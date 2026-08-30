@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import importlib
-import sys
-import types
 from types import SimpleNamespace
 
 import pytest
@@ -473,10 +471,13 @@ def test_cache_key_changes_with_profile_and_rubric_versions() -> None:
     assert base != other_rubric
 
 
+def _mcts_module():
+    pytest.importorskip("faiss")
+    return importlib.import_module("src.agents.idea_agent.agent.mcts")
+
+
 def test_idea_evaluation_scientific_dimensions_are_backward_compatible() -> None:
-    if "faiss" not in sys.modules:
-        sys.modules["faiss"] = types.ModuleType("faiss")
-    mcts = importlib.import_module("src.agents.idea_agent.agent.mcts")
+    mcts = _mcts_module()
     legacy = mcts.IdeaEvaluation.from_payload(
         {
             "novelty": 4,
@@ -503,9 +504,7 @@ def test_idea_evaluation_scientific_dimensions_are_backward_compatible() -> None
 
 
 def test_fixed_scientific_candidate_fixtures_do_not_lose_to_benchmark_only_cs() -> None:
-    if "faiss" not in sys.modules:
-        sys.modules["faiss"] = types.ModuleType("faiss")
-    mcts = importlib.import_module("src.agents.idea_agent.agent.mcts")
+    mcts = _mcts_module()
 
     common = {
         "surprise": 3,

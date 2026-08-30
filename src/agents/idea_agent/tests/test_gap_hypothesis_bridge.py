@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-import sys
-import types
+import pytest
 
-if "faiss" not in sys.modules:
-    sys.modules["faiss"] = types.ModuleType("faiss")
+pytest.importorskip("faiss")
 
 from src.agents.idea_agent.agent.mcts import IdeaState
 from src.agents.idea_agent.utils.mcts.mcts_runtime import build_root_state
