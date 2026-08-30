@@ -119,38 +119,6 @@ def test_vision_settings_select_quality_and_batch_models():
     assert resolve_vision_settings(config, batch=True)["model"] == "qwen3-vl-flash"
 
 
-def test_blog_gengraph_qwen_route_uses_image_adapter(monkeypatch):
-    from PIL import Image
-
-    from src.agents.blog_agent.tools import gengraph
-    from src.llm import image_generation
-
-    class FakeImageClient:
-        def __init__(self, **kwargs):
-            self.kwargs = kwargs
-
-        def generate(self, **kwargs):
-            buffer = __import__("io").BytesIO()
-            Image.new("RGB", (2, 2), "white").save(buffer, format="PNG")
-            return image_generation.ImageGenerationResult(
-                images=(buffer.getvalue(),),
-                model=kwargs["model"],
-                provider="qwen",
-            )
-
-    monkeypatch.setattr(image_generation, "DashScopeImageClient", FakeImageClient)
-    result = gengraph.call_llm_image_generation(
-        prompt="academic figure",
-        api_key="test-key",
-        model="wan2.7-image-pro",
-        base_url="https://dashscope.example/api/v1",
-        provider="qwen",
-    )
-
-    assert result is not None
-    assert result.size == (2, 2)
-
-
 class FakeHttpResponse:
     def __init__(self, payload=None, *, status_code=200, content=b""):
         self._payload = payload or {}

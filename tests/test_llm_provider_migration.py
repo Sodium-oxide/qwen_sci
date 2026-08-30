@@ -57,7 +57,6 @@ def _project_config(provider: str = "qwen"):
                         "default_models": {
                             "survey": "gpt-5.4-mini",
                             "judge": "gpt-5.5",
-                            "blog": "gpt-5.5",
                         },
                     },
                     "qwen": {
@@ -71,7 +70,6 @@ def _project_config(provider: str = "qwen"):
                         "default_models": {
                             "survey": "qwen3.6-flash",
                             "judge": "qwen3.8-max",
-                            "blog": "qwen3.8-max",
                         },
                     },
                 },
@@ -114,10 +112,6 @@ def _project_config(provider: str = "qwen"):
                         "capabilities": {"image_generation": True},
                     },
                 },
-            },
-            "blog": {
-                "provider": provider,
-                "model": "",
             },
         }
     )
@@ -210,7 +204,6 @@ def test_default_config_resolves_openai_and_qwen(
         monkeypatch.setenv("DASHSCOPE_BASE_URL", base_url)
         monkeypatch.delenv("SURVEY_LLM_MODEL", raising=False)
         monkeypatch.delenv("SURVEY_JUDGE_MODEL", raising=False)
-        monkeypatch.delenv("BLOG_LLM_MODEL", raising=False)
     else:
         monkeypatch.setenv("OPENAI_BASE_URL", base_url)
 
@@ -776,54 +769,6 @@ def test_survey_rejects_non_chat_models(monkeypatch, model):
     with pytest.raises(ValueError, match="missing required capabilities: chat_completions"):
         api_call.ChatAgent(config)
 
-
-def test_blog_builds_qwen_openhands_provider_config_without_network():
-    from src.agents.blog_agent.agent.llm_config import build_openhands_config
-
-    project_config = _project_config()
-    result = build_openhands_config(
-        project_config,
-        model="qwen3.8-max",
-        provider="qwen",
-    )
-
-    assert result == {
-        "api_key": "qwen-test-key",
-        "model": "openai/qwen3.8-max",
-        "base_url": "https://dashscope.example/compatible-mode/v1",
-    }
-
-
-def test_blog_uses_qwen_role_default_and_rejects_image_model():
-    from src.agents.blog_agent.agent.llm_config import build_openhands_config
-
-    project_config = _project_config()
-
-    assert build_openhands_config(project_config)["model"] == "openai/qwen3.8-max"
-    with pytest.raises(ValueError, match="missing required capabilities: chat_completions"):
-        build_openhands_config(
-            project_config,
-            model="qwen-image-3.0-pro",
-            provider="qwen",
-        )
-
-
-def test_blog_preserves_explicit_legacy_openai_config():
-    from src.agents.blog_agent.agent.llm_config import build_openhands_config
-
-    project_config = _project_config(provider="openai")
-    project_config.blog.model = "gpt-5.5"
-    project_config.blog.provider = ""
-    project_config.blog.openai = {
-        "api_key": "legacy-blog-key",
-        "base_url": "https://blog-gateway.example/v1",
-    }
-
-    assert build_openhands_config(project_config) == {
-        "api_key": "legacy-blog-key",
-        "model": "openai/gpt-5.5",
-        "base_url": "https://blog-gateway.example/v1",
-    }
 
 
 def test_pipeline_survey_forwards_active_config(monkeypatch, tmp_path):
