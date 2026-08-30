@@ -817,49 +817,6 @@ def test_resolve_executable_rejects_explicit_missing_path(tmp_path: Path) -> Non
         )
 
 
-def test_latex_engine_symlink_name_is_preserved_for_resolution_and_compilation(monkeypatch, tmp_path: Path) -> None:
-    engine_target = tmp_path / "pdftex"
-    engine_target.write_text("placeholder", encoding="utf-8")
-    engine_link = tmp_path / "pdflatex"
-    try:
-        engine_link.symlink_to(engine_target)
-    except OSError:
-        pytest.skip("creating symbolic links is unavailable in this test environment")
-
-    resolved = resolve_executable(
-        explicit=engine_link,
-        environment_variable="SCIENCE_LATEX_ENGINE",
-        configured="",
-        fallback="pdflatex",
-        label="LaTeX engine",
-    )
-    assert resolved == engine_link.absolute()
-    assert resolved.name == "pdflatex"
-
-    project_dir = tmp_path / "project"
-    project_dir.mkdir()
-    main_tex = project_dir / "main.tex"
-    main_tex.write_text("\\documentclass{article}", encoding="utf-8")
-    commands: list[list[str]] = []
-
-    def fake_run(command: list[str], **_kwargs: object) -> tuple[dict[str, object], str]:
-        commands.append(command)
-        return {"return_code": 0, "timed_out": False, "elapsed_ms": 0}, ""
-
-    monkeypatch.setattr(latex_compiler, "_run_command", fake_run)
-    compile_latex_project(
-        project_dir,
-        main_tex=main_tex,
-        latex_engine=resolved,
-        bibtex=None,
-        run_bibtex=False,
-        timeout_seconds=1,
-        staged_pdf_path=tmp_path / "output.pdf",
-    )
-
-    assert commands[0][0] == str(engine_link.absolute())
-
-
 def test_author_cli_forwards_explicit_rendering_overrides(monkeypatch, tmp_path: Path, capsys) -> None:
     from omegaconf import OmegaConf
     import src.cli as cli

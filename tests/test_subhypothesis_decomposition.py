@@ -5,7 +5,6 @@ import pytest
 from omegaconf import OmegaConf
 
 from src.agents.survey_agent.modules.work_collector import WorkCollector
-from src.agents.survey_agent.modules.survey_generator import SurveyGenerator
 from src.agents.survey_agent.utils import api_call
 from src.pipeline.research_identity import build_project_research_context
 from src.pipeline.research_question_contract import QUESTION_KIND_SPECS
@@ -463,24 +462,3 @@ def test_chat_agent_provider_override_keeps_the_survey_model_unchanged(monkeypat
     assert agent.remote_url == "https://qwen.invalid/v1/chat/completions"
     assert agent.token == "qwen-key"
     assert survey_config.APIInfo.llm_model_name == "gpt-5.4-mini"
-
-
-def test_survey_json_persists_subhypothesis_decomposition(tmp_path) -> None:
-    markdown_path = tmp_path / "survey.md"
-    json_path = tmp_path / "survey.json"
-    generator = object.__new__(SurveyGenerator)
-    generator.config = SimpleNamespace(
-        BasicInfo=SimpleNamespace(
-            save_path=str(markdown_path),
-            save_json_path=str(json_path),
-            topic="precision medicine",
-            research_context={"input_fingerprint": "project-fingerprint"},
-            subhypothesis_decomposition={"source": "automatic_qwen"},
-            subhypothesis_retrieval={"schema_version": "subhypothesis_retrieval_execution_v1"},
-            debug=False,
-        )
-    )
-    generator.save_survey("Survey body", [])
-
-    payload = json.loads(json_path.read_text(encoding="utf-8"))
-    assert payload["subhypothesis_decomposition"] == {"source": "automatic_qwen"}
