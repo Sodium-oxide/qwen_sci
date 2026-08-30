@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling>=1.27.0"]
+requires = ["hatchling==1.32.0"]
 build-backend = "hatchling.build"
 
 [project]
 name = "qwen-sci"
-version = "0.2.0rc6"
+version = "0.2.0rc7"
 description = "Qwen-Sci multi-agent research workflow"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
@@ -83,7 +83,7 @@ dependencies = [
   "opentelemetry-instrumentation-threading==0.65b0",
   "opentelemetry-sdk==1.44.0",
   "opentelemetry-semantic-conventions==0.65b0",
-  "packaging==25.0",
+  "packaging==26.3",
   "protobuf==7.36.0",
   "psutil==7.2.1",
   "pydantic==2.12.5",
@@ -98,7 +98,7 @@ dependencies = [
   "referencing==0.37.0",
   "regex==2025.11.3",
   "requests==2.32.5",
-  "rich==14.3.1",
+  "rich==14.3.3",
   "rpds-py==0.30.0",
   "ruamel.yaml==0.19.1",
   "s3transfer==0.16.0",
@@ -129,7 +129,7 @@ qwensci-install-mcp-wrappers = "src.cli:install_mcp_wrappers_main"
 dev = [
   "build>=1.2.2",
   "pytest==9.0.2",
-  "twine>=6.1.0",
+  "twine==7.0.0",
 ]
 memory = [
   "faiss-cpu==1.12.0",
