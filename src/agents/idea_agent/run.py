@@ -207,7 +207,12 @@ def run_idea_workflow(
     survey_context: Optional[SurveyIdeaContext] = None
     if requested_manifest:
         survey_context = load_survey_idea_context(requested_manifest)
-    resolved_inputs = resolve_run_inputs(config, default_output_root=str(DEFAULT_OUTPUT_ROOT))
+    resolved_inputs = resolve_run_inputs(
+        config,
+        default_output_root=str(DEFAULT_OUTPUT_ROOT),
+        topic_override=topic,
+        survey_manifest_override=requested_manifest,
+    )
     requested_topic = clean_optional_text(topic or str(resolved_inputs.get("topic") or ""))
     if survey_context is not None:
         if requested_topic and requested_topic.casefold() != survey_context.topic.casefold():

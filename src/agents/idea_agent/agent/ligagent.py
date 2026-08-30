@@ -1,4 +1,4 @@
-from src.agents.idea_agent.agent.base import AgentBase
+from src.agents.idea_agent.agent.base import AgentBase, resolve_idea_chat_model
 from src.agents.idea_agent.agent import get_logger
 from src.agents.idea_agent.utils.core.logger import LoguruCompatLogger, get_or_create_mode_logger
 from src.agents.idea_agent.utils.core.chat_router import prepare_ligagent_chat_request
@@ -56,7 +56,6 @@ from src.agents.idea_agent.utils.workflow.idea_contract import (
     mature_idea_legacy_text,
     normalize_mature_ideas,
 )
-from src.llm.provider_registry import resolve_role_model
 from src.agents.idea_agent.utils.papers.paper_graph_vector_store import (
     PaperGraphComponentVectorStore,
 )
@@ -77,10 +76,7 @@ class LigAgent(AgentBase):
         rag_config = kwargs.pop("rag_config", None)
         configured_model = get_config_value(config, "agent.model", None)
         super().__init__(*args, config=config, **kwargs)
-        if str(configured_model or "").strip():
-            self.model = str(configured_model).strip()
-        else:
-            self.model = resolve_role_model(self.project_config, "idea").name
+        self.model = resolve_idea_chat_model(configured_model)
         self.artifact = artifact_init()
         self.session = LigSession(self.artifact)
 
@@ -122,16 +118,19 @@ class LigAgent(AgentBase):
             override = get_config_value(config, f"mcts.{field.name}", None)
             if override is not None and (not isinstance(override, str) or override.strip()):
                 setattr(mcts_config, field.name, override)
-        if not str(mcts_config.generation_model or "").strip():
-            mcts_config.generation_model = resolve_role_model(
-                self.project_config, "idea_generation"
-            ).name
-        if not str(mcts_config.evaluation_model or "").strip():
-            mcts_config.evaluation_model = resolve_role_model(
-                self.project_config, "idea_evaluation"
-            ).name
+        mcts_config.generation_model = resolve_idea_chat_model(
+            mcts_config.generation_model,
+        )
+        mcts_config.evaluation_model = resolve_idea_chat_model(
+            mcts_config.evaluation_model,
+        )
         if not str(mcts_config.component_novelty_eval_model or "").strip():
             mcts_config.component_novelty_eval_model = mcts_config.evaluation_model
+        mcts_config.component_novelty_eval_model = resolve_idea_chat_model(
+            mcts_config.component_novelty_eval_model,
+            mcts_config.evaluation_model,
+            self.model,
+        )
         legacy_symbolic_memory_path = get_config_value(
             config, "mcts.skill_prior_memory_path", None
         )
@@ -175,7 +174,7 @@ class LigAgent(AgentBase):
         last_exc: Optional[Exception] = None
         request_kwargs = dict(kwargs)
         stage = str(request_kwargs.pop("stage", "") or "").strip()
-        resolved_model = str(model or self.model or self.default_model)
+        resolved_model = resolve_idea_chat_model(model, self.model, self.default_model)
         for attempt in range(1, self.chat_max_retries + 1):
             try:
                 routed_model, routed_kwargs = prepare_ligagent_chat_request(
@@ -227,7 +226,7 @@ class LigAgent(AgentBase):
         workflow_name: Optional[str] = None,
         requested_model: Optional[str] = None,
     ) -> str:
-        base_model = str(self.model or self.default_model)
+        base_model = resolve_idea_chat_model(self.model, self.default_model)
         explicit_model = str(requested_model or "").strip()
         if explicit_model and explicit_model != base_model:
             return explicit_model
@@ -243,7 +242,7 @@ class LigAgent(AgentBase):
             value = get_config_value(self.config, key, None)
             if isinstance(value, str) and value.strip():
                 return value.strip()
-        return explicit_model or base_model
+        return resolve_idea_chat_model(explicit_model, base_model)
 
     def bootstrap_topic(self, topic: str, retrieval_keywords: Optional[str] = None) -> None:
         normalized_topic = (topic or "").strip()

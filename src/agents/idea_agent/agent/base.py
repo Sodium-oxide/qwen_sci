@@ -16,6 +16,17 @@ from src.agents.idea_agent.utils.core.chat_transport import (
 from src.llm.provider_registry import resolve_model, resolve_provider
 
 
+DEFAULT_IDEA_CHAT_MODEL = "qwen3.7-plus"
+
+
+def resolve_idea_chat_model(*candidates: Any) -> str:
+    for candidate in candidates:
+        model = str(candidate or "").strip()
+        if model:
+            return model
+    return DEFAULT_IDEA_CHAT_MODEL
+
+
 def _load_runtime_project_config(config: Any) -> Any:
     if config is not None and hasattr(config, "get") and config.get("llm") is not None:
         return config
@@ -72,7 +83,7 @@ class AgentBase:
         """
         if not str(prompt or "").strip():
             raise ValueError("Chat prompt must not be empty.")
-        resolved_model = str(model or self.default_model or "gpt-5-mini")
+        resolved_model = resolve_idea_chat_model(model, self.default_model)
         resolve_model(self.project_config, resolved_model, self.provider.name)
         transport = resolve_chat_transport(
             self._current_base_url(),
@@ -119,4 +130,4 @@ class AgentBase:
 
     @property
     def default_model(self) -> str:
-        return str(self.provider.default_models.get("idea") or "gpt-5-mini")
+        return DEFAULT_IDEA_CHAT_MODEL

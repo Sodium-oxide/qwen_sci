@@ -1,0 +1,21 @@
+{
+  "schema_version": "survey_idea_handoff_v1",
+  "survey_run_id": "periodic-completeness-survey-001",
+  "project_id": "periodic-completeness-001",
+  "topic": "Will the periodic table ever be complete?",
+  "core_finding": "No accepted evidence fixes a final atomic number; the recognized table and the physical/technological reachability frontier must be kept distinct.",
+  "accepted_gap_ids": ["GAP-01", "GAP-02", "GAP-03", "GAP-04"],
+  "required_invariants": [
+    "Do not assert a predicted element exists or will be discovered.",
+    "Separate nuclear stability, production/detection reachability, and institutional recognition.",
+    "Treat IUPAC/IUPAP recognition as an evidence decision, not merely a detector output.",
+    "Keep all proposed methods DESIGN_ONLY and non-operational.",
+    "Expose model uncertainty, negative outcomes, and expert-review gates."
+  ],
+  "recommended_problem_formulation": "Can an uncertainty-aware, evidence-constrained reachability model distinguish a physical-stability boundary from a present technology/evidence boundary for potential elements beyond 118?",
+  "unknowns": [
+    "Which nuclear-model ensemble and archival data sources are appropriate for calibrated forecasts?",
+    "How should technology scenarios be represented without overpromising facility performance?",
+    "Which evidence fields should be required before a future claim is promoted for IUPAC/IUPAP assessment?"
+  ]
+}

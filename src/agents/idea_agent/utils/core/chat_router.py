@@ -75,9 +75,7 @@ def prepare_ligagent_chat_request(
     kwargs: Mapping[str, Any],
     config: Any = None,
 ) -> tuple[str, Dict[str, Any]]:
-    resolved_model = str(model or "").strip()
-    if not resolved_model:
-        raise ValueError("LigAgent chat requires a non-empty model name.")
+    resolved_model = str(model or "").strip() or "qwen3.7-plus"
 
     request_kwargs = dict(kwargs)
 

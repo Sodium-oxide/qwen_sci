@@ -27,6 +27,17 @@ def _resolve_project_placeholders(config: DictConfig) -> DictConfig:
     return OmegaConf.create(_replace(OmegaConf.to_container(config, resolve=False)))
 
 
+def _has_explicit_survey_artifact_paths(config: DictConfig) -> bool:
+    """Return whether a caller already selected the required Survey output paths."""
+
+    required_paths = (
+        "BasicInfo.base_dir",
+        "BasicInfo.save_path",
+        "BasicInfo.save_json_path",
+    )
+    return all(str(OmegaConf.select(config, path) or "").strip() for path in required_paths)
+
+
 def merge_with_default_survey_config(config: DictConfig) -> DictConfig:
     """Merge a survey preset config on top of src/config/default.yaml::survey."""
     active_config_path = resolve_runtime_config_path()
@@ -51,7 +62,7 @@ def merge_with_default_survey_config(config: DictConfig) -> DictConfig:
         _resolve_project_placeholders(survey_overrides) if survey_overrides is not None else OmegaConf.create(),
     )
     topic = str(OmegaConf.select(merged, "BasicInfo.topic") or "").strip()
-    if topic:
+    if topic and not _has_explicit_survey_artifact_paths(merged):
         from src.agents.survey_agent.utils.topic_survey_storage import apply_topic_survey_paths
 
         apply_topic_survey_paths(

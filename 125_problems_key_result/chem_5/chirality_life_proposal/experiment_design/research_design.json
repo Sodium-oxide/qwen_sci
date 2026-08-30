@@ -1,0 +1,20 @@
+{
+  "schema_version": "experiment_design_v1",
+  "project_id": "chirality-life-001",
+  "design_run_id": "chirality-life-design-001",
+  "survey_run_id": "chirality-life-survey-001",
+  "idea_run_id": "chirality-life-idea-001",
+  "selected_direction_id": "D2",
+  "execution_policy": {"mode": "DESIGN_ONLY", "observed_results": []},
+  "research_brief": {
+    "object": "Published evidence records and conceptual models of stereochemical compatibility.",
+    "central_hypothesis": "Stereochemical closure supports specified chiral polymer-based life capabilities more directly than a preferred terrestrial hand.",
+    "alternative_explanations": ["source-selection bias", "model-specific assumptions", "cross-chiral compatibility", "definition-dependent endpoint choice"],
+    "falsification_conditions": ["closure is not associated with registered capabilities", "a well-supported alternative works without closure", "codebook does not support reproducible review"]
+  },
+  "architecture_states": ["homochiral_closure", "cross_chiral_closure", "mixed_unclosed", "achiral_or_unknown"],
+  "capability_endpoints": ["template_continuity", "reproducible_structure", "selective_recognition", "heritable_information", "open_ended_evolution_support"],
+  "permitted_outputs": ["closure_functionally_supported", "alternative_architecture_supported", "evidence_insufficient", "definition_sensitive_abstain"],
+  "forbidden_outputs": ["life_created", "universal_law_proved", "mirror_organism_exists"],
+  "human_review_required": true
+}

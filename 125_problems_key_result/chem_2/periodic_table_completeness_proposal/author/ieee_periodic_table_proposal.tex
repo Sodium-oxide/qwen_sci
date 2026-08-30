@@ -1,0 +1,397 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{url}
+\usepackage{balance}
+
+\newcommand{\reachability}{conditional new-element reachability}
+\newcommand{\designonly}{\textsc{Design-Only}}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\begin{document}
+\raggedbottom
+
+\title{Will the Periodic Table Ever Be Complete? An Evidence-Aware Proposal for Mapping Conditional New-Element Reachability Beyond 118}
+
+\author{\IEEEauthorblockN{Simulated Four-Agent Research Workflow}
+\IEEEauthorblockA{Survey Agent $\rightarrow$ Idea Agent $\rightarrow$ ExperimentDesign Agent $\rightarrow$ Author Agent\\
+Nuclear Physics, Chemistry Governance, and Scientific Evidence Modelling\\
+Document state: \texttt{PROPOSAL\_NO\_OBSERVED\_RESULTS}}}
+
+\maketitle
+
+\begin{abstract}
+The periodic table contains 118 formally named elements, but this recognized inventory does not by itself establish a final atomic number. The question of completeness combines at least four distinct boundaries: physical existence of nuclei, present technological reachability, observational evidence, and institutional recognition. IUPAC formally named elements 113, 115, 117, and 118 in 2016, and the IUPAC/IUPAP review initiated in 2016 and reported in 2018 acknowledged that earlier discovery criteria were associated with methods being replaced by newer approaches. At the same time, superheavy-nucleus physics imposes constraints that cannot be reduced to human imagination: Coulomb repulsion, fission, shell effects, production probability, survival, detection, and the sufficiency of an identity proof all matter. This paper proposes a calibrated, evidence-aware research program for mapping conditional reachability beyond element 118. A time-versioned historical corpus links nuclear-model uncertainty, high-level technology/evidence scenarios, and structured proof-chain completeness. A three-layer model is evaluated against stability-only and scenario-only baselines using temporal validation and abstention. The output is a conditional frontier, not a discovery claim or a forecast of a final element. This is a \designonly{} proposal; it contains no nuclear experiment, simulation result, element observation, priority judgment, or naming decision.
+\end{abstract}
+
+\begin{IEEEkeywords}
+periodic table, superheavy nuclei, IUPAC, IUPAP, element discovery, nuclear stability, uncertainty calibration, scientific evidence, reachability frontier
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+The phrase ``the periodic table is complete'' can mean several incompatible things. It can mean that every element currently recognized by IUPAC has a name and place in the table. It can mean that all nuclei that can be created with current instruments have been observed. It can mean that no nucleus with a larger proton number can form a distinguishable bound system. Or it can be used loosely to express the intuition that increasingly heavy elements are too difficult to make. These statements are not equivalent. A rigorous research program must distinguish them before it tries to infer what lies beyond element 118.
+
+The present institutional boundary is clear. On 30 November 2016, IUPAC announced the formal names and symbols of elements 113, 115, 117, and 118: nihonium (Nh), moscovium (Mc), tennessine (Ts), and oganesson (Og), respectively \cite{iupac2016}. The announcement followed prior discovery-assessment reports and emphasizes that exploration beyond the seventh row continued. It also states that IUPAC and IUPAP were establishing a joint group to examine the verification criteria for new-element claims. Thus, the formal completion of a row is not a declaration that physics has reached a terminal atomic number.
+
+The 2018 IUPAC/IUPAP Provisional Report gives the next critical context. The group was formed because criteria developed by the earlier Transfermium Working Group related to methods that were being replaced by newer methods; the criterion and Joint Working Party procedures were reviewed before further claims \cite{iupac2018}. This does not make discovery standards optional. It makes their implementation technology-aware. A new separator, detector, data-analysis method, or experimental route may require a different evidentiary expression, but an identity and priority claim still needs a traceable proof chain that can withstand independent assessment.
+
+The popular assertion that human inventiveness is the only obstacle therefore overstates the case. Invention matters: superheavy-element work has depended on improved beams, targets, recoil separation, and detection. Yet nuclei also face irreducible physical pressures, including proton--proton repulsion, decay and fission modes, and the changing shell structure of very heavy systems. The relevant scientific question is not whether ingenuity can guarantee an unlimited periodic table. It is whether a named candidate region is physically plausible, conditionally accessible under a specified technology/evidence scenario, and capable of producing a proof package adequate for formal assessment.
+
+This paper reports a simulated four-agent research workflow. The Survey Agent establishes the evidence boundary and separates competing meanings of completeness. The Idea Agent compares possible research directions and rejects a single-number endpoint forecast. The ExperimentDesign Agent creates a design-only, retrospective validation protocol. The Author Agent turns the resulting contracts into a source-bound IEEE proposal. The purpose is methodological: to make uncertainty and proof obligations visible before claims are made. No new nuclear reaction, event record, or element discovery is reported.
+
+\section{Why Completeness Is a Four-Layer Problem}
+
+\subsection{Institutional recognition}
+
+IUPAC's role is essential but delimited. It works with IUPAP through Joint Working Parties to examine discovery claims, and its naming process follows recognition of a fulfilled claim. The 2016 naming announcement identifies both the formal names and the prior reports on discovery assignment \cite{iupac2016,karol113,karol115}. Recognition therefore marks a high-confidence institutional conclusion about a documented claim. It does not map all possible nuclei, and it does not imply that an unrecognized candidate is impossible. The recognized table is an authoritative chemical reference, but it is not a direct measurement of the upper bound of nuclear matter.
+
+\subsection{Physical nuclear limit}
+
+The physical question asks whether a nucleus with a given proton number \(Z\) and neutron number \(N\) can be sufficiently bound and long-lived to be a distinguishable nuclear system. Superheavy-nucleus theory seeks shell effects that can counteract, over limited regions, the destabilizing influence of large proton number. Hofmann's review describes historically shifting predictions of enhanced stability around \(N=184\), with proposed proton closures that changed among models, and additional deformed-shell stability near \(Z=108\), \(N=162\) \cite{hofmann2015}. The shift in predicted proton closures is not a weakness to hide; it is evidence that theory uncertainty must be retained rather than collapsed into one endpoint value.
+
+The same review notes that nuclear fission became an early indication of a limit at increasing proton number and that shell-model calculations refined estimates of binding, half-lives, and decay modes \cite{hofmann2015}. A possible stability island neither proves that all larger elements can be made nor determines the final endpoint. It identifies a model-dependent region in which the survival component may be less unfavorable than a simple smooth extrapolation suggests. Hamilton, Hofmann, and Oganessian likewise frame the search as a combined problem of producing and identifying superheavy nuclei \cite{hamilton2013}.
+
+\subsection{Technological and observational limits}
+
+A physically plausible nucleus need not be accessible with a present facility. The discovery chain requires a productive pathway, survival through the relevant system, separation or correlation of the relevant evidence, calibrated detection, and interpretable statistical support. Hofmann identifies intensive heavy-ion beams, target technology, recoil separation, and sensitive detector arrays as prerequisites for the prior decades of discovery \cite{hofmann2015}. This statement supports a general reachability layer; it does not authorize this proposal to prescribe physical operating conditions.
+
+An observation is also not automatically a discovery. A signal must be linked to an identity claim with adequate provenance, correlation, and corroboration, then assessed through the competent process. The 2018 report's motivation---older criteria facing newer methods---makes this distinction especially important \cite{iupac2018}. A technology may improve the quality or availability of evidence without lowering the requirement that an element identity be convincingly established.
+
+\begin{table*}[!t]
+\caption{Four forms of periodic-table completeness and their non-equivalence.}
+\label{tab:four-layers}
+\centering
+\renewcommand{\arraystretch}{1.23}
+\begin{tabular}{|P{0.17\textwidth}|P{0.25\textwidth}|P{0.28\textwidth}|P{0.16\textwidth}|}
+\hline
+\textbf{Layer} & \textbf{Question} & \textbf{Minimum evidence} & \textbf{It cannot prove alone} \\
+\hline
+Institutional & What is formally recognized and named? & IUPAC/IUPAP assessment, accepted discovery record, naming action. & A maximum physically possible \(Z\). \\
+\hline
+Observational & What nuclei have been produced and identified with accepted evidence? & Source-linked observation/correlation, documented assessment, provenance. & Non-existence of an unobserved nucleus. \\
+\hline
+Technological & What may be reached under an explicitly stated present or future scenario? & Conditional facility/evidence description, calibrated historical comparison, uncertainty. & A timeless physical limit. \\
+\hline
+Physical & What bound or distinguishable nuclei may exist under nuclear theory? & Model ensemble, uncertainty, and validation against known data. & A guarantee of production, observation, or formal discovery. \\
+\hline
+\end{tabular}
+\end{table*}
+
+\section{Survey Synthesis and Research Gaps}
+
+The Survey stage finds no accepted source that specifies a final atomic number. The current recognized endpoint at 118 is an institutional fact, whereas the underlying physical endpoint is open. It also finds that new methods are not a marginal detail: IUPAC/IUPAP treated method replacement as a reason to review discovery procedures before future claims \cite{iupac2018}. Finally, nuclear theory and technology have separate uncertainties, and discovery assessment has an additional evidence-governance layer. These findings create four research gaps.
+
+The first is a \emph{completion-definition gap}. Public and technical discussions commonly use a single word for institutional status, physical possibility, and present reachability. The second is a \emph{coupled-reachability gap}. Theory may forecast relative stability while technology constrains production and observation; treating either alone as a discovery forecast creates overconfidence. The third is a \emph{proof-chain gap}. Future instruments need a method-aware but method-neutral representation of what counts as identity-supporting evidence. The fourth is a \emph{forecast-validation gap}. A conditional model must be evaluated against historical information available before later outcomes, not judged by whether its narrative resembles a successful discovery after the fact.
+
+\begin{table}[!t]
+\caption{Survey gaps and downstream design obligations.}
+\label{tab:gaps}
+\centering
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{|P{0.11\columnwidth}|P{0.28\columnwidth}|P{0.34\columnwidth}|}
+\hline
+\textbf{Gap} & \textbf{Problem} & \textbf{Design obligation} \\
+\hline
+G1 & Completion labels conflate four different boundaries. & Report every output with an explicit layer and evidence state. \\
+\hline
+G2 & Stability and reachability are separated in narrative but not in uncertainty. & Use a vector model with distinct physical and scenario components. \\
+\hline
+G3 & New instruments need proof obligations that do not hard-code obsolete methods. & Encode an auditable evidence graph and expert review gates. \\
+\hline
+G4 & Forecasts can leak future knowledge or hide failures. & Use time splits, source dates, abstention, and negative-result ledgers. \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Idea Portfolio and Selected Hypothesis}
+
+The Idea Agent evaluated four directions. D1 was a taxonomy-only completeness map. It is necessary because it prevents category errors, but it cannot quantify a frontier. D2 was an evidence-aware Bayesian reachability model that represents physical plausibility, scenario reachability, and proof sufficiency separately. D3 was an automated claim scorer based on published evidence fields. It could assist an audit but would be dangerous as a standalone arbiter because a software score is not an IUPAC/IUPAP decision. D4 was a single-number extrapolation to the final atomic number. It was rejected because the observed sequence of recognized elements does not identify a stable extrapolation target and because it conflates all four layers.
+
+The selected D2 hypothesis is the following: \emph{when frozen at a historical time cutoff, a model that separates nuclear-stability uncertainty, technology/evidence scenarios, and proof-chain completeness will produce better-calibrated classifications of subsequently documented reachability outcomes than stability-only or technology-only baselines, while abstaining when evidence is insufficient.} The target is deliberately modest. It asks whether a disciplined forecast classifies historical records better, not whether an algorithm discovers an element.
+
+The hypothesis has meaningful failure modes. The physical component may dominate, making additional layers unhelpful. Historical records may be too sparse for reliable calibration at the upper end. A review-informed evidence graph may contain subjective ambiguity. Or an abstention rule may avoid difficult cases without being informative. These are all reportable outcomes. None can be converted into a conclusion that the periodic table is complete.
+
+\begin{figure*}[!t]
+\centering
+\fbox{\parbox{0.94\textwidth}{\centering
+\vspace{4pt}
+\textbf{Evidence-bound four-agent flow}\\[5pt]
+\begin{tabular}{c@{\hspace{8pt}$\longrightarrow$\hspace{8pt}}c@{\hspace{8pt}$\longrightarrow$\hspace{8pt}}c@{\hspace{8pt}$\longrightarrow$\hspace{8pt}}c}
+\fbox{\parbox{0.14\textwidth}{\centering \textbf{Survey}\\IUPAC evidence\\Completion layers\\Gap ledger}} &
+\fbox{\parbox{0.14\textwidth}{\centering \textbf{Idea}\\Portfolio\\Conditional frontier\\Reject endpoint}} &
+\fbox{\parbox{0.16\textwidth}{\centering \textbf{ExperimentDesign}\\Time-split corpus\\Three layers\\Review gates}} &
+\fbox{\parbox{0.14\textwidth}{\centering \textbf{Author}\\IEEE report\\Claim audit\\No results claim}}
+\end{tabular}\\[7pt]
+\fbox{\parbox{0.78\textwidth}{\centering \textbf{Cross-stage invariant:} no model output proves a prospective element exists, assigns IUPAC/IUPAP priority, or replaces a physical discovery process.}}
+\par\vspace{4pt}}}
+\caption{Data and claim flow for the simulated research process. The editable Draw.io workflow is supplied separately in the accompanying artifact folder.}
+\label{fig:agents}
+\end{figure*}
+
+\section{ExperimentDesign: A Conditional-Reachability Method}
+
+\subsection{Research object and source contract}
+
+The object of analysis is a time-versioned corpus rather than a nuclear reaction. Each record represents a published claim, model statement, formal assessment, or documented non-confirmation/ambiguity state. It contains the original source date, publication type, theory/model version, high-level technology/evidence era, claim state, and source passages needed to audit the label. Claim date, assessment date, and recognition date must be retained separately; they correspond to different layers of completeness. Public sources must be licensed or otherwise eligible for use, and any inaccessible or ambiguous record is placed in an exclusion ledger rather than silently transformed into a negative example.
+
+The corpus is intentionally not a data dump of nuclear numbers. It is an evidence graph. A node may represent a candidate nuclide label, a model prediction, an observation claim, a correlation statement, a corroborating report, or an institutional assessment. Edges record explicit support, temporal relation, or provenance. The graph permits a reviewer to ask whether a conclusion was known at the claimed time, whether two apparently independent records share a common source, and which evidence link is missing.
+
+\subsection{Three-layer frontier representation}
+
+For a candidate record \(c\), a model ensemble \(\mathcal{M}\), high-level scenario descriptor \(\mathbf{t}\), and evidence graph \(G_E\), the proposed output is
+\begin{equation}
+\mathcal{F}(c)=\big(p_{\mathrm{phys}}(c\mid\mathcal{M}),\;p_{\mathrm{reach}}(c\mid\mathbf{t}),\;p_{\mathrm{proof}}(c\mid G_E),\;u(c)\big).
+\label{eq:frontier}
+\end{equation}
+Here, $p_{\mathrm{phys}}$ is a conditional physical-plausibility component, $p_{\mathrm{reach}}$ is a scenario-conditional production/observation reachability component, $p_{\mathrm{proof}}$ is a structured proof-sufficiency component, and $u$ records ensemble disagreement, missingness, and epistemic uncertainty. Equation \eqref{eq:frontier} is a frontier vector, not a probability that an element exists. The components must remain inspectable even if a later decision layer uses them together.
+
+The physical component can summarize published model predictions and disagreement, but it must not fabricate unobserved decay or production values. The scenario component uses non-operational categories of public technology and evidence capability, not accelerator settings, target preparation, or detector configuration. The proof component evaluates whether a source record contains registered categories of identity linkage, provenance, temporal correlation, corroboration, and review status. It cannot issue a discovery decision. When fields are absent or out of distribution, the model abstains rather than creating a favourable score.
+
+\subsection{Evidence states and decision language}
+
+The only permitted model labels are \texttt{conditional\_priority}, \texttt{evidence\_insufficient}, \texttt{currently\_unreachable\_under\_scenario}, and \texttt{abstain}. These are research states. The forbidden output is \texttt{discovered}. A future claim cannot advance from a reported observation to institutional recognition through this software; it must undergo the formal IUPAC/IUPAP process. The separation is not bureaucratic decoration. It protects against a model that mistakes internal consistency for external proof.
+
+\begin{table*}[!t]
+\caption{Variables and claim boundaries for the design-only frontier model.}
+\label{tab:variables}
+\centering
+\renewcommand{\arraystretch}{1.20}
+\begin{tabular}{|P{0.18\textwidth}|P{0.17\textwidth}|P{0.31\textwidth}|P{0.15\textwidth}|}
+\hline
+\textbf{Variable family} & \textbf{Role} & \textbf{Definition and control} & \textbf{Proposal-time state} \\
+\hline
+Nuclear identity and model ensemble & Physical context & Candidate label, public theory version, ensemble disagreement, source date, and provenance. & Required record; no new theory result. \\
+\hline
+$p_{\mathrm{phys}}$ & Physical component & Conditional stability/survival plausibility with stated model assumptions and interval. & Planned model output only. \\
+\hline
+$\mathbf{t}$ and $p_{\mathrm{reach}}$ & Scenario component & Non-operational technology/evidence-era descriptors and conditional reachability estimate. & Planned; no facility instruction. \\
+\hline
+$G_E$ and $p_{\mathrm{proof}}$ & Evidence component & Source-linked proof-chain fields, missingness flags, and reviewer assessment. & Planned audit output only. \\
+\hline
+$u$ and abstention state & Uncertainty control & Ensemble spread, source ambiguity, out-of-distribution flags, and declared abstention. & Mandatory. \\
+\hline
+Record state & Claim control & Literature record, model prediction, review assessment, not available, or out of scope. & Mandatory. \\
+\hline
+\end{tabular}
+\end{table*}
+
+\section{Validation Plan and Decision Rules}
+
+\subsection{Time-split design}
+
+The model is evaluated in historical time rather than through random cross-validation alone. At a cutoff \(\tau\), all sources published after \(\tau\) are removed from training, feature construction, and evidence graphs. The model is fitted with information that would have been available at that time. Its outputs are then compared with later documented outcomes that satisfy the source-quality rule. Related records are grouped so that near-duplicate papers, repeated narratives, or claims sharing a common evidence origin do not create leakage across train and test partitions.
+
+The design compares four policies. Baseline B0 uses stability-related public model features only. Baseline B1 uses high-level scenario/evidence-era descriptors only. Baseline B2 uses proof-chain completeness only. D2 uses the three-layer vector in \eqref{eq:frontier}, uncertainty, and a declared abstention policy. The comparison does not assume that any one baseline is foolish; each captures a real but incomplete intuition about new-element work. Equal source windows and a frozen codebook are required so D2 cannot win by receiving later knowledge or more favorable labels.
+
+\subsection{Primary and secondary endpoints}
+
+The primary endpoint is calibration of later documented record states, evaluated with a preregistered proper scoring rule and reliability analysis while reporting the abstention rate. A lower error is not enough if the confidence intervals are miscalibrated or the model abstains on every difficult record. The study should report coverage, reliability by era, and the number of records in each state. It should never turn an improved historical score into a prediction that a particular prospective element will be discovered.
+
+Secondary endpoints include discrimination between adequately documented later outcomes and evidence-insufficient/not-confirmed records where labels are defensible; inter-reviewer agreement on the evidence graph; sensitivity to alternate theory ensembles; sensitivity to source inclusion; and the relationship between abstentions and documented ambiguity. Another useful analysis asks whether a scenario change affects $p_{\mathrm{reach}}$ while leaving $p_{\mathrm{phys}}$ distinct. This explicitly tests the difference between a technology boundary and a physical one.
+
+The project has strong negative-result rules. It reports a null result if D2 fails to improve calibration, if theory disagreement dominates all classes, if time splits reveal leakage, if abstentions are uninformative, or if expert reviewers cannot map the schema to actual discovery logic. None of these outcomes proves a final atomic number. They state only that the proposed separation cannot yet be justified with the available evidence.
+
+\begin{figure}[!t]
+\centering
+\fbox{\parbox{0.90\columnwidth}{\centering
+\textbf{Evidence-state ladder}\\[4pt]
+\fbox{Literature/model record} $\rightarrow$ \fbox{Conditional frontier} $\rightarrow$ \fbox{Evidence packet under review} $\rightarrow$ \fbox{External formal assessment}\\[5pt]
+\parbox{0.82\columnwidth}{\centering The first three states are research artifacts. The final state is outside this model and remains subject to the IUPAC/IUPAP discovery-assessment process. Missing or ambiguous evidence routes to \texttt{abstain}, not to a discovery label.}}}
+\caption{Claim-control mechanism. The proposed model supplies conditional research descriptions; it does not produce a formal discovery outcome.}
+\label{fig:states}
+\end{figure}
+
+\section{Scenario Taxonomy, Corpus Governance, and Reproducible Interpretation}
+
+\subsection{Candidate scope without claim creep}
+
+The unit of analysis must be defined before any model is selected. It is not an unqualified prospective chemical element, and it is not a claim that a particular atomic number will occur. Instead, a candidate is a historically bounded public record about a named nuclear region, a model forecast, a documented observation claim, a corroborating analysis, an assessment, or an explicitly unresolved case. Several records can refer to the same candidate label while making different statements at different dates. For example, a theory paper can contribute a physical-plausibility assertion, whereas a later assessment can contribute an evidence-status assertion. Collapsing them into one row would erase the very distinction that the project is intended to study.
+
+Candidate identity is consequently a versioned composite: a public label, the source's stated nuclear context, claim type, original date, and relationship to other records. The corpus must preserve ambiguity when sources use different labels or scopes. A disputed or incomplete identity link is not a data-cleaning nuisance. It is part of the proof component and should reduce the permissible strength of an interpretation. The study must also avoid treating all absent records as negative evidence. A publication may be inaccessible, a non-confirmation may never have been published, or a documented null search may be too weakly described to be comparable with a formal assessment. These conditions receive explicit missingness or exclusion labels.
+
+The historical boundary applies to all inputs. A review published after a cutoff may help construct a later outcome label but cannot be used as an earlier feature. Likewise, a modern reinterpretation of an older measurement cannot be silently inserted into the older evidence graph. The corpus therefore stores both the event/claim date stated by a source and the publication/assessment date of the source itself. When those dates are uncertain, the record is routed to an ambiguity ledger. This discipline turns a vague question about the end of the table into a set of auditable historical comparisons.
+
+\subsection{Controlled scenario vocabulary}
+
+The reachability component requires a controlled vocabulary that is expressive enough to distinguish changing capabilities but too high-level to turn the proposal into an operating manual. Table \ref{tab:scenario-vocabulary} gives the proposed vocabulary. The descriptors are evidence and era categories, not accelerator prescriptions. They are registered before evaluation and used only when a public source supports the assignment. A future implementation may add a category only through a versioned codebook update that applies prospectively to a new analysis.
+
+\begin{table*}[!t]
+\caption{Non-operational controlled vocabulary for scenario and evidence coding.}
+\label{tab:scenario-vocabulary}
+\centering
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{|P{0.17\textwidth}|P{0.25\textwidth}|P{0.29\textwidth}|P{0.17\textwidth}|}
+\hline
+\textbf{Code family} & \textbf{Permitted values} & \textbf{Meaning in the corpus} & \textbf{Prohibited inference} \\
+\hline
+Source era & Historical source window; explicit assessment period; unknown. & Time label for leakage control and context; it never ranks laboratories or groups. & That a later era guarantees a discovery. \\
+\hline
+Physical support & Published model statement; model ensemble disagreement; no eligible model statement. & Source-bound context for $p_{\mathrm{phys}}$ and its uncertainty. & A direct measurement or a proof of non-existence. \\
+\hline
+Reachability context & Public high-level capability description; pathway discussed but not evidenced; not described. & Conditional input to $p_{\mathrm{reach}}$; no parameters, apparatus details, or recipes. & A facility plan, operating condition, or production prediction. \\
+\hline
+Identity linkage & Stated decay/correlation logic; partial linkage; ambiguous linkage; absent. & Evidence-graph field used in $p_{\mathrm{proof}}$. & Institutional recognition or discovery priority. \\
+\hline
+Corroboration and review & Independent public corroboration; related-source corroboration; formal assessment; none/unclear. & Provenance-aware evidence state with dependencies recorded. & That repeated papers with a shared origin are independent proof. \\
+\hline
+Record disposition & Eligible; excluded with reason; deferred for human review; out of scope. & Preserves denominator, ambiguity, and curation decisions. & That exclusion is a negative scientific result. \\
+\hline
+\end{tabular}
+\end{table*}
+
+The vocabulary provides a second benefit: it lets a reviewer test whether an apparent model improvement is merely a change in terminology. A model that gains accuracy only because a later source calls a record ``established'' has leaked an outcome. A model that responds to a public high-level capability category while keeping its theory input fixed may be describing a scenario boundary. Neither pattern answers the physical-limit question by itself. Each output remains conditional on the codebook, the evidence window, and the exclusion log.
+
+\subsection{Evidence annotation and adjudication protocol}
+
+The design calls for two domain-qualified reviewers to independently annotate a small pilot subset before the main time-split corpus is frozen. They use a written codebook with positive examples, borderline cases, and an ``insufficient source support'' option. The goal is not to automate expert judgment away. It is to learn whether the fields in Table \ref{tab:scenario-vocabulary} can be applied consistently enough to support a transparent model comparison. Reviewers record a rationale and source passage for every non-missing label. They may not infer a field from general knowledge absent from the archived source.
+
+Disagreements are resolved in a third, documented adjudication step. The adjudicator can assign a consensus label, retain competing plausible labels for sensitivity analysis, or declare the record ineligible. Inter-reviewer agreement is reported per field, not as one flattering aggregate. A low agreement rate is a substantive result: it may show that a proof-chain concept is underspecified or that publicly available evidence cannot support the proposed granularity. It does not license the system to pick whichever label makes the frontier look more optimistic.
+
+The resulting codebook, inclusion log, and adjudication ledger are release artifacts. Personal data are not needed for this public-document corpus. Nonetheless, the archive should use stable record identifiers, preserve source rights and access notes, and record any redaction or inaccessible material. Model inputs must reference identifiers rather than duplicate long passages without provenance. A reviewer must be able to reconstruct why a record entered an evidence state at a particular historical cutoff.
+
+\subsection{Audit-ready evaluation and reporting matrix}
+
+Evaluation has two audiences: method researchers who need calibrated comparisons and scientific-governance readers who need claim boundaries. For the first audience, every temporal split reports the record count, eligible fraction, exclusions, class distribution, calibration metric with interval, reliability visualization, and abstention coverage. Confidence intervals must respect the grouping of records that depend on a common source. For the second audience, every top-level conclusion is mapped to the exact component and evidence state that permits it. A model score is never translated into an announcement about a new element.
+
+The principal analysis may use a proper scoring rule, such as the Brier score for pre-registered defensible labels, together with calibration curves and coverage. For an eligible set $\mathcal{D}_{\tau}$ at cutoff $\tau$, a generic Brier-style comparison is
+\begin{equation}
+\operatorname{BS}_{\tau}=\frac{1}{|\mathcal{D}_{\tau}|}\sum_{c\in\mathcal{D}_{\tau}}\sum_{k\in\mathcal{K}}\left(\widehat{q}_{k}(c)-\mathbb{1}\{y(c)=k\}\right)^2,
+\label{eq:brier}
+\end{equation}
+where $\mathcal{K}$ contains only pre-specified research record states. Equation \eqref{eq:brier} is not evaluated in this proposal and does not convert a physical or institutional question into a single numerical score. It merely requires that any later claim of improved calibration be falsifiable, time-bounded, and accompanied by coverage and uncertainty.
+
+Table \ref{tab:interpretation-matrix} specifies the result language in advance. It is deliberately asymmetric: a model may earn a narrow methodological conclusion, but no numerical outcome can settle a final atomic number or award discovery. This is the mechanism by which a future study remains informative in the face of model failure.
+
+\begin{table*}[!t]
+\caption{Pre-registered interpretation matrix for a future evaluation.}
+\label{tab:interpretation-matrix}
+\centering
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{|P{0.22\textwidth}|P{0.26\textwidth}|P{0.28\textwidth}|P{0.14\textwidth}|}
+\hline
+\textbf{Observed future evaluation pattern} & \textbf{Permitted interpretation} & \textbf{Required report action} & \textbf{Forbidden conclusion} \\
+\hline
+D2 improves calibration with useful coverage across frozen time splits. & The separated model is more reliable for its conditional historical classification task. & Publish intervals, codebook version, exclusions, and component ablations. & A specified element will be discovered or exists. \\
+\hline
+D2 matches or loses to a simpler baseline. & The added separation is not supported by this corpus/version. & Publish negative result and diagnose physical, scenario, and proof components separately. & The table has reached a final physical endpoint. \\
+\hline
+High abstention is concentrated in ambiguous records. & The corpus identifies a zone needing better public evidence or expert review. & Report coverage by era and retain ambiguity ledger. & Ambiguous records are failures or hidden discoveries. \\
+\hline
+Inter-reviewer agreement is weak for a field. & The field/codebook is not yet stable enough for decisive modeling. & Revise codebook prospectively or remove the field in sensitivity analysis. & The algorithm can replace human scientific assessment. \\
+\hline
+Later review changes a historical label. & The outcome definition is version-sensitive and must be re-run under a new registered analysis. & Preserve both label versions and disclose the change. & Earlier forecasts were validated with knowledge available at the cutoff. \\
+\hline
+\end{tabular}
+\end{table*}
+
+\section{Validity Threats, Governance, and Safety Boundaries}
+
+\subsection{Construct and temporal validity}
+
+The central construct threat is treating a model proxy as the physical quantity it approximates. A theory ensemble is not the nucleus; a technology-era category is not a facility demonstration; an evidence graph is not an IUPAC/IUPAP decision. The design reduces this threat by keeping components separate, exposing their sources, recording uncertainty, and requiring abstention. It cannot eliminate the underlying uncertainty. In particular, a low physical-plausibility score is conditional on the included model ensemble, not a proof of non-existence.
+
+Temporal validity is equally important. A model can appear prescient if it learns terminology, interpretations, or assessment outcomes that became available only later. Each source must retain an original publication date, and a temporal audit must search for model-era leakage. The system should also distinguish a source that predates a claim from a later retrospective review. The historical record is not an independent random sample: successful discoveries attract more publication and documentation than unproductive searches. Missing negative outcomes must be described as missingness, not silently used as failures.
+
+\subsection{Governance boundary}
+
+Discovery priority and naming are institutional scientific judgments. The IUPAC 2016 announcement makes clear that discovery assessment precedes the invitation for discoverers to propose names \cite{iupac2016}. The present model may help organize a public evidence packet or identify missing provenance, but it cannot decide that criteria have been met, award priority, or assign a name. Every output must therefore carry the phrase ``conditional research assessment'' and identify the competent external decision process.
+
+The 2018 criteria review reinforces this boundary. Method evolution is a reason to review how proof obligations are expressed, not a justification for allowing opaque algorithmic decisions or lowering evidence standards \cite{iupac2018}. A useful evidence schema is technology-aware, source-linked, and reviewed by domain experts. It must be able to say ``insufficient evidence'' even when a narrative is exciting.
+
+\subsection{Physical-work exclusion}
+
+This study is not a nuclear laboratory protocol. It contains no reaction pathways, beam settings, target chemistry, separator parameters, detector layouts, acquisition thresholds, or handling instructions. Any future physical investigation requires authorized facilities, qualified staff, site-specific radiation and material controls, formal institutional approval, and independent assessment of its evidence. The proposal's contribution is limited to the logic by which public records and conditional forecasts are compared.
+
+\begin{table}[!t]
+\caption{Risk register and mandatory response.}
+\label{tab:risks}
+\centering
+\renewcommand{\arraystretch}{1.16}
+\begin{tabular}{|P{0.20\columnwidth}|P{0.19\columnwidth}|P{0.28\columnwidth}|}
+\hline
+\textbf{Risk} & \textbf{Failure signal} & \textbf{Required response} \\
+\hline
+Model-era leakage & A feature or label uses post-cutoff knowledge. & Remove leakage, rebuild split, and invalidate prior score. \\
+\hline
+Theory overconfidence & Ensemble disagreement is hidden by a single forecast. & Preserve ensemble intervals and downgrade to conditional/abstain. \\
+\hline
+Evidence ambiguity & Sources do not support a complete proof-chain label. & Quarantine record and retain an ambiguity rationale. \\
+\hline
+Technology conflation & Scenario improvement is reported as new physics. & Report physical and scenario components separately. \\
+\hline
+Governance overclaim & Output is described as a discovery or priority ruling. & Enforce claim-language review and IUPAC/IUPAP boundary. \\
+\hline
+Operational drift & Work moves toward a physical nuclear experiment. & Stop and require authorized facility/institutional processes. \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Expected Contributions and Interpretation of Outcomes}
+
+The proposal's first contribution is a language and data contract for periodic-table completeness. It prevents a formal recognized endpoint, an observational frontier, a technology limit, and a physical limit from being reported as the same fact. Its second contribution is a versioned evidence corpus that preserves dates, source provenance, ambiguity, and exclusions. Its third contribution is a calibrated comparison between a three-layer reachability model and simpler alternatives. Even if the model fails, the corpus and taxonomy can improve the transparency of future public discussion.
+
+A positive future result would mean that D2 is better calibrated on historical, time-split outcomes and its abstentions identify records with documented insufficiency. The correct conclusion would be modest: the model provides a more reliable conditional map of reachability under its stated sources and scenarios. It would not mean that an element beyond 118 exists or will be discovered. A null result would mean that available theory, scenario metadata, and proof representations do not separate the barriers reliably. That is valuable because it identifies the limit of the method rather than inventing certainty.
+
+The project also makes an important conceptual contribution by allowing several kinds of incompleteness to coexist. The periodic table can be institutionally complete through 118 today, technologically incomplete for a future scenario, and physically uncertain in the same region. A changing instrument can shift a technology boundary while leaving the physical component unchanged. A stronger proof framework can change whether a claim is recognized without changing the underlying nucleus. This plurality is not evasive; it is the structure of the scientific problem.
+
+\section{Minimum Preregistration and Evidence-Record Contract}
+
+Before a future implementation evaluates any candidate record, it must register the source window, inclusion/exclusion rules, theory ensemble, high-level scenario vocabulary, evidence-graph schema, time cutoffs, feature definitions, model family, uncertainty method, abstention policy, baseline policies, endpoint, and review responsibilities. Any change made after later outcomes become visible creates a new registered analysis. This constraint is necessary because a model of scientific discovery can otherwise absorb hindsight while presenting itself as a forecast.
+
+At the record level, the archive must keep a stable identifier; source passage and publication date; candidate identity label; theory/model version; high-level scenario category; evidence links; uncertainty; missingness; review notes; original claim state; and report-language state. A future public observation would add its externally available provenance and assessment references, but it would not automatically become an institutional recognition field. The record must preserve rejected and inconclusive entries so that successful cases are not the only visible history.
+
+\begin{table}[!t]
+\caption{Minimum evidence record for a conditional reachability assessment.}
+\label{tab:record-contract}
+\centering
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{|P{0.27\columnwidth}|P{0.54\columnwidth}|}
+\hline
+\textbf{Record block} & \textbf{Required fields} \\
+\hline
+Project registration & Source window, completion layer, model ensemble, scenario vocabulary, codebook, cutoff, baselines, endpoint, and abstention rule. \\
+\hline
+Source provenance & Stable record ID, source type/date, passage link, rights status, duplicate relation, and exclusion/ambiguity reason. \\
+\hline
+Frontier components & Physical component, scenario component, proof component, uncertainty, model version, and stated assumptions. \\
+\hline
+Evidence assessment & Identity linkage, correlation/provenance fields, corroboration, review status, missingness, and evidence-state label. \\
+\hline
+Claim audit & Exact allowable wording, external assessment boundary, later-outcome reference if any, and downgrade/negative-result record. \\
+\hline
+\end{tabular}
+\end{table}
+
+\balance
+\section{Conclusion}
+
+The periodic table is not known to be physically complete at 118, but neither is it scientifically responsible to promise an unlimited sequence of elements. The recognized inventory, physical stability landscape, technological reachability, observational evidence, and formal discovery assessment are distinct layers. IUPAC's 2016 naming action and its 2018 method-aware criteria review support continued exploration while underscoring the importance of credible proof. Nuclear theory and facility advances make new elements beyond 118 plausible research targets, yet shell effects, fission, production probability, detection, and evidence sufficiency remain real constraints. This paper proposes a falsifiable, design-only path: calibrate an evidence-aware, uncertainty-bearing frontier on historical records; preserve abstention and negative outcomes; and reserve discovery, priority, and naming for the appropriate formal process.
+
+\section*{Acknowledgment}
+
+This document is a simulated research proposal produced from an evidence-bound four-agent workflow. It reports no nuclear reaction, detector observation, simulation result, element discovery, priority decision, or naming result.
+
+\begin{thebibliography}{00}
+
+\bibitem{iupac2016} IUPAC, ``IUPAC announces the names of the elements 113, 115, 117, and 118,'' 30 Nov. 2016. Available: \url{https://iupac.org/iupac-announces-the-names-of-the-elements-113-115-117-and-118/}.
+
+\bibitem{iupac2018} S. Hofmann, S. N. Dmitriev, C. Fahlander, J. M. Gates, J. B. Roberto, and H. Sakai, ``On the discovery of new elements (IUPAC/IUPAP Provisional Report),'' \emph{Pure and Applied Chemistry}, vol. 90, no. 11, pp. 1773--1832, 2018, doi: 10.1515/pac-2018-0918.
+
+\bibitem{hofmann2015} S. Hofmann, ``Super-heavy nuclei,'' \emph{Journal of Physics G: Nuclear and Particle Physics}, vol. 42, Art. no. 114001, 2015, doi: 10.1088/0954-3899/42/11/114001.
+
+\bibitem{hamilton2013} J. H. Hamilton, S. Hofmann, and Y. T. Oganessian, ``Search for superheavy nuclei,'' \emph{Annual Review of Nuclear and Particle Science}, vol. 63, pp. 383--405, 2013, doi: 10.1146/annurev-nucl-102912-144535.
+
+\bibitem{karol113} P. J. Karol, R. C. Barber, B. M. Sherrill, E. Vardaci, and T. Yamazaki, ``Discovery and assignment of elements with atomic numbers 113, 115, 117 and 118,'' \emph{Pure and Applied Chemistry}, vol. 88, no. 1--2, pp. 139--153, 2016, doi: 10.1515/pac-2015-0502.
+
+\bibitem{karol115} P. J. Karol, R. C. Barber, B. M. Sherrill, E. Vardaci, and T. Yamazaki, ``Discovery and assignment of elements with atomic numbers 113, 115, 117 and 118,'' \emph{Pure and Applied Chemistry}, vol. 88, no. 1--2, pp. 155--160, 2016, doi: 10.1515/pac-2015-0501.
+
+\bibitem{oganessian2015} Y. T. Oganessian and V. K. Utyonkov, ``Super-heavy element research,'' \emph{Reports on Progress in Physics}, vol. 78, Art. no. 036301, 2015, doi: 10.1088/0034-4885/78/3/036301.
+
+\end{thebibliography}
+
+\end{document}

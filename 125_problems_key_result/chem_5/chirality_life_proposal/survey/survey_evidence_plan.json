@@ -1,0 +1,45 @@
+{
+  "schema_version": "survey_evidence_plan_v1",
+  "project_id": "chirality-life-001",
+  "survey_run_id": "chirality-life-survey-001",
+  "topic": "Why does life require chirality?",
+  "execution_policy": "DESIGN_ONLY",
+  "subhypotheses": [
+    {
+      "id": "SH-01",
+      "claim": "Compatible stereochemistry supports reliable template copying, folding, and molecular recognition in known biopolymer systems.",
+      "allowed_sources": ["S2", "S4", "S7"],
+      "claim_limit": "Functional evidence for specified molecular architectures, not a universal law."
+    },
+    {
+      "id": "SH-02",
+      "claim": "Homochirality can emerge or be amplified through multiple chemical, physical, or evolutionary mechanisms.",
+      "allowed_sources": ["S1", "S3", "S5", "S6", "S8"],
+      "claim_limit": "Plausibility and model support; no single historical origin mechanism is confirmed."
+    },
+    {
+      "id": "SH-03",
+      "claim": "Cross-chiral catalysis weakens the claim that a single shared handedness is the only possible functional architecture.",
+      "allowed_sources": ["S4"],
+      "claim_limit": "Does not demonstrate a mirror organism or achiral life."
+    },
+    {
+      "id": "SH-04",
+      "claim": "Whether chirality is necessary for life depends partly on the operational definition of life and its reference class.",
+      "allowed_sources": ["S3", "S9"],
+      "claim_limit": "A definition analysis, not empirical proof that non-chiral life exists."
+    }
+  ],
+  "evidence_sources": {
+    "S2": {"kind": "primary experiment", "doi": "10.1038/310602a0", "status": "publisher-page verified"},
+    "S3": {"kind": "computational model", "doi": "10.1371/journal.pcbi.1007592", "status": "publisher-page and dual-engine metadata verified"},
+    "S4": {"kind": "primary experiment", "doi": "10.1038/nature13900", "status": "publisher-page verified"},
+    "S5": {"kind": "primary prebiotic chemistry", "doi": "10.1126/sciadv.adg8274", "status": "dual-engine metadata verified"},
+    "S1": {"kind": "review", "doi": "10.1101/cshperspect.a002147", "status": "OpenAlex metadata verified"},
+    "S6": {"kind": "review", "doi": "10.1021/ar200316n", "status": "OpenAlex metadata verified"},
+    "S7": {"kind": "computational protein study", "doi": "10.1073/pnas.1908241116", "status": "OpenAlex metadata verified"},
+    "S8": {"kind": "review", "doi": "10.1039/D1CS01179K", "status": "OpenAlex metadata verified"},
+    "S9": {"kind": "definition source", "url": "https://astrobiology.nasa.gov/research/life-detection/about/", "status": "browser-search verified; direct page unavailable in current browser session"}
+  },
+  "observed_results": []
+}

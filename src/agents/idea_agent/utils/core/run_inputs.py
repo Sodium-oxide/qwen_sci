@@ -132,8 +132,20 @@ def _interpret_input_text(input_text: str, config: Optional[object]) -> Dict[str
     }
 
 
-def resolve_run_inputs(config: Optional[object], *, default_output_root: str) -> Dict[str, object]:
+def resolve_run_inputs(
+    config: Optional[object],
+    *,
+    default_output_root: str,
+    topic_override: Optional[str] = None,
+    survey_manifest_override: Optional[str] = None,
+) -> Dict[str, object]:
     defaults = load_run_defaults(config, default_output_root=default_output_root)
+    explicit_topic_override = clean_optional_text(topic_override)
+    explicit_manifest_override = clean_optional_text(survey_manifest_override)
+    if explicit_topic_override:
+        defaults["topic"] = explicit_topic_override
+    if explicit_manifest_override:
+        defaults["survey_manifest"] = explicit_manifest_override
     input_text = clean_optional_text(defaults["input"])
     explicit_topic = clean_optional_text(defaults["topic"])
     explicit_mature_idea = clean_optional_text(defaults["mature_idea"])

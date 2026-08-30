@@ -1,0 +1,60 @@
+{
+  "schema_version": "simulated_science_result_v1",
+  "project_id": "chem-pigment-discovery-001",
+  "run_mode": "evidence-grounded simulated four-agent workflow",
+  "topic": "Are more colour pigments to discover?",
+  "status": "COMPLETED_DESIGN_ONLY",
+  "research_conclusion": "New pigment materials and useful reflectance signatures remain plausible to discover or engineer. A pigment does not create a new fundamental dimension of normal human colour vision; novelty must be defined relative to a reference library and stated viewing conditions.",
+  "stages": [
+    {
+      "stage": "survey",
+      "status": "completed",
+      "outputs": [
+        "survey/survey.md",
+        "survey/survey_evidence_plan.json",
+        "survey/survey_gap_ledger.json",
+        "survey/survey_idea_handoff.json",
+        "survey/survey_manifest.json"
+      ]
+    },
+    {
+      "stage": "idea",
+      "status": "completed",
+      "selected_direction": "D2",
+      "outputs": ["idea/idea_portfolio.md", "idea/idea_result_v5.json"]
+    },
+    {
+      "stage": "experiment_design",
+      "status": "completed_design_only",
+      "execution_policy": "DESIGN_ONLY",
+      "outputs": [
+        "experiment_design/research_design.md",
+        "experiment_design/research_design.json",
+        "experiment_design/author_handoff.json"
+      ]
+    },
+    {
+      "stage": "author",
+      "status": "completed",
+      "outputs": [
+        "author/research_report.md",
+        "author/ieee_pigment_proposal.tex",
+        "author/ieee_pigment_proposal.pdf",
+        "author/pdf_validation.json"
+      ]
+    }
+  ],
+  "supporting_visual": "figures/four_agent_pigment_workflow.drawio",
+  "observed_results": [],
+  "human_review_required": [
+    "reference-library and application-specific threshold definition",
+    "candidate composition, safety, and environmental constraints",
+    "any physical synthesis or characterization protocol",
+    "future measurement and commercial/novelty claims"
+  ],
+  "known_limitations": [
+    "Publisher full text for the YInMn study was CAPTCHA-protected during this run; only verified bibliographic/contextual claims were used.",
+    "The proposed ranking method has not been executed or empirically validated in this deliverable.",
+    "No automatic workflow can replace expert review of chemistry, colorimetry, safety, environmental impact, or prior art."
+  ]
+}

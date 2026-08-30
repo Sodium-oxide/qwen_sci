@@ -1,0 +1,368 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{url}
+
+\newcommand{\practicalnovelty}{practical-pigment novelty}
+\newcommand{\designonly}{\textsc{Design-Only}}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\begin{document}
+\raggedbottom
+
+\title{Can More Pigments Be Discovered? An Evidence-Bound, Multiobjective Proposal for Extending the Usable Material Colour Frontier}
+
+\author{\IEEEauthorblockN{Simulated Four-Agent Research Workflow}
+\IEEEauthorblockA{Survey Agent $\rightarrow$ Idea Agent $\rightarrow$ ExperimentDesign Agent $\rightarrow$ Author Agent\\
+Materials Chemistry, Color Science, and Materials Informatics\\
+Document state: \texttt{PROPOSAL\_NO\_OBSERVED\_RESULTS}}}
+
+\maketitle
+
+\begin{abstract}
+The question ``are there more colours to discover?'' is often conflated with the materially different question of whether useful pigment materials remain undiscovered. This proposal separates a pigment composition, its reflectance spectrum, and the colour appearance obtained by a specified observer under specified illumination. It argues that normal human trichromatic colour matching is not extended by a new pigment, while the material frontier can still expand through reflectance signatures and engineering properties that are absent from a declared reference library. The modern YInMn Blue case motivates this distinction: it is evidence that a practically useful inorganic pigment family can emerge, not evidence for a new fundamental human colour. We propose an evidence-bound, safety-constrained, uncertainty-aware, multiobjective workflow for identifying candidate materials predicted to extend a usable spectral--perceptual--engineering frontier. The study first builds a traceable reference atlas; then it calculates standardized colour and spectral distances, filters candidates through explicit constraints, calibrates predictive uncertainty, and uses Pareto acquisition to select a future characterization batch. The preregistered comparison is against random and colour-distance-only selection at equal budget. Every claim is conditioned on a stated library, illuminants, raw spectra, and expert review. This is a \designonly{} research proposal: no material has been synthesized, simulated, measured, or declared a discovery.
+\end{abstract}
+
+\begin{IEEEkeywords}
+pigment discovery, colorimetry, YInMn Blue, reflectance spectra, materials informatics, Pareto optimization, uncertainty quantification, research proposal
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+The apparently simple question, ``are there more colour pigments to discover?'', deserves a more precise answer than either ``all colours already exist'' or ``every new compound creates a new colour.'' Pigments are material systems with composition, crystal structure, defects, particle morphology, surface condition, dispersion state, and binder compatibility. Colour is an appearance and a measurement outcome that depends on a spectral stimulus, an observer, an illuminant, geometry, and adaptation conditions. A new pigment can be chemically unprecedented yet appear close to a known material under one condition. Conversely, two materials that have similar coordinates under a selected illuminant can differ in spectral reflectance, near-infrared behavior, metamerism, durability, environmental profile, or manufacturing suitability. These distinctions control both scientific interpretation and the design of a credible discovery study.
+
+The historical emergence of Prussian Blue in the early eighteenth century is commonly used to mark the beginning of modern synthetic pigments. It illustrates a durable lesson: a material discovery can make a colorant technologically available even when the physics of visible light and visual perception has not changed. A more recent example is YInMn Blue, whose development is associated with an unintended material outcome in 2009 and a subsequent pigment class based on trigonal-bipyramidal chromophores \cite{yinmn}. The YInMn case is important because it reopens a practical materials question. It does not establish that human colour vision gained a new primary channel, nor does it license a general claim that arbitrary ``new colours'' are easy to create. It shows that a stable, useful point in the materials-and-optics landscape can remain undiscovered for a long time.
+
+This paper presents a research proposal that answers the question at the right level. The proposal asks whether a documented, safety-constrained candidate library can yield materials predicted to extend a stated reference library's \emph{usable} spectral--perceptual--engineering frontier. The word ``usable'' is intentional. A visually interesting spectrum is insufficient if the candidate is unstable, unsuitable for the target matrix, excluded by composition constraints, poorly characterized, or represented by an uncalibrated prediction. The research goal is not to maximize a single blue coordinate; it is to make a falsifiable comparison between selection policies under a fixed experimental budget.
+
+The work is organized as a simulated four-agent research process. The Survey Agent establishes the evidence boundary and research gaps. The Idea Agent compares several directions and selects a multiobjective inverse-design strategy. The ExperimentDesign Agent converts that strategy into a design-only, safety-aware protocol with predeclared endpoints. The Author Agent assembles this source-bound proposal. The architecture is valuable because it prevents a common failure mode in AI-assisted science: a fluent narrative that crosses, without notice, from literature context to predicted candidates to purported experimental results. Here, each state transition is explicit and the observed-results field is intentionally empty.
+
+\section{Colour, Spectrum, and Pigment: Necessary Distinctions}
+
+\subsection{Colorimetry defines a comparison protocol, not a closed material inventory}
+
+CIE 015:2018 specifies the use of standard observers, standard illuminants, reflectance references, viewing conditions, tristimulus values, chromaticity coordinates, colour-space coordinates, and colour-difference practice \cite{cie2018}. This infrastructure makes a colour claim reproducible. It does not enumerate all possible pigment materials, and it does not make ``new colour'' a universal material property. A defensible comparison must state the measurement conditions and retain the underlying reflectance spectrum rather than storing only a colour name or three coordinates.
+
+For a reflecting sample with spectral reflectance $R(\lambda)$, illuminant spectral power distribution $S(\lambda)$, and standard-observer colour-matching function $\overline{x}(\lambda)$, a CIE tristimulus component has the generic form
+\begin{equation}
+X=k\int_{\lambda_1}^{\lambda_2}S(\lambda)R(\lambda)\overline{x}(\lambda)\,d\lambda,
+\label{eq:tristimulus}
+\end{equation}
+where $k$ is the normalization factor and $\lambda_1$ and $\lambda_2$ define the stated spectral interval. The corresponding $Y$ and $Z$ values use $\overline{y}(\lambda)$ and $\overline{z}(\lambda)$, respectively. Equation \eqref{eq:tristimulus} makes the key point visible: a spectrum is projected into a low-dimensional representation conditional on a chosen illuminant and observer. Distinct spectra can yield the same or very similar coordinates under one condition. They can then diverge under a different illuminant or observer, a phenomenon central to metamerism.
+
+The practical implication is twofold. First, spectral novelty is not identical to perceptual novelty. Second, perceptual novelty is not identical to a fundamental new colour dimension. Normal trichromatic matching remains described through three tristimulus coordinates under the standardized model; a new pigment changes neither the observer's cone classes nor the number of dimensions needed for the matching relation. The material opportunity instead lies in the high-dimensional family of spectra, structures, and engineering attributes that can be projected into that perceptual space.
+
+\subsection{A new pigment is a multiobjective material claim}
+
+Industrial pigment science cannot be reduced to hue labels. Composition, phase purity, particle size, optical scattering, heat and light stability, chemical resistance, dispersibility, opacity or transparency, cost, and application medium are relevant to whether a material becomes useful \cite{buxbaum}. Nassau's treatment of the physical and chemical causes of colour similarly cautions that colour mechanisms span more than one simple composition-to-hue correspondence \cite{nassau}. A candidate that is novel in a database but fails stability or responsible-use requirements should not be promoted as a practical pigment discovery.
+
+This proposal therefore uses a hierarchy of claims. A \emph{predicted candidate} is a material record selected by the model. A \emph{measured candidate} has future raw spectra and condition metadata. A \emph{gate-passing candidate} meets predeclared spectral, perceptual, utility, uncertainty, and traceability requirements. A \emph{reviewed candidate} has passed relevant specialist scrutiny. A \emph{commercial pigment} is an external, application-level status that requires manufacturing, regulatory, environmental, and user validation. The hierarchy is deliberately conservative: a material is never declared ``new'' merely because it scores highly in a model.
+
+\begin{table*}[!t]
+\caption{Three non-interchangeable forms of novelty and their required evidence.}
+\label{tab:novelty}
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{|P{0.15\textwidth}|P{0.24\textwidth}|P{0.26\textwidth}|P{0.12\textwidth}|}
+\hline
+\textbf{Claim} & \textbf{Meaning} & \textbf{Minimum evidence} & \textbf{Insufficient shortcut} \\
+\hline
+Chemical/material novelty & Composition, phase, structure, or formulation is not represented in the stated comparator set. & Provenance, characterization appropriate to the material, and a declared comparator rule. & A new database identifier or generated formula. \\
+\hline
+Spectral novelty & Reflectance curve is separated from eligible references over a stated wavelength grid. & Calibrated raw spectrum, geometry, normalization, reference-library version, and nearest-neighbor distance. & A colour name, photograph, or a single RGB value. \\
+\hline
+Practical pigment novelty & Candidate extends a reference library's joint visual, spectral, engineering, and constraint frontier. & All gates in this paper, replicated future characterization, and expert review. & A large model score or a visually striking rendering. \\
+\hline
+Fundamental new human colour & A new dimension of normal human colour matching. & Not a plausible consequence of a pigment material alone. & Any new pigment, wavelength peak, or commercial colour name. \\
+\hline
+\end{tabular}
+\end{table*}
+
+\subsection{YInMn Blue: motivation without overinterpretation}
+
+Subramanian and Li describe YInMn Blue as an intense inorganic pigment class based on chromophores in trigonal-bipyramidal coordination \cite{yinmn}. The example matters for this proposal in three bounded ways. First, it shows that a colour-relevant local coordination environment can be scientifically fruitful. Second, it illustrates why serendipity should be converted into a systematic, auditable search rather than romanticized as an irreproducible accident. Third, it exposes an opportunity for modern data methods: composition and structure information can organize candidate selection before scarce characterization capacity is consumed.
+
+The example does \emph{not} supply unmeasured targets for the present project. This study will not copy a numerical property value from a publisher page that was not fully accessible during the evidence-collection run. It will not assume that a known coordination motif generalizes across all structures. It will not assert that an attempted candidate reproduces YInMn behavior. The role of the YInMn literature is conceptual and hypothesis-generating: it motivates the search for credible structure--spectrum relationships while preserving the need for direct future measurement.
+
+\section{Survey Synthesis and Research Gaps}
+
+The Survey stage reduced the open question to four linked gaps. The first is an \emph{operational novelty gap}: studies and public accounts often mix composition novelty, spectral change, CIE separation, and commercial novelty. The second is a \emph{joint-objective gap}: a candidate can be colorful but unsafe, unstable, or impractical, so visual distance alone is not a discovery metric. The third is a \emph{structure-to-spectrum gap}: an auditable benchmark is needed to connect material descriptors to full reflectance curves and multi-illuminant metrics. The fourth is a \emph{reporting gap}: predicted, measured, reviewed, and commercial states must be visibly separated.
+
+The evidence supports the first two gaps strongly. Standard colorimetry establishes the need for stated conditions and raw spectral information \cite{cie2018,cie2000}; industrial pigment literature establishes the relevance of properties beyond hue \cite{buxbaum,nassau}. The third and fourth gaps are methodologically plausible but require a project-specific benchmark and governance plan. Materials informatics has shown that data-driven methods can accelerate the exploration of high-dimensional design spaces \cite{butler,curtarolo,materialsproject}. It does not follow that a generic materials model is already accurate for pigments. Prediction quality depends on data provenance, descriptor validity, split design, uncertainty calibration, and whether the target property is experimentally meaningful.
+
+Table \ref{tab:gaps} turns the Survey into actionable design obligations. Each gap is retained in the downstream protocol. This transfer is essential: an Idea Agent should not merely propose an appealing topic; it should select a direction that resolves named uncertainties without violating the survey's claim boundary.
+
+\begin{table}[!t]
+\caption{Survey gaps and design obligations.}
+\label{tab:gaps}
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|P{0.10\columnwidth}|P{0.30\columnwidth}|P{0.32\columnwidth}|}
+\hline
+\textbf{Gap} & \textbf{Problem} & \textbf{Required response} \\
+\hline
+G1 & ``New color'' has no operational comparison rule. & Freeze reference library, observers, illuminants, and pass thresholds before selection. \\
+\hline
+G2 & Visual distance ignores utility and constraints. & Use multiobjective Pareto selection with explicit exclusion and review states. \\
+\hline
+G3 & Structure-to-spectrum data may be sparse and heterogeneous. & Build a traceable atlas, use group-aware validation, and report uncertainty. \\
+\hline
+G4 & Predictions are conflated with discoveries. & Retain evidence-state ledger and publish negative/inconclusive outcomes. \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Idea Portfolio and Selected Direction}
+
+The Idea stage compared four directions. Direction D1 was a spectrum-first atlas of existing materials. It directly addresses G1 and is retained as an enabling work package, but it does not itself decide which new candidates deserve expensive review. Direction D2 was a safety-constrained, uncertainty-aware multiobjective inverse-design workflow. D2 integrates all four gaps by pairing atlas construction with calibrated prediction, explicit constraints, batch diversity, and a measurement-ready decision gate. Direction D3 was coordination-environment rule mining inspired by YInMn Blue. It is interpretable and valuable as a feature-explanation module, but it is too narrow as a standalone discovery strategy because particle, defect, and matrix effects can confound a motif-to-colour story. Direction D4 was a generative search that maximizes CIE separation. It was rejected as the primary strategy because a large coordinate distance can select implausible or unusable materials and thereby violate G2.
+
+The selected direction is therefore D2: \emph{Beyond the Current Pigment Library: A Calibrated Multiobjective Search for New Usable Reflectance Signatures}. Its central hypothesis is stated as follows.
+
+\emph{For a preregistered reference pigment library and stated viewing conditions, a safety-constrained, uncertainty-aware Pareto acquisition strategy will select a batch of candidate materials with a higher rate of passing the project's declared spectral--perceptual--engineering novelty gates than either random sampling or a colour-distance-only ranking.}
+
+This is a useful scientific hypothesis because it can fail in informative ways. A model may not outperform a baseline. The candidate family may contain no frontier-extending materials. The reference library may expand and eliminate apparent novelty. The uncertainty model may be miscalibrated. Or expert review may exclude the candidate that appears optimal numerically. Each failure delimits the method or the material space without requiring a misleading success narrative.
+
+\begin{figure*}[!t]
+\centering
+\fbox{\parbox{0.94\textwidth}{\centering
+\vspace{4pt}
+\textbf{Evidence-bound four-agent flow}\\[5pt]
+\begin{tabular}{c@{\hspace{8pt}$\longrightarrow$\hspace{8pt}}c@{\hspace{8pt}$\longrightarrow$\hspace{8pt}}c@{\hspace{8pt}$\longrightarrow$\hspace{8pt}}c}
+\fbox{\parbox{0.14\textwidth}{\centering \textbf{Survey}\\Evidence plan\\Gap ledger\\CIE boundary}} &
+\fbox{\parbox{0.14\textwidth}{\centering \textbf{Idea}\\Portfolio\\Falsifiable D2\\Rejected shortcuts}} &
+\fbox{\parbox{0.16\textwidth}{\centering \textbf{ExperimentDesign}\\Reference atlas\\Pareto protocol\\Safety reviews}} &
+\fbox{\parbox{0.14\textwidth}{\centering \textbf{Author}\\Source-bound report\\Semantic checks\\No results claim}}
+\end{tabular}\\[7pt]
+\fbox{\parbox{0.78\textwidth}{\centering \textbf{Cross-stage invariant:} no synthesis, measurement, simulation, or observed result is represented in this proposal; no material is said to create a new fundamental human colour.}}
+\par\vspace{4pt}}}
+\caption{Data and claim flow for the simulated research process. The editable Draw.io workflow is delivered separately in the accompanying artifact folder.}
+\label{fig:agents}
+\end{figure*}
+
+\section{ExperimentDesign: A Design-Only Method}
+
+\subsection{Research object and data contract}
+
+The research object is a pairing of two libraries. The first is a reference library $\mathcal{R}$ of pigments or pigment-like materials relevant to a declared application. Each record must include an immutable identifier, provenance, reflectance spectrum, wavelength grid, measurement geometry, illuminant/observer metadata where applicable, composition or structure information, matrix/preparation information, and missingness flags. The second is a candidate library $\mathcal{C}$ containing materials that satisfy an initial scope definition. The candidate library is not a list of claims; it is a versioned source of descriptors and uncertainty-bearing predictions.
+
+Data governance begins before modelling. Spectra measured under incompatible geometry or missing essential metadata may not be silently pooled. Interpolation to a common wavelength grid must be recorded. Near-duplicate structures or formulations must not leak across training and test groups. Reference-library coverage is itself an uncertainty: a candidate cannot be declared globally new merely because it is distant from a narrow library. The report must name the library version and comparator eligibility rule in every claimed result.
+
+The project labels records as predicted, measured, reviewed, rejected, or inconclusive. An evidence-state field is mandatory in every table and figure. At proposal time, every candidate-related value is either methodological, predicted-in-principle, or not available. There are no measurements in this paper.
+
+\subsection{Predeclared novelty metrics}
+
+For a future candidate $c$ and each eligible reference $r_j\in\mathcal{R}$, the colour difference $\Delta E_{00}(c,r_j\mid I,O)$ is calculated under illuminant $I$ and observer $O$ using the CIEDE2000 convention \cite{cie2000}. The closest perceptual separation is
+\begin{equation}
+d_{\mathrm{CIE}}(c\mid I,O)=\min_{r_j\in\mathcal{R}}\Delta E_{00}(c,r_j\mid I,O).
+\label{eq:cie-distance}
+\end{equation}
+The symbols $I$ and $O$ identify the frozen viewing condition, and $d_{\mathrm{CIE}}$ is not interpreted outside that condition. The design requires a primary application illuminant and at least one secondary illuminant for robustness. Exact thresholds are intentionally not invented here; they must be specified by the application owner before data selection and appear in a preregistration.
+
+In parallel, the project calculates a normalized spectrum distance $d_{\mathrm{spec}}(c)$ over a declared wavelength grid and weighting scheme. Sensitivity analysis must test whether the nearest neighbor changes under reasonable normalizations or weighting choices. A candidate may have high $d_{\mathrm{spec}}$ but modest $d_{\mathrm{CIE}}$; that outcome is meaningful for spectral functionality or metamerism but cannot be marketed as a novel visible hue. A candidate may have high $d_{\mathrm{CIE}}$ under one illuminant and low separation under another; it then fails the robustness gate for applications that require multi-illuminant stability.
+
+Practical novelty is an all-gates decision rather than a scalar. A future measured candidate passes only when spectral separation, perceptual separation, utility proxy, constraint status, uncertainty, and replicate/traceability conditions are all satisfied. This conjunction deliberately prevents a model from winning by exploiting one metric. It also prevents an unknown value from being interpreted as a favorable one.
+
+\subsection{Constraint filtering and human review}
+
+Candidate filtering is not delegated to a model alone. The automated rule layer can identify missing data, stated policy matches, or a need for further review. It assigns one of three non-final statuses: \texttt{pass}, \texttt{review}, or \texttt{exclude}. Candidate classes that involve regulated, highly toxic, unstable, or otherwise inappropriate constituents are excluded or routed to a qualified reviewer under the governing institution's policy. This paper does not specify chemicals, quantities, preparation temperatures, or handling instructions. Those details are neither necessary nor appropriate for a design-only computational proposal.
+
+The reporting ledger must retain exclusions and their reasons. Otherwise an apparent Pareto improvement can be inflated by hiding candidates that are scientifically or environmentally unsuitable. The human-review queue includes, at minimum, materials chemistry, colour measurement validity, environmental/safety constraints, and claim language. A reviewer may reject a model-selected candidate without invalidating the method; the decision becomes data for evaluating the practical value of the acquisition strategy.
+
+\subsection{Calibrated, multiobjective ranking}
+
+Materials informatics can reduce search cost when model targets, uncertainty, and validation are appropriate \cite{butler,curtarolo}. The proposal does not assume that a single black-box model maps structure directly to commercial usefulness. It uses a staged model family. A deterministic colourimetry module converts compatible spectra into CIE and spectral metrics. A predictive module estimates those metrics, selected function/stability proxies, and uncertainty from curated descriptors. A calibration module assesses whether predicted intervals have the claimed coverage on group-held-out data. A Pareto layer compares candidates only within the constraint-passing or review-routed pool.
+
+The conceptual acquisition utility is
+\begin{equation}
+U(c)=\mathbb{I}_{\mathrm{eligible}}(c)\,A\!\left(d_{\mathrm{CIE}},d_{\mathrm{spec}},f_{\mathrm{app}},s,u,q\right),
+\label{eq:utility}
+\end{equation}
+where $\mathbb{I}_{\mathrm{eligible}}(c)$ is zero for excluded candidates; $f_{\mathrm{app}}$ is an application-relevant spectral or functional proxy; $s$ is a feasibility or stability proxy; $u$ is predictive uncertainty; and $q$ is a batch-diversity term. The function $A$ is not an unreported magic score. Its objectives, normalizations, constraints, and tie-breaking rules must be frozen before future hold-out evaluation. If a utility cannot be explained in a table, it is not sufficiently auditable for discovery selection.
+
+Pareto ranking is chosen because no single objective deserves universal priority. For example, a modest perceptual separation may be worthwhile if it accompanies an unusually useful spectral response and safe composition, whereas a visually distant candidate may be unsuitable if its uncertainty or constraint status is poor. Candidates on a nondominated frontier are then diversified by structure or composition so that a measurement batch does not consist of near-replicates of one model error.
+
+\begin{table*}[!t]
+\caption{Design variables, role, and proposal-time state. All values are planned quantities; none is an observed result.}
+\label{tab:variables}
+\centering
+\renewcommand{\arraystretch}{1.22}
+\begin{tabular}{|P{0.16\textwidth}|P{0.15\textwidth}|P{0.29\textwidth}|P{0.14\textwidth}|}
+\hline
+\textbf{Variable} & \textbf{Role} & \textbf{Definition and control} & \textbf{Proposal-time state} \\
+\hline
+$R(\lambda)$ & Primary optical input & Reflectance recorded with wavelength grid, geometry, calibration, preparation, and provenance. & Required future measurement or vetted reference record. \\
+\hline
+$(L^*,a^*,b^*)$ and $d_{\mathrm{CIE}}$ & Perceptual comparison & Deterministically derived under named CIE illuminant and observer; evaluated against eligible $\mathcal{R}$. & Formula and protocol specified; no candidate value. \\
+\hline
+$d_{\mathrm{spec}}$ & Spectrum comparison & Nearest-library distance under a preregistered normalization and sensitivity analysis. & Formula and protocol specified; no candidate value. \\
+\hline
+$f_{\mathrm{app}}$, $s$ & Use/feasibility proxies & Application-specific properties with source, units, and uncertainty declared before training. & Human input required. \\
+\hline
+$u$ & Predictive uncertainty & Calibrated interval, ensemble spread, or conformal set evaluated on group-held-out data. & Model specification required. \\
+\hline
+Constraint flag & Responsible selection & Pass, review, or exclude; automated flags never replace expert safety judgement. & Mandatory human review path. \\
+\hline
+Evidence state & Claim control & Predicted, measured, reviewed, rejected, or inconclusive. & All proposed candidates remain predicted. \\
+\hline
+\end{tabular}
+\end{table*}
+
+\section{Evaluation Plan and Decision Rules}
+
+\subsection{Work packages}
+
+The protocol begins with Work Package 1 (WP1), the reference atlas. WP1 inventories spectra and metadata, quantifies missingness, applies quality controls, and freezes the comparator subset. The atlas is not a preliminary convenience; it is the denominator of every novelty statement. It must be capable of returning the nearest reference material and the conditions under which that comparison was computed.
+
+WP2 performs deterministic metrics. It transforms compatible spectra into CIE coordinates under the selected conditions and calculates $d_{\mathrm{CIE}}$ and $d_{\mathrm{spec}}$. It also runs a sensitivity analysis under secondary illuminants and alternate permissible spectrum normalizations. Records that fail data-quality criteria are quarantined rather than adjusted until they become favorable.
+
+WP3 executes constraint filtering and establishes the review ledger. It reports how many candidates were passed, routed to review, or excluded, including reasons. This prevents a hidden survivor bias in which only attractive candidates appear in the final visualization.
+
+WP4 trains and evaluates the prediction system. Group-aware train/test splits prevent near-identical compositions, structures, or formulations from artificially inflating performance. Model calibration is measured before acquisition. If calibration fails the preregistered criterion, the project publishes the atlas and model failure analysis rather than advancing an untrustworthy ranking.
+
+WP5 is a future authorized characterization phase. It is outside the execution scope of this paper. A separately approved laboratory protocol would specify material handling, instrument operation, calibration standards, replication, waste disposition, and laboratory controls. The only binding requirement here is that raw spectra, conditions, failures, and evidence states be preserved. No candidate may transition from predicted to measured without that provenance.
+
+\subsection{Baselines and primary endpoint}
+
+The principal comparison uses equal-size batches drawn from four policies. Baseline B0 samples randomly from the eligible pool. Baseline B1 ranks candidates by colour distance only under the primary illuminant. Baseline B2 ranks by spectrum distance only. Baseline B3 is atlas-only: it makes no predictive selection and serves as a coverage/uncertainty audit. The D2 policy uses the constrained Pareto acquisition described in \eqref{eq:utility}. Equal budgets are essential because an adaptive method can otherwise appear superior merely by consuming more characterization resources.
+
+The future primary endpoint is the proportion of selected and authoritatively measured candidates that satisfy every preregistered practical-novelty gate. The D2 pass proportion is compared with B0 and B1 at equal budget. The endpoint is intentionally strict. A candidate that is visually distinct but fails a responsible-use gate does not count as a practical success. A candidate without sufficiently complete measurements is inconclusive, not positive. The study should report a confidence interval and the raw numerator/denominator rather than only a relative improvement claim.
+
+Secondary endpoints include calibration error and interval coverage on group-held-out data; cross-illuminant retention of perceptual separation; measured Pareto-front coverage or hypervolume relative to the frozen reference library; structural diversity of selected batches; the fraction of selected candidates later excluded by review; and the completeness of negative-result archiving. The project must distinguish model-quality endpoints from material-quality endpoints. A well-calibrated model may select no frontier-extending candidate if the material family is exhausted, which is a valid scientific result. A visually impressive candidate may not validate a poorly calibrated model.
+
+\subsection{Statistical safeguards}
+
+All selection policies, thresholds, data splits, model families, and scoring normalizations should be preregistered before final hold-out evaluation. Threshold selection requires application input. The proposal deliberately withholds numerical thresholds because values copied from a generic paper would create false precision: a coating, artist pigment, polymer, and passive-cooling application can have different meaningful constraints. Instead, the preregistration must state the scientific rationale, decision owner, units, and sensitivity range for each threshold.
+
+Uncertainty must be evaluated empirically rather than treated as an attractive visualization. The study should report calibration curves, interval coverage, and error stratified by composition/structure group and distance from the training distribution. A candidate with a high predicted utility but high uncertainty may be selected only if the acquisition policy explicitly values information gain and labels it as exploratory. It cannot be presented as the strongest predicted pigment candidate without that qualifier.
+
+Multiple comparisons are inherent in library screening. The primary endpoint avoids post-hoc cherry-picking by asking whether an entire policy improves all-gate pass rate at a fixed budget. Exploratory subgroup findings, alternative distance metrics, and individual candidate stories must be separated from the primary analysis. The project should archive a candidate ledger so that readers can see every selected, excluded, and unsuccessful item.
+
+\begin{figure}[!t]
+\centering
+\fbox{\parbox{0.90\columnwidth}{\centering
+\textbf{Candidate evidence-state ladder}\\[4pt]
+\fbox{Predicted} $\rightarrow$ \fbox{Measured} $\rightarrow$ \fbox{Gate-passing} $\rightarrow$ \fbox{Expert-reviewed}\\[5pt]
+\parbox{0.82\columnwidth}{\centering A future record advances only with raw data, stated conditions, and the required review. \texttt{Rejected} and \texttt{Inconclusive} remain durable terminal states; they are not removed from the ledger.}}}
+\caption{Claim-control mechanism. At the time of this proposal, no record has progressed beyond the conceptual predicted state.}
+\label{fig:states}
+\end{figure}
+
+\section{Validity Threats, Safety, and Environmental Boundaries}
+
+\subsection{Construct validity}
+
+The main construct-validity threat is confusing an easily measured proxy with the scientific construct of useful pigment novelty. CIE distance is meaningful only relative to stated conditions. Spectrum distance is sensitive to calibration, normalization, wavelength grid, and geometry. Stability proxies can be uncertain or unrelated to the target matrix. Constraint rules may be incomplete. The design mitigates these threats by retaining raw spectra, publishing metadata, using multiple illuminants, declaring application-specific thresholds, and requiring human review. It does not eliminate the threats; it makes them inspectable.
+
+Another construct threat is treating a restricted reference library as the whole world. A candidate distant from one library might already exist in another market, historical collection, or formulation class. The report therefore uses the phrase ``extends the declared reference library'' rather than ``is globally unprecedented.'' Any external novelty or commercial claim requires a broader prior-art, product, and intellectual-property assessment that lies beyond the present study.
+
+\subsection{Internal and external validity}
+
+Internal validity can be compromised by leakage among compositionally related samples, incompatible spectra, or adaptive selection after looking at outcomes. Group-aware splits, frozen metrics, and an archived ledger reduce these risks. External validity is constrained by the application and material family. A protocol developed for one reference library may not transfer to an artist material, an architectural coating, a polymer colorant, or a passive-cooling surface. The proposal responds by making the application context a mandatory input, not a footnote.
+
+The YInMn example also has a transferability risk. A scientifically productive coordination environment in one host lattice does not form a universal design rule. Its use in this project is therefore limited to feature construction and mechanistic interpretation. The model must demonstrate incremental value over baselines on a held-out set; it cannot be validated by a narrative resemblance to a celebrated blue pigment.
+
+\subsection{Safety and environmental review}
+
+This proposal is intentionally not a laboratory recipe. It provides no reagent list, quantities, processing conditions, or instructions for producing materials. Any future physical characterization or synthesis requires qualified personnel, institutional procedures, site-specific risk assessment, appropriate engineering controls, and waste/environmental review. Candidate composition constraints must be set by an accountable authority before ranking. The system may flag a candidate for review, but it cannot certify safety, environmental acceptability, regulatory status, or commercial feasibility.
+
+Responsible discovery also requires that exclusion decisions be visible. A model that repeatedly selects candidates later rejected for material constraints is not an efficient discovery system, even if its colour predictions are accurate. The primary endpoint therefore counts only all-gate passes, and a secondary endpoint measures the fraction of selected candidates routed to review or excluded. This design aligns the optimization target with the decision a laboratory or manufacturer actually faces.
+
+\begin{table}[!t]
+\caption{Risk register and required response.}
+\label{tab:risks}
+\centering
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{|P{0.20\columnwidth}|P{0.19\columnwidth}|P{0.28\columnwidth}|}
+\hline
+\textbf{Risk} & \textbf{Failure signal} & \textbf{Required response} \\
+\hline
+Incomplete reference library & Apparent novelty vanishes after library expansion. & Recompute all distances, retain prior version, and downgrade claim. \\
+\hline
+Measurement artifact & Colour metrics vary with geometry or calibration. & Quarantine record; remeasure only under approved protocol; report inconclusive if unresolved. \\
+\hline
+Model overconfidence & Held-out intervals under-cover errors. & Stop acquisition claim, recalibrate or publish model failure. \\
+\hline
+Proxy mismatch & Candidate scores well but fails practical gate. & Preserve negative result and revise proxy justification. \\
+\hline
+Constraint conflict & Expert review flags safety, environment, or policy issue. & Exclude or route to approved review; never override automatically. \\
+\hline
+Rhetorical overclaim & Draft calls prediction a discovery or a new human colour. & Enforce evidence-state language and editorial review. \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Expected Contributions and Interpretation of Outcomes}
+
+If the proposal is carried out under authorized conditions, its first contribution is an auditable reference atlas. Even if no new candidate passes, the atlas clarifies what has been measured, how conditions differ, and where the reference library lacks coverage. Its second contribution is an operational definition of \practicalnovelty{} that combines spectrum, colorimetry, engineering proxies, constraints, uncertainty, and traceability. Its third contribution is a policy-level comparison: does a multiobjective acquisition strategy improve the allocation of scarce characterization capacity over simple alternatives?
+
+There are several possible outcomes. A positive outcome would be a future measured candidate that extends the declared library's all-gate Pareto frontier and is supported by raw data, repeat characterization, and specialist review. This would justify a carefully scoped statement: the material is a promising practical pigment candidate relative to the stated library and conditions. It would not justify a claim of a new human colour dimension. A null outcome would be that D2 fails to outperform the baselines or that no candidate passes all gates. This is still useful: it may mean the selected material family is mature, the models are inadequate, or the assumed utility function is wrong.
+
+An especially valuable result is a negative result with complete provenance. If broad candidates remain close to the reference library after measurement, the study narrows the search space. If the model is overconfident, the calibration analysis informs future method design. If expert review excludes high-scoring candidates, the constraint system should be strengthened before additional optimization. A proposal that treats these outcomes as publishable avoids the incentive to overstate a visually compelling but practically weak material.
+
+\section{Conclusion}
+
+More pigments can plausibly be discovered, engineered, or made practically useful because the space of material structures, reflectance spectra, processing states, and application trade-offs remains open. This does not mean that a pigment produces a new fundamental human colour. The scientifically rigorous formulation is narrower and stronger: can a safe, traceable material candidate extend the usable spectral--perceptual--engineering frontier of a declared reference library? This paper converts that formulation into a falsifiable, design-only protocol. It binds novelty to CIE conditions and raw spectra, keeps prediction separate from measurement, uses constraints and uncertainty before acquisition, compares against simple baselines, and makes null results durable. The next responsible step is not an unbounded search or an announcement of discovery; it is expert-approved construction of the reference atlas and preregistration of the application-specific thresholds.
+
+\section{Minimum Preregistration and Candidate-Record Contract}
+
+This section fixes the smallest auditable record that a future authorized implementation must create before any candidate is ranked or characterized. Its purpose is to keep a paper, a model run, and a physical measurement connected to the same evidence object. The record is deliberately more detailed than a colour name or a predicted composition because those labels cannot later reveal whether an apparent novelty came from a material effect, a change in geometry, an incomplete comparator set, or a modelling artifact.
+
+At the project level, the preregistration must freeze the application context; the reference-library version and eligibility rule; the primary and secondary illuminants; observer functions; wavelength interval and grid; reflectance normalization; CIEDE2000 and spectrum-distance calculations; threshold owners and rationales; data split rule; model family; uncertainty method; Pareto objectives; selection budget; baselines; and the exact primary endpoint. The registry must also record which values are not yet known. A missing field cannot be silently replaced by a favorable default. If an application owner changes a threshold after seeing a candidate list, the run becomes a new registered analysis rather than a continuation of the old one.
+
+At the candidate level, the record must include a stable identifier, composition/structure provenance, descriptor version, source license, constraint status and reason, prediction timestamp, model identifier, uncertainty, nearest eligible reference material, and a complete evidence state. For any future measurement, it must add sample and matrix identity, preparation identifier, geometry, calibration status, wavelength grid, raw spectrum location, replicate identifier, and a quality-control decision. Inorganic material stability is a useful but not sufficient attribute; thermodynamic and structural evidence must remain distinguishable from an application-specific pigment qualification \cite{sun}. The record must preserve rejected and inconclusive candidates so that a subsequent paper cannot present only favourable survivors.
+
+Finally, every candidate-facing sentence in a future report should be generated from the evidence state. A predicted candidate may be called ``model-selected'' or ``Pareto-promising under the stated reference library.'' A measured candidate may be described only with linked raw data and conditions. A gate-passing candidate should still be described as application-conditional until specialist review is documented. This language contract prevents an attractive colour rendering, a high model score, or a historical analogy from becoming an unsupported discovery claim.
+
+\begin{table}[!t]
+\caption{Minimum record fields required before and after future characterization.}
+\label{tab:record-contract}
+\centering
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{|P{0.28\columnwidth}|P{0.55\columnwidth}|}
+\hline
+\textbf{Record block} & \textbf{Required fields} \\
+\hline
+Project registration & Application, reference library/version, comparator eligibility, illuminants, observers, metrics, thresholds, split rule, baselines, and endpoint. \\
+\hline
+Candidate provenance & Candidate ID, composition/structure source, descriptor/model versions, source license, and immutable timestamp. \\
+\hline
+Constraint and prediction & Pass/review/exclude status with reason, predicted objectives, uncertainty, Pareto rank, nearest reference, and evidence state. \\
+\hline
+Future measurement & Sample/matrix identity, geometry, calibration, wavelength grid, raw spectrum, replicate, quality-control result, and reviewer decision. \\
+\hline
+Claim audit & Exact report wording, reference-library scope, result state, linked files, and any downgrade or negative outcome. \\
+\hline
+\end{tabular}
+\end{table}
+
+\section*{Acknowledgment}
+
+This document is a simulated research proposal produced from an evidence-bound four-agent workflow. It reports no experimental, computational, instrument, or human-subject results.
+
+\begin{thebibliography}{00}
+
+\bibitem{cie2018} CIE, \emph{Colorimetry, 4th Edition}, CIE 015:2018, 2018.
+
+\bibitem{yinmn} M. A. Subramanian and C. C. Li, ``YInMn blue---200 years in the making: New intense inorganic pigments based on chromophores in trigonal bipyramidal coordination,'' \emph{Materials Today Advances}, vol. 16, Art. no. 100323, 2022, doi: 10.1016/j.mtadv.2022.100323.
+
+\bibitem{buxbaum} G. Buxbaum and G. Pfaff, \emph{Industrial Inorganic Pigments}, 3rd ed. Weinheim, Germany: Wiley-VCH, 2005.
+
+\bibitem{nassau} K. Nassau, \emph{The Physics and Chemistry of Color: The Fifteen Causes of Color}, 2nd ed. New York, NY, USA: Wiley, 2001.
+
+\bibitem{cie2000} ISO/CIE, \emph{Colorimetry---Part 6: CIEDE2000 Colour-Difference Formula}, ISO/CIE 11664-6:2014, 2014.
+
+\bibitem{butler} K. T. Butler, D. W. Davies, H. Cartwright, O. Isayev, and A. Walsh, ``Machine learning for molecular and materials science,'' \emph{Nature}, vol. 559, pp. 547--555, 2018, doi: 10.1038/s41586-018-0337-2.
+
+\bibitem{curtarolo} S. Curtarolo \emph{et al.}, ``The high-throughput highway to computational materials design,'' \emph{Nature Materials}, vol. 12, pp. 191--201, 2013, doi: 10.1038/nmat3568.
+
+\bibitem{materialsproject} A. Jain \emph{et al.}, ``Commentary: The Materials Project: A materials genome approach to accelerating materials innovation,'' \emph{APL Materials}, vol. 1, Art. no. 011002, 2013, doi: 10.1063/1.4812323.
+
+\bibitem{sun} W. Sun \emph{et al.}, ``The thermodynamic scale of inorganic crystalline metastability,'' \emph{Science Advances}, vol. 2, Art. no. e1600225, 2016, doi: 10.1126/sciadv.1600225.
+
+\end{thebibliography}
+
+\end{document}

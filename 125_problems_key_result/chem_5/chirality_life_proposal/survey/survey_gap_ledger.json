@@ -1,0 +1,40 @@
+{
+  "schema_version": "survey_gap_ledger_v1",
+  "project_id": "chirality-life-001",
+  "accepted_gaps": [
+    {
+      "gap_id": "GAP-01",
+      "title": "Function-versus-universality gap",
+      "statement": "Evidence for homochirality in terrestrial biochemistry is often rhetorically promoted to a universal requirement for all possible life without a defined reference class.",
+      "evidence": ["S2", "S4", "S9"],
+      "status": "accepted"
+    },
+    {
+      "gap_id": "GAP-02",
+      "title": "Scale-bridging gap",
+      "statement": "Prebiotic enantioenrichment, polymer replication, molecular folding, and Darwinian evolvability are frequently studied separately; their evidentiary links are not consistently represented.",
+      "evidence": ["S3", "S5", "S6", "S8"],
+      "status": "accepted"
+    },
+    {
+      "gap_id": "GAP-03",
+      "title": "Alternative-architecture gap",
+      "statement": "Cross-chiral and mirror-compatible systems demonstrate alternatives to a single shared convention, but their implications for viable life-like systems have not been formalized as a constrained comparison.",
+      "evidence": ["S4"],
+      "status": "accepted"
+    },
+    {
+      "gap_id": "GAP-04",
+      "title": "Definition-sensitive inference gap",
+      "statement": "Claims that chirality defines life lack a preregistered mapping from a chosen life definition to measurable chemical capabilities.",
+      "evidence": ["S3", "S9"],
+      "status": "accepted"
+    }
+  ],
+  "rejected_overclaims": [
+    "All living molecules are right-handed.",
+    "A single prebiotic mechanism is known to have caused terrestrial homochirality.",
+    "A cross-chiral ribozyme is a mirror organism.",
+    "Existing evidence proves that achiral life is impossible."
+  ]
+}

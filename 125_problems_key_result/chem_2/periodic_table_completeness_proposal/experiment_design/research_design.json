@@ -1,0 +1,51 @@
+{
+  "schema_version": "experiment_design_v1",
+  "design_run_id": "periodic-completeness-design-001",
+  "project_id": "periodic-completeness-001",
+  "idea_binding": {
+    "idea_run_id": "periodic-completeness-idea-001",
+    "idea_result_path": "../idea/idea_result_v5.json",
+    "selected_direction_id": "D2",
+    "survey_run_id": "periodic-completeness-survey-001"
+  },
+  "research_brief": {
+    "question": "Can a three-layer, uncertainty-aware reachability model distinguish physical-stability limits from technology/evidence limits beyond element 118?",
+    "hypothesis": "The model is better calibrated on time-split historical outcomes than stability-only and scenario-only baselines.",
+    "scientific_object": "Versioned public-record corpus and model/evidence representations.",
+    "alternative_explanations": [
+      "Historical source labels are too sparse or inconsistent.",
+      "Theory disagreement overwhelms any technology/evidence contribution.",
+      "Observed outcomes reflect unmeasured institutional/resource factors.",
+      "The evidence schema encodes modern knowledge into historical records."
+    ],
+    "falsification_conditions": [
+      "No calibration/discrimination improvement over baselines.",
+      "Model-era leakage across time splits.",
+      "Uninterpretable abstention behavior.",
+      "Expert rejection of schema adequacy."
+    ]
+  },
+  "template": "computational_digital_evidence_governance",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "may_execute_experiment": false,
+    "may_execute_simulation": false,
+    "may_operate_accelerator_or_detector": false,
+    "may_handle_nuclear_material": false,
+    "observed_results": []
+  },
+  "outputs": {
+    "frontier_vector": ["physical_plausibility", "scenario_reachability", "proof_sufficiency", "uncertainty"],
+    "permitted_states": ["conditional_priority", "evidence_insufficient", "currently_unreachable_under_scenario", "abstain"],
+    "forbidden_state": "discovered"
+  },
+  "baselines": ["stability_only", "scenario_only", "evidence_only"],
+  "primary_endpoint": "Time-split calibration of later documented record states with declared abstention policy.",
+  "human_review_required": true,
+  "needs_human_input": [
+    "Public-source inclusion and licensing policy.",
+    "Nuclear-model ensemble and uncertainty interpretation.",
+    "Historical time cutoffs and record-state codebook.",
+    "Expert-approved evidence graph and governance wording."
+  ]
+}

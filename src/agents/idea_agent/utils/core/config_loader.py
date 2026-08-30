@@ -32,10 +32,18 @@ def _preprocess_yaml_content(content: str) -> str:
     content = env_pattern.sub(lambda match: os.environ.get(match.group(1), ""), content)
 
     oc_env_pattern = re.compile(r"\$\{oc\.env:([^,}]+)(?:,([^}]*))?\}")
-    content = oc_env_pattern.sub(
-        lambda match: os.environ.get(match.group(1), match.group(2) or ""),
-        content,
-    )
+
+    def _resolve_oc_env(match: re.Match[str]) -> str:
+        default = match.group(2) or ""
+        if (
+            len(default) >= 2
+            and default[0] == default[-1]
+            and default[0] in {"'", '"'}
+        ):
+            default = default[1:-1]
+        return os.environ.get(match.group(1), default)
+
+    content = oc_env_pattern.sub(_resolve_oc_env, content)
 
     content = content.replace("${repo_root}", _REPO_ROOT_TOKEN)
     content = content.replace("${workspace}", _WORKSPACE_TOKEN)

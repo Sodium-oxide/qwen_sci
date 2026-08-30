@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="26.0.0">
+  <diagram name="Four-Agent Chirality Workflow">
+    <mxGraphModel dx="1500" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" value="Why Does Life Require Chirality?&#xa;Evidence-Bound Four-Agent Workflow" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=24;fontColor=#1a1a1a;" vertex="1" parent="1">
+          <mxGeometry x="330" y="30" width="840" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="Survey Agent&#xa;• distinguish chirality, homochirality, universality&#xa;• source-quality plan&#xa;• gap ledger" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=15;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="80" y="150" width="260" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="Idea Agent&#xa;• generate alternatives&#xa;• select stereochemical closure&#xa;• reject preferred-hand universalism" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=15;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="420" y="150" width="260" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="ExperimentDesign Agent&#xa;• evidence matrix and capability endpoints&#xa;• counterfactual architecture classes&#xa;• abstention and human review" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=15;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="760" y="150" width="300" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="Author Agent&#xa;• source-bound IEEE proposal&#xa;• claim-language audit&#xa;• no observed-results assertion" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=15;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="150" width="260" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="survey handoff: verified sources + Gaps 01–04" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;labelBackgroundColor=#ffffff;fontSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="3" target="4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="8" value="idea result: D2 + falsification conditions" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;labelBackgroundColor=#ffffff;fontSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="4" target="5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="author handoff: DESIGN_ONLY + review constraints" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;labelBackgroundColor=#ffffff;fontSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="5" target="6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="10" value="Cross-stage invariant: a terrestrial functional pattern does not prove a universal law; no stage reports a new experiment, simulation, mirror organism, or origin event." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=17;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="180" y="400" width="1120" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="Legend" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="720" y="560" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="Evidence boundary" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="470" y="610" width="135" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="Hypothesis selection" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="625" y="610" width="135" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="14" value="Design and abstention" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="780" y="610" width="135" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="15" value="Source-bound report" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="935" y="610" width="135" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

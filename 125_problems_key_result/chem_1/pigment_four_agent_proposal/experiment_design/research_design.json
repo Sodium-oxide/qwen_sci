@@ -1,0 +1,58 @@
+{
+  "schema_version": "experiment_design_v1",
+  "design_run_id": "chem-pigment-design-001",
+  "project_id": "chem-pigment-discovery-001",
+  "idea_binding": {
+    "idea_run_id": "chem-pigment-idea-001",
+    "idea_result_path": "../idea/idea_result_v5.json",
+    "selected_direction_id": "D2",
+    "survey_run_id": "chem-pigment-survey-001"
+  },
+  "research_brief": {
+    "question": "Can a safety-constrained, uncertainty-aware Pareto acquisition policy select practical pigment-novelty candidates more efficiently than random and color-distance-only selection?",
+    "hypothesis": "The multiobjective policy has a higher future measured novelty-gate pass rate than prespecified baselines.",
+    "scientific_object": "Candidate material library and declared reference pigment library.",
+    "alternative_explanations": [
+      "The reference library is incomplete.",
+      "A model exploits measurement-condition artifacts.",
+      "The predicted improvement is a proxy mismatch.",
+      "Composition/safety review invalidates the apparent winner."
+    ],
+    "falsification_conditions": [
+      "No baseline improvement at equal budget.",
+      "Uncertainty is not calibrated.",
+      "No candidate passes all gates after future measurement.",
+      "Eligible set is emptied by mandatory review."
+    ]
+  },
+  "template": "computational_digital_with_materials_characterization_handoff",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "may_execute_experiment": false,
+    "may_execute_simulation": false,
+    "may_operate_instrument": false,
+    "may_collect_data": false,
+    "observed_results": []
+  },
+  "novelty_gate": {
+    "requires": [
+      "declared reference library",
+      "raw reflectance spectrum and conditions",
+      "spectral separation above preregistered threshold",
+      "CIEDE2000 separation under primary and secondary illuminants",
+      "constraint pass or human review clearance",
+      "uncertainty gate",
+      "future replicated measurement"
+    ],
+    "forbidden_claim": "new fundamental human color"
+  },
+  "baselines": ["random_eligible", "color_distance_only", "spectrum_distance_only", "atlas_only"],
+  "primary_endpoint": "Future measured all-gate pass proportion at equal selection budget.",
+  "human_review_required": true,
+  "needs_human_input": [
+    "Application-specific reference library and eligible comparator rules.",
+    "Institutional composition, safety, and waste constraints.",
+    "Numerical novelty, utility, and uncertainty thresholds.",
+    "Future authorised measurement protocol and resources."
+  ]
+}

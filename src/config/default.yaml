@@ -705,7 +705,7 @@ idea:
     openai_base_url: "${api.openai.base_url}"
 
   agent:
-    model: "${oc.env:IDEA_LLM_MODEL,''}"
+    model: "${oc.env:IDEA_LLM_MODEL,'qwen3.7-plus'}"
     paper_keynote_keep_top_k: 10
     workflow_models:
       default: "${idea.agent.model}"
@@ -744,7 +744,7 @@ idea:
       max_output_tokens: 65536
 
   mcts:
-    max_iterations: 16
+    max_iterations: 8
     max_depth: 3
     branching_factor: 3
     exploration_constant: 1.2
@@ -754,8 +754,8 @@ idea:
     #   - default
     #   - conceptual_surprise
     prompt_mode: "conceptual_surprise"
-    generation_model: "${oc.env:IDEA_GENERATION_MODEL,''}"
-    evaluation_model: "${oc.env:IDEA_EVALUATION_MODEL,''}"
+    generation_model: "${oc.env:IDEA_GENERATION_MODEL,'qwen3.7-plus'}"
+    evaluation_model: "${oc.env:IDEA_EVALUATION_MODEL,'qwen3.7-plus'}"
     generation_temperature: 0.7
     evaluation_temperature: 0.001
     generation_max_tokens: 16384
@@ -764,7 +764,7 @@ idea:
     component_novelty_index_dir: null
     component_novelty_retrieval_top_k: 50
     component_novelty_evidence_top_k: 5
-    component_novelty_eval_model: ""
+    component_novelty_eval_model: "${idea.mcts.evaluation_model}"
     component_novelty_eval_temperature: 0.001
     component_novelty_eval_max_tokens: 16384
     mechanism_commit_retrieval_top_k: 3

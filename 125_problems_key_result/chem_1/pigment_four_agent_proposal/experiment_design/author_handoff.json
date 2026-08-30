@@ -1,0 +1,33 @@
+{
+  "schema_version": "experiment_design_author_handoff_v1",
+  "project_id": "chem-pigment-discovery-001",
+  "design_run_id": "chem-pigment-design-001",
+  "survey_run_id": "chem-pigment-survey-001",
+  "idea_run_id": "chem-pigment-idea-001",
+  "selected_direction_id": "D2",
+  "authoring_constraints": {
+    "document_state": "PROPOSAL_NO_OBSERVED_RESULTS",
+    "must_preserve": [
+      "distinction between pigment, reflectance spectrum, and human color appearance",
+      "reference-library and viewing-condition dependency of novelty",
+      "DESIGN_ONLY execution boundary",
+      "candidate evidence-state labels",
+      "safety and human-review requirements",
+      "falsification and negative-result paths"
+    ],
+    "must_not_claim": [
+      "a new pigment was created in this study",
+      "a new fundamental human color exists",
+      "observed experimental or simulation results",
+      "safety approval or direct executability"
+    ]
+  },
+  "allowed_sources": [
+    "../survey/survey.md",
+    "../survey/survey_evidence_plan.json",
+    "../idea/idea_result_v5.json",
+    "research_design.md",
+    "research_design.json"
+  ],
+  "outputs_expected": ["IEEE-style research report in Markdown, LaTeX source, PDF, and validation record"]
+}

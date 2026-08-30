@@ -1,121 +1,105 @@
 # Qwen-Sci
 
-**Qwen-Sci** is a multi-agent research workflow that turns a research topic into literature evidence, a structured research idea, a validated experimental design, and an English research plan. It provides one public command-line interface, `qwensci`, backed by Qwen or OpenAI-compatible language-model endpoints.
+**Qwen-Sci** is a code-executed scientific research workflow. Starting with a research topic, its Python orchestration runs an evidence-to-proposal process that produces literature survey artifacts, a structured research idea, a validated experimental design, and an English research-plan package.
 
-> **Release status — 0.2.0.** This repository contains the workflow code and configuration. API credentials, downloaded embedding models, graph/vector indexes, PDFs, experiment outputs, and runtime workspaces are intentionally local-only and are not included in Git.
+It provides one public command-line interface, `qwensci`, and supports Qwen/DashScope or OpenAI-compatible language-model endpoints.
 
-[English](README.md) · [简体中文](README_CN.md) · [GitHub repository](https://github.com/Sodium-oxide/qwen_sci)
+[GitHub repository](https://github.com/Sodium-oxide/qwen_sci) · [PyPI](https://pypi.org/project/qwen-sci/)
 
-## What Qwen-Sci does
+## Code-executed scientific workflow
 
-| Component | Purpose | Public command |
+```text
+Research topic
+    │
+    ▼
+Survey ──► Idea ──► ExperimentDesign ──► Author
+evidence    proposal      design              research plan
+```
+
+`qwensci science` executes this workflow in Python. It calls the stage services, records their inputs and outputs, validates handoffs, and persists an auditable run directory. A complete run includes:
+
+- an isolated `attempt-001`, `attempt-002`, … directory for every stage execution;
+- stage manifests whose identity and fingerprints are checked before downstream use;
+- `science_state.json` for resumable process state and `events.jsonl` for durable event history;
+- a copied configuration snapshot and run metadata for reproducibility; and
+- restart support that invalidates a selected stage and its downstream stages **without deleting historical attempts**.
+
+This is deliberately a **design-only** workflow. Qwen-Sci executes its orchestration, retrieval, validation, and document-generation code, but it does **not** execute arbitrary research programs, numerical simulations, laboratory instruments, data-collection jobs, or physical experiments. `ExperimentDesign` creates and validates a plan for such work; it does not perform the work or claim experimental results.
+
+## Workflow outputs
+
+| Stage | What the code does | Main output |
 | --- | --- | --- |
-| Survey Agent | Retrieves and analyses literature, groups evidence, and writes survey artifacts. | `qwensci survey` |
-| Idea Agent (LigAgent) | Turns a topic, prior evidence, or a seed idea into a structured research proposal. | `qwensci idea` |
-| ExperimentDesign Agent | Builds and validates a design-only experimental plan from an Idea result and evidence; it never executes experiments. | `qwensci exp_design` |
-| Research Plan Author | Composes an English research-plan package from verified Survey and ExperimentDesign artifacts, optionally rendering a copied LaTeX template. | `qwensci author` |
-| Science workflow | Creates or resumes the auditable Survey → Idea → ExperimentDesign → Author workflow. | `qwensci science` |
+| **Survey** | Retrieves and analyses literature evidence for the research question. | Survey artifacts and a verified survey manifest. |
+| **Idea** | Develops a structured, evidence-informed research proposal and directions. | `idea_result.json`. |
+| **ExperimentDesign** | Retrieves design evidence, composes a testable design, and validates the design-only plan. | JSON, Markdown, Author handoff JSON, and a JSONL run log. |
+| **Author** | Composes an English research-plan package from verified Survey and ExperimentDesign handoffs. | Research-plan artifacts; optionally a copied LaTeX project and validated PDF. |
 
-The `science` workflow is useful for an end-to-end design-only run. During development and debugging, running one agent at a time is usually clearer and gives each stage an explicit input and output.
+The recommended entry point is `qwensci science`. Each stage is also available as an individual command when you want to inspect, supply, or reuse a particular handoff.
 
-## Requirements and supported environment
+## Requirements
 
 - Python **3.12** (`>=3.12,<3.13`)
-- [`uv`](https://docs.astral.sh/uv/)
-- A Qwen/DashScope account **or** an OpenAI-compatible endpoint
-- Linux x86_64 or WSL2. The locked `uv` environment is currently targeted at Linux x86_64; Windows users should use WSL rather than a native Windows virtual environment.
+- [`uv`](https://docs.astral.sh/uv/) for source/development installation
+- A Qwen/DashScope account or an OpenAI-compatible endpoint
+- Linux x86_64 or **WSL2**
 
-Some workflows also require optional local assets and dependency groups:
+The locked development environment targets Linux x86_64. On Windows, use WSL rather than a native Windows virtual environment.
 
-| Capability | Install / provision |
-| --- | --- |
-| Core CLI and API-driven flows | `uv sync` |
-| Memory and vector retrieval | `uv sync --group memory --group ml` |
-| PDF parsing and survey full-text processing | `uv sync --group pdf` |
-| Explicit image, video, signal, table, audio, 3D, or trajectory input | `uv sync --group multimodal` |
-| Optional OCR, figure, and text-removal stack | `uv sync --group pdf --group blog` |
-| Full local setup | `uv sync --all-groups` |
+## Installation
 
-For the first complete setup, use `uv sync --all-groups`. It avoids the common `ModuleNotFoundError: pypdfium2` failure when a survey path needs PDF parsing.
+### Install a published package
 
-## Install and configure
+When using a released package from PyPI, create a separate virtual environment outside the repository:
 
-### 1. Clone and install
+```bash
+python3.12 -m venv "$HOME/.venvs/qwen-sci"
+"$HOME/.venvs/qwen-sci/bin/python" -m pip install --upgrade pip
+"$HOME/.venvs/qwen-sci/bin/python" -m pip install qwen-sci
+"$HOME/.venvs/qwen-sci/bin/qwensci" --help
+```
+
+### Install from source (recommended for contributors)
+
+Run these commands in WSL. Use an external environment so `uv` never creates, replaces, or synchronizes a repository-local `.venv`:
 
 ```bash
 git clone https://github.com/Sodium-oxide/qwen_sci.git
 cd qwen_sci
-uv sync --all-groups
+
+export UV_PROJECT_ENVIRONMENT="$HOME/.venvs/qwen-sci-dev"
+uv sync --all-groups --locked
+uv run qwensci --help
 ```
 
-The PDF group is pinned to **MinerU 3.4.5** and includes its Linux vLLM
-backend. Do not update it in an existing project environment with a separate
-`pip install -U 'mineru[all]'`: that command does not re-resolve Qwen-Sci's
-installed metadata and can leave incompatible package versions behind. After
-changing dependency declarations, resolve and install the project as one set:
+Set `UV_PROJECT_ENVIRONMENT` in every shell where you run `uv` for this checkout. `--all-groups` is the complete local setup; focused installations may use only the groups required for their work:
 
-```bash
-uv lock
-uv sync --all-groups
-uv pip check
-```
+| Capability | Command |
+| --- | --- |
+| Core API-driven workflow | `uv sync` |
+| Memory and vector retrieval | `uv sync --group memory --group ml` |
+| PDF parsing and full-text survey paths | `uv sync --group pdf` |
+| Explicit image, video, signal, table, audio, 3D, or trajectory inputs | `uv sync --group multimodal` |
+| Complete development setup | `uv sync --all-groups --locked` |
 
-`uv sync` deliberately does not install the `pip` package in a project
-environment. Use `uv pip check` above for validation; it works without a
-`pip` module. For a legacy virtual environment that is intentionally managed
-with pip, pass the project and requirements file to the same resolver
-invocation, then use pip's own check command:
+## Configure a model provider
 
-```bash
-python -m pip install --upgrade -e . -r requirements.txt
-python -m pip check
-```
-
-`uv run` is the recommended way to run commands because it selects the project environment without manually activating it.
-
-If you prefer activation, use the command appropriate for your shell:
-
-```bash
-# bash / zsh / WSL
-source .venv/bin/activate
-```
-
-```powershell
-# PowerShell (native Windows is not the supported dependency target)
-.\.venv\Scripts\Activate.ps1
-```
-
-### 2. Create a private environment file
+Copy the template and keep the resulting `.env` private:
 
 ```bash
 cp .env.example .env
 ```
 
-In PowerShell, use:
-
-```powershell
-Copy-Item .env.example .env
-```
-
-`.env` is ignored by Git. Keep keys only in this file or in your deployment secret manager; never put a real credential in YAML, Python source, an issue, or a commit.
-
-### 3. Configure a provider
-
-Select the unified model provider with `QWENSCI_LLM_PROVIDER`. The public package and command are **Qwen-Sci** and `qwensci`.
-
-For Qwen/DashScope, set the following in `.env`:
+For Qwen/DashScope, add the following values to `.env`:
 
 ```dotenv
 QWENSCI_LLM_PROVIDER=qwen
 DASHSCOPE_API_KEY=replace-with-your-key
-# Leave this default unless your DashScope-compatible gateway says otherwise.
 DASHSCOPE_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
-
-# Required by the current `qwensci doctor` check and used by literature retrieval.
 SEMANTIC_SCHOLAR_API_KEY=replace-with-your-key
 ```
 
-For an OpenAI-compatible endpoint, use instead:
+For an OpenAI-compatible endpoint, use:
 
 ```dotenv
 QWENSCI_LLM_PROVIDER=openai
@@ -124,19 +108,64 @@ OPENAI_BASE_URL=https://api.openai.com/v1
 SEMANTIC_SCHOLAR_API_KEY=replace-with-your-key
 ```
 
-Use `OPENAI_BASE_URL` for new configurations. `OPENAI_API_BASE` is an older compatibility alias; do not set conflicting values for both.
+`OPENAI_API_BASE` remains a compatibility alias, but new configurations should use `OPENAI_BASE_URL`. Never commit `.env` or paste real credentials into source code, issues, logs, or screenshots.
 
-### 4. Inspect the local setup
+Check local prerequisites before a full run:
 
 ```bash
 uv run qwensci doctor
 ```
 
-`doctor` is deliberately strict. It reports the active provider and role models, required credentials, and the optional local retrieval assets listed below. It exits non-zero until *all* of those checks pass, so a `FAIL` line for a graph database or a local embedding model means that full local retrieval is not ready—not that every API-only command is necessarily unusable.
+`doctor` reports provider settings, required credentials, and optional local retrieval assets. It can return a non-zero status when optional models or credentials are absent; inspect the individual checks to decide whether the command you plan to use needs them.
 
-## Quick start
+## Quick start: an auditable science run
 
-After configuring `.env`, start with a survey. The topic is the research question; provide supporting context separately with `--research-brief`:
+The primary command runs the full code-executed workflow. This example uses a topic supplied for Qwen-Sci:
+
+```bash
+uv run qwensci science \
+  --topic "Why do black holes exist?" \
+  --discipline-id "Astrophysics" \
+  --run-id black-hole-existence
+```
+
+The new run is created below `workspace/science-runs/black-hole-existence/` unless you provide `--output-root`. The command executes stages in order, records state after every transition, and prints the resulting run information.
+
+For a cheaper first pass, stop at an earlier stage:
+
+```bash
+uv run qwensci science \
+  --topic "Why do black holes exist?" \
+  --discipline-id "Astrophysics" \
+  --run-id black-hole-existence \
+  --until idea
+```
+
+Resume the same run rather than starting another directory:
+
+```bash
+uv run qwensci science \
+  --resume workspace/science-runs/black-hole-existence
+```
+
+If a stage needs to be re-run, restart from that point with an explicit confirmation. Earlier attempts remain available for audit:
+
+```bash
+uv run qwensci science \
+  --resume workspace/science-runs/black-hole-existence \
+  --restart-from exp_design \
+  --force
+```
+
+Use `--json` when another program needs the stable `science_run_result_v1` result on standard output. Use `qwensci science --help` for all supported options, including Author template and PDF-rendering settings.
+
+## Run stages individually
+
+Individual commands are useful when a stage needs a carefully reviewed input, a custom output location, or a separately managed handoff.
+
+### 1. Survey
+
+Use the research question as `--topic` and put the supplied scientific context in `--research-brief`:
 
 ```bash
 uv run qwensci survey \
@@ -145,130 +174,23 @@ uv run qwensci survey \
   --research-brief "Nobel laureate Sir Roger Penrose proved Einstein’s prediction of the existence of black holes, which form when supermassive stars burn out and collapse in on themselves."
 ```
 
-Then create an idea from the same question and context:
+`--research-objective`, `--base-dir`, `--save-path`, and `--save-json-path` let you refine the question and choose output locations. Survey accepts explicit multimodal input only when you provide `--multimodal-file` or `--multimodal-evidence-manifest`; install the `multimodal` group first for those paths.
 
-```bash
-uv run qwensci idea \
-  --topic "Why do black holes exist?" \
-  --input "Nobel laureate Sir Roger Penrose proved Einstein’s prediction of the existence of black holes, which form when supermassive stars burn out and collapse in on themselves."
-```
+### 2. Idea
 
-The default configuration is [`src/config/default.yaml`](src/config/default.yaml). A command-line `--topic` overrides the relevant topic for that run without editing the file. Use `--config /path/to/config.yaml` to run a separate configuration.
-
-## Command reference
-
-All commands below can be called as `uv run qwensci …`, or as `qwensci …` after activation/install. The agent commands and `doctor` accept `--config`; run `uv run qwensci <command> --help` for the complete option list.
-
-### Environment diagnostics
-
-```bash
-uv run qwensci doctor
-uv run qwensci-doctor
-```
-
-Use this before a full retrieval, ExperimentDesign, Author, or `science` run. It prints paths and setting names but never prints secret values.
-
-### Survey
-
-```bash
-uv run qwensci survey \
-  --topic "Why do black holes exist?" \
-  --declared-domain "astrophysics" \
-  --research-brief "Nobel laureate Sir Roger Penrose proved Einstein’s prediction of the existence of black holes, which form when supermassive stars burn out and collapse in on themselves."
-```
-
-Useful survey options:
-
-```bash
-uv run qwensci survey \
-  --topic "Why do black holes exist?" \
-  --declared-domain "astrophysics" \
-  --research-objective "Explain the theoretical and astrophysical basis for black-hole formation." \
-  --research-brief "Nobel laureate Sir Roger Penrose proved Einstein’s prediction of the existence of black holes, which form when supermassive stars burn out and collapse in on themselves." \
-  --base-dir /path/to/survey-workspace \
-  --save-path /path/to/survey.md \
-  --save-json-path /path/to/survey.json
-```
-
-Without output overrides, survey artifacts are written below `src/agents/survey_agent/outputs/` according to the active configuration.
-
-#### Explicit multimodal input
-
-Multimodal input is disabled by default. Text-only Survey and Idea users do not need the multimodal group: Survey does not scan directories or read media unless you explicitly provide either repeatable `--multimodal-file` paths or one manifest. Before using explicit media input, install its bounded local readers:
-
-```bash
-uv sync --group multimodal
-```
-
-Use local-only analysis when the input must remain on your machine:
-
-```bash
-uv run qwensci survey \
-  --topic "Microstructure mechanisms under humidity cycling" \
-  --multimodal-file /data/micrograph-01.png \
-  --multimodal-file /data/micrograph-02.png
-```
-
-Use `multimodal_input_manifest_v1` when the modality is ambiguous or records need grouping metadata. Each `file` is relative to the manifest directory; absolute paths, `..` traversal, and symlinks outside that directory are rejected.
-
-```json
-{
-  "schema_version": "multimodal_input_manifest_v1",
-  "dataset_id": "experiment-042",
-  "records": [
-    {
-      "record_id": "img-001",
-      "file": "files/micrograph-01.tif",
-      "modality": "image",
-      "group": "batch-A",
-      "condition": "high-humidity",
-      "timepoint": "cycle-20"
-    }
-  ]
-}
-```
-
-```bash
-uv run qwensci survey \
-  --topic "Microstructure mechanisms under humidity cycling" \
-  --multimodal-evidence-manifest /data/experiment-042/manifest.json
-```
-
-With both explicit input and `--allow-remote-perception`, Survey additionally allows the fixed `qwen3-vl-plus` model to inspect a bounded preview:
-
-```bash
-uv run qwensci survey \
-  --topic "Microstructure mechanisms under humidity cycling" \
-  --multimodal-file /data/micrograph-01.tif \
-  --allow-remote-perception
-```
-
-Without `--allow-remote-perception`, Survey performs bounded local-only metadata and aggregate native analysis. With it, only image, signal, audio, 3D, and trajectory records are eligible for a size-limited, re-encoded PNG preview sent to `qwen3-vl-plus`; video, table, text, and symbolic records remain local-only. Every eligible preview has EXIF and source paths removed. Raw media, Base64 payloads, preview paths, unfiltered model replies, and full tables never enter runtime evidence. Validated observations can become at most three data-anchored `MM_SH_*` retrieval questions, each with supporting and counter/alternative evidence queries. They are scheduled ahead of automatically decomposed SHs but remain hypotheses, not scientific conclusions.
-
-Common input errors fail before Survey starts: `--allow-remote-perception` requires a file or manifest, `--multimodal-file` and `--multimodal-evidence-manifest` are mutually exclusive, and missing optional readers report `uv sync --group multimodal`. Molecular files are not treated as text: the first release rejects them until an independent chemistry group with RDKit support is introduced.
-
-### Idea
-
-```bash
-uv run qwensci idea \
-  --topic "Why do black holes exist?" \
-  --input "Nobel laureate Sir Roger Penrose proved Einstein’s prediction of the existence of black holes, which form when supermassive stars burn out and collapse in on themselves."
-```
-
-The Idea Agent can also receive an input or seed idea and write to a selected output root:
+Create a structured research proposal from the question and contextual seed:
 
 ```bash
 uv run qwensci idea \
   --topic "Why do black holes exist?" \
   --input "Nobel laureate Sir Roger Penrose proved Einstein’s prediction of the existence of black holes, which form when supermassive stars burn out and collapse in on themselves." \
-  --mature-idea "Optional seed idea" \
   --survey-manifest /path/to/survey_manifest.json \
   --output-root /path/to/idea-runs
 ```
 
-The expected artifact for ExperimentDesign is `idea_result.json` (or an Idea run directory containing it).
+`--survey-manifest` is optional for a standalone Idea run, but it is the preferred way to give Idea verified literature context. The `idea_result.json` output is the input to ExperimentDesign.
 
-### ExperimentDesign
+### 3. ExperimentDesign
 
 ```bash
 uv run qwensci exp_design \
@@ -276,11 +198,9 @@ uv run qwensci exp_design \
   --discipline-id "Astrophysics"
 ```
 
-ExperimentDesign retrieves design evidence, composes and validates a design-only plan, and writes JSON, Markdown, an Author handoff JSON, and a JSONL run log. It does not run code, simulations, or experiments.
+Use `--selected-direction` to choose an Idea direction, `--model` to override the configured model, and `--output-dir` to control where the design artifacts are written. The output includes an `experiment_design_author_<timestamp>.json` handoff for Author.
 
-By default, outputs are placed beside the Idea result. Use `--output-dir` to select another directory, `--selected-direction` to choose a specific Idea direction, and `--model` to override the configured ExperimentDesign model.
-
-### Research Plan Author
+### 4. Author
 
 ```bash
 uv run qwensci author \
@@ -288,92 +208,45 @@ uv run qwensci author \
   --survey-manifest /path/to/survey_manifest.json
 ```
 
-Author requires the ExperimentDesign handoff and a completed, verified Survey manifest. It composes an English-only proposal package; with `--template-dir` or a configured rendering template, it can copy the template into the run output and render a validated PDF. Use `--idea-result` only to include source-anchored Idea checkpoints.
+Author verifies the Survey and ExperimentDesign bindings before composing an English research-plan package. Add `--template-dir /path/to/latex-template` to render a copied template; use `--render-required` with `qwensci science` when a rendered document must be produced for the run to succeed.
 
-### Science workflow
+## CLI reference
 
-```bash
-uv run qwensci science \
-  --topic "Why do black holes exist?" \
-  --discipline-id "Astrophysics"
-```
+All commands are available through `uv run qwensci …` from source, or `qwensci …` from a published-package environment.
 
-`science` initializes or resumes an auditable, design-only run under `workspace/science-runs/`. Its stages bind Survey, Idea, ExperimentDesign, and Author artifacts by identity and fingerprints. Use `--resume /path/to/run` to continue a run, and `--restart-from <stage> --force` to invalidate that stage and downstream stages without deleting historical artifacts.
+| Command | Purpose |
+| --- | --- |
+| `qwensci survey` | Produce literature-survey evidence and artifacts. |
+| `qwensci idea` | Develop structured research ideas and directions. |
+| `qwensci exp_design` | Produce and validate a design-only experimental plan. |
+| `qwensci author` | Create an English research-plan package from verified handoffs. |
+| `qwensci science` | Run, resume, or restart the complete auditable workflow. |
+| `qwensci doctor` | Report local runtime prerequisites. |
+| `qwensci install-mcp-wrappers` | Install local Bash-based MCP wrapper scripts on Linux/WSL. |
 
-### Helper scripts and MCP wrappers
+The package also exposes `qwensci-survey`, `qwensci-idea`, `qwensci-doctor`, and `qwensci-install-mcp-wrappers` as focused console-script entry points. Prefer the unified `qwensci` command in new scripts and documentation.
 
-To install local MCP wrapper scripts, run:
+## Reproducibility and local assets
 
-```bash
-uv run qwensci install-mcp-wrappers
-```
+`src/config/default.yaml` is the canonical configuration for provider capabilities, role models, workflow settings, workspace paths, and default output locations. For a reproducible project, copy it to a private/project-specific file and pass that file with `--config /path/to/config.yaml`.
 
-This command invokes a Bash script and is therefore intended for Linux/WSL.
-
-## Local retrieval assets
-
-The repository does **not** ship the following large or generated resources:
+The repository intentionally does not include credentials, downloaded embedding models, graph/vector stores, cached PDFs, generated documents, or runtime workspaces. Examples of locally provisioned assets include:
 
 ```text
-data/processed/graph.db
-data/processed/core_component_summary_vector_store/build_stats.json
-data/processed/core_component_summary_vector_store/faiss.index
-data/processed/core_component_summary_vector_store/meta.json
 models/all-MiniLM-L6-v2/
 models/bge-m3/
+data/processed/graph.db
+data/processed/core_component_summary_vector_store/
+workspace/science-runs/
 ```
 
-Place externally provisioned assets at those paths, or update the appropriate paths in `src/config/default.yaml`. Do not commit models, vector stores, graph databases, downloaded papers, run logs, or a populated `workspace/` directory.
+Keep these resources, `.env`, and any generated research artifacts outside commits. Review paths and contents before sharing logs because they can reveal local usernames, source documents, or organization information.
 
-If you have the graph data and want to start the local graph service:
+## Security
 
-```bash
-uv run uvicorn graph.server:app --host 127.0.0.1 --port 8000
-```
-
-## Environment variable reference
-
-Copy `.env.example` and leave settings blank unless you need the corresponding feature. The following table is the public configuration reference for variables currently supplied by the template or read by the unified configuration.
-
-| Group | Variables | When to set them |
-| --- | --- | --- |
-| Provider selection | `QWENSCI_LLM_PROVIDER` | Set to `qwen` or `openai`. |
-| Runtime configuration | `QWENSCI_CONFIG`, `QWENSCI_CONFIG_PATH` | Optional runtime overrides for direct module invocation. Prefer the public `--config /path/to/config.yaml` option for normal CLI use. |
-| ExperimentDesign | `EXPERIMENT_DESIGN_LLM_PROVIDER`, `EXPERIMENT_DESIGN_LLM_MODEL` | Override the ExperimentDesign provider or model. |
-| Research Plan Author | `RESEARCH_PLAN_AUTHOR_LLM_PROVIDER`, `RESEARCH_PLAN_AUTHOR_LLM_MODEL`, `RESEARCH_PLAN_AUTHOR_QUALITY_MODEL` | Override the Author provider, composition model, or whole-document quality model. |
-| Qwen text and vision | `DASHSCOPE_API_KEY`, `DASHSCOPE_BASE_URL`, `DASHSCOPE_IMAGE_BASE_URL` | Required for Qwen text calls; image endpoint/base URL is needed for Qwen figure generation. |
-| OpenAI-compatible text | `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `OPENAI_API_BASE`, `OPENAI_MODEL` | Use when the selected provider is `openai`; prefer `OPENAI_BASE_URL`. |
-| Literature and retrieval | `SEMANTIC_SCHOLAR_API_KEY`, `OPENALEX_EMAIL`, `UNPAYWALL_EMAIL`, `SERPER_API_KEY`, `GITHUB_AI_TOKEN`, `JINA_API_KEY`, `TAVILY_API_KEY`, `HF_TOKEN` | Semantic Scholar is checked by `doctor`; the others enable their corresponding retrieval, search, download, or Hugging Face paths. OpenAlex can work without an email; Unpaywall DOI resolution needs one. |
-| Survey role overrides | `SURVEY_LLM_MODEL`, `SURVEY_JUDGE_PROVIDER`, `SURVEY_JUDGE_MODEL` | Override the configured survey or judge model settings. |
-| Idea role overrides | `IDEA_LLM_MODEL`, `IDEA_GENERATION_MODEL`, `IDEA_EVALUATION_MODEL` | Override the base, generation, or evaluation model for Idea Agent. |
-| Memory | `MEMORY_LLM_PROVIDER`, `MEMORY_LLM_MODEL` | Override the LLM used by the shared memory subsystem. |
-| Vision and image generation | `VISION_LLM_PROVIDER`, `VISION_QUALITY_MODEL`, `VISION_BATCH_MODEL`, `IMAGE_GENERATION_PROVIDER`, `IMAGE_ACADEMIC_FIGURE_MODEL`, `IMAGE_TEXT_RICH_FIGURE_MODEL`, `IMAGE_DRAFT_MODEL` | Change Qwen vision review or figure-generation model choices. |
-| Direct legacy utility only | `SURVEY_AGENT_API_KEY`, `SURVEY_AGENT_API_URL`, `SURVEY_AGENT_MODEL_NAME`, `SURVEY_AGENT_DATA_DIR` | Required only when running `src/agents/survey_agent/utils/step2v2.py` directly; `qwensci survey` does not require this standalone utility configuration. |
-| Agent-specific compatibility | `ANTHROPIC_API_KEY`, `ANTHROPIC_BASE_URL` | Needed only by code paths explicitly configured to use them; they do not select the unified provider by themselves. |
-
-Use role-model overrides only after the basic provider setup works. The supported provider/model capabilities are declared in `src/config/default.yaml`; assigning a model to a role that needs unsupported capabilities can make `doctor` fail before a run starts.
-
-## Configuration and output locations
-
-`src/config/default.yaml` is the canonical unified configuration. It contains the provider registry, model capabilities, agent settings, workspace root, and default output locations.
-
-| Area | Primary configuration |
-| --- | --- |
-| Shared provider/model registry | `llm:` in `src/config/default.yaml` |
-| Survey Agent | `survey:` plus `src/agents/survey_agent/config/*.yaml` |
-| Idea Agent | `idea:` |
-| ExperimentDesign | `experiment_design:` |
-| Research Plan Author | `research_plan_author:` |
-| Workspace root | `workspace.root` (defaults to `workspace/`) |
-
-For a reproducible research run, copy the default YAML to a separate private/project configuration, make changes there, and pass it with `--config`. Keep generated output and credentials outside source-controlled files.
-
-## Security and data handling
-
-- Treat every API key as a secret and rotate any key that has appeared in a public commit, chat, log, or screenshot.
-- Review paths before sharing logs: local workspace paths may reveal usernames or organization information.
-- Do not commit `.env`, model directories, graph/vector data, PDF caches, generated reports, or runtime workspaces.
-- Use public, generic paths such as `/path/to/qwen-sci/workspace` in documentation and issue reports.
+- Treat every API key as a secret; rotate any key exposed in a commit, chat, log, or screenshot.
+- Run external experiments, simulations, and instruments under their own reviewed execution environment. Qwen-Sci's design artifacts are not a substitute for those controls.
+- Review generated research plans and cited evidence before using them for scientific decisions, publication, or real-world experimental work.
 
 ## License
 

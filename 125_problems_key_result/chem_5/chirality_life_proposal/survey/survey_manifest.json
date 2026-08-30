@@ -1,0 +1,13 @@
+{
+  "schema_version": "survey_manifest_v1",
+  "project_id": "chirality-life-001",
+  "survey_run_id": "chirality-life-survey-001",
+  "project_context": {
+    "discipline": ["origin-of-life chemistry", "molecular biology", "scientific evidence modelling"],
+    "topic": "Why does life require chirality?",
+    "execution_policy": "DESIGN_ONLY"
+  },
+  "artifacts": ["survey.md", "survey_evidence_plan.json", "survey_gap_ledger.json", "survey_idea_handoff.json"],
+  "identity_binding": {"accepted_gap_ids": ["GAP-01", "GAP-02", "GAP-03", "GAP-04"], "idea_handoff": "survey_idea_handoff.json"},
+  "observed_results": []
+}
