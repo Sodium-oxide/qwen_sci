@@ -1015,6 +1015,7 @@ class MemoryGuidedMCTS:
         self.gap_hypothesis_seeds: List[Dict[str, Any]] = []
         self.gap_seed_status: Dict[str, Any] = {}
         self.gap_seed_context: str = ""
+        self.multimodal_evidence_projection: Dict[str, Any] = {}
         self.idea_taste_preset: Optional[IdeaTastePreset] = get_idea_taste_preset(
             getattr(self.config, "idea_taste_mode", None)
         )
@@ -1630,6 +1631,11 @@ class MemoryGuidedMCTS:
 
     def prepare_root_context(self, topic: str, context: Dict[str, Any]) -> Dict[str, Any]:
         prepared = dict(context or {})
+        self.multimodal_evidence_projection = (
+            dict(prepared.get("multimodal_evidence_projection"))
+            if isinstance(prepared.get("multimodal_evidence_projection"), dict)
+            else {}
+        )
         survey_handoff = prepared.get("survey_idea_handoff")
         self.survey_idea_handoff = (
             dict(survey_handoff) if isinstance(survey_handoff, dict) else {}
@@ -1866,6 +1872,7 @@ class MemoryGuidedMCTS:
             profile_resolution=prepared["scientific_intervention_profile"],
             scope=prepared.get("scope") if isinstance(prepared.get("scope"), dict) else None,
             topic=topic,
+            multimodal_evidence_projection=self.multimodal_evidence_projection,
         )
         gap_seed_status = build_gap_seed_status(gap_hypothesis_seeds)
         gap_seed_context = build_gap_seed_context(gap_hypothesis_seeds)
@@ -1904,6 +1911,20 @@ class MemoryGuidedMCTS:
         self.refinement_scope = (context.get("refinement_scope") or "").strip()
         self._mature_idea_components = list(context.get("components") or [])
         self._mature_idea_component_explanations = dict(context.get("component_explanations") or {})
+        raw_iteration_budget = context.get("mcts_iteration_budget")
+        try:
+            effective_iterations = int(raw_iteration_budget)
+        except (TypeError, ValueError):
+            effective_iterations = self.config.max_iterations
+        effective_iterations = max(0, min(self.config.max_iterations, effective_iterations))
+        try:
+            depth_multiplier = float(context.get("data_anchored_mcts_depth_multiplier", 1.0))
+        except (TypeError, ValueError):
+            depth_multiplier = 1.0
+        effective_max_depth = max(
+            1,
+            int(math.ceil(self.config.max_depth * max(1.0, depth_multiplier))),
+        )
         root_domains = context.get("root_domains") or []
         log_message(
             self.logger,
@@ -1969,19 +1990,29 @@ class MemoryGuidedMCTS:
                     "signature": target.state.signature,
                     "edit_plan": target.state.edit_plan,
                     "skill_metrics": target.state.skill_metrics,
+                    "data_anchored_coverage_branch": (
+                        dict(
+                            target.state.scientific_intervention.get(
+                                "data_anchored_coverage_branch"
+                            )
+                            or {}
+                        )
+                        if isinstance(target.state.scientific_intervention, dict)
+                        else {}
+                    ),
                 }
             )
 
         for iteration in iter_with_progress(
-            range(self.config.max_iterations),
+            range(effective_iterations),
             description="MCTS search",
-            total=self.config.max_iterations,
+            total=effective_iterations,
         ):
             leaf, path = self._select(root)
             depth = len(path) - 1
             rollout_targets: List[Tuple[IdeaNode, List[IdeaNode]]] = []
 
-            if depth >= self.config.max_depth:
+            if depth >= effective_max_depth:
                 rollout_targets = [(leaf, path)]
             else:
                 target, rollout_path = self._expand(leaf, path)

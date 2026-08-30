@@ -669,7 +669,7 @@ The passage below is immutable. Do not rewrite, shorten, expand, reorder, or add
 Immutable prose:
 {visible_prose}
 
-Admissible evidence paths for citations already present in the prose:
+Admissible evidence paths for citations already present in the prose and for bounded supplied-data observations:
 {admissible_paths}
 
 Allowed SH claim modes and limitation slots:
@@ -687,13 +687,14 @@ Return exactly this minimal JSON schema:
       "claim_text": "the cited prose sentence, if available",
       "sub_hypothesis_ids": ["SH1"],
       "claim_mode": "one allowed mode for this SH",
-      "evidence_paths": [
-        {{
-          "sub_hypothesis_id": "SH1",
-          "slot_name": "one listed slot",
-          "paper_id": "one cited paper ID listed above"
-        }}
-      ]
+       "evidence_paths": [
+         {{
+           "source_type": "paper",
+           "sub_hypothesis_id": "SH1",
+           "slot_name": "one listed slot",
+           "paper_id": "one cited paper ID listed above"
+         }}
+       ]
     }}
   ]
 }}
@@ -701,7 +702,7 @@ Return exactly this minimal JSON schema:
 Rules:
 1. ``claim_index`` is one-based, counting sentences in the immutable prose. Use it whenever possible.
 2. Trace only substantive SH claims. Every paper cited in a traced claim must have a listed path.
-3. Use only the listed SH, slot, and paper combinations. Do not invent an evidence role, support kind, or limitation slot; the program derives those from the evidence plan.
+3. Use only the listed paper or multimodal-observation paths. A paper path requires the listed SH, slot, and paper combination. A multimodal path uses only ``source_type``, SH, and ``observation_id``; it is never a literature citation. For a LOCAL_DATA_OBSERVATION, replace the sole paper object in the example with one sole multimodal object: ``{{"source_type":"multimodal_observation","sub_hypothesis_id":"MM_SH_01","observation_id":"one listed provided-data observation ID"}}``.
 4. For an EVIDENCE_GAP_REPORT or OUT_OF_SCOPE_OR_REJECTED claim, use an empty ``evidence_paths`` list and use a listed limitation slot when required.
 5. The returned object repairs metadata only; it must not imply evidence absent from the immutable prose or the supplied admissible paths.
 """
@@ -751,12 +752,12 @@ Utilize the input content in a safe and reasonable manner, and ensure that the r
 - Aim for about {subsection_target_words} words; the visible prose must not exceed {subsection_max_words} words. Be concise: merge closely related findings into synthesis rather than enumerating papers.
 - Generate the content directly. DO NOT generate any subsection title or section header here.
 - CRITICAL: '#' is used for section/subsection anchor. Avoid any '#' in the output content.
-- When evidence_bounded_writing=true in the plan: every substantive SH claim must obey its allowed_writing_mode and paper_role_constraints. A GRAPH_EXPANDED_CANDIDATE remains lineage/retrieval context and is never evidence by itself. It may be cited only when the current SH evidence plan explicitly includes the same paper through a FULLTEXT_PROMOTION role earned from that paper's own complete-section reading; then use exactly its listed direct, qualified, or background strength. Do not use BACKGROUND_CONTEXT papers for direct empirical support. A QUALIFIED_SH_CONTRIBUTION may support only QUALIFIED_SYNTHESIS and must state the applicable limitation rather than asserting a complete causal chain. An EVIDENCE_GAP_REPORT must report the gap and must not make an affirmative scientific conclusion.
+- When evidence_bounded_writing=true in the plan: every substantive SH claim must obey its allowed_writing_mode and paper_role_constraints. A GRAPH_EXPANDED_CANDIDATE remains lineage/retrieval context and is never evidence by itself. It may be cited only when the current SH evidence plan explicitly includes the same paper through a FULLTEXT_PROMOTION role earned from that paper's own complete-section reading; then use exactly its listed direct, qualified, or background strength. Do not use BACKGROUND_CONTEXT papers for direct empirical support. A QUALIFIED_SH_CONTRIBUTION may support only QUALIFIED_SYNTHESIS and must state the applicable limitation rather than asserting a complete causal chain. An EVIDENCE_GAP_REPORT must report the gap and must not make an affirmative scientific conclusion. A ``multimodal_projection`` is a bounded observation from supplied local data, not a paper: retain its sample scope and claim limits, name competing explanations, and use only cautious compatibility language. Never say that it proves, establishes, or generally demonstrates a mechanism.
 - In evidence-bounded mode, end the response with exactly one final metadata block, using this literal delimiter (not angle brackets):
 [[SH_CLAIM_TRACE]]
-{{"claims":[{{"claim_index":1,"claim_anchor":"a distinctive short phrase from the cited prose sentence","claim_text":"the cited prose sentence when available","sub_hypothesis_ids":["SH1"],"claim_mode":"one allowed mode from the plan","evidence_paths":[{{"sub_hypothesis_id":"SH1","slot_name":"one plan slot","paper_id":"the cited plan-listed paper id"}}]}}]}}
+{{"claims":[{{"claim_index":1,"claim_anchor":"a distinctive short phrase from the visible prose sentence","claim_text":"the visible prose sentence when available","sub_hypothesis_ids":["SH1"],"claim_mode":"one allowed mode from the plan","evidence_paths":[{{"source_type":"paper","sub_hypothesis_id":"SH1","slot_name":"one plan slot","paper_id":"the cited plan-listed paper id"}}]}}]}}
 [[/SH_CLAIM_TRACE]]
-The metadata must be valid JSON, must be final, and must not introduce claims or paper IDs absent from the prose/plan. ``claim_index`` is one-based among visible prose sentences and lets the program recover the exact sentence despite harmless spacing or punctuation differences. Do not emit evidence_role, support_kind, or limitation_slots: the program derives them from the authoritative evidence plan. Every bounded response must include at least one claim. For EVIDENCE_GAP_REPORT or OUT_OF_SCOPE_OR_REJECTED, use evidence_paths: [] and include an appropriate claim_index / claim_anchor; do not cite a paper. If the plan is inactive, omit this block.
+The metadata must be valid JSON, must be final, and must not introduce claims or paper IDs absent from the prose/plan. ``claim_index`` is one-based among visible prose sentences and lets the program recover the exact sentence despite harmless spacing or punctuation differences. Do not emit evidence_role, support_kind, or limitation_slots: the program derives them from the authoritative evidence plan. A paper path may trace a citation; a multimodal-observation path uses only ``source_type``, SH, and ``observation_id`` and is not a literature citation. A LOCAL_DATA_OBSERVATION must use only its listed multimodal-observation path, for example ``{{"source_type":"multimodal_observation","sub_hypothesis_id":"MM_SH_01","observation_id":"one plan-listed supplied-data observation"}}``, and must retain supplied-data scope plus uncertainty in the visible prose. Every bounded response must include at least one claim. For EVIDENCE_GAP_REPORT or OUT_OF_SCOPE_OR_REJECTED, use evidence_paths: [] and include an appropriate claim_index / claim_anchor; do not cite a paper. If the plan is inactive, omit this block.
 """
 
 SUBSECTION_DRAFT_WITH_CODE = """You are an expert in writing top academic conference standards surveys. The ultimate goal is to complete a acadamic survey with depth, insights and can boost further development, rather than simply listing methods.
@@ -806,12 +807,12 @@ Utilize the input content in a safe and reasonable manner, and ensure that the r
 - Aim for about {subsection_target_words} words; the visible prose must not exceed {subsection_max_words} words. Be concise: merge closely related findings into synthesis rather than enumerating papers.
 - Generate the content directly. DO NOT generate any subsection title or section header here.
 - CRITICAL: '#' is used for section/subsection anchor. Avoid any '#' in the output content.
-- When evidence_bounded_writing=true in the plan: every substantive SH claim must obey its allowed_writing_mode and paper_role_constraints. A GRAPH_EXPANDED_CANDIDATE remains lineage/retrieval context and is never evidence by itself. It may be cited only when the current SH evidence plan explicitly includes the same paper through a FULLTEXT_PROMOTION role earned from that paper's own complete-section reading; then use exactly its listed direct, qualified, or background strength. Do not use BACKGROUND_CONTEXT papers for direct empirical support. A QUALIFIED_SH_CONTRIBUTION may support only QUALIFIED_SYNTHESIS and must state the applicable limitation rather than asserting a complete causal chain. An EVIDENCE_GAP_REPORT must report the gap and must not make an affirmative scientific conclusion.
+- When evidence_bounded_writing=true in the plan: every substantive SH claim must obey its allowed_writing_mode and paper_role_constraints. A GRAPH_EXPANDED_CANDIDATE remains lineage/retrieval context and is never evidence by itself. It may be cited only when the current SH evidence plan explicitly includes the same paper through a FULLTEXT_PROMOTION role earned from that paper's own complete-section reading; then use exactly its listed direct, qualified, or background strength. Do not use BACKGROUND_CONTEXT papers for direct empirical support. A QUALIFIED_SH_CONTRIBUTION may support only QUALIFIED_SYNTHESIS and must state the applicable limitation rather than asserting a complete causal chain. An EVIDENCE_GAP_REPORT must report the gap and must not make an affirmative scientific conclusion. A ``multimodal_projection`` is a bounded observation from supplied local data, not a paper: retain its sample scope and claim limits, name competing explanations, and use only cautious compatibility language. Never say that it proves, establishes, or generally demonstrates a mechanism.
 - In evidence-bounded mode, end the response with exactly one final metadata block, using this literal delimiter (not angle brackets):
 [[SH_CLAIM_TRACE]]
-{{"claims":[{{"claim_index":1,"claim_anchor":"a distinctive short phrase from the cited prose sentence","claim_text":"the cited prose sentence when available","sub_hypothesis_ids":["SH1"],"claim_mode":"one allowed mode from the plan","evidence_paths":[{{"sub_hypothesis_id":"SH1","slot_name":"one plan slot","paper_id":"the cited plan-listed paper id"}}]}}]}}
+{{"claims":[{{"claim_index":1,"claim_anchor":"a distinctive short phrase from the visible prose sentence","claim_text":"the visible prose sentence when available","sub_hypothesis_ids":["SH1"],"claim_mode":"one allowed mode from the plan","evidence_paths":[{{"source_type":"paper","sub_hypothesis_id":"SH1","slot_name":"one plan slot","paper_id":"the cited plan-listed paper id"}}]}}]}}
 [[/SH_CLAIM_TRACE]]
-The metadata must be valid JSON, must be final, and must not introduce claims or paper IDs absent from the prose/plan. ``claim_index`` is one-based among visible prose sentences and lets the program recover the exact sentence despite harmless spacing or punctuation differences. Do not emit evidence_role, support_kind, or limitation_slots: the program derives them from the authoritative evidence plan. Every bounded response must include at least one claim. For EVIDENCE_GAP_REPORT or OUT_OF_SCOPE_OR_REJECTED, use evidence_paths: [] and include an appropriate claim_index / claim_anchor; do not cite a paper. If the plan is inactive, omit this block.
+The metadata must be valid JSON, must be final, and must not introduce claims or paper IDs absent from the prose/plan. ``claim_index`` is one-based among visible prose sentences and lets the program recover the exact sentence despite harmless spacing or punctuation differences. Do not emit evidence_role, support_kind, or limitation_slots: the program derives them from the authoritative evidence plan. A paper path may trace a citation; a multimodal-observation path uses only ``source_type``, SH, and ``observation_id`` and is not a literature citation. A LOCAL_DATA_OBSERVATION must use only its listed multimodal-observation path, for example ``{{"source_type":"multimodal_observation","sub_hypothesis_id":"MM_SH_01","observation_id":"one plan-listed supplied-data observation"}}``, and must retain supplied-data scope plus uncertainty in the visible prose. Every bounded response must include at least one claim. For EVIDENCE_GAP_REPORT or OUT_OF_SCOPE_OR_REJECTED, use evidence_paths: [] and include an appropriate claim_index / claim_anchor; do not cite a paper. If the plan is inactive, omit this block.
 """
 
 CODE_REPORT_PROMPT = """Code Report Context:
@@ -994,7 +995,7 @@ Planned Subsections under this Section: {subsection_drafts} (Use these as a road
 
 **Output**:
 Generate the introductory content directly. DO NOT generate any subsection title or section header here.
-When evidence_bounded_writing=true in the plan, obey every SH writing mode and paper_role_constraints: do not use graph-expanded candidates as evidence, because root lineage never upgrades them; do not use background papers as direct support; use QUALIFIED_SH_CONTRIBUTION only for qualified, limitation-bearing synthesis. End with the same single final [[SH_CLAIM_TRACE]] JSON block required for bounded subsection writing. Each trace claim should use a one-based claim_index, a short claim_anchor, SH, claim mode, and minimal (SH, slot, paper) evidence paths. Do not emit evidence_role, support_kind, or limitation_slots: the program derives them from the plan. Every bounded response must contain at least one claim; only gap/rejection claims may use evidence_paths: []. Omit the block only when the plan is inactive.
+When evidence_bounded_writing=true in the plan, obey every SH writing mode and paper_role_constraints: do not use graph-expanded candidates as evidence, because root lineage never upgrades them; do not use background papers as direct support; use QUALIFIED_SH_CONTRIBUTION only for qualified, limitation-bearing synthesis. A multimodal_projection is supplied local data rather than literature: retain its sample scope, limits, alternatives, and uncertainty; never say it proves or establishes a mechanism. End with the same single final [[SH_CLAIM_TRACE]] JSON block required for bounded subsection writing. Each trace claim should use a one-based claim_index, a short claim_anchor, SH, claim mode, and either a minimal (SH, slot, paper) paper path or a minimal (SH, observation_id) multimodal-observation path. Do not emit evidence_role, support_kind, or limitation_slots: the program derives them from the plan. Every bounded response must contain at least one claim; only gap/rejection claims may use evidence_paths: []. Omit the block only when the plan is inactive.
 """
 
 SECTION_REVIEW = """You are an expert reviewer for an academic survey paper with deep analysis and insights concerning topic: {topic}. You are reviewing the section:{section_title}.

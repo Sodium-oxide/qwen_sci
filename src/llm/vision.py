@@ -149,6 +149,29 @@ class QwenVisionClient:
             provider=self.provider.name,
         )
 
+    def describe_json(
+        self,
+        image_bytes: bytes,
+        *,
+        prompt: str,
+        schema: Mapping[str, Any],
+        media_type: str = "image/png",
+        max_tokens: int = 2048,
+    ) -> dict[str, Any]:
+        """Describe one prepared image and validate the provider's JSON object."""
+
+        raw = self.describe(
+            image_bytes,
+            prompt=prompt,
+            media_type=media_type,
+            max_tokens=max_tokens,
+            response_format={"type": "json_object"},
+        )
+        parsed = parse_and_validate(raw, dict(schema))
+        if not isinstance(parsed, Mapping):
+            raise RuntimeError("Qwen vision model did not return a JSON object.")
+        return dict(parsed)
+
 
 def resolve_vision_settings(config: Any, *, batch: bool = False) -> dict[str, Any]:
     vision = config.get("vision", {}) if hasattr(config, "get") else {}

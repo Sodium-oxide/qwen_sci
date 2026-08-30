@@ -34,6 +34,12 @@ from src.agents.idea_agent.utils.workflow.mature_idea_sources import (
     build_mature_idea_evidence_context,
     collect_mature_idea_sources,
 )
+from src.agents.idea_agent.utils.workflow.multimodal_data_anchoring import (
+    DATA_ANCHORED_PRIORITY,
+    apply_data_anchored_idea_constraints,
+    build_data_anchored_coverage_schedule,
+    is_data_anchored,
+)
 from src.agents.idea_agent.utils.workflow.idea_debate import debate_direction_set
 from src.agents.idea_agent.utils.workflow.idea_helpers import build_direction_result_document
 from src.agents.idea_agent.utils.workflow.idea_synthesis import synthesize_direction_set
@@ -341,6 +347,20 @@ def execute_advanced_analysis_stage(agent: Any, ctx: StageContext) -> StageResul
             + "\n\n"
             + prompt
         )
+    multimodal_projection = (
+        survey_context.get("multimodal_evidence_projection")
+        if isinstance(survey_context, dict)
+        else None
+    )
+    if isinstance(multimodal_projection, dict) and multimodal_projection:
+        prompt = (
+            "== Bounded supplied-data projection (not literature evidence) ==\n"
+            + pretty_json(multimodal_projection)
+            + "\nUse this only as dataset-local observation context. Do not describe it as proving "
+            "a mechanism, a universal result, or a first discovery. Preserve candidate mechanisms, "
+            "alternative explanations, measurement artifacts, and the stated claim limits.\n\n"
+            + prompt
+        )
     prompt = render_advanced_analysis_prompt(prompt, profile_id)
     prompt = (
         "== Scientific intervention profile (fixed before analysis) ==\n"
@@ -609,6 +629,10 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
         context["survey_gap_ledger"] = dict(survey_context.get("gap_ledger") or {})
         context["defect_tags"] = list(survey_context.get("defect_tags") or [])
         context["project_context"] = dict(survey_context.get("project_context") or {})
+        if isinstance(survey_context.get("multimodal_evidence_projection"), dict):
+            context["multimodal_evidence_projection"] = deepcopy(
+                survey_context["multimodal_evidence_projection"]
+            )
         context["paper_context"] = (
             "Verified Survey handoff:\n"
             + pretty_json(context["survey_idea_handoff"])
@@ -649,6 +673,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
         allow_problem_reframing=bool(get_config_value(agent.config, "run.allow_problem_reframing", True)),
         allow_unanchored_seed=bool(get_config_value(agent.config, "run.allow_unanchored_seed", True)),
         allow_high_risk_seed=bool(get_config_value(agent.config, "run.allow_high_risk_seed", True)),
+        multimodal_evidence_projection=context.get("multimodal_evidence_projection"),
     )
     mature_idea_contexts = [
         build_mature_idea_evidence_context(
@@ -658,6 +683,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
             references=paper_entries,
             ablation_results=artifact_get(artifact, "ablation_results", []),
             public_facts=context.get("public_facts", {}),
+            multimodal_evidence_projection=context.get("multimodal_evidence_projection"),
         )
         for idea in mature_ideas
     ]
@@ -727,6 +753,8 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
             entry.setdefault("seed_id", str(seed.get("idea_id") if seed else "legacy-primary"))
             entry.setdefault("route_id", f"legacy:{mode}")
             entry.setdefault("route_signature", {"route_id": f"legacy:{mode}", "direction_mode": mode})
+        if seed is not None and is_data_anchored(seed):
+            entry = apply_data_anchored_idea_constraints(entry, seed=seed)
         completed_modes.append({
             "mode": mode,
             "result": result,
@@ -741,23 +769,81 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
         if str(idea.get("maturity_status") or "").casefold() != "rejected"
         and str(idea.get("independence_status") or "").casefold() != "collapsed_duplicate"
     ]
-    seed_specs: List[Dict[str, Any] | None] = list(active_mature_ideas) if active_mature_ideas else [None]
+    seed_specs: List[Dict[str, Any] | None] = [
+        idea for idea in active_mature_ideas if not is_data_anchored(idea)
+    ]
+    if not seed_specs:
+        seed_specs = [None]
     if route_matrix_enabled and (mature_ideas or ligagent_pro):
         max_route_expansions = int(get_config_value(agent.config, "portfolio.max_route_expansions_per_seed", len(IDEA_ROUTE_POLICIES)) or len(IDEA_ROUTE_POLICIES))
         route_specs = list(IDEA_ROUTE_POLICIES)[: max(1, max_route_expansions)]
     else:
         route_specs = [None]
     tasks = [(seed, route) for seed in seed_specs for route in route_specs]
-    total_mcts_searches = len(tasks)
-    iterations_per_search = int(get_config_value(agent.config, "mcts.max_iterations", 0) or 0)
+    iterations_per_search = int(
+        get_config_value(
+            agent.config,
+            "mcts.max_iterations",
+            getattr(agent.mcts.config, "max_iterations", 0),
+        )
+        or getattr(agent.mcts.config, "max_iterations", 0)
+    )
+    raw_data_budget_cap = get_config_value(
+        agent.config,
+        "survey.multimodal_evidence.data_sh_mcts_budget_cap",
+        0.50,
+    )
+    try:
+        data_budget_cap = float(raw_data_budget_cap)
+    except (TypeError, ValueError):
+        data_budget_cap = 0.50
+    shared_context = agent.mcts.prepare_root_context(topic, context)
+    data_schedule = build_data_anchored_coverage_schedule(
+        shared_context.get("gap_hypothesis_seeds", []) if isinstance(shared_context, dict) else [],
+        ordinary_task_count=len(tasks),
+        iterations_per_search=iterations_per_search,
+        budget_cap=data_budget_cap,
+    )
+    data_seed_by_subhypothesis = {
+        str(seed.get("subhypothesis_id") or "").strip(): dict(seed)
+        for seed in (shared_context.get("gap_hypothesis_seeds", []) if isinstance(shared_context, dict) else [])
+        if isinstance(seed, dict) and is_data_anchored(seed)
+    }
+    coverage_tasks: list[tuple[dict[str, Any], dict[str, Any]]] = []
+    for assignment in data_schedule.get("assignments", []):
+        if not isinstance(assignment, dict):
+            continue
+        source_seed = data_seed_by_subhypothesis.get(
+            str(assignment.get("subhypothesis_id") or "").strip()
+        )
+        if source_seed is None:
+            continue
+        coverage_seed = deepcopy(source_seed)
+        coverage_seed.update(
+            {
+                "idea_id": "data-coverage-" + str(
+                    assignment.get("subhypothesis_id") or coverage_seed.get("seed_id")
+                ),
+                "title": "Data-anchored coverage: " + str(
+                    assignment.get("subhypothesis_id") or "supplied observation"
+                ),
+                "abstract": str(coverage_seed.get("gap_statement") or "").strip(),
+                "hypothesis": str(coverage_seed.get("gap_statement") or "").strip(),
+                "target_gap_ids": [coverage_seed.get("gap_id")],
+                "maturity_status": "provisional",
+                "idea_source": "survey_gap",
+                "data_anchored_coverage_assignment": deepcopy(assignment),
+            }
+        )
+        coverage_tasks.append((coverage_seed, assignment))
+    total_mcts_searches = len(coverage_tasks) + len(tasks)
     logger.info(
-        "🧭 MCTS schedule: %s total search(es) (%s seed(s) × %s route(s); %s iteration(s) each).",
+        "🧭 MCTS schedule: %s search(es), including %s data-SH coverage pass(es) before %s ordinary task(s); %s iteration(s) per ordinary search.",
         total_mcts_searches,
-        len(seed_specs),
-        len(route_specs),
+        len(coverage_tasks),
+        len(tasks),
         iterations_per_search,
     )
-    shared_context = agent.mcts.prepare_root_context(topic, context)
 
     def _mcts_task_identity(seed: Dict[str, Any] | None, route: Any) -> tuple[str, str]:
         seed_id = str(seed.get("idea_id") if seed else "legacy-primary")
@@ -785,6 +871,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
                     references=paper_entries,
                     ablation_results=artifact_get(artifact, "ablation_results", []),
                     public_facts=context.get("public_facts", {}),
+                    multimodal_evidence_projection=context.get("multimodal_evidence_projection"),
                 )
             isolated["mature_idea_evidence_context"] = evidence_context
             isolated["public_facts"] = deepcopy(evidence_context.get("public_facts") or {})
@@ -824,6 +911,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
                         "mechanism_chain": evidence_context.get("mechanism_chain") or [],
                         "validation_targets": evidence_context.get("validation_targets") or [],
                         "retrieval_queries": evidence_context.get("retrieval_queries") or [],
+                        "multimodal_evidence_context": evidence_context.get("multimodal_evidence_context") or {},
                         "anchor_policy": evidence_context.get("anchor_policy"),
                     }
                 )
@@ -845,6 +933,11 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
                 "gap_alignment": deepcopy(seed.get("gap_alignment") or ""),
                 "refinement_scope": seed.get("refinement_scope") or isolated.get("refinement_scope", ""),
             })
+            if is_data_anchored(seed):
+                isolated["data_anchored_context"] = deepcopy(seed)
+                isolated["data_anchored_mcts_depth_multiplier"] = float(
+                    seed.get("mcts_depth_multiplier") or 1.75
+                )
         if route is not None:
             isolated["route_id"] = route.route_id
             isolated["route_policy"] = route.to_payload()
@@ -859,6 +952,71 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
             )
         return isolated
 
+    for coverage_number, (coverage_seed, assignment) in enumerate(coverage_tasks, start=1):
+        coverage_context = _route_context(coverage_seed, None)
+        coverage_context["mcts_iteration_budget"] = int(
+            assignment.get("iteration_budget") or 0
+        )
+        coverage_context["data_anchored_mcts_depth_multiplier"] = float(
+            assignment.get("mcts_depth_multiplier") or 1.75
+        )
+        coverage_context["data_anchored_coverage_assignment"] = deepcopy(assignment)
+        coverage_mode = "evidence_first"
+        coverage_route_id = "data_coverage:" + str(
+            assignment.get("subhypothesis_id") or coverage_number
+        )
+        logger.info(
+            "🚀 Data-SH coverage %s/%s started (subhypothesis_id=%s; budget=%s).",
+            coverage_number,
+            len(coverage_tasks),
+            assignment.get("subhypothesis_id"),
+            assignment.get("iteration_budget"),
+        )
+        try:
+            result = agent.build_mcts_for_mode(
+                coverage_mode,
+                seed_id=str(coverage_seed.get("idea_id") or "data-coverage"),
+                route_id=coverage_route_id,
+            ).search(topic, coverage_context)
+        except Exception as exc:
+            assignment["materialized_branch_ids"] = []
+            assignment["coverage_status"] = "failed"
+            logger.warning(
+                "⚠️ Data-SH coverage failed (subhypothesis_id=%s): %s",
+                assignment.get("subhypothesis_id"),
+                exc,
+            )
+            mode_results[coverage_route_id] = None
+            continue
+        required_branch_ids = {
+            str(branch.get("branch_id") or "").strip()
+            for branch in assignment.get("coverage_branches", [])
+            if isinstance(branch, dict) and str(branch.get("branch_id") or "").strip()
+        }
+        materialized_branch_ids = {
+            str((item.get("data_anchored_coverage_branch") or {}).get("branch_id") or "").strip()
+            for item in (getattr(result, "trace", []) or [])
+            if isinstance(item, dict)
+            and isinstance(item.get("data_anchored_coverage_branch"), dict)
+        }
+        materialized_branch_ids.discard("")
+        assignment["materialized_branch_ids"] = sorted(materialized_branch_ids)
+        assignment["coverage_status"] = (
+            "complete"
+            if required_branch_ids.issubset(materialized_branch_ids)
+            else "incomplete_missing_required_branches"
+        )
+        mode_results[coverage_route_id] = result
+        if result.best and assignment["coverage_status"] == "complete":
+            _complete_mode(coverage_route_id, result, seed=coverage_seed)
+        elif assignment["coverage_status"] != "complete":
+            logger.warning(
+                "⚠️ Data-SH coverage is incomplete (subhypothesis_id=%s; missing branches=%s); "
+                "its candidate will not enter the portfolio.",
+                assignment.get("subhypothesis_id"),
+                sorted(required_branch_ids - materialized_branch_ids),
+            )
+
     if len(tasks) == 1 and tasks[0][0] is None and tasks[0][1] is None:
         logger.info("🚀 MCTS 1/1 started (seed_id=legacy-primary, route_id=default).")
         with suspend_console_handlers(logger):
@@ -871,7 +1029,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
         )
         if result.best:
             _complete_mode(mode_label, result)
-    else:
+    elif tasks:
         agent.mcts.symbolic_memory_path.parent.mkdir(parents=True, exist_ok=True)
         agent.mcts.symbolic_memory.save(str(agent.mcts.symbolic_memory_path))
         max_workers = min(
@@ -1063,6 +1221,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
             status="degraded",
             artifact_patch=ArtifactPatch(replace={
                 "idea_portfolio": idea_portfolio,
+                "data_anchored_mcts_schedule": data_schedule,
                 "route_clusters": idea_portfolio.get("route_clusters", []),
                 "diversity_report": idea_portfolio.get("diversity_report", {}),
             }),
@@ -1358,9 +1517,20 @@ def execute_mature_idea_portfolio_generation_stage(agent: Any, ctx: StageContext
         legacy_value=artifact_get(artifact, "mature_idea", ""),
     )
     analysis_entries = artifact_get(artifact, "analysis", [])
+    survey_context = artifact_get(artifact, "survey_idea_context", {})
+    survey_handoff = (
+        dict(survey_context.get("handoff") or {})
+        if isinstance(survey_context, dict)
+        else {}
+    )
+    multimodal_projection = (
+        survey_context.get("multimodal_evidence_projection")
+        if isinstance(survey_context, dict)
+        else None
+    )
     mature_ideas = collect_mature_idea_sources(
         existing=existing,
-        survey_handoff=artifact_get(artifact, "survey_idea_context", {}),
+        survey_handoff=survey_handoff,
         prior_candidate=artifact_get(artifact, "latest_candidate", {}),
         experiment_results=artifact_get(artifact, "ablation_results", []),
         analysis=analysis_entries[-1] if analysis_entries else {},
@@ -1368,6 +1538,7 @@ def execute_mature_idea_portfolio_generation_stage(agent: Any, ctx: StageContext
         allow_problem_reframing=bool(get_config_value(agent.config, "run.allow_problem_reframing", True)),
         allow_unanchored_seed=bool(get_config_value(agent.config, "run.allow_unanchored_seed", True)),
         allow_high_risk_seed=bool(get_config_value(agent.config, "run.allow_high_risk_seed", True)),
+        multimodal_evidence_projection=multimodal_projection,
     )
     return StageResult(
         artifact_patch=ArtifactPatch(replace={
@@ -1404,7 +1575,17 @@ def execute_route_context_preparation_stage(agent: Any, ctx: StageContext) -> St
     topic_history = artifact_get(artifact, "topic", [])
     topic = topic_history[-1] if topic_history else ""
     references = collect_paper_context_entries(artifact, artifact_get(artifact, "references", []))
-    handoff = artifact_get(artifact, "survey_idea_context", {})
+    survey_context = artifact_get(artifact, "survey_idea_context", {})
+    handoff = (
+        dict(survey_context.get("handoff") or {})
+        if isinstance(survey_context, dict)
+        else {}
+    )
+    multimodal_projection = (
+        survey_context.get("multimodal_evidence_projection")
+        if isinstance(survey_context, dict)
+        else None
+    )
     mature_ideas = artifact_get(artifact, "mature_ideas", [])
     contexts = [
         build_mature_idea_evidence_context(
@@ -1413,6 +1594,7 @@ def execute_route_context_preparation_stage(agent: Any, ctx: StageContext) -> St
             survey_handoff=handoff if isinstance(handoff, dict) else {},
             references=references,
             ablation_results=artifact_get(artifact, "ablation_results", []),
+            multimodal_evidence_projection=multimodal_projection,
         )
         for idea in mature_ideas
         if isinstance(idea, dict)

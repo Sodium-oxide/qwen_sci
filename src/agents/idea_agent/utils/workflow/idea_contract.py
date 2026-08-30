@@ -48,6 +48,15 @@ IDEA_CONTRACT_FIELDS = (
     "gap_alignment",
     "evidence_requirement",
     "evidence_basis",
+    "analysis_priority",
+    "data_anchor_refs",
+    "literature_reconciliation_status",
+    "candidate_mechanism",
+    "competing_explanations",
+    "discriminating_measurement_plan",
+    "falsifier",
+    "confound_and_leakage_checks",
+    "data_anchored_contract_status",
 )
 
 MATURE_IDEA_FIELDS = (
@@ -223,6 +232,15 @@ def normalize_idea_contract(
         "gap_alignment": _as_optional_payload(raw.get("gap_alignment")),
         "evidence_requirement": _as_text(raw.get("evidence_requirement")),
         "evidence_basis": _as_optional_payload(raw.get("evidence_basis")),
+        "analysis_priority": _as_text(raw.get("analysis_priority")),
+        "data_anchor_refs": _as_list(raw.get("data_anchor_refs")),
+        "literature_reconciliation_status": _as_text(raw.get("literature_reconciliation_status")),
+        "candidate_mechanism": _as_text(raw.get("candidate_mechanism")),
+        "competing_explanations": _as_list(raw.get("competing_explanations")),
+        "discriminating_measurement_plan": _as_text(raw.get("discriminating_measurement_plan")),
+        "falsifier": _as_text(raw.get("falsifier")),
+        "confound_and_leakage_checks": _as_list(raw.get("confound_and_leakage_checks")),
+        "data_anchored_contract_status": _as_text(raw.get("data_anchored_contract_status")),
     }
     missing = [field for field in _REQUIRED_TEXT_FIELDS if not idea[field]]
     if missing:

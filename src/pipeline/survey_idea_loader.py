@@ -15,6 +15,10 @@ from .survey_idea_handoff import (
     validate_gap_ledger_payload,
     validate_handoff_payload,
 )
+from .multimodal_evidence.contract import validate_multimodal_evidence
+from .multimodal_evidence.survey_integration import (
+    build_multimodal_survey_projection,
+)
 
 
 class SurveyIdeaLoadError(ValueError):
@@ -112,6 +116,7 @@ class SurveyIdeaContext:
     topic: str
     defect_tags: list[str] = field(default_factory=list)
     legacy: bool = False
+    multimodal_evidence_projection: dict[str, Any] = field(default_factory=dict)
 
     @property
     def survey_run_id(self) -> str:
@@ -129,7 +134,7 @@ class SurveyIdeaContext:
         )
 
     def to_payload(self) -> dict[str, Any]:
-        return {
+        payload = {
             "schema_version": "survey_idea_context_v1",
             "manifest_path": str(self.manifest_path),
             "base_dir": str(self.base_dir),
@@ -146,6 +151,11 @@ class SurveyIdeaContext:
             "defect_tags": list(self.defect_tags),
             "legacy": self.legacy,
         }
+        if self.multimodal_evidence_projection:
+            payload["multimodal_evidence_projection"] = dict(
+                self.multimodal_evidence_projection
+            )
+        return payload
 
 
 def _load_legacy_context(manifest_path: Path, base_dir: Path) -> SurveyIdeaContext:
@@ -249,6 +259,18 @@ def load_survey_idea_context(source: str | Path) -> SurveyIdeaContext:
         if not normalized[0] or any(value != normalized[0] for value in normalized[1:]):
             raise SurveyIdeaLoadError(f"Survey artifact identity mismatch for {label}")
     topic = _text(manifest.get("topic")) or _text(handoff.get("topic")) or _text(survey_json.get("topic"))
+    multimodal_projection: dict[str, Any] = {}
+    if "multimodal_evidence" in _mapping(manifest.get("artifacts")):
+        sidecar_path = _artifact_path(base_dir, manifest, "multimodal_evidence")
+        try:
+            evidence = validate_multimodal_evidence(
+                _read_json(sidecar_path, "multimodal evidence")
+            )
+            multimodal_projection = build_multimodal_survey_projection(evidence) or {}
+        except Exception as exc:
+            raise SurveyIdeaLoadError(
+                "Multimodal evidence sidecar validation failed."
+            ) from exc
     return SurveyIdeaContext(
         manifest_path=manifest_path,
         base_dir=base_dir,
@@ -260,6 +282,7 @@ def load_survey_idea_context(source: str | Path) -> SurveyIdeaContext:
         survey_markdown=markdown,
         topic=topic,
         defect_tags=_handoff_defect_tags(handoff),
+        multimodal_evidence_projection=multimodal_projection,
     )
 
 

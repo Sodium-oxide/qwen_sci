@@ -122,21 +122,8 @@ dependencies = [
 qwensci = "src.cli:main"
 qwensci-survey = "src.cli:survey_main"
 qwensci-idea = "src.cli:idea_main"
-qwensci-experiment = "src.cli:experiment_main"
-qwensci-blog = "src.cli:blog_main"
-qwensci-pipeline = "src.cli:pipeline_main"
 qwensci-doctor = "src.cli:doctor_main"
 qwensci-install-mcp-wrappers = "src.cli:install_mcp_wrappers_main"
-
-# Legacy command aliases retained for one migration cycle.
-xcientist = "src.cli:legacy_main"
-xcientist-survey = "src.cli:legacy_survey_main"
-xcientist-idea = "src.cli:legacy_idea_main"
-xcientist-experiment = "src.cli:legacy_experiment_main"
-xcientist-blog = "src.cli:legacy_blog_main"
-xcientist-pipeline = "src.cli:legacy_pipeline_main"
-xcientist-doctor = "src.cli:legacy_doctor_main"
-xcientist-install-mcp-wrappers = "src.cli:legacy_install_mcp_wrappers_main"
 
 [dependency-groups]
 dev = [
@@ -184,6 +171,18 @@ ml = [
   "torch==2.11.0",
   "torchvision==0.26.0",
   "transformers==4.57.3",
+]
+multimodal = [
+  "imageio==2.37.2",
+  "imageio-ffmpeg",
+  "matplotlib==3.10.8",
+  "openpyxl==3.1.5",
+  "pandas==2.3.3",
+  "pillow==12.0.0",
+  "pyarrow==22.0.0",
+  "scipy==1.15.3",
+  "sympy==1.14.0",
+  "xlrd==2.0.2",
 ]
 pdf = [
   "albucore==0.0.24",

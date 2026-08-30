@@ -188,6 +188,14 @@ def compact_direction_document(direction: Any) -> Dict[str, Any]:
         "source_candidate_ids",
         "idea_source",
         "synthesis_notes",
+        "analysis_priority",
+        "data_anchor_refs",
+        "literature_reconciliation_status",
+        "candidate_mechanism",
+        "competing_explanations",
+        "discriminating_measurement_plan",
+        "confound_and_leakage_checks",
+        "data_anchored_contract_status",
     )
     result: Dict[str, Any] = {}
     for field in fields:
@@ -278,6 +286,14 @@ def compact_candidate_entry(entry: Any) -> Dict[str, Any]:
         "synthesis_notes",
         "debate_status",
         "debate_failure_reason",
+        "analysis_priority",
+        "data_anchor_refs",
+        "literature_reconciliation_status",
+        "candidate_mechanism",
+        "competing_explanations",
+        "discriminating_measurement_plan",
+        "confound_and_leakage_checks",
+        "data_anchored_contract_status",
     )
     result: Dict[str, Any] = {}
     for field in fields:
@@ -315,6 +331,7 @@ def compact_mature_idea_contexts(value: Any) -> List[Dict[str, Any]]:
             "anchor_policy",
             "anti_anchor",
             "anti_anchor_reason",
+            "multimodal_evidence_context",
         ):
             raw = context.get(field)
             if raw not in (None, "", [], {}):

@@ -71,6 +71,10 @@ from src.pipeline.subhypothesis_decomposition import (
     load_or_build_subhypothesis_decomposition,
     subhypothesis_decomposition_fingerprint,
 )
+from src.pipeline.multimodal_evidence.contract import validate_multimodal_evidence
+from src.pipeline.multimodal_evidence.data_sh_compiler import (
+    compile_data_anchored_subhypotheses,
+)
 
 class WorkCollector:
     _OPENALEX_GRAPH_PROVIDER = "openalex"
@@ -91,6 +95,7 @@ class WorkCollector:
         self.subhypothesis_decomposition_artifact = {}
         self.sh_graph_provenance_artifact = {}
         self._subhypothesis_decomposition_agent = None
+        self.data_anchored_subhypothesis_artifact = {}
         self.context_seed_paper_ids = set()
         self.graph_seed_expansion_modes = {}
         # Roots in this set were semantically admitted for graph exploration,
@@ -724,6 +729,8 @@ class WorkCollector:
         *,
         provider: str,
         model: str,
+        reserved_subhypotheses: Sequence[Mapping[str, Any]] | None = None,
+        observation_projection: Mapping[str, Any] | None = None,
     ) -> str:
         configured_path = str(
             self._basic_info_value("subhypothesis_decomposition_path", "") or ""
@@ -734,6 +741,8 @@ class WorkCollector:
             research_context,
             provider=provider,
             model=model,
+            reserved_subhypotheses=reserved_subhypotheses,
+            observation_projection=observation_projection,
         )
         return os.path.join(
             self.cache_path,
@@ -755,6 +764,9 @@ class WorkCollector:
     def _auto_decompose_subhypotheses(
         self,
         research_context: Mapping[str, Any],
+        *,
+        reserved_subhypotheses: Sequence[Mapping[str, Any]] | None = None,
+        observation_projection: Mapping[str, Any] | None = None,
     ) -> list[Dict]:
         provider = str(
             self._work_collector_setting(
@@ -836,6 +848,8 @@ class WorkCollector:
                     research_context,
                     provider=provider,
                     model=model,
+                    reserved_subhypotheses=reserved_subhypotheses,
+                    observation_projection=observation_projection,
                 )
                 if str(
                     self._work_collector_setting(
@@ -851,6 +865,8 @@ class WorkCollector:
             raw_response_observer=log_raw_response,
             provider=provider,
             model=model,
+            reserved_subhypotheses=reserved_subhypotheses,
+            observation_projection=observation_projection,
         )
         artifact["source"] = "automatic_qwen"
         self._store_subhypothesis_decomposition_artifact(artifact)
@@ -872,10 +888,90 @@ class WorkCollector:
         )
         return subhypotheses
 
+    def _multimodal_runtime_evidence(self) -> Mapping[str, Any] | None:
+        multimodal = getattr(getattr(self, "config", None), "multimodal_evidence", None)
+        if not hasattr(multimodal, "get"):
+            return None
+        if not bool(multimodal.get("enabled")):
+            return None
+        input_spec = multimodal.get("input_spec", {})
+        if not isinstance(input_spec, Mapping) or not input_spec.get("records"):
+            return None
+        runtime_evidence = multimodal.get("runtime_evidence", {})
+        if not isinstance(runtime_evidence, Mapping) or not runtime_evidence:
+            return None
+        try:
+            evidence = validate_multimodal_evidence(runtime_evidence)
+        except Exception as exc:
+            raise ValueError("Invalid runtime multimodal evidence configuration.") from exc
+        if evidence.get("perception", {}).get("mode") == "remote_perception" and not bool(
+            multimodal.get("allow_remote_perception")
+        ):
+            raise ValueError(
+                "Remote multimodal evidence requires the explicit allow_remote_perception gate."
+            )
+        return evidence
+
+    def _load_data_anchored_subhypotheses(
+        self,
+        research_context: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        evidence = self._multimodal_runtime_evidence()
+        if evidence is None or not evidence.get("claims"):
+            artifact = {
+                "subhypotheses": [],
+                "metadata_by_subhypothesis": {},
+                "query_variant_bindings": [],
+                "limitations": [],
+            }
+            self.data_anchored_subhypothesis_artifact = artifact
+            return artifact
+        multimodal = getattr(self.config, "multimodal_evidence", {})
+        try:
+            maximum = int(multimodal.get("max_data_anchored_sh", 3) or 3)
+        except (AttributeError, TypeError, ValueError):
+            maximum = 3
+        if maximum < 1 or maximum > 3:
+            raise ValueError("survey.multimodal_evidence.max_data_anchored_sh must be 1-3.")
+        artifact = compile_data_anchored_subhypotheses(
+            evidence.get("claims", []),
+            research_context,
+            max_count=maximum,
+        )
+        self.data_anchored_subhypothesis_artifact = dict(artifact)
+        return dict(artifact)
+
+    @staticmethod
+    def _merge_data_anchored_subhypotheses(
+        data_subhypotheses: Sequence[Mapping[str, Any]],
+        other_subhypotheses: Sequence[Mapping[str, Any]],
+    ) -> list[Dict]:
+        merged = [
+            dict(item)
+            for item in [*data_subhypotheses, *other_subhypotheses]
+            if isinstance(item, Mapping)
+        ]
+        identifiers = [str(item.get("sub_hypothesis_id") or "").strip() for item in merged]
+        nonempty_identifiers = [identifier for identifier in identifiers if identifier]
+        if len(nonempty_identifiers) != len(
+            {identifier.casefold() for identifier in nonempty_identifiers}
+        ):
+            raise ValueError("Data-anchored and configured sub-hypotheses must not reuse an identifier.")
+        if len(merged) > 12:
+            raise ValueError(
+                "Data-anchored, manual, and automatic sub-hypotheses exceed the retrieval limit of 12."
+            )
+        return merged
+
     def _resolved_subhypotheses(
         self,
         research_context: Mapping[str, Any],
     ) -> list[Dict]:
+        data_anchored_artifact = self._load_data_anchored_subhypotheses(research_context)
+        data_anchored_subhypotheses = list(
+            data_anchored_artifact.get("subhypotheses") or []
+        )
+        observation_projection = self._multimodal_runtime_evidence() or {}
         configured_subhypotheses = self._configured_subhypotheses()
         existing_artifact = self._basic_info_value("subhypothesis_decomposition", {})
         automatic_artifact = (
@@ -885,10 +981,20 @@ class WorkCollector:
             else {}
         )
         if automatic_artifact:
-            if automatic_artifact.get("project_context_fingerprint") == research_context.get(
-                "input_fingerprint"
+            expected_fingerprint = subhypothesis_decomposition_fingerprint(
+                research_context,
+                reserved_subhypotheses=data_anchored_subhypotheses,
+                observation_projection=observation_projection,
+            )
+            if (
+                automatic_artifact.get("project_context_fingerprint")
+                == research_context.get("input_fingerprint")
+                and automatic_artifact.get("input_fingerprint") == expected_fingerprint
             ):
-                return configured_subhypotheses
+                return self._merge_data_anchored_subhypotheses(
+                    data_anchored_subhypotheses,
+                    configured_subhypotheses,
+                )
             configured_subhypotheses = []
         if configured_subhypotheses:
             self._store_subhypothesis_decomposition_artifact(
@@ -902,10 +1008,24 @@ class WorkCollector:
                     "validation": {"deferred_to_retrieval_contract": True},
                 }
             )
-            return configured_subhypotheses
+            return self._merge_data_anchored_subhypotheses(
+                data_anchored_subhypotheses,
+                configured_subhypotheses,
+            )
         if not self._automatic_subhypothesis_decomposition_enabled():
-            return []
-        return self._auto_decompose_subhypotheses(research_context)
+            return self._merge_data_anchored_subhypotheses(
+                data_anchored_subhypotheses,
+                [],
+            )
+        automatic_subhypotheses = self._auto_decompose_subhypotheses(
+            research_context,
+            reserved_subhypotheses=data_anchored_subhypotheses,
+            observation_projection=observation_projection,
+        )
+        return self._merge_data_anchored_subhypotheses(
+            data_anchored_subhypotheses,
+            automatic_subhypotheses,
+        )
 
     def _store_subhypothesis_retrieval_artifact(self, artifact: Mapping[str, Any]) -> None:
         self.subhypothesis_retrieval_artifact = dict(artifact)
@@ -1875,11 +1995,22 @@ class WorkCollector:
 
     def build_subhypothesis_retrieval_plan(self, subhypotheses, topic: str = "") -> Dict:
         """Expose the cached project identity to an SH planner without another LLM call."""
-
+        research_context = self.get_project_research_context(topic)
+        data_anchored_artifact = self._load_data_anchored_subhypotheses(research_context)
         return build_subhypothesis_retrieval_plan(
-            self.get_project_research_context(topic),
+            research_context,
             subhypotheses,
             include_arxiv=self._arxiv_discovery_enabled(),
+            query_variant_bindings=(
+                data_anchored_artifact.get("query_variant_bindings")
+                if data_anchored_artifact.get("query_variant_bindings")
+                else None
+            ),
+            subhypothesis_metadata=(
+                data_anchored_artifact.get("metadata_by_subhypothesis")
+                if data_anchored_artifact.get("metadata_by_subhypothesis")
+                else None
+            ),
         )
 
     @staticmethod
@@ -3968,10 +4099,27 @@ class WorkCollector:
     ) -> tuple[Dict, list[Dict]]:
         resolved_context = research_context or self.get_project_research_context(topic)
         configured_subhypotheses = self._resolved_subhypotheses(resolved_context)
+        data_anchored_artifact = getattr(
+            self,
+            "data_anchored_subhypothesis_artifact",
+            {},
+        )
         plan = build_subhypothesis_retrieval_plan(
             resolved_context,
             configured_subhypotheses,
             include_arxiv=self._arxiv_discovery_enabled(),
+            query_variant_bindings=(
+                data_anchored_artifact.get("query_variant_bindings")
+                if isinstance(data_anchored_artifact, Mapping)
+                and data_anchored_artifact.get("query_variant_bindings")
+                else None
+            ),
+            subhypothesis_metadata=(
+                data_anchored_artifact.get("metadata_by_subhypothesis")
+                if isinstance(data_anchored_artifact, Mapping)
+                and data_anchored_artifact.get("metadata_by_subhypothesis")
+                else None
+            ),
         )
         self._emit_subhypothesis_declared_events(plan, resolved_context)
         valid_subhypotheses = self._valid_subhypotheses(plan)

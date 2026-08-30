@@ -56,6 +56,13 @@ from src.pipeline.survey_evidence_plan import (
     SURVEY_EVIDENCE_PLAN_SCHEMA_VERSION,
     build_survey_evidence_plan,
 )
+from src.pipeline.multimodal_evidence.contract import validate_multimodal_evidence
+from src.pipeline.multimodal_evidence.safety import violates_noncausal_policy
+from src.pipeline.multimodal_evidence.survey_integration import (
+    LOCAL_DATA_OBSERVATION,
+    enrich_multimodal_evidence,
+    multimodal_trace_details,
+)
 from src.pipeline.paper_identity import canonical_paper_id, canonical_paper_ids
 from src.pipeline.survey_handoff_persistence import publish_survey_run_artifacts
 
@@ -88,6 +95,7 @@ class SurveyGenerator:
         self.survey_evidence_plan = {}
         self.survey_claim_traceability_artifact = {}
         self.survey_outline_artifact = {}
+        self.survey_multimodal_evidence = {}
         # This is prompt-local state. ``survey_evidence_plan`` stays complete
         # so its persisted JSON remains the audit artifact.
         self._outline_representative_paper_ids: list[str] = []
@@ -161,6 +169,42 @@ class SurveyGenerator:
                     bucket.append(constraint)
         return normalized
 
+    def _survey_runtime_multimodal_evidence(self, collector: Any) -> dict[str, Any] | None:
+        """Return only explicitly enabled, validated multimodal runtime evidence."""
+
+        self.survey_multimodal_evidence = {}
+        multimodal = getattr(getattr(self, "config", None), "multimodal_evidence", None)
+        if not hasattr(multimodal, "get") or not bool(multimodal.get("enabled")):
+            return None
+        input_spec = multimodal.get("input_spec", {})
+        if not isinstance(input_spec, Mapping) or not input_spec.get("records"):
+            return None
+        runtime_evidence = multimodal.get("runtime_evidence", {})
+        if not isinstance(runtime_evidence, Mapping) or not runtime_evidence:
+            return None
+        try:
+            evidence = validate_multimodal_evidence(runtime_evidence)
+        except Exception as exc:
+            raise ValueError("Invalid runtime multimodal evidence configuration.") from exc
+        if evidence.get("perception", {}).get("mode") == "remote_perception" and not bool(
+            multimodal.get("allow_remote_perception")
+        ):
+            raise ValueError(
+                "Remote multimodal evidence requires the explicit allow_remote_perception gate."
+            )
+        data_artifact = getattr(collector, "data_anchored_subhypothesis_artifact", {})
+        try:
+            enriched = enrich_multimodal_evidence(
+                evidence,
+                data_anchored_subhypothesis_artifact=(
+                    data_artifact if isinstance(data_artifact, Mapping) else None
+                ),
+            )
+        except Exception as exc:
+            raise ValueError("Unable to link multimodal evidence to data-anchored SH metadata.") from exc
+        self.survey_multimodal_evidence = dict(enriched)
+        return dict(enriched)
+
     def _survey_evidence_plan_sources(self):
         """Read only the current v1 SH artifacts needed before survey writing."""
 
@@ -207,13 +251,17 @@ class SurveyGenerator:
         contracts = plan.get("subhypotheses")
         if not isinstance(contracts, Sequence) or isinstance(contracts, (str, bytes)):
             raise ValueError("Survey evidence plan requires compiled SH contracts from the retrieval plan.")
-        return {
+        sources = {
             "provenance_artifact": provenance,
             "coverage_ledger": retrieval.get("evidence_coverage_ledger_final"),
             "cluster_coverage_artifact": cluster_coverage,
             "subhypothesis_contracts": list(contracts),
             "max_writable_papers_per_sh": max_writable_papers_per_sh,
         }
+        multimodal_evidence = self._survey_runtime_multimodal_evidence(collector)
+        if multimodal_evidence is not None:
+            sources["multimodal_evidence"] = multimodal_evidence
+        return sources
 
     def _store_survey_evidence_plan(self, plan: Mapping[str, Any]) -> None:
         self.survey_evidence_plan = dict(plan)
@@ -369,8 +417,7 @@ class SurveyGenerator:
                 }
 
             limitations = self._as_mapping(entry.get("limitations"))
-            entries.append(
-                {
+            prompt_entry = {
                     "sub_hypothesis_id": str(
                         entry.get("sub_hypothesis_id") or ""
                     ),
@@ -409,8 +456,18 @@ class SurveyGenerator:
                             limitations.get("scope_rejection_count"), 0
                         ),
                     },
-                }
-            )
+            }
+            multimodal_projection = self._as_mapping(entry.get("multimodal_projection"))
+            if multimodal_projection:
+                prompt_entry["analysis_priority"] = str(
+                    entry.get("analysis_priority") or ""
+                )
+                prompt_entry["must_cover"] = bool(entry.get("must_cover"))
+                prompt_entry["multimodal_projection"] = multimodal_projection
+            entries.append(prompt_entry)
+
+        if any(entry.get("must_cover") for entry in entries):
+            entries.sort(key=lambda entry: 0 if entry.get("must_cover") else 1)
 
         writing_rules = self._as_mapping(plan.get("writing_rules"))
         return {
@@ -428,6 +485,8 @@ class SurveyGenerator:
                     "partial_or_indirect_seed_contributions_require_qualified_synthesis",
                     "not_admissible_subhypotheses_cannot_receive_assertive_conclusions",
                     "claims_require_sh_slot_paper_trace",
+                    "multimodal_observations_are_not_literature",
+                    "data_anchored_subhypotheses_must_cover",
                 )
                 if key in writing_rules
             },
@@ -711,8 +770,7 @@ class SurveyGenerator:
                         f"limitation summary for {sub_hypothesis_id or 'an unnamed SH'}."
                     )
 
-            entries.append(
-                {
+            prompt_entry = {
                     "sub_hypothesis_id": sub_hypothesis_id,
                     "summary": str(entry.get("summary") or ""),
                     "mode": mode,
@@ -724,10 +782,33 @@ class SurveyGenerator:
                     "missing_slots": self._as_texts(entry.get("missing_slots")),
                     "representative_evidence": representative_evidence,
                     "representative_evidence_gaps": representative_evidence_gaps,
-                }
-            )
+            }
+            multimodal_projection = self._as_mapping(entry.get("multimodal_projection"))
+            if multimodal_projection:
+                prompt_entry["analysis_priority"] = str(
+                    entry.get("analysis_priority") or ""
+                )
+                prompt_entry["must_cover"] = bool(entry.get("must_cover"))
+                prompt_entry["allowed_claim_modes"] = self._as_texts(
+                    entry.get("allowed_claim_modes")
+                )
+                prompt_entry["multimodal_projection"] = multimodal_projection
+            entries.append(prompt_entry)
+
+        if any(entry.get("must_cover") for entry in entries):
+            entries.sort(key=lambda entry: 0 if entry.get("must_cover") else 1)
 
         writing_rules = self._as_mapping(plan.get("writing_rules"))
+        derived_writing_rules = {
+            "representative_evidence_gaps_must_be_reported_without_assertive_claims": True
+        }
+        if any(entry.get("must_cover") for entry in entries):
+            derived_writing_rules.update(
+                {
+                    "multimodal_observations_are_not_literature": True,
+                    "data_anchored_subhypotheses_must_cover": True,
+                }
+            )
         return {
             "schema_version": OUTLINE_EVIDENCE_PROMPT_SCHEMA_VERSION,
             "source_schema_version": str(plan.get("schema_version") or ""),
@@ -743,12 +824,12 @@ class SurveyGenerator:
                     "partial_or_indirect_seed_contributions_require_qualified_synthesis",
                     "not_admissible_subhypotheses_cannot_receive_assertive_conclusions",
                     "representative_evidence_gaps_must_be_reported_without_assertive_claims",
+                    "multimodal_observations_are_not_literature",
+                    "data_anchored_subhypotheses_must_cover",
                 )
                 if key in writing_rules
             }
-            | {
-                "representative_evidence_gaps_must_be_reported_without_assertive_claims": True
-            },
+            | derived_writing_rules,
         }
 
     def _survey_evidence_plan_prompt(
@@ -2048,6 +2129,12 @@ class SurveyGenerator:
                     path_prefix = f"{prefix} path {path_index}"
                     path_sh = str(path.get("sub_hypothesis_id") or "").strip()
                     slot_name = str(path.get("slot_name") or "").strip()
+                    source_type = self._claim_trace_source_type(path)
+                    if str(path.get("source_type") or "").strip():
+                        path["source_type"] = source_type
+                    if source_type == "multimodal_observation":
+                        normalized_paths.append(path)
+                        continue
                     paper_id = canonical_paper_id(path.get("paper_id"))
                     path["paper_id"] = paper_id
                     entry = entries.get(path_sh)
@@ -2090,6 +2177,13 @@ class SurveyGenerator:
             normalized_claims.append(claim)
 
         return normalized_claims, errors
+
+    @staticmethod
+    def _claim_trace_source_type(path: Mapping[str, Any]) -> str:
+        source_type = str(path.get("source_type") or "").strip()
+        if source_type:
+            return source_type
+        return "paper" if canonical_paper_id(path.get("paper_id")) else ""
 
     def _claim_trace_repair_context(self, visible_text: str) -> tuple[list[dict], list[dict]]:
         """Expose only plan-valid paths for citations already visible to readers."""
@@ -2148,11 +2242,27 @@ class SurveyGenerator:
                             seen_paths.add(key)
                             admissible_paths.append(
                                 {
+                                    "source_type": "paper",
                                     "sub_hypothesis_id": sh_id,
                                     "slot_name": str(slot_name),
                                     "paper_id": paper_id,
                                 }
                             )
+            multimodal_projection = self._as_mapping(entry.get("multimodal_projection"))
+            for observation_id in self._as_texts(
+                multimodal_projection.get("observation_ids")
+            ):
+                key = (sh_id, "multimodal_observation", observation_id)
+                if key in seen_paths:
+                    continue
+                seen_paths.add(key)
+                admissible_paths.append(
+                    {
+                        "source_type": "multimodal_observation",
+                        "sub_hypothesis_id": sh_id,
+                        "observation_id": observation_id,
+                    }
+                )
         return admissible_paths, contracts
 
     def _claim_trace_repair_max_attempts(self) -> int:
@@ -2386,7 +2496,8 @@ class SurveyGenerator:
             path_paper_ids = {
                 canonical_paper_id(path.get("paper_id"))
                 for path in paths
-                if canonical_paper_id(path.get("paper_id"))
+                if self._claim_trace_source_type(path) == "paper"
+                and canonical_paper_id(path.get("paper_id"))
             }
             untraced_citations = citation_paper_ids - path_paper_ids
             if untraced_citations:
@@ -2394,9 +2505,12 @@ class SurveyGenerator:
                     f"{prefix}: every claim citation requires a matching evidence path: "
                     + ", ".join(sorted(untraced_citations))
                 )
+            paper_paths: list[dict[str, Any]] = []
+            multimodal_paths: list[dict[str, Any]] = []
             for path_index, path in enumerate(paths, start=1):
                 path_prefix = f"{prefix} path {path_index}"
                 path_sh = str(path.get("sub_hypothesis_id") or "").strip()
+                source_type = self._claim_trace_source_type(path)
                 slot_name = str(path.get("slot_name") or "").strip()
                 paper_id = canonical_paper_id(path.get("paper_id"))
                 support_kind = str(path.get("support_kind") or "").strip()
@@ -2404,6 +2518,39 @@ class SurveyGenerator:
                 if path_sh not in sh_ids or path_sh not in entries:
                     errors.append(f"{path_prefix}: path must name one claim sub_hypothesis_id.")
                     continue
+                if source_type == "multimodal_observation":
+                    multimodal_paths.append(path)
+                    unexpected_fields = set(path) - {
+                        "source_type",
+                        "sub_hypothesis_id",
+                        "observation_id",
+                    }
+                    if unexpected_fields:
+                        errors.append(
+                            f"{path_prefix}: multimodal observation paths use only source_type, SH, and observation_id."
+                        )
+                    details = multimodal_trace_details(
+                        entries[path_sh], path.get("observation_id")
+                    )
+                    if details is None:
+                        errors.append(
+                            f"{path_prefix}: observation_id is missing or does not belong to this data-anchored SH."
+                        )
+                    if self._multimodal_claim_is_overstrong(claim_text):
+                        errors.append(
+                            f"{path_prefix}: multimodal observation claims must not use causal, universal, or overstrong language."
+                        )
+                    if not self._is_bounded_multimodal_claim(claim_text, details):
+                        errors.append(
+                            f"{path_prefix}: multimodal observation claims must retain the supplied-data scope and claim limits."
+                        )
+                    continue
+                if source_type != "paper":
+                    errors.append(
+                        f"{path_prefix}: source_type must be paper or multimodal_observation."
+                    )
+                    continue
+                paper_paths.append(path)
                 slot_support = self._as_mapping(entries[path_sh].get("slot_support"))
                 support = self._as_mapping(slot_support.get(slot_name))
                 if not support:
@@ -2472,17 +2619,83 @@ class SurveyGenerator:
                 if paper_id and paper_id not in citation_paper_ids:
                     errors.append(f"{path_prefix}: paper_id must be cited in claim_text.")
 
-            if claim_mode == EVIDENCE_BACKED_SYNTHESIS and any(
-                str(path.get("support_kind") or "") != "DIRECT_LEDGER_EVIDENCE"
-                for path in paths
+            if claim_mode == LOCAL_DATA_OBSERVATION:
+                if not multimodal_paths or paper_paths:
+                    errors.append(
+                        f"{prefix}: local-data observations require multimodal observation paths only."
+                    )
+                if citation_paper_ids:
+                    errors.append(
+                        f"{prefix}: local-data observations must not present their observation as a paper citation."
+                    )
+            if claim_mode == EVIDENCE_BACKED_SYNTHESIS and (
+                not any(
+                    str(path.get("support_kind") or "") == "DIRECT_LEDGER_EVIDENCE"
+                    for path in paper_paths
+                )
+                or any(
+                    str(path.get("support_kind") or "") != "DIRECT_LEDGER_EVIDENCE"
+                    for path in paper_paths
+                )
             ):
-                errors.append(f"{prefix}: evidence-backed claims require direct paths only.")
-            if claim_mode == BACKGROUND_ONLY and any(
-                str(path.get("support_kind") or "") != "BACKGROUND_CONTEXT"
-                for path in paths
+                errors.append(f"{prefix}: evidence-backed claims require direct paper paths.")
+            if claim_mode == BACKGROUND_ONLY and (
+                not paper_paths
+                or any(
+                    str(path.get("support_kind") or "") != "BACKGROUND_CONTEXT"
+                    for path in paper_paths
+                )
             ):
-                errors.append(f"{prefix}: background-only claims require background paths only.")
+                errors.append(f"{prefix}: background-only claims require background paper paths.")
         return errors
+
+    @staticmethod
+    def _is_bounded_multimodal_claim(
+        claim_text: str,
+        details: Mapping[str, Any] | None,
+    ) -> bool:
+        if not details or not SurveyGenerator._as_texts(details.get("claim_limits")):
+            return False
+        normalized = re.sub(r"\s+", " ", str(claim_text or "")).casefold()
+        scope_markers = (
+            "provided data",
+            "provided-data",
+            "local data",
+            "local observation",
+            "representative",
+            "bounded",
+        )
+        uncertainty_markers = (
+            "compatible",
+            "tentative",
+            "may",
+            "might",
+            "could",
+            "cannot distinguish",
+            "does not establish",
+        )
+        return any(marker in normalized for marker in scope_markers) and any(
+            marker in normalized for marker in uncertainty_markers
+        )
+
+    @staticmethod
+    def _multimodal_claim_is_overstrong(claim_text: str) -> bool:
+        if violates_noncausal_policy(claim_text):
+            return True
+        normalized = re.sub(r"\s+", " ", str(claim_text or "")).casefold()
+        universal_markers = (
+            "all samples",
+            "every sample",
+            "any sample",
+            "across all",
+            "in every",
+            "generalizes",
+            "generalizable",
+            "universally",
+            "universal",
+            "always",
+        )
+        return any(marker in normalized for marker in universal_markers)
 
     def _store_claim_traceability(
         self,
@@ -5113,6 +5326,12 @@ class SurveyGenerator:
             "survey_outline_artifact",
             getattr(self.config.BasicInfo, "survey_outline", {}),
         )
+        active_collector = getattr(
+            getattr(self, "work_analyzer", None), "work_collector", None
+        )
+        raw_multimodal_evidence = self._survey_runtime_multimodal_evidence(
+            active_collector
+        )
         try:
             research_context = self._json_compatible(raw_research_context or {})
         except (TypeError, ValueError):
@@ -5141,6 +5360,16 @@ class SurveyGenerator:
             survey_outline = self._json_compatible(raw_survey_outline or {})
         except (TypeError, ValueError):
             survey_outline = {}
+        try:
+            multimodal_evidence = (
+                validate_multimodal_evidence(
+                    self._json_compatible(raw_multimodal_evidence)
+                )
+                if raw_multimodal_evidence
+                else None
+            )
+        except Exception as exc:
+            raise ValueError("Survey cannot publish invalid multimodal evidence.") from exc
 
         if self.config.BasicInfo.debug:
             self.logger.info(f"\n--------------------------")
@@ -5213,18 +5442,23 @@ class SurveyGenerator:
                 )
                 return '{"candidates": [], "decisions": []}'
 
+        publication_arguments = {
+            "base_dir": base_dir,
+            "topic": topic,
+            "survey_run_id": research_run_id or base_dir.name,
+            "final_survey": final_survey,
+            "survey_payload": survey_payload,
+            "survey_outline": survey_outline,
+            "project_context": research_context,
+            "evidence_plan": survey_evidence_plan,
+            "claim_traceability": claim_traceability,
+            "gap_llm_call": gap_llm_call if chat_agent is not None else None,
+            "gap_papers": gap_papers,
+        }
+        if multimodal_evidence is not None:
+            publication_arguments["multimodal_evidence"] = multimodal_evidence
         publication = publish_survey_run_artifacts(
-            base_dir=base_dir,
-            topic=topic,
-            survey_run_id=research_run_id or base_dir.name,
-            final_survey=final_survey,
-            survey_payload=survey_payload,
-            survey_outline=survey_outline,
-            project_context=research_context,
-            evidence_plan=survey_evidence_plan,
-            claim_traceability=claim_traceability,
-            gap_llm_call=gap_llm_call if chat_agent is not None else None,
-            gap_papers=gap_papers,
+            **publication_arguments,
         )
         save_path = publication["artifacts"]["survey_markdown"]
         save_json_path = publication["artifacts"]["survey_json"]
@@ -5239,6 +5473,10 @@ class SurveyGenerator:
             "survey_gap_ledger_path": publication["gap_ledger_path"],
             "survey_idea_handoff_path": publication["idea_handoff_path"],
         }
+        if "multimodal_evidence" in publication["artifacts"]:
+            saved_artifacts["multimodal_evidence_path"] = publication["artifacts"][
+                "multimodal_evidence"
+            ]
 
         # Visual enhancement is intentionally post-save and fail-open.  The
         # canonical evidence-bounded survey remains available even if a remote

@@ -1,0 +1,326 @@
+{
+  "schema_version": "research_plan_document_v1",
+  "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "language": "en",
+  "source_design_id": "design-manual-interface-state-triangulation-v1",
+  "document_metadata": {
+    "title": "Beyond Film Thickness: A Design-Only Research Plan for Correlative Geometric--Molecular--Force Metrology of Nanoscale Film Stability",
+    "source_title": "Correlative Geometric--Molecular--Force Metrology for Chemical Control of Nanoscale Film Stability",
+    "title_status": "author_composed_from_selected_direction",
+    "discipline_ids": [
+      "15",
+      "16"
+    ],
+    "study_type": "design-only comparative mechanism-discrimination proposal"
+  },
+  "abstract": {
+    "text": "This proposal defines an auditable evidence architecture for determining whether a future expert-approved non-biological liquid--solid thin-film comparison can discriminate a chemistry-mediated local-interaction account from a thickness-only account. It retains geometry, molecular-state, confined-interaction, transition-outcome, and audit representations while preserving the design-only and human-review boundaries.",
+    "claim_ids": [
+      "C1",
+      "C2",
+      "C3"
+    ]
+  },
+  "keywords": [
+    "interfacial metrology",
+    "nanoscale liquid films",
+    "disjoining pressure",
+    "causal discrimination",
+    "research design"
+  ],
+  "sections": [
+    {
+      "section_id": "introduction",
+      "title": "Introduction",
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "problem",
+          "kind": "paragraph",
+          "text": "Film thickness is a valuable geometric observable but does not uniquely identify molecular state, local confined interactions, or the causal route to a stability transition. The proposal treats microscopic interfacial measurement as mechanism discrimination rather than resolution improvement.",
+          "claim_ids": [
+            "C1",
+            "C2"
+          ]
+        }
+      ]
+    },
+    {
+      "section_id": "literature_gap",
+      "title": "Literature-Grounded Gap",
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "component_capabilities",
+          "kind": "paragraph",
+          "text": "The cited Survey anchors provide component capabilities for molecular-state, interpretation-limit, confined-force, and geometric observation. They do not establish the novel combined causal relation proposed in this document.",
+          "claim_ids": [
+            "C4"
+          ]
+        }
+      ]
+    },
+    {
+      "section_id": "proposition",
+      "title": "Central Proposition and Scope",
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "hypothesis",
+          "kind": "paragraph",
+          "text": "Within a bounded non-biological liquid--solid thin-film system, a temporally coherent relation among film geometry, an interface-specific molecular state, and a confined-force proxy may distinguish chemistry-mediated local-interaction control from a thickness-only explanation.",
+          "claim_ids": [
+            "C3"
+          ]
+        },
+        {
+          "block_id": "state_vector",
+          "kind": "equation",
+          "text": "The conceptual state vector is $\\mathbf{X}(t)=\\bigl[G(t),M(t),F(t),T(t),A(t)\\bigr]$, where the entries represent geometry, molecular state, local interaction, transition outcome, and audit record.",
+          "claim_ids": [
+            "C3"
+          ]
+        },
+        {
+          "block_id": "model_comparison",
+          "kind": "equation",
+          "text": "The comparison is $\\mathcal{M}_0:T\\leftarrow G$ and $\\mathcal{M}_1:T\\leftarrow(G,M,F,A)$; no numerical preference threshold is fixed before human approval of the estimand and uncertainty model.",
+          "claim_ids": [
+            "C3",
+            "C5"
+          ]
+        }
+      ]
+    },
+    {
+      "section_id": "design",
+      "title": "Research Design and Evidence Architecture",
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "roles",
+          "kind": "table",
+          "text": "Evidence role | Requirement | Limitation\nGeometry | Calibrated time-indexed geometry | Optical-model uncertainty\nMolecular state | Interface-specific state representation | Interpretation uncertainty\nLocal interaction | Confined-force representation | Probe and model perturbation\nAudit | Calibration, surface history, timing | Completeness required",
+          "claim_ids": [
+            "C4",
+            "C5"
+          ]
+        },
+        {
+          "block_id": "comparison_logic",
+          "kind": "paragraph",
+          "text": "The design compares a geometry-only account with molecular-added, interaction-added, and joint accounts under one declared comparability boundary. It retains capillarity, calibration, surface history, roughness, probe effects, observation-induced changes, and temporal mismatch as live alternatives.",
+          "claim_ids": [
+            "C3",
+            "C5"
+          ]
+        }
+      ]
+    },
+    {
+      "section_id": "analysis",
+      "title": "Analysis and Reproducibility Boundary",
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "analysis_logic",
+          "kind": "paragraph",
+          "text": "Future analysis may compare the explanatory accounts only after the model system, calibration traceability, uncertainty model, and estimand are approved. No statistic, threshold, repeat count, material identity, instrument configuration, or operating condition is supplied.",
+          "claim_ids": [
+            "C5",
+            "C6"
+          ]
+        }
+      ]
+    },
+    {
+      "section_id": "outcomes",
+      "title": "Conditional Outcome Branches",
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "branches",
+          "kind": "outcome_branch",
+          "text": "Supports mechanism: bounded joint evidence adds information beyond geometry.\nPartial or heterogeneous: the relation is conditional or incompletely identifiable.\nNull or contradictory: the proposal is not supported in the documented boundary.\nUninformative or invalid: a critical audit is absent or non-discriminating, so no causal conclusion is permitted.",
+          "claim_ids": [
+            "C5"
+          ]
+        }
+      ]
+    },
+    {
+      "section_id": "responsible_research",
+      "title": "Responsible-Research Boundary",
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "review_gate",
+          "kind": "review_checklist",
+          "text": "Physical execution remains prohibited. Qualified confirmation is required for chemical safety, facility compatibility, model-system appropriateness, calibration traceability, and governance. No human, animal, plant, clinical, or restricted biological system is included.",
+          "claim_ids": [
+            "C6"
+          ]
+        }
+      ]
+    },
+    {
+      "section_id": "conclusion",
+      "title": "Conclusion",
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "conclusion_text",
+          "kind": "paragraph",
+          "text": "The contribution is an auditable mechanism-discrimination architecture. It does not claim that chemistry-mediated disjoining pressure is established; it specifies the evidence conditions for support, limitation, null, contradiction, or non-interpretability in a future approved non-biological comparison.",
+          "claim_ids": [
+            "C2",
+            "C3",
+            "C6"
+          ]
+        }
+      ]
+    },
+    {
+      "section_id": "references",
+      "title": "References",
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "ref_inventory",
+          "kind": "list",
+          "text": "Backus, Schaefer, and Bonn (2020), Probing the Mineral-Water Interface with Nonlinear Optical Spectroscopy.\nWang et al. (2005), Quantitative spectral and orientational analysis in surface sum frequency generation vibrational spectroscopy.\nDziadkowiec et al. (2019), Nucleation in confinement generates long-range repulsion between rough calcite surfaces.\nShoji et al. (2024), Superspreading Wetting of Nanofluid Droplet Laden with Highly Dispersed Nanoparticles.",
+          "claim_ids": [
+            "C4"
+          ]
+        }
+      ]
+    }
+  ],
+  "appendices": [
+    {
+      "section_id": "appendix_open_items",
+      "title": "Open Items Before Any Physical Implementation",
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "open_items",
+          "kind": "list",
+          "text": "Select a safe and scientifically relevant non-biological model interface.\nDefine cross-channel calibration and time-registration traceability.\nDefine the estimand and repetition rationale.\nObtain chemical-safety and facility confirmation.\nConfirm manual Survey-to-Idea provenance.",
+          "claim_ids": [
+            "C6"
+          ]
+        }
+      ]
+    }
+  ],
+  "citation_registry": [
+    {
+      "citation_key": "cite_r2",
+      "source_id": "R2",
+      "evidence_level": "user_supplied"
+    },
+    {
+      "citation_key": "cite_r4",
+      "source_id": "R4",
+      "evidence_level": "user_supplied"
+    },
+    {
+      "citation_key": "cite_r10",
+      "source_id": "R10",
+      "evidence_level": "user_supplied"
+    },
+    {
+      "citation_key": "cite_r11",
+      "source_id": "R11",
+      "evidence_level": "user_supplied"
+    }
+  ],
+  "claim_provenance": [
+    {
+      "claim_id": "C1",
+      "claim_kind": "problem_framing",
+      "statement": "Thickness alone does not identify molecular state, local force, or the cause of a stability transition.",
+      "citation_keys": []
+    },
+    {
+      "claim_id": "C2",
+      "claim_kind": "proposal_boundary",
+      "statement": "The document is a design-only proposal with no observed results.",
+      "citation_keys": []
+    },
+    {
+      "claim_id": "C3",
+      "claim_kind": "hypothesis",
+      "statement": "A joint geometric--molecular--force evidence architecture may discriminate a chemistry-mediated local-interaction account from a thickness-only account.",
+      "citation_keys": []
+    },
+    {
+      "claim_id": "C4",
+      "claim_kind": "component_method_context",
+      "statement": "The Survey anchors support component observation capabilities and interpretation limits.",
+      "citation_keys": [
+        "cite_r2",
+        "cite_r4",
+        "cite_r10",
+        "cite_r11"
+      ]
+    },
+    {
+      "claim_id": "C5",
+      "claim_kind": "design_requirement",
+      "statement": "Causal interpretation requires geometry-only comparison, uncertainty representation, and named-alternative audits.",
+      "citation_keys": []
+    },
+    {
+      "claim_id": "C6",
+      "claim_kind": "governance_requirement",
+      "statement": "Physical implementation is prohibited until qualified human review resolves the open safety, facility, calibration, and model-system decisions.",
+      "citation_keys": []
+    }
+  ],
+  "open_items": [
+    {
+      "field_path": "template_details.sample_or_material",
+      "status": "needs_human_input",
+      "reason": "No model interface has been selected or safety reviewed."
+    },
+    {
+      "field_path": "measurement_and_calibration.calibration",
+      "status": "needs_human_input",
+      "reason": "Cross-channel calibration and time-registration traceability remain unresolved."
+    },
+    {
+      "field_path": "analysis_plan.statistical_analysis",
+      "status": "needs_human_input",
+      "reason": "The estimand and comparison criterion require expert approval."
+    }
+  ],
+  "review_items": [
+    {
+      "field_path": "risk_and_human_review",
+      "status": "review_required",
+      "reason": "Chemical-safety and facility confirmation are required before any physical implementation."
+    },
+    {
+      "field_path": "survey_binding",
+      "status": "review_required",
+      "reason": "The Survey-to-Idea linkage is manual and requires provenance confirmation."
+    }
+  ],
+  "authoring_constraints": {
+    "proposal_without_observed_results": true,
+    "unverified_reasoning_must_be_labeled": true,
+    "unsupported_claims_forbidden": true,
+    "counterexample_must_satisfy_all_assumptions": true,
+    "formal_and_empirical_claims_must_remain_separate": true,
+    "observed_results_are_absent": true
+  },
+  "source_manifest": {
+    "selected_direction_id": "correlative_geometric_molecular_force_metrology",
+    "idea_result_path": "src/agents/idea_agent/outputs/manual-interfacial-metrology-codesign-20260830/idea_result.json",
+    "experiment_design_path": "src/agents/experiment_design_agent/outputs/manual-interfacial-metrology-design-20260830/experiment_design.json",
+    "author_input_path": "src/agents/experiment_design_agent/outputs/manual-interfacial-metrology-design-20260830/experiment_design_author_input.json",
+    "survey_path": "src/agents/survey_agent/outputs/20260830-172338-646840-survey-001/survey.json",
+    "survey_binding_status": "survey_unbound_requires_human_confirmation"
+  }
+}

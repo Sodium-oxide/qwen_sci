@@ -23,6 +23,7 @@ from src.pipeline.discipline_taxonomy import (
     resolve_query_variant_discipline_taxonomy,
     resolve_subhypothesis_discipline_taxonomy,
 )
+from src.pipeline.multimodal_evidence.query_binding import query_binding_lookup
 
 
 RETRIEVAL_LANES_SCHEMA_VERSION = "retrieval_lanes_v1"
@@ -586,6 +587,7 @@ def build_slot_recovery_tasks(
     *,
     project_context: Mapping[str, Any] | None,
     include_arxiv: bool = True,
+    query_variant_bindings: Sequence[Mapping[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """Compile one recovery task per declared required slot.
 
@@ -617,6 +619,7 @@ def build_slot_recovery_tasks(
             ]
         ),
     }
+    binding_lookup = query_binding_lookup(query_variant_bindings)
     tasks: list[dict[str, Any]] = []
     for slot_name in contract.get("required_slots", []):
         slot = _text(slot_name, limit=160)
@@ -654,8 +657,12 @@ def build_slot_recovery_tasks(
                 # broad, precision, and evidence-mode retrieval routes.
                 include_arxiv=bool(include_arxiv and initial_variant),
             )
-            variant_lanes = [
-                {
+            variant_lanes = []
+            for lane in route_plan.get("query_lanes", []):
+                if not isinstance(lane, Mapping):
+                    continue
+                binding = binding_lookup.get((identifier, slot, variant_id))
+                variant_lane = {
                     **lane,
                     "sub_hypothesis_id": identifier,
                     "slot_recovery_task_id": task_id,
@@ -675,10 +682,9 @@ def build_slot_recovery_tasks(
                     "query_quality_warnings": list(
                         query_variant.get("query_quality_warnings") or []
                     ),
+                    **(binding or {}),
                 }
-                for lane in route_plan.get("query_lanes", [])
-                if isinstance(lane, Mapping)
-            ]
+                variant_lanes.append(variant_lane)
             route_plan["query_lanes"] = variant_lanes
             route_plan["query_variant"] = dict(query_variant)
             route_plans.append(route_plan)
@@ -791,6 +797,7 @@ def build_subhypothesis_context(
     *,
     index: int = 0,
     include_arxiv: bool = True,
+    query_variant_bindings: Sequence[Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Compile a validated v2 SH into one retrieval task per required slot."""
 
@@ -808,6 +815,7 @@ def build_subhypothesis_context(
             contract,
             project_context=project,
             include_arxiv=include_arxiv,
+            query_variant_bindings=query_variant_bindings,
         )
         if len(tasks) != len(contract.get("required_slots") or []):
             validation = {
@@ -845,22 +853,37 @@ def build_subhypothesis_retrieval_plan(
     subhypotheses: Sequence[Mapping[str, Any]] | None,
     *,
     include_arxiv: bool = True,
+    query_variant_bindings: Sequence[Mapping[str, Any]] | None = None,
+    subhypothesis_metadata: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Build a layered retrieval contract for a bounded SH list without LLM calls."""
 
     candidates = subhypotheses if isinstance(subhypotheses, Sequence) and not isinstance(subhypotheses, str) else []
+    active_bindings = (
+        list(query_variant_bindings) if query_variant_bindings is not None else None
+    )
     normalized = [
         build_subhypothesis_context(
             project_context,
             candidate,
             index=index,
             include_arxiv=include_arxiv,
+            query_variant_bindings=active_bindings,
         )
         for index, candidate in enumerate(candidates[:_MAX_SUBHYPOTHESES])
     ]
-    return {
+    plan = {
         "schema_version": SUBHYPOTHESIS_RETRIEVAL_SCHEMA_VERSION,
         "retrieval_strategy": "slot_driven_required_slot_recovery",
         "project_context": subhypothesis_decomposition_context_payload(project_context),
         "subhypotheses": normalized,
     }
+    if active_bindings is not None:
+        plan["query_variant_bindings"] = list(query_binding_lookup(active_bindings).values())
+    if subhypothesis_metadata:
+        plan["subhypothesis_metadata"] = {
+            str(identifier): dict(metadata)
+            for identifier, metadata in subhypothesis_metadata.items()
+            if isinstance(metadata, Mapping)
+        }
+    return plan

@@ -26,6 +26,10 @@ from src.pipeline.sh_graph_provenance import (
     SH_GRAPH_PROVENANCE_SCHEMA_VERSION,
 )
 from src.pipeline.paper_identity import canonical_paper_id, canonical_paper_ids
+from src.pipeline.multimodal_evidence.survey_integration import (
+    LOCAL_DATA_OBSERVATION,
+    build_multimodal_survey_projection,
+)
 
 
 SURVEY_EVIDENCE_PLAN_SCHEMA_VERSION = "survey_sh_evidence_plan_v1"
@@ -576,6 +580,7 @@ def build_survey_evidence_plan(
     cluster_coverage_artifact: Mapping[str, Any] | None,
     subhypothesis_contracts: Sequence[Mapping[str, Any]] | None,
     max_writable_papers_per_sh: int = 20,
+    multimodal_evidence: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Compile every SH into its allowed writing mode and evidence boundary."""
 
@@ -795,7 +800,37 @@ def build_survey_evidence_plan(
             }
         )
 
-    return {
+    multimodal_projection = build_multimodal_survey_projection(multimodal_evidence)
+    if multimodal_projection is not None:
+        by_subhypothesis = {
+            str(item.get("sub_hypothesis_id") or ""): item
+            for item in multimodal_projection.get("data_anchored_subhypotheses", [])
+            if isinstance(item, Mapping)
+        }
+        unresolved_data_sh = sorted(
+            identifier
+            for identifier in by_subhypothesis
+            if identifier not in {
+                str(entry.get("sub_hypothesis_id") or "") for entry in entries
+            }
+        )
+        if unresolved_data_sh:
+            raise ValueError(
+                "Multimodal evidence references data-anchored SHs absent from the final coverage ledger: "
+                + ", ".join(unresolved_data_sh)
+            )
+        for entry in entries:
+            row = by_subhypothesis.get(str(entry.get("sub_hypothesis_id") or ""))
+            if row is None:
+                continue
+            entry["analysis_priority"] = str(row.get("analysis_priority") or "")
+            entry["must_cover"] = bool(row.get("must_cover"))
+            entry["multimodal_projection"] = dict(row)
+            entry["allowed_claim_modes"] = _texts(
+                [LOCAL_DATA_OBSERVATION, *entry.get("allowed_claim_modes", [])]
+            )
+
+    payload = {
         "schema_version": SURVEY_EVIDENCE_PLAN_SCHEMA_VERSION,
         "project_id": str(provenance.get("project_id") or ""),
         "project_context_fingerprint": str(
@@ -816,3 +851,8 @@ def build_survey_evidence_plan(
             "claims_require_sh_slot_paper_trace": True,
         },
     }
+    if multimodal_projection is not None:
+        payload["multimodal_evidence_projection"] = multimodal_projection
+        payload["writing_rules"]["multimodal_observations_are_not_literature"] = True
+        payload["writing_rules"]["data_anchored_subhypotheses_must_cover"] = True
+    return payload

@@ -189,6 +189,16 @@ def build_experiment_handoff(direction: Dict[str, Any], artifact: Dict[str, Any]
         for anchor_id in _texts(next((item.get("anchor_ids") for item in _records(handoff.get("gaps")) if item.get("gap_id") == gap.get("gap_id")), [])):
             if anchor_id in anchor_index and anchor_index[anchor_id] not in source_anchors:
                 source_anchors.append(anchor_index[anchor_id])
+    data_contract = _mapping(intervention.get("data_anchored_contract"))
+    data_anchor_refs = _texts(direction.get("data_anchor_refs") or data_contract.get("data_anchor_refs"))
+    if data_anchor_refs:
+        for anchor in _records(handoff.get("anchors")):
+            if (
+                _text(anchor.get("anchor_type")) == "multimodal_observation"
+                and _text(anchor.get("source_id")) in data_anchor_refs
+                and anchor not in source_anchors
+            ):
+                source_anchors.append(anchor)
     roles_from_handoff = _records(handoff.get("evidence_roles"))
     gap_slots = _texts([gap.get("target_slot") for gap in gap_records])
     for role in roles_from_handoff:
@@ -207,7 +217,7 @@ def build_experiment_handoff(direction: Dict[str, Any], artifact: Dict[str, Any]
             alternatives.extend(_texts(event.get("alternative_explanations")))
         alternatives = _texts(alternatives)
     risks = _texts(direction.get("risks"))
-    return {
+    result = {
         "claim_to_test": hypothesis["central_hypothesis"],
         "gap_ids": gap_ids,
         "gap_records": gap_records,
@@ -223,6 +233,26 @@ def build_experiment_handoff(direction: Dict[str, Any], artifact: Dict[str, Any]
         "risks": risks,
         "known_unknowns": _texts(unknowns),
     }
+    if data_anchor_refs:
+        result.update(
+            {
+                "data_anchor_refs": data_anchor_refs,
+                "literature_reconciliation_status": _text(
+                    direction.get("literature_reconciliation_status")
+                    or data_contract.get("literature_reconciliation_status")
+                )
+                or "unresolved",
+                "competing_explanations": _texts(
+                    direction.get("competing_explanations")
+                    or data_contract.get("competing_explanations")
+                ),
+                "confound_and_leakage_checks": _texts(
+                    direction.get("confound_and_leakage_checks")
+                    or data_contract.get("claim_limits")
+                ),
+            }
+        )
+    return result
 
 
 def build_direction_result_document(
@@ -251,6 +281,21 @@ def build_direction_result_document(
         },
         "experiment_handoff": build_experiment_handoff(direction, artifact),
     }
+    for data_field in (
+        "analysis_priority",
+        "data_anchor_refs",
+        "literature_reconciliation_status",
+        "candidate_mechanism",
+        "competing_explanations",
+        "discriminating_measurement_plan",
+        "falsifier",
+        "confound_and_leakage_checks",
+        "claim_scope",
+        "data_anchored_contract_status",
+    ):
+        value = direction.get(data_field)
+        if value not in (None, "", [], {}):
+            direction_payload[data_field] = value
     for mature_field in (
         "mature_idea",
         "maturity",

@@ -5,7 +5,6 @@ import contextlib
 import json
 import os
 import re
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -18,6 +17,15 @@ from omegaconf import OmegaConf
 from src.agents.survey_agent.utils.topic_survey_storage import (
     apply_topic_survey_paths,
     get_survey_output_root,
+)
+from src.pipeline.multimodal_evidence import (
+    MultimodalInputError,
+    MultimodalSettings,
+    build_input_spec_from_files,
+    build_local_multimodal_input_context,
+    build_multimodal_evidence,
+    load_input_manifest,
+    preflight_multimodal_capabilities,
 )
 from src.pipeline.survey_idea_loader import SurveyIdeaLoadError, load_survey_idea_context
 from src.pipeline.science_run import (
@@ -53,10 +61,6 @@ DEFAULT_CONFIG_PATH = REPO_ROOT / "src" / "config" / "default.yaml"
 DEFAULT_ENV_PATH = REPO_ROOT / ".env"
 LEGACY_ENV_PATH = REPO_ROOT / "src" / "config" / ".env"
 DEFAULT_SCIENCE_OUTPUT_ROOT = REPO_ROOT / "workspace" / "science-runs"
-LEGACY_COMMAND_DEPRECATION = (
-    "DeprecationWarning: `{legacy}` will be removed in a future release.\n"
-    "Use `{replacement}` instead."
-)
 
 
 EXP_DESIGN_EXIT_SUCCESS = 0
@@ -212,6 +216,32 @@ def _build_root_parser() -> argparse.ArgumentParser:
         "--evaluation-save-path",
         help="Override survey.BasicInfo.evaluation_save_path",
     )
+    multimodal_input = survey.add_mutually_exclusive_group()
+    multimodal_input.add_argument(
+        "--multimodal-file",
+        action="append",
+        metavar="PATH",
+        help=(
+            "Explicit local multimodal file to analyze; repeat for multiple files. "
+            "Optional readers: uv sync --group multimodal"
+        ),
+    )
+    multimodal_input.add_argument(
+        "--multimodal-evidence-manifest",
+        metavar="PATH",
+        help=(
+            "Path to a multimodal_input_manifest_v1 JSON manifest; mutually exclusive "
+            "with --multimodal-file"
+        ),
+    )
+    survey.add_argument(
+        "--allow-remote-perception",
+        action="store_true",
+        help=(
+            "Allow qwen3-vl-plus to inspect bounded, metadata-free PNG previews of "
+            "explicit multimodal input"
+        ),
+    )
     survey.add_argument("overrides", nargs="*", help="Additional Hydra overrides")
     survey.set_defaults(func=_survey_command)
 
@@ -239,23 +269,6 @@ def _build_root_parser() -> argparse.ArgumentParser:
         help="Set IDEA_AGENT_PREVIOUS_CANDIDATE_PATH",
     )
     idea.set_defaults(func=_idea_command)
-
-    experiment = subparsers.add_parser("experiment", help="Run Experiment Agent")
-    experiment.add_argument("--config", default=str(DEFAULT_CONFIG_PATH), help="Path to config YAML")
-    experiment.add_argument("--experiment", required=True, help="Experiment ID")
-    experiment.add_argument("--idea-json", required=True, help="Path to idea_result.json")
-    experiment.add_argument("--prepare-only", action="store_true", help="Only run prepare phase")
-    experiment.add_argument("--resume", action="store_true", help="Resume experiment execution")
-    experiment.add_argument("--force", action="store_true", help="Force rerun prepare phase")
-    experiment.add_argument("--skip-repos", action="store_true", help="Skip repo cloning in prepare")
-    experiment.add_argument("--skip-datasets", action="store_true", help="Skip dataset downloads in prepare")
-    experiment.add_argument("--clone-depth", type=int, default=1, help="git clone depth")
-    experiment.add_argument(
-        "--max-iterations",
-        type=int,
-        help="Deprecated compatibility option; OpenHarness uses fixed reviewed phase gates",
-    )
-    experiment.set_defaults(func=_experiment_command)
 
     exp_design = subparsers.add_parser(
         "exp_design",
@@ -515,21 +528,6 @@ def _build_root_parser() -> argparse.ArgumentParser:
     )
     science.set_defaults(func=_science_command)
 
-    blog = subparsers.add_parser("blog", help="Run Blog Agent")
-    blog.add_argument("--config", default=str(DEFAULT_CONFIG_PATH), help="Path to config YAML")
-    blog.add_argument("--experiment", required=True, help="Experiment/project name")
-    blog.add_argument("--resume", action="store_true", help="Resume from the last completed step")
-    blog.add_argument(
-        "--source-workspace",
-        help="Set BLOG_AGENT_SOURCE_WORKSPACE for an experiment workspace outside the default source path",
-    )
-    blog.set_defaults(func=_blog_command)
-
-    pipeline = subparsers.add_parser("pipeline", help="Run Survey -> Idea -> Experiment loop")
-    pipeline.add_argument("--config", default=str(DEFAULT_CONFIG_PATH), help="Path to config YAML")
-    pipeline.add_argument("--topic", help="Override pipeline research topic")
-    pipeline.set_defaults(func=_pipeline_command)
-
     doctor = subparsers.add_parser("doctor", help="Check local runtime prerequisites")
     doctor.add_argument("--config", default=str(DEFAULT_CONFIG_PATH), help="Path to config YAML")
     doctor.set_defaults(func=_doctor_command)
@@ -540,11 +538,155 @@ def _build_root_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _prepare_survey_multimodal_input(
+    args: argparse.Namespace,
+    config: object,
+) -> tuple[object | None, dict[str, object] | None, dict[str, object] | None, MultimodalSettings]:
+    raw_files = list(getattr(args, "multimodal_file", None) or [])
+    manifest_value = getattr(args, "multimodal_evidence_manifest", None)
+    remote_perception_authorized = bool(
+        getattr(args, "allow_remote_perception", False)
+    )
+    has_multimodal_input = bool(raw_files or manifest_value)
+    if remote_perception_authorized and not has_multimodal_input:
+        raise MultimodalInputError(
+            "--allow-remote-perception requires --multimodal-file or --multimodal-evidence-manifest."
+        )
+    if not has_multimodal_input:
+        return None, None, None, MultimodalSettings()
+
+    survey_config = (
+        config.get("survey")
+        if hasattr(config, "get") and config.get("survey") is not None
+        else config
+    )
+    configured_settings = (
+        survey_config.get("multimodal_evidence", {})
+        if hasattr(survey_config, "get")
+        else {}
+    )
+    settings_data = OmegaConf.to_container(configured_settings, resolve=False)
+    if not isinstance(settings_data, dict):
+        settings_data = {}
+    settings_data["remote_perception_authorized"] = remote_perception_authorized
+    settings = MultimodalSettings.from_mapping(settings_data)
+    if manifest_value:
+        input_spec = load_input_manifest(
+            _resolve_cli_path(manifest_value),
+            settings=settings,
+        )
+    else:
+        input_spec = build_input_spec_from_files(
+            [_resolve_cli_path(value) for value in raw_files],
+            settings=settings,
+        )
+    preflight_multimodal_capabilities(
+        input_spec,
+        remote_perception_authorized=settings.remote_perception_authorized,
+    )
+    local_context = build_local_multimodal_input_context(
+        input_spec,
+        settings=settings,
+    )
+    runtime_evidence = build_multimodal_evidence(
+        input_spec=input_spec,
+        config=config,
+        local_context=local_context,
+    )
+    return input_spec, local_context, runtime_evidence, settings
+
+
+def _needs_multimodal_runtime_reset(config: object) -> bool:
+    survey_config = (
+        config.get("survey")
+        if hasattr(config, "get") and config.get("survey") is not None
+        else config
+    )
+    configured = (
+        survey_config.get("multimodal_evidence", {})
+        if hasattr(survey_config, "get")
+        else {}
+    )
+    if not hasattr(configured, "get"):
+        return False
+    return any(
+        bool(configured.get(key))
+        for key in (
+            "enabled",
+            "allow_remote_perception",
+            "input_spec",
+            "local_input_context",
+            "runtime_evidence",
+        )
+    )
+
+
+def _multimodal_override_requested(overrides: Sequence[str]) -> bool:
+    """Keep explicit CLI input as the only route into multimodal runtime state."""
+
+    for raw_override in overrides:
+        key = str(raw_override or "").strip().lstrip("+~")
+        key = key.split("=", 1)[0].strip()
+        if key == "multimodal_evidence" or key.startswith("multimodal_evidence."):
+            return True
+        if key == "survey.multimodal_evidence" or key.startswith(
+            "survey.multimodal_evidence."
+        ):
+            return True
+    return False
+
+
 def _survey_command(args: argparse.Namespace) -> int:
     config_path = _resolve_config_path(args.config)
     _ensure_config_exists(config_path)
+    if _multimodal_override_requested(args.overrides):
+        print(
+            "Multimodal runtime settings cannot be overridden positionally; use "
+            "--multimodal-file or --multimodal-evidence-manifest and, when intended, "
+            "--allow-remote-perception.",
+            file=sys.stderr,
+        )
+        return 2
     override_key = lambda key: _survey_override_key(config_path, key)
     config = OmegaConf.load(config_path)
+    try:
+        (
+            multimodal_input_spec,
+            multimodal_local_context,
+            multimodal_runtime_evidence,
+            multimodal_settings,
+        ) = (
+            _prepare_survey_multimodal_input(args, config)
+        )
+    except MultimodalInputError as exc:
+        print(f"Multimodal input error: {exc}", file=sys.stderr)
+        return 2
+    multimodal_updates: list[tuple[str, object]] = []
+    if multimodal_input_spec is not None or _needs_multimodal_runtime_reset(config):
+        multimodal_updates = [
+            (
+                override_key("multimodal_evidence.enabled"),
+                multimodal_input_spec is not None,
+            ),
+            (
+                override_key("multimodal_evidence.allow_remote_perception"),
+                multimodal_settings.remote_perception_authorized,
+            ),
+            (
+                override_key("multimodal_evidence.input_spec"),
+                multimodal_input_spec.to_safe_runtime_dict()
+                if multimodal_input_spec is not None
+                else {},
+            ),
+            (
+                override_key("multimodal_evidence.local_input_context"),
+                multimodal_local_context or {},
+            ),
+            (
+                override_key("multimodal_evidence.runtime_evidence"),
+                multimodal_runtime_evidence or {},
+            ),
+        ]
     derived_paths = None
     if args.topic and not any(
         (
@@ -593,6 +735,7 @@ def _survey_command(args: argparse.Namespace) -> int:
                 args.evaluation_save_path
                 or (str(derived_paths.evaluation_path) if derived_paths else ""),
             ),
+            *multimodal_updates,
         ],
     )
     effective_config_path = Path(runtime_config) if runtime_config else config_path
@@ -660,63 +803,6 @@ def _idea_command(args: argparse.Namespace) -> int:
     finally:
         if runtime_config:
             Path(runtime_config).unlink(missing_ok=True)
-
-
-def _experiment_command(args: argparse.Namespace) -> int:
-    config_path = _resolve_config_path(args.config)
-    _ensure_config_exists(config_path)
-    idea_json_path = Path(args.idea_json).expanduser().resolve()
-    if not idea_json_path.exists():
-        raise FileNotFoundError(f"Idea JSON not found: {idea_json_path}")
-
-    from src.config import load_config
-
-    config = load_config(str(config_path))
-    workspace_root = Path(str(config.experiment.workspace.root)).expanduser()
-    if not workspace_root.is_absolute():
-        workspace_root = (REPO_ROOT / workspace_root).absolute()
-    experiment_dir = workspace_root / args.experiment
-    experiment_dir.mkdir(parents=True, exist_ok=True)
-
-    target_idea_json = experiment_dir / "idea.json"
-    target_idea_result_json = experiment_dir / "idea_result.json"
-    if idea_json_path != target_idea_json.resolve():
-        shutil.copy2(idea_json_path, target_idea_json)
-    shutil.copy2(idea_json_path, target_idea_result_json)
-
-    env = _base_env(config_path=config_path)
-    env.setdefault("SHOW_LLM_REASONING", "1")
-    env.setdefault("AGENT_BASH_TIMEOUT_SECONDS", "600000")
-    env["EXPERIMENT_AGENT_WORKSPACE_DIR"] = str(experiment_dir)
-
-    cmd = [
-        sys.executable,
-        "-m",
-        "src.agents.experiment_agent.main",
-        "--experiment",
-        args.experiment,
-        "--config",
-        str(config_path),
-        "--verbose",
-        "--clone-depth",
-        str(args.clone_depth),
-    ]
-    if args.prepare_only:
-        cmd.append("--prepare-only")
-    if args.resume:
-        cmd.append("--resume")
-    if args.force:
-        cmd.append("--force")
-    if args.skip_repos:
-        cmd.append("--skip-repos")
-    if args.skip_datasets:
-        cmd.append("--skip-datasets")
-    if args.max_iterations is not None:
-        print(
-            "Warning: --max-iterations is deprecated; the OpenHarness experiment "
-            "control plane runs prepare, code, science, and finalization gates once."
-        )
-    return _run_command(cmd, env=env)
 
 
 def _exp_design_allow_digital_execution(config: object) -> bool:
@@ -1125,27 +1211,6 @@ def _exp_design_command(args: argparse.Namespace) -> int:
     return EXP_DESIGN_EXIT_SUCCESS
 
 
-def _blog_command(args: argparse.Namespace) -> int:
-    config_path = _resolve_config_path(args.config)
-    _ensure_config_exists(config_path)
-    env = _base_env(config_path=config_path)
-    agents_root = REPO_ROOT / "src" / "agents"
-    env["PYTHONPATH"] = str(agents_root) + os.pathsep + env["PYTHONPATH"]
-    if args.source_workspace:
-        env["BLOG_AGENT_SOURCE_WORKSPACE"] = str(Path(args.source_workspace).expanduser().resolve())
-
-    cmd = [
-        sys.executable,
-        "-m",
-        "blog_agent.scripts.run",
-        "--experiment",
-        args.experiment,
-    ]
-    if args.resume:
-        cmd.append("--resume")
-    return _run_command(cmd, env=env)
-
-
 def _science_path_option(value: str | None) -> str | None:
     if value is None or not str(value).strip():
         return None
@@ -1385,22 +1450,6 @@ def _science_command(args: argparse.Namespace) -> int:
     return SCIENCE_EXIT_SUCCESS
 
 
-def _pipeline_command(args: argparse.Namespace) -> int:
-    config_path = _resolve_config_path(args.config)
-    _ensure_config_exists(config_path)
-    env = _base_env(config_path=config_path)
-    cmd = [
-        sys.executable,
-        "-m",
-        "src.pipeline.run_loop",
-        "--config",
-        str(config_path),
-    ]
-    if args.topic:
-        cmd.extend(["--topic", args.topic])
-    return _run_command(cmd, env=env)
-
-
 def _doctor_command(args: argparse.Namespace) -> int:
     config_path = _resolve_config_path(args.config)
     _ensure_config_exists(config_path)
@@ -1569,71 +1618,12 @@ def idea_main() -> int:
     return main(["idea", *sys.argv[1:]])
 
 
-def experiment_main() -> int:
-    return main(["experiment", *sys.argv[1:]])
-
-
-def blog_main() -> int:
-    return main(["blog", *sys.argv[1:]])
-
-
-def pipeline_main() -> int:
-    return main(["pipeline", *sys.argv[1:]])
-
-
 def doctor_main() -> int:
     return main(["doctor", *sys.argv[1:]])
 
 
 def install_mcp_wrappers_main() -> int:
     return main(["install-mcp-wrappers", *sys.argv[1:]])
-
-
-def _warn_legacy_command(legacy: str, replacement: str) -> None:
-    print(
-        LEGACY_COMMAND_DEPRECATION.format(legacy=legacy, replacement=replacement),
-        file=sys.stderr,
-    )
-
-
-def legacy_main() -> int:
-    _warn_legacy_command("xcientist", "qwensci")
-    return main()
-
-
-def legacy_survey_main() -> int:
-    _warn_legacy_command("xcientist-survey", "qwensci-survey")
-    return survey_main()
-
-
-def legacy_idea_main() -> int:
-    _warn_legacy_command("xcientist-idea", "qwensci-idea")
-    return idea_main()
-
-
-def legacy_experiment_main() -> int:
-    _warn_legacy_command("xcientist-experiment", "qwensci-experiment")
-    return experiment_main()
-
-
-def legacy_blog_main() -> int:
-    _warn_legacy_command("xcientist-blog", "qwensci-blog")
-    return blog_main()
-
-
-def legacy_pipeline_main() -> int:
-    _warn_legacy_command("xcientist-pipeline", "qwensci-pipeline")
-    return pipeline_main()
-
-
-def legacy_doctor_main() -> int:
-    _warn_legacy_command("xcientist-doctor", "qwensci-doctor")
-    return doctor_main()
-
-
-def legacy_install_mcp_wrappers_main() -> int:
-    _warn_legacy_command("xcientist-install-mcp-wrappers", "qwensci-install-mcp-wrappers")
-    return install_mcp_wrappers_main()
 
 
 if __name__ == "__main__":

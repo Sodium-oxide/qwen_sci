@@ -26,6 +26,7 @@ from .survey_idea_handoff import (
     build_manifest_payload,
     validate_manifest_payload,
 )
+from .multimodal_evidence.contract import validate_multimodal_evidence
 
 
 SURVEY_MANIFEST_FILENAME = "survey_manifest.json"
@@ -40,6 +41,7 @@ _ARTIFACT_FILENAMES = {
     "gap_candidates": "survey_gap_candidates.json",
     "gap_coverage": "survey_gap_coverage.json",
     "gap_triage": "survey_gap_triage.json",
+    "multimodal_evidence": "multimodal_evidence.json",
     "idea_handoff": "survey_idea_handoff.json",
 }
 
@@ -282,6 +284,7 @@ def publish_survey_run_artifacts(
     project_context: Mapping[str, Any] | None = None,
     evidence_plan: Mapping[str, Any] | None = None,
     claim_traceability: Mapping[str, Any] | None = None,
+    multimodal_evidence: Mapping[str, Any] | None = None,
     gap_llm_call: Any | None = None,
     gap_papers: list[Mapping[str, Any]] | None = None,
     created_at: str = "",
@@ -301,6 +304,14 @@ def publish_survey_run_artifacts(
         project_id=project_id,
         fingerprint=fingerprint,
     )
+    safe_multimodal_evidence: dict[str, Any] | None = None
+    if multimodal_evidence is not None:
+        try:
+            safe_multimodal_evidence = validate_multimodal_evidence(multimodal_evidence)
+        except Exception as exc:
+            raise SurveyArtifactPublicationError(
+                "Multimodal evidence cannot be published because its contract is invalid."
+            ) from exc
     normalized_survey = dict(survey_payload)
     normalized_survey["topic"] = _text(normalized_survey.get("topic")) or _text(topic)
     normalized_survey["research_run_id"] = _text(normalized_survey.get("research_run_id")) or run_id
@@ -313,6 +324,8 @@ def publish_survey_run_artifacts(
         "survey_outline": _json_bytes(_mapping(survey_outline)),
         "project_context": _json_bytes(context_artifact),
     }
+    if safe_multimodal_evidence is not None:
+        artifacts["multimodal_evidence"] = _json_bytes(safe_multimodal_evidence)
     complete_contract = _valid_evidence_plan(plan, fingerprint)
     if complete_contract:
         ledger = build_deterministic_gap_ledger(
@@ -368,9 +381,17 @@ def publish_survey_run_artifacts(
             evidence_plan=plan,
             project_context=context_artifact,
             survey_json=normalized_survey,
-            source_artifacts={"manifest": "survey_manifest.json"},
+            source_artifacts={
+                "manifest": "survey_manifest.json",
+                **(
+                    {"multimodal_evidence": _ARTIFACT_FILENAMES["multimodal_evidence"]}
+                    if safe_multimodal_evidence is not None
+                    else {}
+                ),
+            },
             created_at=created_at,
             triage_llm_call=gap_llm_call if callable(gap_llm_call) else None,
+            multimodal_evidence=safe_multimodal_evidence,
         )
         artifacts.update(
             {

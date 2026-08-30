@@ -12,6 +12,10 @@ from src.agents.idea_agent.utils.workflow.idea_contract import (
 from src.agents.idea_agent.utils.workflow.idea_diversity import (
     filter_independent_mature_ideas,
 )
+from src.agents.idea_agent.utils.workflow.multimodal_data_anchoring import (
+    annotate_data_anchored_mature_idea,
+    scoped_multimodal_evidence_for_idea,
+)
 
 
 MATURE_IDEA_SOURCES = (
@@ -52,6 +56,10 @@ _ACTIVE_GAP_ROUTES = {
 
 def _text(value: Any) -> str:
     return str(value or "").strip()
+
+
+def _mapping(value: Any) -> Dict[str, Any]:
+    return dict(value) if isinstance(value, Mapping) else {}
 
 
 def _list(value: Any) -> List[Any]:
@@ -335,6 +343,7 @@ def collect_mature_idea_sources(
     allow_problem_reframing: bool = True,
     allow_unanchored_seed: bool = True,
     allow_high_risk_seed: bool = True,
+    multimodal_evidence_projection: Mapping[str, Any] | None = None,
 ) -> List[Dict[str, Any]]:
     """Collect, structurally deduplicate, and annotate mature ideas by lineage."""
 
@@ -352,6 +361,14 @@ def collect_mature_idea_sources(
     records.extend(_prior_candidate_ideas(prior_candidate))
     records.extend(_experiment_feedback_ideas(experiment_results))
     records.extend(_analysis_source_ideas(analysis))
+    records = [
+        annotate_data_anchored_mature_idea(
+            record,
+            survey_idea_handoff=survey_handoff if isinstance(survey_handoff, Mapping) else {},
+            multimodal_evidence_projection=multimodal_evidence_projection,
+        )
+        for record in records
+    ]
 
     independent = filter_independent_mature_ideas(records)
     enriched: List[Dict[str, Any]] = []
@@ -454,6 +471,7 @@ def build_mature_idea_evidence_context(
     references: Sequence[Mapping[str, Any]] | None = None,
     ablation_results: Any = None,
     public_facts: Any = None,
+    multimodal_evidence_projection: Mapping[str, Any] | None = None,
 ) -> Dict[str, Any]:
     """Create public, idea-specific, and anti-anchor evidence layers."""
 
@@ -466,6 +484,11 @@ def build_mature_idea_evidence_context(
         for row in _gap_rows(handoff)
         if gap_ids and _text(row.get("gap_id")) in gap_ids
     ]
+    data_evidence = scoped_multimodal_evidence_for_idea(
+        idea,
+        survey_idea_handoff=handoff,
+        multimodal_evidence_projection=multimodal_evidence_projection,
+    )
     keywords = set(
         _text(value).casefold()
         for value in (
@@ -477,11 +500,54 @@ def build_mature_idea_evidence_context(
         if _text(value)
     )
     evidence_subset: List[Dict[str, Any]] = []
+    target_anchor_ids = {
+        _text(anchor_id)
+        for gap in gaps
+        for anchor_id in _list(gap.get("anchor_ids"))
+        if _text(anchor_id)
+    }
+    scoped_anchors = [
+        anchor
+        for anchor in _list(handoff.get("anchors"))
+        if isinstance(anchor, Mapping)
+        and (
+            _text(anchor.get("anchor_id")) in target_anchor_ids
+            or anchor in data_evidence.get("source_anchors", [])
+        )
+    ]
+    scoped_paper_ids = {
+        _text(_mapping(anchor.get("source_pointer")).get("paper_id"))
+        for anchor in scoped_anchors
+        if _text(_mapping(anchor.get("source_pointer")).get("paper_id"))
+    }
+    target_subhypotheses_for_papers = {_text(gap.get("subhypothesis_id")) for gap in gaps}
+    for role in _list(handoff.get("evidence_roles")):
+        if not isinstance(role, Mapping) or _text(role.get("subhypothesis_id")) not in target_subhypotheses_for_papers:
+            continue
+        scoped_paper_ids.update(
+            paper_id
+            for paper_id in _unique(
+                [
+                    role.get("paper_id"),
+                    *_list(role.get("paper_ids")),
+                    *_list(role.get("qualified_paper_ids")),
+                    *_list(role.get("background_paper_ids")),
+                ]
+            )
+            if paper_id
+        )
+    scoped_paper_ids.update(
+        _text(assessment.get("paper_id"))
+        for assessment in _list(data_evidence.get("paper_assessments"))
+        if isinstance(assessment, Mapping) and _text(assessment.get("paper_id"))
+    )
     for reference in references or []:
         if not isinstance(reference, Mapping):
             continue
         ref_text = " ".join(_text(reference.get(field)) for field in ("title", "abstract", "summary", "tldr")).casefold()
-        if any(gap_id.casefold() in ref_text for gap_id in gap_ids) or any(
+        if _text(reference.get("paper_id")) in scoped_paper_ids or any(
+            gap_id.casefold() in ref_text for gap_id in gap_ids
+        ) or any(
             keyword and keyword in ref_text for keyword in keywords
         ):
             evidence_subset.append(dict(reference))
@@ -516,7 +582,24 @@ def build_mature_idea_evidence_context(
             )
         ]
     }
-    return {
+    target_subhypotheses = {_text(gap.get("subhypothesis_id")) for gap in gaps}
+    scoped_handoff["anchors"] = [
+        deepcopy(anchor)
+        for anchor in scoped_anchors
+    ]
+    scoped_handoff["evidence_roles"] = [
+        deepcopy(role)
+        for role in _list(handoff.get("evidence_roles"))
+        if isinstance(role, Mapping)
+        and (
+            _text(role.get("subhypothesis_id")) in target_subhypotheses
+            or bool(
+                set(_unique(role.get("anchor_ids")))
+                & {_text(anchor.get("anchor_id")) for anchor in scoped_anchors}
+            )
+        )
+    ]
+    result = {
         "public_facts": deepcopy(public_facts) if isinstance(public_facts, (Mapping, list, str)) else {},
         "idea_id": _text(idea.get("idea_id")),
         "idea_source": source,
@@ -542,6 +625,19 @@ def build_mature_idea_evidence_context(
             else "Evidence is scoped to the idea's selected gaps and mechanism."
         ),
     }
+    if data_evidence:
+        result["multimodal_evidence_context"] = data_evidence
+        result["counterexamples"] = _list(result["counterexamples"]) + [
+            *data_evidence.get("competing_explanations", []),
+            *data_evidence.get("claim_limits", []),
+        ]
+        result["validation_targets"] = _unique(
+            [
+                *result["validation_targets"],
+                *data_evidence.get("measurement_needs", []),
+            ]
+        )
+    return result
 
 
 __all__ = [

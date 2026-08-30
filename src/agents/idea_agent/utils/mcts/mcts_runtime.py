@@ -67,6 +67,10 @@ from src.agents.idea_agent.utils.workflow.idea_contract import (
     normalize_idea_contract,
     normalize_mature_idea,
 )
+from src.agents.idea_agent.utils.workflow.multimodal_data_anchoring import (
+    DATA_ANCHORED_PRIORITY,
+    is_data_anchored,
+)
 
 
 HYPOTHESIS_CONTRACT_FIELDS = (
@@ -1357,6 +1361,23 @@ def _direction_prompt_context(
     }
 
 
+def _data_anchored_contract_prompt(state: Any) -> str:
+    intervention = getattr(state, "scientific_intervention", {})
+    intervention = intervention if isinstance(intervention, Mapping) else {}
+    contract = intervention.get("data_anchored_contract")
+    if not isinstance(contract, Mapping) or not contract.get("data_anchor_refs"):
+        return ""
+    return (
+        "\n\n== Bounded supplied-data requirement ==\n"
+        + pretty_json(dict(contract))
+        + "\nThe data anchors are local observations, not paper citations. Keep their claim scope "
+        "dataset-local and do not state that they prove a mechanism or a first discovery. "
+        "The coverage pass must explicitly distinguish candidate_mechanism, "
+        "alternative_explanation, and measurement_artifact branches. A measurement-at-risk "
+        "anchor may support only measurement validity or workflow reasoning."
+    )
+
+
 def _contract_from_instantiation(instantiated: Mapping[str, Any]) -> Dict[str, Any]:
     explicit_contract = instantiated.get("scientific_contract")
     if isinstance(explicit_contract, Mapping):
@@ -1544,6 +1565,21 @@ def materialize_child_state(
     scientific_intervention = dict(
         getattr(parent_state, "scientific_intervention", {}) or {}
     )
+    coverage_branch = selection_metadata.get("data_anchored_coverage_branch")
+    if isinstance(coverage_branch, Mapping):
+        coverage_branch = dict(coverage_branch)
+        branch_id = str(coverage_branch.get("branch_id") or "").strip()
+        if branch_id:
+            tags = _dedupe_keep_order_strings(
+                [*tags, f"data_coverage:{branch_id}"]
+            )
+            skill_metrics["data_anchored_coverage_branch"] = coverage_branch
+            scientific_intervention["data_anchored_coverage_branch"] = coverage_branch
+            inherited_data_contract = scientific_intervention.get("data_anchored_contract")
+            if isinstance(inherited_data_contract, Mapping):
+                inherited_data_contract = dict(inherited_data_contract)
+                inherited_data_contract["active_coverage_branch"] = coverage_branch
+                scientific_intervention["data_anchored_contract"] = inherited_data_contract
     parent_contract = _parent_hypothesis_contract(parent_state)
     instantiated_contract = _contract_from_instantiation(inst)
     scientific_contract = merge_hypothesis_contract(
@@ -1729,6 +1765,7 @@ def instantiate_compiled_plan_for_node(
         "to distinguish the claim; it must not contain an experiment design. Do not return predicted results, "
         "sample sizes, statistical tests, instrument configurations, ablation plans, or failure-repair plans."
     )
+    prompt += _data_anchored_contract_prompt(parent_state)
     survey_handoff = getattr(mcts, "survey_idea_handoff", {})
     if isinstance(survey_handoff, dict) and survey_handoff:
         prompt += "\n\n== Verified Survey -> Idea handoff ==\n" + pretty_json(survey_handoff)
@@ -2051,6 +2088,28 @@ def expand_node_with_skills(
         profile_id=profile_id,
     )
     skill_candidates = list(selected_skill_candidates)
+    data_contract = scientific_intervention.get("data_anchored_contract")
+    data_contract = data_contract if isinstance(data_contract, Mapping) else {}
+    coverage_assignment = data_contract.get("coverage_assignment")
+    coverage_assignment = (
+        coverage_assignment if isinstance(coverage_assignment, Mapping) else {}
+    )
+    coverage_branches = [
+        dict(branch)
+        for branch in data_contract.get("coverage_branches", [])
+        if isinstance(branch, Mapping) and str(branch.get("branch_id") or "").strip()
+    ]
+    is_coverage_root = bool(coverage_assignment and coverage_branches) and int(
+        getattr(node, "depth", len(path) - 1)
+    ) == 0
+    expansion_specs: list[tuple[Any, Mapping[str, Any] | None]]
+    if is_coverage_root and skill_candidates:
+        expansion_specs = [
+            (skill_candidates[index % len(skill_candidates)], branch)
+            for index, branch in enumerate(coverage_branches)
+        ]
+    else:
+        expansion_specs = [(selection_candidate, None) for selection_candidate in skill_candidates]
     log_message(
         mcts.logger,
         mcts.log_sink,
@@ -2066,7 +2125,7 @@ def expand_node_with_skills(
 
     idea_node_cls = type(node)
     operator_application_cls = type(node.transformation)
-    for selection_candidate in skill_candidates:
+    for selection_candidate, coverage_branch in expansion_specs:
         skill = mcts.skill_catalog.render_skill_for_profile(
             selection_candidate.skill,
             profile_id,
@@ -2084,6 +2143,23 @@ def expand_node_with_skills(
         prior_constraints = mcts.skill_catalog.priors.get(skill.name, SkillUsagePrior()).rule_constraints
         if prior_constraints:
             plan.guardrails = _dedupe_keep_order_strings(plan.guardrails + list(prior_constraints))
+        if coverage_branch is not None:
+            branch_id = str(coverage_branch.get("branch_id") or "").strip()
+            branch_instruction = str(coverage_branch.get("instruction") or "").strip()
+            plan.objective = (
+                f"{plan.objective} Data-coverage branch `{branch_id}`: {branch_instruction}"
+            ).strip()
+            plan.guardrails = _dedupe_keep_order_strings(
+                [
+                    *plan.guardrails,
+                    f"Materialize the required data-coverage branch `{branch_id}`.",
+                    "Keep this branch dataset-local; it cannot establish a universal mechanism or novelty claim.",
+                ]
+            )
+            plan.compile_notes = (
+                f"{plan.compile_notes}\nRequired data-coverage branch: {branch_id}. "
+                f"{branch_instruction}"
+            ).strip()
 
         current_count = len(node.state.components)
         filtered_edits: List[ComponentEdit] = []
@@ -2148,6 +2224,8 @@ def expand_node_with_skills(
                 "selection_total": selection_candidate.selection_total,
             },
         }
+        if coverage_branch is not None:
+            selection_metadata["data_anchored_coverage_branch"] = dict(coverage_branch)
         child_state = mcts._materialize_child_state(
             node.state,
             plan,
@@ -2260,6 +2338,7 @@ def simulate_node_value(
         defect_registry=format_defect_registry(profile_id),
         symbolic_memory_hints=symbolic_hints,
     )
+    prompt += _data_anchored_contract_prompt(node.state)
     survey_handoff = getattr(mcts, "survey_idea_handoff", {})
     if isinstance(survey_handoff, dict) and survey_handoff:
         prompt += "\n\n== Verified Survey -> Idea handoff ==\n" + pretty_json(survey_handoff)
@@ -2784,21 +2863,60 @@ def build_root_state(
         if isinstance(seed, dict) and str(seed.get("seed_id") or "").strip()
     ]
     if gap_hypothesis_seeds:
-        scientific_intervention["hypothesis_seed_refs"] = [
-            {
+        hypothesis_seed_refs = []
+        for seed in gap_hypothesis_seeds:
+            seed_ref = {
                 "seed_id": str(seed.get("seed_id") or "").strip(),
                 "gap_id": str(seed.get("gap_id") or "").strip(),
                 "gap_route": str(seed.get("gap_route") or "").strip(),
                 "seed_status": str(seed.get("seed_status") or "").strip(),
                 "target_slot": str(seed.get("target_slot") or "").strip(),
             }
-            for seed in gap_hypothesis_seeds
-        ]
+            if is_data_anchored(seed):
+                seed_ref.update(
+                    {
+                        "analysis_priority": DATA_ANCHORED_PRIORITY,
+                        "data_anchor_refs": list(seed.get("data_anchor_refs") or []),
+                        "literature_reconciliation_status": str(
+                            seed.get("literature_reconciliation_status") or "unresolved"
+                        ),
+                    }
+                )
+            hypothesis_seed_refs.append(seed_ref)
+        scientific_intervention["hypothesis_seed_refs"] = hypothesis_seed_refs
         scientific_intervention["gap_seed_status"] = (
             dict(context.get("gap_seed_status"))
             if isinstance(context.get("gap_seed_status"), dict)
             else {}
         )
+    data_anchored_context = context.get("data_anchored_context")
+    if not isinstance(data_anchored_context, Mapping) and isinstance(mature_record, Mapping):
+        data_anchored_context = mature_record
+    if is_data_anchored(data_anchored_context):
+        scientific_intervention["data_anchored_contract"] = {
+            "data_anchor_refs": list(data_anchored_context.get("data_anchor_refs") or []),
+            "literature_reconciliation_status": str(
+                data_anchored_context.get("literature_reconciliation_status") or "unresolved"
+            ),
+            "competing_explanations": list(
+                data_anchored_context.get("competing_explanations") or []
+            ),
+            "measurement_needs": list(data_anchored_context.get("measurement_needs") or []),
+            "claim_limits": list(data_anchored_context.get("claim_limits") or []),
+            "mcts_depth_multiplier": float(
+                data_anchored_context.get("mcts_depth_multiplier") or 1.75
+            ),
+            "coverage_branches": list(
+                data_anchored_context.get("coverage_branches") or []
+            ),
+        }
+        coverage_assignment = data_anchored_context.get(
+            "data_anchored_coverage_assignment"
+        )
+        if isinstance(coverage_assignment, Mapping):
+            scientific_intervention["data_anchored_contract"][
+                "coverage_assignment"
+            ] = dict(coverage_assignment)
 
     return idea_state_cls(
         title=str(title),

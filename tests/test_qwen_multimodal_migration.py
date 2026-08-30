@@ -88,6 +88,31 @@ def test_qwen_vision_payload_uses_data_url_and_quality_model():
     assert payload["response_format"] == {"type": "json_object"}
 
 
+def test_qwen_vision_describe_json_enforces_json_object_response_format():
+    fake = FakeVisionClient('{"finding":"bounded preview"}')
+    client = QwenVisionClient(
+        model="qwen3-vl-plus",
+        provider="qwen",
+        client=fake,
+        config=_config(),
+    )
+
+    result = client.describe_json(
+        b"png-preview",
+        prompt="return one object",
+        schema={
+            "type": "object",
+            "properties": {"finding": {"type": "string"}},
+            "required": ["finding"],
+            "additionalProperties": False,
+        },
+    )
+
+    assert result == {"finding": "bounded preview"}
+    assert fake.completions.calls[0]["model"] == "qwen3-vl-plus"
+    assert fake.completions.calls[0]["response_format"] == {"type": "json_object"}
+
+
 def test_vision_settings_select_quality_and_batch_models():
     config = _config()
     assert resolve_vision_settings(config)["model"] == "qwen3-vl-plus"

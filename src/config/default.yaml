@@ -211,6 +211,21 @@ api:
 survey:
   output:
     root_dir: "${repo_root}/src/agents/survey_agent/outputs"
+  multimodal_evidence:
+    enabled: false
+    allow_remote_perception: false
+    quality_model: "qwen3-vl-plus"
+    max_data_anchored_sh: 3
+    max_vl_calls: 8
+    max_preview_pixels: 1600000
+    max_preview_bytes: 4194304
+    max_records_per_modality: 24
+    max_input_file_bytes: 52428800
+    max_total_input_bytes: 268435456
+    sampling_policy: "stratified_by_label_group_condition_timepoint_round_robin_v1"
+    input_spec: {}
+    local_input_context: {}
+    runtime_evidence: {}
   BasicInfo:
     topic: ""
     research_title: ""

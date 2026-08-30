@@ -3,9 +3,14 @@
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
+import re
 from typing import Any
 
 from src.pipeline.survey_idea_handoff import stable_identifier
+from src.agents.idea_agent.utils.workflow.multimodal_data_anchoring import (
+    DATA_ANCHORED_PRIORITY,
+    build_data_anchored_seed_context,
+)
 
 
 GAP_HYPOTHESIS_BRIDGE_SCHEMA_VERSION = "gap_hypothesis_bridge_v1"
@@ -225,6 +230,24 @@ def _is_excluded(gap: Mapping[str, Any], route: str, audit_status: str) -> bool:
     )
 
 
+def _bound_unresolved_data_gap_statement(statement: str) -> str:
+    """Remove novelty assertions that an unresolved local observation cannot support."""
+
+    text = _text(statement)
+    novelty_claim = re.compile(
+        r"\b(?:first\s+(?:discovery|finding|observation|report|evidence)|"
+        r"newly\s+discovered|first[- ]ever)\b|首次(?:发现|报道|观察)|首个(?:发现|报道|观察)",
+        re.IGNORECASE,
+    )
+    if not novelty_claim.search(text):
+        return text
+    return (
+        "The supplied dataset contains an observation whose relationship to the "
+        "literature remains unresolved; test condition-specific, alternative, and "
+        "measurement explanations before making any novelty claim."
+    )
+
+
 def build_gap_hypothesis_seeds(
     survey_idea_handoff: Mapping[str, Any] | None,
     gap_triage: Mapping[str, Any] | None = None,
@@ -232,6 +255,7 @@ def build_gap_hypothesis_seeds(
     profile_resolution: Mapping[str, Any] | None = None,
     scope: Mapping[str, Any] | None = None,
     topic: str = "",
+    multimodal_evidence_projection: Mapping[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     """Build hypothesis seeds without imposing a strict evidence admission gate."""
 
@@ -264,6 +288,41 @@ def build_gap_hypothesis_seeds(
         candidate_defect_tags = _texts(gap.get("candidate_defect_tags"))
         if not candidate_defect_tags:
             candidate_defect_tags = ["unexplored_gap"]
+        data_context = build_data_anchored_seed_context(
+            handoff,
+            gap,
+            multimodal_evidence_projection=multimodal_evidence_projection,
+        )
+        data_status = _text(data_context.get("literature_reconciliation_status"))
+        gap_kind = _text(gap.get("gap_kind")) or "unexplored_gap"
+        target_slot = _text(gap.get("target_slot")) or "scientific_constraint"
+        gap_statement = _text(gap.get("statement")) or "An unresolved research gap remains."
+        unknown_or_unverified = _unknown_or_unverified(gap, triage_row)
+        if data_status == "measurement_at_risk":
+            gap_kind = "measurement_validity_gap"
+            target_slot = "multimodal_native_measurement"
+            gap_statement = (
+                "The supplied-data pattern requires validation against calibration, "
+                "preparation, proxy-validity, or preprocessing explanations before "
+                "it can support a mechanism claim."
+            )
+            candidate_defect_tags = _texts(
+                ["measurement_validity", "method_design", *candidate_defect_tags]
+            )
+        elif data_status == "challenged":
+            gap_statement = (
+                "The supplied-data observation and comparable literature evidence "
+                "are challenged; resolve their conditions, comparability, measurement, "
+                "or competing mechanisms without treating either source as decisive."
+            )
+        elif data_status == "unresolved":
+            gap_statement = _bound_unresolved_data_gap_statement(gap_statement)
+            unknown_or_unverified = _texts(
+                [
+                    *unknown_or_unverified,
+                    "literature_reconciliation:unresolved; do not characterize the local observation as a first discovery",
+                ]
+            )
         seed_id = stable_identifier(
             "gap_seed",
             gap_id,
@@ -276,16 +335,16 @@ def build_gap_hypothesis_seeds(
                 "seed_id": seed_id,
                 "gap_id": gap_id,
                 "subhypothesis_id": _text(gap.get("subhypothesis_id")) or "GLOBAL",
-                "gap_statement": _text(gap.get("statement")) or "An unresolved research gap remains.",
-                "gap_kind": _text(gap.get("gap_kind")) or "unexplored_gap",
-                "target_slot": _text(gap.get("target_slot")) or "scientific_constraint",
+                "gap_statement": gap_statement,
+                "gap_kind": gap_kind,
+                "target_slot": target_slot,
                 "target_object": _text(gap.get("target_object")),
                 "priority": _text(gap.get("priority")) or "medium",
                 "gap_route": route or "provisional_hypothesis",
                 "profile_id": resolved_profile_id,
                 "why_it_matters": _text(gap.get("why_it_matters")),
                 "known_evidence": _known_evidence(gap, source_anchors, evidence_roles),
-                "unknown_or_unverified": _unknown_or_unverified(gap, triage_row),
+                "unknown_or_unverified": unknown_or_unverified,
                 "source_anchors": source_anchors,
                 "evidence_roles": evidence_roles,
                 "scope": dict(resolved_scope),
@@ -295,6 +354,7 @@ def build_gap_hypothesis_seeds(
                 "seed_status": _seed_status(route, audit_status, source_anchors),
                 "audit_status": audit_status,
                 "verification_status": _text(triage_row.get("verification_status")) or "not_checked",
+                **data_context,
             }
         )
 
@@ -332,6 +392,7 @@ def build_gap_hypothesis_seeds(
 
     seeds.sort(
         key=lambda seed: (
+            0 if seed.get("analysis_priority") == DATA_ANCHORED_PRIORITY else 1,
             _ROUTE_RANK.get(_text(seed.get("gap_route")), 9),
             _PRIORITY_RANK.get(_text(seed.get("priority")), 1),
             -float(seed.get("confidence") or 0.0),
@@ -379,6 +440,16 @@ def build_gap_seed_context(seeds: Sequence[Mapping[str, Any]]) -> str:
                 f"   unknown_or_unverified={'; '.join(_texts(seed.get('unknown_or_unverified'))) or 'not specified'}",
             ]
         )
+        if seed.get("analysis_priority") == DATA_ANCHORED_PRIORITY:
+            lines.extend(
+                [
+                    f"   data_anchor_refs={', '.join(_texts(seed.get('data_anchor_refs'))) or 'none'}",
+                    f"   literature_reconciliation_status={_text(seed.get('literature_reconciliation_status')) or 'unresolved'}",
+                    f"   competing_explanations={'; '.join(_texts(seed.get('competing_explanations'))) or 'must remain open'}",
+                    f"   measurement_needs={'; '.join(_texts(seed.get('measurement_needs'))) or 'a discriminating measurement is required'}",
+                    "   data_coverage_branches=candidate_mechanism | alternative_explanation | measurement_artifact",
+                ]
+            )
     return "\n".join(lines)
 
 

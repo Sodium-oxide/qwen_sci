@@ -21,6 +21,10 @@ from .survey_idea_handoff import (
     validate_gap_ledger_payload,
 )
 from .survey_gap_triage import build_gap_triage_artifact
+from .multimodal_evidence.handoff_binding import (
+    MULTIMODAL_EVIDENCE_ARTIFACT,
+    build_multimodal_handoff_binding,
+)
 
 
 _ROLE_ALIASES = {
@@ -330,6 +334,7 @@ def build_survey_idea_handoff_projection(
     source_artifacts: Mapping[str, Any] | None = None,
     created_at: str = "",
     triage_llm_call: Any = None,
+    multimodal_evidence: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Project authoritative ledger gaps plus adjudicated candidates to Handoff v1."""
 
@@ -403,14 +408,28 @@ def build_survey_idea_handoff_projection(
         "idea_handoff": "survey_idea_handoff.json",
     }
     artifacts.update(dict(source_artifacts or {}))
+    gap_ids_by_subhypothesis: dict[str, list[str]] = {}
+    for gap in gaps:
+        subhypothesis_id = _text(gap.subhypothesis_id)
+        if subhypothesis_id:
+            gap_ids_by_subhypothesis.setdefault(subhypothesis_id, []).append(gap.gap_id)
+    multimodal_anchors, multimodal_roles = build_multimodal_handoff_binding(
+        multimodal_evidence,
+        gap_ids_by_subhypothesis=gap_ids_by_subhypothesis,
+    )
+    if multimodal_evidence is not None:
+        artifacts["multimodal_evidence"] = MULTIMODAL_EVIDENCE_ARTIFACT
     handoff = SurveyIdeaHandoff(
         project_id=project_id,
         survey_run_id=survey_run_id,
         topic=topic,
         project_context_fingerprint=_text(ledger.get("project_context_fingerprint")),
         gaps=gaps,
-        anchors=anchors,
-        evidence_roles=_evidence_roles(plan, anchors_by_slot),
+        anchors=[*anchors, *multimodal_anchors],
+        evidence_roles=[
+            *_evidence_roles(plan, anchors_by_slot),
+            *multimodal_roles,
+        ],
         profile_resolution=_profile_resolution(ledger.get("profile_resolution")),
         scope=_scope_from_context(context),
         constraints={

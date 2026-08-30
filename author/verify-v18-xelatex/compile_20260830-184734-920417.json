@@ -1,0 +1,63 @@
+{
+  "allow_shell_escape": false,
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/xelatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "conference_101719.tex"
+      ],
+      "elapsed_ms": 522.38,
+      "return_code": 0,
+      "stage": "latex_initial",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/usr/bin/bibtex",
+        "conference_101719"
+      ],
+      "elapsed_ms": 19.623,
+      "return_code": 0,
+      "stage": "bibtex",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/usr/bin/xelatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "conference_101719.tex"
+      ],
+      "elapsed_ms": 302.95,
+      "return_code": 0,
+      "stage": "latex_resolve_references_1",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/usr/bin/xelatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "conference_101719.tex"
+      ],
+      "elapsed_ms": 311.457,
+      "return_code": 0,
+      "stage": "latex_resolve_references_2",
+      "timed_out": false
+    }
+  ],
+  "failure_stage": "",
+  "generated_at": "2026-08-30T10:07:51.199+00:00",
+  "main_tex": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/author/verify-v18-xelatex/research_plan_20260830-184734-920417_project/conference_101719.tex",
+  "project_dir": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/author/verify-v18-xelatex/research_plan_20260830-184734-920417_project",
+  "run_bibtex": true,
+  "schema_version": "research_plan_author_latex_compile_v1",
+  "staged_pdf": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/author/verify-v18-xelatex/.research_plan_20260830-184734-920417.pdf.staging",
+  "success": true,
+  "timeout_seconds": 180
+}

@@ -129,7 +129,12 @@ def enforce_candidate_invariants(
         if not isinstance(item, Mapping):
             continue
         candidate = deepcopy(dict(item))
-        violations: List[str] = []
+        existing_violations = [
+            _text(value)
+            for value in candidate.get("invariant_violations", [])
+            if _text(value)
+        ]
+        violations: List[str] = list(existing_violations)
         candidate["idea_id"] = _text(candidate.get("idea_id") or candidate.get("candidate_id") or candidate.get("title") or "candidate")
         candidate["seed_id"] = _text(candidate.get("seed_id") or candidate["idea_id"])
         candidate["route_id"] = _text(candidate.get("route_id") or candidate.get("direction_mode") or "legacy_route")
@@ -141,7 +146,32 @@ def enforce_candidate_invariants(
             violations.append("missing_rejected_gap_ids")
         if candidate.get("rejected_gap_ids") and not candidate.get("reframed_problem_id"):
             violations.append("missing_reframed_problem_id")
-        if violations:
+        is_data_anchored = bool(
+            candidate.get("analysis_priority") == "DATA_ANCHORED_PRIMARY"
+            or candidate.get("data_anchor_refs")
+        )
+        if is_data_anchored:
+            required_data_fields = (
+                "target_gap_ids",
+                "data_anchor_refs",
+                "candidate_mechanism",
+                "competing_explanations",
+                "discriminating_measurement_plan",
+                "falsifier",
+                "confound_and_leakage_checks",
+            )
+            for field_name in required_data_fields:
+                if not candidate.get(field_name):
+                    violations.append(f"missing_data_anchored_{field_name}")
+            if (
+                candidate.get("claim_scope")
+                != "dataset_local_hypothesis_pending_external_validation"
+            ):
+                violations.append("invalid_data_anchored_claim_scope")
+            if candidate.get("data_anchored_contract_status") != "complete":
+                violations.append("incomplete_data_anchored_contract")
+        violations = list(dict.fromkeys(violations))
+        if violations or candidate.get("invariant_status") == "violated":
             candidate["invariant_status"] = "violated"
             candidate["invariant_violations"] = violations
         else:
