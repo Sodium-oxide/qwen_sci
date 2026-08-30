@@ -1515,23 +1515,6 @@ def _doctor_command(args: argparse.Namespace) -> int:
             blog_model,
         )
     checks.append(
-        ("graph.db", (REPO_ROOT / "data" / "processed" / "graph.db").exists(), "data/processed/graph.db"),
-    )
-    vector_store_dir = REPO_ROOT / "data" / "processed" / "core_component_summary_vector_store"
-    vector_store_files = [
-        "build_stats.json",
-        "faiss.index",
-        "meta.json",
-    ]
-    for filename in vector_store_files:
-        checks.append(
-            (
-                f"vector_store/{filename}",
-                (vector_store_dir / filename).exists(),
-                f"data/processed/core_component_summary_vector_store/{filename}",
-            )
-        )
-    checks.append(
         ("all-MiniLM-L6-v2", (REPO_ROOT / "models" / "all-MiniLM-L6-v2").exists(), "models/all-MiniLM-L6-v2")
     )
     checks.append(
@@ -1588,8 +1571,6 @@ def _doctor_command(args: argparse.Namespace) -> int:
         not llm_provider.base_url,
         any(role_model_failures),
         not os.environ.get("SEMANTIC_SCHOLAR_API_KEY"),
-        not (REPO_ROOT / "data" / "processed" / "graph.db").exists(),
-        any(not (vector_store_dir / filename).exists() for filename in vector_store_files),
         not (REPO_ROOT / "models" / "all-MiniLM-L6-v2").exists(),
         not (REPO_ROOT / "models" / "bge-m3").exists(),
     ]
