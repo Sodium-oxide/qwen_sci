@@ -258,7 +258,7 @@ survey:
     # stable operating range. Survey presets may not exceed this default.
     batch_chat_agent_worker: 4
     chat_timeout: 900
-    batch_chat_timeout: 600
+    batch_chat_timeout: 1800
     # OpenAlex is the primary literature-discovery provider. API keys are
     # required by the current OpenAlex API; the adapter sends this value only
     # as an Authorization header and never writes it to logs or cache artifacts.

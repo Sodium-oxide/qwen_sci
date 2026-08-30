@@ -150,7 +150,7 @@ APIInfo:
   openalex_api_key: "${oc.env:OPENALEX_API_KEY,''}"
   batch_chat_agent_worker: 2
   chat_timeout: 3600
-  batch_chat_timeout: 600
+  batch_chat_timeout: 1800
 
 ModuleInfo:
   WorkCollector:

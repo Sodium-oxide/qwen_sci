@@ -20,7 +20,7 @@ APIInfo:
   llm_max_context_length: 1000000
   batch_chat_agent_worker: 4
   chat_timeout: 900
-  batch_chat_timeout: 600
+  batch_chat_timeout: 1800
   use_stream_mode: False
   openalex_api_key: "${oc.env:OPENALEX_API_KEY,''}"
   semantic_scholar_api_key: 

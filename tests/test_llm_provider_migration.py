@@ -447,7 +447,7 @@ def test_deep_survey_limits_batch_chat_concurrency():
 
     assert config.APIInfo.batch_chat_agent_worker == 4
     assert config.APIInfo.chat_timeout == 600
-    assert config.APIInfo.batch_chat_timeout == 600
+    assert config.APIInfo.batch_chat_timeout == 1800
 
 
 def test_batch_chat_marks_unfinished_requests_for_retry(monkeypatch):

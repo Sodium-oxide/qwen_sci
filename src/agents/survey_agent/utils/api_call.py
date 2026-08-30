@@ -2007,7 +2007,7 @@ class ChatAgent:
         if workers is None:
             workers = self.batch_workers
         if future_timeout is None:
-            future_timeout = getattr(self.config.APIInfo, "batch_chat_timeout", 600.0)
+            future_timeout = getattr(self.config.APIInfo, "batch_chat_timeout", 1800.0)
         if workers <= 0:
             raise ValueError("workers must be positive.")
         if future_timeout <= 0:
@@ -2302,7 +2302,7 @@ class ChatAgent:
         max_in_flight_tokens: int | None = None,
     ) -> list[str]:
         if future_timeout is None:
-            future_timeout = getattr(self.config.APIInfo, "batch_chat_timeout", 600.0)
+            future_timeout = getattr(self.config.APIInfo, "batch_chat_timeout", 1800.0)
         """
         Batch remote chat with retry logic for failed validations.
         

@@ -18,7 +18,7 @@ APIInfo:
   use_stream_mode: False
   batch_chat_agent_worker: 4
   chat_timeout: 600
-  batch_chat_timeout: 600
+  batch_chat_timeout: 1800
   openalex_api_key: "${oc.env:OPENALEX_API_KEY,''}"
   semantic_scholar_api_key: "${oc.env:SEMANTIC_SCHOLAR_API_KEY,''}"
   low_flow_mode: False

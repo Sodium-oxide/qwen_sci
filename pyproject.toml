@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "qwen-sci"
-version = "0.2.0rc3"
+version = "0.2.0rc4"
 description = "Qwen-Sci multi-agent research workflow"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
@@ -127,7 +127,9 @@ qwensci-install-mcp-wrappers = "src.cli:install_mcp_wrappers_main"
 
 [dependency-groups]
 dev = [
+  "build>=1.2.2",
   "pytest==9.0.2",
+  "twine>=6.1.0",
 ]
 memory = [
   "faiss-cpu==1.12.0",
