@@ -39,8 +39,8 @@ _DISCIPLINE_TEMPLATE = {
 }
 
 _COMMON_ROUTES = (
-    ("abstract", "Abstract", "abstract", ("research_gap", "planned_contribution", "expected_outcome")),
-    ("introduction", "Introduction", "sections", ("background", "research_gap")),
+    ("abstract", "Abstract", "abstract", ("planned_contribution", "expected_outcome")),
+    ("introduction", "Introduction", "sections", ("background", "research_gap", "planned_contribution", "design_assumption")),
     ("survey_and_research_gap", "Background, Survey, and Research Gap", "sections", ("background", "survey_evidence", "research_gap")),
     ("research_questions_and_contributions", "Research Questions and Planned Contributions", "sections", ("research_question", "planned_contribution", "design_assumption")),
     ("idea_origin_and_selection", "Idea Source Checkpoints and Direction Selection Audit", "sections", ("idea_provenance", "design_assumption")),
@@ -77,6 +77,15 @@ _TEMPLATE_ROUTES = {
     "clinical_health": (
         ("pico_endpoints_and_governance", "PICO, Endpoints, Bias Control, and Governance", ("planned_method", "design_assumption", "needs_human_input", "review_requirement")),
     ),
+}
+
+_MATHEMATICS_THEORY_ROUTE_ROLES = {
+    "formal_problem_and_hypotheses": "candidate_theorem_entry",
+    "definitions_and_propositions": "theory_control_panel",
+    "forward_derivation_and_counterexamples": "derivation_and_falsification",
+    "expected_outcomes": "preregistered_decision_protocol",
+    "risk_limitations_and_review": "release_and_review_protocol",
+    "appendix_variables_and_definitions": "energy_condition_boundary_defense",
 }
 
 
@@ -127,24 +136,50 @@ def route_author_sections(author_input: Mapping[str, Any]) -> dict[str, Any]:
     for section_id, title, target, claim_kinds in _COMMON_ROUTES:
         if section_id == "references":
             for extra_id, extra_title, extra_claim_kinds in template_routes:
-                routes.append(
-                    {
-                        "section_id": extra_id,
-                        "title": extra_title,
-                        "target": "sections",
-                        "applicability": "required",
-                        "allowed_claim_kinds": list(extra_claim_kinds),
-                    }
-                )
-        routes.append(
-            {
-                "section_id": section_id,
-                "title": title,
-                "target": target,
-                "applicability": "required" if section_id != "appendix_idea_evolution" else "optional",
-                "allowed_claim_kinds": list(claim_kinds),
-            }
+                template_route = {
+                    "section_id": extra_id,
+                    "title": extra_title,
+                    "target": "sections",
+                    "applicability": "required",
+                    "allowed_claim_kinds": list(extra_claim_kinds),
+                }
+                theory_role = _MATHEMATICS_THEORY_ROUTE_ROLES.get(extra_id) if template_family == "mathematics_theory" else ""
+                if theory_role:
+                    template_route["theory_role"] = theory_role
+                routes.append(template_route)
+        route = {
+            "section_id": section_id,
+            "title": title,
+            "target": target,
+            "applicability": "required" if section_id != "appendix_idea_evolution" else "optional",
+            "allowed_claim_kinds": list(claim_kinds),
+        }
+        theory_role = (
+            _MATHEMATICS_THEORY_ROUTE_ROLES.get(section_id)
+            if template_family == "mathematics_theory"
+            else ""
         )
+        if theory_role:
+            route["theory_role"] = theory_role
+        routes.append(route)
+    if template_family == "mathematics_theory":
+        for route in routes:
+            if route.get("section_id") == "appendix_variables_and_definitions":
+                route["title"] = "Energy-Condition Taxonomy, Symbols, and Boundary Defense"
+        appendix_order = {
+            "appendix_variables_and_definitions": 0,
+            "appendix_idea_evolution": 1,
+            "appendix_evidence_and_review": 2,
+        }
+        routes = sorted(
+            enumerate(routes),
+            key=lambda item: (
+                1 if item[1].get("target") == "appendices" else 0,
+                appendix_order.get(_text(item[1].get("section_id")), 99),
+                item[0],
+            ),
+        )
+        routes = [route for _index, route in routes]
     return {
         "schema_version": "research_plan_author_section_routing_v1",
         "template_family": template_family,

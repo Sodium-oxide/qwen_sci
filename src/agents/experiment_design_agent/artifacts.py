@@ -211,10 +211,28 @@ def _canonical_review_items(design: Mapping[str, Any]) -> list[dict[str, str]]:
     return _stable_items(collected)
 
 
+_BIBLIOGRAPHIC_METADATA_FIELDS = ("authors", "title", "year", "venue", "doi", "url")
+
+
+def _compact_bibliographic_metadata(record: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        field: deepcopy(record[field])
+        for field in _BIBLIOGRAPHIC_METADATA_FIELDS
+        if record.get(field) not in (None, "", [])
+    }
+
+
 def _compact_source_registry(evidence_bundle: Mapping[str, Any]) -> dict[str, Any]:
     cards: dict[str, dict[str, Any]] = {}
     allowed_source_ids: list[str] = []
     citations: list[dict[str, Any]] = []
+    papers_by_source_id: dict[str, Mapping[str, Any]] = {}
+    for raw_paper in evidence_bundle.get("paper_registry") or []:
+        if not isinstance(raw_paper, Mapping):
+            continue
+        source_id = _text(raw_paper.get("canonical_paper_id"))
+        if source_id:
+            papers_by_source_id[source_id] = raw_paper
     for index, raw_card in enumerate(evidence_bundle.get("evidence_cards") or [], start=1):
         if not isinstance(raw_card, Mapping):
             continue
@@ -231,6 +249,7 @@ def _compact_source_registry(evidence_bundle: Mapping[str, Any]) -> dict[str, An
             "evidence_level": _text(raw_card.get("evidence_level")) or "metadata",
             "claim_slot": _text(raw_card.get("claim_slot")),
             "source_location": _text(raw_card.get("source_location")),
+            "support_statement": _text(raw_card.get("statement")),
         }
         cards[card_id] = record
         if source_id and source_id not in allowed_source_ids:
@@ -238,12 +257,27 @@ def _compact_source_registry(evidence_bundle: Mapping[str, Any]) -> dict[str, An
         if source_id:
             existing = next((item for item in citations if item.get("source_id") == source_id), None)
             if existing is None:
-                citations.append({
+                paper = papers_by_source_id.get(source_id, {})
+                citation = {
                     "citation_key": record["citation_key"],
                     "source_id": source_id,
                     "evidence_level": record["evidence_level"],
                     "evidence_card_ids": [card_id],
-                })
+                }
+                bibliographic_metadata = _compact_bibliographic_metadata(paper)
+                if bibliographic_metadata:
+                    citation["bibliographic_metadata"] = bibliographic_metadata
+                citation_rendering_status = _text(paper.get("citation_rendering_status"))
+                if citation_rendering_status:
+                    citation["citation_rendering_status"] = citation_rendering_status
+                citation_missing_fields = [
+                    _text(field)
+                    for field in paper.get("citation_missing_fields") or []
+                    if _text(field)
+                ]
+                if citation_missing_fields:
+                    citation["citation_missing_fields"] = citation_missing_fields
+                citations.append(citation)
             elif card_id not in existing["evidence_card_ids"]:
                 existing["evidence_card_ids"].append(card_id)
     return {

@@ -952,11 +952,27 @@ research_plan_author:
   model: "${oc.env:RESEARCH_PLAN_AUTHOR_LLM_MODEL,'qwen3.8-flash'}"
   authoring:
     require_survey_manifest: true
-    require_source_traceability: true
     proposal_without_observed_results: true
     unsupported_claims_forbidden: true
-    max_contract_repairs: 1
+    # 0 disables generic repair; 1 permits one bounded repair for each Author section and Blueprint assignment.
+    max_contract_repairs_per_section: 1
+    composer_concurrency: 5
+    section_cache:
+      enabled: true
+      mode: "read_write"
+      root: ".science/cache/research_plan_author/v1"
+    temperature: 0.5
     require_survey_binding: false
+  document_quality:
+    enabled: true
+    model: "${oc.env:RESEARCH_PLAN_AUTHOR_QUALITY_MODEL,'qwen3.7-plus'}"
+    judge_temperature: 0.0
+    revision_temperature: 0.5
+    judge_max_retries: 3
+    max_iterations: 2
+    score_concurrency: 3
+    max_revision_block_edits: 14
+    special_score_weight: 0.25
   idea_evolution:
     default_mode: "auto"
     max_iterations: 3

@@ -53,6 +53,20 @@ def _brief(discipline_id: str, topic: str) -> dict:
         "known_unknowns": ["Final sampling or availability constraints are not yet confirmed."],
         "evidence_status": "PROPOSED",
         "source": {"idea_result_schema": "idea_result_v5", "direction_id": f"route-{discipline_id}"},
+        "reasoning_context": {
+            "schema_version": "reasoning_context_v1",
+            "selected_direction_id": f"route-{discipline_id}",
+            "assumptions": [],
+            "claim_scope": "",
+            "falsifiers": [],
+            "boundary_conditions": [],
+            "alternative_explanations": [],
+            "formal_symbols": [],
+            "gap_records": [],
+            "evidence_roles": [],
+            "source_anchors": [],
+            "upstream_source_paths": [],
+        },
     }
 
 
@@ -195,7 +209,7 @@ def test_query_planner_rejects_source_like_llm_output() -> None:
         )
 
 
-def test_query_planner_logs_every_received_query_variant_even_when_validation_fails(tmp_path) -> None:
+def test_query_planner_accepts_single_term_variants_and_logs_them(tmp_path) -> None:
     brief = _brief("25", "Material interface stability.")
     routing = TemplateRouter().route(brief)
     response = {
@@ -212,15 +226,15 @@ def test_query_planner_logs_every_received_query_variant_even_when_validation_fa
         console_stream=console,
     )
 
-    with pytest.raises(ValueError, match="invalid_variant_query_length:research_object_measurability:2"):
-        EvidenceRetrievalPlanner().plan(
-            brief,
-            routing,
-            llm_call=lambda _, **__: response,
-            logger=logger,
-        )
+    planned = EvidenceRetrievalPlanner().plan(
+        brief,
+        routing,
+        llm_call=lambda _, **__: response,
+        logger=logger,
+    )
     logger.close()
 
+    assert planned["planning_status"] == "READY_FOR_RETRIEVAL"
     records = [json.loads(line) for line in (tmp_path / "planner.jsonl").read_text(encoding="utf-8").splitlines()]
     variant_records = [record for record in records if record["event"] == "query_plan_variant_received"]
     assert variant_records
@@ -231,7 +245,7 @@ def test_query_planner_logs_every_received_query_variant_even_when_validation_fa
         and record["query_term_count"] == 1
         for record in variant_records
     )
-    assert any(record["event"] == "query_plan_validation_failed" for record in records)
+    assert not any(record["event"] == "query_plan_validation_failed" for record in records)
     assert "query=single" in console.getvalue()
 
 

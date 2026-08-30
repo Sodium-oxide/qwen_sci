@@ -1,0 +1,103 @@
+{
+  "authoring_constraints": {
+    "all_displayed_checkpoints_require_source_anchors": true,
+    "do_not_describe_checkpoints_as_temporal_iterations": true,
+    "do_not_invent_missing_iterations": true,
+    "do_not_present_idea_history_as_empirical_evidence": true,
+    "language": "en",
+    "temporal_order_is_unknown_without_iteration_id_timestamp_parent_or_auditable_diff": true
+  },
+  "checkpoints": [
+    {
+      "checkpoint_id": "checkpoint-1",
+      "checkpoint_type": "available_audit_snapshot",
+      "snapshot": {
+        "central_hypothesis": "If spherically symmetric stellar collapse satisfies AANEC, global hyperbolicity, regular matter fields, complete null generators, and an explicit averaged null-convergence/focusing condition, then reaching a model-dependent compactness threshold forces trapped-surface formation; consequently, stable non-black-hole remnants above a compactness-dependent mass scale are excluded within this restricted model class. This does not by itself explain the observed 2-5 solar mass gap, which may be governed by supernova explosion physics, fallback, equation-of-state uncertainties, rotation, magnetic fields, nonspherical dynamics, or binary interactions.",
+        "claim_scope": "Formal theorem/conjecture for classical GR, spherical nonrotating collapse with isotropic pressure, regular matter fields, global hyperbolicity, complete null generators, AANEC, and an explicit averaged null-convergence/focusing condition. Not a quantitative derivation of the observed 2-5 solar mass gap, not a general proof that all massive stars necessarily form black holes, and not a replacement for stellar-evolution or supernova-engine explanations.",
+        "direction_mode": "mechanism_replacement",
+        "mechanism_or_relation": "Replace pointwise NEC/SEC assumptions with AANEC plus an explicit averaged null-convergence/focusing assumption on null congruence generators; derive a trapped-surface threshold via Raychaudhuri-type focusing and Misner-Sharp compactness, then bound stable non-black-hole remnants through TOV-like stellar-structure assumptions. The observed mass gap is treated as an astrophysical consistency constraint, with alternative stellar-physics mechanisms identified as confounders.",
+        "target_gap_ids": [
+          "gap:sh3:missing_assumption:formal_claim:formal_claim:unknown:97595ecd2c86",
+          "gap:sh4:unmapped_gap_boundary_variable:boundary_variable:boundary_variable:unknown:71a0013bb7fd",
+          "gap:global:unresolved_mechanism:progenitor_explosion_energetics:unknown:unknown:352f365bc3b5"
+        ],
+        "title": "AANEC-Relaxed Trapped Surface Theorem and Stellar Mass-Gap Derivation"
+      },
+      "source_file": "idea_candidate.json",
+      "source_json_pointer": "/",
+      "source_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/src/agents/idea_agent/runs/20260828-004610-870347/idea_candidate.json",
+      "temporal_order": "unknown"
+    },
+    {
+      "checkpoint_id": "checkpoint-2",
+      "checkpoint_type": "available_audit_snapshot",
+      "snapshot": {
+        "central_hypothesis": "If spherically symmetric stellar collapse satisfies AANEC, global hyperbolicity, regular matter fields, complete null generators, and an explicit averaged null-convergence/focusing condition, then reaching a model-dependent compactness threshold forces trapped-surface formation; consequently, stable non-black-hole remnants above a compactness-dependent mass scale are excluded within this restricted model class. This does not by itself explain the observed 2-5 solar mass gap, which may be governed by supernova explosion physics, fallback, equation-of-state uncertainties, rotation, magnetic fields, nonspherical dynamics, or binary interactions.",
+        "claim_scope": "Formal theorem/conjecture for classical GR, spherical nonrotating collapse with isotropic pressure, regular matter fields, global hyperbolicity, complete null generators, AANEC, and an explicit averaged null-convergence/focusing condition. Not a quantitative derivation of the observed 2-5 solar mass gap, not a general proof that all massive stars necessarily form black holes, and not a replacement for stellar-evolution or supernova-engine explanations.",
+        "direction_mode": "mechanism_replacement",
+        "mechanism_or_relation": "Replace pointwise NEC/SEC assumptions with AANEC plus an explicit averaged null-convergence/focusing assumption on null congruence generators; derive a trapped-surface threshold via Raychaudhuri-type focusing and Misner-Sharp compactness, then bound stable non-black-hole remnants through TOV-like stellar-structure assumptions. The observed mass gap is treated as an astrophysical consistency constraint, with alternative stellar-physics mechanisms identified as confounders.",
+        "target_gap_ids": [
+          "gap:sh3:missing_assumption:formal_claim:formal_claim:unknown:97595ecd2c86",
+          "gap:sh4:unmapped_gap_boundary_variable:boundary_variable:boundary_variable:unknown:71a0013bb7fd",
+          "gap:global:unresolved_mechanism:progenitor_explosion_energetics:unknown:unknown:352f365bc3b5"
+        ],
+        "title": "A Qualified AANEC Trapped-Surface Bound for Non-Black-Hole Stellar Remnants"
+      },
+      "source_file": "idea_portfolio.json",
+      "source_json_pointer": "/selected_primary_idea",
+      "source_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/src/agents/idea_agent/runs/20260828-004610-870347/idea_portfolio.json",
+      "temporal_order": "unknown"
+    },
+    {
+      "checkpoint_id": "checkpoint-3",
+      "checkpoint_type": "available_audit_snapshot",
+      "snapshot": {
+        "direction_mode": "mechanism_replacement",
+        "hypothesis": {
+          "assumptions": [
+            "Spherically symmetric collapse of massive stars with isotropic pressure.",
+            "Matter fields satisfy AANEC along complete null generators and do not exhibit uncontrolled quantum ANEC violations.",
+            "Spacetime is globally hyperbolic and sufficiently regular for trapped-surface arguments.",
+            "An explicit averaged null-convergence/focusing condition holds along the relevant generators; this is an independent geometric hypothesis, not a consequence of AANEC alone.",
+            "Non-black-hole remnants are modeled as stable equilibrium objects obeying a bounded compactness or TOV-like limit.",
+            "The observed 2-5 solar mass gap is not assumed to be a direct consequence of the theorem; it is treated as an astrophysical consistency constraint subject to alternative stellar-physics explanations."
+          ],
+          "boundary_or_failure_condition": "The theorem fails or must be restricted if AANEC is violated, the added averaged null-convergence/focusing condition fails, null generators are incomplete, quantum stress-energy violates ANEC, nonspherical/rotating/magnetic dynamics dominate, or stable exotic compact objects evade the averaged-focusing assumptions. The mass-gap inference fails or becomes non-discriminating if explosion energetics, fallback, equation-of-state physics, pair-instability processes, or binary evolution dominate the observed remnant distribution.",
+          "central_hypothesis": "If spherically symmetric stellar collapse satisfies AANEC, global hyperbolicity, regular matter fields, complete null generators, and an explicit averaged null-convergence/focusing condition, then reaching a model-dependent compactness threshold forces trapped-surface formation; consequently, stable non-black-hole remnants above a compactness-dependent mass scale are excluded within this restricted model class. This does not by itself explain the observed 2-5 solar mass gap, which may be governed by supernova explosion physics, fallback, equation-of-state uncertainties, rotation, magnetic fields, nonspherical dynamics, or binary interactions.",
+          "claim_scope": "Formal theorem/conjecture for classical GR, spherical nonrotating collapse with isotropic pressure, regular matter fields, global hyperbolicity, complete null generators, AANEC, and an explicit averaged null-convergence/focusing condition. Not a quantitative derivation of the observed 2-5 solar mass gap, not a general proof that all massive stars necessarily form black holes, and not a replacement for stellar-evolution or supernova-engine explanations.",
+          "discriminating_observation": "A rigorous proof or counterexample distinguishing whether AANEC plus explicit averaged focusing yields a trapped-surface/compactness bound; astrophysical observations of the mass gap alone are not sufficient to distinguish the theorem from explosion, fallback, equation-of-state, rotation, magnetic-field, nonspherical, or binary-evolution explanations.",
+          "evidence_basis": [
+            "SURVEY_ANCHOR: realistic matter fields may violate SEC while satisfying DEC, motivating relaxation of pointwise energy conditions.",
+            "SURVEY_ANCHOR: observed mass gap is a discriminator for supernova engine physics, implying it is astrophysically inferred rather than a pure GR theorem.",
+            "Uncertainty note: AANEC alone may not imply the local or integrated focusing needed for Penrose-type trapped-surface formation; the added averaged null-convergence/focusing condition is therefore essential but may be as restrictive as the original pointwise assumption in some regimes.",
+            "Uncertainty note: stellar remnant masses are sensitive to explosion energetics, fallback, equation-of-state physics, rotation, magnetic fields, nonspherical dynamics, and binary interactions."
+          ],
+          "evidence_requirement": "A proof or counterexample establishing whether AANEC plus the stated averaged null-convergence/focusing and stellar-structure assumptions implies a trapped-surface/compactness bound. Separately, astrophysical inference is required to connect any bound to the observed mass gap; the observed gap alone cannot distinguish the theorem from explosion, fallback, equation-of-state, rotation, magnetic-field, nonspherical, or binary-evolution explanations.",
+          "expected_mechanism": "AANEC plus explicit averaged null-convergence/focusing forces relevant null congruences to converge sufficiently to form a trapped surface when compactness exceeds a model-dependent threshold; this excludes stable non-black-hole remnants above a compactness-dependent mass scale within the restricted theorem class.",
+          "intervention_or_transformation": "Relax pointwise NEC/SEC to AANEC and add an explicit averaged null-convergence/focusing condition to the trapped-surface theorem, while demoting the observed stellar mass gap to an astrophysical consistency constraint rather than a theorem-derived prediction.",
+          "mechanism_or_relation": "Replace pointwise NEC/SEC assumptions with AANEC plus an explicit averaged null-convergence/focusing assumption on null congruence generators; derive a trapped-surface threshold via Raychaudhuri-type focusing and Misner-Sharp compactness, then bound stable non-black-hole remnants through TOV-like stellar-structure assumptions. The observed mass gap is treated as an astrophysical consistency constraint, with alternative stellar-physics mechanisms identified as confounders.",
+          "scientific_object": {
+            "description": "AANEC-relaxed trapped-surface theorem and compactness bound for non-black-hole stellar remnants, with explicit validity domain, added averaged-focusing assumption, counterexample boundary, and separation from astrophysical mass-gap explanations."
+          }
+        },
+        "target_gap_ids": [
+          "gap:sh3:missing_assumption:formal_claim:formal_claim:unknown:97595ecd2c86",
+          "gap:sh4:unmapped_gap_boundary_variable:boundary_variable:boundary_variable:unknown:71a0013bb7fd",
+          "gap:global:unresolved_mechanism:progenitor_explosion_energetics:unknown:unknown:352f365bc3b5"
+        ],
+        "title": "AANEC-Relaxed Trapped Surface Theorem and Stellar Mass-Gap Derivation"
+      },
+      "source_file": "idea_result.json",
+      "source_json_pointer": "/directions/0",
+      "source_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/src/agents/idea_agent/runs/20260828-004610-870347/idea_result.json",
+      "temporal_order": "unknown"
+    }
+  ],
+  "iterations": [],
+  "max_iterations": 3,
+  "missing_audit_sources": [],
+  "schema_version": "idea_evolution_appendix_v1",
+  "selected_direction_id": "mechanism_replacement",
+  "status": "CHECKPOINTS_AVAILABLE",
+  "temporal_order": "unknown"
+}

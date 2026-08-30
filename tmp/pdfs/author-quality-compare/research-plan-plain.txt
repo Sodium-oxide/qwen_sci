@@ -1,0 +1,1222 @@
+AANEC-Relaxed Trapped Surface Theorem and
+Stellar Mass-Gap Derivation
+Anonymous Research Plan Author
+Abstract—This proposal introduces an AANEC-relaxed
+trapped surface theorem designed to establish a compactness
+bound for non-black-hole stellar remnants within a restricted
+model class of spherically symmetric, regular spacetimes with
+complete null generators. The planned contribution replaces
+pointwise energy conditions with an explicit averaged nullconvergence assumption, aiming to derive a threshold condition
+that excludes stable non-black-hole remnants above a modeldependent compactness limit.
+The expected outcome is a formal proof or counterexample distinguishing whether the stated assumptions imply a
+trapped-surface bound, alongside a conditional assessment of
+how such a bound interacts with astrophysical confounders
+like explosion energetics and equation-of-state uncertainties.
+No observed results are claimed; the focus remains on verifying
+the logical consistency of the theorem and its separation from
+empirical mass-gap explanations.
+Index Terms—AANEC, trapped surfaces, Misner-Sharp
+compactness, stellar collapse, mass gap, black hole remnants,
+Raychaudhuri equation
+
+I. Introduction
+A. Compact Remnants and the Stellar Mass Gap
+The observed stellar mass gap is a central feature in
+the population of compact remnants, yet its physical
+origin remains debated. Gravitational-wave observations
+and stellar-evolution modeling indicate that the location of
+the lower edge of the black hole mass gap is dictated by the
+near-final core mass, which in turn sets the resulting black
+hole mass. This suggests that the gap is astrophysically
+inferred and governed by progenitor physics rather than
+being a direct consequence of a pure general-relativistic
+theorem. Consequently, the gap serves as a consistency
+constraint for models of massive-star collapse, requiring
+a clear separation between formal geometric bounds and
+the complex stellar-physics mechanisms that populate the
+observed remnant distribution. [1], [2]
+B. Alternative Explanations and Confounders
+While geometric bounds may restrict the final state of
+collapse, the observed distribution of remnant masses is
+heavily influenced by alternative stellar-physics mechanisms. Numerical simulations of binary mergers demonstrate that the use of a non-isentropic equation of state
+leads to delayed collapse to a black hole, particularly in
+high-mass binaries, due to pressure support from temperature increases via shocks. Furthermore, stellar-evolution
+codes incorporating diffusion for angular momentum and
+chemical abundances enable calculations of rotating-star
+models, highlighting how rotation and mixing can alter
+
+collapse outcomes. These findings indicate that explosion
+energetics, fallback, equation-of-state uncertainties, and
+binary interactions act as confounders that can populate
+or avoid the stellar mass gap independently of a trappedsurface theorem. [3], [4]
+C. Proposal Scope and Claim Discipline
+This proposal introduces a formal theorem for classical
+general relativity under restricted conditions, specifically
+spherical nonrotating collapse with isotropic pressure.
+The central contribution is to replace pointwise energy
+conditions with the Averaged Null Energy Condition
+(AANEC) combined with an explicit averaged nullconvergence assumption on null congruence generators.
+This formal mechanism is designed to derive a trappedsurface threshold via Raychaudhuri-type focusing and
+Misner-Sharp compactness. Crucially, the proposal maintains strict claim discipline: the observed 2-5 solar mass
+gap is not assumed to be a direct consequence of this
+theorem. Instead, it is treated as an astrophysical consistency constraint, subject to the alternative mechanisms
+identified in the literature.
+D. Design Assumptions and Boundary Conditions
+The validity of the proposed formal bound depends
+on several design assumptions. The model class assumes
+globally hyperbolic spacetime with regular matter fields
+and complete null generators. It further assumes that nonblack-hole remnants are modeled as stable equilibrium objects obeying a bounded compactness limit. The theorem is
+expected to fail or require restriction if AANEC is violated,
+if the added averaged null-convergence condition fails, or
+if nonspherical, rotating, or magnetic dynamics dominate
+the collapse. These boundary conditions define the scope
+of the formal contribution, separating it from the broader
+astrophysical inference required to connect the bound to
+the observed mass gap.
+II. Background, Survey, and Research Gap
+A. Theoretical Foundations and Observational Context
+Black holes serve as both exact solutions to Einstein’s field equations and empirically verified compact
+objects, creating a unique intersection between theoretical physics and observational astrophysics. Establishing
+their existence requires reconciling the stringent conditions predicted by singularity theorems with multimessenger observational benchmarks. The survey methodology delineates operational boundaries for black hole
+
+identification, distinguishing between theoretical models,
+astrophysical candidates, and confirmed objects through
+dynamical mass constraints and horizon-scale diagnostics.
+This framework systematically examines astrophysical
+pathways leading to black hole formation, ranging from
+core collapse to hierarchical assembly, while evaluating
+observational proxies such as electromagnetic signatures,
+stellar kinematics, and gravitational-wave ringdowns.
+B. Evolution of Energy Conditions and AANEC
+The theoretical edifice supporting black hole formation
+is anchored in Penrose-type singularity theorems, which
+demonstrate geodesic incompleteness contingent upon
+specific energy conditions and the formation of trapped
+surfaces. Traditionally, these theorems rely on the Null
+Energy Condition (NEC) to guarantee the focusing of null
+geodesics via the Raychaudhuri equation. However, the
+introduction of quantum field theory reveals a profound
+tension with these classical foundations, as pointwise
+energy conditions are fundamentally incompatible with
+quantum mechanics. Quantum fields routinely exhibit
+regions of negative energy density, violating the Weak,
+Strong, and Null Energy Conditions. To navigate this
+conflict, the conceptual framework has shifted toward
+constraints on averaged quantities. The Achronal Averaged Null Energy Condition (AANEC) has emerged as a
+candidate for a universal property of gravitating matter,
+offering a robust pathway to preserve singularity theorems
+in the face of quantum violations by averaging along
+achronal null geodesics.
+C. Alternative Compact Objects and Counterexamples
+Contemporary analyses reveal that the inevitability
+of singularities is strictly contingent upon specific assumptions regarding energy conditions, causality, and
+boundary configurations. A diverse class of horizonless
+alternatives, known as Exotic Compact Objects (ECOs),
+has been developed to address the singularity problem.
+These models resolve infinities while closely mimicking
+the observable signatures of astrophysical black holes. The
+survey highlights that realistic matter fields, such as scalar
+fields involved in inflationary scenarios, frequently violate
+the Strong Energy Condition (SEC) while satisfying the
+Dominant Energy Condition (DEC), thereby permitting
+non-singular bouncing cosmologies and collapse scenarios.
+Furthermore, the absence of trapped surfaces entirely
+circumvents singularity theorems, allowing for singularityfree histories. This theoretical flexibility necessitates rigorous interrogation of alternative compact objects through
+model-independent parametrizations, such as the closeness
+parameter, which quantifies the proximity of an object’s
+surface to the Schwarzschild radius.
+D. Stellar-Mass Black Hole Formation and the Mass Gap
+The transition from stellar core collapse to either a
+neutron star or a black hole is governed by progenitor
+
+structure, explosion dynamics, and neutrino physics. Recent theoretical frameworks have moved away from relying
+solely on zero-age main sequence mass, instead emphasizing post-bounce compactness metrics as robust discriminators for collapse outcomes. Stars with high compactness
+tend to undergo rapid accretion that overwhelms neutrino
+heating, leading to failing supernovae and direct black
+hole formation. Conversely, lower compactness progenitors
+allow suﬀicient time for instabilities to reverse the shock.
+The observed paucity of compact objects in the 2-5 solar
+mass range provides a crucial observational constraint on
+these scenarios. The existence of this mass gap strongly
+favors rapid explosion dynamics for single stars, where the
+dichotomy between successful explosions and total failures
+leaves no room for intermediate remnants. However, the
+survey notes that theoretical predictions remain sensitive
+to uncertainties in explosion and unbinding energies,
+leaving key physical parameters unconstrained.
+E. Observational Proxies and Strong-Field Tests
+Testing General Relativity in the strong-field regime
+constitutes a fundamental probe of gravity’s validity beyond the weak-field limit. The survey synthesizes insights
+from dynamical mass measurements in X-ray binaries,
+horizon-scale interferometry, and gravitational-wave astronomy. Dynamical mass measurements constitute the
+most direct method for confirming stellar-mass black
+holes, establishing rigorous lower bounds on compact
+object masses. These measurements have revealed a narrow mass distribution clustered tightly around 7.8 solar
+masses, challenging conventional supernova fallback scenarios. Additionally, gravitational-wave observations offer
+clean tests of strong-field gravity by probing coherent
+source motions. The non-detection of gravitational-wave
+echoes and the absence of observed highly-spinning compact objects impose severe restrictions on the viability
+of many horizonless models. Despite this, current data
+does not definitively rule out all exotic alternatives due
+to significant model dependence in deriving exclusion
+bounds.
+F. Research Gap: Missing Formal Premises
+A critical gap identified in the survey evidence plan
+is the absence of a formal claim slot for sub-hypothesis
+SH3. Specifically, the survey lacks the stated assumptions
+and validity domains under which Penrose-type singularity
+theorems and Einstein-field-equation solutions support the
+existence of black holes. Without these stated assumptions, the claim cannot be evaluated for validity. This
+missing premise is essential for establishing the theoretical
+boundaries of black hole seeding mechanisms and highlighting the potential role of dark matter or quantum
+corrections in shaping the initial mass function of the first
+black holes. The gap represents an unresolved research
+constraint that prevents a rigorous assessment of whether
+
+classical singularity theorems survive the demands of
+quantum coherence and renormalization consistency.
+
+C. Planned Contribution: Separating Geometric Bounds
+from Astrophysical Explanations
+
+G. Research Gap: Unmapped Boundary Variables
+Another significant gap identified in the survey is the
+unmapped boundary variable for sub-hypothesis SH4. The
+required slot for ’boundary_variable’ remains uncovered
+in the relevant evidence cluster concerning theoretical
+stellar evolution and remnant formation pathways. This
+gap matters because the structured survey artifacts identify an unresolved research constraint regarding which
+variables effectively serve as boundaries between blackhole and non-black-hole outcomes. While mass, compactness, rotation, and metallicity are acknowledged as
+affecting remnant type, the specific operational definition
+and threshold values for these boundary variables within
+the restricted model class remain undefined in the current
+evidence plan. This lack of clarity hinders the ability
+to discriminate between different formation channels and
+interpret the observed mass spectrum.
+
+The primary planned contribution is to establish a
+qualified AANEC trapped-surface bound that explicitly
+separates geometric theorem constraints from astrophysical mass-gap explanations. The proposal aims to derive a
+trapped-surface threshold via Raychaudhuri-type focusing
+and Misner-Sharp compactness, thereby excluding stable
+non-black-hole remnants within the restricted model class.
+Crucially, this contribution does not claim to quantitatively derive the observed 2-5 solar mass gap. Instead, it
+treats the observed gap as an astrophysical consistency
+constraint subject to alternative explanations such as explosion energetics, fallback, equation-of-state physics, and
+binary evolution. The contribution lies in clarifying the
+boundary conditions under which the geometric theorem
+fails or must be restricted, particularly when quantum
+stress-energy effects or nonspherical dynamics dominate.
+
+III. Research Questions and Planned Contributions
+A. Formalizing the AANEC-Relaxed Trapped Surface
+Threshold
+The first research question asks whether spherically
+symmetric stellar collapse, governed by classical general
+relativity with regular matter fields, global hyperbolicity, and complete null generators, necessarily forms a
+trapped surface once a specific compactness threshold is
+crossed. This inquiry requires replacing standard pointwise
+energy conditions with the Averaged Null Energy Condition (AANEC) supplemented by an explicit averaged
+null-convergence/focusing condition. A critical unresolved
+premise is the exact mathematical form of this additional
+focusing condition, which must be distinguished from
+standard AANEC to serve as an independent geometric
+hypothesis. Without this precise definition, the logical
+bridge between energy condition satisfaction and trappedsurface formation remains formally incomplete.
+
+D. Planned Contribution: Counterexample Search and
+Verification Strategy
+
+B. Defining Compactness and Stability for Non-BlackHole Remnants
+The second research question investigates the exclusion
+of stable non-black-hole remnants above a compactnessdependent mass scale. This requires a rigorous definition of
+the Misner-Sharp compactness parameter for the specific
+metric class under consideration, as well as a formal stability predicate that distinguishes these objects from regular
+black hole models like Hayward or Bardeen solutions.
+The proposal posits that if such objects are modeled as
+stable equilibrium states obeying a bounded compactness
+or TOV-like limit, they may be excluded by the theorem.
+However, the current context lacks the formal definitions
+necessary to operationalize these stability criteria and
+compactness thresholds, delimiting the scope of the inquiry to a theoretical framework that is yet to be fully
+specified.
+
+IV. Idea Source Checkpoints and Direction Selection
+Audit
+
+A secondary planned contribution is the systematic
+search for counterexamples that satisfy all stated assumptions but fail to form a trapped surface. This involves evaluating candidate witnesses to determine if they genuinely
+violate the explicit averaged null-convergence condition or
+if the condition itself is ill-defined in the current context.
+The proposal includes a potential strategy for numerical
+verification of the Raychaudhuri equation and trapped
+surface formation for a discrete subset of test metrics.
+This verification plan is contingent upon resolving the
+open design questions regarding the mathematical forms
+of the key assumptions. The contribution is thus defined
+by the methodological framework for testing the theorem’s
+validity, rather than by a pre-assumed proof or observed
+result.
+
+A. Scientific Attraction and Initial Scope
+The
+proposal
+originates
+from
+the
+’mechanism_replacement’ direction, which seeks to relax
+classical pointwise energy conditions in favor of the
+Averaged Null Energy Condition (AANEC) combined
+with an explicit averaged null-convergence assumption.
+The scientific attraction lies in deriving a trappedsurface threshold for spherically symmetric collapse that
+excludes stable non-black-hole remnants above a specific
+compactness limit. This formal bound is positioned not
+as a direct predictor of the observed 2-5 solar mass gap,
+but as a geometric constraint on the existence of exotic
+compact objects, treating the astrophysical gap as a
+consistency check rather than a theorem-derived output.
+
+B. Audit of Checkpoints and Unsupported Links
+Audit snapshots from the idea generation pipeline
+(checkpoints 1-3) reveal critical gaps in the formalization
+of the proposed mechanism. While the central hypothesis consistently links AANEC and focusing conditions
+to trapped-surface formation, the operational definitions
+for the key variables remain incomplete. Specifically,
+the mathematical form of the averaged null-convergence
+assumption (A5) and the Misner-Sharp compactness parameter (D4) are missing. Furthermore, the checkpoints
+explicitly flag that AANEC alone may not imply the local
+focusing required for Penrose-type arguments, necessitating an independent geometric hypothesis that has not yet
+been rigorously defined or proven.
+C. Qualified Retention and Explicit Exclusions
+The direction is retained under a qualified design
+assumption that strictly separates formal geometric proofs
+from astrophysical inference. The selection process excludes any claim that the theorem quantitatively explains the stellar mass gap, acknowledging instead that
+explosion energetics, fallback, and binary evolution are
+dominant confounders. The retained scope is limited to
+proving whether the added averaged focusing condition,
+when satisfied, forces trapped-surface formation within
+the restricted model class of regular, globally hyperbolic
+spacetimes. All other links to observational data are
+treated as secondary consistency constraints rather than
+primary evidentiary support.
+V. Problem Definition, Assumptions, and Hypotheses
+A. Problem Scope and Restricted Model Class
+The proposed research addresses a formal problem in
+classical General Relativity: determining whether spherically symmetric stellar collapse with isotropic pressure
+forces trapped-surface formation when a model-dependent
+compactness threshold is exceeded. The work is restricted
+to a specific model class defined by global hyperbolicity,
+regular matter fields, and complete null generators. Within
+this domain, the project seeks to establish whether stable
+non-black-hole remnants above a compactness-dependent
+mass scale can be excluded. This formal scope is explicitly
+separated from astrophysical inference; the observed 25 solar mass gap is treated as an external consistency
+constraint rather than a direct prediction of the theorem.
+The proposal does not claim to resolve stellar-evolution
+mechanisms, supernova engine physics, or binary interactions, but rather to clarify the geometric boundaries within
+which such astrophysical explanations must operate. The
+central problem is thus a mathematical conjecture about
+the interplay between averaged energy conditions and
+compactness bounds, not a quantitative derivation of
+observed remnant distributions.
+
+B. Assumption Ledger and Energy Condition Relaxation
+•
+
+The formal argument rests on a specific ledger of
+declared assumptions that distinguish it from classical pointwise energy-condition theorems. First, the
+geometry assumes spherically symmetric collapse of
+massive stars with isotropic pressure, global hyperbolicity, and suﬀicient regularity for trapped-surface
+arguments. Second, null generators in the relevant
+region are assumed complete. Third, matter fields satisfy the Averaged Null Energy Condition (AANEC)
+along these generators. Crucially, the proposal introduces an independent geometric hypothesis: an explicit averaged null-convergence or focusing condition.
+This condition is not presented as a consequence of
+AANEC alone, addressing the concern that AANEC
+may be satisfied while local or integrated focusing
+fails. Fourth, non-black-hole remnants are modeled
+as stable equilibrium objects obeying a bounded
+compactness or TOV-like limit. The relaxation of
+pointwise NEC/SEC to AANEC plus explicit averaged focusing constitutes the primary methodological
+shift. However, the precise mathematical form of the
+averaged focusing condition remains an unresolved
+premise, and its relationship to AANEC requires
+human review to ensure it is not merely a restatement
+of the original pointwise assumption in integral form.
+
+C. Formal Objects and Operational Definitions
+a) Definition.: The formal objects are defined
+through a candidate symbol set and variable mapping.
+The spacetime metric is denoted by g, and the stressenergy tensor by T. The mass of the collapsing matter or
+remnant object is M, while r represents the areal radius or
+radial coordinate. The expansion scalar of a null geodesic
+congruence is theta, and k denotes the tangent vector to
+null geodesic generators. The central geometric quantity
+is the Misner-Sharp compactness parameter, denoted C.
+This parameter is intended to measure the effective mass
+within radius r relative to the areal radius, serving as
+the threshold variable for trapped-surface formation. The
+proposal treats C as the independent variable governing
+the compactness bound, while trapped_surface_existence
+and stable_remnant_exclusion are the dependent formal
+outcomes. The operationalization of C, however, is not
+fully specified. The definition requires a rigorous formula
+linking M, r, and the metric components g in the chosen
+spherical ansatz. Without this explicit definition, the
+compactness threshold remains a candidate formalization
+rather than a verified mathematical object.
+2M
+r
+D. Candidate Hypotheses and Unresolved Status
+a) Proposition (proposed).: Two candidate propositions structure the proposed derivation. P1 posits that in
+spherically symmetric stellar collapse satisfying AANEC,
+C≈
+
+global hyperbolicity, regular matter fields, complete null
+generators, and an explicit averaged null-convergence condition, reaching a model-dependent compactness threshold
+forces trapped-surface formation. P2 posits that stable
+non-black-hole remnants above a compactness-dependent
+mass scale are excluded within this restricted model
+class. Both propositions are currently status: candidate_formalization and remain unverified. The forward
+derivation from P1 to P2 depends on proof obligations
+PO1 through PO3, which are unresolved. Specifically,
+the argument requires demonstrating that the averaged
+focusing condition forces theta to become negative, that
+negative theta implies a trapped surface when C exceeds a
+threshold, and that a trapped surface is incompatible with
+the stable equilibrium limit. These steps are proposed but
+not proved. The hypothesis mapping identifies H1 and H2
+as testable formal claims, but the counterexample analysis
+remains a design assumption. The final canonical field
+status for the assumption ledger requires human input,
+meaning the precise formulation of the averaged focusing
+condition and the Misner-Sharp compactness parameter
+must be resolved before the propositions can be considered
+well-posed.
+VI. Study Design and Methods
+A. Analytical Framework and Unit of Analysis
+The study adopts a theoretical and mathematical design, treating formal proof construction and counterexample search as the primary unit of analysis. The proposed
+method replaces pointwise energy conditions with the
+averaged null energy condition (AANEC) combined with
+an explicit averaged null-convergence assumption. This
+framework aims to derive a trapped-surface threshold
+using Raychaudhuri-type focusing and Misner-Sharp compactness, subsequently bounding stable non-black-hole
+remnants via TOV-like stellar-structure assumptions.
+B. Operational Definitions and Unresolved Variables
+The operationalization of key variables remains incomplete. Specifically, the mathematical form of the explicit
+averaged null-convergence condition and the formula for
+the Misner-Sharp compactness parameter are currently
+undefined. These definitions are prerequisites for the proposed derivation and require human specification before
+the formal proof strategy can be fully implemented.
+C. Boundary Conditions and Counterexample Strategy
+The validity of the theorem is restricted to spherically
+symmetric collapse with isotropic pressure, global hyperbolicity, and complete null generators. The design includes
+a strategy to identify counterexamples that satisfy all
+assumptions but fail to form a trapped surface. This
+analysis explicitly excludes astrophysical confounders such
+as rotation, magnetic fields, and binary evolution from
+the formal proof, treating them instead as boundary
+conditions that may restrict the theorem’s applicability.
+
+D. Data Governance and Reproducibility
+The protocols for data management and reproducibility
+in this theoretical context are not yet established. Human
+input is required to define the standards for documenting
+the formal derivations, storing intermediate mathematical
+results, and ensuring the auditability of the proof steps.
+E. Measurement and Quality Control
+In the absence of empirical data collection, the measurement plan and quality control procedures refer to
+the validation of logical consistency and mathematical
+rigor. These procedural details require human review to
+define acceptable standards for proof verification and error
+checking within the formal model.
+VII. Expected Outcome Branches and Conditional
+Conclusions
+A. Supportive Conditional Branch
+If the prespecified analysis is consistent with the declared relation while planned controls do not favor a
+stated alternative explanation, the result would support, but not prove, the declared relation within the
+design boundary. This outcome corresponds to the supports_mechanism branch. The theorem fails or must be
+restricted if AANEC is violated, the added averaged
+null-convergence/focusing condition fails, null generators
+are incomplete, quantum stress-energy violates ANEC,
+nonspherical/rotating/magnetic dynamics dominate, or
+stable exotic compact objects evade the averaged-focusing
+assumptions. The mass-gap inference fails or becomes nondiscriminating if explosion energetics, fallback, equationof-state physics, pair-instability processes, or binary evolution dominate the observed remnant distribution. In this
+scenario, improvement actions include replicating under
+independently confirmed conditions and testing the most
+consequential declared boundary condition.
+B. Heterogeneous and Null Branches
+The relation may be conditional or heterogeneous;
+no universal conclusion is warranted if the prespecified
+analysis indicates variation across declared conditions,
+units, or measurement contexts. This corresponds to
+the partial_or_heterogeneous branch, where improvement
+actions involve predefining and checking plausible moderators and improving the coverage of conditions and
+measurement comparability. Conversely, if the prespecified comparison does not support the declared relation
+or instead favors a declared alternative explanation, the
+proposed relation is not supported in this design boundary. This null_or_contradictory outcome indicates that
+absence of support is not proof of absence generally,
+requiring an audit of construct validity and comparison
+adequacy, and revision of the mechanism or boundary
+claim before another design iteration.
+
+C. Uninformative Branch Consequence
+No scientific conclusion is warranted because the
+planned design did not yield interpretable evidence if prespecified quality-control, missingness, protocol-deviation,
+or validity criteria prevent interpretation. This corresponds to the uninformative_or_invalid branch. The
+consequence of this outcome is that the identified validity
+or data-quality failure must be resolved before repeating
+the design. Furthermore, human confirmation of measurement, sampling, and analysis prerequisites is required to
+proceed, as the current design boundary cannot support a
+definitive conclusion regarding the formal theorem or its
+astrophysical implications.
+VIII. Risks, Limitations, and Human Review
+Requirements
+A. Formal Definition and Assumption Gaps
+The proposed theoretical framework relies on several
+critical mathematical definitions and physical assumptions
+that are currently incomplete. Specifically, the formal
+definition of the Misner-Sharp compactness parameter
+(D4) and the mathematical expression for the explicit
+averaged null-convergence/focusing condition (A5) are
+missing from the canonical context. Without these precise
+formulations, it is impossible to rigorously verify whether
+hypothetical counterexample witnesses satisfy all necessary assumptions. Consequently, the status of the trappedsurface theorem and the exclusion of stable non-blackhole remnants remains unresolved. These gaps prevent the
+closure of proof obligations PO1 and PO2, rendering the
+formal claims unverified until the missing definitions are
+supplied and validated.
+B. Astrophysical Confounders and Observational Limits
+The inference connecting the formal compactness bound
+to the observed stellar mass gap is subject to significant
+astrophysical confounders. Alternative mechanisms such
+as supernova explosion energetics, fallback, equation-ofstate uncertainties, rotation, magnetic fields, and binary
+evolution can independently determine remnant masses.
+These factors may dominate the observed distribution,
+making the mass gap a non-discriminating proxy for the
+proposed GR theorem. Additionally, quantum field theory
+indicates that pointwise energy conditions are systematically violated, necessitating weaker averaged conditions for
+broader validity. This limitation restricts the applicability
+of classical energy-condition-based arguments in regimes
+where quantum stress-energy effects are significant. [5]
+C. Verification and Human Review Requirements
+Given the complexity of hybrid formal-physical systems,
+simulation and analytical testing alone may be insuﬀicient
+to ensure correctness or provide adequate evidence for
+certification. A qualified human review of the final formal
+reasoning plan is required to assess the logical consistency
+of the proposed proof obligations and counterexample
+
+analyses. This review must determine whether the current
+definitions are adequate to support the central hypothesis
+or if the scope must be further restricted. The review
+requirement is triggered by the unresolved status of the
+formal reasoning plan and the potential for subtle mathematical errors in the averaged focusing assumptions. [6]
+IX. Definitions, Propositions, and Proof Obligations
+A. Geometric and Matter Definitions
+The formal framework relies on classical General Relativity in a spherically symmetric setting. The spacetime
+metric g (D6) describes the geometry of the collapsing
+matter. The stress-energy tensor T (D5) encodes the
+matter distribution, assumed to have isotropic pressure.
+Null geodesic generators are characterized by their tangent vector k (D7), which defines the direction of light
+propagation in the relevant regions. The expansion scalar
+theta (D3) measures the rate of change of the crosssectional area of a null congruence, serving as a key
+indicator of focusing. The mass M (D1) represents the
+total mass of the collapsing object or remnant, while
+the areal radius r (D2) provides the radial coordinate
+for defining compactness. These definitions establish the
+variables used in subsequent propositions.
+B. Unresolved Compactness Parameter
+A critical component of the argument is the MisnerSharp compactness parameter C (D4). This quantity is
+intended to measure the degree of compactness of the
+object relative to its radius, which determines whether a
+trapped surface forms. However, the specific mathematical
+formula for C, including the definition of effective mass
+within radius r in the chosen metric, is currently missing
+from the canonical context. Without this precise definition, the threshold for trapped-surface formation cannot
+be rigorously calculated. Consequently, the definition of
+C remains a design assumption requiring human input to
+specify the exact functional form.
+C. Core Propositions
+Two central propositions structure the theoretical argument. Proposition P1 posits that in spherically symmetric stellar collapse satisfying the Averaged Null Energy
+Condition (AANEC), global hyperbolicity, regular matter
+fields, complete null generators, and an explicit averaged
+null-convergence/focusing condition, reaching a modeldependent compactness threshold forces trapped-surface
+formation. Proposition P2 extends this to conclude that
+stable non-black-hole remnants above a compactnessdependent mass scale are excluded within this restricted
+model class. These propositions are currently candidate
+formalizations; their validity depends on the resolution of
+the missing definitions and the proof of the associated
+obligations.
+
+D. Proof Obligations and Missing Assumptions
+The derivation of P1 and P2 entails several proof obligations. PO1 requires verifying that the explicit averaged
+null-convergence condition (A5) holds along the relevant
+null generators. However, the mathematical form of A5 is
+not provided, distinguishing it from the standard AANEC
+(A2). PO2 involves ensuring the global hyperbolicity and
+regularity of the spacetime metric (A3) are suﬀicient for
+trapped-surface arguments. PO3 demands the calculation
+of the compactness threshold using the defined parameter
+C. These obligations are unresolved due to the missing
+formal inputs for A5 and D4.
+E. Forward Derivation Status
+The proposed forward derivation proceeds in four steps.
+Step S1 suggests that the expansion scalar theta becomes
+negative along null generators due to the averaged focusing
+condition. Step S2 proposes that if the compactness parameter C exceeds a threshold, both outgoing and ingoing
+null expansions become negative, indicating a trapped
+surface. Step S3 checks the consistency of trapped-surface
+formation against the assumption that non-black-hole
+remnants are stable equilibrium objects (A6). Step S4
+concludes that stable non-black-hole remnants are excluded for mass/compactness regimes where C exceeds the
+threshold. All steps are currently marked as proposed or
+unverified, contingent on the resolution of the underlying
+definitions and assumptions.
+F. Scope of Formal Claims
+The template details for the formal claim and proof
+obligations are currently flagged as requiring human input.
+This indicates that the precise logical structure and the
+specific requirements for closing the proof obligations have
+not been fully specified in the canonical context. The
+final status of these template fields must be resolved to
+ensure that the formal argument is complete and that the
+proposed derivation aligns with the intended theoretical
+scope.
+X. Forward Derivation and Counterexample Search Plan
+A. Lemma-by-Lemma Forward Derivation Plan
+The proposed forward derivation proceeds through a
+sequence of four lemmas that link energy conditions to
+compactness bounds. Step S1 applies a Raychaudhuri-type
+focusing argument to show that the expansion scalar theta
+becomes negative along null generators under the explicit
+averaged focusing condition A5. Step S2 proposes that
+when the Misner-Sharp compactness parameter C exceeds
+a model-dependent threshold, both outgoing and ingoing null expansions become negative, indicating trappedsurface formation. Step S3 checks consistency between
+trapped-surface formation and the stability predicate A6,
+which models non-black-hole remnants as stable equilibrium objects obeying a bounded compactness or TOV-like
+
+limit. Step S4 derives the exclusion bound for stable nonblack-hole remnants above a compactness-dependent mass
+scale. Each step is currently marked proposed or unverified
+and depends on formal obligations PO1, PO2, and PO3
+that remain unresolved.
+∫
+Tab k a k b dλ ≥ 0
+γ
+
+B. Admissible Comparators and Failure Conditions
+The theorem’s validity is bounded by several admissible
+comparators and failure conditions. The result fails or
+must be restricted if AANEC is violated, if the added
+averaged null-convergence/focusing condition A5 fails, if
+null generators are incomplete, or if quantum stressenergy effects violate ANEC. Nonspherical, rotating, or
+magnetically dominated dynamics may also invalidate the
+spherical isotropy assumption A1. Stable exotic compact
+objects that evade the averaged-focusing assumptions constitute another boundary case. For the astrophysical massgap application, the inference becomes non-discriminating
+if explosion energetics, fallback, equation-of-state physics,
+pair-instability processes, or binary evolution dominate
+the observed remnant distribution. These failure conditions define the scope within which the formal claims are
+proposed to hold.
+C. Valid Counterexamples Versus Out-of-Domain Boundary Cases
+A valid counterexample must satisfy all assumptions A1
+through A6 while negating proposition P2. Candidate CE1
+proposes a static, spherically symmetric, regular metric
+with high compactness that satisfies AANEC but potentially violates the explicit averaged focusing condition
+A5 or the stability bound A6. Candidate CE2 considers
+regular black hole models such as Hayward or Bardeen
+metrics that satisfy AANEC and global hyperbolicity but
+may fail to qualify as non-black-hole remnants if they
+contain horizons. Both candidates are currently classified
+as boundary cases or assumptions-not-satisfied rather
+than valid counterexamples. Distinguishing formal counterexamples from out-of-domain boundary cases requires
+human review of the specific mathematical structure of
+the proposed witnesses.
+D. Unresolved Formal Obligations and Human Review
+Needs
+The counterexample and boundary analysis, together
+with the verification plan, remain fields that require
+human input. The specific formal definition of the MisnerSharp compactness parameter C is missing, preventing
+precise calculation of thresholds. The explicit mathematical form of the averaged null-convergence condition A5
+is also absent, making verification of this assumption
+impossible. These unresolved items signal that the current
+derivation and counterexample search are provisional and
+cannot be treated as verified results.
+
+Appendix A
+Idea Source Checkpoints and Direction Selection Audit
+A. Available Audit Snapshots
+Three available audit snapshots were recovered from
+the idea generation pipeline: an initial candidate record,
+a portfolio entry with a qualified title variant, and a
+direction-specific result record. These checkpoints are
+presented as available source material rather than as a
+proven temporal iteration sequence. Each snapshot preserves the core proposal for an AANEC-relaxed trappedsurface theorem and a compactness bound for non-blackhole stellar remnants, while the portfolio entry displays a
+narrower title that foregrounds the qualified nature of the
+bound. The direction result record additionally contains
+explicit lists of assumptions, boundary or failure conditions, discriminating observations, evidence requirements,
+and expected mechanisms that are not fully duplicated in
+the other two snapshots.
+B. Scope Corrections and Retained Decisions
+The retained direction selection is mechanism replacement, and all three snapshots consistently record the same
+central hypothesis and claim scope. The proposal replaces
+pointwise NEC/SEC assumptions with AANEC plus
+an explicit averaged null-convergence/focusing condition,
+derives a trapped-surface threshold via Raychaudhuritype focusing and Misner-Sharp compactness, and bounds
+stable non-black-hole remnants through TOV-like stellarstructure assumptions. A key scope correction preserved
+across the checkpoints is that the observed 2-5 solar
+mass gap is not claimed to be a direct consequence of
+the theorem; it is treated instead as an astrophysical
+consistency constraint subject to alternative explanations
+such as explosion energetics, fallback, equation-of-state
+uncertainties, rotation, magnetic fields, nonspherical dynamics, and binary interactions.
+C. Open Questions and Missing Formal Material
+The audit snapshots identify three target gaps that
+remain unresolved: a missing formal claim assumption,
+an unmapped gap boundary variable, and an unresolved
+progenitor explosion energetics mechanism. The direction
+result record also flags uncertainty about whether AANEC
+alone implies the local or integrated focusing needed
+for Penrose-type trapped-surface formation, making the
+added averaged null-convergence/focusing condition essential but potentially as restrictive as the original pointwise assumption in some regimes. These open questions
+are preserved for human review rather than resolved here;
+no proof, counterexample, or empirical result is asserted.
+Appendix B
+Variables, Symbols, and Operational Definitions
+A. Geometric and Matter-Field Symbols
+The formal argument is stated within a restricted
+model class defined by a specific set of geometric and
+
+matter-field symbols. The spacetime metric is denoted
+by g, and the stress-energy tensor by T. Null geodesic
+generators are represented by their tangent vector k,
+while the expansion scalar of a null geodesic congruence
+is denoted by theta. These symbols support the core
+assumptions: spherical symmetry and isotropic pressure
+(A1), the Averaged Null Energy Condition along complete
+null generators (A2), global hyperbolicity and regularity
+(A3), null generator completeness (A4), and an explicit
+averaged null-convergence or focusing condition (A5).
+The mass of the collapsing matter or remnant object is
+symbolized by M, and the areal radius or radial coordinate
+by r. These definitions provide the language for the
+proposed trapped-surface derivation, but their operational
+role depends on resolving the specific model-dependent
+thresholds discussed below.
+B. The Misner-Sharp Compactness Parameter
+A central element of the proposed theorem is the
+Misner-Sharp compactness parameter, symbolized by C.
+This quantity is intended to serve as the threshold variable
+that, when exceeded, forces trapped-surface formation under the stated focusing and energy-condition assumptions.
+However, the specific formal definition of C, including
+the formula for effective mass within radius r in the
+chosen metric, is not supplied. Without this formula,
+the compactness threshold remains a placeholder rather
+than a computable quantity, and the derivation of the
+exclusion bound for stable non-black-hole remnants cannot
+proceed. This gap is tracked as an unresolved premise
+requiring human input before the formal argument can be
+completed.
+C. Operational Variables Requiring Specification
+Several variables that mediate between the formal theorem and its astrophysical interpretation lack operational
+definitions. The measurement method for stellar remnant
+mass, which could involve radial velocity curves or pulsar
+timing, is unspecified, as is the specific metric for explosion
+energy, whether kinetic or total, and its measurement
+in observed samples. Additionally, the equation-of-state
+models or nuclear physics parameters to be tested are
+not listed, and the measurement or initial condition
+specifications for rotation and magnetic fields in collapse
+models are undefined. These omissions mean that the
+proposed variables V6 through V12 cannot yet be operationalized for empirical comparison, and their treatment
+as confounders or consistency constraints remains a design
+assumption pending human specification.
+Appendix C
+Evidence Coverage, Unknown Items, and Review
+Checklist
+A. Bounded Evidence Coverage
+The proposal’s reliance on averaged energy conditions
+is bounded by the finding that pointwise energy conditions are systematically violated by quantum fields,
+
+which necessitates weaker statements such as quantum
+energy inequalities or averaged energy conditions for
+broader validity. This supports the design choice to replace
+pointwise NEC or SEC assumptions with AANEC, but it
+does not prove that AANEC alone implies the additional
+explicit averaged null-convergence condition required by
+the theorem. Astrophysical context is supplied by the
+observation that the lower edge of the black hole mass gap
+is dictated by near-final core mass and is robust against
+variations in metallicity, internal mixing, and stellar wind
+mass loss. This anchors the mass-gap discussion in stellarphysics mechanisms rather than treating the gap as a
+direct prediction of the formal theorem. [2], [5]
+B. Formal Unknowns and Counterexample Limits
+Two formal gaps prevent release of any theorem claim.
+The Misner-Sharp compactness parameter C lacks a
+supplied mathematical definition, so compactness thresholds and mass scales cannot be computed. The explicit
+averaged null-convergence condition A5 likewise lacks a
+formal mathematical form, so candidate witnesses cannot
+be tested against it. Counterexample analysis therefore
+remains a boundary case rather than a completed result:
+a proposed witness is a static, spherically symmetric,
+regular metric with isotropic pressure and high compactness satisfying AANEC, but its status under A5 and
+under the stability predicate is unknown. Because the
+counterexample must satisfy all assumptions, its validity
+cannot be decided until A5 and C are formally specified.
+C. Release Criteria for Future Claims
+•
+
+Before any formal claim is released, human review
+must confirm the following: first, supply the mathematical definition of Misner-Sharp compactness C
+and its relation to the model-dependent threshold;
+second, supply the mathematical form of the explicit
+averaged null-convergence condition A5 and verify
+whether it is independent of AANEC; third, audit
+the proposed counterexample witnesses to determine
+whether they satisfy A5 and the stability predicate or
+instead violate an assumption; fourth, confirm that
+all empirical mass-gap statements remain separated
+from the formal theorem and are treated only as
+astrophysical consistency constraints.
+References
+References
+
+[1] R. Abbott, T. D. Abbott, F. Acernese, K. Ackley, C. Adams,
+N. Adhikari, R. X. Adhikari, V. B. Adya, C. Affeldt,
+D. Agarwal, M. Agathos, K. Agatsuma, N. Aggarwal, O. D.
+Aguiar, L. Aiello, A. Ain, P. Ajith, T. Akutsu, P. F.
+de Alarcón, S. Akçay, S. Albanesi, A. Allocca, P. A. Altin,
+A. Amato, C. K. Anand, S. Anand, A. Ananyeva, S. B.
+Anderson, W. G. Anderson, M. Ando, T. Andrade, N. Andres,
+T. Andrić, S. V. Angelova, S. Ansoldi, J. M. Antelis,
+S. Antier, F. Antonini, S. Appert, K. Arai, K. Arai, Y. Arai,
+S. Araki, A. Araya, M. C. Araya, J. S. Areeda, M. Arène,
+N. Aritomi, N. Arnaud, M. Arogeti, S. M. Aronson, K. G.
+Arun, H. Asada, Y. Asali, G. Ashton, Y. Aso, M. Assiduo,
+
+S. M. Aston, P. Astone, F. Aubin, C. Austin, S. Babak,
+F. Badaracco, M. K. M. Bader, C. Badger, S. Bae, Y. Bae,
+A. M. Baer, S. Bagnasco, Y. Bai, L. Baiotti, J. Baird,
+R. Bajpai, M. Ball, G. Ballardin, S. W. Ballmer, A. Balsamo,
+G. Baltus, S. Banagiri, D. Bankar, J. C. Barayoga, C. Barbieri,
+B. C. Barish, D. Barker, P. Barneo, F. Barone, B. Barr,
+L. Barsotti, M. Barsuglia, D. Barta, J. Bartlett, M. A. Barton,
+I. Bartos, R. Bassiri, A. Basti, M. Bawaj, J. C. Bayley,
+A. C. Baylor, M. Bazzan, and B. Bécsy, “Population of
+merging compact binaries inferred using gravitational waves
+through gwtc-3,” Physical Review X, 2023. [Online]. Available:
+https://doi.org/10.1103/physrevx.13.011048
+[2] R. Farmer, M. Renzo, S. E. de Mink, P. Marchant, and
+S. Justham, “Mind the gap: The location of the lower
+edge of the pair-instability supernova black hole mass
+gap,” The Astrophysical Journal, 2019. [Online]. Available:
+https://doi.org/10.3847/1538-4357/ab518b
+[3] L. Baiotti, B. Giacomazzo, and L. Rezzolla, “Accurate
+evolutions of inspiralling neutron-star binaries: Prompt
+and delayed collapse to a black hole,” Physical review.
+D. Particles, fields, gravitation, and cosmology/Physical
+review. D. Particles and fields, 2008. [Online]. Available:
+https://doi.org/10.1103/physrevd.78.084033
+[4] B. Paxton, M. Cantiello, P. Arras, L. Bildsten, E. F. Brown,
+A. Dotter, C. Mankovich, �. H. Montgomery, D. Stello, F. X.
+Timmes, and R. H. D. Townsend, “Modules for experiments
+in stellar astrophysics (mesa): Planets, oscillations, rotation,
+and massive stars,” The Astrophysical Journal Supplement
+Series, 2013. [Online]. Available: https://doi.org/10.1088/00670049/208/1/4
+[5] E.-A. Kontou and K. Sanders, “Energy conditions
+in
+general
+relativity
+and
+quantum
+field
+theory,”
+Classical and Quantum Gravity, 2020. [Online]. Available:
+https://doi.org/10.1088/1361-6382/ab8fcf
+[6] M. Luckcuck, M. Farrell, L. A. Dennis, C. Dixon, and M. Fisher,
+“Formal specification and verification of autonomous robotic
+systems,” ACM Computing Surveys, 2019. [Online]. Available:
+https://doi.org/10.1145/3342355
+[7] B. P. Abbott, R. Abbott, T. D. Abbott, F. Acernese, K. Ackley,
+C. Adams, T. Adams, P. Addesso, R. X. Adhikari, V. B. Adya,
+C. Affeldt, M. Afrough, B. Agarwal, M. Agathos, K. Agatsuma,
+N. Aggarwal, O. D. Aguiar, L. Aiello, A. Ain, P. Ajith, B. Allen,
+G. Allen, A. Allocca, P. A. Altin, A. Amato, A. Ananyeva,
+S. B. Anderson, W. G. Anderson, S. V. Angelova, S. Antier,
+S. Appert, K. Arai, M. C. Araya, J. S. Areeda, N. Arnaud, K. G.
+Arun, S. Ascenzi, G. Ashton, M. Ast, S. M. Aston, P. Astone,
+D. V. Atallah, P. Aufmuth, C. Aulbert, K. AultONeal,
+C. Austin, A. Avila-Alvarez, S. Babak, P. Bacon, M. K. M.
+Bader, S. Bae, P. T. Baker, F. Baldaccini, G. Ballardin, S. W.
+Ballmer, S. Banagiri, J. C. Barayoga, S. E. Barclay, B. C.
+Barish, D. Barker, K. Barkett, F. Barone, B. Barr, L. Barsotti,
+M. Barsuglia, D. Barta, S. D. Barthelmy, J. Bartlett,
+I. Bartos, R. Bassiri, A. Basti, J. C. Batch, M. Bawaj,
+J. C. Bayley, M. Bazzan, B. Bécsy, C. Beer, M. Bejger,
+I. Belahcene, A. S. Bell, B. K. Berger, G. Bergmann, J. J.
+Bero, C. P. L. Berry, D. Bersanetti, A. Bertolini, J. Betzwieser,
+S. Bhagwat, R. Bhandare, I. A. Bilenko, G. Billingsley, C. R.
+Billman, J. Birch, I. A. Birney, O. Birnholtz, S. Biscans,
+S. Biscoveanu, A. Bisht, M. Bitossi, and C. Biwer, “Multimessenger observations of a binary neutron star merger *,”
+The Astrophysical Journal Letters, 2017. [Online]. Available:
+https://doi.org/10.3847/2041-8213/aa91c9
+[8] G. Agazie, A. Anumarlapudi, A. M. Archibald, P. T. Baker,
+B. Bécsy, L. Blecha, A. Bonilla, A. Brazier, P. R. Brook,
+S. Burke-Spolaor, R. Burnette, R. Case, J. A. Casey-Clyde,
+M. Charisi, S. Chatterjee, K. Chatziioannou, B. D. Cheeseboro,
+S. Chen, T. Cohen, J. M. Cordes, N. J. Cornish, F. Crawford,
+H. T. Cromartie, K. Crowter, C. Cutler, D. J. D’Orazio, M. E.
+DeCesar, D. DeGan, P. B. Demorest, H. Deng, T. Dolch,
+B. Drachler, E. C. Ferrara, W. Fiore, E. Fonseca, G. E.
+Freedman, E. C. Gardiner, N. Garver-Daniels, P. A. Gentile,
+K. A. Gersbach, J. Glaser, D. C. Good, K. Gültekin, J. S.
+Hazboun, S. Hourihane, K. Islo, R. J. Jennings, A. D. Johnson,
+M. L. Jones, A. R. Kaiser, D. L. Kaplan, L. Z. Kelley, M. Kerr,
+
+J. S. Key, N. Laal, M. T. Lam, W. G. Lamb, T. J. W. Lazio,
+N. Lewandowska, T. B. Littenberg, T. Liu, J. Luo, R. S.
+Lynch, C. Ma, D. R. Madison, A. McEwen, J. W. McKee,
+M. A. McLaughlin, N. McMann, B. W. Meyers, P. M. Meyers,
+C. M. F. Mingarelli, A. Mitridate, P. Natarajan, C. Ng, D. J.
+Nice, S. K. Ocker, K. D. Olum, T. T. Pennucci, B. B. P.
+Perera, P. Petrov, N. S. Pol, H. A. Radovan, S. M. Ransom,
+P. S. Ray, J. D. Romano, J. C. Runnoe, S. C. Sardesai,
+A. Schmiedekamp, C. Schmiedekamp, K. Schmitz, L. Schult,
+B. J. Shapiro-Albert, X. Siemens, J. Simon, M. S. Siwek,
+I. H. Stairs, D. R. Stinebring, K. Stovall, and J. P. Sun,
+“The nanograv 15 yr data set: Constraints on supermassive
+black hole binaries from the gravitational-wave background,”
+The Astrophysical Journal Letters, 2023. [Online]. Available:
+https://doi.org/10.3847/2041-8213/ace18b
+[9] G. Agazie, A. Anumarlapudi, A. M. Archibald, Z. Arzoumanian,
+P. T. Baker, B. Bécsy, L. Blecha, A. Brazier, P. R. Brook,
+S. Burke-Spolaor, R. Burnette, R. Case, M. Charisi,
+S. Chatterjee, K. Chatziioannou, B. D. Cheeseboro, S. Chen,
+T. Cohen, J. M. Cordes, N. J. Cornish, F. Crawford, H. T.
+Cromartie, K. Crowter, C. Cutler, M. E. DeCesar, D. DeGan,
+P. B. Demorest, H. Deng, T. Dolch, B. Drachler, J. A.
+Ellis, E. C. Ferrara, W. Fiore, E. Fonseca, G. E. Freedman,
+N. Garver-Daniels, P. A. Gentile, K. A. Gersbach, J. Glaser,
+D. C. Good, K. Gültekin, J. S. Hazboun, S. Hourihane, K. Islo,
+R. J. Jennings, A. D. Johnson, M. L. Jones, A. R. Kaiser, D. L.
+Kaplan, L. Z. Kelley, M. Kerr, J. S. Key, T. C. Klein, N. Laal,
+M. T. Lam, W. G. Lamb, T. J. W. Lazio, N. Lewandowska,
+T. B. Littenberg, T. Liu, A. N. Lommen, D. R. Lorimer,
+J. Luo, R. S. Lynch, C. Ma, D. R. Madison, M. A. Mattson,
+A. McEwen, J. W. McKee, M. A. McLaughlin, N. McMann,
+B. W. Meyers, P. M. Meyers, C. M. F. Mingarelli, A. Mitridate,
+P. Natarajan, C. Ng, D. J. Nice, S. K. Ocker, K. D. Olum, T. T.
+Pennucci, B. B. P. Perera, P. Petrov, N. S. Pol, H. A. Radovan,
+S. M. Ransom, P. S. Ray, J. D. Romano, S. C. Sardesai,
+A. Schmiedekamp, C. Schmiedekamp, K. Schmitz, L. Schult,
+B. J. Shapiro-Albert, X. Siemens, J. Simon, M. S. Siwek, I. H.
+Stairs, D. R. Stinebring, and K. Stovall, “The nanograv 15
+yr data set: Evidence for a gravitational-wave background,”
+The Astrophysical Journal Letters, 2023. [Online]. Available:
+https://doi.org/10.3847/2041-8213/acdac6
+[10] S. Perlmutter, G. Aldering, G. Goldhaber, R. A. Knop,
+P. Nugent, P. G. Castro, S. E. Deustua, S. Fabbro, A. Goobar,
+D. E. Groom, I. Hook, A. Kim, M. Y. Kim, J. C. Lee, N. J.
+Nunes, R. Pain, C. Pennypacker, R. Quimby, C. Lidman,
+R. S. Ellis, M. J. Irwin, R. G. McMahon, P. Ruiz‐Lapuente,
+N. A. Walton, B. E. Schaefer, B. J. Boyle, A. V. Filippenko,
+T. Matheson, A. S. Fruchter, N. Panagia, H. J. Newberg, W. J.
+Couch, and T. S. C. Project, “Measurements of Ω and Λ from
+42 high‐redshift supernovae,” The Astrophysical Journal, 1999.
+[Online]. Available: https://doi.org/10.1086/307221
+[11] P. Ade, N. Aghanim, M. Arnaud, M. Ashdown, J. Aumont,
+C. Baccigalupi, A. J. Banday, R. B. Barreiro, J. G. Bartlett,
+N. Bartolo, E. Battaner, R. A. Battye, K. Benabed, A. Benoı̂t,
+A. Benoit-Lévy, J.-P. Bernard, M. Bersanelli, P. Bielewicz,
+J. J. Bock, A. Bonaldi, L. Bonavera, J. R. Bond, J. Borrill,
+F. R. Bouchet, F. Boulanger, M. Bucher, C. Burigana, R. C.
+Butler, E. Calabrese, J.-F. Cardoso, A. Catalano, A. Challinor,
+A. Chamballu, R.-R. Chary, H. C. Chiang, J. Chluba,
+P. R. Christensen, S. Church, D. L. Clements, S. Colombi,
+L. P. L. Colombo, C. Combet, A. Coulais, B. P. Crill,
+A. Curto, F. Cuttaia, L. Danese, R. D. Davies, R. J. Davis,
+P. de Bernardis, A. de Rosa, G. de Zotti, J. Delabrouille,
+F. Désert, E. D. Valentino, C. Dickinson, J. M. Diego, K. Dolag,
+H. Dole, S. Donzelli, O. Doré, M. Douspis, A. Ducout,
+J. Dunkley, X. Dupac, G. Efstathiou, F. Elsner, T. A. Enßlin,
+H. K. Eriksen, M. Farhang, J. Fergusson, F. Finelli�, O. Forni,
+M. Frailis, A. A. Fraisse, E. Franceschi, A. Frejsel, S. Galeotta,
+S. Galli, K. Ganga, C. Gauthier, M. Gerbino, T. Ghosh,
+M. Giard, Y. Giraud–Héraud, E. Giusarma, E. Gjerløw,
+J. González-Nuevo, K. M. Górski, S. Gratton, A. Gregorio,
+A. Gruppuso, J. E. Gudmundsson, J. Hamann, F. K. Hansen,
+D. Hanson, D. L. Harrison, G. Hélou, S. Henrot–Versillé,
+and C. Hernández-Monteagudo, “Planck 2015 results,” ORCA
+
+Online Research @Cardiff (Cardiff University), 2016. [Online].
+Available: https://doi.org/10.17863/cam.32861
+[12] N. Aghanim, Y. Akrami, M. Ashdown, J. Aumont,
+C. Baccigalupi, M. Ballardini, A. J. Banday, R. B.
+Barreiro, N. Bartolo, S. Basak, R. A. Battye, K. Benabed,
+J.-P. Bernard, M. Bersanelli, P. Bielewicz, J. J. Bock, J. R.
+Bond, J. Borrill, F. R. Bouchet, F. Boulanger, M. Bucher,
+C. Burigana, R. C. Butler, E. Calabrese, J.-F. Cardoso,
+J. Carron, A. Challinor, H. C. Chiang, J. Chluba, L. P. L.
+Colombo, C. Combet, D. Contreras, B. P. Crill, F. Cuttaia,
+P. de Bernardis, G. de Zotti, J. Delabrouille, J. Delouis, E. D.
+Valentino, J. M. Diego, O. Doré, M. Douspis, A. Ducout,
+X. Dupac, S. Dusini, G. Efstathiou, F. Elsner, T. A.
+Enßlin, H. K. Eriksen, Y. Fantaye, M. Farhang, J. Fergusson,
+R. Fernández-Cobos, F. Finelli�, F. Forastieri, M. Frailis,
+A. A. Fraisse, E. Franceschi, A. Frolov, S. Galeotta, S. Galli,
+K. Ganga, R. T. Génova-Santos, M. Gerbino, T. Ghosh,
+J. González-Nuevo, K. M. Górski, S. Gratton, A. Gruppuso,
+J. E. Gudmundsson, J. Hamann, W. Handley, F. K. Hansen,
+D. Herranz, S. R. Hildebrandt, E. Hivon, Z. Huang, A. H. Jaffe,
+W. C. Jones, A. Karakci, E. Keihänen, R. Keskitalo, K. Kiiveri,
+J. Kim, T. S. Kisner, L. Knox, N. Krachmalnicoff, M. Kunz,
+H. Kurki‐Suonio, G. Lagache, J.-M. Lamarre, A. Lasenby,
+M. Lattanzi, C. R. Lawrence, M. L. Jeune, P. Lemos,
+J. Lesgourgues, F. Levrier, A. Lewis, and M. Liguori, “Planck
+2018 results,” Astronomy and Astrophysics, 2020. [Online].
+Available: https://doi.org/10.1051/0004-6361/201833910
+[13] A. Ashtekar and B. Krishnan, “Isolated and dynamical horizons
+and their applications,” Living Reviews in Relativity, 2004.
+[Online]. Available: https://doi.org/10.12942/lrr-2004-10
+[14] B. P. Abbott, R. Abbott, T. D. Abbott, F. Acernese, K. Ackley,
+C. Adams, T. Adams, P. Addesso, R. X. Adhikari, V. B.
+Adya, C. Affeldt, B. Agarwal, M. Agathos, K. Agatsuma,
+N. Aggarwal, O. D. Aguiar, L. Aiello, A. Ain, P. Ajith,
+B. Allen, A. Allocca, M. �. Aloy, P. A. Altin, A. Amato,
+A. Ananyeva, S. B. Anderson, W. G. Anderson, S. V.
+Angelova, S. Antier, S. Appert, K. Arai, M. C. Araya, J. S.
+Areeda, M. Arène, N. Arnaud, K. G. Arun, S. Ascenzi,
+G. Ashton, M. Ast, S. M. Aston, P. Astone, D. V. Atallah,
+F. Aubin, P. Aufmuth, C. Aulbert, K. AultONeal, C. Austin,
+A. Avila-Alvarez, S. Babak, P. Bacon, F. Badaracco, M. K. M.
+Bader, S. Bae, P. T. Baker, F. Baldaccini, G. Ballardin, S. W.
+Ballmer, S. Banagiri, J. C. Barayoga, S. E. Barclay, B. C.
+Barish, D. Barker, K. Barkett, S. Barnum, F. Barone, B. Barr,
+L. Barsotti, M. Barsuglia, D. Barta, J. Bartlett, I. Bartos,
+R. Bassiri, A. Basti, J. C. Batch, M. Bawaj, J. C. Bayley,
+M. Bazzan, B. Bécsy, C. Beer, M. Bejger, I. Belahcene, A. S.
+Bell, D. Beniwal, M. Bensch, B. K. Berger, G. Bergmann,
+S. Bernuzzi, J. J. Bero, C. P. L. Berry, D. Bersanetti,
+A. Bertolini, J. Betzwieser, R. Bhandare, I. A. Bilenko, S. A.
+Bilgili, G. Billingsley, C. R. Billman, J. Birch, and R. Birney,
+“Gw170817: Measurements of neutron star radii and equation
+of state,” Physical Review Letters, 2018. [Online]. Available:
+https://doi.org/10.1103/physrevlett.121.161101
+[15] A. G. Riess, A. V. Filippenko, P. Challis, A. Clocchiatti,
+A. H. Diercks, P. Garnavich, R. Gilliland, C. J. Hogan, S. W.
+Jha, R. Kirshner, B. Leibundgut, M. M. Phillips, D. J. Reiss,
+B. Schmidt, R. A. Schommer, R. C. Smith, J. Spyromilio,
+C. W. Stubbs, N. B. Suntzeff, and J. Tonry, “Observational
+evidence from supernovae for an accelerating universe and
+a cosmological constant,” The Astronomical Journal, 1998.
+[Online]. Available: https://doi.org/10.1086/300499
+[16] M. Kowalski, D. Rubin, G. Aldering, R. Agostinho, A. Amadon,
+R. Amanullah, C. Balland, K. Barbary, G. A. Blanc, P. Challis,
+A. Conley, N. Connolly, R. Covarrubias, K. Dawson, S. E.
+Deustua, R. S. Ellis, S. Fabbro, V. Fadeyev, X. Fan, B. D.
+Farris, G. Folatelli, B. Frye, G. Garavini, E. L. Gates,
+L. Germany, G. Goldhaber, B. Goldman, A. Goobar, D. E.
+Groom, J. Haïssinski, D. Hardin, I. Hook, S. Kent, A. Kim,
+R. A. Knop, C. Lidman, E. Linder, J. Méndez, J. Meyers,
+G. J. Miller, M. Moniez, A. Mourão, H. J. Newberg, S. Nobili,
+P. Nugent, R. Pain, O. Perdereau, S. Perlmutter, M. M.
+Phillips, V. Prasad, R. Quimby, N. Regnault, J. Rich, E. P.
+Rubenstein, P. Ruiz‐Lapuente, F. D. Santos, B. E. Schaefer,
+
+R. A. Schommer, R. C. Smith, A. Soderberg, A. L. Spadafora,
+L.-G. Strolger, M. Strovink, N. B. Suntzeff, N. Suzuki,
+R. C. Thomas, N. A. Walton, L. Wang, W. M. Wood‐Vasey,
+J. L. Yun, and T. S. C. Project), “Improved cosmological
+constraints from new, old, and combined supernova data
+sets,” The Astrophysical Journal, 2008. [Online]. Available:
+https://doi.org/10.1086/589937
+[17] E. O’Connor, R. Bollig, A. Burrows, S. M. Couch,
+T. Fischer, H. Janka, K. Kotake, E. J. Lentz,
+M. Liebendörfer, B. Messer, A. Mezzacappa, T. Takiwaki, and
+D. Vartanyan, “Global comparison of core-collapse supernova
+simulations in spherical symmetry,” Journal of Physics G
+Nuclear and Particle Physics, 2018. [Online]. Available:
+https://doi.org/10.1088/1361-6471/aadeae
+[18] C. J. Neijssel, A. Vigna-Gómez, S. P. Stevenson, J. W.
+Barrett, S. M. Gaebel, F. S. Broekgaarden, S. E.
+de Mink, D. Szécsi, S. Vinciguerra, and I. Mandel, “The
+effect of the metallicity-specific star formation history
+on double compact object mergers,” Monthly Notices of
+the Royal Astronomical Society, 2019. [Online]. Available:
+https://doi.org/10.1093/mnras/stz2840
+[19] N. Suzuki, D. Rubin, C. Lidman, G. Aldering, R. Amanullah,
+K. Barbary, L. F. Barrientos, J. Botyánszki, M. Brodwin,
+N. Connolly, K. Dawson, A. Dey, M. Doi, M. Donahue,
+S. E. Deustua, P. Eisenhardt, E. Ellingson, L. Faccioli,
+V. Fadeyev, H. K. Fakhouri, A. S. Fruchter, D. Gilbank,
+M. D. Gladders, G. Goldhaber, A. H. Gonzalez, A. Goobar,
+A. Gude, T. Hattori, H. Hoekstra, E. Y. Hsiao, X. Huang,
+Y. Ihara, M. J. Jee, D. Johnston, N. Kashikawa, B. P.
+Koester, K. Konishi, M. Kowalski, E. V. Linder, L. M. Lubin,
+J. Melbourne, J. Meyers, T. Morokuma, F. Munshi, C. R.
+Mullis, T. Oda, N. Panagia, S. Perlmutter, M. Postman, T. A.
+Pritchard, J. Rhodes, P. Ripoche, P. Rosati, D. J. Schlegel,
+A. L. Spadafora, S. A. Stanford, V. Stanishev, D. Stern,
+M. Strovink, N. Takanashi, K. Tokita, M. Wagner, L. Wang,
+N. Yasuda, H. K. C. Yee, and T. S. C. Project, “Thehubble
+space telescopecluster supernova survey. v. improving the darkenergy constraints abovez> 1 and building an early-type-hosted
+supernova sample,” The Astrophysical Journal, 2012. [Online].
+Available: https://doi.org/10.1088/0004-637x/746/1/85
+[20] B. P. Abbott, R. Abbott, T. D. Abbott, F. Acernese, K. Ackley,
+C. Adams, T. Adams, P. Addesso, R. X. Adhikari, V. B.
+Adya, C. Affeldt, M. Afrough, B. Agarwal, M. Agathos,
+K. Agatsuma, N. Aggarwal, O. D. Aguiar, L. Aiello, A. Ain,
+P. Ajith, B. Allen, A. Allocca, P. A. Altin, A. Amato,
+A. Ananyeva, S. B. Anderson, W. G. Anderson, S. V.
+Angelova, S. Antier, S. Appert, K. Arai, M. C. Araya,
+J. Areeda, N. Arnaud, K. G. Arun, S. Ascenzi, G. Ashton,
+M. Ast, S. M. Aston, P. Astone, D. V. Atallah, P. Aufmuth,
+C. Aulbert, K. AultONeal, C. Austin, A. Avila-Alvarez,
+S. Babak, P. Bacon, M. K. M. Bader, S. Bae, M. Bailes,
+P. T. Baker, F. Baldaccini, G. Ballardin, S. W. Ballmer,
+S. Banagiri, J. C. Barayoga, S. E. Barclay, B. C. Barish,
+D. Barker, K. Barkett, F. Barone, B. Barr, L. Barsotti,
+M. Barsuglia, D. Barta, S. D. Barthelmy, J. Bartlett,
+I. Bartos, R. Bassiri, A. Basti, J. C. Batch, M. Bawaj,
+J. C. Bayley, M. Bazzan, B. Bécsy, C. Beer, M. Bejger,
+I. Belahcene, A. S. Bell, B. K. Berger, G. Bergmann,
+S. Bernuzzi, J. J. Bero, C. P. L. Berry, D. Bersanetti,
+A. Bertolini, J. Betzwieser, S. Bhagwat, R. Bhandare, I. A.
+Bilenko, G. Billingsley, C. R. Billman, J. Birch, R. Birney,
+O. Birnholtz, S. Biscans, S. Biscoveanu, and A. Bisht,
+“Gw170817: Observation of gravitational waves from a binary
+neutron star inspiral,” Physical Review Letters, 2017. [Online].
+Available: https://doi.org/10.1103/physrevlett.119.161101
+[21] B. P. Abbott, R. Abbott, T. D. Abbott, M. R. Abernathy,
+F. Acernese, K. Ackley, C. Adams, T. Adams, P. Addesso, R. X.
+Adhikari, V. B. Adya, C. Affeldt, M. Agathos, K. Agatsuma,
+N. Aggarwal, O. D. Aguiar, L. Aiello, A. Ain, P. Ajith,
+B. Allen, A. Allocca, P. A. Altin, S. B. Anderson, W. G.
+Anderson, K. Arai, M. C. Araya, C. C. Arceneaux, J. S. Areeda,
+N. Arnaud, K. G. Arun, S. Ascenzi, G. Ashton, M. Ast, S. M.
+Aston, P. Astone, P. Aufmuth, C. Aulbert, S. Babak, P. Bacon,
+M. K. M. Bader, P. T. Baker, F. Baldaccini, G. Ballardin,
+
+S. W. Ballmer, J. C. Barayoga, S. E. Barclay, B. C. Barish,
+D. Barker, F. Barone, B. Barr, L. Barsotti, M. Barsuglia,
+D. Barta, J. Bartlett, I. Bartos, R. Bassiri, A. Basti, J. C.
+Batch, C. Baune, V. Bavigadda, M. Bazzan, M. Bejger, A. S.
+Bell, B. K. Berger, G. Bergmann, C. P. L. Berry, D. Bersanetti,
+A. Bertolini, J. Betzwieser, S. Bhagwat, R. Bhandare, I. A.
+Bilenko, G. Billingsley, J. Birch, R. Birney, O. Birnholtz,
+S. Biscans, A. Bisht, M. Bitossi, C. Biwer, M. A. Bizouard, J. K.
+Blackburn, C. D. Blair, D. G. Blair, R. M. Blair, S. Bloemen,
+O. Bock, M. Boër, G. Bogaert, C. Bogan, A. Bohé, C. Bond,
+F. Bondu, R. Bonnand, B. A. Boom, R. Bork, V. Boschi,
+S. Bose, Y. Bouffanais, and A. Bozzi, “Gw151226: Observation
+of gravitational waves from a 22-solar-mass binary black
+hole coalescence,” Physical Review Letters, 2016. [Online].
+Available: https://doi.org/10.1103/physrevlett.116.241103
+[22] B. Paxton, P. Marchant, J. Schwab, E. B. Bauer, L. Bildsten,
+M. Cantiello, L. Dessart, R. Farmer, H. Hu, N. Langer, R. H. D.
+Townsend, D. M. Townsley, and F. X. Timmes, “Modules for
+experiments in stellar astrophysics (mesa): Binaries, pulsations,
+and explosions,” The Astrophysical Journal Supplement
+Series, 2015. [Online]. Available: https://doi.org/10.1088/00670049/220/1/15
+[23] R. Abbott, T. D. Abbott, S. Abraham, F. Acernese, K. Ackley,
+C. Adams, R. X. Adhikari, V. B. Adya, C. Affeldt, M. Agathos,
+K. Agatsuma, N. Aggarwal, O. D. Aguiar, A. Aich, L. Aiello,
+A. Ain, P. Ajith, S. Akçay, B. Allen, A. Allocca, P. A. Altin,
+A. Amato, S. Anand, A. Ananyeva, S. B. Anderson, W. G.
+Anderson, S. V. Angelova, S. Ansoldi, S. Antier, S. Appert,
+K. Arai, M. Araya, J. S. Areeda, M. Arène, N. Arnaud,
+S. M. Aronson, K. G. Arun, Y. Asali, S. Ascenzi, G. Ashton,
+S. M. Aston, P. Astone, F. Aubin, P. Aufmuth, K. AultONeal,
+C. Austin, V. Avendano, S. Babak, P. Bacon, F. Badaracco,
+M. K. M. Bader, S. Bae, A. M. Baer, J. Baird, F. Baldaccini,
+G. Ballardin, S. W. Ballmer, A. Bals, A. Balsamo, G. Baltus,
+S. Banagiri, D. Bankar, R. S. Bankar, J. C. Barayoga,
+C. Barbieri, B. C. Barish, D. Barker, K. Barkett, P. Barneo,
+F. Barone, B. Barr, L. Barsotti, M. Barsuglia, D. Barta,
+J. Bartlett, I. Bartos, R. Bassiri, A. Basti, M. Bawaj,
+J. C. Bayley, M. Bazzan, B. Bécsy, M. Bejger, I. Belahcene,
+A. S. Bell, D. Beniwal, M. G. Benjamin, J. D. Bentley,
+F. Bergamin, B. K. Berger, G. Bergmann, S. Bernuzzi,
+C. P. L. Berry, D. Bersanetti, A. Bertolini, J. Betzwieser,
+R. Bhandare, A. V. Bhandari, J. Bidler, and E. Biggs,
+“Gw190521: A binary black hole merger with a total mass of
+150 m �,” Physical Review Letters, 2020. [Online]. Available:
+https://doi.org/10.1103/physrevlett.125.101102
+[24] B. Paxton, J. Schwab, E. B. Bauer, L. Bildsten, �. �. ���������,
+P. C. Duffell, R. Farmer, J. A. Goldberg, P. Marchant, E. I.
+Sorokina, A. Thoul, R. H. D. Townsend, and F. X. Timmes,
+“Modules for experiments in stellar astrophysics ( ): Convective
+boundaries, element diffusion, and massive star explosions,”
+The Astrophysical Journal Supplement Series, 2018. [Online].
+Available: https://doi.org/10.3847/1538-4365/aaa5a8
+[25] B. P. Abbott, R. Abbott, T. D. Abbott, M. R. Abernathy,
+F. Acernese, K. Ackley, C. Adams, T. Adams, P. Addesso, R. X.
+Adhikari, V. B. Adya, C. Affeldt, M. Agathos, K. Agatsuma,
+N. Aggarwal, O. D. Aguiar, L. Aiello, A. Ain, P. Ajith, B. Allen,
+A. Allocca, P. A. Altin, S. B. Anderson, W. G. Anderson,
+K. Arai, M. A. Arain, M. C. Araya, C. C. Arceneaux, J. S.
+Areeda, N. Arnaud, K. G. Arun, S. Ascenzi, G. Ashton, M. Ast,
+S. M. Aston, P. Astone, P. Aufmuth, C. Aulbert, S. Babak,
+P. Bacon, M. K. M. Bader, P. T. Baker, F. Baldaccini,
+G. Ballardin, S. W. Ballmer, J. C. Barayoga, S. E. Barclay,
+B. C. Barish, D. Barker, F. Barone, B. Barr, L. Barsotti,
+M. Barsuglia, D. Barta, J. Bartlett, M. A. Barton, I. Bartos,
+R. Bassiri, A. Basti, J. C. Batch, C. Baune, V. Bavigadda,
+M. Bazzan, B. Behnke, M. Bejger, K. Belczyński, A. S. Bell,
+C. Bell, B. K. Berger, J. Bergman, G. Bergmann, C. P. L.
+Berry, D. Bersanetti, A. Bertolini, J. Betzwieser, S. Bhagwat,
+R. Bhandare, I. A. Bilenko, G. Billingsley, J. Birch, R. Birney,
+O. Birnholtz, S. Biscans, A. Bisht, M. Bitossi, C. Biwer,
+M. A. Bizouard, J. K. Blackburn, C. D. Blair, D. G. Blair,
+R. M. Blair, S. Bloemen, O. Bock, T. P. Bodiya, M. Boër,
+G. Bogaert, C. Bogan, A. Bohé, P. Bojtos, and C. Bond,
+
+“Observation of gravitational waves from a binary black hole
+merger,” Physical Review Letters, 2016. [Online]. Available:
+https://doi.org/10.1103/physrevlett.116.061102
+[26] E. N. Taylor, A. Hopkins, I. K. Baldry, M. J. I. Brown,
+S. P. Driver, L. S. Kelvin, D. T. Hill, A. S. G. Robotham,
+J. Bland‐Hawthorn, D. H. P. Jones, R. Sharp, D. Thomas,
+J. Liske, J. Loveday, P. Norberg, J. A. Peacock, S. P. Bamford,
+S. Brough, M. Colless, E. Cameron, C. J. Conselice, S. M.
+Croom, C. S. Frenk, M. L. P. Gunawardhana, K. Kuijken,
+R. C. Nichol, H. R. Parkinson, S. Phillipps, K. A. Pimbblet,
+C. C. Popescu, M. Prescott, W. J. Sutherland, R. J. Tuffs,
+E. van Kampen, and D. Wijesinghe, “Galaxy and mass
+assembly (gama): stellar mass estimates,” Monthly Notices
+of the Royal Astronomical Society, 2011. [Online]. Available:
+https://doi.org/10.1111/j.1365-2966.2011.19536.x
+[27] S. van Buuren and K. Groothuis‐Oudshoorn, “Mice:
+Multivariate imputation by chained equations in r,” University
+of Twente Research Information, 2010. [Online]. Available:
+https://research.utwente.nl/en/publications/f332b76985cd-4d13-818f-5799cb957366
+[28] A. A. Veroniki, D. Jackson, W. Viechtbauer, R. Bender,
+J. Bowden, G. Knapp, O. Kuß, J. P. T. Higgins,
+D. Langan, and G. Salanti, “Methods to estimate the
+between‐study variance and its uncertainty in meta‐analysis,”
+Research Synthesis Methods, 2015. [Online]. Available:
+https://doi.org/10.1002/jrsm.1164
+[29] R. Abbott, T. D. Abbott, S. Abraham, F. Acernese, K. Ackley,
+C. Adams, R. X. Adhikari, V. B. Adya, C. Affeldt, M. Agathos,
+K. Agatsuma, N. Aggarwal, O. D. Aguiar, A. Aich, L. Aiello,
+A. Ain, P. Ajith, S. Akcay, G. Allen, A. Allocca, P. A. Altin,
+A. Amato, S. Anand, A. Ananyeva, S. B. Anderson, W. G.
+Anderson, S. V. Angelova, S. Ansoldi, S. Antier, S. Appert,
+K. Arai, M. C. Araya, J. S. Areeda, M. Arène, N. Arnaud,
+S. M. Aronson, K. G. Arun, Y. Asali, S. Ascenzi, G. Ashton,
+S. M. Aston, P. Astone, F. Aubin, P. Aufmuth, K. AultONeal,
+C. Austin, V. Avendano, S. Babak, P. Bacon, F. Badaracco,
+M. K. M. Bader, S. Bae, A. M. Baer, J. Baird, F. Baldaccini,
+G. Ballardin, S. W. Ballmer, A. Bals, A. Balsamo, G. Baltus,
+S. Banagiri, D. Bankar, R. S. Bankar, J. C. Barayoga,
+C. Barbieri, B. C. Barish, D. Barker, K. Barkett, P. Barneo,
+F. Barone, B. Barr, L. Barsotti, M. Barsuglia, D. Barta,
+J. Bartlett, I. Bartos, R. Bassiri, A. Basti, M. Bawaj, J. C.
+Bayley, M. Bazzan, B. Bécsy, M. Bejger, I. Belahcene, A. S.
+Bell, D. Beniwal, M. G. Benjamin, R. Benkel, J. D. Bentley,
+F. Bergamin, B. K. Berger, G. Bergmann, S. Bernuzzi,
+C. P. L. Berry, D. Bersanetti, A. Bertolini, J. Betzwieser,
+R. Bhandare, A. V. Bhandari, and J. Bidler, “Gw190814:
+Gravitational waves from the coalescence of a 23 solar
+mass black hole with a 2.6 solar mass compact object,”
+The Astrophysical Journal Letters, 2020. [Online]. Available:
+https://doi.org/10.3847/2041-8213/ab960f
+
+

@@ -8,7 +8,7 @@ import re
 from collections.abc import Mapping
 from typing import Any
 
-from .latex_safety import LatexSafetyError, contains_non_english_script, escape_latex_text, validate_citation_key
+from .latex_safety import LatexSafetyError, escape_latex_text, validate_citation_key
 
 
 BIBTEX_RENDER_SCHEMA_VERSION = "research_plan_author_bibtex_render_v1"
@@ -90,12 +90,11 @@ def _bib_value(value: object, *, label: str) -> str:
     text = _text(value)
     if not text:
         raise BibtexRenderError(f"missing required BibTeX {label}")
-    if contains_non_english_script(text):
-        raise BibtexRenderError(
-            f"BibTeX {label} contains non-English-script text; use an explicitly configured Unicode-capable profile after review"
-        )
     try:
-        return escape_latex_text(text, label=f"BibTeX {label}")
+        return escape_latex_text(
+            text,
+            label=f"BibTeX {label}",
+        )
     except LatexSafetyError as error:
         raise BibtexRenderError(str(error)) from error
 
@@ -113,8 +112,13 @@ def _render_entry(record: Mapping[str, Any], *, key: str) -> tuple[str | None, d
     if missing:
         return None, _completion_record(record, key=key, reason="missing_metadata:" + ",".join(missing))
     try:
+        rendered_authors = [_bib_value(authors[0], label="author")]
+        if len(authors) > 1:
+            # BibTeX's standard `others` marker lets IEEEtran.bst typeset
+            # “First Author et al.” without keeping a long author list alive.
+            rendered_authors.append("others")
         fields = [
-            ("author", " and ".join(_bib_value(author, label="author") for author in authors)),
+            ("author", " and ".join(rendered_authors)),
             ("title", _bib_value(title, label="title")),
             ("journal", _bib_value(venue, label="venue")),
             ("year", _bib_value(year, label="year")),
@@ -133,10 +137,15 @@ def _render_entry(record: Mapping[str, Any], *, key: str) -> tuple[str | None, d
     return rendered, None
 
 
-def render_bibtex(document: Mapping[str, Any]) -> BibtexRenderResult:
-    """Emit only fully identified citations; never make up missing bibliography fields."""
+def render_bibtex(
+    document: Mapping[str, Any],
+    *,
+    include_uncited: bool = False,
+) -> BibtexRenderResult:
+    """Emit only cited, fully identified records unless preflighting metadata."""
 
     registry = _paper_metadata(document)
+    required_keys = required_citation_keys(document)
     emitted: list[tuple[str, str, dict[str, Any]]] = []
     completion: list[dict[str, Any]] = []
     seen_keys: set[str] = set()
@@ -152,6 +161,8 @@ def render_bibtex(document: Mapping[str, Any]) -> BibtexRenderResult:
         if key in seen_keys:
             raise BibtexRenderError(f"duplicate citation key in frozen document: {key}")
         seen_keys.add(key)
+        if not include_uncited and key not in required_keys:
+            continue
         source_id = _text(record.get("source_id"))
         source_record = registry.get(source_id, record)
         entry, needs_completion = _render_entry(source_record, key=key)
@@ -181,6 +192,33 @@ def render_bibtex(document: Mapping[str, Any]) -> BibtexRenderResult:
     )
 
 
+def bibliography_preflight_errors(citations: object) -> list[str]:
+    """Report malformed citation identities before composition begins.
+
+    Metadata completeness is intentionally deferred until composition has fixed
+    which records are actually cited. An unused incomplete registry record must
+    not prevent Author from drafting the document.
+    """
+
+    records = [_mapping(raw) for raw in citations or [] if isinstance(raw, Mapping)]
+    errors: list[str] = []
+    seen_keys: set[str] = set()
+    for index, record in enumerate(records):
+        citation_key = _text(record.get("citation_key"))
+        source_id = _text(record.get("source_id"))
+        if not source_id:
+            errors.append(f"citation registry record {index} is missing source_id")
+        try:
+            normalized_key = validate_citation_key(citation_key)
+        except LatexSafetyError as error:
+            errors.append(str(error))
+            continue
+        if normalized_key in seen_keys:
+            errors.append(f"duplicate citation key in frozen document: {normalized_key}")
+        seen_keys.add(normalized_key)
+    return sorted(set(errors))
+
+
 def required_citation_keys(document: Mapping[str, Any]) -> set[str]:
     """Return all claim-level citation keys without interpreting LLM prose."""
 
@@ -207,6 +245,7 @@ __all__ = [
     "BIBTEX_RENDER_SCHEMA_VERSION",
     "BibtexRenderError",
     "BibtexRenderResult",
+    "bibliography_preflight_errors",
     "ensure_citation_coverage",
     "render_bibtex",
     "required_citation_keys",

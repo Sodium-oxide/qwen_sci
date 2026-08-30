@@ -385,6 +385,57 @@ def test_author_handoff_rejects_an_unvalidated_design() -> None:
         build_author_handoff(design)
 
 
+def test_author_handoff_preserves_evidence_card_support_statement() -> None:
+    design = _design()
+    design["evidence_bundle"]["evidence_cards"] = [
+        {
+            "card_id": "EC-1",
+            "claim_slot": "mechanism",
+            "statement": "The source supports the bounded mechanism statement.",
+            "design_implication": "The proposal must keep the mechanism within its stated boundary.",
+            "source_id": "W1",
+            "source_location": "fulltext:W1:section-1",
+            "evidence_level": "fulltext",
+            "evidence_excerpt": "The source supports the bounded mechanism statement in section one.",
+            "limitations": [],
+            "does_not_establish": [],
+        }
+    ]
+    design["evidence_bundle"]["paper_registry"] = [
+        {
+            "canonical_paper_id": "W1",
+            "title": "A traceable source record",
+            "authors": ["Ada Example", "Ben Example"],
+            "year": "2026",
+            "venue": "Journal of Testable Plans",
+            "doi": "10.1000/w1",
+            "url": "https://example.test/W1",
+            "citation_rendering_status": "RENDERABLE",
+            "citation_missing_fields": [],
+            "provider_ids": {"canonical": "W1"},
+            "providers": ["test"],
+            "query_task_ids": [],
+            "content_availability": "fulltext",
+            "fulltext_source_location": "fulltext:W1",
+        }
+    ]
+
+    handoff = build_author_handoff(design)
+    compact_card = handoff["source_registry"]["evidence_cards_by_id"]["EC-1"]
+    citation = handoff["source_registry"]["citation_registry"][0]
+
+    assert compact_card["support_statement"] == "The source supports the bounded mechanism statement."
+    assert citation["citation_rendering_status"] == "RENDERABLE"
+    assert citation["bibliographic_metadata"] == {
+        "authors": ["Ada Example", "Ben Example"],
+        "title": "A traceable source record",
+        "year": "2026",
+        "venue": "Journal of Testable Plans",
+        "doi": "10.1000/w1",
+        "url": "https://example.test/W1",
+    }
+
+
 def test_writer_removes_partial_artifacts_when_atomic_publish_fails(monkeypatch, tmp_path: Path) -> None:
     import src.agents.experiment_design_agent.artifacts as artifacts
 

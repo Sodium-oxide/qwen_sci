@@ -1,0 +1,166 @@
+{
+  "artifact_kind": "section_composer:abstract",
+  "constraints": [
+    "Only JSON structure, enum values, IDs, references, and exact copying may be repaired.",
+    "No facts, sources, citations, DOI, numerical values, methods, results, proof claims, or verification claims may be added."
+  ],
+  "initial_candidate": {
+    "applicability": "required",
+    "blocks": [
+      {
+        "block_id": "block_1",
+        "citations": {
+          "citation_keys": [],
+          "evidence_card_ids": [],
+          "source_ids": [],
+          "survey_anchor_ids": [
+            "anchor:gap_evidence_anchor:sh3:formal_claim:survey_evidence_plan_json_subhypotheses_2_missing_slots_0:required_evidence_slot_formal_claim_is_missing_from_the_survey_evidence_plan_for_sub_hypothesis_sh3_under_what_assumptions_and_validity_domains_do_penrose_type_singularity_theorems_and_einstein_field_equation_solutions_support_the_existence_of_black_holes_and_what_counterexamples_or_limiting_conditions_challenge_their_applicability:ae6b9e1d56e3",
+            "anchor:gap_evidence_anchor:sh4:boundary_variable:survey_evidence_plan_json_subhypotheses_3_relevant_clusters_2_uncovered_required_slots_0:required_slot_boundary_variable_remains_uncovered_in_relevant_evidence_cluster_theoretical_stellar_evolution_and_remnant_formation_pathways:e6a883c4c52e"
+          ]
+        },
+        "claim_kind": "research_gap",
+        "content": "The investigation addresses critical omissions in the theoretical framework connecting General Relativity to stellar mass gaps. Specifically, there is a lack of formal evidence analyzing assumptions for Penrose-type theorems in this domain, and a lack of identified boundary variables in theoretical stellar evolution models that distinguish black-hole from non-black-hole outcomes.",
+        "type": "research_gap"
+      },
+      {
+        "block_id": "block_2",
+        "citations": {
+          "citation_keys": [],
+          "evidence_card_ids": [],
+          "source_ids": [],
+          "survey_anchor_ids": []
+        },
+        "claim_kind": "planned_contribution",
+        "content": "We propose a formal, theoretical derivation of an AANEC-relaxed trapped-surface bound for non-black-hole stellar remnants. The work aims to replace pointwise NEC/SEC assumptions with an explicit averaged null-convergence/focusing condition to determine a compactness threshold for trapped-surface formation within a spherical, non-rotating, classical GR framework.",
+        "type": "planned_contribution"
+      },
+      {
+        "block_id": "block_3",
+        "citations": {
+          "citation_keys": [],
+          "evidence_card_ids": [],
+          "source_ids": [],
+          "survey_anchor_ids": [
+            "anchor:gap_evidence_anchor:global:progenitor_explosion_energetics:paper_abstract_w2020387858_abstract:the_derived_mass_distributions_remain_sensitive_to_uncertainties_in_the_explosion_and_unbinding_energies_across_different_progenitor_masses_leaving_a_key_physical_parameter_unconstrained:961ddb8a1d5a"
+          ]
+        },
+        "claim_kind": "expected_outcome",
+        "content": "The expected outcome is the derivation of a conditional theorem or the identification of specific failure boundaries, demonstrating that the resulting mass gap remains consistent with astrophysical constraints from stellar evolution rather than being uniquely derived from the formal theorem.",
+        "qualification": "expected_not_observed",
+        "type": "expected_outcome"
+      }
+    ],
+    "review_items": [],
+    "section_id": "abstract",
+    "title": "Abstract",
+    "unknown_items": []
+  },
+  "initial_validation_errors": [
+    "$: 'claim_provenance' is a required property",
+    "$: 'language' is a required property",
+    "$: 'open_items' is a required property",
+    "$: 'schema_version' is a required property",
+    "$: Additional properties are not allowed ('unknown_items' was unexpected)",
+    "blocks/0: 'claim_ids' is a required property",
+    "blocks/0: 'kind' is a required property",
+    "blocks/0: 'text' is a required property",
+    "blocks/0: Additional properties are not allowed ('citations', 'claim_kind', 'content', 'type' were unexpected)",
+    "blocks/1: 'claim_ids' is a required property",
+    "blocks/1: 'kind' is a required property",
+    "blocks/1: 'text' is a required property",
+    "blocks/1: Additional properties are not allowed ('citations', 'claim_kind', 'content', 'type' were unexpected)",
+    "blocks/2: 'claim_ids' is a required property",
+    "blocks/2: 'kind' is a required property",
+    "blocks/2: 'text' is a required property",
+    "blocks/2: Additional properties are not allowed ('citations', 'claim_kind', 'content', 'qualification', 'type' were unexpected)"
+  ],
+  "repair_attempted": true,
+  "repair_status": "REJECTED",
+  "repair_validation_errors": [
+    "claim A1 may not cite Survey anchors outside the Survey section",
+    "claim A1 references unknown survey anchors: ['anchor:gap_evidence_anchor:sh3:formal_claim:survey_evidence_plan_json_subhypotheses_2_missing_slots_0:required_evidence_slot_formal_claim_is_missing_from_the_survey_evidence_plan_for_sub_hypothesis_sh3_under_what_assumptions_and_validity_domains_do_penrose_type_singularity_theorems_and_einstein_field_equation_solutions_support_the_existence_of_black_holes_and_what_counterexamples_or_limiting_conditions_challenge_their_applicability:ae6b9e1d56e3', 'anchor:gap_evidence_anchor:sh4:boundary_variable:survey_evidence_plan_json_subhypotheses_3_relevant_clusters_2_uncovered_required_slots_0:required_slot_boundary_variable_remains_uncovered_in_relevant_evidence_cluster_theoretical_stellar_evolution_and_remnant_formation_pathways:e6a883c4c52e']",
+    "claim A3 may not cite Survey anchors outside the Survey section",
+    "claim A3 references unknown survey anchors: ['anchor:gap_evidence_anchor:global:progenitor_explosion_energetics:paper_abstract_w2020387858_abstract:the_derived_mass_distributions_remain_sensitive_to_uncertainties_in_the_explosion_and_unbinding_energies_across_different_progenitor_masses_leaving_a_key_physical_parameter_unconstrained:961ddb8a1d5a']",
+    "contract repair introduced new non-structural text",
+    "expected outcome claim A3 must map to an outcome branch"
+  ],
+  "repaired_candidate": {
+    "applicability": "required",
+    "blocks": [
+      {
+        "block_id": "block_1",
+        "claim_ids": [
+          "A1"
+        ],
+        "kind": "paragraph",
+        "text": "The investigation addresses critical omissions in the theoretical framework connecting General Relativity to stellar mass gaps. Specifically, there is a lack of formal evidence analyzing assumptions for Penrose-type theorems in this domain, and a lack of identified boundary variables in theoretical stellar evolution models that distinguish black-hole from non-black-hole outcomes."
+      },
+      {
+        "block_id": "block_2",
+        "claim_ids": [
+          "A2"
+        ],
+        "kind": "paragraph",
+        "text": "We propose a formal, theoretical derivation of an AANEC-relaxed trapped-surface bound for non-black-hole stellar remnants. The work aims to replace pointwise NEC/SEC assumptions with an explicit averaged null-convergence/focusing condition to determine a compactness threshold for trapped-surface formation within a spherical, non-rotating, classical GR framework."
+      },
+      {
+        "block_id": "block_3",
+        "claim_ids": [
+          "A3"
+        ],
+        "kind": "paragraph",
+        "text": "The expected outcome is the derivation of a conditional theorem or the identification of specific failure boundaries, demonstrating that the resulting mass gap remains consistent with astrophysical constraints from stellar evolution rather than being uniquely derived from the formal theorem."
+      }
+    ],
+    "claim_provenance": [
+      {
+        "citation_keys": [],
+        "claim_id": "A1",
+        "claim_kind": "research_gap",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "not_applicable",
+        "source_ids": [],
+        "statement": "The investigation addresses critical omissions in the theoretical framework connecting General Relativity to stellar mass gaps. Specifically, there is a lack of formal evidence analyzing assumptions for Penrose-type theorems in this domain, and a lack of identified boundary variables in theoretical stellar evolution models that distinguish black-hole from non-black-hole outcomes.",
+        "survey_anchor_ids": [
+          "anchor:gap_evidence_anchor:sh3:formal_claim:survey_evidence_plan_json_subhypotheses_2_missing_slots_0:required_evidence_slot_formal_claim_is_missing_from_the_survey_evidence_plan_for_sub_hypothesis_sh3_under_what_assumptions_and_validity_domains_do_penrose_type_singularity_theorems_and_einstein_field_equation_solutions_support_the_existence_of_black_holes_and_what_counterexamples_or_limiting_conditions_challenge_their_applicability:ae6b9e1d56e3",
+          "anchor:gap_evidence_anchor:sh4:boundary_variable:survey_evidence_plan_json_subhypotheses_3_relevant_clusters_2_uncovered_required_slots_0:required_slot_boundary_variable_remains_uncovered_in_relevant_evidence_cluster_theoretical_stellar_evolution_and_remnant_formation_pathways:e6a883c4c52e"
+        ]
+      },
+      {
+        "citation_keys": [],
+        "claim_id": "A2",
+        "claim_kind": "planned_contribution",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "proposed",
+        "source_ids": [],
+        "statement": "We propose a formal, theoretical derivation of an AANEC-relaxed trapped-surface bound for non-black-hole stellar remnants. The work aims to replace pointwise NEC/SEC assumptions with an explicit averaged null-convergence/focusing condition to determine a compactness threshold for trapped-surface formation within a spherical, non-rotating, classical GR framework.",
+        "survey_anchor_ids": []
+      },
+      {
+        "citation_keys": [],
+        "claim_id": "A3",
+        "claim_kind": "expected_outcome",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "expected_not_observed",
+        "source_ids": [],
+        "statement": "The expected outcome is the derivation of a conditional theorem or the identification of specific failure boundaries, demonstrating that the resulting mass gap remains consistent with astrophysical constraints from stellar evolution rather than being uniquely derived from the formal theorem.",
+        "survey_anchor_ids": [
+          "anchor:gap_evidence_anchor:global:progenitor_explosion_energetics:paper_abstract_w2020387858_abstract:the_derived_mass_distributions_remain_sensitive_to_uncertainties_in_the_explosion_and_unbinding_energies_across_different_progenitor_masses_leaving_a_key_physical_parameter_unconstrained:961ddb8a1d5a"
+        ]
+      }
+    ],
+    "language": "en",
+    "open_items": [],
+    "review_items": [],
+    "schema_version": "research_plan_section_v1",
+    "section_id": "abstract",
+    "title": "Abstract"
+  },
+  "schema_version": "research_plan_author_contract_repair_audit_v1"
+}

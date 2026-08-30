@@ -12,9 +12,16 @@ from typing import Any
 
 from .bibtex_renderer import BibtexRenderResult, ensure_citation_coverage, render_bibtex
 from .contracts import AUTHORING_LANGUAGE, validate_research_plan_document
-from .latex_safety import LatexSafetyError, escape_latex_text, require_english_visible_text, safe_math_expression
+from .latex_safety import (
+    LatexSafetyError,
+    escape_latex_text,
+    normalize_visible_text,
+    safe_math_expression,
+    split_equation_content,
+)
 from .template_adapter import MaterializedTemplate, TemplateAdapter, TemplateAdapterError
 from .template_profile import TemplateProfile
+from .theory_presentation import theory_block_presentation, theory_unit_registry, visible_theory_text
 
 
 TEX_RENDER_SCHEMA_VERSION = "research_plan_author_tex_render_v1"
@@ -51,6 +58,33 @@ def _text(value: object) -> str:
     return str(value or "").strip()
 
 
+_PRIVATE_PROVENANCE_ANCHOR = re.compile(
+    r"\[?(?:survey:survey_markdown(?:#section-[A-Za-z0-9._:+-]+)?|anchor:[A-Za-z0-9_:+-]+(?:\.[A-Za-z0-9_:+-]+)*)\]?",
+    re.IGNORECASE,
+)
+
+
+def _strip_private_survey_anchors(value: object) -> str:
+    """Keep Survey provenance private even if a composer leaks an anchor into prose."""
+
+    text = str(value or "")
+    cleaned = _PRIVATE_PROVENANCE_ANCHOR.sub("", text)
+    return re.sub(r"[ \t]{2,}", " ", cleaned).replace(" \n", "\n").strip()
+
+
+def _label_component(value: object) -> str:
+    component = re.sub(r"[^A-Za-z0-9:-]+", "-", _text(value)).strip("-:")
+    return component or "unnamed"
+
+
+def _equation_label(section_id: object, block_id: object) -> str:
+    return f"eq:{_label_component(section_id)}-{_label_component(block_id)}"
+
+
+def _table_label(section_id: object, block_id: object) -> str:
+    return f"tab:{_label_component(section_id)}-{_label_component(block_id)}"
+
+
 def _claim_map(document: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
     claims: dict[str, dict[str, Any]] = {}
     for raw in document.get("claim_provenance") or []:
@@ -77,24 +111,27 @@ def _citation_suffix(keys: list[str]) -> str:
 
 
 def _paragraphs(text: str, *, label: str) -> str:
-    fragments = [fragment.strip() for fragment in re.split(r"\n\s*\n", text) if fragment.strip()]
+    visible_text = _strip_private_survey_anchors(text)
+    fragments = [fragment.strip() for fragment in re.split(r"\n\s*\n", visible_text) if fragment.strip()]
     if not fragments:
         return ""
     return "\n\n".join(escape_latex_text(fragment, label=label).replace("\n", " ") for fragment in fragments)
 
 
 def _list_items(text: str, *, label: str) -> list[str]:
-    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    lines = [line.strip() for line in _strip_private_survey_anchors(text).splitlines() if line.strip()]
     items = [re.sub(r"^(?:[-*+]|\d+[.)])\s*", "", line).strip() for line in lines]
     return [escape_latex_text(item, label=label) for item in items if item]
 
 
-def _render_table(text: str, *, label: str) -> str:
+def _render_table(text: str, *, label: str, caption: str, table_label: str) -> str:
     rows: list[list[str]] = []
-    for line in (line.strip() for line in text.splitlines() if line.strip()):
+    for line in (line.strip() for line in _strip_private_survey_anchors(text).splitlines() if line.strip()):
         stripped = line.strip("|")
         cells = [cell.strip() for cell in (stripped.split("|") if "|" in stripped else stripped.split("\t"))]
         if len(cells) >= 2 and any(cells):
+            if all(re.fullmatch(r":?-{3,}:?", cell.replace(" ", "")) for cell in cells):
+                continue
             rows.append(cells)
     if not rows or len(rows) > 40:
         return "\\begin{quote}\\small " + _paragraphs(text, label=label) + " \\end{quote}"
@@ -102,56 +139,188 @@ def _render_table(text: str, *, label: str) -> str:
     if width > 6:
         return "\\begin{quote}\\small " + _paragraphs(text, label=label) + " \\end{quote}"
     normalized = [row + [""] * (width - len(row)) for row in rows]
+    longest_cell = max((len(cell) for row in normalized for cell in row), default=0)
+    use_wide_layout = width >= 4 or longest_cell > 52
+    environment = "table*" if use_wide_layout else "table"
+    available_width = r"\textwidth" if use_wide_layout else r"\linewidth"
+    if use_wide_layout:
+        column_width = f"{0.92 / width:.4f}".rstrip("0").rstrip(".")
+    else:
+        column_width = "0.45" if width == 2 else "0.29"
     rendered_rows = [
         " & ".join(escape_latex_text(cell, label=label) for cell in row) + r" \\\hline"
         for row in normalized
     ]
     return "\n".join(
         [
-            "\\begin{table}[htbp]",
+            "\\begin{" + environment + "}[htbp]",
             "\\centering",
-            "\\small",
-            "\\begin{tabular}{|" + "|".join("p{0.14\\linewidth}" for _ in range(width)) + "|}",
+            "\\footnotesize" if use_wide_layout else "\\small",
+            "\\setlength{\\tabcolsep}{3pt}" if use_wide_layout else "",
+            "\\renewcommand{\\arraystretch}{1.12}" if use_wide_layout else "",
+            "\\caption{" + escape_latex_text(caption, label=f"{label} caption") + "}",
+            "\\label{" + table_label + "}",
+            "\\begin{tabular}{|" + "|".join(
+                f"p{{{column_width}{available_width}}}" for _ in range(width)
+            ) + "|}",
             "\\hline",
             *rendered_rows,
             "\\end{tabular}",
-            "\\end{table}",
+            "\\end{" + environment + "}",
         ]
     )
 
 
-def _render_block(block: Mapping[str, Any], *, claims: Mapping[str, Mapping[str, Any]]) -> str:
+def _equation_cross_references(
+    block: Mapping[str, Any],
+    *,
+    equation_labels: Mapping[str, str],
+) -> str:
+    labels = [
+        equation_labels[reference_id]
+        for raw_reference_id in block.get("reference_block_ids") or []
+        if (reference_id := _text(raw_reference_id)) in equation_labels
+    ]
+    if not labels:
+        return ""
+    rendered = ", ".join("Eq.~\\eqref{" + label + "}" for label in labels)
+    return " See " + rendered + "."
+
+
+def _render_math_expression(expression: str, *, equation_label: str | None) -> str:
+    lines = [line.strip() for line in expression.split(r"\\")]
+    if len(lines) == 1:
+        if equation_label:
+            return "\\begin{equation}\n" + expression + "\n\\label{" + equation_label + "}\n\\end{equation}"
+        return "\\begin{equation*}\n" + expression + "\n\\end{equation*}"
+    if not all(lines):
+        raise LatexSafetyError("equation has an empty align row")
+    rendered_lines = [
+        line
+        + (
+            r" \nonumber \\"
+            if index < len(lines) - 1
+            else (r" \label{" + equation_label + "}" if equation_label else "")
+        )
+        for index, line in enumerate(lines)
+    ]
+    environment = "align" if equation_label else "align*"
+    return "\\begin{" + environment + "}\n" + "\n".join(rendered_lines) + "\n\\end{" + environment + "}"
+
+
+def _render_equation(text: str, *, label: str, equation_label: str) -> str:
+    fragments = split_equation_content(_strip_private_survey_anchors(text), label=label)
+    rendered: list[str] = []
+    labeled_expression = False
+    for kind, fragment in fragments:
+        if kind == "prose":
+            prose = _paragraphs(fragment, label=label)
+            if prose:
+                rendered.append(prose)
+            continue
+        rendered.append(
+            _render_math_expression(
+                safe_math_expression(fragment, label=label),
+                equation_label=equation_label if not labeled_expression else None,
+            )
+        )
+        labeled_expression = True
+    if not labeled_expression:
+        raise LatexSafetyError(f"{label} contains no valid mathematical expression")
+    return "\n\n".join(rendered)
+
+
+def _render_block(
+    block: Mapping[str, Any],
+    *,
+    claims: Mapping[str, Mapping[str, Any]],
+    document: Mapping[str, Any],
+    theory_registry: Mapping[str, Mapping[str, Any]],
+    section_id: str,
+    equation_labels: Mapping[str, str],
+) -> str:
     kind = _text(block.get("kind"))
-    text = require_english_visible_text(block.get("text"), label=f"block {block.get('block_id') or kind}")
+    text = normalize_visible_text(
+        _strip_private_survey_anchors(visible_theory_text(document, block.get("text"))),
+        label=f"block {block.get('block_id') or kind}",
+    )
     citations = _citation_suffix(_block_citations(block, claims))
     label = f"block {block.get('block_id') or kind}"
+    heading_text = _strip_private_survey_anchors(visible_theory_text(document, block.get("heading")))
+    heading = "" if not heading_text else "\\subsection{" + escape_latex_text(heading_text, label=f"{label} heading") + "}\n"
+    cross_references = _equation_cross_references(block, equation_labels=equation_labels)
+    theory_prefix, theory_status = theory_block_presentation(
+        block,
+        claims=claims,
+        registry=theory_registry,
+    )
     if kind == "equation":
-        return "\\[\n" + safe_math_expression(text, label=label) + "\n\\]" + citations
+        equation_label = _equation_label(section_id, block.get("block_id"))
+        return heading + _render_equation(text, label=label, equation_label=equation_label) + citations
     if kind == "list":
         items = _list_items(text, label=label)
         if not items:
             return ""
-        return "\\begin{itemize}\n" + "\n".join(f"\\item {item}" for item in items) + "\n\\end{itemize}" + citations
+        return heading + "\\begin{itemize}\n" + "\n".join(f"\\item {item}" for item in items) + "\n\\end{itemize}" + citations
     if kind == "table":
-        return _render_table(text, label=label) + citations
+        caption = heading_text or theory_prefix.rstrip(".") or (
+            f"Decision matrix ({theory_status})" if theory_status else "Decision matrix"
+        )
+        return _render_table(
+            text,
+            label=label,
+            caption=caption,
+            table_label=_table_label(section_id, block.get("block_id")),
+        ) + cross_references + citations
     paragraph = _paragraphs(text, label=label)
+    if theory_prefix:
+        return heading + "\\paragraph{" + escape_latex_text(theory_prefix, label=f"{label} theory presentation") + "} " + paragraph + cross_references + citations
     if kind == "definition":
-        return "\\paragraph{Definition.} " + paragraph + citations
+        return heading + "\\paragraph{Definition.} " + paragraph + cross_references + citations
     if kind == "proposition":
-        return "\\paragraph{Proposition (proposed).} " + paragraph + citations
+        return heading + "\\paragraph{Proposition (proposed).} " + paragraph + cross_references + citations
     if kind == "protocol":
-        return "\\paragraph{Planned protocol.} " + paragraph + citations
+        return heading + "\\paragraph{Planned protocol.} " + paragraph + cross_references + citations
     if kind == "outcome_branch":
-        return "\\paragraph{Conditional outcome branch.} " + paragraph + citations
+        return heading + "\\paragraph{Conditional outcome branch.} " + paragraph + cross_references + citations
     if kind == "review_checklist":
-        return "\\paragraph{Human-review checklist.} " + paragraph + citations
-    return paragraph + citations
+        return heading + "\\paragraph{Human-review checklist.} " + paragraph + cross_references + citations
+    return heading + paragraph + cross_references + citations
 
 
-def _render_section(section: Mapping[str, Any], *, claims: Mapping[str, Mapping[str, Any]], appendix: bool) -> str:
-    title = escape_latex_text(section.get("title"), label=f"section {section.get('section_id')} title")
+def _render_section(
+    section: Mapping[str, Any],
+    *,
+    claims: Mapping[str, Mapping[str, Any]],
+    document: Mapping[str, Any],
+    theory_registry: Mapping[str, Mapping[str, Any]],
+    document_equation_labels: Mapping[str, str],
+    appendix: bool,
+) -> str:
+    section_id = _text(section.get("section_id"))
+    title = escape_latex_text(
+        _strip_private_survey_anchors(visible_theory_text(document, section.get("title"))),
+        label=f"section {section_id} title",
+    )
     heading = "\\section" if appendix else "\\section"
-    blocks = [_render_block(_mapping(block), claims=claims) for block in section.get("blocks") or [] if isinstance(block, Mapping)]
+    equation_labels = {
+        _text(block.get("block_id")): _equation_label(section_id, block.get("block_id"))
+        for block in section.get("blocks") or []
+        if isinstance(block, Mapping) and _text(block.get("kind")) == "equation"
+    }
+    equation_labels = {**document_equation_labels, **equation_labels}
+    blocks = [
+        _render_block(
+            _mapping(block),
+            claims=claims,
+            document=document,
+            theory_registry=theory_registry,
+            section_id=section_id,
+            equation_labels=equation_labels,
+        )
+        for block in section.get("blocks") or []
+        if isinstance(block, Mapping)
+    ]
     blocks = [block for block in blocks if block]
     if _text(section.get("applicability")) == "not_applicable":
         blocks.insert(0, "\\emph{Not applicable to this proposal.}")
@@ -162,13 +331,41 @@ def _render_section(section: Mapping[str, Any], *, claims: Mapping[str, Mapping[
 
 def _render_body(document: Mapping[str, Any], *, profile: TemplateProfile) -> str:
     claims = _claim_map(document)
+    theory_registry = theory_unit_registry(document)
+    document_equation_labels = {
+        f"{_text(section.get('section_id'))}:{_text(block.get('block_id'))}": _equation_label(
+            section.get("section_id"),
+            block.get("block_id"),
+        )
+        for section in [*(document.get("sections") or []), *(document.get("appendices") or [])]
+        if isinstance(section, Mapping)
+        for block in section.get("blocks") or []
+        if isinstance(block, Mapping)
+        and _text(section.get("section_id"))
+        and _text(block.get("block_id"))
+        and _text(block.get("kind")) == "equation"
+    }
     sections = [
-        _render_section(_mapping(section), claims=claims, appendix=False)
+        _render_section(
+            _mapping(section),
+            claims=claims,
+            document=document,
+            theory_registry=theory_registry,
+            document_equation_labels=document_equation_labels,
+            appendix=False,
+        )
         for section in document.get("sections") or []
         if isinstance(section, Mapping) and _text(section.get("section_id")) != "references"
     ]
     appendices = [
-        _render_section(_mapping(section), claims=claims, appendix=True)
+        _render_section(
+            _mapping(section),
+            claims=claims,
+            document=document,
+            theory_registry=theory_registry,
+            document_equation_labels=document_equation_labels,
+            appendix=True,
+        )
         for section in document.get("appendices") or []
         if isinstance(section, Mapping)
     ]
@@ -180,10 +377,16 @@ def _render_body(document: Mapping[str, Any], *, profile: TemplateProfile) -> st
 
 def _render_abstract(document: Mapping[str, Any], *, profile: TemplateProfile) -> str:
     abstract = _mapping(document.get("abstract"))
-    text = _paragraphs(_text(abstract.get("text")), label="abstract")
+    text = _paragraphs(
+        _strip_private_survey_anchors(visible_theory_text(document, abstract.get("text"))),
+        label="abstract",
+    )
     if not text:
         raise TexRenderError("ResearchPlanDocument has no rendered abstract")
-    keywords = [escape_latex_text(keyword, label="keyword") for keyword in document.get("keywords") or []]
+    keywords = [
+        escape_latex_text(_strip_private_survey_anchors(visible_theory_text(document, keyword)), label="keyword")
+        for keyword in document.get("keywords") or []
+    ]
     lines = ["\\begin{abstract}", text, "\\end{abstract}"]
     if keywords and profile.profile_id == "ieee_conference_v1":
         lines.extend(["\\begin{IEEEkeywords}", ", ".join(keywords), "\\end{IEEEkeywords}"])
@@ -198,12 +401,10 @@ def _render_bibliography(result: BibtexRenderResult, *, profile: TemplateProfile
             "\\section*{References}\n"
             "\\emph{No provenance-backed bibliographic records are available for rendering; see the bibliography completion ledger.}"
         )
-    keys = ",".join(result.emitted_keys)
     database = Path(profile.generated_bib).with_suffix("").as_posix()
     return "\n".join(
         [
             "\\section*{References}",
-            f"\\nocite{{{keys}}}",
             f"\\bibliographystyle{{{profile.bibliography_style}}}",
             f"\\bibliography{{{database}}}",
         ]
@@ -239,7 +440,7 @@ def _validate_document(document: Mapping[str, Any]) -> None:
     if document.get("document_status") != "PROPOSAL_NO_OBSERVED_RESULTS":
         raise TexRenderError("only PROPOSAL_NO_OBSERVED_RESULTS documents may be rendered")
     metadata = _mapping(document.get("document_metadata"))
-    require_english_visible_text(metadata.get("title"), label="document title")
+    normalize_visible_text(metadata.get("title"), label="document title")
 
 
 def render_tex_project(
@@ -256,7 +457,10 @@ def render_tex_project(
         _validate_document(document)
         bibliography = render_bibtex(document)
         ensure_citation_coverage(document, bibliography)
-        title = escape_latex_text(_mapping(document.get("document_metadata")).get("title"), label="document title")
+        title = escape_latex_text(
+            visible_theory_text(document, _mapping(document.get("document_metadata")).get("title")),
+            label="document title",
+        )
         author = escape_latex_text(author_name, label="author name")
         abstract = _render_abstract(document, profile=profile)
         body = _render_body(document, profile=profile)

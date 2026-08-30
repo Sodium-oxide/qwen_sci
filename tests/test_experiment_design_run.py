@@ -45,6 +45,20 @@ def _brief() -> dict[str, Any]:
             "upstream_source_paths": {"idea_result": "/tmp/idea_result.json"},
             "missing_audit_sources": [],
         },
+        "reasoning_context": {
+            "schema_version": "reasoning_context_v1",
+            "selected_direction_id": "selected",
+            "assumptions": [],
+            "claim_scope": "",
+            "falsifiers": [],
+            "boundary_conditions": [],
+            "alternative_explanations": [],
+            "formal_symbols": [],
+            "gap_records": [],
+            "evidence_roles": [],
+            "source_anchors": [],
+            "upstream_source_paths": ["/tmp/idea_result.json"],
+        },
     }
 
 

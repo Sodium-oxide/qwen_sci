@@ -17,9 +17,15 @@ from .contracts import (
     AUTHOR_PREPARATION_SCHEMA_VERSION,
     validate_author_preparation,
 )
+from .document_quality import render_document_quality_report
+from .markdown_renderer import render_research_plan_markdown
 
 
 _TIMESTAMP_PATTERN = re.compile(r"^\d{8}-\d{6}-\d{6}$")
+
+
+def _mapping(value: object) -> dict[str, Any]:
+    return dict(value) if isinstance(value, Mapping) else {}
 
 
 class AuthorArtifactError(RuntimeError):
@@ -41,16 +47,24 @@ class AuthorPreparationArtifactPaths:
     preparation_json: Path
     author_context_json: Path
     document_json: Path
+    document_markdown: Path
     idea_evolution_json: Path
+    document_quality_json: Path
+    document_quality_report_markdown: Path
+    candidate_markdowns: tuple[Path, ...]
 
-    def as_dict(self) -> dict[str, str | int]:
+    def as_dict(self) -> dict[str, Any]:
         return {
             "timestamp": self.timestamp,
             "collision_index": self.collision_index,
             "preparation_json": str(self.preparation_json),
             "author_context_json": str(self.author_context_json),
             "document_json": str(self.document_json),
+            "document_markdown": str(self.document_markdown),
             "idea_evolution_json": str(self.idea_evolution_json),
+            "document_quality_json": str(self.document_quality_json),
+            "document_quality_report_markdown": str(self.document_quality_report_markdown),
+            "candidate_markdowns": [str(path) for path in self.candidate_markdowns],
         }
 
 
@@ -106,7 +120,7 @@ def _publish_without_overwrite(temp_path: Path, target_path: Path) -> None:
         temp_path.unlink(missing_ok=True)
 
 
-def _candidate_paths(output_dir: Path, timestamp: str, collision_index: int) -> AuthorPreparationArtifactPaths:
+def _candidate_paths(output_dir: Path, timestamp: str, collision_index: int, *, candidate_count: int) -> AuthorPreparationArtifactPaths:
     suffix = "" if collision_index == 0 else f"_{collision_index}"
     return AuthorPreparationArtifactPaths(
         timestamp=timestamp,
@@ -114,7 +128,14 @@ def _candidate_paths(output_dir: Path, timestamp: str, collision_index: int) -> 
         preparation_json=output_dir / f"research_plan_author_preparation_{timestamp}{suffix}.json",
         author_context_json=output_dir / f"research_plan_author_context_{timestamp}{suffix}.json",
         document_json=output_dir / f"research_plan_document_{timestamp}{suffix}.json",
+        document_markdown=output_dir / f"research_plan_document_{timestamp}{suffix}.md",
         idea_evolution_json=output_dir / f"idea_evolution_appendix_{timestamp}{suffix}.json",
+        document_quality_json=output_dir / f"research_plan_document_quality_{timestamp}{suffix}.json",
+        document_quality_report_markdown=output_dir / f"research_plan_document_quality_{timestamp}{suffix}.md",
+        candidate_markdowns=tuple(
+            output_dir / f"research_plan_document_{timestamp}{suffix}_candidate_{index:02d}.md"
+            for index in range(candidate_count)
+        ),
     )
 
 
@@ -141,33 +162,51 @@ class AuthorPreparationArtifactWriter:
             self.output_dir.mkdir(parents=True, exist_ok=True)
         except OSError as error:
             raise AuthorArtifactWriteError(f"Cannot create Author output directory '{self.output_dir}': {error}") from error
+        document_quality = _mapping(payload.get("document_quality"))
+        candidates = [item for item in document_quality.get("candidates") or [] if isinstance(item, Mapping)]
         contents = {
             "preparation_json": _json_text(payload),
             "author_context_json": _json_text(payload["source_bundle"]["author_context"]),
             "document_json": _json_text(payload["document"]),
+            "document_markdown": render_research_plan_markdown(payload["document"]),
             "idea_evolution_json": _json_text(payload["source_bundle"]["idea_evolution"]),
+            "document_quality_json": _json_text(document_quality),
+            "document_quality_report_markdown": render_document_quality_report(document_quality),
         }
         for collision_index in range(1000):
-            paths = _candidate_paths(self.output_dir, effective_timestamp, collision_index)
-            targets = [
-                paths.preparation_json,
-                paths.author_context_json,
-                paths.document_json,
-                paths.idea_evolution_json,
+            paths = _candidate_paths(
+                self.output_dir,
+                effective_timestamp,
+                collision_index,
+                candidate_count=len(candidates),
+            )
+            artifact_entries = [
+                (paths.preparation_json, contents["preparation_json"]),
+                (paths.author_context_json, contents["author_context_json"]),
+                (paths.document_json, contents["document_json"]),
+                (paths.document_markdown, contents["document_markdown"]),
+                (paths.idea_evolution_json, contents["idea_evolution_json"]),
+                (paths.document_quality_json, contents["document_quality_json"]),
+                (paths.document_quality_report_markdown, contents["document_quality_report_markdown"]),
+                *[
+                    (target, str(candidate.get("markdown") or ""))
+                    for target, candidate in zip(paths.candidate_markdowns, candidates)
+                ],
             ]
+            targets = [target for target, _content in artifact_entries]
             if any(target.exists() for target in targets):
                 continue
-            temp_paths: dict[str, Path] = {}
+            temp_paths: list[tuple[Path, Path]] = []
             published: list[Path] = []
             try:
-                for key, target in zip(contents, targets):
-                    temp_paths[key] = _write_temp_text(self.output_dir, target.name, contents[key])
-                for key, target in zip(contents, targets):
-                    _publish_without_overwrite(temp_paths[key], target)
+                for target, content in artifact_entries:
+                    temp_paths.append((_write_temp_text(self.output_dir, target.name, content), target))
+                for temp_path, target in temp_paths:
+                    _publish_without_overwrite(temp_path, target)
                     published.append(target)
                 return paths
             except Exception as error:
-                for temp_path in temp_paths.values():
+                for temp_path, _target in temp_paths:
                     temp_path.unlink(missing_ok=True)
                 for published_path in published:
                     published_path.unlink(missing_ok=True)

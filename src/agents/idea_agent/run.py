@@ -92,6 +92,7 @@ def _run_topic(
     resolved_inputs: Dict[str, object],
     survey_config: Optional[object] = None,
     survey_context: Optional[SurveyIdeaContext] = None,
+    idea_config: Optional[object] = None,
 ) -> str:
     run_dir = Path(output_root) / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -134,7 +135,7 @@ def _run_topic(
     logger.info("========================================")
     logger.info("💡 The research topic is %s", topic)
 
-    config = load_idea_agent_config()
+    config = idea_config if idea_config is not None else load_idea_agent_config()
     agent = LigAgent(
         run_dir=run_dir,
         rag_config=rag_config,
@@ -184,6 +185,65 @@ def _run_topic(
     return str(run_dir)
 
 
+def run_idea_workflow(
+    *,
+    config_path: str | None = None,
+    topic: str | None = None,
+    output_root: str | None = None,
+    run_id: str | None = None,
+    survey_manifest: str | None = None,
+    include_console: bool | None = None,
+) -> str:
+    """Run one Idea workflow and return its exact result directory."""
+
+    config = load_idea_agent_config(config_path)
+    project_config = load_project_config(config_path)
+    _apply_env_config(config)
+    requested_manifest = clean_optional_text(
+        survey_manifest
+        or os.getenv("IDEA_AGENT_SURVEY_MANIFEST")
+        or str(get_config_value(config, "run.survey_manifest", "") or "")
+    )
+    survey_context: Optional[SurveyIdeaContext] = None
+    if requested_manifest:
+        survey_context = load_survey_idea_context(requested_manifest)
+    resolved_inputs = resolve_run_inputs(config, default_output_root=str(DEFAULT_OUTPUT_ROOT))
+    requested_topic = clean_optional_text(topic or str(resolved_inputs.get("topic") or ""))
+    if survey_context is not None:
+        if requested_topic and requested_topic.casefold() != survey_context.topic.casefold():
+            raise SurveyIdeaLoadError(
+                "Explicit Idea topic does not match the selected Survey manifest: "
+                f"{requested_topic!r} != {survey_context.topic!r}"
+            )
+        requested_topic = survey_context.topic
+        resolved_inputs["topic_source"] = "survey_manifest"
+    resolved_inputs["topic"] = requested_topic
+    if output_root is not None:
+        resolved_inputs["output_root"] = str(output_root)
+    if survey_context is not None:
+        resolved_inputs["survey_manifest"] = str(survey_context.manifest_path)
+    resolved_topic = load_topic(str(resolved_inputs["topic"]))
+    survey_config, _survey_topic = _resolve_runtime_survey_config(
+        get_config_value(project_config, "survey", None),
+        survey_context,
+    )
+    resolved_output_root = Path(str(resolved_inputs["output_root"])).expanduser()
+    if not resolved_output_root.is_absolute():
+        resolved_output_root = IDEA_AGENT_ROOT / resolved_output_root
+    resolved_output_root.mkdir(parents=True, exist_ok=True)
+    return _run_topic(
+        resolved_topic,
+        str(resolved_output_root),
+        run_id or create_research_run_id(),
+        bool(resolved_inputs["console_logs"]) if include_console is None else include_console,
+        str(resolved_inputs["rag_config"]),
+        resolved_inputs,
+        survey_config,
+        survey_context,
+        config,
+    )
+
+
 def _apply_env_config(config: Optional[object]) -> None:
     if config is None:
         return
@@ -200,62 +260,15 @@ def _apply_env_config(config: Optional[object]) -> None:
                 os.environ[env_var] = str(value)
 
 def main() -> int:
-    config = load_idea_agent_config()
-    project_config = load_project_config()
-    _apply_env_config(config)
-    survey_manifest = clean_optional_text(
-        os.getenv("IDEA_AGENT_SURVEY_MANIFEST")
-        or str(get_config_value(config, "run.survey_manifest", "") or "")
-    )
-    survey_context: Optional[SurveyIdeaContext] = None
-    if survey_manifest:
-        try:
-            survey_context = load_survey_idea_context(survey_manifest)
-        except SurveyIdeaLoadError as exc:
-            print(f"Survey manifest error: {exc}")
-            return 2
-    resolved_inputs = resolve_run_inputs(config, default_output_root=str(DEFAULT_OUTPUT_ROOT))
-    requested_topic = clean_optional_text(str(resolved_inputs.get("topic") or ""))
-    if survey_context is not None:
-        if requested_topic and requested_topic.casefold() != survey_context.topic.casefold():
-            print(
-                "Survey manifest error: Explicit Idea topic does not match the selected "
-                f"Survey manifest topic: {requested_topic!r} != {survey_context.topic!r}"
-            )
-            return 2
-        resolved_inputs["topic"] = survey_context.topic
-        resolved_inputs["topic_source"] = "survey_manifest"
-    topic = load_topic(str(resolved_inputs["topic"]))
-    survey_config, survey_topic = _resolve_runtime_survey_config(
-        get_config_value(project_config, "survey", None),
-        survey_context,
-    )
-    if survey_topic:
-        print(f"[{topic}] using explicit survey manifest -> {survey_context.manifest_path}")
-    output_root = Path(str(resolved_inputs["output_root"])).expanduser()
-    if not output_root.is_absolute():
-        output_root = IDEA_AGENT_ROOT / output_root
-    output_root.mkdir(parents=True, exist_ok=True)
-
-    rag_config = str(resolved_inputs["rag_config"])
-    include_console = bool(resolved_inputs["console_logs"])
-
-    run_id = create_research_run_id()
     try:
-        result_dir = _run_topic(
-            topic,
-            str(output_root),
-            run_id,
-            include_console,
-            rag_config,
-            resolved_inputs,
-            survey_config,
-            survey_context,
-        )
-        print(f"[{topic}] ✅ completed -> {result_dir}")
+        result_dir = run_idea_workflow()
+        print(f"✅ completed -> {result_dir}")
         return 0
+    except SurveyIdeaLoadError as exc:
+        print(f"Survey manifest error: {exc}")
+        return 2
     except Exception as exc:
-        print(f"[{topic}] ❌ failed: {exc}")
+        print(f"❌ failed: {exc}")
         return 1
 
 

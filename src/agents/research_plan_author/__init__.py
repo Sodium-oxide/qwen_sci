@@ -1,4 +1,4 @@
-"""Contracts and preparation workflow for the English-only Research Plan Author."""
+"""Contracts and preparation workflow for the Research Plan Author."""
 
 from .artifacts import (
     AuthorPreparationArtifactPaths,

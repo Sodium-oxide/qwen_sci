@@ -159,7 +159,14 @@ class AuthorRunLogger:
         return record
 
     @contextmanager
-    def stage(self, stage: str, **fields: object) -> Iterator[None]:
+    def stage(
+        self,
+        stage: str,
+        *,
+        failure_level: str = "ERROR",
+        failure_status: str = "FAILED",
+        **fields: object,
+    ) -> Iterator[None]:
         started_at = perf_counter()
         self.emit(stage, "started", status="RUNNING", **fields)
         try:
@@ -168,8 +175,8 @@ class AuthorRunLogger:
             self.emit(
                 stage,
                 "failed",
-                level="ERROR",
-                status="FAILED",
+                level=failure_level,
+                status=failure_status,
                 elapsed_ms=(perf_counter() - started_at) * 1000,
                 error_code=type(error).__name__,
                 exception_type=type(error).__name__,

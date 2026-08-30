@@ -3,52 +3,12 @@
 from __future__ import annotations
 
 import re
-import unicodedata
 
 
 class LatexSafetyError(ValueError):
     """Raised when document-controlled text is unsafe for the renderer."""
 
 
-_CJK = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\U00020000-\U0002FA1F]")
-_NON_ENGLISH_SCRIPT_MARKERS = (
-    "ARABIC",
-    "ARMENIAN",
-    "BALINESE",
-    "BENGALI",
-    "BOPOMOFO",
-    "CANADIAN SYLLABICS",
-    "CHEROKEE",
-    "CJK",
-    "COPTIC",
-    "CYRILLIC",
-    "DEVANAGARI",
-    "ETHIOPIC",
-    "GEORGIAN",
-    "GREEK",
-    "GUJARATI",
-    "GURMUKHI",
-    "HANGUL",
-    "HEBREW",
-    "HIRAGANA",
-    "KANGXI",
-    "KANNADA",
-    "KATAKANA",
-    "KHMER",
-    "LAO",
-    "MALAYALAM",
-    "MONGOLIAN",
-    "MYANMAR",
-    "ORIYA",
-    "RUNIC",
-    "SINHALA",
-    "SYRIAC",
-    "TAMIL",
-    "TELUGU",
-    "THAI",
-    "TIBETAN",
-    "YI ",
-)
 _OBSERVED_RESULT_LANGUAGE = re.compile(
     r"\b(?:we|this\s+(?:study|research|work|investigation|analysis)|"
     r"the\s+(?:study|experiment|analysis|evaluation))\s+(?:have\s+)?"
@@ -75,25 +35,14 @@ _ALLOWED_MATH_COMMANDS = {
     "mathcal", "mathbb", "mathbf", "operatorname", "left", "right", "langle", "rangle", "vert", "mid",
 }
 _ALLOWED_MATH_CHARS = re.compile(r"^[A-Za-z0-9\s+\-*/=<>(),.;:{}\[\]_\\^|!?'`]+$")
-
-
-def contains_cjk(value: object) -> bool:
-    return bool(_CJK.search(str(value or "")))
-
-
-def contains_non_english_script(value: object) -> bool:
-    """Return whether visible text uses a non-Latin writing system.
-
-    This is a script safeguard rather than a language detector: accented Latin
-    scientific terms and names remain allowed, whereas scripts that cannot
-    satisfy the English-only Author prose contract are rejected.
-    """
-
-    for character in str(value or ""):
-        name = unicodedata.name(character, "")
-        if any(marker in name for marker in _NON_ENGLISH_SCRIPT_MARKERS):
-            return True
-    return False
+_MATH_STRUCTURE = re.compile(
+    r"(?:[=<>]|[_^]|\\(?:frac|sqrt|sum|prod|int|lim|forall|exists|leq|geq|neq|approx|equiv|to|rightarrow|Rightarrow|Leftarrow|Leftrightarrow)\b)"
+)
+_MATH_IDENTIFIER_COMMAND = re.compile(
+    r"\\(?:operatorname|mathrm|mathcal|mathbb|mathbf)\s*\{[A-Za-z]+\}"
+)
+_LOWERCASE_PROSE_WORD = re.compile(r"\b[a-z]{3,}\b")
+_EQUATION_FRAGMENT_BOUNDARY = re.compile(r"\n[ \t]*\n+")
 
 
 def contains_observed_result_language(value: object) -> bool:
@@ -102,23 +51,27 @@ def contains_observed_result_language(value: object) -> bool:
     return bool(_OBSERVED_RESULT_LANGUAGE.search(str(value or "")))
 
 
-def require_english_visible_text(value: object, *, label: str) -> str:
+def normalize_visible_text(value: object, *, label: str) -> str:
+    """Normalize visible text while rejecting unsupported control characters.
+
+    Author content may use any Unicode script. Text safety is enforced by
+    escaping and raw-TeX restrictions rather than by a language gate.
+    """
+
     text = str(value or "")
-    if contains_non_english_script(text):
-        raise LatexSafetyError(
-            f"{label} contains non-English-script visible prose; final Author prose must be English only"
-        )
     if any(ord(character) < 32 and character not in "\n\r\t" for character in text):
         raise LatexSafetyError(f"{label} contains an unsupported control character")
     return text.replace("\r\n", "\n").replace("\r", "\n")
 
 
-def escape_latex_text(value: object, *, label: str = "text") -> str:
+def escape_latex_text(
+    value: object,
+    *,
+    label: str = "text",
+) -> str:
     """Escape plain visible text; this intentionally never preserves raw TeX."""
 
-    text = require_english_visible_text(value, label=label)
-    placeholder = "\u0000QWENSCI_BACKSLASH\u0000"
-    text = text.replace("\\", placeholder)
+    text = normalize_visible_text(value, label=label)
     replacements = {
         "&": r"\&",
         "%": r"\%",
@@ -129,16 +82,15 @@ def escape_latex_text(value: object, *, label: str = "text") -> str:
         "}": r"\}",
         "~": r"\textasciitilde{}",
         "^": r"\textasciicircum{}",
+        "\\": r"\textbackslash{}",
     }
-    for raw, escaped in replacements.items():
-        text = text.replace(raw, escaped)
-    return text.replace(placeholder, r"\textbackslash{}")
+    return "".join(replacements.get(character, character) for character in text)
 
 
 def safe_math_expression(value: object, *, label: str = "equation") -> str:
     """Allow a deliberately small math-only subset and reject executable TeX."""
 
-    text = require_english_visible_text(value, label=label).strip()
+    text = normalize_visible_text(value, label=label).strip()
     if not text:
         raise LatexSafetyError(f"{label} is empty")
     if "$" in text or "\\begin" in text.casefold() or "\\end" in text.casefold():
@@ -147,11 +99,46 @@ def safe_math_expression(value: object, *, label: str = "equation") -> str:
         raise LatexSafetyError(f"{label} contains a forbidden TeX command")
     if not _ALLOWED_MATH_CHARS.fullmatch(text):
         raise LatexSafetyError(f"{label} contains unsupported math characters")
-    commands = _MATH_COMMAND.findall(text)
+    commands = _MATH_COMMAND.findall(text.replace(r"\\", " "))
     unsupported = sorted({command for command in commands if command not in _ALLOWED_MATH_COMMANDS})
     if unsupported:
         raise LatexSafetyError(f"{label} contains unsupported math commands: {', '.join(unsupported)}")
+    if not _MATH_STRUCTURE.search(text):
+        raise LatexSafetyError(f"{label} must contain a mathematical relation or structure")
+    residual_text = _MATH_COMMAND.sub("", _MATH_IDENTIFIER_COMMAND.sub("", text))
+    if _LOWERCASE_PROSE_WORD.search(residual_text):
+        raise LatexSafetyError(f"{label} contains explanatory prose and must be split from its mathematics")
     return text
+
+
+def split_equation_content(value: object, *, label: str = "equation") -> list[tuple[str, str]]:
+    """Partition an equation block into safe math expressions and visible prose.
+
+    A model may put sentence-level explanation around otherwise valid formulae.
+    Keeping these fragments distinct lets the renderer preserve the explanation
+    without sending it into a display-math environment.
+    """
+
+    text = normalize_visible_text(value, label=label).strip()
+    if not text:
+        raise LatexSafetyError(f"{label} is empty")
+    if "$" in text or "\\begin" in text.casefold() or "\\end" in text.casefold():
+        raise LatexSafetyError(f"{label} must be a math expression, not a TeX environment")
+    if _FORBIDDEN_TEX_COMMANDS.search(text):
+        raise LatexSafetyError(f"{label} contains a forbidden TeX command")
+    fragments = [
+        fragment.strip()
+        for fragment in _EQUATION_FRAGMENT_BOUNDARY.split(text)
+        if fragment.strip()
+    ]
+    result: list[tuple[str, str]] = []
+    for index, fragment in enumerate(fragments, start=1):
+        fragment_label = label if len(fragments) == 1 else f"{label} fragment {index}"
+        try:
+            result.append(("equation", safe_math_expression(fragment, label=fragment_label)))
+        except LatexSafetyError:
+            result.append(("prose", fragment))
+    return result
 
 
 def validate_citation_key(value: object) -> str:
@@ -163,11 +150,10 @@ def validate_citation_key(value: object) -> str:
 
 __all__ = [
     "LatexSafetyError",
-    "contains_cjk",
-    "contains_non_english_script",
     "contains_observed_result_language",
     "escape_latex_text",
-    "require_english_visible_text",
+    "normalize_visible_text",
     "safe_math_expression",
+    "split_equation_content",
     "validate_citation_key",
 ]

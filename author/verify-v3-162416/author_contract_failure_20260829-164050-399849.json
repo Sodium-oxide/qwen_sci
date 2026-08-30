@@ -1,0 +1,56 @@
+{
+  "artifact_kind": "authoring_blueprint_section_assignment:formal_problem_and_hypotheses",
+  "constraints": [
+    "Only JSON structure, enum values, IDs, references, and exact copying may be repaired.",
+    "No facts, sources, citations, DOI, numerical values, methods, results, proof claims, or verification claims may be added."
+  ],
+  "initial_candidate": {
+    "allowed_source_ids": [],
+    "required_open_item_ids": [
+      "definitions.D1",
+      "definitions.D2",
+      "definitions.D3",
+      "definitions.D4",
+      "definitions.D5",
+      "template_details.assumptions",
+      "template_details.counterexample_or_boundary_analysis",
+      "template_details.definitions",
+      "template_details.formal_claim",
+      "template_details.numerical_verification",
+      "template_details.proof_obligations",
+      "template_details.verification_plan"
+    ],
+    "required_review_item_ids": [],
+    "schema_version": "research_plan_authoring_blueprint_section_assignment_v1",
+    "section_id": "formal_problem_and_hypotheses"
+  },
+  "initial_validation_errors": [
+    "section assignment references unavailable unknown-item IDs"
+  ],
+  "repair_attempted": true,
+  "repair_status": "REJECTED",
+  "repair_validation_errors": [
+    "section assignment references unavailable unknown-item IDs"
+  ],
+  "repaired_candidate": {
+    "allowed_source_ids": [],
+    "required_open_item_ids": [
+      "definitions.D1",
+      "definitions.D2",
+      "definitions.D3",
+      "definitions.D4",
+      "definitions.D5",
+      "template_details.assumptions",
+      "template_details.counterexample_or_boundary_analysis",
+      "template_details.definitions",
+      "template_details.formal_claim",
+      "template_details.numerical_verification",
+      "template_details.proof_obligations",
+      "template_details.verification_plan"
+    ],
+    "required_review_item_ids": [],
+    "schema_version": "research_plan_authoring_blueprint_section_assignment_v1",
+    "section_id": "formal_problem_and_hypotheses"
+  },
+  "schema_version": "research_plan_author_contract_repair_audit_v1"
+}

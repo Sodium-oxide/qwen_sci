@@ -1,7 +1,8 @@
-"""Batch-A preparation entrypoint for the English-only Research Plan Author."""
+"""Batch-A preparation entrypoint for the Research Plan Author."""
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 import os
 from pathlib import Path
@@ -11,7 +12,9 @@ from collections.abc import Callable, Mapping
 from typing import Any
 
 from .authoring_blueprint import AuthoringBlueprintError, AuthoringBlueprintPlanner
+from .bibtex_renderer import BibtexRenderError, bibliography_preflight_errors
 from .contract_repair import AuthorContractRepairError
+from .document_quality import optimize_research_plan_document
 from .contracts import (
     AUTHORING_LANGUAGE,
     AUTHOR_PREPARATION_SCHEMA_VERSION,
@@ -25,12 +28,18 @@ from .idea_evolution import (
 )
 from .input_loader import AuthorInputLoadError, load_author_input_with_identity
 from .run_logging import AuthorRunLogger
-from .section_composer import SectionComposer, SectionCompositionError
+from .section_cache import SectionCompositionCache, section_cache_identity
+from .section_composer import SectionComposer, SectionCompositionError, validate_section_output
 from .section_router import route_author_sections
 from .semantic_validator import validate_composed_research_plan
 from .source_bundle import build_author_source_bundle
-from .source_registry import build_frozen_source_registry, source_registry_for_blueprint_section
+from .source_registry import (
+    build_authoring_knowledge_base,
+    build_frozen_source_registry,
+    source_registry_for_blueprint_section,
+)
 from .survey_source_loader import SurveyAuthorSourceError, load_verified_survey_sources
+from .theory_spine import TheorySpineError, build_theory_spine
 
 
 class AuthorRunError(RuntimeError):
@@ -150,6 +159,30 @@ def run_author_preparation(
                 resolved_author_input, author_input, author_input_identity = load_author_input_with_identity(author_input_path)
     except AuthorInputLoadError as error:
         raise AuthorRunError("input", str(error)) from error
+    source_registry = _mapping(author_input.get("source_registry"))
+    try:
+        if active_logger is None:
+            bibliography_errors = bibliography_preflight_errors(source_registry.get("citation_registry"))
+        else:
+            with active_logger.stage(
+                "bibliography_preflight",
+                citation_count=len(source_registry.get("citation_registry") or []),
+            ):
+                bibliography_errors = bibliography_preflight_errors(source_registry.get("citation_registry"))
+                if bibliography_errors:
+                    raise AuthorRunError(
+                        "input",
+                        "citation registry contains records that cannot render before composition: "
+                        + "; ".join(bibliography_errors),
+                    )
+    except BibtexRenderError as error:
+        raise AuthorRunError("input", f"invalid citation registry before composition: {error}") from error
+    if bibliography_errors:
+        raise AuthorRunError(
+            "input",
+            "citation registry contains records that cannot render before composition: "
+            + "; ".join(bibliography_errors),
+        )
     try:
         if active_logger is None:
             survey_sources = load_verified_survey_sources(survey_manifest_path)
@@ -228,6 +261,28 @@ def run_author_preparation(
         idea_evolution=idea_evolution,
     )
     document = build_research_plan_document_skeleton(author_input, source_bundle)
+    theory_preparation = {
+        "source_design_id": author_input["source_design_id"],
+        "source_bundle": source_bundle,
+        "document": document,
+    }
+    routing = route_author_sections(author_input)
+    try:
+        if active_logger is None:
+            theory_spine = build_theory_spine(
+                theory_preparation,
+                routing=routing,
+                source_registry=build_frozen_source_registry(theory_preparation),
+            )
+        else:
+            with active_logger.stage("theory_spine", template_family=routing["template_family"]):
+                theory_spine = build_theory_spine(
+                    theory_preparation,
+                    routing=routing,
+                    source_registry=build_frozen_source_registry(theory_preparation),
+                )
+    except TheorySpineError as error:
+        raise AuthorRunError("theory_spine", str(error)) from error
     result = {
         "schema_version": AUTHOR_PREPARATION_SCHEMA_VERSION,
         "status": "PREPARED_FOR_COMPOSITION",
@@ -237,6 +292,7 @@ def run_author_preparation(
         "selected_direction_id": selected_direction_id,
         "source_bundle": source_bundle,
         "document": document,
+        "theory_spine": theory_spine,
     }
     if active_logger is not None:
         active_logger.emit(
@@ -247,6 +303,7 @@ def run_author_preparation(
             selected_direction_id=selected_direction_id,
             idea_evolution_status=idea_evolution["status"],
             survey_binding_status=survey_binding["status"],
+            theory_spine_enabled=theory_spine["enabled"],
             language=AUTHORING_LANGUAGE,
         )
     return result
@@ -262,6 +319,33 @@ def _append_unique(items: list[Any], additions: object) -> None:
     for candidate in additions:
         if candidate not in items:
             items.append(deepcopy(candidate))
+
+
+def _namespace_section_claim_ids(section: Mapping[str, Any]) -> dict[str, Any]:
+    """Make locally valid claim identifiers unique in the assembled document."""
+
+    normalized = deepcopy(dict(section))
+    section_id = str(normalized.get("section_id") or "").strip()
+    claims = [dict(claim) for claim in normalized.get("claim_provenance") or [] if isinstance(claim, Mapping)]
+    normalized["claim_provenance"] = claims
+    claim_id_map = {
+        str(claim.get("claim_id") or "").strip(): f"{section_id}:{str(claim.get('claim_id') or '').strip()}"
+        for claim in claims
+    }
+    for claim in claims:
+        claim_id = str(claim.get("claim_id") or "").strip()
+        claim["claim_id"] = claim_id_map[claim_id]
+    blocks: list[Any] = []
+    for block in normalized.get("blocks") or []:
+        if not isinstance(block, Mapping):
+            blocks.append(deepcopy(block))
+            continue
+        normalized_block = dict(block)
+        block_claim_ids = [str(claim_id).strip() for claim_id in normalized_block.get("claim_ids") or []]
+        normalized_block["claim_ids"] = [claim_id_map.get(claim_id, claim_id) for claim_id in block_claim_ids]
+        blocks.append(normalized_block)
+    normalized["blocks"] = blocks
+    return normalized
 
 
 def _render_composed_document(
@@ -283,6 +367,7 @@ def _render_composed_document(
     document["document_metadata"] = metadata
     document["keywords"] = list(blueprint.get("keywords") or [])
     document["authoring_blueprint"] = deepcopy(dict(blueprint))
+    document["theory_spine"] = deepcopy(_mapping_value(preparation.get("theory_spine")))
     document["citation_registry"] = deepcopy(list(source_registry.get("citation_registry") or []))
     document["claim_provenance"] = []
     document["sections"] = []
@@ -290,7 +375,8 @@ def _render_composed_document(
     document["contract_repair_audit"] = [deepcopy(dict(audit)) for audit in repair_audits]
     all_open_items: list[Any] = []
     all_review_items: list[Any] = []
-    for route, section in composed_sections:
+    for route, raw_section in composed_sections:
+        section = _namespace_section_claim_ids(raw_section)
         section_id = str(section.get("section_id") or "")
         _append_unique(all_open_items, section.get("open_items"))
         _append_unique(all_review_items, section.get("review_items"))
@@ -347,10 +433,29 @@ def run_research_plan_author(
     strict_survey_binding: bool = False,
     llm_call: Callable[..., object] | None = None,
     max_contract_repairs: int = 1,
+    composer_concurrency: int = 5,
+    section_cache_config: Mapping[str, Any] | None = None,
+    document_quality_config: Mapping[str, Any] | None = None,
+    quality_judge_llm_call: Callable[..., object] | None = None,
+    quality_revision_llm_call: Callable[..., object] | None = None,
+    collect_section_contract_errors: bool = True,
     logger: AuthorRunLogger | None = None,
 ) -> dict[str, Any]:
-    """Run preparation, required LLM authoring, and final proposal-only validation."""
+    """Run preparation, section composition, and final proposal-only validation.
 
+    Every routed section is attempted even when earlier sections fail. Failed
+    sections emit warnings and the run stops only after the full section batch
+    has completed, with one aggregate failure audit. The legacy
+    ``collect_section_contract_errors`` argument is retained for callers but
+    section failures are always aggregated.
+    """
+
+    if max_contract_repairs not in (0, 1):
+        raise AuthorRunError(
+            "input",
+            "max_contract_repairs must be 0 or 1; each section supports at most one generic repair",
+        )
+    resolved_input_path = _resolve_optional_path(author_input_path)
     preparation = run_author_preparation(
         author_input_path,
         survey_manifest_path=survey_manifest_path,
@@ -360,13 +465,26 @@ def run_research_plan_author(
         strict_survey_binding=strict_survey_binding,
         logger=logger,
     )
-    if max_contract_repairs < 0:
-        raise AuthorRunError("input", "max_contract_repairs must not be negative")
+    if composer_concurrency < 1:
+        raise AuthorRunError("input", "composer_concurrency must be at least 1")
     source_registry = build_frozen_source_registry(preparation)
+    # The catalog remains source-bounded, but all sections receive the same
+    # upstream knowledge base.  Route recommendations are a writing aid, not
+    # a permission system.
+    source_registry["authoring_knowledge_base"] = build_authoring_knowledge_base(
+        preparation,
+        source_registry,
+    )
     author_context = _mapping_value(_mapping_value(preparation.get("source_bundle")).get("author_context"))
     routing = route_author_sections(author_context)
     planner = AuthoringBlueprintPlanner()
-    repair_budget = int(max_contract_repairs)
+    section_repairs_enabled = bool(max_contract_repairs)
+    resolved_cache_config = dict(section_cache_config or {})
+    if "root" not in resolved_cache_config and resolved_input_path is not None:
+        resolved_cache_config["root"] = str(
+            resolved_input_path.parent / ".science" / "cache" / "research_plan_author" / "v1"
+        )
+    section_cache = SectionCompositionCache(resolved_cache_config)
     repair_audits: list[Mapping[str, Any]] = []
     try:
         if logger is None:
@@ -375,7 +493,7 @@ def run_research_plan_author(
                 routing=routing,
                 source_registry=source_registry,
                 llm_call=llm_call,
-                allow_contract_repair=repair_budget > 0,
+                allow_contract_repair=section_repairs_enabled,
                 logger=logger,
             )
         else:
@@ -385,12 +503,11 @@ def run_research_plan_author(
                     routing=routing,
                     source_registry=source_registry,
                     llm_call=llm_call,
-                    allow_contract_repair=repair_budget > 0,
+                    allow_contract_repair=section_repairs_enabled,
                     logger=logger,
                 )
         if blueprint_audit is not None:
             repair_audits.append(blueprint_audit)
-            repair_budget -= 1
     except AuthorContractRepairError as error:
         raise AuthorCompositionError(str(error), audit=error.audit) from error
     except AuthoringBlueprintError as error:
@@ -403,48 +520,171 @@ def run_research_plan_author(
         for section in blueprint.get("sections") or []
         if isinstance(section, Mapping)
     }
-    composer = SectionComposer()
     composed_sections: list[tuple[Mapping[str, Any], Mapping[str, Any]]] = []
-    for route in routing["routes"]:
-        section_id = str(route["section_id"])
-        blueprint_section = _mapping_value(blueprint_sections.get(section_id))
-        section_source_registry = source_registry_for_blueprint_section(
-            source_registry,
+    section_failures: list[dict[str, Any]] = []
+    section_jobs = [
+        (
+            route_index,
             route,
-            blueprint_section,
+            _mapping_value(blueprint_sections.get(str(route["section_id"]))),
         )
+        for route_index, route in enumerate(routing["routes"])
+    ]
+
+    def compose_section(
+        route_index: int,
+        route: Mapping[str, Any],
+        blueprint_section: Mapping[str, Any],
+    ) -> tuple[int, Mapping[str, Any], Mapping[str, Any] | None, Mapping[str, Any] | None, dict[str, Any] | None]:
+        section_id = str(route["section_id"])
+        section_source_registry = source_registry_for_blueprint_section(source_registry, route, blueprint_section)
+        cache_identity = section_cache_identity(
+            preparation=preparation,
+            blueprint=blueprint,
+            route=route,
+            blueprint_section=blueprint_section,
+            source_registry=section_source_registry,
+        )
+        cached_section = section_cache.read(cache_identity)
+        if cached_section is not None:
+            cached_errors = validate_section_output(
+                cached_section,
+                route=route,
+                blueprint_section=blueprint_section,
+                preparation=preparation,
+                source_registry=section_source_registry,
+                allow_cross_reference_quality_warnings=True,
+            )
+            if not cached_errors:
+                if logger is not None:
+                    logger.emit(
+                        "section_composition",
+                        "cache_hit",
+                        status="CACHED",
+                        section_id=section_id,
+                    )
+                return route_index, route, cached_section, None, None
+            if logger is not None:
+                logger.emit(
+                    "section_composition",
+                    "cache_rejected",
+                    level="WARNING",
+                    status="CACHE_REJECTED",
+                    section_id=section_id,
+                    validation_error_count=len(cached_errors),
+                )
         try:
             if logger is None:
-                section, audit = composer.compose(
+                section, audit = SectionComposer().compose(
                     preparation,
                     blueprint=blueprint,
                     route=route,
                     blueprint_section=blueprint_section,
                     source_registry=section_source_registry,
                     llm_call=llm_call,
-                    allow_contract_repair=repair_budget > 0,
+                    allow_contract_repair=section_repairs_enabled,
                 )
             else:
-                with logger.stage("section_composition", section_id=section_id):
-                    section, audit = composer.compose(
+                with logger.stage(
+                    "section_composition",
+                    failure_level="WARNING",
+                    failure_status="WARNING",
+                    section_id=section_id,
+                ):
+                    section, audit = SectionComposer().compose(
                         preparation,
                         blueprint=blueprint,
                         route=route,
                         blueprint_section=blueprint_section,
                         source_registry=section_source_registry,
                         llm_call=llm_call,
-                        allow_contract_repair=repair_budget > 0,
+                        allow_contract_repair=section_repairs_enabled,
                     )
-        except AuthorContractRepairError as error:
-            raise AuthorCompositionError(str(error), audit=error.audit) from error
-        except SectionCompositionError as error:
-            raise AuthorCompositionError(str(error), audit=error.audit) from error
+        except (AuthorContractRepairError, SectionCompositionError) as error:
+            failure = {
+                "section_id": section_id,
+                "error_code": type(error).__name__,
+                "error": str(error),
+            }
+            if isinstance(error.audit, Mapping):
+                failure["audit"] = deepcopy(dict(error.audit))
+                validation_errors = error.audit.get("initial_validation_errors") or error.audit.get("repair_validation_errors") or []
+                if isinstance(validation_errors, list):
+                    failure["validation_error_count"] = len(validation_errors)
+            return route_index, route, None, None, failure
         except Exception as error:
-            raise AuthorCompositionError(str(error)) from error
+            return (
+                route_index,
+                route,
+                None,
+                None,
+                {
+                    "section_id": section_id,
+                    "error_code": type(error).__name__,
+                    "error": str(error),
+                    "validation_error_count": 0,
+                },
+            )
+        section_cache.write(cache_identity, section)
+        return route_index, route, section, audit, None
+
+    with ThreadPoolExecutor(
+        max_workers=min(int(composer_concurrency), len(section_jobs)),
+        thread_name_prefix="author-section",
+    ) as executor:
+        futures = [
+            executor.submit(compose_section, route_index, route, blueprint_section)
+            for route_index, route, blueprint_section in section_jobs
+        ]
+        section_results = [future.result() for future in as_completed(futures)]
+    section_quality_warning_count = 0
+    for _route_index, route, section, audit, failure in sorted(section_results, key=lambda result: result[0]):
+        if failure is not None:
+            section_failures.append(failure)
+            continue
         if audit is not None:
             repair_audits.append(audit)
-            repair_budget -= 1
-        composed_sections.append((route, section))
+            quality_warnings = audit.get("quality_warnings") if isinstance(audit, Mapping) else []
+            if quality_warnings:
+                section_quality_warning_count += 1
+                if logger is not None:
+                    logger.emit(
+                        "section_composition",
+                        "quality_warning",
+                        level="WARNING",
+                        status="WARNING",
+                        section_id=str(route.get("section_id") or ""),
+                        warning_count=len(quality_warnings),
+                    )
+        if section is not None:
+            composed_sections.append((route, section))
+    if section_failures:
+        diagnostic_audit = {
+            "schema_version": "research_plan_author_section_contract_diagnostics_v1",
+            "artifact_kind": "section_contract_preflight",
+            "mode": "complete_all_sections_before_abort",
+            "section_count": len(routing["routes"]),
+            "attempted_section_count": len(routing["routes"]),
+            "passed_section_count": len(composed_sections),
+            "failed_section_count": len(section_failures),
+            "section_cache": section_cache.summary(),
+            "failures": section_failures,
+        }
+        if logger is not None:
+            logger.emit(
+                "section_diagnostics",
+                "completed",
+                level="WARNING",
+                status="REJECTED",
+                section_count=len(routing["routes"]),
+                failed_section_count=len(section_failures),
+                passed_section_count=len(composed_sections),
+            )
+        failed_section_ids = ", ".join(failure["section_id"] for failure in section_failures)
+        raise AuthorCompositionError(
+            f"section contract preflight found {len(section_failures)} failing section(s): {failed_section_ids}",
+            audit=diagnostic_audit,
+        )
     document = _render_composed_document(
         preparation,
         blueprint=blueprint,
@@ -453,6 +693,44 @@ def run_research_plan_author(
         composed_sections=composed_sections,
         repair_audits=repair_audits,
     )
+    # Whole-document quality scoring and revision now owns cross-section
+    # coherence, deduplication, and scholarly depth.  Do not pre-edit the
+    # canonical 15-section manuscript with the legacy constrained editor:
+    # it makes an unscored extra LLM call and prevents the quality loop from
+    # considering the actual composed draft as its baseline candidate.
+    if logger is not None:
+        logger.emit("document_quality", "started", status="RUNNING")
+    try:
+        document, document_quality = optimize_research_plan_document(
+            document,
+            preparation=preparation,
+            routing=routing,
+            source_registry=source_registry,
+            quality_config=document_quality_config,
+            judge_llm_call=quality_judge_llm_call,
+            revision_llm_call=quality_revision_llm_call,
+            logger=logger,
+        )
+    except Exception as error:
+        document_quality = {
+            "schema_version": "research_plan_author_document_quality_v1",
+            "enabled": bool(_mapping_value(document_quality_config).get("enabled")),
+            "candidates": [],
+            "selected_candidate_index": 0,
+            "warnings": [f"document quality loop failed without blocking composition: {type(error).__name__}: {error}"],
+        }
+        if logger is not None:
+            logger.emit("document_quality", "failed", level="WARNING", status="WARNING", error=str(error))
+    else:
+        if logger is not None:
+            logger.emit(
+                "document_quality",
+                "completed",
+                status="COMPLETED",
+                selected_candidate_index=document_quality.get("selected_candidate_index", 0),
+                candidate_count=len(document_quality.get("candidates") or []),
+                warning_count=len(document_quality.get("warnings") or []),
+            )
     errors = validate_composed_research_plan(
         document,
         preparation=preparation,
@@ -464,6 +742,8 @@ def run_research_plan_author(
     result = deepcopy(preparation)
     result["status"] = "COMPOSED_FOR_RENDERING"
     result["document"] = document
+    result["section_cache"] = section_cache.summary()
+    result["document_quality"] = document_quality
     if logger is not None:
         logger.emit(
             "composition",
@@ -471,7 +751,12 @@ def run_research_plan_author(
             status="COMPLETED",
             source_design_id=result["source_design_id"],
             template_family=routing["template_family"],
-            contract_repair_count=len(repair_audits),
+            contract_repair_count=sum(
+                1 for audit in repair_audits if isinstance(audit, Mapping) and audit.get("repair_attempted")
+            ),
+            section_quality_warning_count=section_quality_warning_count,
+            section_cache_hits=result["section_cache"]["hits"],
+            section_cache_writes=result["section_cache"]["writes"],
             language=AUTHORING_LANGUAGE,
         )
     return result

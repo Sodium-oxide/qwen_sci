@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping
+from threading import local
 from typing import Any, Optional
 
 from src.agents.experiment_design_agent.llm_json import (
@@ -17,10 +18,11 @@ def build_author_json_llm_call(
     *,
     config: Any = None,
     model: Optional[str] = None,
+    temperature: float | None = None,
 ) -> Callable[..., object]:
     """Build the configured Author callback while preserving strict JSON mode."""
 
-    holder: dict[str, Any] = {}
+    holder = local()
 
     def setting(value: Any, key: str, default: Any = "") -> Any:
         if isinstance(value, Mapping):
@@ -36,21 +38,30 @@ def build_author_json_llm_call(
 
             runtime_config = get_config()
         author_config = setting(runtime_config, "research_plan_author", {})
+        authoring_config = setting(author_config, "authoring", {})
         resolved_model = str(model or setting(author_config, "model") or "").strip()
         provider_name = str(setting(author_config, "provider") or "").strip()
+        resolved_temperature = float(
+            setting(authoring_config, "temperature", 0.5) if temperature is None else temperature
+        )
         if model:
             provider_name = resolve_model(runtime_config, resolved_model).provider
-        agent = holder.get("agent")
+        agent = getattr(holder, "agent", None)
         if agent is None:
             from src.agents.idea_agent.agent.base import AgentBase
 
             agent = AgentBase(config=runtime_config, provider_name=provider_name or None)
-            holder["agent"] = agent
+            holder.agent = agent
         if not resolved_model:
             resolved_model = str(agent.provider.default_models.get("author") or "").strip()
         if not resolved_model:
             raise RequiredJsonLLMError("research_plan_author: no model is configured for the author LLM role")
-        return agent.chat(prompt, model=resolved_model, response_format=JSON_OBJECT_RESPONSE_FORMAT)
+        return agent.chat(
+            prompt,
+            model=resolved_model,
+            response_format=JSON_OBJECT_RESPONSE_FORMAT,
+            temperature=resolved_temperature,
+        )
 
     return _call
 

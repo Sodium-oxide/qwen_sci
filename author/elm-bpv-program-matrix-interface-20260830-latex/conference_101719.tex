@@ -1,0 +1,220 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{url}
+
+\begin{document}
+
+\title{Program--Matrix--Interface Co-Design for Calibrated Cyanobacterial Living Photovoltaic Materials:\\
+A Literature-Grounded, Design-Only Research Plan}
+
+\author{\IEEEauthorblockN{Anonymous Research Plan}
+\IEEEauthorblockA{\textit{Design-only synthesis of Survey, Idea, and ExperimentDesign artifacts}\\
+Materials Science; Biochemistry, Genetics and Molecular Biology\\
+PROPOSAL\_NO\_OBSERVED\_RESULTS}}
+
+\maketitle
+
+\begin{abstract}
+Engineered living materials (ELMs) offer a route to couple biological state with material function, but the path from a biological program to a persistent, measurable material property remains incompletely specified. This paper integrates a manual literature survey, a hypothesis-generation artifact, and a safety-gated experiment-design artifact into one research-plan manuscript. It proposes a conceptual program--matrix--interface co-design question for cyanobacterial living photovoltaics: could a biological-state factor and a conductive-interface factor jointly improve a normalized photoelectrical outcome through a more continuous electron-extraction path? The contribution is a falsifiable design logic, not an empirical claim. We synthesize literature on programmable extracellular architectures, living-material fabrication, and bioelectronic interfaces; identify the missing program-to-property mapping; specify a four-state conceptual comparison and interaction model; declare alternatives; and define conditional interpretation branches. No biological system, material formulation, instrument, parameter, protocol, or result is supplied. All future physical implementation is explicitly \texttt{needs\_human\_input} and is blocked pending qualified life-science, biosafety, materials-safety, institutional, and, if applicable, genetic-modification review.
+\end{abstract}
+
+\begin{IEEEkeywords}
+engineered living materials, synthetic biology, living photovoltaics, bioelectronic interface, research design, responsible innovation
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Synthetic biology and materials science increasingly meet at the question of whether matter can be programmed to acquire adaptive, regenerative, or responsive behavior. Engineered living materials frame this possibility as a coupling of living processes with material architectures rather than as a conventional inert-material optimization problem \cite{nguyen2018,gilbert2019,liu2022}. The relevant scientific promise is not simply that a living component can be included in a material. A program, a cellular state, an extracellular or interfacial architecture, and an observable material function would need to be connected through a defensible causal account.
+
+This manuscript treats cyanobacterial living photovoltaics only as a \emph{conceptual research object}. Prior work establishes the wider field and reports photoelectrical phenomena and interface-oriented approaches \cite{schuergers2017,saper2018,zhu2019,reggente2024,chen2025}. These publications motivate a question, but do not establish the combined causal mechanism proposed here. A raw electrical signal alone cannot discriminate biological-state, optical, geometry, adhesion, biomass-retention, and interface-transport explanations.
+
+This is a proposal with no observed results. It consolidates a manual literature survey, an Idea Agent candidate, and an ExperimentDesign artifact whose execution policy is \texttt{DESIGN\_ONLY} and whose validation status is \texttt{BLOCKED\_BY\_RISK\_REVIEW}. The manuscript neither describes nor authorizes a physical experiment. Its purpose is to make the proposed scientific claim, evidence requirements, non-claims, and human-review dependencies explicit before any implementation could be considered.
+
+\section{Literature Synthesis and Research Gap}
+
+\subsection{Programmable biological architectures}
+
+ELM reviews describe the possibility of using biological systems to direct smart-material assembly and to grow functional materials with programmable properties \cite{nguyen2018,gilbert2019}. The synthetic-biology/biomaterials interface frames biological and material design as mutually constraining choices \cite{liu2022}. At the demonstration level, engineered cells have been associated with tunable multiscale materials \cite{chen2014}; programmable biofilms and protein-nanofiber-derived microbial inks show that extracellular architectures can be functional material components \cite{huang2019,durajthatte2021}. Cell--cell signaling and genetically targeted chemical assembly broaden the conceptual repertoire for linking state, organization, and function \cite{toda2018,liu2020}.
+
+These studies motivate a general proposition that material behavior can depend on biological organization. They do not yield a generally validated predictive map from a biological program to a material property. The mapping can be interrupted by state heterogeneity, incomplete contact, optical effects, temporal drift, and manufacturing variability. A research plan should expose these alternatives instead of treating programmability as an established outcome.
+
+\subsection{Bioelectronic ELMs and the interface bottleneck}
+
+Living photovoltaic work is a useful test case because a target function is inseparable from an interface. The literature contains synthetic-biology perspectives on living photovoltaics \cite{schuergers2017}, reports involving live cyanobacteria and two-species biophotovoltaic concepts \cite{saper2018,zhu2019}, and recent interface-oriented reports on coatings and conductive gels \cite{reggente2024,chen2025}. Related reviews place cyanobacteria-based living biomaterials and sustainability-oriented ELMs in broader design contexts \cite{goodchild2023,an2023,islam2023}.
+
+The literature suggests two partially separable levers: a biological state related to matrix or attachment behavior, and an abiotic interface related to extraction or transport. Their joint action is a gap, not a verified fact. The critical missing relation is
+\begin{equation}
+  \begin{aligned}
+    \text{program} &\longrightarrow \text{cell state}\\
+    &\longrightarrow \text{matrix/interface architecture}\\
+    &\longrightarrow \text{material property}.
+  \end{aligned}
+  \label{eq:program-property-map}
+\end{equation}
+Equation \eqref{eq:program-property-map} is a conceptual chain, not a measured pathway. Every arrow is a future evidentiary obligation.
+
+\begin{table}[t]
+\caption{Evidence-to-gap synthesis. Literature roles are not claims of reproduced findings.}
+\label{tab:evidence-gap}
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{p{0.25\columnwidth}p{0.35\columnwidth}p{0.30\columnwidth}}
+\toprule
+\textbf{Evidence cluster} & \textbf{What the literature motivates} & \textbf{Open requirement} \\
+\midrule
+ELM foundations \cite{nguyen2018,gilbert2019,liu2022} & Biological state can matter for material design. & Specify a falsifiable program-to-property map. \\
+Programmable architectures \cite{chen2014,huang2019,durajthatte2021,toda2018,liu2020} & Architecture can be a design variable. & Separate architecture from biomass and optical alternatives. \\
+Living photovoltaics \cite{schuergers2017,saper2018,zhu2019} & A photoelectrical function is a meaningful conceptual target. & Normalize a future output before mechanism attribution. \\
+Interface advances \cite{reggente2024,chen2025} & Interface engineering may be consequential. & Establish whether an interface effect depends jointly on biological state. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table*}[t]
+\caption{Conditional outcome branches inherited from the design-only artifact. No branch reports an observed result.}
+\label{tab:outcome-branches}
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{p{0.18\textwidth}p{0.27\textwidth}p{0.47\textwidth}}
+\toprule
+\textbf{Branch} & \textbf{Future trigger} & \textbf{Permitted interpretation} \\
+\midrule
+Supports mechanism & A future interaction remains consistent after approved confounder checks. & The relation would be supported, not proven, only within the documented system boundary; independent review remains required. \\
+Partial or heterogeneous & The relation differs across declared states, batches, geometry representations, or persistence windows. & A conditional relation may exist; a universal program-to-property conclusion is not warranted. \\
+Null or contradictory & A future comparison does not support the interaction or favors an alternative. & The proposed mechanism is not supported in that reviewed boundary; this does not prove absence of all mechanisms. \\
+Uninformative or invalid & Safety, measurement, provenance, comparability, or validity failures remain unresolved. & No scientific conclusion is warranted; the artifact remains a non-executing design draft. \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Research Objective, Scope, and Central Proposition}
+
+\subsection{Objective and scope}
+
+The objective is to formulate a rigorous, safety-bounded design for assessing whether co-design of a biological-state factor and an interface factor could support a program--matrix--interface mechanism in a future approved living-photovoltaic system. The disciplinary framing is Materials Science together with Biochemistry, Genetics and Molecular Biology. No physical system is selected. The word cyanobacterial identifies a literature-grounded conceptual class; it does not select an organism, strain, culture, specimen, or source.
+
+\subsection{Conditional hypothesis}
+
+The central hypothesis is conditional: \emph{if} a future, separately approved implementation can operationalize a biological-state factor and a biocompatible conductive-interface factor while preserving interpretable comparability, then their joint relation may yield a persistent increase in normalized photoelectrical output and a lower transport-resistance proxy than either factor alone. The proposed explanation is that biological state and interface jointly establish a more continuous electron-extraction path. No value, effect size, direction of a real measurement, or mechanism confirmation is asserted.
+
+For future analysis planning only, the proposed interaction can be represented by
+\begin{equation}
+  Y = \beta_{0} + \beta_{B}B + \beta_{I}I
+  + \beta_{BI}(B\mathbin{:}I) + \boldsymbol{\gamma}^{\top}\mathbf{Z}
+  + \varepsilon ,
+  \label{eq:interaction}
+\end{equation}
+where $Y$ is a future declared functional outcome, $B$ and $I$ are conceptual biological-state and interface factors, $\beta_{BI}$ is the proposed interaction term, $\mathbf{Z}$ represents predeclared confounder representations, and $\varepsilon$ denotes unexplained variation. Equation \eqref{eq:interaction} is not an analysis instruction, a threshold, or a claim that parameters can be estimated. It prevents the proposed claim from being reduced to the largest raw output among four labels.
+
+Any future outcome would require an approved normalization relation such as
+\begin{equation}
+  \begin{aligned}
+    Y_{\mathrm{norm}} &=
+    \frac{Y_{\mathrm{raw}}}{G(\mathbf{z}_{\mathrm{conf}})},\\
+    \mathbf{z}_{\mathrm{conf}} &= (b,g,a),
+  \end{aligned}
+  \label{eq:normalization}
+\end{equation}
+where $Y_{\mathrm{raw}}$ is a future raw observation, $G(\cdot)$ is an expert-approved accounting function, and $(b,g,a)$ conceptually denote biomass, illuminated geometry, and contact architecture. These are placeholders for confounding structure, not a measurement recipe.
+
+\section{Conceptual Comparison Framework}
+
+The Idea and ExperimentDesign artifacts organize the causal question into four conceptual states. They are labels for reasoning and do not prescribe samples, material formulations, biological manipulations, or physical controls. Their role is to make the interaction claim distinguishable from a single-factor interpretation.
+
+\begin{table}[t]
+\caption{Conceptual comparison states; these are not experimental protocols.}
+\label{tab:conceptual-states}
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.14}
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{p{0.16\columnwidth}p{0.29\columnwidth}p{0.46\columnwidth}}
+\toprule
+\textbf{State} & \textbf{Conceptual factors} & \textbf{Interpretive role} \\
+\midrule
+S0 & Neither factor asserted & No-factor conceptual baseline. \\
+S1 & Biological-state factor only & Separates a biological-only explanation. \\
+S2 & Interface factor only & Separates an interface-only explanation. \\
+S3 & Both factors jointly asserted & Candidate joint relation; compare with S1, S2, and an approved additive expectation. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+An apparent S3 advantage would remain uninterpretable if viable biomass, illuminated area, contact geometry, scattering, metabolic state, adhesion, or batch/time effects were not represented in the future review. The framework prohibits a common overreach: claiming synergy from a raw maximum without a predeclared interaction model and alternative-explanation checks.
+
+\section{Evidence Plan and Conditional Interpretation}
+
+\subsection{Evidence roles}
+
+A future reviewed plan would need five evidence roles: normalized functional output, a transport or impedance representation, a biological-state representation, a contact-architecture representation, and persistence over a declared time basis. Their purpose is to keep a proposed mechanistic claim from resting on one signal. A sufficient conceptual conjunction is
+\begin{equation}
+  \begin{aligned}
+    C_{\mathrm{mech}} &= C_{\mathrm{interaction}} \wedge
+    C_{\mathrm{transport}} \wedge C_{\mathrm{architecture}}\\
+    &\wedge C_{\mathrm{persistence}} \wedge
+    \neg C_{\mathrm{alternative}},
+  \end{aligned}
+  \label{eq:mechanism-conjunction}
+\end{equation}
+where each $C$ denotes a future expert-defined evidentiary condition. In Equation \eqref{eq:mechanism-conjunction}, $C_{\mathrm{alternative}}$ means that a declared alternative explanation is favored. The conjunction is a decision architecture, not an observed result.
+
+Declared alternatives are retained viable biomass alone; illumination, scattering, transparency, or contact geometry; metabolic or temporal state; non-specific coating or adhesion; and unresolved material-compatibility or batch effects. The hypothesis is falsified within its future approved boundary if the interaction vanishes after valid normalization, if biological/optical compatibility is not retained, if the relation does not persist, or if variability prevents a reproducible mapping.
+
+\subsection{Analysis and reproducibility boundary}
+
+No sample size, allocation scheme, instrument, assay, operating condition, fabrication route, or statistical threshold is defined. Such choices would become operational only after qualified human review. A future design would need an approved estimand, observable definition, variance basis, treatment of unavailable or invalid observations, and provenance plan. It would also need to distinguish technical, biological, temporal, and independent replication rather than use a generic repeat label.
+
+The artifact is reproducible in a narrower but useful sense: it preserves the hypothesis, alternatives, conceptual comparators, non-claims, and decision branches. This permits auditing of later claim drift; it does not establish reproducibility of a biological or material behavior.
+
+\section{Responsible Research Boundary and Human Review}
+
+\subsection{Non-execution status}
+
+The evidence status is \texttt{DESIGNED\_NOT\_EXECUTED}; the execution policy is \texttt{DESIGN\_ONLY}; and the validation status is \texttt{BLOCKED\_BY\_RISK\_REVIEW}. No animals, plants, human participants, environmental specimens, microbial strains, cell lines, or materials are obtained or used. No culture, cultivation, genetic modification, transformation, editing, material recipe, electrode configuration, instrument setting, sample number, or operational parameter is included.
+
+\subsection{Required human input}
+
+Any future physical implementation is \texttt{needs\_human\_input}. Qualified personnel must separately confirm life-science methodology, biosafety and facility suitability, material compatibility and laboratory safety, institutional oversight, and any relevant genetic-modification governance. The user constraint excluding real animal and plant experiments remains binding. Human reviewers must also decide whether a non-biological surrogate, literature-only causal model, or other non-executing route is preferable.
+
+The upstream survey is a manual literature survey with a recorded provenance graph, not an automatically verified Survey Agent run. Its references provide context for the component fields, but they do not prove the combined mechanism. These provenance and scope limitations are retained rather than concealed.
+
+\section{Discussion, Limitations, and Future Directions}
+
+The contribution is the conversion of a broad ambition--program matter into living materials--into a bounded causal proposition. The program--matrix--interface framing requires every proposed gain to pass through biological state, architecture, transport, and persistence. It also acknowledges that a biological component and an interface can fail to compose even if each literature field is individually mature.
+
+This is not an empirical paper. It supplies neither a demonstrated material nor a measured photovoltaic output. It cannot resolve the manual survey's incomplete automatic provenance or source-level details needed for a formal systematic review. The component literature spans heterogeneous contexts, so transfer to a future joint system must not be assumed. The manuscript deliberately avoids false precision in a protocol, parameter values, or projected effects.
+
+Next steps are governance-first. Human reviewers may select a literature-only evidence map, a non-biological computational surrogate, a formal causal diagram, or no further work. If a future physical route is contemplated, it must begin with an independently reviewed design satisfying applicable institutional and safety requirements. The conditional branches in Table \ref{tab:outcome-branches} cannot be converted into execution instructions by this manuscript.
+
+\section{Conclusion}
+
+This design-only paper integrates literature synthesis, hypothesis generation, and experiment-design logic for a proposed program--matrix--interface co-design question in conceptual cyanobacterial living photovoltaics. It identifies a program-to-property gap, represents interaction and normalization requirements, declares alternatives and falsifiers, and preserves four conditional branches. The paper makes no observed-result claim and authorizes no real-world experimentation. Its value is an auditable starting point for qualified human review, not a substitute for biological, materials, ethical, or institutional expertise.
+
+\begin{thebibliography}{99}
+\IEEEtriggeratref{7}
+\bibitem{nguyen2018} P. Q. Nguyen \emph{et al.}, \emph{Engineered Living Materials: Prospects and Challenges for Using Biological Systems to Direct the Assembly of Smart Materials}, \emph{Advanced Materials}, 2018, doi: 10.1002/adma.201704847.
+\bibitem{gilbert2019} C. Gilbert and T. Ellis, \emph{Biological Engineered Living Materials: Growing Functional Materials with Genetically Programmable Properties}, \emph{ACS Synthetic Biology}, 2019, doi: 10.1021/acssynbio.8b00423.
+\bibitem{liu2022} X. Liu \emph{et al.}, \emph{The Living Interface Between Synthetic Biology and Biomaterial Design}, \emph{Nature Materials}, 2022, doi: 10.1038/s41563-022-01231-3.
+\bibitem{chen2014} A. Y. Chen \emph{et al.}, \emph{Synthesis and Patterning of Tunable Multiscale Materials with Engineered Cells}, \emph{Nature Materials}, 2014, doi: 10.1038/nmat3912.
+\bibitem{huang2019} J. Huang \emph{et al.}, \emph{Programmable and Printable Bacillus subtilis Biofilms as Engineered Living Materials}, \emph{Nature Chemical Biology}, 2019, doi: 10.1038/s41589-018-0169-2.
+\bibitem{durajthatte2021} A. Duraj-Thatte \emph{et al.}, \emph{Programmable Microbial Ink for 3D Printing of Living Materials Produced from Genetically Engineered Protein Nanofibers}, \emph{Nature Communications}, 2021, doi: 10.1038/s41467-021-26791-x.
+\bibitem{toda2018} S. Toda \emph{et al.}, \emph{Programming Self-Organizing Multicellular Structures with Synthetic Cell--Cell Signaling}, \emph{Science}, 2018, doi: 10.1126/science.aat0271.
+\bibitem{liu2020} X. Liu \emph{et al.}, \emph{Genetically Targeted Chemical Assembly of Functional Materials in Living Cells, Tissues, and Animals}, \emph{Science}, 2020, doi: 10.1126/science.aay4866.
+\bibitem{schuergers2017} N. Schuergers \emph{et al.}, \emph{A Synthetic Biology Approach to Engineering Living Photovoltaics}, \emph{Energy \& Environmental Science}, 2017, doi: 10.1039/c7ee00282c.
+\bibitem{saper2018} G. Saper \emph{et al.}, \emph{Live Cyanobacteria Produce Photocurrent and Hydrogen Using Both the Respiratory and Photosynthetic Systems}, \emph{Nature Communications}, 2018, doi: 10.1038/s41467-018-04613-x.
+\bibitem{zhu2019} H. Zhu \emph{et al.}, \emph{Development of a Longevous Two-Species Biophotovoltaics with Constrained Electron Flow}, \emph{Nature Communications}, 2019, doi: 10.1038/s41467-019-12190-w.
+\bibitem{reggente2024} M. Reggente \emph{et al.}, \emph{Polydopamine-Coated Photoautotrophic Bacteria for Improving Extracellular Electron Transfer in Living Photovoltaics}, \emph{Nano Research}, 2024, doi: 10.1007/s12274-023-6396-1.
+\bibitem{chen2025} Y. Chen \emph{et al.}, \emph{Three-Dimensional Conductive Conjugated Polyelectrolyte Gels Facilitate Interfacial Electron Transfer for Improved Biophotovoltaic Performance}, \emph{Nature Communications}, 2025, doi: 10.1038/s41467-025-61086-5.
+\bibitem{goodchild2023} I. Goodchild-Michelman \emph{et al.}, \emph{Light and Carbon: Synthetic Biology Toward New Cyanobacteria-Based Living Biomaterials}, \emph{Materials Today Bio}, 2023, doi: 10.1016/j.mtbio.2023.100583.
+\bibitem{an2023} X. An \emph{et al.}, \emph{Engineered Living Materials For Sustainability}, \emph{Chemical Reviews}, 2023, doi: 10.1021/acs.chemrev.2c00512.
+\bibitem{islam2023} M. A. Islam \emph{et al.}, \emph{Engineered Living Carbon Materials}, \emph{Matter}, 2023, doi: 10.1016/j.matt.2023.03.018.
+\end{thebibliography}
+\end{document}

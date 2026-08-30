@@ -1,0 +1,420 @@
+# AANEC-Relaxed Trapped Surface Theorem and Stellar Mass-Gap Derivation
+
+**Keywords:** AANEC, trapped surface, Misner-Sharp compactness, stellar mass gap, global hyperbolicity, Raychaudhuri focusing
+
+## Abstract
+
+This research plan proposes a formal theorem for classical general relativity that replaces pointwise null energy assumptions with the Averaged Null Energy Condition (AANEC) supplemented by an explicit, independent averaged null-convergence hypothesis. The central argument is that, within a restricted model class of spherically symmetric, globally hyperbolic collapse with complete null generators, this combined geometric condition forces trapped-surface formation once the Misner-Sharp compactness exceeds a model-dependent threshold. Consequently, stable non-black-hole remnants above a compactness-dependent mass scale are excluded within this domain. The AANEC is adopted as a robust substitute for pointwise conditions that are systematically violated by quantum fields (W3009127927). This contribution is strictly a candidate formalization; it does not claim to derive the observed 2-5 solar mass gap, which remains an astrophysical consistency constraint governed by explosion energetics, fallback, and equation-of-state uncertainties. The plan transitions to the theory control panel to specify the definition ledger and proof obligations required to audit this claim.
+
+The expected outcome is a rigorous proof or a counterexample establishing whether AANEC plus the stated averaged focusing condition implies a trapped-surface bound. A successful proof would support the exclusion of stable exotic compact objects in the high-compactness regime, while a valid counterexample would restrict the theorem's scope or require revision of the averaged focusing assumption. The design anticipates outcome branches including support for the mechanism, partial or heterogeneous results, and null or contradictory findings, all of which are expected but not observed. The mass-gap inference is explicitly separated from the formal theorem: astrophysical observations of the gap are treated as potential confounders rather than direct evidence for the geometric bound. This section establishes the intellectual boundary for the subsequent derivation and falsification protocols.
+
+## Introduction
+
+### Scientific Setting and Motivation
+
+The identification of black holes as the endpoints of stellar collapse rests on a convergence of formal general relativity and multi-messenger astrophysics. Classical singularity theorems predict that gravitational collapse, under appropriate energy conditions and causality assumptions, leads to trapped-surface formation and subsequent geodesic incompleteness. However, the applicability of these theorems to realistic stellar matter is constrained by the fragility of pointwise energy conditions. As documented in the survey literature, pointwise conditions such as the Null Energy Condition (NEC) and Strong Energy Condition (SEC) are systematically violated by quantum fields and certain classical scalar-field configurations, which necessitates a shift toward averaged or quantum-bounded energy conditions for broader validity. Concurrently, observational data from gravitational-wave catalogs and X-ray binaries reveal a complex remnant mass distribution, including a potential lower mass gap between neutron stars and black holes. While this gap is often interpreted through supernova engine physics, fallback, and pair-instability mechanisms, its persistence raises the question of whether a model-independent compactness bound derived from averaged energy conditions could provide a complementary, purely geometric explanation for the exclusion of stable non-black-hole remnants above a certain scale. This proposal addresses that question by constructing a formal theorem that relaxes pointwise assumptions to the Achronal Averaged Null Energy Condition (AANEC) combined with an explicit averaged null-convergence hypothesis, thereby seeking a trapped-surface threshold for spherically symmetric collapse that is robust against local energy-condition violations. [@cite_0ed84243cf171bc4]
+
+### Research Gap and Claim Separation
+
+A critical gap in the existing literature is the lack of a formal theorem that explicitly separates the geometric focusing required for trapped-surface formation from the matter-field energy conditions that imply it. Standard Penrose-type arguments often conflate AANEC with the integrated null convergence needed to drive the Raychaudhuri equation to caustic formation. The survey evidence indicates that while AANEC is a robust candidate for a universal property of gravitating matter, it does not automatically guarantee the local or integrated focusing conditions required for singularity theorems without additional assumptions about null generator completeness and the specific averaged convergence parameter. This distinction is vital because quantum stress-energy effects or exotic compact objects might satisfy AANEC while evading the pointwise focusing that leads to horizon formation. Furthermore, the observed stellar mass gap is not currently established as a direct consequence of any such theorem; rather, it is treated as an astrophysical consistency constraint subject to alternative explanations such as explosion energetics, rotation, magnetic fields, and binary evolution. The research gap, therefore, lies in formulating a scoped formal claim that identifies the precise additional geometric hypothesis—distinct from AANEC itself—under which a compactness threshold forces trapped-surface formation, and in rigorously delimiting the boundary between this formal exclusion of stable non-black-hole remnants and the empirical inference of the mass gap. [@cite_0ed84243cf171bc4]
+
+### Planned Contribution and Scope
+
+This proposal contributes a candidate theorem for spherically symmetric stellar collapse that replaces pointwise NEC/SEC assumptions with AANEC plus an explicit averaged null-convergence/focusing condition. The planned contribution is threefold. First, it formalizes a scoped entry lemma stating that if the averaged null-convergence parameter exceeds a model-dependent threshold along complete null generators, then a trapped surface must form when the Misner-Sharp compactness exceeds a critical value. Second, it establishes a dependency-closure matrix that distinguishes the AANEC premise from the independent focusing premise, ensuring that neither is assumed to imply the other without proof. Third, it derives a bound excluding stable non-black-hole remnants above this compactness threshold within the restricted model class, while explicitly demoting the observed 2-5 solar mass gap to an astrophysical consistency constraint rather than a theorem-derived prediction. The scope is limited to classical general relativity, spherical symmetry, isotropic pressure, and global hyperbolicity. It does not claim to explain the mass gap quantitatively, nor does it address nonspherical, rotating, or magnetically dominated collapse. By separating the formal geometric claim from the astrophysical inference, this work provides a rigorous boundary for when averaged energy conditions can support trapped-surface theorems and when alternative stellar-physics mechanisms remain necessary to explain observational demographics.
+
+### Transition to Formal Framework
+
+The argument advances by operationalizing the distinction between matter-field energy conditions and geometric focusing. The next section will define the specific admissible premises for the candidate theorem, including the formal statement of the averaged null-convergence condition and the Misner-Sharp compactness parameter. This transition ensures that the proof obligations and counterexample boundaries are established before the derivation chain is examined, providing a clear audit trail for the logical dependencies between AANEC, the added focusing hypothesis, and the resulting trapped-surface threshold. [@cite_7a407c865faafd11]
+
+## Background, Survey, and Research Gap
+
+### Theoretical Foundations and the Unresolved Bridge
+
+The theoretical foundation for black-hole formation in classical general relativity relies on singularity theorems that require energy conditions to guarantee the focusing of null geodesics. However, pointwise energy conditions, such as the Null Energy Condition (NEC) and Strong Energy Condition (SEC), are systematically violated by quantum fields and realistic matter models, creating a critical gap between classical geometric predictions and quantum or semiclassical reality. To navigate this, the Averaged Null Energy Condition (AANEC) has emerged as a robust candidate for a universal property of gravitating matter, offering a pathway to preserve singularity theorems in the face of quantum violations. The unresolved bridge lies in determining whether AANEC, when combined with global hyperbolicity and regular matter fields, is sufficient to force the formation of trapped surfaces in spherically symmetric stellar collapse, or if an explicit, independent averaged null-convergence/focusing condition must be added to the theorem's premises. [@cite_0ed84243cf171bc4]
+
+### Survey Evidence on Energy Conditions and Quantum Violations
+
+Survey evidence demonstrates that pointwise energy conditions are fundamentally incompatible with quantum mechanics, as quantum fields routinely exhibit regions of negative energy density. This ubiquity of violation implies that the direct application of classical theorems is untenable in regimes where quantum fluctuations are significant. Consequently, the conceptual framework has shifted toward constraints on averaged quantities, such as Quantum Energy Inequalities (QEIs) and the AANEC. The AANEC strengthens the standard Averaged Null Energy Condition (ANEC) by averaging along achronal null geodesics, excluding pathologies associated with closed timelike curves. While the AANEC is hypothesized to remain valid even in the context of full quantum gravity, its derivation from first principles remains an open challenge, and its ability to independently establish the local or integrated focusing needed for Penrose-type trapped-surface formation without additional assumptions is uncertain. [@cite_0ed84243cf171bc4]
+
+### Alternative Mechanisms and Boundary Variables in Stellar Evolution
+
+The astrophysical boundary between black-hole and non-black-hole outcomes is not solely determined by classical geometric theorems but is profoundly modulated by stellar-physics mechanisms. Theoretical frameworks emphasize post-bounce compactness metrics over zero-age main sequence mass as the primary discriminator for collapse outcomes. Stars with high compactness tend to undergo rapid accretion that overwhelms neutrino heating, leading to a failing supernova and direct black hole formation, whereas lower compactness progenitors allow sufficient time for instabilities to reverse the shock. Furthermore, the observed paucity of compact objects in the 2-5 solar mass range provides a crucial constraint on these scenarios, favoring rapid explosion dynamics over delayed fallback. However, alternative explanations for this mass gap include maximum neutron-star mass limits, supernova explosion energy, fallback, rotation, magnetic fields, binary evolution, and observational selection effects. The survey highlights that the required evidence slot for a formal claim regarding the assumptions and validity domains of Penrose-type singularity theorems is currently missing, leaving a gap in the theoretical bridge between geometric bounds and astrophysical observables. [@cite_72d7ff391b29c495] [@cite_7a44e6730c44cb39] [@cite_7a407c865faafd11] [@cite_fd0f77b2a173c0ab]
+
+### Research Gap Synthesis: Missing Premises and Unconstrained Parameters
+
+The synthesis of survey evidence and formal reasoning reveals a multi-layered research gap. First, there is a missing formal claim and explicit mathematical definition for the averaged null-convergence/focusing condition required to bridge AANEC and trapped-surface formation in the restricted model class. Second, the formal definition of the Misner-Sharp compactness parameter for the specific metric class remains unresolved, preventing the precise calculation of model-dependent thresholds. Third, the boundary variable that cleanly separates black-hole and non-black-hole outcomes in theoretical stellar evolution remains uncovered in relevant evidence clusters. Finally, the derived mass distributions remain highly sensitive to unconstrained physical parameters, particularly uncertainties in explosion and unbinding energies across different progenitor masses. These gaps indicate that while the AANEC-relaxed framework provides a promising theoretical direction, it currently lacks the formal mathematical closure and astrophysical boundary conditions necessary to establish a definitive, non-phenomenological theorem.
+
+### Transition to Formal Argument
+
+To address these gaps, the subsequent formal argument will establish a scoped entry lemma for the candidate theorem. This will involve defining the admissible premises, including the explicit averaged null-convergence condition, and formulating the proof obligations required to derive the trapped-surface threshold. The transition from this survey-based gap synthesis to the formal theory control panel will operationalize the missing definitions and establish the dependency-closure matrix necessary for evaluating the theorem's validity within the restricted model class.
+
+## Research Questions and Planned Contributions
+
+### Framing the AANEC-Relaxed Theorem
+
+This route addresses a formal mechanism-replacement problem: whether classical trapped-surface arguments can survive the known failure of pointwise energy conditions in realistic and quantum regimes. The planned contribution is a scoped theorem/conjecture for spherically symmetric, nonrotating stellar collapse in which the Averaged Null Energy Condition (AANEC) is supplemented by an explicit averaged null-convergence/focusing hypothesis. The central question is not whether black holes exist observationally, but whether AANEC plus this added focusing assumption, together with global hyperbolicity, regular matter, and complete null generators, yields a model-dependent compactness threshold that forces trapped-surface formation. A second, distinct contribution is the separation of that formal result from the observed 2-5 solar mass gap, which is treated only as an astrophysical consistency constraint vulnerable to explosion energetics, fallback, equation-of-state uncertainty, rotation, magnetic fields, nonspherical dynamics, and binary evolution. [@cite_07d6df5d6978a1fc] [@cite_0ed84243cf171bc4] [@cite_42e341ff6471ce89] [@cite_789b47fb0241d9ae] [@cite_7a407c865faafd11] [@cite_7a44e6730c44cb39] [@cite_977568cf7b8a55bf] [@cite_cbbced417410bc6c] [@cite_f634820e22d7a238] [@cite_fd0f77b2a173c0ab]
+
+### Operational Research Questions
+
+The research questions are deliberately narrow so that each maps to a proof obligation or a counterexample search rather than an empirical measurement.
+
+1. What exact mathematical form must the explicit averaged null-convergence condition take so that it is logically independent of, yet compatible with, standard AANEC?
+2. What is the formal definition of the Misner-Sharp compactness parameter for the restricted metric class, and what threshold criterion follows from it?
+3. How should stability of non-black-hole remnants be defined so that regular black hole models and exotic compact objects are not silently admitted as counterexamples?
+4. Do the proposed witnesses genuinely violate the added focusing assumption, or do they expose an ill-defined premise?
+5. Should a discrete numerical audit of Raychaudhuri-type focusing and trapped-surface formation be used as a falsification aid, while keeping formal proof status separate from simulation evidence?
+
+### Planned Contributions and Their Roles
+
+| Contribution | Role in the argument | Required upstream dependency |
+|---|---|---|
+| Candidate trapped-surface theorem | States the scoped formal claim that averaged focusing plus compactness threshold implies trapped-surface formation | AANEC, global hyperbolicity, regular matter, complete null generators, explicit averaged focusing |
+| Remnant-exclusion corollary | Converts the theorem into a conditional exclusion of stable non-black-hole remnants above a compactness-dependent scale | TOV-like stability assumption and compactness definition |
+| Counterexample boundary ledger | Distinguishes genuine falsifiers from assumption violations and scope delimiters | Candidate witnesses and unresolved definitions |
+| Astrophysical demotion of the mass gap | Prevents the formal theorem from being misrepresented as a direct explanation of the observed gap | Alternative stellar-physics mechanisms and population evidence | [@cite_07d6df5d6978a1fc] [@cite_0ed84243cf171bc4] [@cite_42e341ff6471ce89] [@cite_789b47fb0241d9ae] [@cite_7a407c865faafd11] [@cite_7a44e6730c44cb39] [@cite_977568cf7b8a55bf] [@cite_cbbced417410bc6c] [@cite_f634820e22d7a238] [@cite_fd0f77b2a173c0ab]
+
+### Transition to the Formal Ledger
+
+The unresolved items above are not generic caveats; they are the precise seams where the later definition ledger and proof-obligation registry must operate. The next stage should therefore formalize the candidate theorem only after fixing the averaged-focusing expression, the compactness formula, and the stability predicate, while treating numerical checks as auxiliary diagnostics rather than substitutes for proof.
+
+## Idea Source Checkpoints and Direction Selection Audit
+
+### The scientific attraction of the AANEC-relaxed mechanism
+
+The selected direction is retained because it targets a specific weakness in classical trapped-surface arguments: pointwise energy conditions are systematically violated by quantum fields, making averaged statements the more defensible physical premise (W3009127927). The proposed mechanism replaces pointwise NEC/SEC assumptions with the Averaged Null Energy Condition (AANEC) plus an explicit averaged null-convergence/focusing condition along complete null generators, then derives a compactness threshold for trapped-surface formation via Raychaudhuri-type focusing and Misner-Sharp compactness. The intellectual attraction lies in its disciplined separation of roles: the formal theorem addresses a restricted model class of spherically symmetric, non-rotating collapse with isotropic pressure, while the observed 2-5 solar mass gap is demoted from a theorem-derived prediction to an astrophysical consistency constraint. This prevents the proposal from overclaiming against well-documented alternative explanations, including explosion energetics, fallback, equation-of-state physics, rotation, magnetic fields, nonspherical dynamics, and binary evolution, which population studies treat as dominant drivers of remnant distributions (W4226083230). [@cite_0ed84243cf171bc4] [@cite_fd0f77b2a173c0ab]
+
+### Defects and unsupported links exposed by the checkpoints
+
+The available audit snapshots expose a structural defect that survives into the selected direction: the added averaged focusing condition (A5) is declared as an independent geometric hypothesis not implied by AANEC alone, yet its explicit mathematical form is missing. This is not a minor notation gap; the counterexample analysis shows that candidate witnesses (CE1, CE2) cannot be adjudicated without A5's formula, because their validity turns on whether they satisfy or evade the averaged focusing premise. A second defect concerns the Misner-Sharp compactness parameter (D4), whose formal definition is absent, preventing any precise threshold calculation or stability bound for non-black-hole remnants. A third defect is definitional: the stability predicate for non-black-hole remnants (A6) is not separated from regular black-hole models such as Hayward or Bardeen, which typically contain horizons and therefore do not qualify as horizonless alternatives. These gaps mean the current argument contains an unverified link between AANEC and the focusing conclusion, and an unresolved circularity in the exclusion claim if A6 is defined via the very compactness threshold the theorem is supposed to derive.
+
+### Qualified retention and explicit exclusions
+
+The direction is retained only as a qualified proposal, not as an established result. Retained elements include the spherical/isotropic model class, global hyperbolicity, complete null generators, and the treatment of the mass gap as a consistency constraint rather than a prediction. Explicit exclusions are equally important: the theorem is not claimed to apply to rotating, magnetized, nonspherical, or anisotropic collapse; it is not claimed to prove that all massive stars form black holes; and it is not claimed to derive a quantitative mass-gap location from GR alone. The dependency on the definition ledger is acknowledged but not re-litigated here: the missing formal definitions for A5 and D4 are procedural prerequisites that must be resolved before the candidate theorem can be audited, and their absence does not invalidate the research plan but prevents any status update on the theorem itself.
+
+### Audit snapshot comparison and selection rationale
+
+| Checkpoint | Title Emphasis | Retained in Selection | Excluded / Qualified |
+|---|---|---|---|
+| Checkpoint 1 | "AANEC-Relaxed Trapped Surface Theorem and Stellar Mass-Gap Derivation" | Core mechanism: AANEC + averaged focusing + Misner-Sharp compactness | Mass-gap derivation is reframed as consistency constraint, not theorem output |
+| Checkpoint 2 | "A Qualified AANEC Trapped-Surface Bound for Non-Black-Hole Stellar Remnants" | Explicit qualification of the bound to the restricted model class | Removes implication of a general non-BH exclusion beyond spherical/isotropic assumptions |
+| Checkpoint 3 | Detailed hypothesis with assumptions, boundary conditions, and discriminating observation | Full assumption set (A1-A6) and boundary/failure conditions carried forward | Confirms that astrophysical observations alone cannot distinguish the theorem from stellar-physics confounders |
+
+The selection audit reveals that all three snapshots share the same central hypothesis and claim scope, differing only in title emphasis and the granularity of assumption listing. The qualified title from Checkpoint 2 is adopted as the working label because it foregrounds the restriction to non-black-hole remnants within the model class, while the detailed assumption and boundary structure from Checkpoint 3 is carried into the formal reasoning plan. The transition to the next stage requires resolving the A5 and D4 definition gaps before the candidate theorem can be subjected to proof-obligation auditing.
+
+## Problem Definition, Assumptions, and Hypotheses
+
+### Formal Domain and Admissible Premises
+
+This section states the scoped mathematical problem that later derivations consume. The domain is restricted to classical general relativity with spherically symmetric stellar collapse, isotropic pressure, regular matter fields, global hyperbolicity, and complete null generators. The proposed mechanism replaces pointwise energy-condition hypotheses with the Averaged Null Energy Condition (AANEC) along complete null generators, supplemented by an explicit averaged null-convergence or focusing condition. This separation is essential: AANEC alone is not claimed to establish focusing or trapped-surface formation. The AANEC is motivated by the observation that pointwise energy conditions can be violated by quantum fields, while averaged or inequality-constrained statements may retain broader validity (W3009127927). The problem is therefore a candidate theorem for a restricted model class, not a general proof that all massive stars form black holes and not a quantitative derivation of the observed 2-5 solar mass gap. [@cite_0ed84243cf171bc4]
+
+### Assumption Boundary for the Candidate Entry
+
+The admissible premises below are the only assumptions from which the scoped entry lemma may be derived. They are treated as design assumptions pending human formalization where indicated.
+- A1: Spherically symmetric collapse of massive stars with isotropic pressure in classical general relativity.
+- A2: Matter fields satisfy AANEC along complete null generators.
+- A3: Spacetime is globally hyperbolic and sufficiently regular for trapped-surface arguments.
+- A4: Null generators in the relevant region are complete.
+- A5: An explicit averaged null-convergence/focusing condition holds along the relevant null generators; its precise mathematical form is unresolved and requires human input.
+- A6: Non-black-hole remnants are modeled as stable equilibrium objects obeying a bounded compactness or TOV-like limit; the stability predicate is unresolved and requires human input.
+
+### Numbered Problem Relation: AANEC and Independent Focusing
+
+**Equation [eq:formal-problem-and-hypotheses-block-3].**
+
+$$
+AANEC along a complete null generator with tangent k^a is written as
+
+\int_{-\infty}^{\infty} T_{ab} k^a k^b \, d\lambda \geq 0 .
+
+The proposed trapped-surface entry additionally requires an independent averaged focusing hypothesis, schematically
+
+\int_{\gamma} R_{ab} k^a k^b \, d\lambda > 0 ,
+
+where the exact integrated form, affine parameter range, and relation to expansion scalar theta are not fixed by the supplied material and remain a procedural dependency.
+$$
+
+### Candidate Entry Lemma and Scope Boundaries
+
+**Lemma Registry L1, L2 (Candidate).** Candidate L1 (unverified): Under A1-A5, if the spacetime reaches a model-dependent compactness threshold, the proposed Raychaudhuri-type focusing step is intended to force negative expansion along the relevant null generators, and the proposed trapped-surface identification criterion is intended to convert that focusing into a trapped surface. Candidate L2 (unverified): Under A6 and the compactness definition D4, a stable non-black-hole equilibrium object is intended to be incompatible with a trapped surface above the threshold. These are lemma registry entries for the candidate theorem, not completed proofs. The logical boundary is explicit: NEC, ANEC/AANEC, null convergence or Ricci contraction, SEC, and the independently assumed focusing condition cannot be interchanged automatically. Stress-energy to Ricci/null-convergence implications require extra assumptions; AANEC alone does not establish focusing or trapped-surface conclusions; and SEC is not a substitute for AANEC. See Eq. (eq:formal-problem-and-hypotheses-block-3).
+
+### Proposed Propositions and Proof Obligations
+
+**Proof Obligation Registry PO1, PO2, PO3 (Unverified).** Proposed P1: In spherically symmetric stellar collapse satisfying A1-A5, reaching a model-dependent compactness threshold forces trapped-surface formation. Proposed P2: Stable non-black-hole remnants above a compactness-dependent mass scale are excluded within the restricted model class defined by AANEC and averaged focusing. The proof obligations are unresolved. PO1 requires the explicit mathematical form of the averaged null-convergence/focusing condition A5 distinguishing it from A2. PO2 requires the metric and trapped-surface identification details for the relevant spherical collapse class. PO3 requires the formal definition of the Misner-Sharp compactness parameter C and the stability predicate in A6. The astrophysical mass gap is treated as a consistency constraint, not as a direct consequence of P2; explosion energetics, fallback, equation-of-state physics, pair-instability processes, and binary evolution remain alternative explanations (W2994776863, W3036761016). [@cite_7a407c865faafd11] [@cite_f634820e22d7a238]
+
+### Failure Condition and Transition
+
+The candidate theorem fails or must be restricted if AANEC is violated, the added averaged focusing condition fails, null generators are incomplete, quantum stress-energy violates ANEC, nonspherical/rotating/magnetic dynamics dominate, or stable exotic compact objects evade the averaged-focusing assumptions. A proposed counterexample is admissible only if it satisfies all assumptions A1-A6; boundary cases that violate A5 or the stability predicate are scope delimiters rather than theorem falsifiers. The next stage consumes these premises to develop the definition ledger, derivation lemmas, and falsification protocol.
+
+## Study Design and Methods
+
+### Protocol Scope and Unit of Analysis
+
+The proposed unit of analysis is a formal proof and counterexample search conducted within a restricted classical general-relativistic model class. The design premise is that spherically symmetric collapse with isotropic pressure, global hyperbolicity, regular matter fields, complete null generators, AANEC, and an explicit averaged null-convergence/focusing condition can support a candidate trapped-surface threshold. This study does not claim that the observed 2-5 solar mass gap is a direct theorem consequence; it treats the gap as an astrophysical consistency constraint subject to explosion energetics, fallback, equation-of-state uncertainty, rotation, magnetic fields, nonspherical dynamics, binary evolution, and pair-instability channels. The protocol therefore separates formal reasoning from empirical inference and leaves detailed definition and proof-obligation ledgers to the dedicated theory sections. [@cite_0ed84243cf171bc4] [@cite_7a407c865faafd11] [@cite_c369df652181e8f7] [@cite_fd0f77b2a173c0ab]
+
+### Proof and Counterexample Search Protocol
+
+**Planned protocol.** The planned method proceeds in three stages. First, the candidate theorem entry must be formalized only after the missing definitions are supplied: the Misner-Sharp compactness parameter and the mathematical form of the explicit averaged focusing condition remain human-input dependencies. Second, the derivation lemmas are audited as proposed rather than proved, with the Raychaudhuri-type focusing step, trapped-surface identification step, stable-remnant exclusion step, and mass-threshold step each mapped to a distinct proof obligation. Third, candidate witnesses are screened against all declared assumptions; a witness is admissible as a formal counterexample only if it satisfies spherical symmetry, isotropic pressure, AANEC, global hyperbolicity, null-generator completeness, the added averaged focusing condition, and the stability premise. If a witness fails any assumption, the result is a scope delimiter or an invalid witness, not a proof of failure. [@cite_0ed84243cf171bc4] [@cite_37ecbded9d629353]
+
+### Energy-Condition Boundary Matrix
+
+| Condition | Planned role in this design | Boundary check | If absent or violated |
+| --- | --- | --- | --- |
+| NEC | Background pointwise condition, not the primary assumption. | Check whether quantum or exotic stress-energy makes pointwise positivity untenable. | Do not infer focusing from NEC alone; use averaged conditions only if formally specified. |
+| ANEC / AANEC | Declared averaged energy input along complete null generators. | Verify completeness and the class of null geodesics used. | AANEC alone does not establish trapped-surface formation or exclude exotic remnants. |
+| Null convergence / Ricci contraction | Potential intermediate geometric consequence, not assumed from stress-energy automatically. | Require an explicit stress-energy-to-Ricci implication and regularity assumptions. | Without that implication, the focusing step remains unresolved. |
+| Explicit averaged focusing condition | Independent geometric hypothesis added to the theorem premises. | Requires a supplied mathematical form distinguishing it from AANEC. | If undefined or failed, the candidate theorem cannot be upgraded beyond a proposal. |
+| SEC | Not used as a substitute for AANEC or averaged focusing. | Record only as a contrast with realistic matter that may violate SEC while satisfying DEC. | SEC failure does not by itself invalidate the averaged-condition strategy. |
+| Focusing / trapped-surface criterion | Planned conclusion target, not a premise. | Must follow from the derivation lemmas and proof obligations. | If the criterion is not derived, the mass-gap application remains non-discriminating. [@cite_0ed84243cf171bc4]
+
+### Comparators, Ablations, and Robustness Checks
+
+1. AANEC-only ablation: test whether the candidate trapped-surface conclusion survives when the explicit averaged focusing condition is removed; the expected design consequence is non-inferentiality, because AANEC alone is not assumed to supply the needed pointwise or integrated focusing.
+2. Completeness ablation: restrict null-generator completeness to assess whether causal-boundary pathologies can mimic or defeat the theorem; any such result is a scope delimiter rather than a general refutation.
+3. Symmetry ablation: compare the spherical/isotropic model class with nonspherical, rotating, magnetic, or anisotropic alternatives; these are astrophysical confounders and are not treated as formal counterexamples unless the full assumption set is preserved.
+4. Stability-definition ablation: distinguish stable non-black-hole remnants from regular black-hole models by requiring the stability premise to be explicitly defined before witness screening.
+5. Astrophysical comparator: check whether explosion-energy, fallback, equation-of-state, pair-instability, and binary-evolution models can reproduce the lower mass gap without invoking a compactness theorem; such a result would weaken explanatory relevance but not falsify the formal theorem. [@cite_07d6df5d6978a1fc] [@cite_42e341ff6471ce89] [@cite_7a407c865faafd11] [@cite_7a44e6730c44cb39] [@cite_f634820e22d7a238] [@cite_fd0f77b2a173c0ab]
+
+### Artifacts, Reproducibility, and Human Decisions
+
+The method artifact set is bounded by upstream formal material and planned outputs: a definition ledger, lemma registry, proof-obligation registry, derivation chain, falsifier matrix, and decision protocol. The visible design contribution is the protocol and boundary logic, not a completed proof. Measurement-plan and quality-control fields are not applicable to a mathematics-theory route except as placeholders for any later numerical witness audit; their canonical status remains a human-input dependency. Data governance and reproducibility fields also require human input before any code, simulation, or numerical verification artifact can be treated as release-ready. The next stage should therefore consume only the supplied premises and decide whether the missing definitions permit a candidate lemma to be formalized, or whether the route must remain a scoped proposal. [@cite_63476e0b002da386]
+
+## Expected Outcome Branches and Conditional Conclusions
+
+### Decision Scope and Upstream Premises
+
+This section converts the scoped premises carried forward from the derivation and counterexample stage into a preregistered decision protocol for the candidate theorem. The two formal propositions are treated as candidate formalizations rather than established results. The first states that, within spherically symmetric collapse with isotropic pressure, global hyperbolicity, complete null generators, AANEC, and an explicitly assumed averaged null-convergence condition, reaching a model-dependent compactness threshold forces trapped-surface formation. The second states that stable non-black-hole remnants above a compactness-dependent mass scale are excluded within this restricted model class. The protocol evaluates the logical status of the proof program and its astrophysical relevance without asserting that either proposition has been proved. Because the averaged null-convergence condition is an independent geometric hypothesis and not a consequence of AANEC alone, the decision rule must separate a genuine theorem-supporting derivation from a mere restatement of a classical focusing argument. The protocol also separates the formal theorem from the observed lower stellar mass gap, which remains an astrophysical consistency constraint that may be governed by explosion energetics, fallback, equation-of-state physics, pair-instability processes, rotation, magnetic fields, nonspherical dynamics, or binary evolution. Quantum-field considerations further motivate the averaged formulation: pointwise energy conditions are systematically violated by quantum fields, so averaged or inequality-based conditions are required for broader validity. These boundary considerations are carried into the branch decision matrix. [@cite_0ed84243cf171bc4]
+
+### Preregistered Outcome Decision Matrix
+
+**Pre-registered Branch (Expected---Not Observed).**
+
+| Branch | Prespecified trigger | Relevant lemma or proof obligation | Allowed conclusion | Next action |
+| --- | --- | --- | --- | --- |
+| supports_mechanism | The derivation closes the trapped-surface threshold using AANEC plus the explicitly assumed averaged null-convergence condition, and the compactness-to-mass bound follows from the stable-equilibrium premise without favoring an alternative explanation. | Candidate lemma L1 and the proof obligations PO1, PO2, and PO3. | Conditional support for the candidate theorem within the declared model class; the result supports but does not prove the relation, and it does not by itself explain the observed 2-5 solar mass gap. | Replicate the argument under independently confirmed assumptions and test the most consequential declared boundary condition. |
+| partial_or_heterogeneous | The derivation succeeds for some admissible metric families or compactness regimes but fails or changes character for others, including cases where a high-compactness witness satisfies AANEC yet violates the added averaged focusing condition. | Candidate lemma L2 and its associated scope delimiter F1. | The relation is conditional; no universal conclusion is warranted and the theorem must be restricted to the regimes where the added focusing premise is genuinely satisfied. | Predefine and check plausible moderators, then improve coverage of the metric class and the comparability of the compactness threshold. |
+| null_or_contradictory | A rigorous witness satisfies every stated assumption, including the averaged focusing condition, yet avoids trapped-surface formation, or the derivation shows that AANEC plus the stated assumptions cannot yield a compactness bound. | Candidate lemma L2 and the counterexample target of proposition P2. | The proposed relation is not supported in this design boundary; absence of support is not proof of absence generally. | Audit construct validity and comparison adequacy, then revise the mechanism or boundary claim before another design iteration. |
+| uninformative_or_invalid | The averaged focusing condition remains undefined, the compactness parameter lacks a formal definition, null-generator completeness cannot be established, or a proposed witness fails an assumption such as the stable-equilibrium premise, making the comparison uninterpretable. | Proof obligations PO1 and PO3, with the assumptions-not-satisfied delimiter F2. | No scientific conclusion is warranted because the planned design did not yield interpretable evidence. | Resolve the identified validity or definition failure and obtain human confirmation of the measurement and analysis prerequisites. |
+| no-information dependency | A required upstream unit is unavailable, such as the formal definition of the compactness parameter or the mathematical form of the averaged focusing condition. | The dependency closure for PO1 and PO3. | The dependency does not update theorem status; it is neither proof of failure nor a reason to describe the whole research plan as invalid. | Resolve or review the upstream input, then rerun the affected branch without reassigning a conclusion to the theorem. |
+
+### Reading the Branches and the No-Information Rule
+
+The supportive branch is deliberately narrow. It licenses only a conditional conclusion: within the declared model class, the derivation is consistent with a trapped-surface threshold and a corresponding exclusion of stable non-black-hole remnants above the compactness-dependent scale. It does not license a claim that the observed mass gap is a direct consequence of the theorem. The heterogeneous branch is the most informative failure mode for the mechanism-replacement strategy, because it distinguishes a genuine AANEC-plus-averaged-focusing result from a restatement of a classical pointwise focusing argument. A witness that satisfies AANEC but violates the added averaged focusing condition is a scope delimiter, not a counterexample to the theorem as stated; it shows that the added premise is doing real work. The null-or-contradictory branch is reserved for a witness that satisfies every assumption, including the added focusing premise, and still avoids trapped-surface formation. The uninformative-or-invalid branch captures cases where a proposed witness fails an assumption, such as the stable-equilibrium premise, or where the comparison cannot be interpreted because a required definition is missing. The no-information rule is essential: an unavailable definition of the compactness parameter or an undefined averaged focusing condition does not falsify the theorem and does not invalidate the research plan. It withholds a status update on the affected proof obligation and routes the dependency to upstream resolution.
+
+### Astrophysical Consistency Boundary
+
+The decision matrix separates the formal theorem from the astrophysical inference. The lower stellar mass gap is treated as a consistency constraint, not as a theorem-derived prediction. A demonstrated astrophysical model that reproduces the gap without any compactness bound would weaken the explanatory relevance of the theorem but would not falsify the formal proposition itself. Conversely, a formal counterexample to the trapped-surface bound would not by itself erase the astrophysical gap, because the observed remnant distribution is sensitive to explosion energetics, fallback, equation-of-state physics, pair-instability processes, rotation, magnetic fields, nonspherical dynamics, and binary evolution. Population studies of merging compact binaries and the inferred location of the pair-instability gap show that the observed demographics are shaped by stellar-evolution channels as well as by collapse physics. Therefore, the supportive branch should be reported as a conditional mathematical result accompanied by an explicit statement that the mass-gap inference is non-discriminating unless the declared stellar-physics alternatives are controlled. This boundary prevents the route from collapsing the theorem and the observation into a single claim. [@cite_7a407c865faafd11] [@cite_cbbced417410bc6c] [@cite_f634820e22d7a238]
+
+### Transition to Risk and Review
+
+The decision protocol supplies the scoped premises for the next stage: it identifies which branches would update the candidate theorem, which would merely restrict its scope, and which would withhold a status update pending upstream resolution. These consequences are handed to the risk, limitations, and review section, which owns the detailed human-review ledger and release criteria. The transition is concrete: the supportive branch requires confirmation that the averaged focusing premise is independent of AANEC; the heterogeneous branch requires a moderator analysis across metric families; the null branch requires audit of the counterexample's assumption satisfaction; the uninformative branch requires resolution of the missing definitions; and the no-information dependency requires upstream input before any theorem status is assigned. No branch is treated as an observed result, and no branch is presented as a completed proof.
+
+## Risks, Limitations, and Human Review Requirements
+
+The formal reasoning plan for the AANEC-relaxed trapped-surface theorem remains a candidate conjecture rather than a completed proof. Its scope is deliberately narrow: classical general relativity, spherically symmetric collapse, isotropic pressure, global hyperbolicity, complete null generators, and an explicit averaged null-convergence/focusing condition. Within that scope, the theorem does not by itself explain the observed 2-5 solar mass gap, which may be governed by supernova explosion physics, fallback, equation-of-state uncertainties, rotation, magnetic fields, nonspherical dynamics, or binary interactions. The review ledger therefore separates mathematical release conditions from astrophysical interpretation, preventing either domain from silently inheriting the other's assumptions. [@cite_0ed84243cf171bc4]
+
+| Condition | Logical role in this route | Boundary that must not be crossed |
+|---|---|---|
+| NEC | Pointwise stress-energy inequality; not assumed here. | Cannot be interchanged with averaged conditions without extra assumptions. |
+| ANEC / AANEC | Weaker averaged null-energy hypothesis retained as an admissible premise. | AANEC alone does not establish focusing or trapped-surface conclusions. |
+| Null convergence / Ricci contraction | Geometric consequence needed for Raychaudhuri-type focusing. | Stress-energy to Ricci/null-convergence implications need extra assumptions. |
+| SEC | Not used as a substitute for AANEC. | SEC is not a replacement for AANEC or the explicit averaged focusing hypothesis. |
+| Explicit averaged focusing (A5) | Independent geometric hypothesis added to the theorem premise. | Its mathematical form is currently unresolved and cannot be inferred from AANEC. | [@cite_0ed84243cf171bc4]
+
+**Decision Status: No-information.**
+
+| Review item | Scope | Release condition | Consequence if unresolved |
+|---|---|---|---|
+| Formal reasoning plan | Candidate theorem, lemmas, and counterexample search | Qualified human review of A5, D4, A6, and the proof obligations | The theorem remains unverified; no release of proof status |
+| Definition ledger (D4) | Misner-Sharp compactness C and threshold formula | Human-supplied formal definition for the chosen metric class | No-information branch; threshold cannot be audited |
+| Proof obligation PO1 | Focusing derivation under A5 | Human-supplied mathematical form of A5 | No-information branch; theorem status withheld |
+| Proof obligations PO2 and PO3 | Trapped-surface identification and remnant exclusion | Human review of regularity, completeness, and stability assumptions | No-information branches; conclusions remain proposed |
+| Counterexample analysis | CE1 and CE2 boundary cases | Human review of whether witnesses satisfy all assumptions | No valid counterexample is established; candidates remain unverified |
+| Alternative explanations | Mass-gap astrophysics | Separate review of explosion, fallback, EOS, rotation, magnetic, nonspherical, and binary channels | Astrophysical inference remains non-discriminating |
+
+**Decision Status: No-information.** A no-information branch means that the dependency does not update theorem status; it is neither proof of failure nor a reason to describe the whole research plan as invalid. The current unresolved dependencies are D4, the mathematical form of A5, and the formal definition of stable non-black-hole remnants. Until these are supplied, the derivation steps remain proposed and the counterexample witnesses remain boundary cases rather than refutations.
+
+The next stage should proceed only after the definition ledger is closed. If the human review supplies A5, D4, and the stability predicate, the proof obligations can be audited as mathematical work. If it does not, the plan should remain a scoped conjecture and the mass-gap discussion should be treated as an astrophysical consistency constraint rather than a theorem-derived prediction.
+
+## Definitions, Propositions, and Proof Obligations
+
+### Symbol Domain and Model Class
+
+The formal model class is restricted to classical General Relativity with spherically symmetric collapse of massive stars and isotropic pressure. The spacetime metric is denoted by g, the stress-energy tensor by T, and the tangent vector to null geodesic generators by k. The areal radius or radial coordinate is r, and the mass of the collapsing matter or remnant object is M. The expansion scalar of a null geodesic congruence is theta. The Misner-Sharp compactness parameter C is a candidate formalization requiring human input for its precise mathematical definition within the chosen metric. These symbols define the domain for all subsequent propositions and proof obligations.
+
+### Definition Ledger
+
+**Definition.** D1: Mass of the collapsing matter or remnant object (M). D2: Areal radius or radial coordinate (r). D3: Expansion scalar of a null geodesic congruence (theta). D4: Misner-Sharp compactness parameter (C) - status: needs_human_input. D5: Stress-energy tensor (T). D6: Spacetime metric (g). D7: Tangent vector to null geodesic generators (k).
+
+### Assumption Ledger
+
+A1: Spacetime and matter fields satisfy classical GR with spherical symmetry and isotropic pressure. A2: Matter fields satisfy the Averaged Null Energy Condition (AANEC) along complete null generators. A3: Spacetime is globally hyperbolic and sufficiently regular for trapped-surface arguments. A4: Null generators in the relevant region are complete. A5: An explicit averaged null-convergence/focusing condition holds along the relevant null generators - status: needs_human_input. A6: Non-black-hole remnants are modeled as stable equilibrium objects obeying a bounded compactness or TOV-like limit.
+
+### Compactness Threshold Relation
+
+**Equation [eq:definitions-and-propositions-def-04].**
+
+$$
+C = 2 M / r
+$$
+
+### Equation Dependency
+
+The relation C = 2 M / r is proposed as a candidate formalization for the Misner-Sharp compactness parameter C. However, the precise formula for effective mass within radius r in the chosen metric is required for rigorous derivation and is currently marked as needs_human_input. This equation serves as a placeholder for the threshold relation that will be used in subsequent propositions. See Eq. (eq:definitions-and-propositions-def-04).
+
+### Candidate Propositions
+
+**Proposition (Candidate).** P1: In spherically symmetric stellar collapse satisfying AANEC, global hyperbolicity, regular matter fields, complete null generators, and an explicit averaged null-convergence/focusing condition, reaching a model-dependent compactness threshold forces trapped-surface formation. P2: Stable non-black-hole remnants above a compactness-dependent mass scale are excluded within the restricted model class defined by AANEC and averaged focusing.
+
+### Lemma Registry
+
+**Lemma Registry L1, L2, L3, L4, L5, L6 (Candidate).** L1: Candidate lemma linking P1 to PO1, PO2, PO3. L2: Candidate lemma linking P2 to PO3. L3: Proposed derivation step S1. L4: Proposed derivation step S2. L5: Proposed derivation step S3. L6: Unverified derivation step S4.
+
+### Dependency Closure Matrix
+
+| Proposition | Lemma | Proof Obligation | Status |
+|-------------|-------|------------------|--------|
+| P1          | L1    | PO1              | Unverified |
+| P1          | L1    | PO2              | Unverified |
+| P1          | L1    | PO3              | Unverified |
+| P2          | L2    | PO3              | Unverified |
+
+### Proof Obligation Registry
+
+**Proof Obligation Registry PO1, PO2, PO3 (Unverified).** PO1: Unresolved. Requires explicit mathematical form of A5. PO2: Unresolved. Requires verification of trapped-surface identification criterion. PO3: Unresolved. Requires formal definition of Misner-Sharp compactness C and consistency check against stable equilibrium limit.
+
+### Transition to Next Stage
+
+This section has established the definition ledger, symbol roles, proposition dependencies, and unresolved formal inputs. The next stage, forward_derivation_and_counterexamples, will consume these premises to derive a new criterion, lemma, comparison, or decision, and will address the proof obligations and counterexamples outlined here.
+
+## Forward Derivation and Counterexample Search Plan
+
+### Derivation Architecture and Lemma Chain
+
+**Proof Obligation Registry L3, L4, L5, L6, PO1, PO2, PO3 (Candidate).** This section advances the argument by converting the scoped premises supplied by the definitions and propositions into a numbered derivation obligation and a counterexample decision matrix, without restating the definition ledger. The route treats AANEC as a boundary condition on quantum or classical stress-energy, while an independent averaged null-convergence assumption supplies the geometric contraction needed for Raychaudhuri-type focusing. The chain proceeds from a proposed focusing lemma to a trapped-surface criterion, then to a compactness-to-mass exclusion bound. Candidate lemmas are labeled as proposed or unverified because the formal definitions for the averaged focusing condition and the Misner-Sharp compactness threshold remain unresolved. [@cite_0ed84243cf171bc4]
+
+### Candidate Lemma Registry
+
+**Lemma Registry L3, L4, L5, L6 (Candidate).** Candidate Lemma L3: Under spherical symmetry, AANEC along complete null generators, and an explicit averaged null-convergence condition, the expansion scalar is proposed to become negative along the relevant null congruence. Candidate Lemma L4: If the expansion becomes negative and the compactness exceeds a model-dependent threshold, both outgoing and ingoing null expansions are proposed to be negative, identifying a trapped surface. Candidate Lemma L5: Formation of a trapped surface is proposed to be inconsistent with a stable non-black-hole equilibrium object obeying a bounded compactness limit. Candidate Lemma L6: The previous consistency check is proposed to yield an exclusion bound for stable non-black-hole remnants above a compactness-dependent mass scale. Each lemma is a proposed derivation unit; none is verified.
+
+### Numbered Derivation Relation
+
+AANEC: \int_{\lambda_1}^{\lambda_2} T_{ab} k^a k^b \, d\lambda \ge 0
+
+Focusing relation: \frac{d\theta}{d\lambda} \le -\frac{1}{2}\theta^2 - R_{ab}k^a k^b
+
+Trapped-surface criterion: \theta_{\text{out}} < 0 \quad \text{and} \quad \theta_{\text{in}} < 0
+
+Exclusion bound: C \ge C_{\text{threshold}} \Rightarrow \text{not StableNonBH}(M)
+
+### Interpretation of the Equation Chain
+
+**Proof Obligation Registry L3, L4, L5, L6, PO1, PO2, PO3 (Candidate).** The relation above is a derivation scaffold, not a completed proof. The first line states the averaged null-energy hypothesis in the form supplied by the upstream operational definitions. The second line is the proposed Raychaudhuri-type step in which an averaged convergence assumption is intended to force negative expansion. The third line expresses the local trapped-surface condition as a joint negativity of outgoing and ingoing expansions. The fourth line is the proposed exclusion implication from compactness to instability of a non-black-hole remnant. Because the explicit mathematical form of the averaged null-convergence condition and the formal Misner-Sharp threshold are unresolved, the chain remains a candidate derivation obligation rather than an established theorem. [@cite_0ed84243cf171bc4]
+
+### Proposition and Proof-Obligation Status
+
+**Proof Obligation Registry L3, L4, L5, L6, PO1, PO2, PO3, No-information: D4, No-information: PO1, No-information: PO2, No-information: PO3 (No-information).** Proposed Proposition P1: In the restricted spherical-collapse model class, AANEC plus an explicit averaged null-convergence condition is proposed to force trapped-surface formation when compactness exceeds a model-dependent threshold. Proposed Proposition P2: Stable non-black-hole remnants above a compactness-dependent mass scale are proposed to be excluded in that same model class. The corresponding proof obligations are PO1 for the focusing step, PO2 for the trapped-surface identification step, and PO3 for the compactness-to-mass exclusion step. All three obligations are unresolved. A missing formal definition of the averaged focusing condition or the compactness threshold places the relevant dependency in a no-information branch, which withholds a theorem-status update but does not by itself prove failure.
+
+### Counterexample and Boundary Matrix
+
+**Decision Status: No-information.**
+
+| Decision | Candidate witness | Assumption check | Classification | Allowed conclusion | Next action |
+|---|---|---|---|---|---|
+| F1 | CE1: hypothetical static, spherically symmetric, regular high-compactness metric with isotropic pressure | Satisfies AANEC and spherical symmetry, but may violate the independent averaged focusing condition or the stable-remnant bound | Scope delimiter | Does not falsify the theorem as stated; marks the boundary of the model class | Refine A5 and D4, then re-test |
+| F2 | CE2: regular black-hole model such as Hayward or Bardeen | May satisfy AANEC and regularity, but is typically a black-hole configuration rather than a non-black-hole remnant | Assumptions not satisfied | Does not falsify P2 because the target class excludes horizon-bearing black holes | Clarify the stability predicate and horizon classification |
+| No-information | Missing formal A5 or missing Misner-Sharp threshold | Cannot verify whether a witness satisfies all premises | Withhold theorem-status update | Neither proof nor counterexample | Resolve upstream definitions |
+| Valid counterexample | Stable non-black-hole object satisfying A1-A6 but no trapped surface | All assumptions satisfied | Would-falsify condition | The proposed exclusion bound fails in the stated model class | Revise the theorem or its premises |
+
+### Failure Conditions and Transition
+
+**Proof Obligation Registry L3, L4, L5, L6, PO1, PO2, PO3, F1, F2 (Candidate).** - Failure condition 1: if the explicit averaged null-convergence assumption is not separable from AANEC, the derivation loses its stated geometric mechanism.
+- Failure condition 2: if the Misner-Sharp compactness threshold is not formally defined for the chosen metric class, the exclusion bound cannot be computed.
+- Failure condition 3: if a stable non-black-hole remnant can be constructed that satisfies spherical symmetry, AANEC, global hyperbolicity, complete null generators, the averaged focusing condition, and the stability bound while avoiding a trapped surface, the proposed theorem is falsified within the restricted model class.
+- Scope limitation: astrophysical mass-gap explanations involving explosion energetics, fallback, equation-of-state physics, rotation, magnetic fields, nonspherical dynamics, or binary evolution are not theorem-derived predictions and may dominate the observed remnant distribution.
+- Transition: the next stage should evaluate prespecified outcome branches against these obligations, treating no-information dependencies as status updates that do not invalidate the research plan. [@cite_07d6df5d6978a1fc] [@cite_0ed84243cf171bc4] [@cite_42e341ff6471ce89] [@cite_72d7ff391b29c495] [@cite_789b47fb0241d9ae] [@cite_7a407c865faafd11] [@cite_7a44e6730c44cb39] [@cite_977568cf7b8a55bf] [@cite_c369df652181e8f7] [@cite_cbbced417410bc6c] [@cite_f634820e22d7a238] [@cite_fd0f77b2a173c0ab]
+
+# Appendices
+
+## Energy-Condition Taxonomy, Symbols, and Boundary Defense
+
+### Logical Distinctions Among Energy Conditions
+
+The theoretical spine of this proposal relies on the explicit separation of energy conditions that are often conflated in broader literature. Pointwise energy conditions, such as the Null Energy Condition (NEC) and Strong Energy Condition (SEC), are systematically violated by quantum fields, necessitating weaker statements like the Averaged Null Energy Condition (ANEC) or Achronal ANEC (AANEC) for broader validity [W3009127927]. However, satisfying AANEC does not automatically imply the local or integrated focusing required for Penrose-type trapped-surface formation. The proposal introduces an independent explicit averaged null-convergence/focusing condition (A5) to bridge this gap. Crucially, the SEC is not a substitute for AANEC; realistic matter fields may violate the SEC while satisfying the Dominant Energy Condition, and the AANEC remains a distinct, stronger requirement along complete null generators. These conditions cannot be interchanged automatically, and the logical boundaries must be strictly maintained to avoid invalidating the theorem's assumptions. [@cite_0ed84243cf171bc4]
+
+### Boundary Matrix for Energy and Focusing Conditions
+
+| Condition | Scope | Logical Relation to Focusing | Status in Proposal |
+|---|---|---|---|
+| NEC | Pointwise, local | Implies local Ricci contraction | Assumed violated by quantum effects |
+| ANEC | Averaged along complete null geodesics | Does not guarantee trapped surface | Satisfied (A2) |
+| AANEC | Achronal averaged null energy | Does not guarantee trapped surface | Satisfied (A2) |
+| Null Convergence | Pointwise Ricci contraction | Implies focusing via Raychaudhuri | Not assumed directly |
+| Explicit Averaged Focusing (A5) | Integrated convergence along generators | Sufficient for trapped surface | Independently assumed |
+| SEC | Pointwise, strong | Implies NEC but not AANEC | Not assumed; explicitly distinct | [@cite_0ed84243cf171bc4]
+
+### Unresolved Operational Definitions and Dependencies
+
+The rigorous derivation of the compactness threshold depends on formal definitions currently marked for human review. The Misner-Sharp compactness parameter C lacks a specific formula dependent on the chosen metric class, preventing the calculation of a precise threshold value. Furthermore, the operationalization of the explicit averaged focusing condition (A5) remains undefined, distinguishing it from standard AANEC. These gaps represent procedural dependencies rather than observed failures. The theorem's status remains unverified pending the resolution of these definitions, which are required to check whether candidate counterexamples genuinely satisfy all assumptions or merely exploit ill-defined constraints.
+
+## Idea Source Checkpoints and Direction Selection Audit
+
+### Idea Source Checkpoints and Direction Selection Audit
+
+This appendix provides an audit of the idea source checkpoints and the selection of the mechanism replacement direction. The selected direction proposes a formal theorem/conjecture for classical GR, specifically focusing on spherical nonrotating collapse with isotropic pressure. The hypothesis relies on the matter fields satisfying the Averaged Null Energy Condition (AANEC) along complete null generators, global hyperbolicity, regular matter fields, and an explicit averaged null-convergence/focusing condition. Under these assumptions, reaching a model-dependent compactness threshold forces trapped-surface formation, thereby excluding stable non-black-hole remnants above a compactness-dependent mass scale within this restricted model class. This theoretical framework is grounded in the understanding that pointwise energy conditions are systematically violated by quantum fields, necessitating the use of weaker statements such as averaged energy conditions for broader validity (W3009127927). [@cite_0ed84243cf171bc4]
+
+### Scope Corrections and Retained Decisions
+
+A critical scope correction retained in the final direction is the explicit demotion of the observed 2-5 solar mass gap from a theorem-derived prediction to an astrophysical consistency constraint. The formal theorem does not by itself explain this observed mass gap, which may be governed by supernova explosion physics, fallback, equation-of-state uncertainties, rotation, magnetic fields, nonspherical dynamics, or binary interactions. The mechanism replaces pointwise NEC/SEC assumptions with AANEC plus an explicit averaged null-convergence/focusing assumption on null congruence generators. This is derived via Raychaudhuri-type focusing and Misner-Sharp compactness, then bounded through TOV-like stellar-structure assumptions. The decision to separate the formal GR theorem from the astrophysical mass-gap inference ensures that alternative stellar-physics mechanisms are properly identified as confounders rather than direct falsifiers of the mathematical proposition.
+
+### Open Questions Preserved for Review
+
+Several open questions and procedural dependencies are preserved for review to maintain the integrity of the formal proposal. The exact mathematical form of the explicit averaged null-convergence condition (A5) that distinguishes it from standard AANEC (A2) remains undefined, preventing the precise verification of candidate witnesses. Additionally, the formal definition of the Misner-Sharp compactness parameter (C) for this specific metric class is missing, which prevents the precise calculation of thresholds. The stability predicate for non-black-hole remnants (A6) requires a formal definition to distinguish it from regular black hole models like Hayward or Bardeen. These unresolved formal dependencies mean that the theorem's status remains unverified, and candidate counterexamples cannot yet be definitively classified as failing the assumptions or merely exposing ill-defined premises.
+
+## Evidence Coverage, Unknown Items, and Review Checklist
+
+### Evidence Coverage and Bounded Use of Sources
+
+The theoretical contribution of this route relies on the systematic failure of pointwise energy conditions in quantum field theory, which necessitates the use of averaged energy conditions such as the Averaged Null Energy Condition (AANEC) for broader validity (W3009127927). While the formal derivation of trapped-surface formation under AANEC is proposed, its application to the astrophysical stellar mass gap remains strictly a consistency constraint rather than a direct prediction. Alternative stellar-physics mechanisms, including supernova explosion energetics, fallback, and binary evolution, are recognized as potential confounders that can independently populate or avoid the observed mass gap (W2095725842, W2767058944). Furthermore, the observational identification of compact objects within the lower mass gap, such as the secondary component of GW190814, highlights the empirical boundaries of the proposed theoretical model (W3036761016). [@cite_0ed84243cf171bc4] [@cite_7a407c865faafd11]
+
+### Unknown-Item Consequences
+
+The rigorous execution of the proposed formal proof is currently impeded by the absence of precise mathematical definitions for the explicit averaged null-convergence condition and the Misner-Sharp compactness parameter. Without the exact mathematical form of the averaged null-convergence condition, it is impossible to verify whether candidate counterexamples genuinely evade the theorem's premises or merely violate an ill-defined constraint. Similarly, the missing formal definition of the Misner-Sharp compactness parameter prevents the precise calculation of the compactness threshold required to exclude stable non-black-hole remnants. These unresolved inputs are not mere omissions but represent critical structural dependencies that must be formalized to advance the mathematical argument.
+
+### Release Criteria for Future Claims
+
+**Human-review checklist (Review-required).** Before any formal claims regarding the AANEC-relaxed trapped-surface theorem can be released or evaluated, the following procedural dependencies must be satisfied:
+1. Qualified human review of the canonical formal reasoning plan must be completed to resolve outstanding proof obligations.
+2. The exact mathematical formulation of the explicit averaged null-convergence condition must be provided to distinguish it from standard AANEC.
+3. The formal definition of the Misner-Sharp compactness parameter must be established to calculate the model-dependent threshold.
+4. Candidate counterexamples must be independently audited to determine whether they fail to satisfy the newly formalized premises or represent valid physical evasions of the theorem.
+
+## References
+- [@cite_07d6df5d6978a1fc] B. P. Abbott et al.. *Multi-messenger Observations of a Binary Neutron Star Merger **. The Astrophysical Journal Letters, 2017.
+- [@cite_0ed84243cf171bc4] Eleni-Alexandra Kontou et al.. *Energy conditions in general relativity and quantum field theory*. Classical and Quantum Gravity, 2020.
+- [@cite_1e54e3c2b35110ad] Gabriella Agazie et al.. *The NANOGrav 15 yr Data Set: Constraints on Supermassive Black Hole Binaries from the Gravitational-wave Background*. The Astrophysical Journal Letters, 2023.
+- [@cite_2576833bf7ef143a] Gabriella Agazie et al.. *The NANOGrav 15 yr Data Set: Evidence for a Gravitational-wave Background*. The Astrophysical Journal Letters, 2023.
+- [@cite_283d00782f1f9ecb] S. Perlmutter et al.. *Measurements of Ω and Λ from 42 High‐Redshift Supernovae*. The Astrophysical Journal, 1999.
+- [@cite_357dd780a9e3a378] Ade, PAR et al.. *Planck 2015 results*. ORCA Online Research @Cardiff (Cardiff University), 2016.
+- [@cite_364386a3569b6e66] N. Aghanim et al.. *Planck 2018 results*. Astronomy and Astrophysics, 2020.
+- [@cite_37ecbded9d629353] Abhay Ashtekar et al.. *Isolated and Dynamical Horizons and Their Applications*. Living Reviews in Relativity, 2004.
+- [@cite_42e341ff6471ce89] B. P. Abbott et al.. *GW170817: Measurements of Neutron Star Radii and Equation of State*. Physical Review Letters, 2018.
+- [@cite_572fec0a1e5d74d9] Adam G. Riess et al.. *Observational Evidence from Supernovae for an Accelerating Universe and a Cosmological Constant*. The Astronomical Journal, 1998.
+- [@cite_5ea4dc0e1b288757] M. Kowalski et al.. *Improved Cosmological Constraints from New, Old, and Combined Supernova Data Sets*. The Astrophysical Journal, 2008.
+- [@cite_63476e0b002da386] Matt Luckcuck et al.. *Formal Specification and Verification of Autonomous Robotic Systems*. ACM Computing Surveys, 2019.
+- [@cite_72d7ff391b29c495] Evan O’Connor et al.. *Global comparison of core-collapse supernova simulations in spherical symmetry*. Journal of Physics G Nuclear and Particle Physics, 2018.
+- [@cite_789b47fb0241d9ae] Coenraad J. Neijssel et al.. *The effect of the metallicity-specific star formation history on double compact object mergers*. Monthly Notices of the Royal Astronomical Society, 2019.
+- [@cite_7a407c865faafd11] R. Farmer et al.. *Mind the Gap: The Location of the Lower Edge of the Pair-instability Supernova Black Hole Mass Gap*. The Astrophysical Journal, 2019.
+- [@cite_7a44e6730c44cb39] Luca Baiotti et al.. *Accurate evolutions of inspiralling neutron-star binaries: Prompt and delayed collapse to a black hole*. Physical review. D. Particles, fields, gravitation, and cosmology/Physical review. D. Particles and fields, 2008.
+- [@cite_7ae92f06684c60ef] N. Suzuki et al.. *THEHUBBLE SPACE TELESCOPECLUSTER SUPERNOVA SURVEY. V. IMPROVING THE DARK-ENERGY CONSTRAINTS ABOVEz> 1 AND BUILDING AN EARLY-TYPE-HOSTED SUPERNOVA SAMPLE*. The Astrophysical Journal, 2012.
+- [@cite_977568cf7b8a55bf] B. P. Abbott et al.. *GW170817: Observation of Gravitational Waves from a Binary Neutron Star Inspiral*. Physical Review Letters, 2017.
+- [@cite_98c5e596c0c34b68] B. P. Abbott et al.. *GW151226: Observation of Gravitational Waves from a 22-Solar-Mass Binary Black Hole Coalescence*. Physical Review Letters, 2016.
+- [@cite_bfae3a92efd1d48f] Bill Paxton et al.. *MODULES FOR EXPERIMENTS IN STELLAR ASTROPHYSICS (MESA): PLANETS, OSCILLATIONS, ROTATION, AND MASSIVE STARS*. The Astrophysical Journal Supplement Series, 2013.
+- [@cite_c369df652181e8f7] Bill Paxton et al.. *MODULES FOR EXPERIMENTS IN STELLAR ASTROPHYSICS (MESA): BINARIES, PULSATIONS, AND EXPLOSIONS*. The Astrophysical Journal Supplement Series, 2015.
+- [@cite_cbbced417410bc6c] R. Abbott et al.. *GW190521: A Binary Black Hole Merger with a Total Mass of 150 M ⊙*. Physical Review Letters, 2020.
+- [@cite_cc5bc07a219047b4] Bill Paxton et al.. *Modules for Experiments in Stellar Astrophysics ( ): Convective Boundaries, Element Diffusion, and Massive Star Explosions*. The Astrophysical Journal Supplement Series, 2018.
+- [@cite_d3016ce6d1faa8ec] B. P. Abbott et al.. *Observation of Gravitational Waves from a Binary Black Hole Merger*. Physical Review Letters, 2016.
+- [@cite_e228b5fd31e37646] Edward N. Taylor et al.. *Galaxy And Mass Assembly (GAMA): stellar mass estimates*. Monthly Notices of the Royal Astronomical Society, 2011.
+- [@cite_e7b42f305bc08498] Stef van Buuren et al.. *MICE: Multivariate Imputation by Chained Equations in R*. University of Twente Research Information, 2010.
+- [@cite_ecea60a2300e4892] Areti Angeliki Veroniki et al.. *Methods to estimate the between‐study variance and its uncertainty in meta‐analysis*. Research Synthesis Methods, 2015.
+- [@cite_f634820e22d7a238] R. Abbott et al.. *GW190814: Gravitational Waves from the Coalescence of a 23 Solar Mass Black Hole with a 2.6 Solar Mass Compact Object*. The Astrophysical Journal Letters, 2020.
+- [@cite_fd0f77b2a173c0ab] R. Abbott et al.. *Population of Merging Compact Binaries Inferred Using Gravitational Waves through GWTC-3*. Physical Review X, 2023.

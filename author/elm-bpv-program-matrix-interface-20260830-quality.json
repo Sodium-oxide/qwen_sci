@@ -1,0 +1,59 @@
+{
+  "schema_version": "research_plan_author_local_quality_v1",
+  "assessment_type": "local_rubric_self_assessment",
+  "assessment_limitations": [
+    "This is a transparent local assessment, not an independent peer review.",
+    "No Author LLM judge score was requested or used.",
+    "The manuscript is a design-only proposal with no observed results."
+  ],
+  "template_profile": "ieee_conference_v1",
+  "template_family": "materials_chemical",
+  "special_dimension": "Mechanistic and Characterization Strength",
+  "special_score_weight": 0.25,
+  "dimension_scores": {
+    "Synthesis Quality": 8.0,
+    "Organization": 8.5,
+    "Readability": 8.0,
+    "Academic Rigor": 8.0,
+    "Clarity": 8.5,
+    "Coherence": 8.5,
+    "Comprehensiveness": 7.5,
+    "Critical Analysis": 9.0,
+    "Novelty and Insights": 8.0,
+    "Future Directions": 8.0
+  },
+  "special_dimension_scores": {
+    "Mechanistic and Characterization Strength": 7.5
+  },
+  "scorecard": {
+    "core_quality": 8.25,
+    "writing_quality": 8.25,
+    "content_depth": 8.125,
+    "total_score": 8.2075,
+    "final_100": 82.08,
+    "special_score": 7.5,
+    "selection_score": 8.0306
+  },
+  "formula": {
+    "core_quality": "(Synthesis Quality + Organization) / 2",
+    "writing_quality": "mean(Readability, Academic Rigor, Clarity, Coherence)",
+    "content_depth": "mean(Comprehensiveness, Critical Analysis, Novelty and Insights, Future Directions)",
+    "total_score": "0.33 * core_quality + 0.33 * writing_quality + 0.34 * content_depth",
+    "selection_score": "0.75 * total_score + 0.25 * special_score"
+  },
+  "rationale": {
+    "strengths": [
+      "The manuscript explicitly joins the literature gap, causal idea, conceptual four-state comparison, falsifiers, and conditional outcome branches.",
+      "It distinguishes literature-supported component claims from the unverified combined mechanism.",
+      "It preserves DESIGN_ONLY, BLOCKED_BY_RISK_REVIEW, and needs_human_input boundaries throughout.",
+      "It includes a program-to-property map, interaction model, normalization relation, and multi-role evidence logic."
+    ],
+    "limitations": [
+      "The underlying Survey is manual and has no verified automatic Survey-to-Idea handoff manifest.",
+      "No empirical evidence, systematic-review protocol, quantitative effect synthesis, or independently reviewed implementation exists.",
+      "Mechanistic and characterization quality is intentionally bounded because operational experimental details are excluded for safety and ethics."
+    ],
+    "highest_value_next_step": "Have qualified human reviewers decide whether a literature-only causal model or non-biological surrogate is appropriate before any consideration of physical work."
+  },
+  "status": "SCORED_LOCALLY_NOT_INDEPENDENTLY_REVIEWED"
+}

@@ -1,0 +1,166 @@
+{
+  "artifact_kind": "section_composer:introduction",
+  "constraints": [
+    "Only JSON structure, enum values, IDs, references, and exact copying may be repaired.",
+    "No facts, sources, citations, DOI, numerical values, methods, results, proof claims, or verification claims may be added."
+  ],
+  "initial_candidate": {
+    "applicability": "required",
+    "blocks": [
+      {
+        "block_id": "intro_proposal_scope",
+        "claim_ids": [
+          "claim_proposal_scope"
+        ],
+        "kind": "paragraph",
+        "text": "The proposed research direction targets spherically symmetric stellar collapse within classical general relativity. Specifically, the plan investigates whether assuming the averaged null energy condition (AANEC) and an independent explicit averaged null-convergence/focusing condition along complete null generators in globally hyperbolic spacetimes forces trapped-surface formation when a model-dependent compactness threshold is reached. The design also examines whether such a geometric threshold yields a bounded compactness that restricts stable non-black-hole remnants within a TOV-like stellar structure model."
+      },
+      {
+        "block_id": "intro_planned_contribution",
+        "claim_ids": [
+          "claim_planned_contribution"
+        ],
+        "kind": "list",
+        "text": "The planned contribution involves three main components:\n1. Replacing pointwise null energy conditions (NEC) or strong energy conditions (SEC) with AANEC alongside a distinct averaged null-convergence/focusing condition.\n2. Deriving a theoretical compactness threshold based on Raychaudhuri-type focusing and Misner-Sharp mass, establishing a formal mechanism for trapped-surface formation.\n3. Demoting the observed 2-5 solar mass astrophysical gap to an external consistency check, rather than treating it as an exclusive consequence of the geometric theorem."
+      },
+      {
+        "block_id": "intro_expected_outcomes",
+        "claim_ids": [
+          "claim_expected_outcomes"
+        ],
+        "kind": "paragraph",
+        "text": "The expected outcomes are that the proposed assumptions may yield a rigorous derivation of a compactness bound for non-black-hole stellar remnants. These outcomes are expected but not observed, and will not serve as empirical evidence resolving supernova explosion physics, fallback rates, equation-of-state uncertainties, or rotation without independent astrophysical inference."
+      }
+    ],
+    "claim_provenance": [
+      {
+        "citation_keys": [],
+        "claim_id": "claim_proposal_scope",
+        "claim_kind": "background",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "design_assumption",
+        "source_ids": [],
+        "statement": "The design targets spherically symmetric collapse under AANEC and an explicit averaged null-convergence/focusing condition to derive compactness thresholds.",
+        "survey_anchor_ids": []
+      },
+      {
+        "citation_keys": [],
+        "claim_id": "claim_planned_contribution",
+        "claim_kind": "background",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "design_assumption",
+        "source_ids": [],
+        "statement": "The research plan proposes separating the formal GR theorem class from astrophysical confounders by replacing pointwise energy conditions and evaluating stellar mass gaps strictly as consistency constraints.",
+        "survey_anchor_ids": []
+      },
+      {
+        "citation_keys": [],
+        "claim_id": "claim_expected_outcomes",
+        "claim_kind": "background",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "expected_not_observed",
+        "source_ids": [],
+        "statement": "The anticipated result of the proposed formal analysis is a theoretical geometric bound; it is treated conditionally without implying observed physical phenomena or resolving observed mass gaps.",
+        "survey_anchor_ids": []
+      }
+    ],
+    "language": "en",
+    "open_items": [],
+    "review_items": [],
+    "schema_version": "research_plan_section_v1",
+    "section_id": "introduction",
+    "title": "Introduction"
+  },
+  "initial_validation_errors": [
+    "claim claim_expected_outcomes requires a traceable evidence card, source, or Survey anchor",
+    "claim claim_planned_contribution requires a traceable evidence card, source, or Survey anchor",
+    "claim claim_proposal_scope requires a traceable evidence card, source, or Survey anchor"
+  ],
+  "repair_attempted": true,
+  "repair_status": "REJECTED",
+  "repair_validation_errors": [
+    "claim claim_expected_outcomes requires a traceable evidence card, source, or Survey anchor",
+    "claim claim_planned_contribution requires a traceable evidence card, source, or Survey anchor",
+    "claim claim_proposal_scope requires a traceable evidence card, source, or Survey anchor"
+  ],
+  "repaired_candidate": {
+    "applicability": "required",
+    "blocks": [
+      {
+        "block_id": "intro_proposal_scope",
+        "claim_ids": [
+          "claim_proposal_scope"
+        ],
+        "kind": "paragraph",
+        "text": "The proposed research direction targets spherically symmetric stellar collapse within classical general relativity. Specifically, the plan investigates whether assuming the averaged null energy condition (AANEC) and an independent explicit averaged null-convergence/focusing condition along complete null generators in globally hyperbolic spacetimes forces trapped-surface formation when a model-dependent compactness threshold is reached. The design also examines whether such a geometric threshold yields a bounded compactness that restricts stable non-black-hole remnants within a TOV-like stellar structure model."
+      },
+      {
+        "block_id": "intro_planned_contribution",
+        "claim_ids": [
+          "claim_planned_contribution"
+        ],
+        "kind": "list",
+        "text": "The planned contribution involves three main components:\n1. Replacing pointwise null energy conditions (NEC) or strong energy conditions (SEC) with AANEC alongside a distinct averaged null-convergence/focusing condition.\n2. Deriving a theoretical compactness threshold based on Raychaudhuri-type focusing and Misner-Sharp mass, establishing a formal mechanism for trapped-surface formation.\n3. Demoting the observed 2-5 solar mass astrophysical gap to an external consistency check, rather than treating it as an exclusive consequence of the geometric theorem."
+      },
+      {
+        "block_id": "intro_expected_outcomes",
+        "claim_ids": [
+          "claim_expected_outcomes"
+        ],
+        "kind": "paragraph",
+        "text": "The expected outcomes are that the proposed assumptions may yield a rigorous derivation of a compactness bound for non-black-hole stellar remnants. These outcomes are expected but not observed, and will not serve as empirical evidence resolving supernova explosion physics, fallback rates, equation-of-state uncertainties, or rotation without independent astrophysical inference."
+      }
+    ],
+    "claim_provenance": [
+      {
+        "citation_keys": [],
+        "claim_id": "claim_proposal_scope",
+        "claim_kind": "background",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "design_assumption",
+        "source_ids": [],
+        "statement": "The design targets spherically symmetric collapse under AANEC and an explicit averaged null-convergence/focusing condition to derive compactness thresholds.",
+        "survey_anchor_ids": []
+      },
+      {
+        "citation_keys": [],
+        "claim_id": "claim_planned_contribution",
+        "claim_kind": "background",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "design_assumption",
+        "source_ids": [],
+        "statement": "The research plan proposes separating the formal GR theorem class from astrophysical confounders by replacing pointwise energy conditions and evaluating stellar mass gaps strictly as consistency constraints.",
+        "survey_anchor_ids": []
+      },
+      {
+        "citation_keys": [],
+        "claim_id": "claim_expected_outcomes",
+        "claim_kind": "background",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "expected_not_observed",
+        "source_ids": [],
+        "statement": "The anticipated result of the proposed formal analysis is a theoretical geometric bound; it is treated conditionally without implying observed physical phenomena or resolving observed mass gaps.",
+        "survey_anchor_ids": []
+      }
+    ],
+    "language": "en",
+    "open_items": [],
+    "review_items": [],
+    "schema_version": "research_plan_section_v1",
+    "section_id": "introduction",
+    "title": "Introduction"
+  },
+  "schema_version": "research_plan_author_contract_repair_audit_v1"
+}

@@ -1,0 +1,3712 @@
+{
+  "abstract": {
+    "claim_ids": [
+      "claim_contribution_01",
+      "claim_outcome_01"
+    ],
+    "text": "This research proposal aims to develop an AANEC-relaxed trapped-surface theorem for spherically symmetric stellar collapse in classical General Relativity. The planned contribution involves replacing pointwise energy conditions with the Averaged Null Energy Condition (AANEC) combined with an explicit averaged null-convergence/focusing assumption. This framework will be used to derive a model-dependent compactness threshold for trapped-surface formation via Raychaudhuri-type focusing, subsequently bounding stable non-black-hole remnants through TOV-like stellar-structure assumptions. The study explicitly separates these formal geometric results from astrophysical inferences regarding the observed 2-5 solar mass gap.\n\nThe expected outcome of this research is the establishment of a valid proof or counterexample within the declared model class, conditional on the resolution of the proposed averaging assumptions. We anticipate determining whether the combined assumptions of AANEC and explicit averaged focusing suffice to force trapped-surface formation, thereby restricting the viable parameter space for exotic compact objects."
+  },
+  "appendices": [
+    {
+      "applicability": "optional",
+      "blocks": [
+        {
+          "block_id": "audit_snapshot_summary",
+          "claim_ids": [
+            "claim_audit_convention"
+          ],
+          "kind": "paragraph",
+          "text": "The following checkpoints represent available audit snapshots from the idea generation and selection process. These records serve to document the provenance of the selected research direction. They are not presented as a temporal evolution of the concept, nor as empirical evidence for the proposed scientific claims. The chronological order of these snapshots remains unknown based on the supplied metadata."
+        },
+        {
+          "block_id": "checkpoint_records",
+          "claim_ids": [
+            "claim_checkpoints_detail"
+          ],
+          "kind": "list",
+          "text": "1. Checkpoint-1 (Source: idea_candidate.json): Records the title \"AANEC-Relaxed Trapped Surface Theorem and Stellar Mass-Gap Derivation\" associated with the central hypothesis of spherically symmetric stellar collapse under AANEC and averaged null-convergence conditions. 2. Checkpoint-2 (Source: idea_portfolio.json): Records the title \"A Qualified AANEC Trapped-Surface Bound for Non-Black-Hole Stellar Remnants\" with the same central hypothesis and mechanism details as Checkpoint-1. 3. Checkpoint-3 (Source: idea_result.json): Provides a detailed snapshot including specific evidence requirements and alternative explanations, maintaining the same hypothesis and title as Checkpoint-1."
+        }
+      ],
+      "section_id": "appendix_idea_evolution",
+      "title": "Idea Source Checkpoints and Direction Selection Audit"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "block-core-assumptions",
+          "claim_ids": [
+            "claim-a1-def",
+            "claim-a3-def"
+          ],
+          "kind": "paragraph",
+          "text": "The proposed formal reasoning plan relies on a set of explicitly declared core assumptions. A1 defines the spherically symmetric collapse of massive stars with isotropic pressure. A3 requires the spacetime to be globally hyperbolic and sufficiently regular to support trapped-surface arguments. These definitions constrain the scope of the candidate formalization to classical general relativity under specific geometric and matter-field conditions."
+        },
+        {
+          "block_id": "block-energy-conditions",
+          "claim_ids": [
+            "claim-v1-opdef",
+            "claim-v2-opdef",
+            "claim-v2-indep"
+          ],
+          "kind": "paragraph",
+          "text": "The energy conditions are treated as central hypotheses requiring further mathematical specification. V1 represents the matter field satisfying the Averaged Null Energy Condition (AANEC), which currently requires a precise mathematical formulation within the GR context. Similarly, V2 denotes the independent hypothesis of an explicit averaged null-convergence or focusing condition, which is asserted in the design but lacks a complete mathematical definition at this stage."
+        },
+        {
+          "block_id": "block-compactness-mass",
+          "claim_ids": [
+            "claim-v8-opdef",
+            "claim-unknown-v7"
+          ],
+          "kind": "paragraph",
+          "text": "Geometric and physical quantities related to the remnant structure are defined for the model class but remain operationally unspecified. V8 represents Misner-Sharp compactness; the operational definition for measuring this quantity in the design context requires human input. V7 refers to the mass of stable non-black-hole remnants, where the unit or domain for measuring stellar remnant mass in this specific formal context is not yet fully defined."
+        },
+        {
+          "block_id": "block-independent-variables",
+          "claim_ids": [
+            "claim-indep-vars"
+          ],
+          "kind": "paragraph",
+          "text": "The study identifies independent variables as the satisfaction of spherical symmetry (A1), AANEC (A2), global hyperbolicity (A3), and the explicit averaged null-convergence condition (A4). The final canonical status of this list requires human review to ensure mathematical precision."
+        },
+        {
+          "block_id": "block-needs-human-input",
+          "claim_ids": [
+            "claim-unknown-v10",
+            "claim-unknown-v11",
+            "claim-unknown-v12",
+            "claim-unknown-v13",
+            "claim-unknown-v14",
+            "claim-unknown-v9",
+            "claim-unknown-v8",
+            "claim-unknown-v7"
+          ],
+          "kind": "review_checklist",
+          "text": "Several variables lack precise operational definitions required for rigorous formal reasoning. Specific parameters for EoS (V10), rotation metrics (V11), magnetic field metrics (V12), binary interaction metrics (V13), quantum stress-energy metrics (V14), and supernova explosion energetics (V9) are currently provided. Additionally, the operational definition for measuring compactness (V8) and stellar remnant mass (V7) requires clarification."
+        },
+        {
+          "block_id": "block-formal-definitions-pending",
+          "claim_ids": [
+            "claim-v1-human",
+            "claim-v2-human"
+          ],
+          "kind": "paragraph",
+          "text": "The definitions of key geometric objects require formalization to ensure proof validity. V1 (AANEC) is currently user-declared but needs a precise GR formulation. V2 (Averaged Null-Convergence/Focusing Condition) is asserted as independent but lacks the exact mathematical statement intended for the proof. These items are flagged for human input before the formal derivation can proceed to verification."
+        }
+      ],
+      "section_id": "appendix_variables_and_definitions",
+      "title": "Variables, Symbols, and Operational Definitions"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "b1_evidence_coverage",
+          "claim_ids": [
+            "c1_ev_quantum",
+            "c2_ev_astrophysical"
+          ],
+          "kind": "review_checklist",
+          "text": "Evidence Coverage: Registered evidence cards support the proposal's constraints on quantum energy condition violations and the role of supernova explosion physics in determining compact remnant masses. The formal theorem relies on averaged null conditions which are necessary due to pointwise violations, and the application to the stellar mass gap is contextualized by alternative astrophysical mechanisms such as explosion energetics."
+        },
+        {
+          "block_id": "b2_unknown_items",
+          "claim_ids": [
+            "c3_ui_a4_def",
+            "c4_ui_a2_def",
+            "c5_ui_var_defs"
+          ],
+          "kind": "list",
+          "text": "Unknown Items: The following premises required for the formal proof remain undefined or unverified and require human input: the precise mathematical definition of assumption A4 (explicit averaged null-convergence/focusing condition); the specific formulation of assumption A2 (AANEC in the context of general relativistic null generators); and the operational definitions for the independent variables in the formal reasoning plan."
+        },
+        {
+          "block_id": "b3_review_checklist",
+          "claim_ids": [
+            "c6_rr_a4",
+            "c7_rr_a2",
+            "c8_rr_var_ind",
+            "c9_rr_var_comp"
+          ],
+          "kind": "review_checklist",
+          "text": "Review Checklist: The following review requirements must be met before finalizing the formal theorem: (1) Define the mathematical structure of assumption A4 to ensure it is independent of AANEC; (2) Specify the form of AANEC required for the Raychaudhuri equation application; (3) Operationalize the 'explicit averaged null-convergence' variable for logical consistency; (4) Operationalize the 'Misner-Sharp compactness' variable for the threshold derivation."
+        }
+      ],
+      "section_id": "appendix_evidence_and_review",
+      "title": "Evidence Coverage, Unknown Items, and Review Checklist"
+    }
+  ],
+  "authoring_blueprint": {
+    "document_title": "AANEC-Relaxed Trapped Surface Theorem and Stellar Mass-Gap Derivation",
+    "global_constraints": {
+      "english_only": true,
+      "formal_and_empirical_claims_must_remain_separate": true,
+      "proposal_without_observed_results": true,
+      "unsupported_claims_forbidden": true
+    },
+    "keywords": [
+      "Averaged Null Energy Condition",
+      "Trapped Surface",
+      "Spherical Collapse",
+      "Stellar Mass Gap",
+      "Raychaudhuri Equation",
+      "Global Hyperbolicity",
+      "Compactness"
+    ],
+    "language": "en",
+    "schema_version": "research_plan_authoring_blueprint_v1",
+    "sections": [
+      {
+        "allowed_claim_kinds": [
+          "planned_contribution",
+          "expected_outcome"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "abstract",
+        "title": "Abstract"
+      },
+      {
+        "allowed_claim_kinds": [
+          "background",
+          "research_gap",
+          "planned_contribution",
+          "design_assumption"
+        ],
+        "allowed_source_ids": [
+          "W2149573451",
+          "W2095725842",
+          "W2765081049",
+          "W2252795400",
+          "W1967037608",
+          "W2766840380",
+          "W4226083230",
+          "W4288079944",
+          "W2160511150",
+          "W3036761016",
+          "W4382358570",
+          "W1853767801",
+          "W2135497511",
+          "W2994776863",
+          "W4298826872",
+          "W2808391388",
+          "W4385454046",
+          "W2006124034"
+        ],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "introduction",
+        "title": "Introduction"
+      },
+      {
+        "allowed_claim_kinds": [
+          "background",
+          "survey_evidence",
+          "research_gap"
+        ],
+        "allowed_source_ids": [
+          "W3009127927",
+          "W2437571239",
+          "W2149573451",
+          "W2095725842",
+          "W2765081049",
+          "W4292875581",
+          "W2252795400",
+          "W3081939279",
+          "W1967037608",
+          "W2766840380",
+          "W4226083230",
+          "W4288079944",
+          "W2160511150",
+          "W2807309204",
+          "W2980421388",
+          "W3036761016",
+          "W2116312019",
+          "W4382358570",
+          "W1853767801",
+          "W2135497511",
+          "W2767058944",
+          "W2811472820",
+          "W1784175517",
+          "W2994776863",
+          "W4298826872",
+          "W2073832139",
+          "W2808391388",
+          "W4385454046",
+          "W2006124034"
+        ],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "survey_and_research_gap",
+        "title": "Background, Survey, and Research Gap"
+      },
+      {
+        "allowed_claim_kinds": [
+          "research_question",
+          "planned_contribution",
+          "design_assumption"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [
+          "unknown-10",
+          "unknown-11",
+          "unknown-12"
+        ],
+        "required_review_item_ids": [],
+        "section_id": "research_questions_and_contributions",
+        "title": "Research Questions and Planned Contributions"
+      },
+      {
+        "allowed_claim_kinds": [
+          "idea_provenance",
+          "design_assumption"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "idea_origin_and_selection",
+        "title": "Idea Source Checkpoints and Direction Selection Audit"
+      },
+      {
+        "allowed_claim_kinds": [
+          "formal_definition",
+          "formal_proposition",
+          "hypothesis",
+          "design_assumption"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [
+          "unknown-6",
+          "unknown-7",
+          "unknown-13"
+        ],
+        "required_review_item_ids": [],
+        "section_id": "formal_problem_and_hypotheses",
+        "title": "Problem Definition, Assumptions, and Hypotheses"
+      },
+      {
+        "allowed_claim_kinds": [
+          "planned_method",
+          "design_assumption",
+          "needs_human_input"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [
+          "unknown-1",
+          "unknown-2",
+          "unknown-8",
+          "unknown-9"
+        ],
+        "required_review_item_ids": [],
+        "section_id": "study_design_and_methods",
+        "title": "Study Design and Methods"
+      },
+      {
+        "allowed_claim_kinds": [
+          "expected_outcome",
+          "conditional_conclusion"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "expected_outcomes",
+        "title": "Expected Outcome Branches and Conditional Conclusions"
+      },
+      {
+        "allowed_claim_kinds": [
+          "limitation",
+          "needs_human_input",
+          "review_requirement"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [
+          "review-1"
+        ],
+        "section_id": "risk_limitations_and_review",
+        "title": "Risks, Limitations, and Human Review Requirements"
+      },
+      {
+        "allowed_claim_kinds": [
+          "formal_definition",
+          "formal_proposition",
+          "proof_obligation"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [
+          "unknown-3",
+          "unknown-4",
+          "unknown-5",
+          "unknown-15",
+          "unknown-16"
+        ],
+        "required_review_item_ids": [],
+        "section_id": "definitions_and_propositions",
+        "title": "Definitions, Propositions, and Proof Obligations"
+      },
+      {
+        "allowed_claim_kinds": [
+          "forward_derivation",
+          "counterexample_plan",
+          "limitation"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [
+          "unknown-14",
+          "unknown-17"
+        ],
+        "required_review_item_ids": [],
+        "section_id": "forward_derivation_and_counterexamples",
+        "title": "Forward Derivation and Counterexample Search Plan"
+      },
+      {
+        "allowed_claim_kinds": [
+          "citation_inventory"
+        ],
+        "allowed_source_ids": [
+          "W3009127927",
+          "W2437571239",
+          "W2149573451",
+          "W2095725842",
+          "W2765081049",
+          "W4292875581",
+          "W2252795400",
+          "W3081939279",
+          "W1967037608",
+          "W2766840380",
+          "W4226083230",
+          "W4288079944",
+          "W2160511150",
+          "W2807309204",
+          "W2980421388",
+          "W3036761016",
+          "W2116312019",
+          "W4382358570",
+          "W1853767801",
+          "W2135497511",
+          "W2767058944",
+          "W2811472820",
+          "W1784175517",
+          "W2994776863",
+          "W4298826872",
+          "W2073832139",
+          "W2808391388",
+          "W4385454046",
+          "W2006124034"
+        ],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "references",
+        "title": "References"
+      },
+      {
+        "allowed_claim_kinds": [
+          "idea_provenance"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "optional",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "appendix_idea_evolution",
+        "title": "Idea Source Checkpoints and Direction Selection Audit"
+      },
+      {
+        "allowed_claim_kinds": [
+          "formal_definition",
+          "planned_method",
+          "design_assumption",
+          "needs_human_input"
+        ],
+        "allowed_source_ids": [
+          "W2149573451",
+          "W4292875581",
+          "W2252795400",
+          "W4226083230",
+          "W2160511150",
+          "W2116312019",
+          "W4382358570",
+          "W1853767801",
+          "W2135497511",
+          "W2994776863",
+          "W2073832139",
+          "W2808391388"
+        ],
+        "applicability": "required",
+        "required_open_item_ids": [
+          "unknown-18",
+          "unknown-19",
+          "unknown-20",
+          "unknown-21",
+          "unknown-22",
+          "unknown-23",
+          "unknown-24",
+          "unknown-25",
+          "unknown-26",
+          "unknown-27",
+          "unknown-28",
+          "unknown-29"
+        ],
+        "required_review_item_ids": [],
+        "section_id": "appendix_variables_and_definitions",
+        "title": "Variables, Symbols, and Operational Definitions"
+      },
+      {
+        "allowed_claim_kinds": [
+          "survey_evidence",
+          "limitation",
+          "review_requirement",
+          "needs_human_input"
+        ],
+        "allowed_source_ids": [
+          "W3009127927",
+          "W2437571239",
+          "W2149573451",
+          "W2095725842",
+          "W2765081049",
+          "W4292875581",
+          "W2252795400",
+          "W3081939279",
+          "W1967037608",
+          "W2766840380",
+          "W4226083230",
+          "W4288079944",
+          "W2160511150",
+          "W2807309204",
+          "W2980421388",
+          "W3036761016",
+          "W2116312019",
+          "W4382358570",
+          "W1853767801",
+          "W2135497511",
+          "W2767058944",
+          "W2811472820",
+          "W1784175517",
+          "W2994776863",
+          "W4298826872",
+          "W2073832139",
+          "W2808391388",
+          "W4385454046",
+          "W2006124034"
+        ],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "appendix_evidence_and_review",
+        "title": "Evidence Coverage, Unknown Items, and Review Checklist"
+      }
+    ],
+    "source_design_id": "design-aanec-trapped-surface-20260828",
+    "template_family": "mathematics_theory"
+  },
+  "authoring_constraints": {
+    "counterexample_must_satisfy_all_assumptions": true,
+    "formal_and_empirical_claims_must_remain_separate": true,
+    "observed_results_are_absent": true,
+    "proposal_without_observed_results": true,
+    "unsupported_claims_forbidden": true,
+    "unverified_reasoning_must_be_labeled": true
+  },
+  "citation_registry": [
+    {
+      "citation_key": "cite_0ed84243cf171bc4",
+      "evidence_card_ids": [
+        "EC:W3009127927:boundary_conditions:fdccce62784a"
+      ],
+      "evidence_level": "fulltext",
+      "source_id": "W3009127927"
+    },
+    {
+      "citation_key": "cite_98c5e596c0c34b68",
+      "evidence_card_ids": [
+        "EC:W2437571239:measurement_calibration:0def866b4200"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W2437571239"
+    },
+    {
+      "citation_key": "cite_7a44e6730c44cb39",
+      "evidence_card_ids": [
+        "EC:W2149573451:study_design:0420541e4d11",
+        "EC:W2149573451:measurement_calibration:cc951729858f",
+        "EC:W2149573451:research_object_measurability:bb8a81873aaa",
+        "EC:W2149573451:mechanism:68f82e63c7f6",
+        "EC:W2149573451:comparison_controls:9f68604257a5"
+      ],
+      "evidence_level": "fulltext",
+      "source_id": "W2149573451"
+    },
+    {
+      "citation_key": "cite_c369df652181e8f7",
+      "evidence_card_ids": [
+        "EC:W2095725842:mechanism:498f7921890b",
+        "EC:W2095725842:measurement_calibration:c123a9767331",
+        "EC:W2095725842:boundary_conditions:1a843b49c71e",
+        "EC:W2095725842:mechanism:e0c6017f49ac"
+      ],
+      "evidence_level": "fulltext",
+      "source_id": "W2095725842"
+    },
+    {
+      "citation_key": "cite_977568cf7b8a55bf",
+      "evidence_card_ids": [
+        "EC:W2765081049:mechanism:6b55b9b3619e",
+        "EC:W2765081049:boundary_conditions:dbdc49941dae",
+        "EC:W2765081049:measurement_calibration:b610a9574b9f",
+        "EC:W2765081049:statistics_bias:00c0248f08e9"
+      ],
+      "evidence_level": "fulltext",
+      "source_id": "W2765081049"
+    },
+    {
+      "citation_key": "cite_357dd780a9e3a378",
+      "evidence_card_ids": [
+        "EC:W4292875581:measurement_calibration:2696ed4cca9b",
+        "EC:W4292875581:boundary_conditions:165350770067",
+        "EC:W4292875581:statistics_bias:9b428cb64de7",
+        "EC:W4292875581:study_design:b65771b4760d"
+      ],
+      "evidence_level": "fulltext",
+      "source_id": "W4292875581"
+    },
+    {
+      "citation_key": "cite_d3016ce6d1faa8ec",
+      "evidence_card_ids": [
+        "EC:W2252795400:research_object_measurability:02ac0adfaa43",
+        "EC:W2252795400:study_design:65aea2e95f25"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W2252795400"
+    },
+    {
+      "citation_key": "cite_cbbced417410bc6c",
+      "evidence_card_ids": [
+        "EC:W3081939279:boundary_conditions:49348840f378"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W3081939279"
+    },
+    {
+      "citation_key": "cite_e228b5fd31e37646",
+      "evidence_card_ids": [
+        "EC:W1967037608:measurement_calibration:048f1c01d956",
+        "EC:W1967037608:mechanism:aaf53b0d6527"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W1967037608"
+    },
+    {
+      "citation_key": "cite_07d6df5d6978a1fc",
+      "evidence_card_ids": [
+        "EC:W2766840380:mechanism:8bbb3e5421f3",
+        "EC:W2766840380:mechanism:aa39fbefa9cc",
+        "EC:W2766840380:boundary_conditions:42d0ed58107f"
+      ],
+      "evidence_level": "fulltext",
+      "source_id": "W2766840380"
+    },
+    {
+      "citation_key": "cite_fd0f77b2a173c0ab",
+      "evidence_card_ids": [
+        "EC:W4226083230:research_object_measurability:d5b3db56f2a1",
+        "EC:W4226083230:statistics_bias:4fa32a684ec3"
+      ],
+      "evidence_level": "fulltext",
+      "source_id": "W4226083230"
+    },
+    {
+      "citation_key": "cite_364386a3569b6e66",
+      "evidence_card_ids": [
+        "EC:W4288079944:measurement_calibration:2c8c80e11ecc",
+        "EC:W4288079944:mechanism:17a825636496",
+        "EC:W4288079944:boundary_conditions:2629965cc909"
+      ],
+      "evidence_level": "fulltext",
+      "source_id": "W4288079944"
+    },
+    {
+      "citation_key": "cite_37ecbded9d629353",
+      "evidence_card_ids": [
+        "EC:W2160511150:research_object_measurability:063b6500b313"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W2160511150"
+    },
+    {
+      "citation_key": "cite_42e341ff6471ce89",
+      "evidence_card_ids": [
+        "EC:W2807309204:boundary_conditions:5aaeaf41fc0c"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W2807309204"
+    },
+    {
+      "citation_key": "cite_789b47fb0241d9ae",
+      "evidence_card_ids": [
+        "EC:W2980421388:boundary_conditions:58ebdc8f3558"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W2980421388"
+    },
+    {
+      "citation_key": "cite_f634820e22d7a238",
+      "evidence_card_ids": [
+        "EC:W3036761016:mechanism:9cea3113168b",
+        "EC:W3036761016:boundary_conditions:6799aadc0af7"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W3036761016"
+    },
+    {
+      "citation_key": "cite_7ae92f06684c60ef",
+      "evidence_card_ids": [
+        "EC:W2116312019:study_design:e3fd199346cf",
+        "EC:W2116312019:boundary_conditions:82b8e22b9319"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W2116312019"
+    },
+    {
+      "citation_key": "cite_2576833bf7ef143a",
+      "evidence_card_ids": [
+        "EC:W4382358570:research_object_measurability:8ccef37a1645",
+        "EC:W4382358570:statistics_bias:4de7ba4aa569",
+        "EC:W4382358570:study_design:96e0cfe93db1"
+      ],
+      "evidence_level": "fulltext",
+      "source_id": "W4382358570"
+    },
+    {
+      "citation_key": "cite_283d00782f1f9ecb",
+      "evidence_card_ids": [
+        "EC:W1853767801:measurement_calibration:2382be92e928",
+        "EC:W1853767801:statistics_bias:5f060780108c",
+        "EC:W1853767801:study_design:951cea8e2085",
+        "EC:W1853767801:research_object_measurability:da78a43feedc"
+      ],
+      "evidence_level": "fulltext",
+      "source_id": "W1853767801"
+    },
+    {
+      "citation_key": "cite_5ea4dc0e1b288757",
+      "evidence_card_ids": [
+        "EC:W2135497511:research_object_measurability:766d8010fd5c",
+        "EC:W2135497511:boundary_conditions:77761827b042"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W2135497511"
+    },
+    {
+      "citation_key": "cite_cc5bc07a219047b4",
+      "evidence_card_ids": [
+        "EC:W2767058944:boundary_conditions:1c3323a9d2ef"
+      ],
+      "evidence_level": "fulltext",
+      "source_id": "W2767058944"
+    },
+    {
+      "citation_key": "cite_63476e0b002da386",
+      "evidence_card_ids": [
+        "EC:W2811472820:risk_ethics_reproducibility:7a7f7f234b72",
+        "EC:W2811472820:boundary_conditions:e31ab8f6c72c"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W2811472820"
+    },
+    {
+      "citation_key": "cite_ecea60a2300e4892",
+      "evidence_card_ids": [
+        "EC:W1784175517:statistics_bias:1c6ca6c1f63d",
+        "EC:W1784175517:statistics_bias:8f5de8a6d9b3"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W1784175517"
+    },
+    {
+      "citation_key": "cite_7a407c865faafd11",
+      "evidence_card_ids": [
+        "EC:W2994776863:mechanism:d3700c18a61d",
+        "EC:W2994776863:research_object_measurability:b4e0b5ebbbc9"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W2994776863"
+    },
+    {
+      "citation_key": "cite_e7b42f305bc08498",
+      "evidence_card_ids": [
+        "EC:W4298826872:mechanism:19e2722514e0",
+        "EC:W4298826872:boundary_conditions:d9700f3a38ef",
+        "EC:W4298826872:statistics_bias:1212bd3d7102"
+      ],
+      "evidence_level": "fulltext",
+      "source_id": "W4298826872"
+    },
+    {
+      "citation_key": "cite_572fec0a1e5d74d9",
+      "evidence_card_ids": [
+        "EC:W2073832139:measurement_calibration:d860525eee02",
+        "EC:W2073832139:study_design:ad92fd92c2a8",
+        "EC:W2073832139:boundary_conditions:859b346f5ef7",
+        "EC:W2073832139:statistics_bias:16bb83eba27a"
+      ],
+      "evidence_level": "fulltext",
+      "source_id": "W2073832139"
+    },
+    {
+      "citation_key": "cite_72d7ff391b29c495",
+      "evidence_card_ids": [
+        "EC:W2808391388:study_design:1fbe7a2127ae",
+        "EC:W2808391388:research_object_measurability:3458c9f3c523"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W2808391388"
+    },
+    {
+      "citation_key": "cite_1e54e3c2b35110ad",
+      "evidence_card_ids": [
+        "EC:W4385454046:mechanism:f663b6f98838",
+        "EC:W4385454046:boundary_conditions:590201d351f5"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W4385454046"
+    },
+    {
+      "citation_key": "cite_bfae3a92efd1d48f",
+      "evidence_card_ids": [
+        "EC:W2006124034:mechanism:adc550be0c84",
+        "EC:W2006124034:mechanism:3eca61bbfc63",
+        "EC:W2006124034:mechanism:e904622b541b"
+      ],
+      "evidence_level": "abstract",
+      "source_id": "W2006124034"
+    }
+  ],
+  "claim_provenance": [
+    {
+      "citation_keys": [],
+      "claim_id": "claim_contribution_01",
+      "claim_kind": "planned_contribution",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "Propose a formal theorem linking AANEC and explicit averaged focusing to trapped-surface formation and stable remnant bounds in spherical collapse.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_outcome_01",
+      "claim_kind": "expected_outcome",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [
+        "supports_mechanism",
+        "partial_or_heterogeneous",
+        "null_or_contradictory",
+        "uninformative_or_invalid"
+      ],
+      "qualification": "expected_not_observed",
+      "source_ids": [],
+      "statement": "Conditional determination of whether AANEC plus explicit focusing implies a compactness bound, serving as a basis for future astrophysical consistency checks.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_f634820e22d7a238",
+        "cite_7a407c865faafd11",
+        "cite_977568cf7b8a55bf"
+      ],
+      "claim_id": "intro_claim_obs",
+      "claim_kind": "background",
+      "evidence_card_ids": [
+        "EC:W3036761016:mechanism:9cea3113168b",
+        "EC:W2994776863:mechanism:d3700c18a61d",
+        "EC:W2765081049:mechanism:6b55b9b3619e"
+      ],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "evidence_backed",
+      "source_ids": [
+        "W3036761016",
+        "W2994776863",
+        "W2765081049"
+      ],
+      "statement": "Astrophysical models suggest that binaries with mass ratios similar to GW190814 can form through several channels, and that the location of the lower edge of the black hole mass gap is dictated by the near-final core mass. GW inspiral phase evolution is determined by chirp mass.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "intro_claim_contrib",
+      "claim_kind": "planned_contribution",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "This proposal plans to derive an AANEC-relaxed trapped surface theorem and stellar mass-gap bound under specific assumptions.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_0ed84243cf171bc4"
+      ],
+      "claim_id": "claim_bg_energy_conditions",
+      "claim_kind": "background",
+      "evidence_card_ids": [
+        "EC:W3009127927:boundary_conditions:fdccce62784a"
+      ],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "evidence_backed",
+      "source_ids": [
+        "W3009127927"
+      ],
+      "statement": "Classical pointwise energy conditions are violated by quantum fields, necessitating the use of weaker statements such as quantum energy inequalities or averaged energy conditions.",
+      "survey_anchor_ids": [
+        "survey:survey_markdown#section-003"
+      ]
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_survey_aanec_status",
+      "claim_kind": "survey_evidence",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "survey_anchored",
+      "source_ids": [],
+      "statement": "The AANEC is identified as a robust pathway to preserve singularity theorems, with no known physically reasonable counter-examples to its validity in quantum gravity contexts.",
+      "survey_anchor_ids": [
+        "survey:survey_markdown#section-003"
+      ]
+    },
+    {
+      "citation_keys": [
+        "cite_7a407c865faafd11"
+      ],
+      "claim_id": "claim_survey_mass_gap_obs",
+      "claim_kind": "survey_evidence",
+      "evidence_card_ids": [
+        "EC:W2994776863:research_object_measurability:b4e0b5ebbbc9"
+      ],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "evidence_backed",
+      "source_ids": [
+        "W2994776863"
+      ],
+      "statement": "A robust absence of compact objects in the 2-5 solar mass range persists even after accounting for flux-limited selection biases, indicating an astrophysical origin.",
+      "survey_anchor_ids": [
+        "survey:survey_markdown#section-006"
+      ]
+    },
+    {
+      "citation_keys": [
+        "cite_7a407c865faafd11"
+      ],
+      "claim_id": "claim_survey_formation_mech",
+      "claim_kind": "survey_evidence",
+      "evidence_card_ids": [
+        "EC:W2994776863:mechanism:d3700c18a61d"
+      ],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "evidence_backed",
+      "source_ids": [
+        "W2994776863"
+      ],
+      "statement": "The location of the lower edge of the black hole mass gap is dictated by the near-final core mass, with rapid instabilities preventing the accumulation of fallback material.",
+      "survey_anchor_ids": [
+        "survey:survey_markdown#section-007"
+      ]
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_gap_formal_claim",
+      "claim_kind": "research_gap",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "survey_anchored",
+      "source_ids": [],
+      "statement": "Required evidence slot 'formal_claim' is missing from the Survey evidence plan for the sub-hypothesis regarding under what assumptions and validity domains Penrose-type singularity theorems and Einstein-field-equation solutions support black hole existence.",
+      "survey_anchor_ids": [
+        "survey:survey_markdown#section-003",
+        "survey:survey_markdown#section-004"
+      ]
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_gap_boundary_var",
+      "claim_kind": "research_gap",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "survey_anchored",
+      "source_ids": [],
+      "statement": "Required slot 'boundary_variable' remains uncovered in relevant evidence cluster 'Theoretical Stellar Evolution and Remnant Formation Pathways'.",
+      "survey_anchor_ids": [
+        "survey:survey_markdown#section-007",
+        "survey:survey_markdown#section-008"
+      ]
+    },
+    {
+      "citation_keys": [
+        "cite_f634820e22d7a238"
+      ],
+      "claim_id": "claim_gap_explosion_energy",
+      "claim_kind": "research_gap",
+      "evidence_card_ids": [
+        "EC:W3036761016:boundary_conditions:6799aadc0af7"
+      ],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "evidence_backed",
+      "source_ids": [
+        "W3036761016"
+      ],
+      "statement": "Derived mass distributions remain sensitive to uncertainties in explosion and unbinding energies across different progenitor masses, leaving a key physical parameter unconstrained.",
+      "survey_anchor_ids": [
+        "survey:survey_markdown#section-006"
+      ]
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_rq_1",
+      "claim_kind": "research_question",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "What is the precise mathematical definition of the 'explicit averaged null-convergence/focusing condition' (A4)?",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_rq_2",
+      "claim_kind": "research_question",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "What quantitative bound on the initial expansion theta_0 is required for the counterexample (CE1) to be invalid?",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_rq_3",
+      "claim_kind": "research_question",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Are there specific, well-defined numerical solutions (e.g., gravastars) that satisfy all stated assumptions without forming a trapped surface?",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_contrib_1",
+      "claim_kind": "planned_contribution",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "Develop a formal mathematical framework replacing pointwise energy conditions with AANEC plus explicit averaged null-convergence to derive trapped-surface thresholds and bound stable non-black-hole remnants.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_assumption_1",
+      "claim_kind": "design_assumption",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "design_assumption",
+      "source_ids": [],
+      "statement": "The observed stellar mass gap is treated as an astrophysical consistency constraint subject to alternative stellar-physics explanations, not a direct consequence of the formal theorem.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_a01",
+      "claim_kind": "idea_provenance",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Idea source checkpoints (checkpoint-1, checkpoint-2, checkpoint-3) are available audit snapshots with unknown temporal order.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_a02",
+      "claim_kind": "idea_provenance",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "No iteration records are available to support a reconstruction of a chronological history.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_a03",
+      "claim_kind": "design_assumption",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "design_assumption",
+      "source_ids": [],
+      "statement": "The proposal designates mechanism_replacement as the selected direction for subsequent work, using it only to fix scope.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "c1",
+      "claim_kind": "design_assumption",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "design_assumption",
+      "source_ids": [],
+      "statement": "A1-A5 are design premises; A2, A4, and final canonical field status need human resolution.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "c2",
+      "claim_kind": "formal_proposition",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [
+        "P1"
+      ],
+      "outcome_branch_ids": [],
+      "qualification": "unverified",
+      "source_ids": [],
+      "statement": "P1 is a candidate formal proposition.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "c3",
+      "claim_kind": "formal_proposition",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [
+        "P2"
+      ],
+      "outcome_branch_ids": [],
+      "qualification": "unverified",
+      "source_ids": [],
+      "statement": "P2 is a candidate formal proposition.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "c4",
+      "claim_kind": "hypothesis",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "The formal reasoning plan asserts P1 as the central hypothesis and a final conclusion.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "c5",
+      "claim_kind": "design_assumption",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "The following items remain unregistered and require human definition: AANEC formulation (A2), averaged null-convergence/focusing condition (A4), and final canonical assumptions field.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_001",
+      "claim_kind": "design_assumption",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "method_field": "design_type",
+      "outcome_branch_ids": [],
+      "qualification": "design_assumption",
+      "source_ids": [],
+      "statement": "The research design is established as a formal mathematical theory approach utilizing formal proof candidates as the primary unit.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_002",
+      "claim_kind": "design_assumption",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "method_field": "assumptions",
+      "outcome_branch_ids": [],
+      "qualification": "design_assumption",
+      "source_ids": [],
+      "statement": "The formal derivation relies on AANEC, spherical symmetry, global hyperbolicity, and an independent averaged null-convergence condition.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_003",
+      "claim_kind": "planned_method",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "method_field": "mechanism",
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "The methodology proposes using Raychaudhuri focusing and Misner-Sharp compactness to derive bounds while demoting mass-gap inference to an astrophysical consistency check.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_004",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "method_field": "data_governance_and_reproducibility",
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Essential planning fields for data governance, management, measurement, and quality control remain undefined and require human confirmation.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_1",
+      "claim_kind": "expected_outcome",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "method_field": "",
+      "outcome_branch_ids": [
+        "null_or_contradictory",
+        "uninformative_or_invalid",
+        "partial_or_heterogeneous"
+      ],
+      "qualification": "expected_not_observed",
+      "source_ids": [],
+      "statement": "If a stable ultra-compact object is identified satisfying the formal assumptions but lacking a trapped surface, the theorem fails. If alternative astrophysical explanations for the mass gap dominate, the mass-gap inference fails.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-limit-a4-missing",
+      "claim_kind": "limitation",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Assumption 4 (A4) lacks a precise mathematical definition, preventing rigorous evaluation of counterexamples.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-limit-a2-ambiguity",
+      "claim_kind": "limitation",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Assumption 2 (A2) requires a specific formulation of AANEC in the context of GR null generators, which is currently undefined.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-review-formal-plan",
+      "claim_kind": "review_requirement",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "The final canonical formal reasoning plan status requires qualified human review.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-status-unverified",
+      "claim_kind": "limitation",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "unverified",
+      "source_ids": [],
+      "statement": "The current status is unverified due to design-only mode and lack of rigorous mathematical solutions.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "clm-def-aanec",
+      "claim_kind": "formal_definition",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "The mathematical formulation of AANEC in the specific context of GR null generators requires explicit definition.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "clm-def-averaged-null-convergence",
+      "claim_kind": "formal_definition",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "A precise mathematical definition for the explicit averaged null-convergence/focusing condition is missing and needs to be established.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "clm-def-compactness",
+      "claim_kind": "formal_definition",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "The operational definition of Misner-Sharp compactness for the system under consideration requires further specification.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "clm-prop-main",
+      "claim_kind": "formal_proposition",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [
+        "P1"
+      ],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "The formal proposition regarding trapped-surface formation under AANEC and averaged null-convergence requires human review to finalize the mathematical statement.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "clm-prop-remnants",
+      "claim_kind": "formal_proposition",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [
+        "P2"
+      ],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "The proposition that stable non-black-hole remnants are excluded above a compactness-dependent mass scale requires human review.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "clm-obligation-proof",
+      "claim_kind": "proof_obligation",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [
+        "S3",
+        "S4",
+        "PO1"
+      ],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "The derivation steps and geometric proofs from the compactness threshold to the trapped-surface conclusion, as well as the final formal proof, require human input.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-deriv-01",
+      "claim_kind": "forward_derivation",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "S1"
+      ],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "S1 proposes applying AANEC and geometric focusing conditions under the assumptions of spherical symmetry and global hyperbolicity.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-deriv-02",
+      "claim_kind": "forward_derivation",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [
+        "A1",
+        "S2",
+        "S3",
+        "P1"
+      ],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "S2 and S3 propose defining Misner-Sharp compactness and identifying a model-dependent compactness threshold.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-deriv-03",
+      "claim_kind": "forward_derivation",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [
+        "S1",
+        "S3",
+        "S4",
+        "P1"
+      ],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "S4 proposes that compactness exceeding the identified threshold forces trapped-surface formation.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-ce-01",
+      "claim_kind": "counterexample_plan",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [
+        "A2",
+        "A4",
+        "P1"
+      ],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "The plan evaluates candidates CE1 and CE2, which posit scenarios where AANEC is satisfied but trapped surfaces are evaded due to large initial expansion or core cosmological constants, though the validity depends on resolving undefined assumptions.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-limit-01",
+      "claim_kind": "limitation",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "The current derivation and counterexample search are conceptual only; strict logical evaluation is impossible because A2 and A4 lack formal definitions and the final canonical field status requires human input.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_0ed84243cf171bc4"
+      ],
+      "claim_id": "claim_citation_W3009127927",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W3009127927"
+      ],
+      "statement": "Source W3009127927 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_98c5e596c0c34b68"
+      ],
+      "claim_id": "claim_citation_W2437571239",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2437571239"
+      ],
+      "statement": "Source W2437571239 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_7a44e6730c44cb39"
+      ],
+      "claim_id": "claim_citation_W2149573451",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2149573451"
+      ],
+      "statement": "Source W2149573451 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_c369df652181e8f7"
+      ],
+      "claim_id": "claim_citation_W2095725842",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2095725842"
+      ],
+      "statement": "Source W2095725842 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_977568cf7b8a55bf"
+      ],
+      "claim_id": "claim_citation_W2765081049",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2765081049"
+      ],
+      "statement": "Source W2765081049 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_357dd780a9e3a378"
+      ],
+      "claim_id": "claim_citation_W4292875581",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W4292875581"
+      ],
+      "statement": "Source W4292875581 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_d3016ce6d1faa8ec"
+      ],
+      "claim_id": "claim_citation_W2252795400",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2252795400"
+      ],
+      "statement": "Source W2252795400 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_cbbced417410bc6c"
+      ],
+      "claim_id": "claim_citation_W3081939279",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W3081939279"
+      ],
+      "statement": "Source W3081939279 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_e228b5fd31e37646"
+      ],
+      "claim_id": "claim_citation_W1967037608",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W1967037608"
+      ],
+      "statement": "Source W1967037608 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_07d6df5d6978a1fc"
+      ],
+      "claim_id": "claim_citation_W2766840380",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2766840380"
+      ],
+      "statement": "Source W2766840380 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_fd0f77b2a173c0ab"
+      ],
+      "claim_id": "claim_citation_W4226083230",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W4226083230"
+      ],
+      "statement": "Source W4226083230 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_364386a3569b6e66"
+      ],
+      "claim_id": "claim_citation_W4288079944",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W4288079944"
+      ],
+      "statement": "Source W4288079944 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_37ecbded9d629353"
+      ],
+      "claim_id": "claim_citation_W2160511150",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2160511150"
+      ],
+      "statement": "Source W2160511150 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_42e341ff6471ce89"
+      ],
+      "claim_id": "claim_citation_W2807309204",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2807309204"
+      ],
+      "statement": "Source W2807309204 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_789b47fb0241d9ae"
+      ],
+      "claim_id": "claim_citation_W2980421388",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2980421388"
+      ],
+      "statement": "Source W2980421388 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_f634820e22d7a238"
+      ],
+      "claim_id": "claim_citation_W3036761016",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W3036761016"
+      ],
+      "statement": "Source W3036761016 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_7ae92f06684c60ef"
+      ],
+      "claim_id": "claim_citation_W2116312019",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2116312019"
+      ],
+      "statement": "Source W2116312019 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_2576833bf7ef143a"
+      ],
+      "claim_id": "claim_citation_W4382358570",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W4382358570"
+      ],
+      "statement": "Source W4382358570 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_283d00782f1f9ecb"
+      ],
+      "claim_id": "claim_citation_W1853767801",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W1853767801"
+      ],
+      "statement": "Source W1853767801 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_5ea4dc0e1b288757"
+      ],
+      "claim_id": "claim_citation_W2135497511",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2135497511"
+      ],
+      "statement": "Source W2135497511 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_cc5bc07a219047b4"
+      ],
+      "claim_id": "claim_citation_W2767058944",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2767058944"
+      ],
+      "statement": "Source W2767058944 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_63476e0b002da386"
+      ],
+      "claim_id": "claim_citation_W2811472820",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2811472820"
+      ],
+      "statement": "Source W2811472820 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_ecea60a2300e4892"
+      ],
+      "claim_id": "claim_citation_W1784175517",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W1784175517"
+      ],
+      "statement": "Source W1784175517 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_7a407c865faafd11"
+      ],
+      "claim_id": "claim_citation_W2994776863",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2994776863"
+      ],
+      "statement": "Source W2994776863 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_e7b42f305bc08498"
+      ],
+      "claim_id": "claim_citation_W4298826872",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W4298826872"
+      ],
+      "statement": "Source W4298826872 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_572fec0a1e5d74d9"
+      ],
+      "claim_id": "claim_citation_W2073832139",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2073832139"
+      ],
+      "statement": "Source W2073832139 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_72d7ff391b29c495"
+      ],
+      "claim_id": "claim_citation_W2808391388",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2808391388"
+      ],
+      "statement": "Source W2808391388 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_1e54e3c2b35110ad"
+      ],
+      "claim_id": "claim_citation_W4385454046",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W4385454046"
+      ],
+      "statement": "Source W4385454046 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_bfae3a92efd1d48f"
+      ],
+      "claim_id": "claim_citation_W2006124034",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [
+        "W2006124034"
+      ],
+      "statement": "Source W2006124034 is included in the reference inventory.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_audit_convention",
+      "claim_kind": "idea_provenance",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "method_field": "audit",
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "Idea source checkpoints are neutral audit snapshots without proven temporal evolution.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim_checkpoints_detail",
+      "claim_kind": "idea_provenance",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "method_field": "audit",
+      "outcome_branch_ids": [],
+      "qualification": "metadata_lead",
+      "source_ids": [],
+      "statement": "Three available audit snapshots are documented from the idea generation files.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-a1-def",
+      "claim_kind": "formal_definition",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [
+        "A1"
+      ],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "Spherically symmetric collapse of massive stars with isotropic pressure.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-a3-def",
+      "claim_kind": "formal_definition",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [
+        "A3"
+      ],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "Spacetime is globally hyperbolic and sufficiently regular for trapped-surface arguments.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-v1-opdef",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "AANEC (V1) requires precise mathematical formulation in GR context not fully explicit in brief.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-v1-human",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "The operational definition of V1 (AANEC) is pending.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-v2-opdef",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Explicit averaged null-convergence/focusing condition (V2) is asserted as an independent hypothesis but not mathematically defined.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-v2-indep",
+      "claim_kind": "design_assumption",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "design_assumption",
+      "source_ids": [],
+      "statement": "V2 is treated as an independent geometric hypothesis, not a consequence of AANEC alone.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-v2-human",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "The operational definition of V2 (Averaged Null-Convergence/Focusing Condition) is pending.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-v8-opdef",
+      "claim_kind": "formal_definition",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [
+        "S2",
+        "A5"
+      ],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "Misner-Sharp compactness is defined as a variable V8.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-unknown-v8",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Operational definition for measuring compactness (V8) in this design context is not specified.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-unknown-v7",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Operational definition for measuring stellar remnant mass (V7) in this design context is not specified.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-indep-vars",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "The final canonical status of independent variables requires human input.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-unknown-v10",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Specific EoS parameters (V10) are not provided.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-unknown-v11",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Specific rotation metrics (V11) are not provided.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-unknown-v12",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Specific magnetic field metrics (V12) are not provided.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-unknown-v13",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Specific binary interaction metrics (V13) are not provided.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-unknown-v14",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Specific quantum stress-energy metrics (V14) are not provided.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "claim-unknown-v9",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Specific metrics for supernova explosion energetics (V9) are not provided.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_0ed84243cf171bc4"
+      ],
+      "claim_id": "c1_ev_quantum",
+      "claim_kind": "survey_evidence",
+      "evidence_card_ids": [
+        "EC:W3009127927:boundary_conditions:fdccce62784a"
+      ],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "evidence_backed",
+      "source_ids": [
+        "W3009127927"
+      ],
+      "statement": "Pointwise energy conditions are systematically violated by quantum fields, necessitating the use of weaker statements such as quantum energy inequalities or averaged energy conditions for broader validity.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [
+        "cite_7a407c865faafd11"
+      ],
+      "claim_id": "c2_ev_astrophysical",
+      "claim_kind": "survey_evidence",
+      "evidence_card_ids": [
+        "EC:W2994776863:mechanism:d3700c18a61d"
+      ],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "evidence_backed",
+      "source_ids": [
+        "W2994776863"
+      ],
+      "statement": "The location of the lower edge of the black hole mass gap is dictated by the near-final core mass, which sets the resulting black hole mass, a process influenced by explosion physics and other stellar evolution factors.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "c3_ui_a4_def",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "The precise mathematical definition of assumption A4 (explicit averaged null-convergence/focusing condition) is missing and must be specified to evaluate the validity of the counterexample and the proof.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "c4_ui_a2_def",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Assumption A2 requires a specific formulation of AANEC in the context of general relativistic null generators, which is currently undefined.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "c5_ui_var_defs",
+      "claim_kind": "needs_human_input",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "needs_human_input",
+      "source_ids": [],
+      "statement": "Operational definitions for the variables used in the formal reasoning plan are incomplete and require human input.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "c6_rr_a4",
+      "claim_kind": "review_requirement",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "Define the mathematical structure of assumption A4 to ensure it is an independent geometric hypothesis.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "c7_rr_a2",
+      "claim_kind": "review_requirement",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "Specify the form of AANEC required for the Raychaudhuri equation application.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "c8_rr_var_ind",
+      "claim_kind": "review_requirement",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "Operationalize the 'explicit averaged null-convergence' variable for logical consistency.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "c9_rr_var_comp",
+      "claim_kind": "review_requirement",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "Operationalize the 'Misner-Sharp compactness' variable for the threshold derivation.",
+      "survey_anchor_ids": []
+    }
+  ],
+  "contract_repair_audit": [
+    {
+      "artifact_kind": "section_composer:appendix_variables_and_definitions",
+      "constraints": [
+        "Only JSON structure, enum values, IDs, references, and source-bounded prose may be repaired.",
+        "No facts, sources, citations, DOI, numerical values, methods, results, proof claims, or verification claims may be added."
+      ],
+      "initial_candidate": {
+        "applicability": "required",
+        "blocks": [
+          {
+            "block_id": "block-core-assumptions",
+            "claim_ids": [
+              "claim-a1-def",
+              "claim-a3-def"
+            ],
+            "kind": "paragraph",
+            "text": "The proposed formal reasoning plan relies on a set of explicitly declared core assumptions. A1 defines the spherically symmetric collapse of massive stars with isotropic pressure. A3 requires the spacetime to be globally hyperbolic and sufficiently regular to support trapped-surface arguments. These definitions constrain the scope of the candidate formalization to classical general relativity under specific geometric and matter-field conditions."
+          },
+          {
+            "block_id": "block-energy-conditions",
+            "claim_ids": [
+              "claim-v1-opdef",
+              "claim-v2-opdef",
+              "claim-v2-indep"
+            ],
+            "kind": "paragraph",
+            "text": "The energy conditions are treated as central hypotheses requiring further mathematical specification. V1 represents the matter field satisfying the Averaged Null Energy Condition (AANEC), which currently requires a precise mathematical formulation within the GR context. Similarly, V2 denotes the independent hypothesis of an explicit averaged null-convergence or focusing condition, which is asserted in the design but lacks a complete mathematical definition at this stage."
+          },
+          {
+            "block_id": "block-compactness-mass",
+            "claim_ids": [
+              "claim-v8-opdef",
+              "claim-v7-opdef"
+            ],
+            "kind": "paragraph",
+            "text": "Geometric and physical quantities related to the remnant structure are defined for the model class but remain operationally unspecified. V8 represents Misner-Sharp compactness; the operational definition for measuring this quantity in the design context requires human input. V7 refers to the mass of stable non-black-hole remnants, where the unit or domain for measuring stellar remnant mass in this specific formal context is not yet fully defined."
+          },
+          {
+            "block_id": "block-independent-variables",
+            "claim_ids": [
+              "claim-indep-vars"
+            ],
+            "kind": "paragraph",
+            "text": "The study identifies independent variables as the satisfaction of spherical symmetry (A1), AANEC (A2), global hyperbolicity (A3), and the explicit averaged null-convergence condition (A4). The final canonical status of this list requires human review to ensure mathematical precision."
+          },
+          {
+            "block_id": "block-needs-human-input",
+            "claim_ids": [
+              "claim-unknown-v10",
+              "claim-unknown-v11",
+              "claim-unknown-v12",
+              "claim-unknown-v13",
+              "claim-unknown-v14",
+              "claim-unknown-v9",
+              "claim-unknown-v8",
+              "claim-unknown-v7"
+            ],
+            "kind": "review_checklist",
+            "text": "Several variables lack precise operational definitions required for rigorous formal reasoning. Specific parameters for EoS (V10), rotation metrics (V11), magnetic field metrics (V12), binary interaction metrics (V13), quantum stress-energy metrics (V14), and supernova explosion energetics (V9) are currently provided. Additionally, the operational definition for measuring compactness (V8) and stellar remnant mass (V7) requires clarification."
+          },
+          {
+            "block_id": "block-formal-definitions-pending",
+            "claim_ids": [
+              "claim-v1-human",
+              "claim-v2-human"
+            ],
+            "kind": "paragraph",
+            "text": "The definitions of key geometric objects require formalization to ensure proof validity. V1 (AANEC) is currently user-declared but needs a precise GR formulation. V2 (Averaged Null-Convergence/Focusing Condition) is asserted as independent but lacks the exact mathematical statement intended for the proof. These items are flagged for human input before the formal derivation can proceed to verification."
+          }
+        ],
+        "claim_provenance": [
+          {
+            "citation_keys": [],
+            "claim_id": "claim-a1-def",
+            "claim_kind": "formal_definition",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [
+              "A1"
+            ],
+            "outcome_branch_ids": [],
+            "qualification": "proposed",
+            "source_ids": [],
+            "statement": "Spherically symmetric collapse of massive stars with isotropic pressure.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-a3-def",
+            "claim_kind": "formal_definition",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [
+              "A3"
+            ],
+            "outcome_branch_ids": [],
+            "qualification": "proposed",
+            "source_ids": [],
+            "statement": "Spacetime is globally hyperbolic and sufficiently regular for trapped-surface arguments.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-v1-opdef",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "AANEC (V1) requires precise mathematical formulation in GR context not fully explicit in brief.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-v1-human",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "The operational definition of V1 (AANEC) is pending.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-v2-opdef",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Explicit averaged null-convergence/focusing condition (V2) is asserted as an independent hypothesis but not mathematically defined.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-v2-indep",
+            "claim_kind": "design_assumption",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "design_assumption",
+            "source_ids": [],
+            "statement": "V2 is treated as an independent geometric hypothesis, not a consequence of AANEC alone.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-v2-human",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "The operational definition of V2 (Averaged Null-Convergence/Focusing Condition) is pending.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-v8-opdef",
+            "claim_kind": "formal_definition",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [
+              "S2",
+              "A5"
+            ],
+            "outcome_branch_ids": [],
+            "qualification": "proposed",
+            "source_ids": [],
+            "statement": "Misner-Sharp compactness is defined as a variable V8.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v8",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Operational definition for measuring compactness (V8) in this design context is not specified.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v7",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Operational definition for measuring stellar remnant mass (V7) in this design context is not specified.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-indep-vars",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "The final canonical status of independent variables requires human input.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v10",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Specific EoS parameters (V10) are not provided.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v11",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Specific rotation metrics (V11) are not provided.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v12",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Specific magnetic field metrics (V12) are not provided.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v13",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Specific binary interaction metrics (V13) are not provided.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v14",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Specific quantum stress-energy metrics (V14) are not provided.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v9",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Specific metrics for supernova explosion energetics (V9) are not provided.",
+            "survey_anchor_ids": []
+          }
+        ],
+        "language": "en",
+        "open_items": [
+          {
+            "source_item_id": "unknown-18",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V1 (AANEC) requires a precise mathematical formulation in the GR context not fully explicit in the brief."
+          },
+          {
+            "source_item_id": "unknown-19",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V10 is incomplete because specific equation-of-state parameters were not provided."
+          },
+          {
+            "source_item_id": "unknown-20",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V11 is incomplete because specific rotation metrics were not provided."
+          },
+          {
+            "source_item_id": "unknown-21",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V12 is incomplete because specific magnetic field metrics were not provided."
+          },
+          {
+            "source_item_id": "unknown-22",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V13 is incomplete because specific binary interaction metrics were not provided."
+          },
+          {
+            "source_item_id": "unknown-23",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V14 is incomplete because specific quantum stress-energy metrics were not provided."
+          },
+          {
+            "source_item_id": "unknown-24",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V2 is missing; the explicit averaged null-convergence/focusing condition is asserted as an independent hypothesis but not mathematically defined."
+          },
+          {
+            "source_item_id": "unknown-25",
+            "status": "needs_human_input",
+            "text": "The unit or domain for variable V7 is unspecified; an operational definition for measuring stellar remnant mass in this design context is not specified."
+          },
+          {
+            "source_item_id": "unknown-26",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V8 is unspecified; the method for measuring compactness in this design context is not defined."
+          },
+          {
+            "source_item_id": "unknown-27",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V9 is incomplete; specific metrics for supernova explosion energetics were not provided."
+          },
+          {
+            "source_item_id": "unknown-28",
+            "status": "needs_human_input",
+            "text": "The final canonical field status for independent variables requires human input."
+          },
+          {
+            "source_item_id": "unknown-29",
+            "status": "needs_human_input",
+            "text": "The final canonical field status for operational definitions requires human input."
+          }
+        ],
+        "review_items": [],
+        "schema_version": "research_plan_section_v1",
+        "section_id": "appendix_variables_and_definitions",
+        "title": "Variables, Symbols, and Operational Definitions"
+      },
+      "initial_validation_errors": [
+        "section block block-compactness-mass references unknown claims: ['claim-v7-opdef']"
+      ],
+      "repair_attempted": true,
+      "repair_status": "REPAIRED",
+      "repair_validation_errors": [],
+      "repaired_candidate": {
+        "applicability": "required",
+        "blocks": [
+          {
+            "block_id": "block-core-assumptions",
+            "claim_ids": [
+              "claim-a1-def",
+              "claim-a3-def"
+            ],
+            "kind": "paragraph",
+            "text": "The proposed formal reasoning plan relies on a set of explicitly declared core assumptions. A1 defines the spherically symmetric collapse of massive stars with isotropic pressure. A3 requires the spacetime to be globally hyperbolic and sufficiently regular to support trapped-surface arguments. These definitions constrain the scope of the candidate formalization to classical general relativity under specific geometric and matter-field conditions."
+          },
+          {
+            "block_id": "block-energy-conditions",
+            "claim_ids": [
+              "claim-v1-opdef",
+              "claim-v2-opdef",
+              "claim-v2-indep"
+            ],
+            "kind": "paragraph",
+            "text": "The energy conditions are treated as central hypotheses requiring further mathematical specification. V1 represents the matter field satisfying the Averaged Null Energy Condition (AANEC), which currently requires a precise mathematical formulation within the GR context. Similarly, V2 denotes the independent hypothesis of an explicit averaged null-convergence or focusing condition, which is asserted in the design but lacks a complete mathematical definition at this stage."
+          },
+          {
+            "block_id": "block-compactness-mass",
+            "claim_ids": [
+              "claim-v8-opdef",
+              "claim-unknown-v7"
+            ],
+            "kind": "paragraph",
+            "text": "Geometric and physical quantities related to the remnant structure are defined for the model class but remain operationally unspecified. V8 represents Misner-Sharp compactness; the operational definition for measuring this quantity in the design context requires human input. V7 refers to the mass of stable non-black-hole remnants, where the unit or domain for measuring stellar remnant mass in this specific formal context is not yet fully defined."
+          },
+          {
+            "block_id": "block-independent-variables",
+            "claim_ids": [
+              "claim-indep-vars"
+            ],
+            "kind": "paragraph",
+            "text": "The study identifies independent variables as the satisfaction of spherical symmetry (A1), AANEC (A2), global hyperbolicity (A3), and the explicit averaged null-convergence condition (A4). The final canonical status of this list requires human review to ensure mathematical precision."
+          },
+          {
+            "block_id": "block-needs-human-input",
+            "claim_ids": [
+              "claim-unknown-v10",
+              "claim-unknown-v11",
+              "claim-unknown-v12",
+              "claim-unknown-v13",
+              "claim-unknown-v14",
+              "claim-unknown-v9",
+              "claim-unknown-v8",
+              "claim-unknown-v7"
+            ],
+            "kind": "review_checklist",
+            "text": "Several variables lack precise operational definitions required for rigorous formal reasoning. Specific parameters for EoS (V10), rotation metrics (V11), magnetic field metrics (V12), binary interaction metrics (V13), quantum stress-energy metrics (V14), and supernova explosion energetics (V9) are currently provided. Additionally, the operational definition for measuring compactness (V8) and stellar remnant mass (V7) requires clarification."
+          },
+          {
+            "block_id": "block-formal-definitions-pending",
+            "claim_ids": [
+              "claim-v1-human",
+              "claim-v2-human"
+            ],
+            "kind": "paragraph",
+            "text": "The definitions of key geometric objects require formalization to ensure proof validity. V1 (AANEC) is currently user-declared but needs a precise GR formulation. V2 (Averaged Null-Convergence/Focusing Condition) is asserted as independent but lacks the exact mathematical statement intended for the proof. These items are flagged for human input before the formal derivation can proceed to verification."
+          }
+        ],
+        "claim_provenance": [
+          {
+            "citation_keys": [],
+            "claim_id": "claim-a1-def",
+            "claim_kind": "formal_definition",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [
+              "A1"
+            ],
+            "outcome_branch_ids": [],
+            "qualification": "proposed",
+            "source_ids": [],
+            "statement": "Spherically symmetric collapse of massive stars with isotropic pressure.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-a3-def",
+            "claim_kind": "formal_definition",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [
+              "A3"
+            ],
+            "outcome_branch_ids": [],
+            "qualification": "proposed",
+            "source_ids": [],
+            "statement": "Spacetime is globally hyperbolic and sufficiently regular for trapped-surface arguments.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-v1-opdef",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "AANEC (V1) requires precise mathematical formulation in GR context not fully explicit in brief.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-v1-human",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "The operational definition of V1 (AANEC) is pending.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-v2-opdef",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Explicit averaged null-convergence/focusing condition (V2) is asserted as an independent hypothesis but not mathematically defined.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-v2-indep",
+            "claim_kind": "design_assumption",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "design_assumption",
+            "source_ids": [],
+            "statement": "V2 is treated as an independent geometric hypothesis, not a consequence of AANEC alone.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-v2-human",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "The operational definition of V2 (Averaged Null-Convergence/Focusing Condition) is pending.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-v8-opdef",
+            "claim_kind": "formal_definition",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [
+              "S2",
+              "A5"
+            ],
+            "outcome_branch_ids": [],
+            "qualification": "proposed",
+            "source_ids": [],
+            "statement": "Misner-Sharp compactness is defined as a variable V8.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v8",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Operational definition for measuring compactness (V8) in this design context is not specified.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v7",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Operational definition for measuring stellar remnant mass (V7) in this design context is not specified.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-indep-vars",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "The final canonical status of independent variables requires human input.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v10",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Specific EoS parameters (V10) are not provided.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v11",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Specific rotation metrics (V11) are not provided.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v12",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Specific magnetic field metrics (V12) are not provided.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v13",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Specific binary interaction metrics (V13) are not provided.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v14",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Specific quantum stress-energy metrics (V14) are not provided.",
+            "survey_anchor_ids": []
+          },
+          {
+            "citation_keys": [],
+            "claim_id": "claim-unknown-v9",
+            "claim_kind": "needs_human_input",
+            "evidence_card_ids": [],
+            "formal_reference_ids": [],
+            "outcome_branch_ids": [],
+            "qualification": "needs_human_input",
+            "source_ids": [],
+            "statement": "Specific metrics for supernova explosion energetics (V9) are not provided.",
+            "survey_anchor_ids": []
+          }
+        ],
+        "language": "en",
+        "open_items": [
+          {
+            "source_item_id": "unknown-18",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V1 (AANEC) requires a precise mathematical formulation in the GR context not fully explicit in the brief."
+          },
+          {
+            "source_item_id": "unknown-19",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V10 is incomplete because specific equation-of-state parameters were not provided."
+          },
+          {
+            "source_item_id": "unknown-20",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V11 is incomplete because specific rotation metrics were not provided."
+          },
+          {
+            "source_item_id": "unknown-21",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V12 is incomplete because specific magnetic field metrics were not provided."
+          },
+          {
+            "source_item_id": "unknown-22",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V13 is incomplete because specific binary interaction metrics were not provided."
+          },
+          {
+            "source_item_id": "unknown-23",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V14 is incomplete because specific quantum stress-energy metrics were not provided."
+          },
+          {
+            "source_item_id": "unknown-24",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V2 is missing; the explicit averaged null-convergence/focusing condition is asserted as an independent hypothesis but not mathematically defined."
+          },
+          {
+            "source_item_id": "unknown-25",
+            "status": "needs_human_input",
+            "text": "The unit or domain for variable V7 is unspecified; an operational definition for measuring stellar remnant mass in this design context is not specified."
+          },
+          {
+            "source_item_id": "unknown-26",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V8 is unspecified; the method for measuring compactness in this design context is not defined."
+          },
+          {
+            "source_item_id": "unknown-27",
+            "status": "needs_human_input",
+            "text": "The operational definition for variable V9 is incomplete; specific metrics for supernova explosion energetics were not provided."
+          },
+          {
+            "source_item_id": "unknown-28",
+            "status": "needs_human_input",
+            "text": "The final canonical field status for independent variables requires human input."
+          },
+          {
+            "source_item_id": "unknown-29",
+            "status": "needs_human_input",
+            "text": "The final canonical field status for operational definitions requires human input."
+          }
+        ],
+        "review_items": [],
+        "schema_version": "research_plan_section_v1",
+        "section_id": "appendix_variables_and_definitions",
+        "title": "Variables, Symbols, and Operational Definitions"
+      },
+      "schema_version": "research_plan_author_contract_repair_audit_v1"
+    }
+  ],
+  "document_metadata": {
+    "discipline_ids": [
+      "31"
+    ],
+    "source_title": "AANEC-Relaxed Trapped Surface Theorem and Stellar Mass-Gap Derivation",
+    "study_type": "mathematics_theory_formal_reasoning",
+    "title": "AANEC-Relaxed Trapped Surface Theorem and Stellar Mass-Gap Derivation",
+    "title_status": "english_llm_composed"
+  },
+  "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "keywords": [
+    "Averaged Null Energy Condition",
+    "Trapped Surface",
+    "Spherical Collapse",
+    "Stellar Mass Gap",
+    "Raychaudhuri Equation",
+    "Global Hyperbolicity",
+    "Compactness"
+  ],
+  "language": "en",
+  "open_items": [
+    {
+      "source_item_id": "unknown-10",
+      "status": "needs_human_input",
+      "text": "Define the precise mathematical formulation of the 'explicit averaged null-convergence/focusing condition' (A4)."
+    },
+    {
+      "source_item_id": "unknown-11",
+      "status": "needs_human_input",
+      "text": "Determine the quantitative bound on initial expansion theta_0 required to invalidate counterexample CE1."
+    },
+    {
+      "source_item_id": "unknown-12",
+      "status": "needs_human_input",
+      "text": "Identify well-defined numerical solutions (e.g., gravastars) that satisfy assumptions without trapped-surface formation."
+    },
+    {
+      "source_item_id": "unknown-6",
+      "status": "needs_human_input",
+      "text": "A2 requires a specific formulation of AANEC in the context of GR null generators."
+    },
+    {
+      "source_item_id": "unknown-7",
+      "status": "needs_human_input",
+      "text": "A4 is asserted but lacks a precise mathematical definition."
+    },
+    {
+      "source_item_id": "unknown-13",
+      "status": "needs_human_input",
+      "text": "The final canonical field status requires human input."
+    },
+    {
+      "source_item_id": "unknown-1",
+      "status": "needs_human_input",
+      "text": "Data management protocols require human input."
+    },
+    {
+      "source_item_id": "unknown-2",
+      "status": "needs_human_input",
+      "text": "Reproducibility framework requires human input."
+    },
+    {
+      "source_item_id": "unknown-8",
+      "status": "needs_human_input",
+      "text": "Measurement plan requires human input."
+    },
+    {
+      "source_item_id": "unknown-9",
+      "status": "needs_human_input",
+      "text": "Quality control metrics require human input."
+    },
+    {
+      "source_item_id": "unknown-3",
+      "status": "needs_human_input",
+      "text": "The mathematical formulation of AANEC in the specific context of GR null generators is asserted but lacks an explicit definition."
+    },
+    {
+      "source_item_id": "unknown-4",
+      "status": "needs_human_input",
+      "text": "A precise mathematical definition is missing for the central assumption regarding the explicit averaged null-convergence/focusing condition."
+    },
+    {
+      "source_item_id": "unknown-5",
+      "status": "needs_human_input",
+      "text": "The operational definition of compactness requires human input."
+    },
+    {
+      "source_item_id": "unknown-15",
+      "status": "needs_human_input",
+      "text": "The final canonical field status requires human input."
+    },
+    {
+      "source_item_id": "unknown-16",
+      "status": "needs_human_input",
+      "text": "The final canonical field status requires human input."
+    },
+    {
+      "source_item_id": "unknown-14",
+      "status": "needs_human_input",
+      "text": "The counterexample or boundary analysis status requires human input to resolve the lack of rigorous mathematical solutions and undefined premises."
+    },
+    {
+      "source_item_id": "unknown-17",
+      "status": "needs_human_input",
+      "text": "The verification plan status requires human input."
+    },
+    {
+      "source_item_id": "unknown-18",
+      "status": "needs_human_input",
+      "text": "The operational definition for variable V1 (AANEC) requires a precise mathematical formulation in the GR context not fully explicit in the brief."
+    },
+    {
+      "source_item_id": "unknown-19",
+      "status": "needs_human_input",
+      "text": "The operational definition for variable V10 is incomplete because specific equation-of-state parameters were not provided."
+    },
+    {
+      "source_item_id": "unknown-20",
+      "status": "needs_human_input",
+      "text": "The operational definition for variable V11 is incomplete because specific rotation metrics were not provided."
+    },
+    {
+      "source_item_id": "unknown-21",
+      "status": "needs_human_input",
+      "text": "The operational definition for variable V12 is incomplete because specific magnetic field metrics were not provided."
+    },
+    {
+      "source_item_id": "unknown-22",
+      "status": "needs_human_input",
+      "text": "The operational definition for variable V13 is incomplete because specific binary interaction metrics were not provided."
+    },
+    {
+      "source_item_id": "unknown-23",
+      "status": "needs_human_input",
+      "text": "The operational definition for variable V14 is incomplete because specific quantum stress-energy metrics were not provided."
+    },
+    {
+      "source_item_id": "unknown-24",
+      "status": "needs_human_input",
+      "text": "The operational definition for variable V2 is missing; the explicit averaged null-convergence/focusing condition is asserted as an independent hypothesis but not mathematically defined."
+    },
+    {
+      "source_item_id": "unknown-25",
+      "status": "needs_human_input",
+      "text": "The unit or domain for variable V7 is unspecified; an operational definition for measuring stellar remnant mass in this design context is not specified."
+    },
+    {
+      "source_item_id": "unknown-26",
+      "status": "needs_human_input",
+      "text": "The operational definition for variable V8 is unspecified; the method for measuring compactness in this design context is not defined."
+    },
+    {
+      "source_item_id": "unknown-27",
+      "status": "needs_human_input",
+      "text": "The operational definition for variable V9 is incomplete; specific metrics for supernova explosion energetics were not provided."
+    },
+    {
+      "source_item_id": "unknown-28",
+      "status": "needs_human_input",
+      "text": "The final canonical field status for independent variables requires human input."
+    },
+    {
+      "source_item_id": "unknown-29",
+      "status": "needs_human_input",
+      "text": "The final canonical field status for operational definitions requires human input."
+    }
+  ],
+  "review_items": [
+    {
+      "source_item_id": "review-1",
+      "status": "review_required",
+      "text": "The final canonical formal_reasoning_plan status requires qualified human review."
+    }
+  ],
+  "schema_version": "research_plan_document_v1",
+  "sections": [
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "intro_background_observations",
+          "claim_ids": [
+            "intro_claim_obs"
+          ],
+          "kind": "paragraph",
+          "text": "Astrophysical models suggest that binaries with mass ratios similar to GW190814 can form through several channels. The location of the lower edge of the black hole mass gap is dictated by the near-final core mass, which sets the resulting black hole mass. The gravitational-wave phase evolution during the inspiral of binary neutron stars is primarily determined by the chirp mass at low frequencies. These observations provide the empirical context for studying compact object formation."
+        },
+        {
+          "block_id": "intro_proposed_contribution",
+          "claim_ids": [
+            "intro_claim_contrib"
+          ],
+          "kind": "paragraph",
+          "text": "This proposal plans to derive an AANEC-relaxed trapped surface theorem and stellar mass-gap bound. The work aims to establish formal bounds under specific geometric and matter assumptions, separating the formal result from astrophysical confounders."
+        }
+      ],
+      "section_id": "introduction",
+      "title": "Introduction"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "block-001",
+          "claim_ids": [
+            "claim_bg_energy_conditions",
+            "claim_survey_aanec_status"
+          ],
+          "kind": "paragraph",
+          "text": "The theoretical framework supporting black hole formation relies heavily on Penrose-type singularity theorems, which traditionally require the Null Energy Condition (NEC) to ensure the focusing of null geodesics. However, classical pointwise energy conditions are frequently violated by quantum fields and certain scalar field configurations. To preserve the validity of singularity theorems in semi-classical regimes, the literature has moved toward averaged conditions, specifically the Achronal Averaged Null Energy Condition (AANEC). The AANEC averages energy density along achronal null geodesics, excluding pathologies associated with closed timelike curves, and is hypothesized to hold even in full quantum gravity."
+        },
+        {
+          "block_id": "block-002",
+          "claim_ids": [
+            "claim_survey_mass_gap_obs",
+            "claim_survey_formation_mech"
+          ],
+          "kind": "paragraph",
+          "text": "Observational astrophysics provides critical constraints on these theoretical bounds through the study of compact object populations. A prominent feature in the observed mass distribution of black holes and neutron stars is the lower mass gap in the range of approximately 2 to 5 solar masses. This gap is robust against selection biases and flux-limited detection effects. Theoretical models attribute this discontinuity to the dynamics of core-collapse supernovae, where rapid growth of hydrodynamic instabilities favors either complete envelope ejection or direct collapse, thereby preventing the accumulation of intermediate-mass remnants."
+        },
+        {
+          "block_id": "block-003",
+          "claim_ids": [
+            "claim_gap_formal_claim"
+          ],
+          "kind": "paragraph",
+          "text": "A significant gap remains in the formal verification of trapped-surface theorems under relaxed energy conditions. Current literature identifies a missing 'formal_claim' slot in the evidence plan, indicating a lack of established derivations showing whether AANEC alone, or AANEC combined with an explicit averaged null-convergence/focusing condition, is sufficient to force trapped-surface formation in spherical collapse. This unresolved logical connection challenges the proposed mechanism of replacing pointwise NEC/SEC assumptions with AANEC for stellar collapse scenarios."
+        },
+        {
+          "block_id": "block-004",
+          "claim_ids": [
+            "claim_gap_boundary_var",
+            "claim_gap_explosion_energy"
+          ],
+          "kind": "paragraph",
+          "text": "Furthermore, the identification of a precise boundary variable governing the transition from neutron-star-like remnants to black-hole-like outcomes remains unmapped. While population synthesis studies indicate that theoretical frameworks can produce continuous mass distributions that challenge the sharp discontinuity implied by a hard theorem-based mass gap, a required 'boundary_variable' slot in the relevant evidence cluster for stellar evolution pathways remains uncovered. This highlights the need for further research to constrain the specific physical parameters that dictate remnant type."
+        }
+      ],
+      "section_id": "survey_and_research_gap",
+      "title": "Background, Survey, and Research Gap"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "block_rq_1",
+          "claim_ids": [
+            "claim_rq_1",
+            "claim_rq_2",
+            "claim_rq_3"
+          ],
+          "kind": "list",
+          "text": "1. What is the precise mathematical definition of the 'explicit averaged null-convergence/focusing condition' (A4)? [Needs human input]\n2. What quantitative bound on the initial expansion theta_0 is required for the counterexample (CE1) to be invalid? [Needs human input]\n3. Are there specific, well-defined numerical solutions (e.g., gravastars) that satisfy all stated assumptions without forming a trapped surface? [Needs human input]"
+        },
+        {
+          "block_id": "block_contrib_1",
+          "claim_ids": [
+            "claim_contrib_1"
+          ],
+          "kind": "paragraph",
+          "text": "The proposed research aims to develop a formal mathematical framework replacing pointwise energy conditions (NEC/SEC) with the Averaged Null Energy Condition (AANEC) combined with an explicit averaged null-convergence/focusing condition. This work intends to derive trapped-surface thresholds via Raychaudhuri-type focusing and Misner-Sharp compactness, subsequently bounding stable non-black-hole remnants through TOV-like stellar-structure assumptions."
+        },
+        {
+          "block_id": "block_assumption_1",
+          "claim_ids": [
+            "claim_assumption_1"
+          ],
+          "kind": "paragraph",
+          "text": "The design assumes that the observed stellar mass gap is treated as an astrophysical consistency constraint rather than a direct theorem-derived prediction, with alternative mechanisms such as supernova explosion physics, fallback, equation-of-state uncertainties, rotation, magnetic fields, nonspherical dynamics, and binary interactions serving as confounders."
+        }
+      ],
+      "section_id": "research_questions_and_contributions",
+      "title": "Research Questions and Planned Contributions"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "audit_summary",
+          "claim_ids": [
+            "claim_a01",
+            "claim_a02"
+          ],
+          "kind": "paragraph",
+          "text": "The audit snapshots show that idea candidates and directions have been available, but they do not provide reliable chronology because temporal order is unknown and iterations are empty. The selected direction, mechanism_replacement, is treated as the proposal baseline."
+        },
+        {
+          "block_id": "checkpoint_listing",
+          "claim_ids": [
+            "claim_a01"
+          ],
+          "kind": "list",
+          "text": "Available checkpoint records: checkpoint-1 from idea_candidate.json; checkpoint-2 from idea_portfolio.json; checkpoint-3 from idea_result.json. All are listed as audit snapshots with unknown temporal order."
+        },
+        {
+          "block_id": "selection_design",
+          "claim_ids": [
+            "claim_a03"
+          ],
+          "kind": "paragraph",
+          "text": "For planning purposes, the proposal designates mechanism_replacement as the selected research direction. This selection defines the scope of the subsequent formal and empirical work; it is not presented as evidence that this direction is superior or chronologically later."
+        }
+      ],
+      "section_id": "idea_origin_and_selection",
+      "title": "Idea Source Checkpoints and Direction Selection Audit"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "fph1",
+          "claim_ids": [
+            "c1"
+          ],
+          "kind": "definition",
+          "text": "Assumptions A1-A5 are registered as design premises. Human input is required to resolve A2, A4, and the final canonical field status before formal claims are finalized."
+        },
+        {
+          "block_id": "fph2",
+          "claim_ids": [
+            "c2",
+            "c3"
+          ],
+          "kind": "proposition",
+          "text": "Proposition P1: If spherically symmetric stellar collapse satisfies AANEC, global hyperbolicity, regular matter fields, complete null generators, and an explicit averaged null-convergence/focusing condition, then reaching a model-dependent compactness threshold forces trapped-surface formation. Proposition P2: Stable non-black-hole remnants above a compactness-dependent mass scale are excluded within this restricted model class."
+        },
+        {
+          "block_id": "fph3",
+          "claim_ids": [
+            "c4"
+          ],
+          "kind": "paragraph",
+          "text": "The central hypothesis P1 posits a formal relation within the specified model class. The final conclusion depends on unresolved assumptions."
+        },
+        {
+          "block_id": "fph4",
+          "claim_ids": [
+            "c5"
+          ],
+          "kind": "list",
+          "text": "- AANEC definition along GR null generators. - Explicit averaged null-convergence/focusing condition definition. - Final canonical field status."
+        }
+      ],
+      "section_id": "formal_problem_and_hypotheses",
+      "title": "Problem Definition, Assumptions, and Hypotheses"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "block_001",
+          "claim_ids": [
+            "claim_001"
+          ],
+          "kind": "definition",
+          "text": "This research proposal is scoped as a formal mathematical theory design in classical general relativity. The unit of analysis is defined as the formal proof candidate, operating under a theoretical design type rather than an experimental or observational framework."
+        },
+        {
+          "block_id": "block_002",
+          "claim_ids": [
+            "claim_002"
+          ],
+          "kind": "list",
+          "text": "The core design assumptions for the proposed theorem derivation include:\n- Assumption A1: Spherically symmetric collapse of massive stars with isotropic pressure.\n- Assumption A2: Matter fields satisfy AANEC along complete null generators, with no uncontrolled quantum ANEC violations.\n- Assumption A3: Spacetime is globally hyperbolic and sufficiently regular to support trapped-surface arguments.\n- Assumption A4: An explicit averaged null-convergence/focusing condition holds along the relevant generators as an independent geometric hypothesis.\n- V8 Operational Definition: Misner-Sharp compactness is used to evaluate the model-dependent threshold."
+        },
+        {
+          "block_id": "block_003",
+          "claim_ids": [
+            "claim_003"
+          ],
+          "kind": "paragraph",
+          "text": "The planned method involves replacing pointwise NEC/SEC assumptions with the averaged null energy condition (AANEC), supplemented by the explicit averaged null-convergence assumption. The procedure will derive a trapped-surface threshold via Raychaudhuri-type focusing and Misner-Sharp compactness. Stable non-black-hole remnants will then be bounded using TOV-like stellar-structure assumptions. Throughout this formal process, the observed stellar mass gap is explicitly treated as an astrophysical consistency constraint subject to alternative stellar-physics explanations, rather than as a direct theorem consequence."
+        },
+        {
+          "block_id": "block_004",
+          "claim_ids": [
+            "claim_004"
+          ],
+          "kind": "review_checklist",
+          "text": "The following prerequisites and operational parameters require human input before the formal design can be finalized or executed:\n1. Data governance and reproducibility framework definitions must be established.\n2. Data management protocols must be specified.\n3. Measurement planning details are required.\n4. Quality control criteria must be defined."
+        }
+      ],
+      "section_id": "study_design_and_methods",
+      "title": "Study Design and Methods"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "blk_exp_out_1",
+          "claim_ids": [
+            "claim_1"
+          ],
+          "kind": "paragraph",
+          "text": "If the analysis identifies a stable ultra-compact object satisfying the formal assumptions (AANEC, global hyperbolicity, spherical symmetry, regular matter fields, and the A4 averaging condition) yet lacking a trapped surface, the theorem is falsified, requiring restriction or refinement of the averaging condition to preserve validity within the model class. Conversely, if the result favors alternative astrophysical explanations such as explosion energetics, fallback, or equation-of-state uncertainties, the mass-gap inference remains unsupported, necessitating further evaluation of observational discriminators for the stellar mass gap."
+        }
+      ],
+      "section_id": "expected_outcomes",
+      "title": "Expected Outcome Branches and Conditional Conclusions"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "risk_limitations_intro",
+          "claim_ids": [
+            "claim-limit-a4-missing",
+            "claim-limit-a2-ambiguity"
+          ],
+          "kind": "paragraph",
+          "text": "The proposed formal reasoning relies on specific mathematical assumptions that lack complete definitions. The primary limitation concerns Assumption 4 (A4), where the precise mathematical definition is missing. Consequently, the logical evaluation of counterexamples against this assumption cannot be fully completed. Similarly, Assumption 2 (A2) requires a specific formulation of AANEC in the context of General Relativity null generators to be rigorously evaluated. These gaps prevent the current status from moving beyond a proposal stage."
+        },
+        {
+          "block_id": "review_requirements_list",
+          "claim_ids": [
+            "claim-review-formal-plan"
+          ],
+          "kind": "list",
+          "text": "Human review is required for the following components before further progress can be made:\n1. The formal reasoning plan requires qualified human review to validate the logical structure and assumption definitions.\n2. Verification of A4's mathematical definition is necessary to determine if the counterexample candidates violate the assumption or satisfy it by default.\n3. Clarification of A2's formulation regarding quantum stress-energy and null generators is needed to ensure compatibility with the proposed theorem scope."
+        },
+        {
+          "block_id": "status_uncertainty",
+          "claim_ids": [
+            "claim-status-unverified"
+          ],
+          "kind": "paragraph",
+          "text": "Given the absence of verified derivations or rigorous proofs, the hypothesis status remains unverified. The counterexample analysis currently identifies only conceptual models, none of which have been mathematically validated as true theorems or valid counterexamples due to the undefined premises. No experimental or observational results are claimed, as the work is strictly theoretical and limited by the missing definitions."
+        }
+      ],
+      "section_id": "risk_limitations_and_review",
+      "title": "Risks, Limitations, and Human Review Requirements"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "definitions",
+          "claim_ids": [
+            "clm-def-aanec",
+            "clm-def-averaged-null-convergence",
+            "clm-def-compactness"
+          ],
+          "kind": "definition",
+          "text": "We formally define the Averaged Null Energy Condition (AANEC), an explicit averaged null-convergence condition along null generators, and the Misner-Sharp compactness for the spherically symmetric model. The precise mathematical formulations are pending human review."
+        },
+        {
+          "block_id": "propositions",
+          "claim_ids": [
+            "clm-prop-main",
+            "clm-prop-remnants"
+          ],
+          "kind": "proposition",
+          "text": "We propose the formal claim that spherically symmetric stellar collapse, under global hyperbolicity and AANEC, forces trapped-surface formation upon reaching a model-dependent compactness threshold. We also propose that stable non-black-hole remnants above a compactness-dependent mass scale are excluded within this restricted model class. The canonical status of these propositions requires human input."
+        },
+        {
+          "block_id": "proof_obligations",
+          "claim_ids": [
+            "clm-obligation-proof"
+          ],
+          "kind": "paragraph",
+          "text": "The proof obligations involve verifying the derivation steps from the geometric assumptions to the compactness threshold and its physical implications. The final canonical details of these obligations remain unresolved and require human input."
+        }
+      ],
+      "section_id": "definitions_and_propositions",
+      "title": "Definitions, Propositions, and Proof Obligations"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "fd-1",
+          "claim_ids": [
+            "claim-deriv-01",
+            "claim-deriv-02",
+            "claim-deriv-03"
+          ],
+          "kind": "paragraph",
+          "text": "The proposed forward derivation outlines the logic connecting the initial assumptions to the final conclusion. Step S1 applies the Averaged Null Energy Condition (AANEC) and geometric focusing conditions under the assumption of spherically symmetric collapse and global hyperbolicity. Step S2 defines the Misner-Sharp compactness based on the spherical symmetry assumption. Step S3 identifies a model-dependent compactness threshold derived from the geometric assumptions. Step S4 proposes that if the compactness exceeds this threshold, trapped-surface formation is forced."
+        },
+        {
+          "block_id": "cp-1",
+          "claim_ids": [
+            "claim-ce-01"
+          ],
+          "kind": "paragraph",
+          "text": "The counterexample search plan targets the validity of the proposition that trapped-surface formation is forced under the stated conditions. Candidate CE1 proposes a stable ultra-compact object with compactness just below the threshold, supported by stress-energy satisfying AANEC globally but violating local energy conditions, which fails to form a trapped surface due to large positive initial expansion. Candidate CE2 proposes a semiclassical Einstein equation solution, such as a gravastar or regular black hole, where vacuum polarization creates a stress-energy tensor satisfying AANEC along certain generators but evading trapped-surface formation via local dominance of a large positive cosmological constant in the core."
+        },
+        {
+          "block_id": "lim-1",
+          "claim_ids": [
+            "claim-limit-01"
+          ],
+          "kind": "paragraph",
+          "text": "The reasoning plan currently contains significant gaps and limitations. Rigorous mathematical solutions have not been generated; the candidates are conceptual models derived via LLM proposal. Crucially, Assumption A2 (AANEC) and Assumption A4 (explicit averaged null-convergence/focusing condition) lack formal mathematical definitions in the current context, which prevents strict logical evaluation of the candidates. Furthermore, the final canonical field status requires human input to resolve these undefined premises and establish a rigorous counterexample search."
+        }
+      ],
+      "section_id": "forward_derivation_and_counterexamples",
+      "title": "Forward Derivation and Counterexample Search Plan"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "ref_inventory_1",
+          "claim_ids": [
+            "claim_citation_W3009127927"
+          ],
+          "kind": "list",
+          "text": "Reference: W3009127927"
+        },
+        {
+          "block_id": "ref_inventory_2",
+          "claim_ids": [
+            "claim_citation_W2437571239"
+          ],
+          "kind": "list",
+          "text": "Reference: W2437571239"
+        },
+        {
+          "block_id": "ref_inventory_3",
+          "claim_ids": [
+            "claim_citation_W2149573451"
+          ],
+          "kind": "list",
+          "text": "Reference: W2149573451"
+        },
+        {
+          "block_id": "ref_inventory_4",
+          "claim_ids": [
+            "claim_citation_W2095725842"
+          ],
+          "kind": "list",
+          "text": "Reference: W2095725842"
+        },
+        {
+          "block_id": "ref_inventory_5",
+          "claim_ids": [
+            "claim_citation_W2765081049"
+          ],
+          "kind": "list",
+          "text": "Reference: W2765081049"
+        },
+        {
+          "block_id": "ref_inventory_6",
+          "claim_ids": [
+            "claim_citation_W4292875581"
+          ],
+          "kind": "list",
+          "text": "Reference: W4292875581"
+        },
+        {
+          "block_id": "ref_inventory_7",
+          "claim_ids": [
+            "claim_citation_W2252795400"
+          ],
+          "kind": "list",
+          "text": "Reference: W2252795400"
+        },
+        {
+          "block_id": "ref_inventory_8",
+          "claim_ids": [
+            "claim_citation_W3081939279"
+          ],
+          "kind": "list",
+          "text": "Reference: W3081939279"
+        },
+        {
+          "block_id": "ref_inventory_9",
+          "claim_ids": [
+            "claim_citation_W1967037608"
+          ],
+          "kind": "list",
+          "text": "Reference: W1967037608"
+        },
+        {
+          "block_id": "ref_inventory_10",
+          "claim_ids": [
+            "claim_citation_W2766840380"
+          ],
+          "kind": "list",
+          "text": "Reference: W2766840380"
+        },
+        {
+          "block_id": "ref_inventory_11",
+          "claim_ids": [
+            "claim_citation_W4226083230"
+          ],
+          "kind": "list",
+          "text": "Reference: W4226083230"
+        },
+        {
+          "block_id": "ref_inventory_12",
+          "claim_ids": [
+            "claim_citation_W4288079944"
+          ],
+          "kind": "list",
+          "text": "Reference: W4288079944"
+        },
+        {
+          "block_id": "ref_inventory_13",
+          "claim_ids": [
+            "claim_citation_W2160511150"
+          ],
+          "kind": "list",
+          "text": "Reference: W2160511150"
+        },
+        {
+          "block_id": "ref_inventory_14",
+          "claim_ids": [
+            "claim_citation_W2807309204"
+          ],
+          "kind": "list",
+          "text": "Reference: W2807309204"
+        },
+        {
+          "block_id": "ref_inventory_15",
+          "claim_ids": [
+            "claim_citation_W2980421388"
+          ],
+          "kind": "list",
+          "text": "Reference: W2980421388"
+        },
+        {
+          "block_id": "ref_inventory_16",
+          "claim_ids": [
+            "claim_citation_W3036761016"
+          ],
+          "kind": "list",
+          "text": "Reference: W3036761016"
+        },
+        {
+          "block_id": "ref_inventory_17",
+          "claim_ids": [
+            "claim_citation_W2116312019"
+          ],
+          "kind": "list",
+          "text": "Reference: W2116312019"
+        },
+        {
+          "block_id": "ref_inventory_18",
+          "claim_ids": [
+            "claim_citation_W4382358570"
+          ],
+          "kind": "list",
+          "text": "Reference: W4382358570"
+        },
+        {
+          "block_id": "ref_inventory_19",
+          "claim_ids": [
+            "claim_citation_W1853767801"
+          ],
+          "kind": "list",
+          "text": "Reference: W1853767801"
+        },
+        {
+          "block_id": "ref_inventory_20",
+          "claim_ids": [
+            "claim_citation_W2135497511"
+          ],
+          "kind": "list",
+          "text": "Reference: W2135497511"
+        },
+        {
+          "block_id": "ref_inventory_21",
+          "claim_ids": [
+            "claim_citation_W2767058944"
+          ],
+          "kind": "list",
+          "text": "Reference: W2767058944"
+        },
+        {
+          "block_id": "ref_inventory_22",
+          "claim_ids": [
+            "claim_citation_W2811472820"
+          ],
+          "kind": "list",
+          "text": "Reference: W2811472820"
+        },
+        {
+          "block_id": "ref_inventory_23",
+          "claim_ids": [
+            "claim_citation_W1784175517"
+          ],
+          "kind": "list",
+          "text": "Reference: W1784175517"
+        },
+        {
+          "block_id": "ref_inventory_24",
+          "claim_ids": [
+            "claim_citation_W2994776863"
+          ],
+          "kind": "list",
+          "text": "Reference: W2994776863"
+        },
+        {
+          "block_id": "ref_inventory_25",
+          "claim_ids": [
+            "claim_citation_W4298826872"
+          ],
+          "kind": "list",
+          "text": "Reference: W4298826872"
+        },
+        {
+          "block_id": "ref_inventory_26",
+          "claim_ids": [
+            "claim_citation_W2073832139"
+          ],
+          "kind": "list",
+          "text": "Reference: W2073832139"
+        },
+        {
+          "block_id": "ref_inventory_27",
+          "claim_ids": [
+            "claim_citation_W2808391388"
+          ],
+          "kind": "list",
+          "text": "Reference: W2808391388"
+        },
+        {
+          "block_id": "ref_inventory_28",
+          "claim_ids": [
+            "claim_citation_W4385454046"
+          ],
+          "kind": "list",
+          "text": "Reference: W4385454046"
+        },
+        {
+          "block_id": "ref_inventory_29",
+          "claim_ids": [
+            "claim_citation_W2006124034"
+          ],
+          "kind": "list",
+          "text": "Reference: W2006124034"
+        }
+      ],
+      "section_id": "references",
+      "title": "References"
+    }
+  ],
+  "source_design_id": "design-aanec-trapped-surface-20260828",
+  "source_manifest": {
+    "author_context_sha256": "4f0c4dbed8fccf6454b0c97f7951f1b104330cdb09c4f680d1fd7e1585d2fadb",
+    "author_input_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/src/agents/idea_agent/runs/20260828-004610-870347/experiment_design_author_20260830-012306-926871.json",
+    "selected_direction_id": "mechanism_replacement",
+    "source_bundle_schema_version": "research_plan_author_source_bundle_v2",
+    "survey_binding": {
+      "expected": {
+        "project_context_fingerprint": "c6c7cb1dbceb69fa980f3d8703eeb3e7261171444268f4ba7c98d5bd64b30c19",
+        "project_id": "sci_20260826_230026_951386",
+        "survey_run_id": "20260826-230026-951386"
+      },
+      "human_confirmation_required": false,
+      "resolved": {
+        "project_context_fingerprint": "c6c7cb1dbceb69fa980f3d8703eeb3e7261171444268f4ba7c98d5bd64b30c19",
+        "project_id": "sci_20260826_230026_951386",
+        "survey_run_id": "20260826-230026-951386"
+      },
+      "status": "BOUND_VERIFIED"
+    },
+    "template_family": "mathematics_theory",
+    "theory_sampling_power_status": "not_applicable"
+  }
+}

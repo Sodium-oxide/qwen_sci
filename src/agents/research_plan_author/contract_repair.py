@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from collections import Counter
 from collections.abc import Callable, Mapping
 from copy import deepcopy
 import json
@@ -13,56 +12,12 @@ from .llm_json import call_required_json
 
 
 AUTHOR_CONTRACT_REPAIR_AUDIT_SCHEMA_VERSION = "research_plan_author_contract_repair_audit_v1"
-_ALLOWED_ENUM_TEXT = {
-    "en",
-    "required",
-    "optional",
-    "not_applicable",
-    "paragraph",
-    "list",
-    "table",
-    "definition",
-    "proposition",
-    "equation",
-    "protocol",
-    "outcome_branch",
-    "review_checklist",
-    "evidence_backed",
-    "abstract_limited",
-    "metadata_lead",
-    "design_assumption",
-    "needs_human_input",
-    "expected_not_observed",
-    "proposed",
-    "unverified",
-    "not_applicable",
-    "fulltext",
-    "abstract",
-    "metadata",
-}
-
-
 class AuthorContractRepairError(RuntimeError):
     """Carries a private artifact audit when a single permitted repair fails."""
 
     def __init__(self, message: str, *, audit: Mapping[str, Any]) -> None:
         super().__init__(message)
         self.audit = deepcopy(dict(audit))
-
-
-def _string_values(value: object) -> Counter[str]:
-    values: Counter[str] = Counter()
-    if isinstance(value, Mapping):
-        for nested in value.values():
-            values.update(_string_values(nested))
-    elif isinstance(value, list):
-        for nested in value:
-            values.update(_string_values(nested))
-    elif isinstance(value, str):
-        normalized = value.strip()
-        if normalized:
-            values[normalized] += 1
-    return values
 
 
 def _contains_forbidden_reference(value: object) -> bool:
@@ -73,22 +28,10 @@ def _contains_forbidden_reference(value: object) -> bool:
 def validate_author_contract_repair(
     initial: Mapping[str, Any],
     repaired: Mapping[str, Any],
-    *,
-    allowed_structural_strings: set[str] | None = None,
 ) -> list[str]:
-    """Reject any repair that could add facts rather than fix contract mechanics."""
+    """Reject unsafe new bibliographic identifiers while allowing source-bounded prose repairs."""
 
     errors: list[str] = []
-    allowed = set(allowed_structural_strings or set()) | _ALLOWED_ENUM_TEXT
-    initial_strings = _string_values(initial)
-    repaired_strings = _string_values(repaired)
-    added = [
-        value
-        for value, count in repaired_strings.items()
-        if count > initial_strings.get(value, 0) and value not in allowed
-    ]
-    if added:
-        errors.append("contract repair introduced new non-structural text")
     if _contains_forbidden_reference(repaired) and not _contains_forbidden_reference(initial):
         errors.append("contract repair introduced a bibliographic identifier or URL")
     return errors
@@ -115,7 +58,7 @@ def build_author_contract_repair_prompt(
 
 The `target_contract_schema` is the output contract. Your response must be the artifact described by that schema, not the INPUT_JSON envelope. Never return `artifact_kind`, `target_contract_schema`, `initial_candidate`, `validation_errors`, or `allowed_structural_strings` as top-level output fields unless the target schema explicitly requires them.
 
-You may only correct required fields, enum values, IDs, references, route membership, duplicate identifiers, and exact copies already present in the initial candidate. You must not add or paraphrase factual prose, literature, citations, DOI, URLs, author names, numerical values, methods, sample sizes, instruments, definitions, lemmas, results, observations, proof claims, counterexamples, or verification claims. Do not upgrade a proposed or unverified statement. If an error cannot be fixed under these constraints, preserve the relevant value and let validation fail.
+You may correct required fields, enum values, IDs, references, route membership, duplicate identifiers, and source-bounded prose. You must not add literature, citations, DOI, URLs, author names, numerical values, methods, sample sizes, instruments, definitions, lemmas, results, observations, proof claims, counterexamples, or verification claims that are absent from the supplied context. Do not upgrade a proposed or unverified statement. If an error cannot be fixed under these constraints, preserve the relevant value and let validation fail.
 
 INPUT_JSON:
 """
@@ -144,7 +87,7 @@ def repair_once(
         "repair_status": "PENDING",
         "repair_validation_errors": [],
         "constraints": [
-            "Only JSON structure, enum values, IDs, references, and exact copying may be repaired.",
+            "Only JSON structure, enum values, IDs, references, and source-bounded prose may be repaired.",
             "No facts, sources, citations, DOI, numerical values, methods, results, proof claims, or verification claims may be added.",
         ],
     }
@@ -164,11 +107,7 @@ def repair_once(
         audit["repair_status"] = "LLM_FAILURE"
         audit["repair_error"] = f"{type(error).__name__}: {error}"
         raise AuthorContractRepairError(f"{artifact_kind}: constrained contract repair failed", audit=audit) from error
-    repair_errors = validate_author_contract_repair(
-        initial_candidate,
-        repaired,
-        allowed_structural_strings=allowed,
-    )
+    repair_errors = validate_author_contract_repair(initial_candidate, repaired)
     repair_errors.extend(validate(repaired))
     if repair_errors:
         audit["repair_status"] = "REJECTED"

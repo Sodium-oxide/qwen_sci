@@ -8,10 +8,26 @@ from types import SimpleNamespace
 
 import pytest
 
-from src.agents.research_plan_author.bibtex_renderer import BibtexRenderError, ensure_citation_coverage, render_bibtex
+from src.agents.research_plan_author.bibtex_renderer import (
+    BibtexRenderError,
+    bibliography_preflight_errors,
+    ensure_citation_coverage,
+    render_bibtex,
+)
+from src.agents.research_plan_author.contracts import validate_research_plan_document
+import src.agents.research_plan_author.latex_compiler as latex_compiler
 from src.agents.research_plan_author.latex_compiler import compile_latex_project, resolve_executable
-from src.agents.research_plan_author.latex_safety import LatexSafetyError, require_english_visible_text
+from src.agents.research_plan_author.latex_safety import (
+    LatexSafetyError,
+    escape_latex_text,
+    normalize_visible_text,
+    safe_math_expression,
+    split_equation_content,
+)
 from src.agents.research_plan_author.render import AuthorRenderingError, render_research_plan_document
+from src.agents.research_plan_author.markdown_renderer import render_research_plan_markdown
+from src.agents.research_plan_author.section_router import route_author_sections
+from src.agents.research_plan_author.theory_presentation import theory_block_presentation
 from src.agents.research_plan_author.template_adapter import TemplateAdapter, TemplateAdapterError
 from src.agents.research_plan_author.template_profile import load_template_profile
 from src.agents.research_plan_author.tex_renderer import TexRenderError, render_tex_project
@@ -142,17 +158,285 @@ def test_marker_profile_copies_source_and_escapes_text(tmp_path: Path) -> None:
     assert "Safe\\_Design \\& Traceability" in text
     assert "中文上游标题" not in text
     assert r"\frac{x}{2}" in text
+    assert "\\begin{equation}" in text
+    assert "\\label{eq:introduction-B2}" in text
+    assert "\\[" not in text
+    assert "\\caption{Decision matrix}" in text
+    assert "\\label{tab:introduction-B3}" in text
+    assert "\\nocite" not in text
     assert rendered.bibliography.emitted_keys == ("cite_example_1",)
 
 
-@pytest.mark.parametrize("text", ["研究计划", "研究計画", "연구 계획", "خطة البحث", "Исследовательский план"])
-def test_english_visible_text_rejects_non_latin_scripts(text: str) -> None:
-    with pytest.raises(LatexSafetyError, match="non-English-script"):
-        require_english_visible_text(text, label="test prose")
+def test_renderer_renders_optional_block_heading_as_subsection(tmp_path: Path) -> None:
+    document = _document()
+    document["sections"][0]["blocks"][0]["heading"] = "Scope and Traceability"
+    rendered = render_tex_project(
+        document,
+        template_dir=_marker_template(tmp_path / "heading-template"),
+        project_dir=tmp_path / "heading-render",
+        profile=load_template_profile("markers_v1"),
+    )
+
+    assert "\\subsection{Scope and Traceability}" in rendered.main_tex.read_text(encoding="utf-8")
 
 
-def test_english_visible_text_allows_latin_accents() -> None:
-    assert require_english_visible_text("René Descartes and naïve Bayesian design", label="test prose")
+def test_renderer_uses_align_cross_references_and_hides_private_survey_anchors(tmp_path: Path) -> None:
+    document = _document()
+    document["sections"][0]["blocks"][0]["text"] = (
+        "The derivation remains source-bounded [survey:survey_markdown#section-003] "
+        "and anchor:gap_evidence_anchor:sh4:boundary_variable:opaque-token."
+    )
+    document["sections"][0]["blocks"][0]["reference_block_ids"] = ["B2"]
+    document["sections"][0]["blocks"][1]["text"] = r"x = y\\y = z"
+    document["sections"][0]["blocks"][2]["text"] = (
+        "Condition | Action\n"
+        "[survey:survey_markdown#section-004] Control | Retain comparator\n"
+        "Boundary | Request human review"
+    )
+
+    rendered = render_tex_project(
+        document,
+        template_dir=_marker_template(tmp_path / "align-template"),
+        project_dir=tmp_path / "align-render",
+        profile=load_template_profile("markers_v1"),
+    )
+    text = rendered.main_tex.read_text(encoding="utf-8")
+
+    assert "\\begin{align}" in text
+    assert r"\nonumber \\" in text
+    assert "See Eq.~\\eqref{eq:introduction-B2}." in text
+    assert "survey:survey_markdown" not in text
+    assert "anchor:gap_evidence_anchor" not in text
+
+
+def test_theory_renderer_uses_public_labels_and_resolves_scoped_equation_references(tmp_path: Path) -> None:
+    document = _document(cited=False)
+    introduction = document["sections"][0]
+    introduction["blocks"][0].update(
+        {
+            "kind": "lemma",
+            "text": "Candidate TS-L-1 uses the declared domain and the later relation.",
+            "theory_unit_ids": ["TS-L-1"],
+            "reference_block_ids": ["derivation:relation"],
+        }
+    )
+    introduction["blocks"].append(
+        {
+            "block_id": "obligation",
+            "kind": "proposition",
+            "text": "TS-PO-1 remains open until the stated implication is checked.",
+            "claim_ids": ["C1"],
+            "theory_unit_ids": ["TS-PO-1"],
+        }
+    )
+    document["sections"].insert(
+        1,
+        {
+            "section_id": "derivation",
+            "title": "Candidate Derivation",
+            "applicability": "required",
+            "blocks": [
+                {
+                    "block_id": "relation",
+                    "kind": "equation",
+                    "text": r"F = G",
+                    "claim_ids": ["C1"],
+                }
+            ],
+        },
+    )
+    document["sections"].insert(
+        2,
+        {
+            "section_id": "outcomes",
+            "title": "Decision Branches",
+            "applicability": "required",
+            "blocks": [
+                {
+                    "block_id": "no_information",
+                    "kind": "table",
+                    "text": "Decision status | Next action\nTS-BR-NOINFO | Route the unresolved dependency to review.",
+                    "claim_ids": ["C1"],
+                    "theory_unit_ids": ["TS-BR-NOINFO"],
+                }
+            ],
+        },
+    )
+    document["theory_spine"] = {
+        "lemma_units": [{"lemma_id": "TS-L-1", "display_label": "L1", "status": "candidate"}],
+        "proof_obligations": [{"proof_obligation_id": "TS-PO-1", "display_label": "PO1", "status": "unverified"}],
+        "falsifiers": [],
+        "decision_branches": [{"branch_id": "TS-BR-NOINFO", "display_label": "No-information", "branch_kind": "no_information"}],
+    }
+
+    markdown = render_research_plan_markdown(document)
+    rendered = render_tex_project(
+        document,
+        template_dir=_marker_template(tmp_path / "theory-template"),
+        project_dir=tmp_path / "theory-render",
+        profile=load_template_profile("markers_v1"),
+    )
+    tex = rendered.main_tex.read_text(encoding="utf-8")
+
+    assert "**Lemma L1 (Candidate).**" in markdown
+    assert "**Proof Obligation PO1 (Unverified).**" in markdown
+    assert "**Decision Status: No-information.**" in markdown
+    assert "See Eq. (eq:derivation-relation)." in markdown
+    assert "TS-" not in markdown
+    assert "\\paragraph{Lemma L1 (Candidate).}" in tex
+    assert "\\paragraph{Proof Obligation PO1 (Unverified).}" in tex
+    assert "\\caption{Decision Status: No-information}" in tex
+    assert "See Eq.~\\eqref{eq:derivation-relation}." in tex
+    assert "TS-" not in tex
+
+
+def test_theory_unit_status_overrides_a_less_precise_claim_qualification() -> None:
+    claims = {"C1": {"qualification": "proposed"}}
+    proof_registry = {
+        "TS-PO-1": {
+            "unit_kind": "proof_obligation",
+            "proof_obligation_id": "TS-PO-1",
+            "display_label": "PO1",
+            "status": "unverified",
+        }
+    }
+    branch_registry = {
+        "TS-BR-EXPECTED": {
+            "unit_kind": "decision_branch",
+            "branch_id": "TS-BR-EXPECTED",
+            "display_label": "Expected branch",
+            "status": "expected_not_observed",
+        }
+    }
+
+    proof_prefix, proof_status = theory_block_presentation(
+        {"kind": "proposition", "claim_ids": ["C1"], "theory_unit_ids": ["TS-PO-1"]},
+        claims=claims,
+        registry=proof_registry,
+    )
+    branch_prefix, branch_status = theory_block_presentation(
+        {"kind": "outcome_branch", "claim_ids": ["C1"], "theory_unit_ids": ["TS-BR-EXPECTED"]},
+        claims=claims,
+        registry=branch_registry,
+    )
+
+    assert (proof_prefix, proof_status) == ("Proof Obligation PO1 (Unverified).", "Unverified")
+    assert (branch_prefix, branch_status) == (
+        "Pre-registered Branch (Expected---Not Observed).",
+        "Expected---Not Observed",
+    )
+
+
+@pytest.mark.parametrize("text", ["研究计划", "研究計画", "연구 계획", "خطة البحث", "Исследовательский план", "Measurements of Ω and Λ"])
+def test_visible_text_allows_all_scripts(text: str) -> None:
+    assert normalize_visible_text(text, label="test prose") == text
+
+
+def test_visible_text_normalization_allows_latin_accents() -> None:
+    assert normalize_visible_text("René Descartes and naïve Bayesian design", label="test prose") == "René Descartes and naïve Bayesian design"
+
+
+def test_visible_text_escape_restores_backslashes_without_control_characters() -> None:
+    rendered = escape_latex_text(r"The literal expression is $\theta$.", label="test prose")
+
+    assert rendered == r"The literal expression is \$\textbackslash{}theta\$."
+    assert "\x00" not in rendered
+    assert "QWENSCI_BACKSLASH" not in rendered
+
+
+def test_math_expression_requires_a_real_mathematical_structure() -> None:
+    with pytest.raises(LatexSafetyError, match="mathematical relation or structure"):
+        safe_math_expression("The first matter premise is expressed in prose.", label="test equation")
+
+    assert safe_math_expression(r"\int_\gamma T_{ab}k^ak^b\,d\lambda \geq 0", label="test equation")
+
+
+def test_math_expression_partitions_explanatory_prose_from_valid_formulae() -> None:
+    mixed = (
+        "A null generator with tangent k^a obeys the proposed relation.\n\n"
+        r"\int_\gamma T_{ab} k^a k^b \, d\lambda \geq 0 ."
+        "\n\n"
+        "The interpretation remains conditional on the stated assumptions."
+    )
+
+    with pytest.raises(LatexSafetyError, match="explanatory prose"):
+        safe_math_expression(mixed, label="test equation")
+
+    assert split_equation_content(mixed, label="test equation") == [
+        ("prose", "A null generator with tangent k^a obeys the proposed relation."),
+        ("equation", r"\int_\gamma T_{ab} k^a k^b \, d\lambda \geq 0 ."),
+        ("prose", "The interpretation remains conditional on the stated assumptions."),
+    ]
+
+
+def test_renderer_splits_mixed_equation_content_before_tex_emission(tmp_path: Path) -> None:
+    document = _document(cited=False)
+    document["sections"][0]["blocks"][1]["text"] = (
+        "A null generator with tangent k^a obeys the proposed relation.\n\n"
+        r"\int_\gamma T_{ab} k^a k^b \, d\lambda \geq 0 ."
+        "\n\n"
+        "A second focusing condition is kept separate from the first relation.\n\n"
+        r"\int_\gamma R_{ab} k^a k^b \, d\lambda > 0 ."
+    )
+
+    rendered = render_tex_project(
+        document,
+        template_dir=_marker_template(tmp_path / "mixed-equation-template"),
+        project_dir=tmp_path / "mixed-equation-render",
+        profile=load_template_profile("markers_v1"),
+    )
+    text = rendered.main_tex.read_text(encoding="utf-8")
+
+    assert "\\begin{equation}\nA null generator" not in text
+    assert text.count("\\begin{equation}") == 1
+    assert text.count("\\begin{equation*}") == 1
+    assert r"A null generator with tangent k\textasciicircum{}a obeys the proposed relation." in text
+    assert r"\int_\gamma T_{ab} k^a k^b \, d\lambda \geq 0 ." in text
+    assert r"\int_\gamma R_{ab} k^a k^b \, d\lambda > 0 ." in text
+
+
+def test_renderer_uses_wide_layout_for_long_four_column_decision_matrix(tmp_path: Path) -> None:
+    document = _document()
+    document["sections"][0]["blocks"][2]["text"] = (
+        "Candidate case | Assumption check | Interpretation | Next action\n"
+        "--- | --- | --- | ---\n"
+        "Near-threshold configuration | Compactness remains in the proposed domain | Continue the lemma chain only conditionally | Record the result for human review\n"
+        "Boundary configuration | An upstream focusing premise fails | Treat it as an out-of-domain counterexample rather than a conclusion | Revise the declared domain"
+    )
+
+    rendered = render_tex_project(
+        document,
+        template_dir=_marker_template(tmp_path / "wide-table-template"),
+        project_dir=tmp_path / "wide-table-render",
+        profile=load_template_profile("markers_v1"),
+    )
+    text = rendered.main_tex.read_text(encoding="utf-8")
+
+    assert "\\begin{table*}" in text
+    assert "p{0.23\\textwidth}" in text
+    assert "p{0.14\\linewidth}" not in text
+    assert "---" not in text
+
+
+def test_renderer_uses_a_safe_width_for_six_column_decision_matrix(tmp_path: Path) -> None:
+    document = _document()
+    document["sections"][0]["blocks"][2]["text"] = (
+        "Branch | Premise | Boundary | Falsifier | Status | Action\n"
+        "Candidate | Retained | Declared domain | None | Unverified | Continue the obligation\n"
+        "No-information | Missing input | Do not infer theorem status | Not applicable | Review-required | Route to review"
+    )
+
+    rendered = render_tex_project(
+        document,
+        template_dir=_marker_template(tmp_path / "six-column-template"),
+        project_dir=tmp_path / "six-column-render",
+        profile=load_template_profile("markers_v1"),
+    )
+    text = rendered.main_tex.read_text(encoding="utf-8")
+
+    assert "\\begin{table*}" in text
+    assert text.count("p{0.1533\\textwidth}") == 6
+    assert "p{0.18\\textwidth}" not in text
 
 
 def test_renderer_rejects_unanchored_or_observed_visible_prose(tmp_path: Path) -> None:
@@ -213,36 +497,16 @@ def test_raw_tex_is_rejected_and_incomplete_bibtex_is_ledgered(tmp_path: Path) -
     incomplete = _document(cited=False, complete_metadata=False)
     bibliography = render_bibtex(incomplete)
     assert bibliography.emitted_keys == ()
-    assert bibliography.needs_completion[0]["reason"] == "missing_metadata:authors"
+    assert bibliography.needs_completion == ()
     cited_incomplete = deepcopy(incomplete)
     cited_incomplete["claim_provenance"][0]["citation_keys"] = ["cite_example_1"]
+    cited_bibliography = render_bibtex(cited_incomplete)
+    assert cited_bibliography.needs_completion[0]["reason"] == "missing_metadata:authors"
     with pytest.raises(BibtexRenderError, match="cannot be rendered"):
-        ensure_citation_coverage(cited_incomplete, bibliography)
+        ensure_citation_coverage(cited_incomplete, cited_bibliography)
 
 
 def test_frozen_evidence_paper_metadata_flows_to_a_renderable_bibtex_entry() -> None:
-    evidence_bundle = {
-        "paper_registry": [
-            {
-                "canonical_paper_id": "W42",
-                "title": "A Traceable Literature Record",
-                "authors": ["Ada Example", "Ben Example"],
-                "year": "2026",
-                "venue": "Journal of Research Plans",
-                "doi": "10.1000/w42",
-                "url": "https://example.test/W42",
-            }
-        ],
-        "evidence_cards": [
-            {
-                "card_id": "EC-W42",
-                "source_id": "W42",
-                "evidence_level": "fulltext",
-                "claim_slot": "measurement_calibration",
-                "source_location": "fulltext:W42",
-            }
-        ],
-    }
     compact_card = {
         "card_id": "EC-W42",
         "source_id": "W42",
@@ -265,6 +529,15 @@ def test_frozen_evidence_paper_metadata_flows_to_a_renderable_bibtex_entry() -> 
                                 "source_id": "W42",
                                 "evidence_level": "fulltext",
                                 "evidence_card_ids": ["EC-W42"],
+                                "citation_rendering_status": "RENDERABLE",
+                                "bibliographic_metadata": {
+                                    "authors": ["Ada Example", "Ben Example"],
+                                    "title": "A Traceable Literature Record",
+                                    "year": "2026",
+                                    "venue": "Journal of Research Plans",
+                                    "doi": "10.1000/w42",
+                                    "url": "https://example.test/W42",
+                                },
                             }
                         ],
                     }
@@ -279,9 +552,175 @@ def test_frozen_evidence_paper_metadata_flows_to_a_renderable_bibtex_entry() -> 
 
     bibliography = render_bibtex(document)
 
-    assert bibliography.emitted_keys == ()
-    assert bibliography.needs_completion[0]["citation_key"] == citation["citation_key"]
-    assert bibliography.needs_completion[0]["reason"].startswith("missing_metadata:")
+    assert bibliography.emitted_keys == (citation["citation_key"],)
+    assert bibliography.needs_completion == ()
+    assert "@article{cite_w42," in bibliography.content
+    assert bibliography_preflight_errors(registry["citation_registry"]) == []
+
+
+def test_bibtex_allows_non_english_bibliographic_metadata() -> None:
+    document = _document(cited=True)
+    metadata = document["citation_registry"][0]["bibliographic_metadata"]
+    metadata["authors"] = ["张伟", "Иван Петров"]
+    metadata["title"] = "量子场中的能量条件"
+    metadata["venue"] = "物理学报"
+
+    bibliography = render_bibtex(document)
+
+    assert bibliography.emitted_keys == ("cite_example_1",)
+    assert "张伟 and others" in bibliography.content
+    assert "Иван Петров" not in bibliography.content
+    assert "量子场中的能量条件" in bibliography.content
+    assert bibliography_preflight_errors(document["citation_registry"]) == []
+
+
+def test_bibtex_omits_uncited_records_and_abbreviates_long_author_lists() -> None:
+    document = _document(cited=True)
+    document["citation_registry"][0]["bibliographic_metadata"]["authors"] = [
+        "Ada Example",
+        "Ben Example",
+        "Casey Example",
+    ]
+    document["citation_registry"].append(
+        {
+            "citation_key": "cite_uncited",
+            "source_id": "W2",
+            "bibliographic_metadata": {
+                "authors": ["Uncited Author", "Uncited Coauthor"],
+                "title": "An Uncited Record",
+                "year": "2025",
+                "venue": "Unused Journal",
+            },
+        }
+    )
+
+    bibliography = render_bibtex(document)
+
+    assert bibliography.emitted_keys == ("cite_example_1",)
+    assert "Ada Example and others" in bibliography.content
+    assert "Ben Example" not in bibliography.content
+    assert "cite_uncited" not in bibliography.content
+
+
+def test_document_validator_allows_unicode_reference_inventory_and_title() -> None:
+    document = _document()
+    references = next(section for section in document["sections"] if section["section_id"] == "references")
+    references["title"] = "参考文献"
+    references["blocks"] = [
+        {
+            "block_id": "ref_inventory",
+            "kind": "list",
+            "text": "张伟 and Иван Петров. 量子场中的能量条件. 物理学报.",
+            "claim_ids": ["C1"],
+        }
+    ]
+
+    assert validate_research_plan_document(document) == []
+
+
+def test_bibliography_preflight_defers_uncited_metadata_completion() -> None:
+    citation = {
+        "citation_key": "cite_missing_metadata",
+        "source_id": "W-missing",
+        "evidence_level": "abstract",
+        "evidence_card_ids": ["EC-missing"],
+        "citation_rendering_status": "NOT_RENDERABLE_NEEDS_HUMAN_METADATA",
+        "citation_missing_fields": ["authors", "venue"],
+    }
+
+    assert bibliography_preflight_errors([citation]) == []
+
+
+def test_document_validator_rejects_unknown_or_non_equation_cross_references() -> None:
+    unknown_reference = _document(cited=False)
+    unknown_reference["sections"][0]["blocks"][0]["reference_block_ids"] = ["missing-equation"]
+    assert validate_research_plan_document(unknown_reference) == [
+        "visible section block B1 references unknown equation blocks: ['missing-equation']"
+    ]
+
+    non_equation_reference = _document(cited=False)
+    non_equation_reference["sections"][0]["blocks"][0]["reference_block_ids"] = ["B3"]
+    assert validate_research_plan_document(non_equation_reference) == [
+        "visible section block B1 cross-references non-equation blocks: ['B3']"
+    ]
+
+
+def test_document_validator_accepts_scoped_equations_and_keeps_appendix_a_math_specific() -> None:
+    document = _document(cited=False)
+    document["sections"].insert(
+        1,
+        {
+            "section_id": "derivation",
+            "title": "Derivation",
+            "applicability": "required",
+            "blocks": [
+                {"block_id": "relation", "kind": "equation", "text": "F = G", "claim_ids": ["C1"]},
+                {"block_id": "explanation", "kind": "paragraph", "text": "This explains the relation.", "claim_ids": ["C1"]},
+            ],
+        },
+    )
+    document["sections"][0]["blocks"][0]["reference_block_ids"] = ["derivation:relation"]
+
+    assert validate_research_plan_document(document) == []
+
+    non_equation = deepcopy(document)
+    non_equation["sections"][0]["blocks"][0]["reference_block_ids"] = ["derivation:explanation"]
+    assert validate_research_plan_document(non_equation) == [
+        "visible section block B1 cross-references non-equation blocks: ['derivation:explanation']"
+    ]
+
+    mathematics_routes = route_author_sections({"provenance": {"template_id": "mathematics_theory"}})["routes"]
+    mathematics_appendices = [route for route in mathematics_routes if route["target"] == "appendices"]
+    assert [route["section_id"] for route in mathematics_appendices] == [
+        "appendix_variables_and_definitions",
+        "appendix_idea_evolution",
+        "appendix_evidence_and_review",
+    ]
+    assert mathematics_appendices[0]["title"] == "Energy-Condition Taxonomy, Symbols, and Boundary Defense"
+
+    computational_routes = route_author_sections({"provenance": {"template_id": "computational_digital"}})["routes"]
+    computational_appendices = [route for route in computational_routes if route["target"] == "appendices"]
+    assert [route["section_id"] for route in computational_appendices] == [
+        "appendix_idea_evolution",
+        "appendix_variables_and_definitions",
+        "appendix_evidence_and_review",
+    ]
+
+
+def test_document_validator_rejects_global_section_and_tex_equation_label_collisions() -> None:
+    duplicate_section = _document(cited=False)
+    duplicate_section["appendices"] = [
+        {
+            "section_id": "introduction",
+            "title": "Repeated section",
+            "applicability": "required",
+            "blocks": [],
+        }
+    ]
+    assert "document contains duplicate section_id values across sections and appendices" in validate_research_plan_document(duplicate_section)
+
+    label_collision = _document(cited=False)
+    label_collision["sections"].insert(
+        1,
+        {
+            "section_id": "a_b",
+            "title": "First normalized route",
+            "applicability": "required",
+            "blocks": [{"block_id": "relation", "kind": "equation", "text": "F = G", "claim_ids": ["C1"]}],
+        },
+    )
+    label_collision["sections"].insert(
+        2,
+        {
+            "section_id": "a-b",
+            "title": "Second normalized route",
+            "applicability": "required",
+            "blocks": [{"block_id": "relation", "kind": "equation", "text": "F = G", "claim_ids": ["C1"]}],
+        },
+    )
+    assert validate_research_plan_document(label_collision) == [
+        "document equation labels collide after TeX normalization: eq:a-b-relation <- ['a-b:relation', 'a_b:relation']"
+    ]
 
 
 def test_compile_and_pdf_validation_publishes_only_validated_pdf(tmp_path: Path) -> None:
@@ -376,6 +815,49 @@ def test_resolve_executable_rejects_explicit_missing_path(tmp_path: Path) -> Non
             fallback="pdflatex",
             label="LaTeX engine",
         )
+
+
+def test_latex_engine_symlink_name_is_preserved_for_resolution_and_compilation(monkeypatch, tmp_path: Path) -> None:
+    engine_target = tmp_path / "pdftex"
+    engine_target.write_text("placeholder", encoding="utf-8")
+    engine_link = tmp_path / "pdflatex"
+    try:
+        engine_link.symlink_to(engine_target)
+    except OSError:
+        pytest.skip("creating symbolic links is unavailable in this test environment")
+
+    resolved = resolve_executable(
+        explicit=engine_link,
+        environment_variable="SCIENCE_LATEX_ENGINE",
+        configured="",
+        fallback="pdflatex",
+        label="LaTeX engine",
+    )
+    assert resolved == engine_link.absolute()
+    assert resolved.name == "pdflatex"
+
+    project_dir = tmp_path / "project"
+    project_dir.mkdir()
+    main_tex = project_dir / "main.tex"
+    main_tex.write_text("\\documentclass{article}", encoding="utf-8")
+    commands: list[list[str]] = []
+
+    def fake_run(command: list[str], **_kwargs: object) -> tuple[dict[str, object], str]:
+        commands.append(command)
+        return {"return_code": 0, "timed_out": False, "elapsed_ms": 0}, ""
+
+    monkeypatch.setattr(latex_compiler, "_run_command", fake_run)
+    compile_latex_project(
+        project_dir,
+        main_tex=main_tex,
+        latex_engine=resolved,
+        bibtex=None,
+        run_bibtex=False,
+        timeout_seconds=1,
+        staged_pdf_path=tmp_path / "output.pdf",
+    )
+
+    assert commands[0][0] == str(engine_link.absolute())
 
 
 def test_author_cli_forwards_explicit_rendering_overrides(monkeypatch, tmp_path: Path, capsys) -> None:

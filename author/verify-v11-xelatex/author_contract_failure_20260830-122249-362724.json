@@ -1,0 +1,280 @@
+{
+  "artifact_kind": "section_contract_preflight",
+  "attempted_section_count": 15,
+  "failed_section_count": 1,
+  "failures": [
+    {
+      "audit": {
+        "artifact_kind": "section_composer:introduction",
+        "constraints": [
+          "Only JSON structure, enum values, IDs, references, and source-bounded prose may be repaired.",
+          "No facts, sources, citations, DOI, numerical values, methods, results, proof claims, or verification claims may be added."
+        ],
+        "initial_candidate": {
+          "applicability": "required",
+          "blocks": [
+            {
+              "block_id": "intro-bg-1",
+              "claim_ids": [
+                "claim-bg-1"
+              ],
+              "heading": "Theoretical Context and the Averaged Energy Condition",
+              "kind": "paragraph",
+              "text": "The formation of black holes from stellar collapse is traditionally analyzed through Penrose-type singularity theorems, which rely on pointwise energy conditions to guarantee the focusing of null geodesics and the subsequent formation of trapped surfaces. However, the validity of these pointwise conditions is compromised in regimes where quantum stress-energy effects or realistic matter fields induce local violations, necessitating a shift toward averaged energy conditions. The Averaged Null Energy Condition (AANEC) has emerged as a robust candidate for a universal property of gravitating matter, offering a pathway to preserve singularity theorems in the face of such quantum violations. Yet, AANEC alone may not imply the local or integrated focusing required for trapped-surface formation, creating a theoretical gap between the relaxation of pointwise conditions and the rigorous geometric conclusions of classical general relativity."
+            },
+            {
+              "block_id": "intro-gap-1",
+              "claim_ids": [
+                "claim-gap-1"
+              ],
+              "heading": "The Missing Formal Bridge: AANEC and Trapped Surfaces",
+              "kind": "paragraph",
+              "text": "A critical unresolved issue in applying AANEC to stellar collapse is the precise mathematical form of the explicit averaged null-convergence or focusing condition required to bridge the gap between energy averaging and trapped-surface formation. Without a formal definition of this independent geometric hypothesis, it remains unclear whether candidate counterexamples—such as regular black holes or ultra-compact objects—genuinely evade the theorem's premises or merely exploit an ill-defined constraint. This ambiguity extends to the definition of the Misner-Sharp compactness parameter, which is essential for establishing the specific threshold at which collapse becomes inevitable. The absence of these formal definitions prevents the rigorous calculation of compactness thresholds and leaves the stability predicates for non-black-hole remnants undefined, thereby hindering the separation of formal theoretical bounds from astrophysical consistency constraints."
+            },
+            {
+              "block_id": "intro-contrib-1",
+              "claim_ids": [
+                "claim-contrib-1"
+              ],
+              "heading": "Proposed Contribution: A Qualified AANEC Bound",
+              "kind": "paragraph",
+              "text": "This research proposes a qualified AANEC trapped-surface bound for non-black-hole stellar remnants by explicitly decoupling the averaged energy condition from the geometric focusing hypothesis. The central contribution is the formulation of a mechanism-replacement strategy: we posit that spherically symmetric stellar collapse satisfying AANEC, global hyperbolicity, and complete null generators will force trapped-surface formation only if an additional, explicit averaged null-convergence condition holds. This approach allows us to derive a model-dependent compactness threshold via Raychaudhuri-type focusing, subsequently bounding stable non-black-hole remnants through TOV-like stellar-structure assumptions. Crucially, we treat the observed 2-5 solar mass gap not as a direct prediction of this theorem, but as an astrophysical consistency constraint subject to alternative stellar-physics explanations such as explosion energetics and binary evolution."
+            },
+            {
+              "block_id": "intro-assump-1",
+              "claim_ids": [
+                "claim-assump-1"
+              ],
+              "heading": "Scope and Design Assumptions",
+              "kind": "paragraph",
+              "text": "To operationalize this proposal, we adopt a restricted model class defined by classical general relativity with spherically symmetric collapse and isotropic pressure. We assume that matter fields satisfy AANEC along complete null generators and that spacetime is globally hyperbolic. The proposed theorem relies on an independent geometric hypothesis—an explicit averaged null-convergence condition—that is not a consequence of AANEC alone. Furthermore, we assume that non-black-hole remnants are modeled as stable equilibrium objects obeying a bounded compactness limit. These design assumptions establish the validity domain for the formal conjecture while explicitly excluding nonspherical, rotating, or magnetic dynamics, which are identified as potential confounders that could allow exotic compact objects to evade the averaged-focusing constraints."
+            }
+          ],
+          "claim_provenance": [
+            {
+              "citation_keys": [
+                "cite_0ed84243cf171bc4"
+              ],
+              "claim_id": "claim-bg-1",
+              "claim_kind": "background",
+              "evidence_card_ids": [
+                "EC:W3009127927:boundary_conditions:fdccce62784a"
+              ],
+              "formal_reference_ids": [],
+              "method_field": "formal_reasoning_plan",
+              "outcome_branch_ids": [],
+              "qualification": "survey_anchored",
+              "source_ids": [
+                "W3009127927"
+              ],
+              "statement": "AANEC is a robust candidate for preserving singularity theorems despite quantum violations of pointwise energy conditions, but it may not imply the local focusing needed for trapped-surface formation.",
+              "survey_anchor_ids": [
+                "survey:survey_markdown#section-003"
+              ]
+            },
+            {
+              "citation_keys": [],
+              "claim_id": "claim-gap-1",
+              "claim_kind": "research_gap",
+              "evidence_card_ids": [],
+              "formal_reference_ids": [],
+              "method_field": "definitions.D4",
+              "outcome_branch_ids": [],
+              "qualification": "needs_human_input",
+              "source_ids": [],
+              "statement": "The lack of a formal mathematical definition for the explicit averaged null-convergence condition and the Misner-Sharp compactness parameter prevents the rigorous calculation of thresholds and the evaluation of candidate counterexamples.",
+              "survey_anchor_ids": []
+            },
+            {
+              "citation_keys": [],
+              "claim_id": "claim-contrib-1",
+              "claim_kind": "planned_contribution",
+              "evidence_card_ids": [],
+              "formal_reference_ids": [
+                "P1",
+                "P2"
+              ],
+              "method_field": "selected_direction",
+              "outcome_branch_ids": [],
+              "qualification": "proposed",
+              "source_ids": [],
+              "statement": "The proposal introduces a mechanism-replacement strategy that decouples AANEC from an explicit averaged focusing hypothesis to derive a qualified trapped-surface bound, treating the mass gap as an astrophysical consistency constraint.",
+              "survey_anchor_ids": []
+            },
+            {
+              "citation_keys": [],
+              "claim_id": "claim-assump-1",
+              "claim_kind": "design_assumption",
+              "evidence_card_ids": [],
+              "formal_reference_ids": [
+                "A1",
+                "A2",
+                "A3",
+                "A4",
+                "A6"
+              ],
+              "method_field": "assumptions",
+              "outcome_branch_ids": [],
+              "qualification": "design_assumption",
+              "source_ids": [],
+              "statement": "The theorem is scoped to classical GR with spherical symmetry and isotropic pressure, assuming AANEC, global hyperbolicity, and a bounded compactness limit for stable remnants, while excluding nonspherical and rotating dynamics.",
+              "survey_anchor_ids": []
+            }
+          ],
+          "language": "en",
+          "open_items": [],
+          "review_items": [],
+          "schema_version": "research_plan_section_v1",
+          "section_id": "introduction",
+          "title": "Introduction"
+        },
+        "initial_validation_errors": [
+          "claim claim-gap-1 requires a traceable evidence card, source, or Survey anchor"
+        ],
+        "repair_attempted": true,
+        "repair_status": "REJECTED",
+        "repair_validation_errors": [
+          "claim claim-gap-1 requires a traceable evidence card, source, or Survey anchor"
+        ],
+        "repaired_candidate": {
+          "applicability": "required",
+          "blocks": [
+            {
+              "block_id": "intro-bg-1",
+              "claim_ids": [
+                "claim-bg-1"
+              ],
+              "heading": "Theoretical Context and the Averaged Energy Condition",
+              "kind": "paragraph",
+              "text": "The formation of black holes from stellar collapse is traditionally analyzed through Penrose-type singularity theorems, which rely on pointwise energy conditions to guarantee the focusing of null geodesics and the subsequent formation of trapped surfaces. However, the validity of these pointwise conditions is compromised in regimes where quantum stress-energy effects or realistic matter fields induce local violations, necessitating a shift toward averaged energy conditions. The Averaged Null Energy Condition (AANEC) has emerged as a robust candidate for a universal property of gravitating matter, offering a pathway to preserve singularity theorems in the face of such quantum violations. Yet, AANEC alone may not imply the local or integrated focusing required for trapped-surface formation, creating a theoretical gap between the relaxation of pointwise conditions and the rigorous geometric conclusions of classical general relativity."
+            },
+            {
+              "block_id": "intro-gap-1",
+              "claim_ids": [
+                "claim-gap-1"
+              ],
+              "heading": "The Missing Formal Bridge: AANEC and Trapped Surfaces",
+              "kind": "paragraph",
+              "text": "A critical unresolved issue in applying AANEC to stellar collapse is the precise mathematical form of the explicit averaged null-convergence or focusing condition required to bridge the gap between energy averaging and trapped-surface formation. Without a formal definition of this independent geometric hypothesis, it remains unclear whether candidate counterexamples—such as regular black holes or ultra-compact objects—genuinely evade the theorem's premises or merely exploit an ill-defined constraint. This ambiguity extends to the definition of the Misner-Sharp compactness parameter, which is essential for establishing the specific threshold at which collapse becomes inevitable. The absence of these formal definitions prevents the rigorous calculation of compactness thresholds and leaves the stability predicates for non-black-hole remnants undefined, thereby hindering the separation of formal theoretical bounds from astrophysical consistency constraints."
+            },
+            {
+              "block_id": "intro-contrib-1",
+              "claim_ids": [
+                "claim-contrib-1"
+              ],
+              "heading": "Proposed Contribution: A Qualified AANEC Bound",
+              "kind": "paragraph",
+              "text": "This research proposes a qualified AANEC trapped-surface bound for non-black-hole stellar remnants by explicitly decoupling the averaged energy condition from the geometric focusing hypothesis. The central contribution is the formulation of a mechanism-replacement strategy: we posit that spherically symmetric stellar collapse satisfying AANEC, global hyperbolicity, and complete null generators will force trapped-surface formation only if an additional, explicit averaged null-convergence condition holds. This approach allows us to derive a model-dependent compactness threshold via Raychaudhuri-type focusing, subsequently bounding stable non-black-hole remnants through TOV-like stellar-structure assumptions. Crucially, we treat the observed 2-5 solar mass gap not as a direct prediction of this theorem, but as an astrophysical consistency constraint subject to alternative stellar-physics explanations such as explosion energetics and binary evolution."
+            },
+            {
+              "block_id": "intro-assump-1",
+              "claim_ids": [
+                "claim-assump-1"
+              ],
+              "heading": "Scope and Design Assumptions",
+              "kind": "paragraph",
+              "text": "To operationalize this proposal, we adopt a restricted model class defined by classical general relativity with spherically symmetric collapse and isotropic pressure. We assume that matter fields satisfy AANEC along complete null generators and that spacetime is globally hyperbolic. The proposed theorem relies on an independent geometric hypothesis—an explicit averaged null-convergence condition—that is not a consequence of AANEC alone. Furthermore, we assume that non-black-hole remnants are modeled as stable equilibrium objects obeying a bounded compactness limit. These design assumptions establish the validity domain for the formal conjecture while explicitly excluding nonspherical, rotating, or magnetic dynamics, which are identified as potential confounders that could allow exotic compact objects to evade the averaged-focusing constraints."
+            }
+          ],
+          "claim_provenance": [
+            {
+              "citation_keys": [
+                "cite_0ed84243cf171bc4"
+              ],
+              "claim_id": "claim-bg-1",
+              "claim_kind": "background",
+              "evidence_card_ids": [
+                "EC:W3009127927:boundary_conditions:fdccce62784a"
+              ],
+              "formal_reference_ids": [],
+              "method_field": "formal_reasoning_plan",
+              "outcome_branch_ids": [],
+              "qualification": "survey_anchored",
+              "source_ids": [
+                "W3009127927"
+              ],
+              "statement": "AANEC is a robust candidate for preserving singularity theorems despite quantum violations of pointwise energy conditions, but it may not imply the local focusing needed for trapped-surface formation.",
+              "survey_anchor_ids": [
+                "survey:survey_markdown#section-003"
+              ]
+            },
+            {
+              "citation_keys": [],
+              "claim_id": "claim-gap-1",
+              "claim_kind": "research_gap",
+              "evidence_card_ids": [],
+              "formal_reference_ids": [
+                "D4"
+              ],
+              "method_field": "definitions.D4",
+              "outcome_branch_ids": [],
+              "qualification": "needs_human_input",
+              "source_ids": [],
+              "statement": "The lack of a formal mathematical definition for the explicit averaged null-convergence condition and the Misner-Sharp compactness parameter prevents the rigorous calculation of thresholds and the evaluation of candidate counterexamples.",
+              "survey_anchor_ids": []
+            },
+            {
+              "citation_keys": [],
+              "claim_id": "claim-contrib-1",
+              "claim_kind": "planned_contribution",
+              "evidence_card_ids": [],
+              "formal_reference_ids": [
+                "P1",
+                "P2"
+              ],
+              "method_field": "selected_direction",
+              "outcome_branch_ids": [],
+              "qualification": "proposed",
+              "source_ids": [],
+              "statement": "The proposal introduces a mechanism-replacement strategy that decouples AANEC from an explicit averaged focusing hypothesis to derive a qualified trapped-surface bound, treating the mass gap as an astrophysical consistency constraint.",
+              "survey_anchor_ids": []
+            },
+            {
+              "citation_keys": [],
+              "claim_id": "claim-assump-1",
+              "claim_kind": "design_assumption",
+              "evidence_card_ids": [],
+              "formal_reference_ids": [
+                "A1",
+                "A2",
+                "A3",
+                "A4",
+                "A6"
+              ],
+              "method_field": "assumptions",
+              "outcome_branch_ids": [],
+              "qualification": "design_assumption",
+              "source_ids": [],
+              "statement": "The theorem is scoped to classical GR with spherical symmetry and isotropic pressure, assuming AANEC, global hyperbolicity, and a bounded compactness limit for stable remnants, while excluding nonspherical and rotating dynamics.",
+              "survey_anchor_ids": []
+            }
+          ],
+          "language": "en",
+          "open_items": [],
+          "review_items": [],
+          "schema_version": "research_plan_section_v1",
+          "section_id": "introduction",
+          "title": "Introduction"
+        },
+        "schema_version": "research_plan_author_contract_repair_audit_v1"
+      },
+      "error": "section_composer:introduction: constrained repair produced an invalid JSON contract: claim claim-gap-1 requires a traceable evidence card, source, or Survey anchor",
+      "error_code": "AuthorContractRepairError",
+      "section_id": "introduction",
+      "validation_error_count": 1
+    }
+  ],
+  "mode": "complete_all_sections_before_abort",
+  "passed_section_count": 14,
+  "schema_version": "research_plan_author_section_contract_diagnostics_v1",
+  "section_cache": {
+    "corrupt": 0,
+    "hits": 0,
+    "misses": 15,
+    "mode": "read_write",
+    "root": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/.science/cache/research_plan_author/v1",
+    "schema_version": "research_plan_author_section_cache_v1",
+    "writes": 14
+  },
+  "section_count": 15
+}

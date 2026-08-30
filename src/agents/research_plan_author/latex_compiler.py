@@ -33,6 +33,17 @@ def _text(value: object) -> str:
     return str(value or "").strip()
 
 
+def _absolute_executable_path(value: str | Path) -> Path:
+    """Make an executable path absolute without dereferencing its command name.
+
+    LaTeX distributions frequently expose ``pdflatex`` and ``xelatex`` as
+    symlinks to lower-level binaries.  The invoked filename selects the TeX
+    format, so resolving that symlink changes the command's behavior.
+    """
+
+    return Path(value).expanduser().absolute()
+
+
 def resolve_executable(
     *,
     explicit: str | Path | None,
@@ -55,15 +66,15 @@ def resolve_executable(
         path = Path(candidate).expanduser()
         has_path_syntax = path.is_absolute() or any(separator in candidate for separator in ("/", "\\"))
         if has_path_syntax:
-            resolved = path.resolve()
-            if resolved.is_file():
-                return resolved
+            executable_path = _absolute_executable_path(path)
+            if executable_path.is_file():
+                return executable_path
             if source != "PATH":
-                raise LatexCompilerError(f"{label} from {source} is not an executable file: {resolved}")
+                raise LatexCompilerError(f"{label} from {source} is not an executable file: {executable_path}")
             continue
         located = shutil.which(candidate)
         if located:
-            return Path(located).resolve()
+            return _absolute_executable_path(located)
         if source != "PATH":
             raise LatexCompilerError(f"{label} from {source} is not available on PATH: {candidate}")
     raise LatexCompilerError(
@@ -147,8 +158,8 @@ def compile_latex_project(
         raise LatexCompilerError("main TeX file must remain inside the render project") from error
     if not source_project.is_dir() or not source_main.is_file():
         raise LatexCompilerError("render project or main TeX file does not exist")
-    engine_path = Path(latex_engine).expanduser().resolve()
-    bibtex_path = Path(bibtex).expanduser().resolve() if bibtex else None
+    engine_path = _absolute_executable_path(latex_engine)
+    bibtex_path = _absolute_executable_path(bibtex) if bibtex else None
     if not engine_path.is_file():
         raise LatexCompilerError(f"LaTeX engine is not an executable file: {engine_path}")
     if run_bibtex and (bibtex_path is None or not bibtex_path.is_file()):
@@ -156,7 +167,7 @@ def compile_latex_project(
     base_name = main_relative.stem
     commands: list[tuple[str, list[str]]] = [
         (
-            "pdflatex_initial",
+            "latex_initial",
             [str(engine_path), "-interaction=nonstopmode", "-halt-on-error", "-no-shell-escape", main_relative.name],
         )
     ]
@@ -165,11 +176,11 @@ def compile_latex_project(
     commands.extend(
         [
             (
-                "pdflatex_resolve_references_1",
+                "latex_resolve_references_1",
                 [str(engine_path), "-interaction=nonstopmode", "-halt-on-error", "-no-shell-escape", main_relative.name],
             ),
             (
-                "pdflatex_resolve_references_2",
+                "latex_resolve_references_2",
                 [str(engine_path), "-interaction=nonstopmode", "-halt-on-error", "-no-shell-escape", main_relative.name],
             ),
         ]

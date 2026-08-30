@@ -333,6 +333,33 @@ def test_author_input_contract_rejects_duplicated_full_design_payload() -> None:
     assert any("experiment_design" in error and "Additional properties" in error for error in errors)
 
 
+def test_author_input_contract_accepts_evidence_card_support_statement() -> None:
+    author_input = _author_input()
+    registry = author_input["source_registry"]
+    registry["allowed_source_ids"] = ["source-1"]
+    registry["evidence_cards_by_id"] = {
+        "card-1": {
+            "card_id": "card-1",
+            "source_id": "source-1",
+            "citation_key": "cite_source_1",
+            "evidence_level": "fulltext",
+            "claim_slot": "mechanism",
+            "source_location": "fulltext:source-1",
+            "support_statement": "The verified source supports this bounded statement.",
+        }
+    }
+    registry["citation_registry"] = [
+        {
+            "citation_key": "cite_source_1",
+            "source_id": "source-1",
+            "evidence_level": "fulltext",
+            "evidence_card_ids": ["card-1"],
+        }
+    ]
+
+    assert validate_author_input(author_input) == []
+
+
 def test_idea_evolution_projects_two_three_and_missing_history(tmp_path: Path) -> None:
     idea_path = _write_idea_run(tmp_path, include_candidate=True, include_portfolio=True)
 
@@ -411,7 +438,7 @@ def test_survey_loader_rejects_missing_manifest(tmp_path: Path) -> None:
         load_verified_survey_sources(tmp_path / "missing-survey-manifest.json")
 
 
-def test_run_preparation_and_atomic_artifacts(monkeypatch, tmp_path: Path) -> None:
+def test_run_preparation_and_atomic_artifacts_accepts_optional_cache_summary(monkeypatch, tmp_path: Path) -> None:
     author_input = _author_input()
     idea_path = _write_idea_run(tmp_path, include_candidate=True, include_portfolio=False)
     author_input["provenance"]["idea_result_path"] = str(idea_path)
@@ -433,6 +460,16 @@ def test_run_preparation_and_atomic_artifacts(monkeypatch, tmp_path: Path) -> No
 
     monkeypatch.setattr(author_run, "load_verified_survey_sources", lambda _path: survey_sources)
     result = run_author_preparation(author_path, survey_manifest_path=tmp_path / "survey_manifest.json")
+    result["status"] = "COMPOSED_FOR_RENDERING"
+    result["section_cache"] = {
+        "schema_version": "research_plan_author_section_cache_v1",
+        "mode": "read_write",
+        "root": str(tmp_path / ".science" / "cache" / "research_plan_author" / "v1"),
+        "hits": 0,
+        "misses": 15,
+        "writes": 15,
+        "corrupt": 0,
+    }
     paths = write_author_preparation_artifacts(
         result,
         tmp_path / "out",
@@ -446,6 +483,7 @@ def test_run_preparation_and_atomic_artifacts(monkeypatch, tmp_path: Path) -> No
     assert paths.document_json.is_file()
     assert paths.idea_evolution_json.is_file()
     assert json.loads(paths.document_json.read_text(encoding="utf-8"))["language"] == "en"
+    assert json.loads(paths.preparation_json.read_text(encoding="utf-8"))["section_cache"]["writes"] == 15
     assert json.loads(paths.author_context_json.read_text(encoding="utf-8")) == author_input
     assert len(result["source_bundle"]["author_input_identity"]["sha256"]) == 64
     assert result["source_bundle"]["survey_binding"]["status"] == "UNBOUND_REQUIRES_HUMAN_CONFIRMATION"
@@ -475,9 +513,96 @@ def test_author_logger_writes_jsonl_and_redacts_sensitive_fields(tmp_path: Path)
     assert "private" not in console.getvalue()
 
 
+def test_author_json_callback_passes_configured_temperature(monkeypatch) -> None:
+    calls: list[dict] = []
+
+    class Provider:
+        default_models = {}
+
+    class FakeAgent:
+        provider = Provider()
+
+        def __init__(self, *, config=None, provider_name=None) -> None:
+            calls.append({"config": config, "provider_name": provider_name})
+
+        def chat(self, prompt: str, *, model: str, **kwargs: object) -> str:
+            calls.append({"prompt": prompt, "model": model, **kwargs})
+            return '{"ok": true}'
+
+    import src.agents.idea_agent.agent.base as base
+    from src.agents.research_plan_author.llm_json import build_author_json_llm_call
+
+    monkeypatch.setattr(base, "AgentBase", FakeAgent)
+    callback = build_author_json_llm_call(
+        config={
+            "research_plan_author": {
+                "model": "test-author-model",
+                "authoring": {"temperature": 0.1},
+            }
+        }
+    )
+
+    assert callback("return JSON") == '{"ok": true}'
+    assert calls[1]["model"] == "test-author-model"
+    assert calls[1]["response_format"] == {"type": "json_object"}
+    assert calls[1]["temperature"] == 0.1
+
+
+def test_author_preparation_defers_uncited_metadata_completion_until_composition(monkeypatch, tmp_path: Path) -> None:
+    author_input = _author_input()
+    author_input["source_registry"]["allowed_source_ids"] = ["W-missing"]
+    author_input["source_registry"]["citation_registry"] = [
+        {
+            "citation_key": "cite_missing_metadata",
+            "source_id": "W-missing",
+            "evidence_level": "abstract",
+            "evidence_card_ids": ["EC-missing"],
+            "citation_rendering_status": "NOT_RENDERABLE_NEEDS_HUMAN_METADATA",
+            "citation_missing_fields": ["authors"],
+        }
+    ]
+    path = tmp_path / "author-input.json"
+    path.write_text(json.dumps(author_input), encoding="utf-8")
+
+    import src.agents.research_plan_author.run as author_run
+
+    survey_sources = {
+        "schema_version": "research_plan_author_survey_sources_v1",
+        "manifest_path": str(tmp_path / "survey_manifest.json"),
+        "base_dir": str(tmp_path),
+        "survey_run_id": "survey-run-1",
+        "project_id": "project-1",
+        "project_context_fingerprint": "fingerprint",
+        "topic": "Test Topic",
+        "manifest": {},
+        "artifacts": {},
+        "artifact_paths": {},
+    }
+    monkeypatch.setattr(author_run, "load_verified_survey_sources", lambda _path: survey_sources)
+
+    result = run_author_preparation(path, survey_manifest_path=tmp_path / "survey_manifest.json")
+
+    assert result["source_bundle"]["author_context"]["source_registry"]["citation_registry"][0][
+        "citation_key"
+    ] == "cite_missing_metadata"
+
+
 def test_author_cli_defaults_output_and_maps_survey_failure(monkeypatch, tmp_path: Path, capsys) -> None:
     config_path = tmp_path / "config.yaml"
-    OmegaConf.save(OmegaConf.create({"research_plan_author": {"enabled": True}}), config_path)
+    OmegaConf.save(
+        OmegaConf.create(
+            {
+                "research_plan_author": {
+                    "enabled": True,
+                    "authoring": {
+                        "max_contract_repairs_per_section": 0,
+                        "section_cache": {"enabled": True, "mode": "read_only", "root": str(tmp_path / "cache")},
+                    },
+                }
+            }
+        ),
+        config_path,
+    )
     author_path = tmp_path / "experiment_design_author.json"
     author_path.write_text("{}", encoding="utf-8")
     survey_path = tmp_path / "survey_manifest.json"
@@ -559,6 +684,8 @@ def test_author_cli_defaults_output_and_maps_survey_failure(monkeypatch, tmp_pat
             str(survey_path),
             "--model",
             "qwen3.8-flash",
+            "--section-cache-mode",
+            "refresh",
         ]
     )
 
@@ -566,11 +693,29 @@ def test_author_cli_defaults_output_and_maps_survey_failure(monkeypatch, tmp_pat
     assert cli._author_command(args) == cli.AUTHOR_EXIT_SUCCESS
     assert captured["author_input_path"] == author_path.resolve()
     assert captured["include_idea_evolution"] == "auto"
+    assert captured["collect_section_contract_errors"] is False
+    assert captured["max_contract_repairs"] == 0
+    assert captured["composer_concurrency"] == 5
+    assert captured["section_cache_config"]["mode"] == "refresh"
     assert captured["llm_builder"]["model"] == "qwen3.8-flash"
     assert (author_path.parent / "research_plan_author").is_dir()
     output = json.loads(capsys.readouterr().out)
     assert output["language"] == "en"
     assert output["status"] == "COMPOSED_FOR_RENDERING"
+
+    diagnostic_args = parser.parse_args(
+        [
+            "author",
+            "--config",
+            str(config_path),
+            "--author-input",
+            str(author_path),
+            "--survey-manifest",
+            str(survey_path),
+            "--collect-section-contract-errors",
+        ]
+    )
+    assert diagnostic_args.collect_section_contract_errors is True
 
 
 def test_author_cli_uses_explicit_output_and_maps_survey_failure(monkeypatch, tmp_path: Path, capsys) -> None:

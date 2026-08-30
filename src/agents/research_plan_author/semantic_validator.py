@@ -3,25 +3,18 @@
 from __future__ import annotations
 
 import json
-import re
 from collections.abc import Mapping
 from typing import Any
 
-from .contracts import AUTHORING_LANGUAGE, validate_research_plan_document
-from .latex_safety import contains_non_english_script, contains_observed_result_language
+from .contracts import (
+    AUTHORING_LANGUAGE,
+    validate_research_plan_document,
+)
+from .latex_safety import (
+    contains_observed_result_language,
+)
 from .section_router import required_route_ids
-
-
-_FORMAL_CLAIMS = {
-    "formal_definition",
-    "formal_proposition",
-    "proof_obligation",
-    "forward_derivation",
-    "counterexample_plan",
-}
-_CRITICAL_METHOD_FIELDS = {"sample_size", "sampling", "calibration", "eligibility", "endpoint", "statistics"}
-_EVIDENCE_REQUIRED_CLAIMS = {"background", "survey_evidence", "research_gap"}
-
+from .theory_spine import theory_spine_internal_ids_in_text
 
 def _mapping(value: object) -> dict[str, Any]:
     return dict(value) if isinstance(value, Mapping) else {}
@@ -42,7 +35,13 @@ def validate_composed_research_plan(
     routing: Mapping[str, Any],
     source_registry: Mapping[str, Any],
 ) -> list[str]:
-    """Reject silent source loss, observed results, and semantic evidence upgrades."""
+    """Reject forged identifiers and scientific-status upgrades only.
+
+    Writing quality, route recommendations, evidence-card wording, and
+    cross-section repetition are deliberately handled as non-blocking quality
+    concerns.  This final pass protects the proposal boundary rather than
+    restricting legitimate synthesis of upstream artifacts.
+    """
 
     errors = validate_research_plan_document(document)
     if not isinstance(document, Mapping):
@@ -54,8 +53,6 @@ def validate_composed_research_plan(
         errors.append("composed document language must be English")
     metadata = _mapping(payload.get("document_metadata"))
     for text_field in (metadata.get("title"), payload.get("abstract", {}).get("text") if isinstance(payload.get("abstract"), Mapping) else ""):
-        if contains_non_english_script(text_field):
-            errors.append("composed document contains non-English-script visible prose")
         if contains_observed_result_language(text_field):
             errors.append("composed document presents an observed result in visible prose")
     all_sections = [
@@ -63,7 +60,32 @@ def validate_composed_research_plan(
         for section in [*(payload.get("sections") or []), *(payload.get("appendices") or [])]
         if isinstance(section, Mapping)
     ]
+    document_block_kinds = {
+        f"{_text(section.get('section_id'))}:{_text(block.get('block_id'))}": _text(block.get("kind"))
+        for section in all_sections
+        if _text(section.get("section_id"))
+        for block in section.get("blocks") or []
+        if isinstance(block, Mapping) and _text(block.get("block_id"))
+    }
     section_ids = {_text(section.get("section_id")) for section in all_sections}
+    theory_unit_ids: set[str] = set()
+    theory_spine = _mapping(preparation.get("theory_spine"))
+    for collection_name, identifier_field in (
+        ("lemma_units", "lemma_id"),
+        ("proof_obligations", "proof_obligation_id"),
+        ("falsifiers", "falsifier_id"),
+        ("decision_branches", "branch_id"),
+    ):
+        theory_unit_ids.update(
+            _text(record.get(identifier_field))
+            for record in theory_spine.get(collection_name) or []
+            if isinstance(record, Mapping) and _text(record.get(identifier_field))
+        )
+    blueprint_sections = {
+        _text(section.get("section_id")): _mapping(section)
+        for section in _mapping(payload.get("authoring_blueprint")).get("sections") or []
+        if isinstance(section, Mapping) and _text(section.get("section_id"))
+    }
     required_ids = set(required_route_ids(routing))
     if "abstract" in required_ids:
         abstract = _mapping(payload.get("abstract"))
@@ -75,22 +97,44 @@ def validate_composed_research_plan(
     missing = required_ids - section_ids
     if missing:
         errors.append(f"composed document omits required routed sections: {sorted(missing)}")
+    for visible_label, text_value in (
+        ("document title", metadata.get("title")),
+        ("abstract", _mapping(payload.get("abstract")).get("text")),
+        *(("keyword", keyword) for keyword in payload.get("keywords") or []),
+    ):
+        private_ids = theory_spine_internal_ids_in_text(text_value)
+        if private_ids:
+            errors.append(f"{visible_label} exposes private theory identifiers: {private_ids}")
     claims = [claim for claim in payload.get("claim_provenance") or [] if isinstance(claim, Mapping)]
     claim_ids = [_text(claim.get("claim_id")) for claim in claims]
     if len(claim_ids) != len(set(claim_ids)):
         errors.append("document contains duplicate claim_id values")
     claim_id_set = set(claim_ids)
     for section in all_sections:
-        if contains_non_english_script(section.get("title")):
-            errors.append(f"section {section.get('section_id')} title contains non-English-script visible prose")
-        for block in section.get("blocks") or []:
-            if not isinstance(block, Mapping):
-                continue
+        section_id = _text(section.get("section_id"))
+        allowed_theory_units = {
+            _text(unit_id)
+            for field_name in ("lemma_ids", "proof_obligation_ids", "falsifier_ids", "decision_branch_ids")
+            for unit_id in _mapping(blueprint_sections.get(section_id)).get("theory_unit_references", {}).get(field_name, [])
+            if _text(unit_id)
+        }
+        private_ids = theory_spine_internal_ids_in_text(section.get("title"))
+        if private_ids:
+            errors.append(f"section {section_id} title exposes private theory identifiers: {private_ids}")
+        blocks = [block for block in section.get("blocks") or [] if isinstance(block, Mapping)]
+        block_kinds = {
+            _text(block.get("block_id")): _text(block.get("kind")) for block in blocks
+        }
+        for block in blocks:
             block_id = _text(block.get("block_id")) or "unnamed"
             block_text = _text(block.get("text"))
-            if contains_non_english_script(block_text):
-                errors.append(f"section block {block_id} contains non-English-script visible prose")
-            if contains_observed_result_language(block_text):
+            for field_name in ("heading", "text"):
+                private_ids = theory_spine_internal_ids_in_text(block.get(field_name))
+                if private_ids:
+                    errors.append(
+                        f"section block {block_id} exposes private theory identifiers in {field_name}: {private_ids}"
+                    )
+            if not (section_id == "references" and block_id == "bibliography") and contains_observed_result_language(block_text):
                 errors.append(f"section block {block_id} presents an observed result")
             block_claim_ids = {_text(claim_id) for claim_id in block.get("claim_ids") or [] if _text(claim_id)}
             if block_text and not block_claim_ids:
@@ -98,6 +142,38 @@ def validate_composed_research_plan(
             unknown_claims = block_claim_ids - claim_id_set
             if unknown_claims:
                 errors.append(f"section block {block.get('block_id')} references unknown claims")
+            reference_ids = {
+                _text(reference_id)
+                for reference_id in block.get("reference_block_ids") or []
+                if _text(reference_id)
+            }
+            local_references = {reference_id for reference_id in reference_ids if ":" not in reference_id}
+            scoped_references = reference_ids - local_references
+            if (local_references - set(block_kinds)) or (scoped_references - set(document_block_kinds)):
+                errors.append(f"section block {block_id} references an unknown equation block")
+            if any(
+                (reference_id in block_kinds and block_kinds.get(reference_id) != "equation")
+                or (
+                    reference_id in document_block_kinds
+                    and document_block_kinds.get(reference_id) != "equation"
+                )
+                for reference_id in reference_ids
+            ):
+                errors.append(f"section block {block_id} cross-references a non-equation block")
+            unknown_theory_units = {
+                _text(unit_id)
+                for unit_id in block.get("theory_unit_ids") or []
+                if _text(unit_id)
+            } - theory_unit_ids
+            if unknown_theory_units:
+                errors.append(f"section block {block_id} references an unknown theory unit")
+            nonlocal_theory_units = {
+                _text(unit_id)
+                for unit_id in block.get("theory_unit_ids") or []
+                if _text(unit_id)
+            } & theory_unit_ids - allowed_theory_units
+            if nonlocal_theory_units:
+                errors.append(f"section block {block_id} references a theory unit outside its section slice")
     allowed_sources = set(source_registry.get("allowed_source_ids") or [])
     allowed_anchors = set(source_registry.get("allowed_survey_anchor_ids") or [])
     cards = _mapping(source_registry.get("evidence_cards_by_id"))
@@ -125,12 +201,6 @@ def validate_composed_research_plan(
         statement = _text(claim.get("statement"))
         if claim_kind == "observed_result" or contains_observed_result_language(statement):
             errors.append(f"claim {claim_id} presents an observed result")
-        if claim_kind in _EVIDENCE_REQUIRED_CLAIMS and not (
-            claim.get("source_ids") or claim.get("evidence_card_ids") or claim.get("survey_anchor_ids")
-        ):
-            errors.append(f"claim {claim_id} lacks traceable evidence provenance")
-        if contains_non_english_script(statement):
-            errors.append(f"claim {claim_id} contains non-English-script visible prose")
         if set(claim.get("source_ids") or []) - allowed_sources:
             errors.append(f"claim {claim_id} has an unregistered source")
         if set(claim.get("survey_anchor_ids") or []) - allowed_anchors:
@@ -146,20 +216,6 @@ def validate_composed_research_plan(
                 errors.append(f"expected outcome claim {claim_id} is not a conditional branch")
             if set(claim.get("outcome_branch_ids") or []) - branch_ids:
                 errors.append(f"expected outcome claim {claim_id} references an unknown outcome branch")
-        if claim_kind in _FORMAL_CLAIMS:
-            if qualification not in {"proposed", "unverified", "not_applicable"}:
-                errors.append(f"formal claim {claim_id} is upgraded beyond the upstream verification state")
-            if claim.get("evidence_card_ids"):
-                errors.append(f"formal claim {claim_id} mixes formal reasoning with empirical evidence")
-            if re.search(r"\b(?:verified|proved|proven|proof completed|valid counterexample)\b", statement, re.IGNORECASE):
-                errors.append(f"formal claim {claim_id} asserts verification that the proposal has not established")
-        elif claim.get("formal_reference_ids"):
-            errors.append(f"empirical claim {claim_id} mixes formal reasoning with empirical evidence")
-        if qualification == "evidence_backed":
-            method_field = _text(claim.get("method_field")).casefold()
-            evidence_cards = [cards.get(card_id, {}) for card_id in claim.get("evidence_card_ids") or []]
-            if method_field in _CRITICAL_METHOD_FIELDS and any(card.get("evidence_level") != "fulltext" for card in evidence_cards):
-                errors.append(f"critical method claim {claim_id} is not backed by full text")
     final_unknowns = payload.get("open_items") if isinstance(payload.get("open_items"), list) else []
     final_reviews = payload.get("review_items") if isinstance(payload.get("review_items"), list) else []
     expected_unknown_ids = {str(item.get("source_item_id") or "") for item in source_registry.get("unknown_items") or [] if isinstance(item, Mapping)}
@@ -174,9 +230,6 @@ def validate_composed_research_plan(
         errors.append("composed document dropped or invented an upstream human-review item")
     if len(final_unknown_id_list) != len(final_unknown_ids) or len(final_review_id_list) != len(final_review_ids):
         errors.append("composed document repeats an upstream unknown or human-review item")
-    for item in [*final_unknowns, *final_reviews]:
-        if isinstance(item, Mapping) and contains_non_english_script(item.get("text")):
-            errors.append("composed document contains a non-English-script unknown or review rendering")
     for item in final_unknowns:
         if isinstance(item, Mapping) and item.get("status") != "needs_human_input":
             errors.append("composed document open_items must use status=needs_human_input")

@@ -1,0 +1,754 @@
+{
+  "artifact_kind": "section_composer:survey_and_research_gap",
+  "constraints": [
+    "Only JSON structure, enum values, IDs, references, and exact copying may be repaired.",
+    "No facts, sources, citations, DOI, numerical values, methods, results, proof claims, or verification claims may be added."
+  ],
+  "initial_candidate": {
+    "applicability": "required",
+    "blocks": [
+      {
+        "block_id": "block_bg_01",
+        "claim_ids": [
+          "claim_bg_proposal_scope"
+        ],
+        "kind": "paragraph",
+        "text": "The proposal addresses a formal mechanism for black-hole formation and its relationship to stellar-mass gaps. It adopts an AANEC-relaxed framework as the mechanism of interest. The framework is restricted to classical GR with spherical, non-rotating collapse with isotropic pressure, regular matter fields, global hyperbolicity, complete null generators, and an explicit averaged null-convergence/focusing condition. The proposed result is not a quantitative derivation of the observed 2–5 solar mass gap and is not a general proof that all massive stars necessarily form black holes."
+      },
+      {
+        "block_id": "block_bg_02",
+        "claim_ids": [
+          "claim_bg_quantum_violation",
+          "claim_bg_formal_claim_missing"
+        ],
+        "kind": "paragraph",
+        "text": "Classical Penrose-type singularity theorems relate trapped-surface formation, energy conditions, and geodesic incompleteness. The literature emphasizes that pointwise energy conditions are systematically violated by quantum fields, motivating weaker averaged energy conditions for broader validity. The available material supports this as a general theoretical motivation, while the specific missing slot indicates that the Survey has not yet located a direct formal-claim evidence source for the Penrose-type theorem pathway relevant to this sub-hypothesis."
+      },
+      {
+        "block_id": "block_svy_01",
+        "claim_ids": [
+          "claim_svy_sec_violation",
+          "claim_svy_no_trapped_surface"
+        ],
+        "kind": "paragraph",
+        "text": "The Survey states that realistic matter fields, such as scalar fields involved in inflationary scenarios, frequently violate the Strong Energy Condition while satisfying the Dominant Energy Condition, permitting non-singular bouncing cosmologies and collapse scenarios. The Survey also describes explicit counterexamples where the absence of trapped surfaces circumvents singularity theorems, yielding singularity-free histories, and discusses alternative compact objects and ECO models. These are Survey-anchored findings, not new evidence cards."
+      },
+      {
+        "block_id": "block_svy_02",
+        "claim_ids": [
+          "claim_svy_aanec_universal",
+          "claim_svy_qei_bounds"
+        ],
+        "kind": "paragraph",
+        "text": "The Survey states that AANEC has emerged as a candidate for a universal property of gravitating matter, offering a pathway to preserve singularity theorems against quantum violations, and notes there are no known physically reasonable counter-examples to AANEC. It further notes that QEIs provide rigorous lower bounds on averaged energy density along geodesics, and that extensions using averaged energy conditions and QEI-inspired assumptions can prove geodesic incompleteness. These statements are synthesized from Survey sections 002 and 003."
+      },
+      {
+        "block_id": "block_svy_03",
+        "claim_ids": [
+          "claim_svy_gap_engine",
+          "claim_svy_gap_metallicity"
+        ],
+        "kind": "paragraph",
+        "text": "The Survey synthesizes that the mass gap serves as a discriminator for supernova engine physics, favoring rapid explosion dynamics over delayed fallback scenarios. It also notes that the mass distribution is shaped by metallicity-dependent winds and binary interactions, and that gravitational-wave catalogs reveal substructure in chirp-mass distributions and candidates within the mass gaps. These findings are grounded in Survey sections 004 and 006."
+      },
+      {
+        "block_id": "block_svy_04",
+        "claim_ids": [
+          "claim_svy_gw_cannot_rule_eco"
+        ],
+        "kind": "paragraph",
+        "text": "The Survey notes that gravitational-wave data for the analyzed binary neutron star candidate cannot rule out objects more compact than neutron stars, including black holes or quark stars, despite component masses consistent with neutron stars. This Survey evidence indicates that current wave-data alone may not fully discriminate black-hole versus ECO outcomes in that analyzed candidate context."
+      },
+      {
+        "block_id": "block_gap_01",
+        "claim_ids": [
+          "claim_gap_sh3_missing"
+        ],
+        "kind": "paragraph",
+        "text": "Research Gap 1: The Survey evidence plan marks the formal_claim slot as missing for SH3. The exact gap text states: 'Required evidence slot 'formal_claim' is missing from the Survey evidence plan for sub-hypothesis SH3: Under what assumptions and validity domains do Penrose-type singularity theorems and Einstein-field-equation solutions support the existence of black holes, and what counterexamples or limiting conditions challenge their applicability?' The claim uses this anchor as a Survey-anchored gap statement."
+      },
+      {
+        "block_id": "block_gap_02",
+        "claim_ids": [
+          "claim_gap_sh4_boundary"
+        ],
+        "kind": "paragraph",
+        "text": "Research Gap 2: The Survey evidence plan marks the boundary_variable slot as uncovered for SH4 in the 'Theoretical Stellar Evolution and Remnant Formation Pathways' cluster. The exact gap text states: 'Required slot 'boundary_variable' remains uncovered in relevant evidence cluster 'Theoretical Stellar Evolution and Remnant Formation Pathways'. This gap is anchored by the corresponding Survey anchor and registered as a research gap."
+      },
+      {
+        "block_id": "block_gap_03",
+        "claim_ids": [
+          "claim_gap_global_explosion_energy"
+        ],
+        "kind": "paragraph",
+        "text": "Research Gap 3: The Survey abstract-derived anchor states that derived mass distributions remain sensitive to uncertainties in explosion and unbinding energies across different progenitor masses, leaving a key physical parameter unconstrained. This gap is registered under the target slot 'progenitor explosion energetics' and anchored by the global progenitor explosion energetics anchor."
+      },
+      {
+        "block_id": "block_gap_04",
+        "claim_ids": [
+          "claim_gap_sh3_missing",
+          "claim_gap_sh4_boundary",
+          "claim_gap_global_explosion_energy"
+        ],
+        "kind": "list",
+        "text": "Gap synthesis: the available Survey artifacts jointly motivate three unresolved questions within this route: (i) the assumptions/validity domains and counterexamples relevant to the proposed formal theorem; (ii) whether a boundary variable exists that cleanly separates black-hole and non-black-hole outcomes; and (iii) whether explosion-energetics uncertainties dominate the inference of mass-gap boundaries. These gaps are Survey-anchored and not yet evidenced by new formal results."
+      }
+    ],
+    "claim_provenance": [
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_bg_proposal_scope",
+        "claim_kind": "background",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "design_assumption",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "The proposal adopts an AANEC-relaxed formal mechanism restricted to classical GR with spherical, non-rotating collapse with isotropic pressure, regular matter fields, global hyperbolicity, complete null generators, and an explicit averaged null-convergence/focusing condition; it does not quantitatively derive the observed 2–5 solar mass gap or prove that all massive stars necessarily form black holes.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-001"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_bg_quantum_violation",
+        "claim_kind": "background",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "evidence_backed",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "Pointwise energy conditions are systematically violated by quantum fields, necessitating the use of weaker statements such as quantum energy inequalities or averaged energy conditions for broader validity.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-003"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_bg_formal_claim_missing",
+        "claim_kind": "background",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "The Survey evidence plan flags that the required evidence slot 'formal_claim' is missing for SH3 regarding Penrose-type singularity theorems and black-hole existence.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-001"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_svy_sec_violation",
+        "claim_kind": "survey_evidence",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "Realistic matter fields can violate the SEC while satisfying the DEC, thereby permitting non-singular bouncing cosmologies and collapse scenarios.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-004"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_svy_no_trapped_surface",
+        "claim_kind": "survey_evidence",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "The absence of trapped surfaces can entirely circumvent singularity theorems, allowing singularity-free histories under some models.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-004"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_svy_aanec_universal",
+        "claim_kind": "survey_evidence",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "AANEC has emerged as a candidate for a universal property of gravitating matter, and no known physically reasonable counter-examples are stated for it.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-002"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_svy_qei_bounds",
+        "claim_kind": "survey_evidence",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "QEIs provide rigorous lower bounds on averaged energy density along geodesics, and theorem extensions using averaged energy conditions and QEI-inspired assumptions can prove geodesic incompleteness.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-003"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_7a407c865faafd11"
+        ],
+        "claim_id": "claim_svy_gap_engine",
+        "claim_kind": "survey_evidence",
+        "evidence_card_ids": [
+          "EC:W2994776863:mechanism:d3700c18a61d"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W2994776863"
+        ],
+        "statement": "The observed mass gap is treated as a discriminator for supernova engine physics, favoring rapid explosion dynamics over delayed fallback scenarios.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-004"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_c369df652181e8f7"
+        ],
+        "claim_id": "claim_svy_gap_metallicity",
+        "claim_kind": "survey_evidence",
+        "evidence_card_ids": [
+          "EC:W2095725842:boundary_conditions:1a843b49c71e"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W2095725842"
+        ],
+        "statement": "The black-hole mass distribution is modulated by metallicity-dependent winds and binary interactions, which reshape progenitor mass budgets and remnant outcomes.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-006"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_07d6df5d6978a1fc"
+        ],
+        "claim_id": "claim_svy_gw_cannot_rule_eco",
+        "claim_kind": "survey_evidence",
+        "evidence_card_ids": [
+          "EC:W2766840380:boundary_conditions:42d0ed58107f"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W2766840380"
+        ],
+        "statement": "Gravitational-wave data alone for the analyzed binary neutron star candidate cannot rule out objects more compact than neutron stars, such as black holes or quark stars, despite component masses consistent with neutron stars.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-006"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_gap_sh3_missing",
+        "claim_kind": "research_gap",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "The Survey evidence plan identifies a missing formal-claim evidence slot for SH3, leaving unresolved which assumptions and validity domains Penrose-type singularity theorems and Einstein-field-equation solutions use to support black-hole existence, and which counterexamples or limiting conditions challenge their applicability.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-002"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_f634820e22d7a238"
+        ],
+        "claim_id": "claim_gap_sh4_boundary",
+        "claim_kind": "research_gap",
+        "evidence_card_ids": [
+          "EC:W3036761016:boundary_conditions:6799aadc0af7"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W3036761016"
+        ],
+        "statement": "The Survey evidence plan identifies an uncovered boundary_variable slot in the relevant evidence cluster 'Theoretical Stellar Evolution and Remnant Formation Pathways', leaving unresolved which variable can serve as a clean boundary between black-hole and non-black-hole outcomes.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-011"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_72d7ff391b29c495"
+        ],
+        "claim_id": "claim_gap_global_explosion_energy",
+        "claim_kind": "research_gap",
+        "evidence_card_ids": [
+          "EC:W2808391388:research_object_measurability:3458c9f3c523"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W2808391388"
+        ],
+        "statement": "The Survey abstract-derived anchor indicates that derived mass distributions remain sensitive to uncertainties in the explosion and unbinding energies across different progenitor masses, leaving a key physical parameter unconstrained.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-005"
+        ]
+      }
+    ],
+    "language": "en",
+    "open_items": [],
+    "review_items": [],
+    "schema_version": "research_plan_section_v1",
+    "section_id": "survey_and_research_gap",
+    "title": "Background, Survey, and Research Gap"
+  },
+  "initial_validation_errors": [
+    "claim claim_bg_formal_claim_missing statement must exactly match a cited evidence-card support statement",
+    "claim claim_bg_proposal_scope statement must exactly match a cited evidence-card support statement",
+    "claim claim_gap_global_explosion_energy statement must exactly match a cited evidence-card support statement",
+    "claim claim_gap_sh3_missing statement must exactly match a cited evidence-card support statement",
+    "claim claim_gap_sh4_boundary statement must exactly match a cited evidence-card support statement",
+    "claim claim_svy_aanec_universal statement must exactly match a cited evidence-card support statement",
+    "claim claim_svy_gap_engine statement must exactly match a cited evidence-card support statement",
+    "claim claim_svy_gap_metallicity statement must exactly match a cited evidence-card support statement",
+    "claim claim_svy_no_trapped_surface statement must exactly match a cited evidence-card support statement",
+    "claim claim_svy_qei_bounds statement must exactly match a cited evidence-card support statement",
+    "claim claim_svy_sec_violation statement must exactly match a cited evidence-card support statement"
+  ],
+  "repair_attempted": true,
+  "repair_status": "REJECTED",
+  "repair_validation_errors": [
+    "claim claim_bg_formal_claim_missing statement must exactly match a cited evidence-card support statement",
+    "claim claim_bg_proposal_scope statement must exactly match a cited evidence-card support statement",
+    "claim claim_gap_global_explosion_energy statement must exactly match a cited evidence-card support statement",
+    "claim claim_gap_sh3_missing statement must exactly match a cited evidence-card support statement",
+    "claim claim_gap_sh4_boundary statement must exactly match a cited evidence-card support statement",
+    "claim claim_svy_aanec_universal statement must exactly match a cited evidence-card support statement",
+    "claim claim_svy_gap_engine statement must exactly match a cited evidence-card support statement",
+    "claim claim_svy_gap_metallicity statement must exactly match a cited evidence-card support statement",
+    "claim claim_svy_no_trapped_surface statement must exactly match a cited evidence-card support statement",
+    "claim claim_svy_qei_bounds statement must exactly match a cited evidence-card support statement",
+    "claim claim_svy_sec_violation statement must exactly match a cited evidence-card support statement"
+  ],
+  "repaired_candidate": {
+    "applicability": "required",
+    "blocks": [
+      {
+        "block_id": "block_bg_01",
+        "claim_ids": [
+          "claim_bg_proposal_scope"
+        ],
+        "kind": "paragraph",
+        "text": "The proposal addresses a formal mechanism for black-hole formation and its relationship to stellar-mass gaps. It adopts an AANEC-relaxed framework as the mechanism of interest. The framework is restricted to classical GR with spherical, non-rotating collapse with isotropic pressure, regular matter fields, global hyperbolicity, complete null generators, and an explicit averaged null-convergence/focusing condition. The proposed result is not a quantitative derivation of the observed 2–5 solar mass gap and is not a general proof that all massive stars necessarily form black holes."
+      },
+      {
+        "block_id": "block_bg_02",
+        "claim_ids": [
+          "claim_bg_quantum_violation",
+          "claim_bg_formal_claim_missing"
+        ],
+        "kind": "paragraph",
+        "text": "Classical Penrose-type singularity theorems relate trapped-surface formation, energy conditions, and geodesic incompleteness. The literature emphasizes that pointwise energy conditions are systematically violated by quantum fields, motivating weaker averaged energy conditions for broader validity. The available material supports this as a general theoretical motivation, while the specific missing slot indicates that the Survey has not yet located a direct formal-claim evidence source for the Penrose-type theorem pathway relevant to this sub-hypothesis."
+      },
+      {
+        "block_id": "block_svy_01",
+        "claim_ids": [
+          "claim_svy_sec_violation",
+          "claim_svy_no_trapped_surface"
+        ],
+        "kind": "paragraph",
+        "text": "The Survey states that realistic matter fields, such as scalar fields involved in inflationary scenarios, frequently violate the Strong Energy Condition while satisfying the Dominant Energy Condition, permitting non-singular bouncing cosmologies and collapse scenarios. The Survey also describes explicit counterexamples where the absence of trapped surfaces circumvents singularity theorems, yielding singularity-free histories, and discusses alternative compact objects and ECO models. These are Survey-anchored findings, not new evidence cards."
+      },
+      {
+        "block_id": "block_svy_02",
+        "claim_ids": [
+          "claim_svy_aanec_universal",
+          "claim_svy_qei_bounds"
+        ],
+        "kind": "paragraph",
+        "text": "The Survey states that AANEC has emerged as a candidate for a universal property of gravitating matter, offering a pathway to preserve singularity theorems against quantum violations, and notes there are no known physically reasonable counter-examples to AANEC. It further notes that QEIs provide rigorous lower bounds on averaged energy density along geodesics, and that extensions using averaged energy conditions and QEI-inspired assumptions can prove geodesic incompleteness. These statements are synthesized from Survey sections 002 and 003."
+      },
+      {
+        "block_id": "block_svy_03",
+        "claim_ids": [
+          "claim_svy_gap_engine",
+          "claim_svy_gap_metallicity"
+        ],
+        "kind": "paragraph",
+        "text": "The Survey synthesizes that the mass gap serves as a discriminator for supernova engine physics, favoring rapid explosion dynamics over delayed fallback scenarios. It also notes that the mass distribution is shaped by metallicity-dependent winds and binary interactions, and that gravitational-wave catalogs reveal substructure in chirp-mass distributions and candidates within the mass gaps. These findings are grounded in Survey sections 004 and 006."
+      },
+      {
+        "block_id": "block_svy_04",
+        "claim_ids": [
+          "claim_svy_gw_cannot_rule_eco"
+        ],
+        "kind": "paragraph",
+        "text": "The Survey notes that gravitational-wave data for the analyzed binary neutron star candidate cannot rule out objects more compact than neutron stars, including black holes or quark stars, despite component masses consistent with neutron stars. This Survey evidence indicates that current wave-data alone may not fully discriminate black-hole versus ECO outcomes in that analyzed candidate context."
+      },
+      {
+        "block_id": "block_gap_01",
+        "claim_ids": [
+          "claim_gap_sh3_missing"
+        ],
+        "kind": "paragraph",
+        "text": "Research Gap 1: The Survey evidence plan marks the formal_claim slot as missing for SH3. The exact gap text states: 'Required evidence slot 'formal_claim' is missing from the Survey evidence plan for sub-hypothesis SH3: Under what assumptions and validity domains do Penrose-type singularity theorems and Einstein-field-equation solutions support the existence of black holes, and what counterexamples or limiting conditions challenge their applicability?' The claim uses this anchor as a Survey-anchored gap statement."
+      },
+      {
+        "block_id": "block_gap_02",
+        "claim_ids": [
+          "claim_gap_sh4_boundary"
+        ],
+        "kind": "paragraph",
+        "text": "Research Gap 2: The Survey evidence plan marks the boundary_variable slot as uncovered for SH4 in the 'Theoretical Stellar Evolution and Remnant Formation Pathways' cluster. The exact gap text states: 'Required slot 'boundary_variable' remains uncovered in relevant evidence cluster 'Theoretical Stellar Evolution and Remnant Formation Pathways'. This gap is anchored by the corresponding Survey anchor and registered as a research gap."
+      },
+      {
+        "block_id": "block_gap_03",
+        "claim_ids": [
+          "claim_gap_global_explosion_energy"
+        ],
+        "kind": "paragraph",
+        "text": "Research Gap 3: The Survey abstract-derived anchor states that derived mass distributions remain sensitive to uncertainties in explosion and unbinding energies across different progenitor masses, leaving a key physical parameter unconstrained. This gap is registered under the target slot 'progenitor explosion energetics' and anchored by the global progenitor explosion energetics anchor."
+      },
+      {
+        "block_id": "block_gap_04",
+        "claim_ids": [
+          "claim_gap_sh3_missing",
+          "claim_gap_sh4_boundary",
+          "claim_gap_global_explosion_energy"
+        ],
+        "kind": "list",
+        "text": "Gap synthesis: the available Survey artifacts jointly motivate three unresolved questions within this route: (i) the assumptions/validity domains and counterexamples relevant to the proposed formal theorem; (ii) whether a boundary variable exists that cleanly separates black-hole and non-black-hole outcomes; and (iii) whether explosion-energetics uncertainties dominate the inference of mass-gap boundaries. These gaps are Survey-anchored and not yet evidenced by new formal results."
+      }
+    ],
+    "claim_provenance": [
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_bg_proposal_scope",
+        "claim_kind": "background",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "design_assumption",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "The proposal adopts an AANEC-relaxed formal mechanism restricted to classical GR with spherical, non-rotating collapse with isotropic pressure, regular matter fields, global hyperbolicity, complete null generators, and an explicit averaged null-convergence/focusing condition; it does not quantitatively derive the observed 2–5 solar mass gap or prove that all massive stars necessarily form black holes.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-001"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_bg_quantum_violation",
+        "claim_kind": "background",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "evidence_backed",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "Pointwise energy conditions are systematically violated by quantum fields, necessitating the use of weaker statements such as quantum energy inequalities or averaged energy conditions for broader validity.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-003"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_bg_formal_claim_missing",
+        "claim_kind": "background",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "The Survey evidence plan flags that the required evidence slot 'formal_claim' is missing for SH3 regarding Penrose-type singularity theorems and black-hole existence.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-001"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_svy_sec_violation",
+        "claim_kind": "survey_evidence",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "Realistic matter fields can violate the SEC while satisfying the DEC, thereby permitting non-singular bouncing cosmologies and collapse scenarios.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-004"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_svy_no_trapped_surface",
+        "claim_kind": "survey_evidence",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "The absence of trapped surfaces can entirely circumvent singularity theorems, allowing singularity-free histories under some models.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-004"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_svy_aanec_universal",
+        "claim_kind": "survey_evidence",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "AANEC has emerged as a candidate for a universal property of gravitating matter, and no known physically reasonable counter-examples are stated for it.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-002"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_svy_qei_bounds",
+        "claim_kind": "survey_evidence",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "QEIs provide rigorous lower bounds on averaged energy density along geodesics, and theorem extensions using averaged energy conditions and QEI-inspired assumptions can prove geodesic incompleteness.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-003"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_7a407c865faafd11"
+        ],
+        "claim_id": "claim_svy_gap_engine",
+        "claim_kind": "survey_evidence",
+        "evidence_card_ids": [
+          "EC:W2994776863:mechanism:d3700c18a61d"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W2994776863"
+        ],
+        "statement": "The observed mass gap is treated as a discriminator for supernova engine physics, favoring rapid explosion dynamics over delayed fallback scenarios.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-004"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_c369df652181e8f7"
+        ],
+        "claim_id": "claim_svy_gap_metallicity",
+        "claim_kind": "survey_evidence",
+        "evidence_card_ids": [
+          "EC:W2095725842:boundary_conditions:1a843b49c71e"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W2095725842"
+        ],
+        "statement": "The black-hole mass distribution is modulated by metallicity-dependent winds and binary interactions, which reshape progenitor mass budgets and remnant outcomes.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-006"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_07d6df5d6978a1fc"
+        ],
+        "claim_id": "claim_svy_gw_cannot_rule_eco",
+        "claim_kind": "survey_evidence",
+        "evidence_card_ids": [
+          "EC:W2766840380:boundary_conditions:42d0ed58107f"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W2766840380"
+        ],
+        "statement": "Gravitational-wave data alone for the analyzed binary neutron star candidate cannot rule out objects more compact than neutron stars, such as black holes or quark stars, despite component masses consistent with neutron stars.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-006"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_0ed84243cf171bc4"
+        ],
+        "claim_id": "claim_gap_sh3_missing",
+        "claim_kind": "research_gap",
+        "evidence_card_ids": [
+          "EC:W3009127927:boundary_conditions:fdccce62784a"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W3009127927"
+        ],
+        "statement": "The Survey evidence plan identifies a missing formal-claim evidence slot for SH3, leaving unresolved which assumptions and validity domains Penrose-type singularity theorems and Einstein-field-equation solutions use to support black-hole existence, and which counterexamples or limiting conditions challenge their applicability.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-002"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_f634820e22d7a238"
+        ],
+        "claim_id": "claim_gap_sh4_boundary",
+        "claim_kind": "research_gap",
+        "evidence_card_ids": [
+          "EC:W3036761016:boundary_conditions:6799aadc0af7"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W3036761016"
+        ],
+        "statement": "The Survey evidence plan identifies an uncovered boundary_variable slot in the relevant evidence cluster 'Theoretical Stellar Evolution and Remnant Formation Pathways', leaving unresolved which variable can serve as a clean boundary between black-hole and non-black-hole outcomes.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-011"
+        ]
+      },
+      {
+        "citation_keys": [
+          "cite_72d7ff391b29c495"
+        ],
+        "claim_id": "claim_gap_global_explosion_energy",
+        "claim_kind": "research_gap",
+        "evidence_card_ids": [
+          "EC:W2808391388:research_object_measurability:3458c9f3c523"
+        ],
+        "formal_reference_ids": [],
+        "outcome_branch_ids": [],
+        "qualification": "survey_anchored",
+        "source_ids": [
+          "W2808391388"
+        ],
+        "statement": "The Survey abstract-derived anchor indicates that derived mass distributions remain sensitive to uncertainties in the explosion and unbinding energies across different progenitor masses, leaving a key physical parameter unconstrained.",
+        "survey_anchor_ids": [
+          "survey:survey_markdown#section-005"
+        ]
+      }
+    ],
+    "language": "en",
+    "open_items": [],
+    "review_items": [],
+    "schema_version": "research_plan_section_v1",
+    "section_id": "survey_and_research_gap",
+    "title": "Background, Survey, and Research Gap"
+  },
+  "schema_version": "research_plan_author_contract_repair_audit_v1"
+}

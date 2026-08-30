@@ -1,0 +1,163 @@
+{
+  "artifact_kind": "section_composer:formal_problem_and_hypotheses",
+  "initial_candidate": {
+    "applicability": "required",
+    "blocks": [
+      {
+        "block_id": "assumptions_and_definitions",
+        "claim_ids": [
+          "c_formal_definition_a1",
+          "c_formal_definition_a2",
+          "c_formal_definition_a3",
+          "c_formal_definition_a4",
+          "c_formal_definition_a5"
+        ],
+        "kind": "list",
+        "text": "The formal problem is defined within the following assumptions and operationalizations. Note that Assumptions A2 and A4 currently lack precise mathematical definitions and require human input:\n- A1: Spherically symmetric collapse of massive stars with isotropic pressure.\n- A2: Matter fields satisfy the Averaged Null Energy Condition (AANEC) along complete null generators. [Needs Human Input]\n- A3: Spacetime is globally hyperbolic and sufficiently regular for trapped-surface arguments.\n- A4: An explicit averaged null-convergence/focusing condition holds along the relevant generators. [Needs Human Input]\n- A5: Non-black-hole remnants are modeled as stable equilibrium objects obeying a bounded compactness limit."
+      },
+      {
+        "block_id": "hypotheses_and_propositions",
+        "claim_ids": [
+          "c_formal_proposition_p1",
+          "c_formal_proposition_p2"
+        ],
+        "kind": "paragraph",
+        "text": "Based on these assumptions, the primary hypothesis posits that if spherically symmetric stellar collapse satisfies AANEC, global hyperbolicity, regular matter fields, complete null generators, and an explicit averaged null-convergence/focusing condition, then reaching a model-dependent compactness threshold forces trapped-surface formation. Consequently, a secondary proposition suggests that stable non-black-hole remnants above a compactness-dependent mass scale are excluded within this restricted model class."
+      }
+    ],
+    "claim_provenance": [
+      {
+        "citation_keys": [],
+        "claim_id": "c_formal_definition_a1",
+        "claim_kind": "formal_definition",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [
+          "A1"
+        ],
+        "outcome_branch_ids": [],
+        "qualification": "proposed",
+        "source_ids": [],
+        "statement": "A1: Spherically symmetric collapse of massive stars with isotropic pressure.",
+        "survey_anchor_ids": []
+      },
+      {
+        "citation_keys": [],
+        "claim_id": "c_formal_definition_a2",
+        "claim_kind": "formal_definition",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [
+          "A2"
+        ],
+        "outcome_branch_ids": [],
+        "qualification": "needs_human_input",
+        "source_ids": [],
+        "statement": "A2: Matter fields satisfy the Averaged Null Energy Condition (AANEC) along complete null generators.",
+        "survey_anchor_ids": []
+      },
+      {
+        "citation_keys": [],
+        "claim_id": "c_formal_definition_a3",
+        "claim_kind": "formal_definition",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [
+          "A3"
+        ],
+        "outcome_branch_ids": [],
+        "qualification": "proposed",
+        "source_ids": [],
+        "statement": "A3: Spacetime is globally hyperbolic and sufficiently regular for trapped-surface arguments.",
+        "survey_anchor_ids": []
+      },
+      {
+        "citation_keys": [],
+        "claim_id": "c_formal_definition_a4",
+        "claim_kind": "formal_definition",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [
+          "A4"
+        ],
+        "outcome_branch_ids": [],
+        "qualification": "needs_human_input",
+        "source_ids": [],
+        "statement": "A4: An explicit averaged null-convergence/focusing condition holds along the relevant generators.",
+        "survey_anchor_ids": []
+      },
+      {
+        "citation_keys": [],
+        "claim_id": "c_formal_definition_a5",
+        "claim_kind": "formal_definition",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [
+          "A5"
+        ],
+        "outcome_branch_ids": [],
+        "qualification": "proposed",
+        "source_ids": [],
+        "statement": "A5: Non-black-hole remnants are modeled as stable equilibrium objects obeying a bounded compactness limit.",
+        "survey_anchor_ids": []
+      },
+      {
+        "citation_keys": [],
+        "claim_id": "c_formal_proposition_p1",
+        "claim_kind": "formal_proposition",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [
+          "P1",
+          "A1",
+          "A2",
+          "A3",
+          "A4"
+        ],
+        "outcome_branch_ids": [],
+        "qualification": "proposed",
+        "source_ids": [],
+        "statement": "P1: If spherically symmetric stellar collapse satisfies AANEC, global hyperbolicity, regular matter fields, complete null generators, and an explicit averaged null-convergence/focusing condition, then reaching a model-dependent compactness threshold forces trapped-surface formation.",
+        "survey_anchor_ids": []
+      },
+      {
+        "citation_keys": [],
+        "claim_id": "c_formal_proposition_p2",
+        "claim_kind": "formal_proposition",
+        "evidence_card_ids": [],
+        "formal_reference_ids": [
+          "P2",
+          "A5"
+        ],
+        "outcome_branch_ids": [],
+        "qualification": "proposed",
+        "source_ids": [],
+        "statement": "P2: Stable non-black-hole remnants above a compactness-dependent mass scale are excluded within this restricted model class.",
+        "survey_anchor_ids": []
+      }
+    ],
+    "language": "en",
+    "open_items": [
+      {
+        "source_item_id": "unknown-6",
+        "status": "needs_human_input",
+        "text": "A2 requires a specific formulation of AANEC in the context of GR null generators."
+      },
+      {
+        "source_item_id": "unknown-7",
+        "status": "needs_human_input",
+        "text": "A4 is asserted but lacks a precise mathematical definition."
+      },
+      {
+        "source_item_id": "unknown-13",
+        "status": "needs_human_input",
+        "text": "The final canonical field status requires human input."
+      }
+    ],
+    "review_items": [],
+    "schema_version": "research_plan_section_v1",
+    "section_id": "formal_problem_and_hypotheses",
+    "title": "Problem Definition, Assumptions, and Hypotheses"
+  },
+  "initial_validation_errors": [
+    "formal claim c_formal_definition_a2 may not be upgraded beyond proposed or unverified",
+    "formal claim c_formal_definition_a4 may not be upgraded beyond proposed or unverified"
+  ],
+  "repair_attempted": false,
+  "repair_status": "NOT_ATTEMPTED_REPAIR_BUDGET_EXHAUSTED",
+  "schema_version": "research_plan_author_contract_repair_audit_v1"
+}

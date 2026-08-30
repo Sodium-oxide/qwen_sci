@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
 import re
@@ -19,6 +20,27 @@ from src.agents.survey_agent.utils.topic_survey_storage import (
     get_survey_output_root,
 )
 from src.pipeline.survey_idea_loader import SurveyIdeaLoadError, load_survey_idea_context
+from src.pipeline.science_run import (
+    SCIENCE_RESULT_SCHEMA_VERSION,
+    SCIENCE_STAGE_NAMES,
+    SURVEY_APPENDIX_MODES,
+    ScienceRunConflictError,
+    ScienceRunError,
+    ScienceRunInputError,
+    ScienceRunLockError,
+    ScienceRunPaths,
+    ScienceRunStateError,
+    atomic_write_json,
+    append_science_event,
+    initialize_science_run,
+    invalidate_stages_from,
+    load_science_run,
+    locked_science_run,
+    save_science_state,
+    science_run_paths,
+    validate_resume_inputs,
+)
+from src.pipeline.science_workflow import ScienceWorkflowError, run_science_workflow
 from src.llm.provider_registry import (
     provider_required_settings,
     require_model_capabilities,
@@ -30,6 +52,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CONFIG_PATH = REPO_ROOT / "src" / "config" / "default.yaml"
 DEFAULT_ENV_PATH = REPO_ROOT / ".env"
 LEGACY_ENV_PATH = REPO_ROOT / "src" / "config" / ".env"
+DEFAULT_SCIENCE_OUTPUT_ROOT = REPO_ROOT / "workspace" / "science-runs"
 LEGACY_COMMAND_DEPRECATION = (
     "DeprecationWarning: `{legacy}` will be removed in a future release.\n"
     "Use `{replacement}` instead."
@@ -54,6 +77,10 @@ AUTHOR_EXIT_CONFIG_ERROR = 23
 AUTHOR_EXIT_RENDER_ERROR = 27
 AUTHOR_EXIT_OUTPUT_ERROR = 28
 AUTHOR_EXIT_RUNTIME_ERROR = 29
+
+SCIENCE_EXIT_SUCCESS = 0
+SCIENCE_EXIT_INPUT_ERROR = 2
+SCIENCE_EXIT_RUNTIME_ERROR = 10
 
 _WSL_MOUNTED_PATH = re.compile(r"^/mnt/([A-Za-z])(?:/(.*))?$")
 _WINDOWS_DRIVE_PATH = re.compile(r"^([A-Za-z]):[\\/](.*)$")
@@ -320,8 +347,37 @@ def _build_root_parser() -> argparse.ArgumentParser:
         help="Fail when ExperimentDesign does not contain a complete Survey identity binding",
     )
     author.add_argument(
+        "--collect-section-contract-errors",
+        action="store_true",
+        help="Deprecated compatibility option; Author now always completes the section batch before reporting failures",
+    )
+    author.add_argument(
+        "--composer-concurrency",
+        type=int,
+        help="Maximum concurrent Author section-composition requests; defaults to research_plan_author.authoring.composer_concurrency",
+    )
+    author.add_argument(
+        "--section-cache-mode",
+        choices=("disabled", "read_write", "read_only", "refresh"),
+        help="Override the Author section-cache mode for this run; refresh bypasses reads and rewrites generated sections",
+    )
+    author.add_argument(
         "--model",
         help="Override the configured Research Plan Author LLM model",
+    )
+    author.add_argument(
+        "--document-quality",
+        choices=("on", "off"),
+        help="Enable or disable whole-document Author scoring and bounded revision",
+    )
+    author.add_argument(
+        "--document-quality-model",
+        help="Override the Author whole-document quality model",
+    )
+    author.add_argument(
+        "--document-quality-max-iterations",
+        type=int,
+        help="Override the maximum whole-document quality revision iterations",
     )
     author.add_argument(
         "--output-dir",
@@ -366,6 +422,98 @@ def _build_root_parser() -> argparse.ArgumentParser:
         help="Plain-text author name to render; defaults to an anonymous proposal author",
     )
     author.set_defaults(func=_author_command)
+
+    science = subparsers.add_parser(
+        "science",
+        help="Initialize or resume the Survey -> Idea -> ExperimentDesign -> Author workflow",
+        description=(
+            "Create or resume an auditable, design-only science run. "
+            "This command never executes experiments."
+        ),
+    )
+    science.add_argument(
+        "--topic",
+        help="Research topic; required for a new run and immutable after initialization",
+    )
+    science.add_argument(
+        "--config",
+        help="Config YAML for a new run or an explicit config consistency check while resuming",
+    )
+    science.add_argument(
+        "--output-root",
+        help="Parent directory for new science runs; defaults to workspace/science-runs",
+    )
+    science.add_argument(
+        "--run-id",
+        help="Optional filesystem-safe ID for a new science run",
+    )
+    science.add_argument(
+        "--resume",
+        help="Existing science run directory to resume",
+    )
+    science.add_argument(
+        "--restart-from",
+        choices=SCIENCE_STAGE_NAMES,
+        help="Invalidate this stage and downstream stages; requires --resume --force",
+    )
+    science.add_argument(
+        "--force",
+        action="store_true",
+        help="Confirm --restart-from; no historical artifacts are removed",
+    )
+    science.add_argument(
+        "--discipline-id",
+        action="append",
+        metavar="ID",
+        help="Discipline ID, label, or OpenAlex field URL; repeat for multiple fields",
+    )
+    science.add_argument(
+        "--selected-direction",
+        help="Idea direction selected for ExperimentDesign and Author",
+    )
+    science.add_argument(
+        "--exp-design-model",
+        help="Override the configured ExperimentDesign model",
+    )
+    science.add_argument(
+        "--author-model",
+        help="Override the configured Research Plan Author model",
+    )
+    science.add_argument("--template-dir", help="Read-only LaTeX template directory for Author")
+    science.add_argument("--template-profile", help="Author rendering template profile")
+    science.add_argument("--template-main", help="Author rendering template main TeX path")
+    science.add_argument("--latex-engine", help="Author rendering LaTeX engine")
+    science.add_argument("--bibtex", help="Author rendering BibTeX executable")
+    science.add_argument("--pdf-renderer", help="Author rendering PDF renderer")
+    science.add_argument(
+        "--compile-timeout-seconds",
+        type=int,
+        help="Per Author rendering command timeout",
+    )
+    science.add_argument("--author-name", help="Plain-text Author name for rendered research plans")
+    science.add_argument(
+        "--render-required",
+        action="store_true",
+        default=None,
+        help="Require Author rendering; fail if no template is configured or rendering fails",
+    )
+    science.add_argument(
+        "--survey-appendix",
+        choices=SURVEY_APPENDIX_MODES,
+        help="Keep a source link or append the verified full Survey text in Author output",
+    )
+    science.add_argument(
+        "--until",
+        choices=SCIENCE_STAGE_NAMES,
+        default="author",
+        help="Stop after this stage once stage execution is enabled; defaults to author",
+    )
+    science.add_argument(
+        "--json",
+        action="store_true",
+        help="Print only the stable science_run_result_v1 JSON result",
+    )
+    science.set_defaults(func=_science_command)
 
     blog = subparsers.add_parser("blog", help="Run Blog Agent")
     blog.add_argument("--config", default=str(DEFAULT_CONFIG_PATH), help="Path to config YAML")
@@ -674,6 +822,31 @@ def _author_command(args: argparse.Namespace) -> int:
         print(f"author failed at output: cannot initialize output or log sink: {exc}", file=sys.stderr)
         return AUTHOR_EXIT_OUTPUT_ERROR
     try:
+        authoring_config = author_config.get("authoring", {}) if hasattr(author_config, "get") else {}
+        configured_section_repairs = (
+            authoring_config.get(
+                "max_contract_repairs_per_section",
+                authoring_config.get("max_contract_repairs", 1),
+            )
+            if hasattr(authoring_config, "get")
+            else 1
+        )
+        section_cache_config = dict(
+            authoring_config.get("section_cache", {}) if hasattr(authoring_config, "get") else {}
+        )
+        document_quality_config = dict(
+            author_config.get("document_quality", {}) if hasattr(author_config, "get") else {}
+        )
+        if args.document_quality is not None:
+            document_quality_config["enabled"] = args.document_quality == "on"
+        if args.document_quality_model:
+            document_quality_config["model"] = args.document_quality_model
+        if args.document_quality_max_iterations is not None:
+            document_quality_config["max_iterations"] = args.document_quality_max_iterations
+        if args.section_cache_mode is not None:
+            section_cache_config["mode"] = args.section_cache_mode
+        quality_model = str(document_quality_config.get("model") or "").strip() or None
+        quality_enabled = bool(document_quality_config.get("enabled", True))
         result = run_research_plan_author(
             author_input_path,
             survey_manifest_path=survey_manifest_path,
@@ -683,9 +856,35 @@ def _author_command(args: argparse.Namespace) -> int:
             max_idea_iterations=args.max_idea_iterations
             or int(author_config.get("idea_evolution", {}).get("max_iterations") or 3),
             strict_survey_binding=args.strict_survey_binding
-            or bool(author_config.get("authoring", {}).get("require_survey_binding", False)),
+            or bool(authoring_config.get("require_survey_binding", False)),
             llm_call=build_author_json_llm_call(config=config, model=args.model),
-            max_contract_repairs=int(author_config.get("authoring", {}).get("max_contract_repairs") or 1),
+            max_contract_repairs=int(1 if configured_section_repairs is None else configured_section_repairs),
+            composer_concurrency=(
+                args.composer_concurrency
+                if args.composer_concurrency is not None
+                else int(authoring_config.get("composer_concurrency") or 5)
+            ),
+            section_cache_config=section_cache_config,
+            document_quality_config=document_quality_config,
+            quality_judge_llm_call=(
+                build_author_json_llm_call(
+                    config=config,
+                    model=quality_model,
+                    temperature=float(document_quality_config.get("judge_temperature") or 0.0),
+                )
+                if quality_enabled
+                else None
+            ),
+            quality_revision_llm_call=(
+                build_author_json_llm_call(
+                    config=config,
+                    model=quality_model,
+                    temperature=float(document_quality_config.get("revision_temperature") or 0.5),
+                )
+                if quality_enabled
+                else None
+            ),
+            collect_section_contract_errors=args.collect_section_contract_errors,
             logger=logger,
         )
         with logger.stage("artifacts", output_dir=str(output_dir)):
@@ -945,6 +1144,245 @@ def _blog_command(args: argparse.Namespace) -> int:
     if args.resume:
         cmd.append("--resume")
     return _run_command(cmd, env=env)
+
+
+def _science_path_option(value: str | None) -> str | None:
+    if value is None or not str(value).strip():
+        return None
+    return str(_resolve_cli_path(value))
+
+
+def _science_executable_option(value: str | None) -> str | None:
+    if value is None:
+        return None
+    normalized = str(value).strip()
+    if not normalized:
+        return None
+    if "/" in normalized.replace("\\", "/") or _WINDOWS_DRIVE_PATH.fullmatch(normalized):
+        return str(_resolve_cli_path(normalized))
+    return normalized
+
+
+def _science_template_profile_option(value: str | None) -> str | None:
+    if value is None:
+        return None
+    normalized = str(value).strip()
+    if not normalized:
+        return None
+    if "/" in normalized.replace("\\", "/") or Path(normalized).suffix.casefold() == ".json":
+        return str(_resolve_cli_path(normalized))
+    return normalized
+
+
+def _science_immutable_options(args: argparse.Namespace) -> dict[str, object]:
+    return {
+        "discipline_ids": args.discipline_id,
+        "selected_direction": args.selected_direction,
+        "exp_design_model": args.exp_design_model,
+        "author_model": args.author_model,
+        "template_dir": _science_path_option(args.template_dir),
+        "template_profile": _science_template_profile_option(args.template_profile),
+        "template_main": args.template_main,
+        "latex_engine": _science_executable_option(args.latex_engine),
+        "bibtex": _science_executable_option(args.bibtex),
+        "pdf_renderer": _science_executable_option(args.pdf_renderer),
+        "compile_timeout_seconds": args.compile_timeout_seconds,
+        "author_name": args.author_name,
+        "render_required": args.render_required,
+        "survey_appendix": args.survey_appendix,
+    }
+
+
+def _science_result_payload(
+    *,
+    action: str,
+    paths: ScienceRunPaths,
+    metadata: dict[str, object],
+    state: dict[str, object],
+    until: str,
+) -> dict[str, object]:
+    immutable_inputs = metadata["immutable_inputs"]
+    if not isinstance(immutable_inputs, dict):
+        raise ScienceRunStateError("science_run.json has invalid immutable_inputs")
+    stages = state["stages"]
+    if not isinstance(stages, dict):
+        raise ScienceRunStateError("science_state.json has invalid stages")
+    stage_summary = {
+        stage_name: {
+            "status": stages[stage_name]["status"],
+            "attempt": stages[stage_name]["attempt"],
+        }
+        for stage_name in SCIENCE_STAGE_NAMES
+    }
+    return {
+        "schema_version": SCIENCE_RESULT_SCHEMA_VERSION,
+        "action": action,
+        "status": state["status"],
+        "science_run_id": metadata["science_run_id"],
+        "run_dir": str(paths.run_dir),
+        "topic": immutable_inputs["topic"],
+        "execution_mode": metadata["execution_mode"],
+        "until": until,
+        "state_revision": state.get("revision", 0),
+        "stages": stage_summary,
+    }
+
+
+def _print_science_result(result: dict[str, object], *, as_json: bool) -> None:
+    if as_json:
+        print(json.dumps(result, ensure_ascii=False, sort_keys=True, allow_nan=False))
+        return
+    print(f"Science run {result['action'].lower()}: {result['science_run_id']}")
+    print(f"Run directory: {result['run_dir']}")
+    print(f"Status: {result['status']} ({result['execution_mode']})")
+    print(f"Executed through: {result['until']}")
+
+
+def _persist_science_result(
+    *,
+    paths: ScienceRunPaths,
+    action: str,
+    until: str,
+    error: dict[str, object] | None = None,
+    expected_state_revision: int | None = None,
+) -> dict[str, object] | None:
+    try:
+        with locked_science_run(paths):
+            metadata, state = load_science_run(paths)
+            if (
+                error is not None
+                and expected_state_revision is not None
+                and state.get("revision", 0) != expected_state_revision
+            ):
+                return None
+            result = _science_result_payload(
+                action=action,
+                paths=paths,
+                metadata=metadata,
+                state=state,
+                until=until,
+            )
+            if error is not None:
+                result["error"] = error
+            atomic_write_json(paths.result, result)
+            return result
+    except (OSError, ScienceRunError):
+        return None
+
+
+def _science_command(args: argparse.Namespace) -> int:
+    if bool(args.restart_from) != bool(args.force):
+        print("science input error: --restart-from and --force must be supplied together", file=sys.stderr)
+        return SCIENCE_EXIT_INPUT_ERROR
+
+    explicit_options = _science_immutable_options(args)
+    paths: ScienceRunPaths | None = None
+    metadata: dict[str, object] | None = None
+    action = "EXECUTED"
+    try:
+        if args.resume:
+            if args.topic is not None:
+                print("science input error: --topic cannot be changed while resuming", file=sys.stderr)
+                return SCIENCE_EXIT_INPUT_ERROR
+            if args.output_root is not None or args.run_id is not None:
+                print(
+                    "science input error: --output-root and --run-id are only valid for a new science run",
+                    file=sys.stderr,
+                )
+                return SCIENCE_EXIT_INPUT_ERROR
+            config_path = _resolve_cli_path(args.config) if args.config else None
+            if config_path is not None:
+                _ensure_config_exists(config_path)
+            paths = science_run_paths(_resolve_cli_path(args.resume))
+            with locked_science_run(paths):
+                metadata, state = load_science_run(paths)
+                validate_resume_inputs(
+                    metadata,
+                    config_path=config_path,
+                    explicit_options=explicit_options,
+                )
+                action = "RESUMED"
+                if args.restart_from:
+                    invalidate_stages_from(state, args.restart_from)
+                    save_science_state(paths, state)
+                    append_science_event(
+                        paths,
+                        event_type="STAGES_INVALIDATED",
+                        restart_from=args.restart_from,
+                    )
+                    action = "RESTART_INVALIDATED"
+        else:
+            if args.restart_from or args.force:
+                print("science input error: --restart-from is only valid with --resume --force", file=sys.stderr)
+                return SCIENCE_EXIT_INPUT_ERROR
+            topic = str(args.topic or "").strip()
+            if not topic:
+                print("science input error: --topic is required for a new science run", file=sys.stderr)
+                return SCIENCE_EXIT_INPUT_ERROR
+            config_path = _resolve_config_path(args.config)
+            _ensure_config_exists(config_path)
+            output_root = _resolve_cli_path(args.output_root) if args.output_root else DEFAULT_SCIENCE_OUTPUT_ROOT
+            paths, metadata, state = initialize_science_run(
+                output_root=output_root,
+                topic=topic,
+                config_path=config_path,
+                immutable_options=explicit_options,
+                run_id=args.run_id,
+            )
+            action = "EXECUTED"
+        with contextlib.redirect_stdout(sys.stderr if args.json else sys.stdout):
+            outcome = run_science_workflow(
+                paths=paths,
+                metadata=metadata,
+                until=args.until,
+                quiet=bool(args.json),
+            )
+        result = _persist_science_result(
+            action=action,
+            paths=paths,
+            until=args.until,
+        )
+        if result is None:
+            raise ScienceRunStateError("Cannot persist science_result.json")
+    except ScienceWorkflowError as exc:
+        failure_result = None
+        error_payload = {
+            "stage": exc.stage,
+            "exit_code": int(exc.exit_code),
+            "message": str(exc),
+        }
+        if paths is not None:
+            failure_result = _persist_science_result(
+                paths=paths,
+                action=action,
+                until=args.until,
+                error=error_payload,
+                expected_state_revision=exc.observed_state_revision,
+            )
+        if failure_result is None and paths is not None and metadata is not None and exc.observed_state:
+            failure_result = _science_result_payload(
+                action=action,
+                paths=paths,
+                metadata=metadata,
+                state=exc.observed_state,
+                until=args.until,
+            )
+            failure_result["error"] = error_payload
+        if args.json and failure_result is not None:
+            _print_science_result(failure_result, as_json=True)
+        print(f"science {exc.stage} error: {exc}", file=sys.stderr)
+        return exc.exit_code
+    except (FileNotFoundError, ScienceRunInputError, ScienceRunConflictError) as exc:
+        print(f"science input error: {exc}", file=sys.stderr)
+        return SCIENCE_EXIT_INPUT_ERROR
+    except ScienceRunLockError as exc:
+        print(f"science runtime error: {exc}", file=sys.stderr)
+        return SCIENCE_EXIT_RUNTIME_ERROR
+    except (OSError, ScienceRunError) as exc:
+        print(f"science runtime error: {exc}", file=sys.stderr)
+        return SCIENCE_EXIT_RUNTIME_ERROR
+    _print_science_result(result, as_json=args.json)
+    return SCIENCE_EXIT_SUCCESS
 
 
 def _pipeline_command(args: argparse.Namespace) -> int:

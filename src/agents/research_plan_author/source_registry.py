@@ -1,4 +1,4 @@
-"""Build deterministic citation and source identifiers from frozen Author inputs."""
+"""Build a global, source-bounded knowledge base for Research Plan Authoring."""
 
 from __future__ import annotations
 
@@ -45,7 +45,7 @@ def _source_items(items: object, *, prefix: str) -> list[dict[str, Any]]:
 
 
 def build_frozen_source_registry(preparation: Mapping[str, Any]) -> dict[str, Any]:
-    """Expose only already-known identifiers; an LLM cannot mint bibliography data."""
+    """Expose every already-known source; an LLM cannot mint bibliography data."""
 
     bundle = _mapping(preparation.get("source_bundle"))
     handoff = _mapping(bundle.get("author_context"))
@@ -78,7 +78,7 @@ def build_frozen_source_registry(preparation: Mapping[str, Any]) -> dict[str, An
     unknown_items = _source_items(handoff.get("unknown_items"), prefix="unknown")
     review_items = _source_items(handoff.get("review_items"), prefix="review")
     return {
-        "schema_version": "research_plan_author_source_registry_v2",
+        "schema_version": "research_plan_author_source_registry_v3",
         "allowed_source_ids": allowed_source_ids,
         "allowed_survey_anchor_ids": survey_anchor_ids,
         "evidence_cards_by_id": evidence_cards_by_id,
@@ -88,61 +88,100 @@ def build_frozen_source_registry(preparation: Mapping[str, Any]) -> dict[str, An
     }
 
 
-def source_registry_for_route(source_registry: Mapping[str, Any], route: Mapping[str, Any]) -> dict[str, Any]:
-    """Return only evidence metadata relevant to one routed section."""
+_RECOMMENDED_SLOTS_BY_SECTION = {
+    "introduction": {"research_object_measurability", "mechanism", "boundary_conditions"},
+    "survey_and_research_gap": {"research_object_measurability", "mechanism", "boundary_conditions"},
+    "study_design_and_methods": {
+        "study_design",
+        "measurement_calibration",
+        "comparison_controls",
+        "statistics_bias",
+    },
+    "computational_evaluation_protocol": {
+        "study_design",
+        "measurement_calibration",
+        "comparison_controls",
+        "statistics_bias",
+    },
+    "expected_outcomes": {"mechanism", "comparison_controls", "statistics_bias"},
+    "risk_limitations_and_review": {"risk_ethics_reproducibility", "boundary_conditions"},
+    "appendix_evidence_and_review": None,
+}
 
-    section_id = _text(route.get("section_id")).casefold()
-    evidence_slots_by_section = {
-        "references": None,
-        "appendix_evidence_and_review": None,
-        "survey_and_research_gap": None,
-        "introduction": {"background", "research_gap", "mechanism", "research_object_measurability"},
-        "abstract": set(),
-        "research_questions_and_contributions": set(),
-        "idea_origin_and_selection": set(),
-        "formal_problem_and_hypotheses": set(),
-        "expected_outcomes": set(),
-        "risk_limitations_and_review": {"risk_ethics_reproducibility", "boundary_conditions"},
-        "appendix_idea_evolution": set(),
-        "appendix_variables_and_definitions": {"research_object_measurability", "study_design"},
-        "computational_evaluation_protocol": {"study_design", "comparison_controls", "boundary_conditions", "statistics_bias"},
-        "materials_and_characterization": {"study_design", "measurement_calibration", "comparison_controls", "boundary_conditions"},
-        "system_boundary_and_validation": {"study_design", "measurement_calibration", "comparison_controls", "boundary_conditions", "risk_ethics_reproducibility"},
-        "spatiotemporal_design": {"study_design", "measurement_calibration", "boundary_conditions"},
-        "model_controls_and_repeats": {"study_design", "measurement_calibration", "comparison_controls", "risk_ethics_reproducibility"},
-        "pico_endpoints_and_governance": {"study_design", "measurement_calibration", "risk_ethics_reproducibility", "statistics_bias"},
-        "definitions_and_propositions": set(),
-        "forward_derivation_and_counterexamples": set(),
-    }
-    slot_filter = evidence_slots_by_section.get(section_id, set())
-    all_cards = _mapping(source_registry.get("evidence_cards_by_id"))
-    selected = (
-        dict(all_cards)
-        if slot_filter is None
-        else {
-            card_id: card
-            for card_id, card in all_cards.items()
-            if _text(_mapping(card).get("claim_slot")).casefold() in slot_filter
-        }
-    )
-    selected_sources = {_text(_mapping(card).get("source_id")) for card in selected.values()}
-    survey_route = section_id == "survey_and_research_gap"
-    citations = [
-        deepcopy(dict(citation))
-        for citation in source_registry.get("citation_registry") or []
-        if _text(_mapping(citation).get("source_id")) in selected_sources
-    ]
+
+def build_authoring_knowledge_base(
+    preparation: Mapping[str, Any],
+    source_registry: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Assemble every frozen upstream artifact into one writer-visible knowledge base.
+
+    The knowledge base is deliberately broader than a route recommendation.  It
+    preserves provenance by exposing canonical IDs and metadata, but it never
+    turns an evidence slot into a permission boundary for scholarly synthesis.
+    """
+
+    bundle = _mapping(preparation.get("source_bundle"))
+    author_context = _mapping(bundle.get("author_context"))
     return {
-        "schema_version": _text(source_registry.get("schema_version")),
-        "allowed_source_ids": [
-            source_id for source_id in source_registry.get("allowed_source_ids") or []
-            if source_id in selected_sources
-        ],
-        "allowed_survey_anchor_ids": list(source_registry.get("allowed_survey_anchor_ids") or []) if survey_route else [],
-        "evidence_cards_by_id": selected,
-        "citation_registry": citations,
+        "schema_version": "research_plan_authoring_knowledge_base_v1",
+        "theory_spine": deepcopy(_mapping(preparation.get("theory_spine"))),
+        "source_catalog": {
+            "allowed_source_ids": list(source_registry.get("allowed_source_ids") or []),
+            "citation_registry": deepcopy(list(source_registry.get("citation_registry") or [])),
+            "evidence_cards_by_id": deepcopy(_mapping(source_registry.get("evidence_cards_by_id"))),
+            "survey_anchor_ids": list(source_registry.get("allowed_survey_anchor_ids") or []),
+        },
+        "upstream_artifacts": {
+            "selected_direction": deepcopy(author_context.get("selected_direction")),
+            "research_design": deepcopy(author_context.get("research_design")),
+            "hypothesis_mapping": deepcopy(author_context.get("hypothesis_mapping")),
+            "formal_reasoning": deepcopy(author_context.get("formal_reasoning")),
+            "counterexample_analysis": deepcopy(author_context.get("counterexample_analysis")),
+            "outcome_branches": deepcopy(author_context.get("outcome_branches")),
+            "reasoning_context": deepcopy(author_context.get("reasoning_context")),
+            "variables_and_operationalization": deepcopy(author_context.get("variables_and_operationalization")),
+            "idea_evolution": deepcopy(_mapping(bundle.get("idea_evolution"))),
+            "survey_binding": deepcopy(_mapping(bundle.get("survey_binding"))),
+        },
         "unknown_items": deepcopy(list(source_registry.get("unknown_items") or [])),
         "review_items": deepcopy(list(source_registry.get("review_items") or [])),
+    }
+
+
+def source_registry_for_route(source_registry: Mapping[str, Any], route: Mapping[str, Any]) -> dict[str, Any]:
+    """Return the global catalog plus non-binding relevance recommendations.
+
+    Earlier versions used ``claim_slot`` to hide sources from most sections.
+    That made source traceability a writing prohibition and caused shallow,
+    repetitive prose.  The writer may now use any canonical source; slots only
+    help it start from a sensible evidence cluster.
+    """
+
+    section_id = _text(route.get("section_id")).casefold()
+    recommended_slots = _RECOMMENDED_SLOTS_BY_SECTION.get(section_id, set())
+    cards = _mapping(source_registry.get("evidence_cards_by_id"))
+    if recommended_slots is None:
+        recommended_source_ids = list(source_registry.get("allowed_source_ids") or [])
+    else:
+        recommended_source_ids = sorted(
+            {
+                _text(_mapping(card).get("source_id"))
+                for card in cards.values()
+                if _text(_mapping(card).get("source_id"))
+                and _text(_mapping(card).get("claim_slot")).casefold() in recommended_slots
+            }
+        )
+    return {
+        "schema_version": _text(source_registry.get("schema_version")),
+        "allowed_source_ids": list(source_registry.get("allowed_source_ids") or []),
+        "allowed_survey_anchor_ids": list(source_registry.get("allowed_survey_anchor_ids") or []),
+        "evidence_cards_by_id": deepcopy(cards),
+        "citation_registry": deepcopy(list(source_registry.get("citation_registry") or [])),
+        "unknown_items": deepcopy(list(source_registry.get("unknown_items") or [])),
+        "review_items": deepcopy(list(source_registry.get("review_items") or [])),
+        "recommended_source_ids": recommended_source_ids,
+        "recommended_claim_slots": sorted(recommended_slots or set()),
+        "authoring_knowledge_base": deepcopy(_mapping(source_registry.get("authoring_knowledge_base"))),
     }
 
 
@@ -151,36 +190,19 @@ def source_registry_for_blueprint_section(
     route: Mapping[str, Any],
     blueprint_section: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """Apply a route-scoped Blueprint source selection before prose composition."""
+    """Preserve global source access after Blueprint planning.
 
-    routed = source_registry_for_route(source_registry, route)
-    selected_source_ids = {
-        _text(source_id)
-        for source_id in blueprint_section.get("allowed_source_ids") or []
-        if _text(source_id)
-    }
-    cards = {
-        card_id: card
-        for card_id, card in _mapping(routed.get("evidence_cards_by_id")).items()
-        if _text(_mapping(card).get("source_id")) in selected_source_ids
-    }
-    citations = [
-        deepcopy(dict(citation))
-        for citation in routed.get("citation_registry") or []
-        if isinstance(citation, Mapping) and _text(citation.get("source_id")) in selected_source_ids
-    ]
-    return {
-        **routed,
-        "allowed_source_ids": [
-            source_id for source_id in routed.get("allowed_source_ids") or [] if source_id in selected_source_ids
-        ],
-        "evidence_cards_by_id": cards,
-        "citation_registry": citations,
-    }
+    ``allowed_source_ids`` in historic Blueprint artifacts is retained only for
+    cache compatibility and observability.  It must never narrow the sources
+    available to the section writer.
+    """
+
+    return source_registry_for_route(source_registry, route)
 
 
 __all__ = [
     "build_frozen_source_registry",
+    "build_authoring_knowledge_base",
     "source_registry_for_blueprint_section",
     "source_registry_for_route",
 ]

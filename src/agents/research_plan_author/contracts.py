@@ -1,8 +1,9 @@
-"""Strict, English-only contracts for Research Plan Author preparation."""
+"""Strict contracts for Research Plan Author preparation."""
 
 from __future__ import annotations
 
 from copy import deepcopy
+import re
 from typing import Any, Mapping
 
 from jsonschema import Draft202012Validator
@@ -10,7 +11,8 @@ from jsonschema import Draft202012Validator
 from src.agents.experiment_design_agent.artifacts import AUTHOR_HANDOFF_SCHEMA_VERSION
 from src.agents.experiment_design_agent.reasoning_context import REASONING_CONTEXT_SCHEMA
 
-from .latex_safety import contains_non_english_script, contains_observed_result_language
+from .latex_safety import contains_observed_result_language
+from .theory_spine import validate_theory_spine
 
 
 RESEARCH_PLAN_AUTHOR_INPUT_SCHEMA_VERSION = AUTHOR_HANDOFF_SCHEMA_VERSION
@@ -32,6 +34,19 @@ _COMPACT_CARD_SCHEMA = {
         "evidence_level": _NONEMPTY_STRING,
         "claim_slot": {"type": "string"},
         "source_location": {"type": "string"},
+        "support_statement": {"type": "string"},
+    },
+}
+_BIBLIOGRAPHIC_METADATA_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "authors": {"type": "array", "items": _NONEMPTY_STRING},
+        "title": {"type": "string"},
+        "year": {"type": "string"},
+        "venue": {"type": "string"},
+        "doi": {"type": "string"},
+        "url": {"type": "string"},
     },
 }
 _COMPACT_CITATION_SCHEMA = {
@@ -43,6 +58,9 @@ _COMPACT_CITATION_SCHEMA = {
         "source_id": _NONEMPTY_STRING,
         "evidence_level": _NONEMPTY_STRING,
         "evidence_card_ids": {"type": "array", "items": _NONEMPTY_STRING, "uniqueItems": True},
+        "bibliographic_metadata": _BIBLIOGRAPHIC_METADATA_SCHEMA,
+        "citation_rendering_status": {"enum": ["RENDERABLE", "NOT_RENDERABLE_NEEDS_HUMAN_METADATA"]},
+        "citation_missing_fields": {"type": "array", "items": _NONEMPTY_STRING, "uniqueItems": True},
     },
 }
 _SOURCE_REGISTRY_SCHEMA = {
@@ -54,6 +72,20 @@ _SOURCE_REGISTRY_SCHEMA = {
         "allowed_survey_anchor_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": True},
         "evidence_cards_by_id": {"type": "object", "additionalProperties": _COMPACT_CARD_SCHEMA},
         "citation_registry": {"type": "array", "items": _COMPACT_CITATION_SCHEMA},
+    },
+}
+_SECTION_CACHE_SUMMARY_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["schema_version", "mode", "root", "hits", "misses", "writes", "corrupt"],
+    "properties": {
+        "schema_version": {"const": "research_plan_author_section_cache_v1"},
+        "mode": {"enum": ["disabled", "read_write", "read_only", "refresh"]},
+        "root": _NONEMPTY_STRING,
+        "hits": {"type": "integer", "minimum": 0},
+        "misses": {"type": "integer", "minimum": 0},
+        "writes": {"type": "integer", "minimum": 0},
+        "corrupt": {"type": "integer", "minimum": 0},
     },
 }
 
@@ -150,12 +182,15 @@ _BLOCK_SCHEMA: dict[str, Any] = {
     "required": ["block_id", "kind", "text", "claim_ids"],
     "properties": {
         "block_id": _NONEMPTY_STRING,
+        "heading": {"type": "string"},
+        "reference_block_ids": {"type": "array", "items": _NONEMPTY_STRING, "uniqueItems": True},
         "kind": {
             "enum": [
                 "paragraph",
                 "list",
                 "table",
                 "definition",
+                "lemma",
                 "proposition",
                 "equation",
                 "protocol",
@@ -165,6 +200,7 @@ _BLOCK_SCHEMA: dict[str, Any] = {
         },
         "text": {"type": "string"},
         "claim_ids": {"type": "array", "items": _NONEMPTY_STRING, "uniqueItems": True},
+        "theory_unit_ids": {"type": "array", "items": _NONEMPTY_STRING, "uniqueItems": True},
     },
 }
 
@@ -230,6 +266,7 @@ RESEARCH_PLAN_DOCUMENT_SCHEMA: dict[str, Any] = {
         "authoring_constraints": _OBJECT,
         "source_manifest": _OBJECT,
         "authoring_blueprint": _OBJECT,
+        "theory_spine": _OBJECT,
         "contract_repair_audit": {"type": "array", "items": _OBJECT},
     },
 }
@@ -313,6 +350,9 @@ AUTHOR_PREPARATION_SCHEMA: dict[str, Any] = {
         "selected_direction_id": _NONEMPTY_STRING,
         "source_bundle": AUTHOR_SOURCE_BUNDLE_SCHEMA,
         "document": RESEARCH_PLAN_DOCUMENT_SCHEMA,
+        "theory_spine": _OBJECT,
+        "section_cache": _SECTION_CACHE_SUMMARY_SCHEMA,
+        "document_quality": _OBJECT,
     },
 }
 
@@ -323,6 +363,17 @@ def _mapping(value: object) -> dict[str, Any]:
 
 def _text(value: object) -> str:
     return str(value or "").strip()
+
+
+def _tex_label_component(value: object) -> str:
+    component = re.sub(r"[^A-Za-z0-9:-]+", "-", _text(value)).strip("-:")
+    return component or "unnamed"
+
+
+def is_bibliographic_inventory_block(section_id: object, block_id: object) -> bool:
+    """Identify the metadata-only reference inventory block."""
+
+    return _text(section_id) == "references" and _text(block_id) == "ref_inventory"
 
 
 def _schema_errors(schema: Mapping[str, Any], payload: object) -> list[str]:
@@ -372,7 +423,7 @@ def validate_author_input(payload: object) -> list[str]:
         missing = required_card_fields - set(card)
         if missing:
             errors.append(f"source_registry.evidence_cards_by_id.{card_id} is missing fields: {sorted(missing)}")
-        allowed = required_card_fields
+        allowed = required_card_fields | {"support_statement"}
         extra = set(card) - allowed
         if extra:
             errors.append(f"source_registry.evidence_cards_by_id.{card_id} contains unsupported fields: {sorted(extra)}")
@@ -417,13 +468,16 @@ def validate_research_plan_document(payload: object) -> list[str]:
             if isinstance(record, Mapping) and _text(record.get("claim_id"))
         }
 
-        def validate_visible_text(label: str, value: object) -> None:
+        def validate_visible_text(
+            label: str,
+            value: object,
+            *,
+            skip_observed_result_detection: bool = False,
+        ) -> None:
             text = _text(value)
             if not text:
                 return
-            if contains_non_english_script(text):
-                errors.append(f"{label} contains non-English-script visible prose")
-            if contains_observed_result_language(text):
+            if not skip_observed_result_detection and contains_observed_result_language(text):
                 errors.append(f"{label} presents an observed result")
 
         metadata = _mapping(document.get("document_metadata"))
@@ -437,18 +491,42 @@ def validate_research_plan_document(payload: object) -> list[str]:
             errors.append("visible abstract references an unknown claim ID")
         for keyword in document.get("keywords") or []:
             validate_visible_text("keyword", keyword)
+        document_block_kinds = {
+            f"{_text(section.get('section_id'))}:{_text(block.get('block_id'))}": _text(block.get("kind"))
+            for collection_name in ("sections", "appendices")
+            for section in document.get(collection_name) or []
+            if isinstance(section, Mapping) and _text(section.get("section_id"))
+            for block in section.get("blocks") or []
+            if isinstance(block, Mapping) and _text(block.get("block_id"))
+        }
         for collection_name in ("sections", "appendices"):
             for section in document.get(collection_name) or []:
                 if not isinstance(section, Mapping):
                     continue
                 section_id = _text(section.get("section_id")) or collection_name
-                validate_visible_text(f"section {section_id} title", section.get("title"))
-                for block in section.get("blocks") or []:
-                    if not isinstance(block, Mapping):
-                        continue
+                validate_visible_text(
+                    f"section {section_id} title",
+                    section.get("title"),
+                    skip_observed_result_detection=section_id == "references",
+                )
+                blocks = [block for block in section.get("blocks") or [] if isinstance(block, Mapping)]
+                block_ids = [_text(block.get("block_id")) for block in blocks]
+                if len(block_ids) != len(set(block_ids)):
+                    errors.append(f"visible section {section_id} contains duplicate block_id values")
+                block_kinds = {
+                    _text(block.get("block_id")): _text(block.get("kind")) for block in blocks
+                }
+                for block in blocks:
                     block_id = _text(block.get("block_id")) or "unnamed"
                     block_text = _text(block.get("text"))
-                    validate_visible_text(f"section block {block_id}", block_text)
+                    validate_visible_text(
+                        f"section block {block_id}",
+                        block_text,
+                        skip_observed_result_detection=is_bibliographic_inventory_block(
+                            section_id,
+                            block_id,
+                        ),
+                    )
                     block_claim_ids = {
                         _text(claim_id)
                         for claim_id in block.get("claim_ids") or []
@@ -458,13 +536,65 @@ def validate_research_plan_document(payload: object) -> list[str]:
                         errors.append(f"visible section block {block_id} must reference at least one claim ID")
                     if block_claim_ids - claim_id_set:
                         errors.append(f"visible section block {block_id} references an unknown claim ID")
+                    reference_ids = {
+                        _text(reference_id)
+                        for reference_id in block.get("reference_block_ids") or []
+                        if _text(reference_id)
+                    }
+                    local_references = {reference_id for reference_id in reference_ids if ":" not in reference_id}
+                    scoped_references = reference_ids - local_references
+                    unknown_references = (
+                        local_references - set(block_kinds)
+                    ) | (
+                        scoped_references - set(document_block_kinds)
+                    )
+                    if unknown_references:
+                        errors.append(
+                            f"visible section block {block_id} references unknown equation blocks: "
+                            f"{sorted(unknown_references)}"
+                        )
+                    non_equation_references = {
+                        reference_id
+                        for reference_id in reference_ids
+                        if (
+                            (reference_id in block_kinds and block_kinds.get(reference_id) != "equation")
+                            or (
+                                reference_id in document_block_kinds
+                                and document_block_kinds.get(reference_id) != "equation"
+                            )
+                        )
+                    }
+                    if non_equation_references:
+                        errors.append(
+                            f"visible section block {block_id} cross-references non-equation blocks: "
+                            f"{sorted(non_equation_references)}"
+                        )
     section_ids = [
         _text(section.get("section_id"))
-        for section in document.get("sections") or []
+        for collection_name in ("sections", "appendices")
+        for section in document.get(collection_name) or []
         if isinstance(section, Mapping)
     ]
     if len(section_ids) != len(set(section_ids)):
-        errors.append("document contains duplicate section_id values")
+        errors.append("document contains duplicate section_id values across sections and appendices")
+    equation_label_targets: dict[str, list[str]] = {}
+    for collection_name in ("sections", "appendices"):
+        for section in document.get(collection_name) or []:
+            if not isinstance(section, Mapping):
+                continue
+            section_id = _text(section.get("section_id"))
+            for block in section.get("blocks") or []:
+                if not isinstance(block, Mapping) or _text(block.get("kind")) != "equation":
+                    continue
+                block_id = _text(block.get("block_id"))
+                label = f"eq:{_tex_label_component(section_id)}-{_tex_label_component(block_id)}"
+                equation_label_targets.setdefault(label, []).append(f"{section_id}:{block_id}")
+    for label, targets in sorted(equation_label_targets.items()):
+        if len(targets) > 1:
+            errors.append(
+                "document equation labels collide after TeX normalization: "
+                + f"{label} <- {sorted(targets)}"
+            )
     return sorted(set(errors))
 
 
@@ -495,6 +625,15 @@ def validate_author_preparation(payload: object) -> list[str]:
         errors.extend(f"author_context: {error}" for error in validate_author_input(context))
         if source_design_id != _text(context.get("source_design_id")):
             errors.append("source_design_id does not match source_bundle.author_context.source_design_id")
+    if "theory_spine" in preparation:
+        from .source_registry import build_frozen_source_registry
+
+        theory_spine_errors = validate_theory_spine(
+            preparation.get("theory_spine"),
+            preparation=preparation,
+            source_registry=build_frozen_source_registry(preparation),
+        )
+        errors.extend(f"theory_spine: {error}" for error in theory_spine_errors)
     binding = _mapping(source_bundle.get("survey_binding"))
     status = _text(binding.get("status"))
     expected = _mapping(binding.get("expected"))
@@ -518,7 +657,7 @@ def build_research_plan_document_skeleton(
     author_input: Mapping[str, Any],
     source_bundle: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """Create an English-only empty document contract for later composition."""
+    """Create an empty document contract for later composition."""
 
     selected_direction = _mapping(author_input.get("selected_direction"))
     research_design = _mapping(author_input.get("research_design"))
@@ -565,7 +704,7 @@ def build_research_plan_document_skeleton(
         "document_metadata": {
             "title": "",
             "source_title": _text(selected_direction.get("title")),
-            "title_status": "requires_english_llm_composition",
+            "title_status": "requires_llm_composition",
             "discipline_ids": list(_mapping(author_input.get("provenance")).get("discipline_ids") or []),
             "study_type": _text(research_design.get("design_type")),
         },
@@ -584,6 +723,7 @@ def build_research_plan_document_skeleton(
             "selected_direction_id": _text(source_bundle.get("selected_direction_id")),
         },
         "authoring_blueprint": {},
+        "theory_spine": {},
         "contract_repair_audit": [],
     }
 

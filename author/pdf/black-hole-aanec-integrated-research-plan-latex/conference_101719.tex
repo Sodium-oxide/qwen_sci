@@ -1,0 +1,574 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+
+\newcommand{\Msun}{M_{\odot}}
+\newcommand{\AANEC}{\mathrm{AANEC}}
+\newcommand{\Ccrit}{\mathcal{C}_{\mathrm{crit}}}
+\newcommand{\Cms}{\mathcal{C}_{\mathrm{MS}}}
+\newcommand{\Expected}{\textsc{Expected---Not Observed}}
+\newcommand{\Unverified}{\textsc{Unverified}}
+\newcommand{\Candidate}{\textsc{Candidate}}
+
+\begin{document}
+
+\title{A Qualified AANEC Trapped-Surface Bound for Non-Black-Hole Stellar Remnants:\\
+An Integrated Survey, Idea-Evolution, and Formal Experiment-Design Plan}
+
+\author{\IEEEauthorblockN{Research Plan Authoring Agent}
+\IEEEauthorblockA{Black-Hole Formation and Strong-Field Gravity Programme\\
+Prepared from the supplied survey, idea-result, and experiment-design artifacts\\
+August 2026}}
+
+\maketitle
+
+\begin{abstract}
+Black-hole research joins mathematical existence statements, stellar-collapse mechanisms, compact-object population inference, and strong-field observations, but these layers do not license the same conclusions. This paper integrates a supplied black-hole survey, a mechanism-replacement idea trajectory, and a formal-theory experiment design into one auditable research plan. The central proposal is deliberately qualified. In classical general relativity, consider spherically symmetric, nonrotating collapse with isotropic pressure, adequate regularity and global hyperbolicity, complete relevant achronal null generators, an achronal averaged null energy condition (AANEC), and an additional explicitly independent averaged null-convergence/focusing condition. The study asks whether reaching a declared Misner--Sharp compactness threshold is sufficient for trapped-surface formation and whether, after adding separate equilibrium and collapse-to-remnant matching assumptions, stable horizonless remnants above a corresponding compactness scale can be excluded inside this restricted model class. The observed lower stellar mass gap is not treated as a theorem output: metallicity, winds, explosion energy, fallback, the nuclear equation of state, rotation, magnetic fields, binary interaction, selection effects, and hierarchical mergers remain independent population-level explanations. The document states research questions, assumptions, variables, candidate propositions, four proof obligations, a lemma-by-lemma derivation protocol, comparison and robustness tests, invalid and potentially valid counterexample classes, four preregistered outcome branches, reproducibility requirements, and a human-review gate. The exact AANEC functional, independent focusing condition, quasi-local mass convention, compactness threshold, transition map, and remnant-mass translation remain unresolved inputs. Accordingly, every theorem statement is labeled candidate or unverified, and every outcome is expected---not observed. The contribution is an executable and falsifiable protocol, not a claimed proof, simulation, or discovery.
+\end{abstract}
+
+\begin{IEEEkeywords}
+black-hole formation, averaged null energy condition, trapped surfaces, Raychaudhuri equation, Misner--Sharp mass, stellar remnants, mass gap, experiment design
+\end{IEEEkeywords}
+
+\section{Introduction}
+\label{sec:introduction}
+
+\subsection{One Research Object, Four Epistemic Layers}
+Black holes are simultaneously exact or approximate solutions of gravitational field equations, possible end states of stellar evolution, compact objects inferred through indirect observations, and components of populations reconstructed statistically. Confusion arises when a statement valid in one layer is silently promoted into another. A Penrose-type argument concerns causal structure and null-geodesic behavior under stated hypotheses. A failed-supernova model concerns hydrodynamics, neutrino transport, and an equation of state. A Galactic-binary mass estimate concerns electromagnetic modeling and inclination. A gravitational-wave catalog concerns detector selection and hierarchical population inference. These layers interact, but none can replace the missing premises of another.
+
+The supplied survey makes this distinction concrete. Stellar orbits near the Galactic center constrain a compact central mass and offer a powerful multi-proxy case for Sgr A* \cite{genzel2010}. Event-horizon-scale imaging constrains compactness and spacetime models, but image morphology depends on plasma and emission assumptions \cite{kocherlakota2021}. Gravitational-wave observations probe inspiral, merger, and ringdown; their interpretation depends on waveform models, signal-to-noise ratio, and population assumptions \cite{berti2015,yunes2016}. These observations strongly motivate black-hole models without themselves supplying the hypotheses of a new focusing theorem.
+
+\subsection{Purpose of the Integrated Plan}
+The idea artifact began from an ambitious seed: relax pointwise energy conditions and derive the observed roughly $2$--$5\Msun$ dearth from the necessity of horizon formation. Its scientifically qualified endpoint is narrower and more defensible. The retained mechanism replacement uses AANEC together with an independent averaged focusing premise, seeks only a sufficient trapped-surface implication in a restricted spherical domain, and demotes the observed gap to an external consistency constraint. The experiment-design artifact then turns that correction into a formal-theory protocol whose unit is a spacetime solution class rather than a human, detector event, or numerical realization.
+
+This paper follows the fifteen routed components in the author-run record: abstract; introduction; survey and gap; questions and contributions; idea origin and selection; formal problem and hypotheses; design and methods; expected outcomes; risks and review; definitions and propositions; derivation and counterexamples; references; and three appendices covering idea evolution, variables, and evidence/review. The structure is not cosmetic. It preserves unresolved items at the routes where they become scientifically consequential instead of hiding them in a generic limitations paragraph.
+
+\subsection{Claim Discipline}
+Three terms are used throughout. \emph{Candidate} denotes a proposed formal statement whose definitions may be complete but whose proof is not established. \emph{Unverified} denotes a derivation step or protocol element not executed in the supplied artifacts. \emph{Expected---not observed} denotes a preregistered outcome branch. No passage should be read as reporting a new proof, numerical experiment, astrophysical measurement, or catalog analysis.
+
+\section{Survey Synthesis and Research Gap}
+\label{sec:survey}
+
+\subsection{Theoretical Foundations and the Energy-Condition Problem}
+Classical focusing arguments commonly use a pointwise null convergence condition, connected through Einstein's equation to a pointwise null energy condition. With vanishing cosmological contribution along a null vector $k^a$, the familiar relation is
+\begin{equation}
+R_{ab}k^ak^b=\frac{8\pi G}{c^4}T_{ab}k^ak^b.
+\label{eq:einstein-null}
+\end{equation}
+Here $R_{ab}$ is the Ricci tensor and $T_{ab}$ the stress-energy tensor. Equation \eqref{eq:einstein-null} is an identity after field equations and conventions are fixed; it does not decide which inequality $T_{ab}k^ak^b$ satisfies.
+
+The survey emphasizes that pointwise energy conditions are not universal physical laws. Quantum fields, and some non-minimally coupled or otherwise admissible classical systems, may violate them. Quantum energy inequalities, averaged conditions, ANEC, and achronal ANEC are therefore studied as weaker substitutes \cite{kontou2020}. Yet weakening a premise creates a precise burden: the new averaged statement must be shown to deliver the integrated convergence required by the intended causal argument. AANEC alone cannot simply be renamed ``focusing.'' This missing bridge is the central formal gap addressed by the idea and experiment design.
+
+Alternative compact objects sharpen the boundary. Boson-star-like configurations, gravastars, regular black holes, and other exotic compact objects can mimic selected observables while changing surfaces, interiors, or causal structure \cite{cardoso2019,mazur2004}. Their value here is methodological: they force definitions of horizon, trapped surface, equilibrium, generator completeness, and theorem domain. A model that violates a declared premise is evidence about scope, not a logical counterexample to the resulting implication.
+
+\subsection{Stellar-Mass Formation Is a Multivariable Process}
+The survey's stellar-evolution evidence shows why a formal compactness result cannot, by itself, determine a remnant mass distribution. Metallicity changes line-driven winds and pre-collapse mass. Explosion timing and energy determine how much material is ejected. Fallback can increase the final compact-object mass. The nuclear equation of state helps set the maximum supported neutron-star mass. Rotation, magnetic fields, asymmetry, and neutrino transport alter the route through collapse. Early-universe accretion scenarios further illustrate that black-hole growth and formation depend on environment and epoch \cite{umeda2009}.
+
+Failed core-collapse calculations provide a direct formation channel but remain model-dependent \cite{oconnor2011}. Collapsar and jet scenarios couple rotation and energetic outflows to massive-star collapse \cite{macfadyen2001}. Theoretical remnant distributions respond to explosion and unbinding prescriptions \cite{fryer2001}. Population-synthesis studies likewise connect missing or abundant mass ranges to supernova engines, winds, and fallback \cite{belczynski2012}. In binaries, common-envelope evolution and related uncertain phases can change merger rates and the systems that survive to become double compact objects \cite{dominik2012}.
+
+These mechanisms are not ``noise'' around a geometric theorem. They are competing causal explanations for the observed population and therefore belong in the design as alternative mechanisms and boundary variables. A theorem could remain true while being astrophysically non-discriminating if these mechanisms dominate the mass distribution.
+
+\subsection{Observational Proxies and Their Inference Chains}
+Electromagnetic evidence spans stellar dynamics, accretion spectra, quasi-periodic variability, jets, and horizon-scale imaging. Each proxy constrains a model through an inference chain. Sgr A* stellar orbits and source-size limits jointly make a strong compact-mass case \cite{genzel2010}; image-based constraints on M87* test compact spacetime models but retain emission and calibration dependence \cite{kocherlakota2021}. The correct survey conclusion is neither skepticism nor over-certainty: multiple independent proxies narrow viable alternatives, while a proposed theorem still needs its own mathematical premises.
+
+Gravitational waves add mass, spin, merger-rate, and ringdown information. The GWTC-3 population indicates substructure and supports multiple possible formation channels rather than one universal stellar pathway \cite{abbott2023gwtc3}. GW190521 motivates hierarchical-merger and intermediate-mass-black-hole discussions because its masses challenge simple first-generation stellar narratives \cite{abbott2020gw190521}. GW190814 includes a roughly $2.59\Msun$ secondary whose nature is ambiguous, demonstrating that an object inside or near the lower gap does not automatically classify itself as a neutron star or black hole \cite{abbott2020gw190814}. Ringdown and parametrized strong-field tests constrain deviations from Kerr, but inference remains waveform- and signal-quality-dependent \cite{berti2015,yunes2016}.
+
+\subsection{The Lower Mass Gap: Evidence, Not Theorem Output}
+Electromagnetic binary samples historically motivated a low-mass dearth \cite{bailyn1998,ozel2010}. That distribution is scientifically important, but three distinctions are essential. First, a population dearth is not an empty interval established without selection effects. Second, the maximum neutron-star mass and the minimum black-hole mass are controlled by different microphysical and macrophysical processes. Third, a sufficient trapped-surface condition stated in compactness need not select the numerical endpoints $2\Msun$ and $5\Msun$. Recent review synthesis continues to place formation mechanisms and observations side by side rather than reducing them to a single theorem \cite{kushangi2026}.
+
+\subsection{Integrated Gap Statement}
+The research gap is therefore a conjunction of missing bridges:
+\begin{enumerate}
+\item an exact definition of the AANEC curve class, weighting, completeness, and regularity;
+\item an independent averaged null-convergence condition sufficient to control Raychaudhuri evolution;
+\item a declared quasi-local mass and a strict trapped-surface criterion in spherical collapse;
+\item a proof that the proposed averaged premises are genuinely weaker than the relevant pointwise comparator;
+\item a separate, non-deductive comparison between any compactness result and remnant populations.
+\end{enumerate}
+The study is valuable only if all five bridges remain visible.
+
+\section{Research Questions and Planned Contributions}
+\label{sec:rqs}
+
+\subsection{Research Questions}
+The experiment design maps the qualified idea into five questions.
+
+\textbf{RQ1: Formal sufficiency.} Under which exact AANEC and independent averaged focusing definitions does a relevant null congruence acquire sufficient negative expansion to support a trapped-surface statement in the declared spherical domain?
+
+\textbf{RQ2: Geometric translation.} Which Misner--Sharp compactness definition, surface class, collapse-sign condition, and threshold convert the focusing result into a sufficient trapped-surface criterion?
+
+\textbf{RQ3: Remnant consequence.} What additional equilibrium, equation-of-state, and stability assumptions are needed to translate a compactness threshold into an exclusion bound for stable non-black-hole remnants?
+
+\textbf{RQ4: Genuine relaxation.} Is AANEC plus the independent focusing premise materially weaker than the pointwise null condition for the admitted solution classes, or does the added premise restore nearly equivalent restrictions?
+
+\textbf{RQ5: Astrophysical relevance.} After controlling claim scope, is the theorem compatible with measured compact-object populations, and does it discriminate among explosion, fallback, equation-of-state, rotation, magnetic, binary, and selection explanations?
+
+The author routing ledger assigns three unresolved items at this stage: the exact theorem-level research object, the admissible comparator for ``relaxation,'' and the criterion for astrophysical discrimination. They are not answered by rhetorical restatement; Sections \ref{sec:formal}--\ref{sec:methods} turn them into operational requirements.
+
+\subsection{Contributions}
+The planned contribution is a package rather than a single formula.
+\begin{enumerate}
+\item \emph{A layered evidence architecture} that separates formal claims, formation mechanisms, observational proxies, and population constraints.
+\item \emph{A qualified theorem candidate} using AANEC plus an explicitly independent focusing condition, with global assumptions stated rather than implied.
+\item \emph{A proof-obligation ledger} that decomposes the causal chain into auditable lemmas.
+\item \emph{A comparator design} testing whether the relaxation is substantive relative to pointwise assumptions.
+\item \emph{A counterexample protocol} distinguishing valid in-domain refutation from boundary evasion.
+\item \emph{A preregistered outcome matrix} preventing a null, heterogeneous, or invalid design from being rewritten as support.
+\item \emph{A reproducibility and review bundle} specifying artifacts required before any theorem-level claim is released.
+\end{enumerate}
+
+\begin{table*}[t]
+\caption{Source-to-claim map for the integrated manuscript.}
+\label{tab:source-map}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.14\textwidth}p{0.24\textwidth}p{0.25\textwidth}p{0.28\textwidth}}
+\toprule
+\textbf{Source class} & \textbf{Primary information} & \textbf{Permitted role} & \textbf{Prohibited promotion}\\
+\midrule
+Survey & Energy conditions; ECO boundaries; stellar evolution; electromagnetic and GW evidence; 19 references & Establish background, alternatives, empirical constraints, and literature-backed gaps & Cannot certify the proposed theorem or convert a population feature into a causal corollary\\
+Idea result & Mechanism replacement; revised claim scope; assumptions; falsifier; defect history; scientifically qualified status & Select and justify the research direction; define the correction from seed to qualified claim & Cannot count direction selection, MCTS score, or debate text as scientific evidence\\
+Experiment design & Formal-theory unit; A1--A6; variables; proof obligations; counterexamples; outcomes; unknowns & Specify an executable protocol and decision rules & Cannot report planned analyses, expected outcomes, or LLM-proposed witnesses as completed results\\
+Future formal work & Definitions, lemmas, symbolic checks, verified metrics, counterexample search & May support or refute propositions after independent review & Cannot be anticipated in the present manuscript\\
+Future observations & Catalog and multi-messenger analyses under explicit selection models & May assess compatibility and discriminating relevance & Cannot replace proof of the formal implication\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Idea Origin, Debate, and Direction Selection}
+\label{sec:idea}
+
+\subsection{Seed Claim and Its Attraction}
+The initial seed connected three attractive components: the failure of universal pointwise energy conditions, a possible AANEC-based replacement, and the apparent low-mass gap. This combination promised both foundational and observational relevance. It also contained a causal overreach. Even a correct trapped-surface theorem would not, without a stellar-structure and population model, generate the numerical interval seen in selected samples.
+
+\subsection{Defects Exposed During Idea Evolution}
+The idea trajectory records six defects: \texttt{missing\_assumption}, \texttt{unmapped\_gap:boundary\_variable}, \texttt{unresolved mechanism}, \texttt{proof\_gap}, \texttt{unsupported\_causal\_link}, and \texttt{missing\_comparator}. Each defect changes the final design.
+
+The missing assumption becomes A4, the independent averaged focusing condition. The unmapped boundary variable becomes the explicit compactness and quasi-local-mass ledger. The unresolved mechanism becomes a separation between geometric focusing and stellar population formation. The proof gap becomes PO1 and PO2. The unsupported causal link is removed by classifying the lower mass gap as A6, an external consistency constraint. The missing comparator becomes a planned pointwise-condition baseline and a premise-ablation analysis.
+
+\subsection{Mechanism Replacement}
+The selected primary direction is \texttt{mechanism\_replacement}. It does not merely weaken ``NEC'' to ``AANEC'' in prose. It proposes the chain
+\begin{equation}
+\AANEC+\mathcal{F}_{\mathrm{avg}}+\mathcal{G}+\mathcal{S}
+\Longrightarrow \mathcal{T},
+\qquad
+\mathcal{T}+\mathcal{E}_{\mathrm{eq}}+\mathcal{M}_{\mathrm{tr}}
+\Longrightarrow \mathcal{B}_{\mathrm{rem}},
+\label{eq:mechanism-chain}
+\end{equation}
+where $\mathcal{F}_{\mathrm{avg}}$ is the independent focusing premise, $\mathcal{G}$ collects global and regularity assumptions, $\mathcal{S}$ denotes spherical collapse conditions, $\mathcal{T}$ is trapped-surface formation, $\mathcal{E}_{\mathrm{eq}}$ is a non-circular equilibrium model, $\mathcal{M}_{\mathrm{tr}}$ is an explicit collapse-to-remnant matching rule, and $\mathcal{B}_{\mathrm{rem}}$ is a separately qualified remnant bound. The observed gap is intentionally absent from Eq. \eqref{eq:mechanism-chain}.
+
+\subsection{Global-Causal Correction}
+A trapped surface is not, without further structure, identical to every stronger black-hole statement. Penrose-style reasoning establishes future null-geodesic incompleteness under its assumptions. Connecting a trapped region to an event horizon or non-escape statement requires global conditions such as an appropriate asymptotic region, future null infinity, asymptotic predictability, and possibly a censorship or non-escape assumption. The final idea therefore avoids the sentence ``trapped surface proves an event horizon'' and requires each global consequence to be stated as its own theorem or assumption.
+
+\subsection{Selection Status}
+The idea artifact marks the direction \textsc{Scientifically Qualified}, not verified. Its MCTS preference indicates a research-program choice under its evaluation criteria, not truth, priority, or theorem completion. Appendix \ref{app:evolution} provides the complete correction matrix.
+
+\section{Formal Problem, Assumptions, and Hypotheses}
+\label{sec:formal}
+
+\subsection{Domain and Unit of Analysis}
+Let $\mathfrak{D}$ denote the declared class of classical spacetime solutions representing spherically symmetric, nonrotating stellar collapse with isotropic pressure. One experimental unit is one solution class together with its matter model, boundary conditions, and null-congruence specification. The time structure is not longitudinal or cross-sectional; affine evolution along a generator is a mathematical coordinate in the proof, not an observational follow-up period.
+
+In regular spherical coordinates, the areal radius $R$ and a quasi-local mass $m_{\mathrm{MS}}$ are related schematically by
+\begin{equation}
+1-\frac{2Gm_{\mathrm{MS}}}{Rc^2}
+=g^{ab}(\nabla_aR)(\nabla_bR).
+\label{eq:ms-definition}
+\end{equation}
+Equation \eqref{eq:ms-definition} fixes the intended Misner--Sharp convention only after signature, units, differentiability, and the coordinate domain are declared.
+
+\subsection{Assumption Ledger}
+The formal experiment design supplies six assumptions.
+
+\textbf{A1 (collapse symmetry).} The base domain is spherical and nonrotating, with isotropic pressure. This is a deliberate restriction, not an approximation already shown adequate for realistic supernovae.
+
+\textbf{A2 (averaged energy).} Matter satisfies the selected achronal averaged null energy condition on the relevant complete achronal null generators, and uncontrolled quantum violations are excluded from the classical theorem domain.
+
+\textbf{A3 (global and regular structure).} Spacetime is globally hyperbolic and sufficiently regular for the chosen trapped-surface and causal arguments. Any use of future null infinity or asymptotic predictability must be added explicitly.
+
+\textbf{A4 (independent focusing).} A separately defined averaged null-convergence/focusing condition holds. It is not claimed to follow from A2 alone.
+
+\textbf{A5 (remnant equilibrium basis).} Candidate horizonless remnants belong to a declared isotropic, causal equation-of-state family with stated boundary conditions and a radial-stability criterion. A5 does not assume the compactness or mass upper bound that PO2 is meant to derive.
+
+\textbf{A6 (population boundary).} The observed lower mass gap is an external consistency constraint, subject to alternative stellar-physics and selection explanations.
+
+\subsection{Formal Hypotheses}
+\textbf{H1 (candidate focusing-to-trapping hypothesis).} For a solution in $\mathfrak{D}$ satisfying A1--A4, if a declared strict compactness threshold and an invariant collapse/time-orientation condition are attained on an eligible two-surface, then both future-directed null expansions become negative and a trapped surface forms.
+
+\textbf{H2 (candidate remnant-exclusion hypothesis).} If H1 and A5 hold and a separately proved transition map $\mathcal{M}_{\mathrm{tr}}$ connects the dynamical collapse surface to a putative equilibrium endpoint while controlling bounce, dispersal, mass loss, and persistence of the trapped region, then stable non-black-hole endpoints above the derived compactness bound are excluded in that matched domain.
+
+\textbf{H3 (genuine-relaxation hypothesis).} There exists a nonempty, well-defined class satisfying A2 and A4 for which the pointwise null condition fails but H1's focusing conclusion remains provable. Without such a class, the mechanism replacement may be formally correct yet scientifically weak as a relaxation.
+
+\textbf{H4 (interpretive boundary).} The $2$--$5\Msun$ population feature is not a direct corollary of H1 or H2. Compatibility may be assessed, but numerical agreement cannot retroactively prove the formal premises.
+
+The one routed unknown assigned here is the exact mathematical form of A4. It is kept unresolved because choosing it determines whether H3 is plausible and whether the proposed theorem is genuinely new.
+
+\subsection{Falsifiers}
+H1 is falsified by an explicit in-domain solution satisfying the finalized A1--A4 definitions, strict compactness antecedent, and invariant collapse condition while one or both future null expansions fail the D4 criterion. H2 is falsified by a matched evolution and stable horizonless endpoint satisfying A5 and $\mathcal{M}_{\mathrm{tr}}$ while exceeding the proven bound. H3 is falsified if A4 necessarily reinstates the relevant pointwise condition in every admitted class or if no admissible separating example exists. An astrophysical model that produces the lower gap through explosion or selection effects weakens the explanatory relevance of H1/H2 but does not logically falsify them.
+
+\section{Study Design and Methods}
+\label{sec:methods}
+
+\subsection{Design Type, Eligibility, and Sampling}
+The design type is \texttt{formal\_theory}. There is no stochastic participant sample and no observed-results table. Eligibility is logical: a unit enters the primary analysis only if its metric, stress-energy model, regularity, null-generator domain, symmetry, pressure structure, compactness convention, and boundary conditions are specified well enough to evaluate A1--A4. Units with rotation, anisotropy, nonclassical stress energy, incomplete generators, or ambiguous quasi-local mass enter prespecified boundary analyses, not the primary proof set.
+
+Sampling is purposive over solution classes. The minimum set is: one positive-control collapse model; one pointwise-NEC comparator; one class with pointwise violations but candidate averaged control; one incomplete-generator boundary; one rotating or nonspherical boundary; and the two supplied ECO/focusing-failure witnesses. This set tests logic and scope; it cannot establish exhaustiveness.
+
+\subsection{Work Package 1: Definitions and Conventions}
+WP1 freezes metric signature, curvature convention, affine-parameter orientation, null-vector normalization, surface topology, differentiability, completeness, and the stress-energy framework. A candidate AANEC functional is
+\begin{equation}
+\mathcal{A}[\gamma]
+=\int_{-\infty}^{+\infty}T_{ab}k^ak^b\,d\lambda \geq 0,
+\label{eq:aanec}
+\end{equation}
+where $\gamma$ is an eligible complete achronal null generator, $k^a=dx^a/d\lambda$, and $\lambda$ is affine. Equation \eqref{eq:aanec} is a template, not the final D1: the achronal generator class, convergence of the integral, distributional stress tensors, normalization, and possible weighting remain human inputs.
+
+The independent focusing functional is provisionally separated as
+\begin{equation}
+\mathcal{F}_{\gamma}(L)
+=\int_{0}^{L}w(\lambda)R_{ab}k^ak^b\,d\lambda
+\geq \eta(L),
+\label{eq:focusing-functional}
+\end{equation}
+with declared weight $w$, interval $L$, and lower bound $\eta$. The exact choices are deliberately unspecified. WP1 must show why Eq. \eqref{eq:focusing-functional} is independent of, compatible with, and not silently equivalent to a pointwise assumption.
+
+\subsection{Work Package 2: Raychaudhuri and Focusing}
+For a hypersurface-orthogonal null congruence, the planned starting point is
+\begin{equation}
+\frac{d\theta}{d\lambda}
+=-\frac{1}{2}\theta^2-\sigma_{ab}\sigma^{ab}
+-R_{ab}k^ak^b,
+\label{eq:raychaudhuri}
+\end{equation}
+where $\theta$ is expansion and $\sigma_{ab}$ is shear. If twist is not identically zero, its term and sign must be restored. The proof may not discard shear unless spherical symmetry and the chosen congruence justify doing so.
+
+The target is an integral inequality of the form
+\begin{align}
+\theta(L)-\theta(0)
+&=-\int_{0}^{L}\left(\frac{1}{2}\theta^2
++\sigma_{ab}\sigma^{ab}
++R_{ab}k^ak^b\right)d\lambda, \nonumber\\
+&\leq -\Xi[\theta,\sigma,\mathcal{F}_{\gamma};L],
+\label{eq:integrated-raychaudhuri}
+\end{align}
+where $\Xi$ must be explicitly derived. PO1 succeeds only if the final bound implies the required sign or blow-up behavior of $\theta$ without inserting a stronger undeclared premise.
+
+\subsection{Work Package 3: Trapped Surfaces and Compactness}
+The dimensionless compactness variable is
+\begin{equation}
+\Cms(R)=\frac{2Gm_{\mathrm{MS}}(R)}{Rc^2}.
+\label{eq:compactness}
+\end{equation}
+In common spherical conventions, $\Cms=1$ is marginal rather than strictly trapped, and strict trapping generally requires $\Cms>1$ together with the appropriate collapse orientation and null-expansion signs. Accordingly, the design does not preassign $\Ccrit=1$ as a universal theorem result. It defines a non-circular candidate antecedent as
+\begin{equation}
+\Cms(R_*)\geq \Ccrit,
+\qquad
+\left.\mathcal{L}_{u}R\right|_{R_*}<0,
+\label{eq:trapping-criterion}
+\end{equation}
+where $u^a$ is the declared future-directed matter flow or another invariantly specified timelike evolution field, and $\mathcal{L}_{u}R<0$ supplies collapse orientation without assuming the desired null-expansion signs. Strict versus non-strict compactness, the eligible surface, and any foliation dependence must be settled by the final geometry. The conclusion to be proved is $\theta_{+}<0$ and $\theta_{-}<0$; the compactness test is sufficient, not assumed necessary or unique.
+
+\subsection{Work Package 4: Remnant Equilibrium Translation}
+The equilibrium layer is independent of PO1. For an isotropic perfect-fluid comparator, a TOV-like system is
+\begin{align}
+\frac{dp}{dr}
+&=-\frac{G\left(\rho+p/c^2\right)
+\left(m+4\pi r^3p/c^2\right)}
+{r^2\left(1-2Gm/(rc^2)\right)}, \nonumber\\
+\frac{dm}{dr}&=4\pi r^2\rho.
+\label{eq:tov}
+\end{align}
+Here $p(r)$, $\rho(r)$, and $m(r)$ require an equation of state and boundary data. A5 cannot be reduced to ``TOV applies'' or ``a bound exists'': stability, phase transitions, causality, and the model family must be stated without presupposing the target upper bound.
+
+If a stable-remnant family has radius function $R_{\mathrm{eq}}(M;\mathcal{E})$ under equation-of-state class $\mathcal{E}$, the candidate exclusion test is
+\begin{equation}
+\frac{2GM}{R_{\mathrm{eq}}(M;\mathcal{E})c^2}
+<\Ccrit.
+\label{eq:remnant-bound}
+\end{equation}
+PO2 must determine whether Eq. \eqref{eq:remnant-bound} yields a mass bound at all, whether the bound is unique, how it varies across admissible $\mathcal{E}$, and whether $\mathcal{M}_{\mathrm{tr}}$ legitimately connects the dynamical H1 domain to that equilibrium family. No numerical mass interval is inserted in advance.
+
+\subsection{Comparison and Robustness Plan}
+Four comparisons are preregistered. C1 compares A2+A4 with the pointwise null convergence condition on identical solution classes. C2 removes A4 while retaining A2 to test whether AANEC alone is insufficient. C3 varies generator completeness and integration domain. C4 varies the quasi-local mass and eligible surface convention within spherical symmetry. Robustness requires conclusion stability under convention-preserving transformations and explicit explanation of any dependence.
+
+A future numerical stage, if justified, would discretize only after the formal objects are fixed. Convergence order, constraint violation, gauge sensitivity, resolution, domain truncation, and apparent-horizon finder calibration would then be measurement properties. The present experiment design contains no such calibration protocol and therefore prohibits a numerical result claim.
+
+\subsection{Analysis and Decision Rules}
+The primary analysis is a proof audit: each premise is mapped to the exact line where it enters; each inequality records its sign convention and domain; and each lemma lists its dependencies. Secondary analysis is a model-checking table over eligible solution classes. Sensitivity analysis removes or changes one premise at a time. Counterexample analysis requires a full assumption checklist before a witness is labeled valid.
+
+The author routing ledger assigns four unresolved items to methods: the operational AANEC protocol, the focusing calibration, the compactness/quasi-local-mass calibration, and the reproducibility specification for any numerical extension. They remain visible in Appendix \ref{app:evidence}.
+
+\begin{table*}[t]
+\caption{Assumption, variable, and validation ledger.}
+\label{tab:assumption-ledger}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.07\textwidth}p{0.19\textwidth}p{0.25\textwidth}p{0.20\textwidth}p{0.19\textwidth}}
+\toprule
+\textbf{ID} & \textbf{Object} & \textbf{Operational requirement} & \textbf{Primary validation} & \textbf{Boundary if unmet}\\
+\midrule
+A1 & Spherical isotropic collapse & Metric, matter model, collapse orientation, zero rotation, pressure structure & Direct inspection of solution ansatz & Rotation, anisotropy, static ECO, nonspherical collapse\\
+A2 / $V_1$ & AANEC & Exact curve class, completeness, affine parameter, convergence, stress-energy regime & Evaluate D1 on every eligible generator & Quantum/nonclassical or incomplete-generator analysis\\
+A3 & Global structure & Hyperbolicity, regularity, boundary/asymptotic assumptions & Causal-structure and regularity audit & No event-horizon or incompleteness promotion\\
+A4 / $V_2$ & Averaged focusing & Exact D2, weight, interval, lower bound, relation to D1 & Derive Eq. \eqref{eq:integrated-raychaudhuri} & AANEC-only negative control\\
+A5 / $V_3$ & Equilibrium basis & Causal isotropic EoS family, boundary data, stability, quasi-local mass; no assumed target bound & PO2, transition-map, and equilibrium-family audit & No remnant-mass exclusion\\
+A6 / $V_6$ & Population constraint & Selection-aware external mass distribution & Compatibility analysis only & No theorem falsification from demographics alone\\
+$V_4$ & Trapped surface & Two-surface, null normals, expansions, strictness & Direct geometric calculation & Ambiguous or foliation-sensitive classification\\
+$V_7$--$V_{10}$ & Rotation, fields, explosion, EoS & Prespecified boundary/confounder definitions & One-factor and combined extensions & Claim restricted to base domain\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Expected Outcomes and Conditional Interpretation}
+\label{sec:outcomes}
+
+No outcome in this section has been observed. Each branch carries the status \Expected.
+
+\subsection{Branch O1: Supports the Mechanism}
+Trigger: the finalized premises yield the prespecified focusing and trapping implication; planned comparisons do not reveal an equivalent hidden pointwise assumption; and no valid in-domain counterexample is found within the declared search. Interpretation: the result supports a restricted theorem candidate and justifies independent proof review. It does not prove a universal black-hole formation rule, establish cosmic censorship, or derive a stellar mass interval. Improvement action: replicate the derivation under independently checked conventions and test the most consequential boundary condition.
+
+\subsection{Branch O2: Partial or Heterogeneous}
+Trigger: the implication holds only for selected matter models, generator classes, compactness conventions, or equilibrium families. Interpretation: the relation is conditional and the theorem domain must shrink. Heterogeneity is scientifically informative if prespecified; it is not permission to retain the universal wording. Improvement action: define moderators before expanding the solution set and improve comparability among definitions.
+
+\subsection{Branch O3: Null or Contradictory}
+Trigger: the pointwise comparator succeeds where A2+A4 fails, a valid in-domain counterexample survives, PO1 or PO2 cannot be closed, or a declared alternative mechanism explains the relevant observation without discriminating support for the formal route. Interpretation: the proposed relation is unsupported inside the tested boundary. This does not prove absence of all possible averaged-condition theorems. Improvement action: audit construct validity, revise the mechanism, and do not proceed to population claims.
+
+\subsection{Branch O4: Uninformative or Invalid}
+Trigger: D1--D4 remain ambiguous; sign or regularity conventions are inconsistent; the counterexample search cannot evaluate the premises; a numerical extension lacks calibration; or protocol deviations prevent interpretation. Interpretation: no scientific conclusion is warranted. Improvement action: resolve the identified design failure and obtain specialist approval before repetition.
+
+\subsection{Mass-Gap Interpretation Across All Branches}
+The population comparison remains subordinate in all four branches. Even O1 permits only a statement of compatibility unless the stellar-evolution map is independently derived. O2 implies model-dependent compatibility. O3 may reduce explanatory relevance but does not let a demographic alternative disprove a well-scoped geometric identity. O4 forbids comparison. The gap is therefore a stress test for scope, not a target fitted by choosing $\Ccrit$ after seeing the data.
+
+\section{Risks, Limitations, and Human Review}
+\label{sec:risks}
+
+\subsection{Formal Risks}
+The dominant risk is assumption laundering: A4 could encode nearly all the pointwise focusing power that the project claims to relax. The comparator in H3 is designed to expose this. A second risk is circularity if the trapped-surface criterion appears both as a premise and a conclusion through the compactness threshold. A third is global overreach: trapped surfaces, null incompleteness, event horizons, and astrophysical black-hole identity must remain distinct statements.
+
+The routed review item is the global-causal implication. Before release, a mathematical-relativity reviewer must confirm exactly what follows from the trapped surface and which asymptotic or predictability assumptions are added. This review is a scientific gate, not a copy-edit.
+
+\subsection{Astrophysical Risks}
+Spherical isotropic collapse omits rotation, magnetic fields, turbulence, anisotropic stresses, neutrino transport, and multidimensional instabilities. The remnant translation depends on equation-of-state and stability assumptions. Population comparisons depend on detection and measurement selection. Consequently, even a correct base theorem may have limited explanatory reach.
+
+\subsection{Evidence and Automation Risks}
+The literature survey is a synthesis artifact, not a systematic review with a fully reproduced search and risk-of-bias protocol. The idea and experiment design were machine-generated planning artifacts. Their internal identifiers and ratings are provenance, not evidence. All formal definitions, bibliographic claims, and proof steps require human verification. The design's own validation report states \texttt{DRAFT\_REQUIRES\_INPUT} and warns that it contains no observed result.
+
+\subsection{Required Human Review}
+At minimum, one mathematical-relativity specialist must review D1--D4, A1--A5, the null congruence, all curvature signs, the global-causal inference, PO1, PO2, and counterexample validity. A compact-star specialist must review the TOV-like translation and stability domain. A stellar-population specialist must review any use of the lower gap, GW190814, or catalog distributions. If numerical work is added, a computational-relativity reviewer must approve gauge, convergence, constraint, and horizon-finding checks.
+
+\section{Definitions, Candidate Propositions, and Proof Obligations}
+\label{sec:definitions}
+
+\subsection{Definitions D1--D10}
+D1 is the final AANEC functional; D2 the independent averaged focusing condition; D3 the compactness and threshold convention; D4 the trapped-surface predicate; D5 remnant mass; D6 the population gap variable; D7 rotation; D8 magnetic-field strength; D9 supernova explosion/fallback energetics; and D10 the equation-of-state class. D1--D4 are theorem-critical. D5--D10 govern translation and external validity.
+
+The author route permitted nine unresolved items here, corresponding to the exact definitions, domains, and codomains needed for the formal system. Rather than manufacture precision, Appendix \ref{app:variables} records their status and completion test.
+
+\subsection{Candidate Propositions}
+\textbf{P1 (candidate trapped-surface proposition).} Within $\mathfrak{D}$, A1--A4 plus the finalized threshold antecedent imply D4. Status: \Candidate.
+
+\textbf{P2 (candidate matched-endpoint proposition).} Within evolutions for which $\mathcal{M}_{\mathrm{tr}}$ connects P1's dynamical domain to an A5 equilibrium endpoint, stable horizonless remnants exceeding the independently derived compactness limit are excluded. Status: \Candidate.
+
+\textbf{P3 (interpretive non-corollary).} D6 is an external consistency constraint and is not a quantitative corollary of P1 or P2. Status: scope rule.
+
+\textbf{P4 (candidate relaxation proposition).} The A2+A4 premise set admits at least one physically and mathematically meaningful class excluded by a pointwise null condition while retaining P1. Status: \Unverified.
+
+\subsection{Proof Obligations}
+\textbf{PO1.} Derive trapped-surface formation from the exact D1 and D2 using Eq. \eqref{eq:raychaudhuri}, with every integration, regularity, completeness, shear, and boundary step justified. Status: needs human input.
+
+\textbf{PO2.} Establish a remnant bound using the exact D3 convention and declared equilibrium family, without assuming the numerical answer or confusing marginal with strict trapping; prove the dynamic-to-equilibrium matching rule rather than presuming the P1 and A5 domains overlap. Status: unresolved.
+
+\textbf{PO3.} Establish P4 with an explicit separating solution class or prove that the proposed relaxation collapses to the comparator. Status: added comparator obligation.
+
+\textbf{PO4.} State the precise global theorem used after D4 and list every additional causal/asymptotic assumption. Status: review required.
+
+\section{Forward Derivation and Counterexample Analysis}
+\label{sec:derivation}
+
+\subsection{Lemma-by-Lemma Forward Chain}
+The forward analysis is decomposed into six auditable lemmas.
+
+\textbf{L1 (well-defined averages).} Show that D1 and D2 exist and are invariant under allowed affine reparameterizations or fix the normalization that removes ambiguity.
+
+\textbf{L2 (curvature control).} Use Eq. \eqref{eq:einstein-null} only within the declared classical field-equation domain to connect energy and curvature statements.
+
+\textbf{L3 (integrated focusing).} Derive a quantitative lower bound for $\Xi$ in Eq. \eqref{eq:integrated-raychaudhuri}. A sign assertion without a finite-parameter consequence is insufficient.
+
+\textbf{L4 (surface construction).} Identify an eligible compact two-surface and calculate both future null expansions. This is where a congruence-level result becomes D4.
+
+\textbf{L5 (compactness sufficiency).} Prove that the finalized D3 compactness antecedent and invariant collapse orientation imply the two negative null expansions in L4. Those expansion signs are conclusions, not inputs. The relation is not assumed necessary.
+
+\textbf{L6 (matched equilibrium exclusion).} Construct $\mathcal{M}_{\mathrm{tr}}$ and then combine L5 with the non-circular A5 basis and Eq. \eqref{eq:remnant-bound}. This lemma must address bounce, dispersal, mass loss, and trapped-region persistence and must not import D6.
+
+Four routed unknowns remain in this chain: the quantitative focusing bound, the surface-construction lemma, the strict compactness implication, and the equilibrium-to-mass map. These are the scientific work, not formatting gaps.
+
+\subsection{Counterexample Validity Rule}
+For implication $A\Rightarrow B$, a valid counterexample satisfies $A$ and $\neg B$. Therefore every candidate witness is evaluated against all finalized assumptions before its conclusion is inspected. A witness that is static when A1 requires collapse, or that violates A4 by construction, is not a counterexample even if it lacks a trapped surface.
+
+\subsection{Supplied Candidate Witnesses}
+\textbf{CE1: static exotic compact object.} The witness is a hypothetical high-compactness but static ECO. It may illuminate the boundary between equilibrium and dynamic collapse, but it fails A1. Classification: assumptions not satisfied; invalid against P1.
+
+\textbf{CE2: AANEC without averaged focusing.} The witness satisfies A2 but violates A4 and avoids trapping. It demonstrates why AANEC alone is insufficient in the proposed logic. Classification: negative control; invalid against P1.
+
+\subsection{Priority Search Classes}
+The next search should target: (i) exact spherical collapse solutions with localized negative null energy but nonnegative complete-generator average; (ii) solutions where D2 holds under one weighting but not another; (iii) regular or semiclassical models near the classical boundary; (iv) high-compactness anisotropic objects after an explicit domain extension; and (v) families approaching marginality $\Cms\rightarrow1$ from both sides. Only cases satisfying every active premise may refute the candidate implication.
+
+\begin{table*}[t]
+\caption{Counterexample and outcome decision matrix. All outcomes are \Expected.}
+\label{tab:counterexamples}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.12\textwidth}p{0.23\textwidth}p{0.23\textwidth}p{0.17\textwidth}p{0.17\textwidth}}
+\toprule
+\textbf{Case} & \textbf{Antecedent check} & \textbf{Conclusion check} & \textbf{Classification} & \textbf{Action}\\
+\midrule
+Positive control & A1--A4 and threshold verified & D4 obtained & Internal consistency, not universal proof & Audit conventions and replicate derivation\\
+CE1 static ECO & A1 false; A4 unknown & No dynamic trapped surface & Boundary case; invalid counterexample & Retain for A1/A5 scope analysis\\
+CE2 AANEC-only & A2 true; A4 false & D4 may fail & Negative control; invalid counterexample & Demonstrate necessity of A4\\
+Complete in-domain witness & All finalized premises true & D4 false & Valid counterexample to P1 & Reject or narrow P1\\
+Comparator separation & A2+A4 true; pointwise condition false & D4 true & Supports P4 if proof is rigorous & Establish genuine relaxation\\
+Undefined protocol & One or more D1--D4 not evaluable & Conclusion ambiguous & O4 uninformative/invalid & Resolve definitions before inference\\
+Population alternative & Formal antecedent not addressed & Gap reproduced astrophysically & Relevance challenge, not formal refutation & Limit explanatory claim\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Exhaustiveness Statement}
+The supplied counterexample search is explicitly non-exhaustive and LLM-proposal-only. Because D1--D4 remain incomplete, no rigorous in-domain counterexample has been established. ``No candidate found'' must not be rewritten as evidence of theorem truth.
+
+\section{References and Source Discipline}
+\label{sec:references}
+The bibliography reproduces the nineteen bibliographic identities listed in the supplied survey, using collaboration abbreviations where author lists are exceptionally long. Citations support background statements only. They do not validate the new propositions. The survey, idea-result, experiment-design, and author-log artifacts are local provenance inputs rather than peer-reviewed references and are documented in Appendix \ref{app:evidence}.
+
+\appendices
+
+\section{Idea Evolution and Selection Audit}
+\label{app:evolution}
+
+\subsection{Correction Matrix}
+\begin{table*}[!t]
+\caption{Evolution from the ambitious seed to the qualified mechanism-replacement design.}
+\label{tab:evolution}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.17\textwidth}p{0.29\textwidth}p{0.40\textwidth}}
+\toprule
+\textbf{Recorded defect} & \textbf{Why the seed was vulnerable} & \textbf{Repair retained in this manuscript}\\
+\midrule
+Missing assumption & AANEC was treated as if it automatically supplied focusing & Add independent A4; make its exact form a theorem-critical unknown\\
+Unmapped boundary variable & ``Compact enough'' lacked quasi-local mass, threshold, and surface conventions & Introduce D3, Eq. \eqref{eq:ms-definition}, Eq. \eqref{eq:compactness}, and PO2\\
+Unresolved mechanism & Geometry was conflated with stellar explosion and population formation & Separate formal chain, equilibrium translation, and external population layer\\
+Proof gap & Raychaudhuri was cited without an integrated bound or surface construction & Decompose PO1 into L1--L5 and require an explicit $\Xi$\\
+Unsupported causal link & Observed lower gap was described as a theorem prediction & Adopt A6 and P3; prohibit a direct $2$--$5\Msun$ derivation\\
+Missing comparator & No test showed the averaged premise was genuinely weaker & Add H3/P4/PO3 and pointwise-condition baseline\\
+Global overreach & Trapped surface was allowed to imply an event horizon without full assumptions & Add PO4 and specialist review of asymptotic and predictability premises\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Eight-Step Selected Mechanism}
+The final idea's scientific specification is preserved as an eight-step program: (1) fix classical GR and the spherical, nonrotating, isotropic domain; (2) replace the pointwise null convergence condition/NEC with AANEC plus independent averaged focusing; (3) define Misner--Sharp compactness and a threshold; (4) derive a trapped-surface implication; (5) add non-circular TOV-like equilibrium assumptions and a transition map to obtain a horizonless-remnant bound; (6) compare with the pointwise null-condition argument; (7) search boundary and counterexample classes; and (8) compare with mass-gap observations only for consistency. Strong-energy-condition arguments belong to a distinct historical singularity-theorem context and are not the direct comparator for the null focusing step here.
+
+\subsection{Selection Interpretation}
+The best-path status in the idea artifact is a workflow outcome. It justifies why this research program was developed rather than proving that its hypothesis is likely or correct. The scientifically meaningful output of the idea stage is the corrected scope, explicit falsifier, and preserved defect ledger.
+
+\section{Variables, Symbols, and Operational Definitions}
+\label{app:variables}
+
+\begin{table*}[!t]
+\caption{Variable and definition registry inherited from the formal experiment design.}
+\label{tab:variables}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.08\textwidth}p{0.17\textwidth}p{0.25\textwidth}p{0.24\textwidth}p{0.15\textwidth}}
+\toprule
+\textbf{ID} & \textbf{Name / role} & \textbf{Domain and codomain} & \textbf{Completion test} & \textbf{Status}\\
+\midrule
+D1/$V_1$ & AANEC; independent & Eligible complete null generators $\rightarrow$ real functional/Boolean & Exact curve class, normalization, convergence, regularity, quantum boundary & Needs human input\\
+D2/$V_2$ & Averaged focusing; independent & Null congruence and interval $\rightarrow$ quantitative bound & Exact $w$, $L$, $\eta$, invariance, and sufficient focusing lemma & Needs human input\\
+D3/$V_3$ & Compactness; independent & Spherical solution surfaces $\rightarrow$ dimensionless & Quasi-local mass, radius, strict threshold, collapse sign & Needs human input\\
+D4/$V_4$ & Trapped surface; dependent & Spacetime two-surfaces $\rightarrow$ geometric predicate & Null normals, both expansions, topology, regularity & Needs human input\\
+D5/$V_5$ & Remnant mass; dependent/translation & Equilibrium family $\rightarrow$ mass & Gravitational versus baryonic mass and stability branch & Needs human input\\
+D6/$V_6$ & Lower mass gap; external constraint & Selection-modeled population $\rightarrow$ interval/density feature & Catalog, likelihood, selection model, uncertainty & Needs human input\\
+D7/$V_7$ & Rotation; boundary & Collapsing star $\rightarrow$ angular momentum/spin & Domain-extension criterion and dimensionless spin & Boundary variable\\
+D8/$V_8$ & Magnetic field; boundary & Progenitor/remnant $\rightarrow$ field strength/topology & Magnetized stress tensor and dynamical relevance & Boundary variable\\
+D9/$V_9$ & Explosion/fallback; confounder & Stellar model $\rightarrow$ energy and fallback mass & Engine prescription and uncertainty model & Unresolved mechanism\\
+D10/$V_{10}$ & Equation of state; control/confounder & Nuclear matter $\rightarrow p(\rho,\ldots)$ & Causality, stability, calibration, admissible family & Needs human input\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The author route assigns six unknown items to this appendix; for auditable routing they are D1--D6. D7--D10 are additional boundary, control, and confounding variables retained from the experiment design rather than extra members of that six-item assignment.
+
+\subsection{Controls and Boundaries}
+The primary controls are spherical symmetry, isotropic pressure, global hyperbolicity/regularity, generator completeness, classical stress energy, and common conventions across comparisons. Rotation, magnetic fields, anisotropy, quantum stress-energy effects, explosion energetics, fallback, binary history, and EoS variation are not silently ``controlled away'' in the astrophysical interpretation; they delimit external validity.
+
+\subsection{Measurement and Calibration Status}
+For the formal stage, measurement means exact evaluation of geometric and integral predicates on specified solutions. Calibration means convention checks, analytic benchmark recovery, and independently reproduced symbolic derivations. For any later numerical stage, calibration must additionally cover discretization error, convergence, constraints, gauge, boundary reflections, and horizon-finder performance. These numerical specifications are absent from the supplied design and remain prohibited assumptions.
+
+\section{Evidence, Unknowns, Reproducibility, and Final Review}
+\label{app:evidence}
+
+\subsection{Evidence-to-Claim Coverage}
+Survey evidence supports four background clusters: theoretical energy-condition limits; alternative compact objects; stellar-collapse and binary mechanisms; and electromagnetic/GW constraints. It leaves the new formal claim uncovered because no supplied source proves D1+D2$\Rightarrow$D4 in the proposed domain. The idea artifact identifies that gap and selects a direction. The experiment design operationalizes it. This sequence is appropriate only if planning artifacts are not cited as confirmation.
+
+\subsection{Nine Explicit Unresolved Items}
+The final author route retains the following nine unresolved items.
+\begin{enumerate}
+\item exact AANEC definition, generator class, parameterization, and regularity;
+\item exact independent averaged focusing condition and its relation to AANEC;
+\item quasi-local mass convention and compactness threshold;
+\item precise trapped-surface predicate and strict/marginal distinction;
+\item quantitative translation from dynamic compactness to stable-remnant mass, including the collapse-to-equilibrium matching rule;
+\item classical versus semiclassical or quantum stress-energy boundary;
+\item proof that the averaged formulation is genuinely weaker than its pointwise comparator;
+\item measurement, calibration, data-governance, and reproducibility protocol for any numerical extension;
+\item independent human review by mathematical-relativity, compact-star, and population specialists.
+\end{enumerate}
+All nine are scientific dependencies. A compiled PDF does not resolve them.
+
+\subsection{Reproducibility Bundle}
+The formal derivation should be stored as versioned source with: a definitions file; a machine-readable assumption ledger; lemma dependencies; symbolic-algebra notebooks or proof-assistant scripts if used; one file per solution-class benchmark; counterexample assumption checks; and an environment manifest. Every generated table must trace to a source artifact. Any numerical extension must add code, initial data, resolution studies, diagnostics, raw summary outputs, and a deterministic build record.
+
+\subsection{Review Checklist}
+Release as a research plan requires consistency of claims, citations, labels, and expected-result language. Release as a theorem paper requires substantially more: D1--D4 finalized; PO1--PO4 closed; a valid comparator; an in-domain counterexample search; independent line-by-line proof review; and explicit global-causal scope. Release of an astrophysical mass-gap claim additionally requires a selection-aware population model and comparison against stellar alternatives.
+
+\subsection{Final Status}
+The present artifact is a detailed integrated research plan. It resolves the earlier brevity and source-integration problem by using the survey for evidence, the idea result for conceptual correction, and the experiment design for execution and falsification. It does not resolve the scientific proof obligations. Its correct final status is \texttt{DRAFT\_REQUIRES\_INPUT}; its outcome status is \Expected.
+
+\begin{thebibliography}{99}
+\bibitem{genzel2010} R. Genzel, F. Eisenhauer, and S. Gillessen, ``The Galactic Center massive black hole and nuclear star cluster,'' \emph{Reviews of Modern Physics}, 2010.
+\bibitem{umeda2009} H. Umeda, N. Yoshida, K. Nomoto, S. Tsuruta, M. Sasaki, and T. Ohkubo, ``Early black hole formation by accretion of gas and dark matter,'' \emph{Journal of Cosmology and Astroparticle Physics}, 2009.
+\bibitem{kontou2020} E.-A. Kontou and K. Sanders, ``Energy conditions in general relativity and quantum field theory,'' \emph{Classical and Quantum Gravity}, 2020.
+\bibitem{macfadyen2001} A. MacFadyen, S. E. Woosley, and A. Heger, ``Supernovae, jets, and collapsars,'' \emph{The Astrophysical Journal}, 2001.
+\bibitem{cardoso2019} V. Cardoso and P. Pani, ``Testing the nature of dark compact objects: a status report,'' \emph{Living Reviews in Relativity}, 2019.
+\bibitem{berti2015} E. Berti \emph{et al.}, ``Testing general relativity with present and future astrophysical observations,'' \emph{Classical and Quantum Gravity}, 2015.
+\bibitem{belczynski2012} K. Belczynski, G. Wiktorowicz, C. L. Fryer, D. E. Holz, and V. Kalogera, ``Missing black holes unveil the supernova explosion mechanism,'' \emph{The Astrophysical Journal}, 2012.
+\bibitem{oconnor2011} E. O'Connor and C. D. Ott, ``Black hole formation in failing core-collapse supernovae,'' \emph{The Astrophysical Journal}, 2011.
+\bibitem{fryer2001} C. L. Fryer and V. Kalogera, ``Theoretical black hole mass distributions,'' \emph{The Astrophysical Journal}, 2001.
+\bibitem{ozel2010} F. Ozel, D. Psaltis, R. Narayan, and J. E. McClintock, ``The black hole mass distribution in the Galaxy,'' \emph{The Astrophysical Journal}, 2010.
+\bibitem{dominik2012} M. Dominik, K. Belczynski, C. Fryer, D. E. Holz, E. Berti, T. Bulik, I. Mandel, and R. O'Shaughnessy, ``Double compact objects. I. The significance of the common envelope on merger rates,'' \emph{The Astrophysical Journal}, 2012.
+\bibitem{abbott2020gw190521} R. Abbott \emph{et al.}, ``Properties and astrophysical implications of the $150\Msun$ binary black hole merger GW190521,'' \emph{The Astrophysical Journal Letters}, 2020.
+\bibitem{kocherlakota2021} P. Kocherlakota \emph{et al.}, ``Constraints on black-hole charges with the 2017 EHT observations of M87*,'' \emph{Physical Review D}, 2021.
+\bibitem{bailyn1998} C. D. Bailyn, R. K. Jain, P. Coppi, and J. A. Orosz, ``The mass distribution of stellar black holes,'' \emph{The Astrophysical Journal}, 1998.
+\bibitem{kushangi2026} D. Kushangi, ``Black hole formation from massive star collapse: A review of physical mechanisms and observational evidence,'' \emph{American Journal of Student Research}, 2026.
+\bibitem{abbott2023gwtc3} R. Abbott \emph{et al.}, ``Population of merging compact binaries inferred using gravitational waves through GWTC-3,'' \emph{Physical Review X}, 2023.
+\bibitem{yunes2016} N. Yunes, K. Yagi, and F. Pretorius, ``Theoretical physics implications of the binary black-hole mergers GW150914 and GW151226,'' \emph{Physical Review D}, 2016.
+\bibitem{abbott2020gw190814} R. Abbott \emph{et al.}, ``GW190814: Gravitational waves from the coalescence of a 23 solar mass black hole with a 2.6 solar mass compact object,'' \emph{The Astrophysical Journal Letters}, 2020.
+\bibitem{mazur2004} P. O. Mazur and E. Mottola, ``Gravitational vacuum condensate stars,'' \emph{Proceedings of the National Academy of Sciences}, 2004.
+\end{thebibliography}
+
+\end{document}
