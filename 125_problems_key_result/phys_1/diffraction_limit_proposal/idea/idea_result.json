@@ -1,0 +1,35 @@
+{
+  "schema_version": "idea_result_v5",
+  "project_id": "phys_1_diffraction_limit_proposal",
+  "survey_run_id": "survey-phys1-diffraction-001",
+  "project_context_fingerprint": "ctx-phys1-diffraction-v1",
+  "selected_primary_idea_id": "idea-traceres-001",
+  "selected_primary_idea": {
+    "idea_id": "idea-traceres-001",
+    "title": "TraceRes: A Task-Specific Resolution Passport for Credible Optical Nanoscopy",
+    "summary": "A cross-modality evidence record that converts a nominal super-resolution result into a task-specific, calibratable, and falsifiable structural claim.",
+    "target_gap_ids": ["G1","G2","G3","G4","G5"],
+    "research_object": "Optical microscopy resolution claims for known structural tasks.",
+    "mechanism": "Typed resolution objective + declared information channel + multi-term error budget + blinded calibration + bounded status.",
+    "falsification_conditions": [
+      "Typed passports do not reduce localization-versus-structure misclassification.",
+      "The multi-term lower bound does not improve calibration on truth-known cases.",
+      "Independent audits do not detect fewer omitted alternatives or artifact pathways.",
+      "Passport-constrained modality choice does not improve valid-information yield at matched resource budget."
+    ]
+  },
+  "competitive_ideas": [
+    {"idea_id":"idea-adaptive-selector-002","title":"Adaptive modality selector","reason":"Useful downstream optimizer but needs TraceRes validation semantics."},
+    {"idea_id":"idea-taxonomy-003","title":"Mechanism taxonomy map","reason":"Useful explanatory component but insufficient as a measurement-validation contribution."}
+  ],
+  "rejected_ideas": [
+    {"idea_id":"idea-sharpness-004","title":"Image-sharpening score","reason":"Visual sharpness does not establish structural resolution or coordinate accuracy."}
+  ],
+  "hypotheses": ["H1","H2","H3","H4"],
+  "survey_binding": {"manifest":"survey/survey_manifest.json","source_keys":["S1","S2","S3","S4","S5","S6","S7","S8","S9","S10","S11","S12"]},
+  "evolution_trace": [
+    {"stage":"seed","change":"Recast a universal limit question into a task-specific inference question.","reason":"G1 and G5."},
+    {"stage":"mechanism-composition","change":"Combine resolution taxonomy with calibration, sampling, and artifact records.","reason":"G2 and G3."},
+    {"stage":"selection","change":"Add blinded counterfactual cases and bounded statuses.","reason":"G4 and direct falsifiability."}
+  ]
+}

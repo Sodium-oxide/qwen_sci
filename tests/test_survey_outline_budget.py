@@ -457,6 +457,86 @@ def test_outline_representatives_cover_every_available_slot_before_optional_caps
     assert "W4" not in selected
 
 
+def test_qualified_synthesis_retains_a_qualified_representative_after_direct_slot_selection():
+    plan = _full_plan()
+    entry = plan["subhypotheses"][0]
+    entry["required_slots"] = [
+        "candidate",
+        "comparator",
+        "comparison_condition",
+        "comparable_endpoint",
+    ]
+    entry["covered_slots"] = entry["required_slots"].copy()
+    entry["slot_support"] = {
+        "candidate": {
+            "expected_evidence_role": "DIRECT_CANDIDATE",
+            "evidence_paper_ids": ["W1"],
+            "qualified_paper_ids": [],
+            "background_paper_ids": [],
+        },
+        "comparator": {
+            "expected_evidence_role": "DIRECT_COMPARATOR",
+            "evidence_paper_ids": ["W2"],
+            "qualified_paper_ids": ["W-qualified"],
+            "background_paper_ids": [],
+            "qualified_paper_constraints": {
+                "W-qualified": [
+                    {
+                        "semantic_claim_limits": [
+                            "Only compare matched material classes."
+                        ]
+                    }
+                ]
+            },
+        },
+        "comparison_condition": {
+            "expected_evidence_role": "DIRECT_CONDITION",
+            "evidence_paper_ids": ["W3"],
+            "qualified_paper_ids": [],
+            "background_paper_ids": [],
+        },
+        "comparable_endpoint": {
+            "expected_evidence_role": "DIRECT_ENDPOINT",
+            "evidence_paper_ids": ["W4"],
+            "qualified_paper_ids": [],
+            "background_paper_ids": [],
+        },
+    }
+    entry["evidence_paper_ids"] = ["W1", "W2", "W3", "W4"]
+    entry["qualified_paper_ids"] = ["W-qualified"]
+    entry["allowed_writing_mode"] = QUALIFIED_SYNTHESIS
+    entry["paper_role_constraints"]["W-qualified"] = [
+        {"semantic_claim_limits": ["Use qualified wording."]}
+    ]
+
+    generator = _generator(
+        plan=plan,
+        outline_representative_papers_per_sh=4,
+        outline_representative_max_papers=4,
+    )
+    generator.work_analyzer = SimpleNamespace(
+        get_paper_keynote=lambda paper_id: {"summary": f"{paper_id} keynote"},
+        work_collector=SimpleNamespace(
+            get_paper_title=lambda paper_id: f"Title for {paper_id}"
+        ),
+    )
+
+    selected = generator._select_outline_representative_paper_ids(
+        ["W1", "W2", "W3", "W4", "W-qualified"]
+    )
+    prompt_plan = json.loads(
+        generator._survey_evidence_plan_prompt(representative_paper_ids=selected)
+    )
+    qualified_evidence = next(
+        item
+        for item in prompt_plan["subhypotheses"][0]["representative_evidence"]
+        if item["paper_id"] == "W-qualified" and item["evidence_role"] == "qualified"
+    )
+
+    assert selected == ["W-qualified", "W1", "W2", "W3", "W4"]
+    assert "matched material classes" in qualified_evidence["limitation_summary"]
+
+
 def test_outline_shape_and_draft_length_budgets_are_concise_and_total_safe():
     generator = _generator(
         outline_min_sections=2,

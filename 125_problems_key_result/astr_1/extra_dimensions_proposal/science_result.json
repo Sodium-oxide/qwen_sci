@@ -1,0 +1,41 @@
+{
+  "schema": "science_result_v1",
+  "project_id": "astr_1_extra_dimensions_proposal",
+  "research_topic": "How many dimensions are there in space?",
+  "reframed_question": "Which extra-dimension model classes are observationally distinguishable across complementary channels, and what would exclude them within declared assumptions?",
+  "status": "completed",
+  "external_evidence_limitation": "In-app browser and live double-engine search were attempted but blocked by a local Windows ACL sandbox error; source registry records verification-pending status honestly.",
+  "stages": {
+    "survey": {
+      "status": "completed",
+      "canonical": "survey/survey.md"
+    },
+    "idea": {
+      "status": "completed",
+      "canonical": "idea/idea_result.json",
+      "primary_direction": "D3"
+    },
+    "experiment_design": {
+      "status": "completed",
+      "canonical": "experiment_design/research_design.json",
+      "execution_policy": "DESIGN_ONLY"
+    },
+    "author": {
+      "status": "completed",
+      "canonical": "author/extra_dimensions_report.tex",
+      "minimum_pages": 7,
+      "report_source": "author/extra_dimensions_report.tex",
+      "pdf": "author/extra_dimensions_report.pdf",
+      "pdf_validation": "author/pdf_validation.json",
+      "validated_nonempty_pages": 7,
+      "ieee_template": "Conference-LaTeX-template_10-17-19"
+    }
+  },
+  "claim_boundary": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "prohibited_claims": [
+    "extra dimensions discovered",
+    "universal dimension count measured",
+    "all extra dimensions disproved",
+    "new experiment observed"
+  ]
+}

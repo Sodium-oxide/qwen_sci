@@ -1,0 +1,499 @@
+             Is De-Extinction Possible? ProxyGate: An
+                Evidence-Gated Research Design for
+                      Extinct-Species Proxies
+                     Research Proposal Generated from a Four-Agent Evidence-to-Design Workflow
+                                       Survey → Idea → ExperimentDesign → Author
+                           Paleogenomics, conservation decision science, and governance research plan
+
+
+   Abstract—De-extinction is commonly presented as a yes-or-no         genome; a reconstructed genome is not a developmental sys-
+technical question, although the label covers biologically different   tem; a phenotype is not a self-sustaining population; and a
+acts: cloning, selective back-breeding, genome editing of an extant    population is not automatically a conservation benefit.
+relative, and ecological replacement. This paper proposes Prox-
+yGate, an evidence-gated research design for assessing extinct-           Ancient-DNA research has produced striking evidence
+species proxies without claiming that a historical organism can        about extinct populations. It has also shown why molecular
+be recovered. The central claim is testable: a candidate can be        recovery cannot be treated as biological reversal. Allentoft
+conditionally reviewable only if conservative evidence bounds          et al. measured DNA decay in dated bone and found an
+clear five non-compensatory gates–genomic provenance, trait-           exponential relationship with major preservation variation
+to-function support, developmental and welfare protection, eco-
+logical counterfactual benefit, and governance with opportunity-       among specimens [1]. Kistler et al. further show that tissue
+cost accountability. A robust priority index is calculated only        and environment shape ancient-DNA survival patterns [2].
+after all gates pass. The design compares recent-extinction,           Mammoth paleogenomics has reconstructed major branches
+mammoth-like, deeper-time, and non-avian-dinosaur negative-            of evolutionary history [3], and population studies document
+control classes, and contrasts proxy claims with conventional          demographic decline, genetic structure, and genomic erosion
+conservation alternatives. The proposed study is computational
+and evidence-synthesis only; it reports no edited genomes, em-         in woolly mammoths [4], [5]. Such achievements expand
+bryos, animals, releases, or observed ecological outcomes. The         what can be inferred about an extinct lineage. They do not
+expected contribution is not a promise to resurrect species. It is     restore a cell, a maternal environment, learned behavior, social
+an auditable way to separate scientifically impossible, evidence-      development, microbiome, or an ecological community.
+insufficient, and conditionally reviewable proxy hypotheses.              The core problem is therefore a decision problem under
+   Index Terms—de-extinction, ancient DNA, conservation ge-
+nomics, rewilding, decision analysis, animal welfare, governance,
+                                                                       heterogeneous uncertainty. A proposal can have excellent se-
+uncertainty                                                            quence data but no defensible phenotype bridge, no acceptable
+                                                                       welfare pathway, no locally credible ecological benefit, or
+                                                                       no legitimate governance. A simple weighted score would
+                       I. I NTRODUCTION
+                                                                       permit a high genomic score to compensate for a welfare or
+   The question “Is de-extinction possible?” has unusual public        rights failure. That is a category error. ProxyGate instead uses
+force because it appears to join paleontology, biotechnology,          gates for non-compensatory conditions and applies quantitative
+conservation, and science fiction in one sentence. It is nev-          prioritization only after all gates pass.
+ertheless a poor scientific decision question. “De-extinction”            This report is the Author-stage output of a four-agent
+may mean recovery of cryopreserved cells from a recently               research workflow. The Survey stage assembled a bounded
+extinct lineage, selective breeding for a historical phenotype,        source registry and gap ledger; the Idea stage compared
+genome editing of an extant relative, or creation of a pop-            alternatives and selected an evidence-gated framework; the
+ulation intended to supply a lost ecological function. These           ExperimentDesign stage specified a computational, design-
+activities do not share the same evidentiary route, biological         only evaluation. The present paper organizes those artifacts
+object, welfare burden, or legal status. Their conflation en-          into a research proposal. It does not report an implemented
+courages a false choice between a spectacular technological            genetic, reproductive, animal, or ecological experiment.
+success and categorical impossibility.
+                                                                            II. E VIDENCE B OUNDARY AND R ESEARCH G AP
+   This proposal takes a more useful position. An edited or
+selectively bred descendant of an extant lineage may someday           A. DNA survival constrains claims, not only dates
+be hypothesized to act as an extinct-species proxy; it is not             Ancient DNA is chemically modified and fragmented. Al-
+thereby a recovered historical individual. The proxy framing           lentoft et al. estimated a mean half-life for a 242-bp mito-
+is consistent with the IUCN’s terminology of creating proxies          chondrial sequence in a geographically constrained moa-bone
+of extinct species for conservation benefit [7]. The distinction       series and stressed taphonomic variance [1]. Their estimate is
+is not semantic caution. It determines the evidence that must          not a universal stopwatch: preservation environment, tissue,
+be supplied. A recoverable DNA fragment is not a complete              molecular type, and post-mortem history matter. Kistler et al.
+used paleogenomic meta-analysis to show that deamination           nor sufficient for ecological benefit. Trophic rewilding litera-
+and fragmentation patterns do not reduce to a single simple        ture describes pathways through which large animals can alter
+chronological rule [2]. Together, these sources support a direct   food webs and ecosystem processes, while also emphasizing
+conclusion: evidence quality must be recorded at the molecule      sparse, context-specific, and geographically biased empirical
+and reconstruction level rather than inferred from a public-       evidence [11]. Steeves et al. argue that functional proxies need
+facing age label.                                                  sufficient genetic diversity and evolutionary potential to persist
+   This conclusion does not deny exceptional ancient-DNA           rather than merely survive a first generation [10].
+discoveries. Van der Valk et al. recovered million-year-              Consequently, a conservation claim must answer a counter-
+scale mammoth genomic information that substantially refined       factual question: compared with habitat protection, protection
+mammoth evolutionary history [3]. Environmental DNA can            of extant relatives, translocation, assisted gene flow, invasive-
+also reveal ancient ecosystem composition under favorable          species control, or another feasible portfolio, does the proxy
+mineral-binding conditions [6]. But an environmental sequence      plausibly deliver a net benefit in a specified system? The
+signal, a damaged fragment, a consensus genome, and a viable       alternative portfolio is not a rhetorical obstacle. It identifies the
+diploid cell are scientifically different objects. The sequence    conservation opportunity cost of a technologically compelling
+of implications is not reversible:                                 but ecologically weak project.
+                                                                   D. Welfare and legitimacy require gate status
+  molecular evidence ⇒ bounded evolutionary inference
+                                                             (1)      Governance analysis finds perceived hazards, moral-hazard
+                      ̸⇒ recovered organism.                       concerns, and uncertainty about development paths central to
+   Equation (1) is a logical boundary, not a claim that every      expert views of de-extinction [12]. Legal and ethical work sim-
+ancient-DNA sample is uninformative. It explains why non-          ilarly identifies tensions between revived or modified organ-
+avian dinosaurs should serve as a negative-control class in a      isms and existing conservation categories [9], [14]. For cultur-
+decision study. Fossils can deliver morphology, phylogeny, and     ally significant species, genomic stewardship and relationships
+paleoecological information, but the deep temporal separation      with rights-holders cannot be reduced to a downstream consent
+from living organisms precludes a credible route from fossil       form [13]. These sources motivate a methodological choice:
+DNA to an exact dinosaur genome or developmental system.           welfare, rights, governance, and opportunity cost are non-
+                                                                   compensatory constraints. If they fail, an appealing genomic
+B. Genomes do not settle organismal fidelity                       narrative does not make a proposal ready for further review.
+   Paleogenomics makes comparative hypotheses possible, but           Table I summarizes the evidence-derived gap ledger.
+it does not by itself validate a phenotype, behavior, or ecosys-
+                                                                       III. P ROXY G ATE H YPOTHESIS AND A RCHITECTURE
+tem effect. A proxy derived from an extant relative would
+inherit the extant lineage’s cellular and maternal context.        A. Research propositions
+Regulatory architecture, epistasis, pleiotropy, developmental         The selected primary idea is **ProxyGate: Evidence-Gated
+timing, mitochondrial interactions, microbiome, parental care,     Readiness Assessment for De-Extinction Proxies**. It has two
+and social learning can all matter for an organism-level trait.    research propositions.
+Population history adds another layer. Palkopoulou et al. found    • H1: Non-compensation. A candidate should be condition-
+demographic and genetic decline through woolly mammoth               ally reviewable only if each required gate clears a conserva-
+genomes [4]; Dehasque et al. report gradual accumulation of          tive threshold under uncertainty. Strong genomic evidence
+mildly deleterious mutations in the isolated Wrangel Island          may increase research value, but it cannot compensate for a
+population [5]. A single reference sequence is neither a             developmental, welfare, ecological, or governance failure.
+complete historical population nor a validated blueprint for       • H2: Counterfactual discipline. Explicit comparison against
+adaptive potential.                                                  conventional conservation portfolios will change the deci-
+   The gap is operational: current discussions often move            sion category for some apparently attractive proxy claims.
+directly from a reconstructed variant to a claimed trait, then        These propositions can fail. If all candidates passing a
+from the trait to ecological restoration. ProxyGate breaks this    genome-centered screen automatically pass ProxyGate, the
+chain into independently auditable evidence cards. Each card       additional architecture supplies no discriminating value. If an
+must distinguish observed sequence, reconstructed sequence,        ecological comparator never changes a decision, it is either
+phenotype support, unresolved dependencies, and conserva-          redundant or improperly specified. Conversely, if a candidate
+tion/governance context. A proposed trait that rests on impu-      with rich paleogenomic evidence is routed to ‘REQUIRES
+tation or analogy remains a proposed trait, not an observed        EVIDENCE‘ because its trait-function bridge or welfare basis
+property.                                                          is weak, that is a meaningful and intended output–not a
+                                                                   negative result to be hidden.
+C. Functional benefit is a counterfactual, not a label
+   Conservation interest is strongest when a candidate might       B. Five non-compensatory gates
+restore a lost function, not when it resembles a well-known          Fig. 1 presents the architecture. A candidate claim first
+extinct form. Yet functional resemblance is neither necessary      passes through five evidence domains. The final decision is
+                                                                        TABLE I
+                                               E VIDENCE - DERIVED GAPS AND THEIR DESIGN CONSEQUENCES .
+
+     ID              Research gap                                                  ProxyGate response
+     G1              One label conflates cloning, back-breeding, genome edit-      Classify the claim before assessing feasibility; prohibit literal-restoration
+                     ing, and ecological replacement.                              language unsupported by the evidence.
+     G2              Reconstruction uncertainty is not routinely propagated        Evidence cards separate observed, reconstructed, and unknown se-
+                     from DNA evidence to trait claims.                            quence/trait states.
+     G3              Genomic similarity is not a validated proxy-fidelity met-     Require a trait-to-function bridge with independent phenotype and ecol-
+                     ric.                                                          ogy evidence.
+     G4              Developmental, welfare, and multigenerational uncer-          Use a dedicated welfare/development gate with mandatory human review.
+                     tainty are separated from technical feasibility.
+     G5              Ecological-benefit claims are insufficiently counterfactual   Compare scenario-based benefit against conventional conservation port-
+                     and site-specific.                                            folios.
+     G6              Governance, participation, and opportunity cost are nar-      Require rights, legitimacy, stewardship, and resource-allocation evidence
+                     rative afterthoughts.                                         as a gate.
+     G7              No standard benchmark distinguishes impossible, prema-        Test decision categories with negative controls, stress tests, and abstention
+                     ture, and reviewable proposals.                               logic.
+
+
+
+an evidence status, not a permit. ‘CONDITIONALLY RE-                                                             TABLE II
+VIEWABLE‘ only means that further multidisciplinary human                                  C ANDIDATE CLASSES USED FOR A DESIGN - ONLY STRESS TEST.
+review is scientifically warranted; it does not authorize animal
+                                                                                      Class        Analytic role                  Expected decision challenge
+creation, animal use, or environmental release.
+                                                                                      C1           Recent extinction with Genomic evidence may be
+   Let qk denote the conservative evidence score for gate k ∈                                      archived material and stronger, but all five gates still
+{1, . . . , 5}, and let [q k , q k ] be the interval obtained from source                          close living relative.    apply.
+uncertainty and scenario analysis. Let τk be a prespecified gate                      C2           Mammoth-like late Pleis- Informative         paleogenomics
+                                                                                                   tocene case.              meets     high    developmental,
+threshold. The proposed robust gate indicator is                                                                             ecological, and governance
+                                 5
+                                                                                                                             uncertainty.
+                                ∏︂                                                    C3           Deeper-time DNA-limited Reconstruction           uncertainty
+                         G=          ⊮{q k ≥ τk }.                          (2)                    case.                     should constrain trait claims.
+                               k=1                                                    C4           Non-avian dinosaur nega- Must never become condition-
+                                                                                                   tive control.             ally reviewable; fossil knowl-
+   Equation (2) deliberately uses the lower evidence bound. It                                                               edge is not a cellular-genomic
+is a design object, not an estimated result. If a gate’s credible                                                            route.
+lower bound is below threshold, the candidate cannot advance                          C5           Conventional conservation Establishes whether proxy bene-
+                                                                                                   comparator.               fit exceeds feasible alternatives.
+to prioritization. The product makes the non-compensatory
+property visible: any zero-valued gate makes G = 0.
+   For candidates that do clear all five gates, a second-layer
+                                                                                    included (Table II). The classes test the framework’s discrim-
+priority index can compare further research attention. Let sE ,
+                                                                                    ination rather than presuppose that any named taxon should
+sF , and sC describe, respectively, evidence strength, prospec-
+                                                                                    be pursued. Candidate identities and locations would remain
+tive functional/ecological benefit, and comparative advantage
+                                                                                    subject to lawful data use and rights-holder review.
+over a conventional portfolio. Let W be a bounded set of
+transparently elicited weights, U be a documented uncertainty                       B. Evidence cards and coding rules
+burden, and λ be a conservatism parameter. Then
+                                                                                       Each candidate-trait pair receives an evidence card with five
+                [︃                                                  ]︃              immutable fields: (1) observed genomic evidence and prove-
+       P = G min (wE sE + wF sF + wC sC ) − λU .                            (3)     nance; (2) reconstructed or imputed sequence with alternatives;
+                 w∈W
+                                                                                    (3) trait-to-function evidence; (4) unknowns, developmental
+  Equation (3) may rank research questions; it cannot convert                       dependencies, and welfare risks; and (5) governance and
+a failing candidate into a passing one. This ordering avoids                        conservation context. The card’s key discipline is ontological:
+a common misuse of multi-criteria analysis in which rights,                         observation, inference, proposal, and unknown must not be
+welfare, or unbounded uncertainty are silently exchanged for                        merged.
+predicted benefit.                                                                     Two independent domain coders will label statements. Dis-
+                                                                                    agreement is itself an uncertainty signal. Instead of averaging
+                     IV. D ESIGN -O NLY M ETHODS
+                                                                                    conflicting claims into a misleading point estimate, the study
+A. Study type and candidate classes                                                 will record the disagreement, request adjudication, widen
+  The proposed study is a computational evidence synthesis                          the relevant uncertainty interval, or route the candidate to
+and robust decision analysis. It will not manipulate biological                     ‘ABSTAIN‘. A machine-readable registry will preserve source
+materials. Instead, it constructs case dossiers from published                      identifier, source type, claim type, evidence level, rationale,
+evidence and official guidance. Five descriptive classes are                        and human-review flag.
+                                                            Candidate proxy claim
+                                                     not a recovered historical organism
+
+
+
+
+                G1: Genomic provenance                     G2: Trait-to-function bridge             G3: Development and welfare
+           observed / reconstructed / unknown            independent phenotype evidence             non-compensatory protection
+
+
+
+
+             G4: Ecological counterfactual                                                       G5: Governance and opportunity cost
+              benefit versus alternatives                                                           rights, legitimacy, stewardship
+
+                                                                 All gates clear
+                                                               under uncertainty?
+
+                                                    no                                     yes
+
+
+
+                               REJECT / ABSTAIN /                                           CONDITIONALLY REVIEWABLE
+                              REQUIRES EVIDENCE                                                  human review only
+
+
+Fig. 1. ProxyGate readiness architecture. The editable source is supplied separately as figures/proxygate_architecture.drawio. No pathway
+authorizes creation, animal use, or release.
+
+
+  The five gates operationalize different questions:                    ecological projection but still fail if plausible adverse scenarios
+1) Genomic provenance (G1): Is the claim based on trace-                dominate or if a conventional portfolio yields equal or greater
+   able observed sequence, bounded reconstruction, or unsup-            benefit at lower risk.
+   ported assumptions?                                                     The comparison is formalized as a prospective net-benefit
+2) Trait-to-function bridge (G2): Is there independent evi-             difference,
+   dence linking a proposed trait to the claimed organismal
+   or ecosystem function, with alternatives considered?                               ∆B(θ) = Bproxy (θ) − Balternative (θ),           (4)
+3) Developmental and welfare protection (G3): Are fore-
+                                                                          where θ indexes documented environmental, social, and
+   seeable developmental, maternal, offspring, and multigen-
+                                                                        model assumptions. The study will not estimate a universal
+   erational welfare risks bounded sufficiently for further
+                                                                        numerical ∆B. It will report its sign stability over plausible
+   human review?
+                                                                        scenarios. A proposal whose sign is unstable is routed to ‘AB-
+4) Ecological counterfactual (G4): Does a site-specific
+                                                                        STAIN‘ or ‘REQUIRES EVIDENCE‘, rather than described
+   causal model predict benefit over credible harm scenarios
+                                                                        as beneficial because one optimistic scenario is positive.
+   and feasible conventional alternatives?
+5) Governance and opportunity cost (G5): Are lawful                     D. Ablation, negative controls, and reproducibility
+   authority, participation, data stewardship, benefit sharing,            Three validation exercises test the proposed architecture.
+   public accountability, and resource trade-offs adequately               First, **negative-control discrimination** asks whether C4
+   established?                                                         is consistently non-reviewable without hand-coding the desired
+  The design intentionally avoids edit lists, delivery systems,         label. Second, **gate ablation** removes one gate at a time.
+embryo handling, gestation, or release procedures. Those are            If a genome-only assessment elevates a candidate that the
+not measurement variables for the current research question;            complete framework defers because of welfare or governance
+presenting them would falsely imply a transition from decision          failure, the difference demonstrates why gate separation mat-
+analysis to implementation.                                             ters. Third, **decision-stability analysis** perturbs evidence
+                                                                        confidence and stakeholder weights within their documented
+C. Scenario analysis and comparators                                    ranges. A candidate that changes category under minor, rea-
+   For each dossier, analysts construct a causal map from               sonable perturbation has not earned a strong conclusion.
+proposed trait to ecological function to outcome. Sce-                     The reproducibility package will include an evidence-card
+narios vary at minimum: habitat condition, climate tra-                 schema, coding manual, source registry, scenario ledger, de-
+jectory, species interactions, human-wildlife coexistence,              cision log, and uncertainty assumptions. It will not publish
+conventional-conservation effectiveness, and governance le-             sensitive locations, restricted biological data, or culturally
+gitimacy. A proxy claim can receive a favorable nominal                 governed genomic information without explicit authorization.
+    V. C ANDIDATE E VIDENCE M ATRIX AND E XPECTED                      Valdez et al. report that experts anticipated hazards and gov-
+                   D ECISION L OGIC                                    ernance needs, including concern that de-extinction narratives
+   Table III illustrates how evidence should be represented be-        could undermine conservation incentives [12].
+fore any actual case study. It is an anticipated decision matrix,         Opportunity cost must be visible. A proxy project competes
+not an empirical result. Its purpose is to make the framework’s        for money, expertise, public attention, land, and institutional
+desired discriminatory behavior visible to reviewers before            legitimacy. The C5 comparator is not a straw alternative; it
+data coding begins.                                                    records what could be achieved by protecting living relatives,
+   The point of C2 is not to pronounce a final verdict on              restoring habitat, or reducing immediate threats. The decision
+mammoth-like research. It is to expose which assertions must           log should specify the comparator’s assumed cost, reversibility,
+be demonstrated separately. Mammoth genomics can support               beneficiaries, risks, and evidence quality.
+strong lineage-history statements [3]–[5]; it does not settle          B. Welfare is not an uncertainty discount
+the G2–G5 conditions. A robust framework should therefore
+allow an intellectually productive answer such as “interesting             In this design, unknown developmental consequences and
+genomic case, not conditionally reviewable as a conservation           foreseeable welfare risk are neither technical footnotes nor
+proxy on current evidence.” This is more informative than              variables to be discounted by predicted benefit. They establish
+either hype or blanket dismissal.                                      a gate. The scope deliberately stops before any operational
+                                                                       reproductive or animal-use plan. This choice is methodologi-
+    VI. FALSIFICATION , A BSTENTION , AND D ECISION                    cally necessary: a decision-analysis paper cannot responsibly
+                       Q UALITY                                        fill unknown biological dependencies with procedural detail.
+                                                                       Any future activity would require independent animal-welfare
+   ProxyGate is deliberately vulnerable to disconfirmation.
+                                                                       oversight, veterinary expertise, law- and jurisdiction-specific
+Table IV defines the decisive failure modes. These tests assess
+                                                                       review, and a case-specific assessment of burden across donor
+decision quality, not the success of a biological intervention.
+                                                                       lineages, gestational contexts, offspring, and populations.
+   The abstention pathway is essential. In conservation, a
+forced yes/no output can manufacture confidence where ev-              C. Participation, data stewardship, and authority
+idence or legitimacy is genuinely unresolved. ‘ABSTAIN‘
+                                                                          Genomic data can be culturally significant. Collier-
+has a narrow meaning here: the framework cannot responsi-
+                                                                       Robinson et al. provide a conservation-genomics example in
+bly determine a category because disagreement, unquantified
+                                                                       which Indigenous principles materially shape how genomic
+uncertainty, or contextual authority invalidates the model’s
+                                                                       research on valued species is conducted [13]. ProxyGate there-
+assumptions. ‘REQUIRES EVIDENCE‘ has a different mean-
+                                                                       fore requires a governance evidence card that identifies rights-
+ing: a researchable question remains, but at least one gate lacks
+                                                                       holders, authority, meaningful participation, benefit sharing,
+adequate support. ‘REJECT‘ applies when a hard condition
+                                                                       data stewardship, and conditions for withdrawal or review. It
+fails or the object of the claim is incoherent. Only ‘CONDI-
+                                                                       is not enough to say that stakeholder consultation will occur
+TIONALLY REVIEWABLE‘ allows further multidisciplinary
+                                                                       later. If legitimacy is unestablished, the appropriate output is
+evaluation.
+                                                                       ‘ABSTAIN‘ or ‘REJECT‘.
+   These categories avoid a subtle but consequential language
+                                                                          Legal treatment can also be indeterminate. Camacho de-
+error. A good decision framework does not “approve de-
+                                                                       scribes how endangered-species, invasive-species, and public-
+extinction.” It decides whether a bounded proxy hypothesis
+                                                                       land categories may poorly fit de-extinction or facsimile or-
+is sufficiently evidenced to deserve more human deliberation.
+                                                                       ganisms [14]. The uncertainty is not merely bureaucratic. It
+Such deliberation may still reject implementation for reasons
+                                                                       affects responsibility for harm, conservation status, land use,
+outside the model, including law, welfare, community author-
+                                                                       transport, stewardship, and the allocation of decision authority.
+ity, cultural significance, public interest, or resource allocation.
+                                                                          VIII. D ISCUSSION : W HAT C OULD THE F RAMEWORK
+   VII. C ONSERVATION , W ELFARE , AND G OVERNANCE                                             C HANGE ?
+                    C ONSTRAINTS
+                                                                          ProxyGate makes three contributions to the scientific discus-
+A. Conservation first, not technology first                            sion. First, it changes the unit of analysis from “Can species
+   IUCN guidance emphasizes conservation benefit in the                X be brought back?” to a set of explicit claims. A candidate
+proxy framing [7]. Candidate-selection research likewise               may be genomically informative, phenotypically ambiguous,
+frames de-extinction through ecological purpose, feasibility,          developmentally risky, ecologically promising only under nar-
+and reintroduction criteria rather than technical novelty alone        row conditions, and socially illegitimate in a particular context.
+[8]. The order of reasoning should therefore be ecological             These states can coexist. The result should preserve that
+problem → feasible conservation alternatives → evidence                structure rather than compress it into a dramatic headline.
+for a potential functional proxy, not available technology →              Second, the framework makes a positive use of negative
+post hoc ecological justification. This order protects against         controls. The non-avian dinosaur class should fail because the
+moral hazard: an impression that future technological reversal         necessary genomic-developmental basis is absent, not because
+reduces the urgency of protecting species and habitats today.          dinosaurs are culturally associated with impossibility. This
+                                                                  TABLE III
+                          P LANNED EVIDENCE MATRIX . E NTRIES STATE DESIGN EXPECTATIONS , NOT OBSERVED OUTCOMES .
+
+Candidate class       G1: genomic evidence        G2: trait bridge           G3: welfare/development G4: ecology                 G5: governance and
+                                                                                                                                 expected status
+C1 recent extinction Potentially high if prove- Case-specific,        not Requires specialist review; Must compare against ex- Often       ‘REQUIRES
+                     nance is secure; still sepa- presumed.               no technical score can off- tant conservation action. EVIDENCE‘;          may
+                     rate observed from inferred                          set risk.                                              become conditionally
+                     sequence.                                                                                                   reviewable only if all
+                                                                                                                                 gates clear.
+C2 mammoth-like Rich but incomplete pale- Polygenic                   and High uncertainty; surro- Tundra function must be Expected to stress ab-
+                    ogenomic context is plau- developmental uncertainty gate and offspring con- site-specific and counter- stention and evidence-
+                    sible.                      likely remains.           cerns cannot be ignored. factual.                      needed routes.
+C3 deeper-time      Fragmentary or indirect in- Weak bridge expected.     Unknowns dominate.          Function likely specula- ‘REQUIRES
+                    formation should widen                                                            tive.                      EVIDENCE‘           or
+                    uncertainty.                                                                                                 ‘REJECT‘, depending
+                                                                                                                                 on claim scope.
+C4        non-avian No credible recoverable Not evaluable as a recon- Not reached as a technical Fossil ecology does not ‘REJECT‘;                  key
+dinosaur            cellular-genome route.      struction claim.          proxy route.                cure G1 failure.           negative-control
+                                                                                                                                 expectation.
+C5 conventional al- Uses living-taxon and site Directly tied to manage- Existing        welfare/legal Supplies        comparator Not a proxy decision;
+ternative           evidence.                   ment objective.           frameworks apply.           Balternative .             required baseline.
+
+
+
+                             TABLE IV                                         welfare, cultural, and environmental stakes, but it should be
+              FALSIFICATION AND ABSTENTION CRITERIA .                         empirically assessed rather than asserted. A calibration study
+                                                                              should compare ProxyGate’s outputs with blinded judgments
+  Test                   Failure condition and consequence
+                                                                              from multidisciplinary panels and test whether its gate ra-
+  Negative control       A non-avian dinosaur becomes conditionally re-
+                         viewable. The framework fails to distinguish fos-
+                                                                              tionales improve agreement, traceability, and sensitivity to
+                         sil knowledge from recoverable biological recon-     counterfactual evidence.
+                         struction.
+  Non-compensation       A candidate with unresolved welfare or legiti-                     IX. C ONDITIONAL C ONCLUSIONS
+                         macy barriers passes because other scores are
+                         high. Redesign the aggregation logic.                   Is de-extinction possible? The evidence supports a con-
+  Trait bridge           A claimed ecological function depends mainly on
+                         genomic similarity or untested analogy. Route to     ditional answer. It is not scientifically sound to describe
+                         ‘REQUIRES EVIDENCE‘.                                 all methods under that label as recovering an extinct his-
+  Counterfactual stabil- ∆B(θ) reverses or is dominated by alternatives       torical organism. Ancient DNA and comparative genomics
+  ity                    under credible scenarios. Route to ‘ABSTAIN‘ or
+                         ‘REJECT‘.                                            can support increasingly rich inference about some extinct
+  Assumption             Minor, reasonable changes in missing-data as-        lineages, particularly recent or well-preserved ones. They do
+  dominance              sumptions change the category. Do not publish        not, by themselves, recover organismal development, behavior,
+                         a definitive rank.
+  Auditability           Independent reviewers cannot reproduce gate rea-     population diversity, ecological function, welfare acceptability,
+                         sons from evidence cards and source IDs. Treat       or political legitimacy. For deep-time non-avian dinosaurs,
+                         the decision as invalid.                             fossil evidence does not provide a plausible genomic route
+                                                                              to literal biological reconstruction.
+                                                                                 The defensible scientific target is narrower and more de-
+safeguards against both overgeneralization from mammoth                       manding: whether a proposed extant-lineage-derived proxy
+research and the mistaken premise that every extinct lineage                  could clear a transparent chain of genomic, trait, welfare, eco-
+lies on one continuous technical scale.                                       logical, and governance evidence. ProxyGate proposes that no
+   Third, the framework places conservation alternatives inside               high score should compensate for failure of another required
+the empirical question. A proxy might satisfy a narrow biolog-                domain. Its strongest expected scientific contribution is not an
+ical hypothesis yet remain a poor conservation choice. Con-                   affirmative list of species to create. It is a reproducible capacity
+versely, technologies developed for de-extinction discussions                 to say why a claim should be rejected, deferred, investigated
+can contribute to protecting endangered species without being                 further, or–rarely–considered for additional multidisciplinary
+used to create a proxy population. This broader transfer is one               review.
+reason the field deserves rigorous decision science rather than                  The next research step is therefore a preregistered, compu-
+polarized rhetoric [15].                                                      tational pilot: code a small number of descriptive candidate
+   The design has limitations. Gate scores require elicitation,               classes; populate source-bound evidence cards; run uncer-
+evidence coding can be contested, and an uncertainty interval                 tainty, ablation, and counterfactual analyses; test negative-
+cannot replace ecological data that do not exist. The hard-                   control behavior; and publish the decision log for independent
+gate architecture may defer many candidates. That is an                       critique. No animal, embryo, genetic intervention, or environ-
+intended conservative feature for decisions with irreversible                 mental release is part of that proposed step.
+                          A PPENDIX A
+             E VIDENCE -C ARD R EGISTRY T EMPLATE
+   Table V is the required schema for each candidate-trait
+claim. It provides a compact audit trail from source evidence
+to decision category.
+                            A PPENDIX B
+                     F IXED O UTPUT TAXONOMY
+                               R EFERENCES
+ [1] M. E. Allentoft et al., “The half-life of DNA in bone: measuring decay
+     kinetics in 158 dated fossils,” Proceedings of the Royal Society B, vol.
+     279, no. 1748, pp. 4724–4733, 2012, doi: 10.1098/rspb.2012.1745.
+ [2] L. Kistler, R. Ware, O. Smith, M. J. Collins, and R. G. Allaby, “A new
+     model for ancient DNA decay based on paleogenomic meta-analysis,”
+     Nucleic Acids Research, vol. 45, no. 11, pp. 6310–6320, 2017, doi:
+     10.1093/nar/gkx361.
+ [3] T. van der Valk et al., “Million-year-old DNA sheds light on mammoth
+     evolution,” Nature, vol. 591, pp. 265–269, 2021, doi: 10.1038/s41586-
+     021-03224-9.
+ [4] E. Palkopoulou et al., “Complete genomes reveal signatures of demo-
+     graphic and genetic declines in the woolly mammoth,” Current Biology,
+     vol. 25, no. 10, pp. 1395–1400, 2015, doi: 10.1016/j.cub.2015.04.049.
+ [5] M. Dehasque et al., “Temporal dynamics of woolly mammoth genome
+     erosion prior to extinction,” Cell, vol. 187, no. 14, pp. 3675–3689.e18,
+     2024, doi: 10.1016/j.cell.2024.05.033.
+ [6] K. H. Kjær et al., “A 2-million-year-old ecosystem in Greenland
+     uncovered by environmental DNA,” Nature, vol. 612, pp. 283–291, 2022,
+     doi: 10.1038/s41586-022-05453-y.
+ [7] IUCN Species Survival Commission, Guiding Principles on Creating
+     Proxies of Extinct Species for Conservation Benefit. Gland, Switzerland:
+     IUCN, 2016.
+ [8] P. J. Seddon, A. Moehrenschlager, and J. G. Ewen, “Reintroduc-
+     ing resurrected species: selecting de-extinction candidates,” Trends
+     in Ecology & Evolution, vol. 29, no. 3, pp. 140–147, 2014, doi:
+     10.1016/j.tree.2014.01.007.
+ [9] J. S. Sherkow and H. T. Greely, “What if extinction is not forever?,” Sci-
+     ence, vol. 340, no. 6128, pp. 32–33, 2013, doi: 10.1126/science.1236965.
+[10] T. E. Steeves, J. A. Johnson, and M. L. Hale, “Maximising evolutionary
+     potential in functional proxies for extinct species: a conservation genetic
+     perspective on de-extinction,” Functional Ecology, vol. 31, no. 5, pp.
+     1032–1040, 2017, doi: 10.1111/1365-2435.12843.
+[11] J.-C. Svenning et al., “Science for a wilder Anthropocene: synthesis
+     and future directions for trophic rewilding research,” Proceedings of the
+     National Academy of Sciences, vol. 113, no. 4, pp. 898–906, 2016, doi:
+     10.1073/pnas.1502556112.
+[12] R. X. Valdez, J. Kuzma, C. L. Cummings, and M. N. Peterson,
+     “Anticipating risks, governance needs, and public perceptions of de-
+     extinction,” Journal of Responsible Innovation, vol. 6, no. 2, pp. 211–
+     231, 2019, doi: 10.1080/23299460.2019.1591145.
+[13] L. Collier-Robinson et al., “Embedding indigenous principles in ge-
+     nomic research of culturally significant species: a conservation genomics
+     case study,” New Zealand Journal of Ecology, vol. 43, no. 3, 2019, doi:
+     10.20417/nzjecol.43.36.
+[14] A. E. Camacho, “Going the way of the dodo: de-extinction, dualisms,
+     and reframing conservation,” Washington University Law Review, vol.
+     92, no. 4, pp. 849–906, 2014.
+[15] S. Turner, A. L. Keyte, A. J. Pask, and B. Shapiro, “De-extinction
+     technology and its application to conservation,” Journal of Heredity,
+     2025, doi: 10.1093/jhered/esaf069.
+                                                                TABLE V
+                                   E VIDENCE - CARD REGISTRY TEMPLATE FOR A P ROXY G ATE CASE DOSSIER .
+
+    Field                   Permitted content                       Evidence state                   Decision implication
+    Claim identity         Candidate, trait/function claim, scope, Administrative.                   Prevents identity and scope drift.
+                           date, responsible review group.
+    Genomic provenance     Sample context, sequence source, au- Observed / reconstructed / un- Feeds G1 lower bound.
+                           thentication, coverage, alternative re- known.
+                           construction.
+    Trait bridge           Independent phenotype, physiology, Direct / indirect / absent.            Feeds G2; absent bridge blocks reviewabil-
+                           ecology, and competing-mechanism                                          ity.
+                           evidence.
+    Development and wel- Unknown dependencies, foreseeable Bounded / unresolved / unaccept- Feeds G3; unacceptable condition rejects.
+    fare                   burdens, expert risk assessment, re- able.
+                           view status.
+    Ecological counterfac- Site model, alternatives, adverse sce- Stable / unstable / unmodeled.     Feeds G4 and Eq. (4).
+    tual                   narios, reversibility, outcome metric.
+    Governance and cost    Authority, participation, data steward- Established / contested / absent. Feeds G5; absent legitimacy blocks re-
+                           ship, benefit sharing, comparator re-                                     viewability.
+                           sources.
+    Decision log           Gate bounds, assumptions, sensitivity Reproducible / incomplete.          Supports auditability test.
+                           results, reviewers, and reason codes.
+
+
+
+
+                             TABLE VI
+            F IXED OUTPUTS USED BY THE PROPOSED STUDY.
+
+Output                   Meaning
+REJECT                   A hard condition fails, or the biologi-
+                         cal/conservation claim is incoherent under
+                         available evidence.
+ABSTAIN                  The decision cannot be responsibly modeled
+                         because critical uncertainty or authority is
+                         unresolved.
+REQUIRES                 A bounded research question remains, but one
+EVIDENCE                 or more scientific gates lack adequate support.
+CONDITIONALLY            All gates clear robustly; further multidisci-
+REVIEWABLE               plinary human review is warranted, not im-
+                         plementation approval.
+

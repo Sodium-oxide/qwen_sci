@@ -1,0 +1,43 @@
+{
+  "schema": "science_result_v1",
+  "project_id": "astr_2_universe_shape_proposal",
+  "research_topic": "What is the shape of the universe?",
+  "reframed_question": "Which spatial-curvature conclusions survive declared model, likelihood, systematic, and cross-probe consistency tests?",
+  "status": "completed",
+  "stages": {
+    "survey": {
+      "status": "completed",
+      "canonical": "survey/survey.md",
+      "manifest": "survey/survey_manifest.json"
+    },
+    "idea": {
+      "status": "completed",
+      "canonical": "idea/idea_result.json",
+      "primary_direction": "D3"
+    },
+    "experiment_design": {
+      "status": "completed",
+      "canonical": "experiment_design/research_design.json",
+      "execution_policy": "DESIGN_ONLY"
+    },
+    "author": {
+      "status": "completed",
+      "canonical": "author/universe_shape_report.tex",
+      "minimum_pages": 7,
+      "template": "Conference-LaTeX-template_10-17-19",
+      "report_source": "author/universe_shape_report.tex",
+      "pdf": "author/universe_shape_report.pdf",
+      "pdf_validation": "author/pdf_validation.json",
+      "validated_nonempty_pages": 7,
+      "source_metadata_validation": "Dual-engine DOI metadata match; DOI resolver returned HTTP 403 for direct landing-page check."
+    }
+  },
+  "evidence_status": "Dual-engine scholarly discovery completed. Seven DOI-matched source records are used as the cited evidence boundary.",
+  "claim_boundary": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "prohibited_claims": [
+    "a new curvature measurement",
+    "the universe proved closed",
+    "the universe proved infinite",
+    "a topology detection"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "research_design_v1",
+  "project_id": "bio_9_deextinction_proxy_proposal",
+  "idea_binding": "../idea/idea_result.json",
+  "research_type": "computational evidence synthesis and robust multi-criteria decision analysis",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": []
+  },
+  "research_question": "Can ProxyGate distinguish impossible, evidence-insufficient, and conditionally reviewable extinct-species proxy proposals more defensibly than genome-centered narrative assessment?",
+  "hypotheses": [
+    {"id": "H1", "statement": "Non-compensatory gates prevent high genomic evidence from masking developmental, welfare, ecological, or governance failure."},
+    {"id": "H2", "statement": "Counterfactual conservation comparison changes at least some apparent proxy-benefit claims."}
+  ],
+  "candidate_classes": ["C1 recent extinction", "C2 mammoth-like", "C3 deep-time DNA-limited", "C4 non-avian dinosaur negative control", "C5 conventional conservation comparator"],
+  "variables": {
+    "independent": ["candidate class", "evidence completeness", "uncertainty scenario", "gate ablation", "comparator portfolio"],
+    "dependent": ["decision category", "decision stability", "gate-failure reason", "counterfactual benefit direction"],
+    "controls": ["fixed evidence-card schema", "fixed decision taxonomy", "source registry", "predeclared scenario ranges"],
+    "mediators": ["trait-to-function bridge", "welfare/development risk", "ecological scenario", "governance legitimacy"],
+    "unknowns": ["genotype-to-phenotype mapping", "developmental and behavioral effects", "site-specific ecosystem response", "jurisdiction-specific authority"]
+  },
+  "gates": ["genomic provenance", "trait-function bridge", "developmental-welfare", "ecological-counterfactual", "governance-opportunity-cost"],
+  "outputs": ["REJECT", "ABSTAIN", "REQUIRES_EVIDENCE", "CONDITIONALLY_REVIEWABLE"],
+  "prohibited_outputs": ["animal created", "genome edited", "embryo transferred", "surrogate used", "organism released", "observed ecological benefit"]
+}

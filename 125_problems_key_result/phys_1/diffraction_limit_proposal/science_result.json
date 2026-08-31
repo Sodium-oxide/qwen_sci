@@ -1,0 +1,65 @@
+{
+  "project_id": "phys_1_diffraction_limit_proposal",
+  "topic": "Is there a diffraction limit?",
+  "research_question": "Under what measurement-model assumptions is optical resolution diffraction bounded, and what evidence should support a credible claim beyond the conventional far-field baseline?",
+  "pipeline": [
+    "Survey",
+    "Idea",
+    "ExperimentDesign",
+    "Author"
+  ],
+  "status": "COMPLETED",
+  "selected_idea_id": "idea-traceres-001",
+  "selected_idea_title": "TraceRes: A Task-Specific Resolution Passport for Credible Optical Nanoscopy",
+  "central_conclusion": "Diffraction imposes a real transfer or separation bound for a specified conventional linear far-field imaging model, but it is not a universal numerical ceiling on every optical inference task.",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": []
+  },
+  "source_registry": {
+    "count": 12,
+    "keys": [
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "S5",
+      "S6",
+      "S7",
+      "S8",
+      "S9",
+      "S10",
+      "S11",
+      "S12"
+    ],
+    "metadata_status": "cross-validated through OpenAlex and AnySearch"
+  },
+  "artifacts": {
+    "survey_markdown": "survey/survey.md",
+    "survey_manifest": "survey/survey_manifest.json",
+    "survey_evidence_plan": "survey/survey_evidence_plan.json",
+    "survey_gap_ledger": "survey/survey_gap_ledger.json",
+    "survey_idea_handoff": "survey/survey_idea_handoff.json",
+    "idea_markdown": "idea/idea.md",
+    "idea_result": "idea/idea_result.json",
+    "experiment_design_markdown": "experiment_design/research_design.md",
+    "experiment_design_json": "experiment_design/research_design.json",
+    "author_handoff": "experiment_design/author_handoff.json",
+    "report_tex": "author/diffraction_limit_report.tex",
+    "report_pdf": "author/diffraction_limit_report.pdf",
+    "pdf_validation": "author/pdf_validation.json"
+  },
+  "final_report": {
+    "style": "IEEE conference",
+    "language": "English",
+    "pages": 7,
+    "minimum_page_requirement_applied": 7,
+    "acknowledgements_present": false,
+    "observed_results_claimed": false
+  },
+  "human_review_items": [
+    "Confirm direct publisher-page details for the frozen DOI registry when the in-app browser ACL issue is resolved.",
+    "Calibrate task-specific TraceRes thresholds for each microscope, label chemistry, sample class, and reconstruction workflow before operational use.",
+    "Execute the proposed blinded truth-known benchmark before assigning structural-resolution-validated status to a biological claim."
+  ]
+}

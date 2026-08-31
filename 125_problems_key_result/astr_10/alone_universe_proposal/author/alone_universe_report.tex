@@ -1,0 +1,311 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{balance}
+\newcommand{\lifetrace}{\textsc{LifeTrace}}
+\begin{document}
+
+\title{Are We Alone in the Universe?\\
+A Contextual Evidence Proposal for Biosignature, Technosignature, and In-Situ Life Detection}
+\author{\IEEEauthorblockN{Evidence-Bounded Research Proposal}
+\IEEEauthorblockA{Survey-to-design synthesis on astrobiology, exoplanet characterization,\\ technosignature validation, and provenance-aware life detection}}
+\maketitle
+
+\begin{abstract}
+The question of whether life exists beyond Earth cannot be resolved by a planet count, a habitable-zone label, a single atmospheric molecule, or a radio non-detection. It is an inference problem involving an operational target, environmental context, alternative explanations, instrument sensitivity, and a discriminating follow-up observation. This proposal introduces LifeTrace, a contextual multi-modal evidence ledger for remote exoplanet spectra, technosignature candidates, and in-situ ocean-world measurements. A candidate record binds measurement provenance, stellar and planetary or geological context, biological and technological hypotheses, abiotic and artifact alternatives, recovery performance, and a value-ranked next observation. The design produces bounded statuses rather than a universal alien-life probability: context insufficient, abiotic or artifact not excluded, biological candidate requiring follow-up, technological candidate requiring independent confirmation, or sensitivity-limited negative result. The proposed study uses pre-registered synthetic benchmarks and authorized public data in a future execution; it reports no new observation, search result, or life detection. Its contribution is a falsifiable protocol that can strengthen a candidate where independent evidence genuinely converges and can make null results precise without confusing them with universal absence.
+\end{abstract}
+\begin{IEEEkeywords}
+astrobiology, biosignatures, technosignatures, exoplanets, ocean worlds, SETI, Bayesian inference, false positives, false negatives, provenance
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Are we alone in the universe? The question is often narrated as though the needed experiment were obvious: identify a planet in a favorable orbit, take a spectrum, and search for a familiar atmospheric gas. That sequence is useful but incomplete. A potentially temperate orbit is not evidence that a world has liquid water, stable chemistry, life, or technology. A gas, reflectance feature, radio event, or organic molecule can be informative while still possessing abiotic, instrumental, human-made, or contamination explanations. A non-detection can place a useful limit only after the detectable signal class, observing band, target population, recovery performance, and coverage are declared.
+
+The empirical opportunity is real. Modern exoplanet surveys have established that planets are common, and atmospheric characterization is progressing rapidly. Planets are found through radial velocity, transit, direct imaging, microlensing, and astrometry; each method exposes a different part of the target population and each has a selection function. Biosignature research has correspondingly moved beyond a lookup table of gases. Schwieterman \emph{et al.} review gaseous, surface, temporal, polarization, and chemical-disequilibrium possibilities together with false positives and false negatives \cite{schwieterman2018}. Catling \emph{et al.} formulate the interpretation as a Bayesian assessment requiring system characterization, candidate signature analysis, and false-positive exclusion \cite{catling2018}.
+
+Technosignature and in-situ searches contribute different evidence strengths and different failure modes. Technology may yield radio, optical, thermal, or structural effects whose origins need not resemble metabolism, but radio data are vulnerable to terrestrial radio-frequency interference and pipeline incompleteness. Margot \emph{et al.} explicitly combine signal injection and recovery, interference rejection, and defined search volume in a large radio survey \cite{margot2023}. In-situ exploration can provide molecular, isotopic, chiral, mineralogical, and geological context, but it must retain sample provenance, blank controls, replicate assays, and planetary-protection discipline \cite{neveu2018,neveu2020}.
+
+This paper proposes \lifetrace{}, a shared evidence protocol for these modes. The central principle is direct: every claim about possible life or technology must identify the evidence class, the strongest remaining alternative, the sensitivity domain, and the next observation capable of changing the status. This report has status \texttt{PROPOSAL\_NO\_OBSERVED\_RESULTS}. It is a research design, not a report of extraterrestrial life, technology, or a completed search.
+
+\section{What the Question Requires}
+
+\subsection{Four distinct propositions}
+
+The broad question decomposes into four propositions. First, a target can have conditions compatible with a stated form of life. Second, a measurement can contain a candidate signal. Third, a suite of measurements can make a biological or technological interpretation more plausible than registered alternatives. Fourth, a negative observation can constrain a declared signal or population. These propositions have different data needs and should not be collapsed into a single score.
+
+Habitability belongs primarily to the first proposition. Kopparapu \emph{et al.} derive habitable-zone estimates from a radiative-convective climate model and describe both their assumptions and limitations, including omitted cloud radiative effects \cite{kopparapu2013}. Such modeling is valuable for target selection. It cannot set the probability that life actually emerged, survived, or altered an atmosphere. The inverse mistake is also serious: an environment outside a simple orbital proxy can contain a subsurface ocean or another energy-rich niche relevant to life detection.
+
+The second and third propositions require context. Oxygen is a familiar example. Meadows \emph{et al.} show that both the presence and absence of atmospheric oxygen require interpretation through the stellar environment, planetary evolution, atmospheric escape, geochemistry, and co-occurring observables \cite{meadows2018}. A high oxygen abundance can arise through nonbiological pathways, while an active biosphere need not produce a remotely prominent oxygen feature at every epoch. Reinhard \emph{et al.} draw attention to cryptic biospheres on ocean-bearing planets and show why canonical atmospheric signals can be false negatives over much of a planet's history \cite{reinhard2017}.
+
+\begin{table*}[t]
+\caption{Life-detection propositions, evidence requirements, and invalid shortcuts. The proposal treats each row as a different inference task.}
+\label{tab:propositions}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.16\textwidth} p{0.24\textwidth} p{0.28\textwidth} p{0.23\textwidth}}
+\hline
+\textbf{Proposition} & \textbf{Valid supporting evidence} & \textbf{Required context or control} & \textbf{Invalid shortcut}\\
+\hline
+Life-compatible environment & Orbit, stellar spectrum, climate, energy sources, water or solvent and geochemical constraints. & Model assumptions, planet properties, uncertainty, and environmental history. & Habitable-zone label means inhabited.\\
+Candidate signal & Spectral feature, time-frequency event, molecular pattern, isotope, chirality, or structure. & Instrument calibration, provenance, detection significance, and data-quality record. & One feature is a discovery.\\
+Candidate interpretation & Convergent independent evidence that discriminates biological or technological hypotheses from alternatives. & Abiotic, artifact, interference, and contamination hypothesis tests. & Familiar chemistry has only a living source.\\
+Informative non-detection & Defined target class, observing or sample domain, recovery efficiency, and completeness. & Injection recovery, duty cycle, selection function, and coverage statement. & No detection means no life or technology exists.\\
+\hline
+\end{tabular}
+\end{table*}
+
+\subsection{The evidence boundary}
+
+The correct scientific conclusion today is not that humanity is alone, nor that a candidate remote signal has settled the question. Current methods have created a richer target space and a mature methodological literature for interpreting future observations. They have not completed a representative census of the Galaxy or the universe, and no finite survey could do so without an explicit population model. The research problem is therefore to make candidate and null-result statements match the actual reach of instruments and models.
+
+\section{Survey Evidence and Usable Gaps}
+
+\subsection{Remote biosignatures}
+
+Remote exoplanet characterization is an inference from sparse, indirect light. A transmission, emission, or reflected-light spectrum depends not only on atmospheric composition but also on clouds, aerosols, temperature structure, stellar heterogeneity, viewing geometry, model choices, and instrumental covariance. Schwieterman \emph{et al.} stress the diversity of plausible gaseous, surface, temporal, and polarization signatures, alongside their possible nonliving mimics \cite{schwieterman2018}. Catling \emph{et al.} articulate a Bayesian framework that combines the likelihood of data under living and nonliving scenarios with contextual information and priors \cite{catling2018}. Fujii \emph{et al.} further explain that target characterization needs circumstantial environmental information, not just a candidate spectral feature \cite{fujii2018}.
+
+The key gap is operational. Existing frameworks motivate context, but sparse observations need a common record that tells a reviewer which environmental and retrieval variables are present, which abiotic pathways were assessed, and which follow-up will actually distinguish alternatives. Without this record, a candidate can move from headline to headline even though the main ambiguity was never measured.
+
+\subsection{Technosignatures}
+
+Technosignatures are complementary rather than derivative of biosignatures. Wright \emph{et al.} argue that technology-related signatures can differ from metabolic signatures in longevity, detectability, and ambiguity, motivating parallel searches \cite{wright2022}. Yet a search sensitivity is not merely telescope collecting area. It includes the pipeline's ability to recover a signal, radio-frequency-interference environment, beam response, observing cadence, transmitter duty cycle, and target selection. Margot \emph{et al.} demonstrate how injection-recovery analysis and interference rejection affect a radio search's interpretable bounds \cite{margot2023}.
+
+This creates a second gap: radio and optical candidate reports need a standardized evidence ledger that travels with the signal. It should report localization, repeatability, on-target and off-target controls, known-human-source checks, pipeline recovery curve, and independent-instrument status. A candidate that does not pass these stages may be scientifically interesting, but its proper status remains artifact or interference not excluded.
+
+\subsection{In-situ ocean worlds}
+
+Ocean worlds can provide access to materials that have interacted with potentially habitable environments. The Ladder of Life Detection organizes measurements by their ability to exclude nonliving explanations and emphasizes the value of complementary evidence rather than a single instrument \cite{neveu2018}. Enceladus planning connects sample return to accessible plume materials, laboratory repeatability, sample integrity, and planetary-protection concerns \cite{neveu2020}. Reviews of Europa and Enceladus metabolic hypotheses also show how assumed ocean chemistry and metabolism should guide detection concepts without being mistaken for evidence that a metabolism exists \cite{weber2023}.
+
+The third gap is cross-modal. Remote spectra, radio events, and in-situ molecular records use separate vocabularies for confidence, provenance, artifacts, and follow-up. A common evidence ledger can preserve modality-specific physics while making the same scientific questions auditable: what was measured, where did it come from, which alternatives remain, what sensitivity was achieved, and what next measurement changes the decision?
+
+\section{LifeTrace: A Contextual Multi-Modal Evidence Ledger}
+
+\subsection{Candidate record}
+
+For candidate \(c\), \lifetrace{} registers
+\begin{equation}
+ R_c=\{D_c,P_c,E_c,H_c,A_c,S_c,F_c\},
+\label{eq:record}
+\end{equation}
+where \(D_c\) denotes data, \(P_c\) provenance, \(E_c\) environmental and observing context, \(H_c\) the hypothesis library, \(A_c\) the alternative-explanation ledger, \(S_c\) sensitivity and recovery information, and \(F_c\) feasible follow-ups. The record is the intervention. It replaces a free-text candidate summary with fields that must be complete before escalation.
+
+The minimum hypothesis library is
+\begin{equation}
+\begin{aligned}
+ H_c={}&\{H_{\mathrm{bio}},H_{\mathrm{tech}},H_{\mathrm{abiotic}},\\
+ &H_{\mathrm{artifact}},H_{\mathrm{interference}},H_{\mathrm{contamination}}\}.
+\end{aligned}
+\label{eq:hypotheses}
+\end{equation}
+Some entries are irrelevant for a particular observation, but that irrelevance itself must be explained. A radio telescope record will give special weight to interference; an ocean-world sample will give special weight to contamination; a remote spectrum will give special weight to photochemistry, atmospheric escape, stellar contamination, clouds, and retrieval degeneracy.
+
+\begin{figure*}[t]
+\centering
+\fbox{\begin{minipage}{0.94\textwidth}
+\centering
+\small
+\textbf{Measurement and provenance} \(\rightarrow\)
+\textbf{environment and sensitivity} \(\rightarrow\)
+\textbf{biological, technological, abiotic, and artifact hypotheses} \(\rightarrow\)
+\textbf{bounded status and discriminating follow-up}\\[3pt]
+Remote branch: star, planet, spectrum, retrieval, co-signatures. \quad
+Technosignature branch: localization, interference, recovery, repeat. \quad
+In-situ branch: sample context, blanks, replicates, chemistry, contamination.
+\end{minipage}}
+\caption{LifeTrace evidence flow. The framework shares a provenance and falsification contract across modalities while retaining their distinct physical alternatives.}
+\label{fig:lifetrace}
+\end{figure*}
+
+\subsection{Bounded status semantics}
+
+The protocol emits one of five statuses. \emph{Context insufficient} means mandatory data, calibration, provenance, or recovery fields are absent. \emph{Abiotic or artifact not excluded} means a registered alternative has not been discriminated. \emph{Biological candidate requires follow-up} means biological models are competitive within the declared record but need an independent discriminating observation. \emph{Technological candidate requires independent confirmation} applies when a technical interpretation survives initial controls but lacks independent confirmation. \emph{Negative result sensitivity limited} means no candidate was recovered within an explicitly declared sensitivity and completeness region.
+
+These labels are deliberately demanding. They do not prevent a strong future conclusion; they specify the evidence needed for one. A null status is not evasive. It is the correct result whenever an observation cannot separate a proposed source of life or technology from alternatives, or whenever a negative measurement did not test the relevant signal class.
+
+\subsection{Inference and follow-up value}
+
+The proposed posterior update is
+\begin{equation}
+ p(H_i\mid D_c,E_c,P_c)=
+ \frac{p(D_c\mid H_i,E_c,P_c)p(H_i\mid E_c,P_c)}
+ {\sum_j p(D_c\mid H_j,E_c,P_c)p(H_j\mid E_c,P_c)}.
+\label{eq:posterior}
+\end{equation}
+Equation~\eqref{eq:posterior} is a research design, not a claim that all life-related priors are known. Every future implementation must publish prior sensitivity, likelihood scope, retrieval assumptions, and the strongest unexcluded alternative.
+
+The proposal selects an approved follow-up \(f\) by expected discrimination value:
+\begin{equation}
+ U(f\mid c)=\sum_{i,j}w_{ij}\mathbb{E}_{D_f}
+ \left[\log\frac{p(D_f\mid H_i,R_c,f)}
+ {p(D_f\mid H_j,R_c,f)}\right]-\lambda C(f).
+\label{eq:utility}
+\end{equation}
+The weights \(w_{ij}\), cost \(C(f)\), and tradeoff \(\lambda\) are registered before candidate evaluation. A new spectral band, time-resolved spectrum, independent telescope, on-off radio cadence, multi-site repeat, isotope measurement, chirality assay, or geological-context image is useful when it changes the likelihood ratio between the hypotheses that actually remain.
+
+\section{Research Hypotheses and Design}
+
+H1 tests whether context-conditioned multi-feature analysis reduces overconfident biosignature claims compared with single-feature rules at matched data quality. H2 tests whether explicit sensitivity and recovery cards make negative results sharper and less prone to universal-absence rhetoric. H3 tests whether a common provenance ledger reduces untracked abiotic, artifact, interference, and contamination explanations across modalities. H4 tests whether expected-discrimination follow-up outperforms fixed follow-up at equal approved observing budget.
+
+The study uses three branch-specific evidence records. The remote branch contains stellar spectral energy distribution and activity, orbit, mass and radius constraints, spectrum type, retrieval posterior, co-occurring gases, temporal behavior, and abiotic pathways. The technosignature branch contains pointing, time-frequency data, drift behavior, beam pattern, on-off checks, injection-recovery curve, interference catalog, repeat observations, and independent-observatory status. The in-situ branch contains sampling location and depth, chain of custody, blanks, replicate assays, organic distributions, isotope and chirality measurements, mineral context, and contamination screen.
+
+\begin{table*}[t]
+\caption{Pre-registered study phases. No phase has been executed by this proposal.}
+\label{tab:design}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.12\textwidth} p{0.31\textwidth} p{0.27\textwidth} p{0.21\textwidth}}
+\hline
+\textbf{Phase} & \textbf{Planned operation} & \textbf{Primary diagnostic} & \textbf{Permitted conclusion}\\
+\hline
+0: registration & Freeze hypothesis library, data versions, decision thresholds, recovery requirements, and release policy. & Manifest and human-review completeness. & No empirical conclusion.\\
+1: quality and provenance & Validate mandatory context, calibration, provenance, blank, and recovery fields. & Field completeness and branch-specific quality checks. & Context status only.\\
+2: alternatives & Evaluate registered biological, technological, abiotic, artifact, interference, and contamination explanations. & Alternative-explanation coverage and likelihood scope. & Candidate remains bounded by unexcluded alternative.\\
+3: follow-up & Rank feasible observations by Eq.~\eqref{eq:utility} and perform only human-approved plans in future work. & Expected separation, feasibility, and cost sensitivity. & Prospective follow-up recommendation only.\\
+4: negative inference & Attach completeness and recovery domain to a null result. & Injection recovery, duty cycle, and coverage map. & Sensitivity-limited negative status only.\\
+\hline
+\end{tabular}
+\end{table*}
+
+\subsection{Comparators and ablations}
+
+The comparison set is intentionally practical. C1 is a single-feature biosignature rule. C2 ranks targets using a habitable-zone proxy only. C3 is a radio candidate list without an injection-recovery or interference ledger. C4 is an in-situ signature list without explicit provenance and blank controls. C5 is full \lifetrace{}. Ablations remove environmental context, recovery cards, common provenance, sensitivity-limited null semantics, or utility-guided follow-up.
+
+Future evaluation uses registered synthetic cases and authorized public benchmark records, never unnamed anecdotal candidates. Planned metrics are candidate-confidence calibration; false-positive and false-negative rate at matched sensitivity; alternative-explanation omission rate under blinded audit; recovery-curve coverage; follow-up information gain per approved cost; status stability under plausible priors and retrieval models; and provenance completeness. A better score on one metric does not license an unsupported discovery statement if a critical alternative remains open.
+
+\subsection{Counterfactual validation and release audit}
+
+The evaluation must test whether the ledger can resist attractive mistakes, not merely describe plausible targets. Each counterfactual case starts from a known non-biological, non-technological, or non-indigenous explanation and asks whether the protocol preserves that explanation until a discriminating measurement has been planned. Remote cards vary stellar ultraviolet forcing, clouds, retrieval covariance, and abiotic atmospheric pathways. Radio cards vary terrestrial interference, satellite geometry, intermittent sources, pipeline settings, and injection-recovery performance. In-situ cards vary blank failure, sample mixing, preservation history, laboratory carryover, and plausible abiotic synthesis. These are planned stress cases, not observations or claimed detections.
+
+The audit has a deliberate information barrier. A second reviewer receives the candidate record, calibrated inputs, and declared decision rule but not the scenario label or expected answer. That reviewer records the strongest alternative, the status supported by the available fields, and the shortest feasible discriminating follow-up. Disagreement is retained as a scientific result about underspecification: it triggers a context-insufficient or alternative-not-excluded status, not a consensus-driven escalation. This produces a directly testable version of H1--H4: a method is useful only if it improves calibrated disposition and follow-up selection under counterfactual pressure.
+
+\begin{table*}[t]
+\caption{Planned counterfactual validation and release rules. Each row tests whether \lifetrace{} withholds escalation when a registered alternative remains viable.}
+\label{tab:counterfactual}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.19\textwidth} p{0.29\textwidth} p{0.26\textwidth} p{0.19\textwidth}}
+\hline
+\textbf{Branch} & \textbf{Counterfactual stressor} & \textbf{Required protocol response} & \textbf{Permitted release language}\\
+\hline
+Remote spectroscopy & Stellar, cloud, retrieval, or geochemical pathway reproduces the candidate feature. & Register the model scope, retain the abiotic alternative, and rank an orthogonal context observation. & Candidate feature under contextual assessment; no biological conclusion.\\
+Radio technosignature & Interference, satellite geometry, beam response, or pipeline behavior reproduces the event. & Require injection recovery, localization, repeat observation, and independent-observatory evidence. & Technical-looking event pending artifact adjudication.\\
+In-situ ocean-world measurement & Blank, chain-of-custody failure, carryover, or abiotic chemistry reproduces a molecular pattern. & Preserve provenance trace, repeat controls, and request a complementary assay or context measure. & Non-indigenous source not excluded.\\
+Sensitivity-limited null & Recovery falls outside a declared frequency, chemistry, duty-cycle, or coverage domain. & Publish the recovery and completeness domain with the null result. & No recovered candidate within the declared domain only.\\
+\hline
+\end{tabular}
+\end{table*}
+
+\subsection{Decision thresholds, sensitivity scopes, and reproducible disclosure}
+
+A LifeTrace status is not a single score with an undisclosed cutoff. Before a candidate is evaluated, the analysis team records three different threshold families: data-quality thresholds that determine whether the record is interpretable at all; discrimination thresholds that specify which alternatives must be tested before escalation; and release thresholds that specify the wording allowed at each evidence status. This separation matters because a high signal-to-noise feature can still be non-diagnostic if its environmental context is absent, while a carefully calibrated non-detection may be scientifically valuable even when it does not imply universal absence.
+
+For a remote spectrum, the declared sensitivity scope includes wavelength coverage, spectral resolution, photon and detector noise, stellar-activity treatment, retrieval model family, and the target population to which the statement is intended to apply. For a radio search, it includes frequency range, bandwidth, temporal coverage, drift-rate range, localization response, injection-recovery curve, interference excision rule, transmitter-strength convention, and duty-cycle assumption. For an in-situ assay, it includes blank performance, detection limits, sample mass and handling history, molecular or isotopic measurement precision, replicate rule, geological-context availability, and contamination model. A result outside any one of these scopes cannot be silently generalized beyond it.
+
+The disclosure package therefore has four linked records: an immutable input manifest naming data versions and calibration products; an alternative ledger that records which physical, instrumental, human-made, or contamination explanations were assessed; a sensitivity card that maps recovery performance over the declared domain; and a decision card that records status, reviewers, unresolved alternatives, and the next measurement with the highest expected discrimination value. Re-running an analysis must reproduce the same inputs, registered thresholds, and evidence status. If a reasonable alternative pipeline or prior changes the status, that instability is itself published and becomes a follow-up requirement rather than being hidden by an averaged confidence score.
+
+This protocol makes the central contribution operational. It does not demand impossible certainty before research can proceed. It demands that a public claim state exactly which candidate class has been tested, which alternatives have been weakened, which still remain, and which observation could change the conclusion. That level of specificity allows independent teams to disagree productively, re-use the record, and improve evidence through new data rather than through stronger rhetoric.
+
+\section{Alternative Explanations and Falsification}
+
+\subsection{Remote spectra}
+
+A remote atmospheric candidate is not assessed in isolation. The protocol first checks stellar contamination, data reduction, retrieval degeneracy, and spectral covariance. It then tests atmospheric escape, photolysis, geochemical cycling, cloud and haze effects, climate state, surface interactions, and known chemical sources. For oxygen, this operationalizes the contextual reasoning developed by Meadows \emph{et al.} \cite{meadows2018}; for a missing gas, it retains the false-negative logic emphasized by Reinhard \emph{et al.} \cite{reinhard2017}. An observation in a new band, a time series, a host-star ultraviolet constraint, or a mass and radius refinement can be more discriminating than repeated measurement of the original feature.
+
+\subsection{Technosignatures}
+
+For a technosignature candidate, the initial prior is not that a narrowband or drifting event is extraterrestrial. The protocol checks terrestrial radio-frequency interference, satellites and aircraft, instrumental artifacts, sidelobes, beam response, known sources, time-frequency morphology, localization, and pipeline behavior. Signal injection and recovery are required to distinguish a failed search from a sensitive one. Independent re-observation and, where practical, a second observatory are central because a signal that cannot be repeated or localized has not excluded the dominant artifact pathways.
+
+\subsection{In-situ evidence}
+
+In-situ measurements benefit from direct chemical access but must meet their own higher standards. Molecular abundance patterns, isotopic fractionation, chirality, mineral associations, cellular structures, and temporal metabolism proxies are assessed with blank controls, replicate instruments, chain of custody, site context, preservation history, and contamination modeling. The Ladder of Life Detection supports this multi-measurement logic: indigenous life is not the default explanation, and a suite of observations must jointly constrain abiotic pathways \cite{neveu2018}. In an ocean-world setting, the target is not merely an organic molecule; it is a coherent, provenance-preserved chemical and geological pattern.
+
+\begin{table*}[t]
+\caption{Failure-mode matrix. A negative or ambiguous result narrows the claim and defines the next scientific action instead of producing an unsupported final answer.}
+\label{tab:failure}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.22\textwidth} p{0.27\textwidth} p{0.24\textwidth} p{0.18\textwidth}}
+\hline
+\textbf{Detected condition} & \textbf{Why it threatens interpretation} & \textbf{Required LifeTrace response} & \textbf{Next action}\\
+\hline
+Planet is only habitable-zone ranked & Target selection does not establish water, life, or a detectable biosphere. & Separate target priority from evidence status. & Obtain environmental and observation-context constraints.\\
+Single atmospheric feature is retrieved & Abiotic pathways, stellar effects, and retrieval degeneracies may remain viable. & Keep abiotic alternative status. & Obtain orthogonal band, time series, or context measurement.\\
+Radio event lacks repeat or localization & Human interference, satellite paths, and instrument effects remain plausible. & Keep artifact or interference status. & Repeat with on-off and independent-observatory controls.\\
+In-situ chemistry lacks blanks or provenance & Contamination and abiotic synthesis cannot be excluded. & Keep context-insufficient status. & Acquire validated controls and context-linked replicate assays.\\
+No candidate is recovered & Tested sensitivity can be narrow in frequency, chemistry, duty cycle, or population. & Emit sensitivity-limited negative result only. & Publish recovery and coverage map; expand declared domain.\\
+\hline
+\end{tabular}
+\end{table*}
+
+\section{Interpretive Outcomes and Limits}
+
+A successful \lifetrace{} execution can yield meaningful conclusions without reaching a universal yes or no. It can identify that a target is scientifically prioritized but not evidence bearing. It can show that a candidate is plausibly biological only under a specified environmental model and name the observation needed to test the key abiotic alternative. It can establish that a technical-looking candidate has cleared initial interference tests but still needs independent confirmation. It can give a negative result a precise scope, such as no recovered narrowband transmitter above a stated strength and duty cycle in a specified observing program, rather than asserting that no civilization exists.
+
+The strongest future conclusion would require convergent, independent evidence. For a remote exoplanet, that could mean a set of atmospheric or surface features, environmental constraints, and temporal behavior that jointly make registered abiotic models inadequate at the declared evidence standard. For a technosignature, it could mean repeatable, localized, independently observed behavior inconsistent with human or natural mechanisms. For an ocean world, it could mean provenance-preserved and replicated chemical, isotopic, chiral, and contextual evidence that jointly reject leading abiotic and contamination explanations. The proposal does not set a universal numerical threshold for all modalities; it requires that each threshold be declared and audited.
+
+The limits are substantial but manageable. Life may use chemistry unlike terrestrial examples. Atmospheric retrievals may be sparse or biased by stellar heterogeneity. Instruments and pipelines may have unmodeled behavior. Biological and technological priors are uncertain. Geological samples can be altered or contaminated. A finite search cannot sample all habitats, time windows, signal bands, or technological choices. These constraints are not reasons to stop searching. They are the reason to make the sensitivity, alternative hypotheses, and next discriminating observation visible in every result.
+
+Human review is mandatory before any observation plan, sample analysis, candidate release, or public statement. Reviewers must check data permissions, observatory and mission policy, planetary-protection obligations, recovery calibration, hypothesis completeness, source metadata, and candidate-language scope. The in-app browser requested for this research could not connect because its local runtime was blocked by a Windows ACL failure. The source registry therefore records dual-engine bibliographic cross-validation and retains direct publisher-page verification as a review task.
+
+\section{Conclusion}
+
+The available evidence does not answer whether humanity is alone, but it provides a rigorous way to pursue the answer. It shows why life-compatible environments, candidate signals, confirmation, and negative constraints must remain separate propositions. It also shows why the strongest paths are contextual and multi-modal: atmospheric chemistry must be interpreted with its star and planet; technosignatures must survive interference and repeatability controls; in-situ evidence must preserve provenance and exclude contamination.
+
+\lifetrace{} operationalizes this insight as a falsifiable evidence ledger. It allows strong candidate claims only when registered alternatives are genuinely discriminated, and it allows null results only within explicit sensitivity and coverage bounds. In this form, the search for life beyond Earth becomes neither overconfident nor timid. It is a sequence of empirical questions whose answers can be strengthened, revised, or left unresolved by the observations that actually have power to decide them.
+
+\appendices
+\section{Minimum Evidence-Record Schema}
+
+Each record must include modality; target or sample identifier; data version; instrument or assay card; calibration; acquisition conditions; provenance; stellar, planetary, geological, or interference context; hypothesis library; registered alternatives; sensitivity and recovery curve; blanks and replicate information when applicable; decision status; follow-up options; source keys; and human-review state. A missing mandatory context field prevents candidate escalation.
+
+\begin{table*}[t]
+\caption{Auditable fields for a minimum LifeTrace record. Fields are completed before interpretation; no row is an empirical result.}
+\label{tab:record-schema}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.20\textwidth} p{0.34\textwidth} p{0.34\textwidth}}
+\hline
+\textbf{Field block} & \textbf{Required content} & \textbf{Audit and escalation rule}\\
+\hline
+Identity and provenance & Candidate or sample identifier; raw and derived data versions; instrument, pipeline, operator, and chain-of-custody record. & Version or provenance ambiguity forces context-insufficient status and blocks external candidate release.\\
+Measurement and calibration & Acquisition settings; calibration products; uncertainties; masking; blank controls, replicates, or injection-recovery curve when applicable. & The declared claim domain cannot exceed demonstrated recovery, quality-control, or blank performance.\\
+Physical and observational context & Stellar and planetary state, geological setting, or interference environment; target-selection rationale; relevant temporal and spatial context. & Missing context blocks a biological or technological interpretation even when a feature is measured.\\
+Hypotheses and alternatives & Biological, technological, abiotic, artifact, interference, and contamination hypotheses, with branch-specific relevance and evidence links. & Each unresolved high-leverage alternative is named in the status card and matched to a discriminating follow-up.\\
+Decision and release record & Registered thresholds; reviewer decisions; status; sensitivity scope; public wording; follow-up utility ranking; source keys. & Status changes require a new versioned record and independent human review before public communication.\\
+\hline
+\end{tabular}
+\end{table*}
+
+The record is designed to preserve a chain of reasoning rather than merely a chain of files. Identity fields connect a conclusion to the exact data and processing context; calibration and recovery fields specify what signal population could have been detected; context fields prevent habitability, a measured feature, and a life interpretation from collapsing into one label. The hypothesis library makes disagreements inspectable: an analyst can challenge an omitted abiotic pathway, an interference model, or a contamination route without re-litigating the entire candidate.
+
+Status assignment is sequential. A preparer completes the data and provenance card; a modality reviewer checks calibration and branch-specific alternatives; an independent reviewer checks whether the stated status follows from the registered rule; and a release reviewer checks that the public wording does not exceed the sensitivity or alternative-explanation record. Any missing handoff returns the record to an earlier status. This workflow makes future improvements cumulative: a new observation, replicate assay, recovery test, or alternative model updates a versioned evidence record instead of replacing uncertainty with a narrative claim.
+
+\section{Proposal Status and Source Boundary}
+
+This document is a research-plan artifact derived from the Survey, Idea, and ExperimentDesign handoffs in the same project directory. The primary sources are registered in the Survey manifest. Novel contributions are proposed evidence records, hypotheses, decision rules, ablations, and follow-up strategy. No telescope observation, radio detection, sample measurement, spacecraft operation, or extraterrestrial-life result is claimed.
+
+\begin{thebibliography}{00}
+\bibitem{schwieterman2018} E. W. Schwieterman et al., "Exoplanet Biosignatures: A Review of Remotely Detectable Signs of Life," \emph{Astrobiology}, vol. 18, no. 6, pp. 663-708, 2018, doi: 10.1089/ast.2017.1729.
+\bibitem{catling2018} D. C. Catling et al., "Exoplanet Biosignatures: A Framework for Their Assessment," \emph{Astrobiology}, vol. 18, no. 6, pp. 709-738, 2018, doi: 10.1089/ast.2017.1737.
+\bibitem{meadows2018} V. Meadows et al., "Exoplanet Biosignatures: Understanding Oxygen as a Biosignature in the Context of Its Environment," \emph{Astrobiology}, vol. 18, no. 6, pp. 630-662, 2018, doi: 10.1089/ast.2017.1727.
+\bibitem{kopparapu2013} R. Kopparapu et al., "Habitable Zones Around Main-Sequence Stars: New Estimates," \emph{The Astrophysical Journal}, vol. 765, 131, 2013, doi: 10.1088/0004-637x/765/2/131.
+\bibitem{reinhard2017} C. T. Reinhard et al., "False Negatives for Remote Life Detection on Ocean-Bearing Planets: Lessons from the Early Earth," \emph{Astrobiology}, vol. 17, no. 4, pp. 287-297, 2017, doi: 10.1089/ast.2016.1598.
+\bibitem{wright2022} J. T. Wright et al., "The Case for Technosignatures: Why They May Be Abundant, Long-lived, Highly Detectable, and Unambiguous," \emph{The Astrophysical Journal Letters}, vol. 927, L30, 2022, doi: 10.3847/2041-8213/ac5824.
+\bibitem{margot2023} J.-L. Margot et al., "A Search for Technosignatures Around 11,680 Stars with the Green Bank Telescope at 1.15-1.73 GHz," \emph{The Astronomical Journal}, vol. 166, 206, 2023, doi: 10.3847/1538-3881/acfda4.
+\bibitem{neveu2018} M. Neveu et al., "The Ladder of Life Detection," \emph{Astrobiology}, vol. 18, no. 11, pp. 1375-1402, 2018, doi: 10.1089/ast.2017.1773.
+\bibitem{neveu2020} M. Neveu et al., "Returning Samples From Enceladus for Life Detection," \emph{Frontiers in Astronomy and Space Sciences}, vol. 7, 2020, doi: 10.3389/fspas.2020.00026.
+\bibitem{weber2023} J. M. Weber et al., "A Review on Hypothesized Metabolic Pathways on Europa and Enceladus: Space-Flight Detection Considerations," \emph{Life}, vol. 13, 1726, 2023, doi: 10.3390/life13081726.
+\bibitem{fujii2018} Y. Fujii et al., "Exoplanet Biosignatures: Observational Prospects," \emph{Astrobiology}, vol. 18, no. 6, pp. 739-778, 2018, doi: 10.1089/ast.2017.1733.
+\end{thebibliography}
+\end{document}

@@ -1190,6 +1190,8 @@ class SurveyGenerator:
         still receives the full bounded paper set.  One paper is retained for
         every available evidence-plan slot before optional per-SH fill-up is
         applied, so the cap cannot silently drop an SH's only support.
+        Qualified synthesis also retains one qualified representative so its
+        required limitation reaches the outline prompt.
         """
 
         paper_ids = self._as_paper_ids(papers)
@@ -1234,6 +1236,22 @@ class SurveyGenerator:
             sub_hypothesis_id = str(entry.get("sub_hypothesis_id") or "unknown")
             sh_selected: list[str] = []
             slot_support = entry.get("slot_support")
+            mode = str(entry.get("allowed_writing_mode") or "")
+            if mode == QUALIFIED_SYNTHESIS and isinstance(slot_support, Mapping):
+                qualified_representative = next(
+                    (
+                        paper_id
+                        for support in slot_support.values()
+                        if isinstance(support, Mapping)
+                        for paper_id in self._as_paper_ids(
+                            support.get("qualified_paper_ids")
+                        )
+                        if paper_id in available
+                    ),
+                    "",
+                )
+                if qualified_representative:
+                    sh_selected.append(qualified_representative)
             if isinstance(slot_support, Mapping):
                 for support in slot_support.values():
                     if not isinstance(support, Mapping):

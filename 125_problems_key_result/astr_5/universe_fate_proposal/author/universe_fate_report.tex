@@ -1,0 +1,322 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{balance}
+\newcommand{\lcdm}{\ensuremath{\Lambda\mathrm{CDM}}}
+\newcommand{\fateledger}{\textsc{FateLedger}}
+\begin{document}
+
+\title{When Will the Universe Die?\\
+An Assumption-Aware Proposal for Falsifiable Cosmic-Fate Inference}
+\author{\IEEEauthorblockN{Evidence-Bounded Research Proposal}
+\IEEEauthorblockA{Survey-to-design synthesis on late-time cosmology,\\ dark-energy inference, and vacuum-stability interpretation}}
+\maketitle
+
+\begin{abstract}
+The question of when the universe will die is commonly posed as a request for a single timescale. Physics instead supplies multiple non-equivalent fate mechanisms: continued accelerated dilution, a finite-time Big Rip, turnaround and recollapse, and false-vacuum decay. Current observations constrain the expansion history over a finite redshift interval but do not directly observe the asymptotic future. This proposal introduces FateLedger, an assumption-aware cosmic-fate falsifiability atlas. Each candidate model carries a declared observational domain, physical continuation, event definition, and validity limit before it may emit a fate class or conditional time integral. The design combines CMB, BAO, supernova, growth, redshift-drift, and standard-siren evidence through pre-registered posterior-predictive tests. It reports expansion fate, observational identifiability, and vacuum stability in separate ledgers. The work does not claim new observations or a measured universal endpoint. Its contribution is a rigorous research protocol that can support continued expansion where a declared model warrants it, identify a conditional finite-time fate where a model defines one, and explicitly return unresolved when accessible evidence cannot discriminate physically distinct futures.
+\end{abstract}
+\begin{IEEEkeywords}
+cosmological future, dark energy, cosmic acceleration, Big Rip, recollapse, vacuum metastability, baryon acoustic oscillations, model identifiability
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Will the universe die, and will expansion continue until that point? The question is scientifically important, but its usual wording hides a category error. A universe can continue expanding while stellar populations age, while distant galaxies become inaccessible, or while a metastable quantum vacuum remains long lived. Conversely, a model can end expansion through a turnaround or reach a finite-time singularity. These outcomes do not share one observed clock, one likelihood function, or one established physical mechanism.
+
+The evidence frontier is active. Planck's final CMB cosmological-parameter analysis reports a successful spatially flat base-\lcdm{} description of its central observables and, together with BAO, a curvature constraint consistent with flatness \cite{planck2018}. DESI's first-year BAO analysis measures late expansion from more than six million extragalactic objects across a broad redshift range; flat-\lcdm{} remains compatible with its BAO baseline, while time-varying equation-of-state analyses display data-set-dependent departures from a cosmological constant when combined with different supernova compilations \cite{desi2025}. These are powerful results about the history of expansion. They are not a measurement of what dark energy must do as the scale factor becomes arbitrarily large.
+
+This proposal introduces \fateledger{}, a framework that makes hidden extrapolation assumptions auditable. It requires a model to declare its asymptotic continuation before receiving a fate classification, defines a conditional time integral only when the associated event is well posed, and pre-registers a measurement plan able to change or withhold a fate label. The outcome can legitimately be a model-conditional fate statement or an explicit status that the future is not observationally identifiable with the declared data. This report has status \texttt{PROPOSAL\_NO\_OBSERVED\_RESULTS}; it contains a research design, not a new parameter fit.
+
+\section{Why Cosmic Death Is Not One Observable}
+
+\subsection{Fate mechanisms are not interchangeable}
+
+Asymptotic dilution is the future of a universe with sufficiently persistent positive vacuum energy: bound local structures remain, but unbound regions recede and usable gradients become progressively scarce. It is not a finite-time global singularity. Long-term observability in a standard accelerated cosmology has been considered explicitly, including the eventual isolation of a local gravitationally bound region \cite{loeb2011}.
+
+A Big Rip is a finite-time divergence in scale factor and dark-energy density in a sustained phantom model. It follows from an assumed future stress-energy behavior; it does not follow simply from present acceleration. Caldwell, Kamionkowski, and Weinberg demonstrate the finite-time result for a constant-\(w\) phantom component under the assumptions of their model \cite{caldwell2003}. A scalar potential can instead permit acceleration over the observed epoch yet later lead to a negative contribution, turnaround, and collapse. Kallosh \emph{et al.} analyzed such a construction, whose future lifetime is a property of the potential and parameters rather than a model-independent observation \cite{kallosh2003}.
+
+False-vacuum decay is a different problem again. A bubble nucleated in a metastable vacuum would be catastrophic locally, but its probability calculation is not a Friedmann background calculation. Electroweak-vacuum studies depend on the Higgs potential, top-quark mass, strong coupling, renormalization, gravity, and possible physics beyond the Standard Model \cite{markkanen2018,chigusa2018}. A background-expansion posterior cannot silently absorb these dependencies.
+
+\begin{table*}[t]
+\caption{Fate taxonomy and permitted scope of evidence statements. A label is emitted only after the model and continuation assumptions are declared.}
+\label{tab:taxonomy}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.15\textwidth} p{0.22\textwidth} p{0.25\textwidth} p{0.28\textwidth}}
+\hline
+\textbf{Fate class} & \textbf{Event definition} & \textbf{Required assumptions} & \textbf{Correct proposal output}\\
+\hline
+Asymptotic dilution & Expansion persists with a non-singular late-time continuation. & Globally specified positive-vacuum or equivalent late-time model. & Model-conditional asymptotic-dilution compatibility.\\
+Finite-time disruption & Scale factor or physical density diverges after a finite proper-time integral. & Sustained phantom-like or other specified singular continuation. & Conditional finite-time disruption with the integral and assumptions.\\
+Turnaround and recollapse & \(H(a)=0\) at a positive future scale factor, followed by contraction. & Potential, curvature, gravity law, and matter content specified beyond the observed domain. & Conditional turnaround or no-turnaround support in the declared model.\\
+Vacuum transition & Nucleation of a lower-energy vacuum state. & Particle-physics parameters, potential, gravitational treatment, and model extensions. & Independent vacuum-stability status.\\
+\hline
+\end{tabular}
+\end{table*}
+
+\subsection{The extrapolation boundary}
+
+For a homogeneous and isotropic background,
+\begin{equation}
+ E^2(a) \equiv \frac{H^2(a)}{H_0^2}
+ = \Omega_{\mathrm r}a^{-4}+\Omega_{\mathrm m}a^{-3}
+ +\Omega_k a^{-2}+\Omega_{\mathrm{de}}X_{\mathrm{de}}(a),
+\label{eq:friedmann}
+\end{equation}
+where \(a\) is scale factor, \(H_0\) is the present Hubble rate, and the density parameters describe radiation, matter, curvature, and dark energy. CMB, BAO, supernova, and growth data constrain different integrals, derivatives, or perturbative consequences of this function over finite domains. They do not observe Eq.~\eqref{eq:friedmann} at \(a\gg1\).
+
+If a component with equation of state \(w(a)\) is separately conserved, then
+\begin{equation}
+ X_{\mathrm{de}}(a) =
+ \exp\left[-3\int_{1}^{a}\frac{1+w(a')}{a'}\,da'\right].
+\label{eq:de-density}
+\end{equation}
+The common form \(w(a)=w_0+w_a(1-a)\) can describe deviations over a data-bearing late universe, but it is not automatically a fundamental law valid at arbitrarily large \(a\). Directly inserting it into Eq.~\eqref{eq:de-density} far outside its intended range can manufacture a future fate from a local interpolation. Dark-energy reviews provide the appropriate framing: data constrain parameterized properties and consistency, while physical identification and future completion remain open \cite{huterer2018,escamilla2024}.
+
+\section{Survey Evidence and Research Gaps}
+
+\subsection{What present evidence supports}
+
+Planck reports a jointly consistent base-\lcdm{} fit to final temperature, polarization, and lensing products, and its joint constraint with BAO on curvature is consistent with spatial flatness \cite{planck2018}. The same analysis quotes a constant-\(w\) result, in combination with supernovae, compatible with a cosmological constant. This is direct evidence for the adequacy of that declared model over its observational domain, not direct evidence that the constant is eternal.
+
+DESI DR1 supplies BAO measurements in seven redshift bins over \(0.1<z<4.2\) and reports that BAO data alone are consistent with flat-\lcdm{} \cite{desi2025}. In a time-varying \(w_0,w_a\) extension, DESI plus CMB and supernova combinations exhibit a preference pattern that depends on which supernova compilation is used. This pattern is scientifically motivating because it makes future dark-energy measurement and systematic control more consequential. It should not be translated into a claim that a Big Rip has been detected or that an end time has shortened. The review by Escamilla \emph{et al.} likewise emphasizes that a consensus multi-probe set can remain compatible with \(w=-1\), despite scattered phantom-like hints \cite{escamilla2024}.
+
+The survey accepts five research gaps. G1 is the missing bridge between a finite observational fit and a declared asymptotic continuation. G2 is the conflation of background fate with vacuum decay. G3 is the lack of an explicit observational-identifiability status: a model family can possess several far-future completions with nearly identical observable histories. G4 is the absence of pre-registered observable-to-fate decision rules. G5 is the loss of particle-physics sensitivity when vacuum metastability is compressed into simple statements about the universe's end.
+
+\section{FateLedger: An Assumption-Aware Falsifiability Atlas}
+
+\subsection{Core representation}
+
+\fateledger{} assigns every model \(M_j\) an assumption card
+\begin{equation}
+ A_j=\{D_j,C_j,\Theta_j,F_j,V_j\},
+\label{eq:assumption-card}
+\end{equation}
+where \(D_j\) is the data-validity domain, \(C_j\) is the asymptotic continuation class, \(\Theta_j\) contains parameters and priors, \(F_j\) names the fate event, and \(V_j\) records validity limitations. The card is a scientific object, not a prose disclaimer. It controls what the framework is allowed to calculate.
+
+For example, a flat-\lcdm{} card has a globally defined constant vacuum term and can emit an asymptotic-dilution status. A constant-\(w\) card can emit a conditional Big-Rip result if \(w<-1\) remains its declared late-time law. A scalar-field card can emit a turnaround result only if its potential and field dynamics are defined beyond the data range. A phenomenological \(w_0,w_a\) card that is explicitly local is barred from emitting an event time unless it is paired with a justified physical completion.
+
+\begin{figure*}[t]
+\centering
+\fbox{\begin{minipage}{0.94\textwidth}
+\centering
+\small
+\textbf{Frozen observations and likelihoods} \(\rightarrow\)
+\textbf{model family \(M_j\)} \(\rightarrow\)
+\textbf{assumption card \(A_j\)} \(\rightarrow\)
+\textbf{background map \(H(a)\) and event definition} \(\rightarrow\)
+\textbf{conditional fate status and discriminator plan}\\[3pt]
+\textbf{Independent branch:} particle-physics assumptions \(\rightarrow\)
+\textbf{vacuum-stability status}. The two branches may be compared in a final narrative but are never algebraically collapsed into a single end time.
+\end{minipage}}
+\caption{FateLedger workflow. The intervention binds a finite-domain fit to an explicit continuation card before a cosmic-fate statement is permitted.}
+\label{fig:ledger}
+\end{figure*}
+
+\subsection{Conditional time integrals and identifiability}
+
+When and only when \(C_j\) and \(F_j\) define an event, the proposal evaluates
+\begin{equation}
+ t_{\mathrm{event}}-t_0 =
+ H_0^{-1}\int_{1}^{a_{\mathrm{event}}}
+ \frac{da}{aE(a)}.
+\label{eq:time}
+\end{equation}
+For a turnaround, \(a_{\mathrm{event}}\) is the first positive root of \(E(a)\). For a finite-time singularity, the upper limit can be infinity while the integral remains finite. For asymptotic dilution, the integral need not represent a singular event at all; the output is a fate class and relevant astrophysical milestones rather than a falsely precise terminal timestamp. Equation~\eqref{eq:time} is a proposed calculation rule. This report does not evaluate it for a new data posterior.
+
+The planned pairwise predictive-separation statistic is
+\begin{equation}
+ \Delta_{jk}=\sum_{q\in Q}
+ \left(\mathbf{m}_{jq}-\mathbf{m}_{kq}\right)^{\mathsf T}
+ \mathbf{C}_{q}^{-1}
+ \left(\mathbf{m}_{jq}-\mathbf{m}_{kq}\right),
+\label{eq:divergence}
+\end{equation}
+where \(Q\) is a pre-registered probe set, \(\mathbf{m}_{jq}\) is a predicted observable vector, and \(\mathbf{C}_q\) includes measurement and systematic covariance. A threshold for \(\Delta_{jk}\) must be calibrated on realistic mock catalogs before status assignment. The statistic does not prove a model correct. It asks whether the declared observational program can discriminate two physically different future continuations.
+
+\section{Research Hypotheses and Study Design}
+
+H1 proposes that explicit assumption cards reduce unsupported asymptotic claims. The evaluation is a blinded audit of reports derived from fixed mock or public-data configurations: reviewers check whether each end-time statement has a compatible domain, continuation, event definition, and source provenance. If uncarded reports perform equally well, the card adds no demonstrated value.
+
+H2 proposes that multi-probe posterior-predictive tests distinguish a subset of fate classes more robustly than single-probe fits. The hypothesis fails if combined-probe gains disappear under nuisance variation, are driven by shared systematic effects, or do not improve calibrated predictive separation. H3 proposes that separate expansion and vacuum ledgers lower contradiction and provenance errors relative to one end-of-universe output. H4 proposes that an explicit unresolved output is the correct product where permitted future completions make indistinguishable accessible predictions.
+
+The initial registry contains four tiers. M1 is flat-\lcdm{}, with a constant cosmological term. M2 is constant-\(w\) dark energy, which can represent dilution or conditional finite-time disruption according to its declared continuation. M3 contains globally specified scalar-field potentials or modified-gravity theories with well-defined field equations. M4 is local \(w_0,w_a\) phenomenology without an approved future completion; it is included precisely to test the framework's refusal to over-extrapolate.
+
+The planned data bundle contains CMB primary anisotropy and lensing constraints, BAO radial and transverse distances, independent supernova distance moduli, and compatible growth or weak-lensing summaries. Prospective redshift drift and gravitational-wave standard sirens enter only as forecast data. Every execution must freeze the release version, covariance, likelihood implementation, nuisance specification, calibration, license, and blinding state before model fitting.
+
+\begin{table*}[t]
+\caption{Pre-registered study phases. None has been executed in this proposal.}
+\label{tab:design}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.12\textwidth} p{0.32\textwidth} p{0.25\textwidth} p{0.22\textwidth}}
+\hline
+\textbf{Phase} & \textbf{Planned operation} & \textbf{Primary diagnostic} & \textbf{Permitted conclusion}\\
+\hline
+0: registration & Freeze sources, releases, cards, priors, nuisance assumptions, and fate taxonomy. & Manifest completeness and human sign-off. & No empirical conclusion.\\
+1: finite-domain inference & Fit eligible models only over their declared data domain. & Predictive calibration and leave-one-probe-out stability. & Constraint on declared observation-domain model only.\\
+2: continuation map & Propagate globally defined models through Eqs.~\eqref{eq:friedmann} and \eqref{eq:time}; construct alternatives for local fits. & Event validity, prior sensitivity, integral checks. & Conditional fate label or unresolved label.\\
+3: discrimination & Add probes one at a time and test Eq.~\eqref{eq:divergence} under systematics. & Calibrated separation and change of ambiguity. & A named probe is prospective only if robust.\\
+4: vacuum ledger & Compile independent particle-physics assumptions and decay formalism. & Assumption completeness and sensitivity analysis. & Separate model-conditional or unresolved vacuum status.\\
+\hline
+\end{tabular}
+\end{table*}
+
+\subsection{Controls, ablations, and robustness}
+
+The primary comparator C1 is a conventional parameter-constraint report without a continuation card. C2 is a single-probe fate annotation. C3 is a multi-probe fate report that merges vacuum and expansion branches. C4 is full \fateledger{}. The key ablations remove the asymptotic card, remove the unresolved label, drop one data probe at a time, exchange a globally defined model for local \(w_0,w_a\) extrapolation, and merge the vacuum ledger. Metrics are unsupported-endpoint rate, provenance completeness, posterior-predictive coverage, fate-label stability under priors and nuisance models, pairwise separation under Eq.~\eqref{eq:divergence}, and expansion-vacuum contradiction rate.
+
+\section{Planned Analysis and Falsification Protocol}
+
+\subsection{Observation-domain inference}
+
+Phase 1 estimates parameter constraints within the observational domain only. Each fit must record convergence diagnostics, posterior-predictive residuals, prior sensitivity, and leave-one-probe-out behavior. The inference report is split into an observational section and a continuation section. A future time must not appear as a default output of a sampling pipeline merely because a distance likelihood returned a posterior.
+
+Data compatibility requires care. CMB, BAO, supernova, and lensing samples can share calibration assumptions or respond differently to selection effects. The protocol does not simply multiply likelihoods and call the result more certain. It requires release-specific nuisance models and documents whether a cross-probe tension drives a fate label. A label that changes under a plausible systematic perturbation is not a robust fate inference.
+
+\subsection{Counterfactual continuation tests}
+
+For a local phenomenology, researchers construct at least two physically admissible continuations consistent with the fit over the observed interval. If the continuations lead respectively to dilution and a finite-time event, but their predictions remain unresolved by the declared data bundle, the framework returns an observationally unidentifiable status. It may not choose the more dramatic future because its conditional integral is easier to calculate.
+
+For global theories, posterior samples are propagated through Eqs.~\eqref{eq:friedmann} and \eqref{eq:time}. The computation tests roots of \(E(a)\), numerical convergence of the integral, parameter-boundary behavior, and sensitivity to the late-time potential. A finite output is a conditional property of a sampled theory, not an observed prediction. The report prints the corresponding assumption card next to the value.
+
+\subsection{Prospective discriminators and vacuum branch}
+
+The most useful future measurement is selected by expected discriminating structure. BAO constrains radial and transverse distance combinations; supernovae constrain relative luminosity distances; growth and weak lensing add structure sensitivity; redshift drift probes a time derivative of expansion; and standard sirens provide an independent distance route. Mock catalogs are needed to calibrate this procedure, including selection effects, covariance, and nuisance shifts. They are proposed benchmarks, not simulated results in this paper.
+
+The vacuum branch begins with a separate eligibility screen. The particle-physics model, mass and coupling inputs, renormalization scheme, gravitational treatment, and treatment of beyond-Standard-Model effects must be declared. The branch attaches a reviewable rate calculation or an unresolved status. It does not import CMB or BAO likelihood ratios as direct evidence for tunneling. This preserves the distinctive physical content of metastability theory and prevents a narrative shortcut.
+
+\section{Provenance, Decision Rules, and Systematic Stress Tests}
+
+\subsection{Evidence-to-claim traceability}
+
+The framework distinguishes a source that constrains present cosmological parameters from a source that derives a fate under an assumed continuation. This is not a stylistic preference. It is necessary because an accurate CMB or BAO likelihood can be cited correctly for a finite-domain constraint and incorrectly for a claim about a limit far outside the data domain. Every paragraph in a final FateLedger report will consequently have a claim type: observational constraint, conditional theoretical consequence, proposed analysis method, or unresolved limitation.
+
+The first class includes the Planck and DESI evidence: the papers constrain particular cosmological models and parameterizations over an observed domain \cite{planck2018,desi2025}. The second class includes constant-phantom and negative-potential examples: the cited derivations show what follows if their field content and continuation rules hold \cite{caldwell2003,kallosh2003}. The third class is the new research proposal in this report. The fourth class includes the future physical behavior of dark energy and the model-sensitive electroweak-vacuum lifetime. Such an assignment prevents a report from converting a theoretical counterexample into evidence that the real universe has selected that counterexample.
+
+\begin{table*}[t]
+\caption{Evidence-to-claim contract used by the proposed Author stage. Direct observational constraints, conditional theory, and proposed methods are not permitted to substitute for one another.}
+\label{tab:traceability}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.17\textwidth} p{0.23\textwidth} p{0.26\textwidth} p{0.24\textwidth}}
+\hline
+\textbf{Claim type} & \textbf{Frozen source role} & \textbf{Permitted claim} & \textbf{Forbidden shortcut}\\
+\hline
+Finite-domain constraint & Planck CMB and DESI BAO analyses \cite{planck2018,desi2025} & A specified model or parameterization is compatible with the declared data analysis. & A present fit is direct evidence for an infinite-future law.\\
+Probe interpretation & Dark-energy reviews \cite{huterer2018,escamilla2024} & A probe combination has stated degeneracies, consistency tests, and systematic sensitivities. & A smaller parameter ellipse establishes a unique physical completion.\\
+Conditional expansion fate & Phantom and recollapse constructions \cite{caldwell2003,kallosh2003} & A stated continuation can lead to a finite-time disruption or turnaround. & The conditional event is the measured fate of Nature.\\
+Vacuum status & Metastability review and rate calculation \cite{markkanen2018,chigusa2018} & Particle-physics assumptions lead to a model-dependent stability statement. & BAO or CMB geometry alone fixes tunneling risk.\\
+Proposed contribution & FateLedger design in this report & Assumption cards, decision rules, ablations, and tests are planned research objects. & A planned protocol is a completed analysis or discovery.\\
+\hline
+\end{tabular}
+\end{table*}
+
+\subsection{Fate-label decision rules}
+
+The report generator will use mutually constrained output rules. A background-expansion label is not issued until a model passes four checks: its observational domain is registered; its continuation is physically declared; its event is mathematically defined; and its likelihood and systematics record is adequate for the conditional claim. If a model lacks the second check, it may retain an observational fit but cannot receive a future time. This makes it impossible for a local equation-of-state parameterization to acquire a dramatic terminal prediction solely because an integration routine can extrapolate it.
+
+An asymptotic-dilution output is permitted where a globally defined constant-vacuum or equivalent continuation remains data compatible and has no finite event in Eq.~\eqref{eq:time}. A finite-time-disruption output requires a specified singular continuation and a converged finite conditional integral. A turnaround output requires a physical positive root of \(E(a)\), a consistent dynamical branch after that root, and sensitivity checks around the root. The no-turnaround support output is intentionally weaker: it means the declared model does not support a turnaround in its permitted parameter region; it is not a proof that no other model can recollapse.
+
+The observationally unidentifiable output is governed by a positive decision rule, not by an informal sense of uncertainty. For each competing continuation pair, the study pre-registers the observables, covariance, mock-calibration procedure, and a separation criterion based on Eq.~\eqref{eq:divergence}. If physically distinct futures fail this criterion after systematics are propagated, the pair remains unresolved. The final report must show which observational direction was tested and why no stronger conclusion follows. This rule converts G3 from a philosophical concern into a measurable study outcome.
+
+\subsection{Systematic-error stress tests}
+
+The proposed stress-test battery is designed around the ways a confident fate claim could be wrong. First, data-release stress tests repeat the full decision procedure over documented alternative releases or supernova compilations when compatible likelihood definitions exist. The DESI time-varying dark-energy results make this necessary: qualitative preference can depend on the supernova combination \cite{desi2025}. Second, nuisance stress tests vary approved calibration, selection, and covariance assumptions within their documented scope. Third, prior stress tests compare physically motivated prior ranges and identify labels that occur only at a boundary.
+
+Fourth, model-completion stress tests hold the finite-domain fit fixed while varying permissible physical completions. A label that changes from dilution to disruption under equally adequate completions cannot be reported as resolved. Fifth, leave-one-probe-out tests expose conclusions carried by a single observational channel. Finally, semantic source audits verify that every expansion statement and every vacuum statement points to the appropriate frozen evidence line. A report is incomplete if it offers a time value without the card, a background label without a data-domain record, or a vacuum statement without a particle-physics sensitivity declaration.
+
+\subsection{Reproducible execution package}
+
+An eventual execution should produce a compact but complete package: an immutable manifest of public data releases; machine-readable assumption cards; likelihood adapters; the prior and nuisance table; posterior-predictive scripts; mock-catalog generators; conditional-integration checks; model-comparison notebooks; a vacuum-status sensitivity panel; and the final two-ledger report. Each result row must carry the model identifier, source keys, data domain, continuation class, event definition, decision rule, and human-review state. This arrangement favors falsification over a black-box fate score.
+
+No such package is executed here. The present study design specifies the structure so that a later analysis can be audited without relying on a narrative reconstruction of hidden choices. That is especially important in late-time cosmology, where a small modification to a future completion can dominate a timescale while remaining nearly invisible to current-distance observables.
+\section{Interpretive Outcomes and Failure-Mode Matrix}
+
+\subsection{What a successful discrimination would establish}
+
+A successful FateLedger analysis does not establish that the universe has reached, or is about to reach, any fate event. Its strongest permissible result is narrower and more useful. Suppose a globally defined model, after fitting the frozen observation-domain data, remains predictively adequate under alternative data releases, nuisance choices, and leave-one-probe-out tests. Suppose also that its continuation card defines a unique late-time event or non-event, and that competing physically specified models are separated by a pre-registered observation program. The result then supports a model-conditional classification with a documented discriminatory path. It does not eliminate unregistered theories, and it does not turn a posterior interval into a universal countdown.
+
+For the standard constant-vacuum continuation, the expected interpretive endpoint is continued expansion with asymptotic dilution. This is already a clear scientific statement when its scope is made explicit: present multi-probe evidence is compatible with that continuation, and the continuation has no finite-time singular event of the type defined here. The result is not weak merely because it declines to name a terminal year. It makes a testable claim about the relation between a model, its observables, and its late-time dynamics. A later verified deviation in distances, growth, or gravitational-wave propagation could change that status.
+
+For a phantom-like continuation, the framework permits a stronger conditional statement. If the continuation remains globally specified and the time integral is finite over the sampled theory, the analysis may report a finite-time disruption conditional on that theory. The scientific value lies in exposing every dependency: the energy condition, the constancy or physical evolution of the equation of state, the data domain, priors, and numerical behavior of the integral. This is more informative than a dramatic raw number because it makes clear which future measurement could falsify the conclusion.
+
+For a recollapse model, the decisive object is a dynamically consistent positive root of the Hubble function, not a graphical extrapolation that merely bends downward. The model must state what happens near and after the root, including the role of curvature, matter, and any scalar potential. The analysis then reports whether a turnaround is supported in that model, whether its timing is stable under parameter perturbation, and whether available observables distinguish it from a non-collapsing continuation. This protects the proposal from confusing a flexible fit with a physical cosmology.
+
+\subsection{Failure modes are scientific results}
+
+The primary failure mode is non-identifiability. Two models can have radically different asymptotic futures and nevertheless agree over a finite redshift interval. If all declared probes fail to separate them after their covariance and systematic uncertainty are included, the research result is that no fate discrimination has been achieved with the declared program. This status directs future work toward observables that change the predictive relation, rather than toward post hoc adjustment of priors until one fate becomes numerically favored.
+
+A second failure mode is model incoherence. A phenomenological parameterization may fit a distance relation while becoming singular, negative where a density is required to be positive, or physically undefined outside its intended domain. FateLedger treats this as an invalid continuation rather than as evidence for a singular universe. A third failure mode is probe incompatibility: a fate label that appears only after combining data products with unresolved tension must be downgraded until the tension is explained. A fourth is vacuum-ledger incompleteness, where a requested decay statement lacks a declared particle-physics model or sensitivity record. The correct output in that case is unresolved vacuum stability, not an invented probability.
+
+\begin{table*}[t]
+\caption{Failure-mode matrix. Each negative outcome narrows the claim and retains a testable next step; it does not authorize post hoc overstatement.}
+\label{tab:failure-modes}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.22\textwidth} p{0.27\textwidth} p{0.24\textwidth} p{0.18\textwidth}}
+\hline
+\textbf{Detected condition} & \textbf{Why it threatens a fate claim} & \textbf{Required FateLedger response} & \textbf{Next scientific action}\\
+\hline
+Local fit lacks a physical completion & Equation-of-state interpolation has no warranted meaning at large scale factor. & Do not compute a future time; emit observationally unidentifiable status. & Specify and compare physically defined continuations.\\
+Fate label changes under priors or nuisance model & Apparent fate weight is prior or systematics dominated. & Downgrade label and attach sensitivity panel. & Improve likelihood, calibration, or theoretical prior justification.\\
+One probe alone drives separation & Claimed discrimination may be a channel-specific artifact. & Flag single-probe dependence and perform leave-one-probe-out tests. & Seek an independent observable with different degeneracy structure.\\
+Continuation gives an ill-conditioned time integral & Numerical precision can disguise unstable extrapolation. & Report invalid or divergent conditional integral. & Analyze asymptotic dynamics before any timing claim.\\
+Vacuum inputs are incomplete & Background data do not determine quantum tunneling. & Emit unresolved vacuum status independently of expansion label. & Freeze particle-physics assumptions and obtain specialist review.\\
+\hline
+\end{tabular}
+\end{table*}
+
+\subsection{Why this design is empirically ambitious}
+
+The proposal does not regard unresolved as the preferred answer. It creates opportunities for resolution. A robust redshift-drift measurement could add a direct temporal handle on expansion. High-quality standard-siren distances could provide an independent geometric calibration. Growth and lensing information can test whether a background expansion change is accompanied by the expected structure response. These channels matter because they change model predictions in different ways; their value is not simply that they add another data point. The proposal assigns each candidate observable a pre-registered role in separating continuation classes, and it rejects any claimed benefit that vanishes under systematic stress tests.
+
+Likewise, the vacuum branch is not excluded from the scientific program merely because it is separate. Its ambition is to identify the assumptions that would make a stability calculation interpretable, then to preserve those assumptions when reporting the result. The output may reveal that cosmological fate cannot be captured by background expansion alone. That conclusion is a substantive advance in problem formulation, because it stops evidence from one physical domain from impersonating evidence in another.
+
+The proposed study is therefore designed to make the answer more concrete whenever data and theory allow it. It can strengthen support for an asymptotic-dilution continuation, identify conditional finite-time disruption or turnaround within a defined theory, and name a future observation capable of changing the result. Its strictest rule is also its most productive one: when no credible measurement can distinguish permitted futures, it states exactly that and records what information is missing.
+\section{Expected Branches, Limitations, and Review}
+
+The proposal has no observed result. It nevertheless specifies what each outcome would mean. Under a globally defined, data-compatible constant-vacuum continuation, the appropriate output is asymptotic-dilution compatibility. Under a globally defined sustained-phantom continuation with a finite value of Eq.~\eqref{eq:time}, the output is conditional finite-time disruption; the event time is inseparable from continuation assumptions. Under a model that reaches a positive root of \(E(a)\), the result is conditional turnaround, with the full potential and gravity law exposed.
+
+The critical branch is unresolved. If two models share acceptable current likelihoods and generate no accessible predictive separation after realistic systematics are included, the result is an answer about the present limits of cosmological information. It prevents an arbitrary extrapolation from being mistaken for a future observation and identifies what kind of data could change the status.
+
+Limitations include incomplete parameterizations, prior-dominated apparent fate weights, shared calibration bias, degrees of freedom absent from a low-redshift model, and particle-physics uncertainty in vacuum calculations. Human review remains mandatory before execution or publication. Reviewers must verify source metadata against publisher pages when browser access becomes available, approve data and covariance versions, evaluate systematic compatibility, and examine every mapping from phenomenological fit to late-time theory. The requested in-app browser could not be connected because its local runtime was blocked by an ACL failure. The source registry therefore records dual-engine metadata cross-validation rather than claiming direct publisher-page inspection.
+
+\section{Conclusion}
+
+The universe's future cannot presently be reduced to one observed countdown. Direct evidence supports a constrained history of expansion and keeps standard continued acceleration viable within its declared model. Conditional theories demonstrate that finite-time disruption, recollapse, and vacuum transition are physically distinct possibilities. \fateledger{} makes every fate statement carry a finite data domain, an explicit continuation, an event definition, and a potential observational discriminator.
+
+The framework will support a conditional fate classification when a globally defined model and evidence warrant one. It will report vacuum stability separately from expansion. When accessible observations cannot discriminate compatible futures, it will return an explicit unresolved status instead of manufacturing a date. That is the path from an evocative question about cosmic death to a falsifiable program of cosmological inference.
+
+\appendices
+\section{Minimum Assumption-Card Schema}
+
+Each model card contains: model identifier; field equations or parameterization; data-validity interval; data releases and likelihood versions; priors and nuisance parameters; asymptotic continuation class; event definition; allowed fate labels; numerical-integral domain; known theoretical pathologies; source keys; and human-review approval. A card missing the continuation class may report finite-domain parameter constraints but is barred from emitting a future-time result.
+
+\section{Source and Proposal Status}
+
+This document is a research-plan artifact derived from the Survey, Idea, and ExperimentDesign handoffs in the same project directory. All novel contributions in this report are proposed methods, hypotheses, and decision rules. No telescope data, likelihood run, numerical simulation, laboratory experiment, or new physical observation is claimed.
+
+\begin{thebibliography}{00}
+\bibitem{planck2018} Planck Collaboration, "Planck 2018 results. VI. Cosmological parameters," \emph{Astronomy \& Astrophysics}, vol. 641, Art. no. A6, 2020, doi: 10.1051/0004-6361/201833910.
+\bibitem{desi2025} DESI Collaboration, "DESI 2024 VI: cosmological constraints from the measurements of baryon acoustic oscillations," \emph{Journal of Cosmology and Astroparticle Physics}, vol. 2025, no. 02, Art. no. 021, 2025, doi: 10.1088/1475-7516/2025/02/021.
+\bibitem{escamilla2024} L. A. Escamilla, W. Giare, E. Di Valentino, R. C. Nunes, and S. Vagnozzi, "The state of the dark energy equation of state circa 2023," \emph{Journal of Cosmology and Astroparticle Physics}, vol. 2024, no. 05, Art. no. 091, 2024, doi: 10.1088/1475-7516/2024/05/091.
+\bibitem{huterer2018} D. Huterer and D. Shafer, "Dark energy two decades after: observables, probes, consistency tests," \emph{Reports on Progress in Physics}, vol. 81, no. 1, Art. no. 016901, 2018, doi: 10.1088/1361-6633/aa997e.
+\bibitem{caldwell2003} R. R. Caldwell, M. Kamionkowski, and N. N. Weinberg, "Phantom energy and cosmic doomsday," \emph{Physical Review Letters}, vol. 91, Art. no. 071301, 2003, doi: 10.1103/PhysRevLett.91.071301.
+\bibitem{kallosh2003} R. Kallosh, J. Kratochvil, A. Linde, E. V. Linder, and M. Shmakova, "Observational bounds on cosmic doomsday," \emph{Journal of Cosmology and Astroparticle Physics}, vol. 2003, no. 10, Art. no. 015, 2003, doi: 10.1088/1475-7516/2003/10/015.
+\bibitem{markkanen2018} T. Markkanen, A. Rajantie, and S. Stopyra, "Cosmological aspects of Higgs vacuum metastability," \emph{Frontiers in Astronomy and Space Sciences}, vol. 5, Art. no. 40, 2018, doi: 10.3389/fspas.2018.00040.
+\bibitem{chigusa2018} S. Chigusa, T. Moroi, and Y. Shoji, "Decay rate of electroweak vacuum in the standard model and beyond," \emph{Physical Review D}, vol. 97, Art. no. 116012, 2018, doi: 10.1103/PhysRevD.97.116012.
+\bibitem{loeb2011} A. Loeb, "Cosmology with hypervelocity stars," \emph{Journal of Cosmology and Astroparticle Physics}, vol. 2011, no. 04, Art. no. 023, 2011, doi: 10.1088/1475-7516/2011/04/023.
+\end{thebibliography}
+\end{document}
+
+

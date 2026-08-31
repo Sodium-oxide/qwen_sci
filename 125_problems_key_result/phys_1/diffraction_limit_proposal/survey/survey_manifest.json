@@ -1,0 +1,32 @@
+{
+  "schema_version": "survey_manifest_v1",
+  "project_id": "phys_1_diffraction_limit_proposal",
+  "survey_run_id": "survey-phys1-diffraction-001",
+  "project_context_fingerprint": "ctx-phys1-diffraction-v1",
+  "topic": "Is there a diffraction limit?",
+  "canonical_artifacts": {
+    "survey_markdown": "survey/survey.md",
+    "evidence_plan": "survey/survey_evidence_plan.json",
+    "gap_ledger": "survey/survey_gap_ledger.json",
+    "idea_handoff": "survey/survey_idea_handoff.json"
+  },
+  "source_registry": [
+    {"source_key":"S1","citation":"S. W. Hell et al., The 2015 super-resolution microscopy roadmap, Journal of Physics D: Applied Physics, vol. 48, 443001, 2015.","doi":"10.1088/0022-3727/48/44/443001","evidence_role":"Mechanism taxonomy and modality trade-offs","sources":["openalex","anysearch"],"cross_validated":true},
+    {"source_key":"S2","citation":"B. Huang, H. P. Babcock, and X. Zhuang, Breaking the Diffraction Barrier: Super-Resolution Imaging of Cells, Cell, vol. 143, no. 7, pp. 1047-1058, 2010.","doi":"10.1016/j.cell.2010.12.002","evidence_role":"Conceptual framework for fluorescence super-resolution","sources":["openalex","anysearch"],"cross_validated":true},
+    {"source_key":"S3","citation":"D. Baddeley and J. Bewersdorf, Biological Insight from Super-Resolution Microscopy: What We Can Learn from Localization-Based Images, Annual Review of Biochemistry, vol. 87, pp. 965-989, 2018.","doi":"10.1146/annurev-biochem-060815-014801","evidence_role":"Localization precision, sampling, and biological interpretation","sources":["openalex","anysearch"],"cross_validated":true},
+    {"source_key":"S4","citation":"J. Valli et al., Seeing beyond the limit: A guide to choosing the right super-resolution microscopy technique, Journal of Biological Chemistry, vol. 297, 100791, 2021.","doi":"10.1016/j.jbc.2021.100791","evidence_role":"Application-specific technique selection","sources":["openalex","anysearch"],"cross_validated":true},
+    {"source_key":"S5","citation":"E. Wegel et al., Imaging cellular structures in super-resolution with SIM, STED and Localisation Microscopy: A practical comparison, Scientific Reports, vol. 6, 27290, 2016.","doi":"10.1038/srep27290","evidence_role":"Cross-modality practical comparison and pitfalls","sources":["openalex","anysearch"],"cross_validated":true},
+    {"source_key":"S6","citation":"M. Lelek et al., Single-molecule localization microscopy, Nature Reviews Methods Primers, vol. 1, 39, 2021.","doi":"10.1038/s43586-021-00038-x","evidence_role":"SMLM acquisition, reconstruction, and artifact controls","sources":["openalex","anysearch"],"cross_validated":true},
+    {"source_key":"S7","citation":"F. Balzarotti et al., Nanometer resolution imaging and tracking of fluorescent molecules with minimal photon fluxes, Science, vol. 355, no. 6325, pp. 606-612, 2017.","doi":"10.1126/science.aak9913","evidence_role":"MINFLUX information-efficient localization","sources":["openalex","anysearch"],"cross_validated":true},
+    {"source_key":"S8","citation":"R. Schmidt et al., MINFLUX nanometer-scale 3D imaging and microsecond-range tracking on a common fluorescence microscope, Nature Communications, vol. 12, 1478, 2021.","doi":"10.1038/s41467-021-21652-z","evidence_role":"MINFLUX implementation and stated precision conditions","sources":["openalex","anysearch"],"cross_validated":true},
+    {"source_key":"S9","citation":"S. Reinhardt et al., Ångström-resolution fluorescence microscopy, Nature, vol. 617, pp. 711-716, 2023.","doi":"10.1038/s41586-023-05925-9","evidence_role":"Sequential imaging and molecular-scale claims","sources":["openalex","anysearch"],"cross_validated":true},
+    {"source_key":"S10","citation":"F. U. Zwettler et al., Molecular resolution imaging by post-labeling expansion single-molecule localization microscopy, Nature Communications, vol. 11, 3388, 2020.","doi":"10.1038/s41467-020-17086-8","evidence_role":"Expansion-enabled localization and labeling error considerations","sources":["openalex","anysearch"],"cross_validated":true},
+    {"source_key":"S11","citation":"R. F. Laine et al., NanoJ: a high-performance open-source super-resolution microscopy toolbox, Journal of Physics D: Applied Physics, vol. 52, 163001, 2019.","doi":"10.1088/1361-6463/ab0261","evidence_role":"Quality assessment and reproducible computational workflows","sources":["openalex","anysearch"],"cross_validated":true},
+    {"source_key":"S12","citation":"N. Gustafsson et al., Fast live-cell conventional fluorophore nanoscopy with ImageJ through super-resolution radial fluctuations, Nature Communications, vol. 7, 12471, 2016.","doi":"10.1038/ncomms12471","evidence_role":"Computational/live-cell trade-off example","sources":["openalex","anysearch"],"cross_validated":true}
+  ],
+  "verification_caveats": [
+    "The requested in-app browser could not start because its local runtime was blocked by a Windows ACL failure.",
+    "Cross-validation means OpenAlex and AnySearch metadata agreement; direct publisher-page verification remains a human-review item.",
+    "The survey distinguishes demonstrated technique performance from the proposed study's unexecuted outcomes."
+  ]
+}

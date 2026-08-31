@@ -1,0 +1,28 @@
+{
+  "schema_version":"author_handoff_v1",
+  "project_id":"phys_1_diffraction_limit_proposal",
+  "survey_run_id":"survey-phys1-diffraction-001",
+  "project_context_fingerprint":"ctx-phys1-diffraction-v1",
+  "selected_idea_id":"idea-traceres-001",
+  "research_design_path":"experiment_design/research_design.json",
+  "document_status":"PROPOSAL_NO_OBSERVED_RESULTS",
+  "allowed_source_keys":["S1","S2","S3","S4","S5","S6","S7","S8","S9","S10","S11","S12"],
+  "required_unknowns":[
+    "No universal numerical diffraction limit answers every optical measurement task.",
+    "A localization-precision result does not by itself establish structural resolution.",
+    "Calibration performance transfers only within its declared modality, sample, and processing scope.",
+    "Future empirical performance of TraceRes remains unobserved."
+  ],
+  "required_human_review_items":[
+    "Verify source metadata against publisher pages when the requested browser is available.",
+    "Approve any future microscope, illumination, live-cell, fluorophore, sample, or data-permission plan.",
+    "Review public language for scope, artifact alternatives, and unsupported structural claims."
+  ],
+  "writing_constraints":[
+    "Write in English and IEEE conference style.",
+    "Do not include acknowledgement, funding, author biography, or personal-note sections.",
+    "Do not report microscopy acquisition, benchmark performance, observed biological structure, or a completed super-resolution result.",
+    "State the physical and methodological conclusions directly within evidence scope.",
+    "Use only registered source keys and distinguish conventional diffraction, localization precision, and structural resolution."
+  ]
+}

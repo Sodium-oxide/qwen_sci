@@ -1,0 +1,77 @@
+{
+  "schema_version": "research_design_v1",
+  "project_id": "astr_10_alone_universe_proposal",
+  "survey_run_id": "survey-astr10-life-detection-001",
+  "project_context_fingerprint": "ctx-astr10-life-detection-v1",
+  "idea_result_path": "idea/idea_result.json",
+  "selected_idea_id": "idea-lifetrace-001",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "automatic_execution_permitted": false,
+    "observed_results": [],
+    "human_review_required": true,
+    "reason": "The proposal specifies life-detection evidence analysis; no observing, laboratory, spacecraft, or data-analysis result has been executed."
+  },
+  "research_brief": {
+    "title": "LifeTrace: contextual multi-modal evidence assessment for life detection",
+    "central_hypotheses": ["H1", "H2", "H3", "H4"],
+    "research_object": "Candidate biological or technological activity beyond Earth.",
+    "falsification_conditions": [
+      "Context and provenance do not improve calibration or false-candidate control.",
+      "Sensitivity cards do not change negative-result interpretation.",
+      "Shared ledger does not reduce alternative-explanation omission.",
+      "Utility-guided follow-up does not outperform fixed follow-up at matched cost."
+    ]
+  },
+  "template_routing": {
+    "primary": "computational_digital",
+    "secondary": "mathematics_theory",
+    "scope_assessment": "low physical execution risk; medium scientific-inference and communication risk"
+  },
+  "evidence_statuses": [
+    "CONTEXT_INSUFFICIENT",
+    "ABIOTIC_OR_ARTIFACT_NOT_EXCLUDED",
+    "BIOLOGICAL_CANDIDATE_REQUIRES_FOLLOW_UP",
+    "TECHNOLOGICAL_CANDIDATE_REQUIRES_INDEPENDENT_CONFIRMATION",
+    "NEGATIVE_RESULT_SENSITIVITY_LIMITED"
+  ],
+  "hypothesis_library": [
+    "H_bio",
+    "H_tech",
+    "H_abiotic",
+    "H_artifact",
+    "H_interference",
+    "H_contamination"
+  ],
+  "data_plan": {
+    "branches": ["remote_exoplanet_spectroscopy", "technosignature_time_frequency_data", "in_situ_ocean_world_measurement"],
+    "selection_rule": "Use only human-approved public or authorized data with complete calibration, provenance, and license records.",
+    "controls": ["data_release", "pipeline_version", "instrument_card", "recovery_curve", "provenance", "hypothesis_library", "human_review_record"]
+  },
+  "analysis_plan": {
+    "steps": [
+      "Pre-register hypotheses, thresholds, sensitivity requirements, and release policy.",
+      "Validate branch-specific context, provenance, calibration, and recovery fields.",
+      "Assess each registered alternative explanation before candidate escalation.",
+      "Rank feasible follow-ups by expected hypothesis discrimination.",
+      "Emit bounded candidate or sensitivity-limited negative status.",
+      "Conduct human-reviewed source and interpretation audit."
+    ],
+    "metrics": [
+      "candidate-confidence calibration",
+      "false-positive and false-negative rate",
+      "alternative-explanation omission rate",
+      "recovery-curve coverage",
+      "follow-up information gain per approved cost",
+      "prior and retrieval sensitivity",
+      "provenance completeness"
+    ]
+  },
+  "risk_register": [
+    {"risk": "A single feature is represented as proof of life.", "mitigation": "Mandatory alternative-hypothesis and context ledger."},
+    {"risk": "A radio event is terrestrial interference or instrument artifact.", "mitigation": "Injection recovery, interference catalog, localization, repeat, and independent-observatory requirements."},
+    {"risk": "In-situ evidence is contaminated or lacks context.", "mitigation": "Chain of custody, blanks, replicate assay, geological provenance, and planetary-protection review."},
+    {"risk": "A finite non-detection is miscommunicated as universal absence.", "mitigation": "Only sensitivity-limited negative status is permitted."}
+  ],
+  "source_keys": ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11"]
+}

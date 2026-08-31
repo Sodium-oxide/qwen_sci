@@ -1,0 +1,69 @@
+{
+  "schema_version": "survey_evidence_plan_v1",
+  "project_id": "astr_5_universe_fate_proposal",
+  "survey_run_id": "survey-astr5-universe-fate-001",
+  "research_question": "Which observationally permitted late-time expansion histories lead to distinct cosmic-fate classes, and which measurements can discriminate them without extrapolating finite-redshift fits beyond their stated domain?",
+  "subhypotheses": [
+    {
+      "id": "SH1",
+      "claim": "Finite-redshift constraints do not by themselves determine the a-to-infinity continuation of dark energy.",
+      "evidence_required": ["CMB/BAO/SN constraints", "dark-energy inference review"],
+      "allowed_sources": ["P1", "P2", "P3", "P4"],
+      "coverage_status": "direct_for_observed_interval_only"
+    },
+    {
+      "id": "SH2",
+      "claim": "Expansion fate and false-vacuum decay are separable mechanisms requiring separate evidence.",
+      "evidence_required": ["phantom/recollapse fate models", "vacuum-decay calculation or review"],
+      "allowed_sources": ["P5", "P6", "P7", "P8"],
+      "coverage_status": "direct_mechanism_level"
+    },
+    {
+      "id": "SH3",
+      "claim": "Finite-time disruption is conditional on sustained phantom-like dynamics and cannot be inferred from acceleration alone.",
+      "evidence_required": ["constant-w phantom fate derivation", "combined-probe equation-of-state constraint"],
+      "allowed_sources": ["P3", "P5"],
+      "coverage_status": "conditional_model_only"
+    },
+    {
+      "id": "SH4",
+      "claim": "A fate-oriented, multi-probe design should report the discriminating observable and the remaining observational non-identifiability.",
+      "evidence_required": ["multi-probe constraints", "probe/systematics review"],
+      "allowed_sources": ["P1", "P2", "P3", "P4"],
+      "coverage_status": "design_gap"
+    }
+  ],
+  "writing_rules": [
+    "Do not state a minimum time to universal death as an established observation.",
+    "Do not turn a fitted w0-wa parametrization into an asymptotic future law unless an explicit continuation assumption is declared.",
+    "Do not call a planned analysis an observed result.",
+    "Report vacuum decay separately from expansion fate.",
+    "Classify evidence as direct, conditional, background, or unresolved."
+  ],
+  "search_provenance": [
+    {
+      "query": "Planck 2018 results VI cosmological parameters",
+      "engines": ["OpenAlex", "AnySearch"],
+      "result_status": "dual_engine_completed",
+      "used_source_keys": ["P1", "P2"]
+    },
+    {
+      "query": "DESI 2024 VI cosmological constraints BAO",
+      "engines": ["OpenAlex", "AnySearch"],
+      "result_status": "dual_engine_completed",
+      "used_source_keys": ["P2"]
+    },
+    {
+      "query": "phantom energy cosmic doomsday Big Rip equation state future universe",
+      "engines": ["OpenAlex", "AnySearch"],
+      "result_status": "dual_engine_completed",
+      "used_source_keys": ["P3", "P5", "P6"]
+    },
+    {
+      "query": "standard model electroweak vacuum metastability cosmology false vacuum decay review",
+      "engines": ["OpenAlex", "AnySearch"],
+      "result_status": "dual_engine_completed",
+      "used_source_keys": ["P7", "P8"]
+    }
+  ]
+}

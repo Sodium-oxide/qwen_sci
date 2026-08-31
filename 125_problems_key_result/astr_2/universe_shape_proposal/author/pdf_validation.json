@@ -1,0 +1,27 @@
+{
+  "schema": "pdf_validation_v1",
+  "pdf": "universe_shape_report.pdf",
+  "page_count": 7,
+  "minimum_page_requirement": 7,
+  "nonempty_text_pages": 7,
+  "page_size": "letter (612 x 792 pt)",
+  "embedded_fonts": true,
+  "rendered_pages_inspected": [
+    1,
+    4,
+    7
+  ],
+  "visual_layout_status": "passed",
+  "unresolved_references_or_errors": [],
+  "overfull_hbox_warnings": [],
+  "residual_layout_notes": [
+    "Two non-clipping underfull hbox warnings remain in long technical paragraphs.",
+    "One non-clipping underfull vbox warning remains on the first page; visual inspection found no overlap, truncation, or unreadable content.",
+    "Last-page reference flow is balanced with the IEEE template trigger."
+  ],
+  "acknowledgement_sections": [],
+  "markdown_artifacts": [],
+  "observed_results_claims": [],
+  "source_metadata_validation": "OpenAlex and AnySearch cross-validated DOI metadata for the cited source registry. DOI landing-page requests were attempted but the resolver returned HTTP 403 in this environment; no source was upgraded beyond metadata-level verification.",
+  "status": "passed"
+}

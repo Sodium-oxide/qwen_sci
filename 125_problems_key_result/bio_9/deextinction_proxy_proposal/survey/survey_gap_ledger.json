@@ -1,0 +1,16 @@
+{
+  "schema": "survey_gap_ledger_v1",
+  "accepted_gaps": [
+    {"id": "G1", "statement": "Terminology conflates cloning, selective breeding, editing, and ecological proxy creation.", "status": "accepted", "evidence": ["S6", "S8"]},
+    {"id": "G2", "statement": "Ancient-DNA reconstruction uncertainty is not routinely propagated into proposed trait claims.", "status": "accepted", "evidence": ["S1", "S2", "S3"]},
+    {"id": "G3", "statement": "Genomic similarity is not validated as a measure of developmental, behavioral, or ecological proxy fidelity.", "status": "accepted", "evidence": ["S4", "S5", "S9"]},
+    {"id": "G4", "statement": "Developmental, welfare, and multigenerational uncertainty are often detached from technical feasibility narratives.", "status": "accepted", "evidence": ["S6", "S9", "S11"]},
+    {"id": "G5", "statement": "Ecological benefit claims lack site-specific counterfactual comparison and adverse-outcome analysis.", "status": "accepted", "evidence": ["S7", "S10"]},
+    {"id": "G6", "statement": "Governance, rights-holder participation, and conservation opportunity costs are insufficiently operationalized.", "status": "accepted", "evidence": ["S6", "S8", "S11", "S12"]},
+    {"id": "G7", "statement": "No standard falsifiable readiness benchmark cleanly distinguishes reject, abstain, evidence-needed, and conditionally reviewable proposals.", "status": "accepted", "evidence": ["S6", "S7", "S9", "S10", "S11"]}
+  ],
+  "rejected_gaps": [
+    {"id": "R1", "statement": "A single genomic similarity percentage can decide whether a species has been restored.", "reason": "Biologically under-specified and contradicted by the evidence boundary."},
+    {"id": "R2", "statement": "A mammoth-like proxy should be treated as proof that dinosaurs can be recreated.", "reason": "Deep-time DNA preservation and developmental reconstruction are non-comparable."}
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "survey_manifest_v1",
+  "project_id": "astr_1_extra_dimensions_proposal",
+  "stage": "survey",
+  "status": "completed_with_external_verification_limitation",
+  "research_topic": "How many dimensions are there in space?",
+  "canonical_artifacts": ["survey.md","survey_evidence_plan.json","survey_gap_ledger.json","survey_idea_handoff.json"],
+  "source_discovery": {
+    "requested_engines": ["OpenAlex","AnySearch"],
+    "requested_browser": "Codex in-app browser",
+    "status": "blocked_by_local_windows_acl_error",
+    "handling": "Sources are explicitly marked source-identified/browser-verification-pending rather than falsely represented as newly cross-verified."
+  },
+  "design_boundary": "PROPOSAL_NO_OBSERVED_RESULTS"
+}

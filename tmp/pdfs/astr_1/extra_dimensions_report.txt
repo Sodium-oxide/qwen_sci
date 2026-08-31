@@ -1,0 +1,436 @@
+        How Many Dimensions Are There in Space?
+        DimensionBridge: A Cross-Scale Falsifiability
+            Design for Extra-Dimension Models
+                    Research Proposal Generated from a Four-Agent Evidence-to-Design Workflow
+                                        Survey → Idea → ExperimentDesign → Author
+                Theoretical physics, precision gravity, collider phenomenology, and gravitational-wave inference
+
+
+   Abstract—We observe three extended spatial dimensions, but         null result constrains an analysis model, parameter domain,
+this fact does not determine the dimensionality of a funda-           and systematic treatment; it does not prove that every higher-
+mental theory. Extra dimensions may be compact, warped,               dimensional completion has been ruled out.
+inaccessible to standard-model fields, or expressed only through
+model-dependent modifications of gravitational or particle phe-          This paper proposes DimensionBridge, an evidence-to-
+nomenology. This paper develops DimensionBridge, a design-            decision framework for preserving these distinctions. The
+only cross-scale falsifiability atlas for extra-dimension models.     target is not a universal dimension count. The target is a
+Rather than attempting to measure a universal “number of              falsifiability map: which extra-dimension model classes pro-
+dimensions,” the framework records a model class, parameter
+                                                                      duce distinguishable signals in which channels, under which
+domain, low-energy translation, channel-specific observable, like-
+lihood assumptions, competing explanations, and an auditable          assumptions, and with what conditions for exclusion, compat-
+model status. It connects short-range gravity, collider missing-      ibility, non-identifiability, or independent replication.
+momentum or resonance searches, gravitational-wave propa-                The proposal is the Author-stage result of a four-agent work-
+gation, and cosmological/astrophysical constraints only when          flow. The Survey stage constructed a source-bound evidence
+their parameter conventions and independence conditions per-
+mit combination. The output categories are excluded within
+                                                                      boundary and research-gap ledger. The Idea stage compared
+assumptions, currently compatible, sensitivity-limited, observa-      a parameter registry, single-channel extensions, a cross-scale
+tionally unidentifiable, and requires independent test. Three         atlas, and a speculative compactification score; it selected the
+testable propositions concern translation discipline, cross-channel   atlas. The ExperimentDesign stage converted that direction
+complementarity, and anomaly attribution. The proposal reports        into a computational synthesis and likelihood-translation plan.
+no new measurement, no detector reanalysis, and no empirical
+discovery. Its contribution is a rigorous way to say what existing
+                                                                      This paper organizes those artifacts as an IEEE-style research
+and future observations can, and cannot, establish about extra        proposal. It does not report a new torsion-balance measure-
+spatial dimensions.                                                   ment, collider analysis, gravitational-wave catalog reanalysis,
+   Index Terms—extra dimensions, string theory, Kaluza–Klein          cosmological inference, or extra-dimension discovery.
+theory, short-range gravity, collider phenomenology, gravitational
+waves, model selection, falsifiability                                     II. E VIDENCE B OUNDARY AND R ESEARCH G AP
+                       I. I NTRODUCTION                               A. Observed dimensions, formal dimensions, and effective
+                                                                      dimensions
+   Space appears to have three extended dimensions: length,
+width, and height. Together with time, these coordinates                 The operationally established statement is modest and
+organize every ordinary laboratory measurement and the four-          strong: at presently accessible macroscopic and microscopic
+dimensional effective description used by general relativity and      scales, physical observations are well described by three ex-
+the Standard Model. This observation is sometimes placed              tended spatial directions and one time direction. A dimension
+beside a very different statement: perturbative superstring           count beyond this baseline requires a physical model that
+theories are naturally formulated in ten spacetime dimensions,        links hidden structure to an observable departure from four-
+and an eleven-dimensional limit is associated with M-theory           dimensional effective physics.
+[1], [2]. The juxtaposition can make “How many dimensions                Kaluza–Klein reasoning provides the canonical illustra-
+are there?” sound like a question with a single numerical             tion. A compact spatial direction can be invisible to low-
+answer awaiting an experiment.                                        energy position measurements while inducing a tower of
+   It is not. A spacetime dimension can be extended or                modes or effective fields after dimensional reduction. String
+compact; it can support only gravity or also other fields; it         theory provides another motivation: consistent perturbative
+can be flat or warped; and it can affect accessible physics           superstrings live in ten spacetime dimensions, while Witten’s
+through a force law, a particle spectrum, a production rate,          strong-coupling argument connects several string theories to
+a propagation law, or not at all in an accessible regime. The         an eleven-dimensional description [1], [2]. Neither result says
+number in a formal construction therefore is not automatically        that a detector must reveal six or seven additional spatial
+a direct observable. Conversely, a laboratory or astrophysical        directions at a fixed accessible scale. The outcome depends on
+compactification, moduli, branes, stabilization, supersymmetry      same approximations; it becomes misleading when they are
+breaking, and the low-energy spectrum.                              combined without recording their differing assumptions.
+   Two influential effective scenarios make the gap from
+formal dimension to observability explicit. In ADD models,          C. Research gaps
+several flat compact dimensions can lower the fundamental              The central gap is not the absence of clever experiments. It
+gravity scale relative to the observed four-dimensional Planck      is an inference problem. A cross-scale literature often contains
+scale [3]. In RS models, a warped fifth direction reshapes the      individual limits, forecast curves, and theory constructions
+relation between scales and can create distinct localization or     without an auditable connection between them. Table I records
+Kaluza–Klein phenomenology [4], [5]. These models do not            the gaps carried from the Survey stage.
+predict the same signatures and must not be placed into one
+unqualified “extra dimensions” likelihood.                                  III. D IMENSION B RIDGE H YPOTHESIS AND
+                                                                                         A RCHITECTURE
+B. Four complementary observational routes
+                                                                    A. Testable propositions
+  Short-range gravity experiments search for departures from
+Newtonian behavior at small separations. A common phe-                 DimensionBridge makes three propositions that can be
+nomenological form is                                               evaluated by a preregistered case-study set.
+                                                                    • H1 – Translation discipline: a limit changes a model
+                       Gm1 m2 [︂          (︂ r )︂]︂                    status only where a source-bound model-to-observable map
+           V (r) = −             1 + α exp −        ,        (1)       covers the relevant parameter region. The framework should
+                         r                   λ
+                                                                       prevent isolated null results from becoming false global
+   where α is a relative interaction strength and λ is its range.      exclusions.
+Equation (1) is experimentally useful because it converts a         • H2 – Complementarity discipline: jointly using genuinely
+force measurement into a likelihood over (α, λ). It is not             compatible and independent channels should improve clas-
+the universal law of extra dimensions. The translation to              sification of selected parameter regions over any single
+a compactification radius, number of dimensions, or brane              channel, without manufacturing precision from duplicated
+coupling depends on the model. Recent torsion-balance work             information.
+improves bounded regions of such non-Newtonian parameter            • H3 – Discovery discipline: a putative excess remains
+space [6]; the scientific interpretation must retain the transla-      a requirement for independent testing until it survives a
+tion conditions.                                                       preregistered alternative-explanation and replication matrix.
+   Collider searches can probe high-energy versions of the             These are scientific claims about an inference architecture,
+same broad theoretical territory. In ADD-like theories, in-         not claims that higher dimensions have been detected. H1
+accessible Kaluza–Klein excitations may appear as missing           fails if removal of a compactification or EFT assumption
+transverse momentum, while warped models can motivate               leaves a numerical exclusion unchanged. H2 fails if a joint
+resonances or other structures. ATLAS and CMS analyses              result depends on incompatible conventions, correlated data
+publish limits under explicit signal, effective-field-theory, and   treated as independent, or prior-volume artifacts. H3 fails if
+detector assumptions [7], [8]. Their strength is high energy        the framework uniquely attributes a generic force, resonance,
+and controlled event reconstruction; their limitation is that a     or propagation deviation to extra dimensions without discrim-
+reported mass-scale bound is conditional on the analysis model      inating observables.
+and treatment of ultraviolet validity.
+   Gravitational-wave observations add a long-baseline prop-        B. Architecture
+agation channel. A crossover to higher-dimensional propaga-
+tion can alter amplitude damping or other distance relations,          Fig. 1 shows the chain of custody for an inference. A model
+as proposed for standard-siren tests [10]. General-relativity       class is paired with parameter and assumption cards, trans-
+tests using compact-binary catalogs constrain specified prop-       lated into channel-specific predictions, tested for likelihood-
+agation deviations [11]. But nonstandard damping can also           combination compatibility and competing explanations, and
+arise from calibration, source-population, cosmological, or         finally routed into a status. The status is not an award
+modified-gravity effects not uniquely tied to an extra dimen-       of truth. ‘CURRENTLY COMPATIBLE‘ means current data
+sion. A gravitational-wave residual should therefore trigger a      do not exclude the declared region. ‘OBSERVATIONALLY
+competing-model test, not a direct dimension count.                 UNIDENTIFIABLE‘ means that no valid accessible observ-
+   Astrophysical and cosmological arguments can reach pa-           able map is available; it must not be promoted to support.
+rameter ranges inaccessible to laboratories, but they intro-
+duce their own history-dependent assumptions. For example,          C. Formal combination rule
+energy-loss reasoning in compact objects constrains selected          Let M denote a model class, θ its physical parameters,
+large-extra-dimension scenarios while relying on astrophysical      Oc the observation from channel c, fc (M, θ) the declared
+modeling and the chosen bulk spectrum [9]. Complementarity          prediction map, and ηc channel-specific nuisance parameters.
+is valuable precisely because the channels do not share the         The planned joint object is
+                                                                TABLE I
+                              E VIDENCE - DERIVED GAPS AND THE CORRESPONDING D IMENSION B RIDGE RESPONSE .
+
+     ID          Gap                                                             DimensionBridge response
+     G1          Observed spatial dimensions, formal string-theory dimensions,   Require every claim to begin with a model class and accessible scale.
+                 compactification, and modified-gravity phenomenology are
+                 commonly conflated.
+     G2          Experimental limits are often detached from compactification,   Attach a translation card to each source likelihood or limit.
+                 warping, coupling, and EFT-validity assumptions.
+     G3          Laboratory, collider, GW, and cosmological information lack     Build a parameter-coverage and overlap atlas before likelihood
+                 a common, auditable complementarity structure.                  combination.
+     G4          Null results are overstated as global no-go theorems; formal    Report bounded status categories rather than a yes/no answer.
+                 consistency is overstated as empirical confirmation.
+     G5          Candidate anomalies lack a shared alternative-explanation and   Require competing-model, systematic, and independent-channel ma-
+                 replication rule.                                               trices.
+     G6          Compatibility with current data is confused with empirical      Use an explicit observational-identifiability audit.
+                 support when no accessible observable exists.
+
+
+
+                                                           Extra-dimension model registry
+                                                       ADD / RS / propagation / compactification
+
+
+
+
+                                                            Parameter and assumption card
+                                                         geometry, scale, coupling, EFT validity
+
+
+
+
+                                      Collider searches
+                     Short-range gravity                                                        Gravitational waves
+                                                                                                              Cosmology and astrophysics
+                     force-lawmissing  momentum / resonances
+                               likelihood                                                      propagation / damping
+                                                                                                              history-dependent constraints
+
+
+
+
+                                                           Translation and combination audit
+                                                     valid map? independent? alternatives covered?
+
+
+
+
+           EXCLUDED WITHIN ASSUMPTIONS                                                                   REQUIRES INDEPENDENT TEST
+              CURRENTLY COMPATIBLE                                                                            not a discovery claim
+                                                             SENSITIVITY LIMITED
+                                                       OBSERVATIONALLY UNIDENTIFIABLE
+
+
+Fig. 1.        DimensionBridge chain from theory statement to bounded model status. The editable source is supplied as
+figures/dimensionbridge_architecture.drawio. A channel enters joint inference only after translation, independence, and alternative-
+explanation checks.
+
+
+
+                                                                              Before any combination, the atlas computes an interpretable
+                            ∏︂                                              coverage quantity,
+      Ljoint (M, θ) =               Lc [Oc | fc (M, θ), ηc ] .       (2)
+                                                                                                                 ∑︂
+                        c∈K(M,θ)
+                                                                                                   C(M, θ) =           wc ⊮c (M, θ),                     (3)
+                                                                                                                   c
+   The set K is intentionally restricted. A channel can appear
+in Eq. (2) only if its units, parameter convention, likelihood                where ⊮c = 1 only if channel c possesses a valid observable
+construction, validity assumptions, and dependence with other               map and declared sensitivity at the point (M, θ). The weight
+channels are documented as compatible. Equation (2) is a                    wc records methodological independence and robustness; it is
+future analysis structure; this report does not calculate it from           not a subjective vote for the theory. A parameter region with
+data.                                                                       low C is not protected from criticism, but it must be reported
+as sensitivity-limited or observationally unidentifiable rather   5) ‘REQUIRES INDEPENDENT TEST‘: a candidate resid-
+than as supported.                                                    ual exists in a stated analysis but lacks the required
+                                                                      alternative-explanation and cross-channel/replication test.
+                  IV. D ESIGN -O NLY M ETHODS                        The distinction between the third and fourth categories
+A. Model registry and source cards                                is important. Sensitivity-limited science has a defined future
+                                                                  measurement requirement. Observationally unidentifiable sci-
+   The study begins with model classes, not experiments.
+                                                                  ence lacks a discriminating accessible prediction under the
+Table II defines the planned registry. The purpose is not
+                                                                  stated model description; no amount of rhetorical confidence
+to exhaust every string compactification. It is to include
+                                                                  converts that state into evidence.
+representative model-to-observable chains whose distinctions
+matter for inference.                                             D. Stress tests
+   For every published input, a source card stores the ex-           Five planned stress tests assess the decision logic. First,
+perimental or theoretical source identifier, observable defini-   translation ablation removes a compactification, warping, or
+tion, model class, parameter units, confidence construction,      EFT-validity assumption. A limit that appears unaffected was
+nuisance treatment, selection or calibration assumptions, and     not being translated transparently. Second, channel ablation
+provenance. A separate translation card stores the logical        compares single-channel and compatible multi-channel sta-
+path from the source likelihood to a model parameter. The         tuses. A gain driven by duplicated information or inconsis-
+translation card has five nonmergeable fields: directly fitted    tent priors is a failure, not complementarity. Third, baseline
+observable; derived prediction; compactification/warping/UV       injection uses four-dimensional pseudo-observables generated
+prior; alternative explanation; and unknown region. This is the   from published uncertainty summaries to test false preference.
+design’s main defense against accidental overstatement.           Fourth, alternative-model injection tests whether a force, res-
+                                                                  onance, or propagation deviation is uniquely attributed without
+B. Channel eligibility and alternative explanations
+                                                                  a discriminator. Fifth, holdout registry testing withholds a
+   The potential channels have different inferential roles (Ta-   known analysis card and asks the atlas to forecast which
+ble III). A short-range force experiment may have a clean         model-observable relation it should constrain before seeing its
+geometry but limited reach in scale. A collider analysis may      final limit.
+reach high energy but depend on a signal model and event-
+selection interpretation. Gravitational-wave propagation has a               V. M ODEL AND O BSERVABLE M ATRIX
+long lever arm but shares degeneracies with source and cos-          Table IV is a planned evidence matrix. It does not contain
+mology modeling. Cosmological arguments can be sensitive          new exclusions or new sensitivity numbers. It shows the
+to bulk effects while depending on assumptions about cosmic       conclusions that each class can legitimately receive after the
+history. Treating them as interchangeable constraints would       required cards and tests have been completed.
+reduce, rather than improve, rigor.                                  The matrix directly answers the broad public question. An
+   The study includes an alternative-explanation matrix. An       experiment does not first “see a dimension” and then count
+anomaly can progress toward ‘REQUIRES INDEPENDENT                 it. It tests a prediction of a particular higher-dimensional
+TEST‘ only if its expected behavior differs from at least         effective model. The number of compact dimensions can enter
+one viable alternative in a future public observable. Without     the predicted density of modes, force-law scaling, or relation
+that discriminator, the appropriate status is ‘OBSERVATION-       among scales; it remains conditional on the rest of the theory.
+ALLY UNIDENTIFIABLE‘ for the attribution question, even           DimensionBridge makes that conditionality inspectable.
+if the anomaly itself remains scientifically interesting.
+                                                                   VI. FALSIFICATION , I DENTIFIABILITY, AND D ISCOVERY
+C. Status rules                                                                          D ISCIPLINE
+  DimensionBridge reports one of five statuses rather than a         The architecture should be rejected or revised if it cannot
+global verdict:                                                   fail. Table V states decisive failure conditions. They protect
+1) ‘EXCLUDED WITHIN ASSUMPTIONS‘: the declared                    against a familiar problem in fundamental physics communi-
+   model region conflicts with valid source likelihoods, with     cation: a mathematically exciting possibility can be made to
+   every translation assumption visible.                          sound like a confirmed object, while a carefully bounded null
+2) ‘CURRENTLY COMPATIBLE‘: available evidence does                result can be made to sound like a final disproof.
+   not exclude the stated region. This is not positive support       The discovery discipline is intentionally stronger than a
+   for the model.                                                 conventional goodness-of-fit comparison. A result becomes an
+3) ‘SENSITIVITY LIMITED‘: a concrete observable map               extra-dimension candidate only when it has a model-specific
+   exists, but current public likelihoods do not reach the        prediction that is incompatible with a four-dimensional base-
+   relevant region.                                               line and the most credible non-extra-dimensional alternatives,
+4) ‘OBSERVATIONALLY UNIDENTIFIABLE‘:                       no     survives systematic checks, and predicts a second accessible
+   validated low-energy observable map distinguishes              observable that an independent channel can test. This is a
+   the model from the baseline or alternatives.                   future decision rule; no current data analysis is performed here.
+                                                                 TABLE II
+                                        P LANNED MODEL REGISTRY AND REQUIRED TRANSLATION EVIDENCE .
+
+    Class                  Parameters to register                 Accessible observables                      Translation risk
+    M0: 4D baseline     GR/SM nuisance and systematic param- Force, collider, GW, and cosmology base- Baseline systematics can mimic a small
+                        eters.                                   line likelihoods.                         anomaly.
+    M1: ADD-like flat Number of dimensions, compactifica- Yukawa-like deviations, missing momen- EFT truncation and bulk-state assump-
+    compact dimensions tion scale/radius, fundamental gravity tum, astrophysical energy loss.              tions.
+                        scale, EFT cutoff.
+    M2: RS-like warped Warp scale, curvature ratio, brane local- Resonance and nonresonant collider signa- Spectrum and coupling conventions.
+    dimension           ization, resonance couplings.            tures; precision constraints.
+    M3: altered propa- Crossover scale, damping/dispersion GW amplitude/distance and multi- Degeneracy with cosmology, calibra-
+    gation ansatz       parameter, dimensional-flow form.        messenger propagation.                    tion, and non-extra-dimensional modi-
+                                                                                                           fied gravity.
+    M4: formal com- Geometry, moduli, stabilization, low- Only a concrete derived effective observ- May be observationally unidentifiable at
+    pactification class energy spectrum.                         able, if available.                       accessible scales.
+
+
+                                                                 TABLE III
+                                  C HANNEL ELIGIBILITY CRITERIA AND NON - EXTRA - DIMENSIONAL ALTERNATIVES .
+
+   Channel                    Eligible input                               Required alternatives                    Combination condition
+   Short-range gravity        Published force/residual likelihood with sep- Scalar fifth force, electromagnetic back- Shared Yukawa or model parame-
+                              aration, geometry, and calibration treatment. grounds, mass-distribution error.         ter convention is explicit.
+   Collider                   Public limit/likelihood with signal model, SM background mismodeling, ordinary Analysis regions are independent
+                              acceptance, uncertainty, and EFT treatment. resonance, dark-sector or other BSM or correlations are modeled.
+                                                                            signatures.
+   Gravitational waves        Propagation likelihood with waveform, cal- Calibration bias, lensing, population Distance/redshift and propagation
+                              ibration, source-population, and cosmology evolution, modified gravity without ex- parameter definitions agree.
+                              assumptions.                                  tra dimensions.
+   Cosmology/astrophysics     Bound with thermal history, stellar/compact- Astrophysical modeling, hidden-sector No contradictory thermal or
+                              object, and particle-content assumptions.     physics, uncertain history.               spectrum assumptions are silently
+                                                                                                                      pooled.
+
+
+                                                                   TABLE IV
+                         P LANNED STATUS LOGIC BY MODEL CLASS . T HIS IS A DESIGN MATRIX , NOT AN EXPERIMENTAL RESULT.
+
+   Class                 Primary evidence card       Cross-channel value              Key failure mode                 Permitted status logic
+   M1 ADD-like        Compactification/EFT trans- Can compare scale-dependent Cutoff, bulk spectrum, or pa- Exclude only within the declared
+                      lation plus laboratory or col- force behavior with high-energy rameter convention is hidden. ADD map; otherwise compatible
+                      lider likelihood.              missing-momentum interpreta-                                  or sensitivity-limited.
+                                                     tion.
+   M2 RS-like         Warp/coupling       spectrum Collider data can separate Ordinary BSM resonance or Requires independent test if an
+                      card plus resonance or selected spectra from generic detector-response alternatives excess lacks a unique spectral or
+                      nonresonant likelihood.        resonances if discriminating unresolved.                      channel signature.
+                                                     shapes are available.
+   M3 propagation     GW        damping/dispersion Multi-messenger distance and Calibration, cosmology, or Not extra-dimensional evidence
+                      card plus source/cosmology independent catalog tests can modified gravity mimics signal. without discriminating propaga-
+                      nuisance model.                test propagation consistency.                                 tion structure.
+   M4 formal compact- Derivation from compactifi- Cross-channel analysis begins No accessible observable map. Observationally unidentifiable,
+   ification          cation data to a low-energy only after this derivation exists.                               not empirically favored.
+                      observable.
+
+
+
+   Identifiability is not a rhetorical failure. Some compacti-                 VII. D ISCUSSION : W HAT C ROSS -S CALE I NFERENCE C AN
+fications may be consistent as formal theories while leaving                                          C HANGE
+no currently calculable, accessible low-energy trace. Reporting
+this state truthfully is more informative than calling it “not yet               The proposed framework changes the research question
+observed” in a way that implies inevitable discovery. It clarifies            in three ways. First, it replaces a contest between a single
+whether the next step is an instrument forecast, a derivation of              number–four, ten, or eleven–with a structured comparison
+a new observable, or recognition that the current model cannot                of physical claims. The observed large-scale world is effec-
+be empirically ordered.                                                       tively four-dimensional in spacetime. A string construction
+                                                                              may require ten dimensions in its formulation. A particular
+                                                                              compactification may contain six internal spatial dimensions.
+                                                                              An ADD effective model may posit a different number of large
+                                                                              compact directions. Those statements can all appear in one
+                            TABLE V                                          for additional spatial directions, often compact or warped.
+           FALSIFICATION AND DECISION - QUALITY CHECKS .                     No observation has established a universal number of hidden
+                                                                             dimensions, and no null result has excluded every such model.
+  Test                   Failure condition and consequence
+                                                                                The scientific route forward is model-specific falsifiability.
+  Translation ablation  A compactification or EFT assumption can be re-      DimensionBridge proposes that a credible claim must expose
+                        moved without changing a reported model limit.
+                        The result has hidden a model prior.                 its model class, parameter domain, low-energy prediction,
+  Combination audit     Joint sensitivity improves only because correlated   measurement channel, likelihood assumptions, competing ex-
+                        inputs are multiplied or incompatible conventions    planations, and replication route. Existing data can then be
+                        are pooled. Reject the combination.
+  Baseline injection    Four-dimensional pseudo-observables yield a          described accurately: a model region may be excluded within
+                        spurious preference for higher dimensions. Re-       stated assumptions, remain compatible, be sensitivity-limited,
+                        calibrate the status thresholds.                     or be observationally unidentifiable. A candidate anomaly may
+  Alternative injection A generic deviation is uniquely labeled extra-
+                        dimensional with viable competing explanations       require independent testing. These outcomes are more useful
+                        still untested. Route to ‘REQUIRES INDEPEN-          than an unqualified yes or no.
+                        DENT TEST‘.
+  Identifiability audit A model with no accessible map is given a
+                                                                                The immediate next step is a preregistered pilot using a
+                        positive or negative empirical rank. Route to        small set of ADD-like, RS-like, propagation, and formal-
+                        ‘OBSERVATIONALLY UNIDENTIFIABLE‘.                    compactification dossiers. Analysts would populate source and
+  Reproducibility audit Another team cannot recreate status reasons from
+                        cards, assumptions, and source provenance. In-
+                                                                             translation cards from public material, perform compatibility
+                        validate the decision.                               and ablation tests, map parameter overlap, and release status
+                                                                             reason codes for independent review. This proposal performs
+                                                                             none of those measurements itself and claims no extra-
+discussion without competing, because they answer different                  dimensional signal.
+questions.
+   Second, DimensionBridge makes null results scientifically                                        A PPENDIX A
+cumulative without overselling them. A short-range test can                          S OURCE AND T RANSLATION C ARD T EMPLATE
+eliminate a bounded non-Newtonian region; a collider search                    Table VI specifies the required audit record. It is designed
+can constrain an effective production model; a gravitational-                so a reader can trace a status from an experimental paper or
+wave observation can test a propagation ansatz; and a cos-                   theoretical derivation to its valid parameter scope.
+mological limit can restrict a history-dependent bulk process.
+If their parameter maps overlap, their joint evidence may be                                            A PPENDIX B
+stronger than any individual result. If they do not overlap,                                     F IXED O UTPUT TAXONOMY
+the atlas should show complementarity rather than generate a
+misleading pooled number.                                                                                  R EFERENCES
+   Third, the framework gives anomalies an accountable path.                  [1] J. Polchinski, String Theory, Vols. 1–2. Cambridge, U.K.: Cambridge
+A force-law deviation, missing-momentum excess, resonance,                        Univ. Press, 1998.
+                                                                              [2] E. Witten, “String theory dynamics in various dimensions,” Nu-
+or propagation residual is not ignored. It receives a source                      clear Physics B, vol. 443, pp. 85–126, 1995, doi: 10.1016/0550-
+card, an alternative matrix, and a predicted discriminating                       3213(95)00158-O.
+observation. This is more ambitious than a generic caution                    [3] N. Arkani-Hamed, S. Dimopoulos, and G. Dvali, “The hierarchy prob-
+                                                                                  lem and new dimensions at a millimeter,” Physics Letters B, vol. 429,
+label: it says exactly what would need to be seen for an extra-                   pp. 263–272, 1998, doi: 10.1016/S0370-2693(98)00466-3.
+dimensional explanation to become competitive, and exactly                    [4] L. Randall and R. Sundrum, “A large mass hierarchy from a small extra
+what future result would rule it down.                                            dimension,” Physical Review Letters, vol. 83, pp. 3370–3373, 1999, doi:
+   The study has limitations. It relies on public likelihood                      10.1103/PhysRevLett.83.3370.
+                                                                              [5] L. Randall and R. Sundrum, “An alternative to compactification,” Phys-
+summaries or published contours, which may not preserve                           ical Review Letters, vol. 83, pp. 4690–4693, 1999, doi: 10.1103/Phys-
+the full correlations available to collaborations. Some model                     RevLett.83.4690.
+translations depend on ultraviolet assumptions that cannot                    [6] J. G. Lee et al., “Improved constraints on non-Newtonian forces at 30–
+                                                                                  8000 microns,” Physical Review Letters, vol. 124, 101101, 2020, doi:
+be tested in the same data set. Cross-channel combination                         10.1103/PhysRevLett.124.101101.
+may therefore be impossible for many otherwise interesting                    [7] G. Aad et al. (ATLAS Collaboration), “Search for new phenomena in
+sources; the framework should classify those cases as non-                                      √ an energetic jet and missing transverse momentum in pp
+                                                                                  final states with
+                                                                                  collisions at s = 13 TeV with the ATLAS detector,” Physical Review
+combinable, not force them into Eq. (2). These restrictions                       D, vol. 103, 112006, 2021, doi: 10.1103/PhysRevD.103.112006.
+are a feature of transparent inference, not a reason to abandon               [8] A. M. Sirunyan et al. (CMS Collaboration), “Search for new physics in
+the question.                                                                     final states with an energetic jet or a √
+                                                                                                                         hadronically decaying W or Z boson
+                                                                                  and missing transverse momentum at s = 13 TeV,’ Journal of High
+              VIII. C ONDITIONAL C ONCLUSIONS                                     Energy Physics, vol. 08, 150, 2019, doi: 10.1007/JHEP08(2019)150.
+                                                                              [9] S. Hannestad and G. Raffelt, “Supernova and neutron-star limits on
+  How many dimensions are there in space? The evidence                            large extra dimensions reexamined,” Physical Review D, vol. 67, 125008,
+supports a conditional answer. We directly observe three                          2003, doi: 10.1103/PhysRevD.67.125008.
+                                                                             [10] C. Deffayet and K. Menou, “Probing gravity with spacetime sirens,”
+extended spatial dimensions. Higher-dimensional string and                        The Astrophysical Journal Letters, vol. 668, pp. L143–L146, 2007, doi:
+gravity theories provide mathematically motivated possibilities                   10.1086/522931.
+                                                                      TABLE VI
+                                              D IMENSION B RIDGE SOURCE AND TRANSLATION CARD TEMPLATE .
+
+     Field                       Required content                           Evidence state               Decision implication
+     Model identity              Class, parameter names/units, baseline Formal/phenomenological.         Prevents model and unit drift.
+                                 comparator, low-energy regime.
+     Source likelihood           Observable, experiment/catalog, confi- Direct bound/likelihood.         Determines the permitted experimental
+                                 dence construction, selection, and nui-                                 statement.
+                                 sances.
+     Translation map             fc (M, θ),                   compactifica- Derived, with uncertainty.   Determines eligibility for Eq. (2).
+                                 tion/warping/cutoff           assumptions,
+                                 derivation source.
+     Alternative matrix          Baseline/systematic and non-extra- Complete/incomplete.                 Incomplete alternatives block discovery at-
+                                 dimensional models with predicted                                       tribution.
+                                 differences.
+     Coverage record             Parameter domain, channel reach, over- Covered/partial/uncovered.       Determines Eq. (3) and status.
+                                 lap with other cards, correlation deci-
+                                 sion.
+     Decision log                Status, reason code, reviewer, assump- Reproducible/incomplete.         Enables independent audit.
+                                 tions, sensitivity/ablation result.
+
+
+
+                              TABLE VII
+                F IXED OUTPUTS FOR THE PLANNED STUDY.
+
+   Output                      Meaning
+   EXCLUDED WITHIN AS- A declared model region conflicts with valid
+   SUMPTIONS              constraints, but the conclusion does not extend
+                          beyond its translation card.
+   CURRENTLY COMPATI- Present included evidence does not exclude the
+   BLE                    declared region; this is not positive confirmation.
+   SENSITIVITY LIMITED    A valid observable exists but included data lack
+                          required reach.
+   OBSERVATIONALLY        No validated accessible map distinguishes the
+   UNIDENTIFIABLE         model from baseline/alternatives.
+   REQUIRES      INDEPEN- A candidate residual requires systematic, alterna-
+   DENT TEST              tive, and independent-channel discrimination.
+
+
+
+
+[11] B. P. Abbott et al. (LIGO Scientific Collaboration and Virgo Collabo-
+     ration), “Tests of general relativity with GWTC-1,” Physical Review D,
+     vol. 100, 104036, 2019, doi: 10.1103/PhysRevD.100.104036.
+

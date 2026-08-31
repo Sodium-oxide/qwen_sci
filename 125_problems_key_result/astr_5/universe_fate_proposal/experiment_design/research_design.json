@@ -1,0 +1,101 @@
+{
+  "schema_version": "research_design_v1",
+  "project_id": "astr_5_universe_fate_proposal",
+  "survey_run_id": "survey-astr5-universe-fate-001",
+  "project_context_fingerprint": "ctx-astr5-universe-fate-v1",
+  "idea_result_path": "idea/idea_result.json",
+  "selected_idea_id": "idea-fateledger-001",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "automatic_execution_permitted": false,
+    "observed_results": [],
+    "human_review_required": true,
+    "reason": "The proposal specifies a cosmological inference study; no new data analysis or scientific result is represented as completed."
+  },
+  "research_brief": {
+    "title": "FateLedger: assumption-aware classification of cosmic futures",
+    "central_hypotheses": ["H1", "H2", "H3", "H4"],
+    "research_object": "Late-time background expansion and a separate false-vacuum decay ledger.",
+    "falsification_conditions": [
+      "Assumption cards do not lower unsupported asymptotic claims.",
+      "Multi-probe addition does not improve calibrated fate-class separation.",
+      "A separate vacuum ledger does not reduce source or logic contradictions.",
+      "All retained continuations become observationally separable with declared probes."
+    ]
+  },
+  "template_routing": {
+    "primary": "mathematics_theory",
+    "secondary": "computational_digital",
+    "scope_assessment": "low physical execution risk; medium inference and interpretation risk"
+  },
+  "registered_model_families": [
+    {
+      "id": "M1",
+      "name": "flat LambdaCDM",
+      "continuation": "constant cosmological constant",
+      "eligible_background_status": ["ASYMPTOTIC_DILUTION_COMPATIBLE"]
+    },
+    {
+      "id": "M2",
+      "name": "constant-w dark energy",
+      "continuation": "constant equation of state",
+      "eligible_background_status": ["ASYMPTOTIC_DILUTION_COMPATIBLE", "FINITE_TIME_DISRUPTION_CONDITIONAL"]
+    },
+    {
+      "id": "M3",
+      "name": "physically specified scalar-field potential",
+      "continuation": "field equations and declared potential",
+      "eligible_background_status": ["ASYMPTOTIC_DILUTION_COMPATIBLE", "TURNAROUND_CONDITIONAL", "FINITE_TIME_DISRUPTION_CONDITIONAL"]
+    },
+    {
+      "id": "M4",
+      "name": "local w0-wa phenomenology",
+      "continuation": "not declared unless supplied by a physical completion",
+      "eligible_background_status": ["FUTURE_BEHAVIOR_OBSERVATIONALLY_UNIDENTIFIABLE"]
+    }
+  ],
+  "data_plan": {
+    "data_types": ["CMB", "BAO", "supernova distances", "growth or weak-lensing summaries", "forecast redshift drift", "forecast standard sirens"],
+    "selection_rule": "Use only human-approved public releases with documented covariance and likelihood provenance.",
+    "controls": ["release version", "covariance version", "prior table", "nuisance model", "blinding status", "data license"]
+  },
+  "analysis_plan": {
+    "steps": [
+      "Register model and asymptotic assumption cards.",
+      "Estimate finite-domain likelihood constraints without assigning future fate.",
+      "Map only globally defined continuations through H(a) and the conditional time integral.",
+      "Run cross-probe predictive comparisons and leave-one-probe-out checks.",
+      "Compile a separate vacuum-metastability sensitivity panel.",
+      "Emit only allowed fate, identifiability, and vacuum labels."
+    ],
+    "metrics": [
+      "posterior-predictive calibration",
+      "leave-one-probe-out label stability",
+      "prior and nuisance sensitivity",
+      "pairwise predictive divergence",
+      "unsupported-claim rate",
+      "source-provenance completeness",
+      "expansion-vacuum contradiction rate"
+    ]
+  },
+  "variables": {
+    "independent": ["model_family", "asymptotic_continuation", "probe_bundle", "prior_specification", "nuisance_model"],
+    "dependent": ["background_fate_status", "identifiability_status", "conditional_event_time", "vacuum_status"],
+    "controls": ["data_release", "covariance", "likelihood_version", "model_domain", "human_review_record"]
+  },
+  "risk_register": [
+    {
+      "risk": "Phenomenological fit is treated as a physical theory.",
+      "mitigation": "A local model cannot emit a future-time label without an approved continuation card."
+    },
+    {
+      "risk": "Combined probes share hidden systematic effects.",
+      "mitigation": "Use release-specific nuisance models, leave-one-probe-out checks, and a human systematics review."
+    },
+    {
+      "risk": "Vacuum-decay language is mistaken for a measured deadline.",
+      "mitigation": "Independent vacuum ledger with parameter and model-dependence requirements."
+    }
+  ],
+  "source_keys": ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9"]
+}

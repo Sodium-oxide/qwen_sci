@@ -1,0 +1,25 @@
+{
+  "schema_version": "survey_evidence_plan_v1",
+  "project_id": "astr_10_alone_universe_proposal",
+  "survey_run_id": "survey-astr10-life-detection-001",
+  "research_question": "How can remote and in-situ observations be combined into a context-conditioned, falsifiable assessment of biological or technological activity without treating a single signal or non-detection as a final answer about life in the universe?",
+  "subhypotheses": [
+    {"id": "SH1", "claim": "Candidate biosignatures require environmental and abiotic-alternative context.", "allowed_sources": ["S1", "S2", "S3", "S5"], "coverage": "direct_framework"},
+    {"id": "SH2", "claim": "Negative findings require sensitivity, recovery, and population coverage statements.", "allowed_sources": ["S5", "S7"], "coverage": "direct_logic"},
+    {"id": "SH3", "claim": "Independent evidence modes should share a provenance and falsification ledger.", "allowed_sources": ["S1", "S2", "S3", "S6", "S8", "S9", "S10"], "coverage": "design_gap"},
+    {"id": "SH4", "claim": "Technosignature candidates require repeat and artifact-control evidence.", "allowed_sources": ["S6", "S7"], "coverage": "direct_operational"}
+  ],
+  "writing_rules": [
+    "Do not equate a habitable zone with life detection.",
+    "Do not equate non-detection with absence of life or technology.",
+    "Do not present a proposed analysis as a detection.",
+    "Keep biological, technological, abiotic, instrumental, and terrestrial-contamination hypotheses explicit.",
+    "Every claimed candidate needs a discriminating follow-up observation or an unresolved status."
+  ],
+  "search_provenance": [
+    {"query": "exoplanet biosignatures review false positives contextual life detection", "engines": ["OpenAlex", "AnySearch"], "used_source_keys": ["S1", "S2", "S3", "S5"]},
+    {"query": "Kopparapu Habitable Zones Around Main-Sequence Stars new estimates", "engines": ["OpenAlex", "AnySearch"], "used_source_keys": ["S4"]},
+    {"query": "Wright technosignatures review SETI search 2022", "engines": ["OpenAlex", "AnySearch"], "used_source_keys": ["S6", "S7"]},
+    {"query": "ocean worlds life detection in situ biosignature review Europa Enceladus", "engines": ["OpenAlex", "AnySearch"], "used_source_keys": ["S8", "S9", "S10"]}
+  ]
+}

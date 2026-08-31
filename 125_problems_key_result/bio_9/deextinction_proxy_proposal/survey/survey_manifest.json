@@ -1,0 +1,19 @@
+{
+  "schema": "survey_manifest_v1",
+  "project_id": "bio_9_deextinction_proxy_proposal",
+  "stage": "survey",
+  "status": "completed",
+  "research_topic": "Is de-extinction possible?",
+  "canonical_artifacts": [
+    "survey.md",
+    "survey_evidence_plan.json",
+    "survey_gap_ledger.json",
+    "survey_idea_handoff.json"
+  ],
+  "source_discovery": {
+    "engines": ["OpenAlex", "AnySearch"],
+    "browser": "Codex in-app browser",
+    "note": "Publisher citation metadata was not exposed by every DOI landing page in the browser session; bibliographic fields are retained only when supported by cross-engine discovery or explicit source inventory."
+  },
+  "design_boundary": "PROPOSAL_NO_OBSERVED_RESULTS"
+}

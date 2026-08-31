@@ -1,0 +1,439 @@
+                     What Is the Shape of the Universe?
+                 CurvLedger: A Cross-Probe Design for Auditable Spatial-Curvature Inference
+
+                                                 Anonymous Research Proposal
+
+
+   Abstract—The expression “shape of the universe” is routinely      lensing, and the assumed early- and late-time physics. BAO
+used for several different scientific objects: the sign of spatial   constrains combinations of transverse distance and expansion
+curvature in a Friedmann-Lemaitre-Robertson-Walker (FLRW)            rate relative to the sound horizon. Type Ia supernovae constrain
+model, the global topology of spatial slices, and the finite
+observable domain accessible to any survey. These objects are not    relative distances; weak lensing and redshift-space distortions
+interchangeable. Planck cosmic microwave background (CMB)            test growth and geometry through still different kernels. These
+spectra have motivated a published closed-curvature interpreta-      observables become a curvature result only after a forward
+tion through their preference for enhanced lensing-like smoothing    model joins them.
+in specified non-flat models, while Planck lensing reconstruction,
+baryon acoustic oscillations (BAO), and independent CMB data            The final Planck analysis provides an unusually sharp illus-
+impose different and frequently more nearly flat geometric con-      tration. Within baseline flat ΛCDM, Planck temperature, po-
+straints. This paper presents C URV L EDGER, a design-only, cross-   larization, and lensing observations fit a flat model extremely
+probe falsifiability framework for deciding what any curvature
+inference can establish. Each result is carried by a versioned
+                                                                     well. When curvature and some extensions are released, high-
+card containing the model, curvature convention, priors, likeli-     ℓ CMB spectra can exhibit a preference for more lensing-like
+hood, nuisance treatment, observable map, data overlap, alter-       smoothing than expected. The Planck collaboration explicitly
+native explanations, and posterior-predictive tests. The planned     noted that this feature is not supported by lensing recon-
+model ladder separates non-flat ΛCDM from phenomenological           struction and that the Planck-plus-BAO curvature constraint
+lensing-amplitude, foreground/calibration, primordial-spectrum,
+and late-time-expansion alternatives. A proposed decision taxon-
+                                                                     is consistent with flatness, quoting ΩK = 0.001 ± 0.002 for
+omy distinguishes curvature consistent with zero, a channel-local    the stated joint model [1]. Di Valentino et al. nevertheless
+closed preference, a cross-validated closed preference, model-or-    showed that a CMB-only non-flat analysis can be interpreted
+likelihood inconsistency, and unresolved topology. The proposal      as a closed-universe preference and argued that the resulting
+reports no newly fitted posterior or observation. Its contribution   discordance deserves investigation [2]. These are not mutually
+is a reproducible way to prevent a conditional CMB anomaly,
+a geometric curvature claim, and a topology claim from being
+                                                                     exclusive propositions: one is a statement about a conditional
+collapsed into one conclusion.                                       spectrum-level posterior, and the other is a statement about the
+   Index Terms—cosmology, spatial curvature, cosmic microwave        difficulty of reconciling it with other probes.
+background, baryon acoustic oscillations, gravitational lensing,
+topology, model comparison, reproducibility                             Recent independent data sharpen rather than erase the
+                                                                     methodological problem. SPT-3G delivered an independent
+                      I. I NTRODUCTION                               CMB lensing measurement consistent with established CMB
+                                                                     constraints in its analysis domain [5]. The ACT DR6 power-
+   The universe is often said to be flat, open, or closed. In        spectrum analysis reports no excess lensing and no depar-
+ordinary language this sounds like a statement about the visible     ture from spatial flatness for its declared combinations [7].
+shape of a three-dimensional object. In relativistic cosmology       Contemporary DESI BAO analyses provide blind-measured
+it is more precise to ask whether spatial sections in an FLRW        geometric distances across a wide redshift range [6]. No one of
+model have negative, zero, or positive constant curvature. With      these findings is a direct observation of “the whole universe.”
+the convention                                                       Together they motivate a stronger research question:
+                                  kc2
+                        ΩK = − 2 2 ,                         (1)
+                                 a0 H0
+                                                                          Which stated curvature models produce a stable,
+where k = +1, 0, −1 labels closed, flat, and open FLRW                    replicated, and cross-probe-compatible preference
+spatial geometry, respectively, a closed model has ΩK < 0.                after likelihood assumptions, data overlap, and non-
+Equation (1) is already model laden: a0 and H0 belong to                  curvature explanations are made explicit?
+a background-expansion description, and an inferred value
+of ΩK depends on how radiation, matter, neutrinos, dark                 This paper develops a research design to answer that ques-
+energy, perturbations, and instrumental nuisance effects are         tion. It is the Author-stage synthesis of a four-agent workflow:
+represented.                                                         Survey established an evidence boundary and gap ledger; Idea
+  This distinction matters because the problem is sometimes          selected a cross-probe inference strategy; ExperimentDesign
+posed as if a single observation could return a universal an-        turned the strategy into a computational plan; and Author
+swer. It cannot. CMB anisotropy spectra constrain an acoustic        assembles the source-bound proposal. The document does not
+angular scale and a pattern of peaks whose interpretation            execute the proposed inference and does not report an observed
+depends on distance to last scattering, the sound horizon,           curvature result.
+                            TABLE I                                               leverage under a blinded analysis protocol [6]. These data
+  E VIDENCE FAMILIES AND THEIR PERMITTED ROLE IN C URV L EDGER .                  do not simply “outvote” Planck. They change the degeneracy
+ Family            Observable contribution       Inference guard
+                                                                                  directions in Eq. (2), confront the CMB-inferred expansion
+                                                                                  history, and thereby test whether a proposed non-flat model
+ Planck primary    Acoustic peaks and           Retain foreground, calibration,
+ CMB               spectrum-level smoothing.    multipole-cut, and AL             predicts both early- and late-time geometry.
+                                                treatment.
+ Planck / SPT /   Lensing reconstruction or     Record sky overlap and do not     C. Accepted gaps
+ ACT lensing      independent CMB spectra.      equate reconstruction with
+                                                peak smoothing.                      Four evidence-derived gaps motivate the design. First, CMB
+ BAO / clustering DM /rd and Hrd over           Retain sound-horizon
+                  redshift.                     calibration, covariance, and      peak smoothing, CMB lensing reconstruction, BAO, super-
+                                                release version.                  novae, and topology searches are too often summarized as
+ SN / weak        Relative distances and growth Retain selection, calibration,
+ lensing          consistency.                  photo-z, and shear nuisance       interchangeable curvature measurements. Second, a Planck-
+                                                model.                            only closed direction and multi-probe flat constraints are
+ Topology         Compact-identification        Never infer from ΩK alone;
+ observables      signatures.                   require a topology-specific       frequently narrated as a binary contradiction rather than a
+                                                likelihood.                       model-selection and likelihood-consistency question. Third,
+                                                                                  quoted curvature intervals can hide the sign convention, priors,
+                                                                                  sound-horizon calibration, or extension parameters needed to
+      II. E VIDENCE B OUNDARY AND R ESEARCH G AP                                  compare them. Fourth, geometry and topology are commonly
+A. Curvature, topology, and observational reach                                   conflated in public accounts. None of these gaps is closed
+   Spatial curvature and global topology are logically distinct.                  by collecting another posterior mean; they require a traceable
+A spatially flat FLRW geometry can possess a compact multi-                       inference architecture.
+ply connected topology, while a curved space does not become                        III. C URV L EDGER H YPOTHESIS AND A RCHITECTURE
+observationally finite merely because a curvature posterior
+                                                                                  A. Scientific hypotheses
+has one sign. Conversely, a matched-circle search or another
+topology-specific observable is needed to test particular global                     C URV L EDGER is a cross-probe falsifiability atlas, not an en-
+identifications; a value of ΩK is not such a test. The present                    semble average. Its first hypothesis (H1, translation discipline)
+proposal treats topology as a protected branch: every curvature                   is that every curvature statement becomes more reliable when
+output must end with topology unresolved unless a separately                      its model, ΩK convention, prior, forward observable map, and
+registered topology likelihood has been evaluated.                                nuisance treatment remain attached. H1 fails if removing an
+   For an FLRW model, curvature enters the transverse co-                         assumption card leaves an advertised conclusion unchanged
+moving distance through                                                           even though the numerical translation depends on that card.
+                                           ∫︂ z                                      H2 (replication discipline) is that a closed-curvature pref-
+                                                dz ′
+                                [︃                    ]︃
+                      c/H0        √︁
+          DM (z) = √︁        SK      |ΩK |          ′
+                                                         ,   (2)                  erence is not cross-validated unless compatible indepen-
+                       |ΩK |                 0 E(z )                              dent channels support an overlapping parameter region and
+where E(z) = H(z)/H0 and SK is sinh, identity, or sin in the                      posterior-predictive residuals are acceptable. Similar-looking
+open, flat, or closed cases under the convention in Eq. (1). The                  marginalized intervals are not sufficient, particularly when
+continuous flat limit is understood. This map explains both                       data products share a sky, a calibration, an external prior, or
+the power and the limitation of distance probes: DM does                          a compressed summary. H3 (alternative discipline) is that a
+not depend on curvature alone. Matter density, dark-energy                        curvature explanation must compete against a declared alterna-
+history, the sound horizon, and other parameters can partially                    tive set: phenomenological lensing amplitude AL , foreground
+compensate for curvature in a finite dataset.                                     or calibration choices, flexible primordial spectra, and late-
+                                                                                  time expansion extensions. H4 (topology separation) is that
+B. What the cited evidence permits                                                no curvature classification can produce a topology conclusion
+   Table I records the bounded roles of the evidence carried                      without a topology-specific likelihood.
+from the Survey stage. It deliberately does not rank sources
+by citation count or label any individual likelihood a truth                      B. Chain of custody
+oracle. The Planck primary analysis is the baseline source                           Figure 1 maps a result from source to decision. A versioned
+because it documents both high-precision parameter inference                      evidence card records the release, measured object, likelihood,
+and the lensing-amplitude caveat [1]. The closed-universe                         nuisance parameters, selection/mask, covariance statement,
+interpretation is retained as a legitimate conditional analysis                   and permitted conclusion. A model card then specifies the
+rather than discarded because its incompatibility with other                      cosmological parameter vector and priors. An audit card
+data is exactly the object to be explained [2], [3].                              states whether likelihood multiplication is justified and which
+   The eBOSS final analysis demonstrates why BAO is useful                        alternative mechanisms can produce similar residuals. Finally,
+in this setting: it reported that BAO materially improves                         a decision card uses fixed labels rather than a free-form
+curvature constraints relative to primary CMB data alone                          declaration of discovery.
+and that broad combinations support flat ΛCDM within their                           This architecture distinguishes evidence strength from con-
+models [4]. DESI’s later BAO results extend the redshift                          clusion breadth. A high signal-to-noise CMB spectrum can
+                            Versioned evidence cards                                       The parameter vector for a model card is θM =
+                      CMB spectra, lensing, BAO, SN, topology
+                                                                                        {ωb , ωc , θs , τ, As , ns , ΩK , ξM }, where ξM contains only the
+                               Model and prior card                                     extension parameters authorized by that card. Channel-specific
+                      ΩK , AL , foregrounds, expansion history                          nuisance parameters are denoted ηc . The intended posterior
+                                                                                        factorization is
+                         Compatibility and alternative audit
+                       overlap, covariance, predictive residuals
+                                                                                                                                   ∏︂
+                                                                                         p(θM , {ηc } | D, M) ∝ p(θM | M)              Lc (Dc | θM , ηc , M)
+                                     Bounded status                                                                              c
+   zero-consistent, channel-local, cross-validated, inconsistent, topology unresolved                             × p(ηc | M).                          (3)
+
+Fig. 1. C URV L EDGER chain of custody. A conclusion may only move down-                Equation (3) is used only after the compatibility audit deter-
+ward when its data-overlap, translation, and alternative-explanation conditions         mines that the product is admissible. If cards overlap without a
+are recorded.
+                                                                                        valid joint covariance or likelihood, the product is prohibited.
+                                                                                        The cards must instead be compared through predictive checks
+give a precise conditional ΩK posterior but still be unable                             or a correctly modeled joint analysis.
+to identify whether a peak-smoothing residual originates in
+                                                                                        C. Inference and compatibility protocol
+curvature, phenomenological AL , foreground treatment, or a
+more general model mismatch. A less precise but differently                                The implementation sequence is as follows. First, freeze
+systematic BAO or independent-CMB card can then be de-                                  the data and model cards before any sampling. Second,
+cisive for attribution, not because it is “more precise,” but                           run channel-local inference for M0–M4 with convergence
+because it changes the error geometry.                                                  requirements declared in advance. Third, calculate posterior-
+                                                                                        predictive diagnostics in observable space: CMB spectra,
+                     IV. D ESIGN -O NLY M ETHODS                                        lensing spectra, BAO distance combinations, or supernova
+A. Experimental unit and release manifest                                               residuals as appropriate. Fourth, document data overlap and
+   The computational experimental unit is a versioned                                   external-prior reuse before combining cards. Fifth, evaluate
+likelihood-model card, not a CMB pixel, individual galaxy,                              only admissible joint combinations. Sixth, challenge any cur-
+or published posterior plot. This avoids pseudo-replication.                            vature preference using the alternative ladder and leave-one-
+For example, Planck primary spectra and Planck lensing re-                              card-out tests.
+construction are complementary but share sky and calibration                               The compatibility question is not whether two posterior
+dependencies; they cannot automatically be multiplied as inde-                          means agree by eye. For datasets Di and Dj , the proposed
+pendent experiments. Likewise, overlapping BAO releases are                             diagnostic suite includes predictive transport: infer θM from
+alternative cards unless a joint covariance model is supplied.                          Di , predict a summary for Dj , and compare the residual to the
+   The frozen data manifest will contain six families. C1 is the                        released covariance and nuisance model. A tension is therefore
+Planck 2018 primary TT/TE/EE and low-multipole likelihood.                              a property of a named (Di , Dj , M) triple, not a free-floating
+C2 is the Planck lensing reconstruction. C3 is ACT DR6                                  fact about the universe. A model that uses curvature to fit C1
+spectra and, where suitable, lensing products. C4 is SPT-3G                             but predicts implausible BAO distances in C5 is not evidence
+lensing. C5 contains non-overlapping eBOSS and DESI BAO                                 for a closed universe; it is a failed joint explanation.
+release cards. C6 is an optional low-redshift validation family
+                                                                                        D. Robustness and false-positive controls
+for supernovae and weak lensing. Each entry must include
+public release identifier, software/likelihood version, masks                              Five stress tests provide a concrete falsification protocol. A
+and multipole cuts, calibration and foreground specification,                           prior ablation repeats M1 with defensible alternative ΩK prior
+allowed parameter ranges, and a statement of shared informa-                            ranges and parameterizations. A lensing ablation separates
+tion.                                                                                   peak-smoothing information from reconstructed lensing. An
+   The design does not download or analyze any of these                                 instrument ablation withholds Planck, ACT, or SPT cards in
+products. Its output is a preregistered protocol that a qualified                       turn. A low-redshift ablation withholds BAO release groups
+cosmology analysis team can implement under the relevant                                and supernova compilations separately. Finally, synthetic in-
+data-use terms. The separation is important: an analysis plan                           jection tests use simulated likelihood summaries generated
+can say exactly what would falsify a claim without pretending                           under flat, closed, and nuisance-shift scenarios to estimate
+that it has observed the relevant result.                                               whether the decision taxonomy can falsely issue a cross-
+                                                                                        validated closed label.
+B. Model ladder                                                                            The synthetic tests have a sharply defined failure mode. If a
+   Table II fixes the central model comparisons. The ladder is                          flat generator plus a calibration or AL -like shift is regularly la-
+deliberately small enough to be interpretable and broad enough                          beled ‘CLOSED PREFERENCE CROSS VALIDATED’, the
+to challenge an anomaly-to-curvature interpretation. It does not                        design is unsafe for discovery-level inference. If a closed
+attempt an unconstrained search over all new physics. Every                             generator cannot be distinguished from the alternatives at the
+extension has to declare how it alters the CMB, distance, and                           planned sensitivity, the correct output is sensitivity-limited or
+growth observables before it is used as an alternative.                                 model/likelihood inconsistent, not a null claim about reality.
+                                                               TABLE II
+              P REDECLARED C URV L EDGER MODEL LADDER . N O MODEL IS PRIVILEGED BECAUSE IT FITS ONE CHANNEL IN ISOLATION .
+
+     Card            Parameter change                 Primary scientific question                    Required diagnostic
+     M0              Flat ΛCDM, ΩK = 0.               Does the baseline describe each card’s         Per-card posterior predictive residuals.
+                                                      observable?
+     M1              Non-flat ΛCDM, free ΩK .         Is a curvature degree of freedom demanded      Prior sensitivity and CMB-to-BAO
+                                                      by a named card?                               predictive transport.
+     M2              M1 plus free phenomenological    Is peak smoothing being attributed uniquely    Lensing-reconstruction comparison; forbid
+                     AL .                             to geometry?                                   AL as physical curvature.
+     M3              M1 plus predeclared              Does a curvature preference survive            Leave-one-variant-out stability and blinded
+                     foreground/calibration or        plausible likelihood alternatives?             injection recovery.
+                     primordial-spectrum robustness
+                     variants.
+     M4              M1 plus a declared late-time     Can altered E(z) reconcile CMB and             BAO/SN prediction and complexity-aware
+                     expansion extension.             distance data without curvature?               model comparison.
+
+
+
+E. Pre-registered evaluation metrics and stopping conditions                                             TABLE III
+                                                                                      P RE - REGISTERED METRICS AND STOPPING RULES .
+   The study will not judge model cards using only a one-
+dimensional credible interval for ΩK . Every card must gen-                Metric                   Pass condition                 Failure action
+erate four classes of prespecified diagnostics. The first is               Numerical validity       Frozen code/version,             Do not interpret any
+sampling and numerical validity: independent chains, conver-                                        convergence and effective        posterior.
+                                                                                                    sample-size thresholds passed.
+gence statistics, effective sample size, likelihood evaluations,           Likelihood fidelity      Released nuisance model and Flag likelihood-local
+and reproducible random seeds must meet thresholds chosen                                           covariance retained; residual    result.
+                                                                                                    checks pass.
+before unblinding. The second is within-channel fit: binned                Cross-probe transport    Held-out observable prediction Issue inconsistency, not
+or otherwise released CMB, lensing, BAO, and supernova                                              is compatible after declared     a combined constraint.
+                                                                                                    overlap treatment.
+residuals must be evaluated against the stated covariance rather           Alternative challenge    M2–M4 do not explain the         Retain channel-local /
+than summarized by a best-fit parameter alone. The third is                                         residual equally well or better. alternative-degenerate
+                                                                                                                                     label.
+cross-channel predictive transport: a posterior inferred from              Topology guard           A topology likelihood exists     Keep topology
+one evidence family must predict the held-out family with                                           and is independently reviewed. unresolved.
+its own nuisance and calibration uncertainty. The fourth is
+robustness: the categorical CurvLedger output must remain
+stable, or its instability must be reported, under the ablations         machine-readable data manifest; exact likelihood versions;
+in the preceding subsection.                                             model equations and prior bounds; covariance and overlap
+   For a compact, auditable comparison, let µi and Σi denote             decisions; nuisance parameter definitions; sampler settings;
+an agreed parameter-summary mean and covariance for a                    convergence diagnostics; posterior-predictive outputs; and a
+named card i. A diagnostic distance may be defined as                    decision ledger recording why a label was assigned. A ledger
+                                                                         entry should link a label to the evidence cards that support
+            ∆2ij = (µi − µj )T (Σi + Σj )−1 (µi − µj ),           (4)    it, the cards withheld, the alternative cards tested, and the
+only when the summaries share a parameterization and the                 reviewer responsible for the covariance decision. This de-
+covariance sum is justified. Equation (4) is not a replacement           sign makes negative findings scientifically useful: a robust
+for a joint likelihood, and it must not be used where shared             ‘MODEL OR LIKELIHOOD INCONSISTENT’ status identi-
+data invalidate the independence approximation. Its role is              fies which prediction fails and which next measurement could
+triage: a large value triggers a posterior-predictive and overlap        resolve it.
+audit; it never independently diagnoses curvature.                          A blinded-analysis rule applies whenever a collaborating
+    Table III specifies the stopping conditions. A failure at any        release supports it. Analysis choices, robustness variants, and
+upstream condition prevents promotion to a broader scien-                status thresholds must be registered before inspecting the
+tific label. For example, a sampler can converge perfectly               final curvature posterior. Post-unblinding changes must be
+on an incomplete foreground model; numerical convergence                 logged, motivated, and rerun from the frozen baseline. This
+then certifies only the computation, not the model. Likewise,            is particularly important because the research question has a
+a statistically sharp CMB-only negative-ΩK interval cannot               salient expected answer—flat versus closed—and therefore is
+advance if the relevant lensing or BAO cards reject the forward          unusually exposed to subtle confirmation bias in prior choice,
+prediction. This is the key distinction between precision and            multipole cut, or data-combination selection.
+identification.
+                                                                                V. O BSERVABLE M ATRIX AND D ECISION L OGIC
+F. Reproducibility package and decision ledger                             Table IV connects the relevant physical mechanisms to their
+   A completed implementation would publish more than a                  observables and alternatives. It is not a forecast of a measured
+final contour. The reproducibility package must contain a                constraint. Its purpose is to prevent an analysis from treating a
+residual in one column as a unique signature of the mechanism        disclaimers: they target the exact ways a false curvature claim
+in the first column.                                                 could be produced.
+A. Fixed status taxonomy                                             VII. E XPECTED O UTCOME B RANCHES AND C ONDITIONAL
+   The final taxonomy is shown in Table V. The labels are                               I NTERPRETATION
+intentionally conservative about conclusion breadth but direct          The proposed study is designed to make a conclusion
+about what a specific analysis demonstrates. A status is neither     conditional on observable behavior rather than on the at-
+a Bayesian model probability detached from its priors nor a          tractiveness of an answer. Table VI enumerates the major
+journal-style claim. It is an audit outcome that tells a reader      branches before data analysis. Each branch has a different
+where the evidence survives and where it does not.                   scientific interpretation and a different next experiment. This is
+   The central decision rule is therefore conditional. Suppose       preferable to an after-the-fact narrative in which every residual
+M1 produces a negative-ΩK posterior from Planck C1. The              is treated as support for the preferred hypothesis.
+output may be ‘CLOSED PREFERENCE CHANNEL LO-
+CAL’ only if the exact C1 likelihood, priors, and posterior-         A. Branch A: a stable flat-compatible geometry
+predictive behavior are recorded. The label can advance only            A future flat-compatible result is not a null outcome in the
+if an independent CMB or lensing card passes a compatibility         colloquial sense. It would show that, across the declared model
+audit, the predicted BAO/SN quantities are acceptable, and           ladder and compatible evidence cards, there is no requirement
+M2–M4 fail to account for the effect without curvature. If           for a curvature parameter beyond zero. The result would be
+any of these requirements is absent, the correct label is not a      stronger than a CMB-only interval because it would include
+weakened discovery claim; it is an explicit limitation.              predictive transport to late-time distances and independent
+                                                                     CMB observables. It would still not prove that the universe
+   VI. FALSIFICATION , I DENTIFIABILITY, AND H UMAN
+                                                                     is infinite. Compact flat topologies are a separate family of
+                         R EVIEW
+                                                                     models, and finite observational reach prevents a direct survey
+A. What could change the conclusion?                                 of the entire spatial slice.
+   The design is falsifiable in both directions. A cross-validated      The relevant next action in this branch is targeted precision:
+closed result would be undermined by an independently cali-          improve polarization, lensing reconstruction, BAO calibration,
+brated CMB spectrum or lensing reconstruction that rejects the       and supernova control only to the extent that these mea-
+same parameter region, by BAO/SN predictive failure, or by           surements create new discriminating directions. Repeating a
+a declared non-curvature alternative that predicts all channels      highly correlated summary statistic with smaller error bars
+better. Conversely, a present flat-compatible conclusion would       may narrow a posterior without increasing identifiability. The
+be revised if future independent likelihoods produce a coherent      ledger makes that distinction measurable through the shared-
+closed region with a well-defined covariance treatment and           information and held-out-prediction fields.
+no viable alternative explanation. In both cases, the target is
+a constrained model statement, not an absolute metaphysical          B. Branch B: a channel-local closed preference
+verdict.                                                                A channel-local closed preference is also a meaningful
+   Identifiability is assessed at the level of forward maps. If      outcome, provided it is described accurately. It identifies a
+two model cards yield indistinguishable predictions over the         feature in a named likelihood/model card that is not yet
+available observables, the design cannot declare one preferred       explained by the baseline. The correct response is to inspect
+merely because its posterior is narrow under a selected prior.       the observable-level residual, test the M2–M4 alternatives,
+It must report an observationally unresolved mechanism or            and seek independent data with different beams, frequency
+collect another discriminator. This guard is especially im-          coverage, sky masks, calibration chains, or redshift response.
+portant for the relationship between ΩK and AL : the latter          The response is not to average the feature away, nor to call it
+is a phenomenological scaling used to describe spectrum              a measurement of global closure.
+smoothing, not a physical measurement of spatial curvature.             This branch directly addresses the historical Planck situa-
+                                                                     tion. The Planck spectra, lensing reconstruction, BAO combi-
+B. Human review requirements                                         nations, and later independent CMB products should be treated
+   The workflow requires qualified human review at four              as a structured diagnostic network. A disagreement can teach
+points. A CMB-likelihood expert must approve high-ℓ fore-            cosmology about foreground modeling, lensing reconstruction,
+ground, beam, calibration, and multipole-cut handling. A             primordial physics, or late-time expansion even if the eventual
+statistics reviewer must approve dataset-overlap and covari-         curvature posterior is consistent with zero. The study therefore
+ance treatment before any product likelihood is used. A data         preserves anomaly information instead of forcing every source
+steward must verify release licences, software versions, and         into a premature consensus.
+blinding rules. A cosmology interpretation reviewer must
+inspect whether the final prose preserves the difference be-         C. Branches C and D: replicated curvature or model failure
+tween a posterior result, an anomaly, a curvature model, and            A cross-validated closed result would require the strictest
+topology. These reviews are scientific controls, not generic         threshold. The common closed region must survive a declared
+                                                               TABLE IV
+   C URVATURE - OBSERVABLE MATRIX . “D ISCRIMINATOR ” MEANS A PLANNED MEASUREMENT OR TEST THAT CAN DISTINGUISH , NOT AN ALREADY
+                                                           ACHIEVED RESULT.
+
+
+    Mechanism card                    Relevant observables                        Confusable alternatives              Required discriminator
+    Nonzero spatial curvature         Acoustic-scale distance, CMB peak           Dark-energy history, sound-horizon
+                                                                                                                 Joint predictive transport from
+                                      pattern, BAO transverse/radial              changes, prior volume.         CMB to BAO/SN under the same
+                                      distance, SN distance relation.                                            forward model.
+    Peak-smoothing anomaly            High-ℓ TT/TE/EE smoothing.          Free AL , foreground template,         Compare to lensing reconstruction
+                                                                          beam/calibration, primordial feature.  and independent ACT/SPT
+                                                                                                                 spectra.
+    Late-time expansion extension     DM (z), H(z), SN distances,         Curvature-distance degeneracy,         Separate M4 posterior-predictive
+                                      structure growth.                   supernova calibration, BAO covariance. checks with release-level nuisance
+                                                                                                                 cards.
+    Nontrivial topology               Matched patterns/circles or         Mask, foreground, chance alignment,    Registered topology likelihood
+                                      topology-specific CMB correlations. transfer-function model.               independent of the ΩK posterior.
+
+
+
+                            TABLE V                                                  it is treating a conditional preference as a universal conclusion
+        F IXED OUTPUTS FOR THE PLANNED CURVATURE STUDY.                              before it survives the tests that its own model makes possible.
+  Output                        Meaning
+                                                                                         C URV L EDGER makes those tests legible. It replaces an
+                                                                                     informal chain—“one dataset prefers closure, another prefers
+  CURVATURE CONSISTENT          The declared model and compatible cards do
+  WITH ZERO                     not demand ΩK ̸= 0.                                  flatness”—with a reproducible sequence: state the observable,
+  CLOSED PREFERENCE             A named card/model favors ΩK < 0 but has             freeze the likelihood and priors, transport the model to another
+  CHANNEL LOCAL                 not passed replication and alternative tests.
+  CLOSED PREFERENCE             Compatible independent cards support an              probe, account for shared information, challenge alternatives,
+  CROSS VALIDATED               overlapping closed region and alternatives fail      and issue a bounded status. This is applicable beyond curva-
+                                the predeclared tests.
+  MODEL OR LIKELIHOOD           No common model region predicts all                  ture. The same structure can be used for lensing anomalies,
+  INCONSISTENT                  included cards; this is not curvature evidence       primordial-spectrum features, neutrino-mass inferences, or
+                                by itself.
+  TOPOLOGY UNRESOLVED           No topology-specific observable has been             modified-gravity claims where a precise measurement in one
+                                tested successfully.                                 channel is not automatically a unique physical identification.
+                                                                                         The design also clarifies the place of future surveys. Im-
+                                                                                     proved polarization, high-resolution CMB lensing, indepen-
+curvature convention and prior family, pass independent-                             dently calibrated BAO, and expanded weak-lensing samples
+instrument replication, correctly predict BAO/SN distances,                          are valuable insofar as they add genuinely distinct response
+and resist the specified non-curvature alternatives. This would                      kernels and systematic controls. The Simons Observatory
+justify a direct statement about spatial curvature within a                          science program illustrates why richer multifrequency CMB
+named model family. It would not answer all versions of the                          measurements can improve both parameter precision and fore-
+shape question: neither topology nor the physical origin of the                      ground/lensing discrimination [8]. Their value for the present
+curvature parameter follows automatically.                                           question is not simply smaller error bars on ΩK ; it is the
+   Alternatively, persistent incompatibility can be the scientifi-                   ability to test whether the same physical model predicts several
+cally decisive outcome. If no M0–M4 card predicts all selected                       observables at once.
+observables after covariance review, the proposal calls for a
+model-or-likelihood inconsistency label. This outcome is valu-                                       IX. C ONDITIONAL C ONCLUSIONS
+able because it keeps the cause localized. It identifies which                          This four-agent proposal answers the initial question in
+prediction fails, which nuisance or physical extensions were                         a form that observations can adjudicate. Present evidence
+tested, and which measurement most efficiently distinguishes                         supports three statements. First, spatial curvature is a model-
+the remaining explanations. Such an outcome prevents a broad                         dependent parameter inferred from a network of distances and
+cosmological crisis from becoming an untestable slogan.                              spectra, not an image of the universe viewed from outside.
+                                                                                     Second, Planck’s published closed-curvature interpretation is
+   VIII. D ISCUSSION : F ROM A S HAPE Q UESTION TO A                                 scientifically relevant but conditional and entangled with a
+                 T ESTABLE P ROGRAM                                                  lensing-like smoothing anomaly; it cannot be promoted to
+   The phrase “the universe is flat” is often shorthand for                          a consensus global shape claim when other declared probe
+an extremely successful standard cosmological description,                           combinations are consistent with flatness [1], [4], [7]. Third,
+not a proof that space is globally Euclidean, infinite, or                           curvature and topology remain separate: even a future robust
+topologically trivial. Likewise, a Planck-only closed posterior                      curvature result would not by itself establish whether space is
+is not empty information. It identifies a structured stress test                     finite or multiply connected.
+involving CMB peak smoothing, lensing inference, and the                                The resulting experimental program is direct. If an overlap-
+geometric degeneracies that BAO and other probes can break.                          ping negative-ΩK region survives independent CMB/lensing
+The scientific error is not considering the closed interpretation;                   replication, BAO/SN predictive transport, covariance review,
+                                                              TABLE VI
+                P REDECLARED OUTCOME BRANCHES . T HE ENTRIES DESCRIBE DECISION LOGIC , NOT RESULTS FROM THIS PROPOSAL .
+
+      Observed pattern after a future CurvLedger classification                              Scientific interpretation and next action
+      implementation
+      All compatible CMB, lensing,          CURVATURE CONSISTENT WITH ZERO    Flat FLRW remains an adequate description in the
+      BAO, and SN cards admit                                                 tested model space. Extend precision only where it
+      ΩK = 0; no structured residual                                          adds a distinct systematic response; do not infer
+      remains.                                                                topology or infinity.
+      A negative-ΩK region appears          CLOSED PREFERENCE CHANNEL LOCAL Diagnose spectrum-level smoothing, foreground,
+      only in a Planck primary-spectrum                                       calibration, and likelihood sensitivity. Obtain
+      card or disappears when AL /                                            independent polarization and lensing discriminators
+      nuisance alternatives are released.                                     before any geometric claim.
+      Independent CMB/lensing cards         CLOSED PREFERENCE CROSS VALIDATED Report a model-bounded curvature preference with
+      and low-redshift geometry support                                       priors, covariance, and failed alternatives. Start a
+      the same closed region;                                                 separate topology program rather than inferring
+      alternatives fail predictive tests.                                     topology.
+      No single parameter region            MODEL OR LIKELIHOOD INCONSISTENT Localize the failed forward prediction, test covariance
+      predicts the included cards under                                       and systematics, and enlarge the model only through a
+      a declared model, even after                                            predeclared physical mechanism. Do not label the
+      allowed extensions.                                                     tension curvature.
+      A topology-specific observable is     TOPOLOGY UNRESOLVED               State explicitly that neither flatness nor closure has
+      absent or non-diagnostic.                                               settled global identifications, total volume, or return
+                                                                              paths.
+
+
+
+and the M2–M4 alternative challenge, the proper conclusion                       [5] Z. Pan et al., “Measurement of gravitational lensing of the cosmic
+is a model-bounded cross-validated closed preference. If the                         microwave background using SPT-3G 2018 data,” Physical Review D,
+                                                                                     vol. 108, 122005, 2023, doi: 10.1103/PhysRevD.108.122005.
+signal remains tied to one Planck likelihood configuration or                    [6] A. G. Adame et al., “DESI 2024 VI: cosmological constraints from
+disappears under an alternative treatment, the correct conclu-                       the measurements of baryon acoustic oscillations,” Journal of Cos-
+sion is channel-local or model/likelihood inconsistent. If no                        mology and Astroparticle Physics, vol. 2025, no. 02, 021, 2025, doi:
+                                                                                     10.1088/1475-7516/2025/02/021.
+topology-specific likelihood is run, topology stays unresolved.                  [7] T. Louis et al., “The Atacama Cosmology Telescope: DR6 power
+These branches turn a broad cosmological question into a                             spectra, likelihoods and ΛCDM parameters,” Journal of Cosmology and
+transparent set of falsifiable outcomes without claiming that                        Astroparticle Physics, vol. 2025, no. 11, 062, 2025, doi: 10.1088/1475-
+                                                                                     7516/2025/11/062.
+any new measurement has already been made.                                       [8] P. A. R. Ade et al., “The Simons Observatory: science goals and
+                                                                                     forecasts,” Journal of Cosmology and Astroparticle Physics, vol. 2019,
+                             R EFERENCES                                             no. 02, 056, 2019, doi: 10.1088/1475-7516/2019/02/056.
+[1] Planck Collaboration, “Planck 2018 results. VI. Cosmological parame-
+    ters,” Astronomy & Astrophysics, vol. 641, A6, 2020, doi: 10.1051/0004-
+    6361/201833910.
+[2] E. Di Valentino, A. Melchiorri, and J. Silk, “Planck evidence for a closed
+    Universe and a possible crisis for cosmology,” Nature Astronomy, vol.
+    4, pp. 196–203, 2020, doi: 10.1038/s41550-019-0906-9.
+[3] E. Di Valentino, A. Melchiorri, and J. Silk, “Cosmological constraints in
+    extended parameter space from the Planck 2018 Legacy release,” Journal
+    of Cosmology and Astroparticle Physics, vol. 2020, no. 01, 013, 2020,
+    doi: 10.1088/1475-7516/2020/01/013.
+[4] S. Alam et al., “Completed SDSS-IV extended Baryon Oscillation
+    Spectroscopic Survey: Cosmological implications from two decades of
+    spectroscopic surveys,” Physical Review D, vol. 103, 083533, 2021, doi:
+    10.1103/PhysRevD.103.083533.
+

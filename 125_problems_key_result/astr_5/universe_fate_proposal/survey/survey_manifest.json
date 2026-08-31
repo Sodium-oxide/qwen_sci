@@ -1,0 +1,92 @@
+{
+  "schema_version": "survey_manifest_v1",
+  "project_id": "astr_5_universe_fate_proposal",
+  "survey_run_id": "survey-astr5-universe-fate-001",
+  "project_context_fingerprint": "ctx-astr5-universe-fate-v1",
+  "topic": "When will the universe die, and will its expansion continue?",
+  "canonical_artifacts": {
+    "survey_markdown": "survey/survey.md",
+    "evidence_plan": "survey/survey_evidence_plan.json",
+    "gap_ledger": "survey/survey_gap_ledger.json",
+    "idea_handoff": "survey/survey_idea_handoff.json"
+  },
+  "source_registry": [
+    {
+      "source_key": "P1",
+      "citation": "Planck Collaboration, Planck 2018 results. VI. Cosmological parameters, Astronomy and Astrophysics, vol. 641, A6, 2020.",
+      "doi": "10.1051/0004-6361/201833910",
+      "evidence_role": "CMB and combined-probe baseline constraints",
+      "sources": ["openalex", "anysearch"],
+      "cross_validated": true
+    },
+    {
+      "source_key": "P2",
+      "citation": "DESI Collaboration, DESI 2024 VI: cosmological constraints from the measurements of baryon acoustic oscillations, JCAP, 2025(02):021.",
+      "doi": "10.1088/1475-7516/2025/02/021",
+      "evidence_role": "BAO expansion constraints and time-varying dark-energy fits",
+      "sources": ["openalex", "anysearch"],
+      "cross_validated": true
+    },
+    {
+      "source_key": "P3",
+      "citation": "L. A. Escamilla, W. Giare, E. Di Valentino, R. C. Nunes, and S. Vagnozzi, The state of the dark energy equation of state circa 2023, JCAP, 2024(05):091.",
+      "doi": "10.1088/1475-7516/2024/05/091",
+      "evidence_role": "Critical review of equation-of-state constraints",
+      "sources": ["openalex", "anysearch"],
+      "cross_validated": true
+    },
+    {
+      "source_key": "P4",
+      "citation": "D. Huterer and D. Shafer, Dark energy two decades after: observables, probes, consistency tests, Reports on Progress in Physics, vol. 81, 016901, 2018.",
+      "doi": "10.1088/1361-6633/aa997e",
+      "evidence_role": "Dark-energy probes and consistency tests",
+      "sources": ["openalex", "anysearch"],
+      "cross_validated": true
+    },
+    {
+      "source_key": "P5",
+      "citation": "R. R. Caldwell, M. Kamionkowski, and N. N. Weinberg, Phantom Energy and Cosmic Doomsday, Physical Review Letters, vol. 91, 071301, 2003.",
+      "doi": "10.1103/PhysRevLett.91.071301",
+      "evidence_role": "Conditional constant-phantom Big Rip model",
+      "sources": ["openalex", "anysearch"],
+      "cross_validated": true
+    },
+    {
+      "source_key": "P6",
+      "citation": "R. Kallosh, J. Kratochvil, A. Linde, E. V. Linder, and M. Shmakova, Observational bounds on cosmic doomsday, JCAP, 2003(10):015.",
+      "doi": "10.1088/1475-7516/2003/10/015",
+      "evidence_role": "Conditional scalar-potential recollapse model",
+      "sources": ["openalex", "anysearch"],
+      "cross_validated": true
+    },
+    {
+      "source_key": "P7",
+      "citation": "T. Markkanen, A. Rajantie, and S. Stopyra, Cosmological Aspects of Higgs Vacuum Metastability, Frontiers in Astronomy and Space Sciences, vol. 5, 40, 2018.",
+      "doi": "10.3389/fspas.2018.00040",
+      "evidence_role": "Vacuum-metastability review",
+      "sources": ["openalex", "anysearch"],
+      "cross_validated": true
+    },
+    {
+      "source_key": "P8",
+      "citation": "S. Chigusa, T. Moroi, and Y. Shoji, Decay rate of electroweak vacuum in the standard model and beyond, Physical Review D, vol. 97, 116012, 2018.",
+      "doi": "10.1103/PhysRevD.97.116012",
+      "evidence_role": "Decay-rate sensitivity calculation",
+      "sources": ["openalex", "anysearch"],
+      "cross_validated": true
+    },
+    {
+      "source_key": "P9",
+      "citation": "A. Loeb, Cosmology with hypervelocity stars, JCAP, 2011(04):023.",
+      "doi": "10.1088/1475-7516/2011/04/023",
+      "evidence_role": "Long-term observability in a standard cosmological model",
+      "sources": ["openalex", "anysearch"],
+      "cross_validated": true
+    }
+  ],
+  "verification_caveats": [
+    "DOI/publisher pages were not independently opened because the requested in-app browser runtime was blocked by a local ACL failure.",
+    "Cross-validation means metadata agreement between OpenAlex and AnySearch; it is not a correctness proof of each scientific claim.",
+    "No file-hash gate was used, consistent with the repository lightweight validation policy."
+  ]
+}

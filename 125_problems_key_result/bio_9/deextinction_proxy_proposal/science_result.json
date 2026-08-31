@@ -1,0 +1,15 @@
+{
+  "schema": "science_result_v1",
+  "project_id": "bio_9_deextinction_proxy_proposal",
+  "research_topic": "Is de-extinction possible?",
+  "reframed_question": "Under what genomic, developmental, welfare, ecological, and governance conditions can an extinct-species proxy be scientifically feasible and conservation-defensible?",
+  "status": "author_source_ready",
+  "stages": {
+    "survey": {"status": "completed", "canonical": "survey/survey.md"},
+    "idea": {"status": "completed", "canonical": "idea/idea_result.json", "primary_direction": "D3"},
+    "experiment_design": {"status": "completed", "canonical": "experiment_design/research_design.json", "execution_policy": "DESIGN_ONLY"},
+    "author": {"status": "source_ready", "canonical": "author/deextinction_proxy_report.tex", "minimum_pages": 7}
+  },
+  "claim_boundary": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "prohibited_claims": ["exact historical organism recovered", "wet-lab work performed", "animal created", "organism released", "observed ecological benefit"]
+}
