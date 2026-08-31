@@ -1,0 +1,16 @@
+{
+  "schema_version": "survey-idea-handoff-v1",
+  "project_id": "math_3_navier_stokes_proposal",
+  "survey_run_id": "survey-ns3d-001",
+  "status": "VERIFIED_HANDOFF",
+  "research_object": "Global regularity or finite-time singularity of smooth 3D incompressible Navier-Stokes solutions.",
+  "target_gap_ids": ["G1", "G2", "G3", "G4"],
+  "must_preserve": [
+    "Distinguish classical, mild, suitable weak, and Leray-Hopf solution classes.",
+    "Preserve the exact spatial domain and initial-data assumptions in every theorem.",
+    "Do not use a finite computation, physical cutoff, or numerical observation as an all-scale proof.",
+    "Label every unverified public solution declaration CLAIM_UNDER_AUDIT."
+  ],
+  "seed_direction": "Seek a scale-invariant, pressure-safe depletion inequality which either yields a critical continuation bound or identifies a precise obstruction before a critical-element compactness argument.",
+  "allowed_source_keys": ["fefferman", "leray", "ckn", "ess", "kenigkoch", "knss", "tao", "barkerprange", "farwig", "buaria"]
+}

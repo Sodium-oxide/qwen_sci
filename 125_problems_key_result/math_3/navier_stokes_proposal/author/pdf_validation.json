@@ -1,0 +1,27 @@
+{
+  "schema_version": "pdf-validation-v1",
+  "status": "PASS",
+  "document": "navier_stokes_report.pdf",
+  "compiler": "MiKTeX pdfTeX-1.40.29",
+  "compilation_passes": 2,
+  "page_count": 7,
+  "page_size": "612 x 792 points (Letter)",
+  "fonts_embedded": true,
+  "rendered_page_count": 7,
+  "visually_inspected_pages": [1, 4, 7],
+  "visual_result": "Inspected title, formulas, two-column text, wide obligation table, appendices, and references. No clipping, overlap, unreadable glyphs, or layout defects were observed.",
+  "structure_checks": {
+    "undefined_citations": false,
+    "undefined_references": false,
+    "fatal_latex_errors": false,
+    "acknowledgements_present": false,
+    "unsupported_observed_results_language": false,
+    "document_status_from_author_handoff": "PROPOSAL_NO_OBSERVED_RESULTS",
+    "execution_policy_from_design_handoff": "DESIGN_ONLY"
+  },
+  "warnings": "The LaTeX log contains ordinary underfull-box warnings and three narrow-column overfull-box warnings; page rendering inspection found no resulting clipping or overlap.",
+  "human_review_notes": [
+    "Direct Clay and publisher-page verification could not be completed because the requested in-app browser failed under a Windows ACL restriction.",
+    "Any future proof claim requires independent mathematical-fluid-dynamics review of the pressure, compactness, and rigidity steps."
+  ]
+}

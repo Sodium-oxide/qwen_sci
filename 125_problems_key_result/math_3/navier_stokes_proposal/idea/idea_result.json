@@ -1,0 +1,33 @@
+{
+  "schema_version": "idea-result-v5",
+  "project_id": "math_3_navier_stokes_proposal",
+  "survey_run_id": "survey-ns3d-001",
+  "selected_primary_idea": {
+    "idea_id": "idea-scalebridge-001",
+    "title": "ScaleBridge: A Pressure-Safe Critical-Envelope Program",
+    "research_object": "Potential first singularities of smooth 3D incompressible Navier-Stokes flows",
+    "target_gap_ids": ["G1", "G2", "G3", "G4"],
+    "central_hypothesis": "A non-circular, scale-invariant local depletion estimate can force a decay of the velocity-pressure concentration envelope at every candidate singular scale.",
+    "falsification_conditions": [
+      "A normalized countersequence violates the proposed one-step decay under all stated hypotheses.",
+      "The pressure or far-field strain cannot be controlled in the declared envelope.",
+      "The rescaled limit lies outside the rigidity theorem class or the required nontriviality step fails."
+    ],
+    "status": "RESEARCH_PROPOSAL_ONLY"
+  },
+  "competitive_ideas": [
+    {"idea_id": "idea-critical-element-002", "title": "Critical-element compactness and ancient-profile rigidity", "status": "COMPETITIVE", "target_gap_ids": ["G1", "G3"]},
+    {"idea_id": "idea-alignment-003", "title": "Multiscale vorticity-strain alignment coercivity", "status": "HIGH_RISK", "target_gap_ids": ["G2", "G4"]}
+  ],
+  "rejected_ideas": [
+    {"title": "Physical ultraviolet cutoff proof", "reason": "It changes the continuum PDE problem."},
+    {"title": "Promote public solution declarations without audit", "reason": "CLAIM_UNDER_AUDIT cannot support proof edges."}
+  ],
+  "mcts_evolution_summary": [
+    {"stage": "seed", "finding": "Energy estimates and critical continuation criteria leave G1 open."},
+    {"stage": "branch", "finding": "Localization is necessary but pressure and far-field strain create G4."},
+    {"stage": "selection", "finding": "A typed critical-envelope route gives a theorem endpoint and an obstruction endpoint."}
+  ],
+  "allowed_source_keys": ["fefferman", "leray", "ckn", "ess", "kenigkoch", "knss", "tao", "barkerprange", "farwig", "buaria"],
+  "claim_audit_policy": "Recent solution declarations remain CLAIM_UNDER_AUDIT unless every formal obligation is independently discharged."
+}

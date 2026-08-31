@@ -121,6 +121,68 @@ def _publish_completed_survey(request: SurveyStageRequest) -> tuple[Path, dict[s
     return manifest, dict(verify_survey_manifest(manifest).identity)
 
 
+def test_require_identity_accepts_author_verified_survey_binding_envelope() -> None:
+    expected = {
+        "survey_run_id": "survey-001",
+        "project_id": "project-001",
+        "project_context_fingerprint": "context-001",
+        "survey_manifest_path": "/verified/survey_manifest.json",
+        "handoff_fingerprint": "handoff-001",
+    }
+    actual = {
+        "status": "BOUND_VERIFIED",
+        "human_confirmation_required": False,
+        "expected": {
+            "survey_run_id": "survey-001",
+            "project_id": "project-001",
+            "project_context_fingerprint": "context-001",
+        },
+        "resolved": {
+            "survey_run_id": "survey-001",
+            "project_id": "project-001",
+            "project_context_fingerprint": "context-001",
+        },
+    }
+
+    identity = science_stages._require_identity(
+        actual,
+        expected,
+        stage="author",
+        exit_code=40,
+    )
+
+    assert identity == expected
+
+
+def test_require_identity_rejects_inconsistent_author_verified_binding() -> None:
+    actual = {
+        "status": "BOUND_VERIFIED",
+        "human_confirmation_required": False,
+        "expected": {
+            "survey_run_id": "survey-001",
+            "project_id": "project-001",
+            "project_context_fingerprint": "context-001",
+        },
+        "resolved": {
+            "survey_run_id": "survey-001",
+            "project_id": "other-project",
+            "project_context_fingerprint": "context-001",
+        },
+    }
+
+    with pytest.raises(ScienceStageError, match="expected and resolved identities differ for project_id"):
+        science_stages._require_identity(
+            actual,
+            {
+                "survey_run_id": "survey-001",
+                "project_id": "project-001",
+                "project_context_fingerprint": "context-001",
+            },
+            stage="author",
+            exit_code=40,
+        )
+
+
 def _fake_services(calls: list[tuple[str, object]]) -> ScienceStageServices:
     def survey(request: SurveyStageRequest) -> ScienceStageResult:
         calls.append(("survey", request))

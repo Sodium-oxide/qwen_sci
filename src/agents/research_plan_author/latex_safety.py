@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 
 
 class LatexSafetyError(ValueError):
@@ -44,6 +45,167 @@ _MATH_IDENTIFIER_COMMAND = re.compile(
 _LOWERCASE_PROSE_WORD = re.compile(r"\b[a-z]{3,}\b")
 _EQUATION_FRAGMENT_BOUNDARY = re.compile(r"\n[ \t]*\n+")
 
+_SUPERSCRIPT_CHARACTERS = {
+    "⁰": "0",
+    "¹": "1",
+    "²": "2",
+    "³": "3",
+    "⁴": "4",
+    "⁵": "5",
+    "⁶": "6",
+    "⁷": "7",
+    "⁸": "8",
+    "⁹": "9",
+    "⁺": "+",
+    "⁻": "-",
+    "⁼": "=",
+    "⁽": "(",
+    "⁾": ")",
+    "ⁱ": "i",
+    "ⁿ": "n",
+}
+_SUBSCRIPT_CHARACTERS = {
+    "₀": "0",
+    "₁": "1",
+    "₂": "2",
+    "₃": "3",
+    "₄": "4",
+    "₅": "5",
+    "₆": "6",
+    "₇": "7",
+    "₈": "8",
+    "₉": "9",
+    "₊": "+",
+    "₋": "-",
+    "₌": "=",
+    "₍": "(",
+    "₎": ")",
+    "ₐ": "a",
+    "ₑ": "e",
+    "ₕ": "h",
+    "ᵢ": "i",
+    "ⱼ": "j",
+    "ₖ": "k",
+    "ₗ": "l",
+    "ₘ": "m",
+    "ₙ": "n",
+    "ₒ": "o",
+    "ₚ": "p",
+    "ᵣ": "r",
+    "ₛ": "s",
+    "ₜ": "t",
+    "ᵤ": "u",
+    "ᵥ": "v",
+    "ₓ": "x",
+}
+_SUPERSCRIPT_RUN = re.compile(
+    "[" + re.escape("".join(_SUPERSCRIPT_CHARACTERS)) + "]+"
+)
+_SUBSCRIPT_RUN = re.compile(
+    "[" + re.escape("".join(_SUBSCRIPT_CHARACTERS)) + "]+"
+)
+_UNICODE_TEX_REPLACEMENTS = {
+    "\u00a0": "~",
+    "\u00ad": "",
+    "\u00b0": r"$^\circ$",
+    "\u00b1": r"$\pm$",
+    "\u00b5": r"$\mu$",
+    "\u00b7": r"$\cdot$",
+    "\u00d7": r"$\times$",
+    "\u00f7": r"$\div$",
+    "\u03b1": r"$\alpha$",
+    "\u03b2": r"$\beta$",
+    "\u03b3": r"$\gamma$",
+    "\u03b4": r"$\delta$",
+    "\u03b5": r"$\epsilon$",
+    "\u03b6": r"$\zeta$",
+    "\u03b7": r"$\eta$",
+    "\u03b8": r"$\theta$",
+    "\u03b9": r"$\iota$",
+    "\u03ba": r"$\kappa$",
+    "\u03bb": r"$\lambda$",
+    "\u03bc": r"$\mu$",
+    "\u03bd": r"$\nu$",
+    "\u03be": r"$\xi$",
+    "\u03c0": r"$\pi$",
+    "\u03c1": r"$\rho$",
+    "\u03c3": r"$\sigma$",
+    "\u03c4": r"$\tau$",
+    "\u03c5": r"$\upsilon$",
+    "\u03c6": r"$\phi$",
+    "\u03c7": r"$\chi$",
+    "\u03c8": r"$\psi$",
+    "\u03c9": r"$\omega$",
+    "\u0393": r"$\Gamma$",
+    "\u0394": r"$\Delta$",
+    "\u0398": r"$\Theta$",
+    "\u039b": r"$\Lambda$",
+    "\u039e": r"$\Xi$",
+    "\u03a0": r"$\Pi$",
+    "\u03a3": r"$\Sigma$",
+    "\u03a6": r"$\Phi$",
+    "\u03a8": r"$\Psi$",
+    "\u03a9": r"$\Omega$",
+    "\u03d1": r"$\vartheta$",
+    "\u03d5": r"$\varphi$",
+    "\u03f5": r"$\varepsilon$",
+    "\u2010": "-",
+    "\u2011": "-",
+    "\u2012": "--",
+    "\u2013": "--",
+    "\u2014": "---",
+    "\u2018": "`",
+    "\u2019": "'",
+    "\u201c": "``",
+    "\u201d": "''",
+    "\u2022": r"\textbullet{}",
+    "\u2026": r"\ldots{}",
+    "\u2032": "'",
+    "\u2033": "''",
+    "\u2116": "No.",
+    "\u2126": r"$\Omega$",
+    "\u2190": r"$\leftarrow$",
+    "\u2192": r"$\rightarrow$",
+    "\u21d2": r"$\Rightarrow$",
+    "\u21d4": r"$\Leftrightarrow$",
+    "\u2202": r"$\partial$",
+    "\u2206": r"$\Delta$",
+    "\u2208": r"$\in$",
+    "\u220f": r"$\prod$",
+    "\u2211": r"$\sum$",
+    "\u2212": "-",
+    "\u221e": r"$\infty$",
+    "\u2248": r"$\approx$",
+    "\u2260": r"$\neq$",
+    "\u2264": r"$\leq$",
+    "\u2265": r"$\geq$",
+    "\u2282": r"$\subset$",
+    "\u2286": r"$\subseteq$",
+}
+
+
+def _normalize_superscript(match: re.Match[str]) -> str:
+    characters = "".join(
+        _SUPERSCRIPT_CHARACTERS[character] for character in match.group()
+    )
+    return "$^{" + characters + "}$"
+
+
+def _normalize_subscript(match: re.Match[str]) -> str:
+    characters = "".join(
+        _SUBSCRIPT_CHARACTERS[character] for character in match.group()
+    )
+    return "$_{" + characters + "}$"
+
+
+def _normalize_unicode_for_pdflatex(value: str) -> str:
+    """Convert known PDFLaTeX-unsafe visible Unicode to fixed TeX fragments."""
+
+    text = unicodedata.normalize("NFC", value)
+    text = _SUPERSCRIPT_RUN.sub(_normalize_superscript, text)
+    text = _SUBSCRIPT_RUN.sub(_normalize_subscript, text)
+    return "".join(_UNICODE_TEX_REPLACEMENTS.get(character, character) for character in text)
+
 
 def contains_observed_result_language(value: object) -> bool:
     """Detect proposal-incompatible statements that present work as completed."""
@@ -84,7 +246,8 @@ def escape_latex_text(
         "^": r"\textasciicircum{}",
         "\\": r"\textbackslash{}",
     }
-    return "".join(replacements.get(character, character) for character in text)
+    escaped = "".join(replacements.get(character, character) for character in text)
+    return _normalize_unicode_for_pdflatex(escaped)
 
 
 def safe_math_expression(value: object, *, label: str = "equation") -> str:

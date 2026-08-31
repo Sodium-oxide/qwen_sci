@@ -346,6 +346,39 @@ def test_visible_text_escape_restores_backslashes_without_control_characters() -
     assert "QWENSCI_BACKSLASH" not in rendered
 
 
+def test_visible_text_escape_normalizes_pdflatex_unsafe_unicode() -> None:
+    rendered = escape_latex_text(
+        "57 mW m⁻¹ K⁻¹; 10⁻⁷ Ω cm²; MoS₂/WS₂ at 0°; θ ≤ Δ.",
+        label="test prose",
+    )
+
+    assert rendered == (
+        r"57 mW m$^{-1}$ K$^{-1}$; 10$^{-7}$ $\Omega$ cm$^{2}$; "
+        r"MoS$_{2}$/WS$_{2}$ at 0$^\circ$; $\theta$ $\leq$ $\Delta$."
+    )
+    assert not any(character in rendered for character in "⁻¹⁷²Ωθ≤Δ")
+
+
+def test_renderer_normalizes_pdflatex_unsafe_unicode_in_visible_content(tmp_path: Path) -> None:
+    document = _document()
+    document["sections"][0]["blocks"][0]["text"] = (
+        "The candidate uses 57 mW m⁻¹ K⁻¹ in MoS₂/WS₂ at 0° and θ ≤ Δ."
+    )
+
+    rendered = render_tex_project(
+        document,
+        template_dir=_marker_template(tmp_path / "unicode-template"),
+        project_dir=tmp_path / "unicode-render",
+        profile=load_template_profile("markers_v1"),
+    )
+    tex = rendered.main_tex.read_text(encoding="utf-8")
+
+    assert "57 mW m$^{-1}$ K$^{-1}$" in tex
+    assert "MoS$_{2}$/WS$_{2}$ at 0$^\\circ$" in tex
+    assert "$\\theta$ $\\leq$ $\\Delta$" in tex
+    assert not any(character in tex for character in "⁻¹²Ωθ≤Δ")
+
+
 def test_math_expression_requires_a_real_mathematical_structure() -> None:
     with pytest.raises(LatexSafetyError, match="mathematical relation or structure"):
         safe_math_expression("The first matter premise is expressed in prose.", label="test equation")

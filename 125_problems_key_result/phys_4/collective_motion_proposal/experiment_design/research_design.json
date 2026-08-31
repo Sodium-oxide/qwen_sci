@@ -1,0 +1,22 @@
+{
+  "schema_version":"experiment_design_v1",
+  "project_id":"phys_4_collective_motion_proposal",
+  "selected_idea_id":"idea-mosaic-001",
+  "discipline":"computational_digital",
+  "execution_policy":{"mode":"DESIGN_ONLY","observed_results":[]},
+  "research_brief":{
+    "central_hypothesis":"A conditional shared latent-state model with explicit delay and geometry moderators predicts held-out collective-motion observables as well as domain-specific models within a preregistered practical margin.",
+    "alternative_explanations":["apparent transfer is caused by measurement preprocessing","polarization or density alone explains performance","shared variables are domain-specific proxies with no invariant semantics"],
+    "falsification_conditions":["out-of-domain non-inferiority fails","ablation removes no predictive information","negative controls remain predictive"]
+  },
+  "variables":{
+    "independent":["activity_persistence","coupling_proxy","noise_proxy","response_delay","geometry_context","candidate_neighbor_kernel"],
+    "dependent":["forecast_score","regime_probability","polarization","connected_correlation","correlation_length","propagation_lag","density_heterogeneity","vorticity_or_defect_proxy"],
+    "controls":["sampling_rate","track_completeness","group_size_window","smoothing_policy","field_of_view","data_split"],
+    "unknowns":["cross-domain measurement invariance","unobserved sensory and motivational state","true causal interaction graph"]
+  },
+  "models":["M0_domain_specific","M1_polarization_only","M2_mosaic_conditional","M3_ablation_suite"],
+  "acceptance_rule":"M2 is labeled conditional-transfer supported only if it is non-inferior to M0 on a held-out domain, improves over M1, retains material support under ablation, and passes tracking/geometry sensitivity analyses.",
+  "human_review_required":true,
+  "author_handoff":"author_handoff.json"
+}

@@ -29,6 +29,11 @@ from src.pipeline.survey_idea_loader import SurveyIdeaLoadError, load_survey_ide
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 _WINDOWS_DRIVE_PATH = re.compile(r"^[A-Za-z]:[\\/]")
+_SURVEY_BINDING_FIELDS = (
+    "survey_run_id",
+    "project_id",
+    "project_context_fingerprint",
+)
 
 
 class ScienceStageError(RuntimeError):
@@ -161,6 +166,49 @@ def _identity_from_survey_context(context: object) -> dict[str, str]:
     }
 
 
+def _normalize_verified_survey_binding(actual: Mapping[str, object]) -> tuple[dict[str, object], bool]:
+    """Normalize Author's verified Survey-binding envelope for stage validation."""
+
+    binding = dict(actual)
+    direct_identity = [_text(binding.get(field)) for field in _SURVEY_BINDING_FIELDS]
+    if any(direct_identity):
+        return binding, False
+    if _text(binding.get("status")) != "BOUND_VERIFIED":
+        return binding, False
+    if binding.get("human_confirmation_required") is not False:
+        raise ScienceStageError(
+            "author",
+            40,
+            "Verified Survey binding must not require human confirmation",
+        )
+    nested_expected = _mapping(binding.get("expected"))
+    nested_resolved = _mapping(binding.get("resolved"))
+    missing = [
+        field
+        for field in _SURVEY_BINDING_FIELDS
+        if not _text(nested_expected.get(field)) or not _text(nested_resolved.get(field))
+    ]
+    if missing:
+        raise ScienceStageError(
+            "author",
+            40,
+            "Verified Survey binding is incomplete; missing " + ", ".join(sorted(set(missing))),
+        )
+    mismatched = [
+        field
+        for field in _SURVEY_BINDING_FIELDS
+        if _text(nested_expected.get(field)) != _text(nested_resolved.get(field))
+    ]
+    if mismatched:
+        raise ScienceStageError(
+            "author",
+            40,
+            "Verified Survey binding expected and resolved identities differ for "
+            + ", ".join(mismatched),
+        )
+    return {**binding, **nested_resolved}, True
+
+
 def _require_identity(
     actual: Mapping[str, object],
     expected: Mapping[str, str],
@@ -173,7 +221,8 @@ def _require_identity(
         "project_id",
         "project_context_fingerprint",
     )
-    normalized = {field: _text(actual.get(field)) for field in required}
+    normalized_actual, author_verified = _normalize_verified_survey_binding(actual)
+    normalized = {field: _text(normalized_actual.get(field)) for field in required}
     missing = [field for field, value in normalized.items() if not value]
     if missing:
         raise ScienceStageError(
@@ -189,16 +238,25 @@ def _require_identity(
             "Survey binding differs for " + ", ".join(mismatched),
         )
     expected_manifest_path = _text(expected.get("survey_manifest_path"))
-    actual_manifest_path = _text(actual.get("survey_manifest_path") or actual.get("manifest_path"))
+    actual_manifest_path = _text(
+        normalized_actual.get("survey_manifest_path") or normalized_actual.get("manifest_path")
+    )
     if expected_manifest_path:
         if not actual_manifest_path:
-            raise ScienceStageError(stage, exit_code, "Survey binding is missing manifest_path")
-        if Path(actual_manifest_path).expanduser().resolve() != Path(expected_manifest_path).expanduser().resolve():
+            if not author_verified:
+                raise ScienceStageError(stage, exit_code, "Survey binding is missing manifest_path")
+        elif Path(actual_manifest_path).expanduser().resolve() != Path(expected_manifest_path).expanduser().resolve():
             raise ScienceStageError(stage, exit_code, "Survey binding differs for manifest_path")
     expected_handoff_fingerprint = _text(expected.get("handoff_fingerprint"))
-    actual_handoff_fingerprint = _text(actual.get("handoff_fingerprint"))
-    if expected_handoff_fingerprint and actual_handoff_fingerprint != expected_handoff_fingerprint:
+    actual_handoff_fingerprint = _text(normalized_actual.get("handoff_fingerprint"))
+    if (
+        expected_handoff_fingerprint
+        and actual_handoff_fingerprint
+        and actual_handoff_fingerprint != expected_handoff_fingerprint
+    ):
         raise ScienceStageError(stage, exit_code, "Survey binding differs for handoff_fingerprint")
+    if expected_handoff_fingerprint and not actual_handoff_fingerprint and not author_verified:
+        raise ScienceStageError(stage, exit_code, "Survey binding is missing handoff_fingerprint")
     return {
         **dict(expected),
         **normalized,

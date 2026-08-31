@@ -1,0 +1,260 @@
+\documentclass[conference]{../../../../Conference-LaTeX-template_10-17-19/IEEEtran}
+\usepackage{amsmath,amssymb,array,booktabs,tabularx,balance,url}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\title{An Audit-First Research Program for the Riemann Hypothesis: Li Positivity, Certified Finite Verification, and Tail Exclusion}
+\author{\IEEEauthorblockN{Research Proposal}\IEEEauthorblockA{Evidence-bounded four-agent synthesis | Mathematical design only}}
+\begin{document}
+\maketitle
+\begin{abstract}
+The Riemann Hypothesis (RH) asserts that every nontrivial zero of the Riemann zeta function has real part one-half. It remains one of mathematics' most consequential open statements because it connects the zeros of an analytic function to the fine distribution of primes. This report evaluates the status question together with recent public claims of a major breakthrough. The evidence survey finds rigorous finite-height zero verification, explicit zero-free-region advances, and multiple exact equivalence criteria, but no cross-validated peer-reviewed record of a complete unconditional proof. Repository manuscripts declaring a proof are therefore classified as claims under audit, not as closure evidence. The selected research direction, ProofBridge, represents a proof attempt as a typed graph of obligations. It uses Li's criterion as an exact target: RH is equivalent to nonnegativity of an infinite sequence of Li coefficients. The program separates the finite certified layer from the unbounded analytic layer by an explicit finite-plus-tail decomposition. It requires formal definition of the completed xi function, theorem-grade equivalence, zero-completeness certificates, uniform tail exclusion, non-circular composition, and independent review. The proposed mathematical derivations identify precisely what a finite computation can prove and what it cannot. The central conclusion is direct: current evidence supports serious partial and conditional advances, but a claimed RH proof must be rejected as unverified until every universal quantifier and bridge theorem has been independently discharged.
+\end{abstract}
+\begin{IEEEkeywords}
+Riemann Hypothesis, Riemann zeta function, Li criterion, proof verification, analytic number theory, formal mathematics, certified computation
+\end{IEEEkeywords}
+
+\section{Introduction}
+The Riemann Hypothesis is often presented through an arresting numerical fact: the nontrivial zeros of the Riemann zeta function that have been checked lie on the vertical line with real part one-half. That evidence is compelling as a guide to mathematical inquiry, but its logical form is finite. RH is an unbounded universal statement. A single zero off the line at any height would refute it, while any finite list of on-line zeros leaves all higher zeros unresolved. This difference between large computation and a universal theorem is the organizing issue of this report.
+
+The proposed project responds to two questions at once. First, what is the current evidence-supported answer to ``Is RH true?'' Second, how should one assess claims that a recent development has finally proved it? The answer to the first is not a numerical prediction. Within the sources collected here, the theorem status is \emph{open}: there are rigorous partial results and reformulations, but no accepted complete proof in the evidence registry. The answer to the second is methodological. A claimed breakthrough deserves careful reading, not automatic dismissal; however, neither a novel analogy, a high-precision calculation, nor a repository declaration can replace a chain of definitions, theorems, hypotheses, bounds, and universal quantifiers.
+
+This report makes that chain explicit. The Survey stage freezes a distinction among standard analytic facts, finite certified calculations, equivalent criteria, and claims under audit. The Idea stage selects ProofBridge, an audit-first program centered on Li's positivity criterion. The ExperimentDesign stage permits mathematical derivation and specifies a proof-obligation graph, but it remains strictly design-only: no proof assistant run, zero calculation, coefficient evaluation, or claimed theorem is produced. The Author stage converts those inputs into a research proposal with a transparent release policy. The result is not a proof of RH. It is a sharper research architecture for finding a proof or identifying why a proposed route does not yet reach one.
+
+\section{Mathematical Statement and Established Structure}
+\subsection{Zeta, xi, and the critical line}
+For $\Re(s)>1$, the Riemann zeta function is defined by the absolutely convergent series
+\begin{equation}
+ \zeta(s)=\sum_{m=1}^{\infty}m^{-s}=\prod_p(1-p^{-s})^{-1},
+\end{equation}
+where the Euler product exposes the connection to primes. Analytic continuation extends $\zeta$ meromorphically to the complex plane with a simple pole at $s=1$. Its negative even-integer zeros are called trivial. The remaining zeros lie in the critical strip $0<\Re(s)<1$.
+
+It is convenient to remove the elementary factors by defining the completed function
+\begin{equation}
+ \xi(s)=\frac{1}{2}s(s-1)\pi^{-s/2}\Gamma(s/2)\zeta(s).
+\label{eq:xi}
+\end{equation}
+This function is entire and satisfies the functional equation $\xi(s)=\xi(1-s)$. Together with conjugation symmetry, this implies that nontrivial zeros occur in reflected configurations. It does \emph{not} imply that a zero is fixed by reflection. RH is precisely the statement
+\begin{equation}
+ \forall\rho\in Z(\xi),\qquad \Re(\rho)=\frac12,
+\label{eq:rh}
+\end{equation}
+where $Z(\xi)$ denotes the nontrivial zero multiset with multiplicity. The symmetry is a necessary structural constraint; the fixed-line conclusion requires an additional argument.
+
+Riemann's original link between zeros and prime counting motivates the problem's importance \cite{riemann}. Explicit formulas express weighted prime-counting errors through the zero set. Thus a sharp description of the zero geometry delivers sharp control of prime-distribution fluctuations. Conversely, an appealing graph of primes or zeros does not establish \eqref{eq:rh}; the theorem is analytic and global.
+
+\subsection{What rigorous computations actually establish}
+Rigorous numerical work can prove strong, bounded statements. Platt describes an algorithm that isolates nontrivial zeta zeros up to a specified height with explicit precision and provides an independent RH verification in that range \cite{platt}. Johnston uses partial RH verification to obtain concrete prime-counting bounds over finite intervals \cite{johnston}. These results matter because their hypotheses, heights, and resulting ranges are explicit.
+
+The correct logical statement has the form
+\begin{equation}
+ \forall\rho\in Z(\xi),\quad |\Im\rho|\le T\Longrightarrow \Re\rho=\frac12.
+\label{eq:finite}
+\end{equation}
+For every finite $T$, \eqref{eq:finite} is weaker than \eqref{eq:rh}. No amount of rhetorical emphasis on the size of $T$ changes that implication. The same caution applies to high-precision locations, a long initial run of a coefficient sequence, or a statistical pattern among zeros. They may test conjectures and support finite theorems; they do not supply the missing all-height argument.
+
+Recent zero-free region work provides a separate type of advance. Mossinghoff, Trudgian, and Yang give explicit regions near $\Re(s)=1$ containing no zeta zeros over stated height ranges \cite{mty}. Such theorems improve analytic estimates and are fully compatible with the possibility of zeros elsewhere inside the critical strip. A proof audit must record the target region of every lemma. Replacing ``no zeros near one'' with ``all zeros have real part one-half'' is not a legitimate strengthening.
+
+\section{Survey Status and Recent-Claim Audit}
+\subsection{Equivalent criteria preserve the hard quantifier}
+The literature contains several exact reformulations of RH. Li's criterion is especially useful for a proof audit because it turns the zero-location statement into infinite positivity. For integers $n\ge1$, define
+\begin{equation}
+ \lambda_n=\frac{1}{(n-1)!}\left.\frac{d^n}{ds^n}\left[s^{n-1}\log\xi(s)\right]\right|_{s=1}.
+\label{eq:li}
+\end{equation}
+Under the standard analytic setup, Li's criterion states
+\begin{equation}
+ \mathrm{RH}\quad\Longleftrightarrow\quad \lambda_n\ge0\quad\text{for every }n\ge1.
+\label{eq:licriterion}
+\end{equation}
+Li-type criteria have been developed for broader classes of $L$-functions and connected with Weil quadratic functionals \cite{lagarias,brown,bucur}. Equation \eqref{eq:licriterion} is powerful because it provides an unambiguous target. It is not an easy proof in disguise: the quantifier ``for every $n$'' contains the same global difficulty that appears in \eqref{eq:rh}.
+
+Other programs use explicit formulas, Hilbert--Polya spectral ideas, Nyman--Beurling approximation, or geometric analogies. Connes reviews several such strategies while explicitly discussing remaining difficulties \cite{connes}. Reformulation is productive when it creates new handles on the problem. It becomes misleading when a proposed map to another field is treated as a theorem before its domain, codomain, injectivity or spectrum-preserving property, and hypotheses have been proved.
+
+\subsection{Recent claims: how the status decision is made}
+The dual scholarly search returned 2026 repository records that explicitly announce proofs or closures of RH. This is likely the kind of material behind claims of a recent breakthrough. The Survey does not silently ignore those records, nor does it promote them to theorem evidence. The returned metadata gives a repository venue and self-declared conclusion; it does not supply a cross-validated peer-reviewed proof record or an independent line-by-line verification. A recent survey of attempts, returned by both engines, further supports retaining an open status in the present evidence base \cite{spigler}.
+
+This classification is deliberately asymmetric. \texttt{CLAIM\_UNDER\_AUDIT} does not mean that a manuscript is false. It means that the required implication chain is not yet an accepted input to this workflow. The proposed audit does not judge style, reputation, or interdisciplinary ambition. It asks technical questions: Is each new object defined? Is the map from that object to $\xi$ or its zero set exact? Does the imported theorem apply to the mapped object? Does the conclusion concern all nontrivial zeros rather than a finite sample or proxy spectrum? Does any step assume a zero-free statement equivalent in strength to RH? A single unanswered question leaves the claim unverified.
+
+\begin{table}[t]
+\caption{Status Labels Used by ProofBridge}
+\centering\small
+\begin{tabular}{p{0.26\columnwidth}p{0.49\columnwidth}}
+\toprule
+Status & Meaning\\
+\midrule
+Proved & A statement is formally or conventionally proved with stated hypotheses.\\
+Finite certificate & A rigorous computation or theorem has an explicit finite range.\\
+Conditional result & A result depends on a named extra assumption.\\
+Open obligation & A required implication, map, or bound is missing.\\
+Claim under audit & A public proof declaration has not passed the proof-obligation audit.\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Why the Infinite Tail Cannot Be Hidden}
+\subsection{Zero symmetry and the Li-coordinate geometry}
+The completed function in \eqref{eq:xi} provides two symmetries of the nontrivial zero multiset. If $\rho$ is a zero, then $1-\rho$ is a zero by the functional equation, and $\overline{\rho}$ is a zero because the coefficients are real on the real axis. Thus a zero away from the critical line normally appears with its reflected and conjugate partners. The symmetry explains why the line $\Re(s)=1/2$ is distinguished. It does not make every quartet collapse onto that line.
+
+A useful coordinate in the Li formulation is
+\begin{equation}
+ w(\rho)=1-\frac{1}{\rho}.
+\label{eq:wmap}
+\end{equation}
+For $\rho=\beta+i\gamma$, direct algebra gives
+\begin{equation}
+ |w(\rho)|^2=\frac{(\beta-1)^2+\gamma^2}{\beta^2+\gamma^2}.
+\label{eq:modw}
+\end{equation}
+If $\beta=1/2$, then the numerator and denominator in \eqref{eq:modw} agree, so $|w(\rho)|=1$. A zero strictly to the left of the critical line gives $|w(\rho)|>1$, while its functional-equation partner is on the corresponding opposite side. Formula \eqref{eq:modw} shows why zero geometry enters Li coefficients so sharply: powers $w(\rho)^n$ can magnify an off-line contribution. It does not by itself prove positivity or exclude cancellation among the complete zero multiset.
+
+With an appropriate symmetric interpretation of the sum over zeros, the Li coefficients admit the representation
+\begin{equation}
+ \lambda_n=\sum_{\rho}\left[1-\left(1-\frac{1}{\rho}\right)^n\right].
+\label{eq:lisum}
+\end{equation}
+The proposal will not use \eqref{eq:lisum} until its convergence convention, multiplicity treatment, and equivalence with \eqref{eq:li} have been established in the formal environment. That restriction is not pedantry. An infinite series involving zeros is precisely where changes of order, truncation, or regularization can create a statement different from the one needed for Li's theorem.
+
+Equations \eqref{eq:modw} and \eqref{eq:lisum} motivate an often stated heuristic: an off-line zero should eventually produce a behavior inconsistent with universal Li positivity. The rigorous content is the equivalence criterion, not the heuristic alone. To turn it into a proof, one must control all other zero contributions, show that the relevant asymptotic or positivity implication is valid under the exact summation convention, and then establish the result for every index. ProofBridge labels the first two items as O3 and O5. It prohibits a narrative that observes a single growing formal term and silently assumes the tail cannot cancel or alter the sign.
+
+\subsection{Finite verification versus global quantification}
+Suppose a future certified computation supplies all zeros up to height $T$ and evaluates a finite set of coefficients. The most honest decomposition is \eqref{eq:split}. It is tempting to regard $R_n(T)$ as small because the omitted zeros have large imaginary parts. But ``small'' must be proved in the norm and uniformly in the parameters relevant to the final conclusion. The number of omitted zeros is infinite, the coefficient power $n$ is unbounded, and off-line zeros are exactly the objects whose absence is in question. A tail estimate that relies on all zeros already lying on the line is circular for an RH proof.
+
+This can be seen through quantifier order. A finite certificate might establish
+\begin{equation}
+ \forall n\le N,\qquad \Lambda_n(T)>0.
+\label{eq:finitepositive}
+\end{equation}
+A global Li proof needs
+\begin{equation}
+ \forall n\ge1,\qquad \Lambda_n(T)+R_n(T)\ge0.
+\label{eq:globalpositive}
+\end{equation}
+No logical rule upgrades \eqref{eq:finitepositive} to \eqref{eq:globalpositive} merely by choosing a very large $N$ or $T$. A valid bridge needs a theorem of the form: for all $n$ beyond a specified range, a proved analytic mechanism supplies the desired lower bound; for the remaining finite range, certified intervals suffice. Both pieces must be explicit, and neither may assume RH.
+
+The same issue governs claimed finite-height breakthroughs. A proof may combine a zero check below $T$ with an analytic theorem above $T$. This is a sensible architecture only if the high-height theorem actually covers every remaining zero and establishes the critical-line property rather than a weaker zero-free region, a density estimate, or a conditional moment bound. The overlap between the finite and analytic regions is useful for bookkeeping but cannot repair a gap in either argument. ProofBridge therefore records the exact source set, target set, and quantifiers of every bridge.
+
+\subsection{A theorem route and an obstruction route}
+The project has two scientifically valid endpoints. The theorem route proves a non-circular all-index positivity or zero-exclusion theorem and composes it with the finite layer. The obstruction route proves that a proposed family of estimates cannot yield O5 without a new input of specified strength. The latter must be stated carefully: a failure of one strategy does not disprove RH and does not establish that no other proof is possible. It identifies a boundary of a method.
+
+An obstruction result is particularly valuable for recent claims. If an external model identifies a finite-dimensional spectrum, a regression root, or a physical parameter with zeta zeros, the audit asks whether the mapping is defined over the full infinite zero multiset. If not, finite agreement is not a route to O5. If the mapping is defined but the invoked theorem gives only stability in another coordinate, the audit asks whether that stability is mathematically equivalent to $\Re\rho=1/2$. If not, there is a typed `GAP'. This is a precise finding, not a judgment about the author's motivation.
+\section{ProofBridge: The Selected Research Direction}
+\subsection{Research objective}
+ProofBridge asks a narrower but decisive research question: can an analytic theorem control the unresolved tail in a Li-criterion formulation strongly enough to establish the all-index positivity in \eqref{eq:licriterion}, without assuming RH or an equivalent condition? The word ``can'' is important. This proposal does not assert that the needed theorem has been found. It converts a vague proof search into a finite list of proof obligations, each with an explicit failure mode.
+
+The graph begins with standard analytic nodes: zeta's continuation, the entire xi function, the functional equation, and the zero multiset. It then passes to an exact Li-coefficient statement and to a finite-plus-tail decomposition. The ending node is \eqref{eq:rh}. Every edge is typed. A prose observation, numerical experiment, or cross-disciplinary analogy can be recorded, but it cannot be used as a `PROVED' edge until its hypotheses and conclusion are mathematically established.
+
+\subsection{Finite-plus-tail architecture}
+For a symmetric truncation convention over zeros, a future proof environment may express
+\begin{equation}
+ \lambda_n=\Lambda_n(T)+R_n(T),
+\label{eq:split}
+\end{equation}
+where $\Lambda_n(T)$ is the certified contribution from zeros with $|\Im\rho|\le T$, and $R_n(T)$ represents all omitted zero contributions or an analytically equivalent remainder. The exact formula, convergence convention, and multiplicity handling must be formally fixed before calculation. Equation \eqref{eq:split} is a research-design identity, not a numerical result produced here.
+
+The attraction of \eqref{eq:split} is also its warning. Suppose a future computation certifies $\Lambda_n(T)>0$ for $1\le n\le N$. That result is meaningful, but it does not show $\lambda_n\ge0$ unless a lower bound for $R_n(T)$ is supplied. Even if it does for each fixed $n\le N$, it cannot show positivity for all $n$ without a uniform extension. The missing universal information has not disappeared; it has been named $R_n(T)$.
+
+The target tail theorem must state its constants and domains, for example in the schematic form
+\begin{equation}
+ R_n(T)\ge -B(n,T),\qquad n\ge1,\ T\ge T_0,
+\label{eq:tail}
+\end{equation}
+with a non-circular argument proving that the certified finite term dominates the bound in every needed case. A bound valid only under RH, only for fixed $n$, or only after assuming a critical-line zero distribution does not close the graph. Such a result may still be valuable as `CONDITIONAL', but it cannot be relabeled as an unconditional proof.
+
+\section{Experiment Design: Formal Derivation and Certificate Plan}
+\subsection{Obligation graph}
+Table II is the core experimental design, where an ``experiment'' means a future formal or certified mathematical check. O1--O3 establish the object and the exact equivalence. O4 is a finite, reproducible layer. O5 is the unbounded analytic layer. O6 composes the result. O7 handles public breakthrough claims under the same standard.
+
+\begin{table*}[t]
+\caption{ProofBridge Obligations and Release Gates}
+\centering\small
+\begin{tabularx}{\textwidth}{p{0.08\textwidth}Y Y}
+\toprule
+ID & Required result & Release gate and failure mode\\
+\midrule
+O1 & Define zeta continuation, xi extension, and zero multiset with multiplicity. & A theorem or checked formalization; reject hidden poles, domains, or multiplicity assumptions.\\
+O2 & Derive functional equation and zero symmetries. & Symmetry is derived from xi, not asserted from a plot or analogy.\\
+O3 & State Li equivalence including all-index quantifier and convergence conventions. & A cited theorem plus checked instantiation; a finite positivity statement fails this gate.\\
+O4 & Certify finite zero and coefficient contribution to stated $T,N$. & Interval enclosures, completeness count, error bounds, and independent checker; floating point alone fails.\\
+O5 & Prove uniform tail exclusion or positivity control. & Explicit non-circular bound in $n$ and height; a conditional or fixed-index bound remains conditional/finite.\\
+O6 & Compose O1--O5 to establish RH. & Every edge PROVED and independently reviewable; any GAP blocks release.\\
+O7 & Audit a claimed external-model bridge. & Exact map, verified theorem hypotheses, and no imported RH-equivalent premise.\\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+The initial formal work package encodes \eqref{eq:xi}, the functional equation, and the definition \eqref{eq:li} in a proof assistant or a comparably audited analytic library. Imported theorem statements must be versioned. This is not bureaucracy: a proof assistant can check a formal implication only if the formalization says what the intended theorem says. A mismatch between a textbook xi function and a library normalization, or between a finite zero list and a multiset with multiplicity, can invalidate later steps.
+
+The second package establishes agreement between every representation used in a certificate. A derivative expression, a zero-sum expression, and an explicit-formula computation must not be switched opportunistically. For each equality, the project records the convergence rule, ordering of zeros, branch of the logarithm, regularization if any, and domain of validity. The output can be a useful lemma even if RH remains open.
+
+The third package is a future finite computation. If authorized, it uses interval arithmetic, a completeness argument such as an argument-principle count or an equivalent rigorous device, certified multiplicity handling, and two independently implemented verifiers. The output statement must name the height $T$, coefficient range $N$, precision, and error enclosure. It may say ``all zeros in this stated region meet the stated enclosure'' or ``these Li coefficients lie in positive intervals.'' It may not say ``RH verified'' without the finite qualifier.
+
+The fourth package seeks the genuinely difficult theorem: a tail control that does not inherit RH through a hidden premise. It may instead prove a restricted obstruction--for example, that a candidate approach cannot deliver the required uniformity without additional input. A proven obstruction narrows the proof landscape. An unproved skepticism remains only a research note. In either case the design prevents a finite computation from being mistaken for a universal theorem.
+
+\subsection{Audit protocol for a claimed breakthrough}
+For a recent claim, ProofBridge first creates a literal dependency graph. Each arrow receives a source statement, target statement, variables, quantifiers, assumptions, and cited theorem. A bridge from a physical spectrum, an ARIMA root, a random matrix statistic, or a numerical surrogate to a zeta zero must be a defined map on the relevant full set. Similarity of values, matching a finite set of constants, or a metaphor of stability is not a map.
+
+Next, the audit checks theorem hypotheses. If a theorem about an autoregressive process, a trace formula, an operator, or a positivity functional is invoked, the candidate object must satisfy its measurability, spectrum, boundedness, convergence, and domain assumptions. The conclusion must then preserve the property needed for RH: real part of every nontrivial zeta zero, not merely a proxy root or a finite regression residual. Finally, the audit looks for circularity. A claim fails if it assumes the absence of off-line zeros in order to obtain the tail estimate used to prove their absence, or if a supposed spectral correspondence is known only under RH.
+
+\section{Validation, Failure Modes, and Interpretation}
+\subsection{Release rules}
+The proof-status release rules are intentionally strict. Passing O1--O4 yields a finite theorem. Passing O5 only under a named conjecture yields a conditional theorem. Passing O5 for fixed $n$ or a fixed height does not prove all-index Li positivity. A `candidate complete proof' label requires O1 through O6 with every assumption displayed; it still requires independent expert verification before any public statement of recognized resolution. This final review is substantive, not ceremonial: a proof can contain a local gap whose repair changes the entire result.
+
+Negative and mixed outcomes are informative. If a certificate cannot establish zero completeness, the failure belongs to O4. If all finite coefficients are positive but the tail remains uncontrolled, the result is `CERTIFIED\_FINITE'. If a novel bridge has a defined map but no applicable theorem, it is `GAP'. If a formalization exposes a previously unstated branch or convergence condition, the proof text needs revision. The program never forces a binary answer before the mathematics has earned it.
+
+\subsection{Known limitations}
+Finite numerical evidence can be extraordinarily extensive and still leave a logical gap at infinity. Formal systems can eliminate implementation ambiguity while still formalizing the wrong mathematical claim. Equivalent criteria can clarify a target while retaining all of RH's difficulty. A proof-obligation graph can make gaps auditable but cannot create an analytic tail theorem. These are real limitations, not generic caveats.
+
+The proposal also distinguishes mathematical status from social visibility. A genuine new proof might appear before a journal issue, and a peer-reviewed paper can still be found incorrect. The appropriate operational rule is not ``repository papers are false'' or ``journal labels guarantee truth.'' It is that a closure claim must expose a complete proof chain that qualified readers can check. Until then, the evidence-supported label remains `UNVERIFIED\_CLAIM'. The browser failure in this environment prevents direct official-page inspection, so the final status should be refreshed by a human reviewer with access to official prize and journal records.
+
+\section{Conclusion}
+RH has a precise and demanding form: every nontrivial zeta zero must lie on the critical line. Current evidence in this project supports rigorous finite verification, finite consequences for prime counting, explicit zero-free regions, and exact reformulations such as Li positivity. It does not support declaring the hypothesis proved. The recent-claim question therefore has a clear answer: a public declaration of a major breakthrough is a candidate for proof audit, not a proof substitute.
+
+ProofBridge provides a research path that is both constructive and resistant to overclaim. It formalizes the xi and Li framework, certifies any finite layer honestly, and places the decisive burden on a non-circular, uniform tail theorem. If that theorem is found and every graph edge is proved, the route becomes a candidate proof. If not, the program yields a precise obstruction ledger rather than a vague assertion of progress. That is the appropriate mathematical standard for a problem whose difficulty lies exactly in the passage from every checked case to all cases.
+
+\appendices
+\section{Formal Derivation Checklist}
+The first formalization target is the meromorphic continuation of $\zeta$, followed by the entire extension in \eqref{eq:xi}. The functional equation must be stated at the xi level so that pole cancellation is not assumed informally. The zero set is a multiset; every use of a zero sum must record multiplicity and a symmetric truncation convention. The logarithm in \eqref{eq:li} requires a local analytic domain around $s=1$ and a stated branch. A future derivative computation must prove that the representation agrees with the intended Li coefficient, rather than treating a numerically convenient expression as definition.
+
+The second target is the equivalence theorem itself. It should be imported with its exact statement, including every convergence and real-valuedness condition, and specialized only after those conditions are discharged. The third target is the finite certificate interface: a machine-readable list of zero intervals, a completeness count, a precision proof, and a verifier result. The fourth target is the tail lemma. Its statement must quantify over every coefficient index and every unverified zero height needed for the final inference. Any stronger conclusion than its quantifiers support is rejected by construction.
+
+\section{Certificate Schema and Counterexample Protocol}
+A mathematical certificate is useful only if a reader can identify exactly what it establishes and rerun or formally inspect the relevant steps. ProofBridge therefore specifies four linked certificate layers. The \emph{object layer} records the chosen zeta and xi normalizations, the source theorem versions, the analytic domains, the zero-multiset convention, and every branch or regularization convention. The \emph{finite-data layer} records a height cutoff, a zero-count completeness proof, interval enclosures, multiplicities, precision, and a deterministic representation of the finite contribution. The \emph{analytic layer} records every remainder estimate with constants, quantifiers, and dependencies. The \emph{release layer} applies only the inference licensed by the first three layers.
+
+For a future finite zero calculation, a certificate must include more than a list of decimal ordinates. It must establish that every zero in the claimed region has been found under the stated multiplicity convention. It must bound numerical evaluation error and distinguish the zeta function from auxiliary functions used to locate it. It must identify the source code version and computational environment only at the release stage, where reproducibility is evaluated; those fingerprints do not substitute for the analytic argument. A second independently implemented verifier should consume the certificate rather than reusing the first implementation's internal results. This design makes it possible to find a transcription or rounding error without silently confirming the same bug twice.
+
+For a future Li-coefficient calculation, the certificate must additionally state whether it is based on derivatives, a zero sum, an explicit formula, or a transformed representation. If it uses the finite-plus-tail form \eqref{eq:split}, it must give disjoint bounds for $\Lambda_n(T)$ and $R_n(T)$. A positive midpoint is not enough; the entire interval must lie in the asserted sign region. The report must list the finite index set explicitly. A theorem about $1\le n\le N$ is written with that quantifier and may not be summarized with the phrase ``Li's criterion holds.''
+
+The counterexample protocol runs in the opposite direction. A proposed off-line zero, negative Li coefficient, or failed bridge is first classified by object identity. Is it a zero of $\zeta$, of $\xi$, of a truncated expression, or of an unrelated proxy? Is the alleged coefficient defined with the same normalization as the theorem? Is its interval enclosure separated from zero? Is a supposed bridge failure a contradiction to a claimed lemma or only a numerical mismatch in a heuristic? Only after these checks may the project use the word counterexample. This avoids both false refutations and false confirmations.
+
+The protocol also prevents a dangerous asymmetry in proof announcements. It is legitimate to publish a finite certified advance without solving RH, and it is legitimate to publish a verified gap in a claimed proof without disproving RH. The release labels make those outcomes visible. A complete RH proof needs an object identity certificate, theorem-grade equivalences, finite certificates where they are used, a non-circular all-height tail theorem, and an independent audit. Failure of any one item changes the label but does not erase the valid portions of the work.
+\balance
+\section{Proof-Obligation Graph Semantics}
+The graph used by ProofBridge is more than a checklist. It is a typed logical object whose nodes are mathematical statements and whose directed edges are claimed implications. A node records its variables, domains, quantifiers, assumptions, source, and status. An edge records the exact theorem or derivation that transforms the source node into the target node. The root node contains the definition and analytic properties of $\xi$. The terminal node is the universal RH statement \eqref{eq:rh}. The intermediate nodes include Li positivity, finite zero isolation, finite coefficient intervals, and a tail theorem.
+
+This representation prevents a common ambiguity in long proof narratives. A sentence such as ``the remaining zeros are controlled by stability'' can encode many different claims: a bound for a fixed finite set, an asymptotic estimate as height tends to infinity, a statement conditional on all zeros already being on the critical line, or an operator theorem about a different spectrum. In the graph those are different target nodes. An edge may be entered only when its source and target are written in compatible formal language. If a theorem controls eigenvalues in a unit disk, the audit must prove the map taking nontrivial zeta zeros to those eigenvalues and must prove that disk membership is equivalent to the required real-part condition. The name of a theorem cannot supply that map.
+
+Each node has a monotone status. `Proved' can support later edges. `Finite certificate' can support only an implication whose target preserves the same finite quantifiers. `Conditional result' can support a later node only if the condition is carried forward visibly. `Open obligation' blocks all descendants that require it. `Claim under audit' is evidence that an argument exists to be checked; it is not a premise. This monotonicity rule stops a workflow from laundering a finite numerical result into an unconditional sentence through a chain of prose summaries.
+
+A simple example illustrates the rule. Let $V(T)$ be the certified statement that every nontrivial zero with $|\Im\rho|\le T$ lies on the critical line. Let $A(T)$ be an analytic theorem claiming that every zero with $|\Im\rho|>T$ lies on the critical line. If both are proved with matching conventions, then $V(T)\wedge A(T)$ implies RH by a complete partition of the zero set. But a theorem $B(T)$ stating only that there are no zeros near $\Re(s)=1$ at high height does not imply $A(T)$. Nor does a density theorem asserting that most zeros lie on the line. The graph records both as valuable results with different targets and refuses the invalid arrow to RH.
+
+The same logic applies to Li coefficients. Let $L(N)$ assert nonnegativity for $1\le n\le N$. A genuine all-index theorem $U(N)$ might state that $\lambda_n\ge0$ for every $n>N$ under hypotheses that have been independently proved. Then $L(N)\wedge U(N)$ gives the criterion. A tail estimate that merely makes $R_n(T)$ numerically small for the tested indices does not give $U(N)$. A plot of the first million coefficients does not give $L(N)$ unless each value has an interval certificate, and even then it remains finite.
+
+The graph also supports modular review. An analytic-number-theory referee can inspect O1--O5. A formal-methods reviewer can inspect whether the proof assistant representation preserves the intended quantifiers. A numerical reviewer can inspect the finite certificate and independent verifier. A reviewer of a recent claim can inspect bridge maps and theorem hypotheses. No reviewer is asked to infer an unstated connection merely because another part of the graph is impressive. A defect discovered in one edge changes the status of descendants while preserving unrelated finite lemmas.
+
+Finally, the graph exposes what a true breakthrough would look like. It would not merely introduce a new vocabulary or a broad interdisciplinary correspondence. It would contribute one or more missing `Proved' edges: most importantly, a non-circular theorem that controls the full unverified tail, or an exact spectral/positivity correspondence with its hypotheses verified. Such an edge would be immediately visible, state its quantifiers, and be available for independent checking. Until then, the graph records the proposal as a serious research route rather than a completed proof.
+\section{Claim-Audit Card}
+For each public claim, the project records: bibliographic identity and version; claimed theorem; definitions introduced; source and target of every bridge map; every imported theorem and its hypotheses; finite computations and their certificates; tail or limit argument; use of functional symmetry; possible RH-equivalent assumptions; independent replication status; and the current graph label. The card may report a gap without asserting that the author's final conclusion is false. It reports only that the presented route has not discharged a named obligation.
+
+
+\begin{thebibliography}{00}
+\bibitem{riemann} G. F. B. Riemann, ``Ueber die Anzahl der Primzahlen unter einer gegebenen Grösse,'' \emph{Monatsberichte der Berliner Akademie}, pp. 671--680, 1859.
+\bibitem{platt} D. J. Platt, ``Isolating some non-trivial zeros of zeta,'' \emph{Mathematics of Computation}, vol. 86, no. 307, pp. 2449--2467, 2017, doi: 10.1090/mcom/3198.
+\bibitem{johnston} D. R. Johnston, ``Improving bounds on prime counting functions by partial verification of the Riemann hypothesis,'' \emph{The Ramanujan Journal}, vol. 59, no. 4, pp. 1307--1321, 2022, doi: 10.1007/s11139-022-00616-x.
+\bibitem{chirre} A. Chirre, ``Bounding zeta on the 1-line under the partial Riemann hypothesis,'' \emph{Bulletin of the Australian Mathematical Society}, vol. 110, no. 2, pp. 244--251, 2024, doi: 10.1017/s0004972723001338.
+\bibitem{mty} M. J. Mossinghoff, T. S. Trudgian, and A. Yang, ``Explicit zero-free regions for the Riemann zeta-function,'' \emph{Research in Number Theory}, vol. 10, 2024, doi: 10.1007/s40993-023-00498-y.
+\bibitem{lagarias} J. C. Lagarias, ``Li coefficients for automorphic $L$-functions,'' \emph{Annales de l'institut Fourier}, vol. 57, no. 5, pp. 1689--1740, 2007, doi: 10.5802/aif.2311.
+\bibitem{brown} F. Brown, ``Li's criterion and zero-free regions of $L$-functions,'' \emph{Journal of Number Theory}, vol. 111, no. 1, pp. 1--32, 2005, doi: 10.1016/j.jnt.2004.07.016.
+\bibitem{bucur} A. Bucur, A.-M. Ernvall-Hytönen, A. Odžak, and L. Smajlović, ``On a Li-type criterion for zero-free regions of certain Dirichlet series with real coefficients,'' \emph{LMS Journal of Computation and Mathematics}, vol. 19, no. 1, pp. 259--280, 2016, doi: 10.1112/s1461157016000115.
+\bibitem{connes} A. Connes, ``An essay on the Riemann Hypothesis,'' arXiv:1509.05576, 2015, doi: 10.48550/arxiv.1509.05576.
+\bibitem{spigler} R. Spigler, ``A Brief Survey on the Riemann Hypothesis and Some Attempts to Prove It,'' \emph{Symmetry}, vol. 17, no. 2, p. 225, 2025, doi: 10.3390/sym17020225.
+\end{thebibliography}
+\end{document}

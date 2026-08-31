@@ -1,0 +1,17 @@
+{
+  "schema_version": "gap-ledger-v1",
+  "project_id": "math_3_navier_stokes_proposal",
+  "accepted_gaps": [
+    {"gap_id": "G1", "title": "Unconditional critical-norm control", "statement": "Energy estimates do not prove a bound in a continuation-critical norm for arbitrary smooth data.", "evidence_ids": ["S2", "S4", "S7", "S9"], "downstream_constraint": "A proposed solution must state an unconditional critical or stronger a priori estimate."},
+    {"gap_id": "G2", "title": "Uniform vortex-stretching depletion", "statement": "No proved scale-uniform inequality controls vortex stretching by dissipation in all potential concentration cylinders.", "evidence_ids": ["S8", "S10"], "downstream_constraint": "Numerical attenuation can motivate, but cannot substitute for, the required inequality."},
+    {"gap_id": "G3", "title": "Nontrivial ancient-profile exclusion", "statement": "Known compactness and Liouville mechanisms do not exclude every profile compatible with arbitrary hypothetical blow-up.", "evidence_ids": ["S5", "S6", "S7"], "downstream_constraint": "The compact limit class, nontriviality, and rigidity theorem must be matched exactly."},
+    {"gap_id": "G4", "title": "Pressure-safe localization", "statement": "A localized velocity argument must bound pressure and far-field strain without a hidden global regularity premise.", "evidence_ids": ["S3", "S8"], "downstream_constraint": "Every local estimate must list pressure decomposition, cutoffs, and tail terms."},
+    {"gap_id": "G5", "title": "Auditable proof-claim adjudication", "statement": "Public solution declarations lack a workflow-level proof-obligation discharge.", "evidence_ids": ["S11", "S12"], "downstream_constraint": "Claims remain unverified until the unrestricted formulation and every analytic bridge are independently checked."}
+  ],
+  "rejected_inferences": [
+    {"id": "R1", "inference": "A finite simulation or grid cutoff rules out blow-up.", "reason": "The Millennium problem is a continuum, all-scale theorem."},
+    {"id": "R2", "inference": "Partial regularity proves the singular set is empty.", "reason": "A small singular set may still be nonempty."},
+    {"id": "R3", "inference": "A theorem for axisymmetric, rotating, thin-domain, or small-data flows proves the general problem.", "reason": "Those are strict subclasses with additional structure."},
+    {"id": "R4", "inference": "A repository declaration solves the problem merely by declaring a global bound.", "reason": "The norm, hypotheses, proof of coercivity, and full limit argument remain to be audited."}
+  ]
+}

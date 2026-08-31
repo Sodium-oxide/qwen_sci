@@ -1,0 +1,35 @@
+{
+  "schema_version": "experiment-design-v2",
+  "project_id": "math_3_navier_stokes_proposal",
+  "selected_idea_id": "idea-scalebridge-001",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": [],
+    "automatic_execution_allowed": false
+  },
+  "research_brief": {
+    "object": "A first hypothetical singularity of a smooth 3D incompressible Navier-Stokes solution",
+    "central_claim": "A uniform pressure-safe decay of a critical local envelope would rule out the singularity through epsilon regularity.",
+    "alternative_explanations": ["Pressure tails prevent local closure.", "A vortex-stretching defect survives rescaling.", "The compact limit does not satisfy the planned Liouville theorem hypotheses."],
+    "falsification": "Produce an admissible normalized sequence violating the decay inequality or identify an unabsorbable term."
+  },
+  "formal_objects": {
+    "equation": "partial_t u + (u dot grad)u + grad p = nu Delta u; div u = 0",
+    "scaling": "u_lambda(x,t) = lambda u(lambda x, lambda^2 t)",
+    "concentration": "C(r,z)=r^-2 integral_Qr |u|^3; D(r,z)=r^-2 integral_Qr |p-(p)_Br|^(3/2)",
+    "mechanism": "V(r,z)=r integral_Qr (omega dot S omega)_+",
+    "target": "E(theta r,z) <= q E(r,z) + K Tail(r,z), with 0<q<1 uniformly"
+  },
+  "proof_obligations": [
+    {"id": "O1", "status": "PROVED_INPUT", "description": "Formulation, scaling, and local continuation framework"},
+    {"id": "O2", "status": "PROVED_INPUT", "description": "Localized energy and pressure bookkeeping"},
+    {"id": "O3", "status": "PROVED_INPUT", "description": "Epsilon regularity in compatible normalization"},
+    {"id": "O4", "status": "PROVED_INPUT", "description": "First-concentration alternative"},
+    {"id": "O5", "status": "OPEN_OBLIGATION", "description": "Uniform vortex-stretching depletion"},
+    {"id": "O6", "status": "OPEN_OBLIGATION", "description": "Non-circular tail absorption"},
+    {"id": "O7", "status": "OPEN_OBLIGATION", "description": "Iteration or ancient-profile rigidity"},
+    {"id": "O8", "status": "HUMAN_REVIEW_REQUIRED", "description": "Independent analytic audit and mapping to the official formulation"}
+  ],
+  "human_review_required": true,
+  "allowed_source_keys": ["fefferman", "leray", "ckn", "ess", "kenigkoch", "knss", "tao", "barkerprange", "farwig", "buaria"]
+}

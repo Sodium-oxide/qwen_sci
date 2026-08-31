@@ -1,0 +1,50 @@
+{
+  "project_id": "phys_4_collective_motion_proposal",
+  "topic": "What are the fundamental principles of collective motion?",
+  "research_question": "Which measurable, conditional mechanisms predict transitions among collective-motion states across biological and engineered groups?",
+  "pipeline": ["Survey", "Idea", "ExperimentDesign", "Author"],
+  "status": "COMPLETED",
+  "selected_idea": {
+    "id": "idea-mosaic-001",
+    "title": "MOSAIC: Mechanism-Observable State Atlas and Invariance Calibration"
+  },
+  "central_conclusion": "Collective motion should be treated as a conditional predictive invariant among activity, coupling, fluctuations, delay, and geometry, not as a single universal microscopic interaction law inferred from visually similar trajectories.",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": []
+  },
+  "evidence": {
+    "source_count": 12,
+    "source_status": "OpenAlex and AnySearch metadata cross-validation",
+    "publisher_page_verification": "PENDING_HUMAN_REVIEW_BROWSER_ACL_FAILURE"
+  },
+  "artifacts": {
+    "survey": "survey/survey.md",
+    "survey_manifest": "survey/survey_manifest.json",
+    "survey_evidence_plan": "survey/survey_evidence_plan.json",
+    "survey_gap_ledger": "survey/survey_gap_ledger.json",
+    "survey_idea_handoff": "survey/survey_idea_handoff.json",
+    "idea": "idea/idea.md",
+    "idea_result": "idea/idea_result.json",
+    "experiment_design": "experiment_design/research_design.md",
+    "experiment_design_json": "experiment_design/research_design.json",
+    "author_handoff": "experiment_design/author_handoff.json",
+    "report_tex": "author/collective_motion_report.tex",
+    "report_pdf": "author/collective_motion_report.pdf",
+    "pdf_validation": "author/pdf_validation.json"
+  },
+  "final_report": {
+    "language": "English",
+    "style": "IEEE conference",
+    "pages": 7,
+    "minimum_page_requirement_applied": 7,
+    "acknowledgements_present": false,
+    "observed_results_claimed": false
+  },
+  "human_review_items": [
+    "Verify frozen DOI metadata against publisher pages once the in-app browser ACL issue is resolved.",
+    "Confirm licensing, ethics, and measurement quality for every future public trajectory or velocity-field dataset.",
+    "Pre-register data-specific normalizations, non-inferiority margins, and candidate interaction kernels before opening held-out domains.",
+    "Obtain qualified safety and regulatory approval before any animal, biological, or drone acquisition."
+  ]
+}

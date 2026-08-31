@@ -1,0 +1,15 @@
+{
+  "status": "EVIDENCE_BOUNDED",
+  "subhypotheses": [
+    {"id":"H1","statement":"Collective state is shaped by the joint balance of self-propulsion, neighbor coupling, noise, delay, and geometry rather than a single interaction parameter.","allowed_sources":["S1","S2","S3","S6","S11","S12"],"evidence_level":"direct_synthesis"},
+    {"id":"H2","statement":"Correlation, polar order, and response propagation must be measured separately to distinguish collective states.","allowed_sources":["S4","S7","S8","S9"],"evidence_level":"direct_synthesis"},
+    {"id":"H3","statement":"A proposed cross-scale principle is credible only if it improves blocked out-of-sample prediction against domain-specific alternatives.","allowed_sources":["S5","S9","S10"],"evidence_level":"methodological_inference"},
+    {"id":"H4","statement":"Hydrodynamics, sensing, communication, and environmental constraints are domain-dependent moderators that must be retained in comparison.","allowed_sources":["S3","S5","S10","S12"],"evidence_level":"direct_synthesis"}
+  ],
+  "prohibited_inferences": [
+    "Do not infer a universal microscopic rule from visual similarity of trajectories.",
+    "Do not infer causal influence from correlation alone.",
+    "Do not report a biological or robot-swarm result as observed; downstream work is design only.",
+    "Do not upgrade cross-validated metadata into direct full-text evidence."
+  ]
+}
