@@ -1,0 +1,291 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{url}
+\newcommand{\xeno}{xenotransplantation}
+\newcommand{\xenograft}{xenograft}
+\newcommand{\xenografts}{xenografts}
+\newcommand{\state}[1]{\texttt{#1}}
+\begin{document}
+
+\title{Can Xenotransplantation Relieve Donor-Organ Shortage?\\
+A Mechanism-to-Access Readiness Framework for Safe, Scalable Deployment}
+
+\author{}
+\maketitle
+
+\begin{abstract}
+The shortage of donor organs motivates interest in pig-to-human xenotransplantation, but the question of whether it can solve shortage is frequently posed more broadly than current evidence permits. Short-term kidney function in brain-dead human recipients and extended cardiac survival in nonhuman primates establish important feasibility signals, yet neither signal alone demonstrates durable living-recipient benefit, clinically deployable supply, or equitable access. This proposal introduces XenoReadiness, a provenance-aware framework that connects biological evidence to system-level deployability. It represents function and durability, immune injury, coagulation and physiological compatibility, microbiological safety, manufacturing and quality, regulation and ethics, and equity and access as separate readiness domains. Critical domains are non-compensatory: a favorable result in one cannot override insufficient evidence or an unresolved deployment barrier in another. The proposed study is design-only. It assembles evidence cards, compares biological-only and gated classifications, conducts transparent scenario and sensitivity analyses, and uses abstention when model transfer or evidence coverage is inadequate. The contribution is not a claim that xenotransplantation has already solved organ shortage. Rather, it is an auditable method for determining when a particular organ-and-indication pathway may credibly be described as a safe, scalable supplement to human donation, and when that conclusion is not yet supported.
+\end{abstract}
+
+\begin{IEEEkeywords}
+xenotransplantation, organ shortage, transplant safety, evidence synthesis, readiness assessment, health equity, clinical translation
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+The shortage of donated organs is not simply an engineering constraint; it is a persistent mismatch between clinically appropriate need and a scarce, time-sensitive human resource. Pig-to-human \xeno{} offers a compelling possibility because pigs can, in principle, provide a renewable source of organs whose physiological scale is relevant to human transplantation. Recent scientific progress has shifted the topic from a distant hypothetical to a translational field with direct human feasibility observations, extensive nonhuman-primate work, and a developing regulatory conversation. That shift warrants an ambitious research program. It does not, however, justify an unqualified statement that \xeno{} can already solve organ shortage.
+
+The phrase ``solve the shortage'' combines at least four different claims. First, a graft must function in a recipient long enough to be clinically meaningful. Second, immune, inflammatory, coagulation, and cross-species physiological injury must be controlled at a level compatible with the intended use. Third, infectious risk must be governed over a long time horizon, including source-animal quality and monitoring obligations. Fourth, a technically functioning organ must be produced, qualified, distributed, regulated, financed, and accessed at a scale that changes the practical availability of transplantation. Treating these claims as one undifferentiated feasibility question creates a familiar failure mode: an early biological signal is reported as if it were evidence of deployment capacity.
+
+This paper proposes a research framework called \emph{XenoReadiness}. Its purpose is to make the necessary bridge explicit. The framework classifies an organ-and-indication pathway from a provenance-bearing evidence package rather than from a narrative impression. It treats biological performance as necessary but not sufficient. It also treats microbiological governance, production quality, regulation, and equity as readiness thresholds rather than final discussion items. The planned study is computational and evidence-integrative; it performs no transplantation, animal work, source-pig operation, pathogen assay, genome manipulation, treatment assignment, or patient-level clinical decision.
+
+The work has four objectives. First, it specifies the evidence boundary that prevents short-term or animal-model findings from being inflated into long-term human results. Second, it defines a seven-domain, non-compensatory readiness model. Third, it designs a comparative analysis in which a biological-only classification is contrasted with the gated model. Finally, it defines conditional result language that can support a strong conclusion when justified while preserving a principled abstention option when evidence is incomplete. The central premise is that a credible shortage-relief claim concerns \emph{deployable supplementary supply}, not merely the number of candidate organs that could theoretically be generated.
+
+\section{Evidence Boundary and Research Gap}
+
+\subsection{What existing evidence establishes}
+
+The strongest direct human feasibility anchor is the report by Montgomery \emph{et al.} of two genetically modified pig kidneys transplanted into brain-dead human recipients \cite{montgomery2022}. The recipients were maintained with physiological support, the kidneys remained perfused and produced urine during the 54-hour observation period, and serial biopsy assessment did not show hyperacute or antibody-mediated rejection. This evidence is consequential: it demonstrates that a genetically modified porcine kidney can provide a short-term functional signal in a human biological setting. Its boundary is equally consequential. A brain-dead-human observation over 54 hours is not a living-recipient outcome study, a durability study, a population-level effectiveness study, or a proof of routine availability.
+
+Longer-duration evidence is available chiefly from preclinical models. Mohiuddin \emph{et al.} report that progressive genetic modifications of porcine cardiac grafts, together with an associated preclinical program, extended survival to approximately nine months in a life-supporting pig-to-baboon model \cite{mohiuddin2022}. This result supports the proposition that major durability barriers can be moved by integrated biological design. It does not yield a human survival estimate, and its cardiac, nonhuman-primate, and protocol-specific setting cannot be silently mapped to kidney or other organ pathways.
+
+Mechanistic reviews frame why a single graft-duration observation cannot answer the shortage question. Lei \emph{et al.} describe donor genetic strategies aimed at antigenicity, complement regulation, coagulation compatibility, physiological mismatch, and infection-risk reduction \cite{lei2022}. Zhou \emph{et al.} similarly emphasize the layered nature of xenograft rejection, including hyperacute, antibody-mediated, and cellular processes \cite{zhou2022}. These sources support a systems view of biological risk: immune injury, endothelial damage, inflammation, and dysregulated hemostasis interact. They do not demonstrate that any particular configuration has eliminated those risks in a general clinical population.
+
+Infectious disease and governance evidence establishes an additional boundary. Fishman and Mueller discuss clinical \xeno{} as a setting in which source-animal management and recipient monitoring matter both to individual recipients and to a larger public-health context \cite{fishman2024}. The Third World Health Organization consultation on regulatory requirements likewise treats source-animal quality, infection control, long-term follow-up, and oversight as translational prerequisites \cite{hawthorne2019}. The appropriate conclusion is neither that infection makes the field impossible nor that infection has been solved. Rather, any claim of ordinary deployment must carry a durable, auditable governance burden.
+
+\begin{table*}[t]
+\caption{Evidence map and permitted interpretation. Evidence settings are intentionally not pooled into a clinical-effect estimate.}
+\label{tab:evidence-map}
+\centering
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{|p{0.17\textwidth}|p{0.19\textwidth}|p{0.21\textwidth}|p{0.32\textwidth}|}
+\hline
+\textbf{Evidence class} & \textbf{Representative source} & \textbf{Permitted inference} & \textbf{Inference not permitted} \\
+\hline
+Direct but bounded human evidence & Two pig-kidney grafts in brain-dead humans, 54 hours \cite{montgomery2022} & Short-term human feasibility signal & Long-term living-recipient efficacy, durable safety, or routine clinical availability \\
+\hline
+Preclinical durability evidence & Pig-to-baboon cardiac study \cite{mohiuddin2022} & Technical plausibility of extended function in a specific model & Human outcome prediction or cross-organ generalization \\
+\hline
+Mechanistic translational evidence & Immune, physiological, and genetic-engineering reviews \cite{lei2022,zhou2022} & Rationale for multi-domain biological assessment & Proof that rejection or coagulation dysfunction is eliminated \\
+\hline
+Infectious and regulatory evidence & Clinical infection and WHO guidance \cite{fishman2024,hawthorne2019} & Monitoring, source quality, and oversight are deployment conditions & Proof of zero infection risk or automatic regulatory approval \\
+\hline
+System-level translation evidence & Cardiac and organ-customization reviews \cite{boulet2022,gao2023} & Deployment involves organ-specific, logistical, and access constraints & Guaranteed replacement of human donation \\
+\hline
+\end{tabular}
+\end{table*}
+
+\subsection{Why current evidence does not yet answer the headline}
+
+The central research gap is not a lack of barrier lists. The literature already identifies immune rejection, coagulation dysfunction, physiological incompatibility, infection, organ preservation, regulation, and ethics as material challenges \cite{boulet2022,goerlich2021,ali2023}. The gap is an operational bridge between these claims. There is no broadly accepted, auditable method that answers the following questions together: What evidence threshold counts as adequate for a specific domain? How is evidence from a brain-dead human model distinguished from nonhuman-primate evidence? When does a manufacturing or surveillance bottleneck negate an otherwise favorable biological claim? What must be true before a proposed supply increase can be described as equitable rather than merely technically possible?
+
+Four linked gaps follow. \emph{G1} is a cross-domain readiness gap: evidence is usually reported by specialty rather than as a common decision structure. \emph{G2} is a translation-to-supply gap: the number of possible source organs is often conflated with the number of qualified grafts that can be safely deployed. \emph{G3} is a governance-as-threshold gap: long-term surveillance, quality systems, regulatory accountability, and access are often mentioned after biological feasibility is judged. \emph{G4} is a model-transfer gap: study setting and observation horizon are not consistently represented in high-level translation claims. XenoReadiness is designed to address these gaps without pretending that a model can substitute for future clinical evidence.
+
+\section{Research Direction: XenoReadiness}
+
+\subsection{Research question and hypothesis}
+
+The research question is: \emph{Can a provenance-aware, non-compensatory readiness assessment determine whether a specified xenograft pathway is supported as preclinical promise, short-term human feasibility, conditional trial readiness, or potential deployable supplementary supply?}
+
+The central hypothesis is that an organ-and-indication pathway can only be described as a credible source of deployable supplementary supply if critical readiness conditions are simultaneously satisfied. These conditions include function and durability, immune injury, coagulation and physiology, microbiological safety, manufacturing and quality, regulation and ethics, and equity and access. A favorable biological score cannot compensate for an unresolved critical failure in surveillance, quality, governance, or accessibility.
+
+This hypothesis is deliberately falsifiable. If the gated framework never changes a decision relative to a biological-only summary, it provides no useful discrimination. If its classifications are driven entirely by unbounded subjective assumptions, it fails its claimed transparency advantage. If a system bottleneck does not alter the estimated availability of deployable grafts in sensitivity analysis, then the proposed bridge between biological and system readiness is not empirically decision-relevant. Conversely, the framework earns value if it reveals reproducible reasons why an apparently promising result should not yet be counted as shortage relief.
+
+\subsection{Seven readiness domains}
+
+The framework represents evidence as an \emph{Evidence Card}: an organ, intended indication, recipient setting, observation horizon, outcome class, mechanism domain, source identifier, evidence level, transfer limitation, and missingness status. The card is the unit of analysis; it does not permit a citation to be detached from its experimental context. An initial demonstrator includes a bounded human kidney card, a nonhuman-primate heart durability card, mechanism cards for immune and coagulation risk, and governance cards for infectious disease and regulation.
+
+The seven domains are defined below.
+
+\begin{enumerate}
+\item \textbf{Function and durability:} Does the evidence support graft function for a relevant duration and setting? Early function is informative but must not be relabeled as durable living-recipient benefit.
+\item \textbf{Immune injury:} What is observed or inferred about antibody-mediated, cellular, innate, and inflammatory injury? The domain records residual uncertainty rather than merely a favorable endpoint.
+\item \textbf{Coagulation and physiology:} Does the package address cross-species vascular, hemostatic, metabolic, and organ-specific physiological compatibility? A clinical pathway may fail even when one immune marker is favorable.
+\item \textbf{Microbiological safety:} Is there a credible source-to-recipient surveillance and response architecture? This domain represents managed uncertainty, not a claim of zero risk.
+\item \textbf{Manufacturing and quality:} Can source, organ qualification, traceability, and quality processes produce a reliable clinical product? A candidate organ is not automatically a qualified graft.
+\item \textbf{Regulation and ethics:} Can oversight, consent, long-term obligations, accountability, and societal governance be sustained for the intended pathway?
+\item \textbf{Equity and access:} Would a claimed supply increase be materially reachable outside a few exceptional centers, and can its long-term monitoring burden be distributed justly?
+\end{enumerate}
+
+\begin{figure}[t]
+\centering
+\footnotesize
+\begin{tabular}{c}
+\textbf{XenoReadiness decision flow}\\[2pt]
+\fbox{\parbox{0.82\columnwidth}{\centering Evidence package: organ, indication, model, horizon, source provenance}}\\[3pt]
+$\downarrow$\\[-1pt]
+\fbox{\parbox{0.82\columnwidth}{\centering Seven separate domains: function/durability; immune injury; coagulation/physiology; microbiological safety; manufacturing/quality; regulation/ethics; equity/access}}\\[3pt]
+$\downarrow$\\[-1pt]
+\fbox{\parbox{0.82\columnwidth}{\centering Non-compensatory critical-domain gate}}\\[3pt]
+\begin{tabular}{c@{\qquad}c}
+\fbox{\parbox{0.36\columnwidth}{\centering Fail or unknown\\System deployment not established\\or evidence abstention}} &
+\fbox{\parbox{0.36\columnwidth}{\centering Pass with sensitivity analysis\\bounded readiness conclusion\\not automatic routine deployment}}
+\end{tabular}
+\end{tabular}
+\caption{Conceptual framework. The editable source diagram is retained with the research artifacts. The flow is a proposed decision structure, not an observed evaluation result.}
+\label{fig:readiness-flow}
+\end{figure}
+
+\subsection{Non-compensatory logic}
+
+For a case $c$ and readiness domain $d$, let $E_{cd}$ indicate whether the registered evidence is sufficient, adverse, insufficient, or not applicable. Let $T_{cd}$ represent a declared transferability qualifier that accounts for organ relevance, recipient setting, observation horizon, and outcome relevance. The critical-domain eligibility rule is
+
+\begin{equation}
+R_c=\prod_{d\in\mathcal{D}_{\mathrm{critical}}}\mathbb{I}\left(E_{cd}=\mathrm{sufficient}\right)\mathbb{I}\left(T_{cd}\geq\tau_d\right),
+\label{eq:gate}
+\end{equation}
+
+where $\mathbb{I}(\cdot)$ is an indicator, $\mathcal{D}_{\mathrm{critical}}$ is a preregistered set of required domains, and $\tau_d$ is the minimum transferability standard for domain $d$. Equation \eqref{eq:gate} is intentionally strict: a case with strong biological evidence but no credible surveillance capability cannot be called deployment-ready through an averaged score.
+
+For cases that pass all critical gates, a transparent conditional summary can be used for scenario comparison:
+
+\begin{equation}
+Q_c=\sum_{d=1}^{7}w_dq_{cd}, \qquad \sum_{d=1}^{7}w_d=1,
+\label{eq:conditional-score}
+\end{equation}
+
+where $q_{cd}$ is a documented conditional assessment and $w_d$ is a stakeholder-tested weight. The score in \eqref{eq:conditional-score} cannot override a failed gate in \eqref{eq:gate}. It is a descriptive comparison among already eligible scenarios, not a probability of clinical success. All weights, domain definitions, and threshold alternatives are reported and varied.
+
+\section{Design-Only Methods}
+
+\subsection{Study design and data structure}
+
+The planned study uses structured evidence synthesis and bounded scenario analysis. Its analytical unit is not an individual patient or animal; it is an organ-indication-evidence package. Sources are registered before interpretation and are tagged with a claim type: direct human observation, nonhuman-primate evidence, mechanistic evidence, regulatory/governance evidence, or system-level translation evidence. This design directly reflects the different evidentiary roles summarized in Table \ref{tab:evidence-map}.
+
+The initial demonstrator has four evidence packages. \state{KIDNEY-HUMAN-SHORT} contains the two brain-dead-human pig-kidney cases and is capped at \state{SHORT\_TERM\_HUMAN\_FEASIBILITY}; it cannot enter a durable clinical deployment state on that source alone. \state{HEART-NHP-DURABILITY} contains the pig-to-baboon cardiac signal and is capped at \state{PRECLINICAL\_PROMISING} for a human claim. \state{MECHANISM-IMMUNE-COAG} contains review-level information on immune, coagulation, and physiological barriers. \state{GOVERNANCE-INFECTION} contains review and consultation evidence on source quality, surveillance, and regulation. The packages are intentionally stratified rather than pooled into a pseudo-precise effect estimate.
+
+Each Evidence Card will include (i) a stable source identifier and DOI, (ii) organ and intended indication, (iii) recipient model, (iv) observation duration, (v) outcome vocabulary, (vi) relevant readiness domains, (vii) evidence strength, (viii) transfer assumptions, (ix) missing information, and (x) a permitted-claim ceiling. Two independent reviewers will assign the cards using a shared codebook. Disagreements will be retained, adjudicated by a designated reviewer, and reported as a traceable uncertainty signal rather than silently harmonized.
+
+\subsection{Comparative classifier}
+
+The principal comparison is between two classifiers. \emph{Model A}, the biological-only comparator, uses function/durability, immune injury, and coagulation/physiology evidence. It resembles a conventional translational summary that asks whether a graft looks promising. \emph{Model B}, XenoReadiness, applies all seven domains and the non-compensatory gate in \eqref{eq:gate}. For every package, the analysis reports the two states, the domains that drive any disagreement, the evidence level, and the role of transferability constraints.
+
+The study uses five controlled output states. \state{PRECLINICAL\_PROMISING} applies to a supportive but nonhuman or mechanistic signal. \state{SHORT\_TERM\_HUMAN\_FEASIBILITY} applies to a bounded human-model signal without evidence of durable living-recipient benefit. \state{CONDITIONAL\_TRIAL\_READINESS} applies only when predeclared research-readiness conditions are satisfied and is explicitly not a routine-deployment conclusion. \state{SYSTEM\_DEPLOYMENT\_NOT\_ESTABLISHED} applies when a critical biological, quality, governance, capacity, or access domain is unresolved. \state{MODEL\_OR\_EVIDENCE\_ABSTAIN} applies when a conclusion would be dominated by missing, incompatible, or non-transferable evidence.
+
+The use of abstention deserves emphasis. In a field with heterogeneous data and high ethical stakes, forcing every package into a positive or negative class may create false confidence. Abstention is an informative output: it identifies what evidence is needed before a stronger claim becomes legitimate. It is not a hidden failure of the framework and must be counted in the final report.
+
+\subsection{Scenario model for deployable supplementary supply}
+
+The supply claim is represented conditionally. Let $N_c$ be the number of candidate organs associated with pathway $c$, $p_{c,\mathrm{bio}}$ a bounded biological qualification factor, $p_{c,\mathrm{quality}}$ a quality/manufacturing qualification factor, $p_{c,\mathrm{gov}}$ a governance and surveillance feasibility factor, and $p_{c,\mathrm{access}}$ an access factor. The conceptual quantity of deployable supplementary supply is
+
+\begin{equation}
+S_c^{\mathrm{dep}}=N_c\,p_{c,\mathrm{bio}}p_{c,\mathrm{quality}}p_{c,\mathrm{gov}}p_{c,\mathrm{access}}\,R_c.
+\label{eq:deployable-supply}
+\end{equation}
+
+Equation \eqref{eq:deployable-supply} is not a numerical forecast and no factor will be represented as an observed clinical probability. It is a causal accounting structure: if a critical gate fails ($R_c=0$), the quantity cannot be used to claim deployable supply, even if the nominal number of source organs is high. The model distinguishes source-organ count from safely qualified, monitored, accessible graft supply.
+
+For an organ-and-indication package, three preregistered scenario bands will be considered: constrained, transitional, and expanded. A constrained scenario assumes limited evidence transferability, narrow center capacity, and unresolved surveillance or quality obligations. A transitional scenario assumes that selected biological and governance requirements become supportable but access remains limited. An expanded scenario is only considered if its production, quality, surveillance, regulatory, and access assumptions are stated in full; it is never inferred from a graft observation alone. The report will use ranges and assumption tables, not point forecasts with unjustified precision.
+
+\subsection{Sensitivity, counterexamples, and uncertainty control}
+
+Sensitivity analysis has five dimensions: durability uncertainty; model-transfer assumptions; manufacturing and quality capacity; feasibility of longitudinal infection monitoring; regulatory delay; and access concentration. Each domain weight in \eqref{eq:conditional-score}, where used, is varied over a declared range. Each critical-domain threshold in \eqref{eq:gate} is varied in a threshold analysis. The analysis reports whether the state remains stable, changes conditionally, or becomes abstention-prone.
+
+Three challenge cases test the framework's intended behavior. In the first, biological performance improves but qualified production and traceability cannot scale; a biological-only analysis may appear favorable, whereas XenoReadiness should withhold a general shortage-relief claim. In the second, early graft performance is favorable but the required source-to-recipient surveillance and follow-up architecture is not demonstrably implementable; the governance gate should block ordinary deployment. In the third, technical feasibility exists only in a handful of high-resource centers; the equity/access domain should prevent a conclusion that the general organ shortage has been relieved. These are counterfactual stress tests of a proposal, not descriptions of observed programs.
+
+\begin{table}[t]
+\caption{Planned decision rules for selected evidence situations.}
+\label{tab:decision-rules}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{|p{0.22\columnwidth}|p{0.20\columnwidth}|p{0.37\columnwidth}|}
+\hline
+\textbf{Evidence situation} & \textbf{Permitted state} & \textbf{Required report language} \\
+\hline
+Brain-dead-human kidney function over a short observation window & Short-term human feasibility & ``Supports bounded human feasibility; durable living-recipient benefit is unestablished.'' \\
+\hline
+Extended cardiac survival in nonhuman primates & Preclinical promise & ``Supports organ- and model-specific preclinical plausibility; it is not a human duration estimate.'' \\
+\hline
+Biological evidence favorable, but surveillance/quality evidence insufficient & Deployment not established or abstain & ``Candidate organs cannot yet be counted as deployable supplementary supply.'' \\
+\hline
+Critical evidence setting is non-transferable or undefined & Evidence/model abstention & ``The available record cannot support a directional deployment claim.'' \\
+\hline
+All declared gates are supportable under stated assumptions & Conditional trial readiness & ``Supports a bounded research-readiness inference, not routine deployment.'' \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Conditional Results Logic and Evaluation Criteria}
+
+The proposed work will not report graft survival, recipient outcomes, costs, infection events, or observed deployment capacity because it will generate none. Its results are instead methodological and conditional. The principal output is a readiness matrix showing which evidence package supports which claim and why. A positive methodological result would be a reproducible case in which Model B changes a biological-only inference for a stated reason: insufficient evidence transferability, unresolved infection governance, inadequate quality capacity, regulatory incompleteness, or constrained access.
+
+Three patterns are expected to be informative. The first is a \emph{biological promise/deployment gap}: an evidence package may support a preclinical or short-term human feasibility label while being unable to support a supply claim. The second is a \emph{transfer gap}: a result may remain informative within its original model but lose certainty when translated to a different organ, recipient, or horizon. The third is a \emph{system bottleneck}: an otherwise attractive biological candidate may become non-deployable when quality, surveillance, or access factors are included. These are expected classes of analytic distinction, not announced findings.
+
+The evaluation has four formal criteria. First, \emph{discrimination}: Model B should identify at least one decision-relevant distinction not visible in Model A, or else its added complexity is not warranted. Second, \emph{provenance}: every state must be traceable to a registered Evidence Card, a source, a model setting, and a claim ceiling. Third, \emph{robustness}: conclusions must be tested against declared changes to domain thresholds, transferability qualifiers, and scenario assumptions. Fourth, \emph{epistemic honesty}: cases lacking critical evidence must become abstentions rather than being filled by optimistic extrapolation.
+
+An additional evaluation concerns language. The system will automatically inspect draft claims for prohibited inflation patterns: equating brain-dead-human feasibility with long-term clinical success; equating a nonhuman-primate result with a human result; asserting that infection, rejection, or coagulation dysfunction has disappeared; and asserting that the organ shortage has been solved. A claim that passes textual inspection must still be checked by a domain reviewer because a mechanically cautious sentence can remain scientifically misleading when its source is misapplied.
+
+\subsection{From readiness to a bounded shortage-relief claim}
+
+The framework is intentionally more demanding than the intuitive question, ``Can more organs be made?'' It asks whether more organs can become safe, qualified, governable, and accessible grafts. A bounded shortage-relief claim takes the form: \emph{for a specified organ and indication, under declared biological, production, surveillance, regulatory, and access assumptions, the pathway may add a defined category of deployable graft capacity}. The framework does not license the stronger claim that all human organ donation can be replaced.
+
+This distinction has practical scientific value. It allows the field to recognize progress without announcing final victory prematurely. A short-term human kidney signal can be called an important feasibility achievement. A durable nonhuman-primate cardiac result can be called a substantial preclinical advance. Source-animal and regulatory systems can be called necessary infrastructure. None of these descriptions needs to be timid. The constraint is simply that each sentence retains the evidence setting and does not convert a component advance into a guaranteed population-level outcome.
+
+\section{Governance, Safety, and Human Review Requirements}
+
+The proposed study is not a clinical protocol. It contains no participant recruitment, patient eligibility criteria, medication or dosage recommendation, surgical procedure, organ procurement protocol, animal handling, source-pig husbandry, genetic-editing instruction, pathogen manipulation, or diagnostic decision. These omissions are intentional: the research question is whether an evidence-and-system readiness framework can make translation claims more auditable, not whether a new xenograft intervention should be undertaken.
+
+Any future work that moves from this design to human or animal research would require its own protocol, institutional ethics review, applicable regulatory authorization, biosafety and infection-governance plan, source-animal quality program, data protection framework, and qualified specialist oversight. The discussion of infectious disease is limited to the proposition that surveillance and source control are readiness conditions, consistent with the literature and WHO consultation guidance \cite{fishman2024,hawthorne2019}. It is not a procedure for monitoring, treating, or managing any individual.
+
+Human review is mandatory at three levels. A transplant-medicine reviewer must verify that organ-specific evidence has not been generalized across organs or recipients. An infectious-disease and regulatory reviewer must examine the interpretation of surveillance, source quality, and longitudinal obligations. A bioethics, health-economics, and equity panel must evaluate whether a proposed ``supply'' model counts only technical output or also the ability of diverse communities and care settings to benefit. This multi-disciplinary review requirement follows from the fact that shortage relief is a socio-technical outcome, not a graft-biology endpoint.
+
+Equity deserves an explicit rather than symbolic role. An intervention could increase the number of technically available organs while leaving access concentrated in centers able to support costly infrastructure and long follow-up. In that circumstance, the deployment effect may be real for a limited subgroup but insufficient to support a general claim of shortage relief. The XenoReadiness equity domain therefore asks about reach, burden, continuity of follow-up, geographic concentration, and the distribution of scarce implementation capacity. It does not attempt to solve allocation ethics through a numerical score; it makes the unresolved questions visible before language of success is adopted.
+
+\section{Discussion}
+
+The proposed framework has three strengths. First, it makes a useful distinction between biological feasibility and clinical deployability. This distinction is often implicit in translational medicine but becomes decisive in \xeno{} because the source organ, recipient biology, infection-governance obligation, regulatory setting, and healthcare delivery system are tightly coupled. Second, it protects evidence provenance. An observation in a brain-dead-human model has a different role from an observation in a living human recipient, and a nonhuman-primate durability result has a different role from either. Third, it creates a productive role for negative space: when a critical domain lacks adequate evidence, the result is not forced into a premature favorable or unfavorable conclusion.
+
+The framework also makes a substantive claim about scientific prioritization. The most valuable next increment of progress may not always be another isolated feasibility demonstration. In some situations, the bottleneck may be a durable evidence bridge between model systems. In others, it may be validated quality capacity, source-to-recipient traceability, governance for long-term surveillance, or an access architecture that prevents a new resource from becoming available only to a narrow subset of candidates. Treating these as first-class research objects can change the trajectory from a sequence of impressive cases to a coherent deployment science.
+
+There are important limitations. XenoReadiness cannot produce evidence that does not exist. It cannot resolve disagreements about acceptable risk, substitute for clinical trials, or create consensus on value weights. The choice of critical domains and threshold levels contains normative and scientific judgment; this is why thresholds must be declared, sensitivity-tested, and reviewed by diverse experts. The initial evidence set is targeted and illustrative, not a systematic review or a meta-analysis. It is also centered on kidney and cardiac evidence because they provide strong anchors, which means organ-specific domains must be extended before the framework is applied to liver, lung, pancreas, or other pathways.
+
+The model's strictness is a feature that requires care. A non-compensatory gate can avoid unsafe aggregation, but excessive conservatism can freeze innovation when evidence is immature yet promising. The appropriate response is not to waive the gate invisibly. It is to state the conditional research state accurately, specify what evidence would change the state, and conduct bounded sensitivity analysis. This preserves an ambitious scientific program without misrepresenting the state of knowledge.
+
+The broader contribution is a language for progress. \xeno{} need not be portrayed as either a failed fantasy or a completed solution. The available record supports a stronger and more useful position: the field has generated meaningful human-relevant and preclinical feasibility signals, while durable, governable, scalable, and equitable deployment remains an open research problem. XenoReadiness is designed to organize that problem into testable evidence requirements.
+
+\section{Conclusion}
+
+Xenotransplantation may become a consequential supplement to human organ donation, but the current evidence does not establish that it can independently solve donor-organ shortage. Short-term function in brain-dead human recipients and extended survival in nonhuman primates are real advances with distinct evidentiary limits. The decisive question is whether a specific organ-and-indication pathway can simultaneously satisfy biological, microbiological, manufacturing, regulatory, and equity requirements.
+
+This proposal introduces a design-only XenoReadiness framework to answer that question transparently. It uses evidence cards, non-compensatory critical-domain gates, conditional supply accounting, scenario analysis, and abstention rules to prevent a favorable biological observation from being converted into an unsupported deployment claim. The output is not an automatic clinical recommendation. It is a disciplined basis for saying when xenotransplantation is preclinically promising, when it has demonstrated bounded human feasibility, when it may justify further research readiness, and when the evidence still cannot support a claim of deployable shortage relief.
+
+\appendices
+\section{Evidence Card and Claim-Validation Contract}
+
+This appendix specifies the minimum contract needed to reproduce an XenoReadiness assessment. Its purpose is to prevent the assessment from becoming a polished narrative that cannot be audited. Each evidence card must preserve five identities: the source identity, the biological object identity, the recipient-setting identity, the observation-horizon identity, and the claim identity. A source identity includes a stable citation key and DOI. A biological object identity records the organ and the intended indication rather than referring generically to ``xenotransplantation.'' A recipient-setting identity distinguishes, at minimum, mechanistic evidence, nonhuman-primate evidence, brain-dead-human evidence, and living-human evidence. An observation-horizon identity records whether an outcome is perioperative, short-term, intermediate, or durable, using a threshold declared for the intended application. A claim identity states precisely whether the card is being used for feasibility, durability, immune injury, coagulation/physiology, microbiological safety, manufacturing/quality, regulation/ethics, or equity/access.
+
+The card also contains a \emph{claim ceiling}. A claim ceiling is the strongest statement that its setting can support without unregistered extrapolation. For example, the direct human kidney evidence used in this proposal has a ceiling of short-term human feasibility because its observation window is bounded and its recipients were brain-dead. It cannot be silently promoted to durable living-recipient benefit. Likewise, a nonhuman-primate cardiac study can support a preclinical durability signal, but it cannot be presented as a human outcome or as evidence that all organ pathways have equivalent readiness. The ceiling is a property of the card's use in the assessment, not a negative judgment on the scientific value of the study.
+
+Every domain assignment must identify one of four statuses: \emph{sufficient}, \emph{adverse}, \emph{insufficient}, or \emph{not applicable}. ``Sufficient'' means that the registered evidence meets the domain's predeclared requirement for the bounded question; it does not mean that the underlying risk is absent. ``Adverse'' means that the evidence identifies a barrier incompatible with the specified decision state. ``Insufficient'' means that available evidence cannot support the required inference. ``Not applicable'' is allowed only when a stated organ, indication, or decision context makes the domain genuinely irrelevant, and its rationale must be reviewed because apparent inapplicability can hide an omitted safety question.
+
+Claim validation occurs in three passes. In the first pass, a scientific reviewer checks source-to-claim fit: the cited evidence must actually support the wording and retain its setting and horizon. In the second pass, a methods reviewer checks decision logic: a score may not override a failed critical gate, and a missing critical domain must trigger abstention or a non-deployment state. In the third pass, a governance reviewer checks that surveillance, quality, regulatory, and equity claims have not been treated as optional after biological success. These passes are deliberately complementary. A scientifically accurate source may still be misused by a model, while a formally correct model may still omit a deployment obligation.
+
+The report produced by an assessment must include a source registry, card-level transfer limitations, the critical-domain set, thresholds, scenario assumptions, sensitivity ranges, disagreements between reviewers, and all abstentions. It must also include a statement of what was \emph{not} done. For this proposal, no human or animal research, surgical intervention, source-pig operation, pathogen experiment, genome editing, or clinical recommendation generated any result. The contract therefore separates evidence about the field from observations produced by the proposed study. That separation enables future investigators to improve one evidence domain without retroactively inflating the certainty of the others.
+
+\begin{thebibliography}{00}
+
+\bibitem{montgomery2022} R. A. Montgomery \emph{et al.}, ``Results of Two Cases of Pig-to-Human Kidney Xenotransplantation,'' \emph{New England Journal of Medicine}, vol. 386, no. 20, pp. 1889--1898, 2022, doi: 10.1056/NEJMoa2120238.
+
+\bibitem{mohiuddin2022} M. M. Mohiuddin \emph{et al.}, ``Progressive genetic modifications of porcine cardiac xenografts extend survival to 9 months,'' \emph{Xenotransplantation}, vol. 29, no. 6, e12744, 2022, doi: 10.1111/xen.12744.
+
+\bibitem{lei2022} T. Lei, L. Chen, K. Wang, S. Du, C. Gonelle-Gispert, Y. Wang, and L. H. Buhler, ``Genetic engineering of pigs for xenotransplantation to overcome immune rejection and physiological incompatibilities: The first clinical steps,'' \emph{Frontiers in Immunology}, vol. 13, 1031185, 2022, doi: 10.3389/fimmu.2022.1031185.
+
+\bibitem{zhou2022} X. Zhou \emph{et al.}, ``Current status of xenotransplantation research and the strategies for preventing xenograft rejection,'' \emph{Frontiers in Immunology}, vol. 13, 928173, 2022, doi: 10.3389/fimmu.2022.928173.
+
+\bibitem{fishman2024} J. A. Fishman and N. J. Mueller, ``Infectious Diseases and Clinical Xenotransplantation,'' \emph{Emerging Infectious Diseases}, vol. 30, no. 7, 2024, doi: 10.3201/eid3007.240273.
+
+\bibitem{hawthorne2019} I. Hawthorne \emph{et al.}, ``Third WHO Global Consultation on Regulatory Requirements for Xenotransplantation Clinical Trials,'' \emph{Xenotransplantation}, vol. 26, no. 6, e12513, 2019, doi: 10.1111/xen.12513.
+
+\bibitem{boulet2022} H. Boulet, C. Cunningham, and M. R. Mehra, ``Cardiac Xenotransplantation,'' \emph{JACC: Basic to Translational Science}, vol. 7, no. 10, pp. 1049--1061, 2022, doi: 10.1016/j.jacbts.2022.05.003.
+
+\bibitem{gao2023} Y. Gao \emph{et al.}, ``Pig-to-Human xenotransplantation: Moving toward organ customization,'' \emph{Precision Clinical Medicine}, vol. 6, pbad013, 2023, doi: 10.1093/pcmedi/pbad013.
+
+\bibitem{goerlich2021} C. E. Goerlich \emph{et al.}, ``Blood Cardioplegia Induction, Perfusion Storage and Graft Dysfunction in Cardiac Xenotransplantation,'' \emph{Frontiers in Immunology}, vol. 12, 667093, 2021, doi: 10.3389/fimmu.2021.667093.
+
+\bibitem{ali2023} A. Ali, E. Kemter, and E. Wolf, ``Advances in Organ and Tissue Xenotransplantation,'' \emph{Annual Review of Animal Biosciences}, vol. 11, pp. 443--469, 2023, doi: 10.1146/annurev-animal-021122-102606.
+
+\bibitem{cooper2024} D. K. C. Cooper and E. Kobayashi, ``Xenotransplantation experiments in brain-dead human subjects--A critical appraisal,'' \emph{American Journal of Transplantation}, vol. 24, no. 5, pp. 1027--1033, 2024, doi: 10.1016/j.ajt.2023.12.020.
+
+\bibitem{denner2020} J. Denner \emph{et al.}, ``Impact of porcine cytomegalovirus on long-term orthotopic cardiac xenotransplant survival,'' \emph{Scientific Reports}, vol. 10, 17570, 2020, doi: 10.1038/s41598-020-73150-9.
+
+\bibitem{pan2024} T. Pan \emph{et al.}, ``Cellular dynamics in pig-to-human kidney xenotransplantation,'' \emph{Med}, vol. 5, no. 7, pp. 1007--1024, 2024, doi: 10.1016/j.medj.2024.05.003.
+
+\end{thebibliography}
+
+\end{document}

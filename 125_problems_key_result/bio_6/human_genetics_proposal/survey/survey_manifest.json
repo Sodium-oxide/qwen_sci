@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "project_id": "bio_6_human_genetics_proposal",
+  "survey_run_id": "bio6-human-cortical-genes-20260831",
+  "canonical_artifacts": [
+    "survey.md",
+    "survey_evidence_plan.json",
+    "survey_gap_ledger.json",
+    "survey_idea_handoff.json"
+  ],
+  "citation_registry": [
+    {"key": "Kanton2019", "doi": "10.1038/s41586-019-1654-9", "evidence_type": "comparative great-ape organoid atlas"},
+    {"key": "Fischer2022", "doi": "10.15252/embr.202254728", "evidence_type": "reciprocal ARHGAP11B perturbation in hominid organoids"},
+    {"key": "Fiddes2018", "doi": "10.1016/j.cell.2018.03.051", "evidence_type": "NOTCH2NL cortical neurogenesis"},
+    {"key": "Keough2023", "doi": "10.1126/science.abm1696", "evidence_type": "HAR-associated 3D genome rewiring"},
+    {"key": "Whalen2023", "doi": "10.1016/j.neuron.2022.12.026", "evidence_type": "HAR functional dissection"},
+    {"key": "Pollen2019", "doi": "10.1016/j.cell.2019.01.017", "evidence_type": "organoids as a human-specific brain evolution model"},
+    {"key": "She2023", "doi": "10.1016/j.cell.2023.05.043", "evidence_type": "comparative genetic dependencies"},
+    {"key": "He2024", "doi": "10.1038/s41586-024-08172-8", "evidence_type": "neural organoid fidelity atlas"},
+    {"key": "Levchenko2018", "doi": "10.1093/gbe/evx240", "evidence_type": "review of HARs and human-specific variations"},
+    {"key": "VanHeurck2023", "doi": "10.1016/j.neuron.2022.10.018", "evidence_type": "CROCCP2 progenitor mechanism"},
+    {"key": "LibePhilippot2021", "doi": "10.1146/annurev-genet-071719-020705", "evidence_type": "cortical development and evolution review"},
+    {"key": "VanderhaeghenPolleux2023", "doi": "10.1038/s41583-023-00675-z", "evidence_type": "human cortical circuit evolution review"}
+  ],
+  "project_context_note": "This manifest records chosen evidence and scope; it does not certify scientific truth or represent cryptographic provenance."
+}

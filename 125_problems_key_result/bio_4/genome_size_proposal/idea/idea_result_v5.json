@@ -1,0 +1,22 @@
+{
+  "schema": "idea_result_v5",
+  "survey_run_id": "bio4-genome-size-survey-001",
+  "selected_primary_idea": {
+    "id": "D3",
+    "title": "GenomeFlux: Phylogenetically Paired Inference of Genome-Size Gain-Loss Balance",
+    "target_gap_ids": ["G1", "G2", "G3", "G4", "G5"],
+    "research_object": "Comparative nuclear genome-size evolution in land plants and selected outgroup lineages.",
+    "mechanism": "Differential repeat-family amplification, WGD, deletion/compaction, and lineage context jointly determine observed 1C values.",
+    "intervention_type": "Computational comparative-genomics and model-comparison study.",
+    "central_hypothesis": "A bidirectional, quality-gated gain-loss model provides more stable out-of-clade explanation of genome-size contrasts than a gain-only or WGD-only model.",
+    "falsification_conditions": [
+      "Gain-only or WGD-only model equals or outperforms the full model under preregistered held-out-clade validation.",
+      "Effects vanish after quality, phylogeny, and annotation controls.",
+      "Critical provenance or repeat/WGD evidence is insufficient."
+    ]
+  },
+  "competitive_ideas": ["D1", "D2"],
+  "high_risk_ideas": ["D4"],
+  "rejected_ideas": [{"title": "Universal TE explanation", "reason": "Violates survey evidence and ignores compaction, WGD, and lineage specificity."}],
+  "observed_results": []
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "survey_manifest.v1",
+  "project_id": "med_6-meridian-system-proposal",
+  "survey_run_id": "med_6-meridian-survey-001",
+  "topic": "Is there a scientific basis to the Meridian System in traditional Chinese medicine?",
+  "canonical_artifacts": {
+    "survey": "survey.md",
+    "evidence_plan": "survey_evidence_plan.json",
+    "gap_ledger": "survey_gap_ledger.json",
+    "idea_handoff": "survey_idea_handoff.json"
+  },
+  "evidence_acquisition": {
+    "metadata_search": "OpenAlex and AnySearch cross-validated records",
+    "browser_verified_pages": [
+      "10.1016/j.jpain.2017.11.005",
+      "10.1371/journal.pone.0011907"
+    ],
+    "publisher_access_boundary": "The 2020 Research and Cochrane DOI pages presented security challenges in the in-app browser; their use is limited to cross-validated metadata and abstract-level claims."
+  },
+  "human_review_required": true
+}

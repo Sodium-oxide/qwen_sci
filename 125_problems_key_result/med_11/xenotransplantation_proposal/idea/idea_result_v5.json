@@ -1,0 +1,50 @@
+{
+  "schema_version": "idea_result_v5",
+  "project_id": "med_11_xenotransplantation",
+  "survey_run_id": "xeno-survey-20260831-med11",
+  "method_note": "Simulated evidence-constrained portfolio search based on the Survey handoff; no empirical MCTS or clinical experiment was executed.",
+  "selected_primary_idea_id": "D2",
+  "selected_primary_idea": {
+    "id": "D2",
+    "title": "XenoReadiness: A Mechanism-to-Access Readiness Framework for Translating Genetically Modified Pig Organs into a Safe, Scalable Supplement to Human Donation",
+    "target_gap_ids": ["G1", "G2", "G3", "G4"],
+    "research_object": "An organ-indication-evidence package for pig-to-human xenotransplantation.",
+    "central_hypothesis": "Deployable supplementary supply requires simultaneous satisfaction of biological, microbiological, manufacturing, governance, and access conditions; no single strong domain compensates for a critical failure in another.",
+    "mechanism": "A provenance-aware, non-compensatory gating model prevents biological feasibility from being misreported as system-wide shortage relief.",
+    "intervention": "Replace ungated translational narratives with domain-specific evidence cards, explicit transfer boundaries, and conditional decision states.",
+    "falsifiability": [
+      "The framework fails its intended claim if biological-only and gated classifications do not differ for any incomplete evidence package.",
+      "The framework fails its uncertainty-control claim if removal of model and observation-horizon labels does not change confidence assessments.",
+      "The framework fails its supply claim if system bottlenecks are shown not to change predicted deployable supply under sensitivity analysis."
+    ],
+    "expected_contribution": [
+      "A common readiness vocabulary spanning biology through access.",
+      "A conditional, auditable estimator of deployable supplementary supply.",
+      "An abstention rule that distinguishes missing evidence from adverse evidence.",
+      "A research-design template that can be adapted across organs without asserting organ equivalence."
+    ]
+  },
+  "competitive_ideas": [
+    {"id": "D1", "title": "Kidney durability and injury mechanism atlas", "target_gap_ids": ["G1", "G4"], "reason_retained": "Useful biological module but insufficient for system-level shortage question."},
+    {"id": "D3", "title": "Multi-organ capacity and economic scenario model", "target_gap_ids": ["G2", "G3"], "reason_retained": "Useful sensitivity module but must be constrained by readiness gates."}
+  ],
+  "high_risk_ideas": [
+    {"id": "D4", "title": "Longitudinal infection-governance framework", "target_gap_ids": ["G3", "G4"], "risk": "May be too narrow if disconnected from graft and capacity evidence.", "value": "Makes public-health and follow-up obligations measurable."}
+  ],
+  "rejected_ideas": [
+    {"id": "D5", "title": "Universal donor-pig optimization recipe", "reason": "Overclaims universality, is operationally sensitive, and violates organ-specific evidence constraints."}
+  ],
+  "maturity_checks": {
+    "gap_alignment": "pass",
+    "mechanism_explicit": "pass",
+    "falsifiable": "pass",
+    "design_only_feasible": "pass",
+    "avoids_observed_result_claims": "pass",
+    "survey_binding": "pass"
+  },
+  "survey_binding": {
+    "survey_handoff": "../survey/survey_idea_handoff.json",
+    "accepted_gap_ids": ["G1", "G2", "G3", "G4"],
+    "canonical_source_ids": ["S1", "S2", "S3", "S4", "S5", "S6", "S7"]
+  }
+}

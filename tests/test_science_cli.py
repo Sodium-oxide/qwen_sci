@@ -79,6 +79,17 @@ def test_science_parser_exposes_required_rendering() -> None:
     assert args.render_required is True
 
 
+def test_science_parser_exposes_the_seven_page_report_policy() -> None:
+    args = cli._build_root_parser().parse_args(
+        ["science", "--topic", "topic", "--minimum-pages", "8"]
+    )
+
+    assert args.minimum_pages == 8
+    assert science_run.normalize_immutable_options({"minimum_pages": args.minimum_pages})[
+        "author_rendering"
+    ]["minimum_pages"] == 7
+
+
 def test_science_initialization_publishes_pending_state_and_config_snapshot(tmp_path) -> None:
     config_path, run_dir = _initialize_run(tmp_path)
 

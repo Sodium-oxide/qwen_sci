@@ -1,0 +1,15 @@
+{
+  "schema": "research_design.v1",
+  "idea_direction_id": "D2",
+  "survey_run_id": "med_5-immune-homeostasis-survey-001",
+  "execution_policy": {"mode": "DESIGN_ONLY", "automatic_execution": false, "observed_results": []},
+  "research_type": "human_observational_longitudinal_multiomics_with_bounded_nonclinical_microphysiological_validation_design",
+  "unit_of_analysis": "consented de-identified participant-by-longitudinal-measurement-window",
+  "hypotheses": ["H1 personal trajectory", "H2 layer attribution", "H3 bounded feedback test", "H4 abstention and equity"],
+  "state_outputs": ["personal_baseline_distance", "tolerance_effector_coordination", "barrier_microbiota_context", "memory_context_uncertainty", "recovery_state", "coverage_and_abstain"],
+  "comparators": ["population-reference baseline", "single-score baseline", "personal state-space proposal", "bounded platform comparator"],
+  "validation": {"splits": ["time-forward within person", "held-out participant", "site/batch holdout where available", "coverage-stratified"], "primary_metrics": ["personal-interval calibration", "recovery-time calibration", "layer-attribution audit", "abstention appropriateness", "coverage-stratified disparity"], "forbidden_shortcut": "No future sample may enter a past state estimate; generic anomaly accuracy is not the primary endpoint."},
+  "decision_labels": ["individual_baseline_stable", "contextual_adaptation_resolved", "persistent_dysregulation_candidate", "model_or_data_abstain"],
+  "safety": {"human_review_required": true, "prohibited": ["participant recruitment", "treatment assignment", "patient diagnosis", "gene editing", "pathogen work", "animal work", "autonomous medical advice", "clinical intervention"], "requirements": ["ethics review", "consent and privacy governance", "institutional biosafety review where applicable", "data provenance", "clinical-governance review", "communication-risk assessment"]},
+  "upstream_unknowns_retained": ["tissue-access limitation", "individual exposure history", "microbiota causality", "batch effects", "consent boundaries", "clinical meaning of research-state labels"]
+}

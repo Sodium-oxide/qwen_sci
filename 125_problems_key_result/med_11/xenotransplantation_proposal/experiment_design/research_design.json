@@ -1,0 +1,34 @@
+{
+  "schema_version": "xenoreadiness_design_v1",
+  "project_id": "med_11_xenotransplantation",
+  "selected_idea_id": "D2",
+  "discipline_template": "computational_digital_with_biomedical_governance",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": [],
+    "prohibited_actions": ["human recruitment", "treatment assignment", "transplantation", "animal work", "source-pig operation", "pathogen experimentation", "genetic engineering", "surgical procedure", "clinical recommendation"]
+  },
+  "research_brief": {
+    "object": "organ-indication-evidence package for pig-to-human xenotransplantation",
+    "hypothesis": "A pathway cannot be classified as deployable supplementary supply unless critical readiness domains are simultaneously supported by sufficiently transferable evidence.",
+    "alternative_explanations": ["A biological-only evidence summary may already be adequate.", "System constraints may not materially alter shortage-relief inferences.", "Observed differences may be driven by conservative thresholds rather than meaningful readiness structure."],
+    "falsification_conditions": ["No classification differs between biological-only and gated models.", "Critical-domain gating fails to identify a decision-relevant missing-evidence case.", "Sensitivity findings are fully determined by unbounded assumptions."]
+  },
+  "evidence_cards": [
+    {"card_id": "KIDNEY-HUMAN-SHORT", "source_ids": ["S1"], "organ": "kidney", "setting": "brain-dead human recipients", "horizon": "54 hours", "state_ceiling": "SHORT_TERM_HUMAN_FEASIBILITY", "transferability": "bounded"},
+    {"card_id": "HEART-NHP-DURABILITY", "source_ids": ["S2"], "organ": "heart", "setting": "pig-to-baboon", "horizon": "approaching nine months", "state_ceiling": "PRECLINICAL_PROMISING", "transferability": "indirect"},
+    {"card_id": "MECHANISM-IMMUNE-COAG", "source_ids": ["S3", "S4"], "setting": "review", "state_ceiling": "MODEL_OR_EVIDENCE_ABSTAIN", "transferability": "mechanistic"},
+    {"card_id": "GOVERNANCE-INFECTION", "source_ids": ["S5", "S6"], "setting": "review and consultation", "state_ceiling": "MODEL_OR_EVIDENCE_ABSTAIN", "transferability": "governance"}
+  ],
+  "domains": ["function_durability", "immune_injury", "coagulation_physiology", "microbiological_safety", "manufacturing_quality", "regulation_ethics", "equity_access"],
+  "decision_states": ["PRECLINICAL_PROMISING", "SHORT_TERM_HUMAN_FEASIBILITY", "CONDITIONAL_TRIAL_READINESS", "SYSTEM_DEPLOYMENT_NOT_ESTABLISHED", "MODEL_OR_EVIDENCE_ABSTAIN"],
+  "analysis": {
+    "comparison": "biological-only classification versus non-compensatory gated classification",
+    "sensitivity_dimensions": ["durability uncertainty", "evidence transferability", "surveillance feasibility", "manufacturing and quality capacity", "regulatory delay", "access concentration"],
+    "counterexamples": ["biological success without production quality scale", "biological success without implementable infection follow-up", "technical feasibility concentrated in a few high-resource centers"],
+    "missing_data_rule": "Unknown or non-transferable critical evidence produces MODEL_OR_EVIDENCE_ABSTAIN, not optimistic imputation."
+  },
+  "human_review_required": true,
+  "review_roles": ["transplant medicine", "infectious diseases", "bioethics", "regulatory science", "health economics", "health equity"],
+  "author_handoff": "author_handoff.json"
+}

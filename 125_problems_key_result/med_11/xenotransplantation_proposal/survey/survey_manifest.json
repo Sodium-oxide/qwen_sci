@@ -1,0 +1,27 @@
+{
+  "schema_version": "survey_manifest_v1",
+  "project_id": "med_11_xenotransplantation",
+  "survey_run_id": "xeno-survey-20260831-med11",
+  "project_context": {
+    "topic": "Can xenotransplantation solve the shortage of donor organs?",
+    "discipline": "transplant medicine and biomedical systems research",
+    "mode": "evidence synthesis and proposal only",
+    "observed_results": []
+  },
+  "canonical_artifacts": {
+    "survey": "survey.md",
+    "evidence_plan": "survey_evidence_plan.json",
+    "gap_ledger": "survey_gap_ledger.json",
+    "idea_handoff": "survey_idea_handoff.json"
+  },
+  "source_verification": {
+    "discovery_method": "OpenAlex plus AnySearch hybrid scholarly search",
+    "cross_validated_count": 9,
+    "browser_check": {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35038978/",
+      "result": "Browser reached the PubMed record URL, but the rendered page did not expose readable text in this environment.",
+      "use": "URL-level check only; substantive claims remain constrained to cross-validated scholarly metadata and stated source boundaries."
+    }
+  },
+  "limits": ["targeted, not systematic, synthesis", "no full-text evidence extraction is claimed", "no clinical, animal, pathogen, or genetic-engineering operation was performed"]
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": "idea_result_v5",
+  "survey_run_id": "bio8-sauropod-gigantism-20260831",
+  "selected_primary_idea": {
+    "direction_id": "D3",
+    "title": "GigaCascade: Fossil-Anchored Causal Comparison of Constraint Release in Sauropod Gigantism",
+    "target_gap_ids": ["G1", "G2", "G3", "G4", "G5", "G6"],
+    "scientific_object": "Repeated extreme body-mass evolution among sauropodomorph dinosaurs",
+    "central_hypothesis": "Extreme sauropod body mass became evolutionarily accessible when feeding architecture, axial pneumaticity, growth/life-history capacity, and ecological opportunity jointly crossed lineage-specific feasibility thresholds; an interaction model should predict held-out giant lineages better than any single-factor or additive alternative.",
+    "mechanism": [
+      "Long neck and reduced oral processing may increase accessible forage volume and intake opportunity.",
+      "Axial pneumaticity may relax mass-distribution constraints and records a respiratory anatomical system, without directly measuring physiology.",
+      "Rapid tissue deposition and oviparous life history may improve access to very large adult body size.",
+      "Ecological opportunity may modulate, rather than universally cause, the expression of these traits."
+    ],
+    "primary_predictions": [
+      "A preregistered interaction model improves leave-clade-out prediction of giant-size transitions over climate-only, neck-only, pneumaticity-only, and additive models.",
+      "Candidate enabling traits precede or co-emerge with mass increases more often than expected under a shuffled-timing null.",
+      "The model remains directionally stable across alternative mass estimates, phylogenies, trait codings, and sampling weights."
+    ],
+    "falsification_conditions": [
+      "No out-of-clade predictive advantage beyond neutral or single-factor models.",
+      "Temporal ordering fails for most independently giant lineages.",
+      "Apparent effects disappear under plausible fossil, phylogenetic, or sampling uncertainty.",
+      "A small number of exceptionally complete taxa explain the entire result."
+    ],
+    "claim_ceiling": "Conditional support for a macroevolutionary feasibility model; no direct measurement of extinct metabolism, behavior, or thermoregulation."
+  },
+  "competitive_ideas": [
+    {"direction_id": "D1", "title": "Vegetation-First Opportunity Map", "reason": "Important environmental ablation but insufficiently discriminative by itself."},
+    {"direction_id": "D2", "title": "Long-Neck Functional Threshold Test", "reason": "Mechanistically sharp but too narrow to test cascade interaction."}
+  ],
+  "high_risk_ideas": [
+    {"direction_id": "D4", "title": "Metabolism reconstruction from histology", "reason": "Histological indicators are not direct metabolic measurements."}
+  ],
+  "rejected_ideas": [
+    {"title": "One global climate variable explains dinosaur size", "reason": "Violates the evidence boundary and cannot explain within-fauna size diversity."},
+    {"title": "All long-necked dinosaurs were giant because they browsed treetops", "reason": "Collapses feeding-envelope potential into unobserved behavior."}
+  ]
+}

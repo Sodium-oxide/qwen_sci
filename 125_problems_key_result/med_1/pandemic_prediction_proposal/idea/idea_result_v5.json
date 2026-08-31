@@ -1,0 +1,38 @@
+{
+  "schema": "idea_result_v5",
+  "survey_run_id": "med_1-pandemic-survey-001",
+  "project_id": "med_1-pandemic-prediction-proposal",
+  "primary_direction_id": "D2",
+  "selected_primary_idea": {
+    "id": "D2",
+    "title": "Auditable Multistage Pandemic-Escalation Forecasting",
+    "summary": "Estimate and calibrate stage-specific regional risk states that support surveillance and preparedness decisions, not exact prediction of the next pandemic.",
+    "target_gap_ids": ["GAP-01", "GAP-02", "GAP-03", "GAP-04", "GAP-05"],
+    "research_object": "Aggregate region-by-time-window One Health and preparedness evidence.",
+    "mechanism": "Separate upstream spillover conditions, local amplification signals, regional dissemination readiness, and decision actionability into linked but noninterchangeable states.",
+    "intervention": "Compare a calibrated multistage decision-support framework with pooled-score and signal-only baselines in a design-only evaluation protocol.",
+    "falsification": [
+      "No gain in calibration, lead-time utility, or attribution compared with strong pooled baselines.",
+      "Transportability is insufficient under temporal or geographic holdouts.",
+      "Fairness and missingness diagnostics preclude responsible action recommendations."
+    ],
+    "evidence_alignment": ["S1", "S2", "S3", "S4", "S5", "S8", "S9"]
+  },
+  "competitive_ideas": [
+    {"id": "D1", "title": "Reservoir and viral discovery prioritization", "target_gap_ids": ["GAP-01", "GAP-05"]},
+    {"id": "D3", "title": "Event-based anomaly detection with corroboration", "target_gap_ids": ["GAP-03", "GAP-04"]}
+  ],
+  "high_risk_ideas": [
+    {"id": "D4", "title": "Single universal next-pandemic predictor", "reason": "High novelty claim but rejected for target conflation, weak falsifiability, and unsafe overclaiming."}
+  ],
+  "rejected_ideas": ["D4"],
+  "mcts_evolution": [
+    {"node": "I0", "operation": "ecological-hotspot seed", "status": "expanded"},
+    {"node": "I1", "operation": "single-score multimodal fusion", "status": "rejected_for_opacity"},
+    {"node": "I2", "operation": "stage-decomposition", "status": "retained"},
+    {"node": "I3", "operation": "decision-utility, uncertainty, and fairness augmentation", "status": "selected"}
+  ],
+  "invariants_satisfied": true,
+  "observed_results": [],
+  "human_review_required": true
+}

@@ -1,0 +1,48 @@
+{
+  "schema": "survey_evidence_plan.v1",
+  "research_question": "Is there a scientific basis to the Meridian System in traditional Chinese medicine?",
+  "subhypotheses": [
+    {
+      "id": "SH1",
+      "question": "Do controlled clinical studies support condition-specific acupuncture effects?",
+      "allowed_evidence": ["C1", "C2"],
+      "allowed_claim": "Selected outcomes, especially chronic pain and migraine prevention, can show condition-specific average effects that are not reducible solely to no-treatment comparisons.",
+      "disallowed_claim": "Clinical benefit proves a unique meridian structure or qi flow."
+    },
+    {
+      "id": "SH2",
+      "question": "Do canonical meridian locations have a reproducible physical signature beyond ordinary anatomy?",
+      "allowed_evidence": ["C3", "C4", "C5"],
+      "allowed_claim": "Some locations and trajectories may covary with connective tissue and impedance measurements; replication is heterogeneous.",
+      "disallowed_claim": "The twelve meridians have been identified as a discrete anatomical network."
+    },
+    {
+      "id": "SH3",
+      "question": "Can known physiology explain acupuncture-associated responses without a separate channel system?",
+      "allowed_evidence": ["C6", "C7", "C9"],
+      "allowed_claim": "Neural, autonomic, immune, and connective-tissue candidates can be investigated as conditional mechanisms.",
+      "disallowed_claim": "Any one animal mechanism proves human clinical efficacy or refutes every non-neural contribution."
+    },
+    {
+      "id": "SH4",
+      "question": "Does an interstitial-space interpretation identify a meridian system?",
+      "allowed_evidence": ["C8"],
+      "allowed_claim": "Physiological spaces are proposed as an interpretive lens.",
+      "disallowed_claim": "The proposal is a replicated unique identification of meridians."
+    }
+  ],
+  "evidence_hierarchy": [
+    "controlled human outcome synthesis",
+    "pre-registered human physical/physiological measurement",
+    "animal or mechanistic experiment",
+    "review or interpretive hypothesis",
+    "historical narrative awaiting primary-source recovery"
+  ],
+  "research_integrity_rules": [
+    "Keep outcome efficacy, local mechanisms, and meridian ontology as separate claim types.",
+    "Treat a local correlation as insufficient for a body-wide channel claim.",
+    "Require anatomically matched controls and blinding whenever testing canonical paths.",
+    "Do not use the radioisotope statement as direct evidence until the primary paper is recovered and assessed.",
+    "Do not infer clinical recommendations from this design-stage evidence synthesis."
+  ]
+}

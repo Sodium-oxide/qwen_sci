@@ -63,6 +63,11 @@ _PRIVATE_PROVENANCE_ANCHOR = re.compile(
     re.IGNORECASE,
 )
 
+_FORBIDDEN_NONROUTE_SECTION = re.compile(
+    r"\\(?:sub)*section\*?\s*\{\s*acknowledg(?:e)?ments?\s*\}",
+    re.IGNORECASE,
+)
+
 
 def _strip_private_survey_anchors(value: object) -> str:
     """Keep Survey provenance private even if a composer leaks an anchor into prose."""
@@ -482,6 +487,11 @@ def render_tex_project(
                 "bibliography": bibliography_fragment,
             },
         )
+        rendered_tex = main_tex.read_text(encoding="utf-8")
+        if _FORBIDDEN_NONROUTE_SECTION.search(rendered_tex):
+            raise TexRenderError(
+                "rendered report contains an Acknowledgment section outside the four-agent route"
+            )
     except (TemplateAdapterError, LatexSafetyError) as error:
         raise TexRenderError(str(error)) from error
     return TexRenderResult(

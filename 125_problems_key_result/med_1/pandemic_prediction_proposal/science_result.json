@@ -1,0 +1,30 @@
+{
+  "schema": "science_result.v1",
+  "project_id": "med_1-pandemic-prediction-proposal",
+  "topic": "Can we predict the next pandemic?",
+  "workflow": ["Survey", "Idea", "ExperimentDesign", "Author"],
+  "headline_conclusion": "Current evidence does not support exact prediction of the next pandemic's pathogen, place, and date; it supports a testable, stage-specific and calibrated approach to prioritizing surveillance and preparedness decisions.",
+  "selected_direction": "D2: Auditable Multistage Pandemic-Escalation Forecasting",
+  "execution_policy": "DESIGN_ONLY",
+  "observed_results": [],
+  "artifacts": {
+    "survey": ["survey/survey.md", "survey/survey_evidence_plan.json", "survey/survey_gap_ledger.json", "survey/survey_idea_handoff.json", "survey/survey_manifest.json"],
+    "idea": ["idea/idea_portfolio.md", "idea/idea_result_v5.json"],
+    "experiment_design": ["experiment_design/research_design.md", "experiment_design/research_design.json", "experiment_design/author_handoff.json"],
+    "author": ["author/ieee_pandemic_prediction_proposal.tex", "author/ieee_pandemic_prediction_proposal.pdf", "author/pdf_validation.json"],
+    "visualization": ["figures/four_agent_multistage_workflow.drawio"]
+  },
+  "verification": {
+    "in_app_browser_evidence_check": "Completed for key publisher DOI pages covering zoonotic spillover, emerging-disease correlates, early-warning review, and ML evaluation cautions.",
+    "drawio_validation": "0 errors, 0 warnings",
+    "json_parse_validation": "passed",
+    "pdf_validation": "passed; 7 Letter pages; all fonts embedded; no LaTeX error, unresolved citation/reference, or Overfull hbox",
+    "hash_checks": "not performed; no deterministic regeneration or transfer-integrity claim was required"
+  },
+  "known_limits": [
+    "This is a source-bound research proposal, not an empirical model run or a public-health deployment.",
+    "All specific data access, outcome definitions, thresholds, equity assessment, and operational use require qualified human and jurisdictional review.",
+    "Literature synthesis is targeted and traceable, not a systematic review or meta-analysis."
+  ],
+  "status": "COMPLETE_WITH_HUMAN_REVIEW_REQUIRED"
+}

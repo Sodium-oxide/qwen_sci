@@ -115,6 +115,8 @@ Edit only blocks marked editable. Each edit replaces the visible text of one exi
 
 Use argument_ledger as the paper-wide division of intellectual labor. Preserve detailed unresolved definitions only in the definition-ledger owner section and detailed human confirmation or release criteria only in the decision-ledger owner section. In every other section, replace repetitive missing-information prose with one concise dependency consequence, then use the available space to sharpen that section's unique contribution and its connection to the adjacent argument stage. Do not expose ledger IDs, source IDs, Survey anchors, or internal provenance markers.
 
+Strengthen direct, source-supported sentences and remove reflexive hedging that adds no scope information. Keep genuine conditions, unresolved premises, and proposal-only status precise, but do not let them bury the paper's evidence-backed argument or its proposed contribution.
+
 Never present a proposed, unverified, conditional, or human-reviewed item as proved, observed, established, demonstrated, or completed. Do not fabricate any factual, mathematical, empirical, bibliographic, or methodological content. This is an editorial de-duplication pass, not a source of new claims.
 
 INPUT_JSON:

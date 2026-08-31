@@ -1,0 +1,15 @@
+{
+  "schema": "survey_gap_ledger.v1",
+  "research_topic": "How is immune homeostasis maintained and regulated?",
+  "accepted_gaps": [
+    {"gap_id": "GAP-01", "title": "Static-reference problem", "statement": "Population averages and one-time samples inadequately represent a person's homeostatic trajectory.", "evidence_ids": ["S1", "S2", "S3"], "status": "accepted"},
+    {"gap_id": "GAP-02", "title": "Cross-compartment integration problem", "statement": "Blood, barrier, microbiota, tissue, metabolic, and history layers are not routinely aligned into an interpretable state.", "evidence_ids": ["S3", "S4", "S5", "S6"], "status": "accepted"},
+    {"gap_id": "GAP-03", "title": "Adaptation-versus-dysregulation problem", "statement": "Snapshot abnormalities cannot reliably distinguish a transient response, durable immune memory, and persistent dysregulation.", "evidence_ids": ["S1", "S2", "S8"], "status": "accepted"},
+    {"gap_id": "GAP-04", "title": "Human-causal-platform problem", "statement": "Animal and simplified systems cannot alone validate individualized human immune feedback mechanisms.", "evidence_ids": ["S7", "S9", "S10", "S11"], "status": "accepted"},
+    {"gap_id": "GAP-05", "title": "Rebalancing-endpoint problem", "statement": "Broad immune modulation lacks a validated, individual-specific endpoint for restored contextual regulation.", "evidence_ids": ["S1", "S3", "S7"], "status": "accepted"}
+  ],
+  "rejected_gaps": [
+    {"title": "One universal immune-health score is sufficient", "reason": "The survey evidence supports multi-layer individual variation and compartment-specific mechanisms instead."}
+  ],
+  "human_review_required": true
+}

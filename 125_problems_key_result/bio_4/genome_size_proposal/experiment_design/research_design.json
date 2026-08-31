@@ -1,0 +1,25 @@
+{
+  "schema": "experiment_design_v1",
+  "idea_id": "D3",
+  "study_type": "computational comparative-genomics model-comparison study",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": [],
+    "permitted_actions": ["public-data curation", "metadata harmonization", "phylogenetic model fitting", "simulation and sensitivity analysis"],
+    "prohibited_actions": ["organism collection", "wet-lab sequencing", "culture", "genome editing", "sampling", "ecological intervention"]
+  },
+  "research_brief": {
+    "outcome": "log-transformed 1C nuclear DNA amount with provenance and uncertainty",
+    "gain_features": ["repeat-family abundance", "TE composition", "WGD timing and confidence"],
+    "loss_features": ["intergenic compaction", "repeat-family absence patterns", "published deletion/compaction evidence"],
+    "controls": ["phylogeny", "assembly and repeat-annotation quality", "cytotype/ploidy", "measurement provenance", "lineage coverage"]
+  },
+  "models": [
+    {"id": "A", "name": "gain-only", "terms": ["repeat features", "quality controls", "phylogeny"]},
+    {"id": "B", "name": "gain plus WGD", "terms": ["repeat features", "WGD history", "quality controls", "phylogeny"]},
+    {"id": "C", "name": "bidirectional GenomeFlux", "terms": ["repeat features", "WGD history", "loss/compaction features", "quality controls", "hierarchical phylogeny"]}
+  ],
+  "primary_decision_rule": "Prefer the simplest model that has demonstrably superior or indistinguishable out-of-clade calibration under preregistered robustness scenarios; otherwise abstain.",
+  "human_review_required": true,
+  "needs_human_input": ["curated source selection", "measurement comparability coding", "repeat-annotation quality thresholds", "phylogeny selection", "interpretation of trait associations"]
+}

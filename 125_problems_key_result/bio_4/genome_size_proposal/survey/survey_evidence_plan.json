@@ -1,0 +1,16 @@
+{
+  "schema": "survey_evidence_plan_v1",
+  "question_reframed": "How do lineage-specific rates of repeat-DNA gain, whole-genome duplication, and DNA loss jointly generate extreme nuclear genome-size divergence, and when do genome-size-associated phenotypes impose evolutionary constraints?",
+  "evidence_cards": [
+    {"id": "EC1", "claim": "Land plants exhibit exceptionally broad genome-size variation with substantial sampling gaps.", "sources": ["S1", "S2"], "claim_ceiling": "descriptive diversity and data-coverage statement"},
+    {"id": "EC2", "claim": "Repeat accumulation and TE-family turnover can explain large fractions of within-clade genome-size differences.", "sources": ["S3", "S4", "S5", "S12"], "claim_ceiling": "mechanism and comparative-case statement"},
+    {"id": "EC3", "claim": "Genome reduction can follow WGD and may involve loss of intergenic/repetitive DNA.", "sources": ["S6", "S7", "S8"], "claim_ceiling": "lineage-specific bidirectional-evolution statement"},
+    {"id": "EC4", "claim": "Genome size may covary with cellular and life-history traits, but causal generalization is unresolved.", "sources": ["S9", "S10", "S11"], "claim_ceiling": "hypothesis motivation only"}
+  ],
+  "prohibited_inferences": [
+    "A repeat fraction is a universal causal explanation of genome size.",
+    "Whole-genome duplication determines current genome size without modeling subsequent loss.",
+    "A genome-size trait correlation establishes adaptation or causal direction.",
+    "A literature-backed mechanism is an observed outcome in a new lineage."
+  ]
+}

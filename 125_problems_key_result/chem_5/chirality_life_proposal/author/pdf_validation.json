@@ -1,0 +1,33 @@
+{
+  "schema_version": "pdf_validation_v1",
+  "document": "ieee_chirality_life_proposal.pdf",
+  "source": "ieee_chirality_life_proposal.tex",
+  "template_project": "ieee_latex_project/conference_101719.tex",
+  "status": "PASS",
+  "compiled_with": {
+    "engine": "MiKTeX pdfTeX 1.40.29",
+    "document_class": "IEEEtran conference",
+    "paper_size": "Letter (612 x 792 pt)"
+  },
+  "structural_audit": {
+    "pages": 8,
+    "target_page_range": "8-10",
+    "page_range_pass": true,
+    "encrypted": false,
+    "forms": false,
+    "javascript": false,
+    "embedded_fonts": "all embedded Type 1 fonts",
+    "unresolved_references": false,
+    "overfull_boxes": false
+  },
+  "nonblocking_warnings": [
+    "Underfull boxes arise from narrow-column long terminology and URLs; visual inspection found no clipping.",
+    "The balance package reports invocation in the second column; final-page visual inspection shows balanced columns without clipping."
+  ],
+  "visual_audit": {
+    "render_engine": "Poppler pdftoppm at 150 dpi",
+    "sample_pages": [1, 4, 8],
+    "result": "PASS"
+  },
+  "scientific_state": "PROPOSAL_NO_OBSERVED_RESULTS"
+}

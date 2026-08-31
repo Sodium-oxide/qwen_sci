@@ -24,6 +24,8 @@ from src.agents.research_plan_author.latex_safety import (
     safe_math_expression,
     split_equation_content,
 )
+from src.agents.research_plan_author.page_policy import PagePolicyError, normalize_minimum_pages
+from src.agents.research_plan_author.pdf_validator import PdfValidationError, validate_pdf
 from src.agents.research_plan_author.render import AuthorRenderingError, render_research_plan_document
 from src.agents.research_plan_author.markdown_renderer import render_research_plan_markdown
 from src.agents.research_plan_author.section_router import route_author_sections
@@ -726,9 +728,14 @@ def test_document_validator_rejects_global_section_and_tex_equation_label_collis
 def test_compile_and_pdf_validation_publishes_only_validated_pdf(tmp_path: Path) -> None:
     if not all(shutil.which(executable) for executable in ("pdflatex", "bibtex", "pdftoppm")):
         pytest.skip("local LaTeX/PDF validation executables are unavailable")
+    document = _document()
+    document["sections"][0]["blocks"][0]["text"] = (
+        "This source-bounded proposal preserves its declared technical scope and citation evidence. "
+        * 800
+    )
     try:
         result = render_research_plan_document(
-            _document(),
+            document,
             output_dir=tmp_path / "out",
             timestamp="20260829-000000-000001",
             preparation_collision_index=0,
@@ -802,8 +809,56 @@ def test_declared_ieee_template_profile_uses_the_real_entrypoint_without_mutatio
     assert source_main.read_bytes() == source_bytes
     assert "This document is a model and instructions" not in rendered
     assert "IEEE conference templates contain guidance text" not in rendered
+    assert "\\section*{Acknowledgment}" not in rendered
+    assert "\\section*{Acknowledgements}" not in rendered
     assert "\\end{document}" in rendered
     assert "A 50\\% Proposal" in rendered
+
+
+def test_report_page_policy_defaults_to_seven_and_normalizes_legacy_eight() -> None:
+    assert normalize_minimum_pages(None) == 7
+    assert normalize_minimum_pages(7) == 7
+    assert normalize_minimum_pages(8) == 7
+    assert normalize_minimum_pages(9) == 9
+    with pytest.raises(PagePolicyError, match="at least 7"):
+        normalize_minimum_pages(6)
+
+
+def test_pdf_validator_rejects_a_report_below_the_configured_page_minimum(tmp_path: Path) -> None:
+    pypdf = pytest.importorskip("pypdf")
+    source = tmp_path / "short.pdf"
+    writer = pypdf.PdfWriter()
+    writer.add_blank_page(width=612, height=792)
+    with source.open("wb") as handle:
+        writer.write(handle)
+    renderer = tmp_path / "pdftoppm"
+    renderer.write_text("placeholder", encoding="utf-8")
+
+    with pytest.raises(PdfValidationError, match="has 1 pages; minimum is 7") as error:
+        validate_pdf(source, renderer=renderer, minimum_pages=7)
+
+    assert error.value.report is not None
+    assert error.value.report["parser"]["page_count_requirement_met"] is False
+
+
+def test_renderer_rejects_an_acknowledgment_outside_the_fixed_route(tmp_path: Path) -> None:
+    template = _marker_template(tmp_path / "acknowledgment-template")
+    main_tex = template / "main.tex"
+    main_tex.write_text(
+        main_tex.read_text(encoding="utf-8").replace(
+            "\\end{document}",
+            "\\section*{Acknowledgment}\nThis must not be emitted.\n\\end{document}",
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(TexRenderError, match="Acknowledgment section outside the four-agent route"):
+        render_tex_project(
+            _document(cited=False),
+            template_dir=template,
+            project_dir=tmp_path / "acknowledgment-rendered",
+            profile=load_template_profile("markers_v1"),
+        )
 
 
 def test_resolve_executable_rejects_explicit_missing_path(tmp_path: Path) -> None:
@@ -884,6 +939,8 @@ def test_author_cli_forwards_explicit_rendering_overrides(monkeypatch, tmp_path:
             "custom-bibtex",
             "--pdf-renderer",
             "custom-pdftoppm",
+            "--minimum-pages",
+            "8",
             "--compile-timeout-seconds",
             "33",
             "--author-name",
@@ -898,6 +955,7 @@ def test_author_cli_forwards_explicit_rendering_overrides(monkeypatch, tmp_path:
     assert captured["latex_engine"] == "custom-pdflatex"
     assert captured["bibtex"] == "custom-bibtex"
     assert captured["pdf_renderer"] == "custom-pdftoppm"
+    assert captured["minimum_pages"] == 8
     assert captured["compile_timeout_seconds"] == 33
     assert captured["author_name"] == "Example Author"
     assert json.loads(capsys.readouterr().out)["render_artifacts"]["pdf"] == "proposal.pdf"

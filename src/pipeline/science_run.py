@@ -22,6 +22,7 @@ from omegaconf import OmegaConf
 import psutil
 
 from src.config import load_config
+from src.agents.research_plan_author.page_policy import PagePolicyError, normalize_minimum_pages
 from src.research_run_ids import create_research_run_id
 
 
@@ -192,6 +193,10 @@ def normalize_immutable_options(options: Mapping[str, object]) -> dict[str, Any]
         raise ScienceRunInputError(
             f"survey_appendix must be one of: {', '.join(SURVEY_APPENDIX_MODES)}"
         )
+    try:
+        minimum_pages = normalize_minimum_pages(options.get("minimum_pages"))
+    except PagePolicyError as error:
+        raise ScienceRunInputError(str(error)) from error
 
     return {
         "discipline_ids": normalized_disciplines,
@@ -207,6 +212,7 @@ def normalize_immutable_options(options: Mapping[str, object]) -> dict[str, Any]
             "latex_engine": _optional_text(options.get("latex_engine")),
             "bibtex": _optional_text(options.get("bibtex")),
             "pdf_renderer": _optional_text(options.get("pdf_renderer")),
+            "minimum_pages": minimum_pages,
             "compile_timeout_seconds": options.get("compile_timeout_seconds"),
             "author_name": _optional_text(options.get("author_name")) or "Anonymous Research Plan Author",
             "required": bool(options.get("render_required", False)),
@@ -835,6 +841,7 @@ def validate_resume_inputs(
         "latex_engine",
         "bibtex",
         "pdf_renderer",
+        "minimum_pages",
         "compile_timeout_seconds",
         "author_name",
         "render_required",
@@ -847,6 +854,11 @@ def validate_resume_inputs(
             normalized = bool(provided)
         elif field_name == "compile_timeout_seconds":
             normalized = provided
+        elif field_name == "minimum_pages":
+            try:
+                normalized = normalize_minimum_pages(provided)
+            except PagePolicyError as error:
+                raise ScienceRunInputError(str(error)) from error
         else:
             normalized = _optional_text(provided)
         persisted_field = "required" if field_name == "render_required" else field_name

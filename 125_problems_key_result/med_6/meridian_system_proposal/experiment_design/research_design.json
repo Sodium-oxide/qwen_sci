@@ -1,0 +1,60 @@
+{
+  "schema": "experiment_design.v1",
+  "project_id": "med_6-meridian-system-proposal",
+  "selected_idea_id": "D2",
+  "study_title": "Meridian Residual Specificity Trial",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": [],
+    "prohibited": [
+      "participant recruitment",
+      "clinical diagnosis",
+      "treatment assignment",
+      "needling procedures",
+      "individual medical advice",
+      "pathogen work",
+      "animal work",
+      "gene editing",
+      "autonomous clinical action"
+    ]
+  },
+  "research_brief": {
+    "primary_question": "Does a canonical meridian label add out-of-sample predictive value after known anatomical, technical, contextual, and spatial covariates are controlled?",
+    "central_claim": "A unique channel claim requires residual specificity, not merely a local correlation or a clinical outcome.",
+    "alternative_explanations": [
+      "known anatomy and connective tissue",
+      "peripheral nerve and autonomic physiology",
+      "measurement contact, depth, hydration, and device effects",
+      "expectation and generic somatosensory stimulation",
+      "spatial autocorrelation and post-hoc path matching"
+    ]
+  },
+  "variables": {
+    "independent_variable": "canonical_path_membership",
+    "dependent_variables": [
+      "calibrated_impedance",
+      "ultrasound_fascial_features",
+      "subcutaneous_thickness",
+      "validated_surface_physiology_proxy",
+      "standardized_sensory_context_proxy"
+    ],
+    "controls": [
+      "anatomy_matched_noncanonical_coordinates",
+      "spatially_shifted_coordinates",
+      "technical_repeat_locations",
+      "operator",
+      "device",
+      "contact_quality",
+      "acquisition_sequence",
+      "spatial_basis"
+    ]
+  },
+  "pre_registered_decision_states": [
+    "RESIDUAL_SIGNAL_REQUIRES_REPLICATION",
+    "EXPLAINED_BY_MEASURED_COVARIATES",
+    "NO_TRAJECTORY_SPECIFICITY",
+    "MODEL_OR_DATA_ABSTAIN"
+  ],
+  "replication_requirement": "Independent trajectory and laboratory replication before a meridian-specific ontological conclusion.",
+  "human_review_required": true
+}

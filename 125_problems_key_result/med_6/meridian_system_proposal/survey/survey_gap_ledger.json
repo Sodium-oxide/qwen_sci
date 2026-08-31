@@ -1,0 +1,38 @@
+{
+  "schema": "survey_gap_ledger.v1",
+  "accepted_gaps": [
+    {
+      "gap_id": "G1",
+      "title": "No decisive residual-specificity test of canonical meridian labels",
+      "evidence_basis": ["C3", "C4", "C5"],
+      "why_open": "Existing measurements show heterogeneous site effects and anatomical covariates, but do not test whether canonical labels add explanatory power after those covariates are controlled.",
+      "researchable": true
+    },
+    {
+      "gap_id": "G2",
+      "title": "Clinical efficacy and meridian ontology are routinely confounded",
+      "evidence_basis": ["C1", "C2", "C6"],
+      "why_open": "A clinical effect does not by itself identify the pathway producing it; trials are not normally structured to distinguish a meridian-specific route from local anatomy, expectation, or generic somatosensory stimulation.",
+      "researchable": true
+    },
+    {
+      "gap_id": "G3",
+      "title": "Competing anatomy, nerve, and fascial mechanisms lack a common falsification protocol",
+      "evidence_basis": ["C3", "C4", "C7", "C9"],
+      "why_open": "Measurements and models are typically evaluated in isolation, making it difficult to compare whether a named trajectory carries information beyond ordinary tissue variables.",
+      "researchable": true
+    }
+  ],
+  "candidate_gaps_not_accepted_as_facts": [
+    {
+      "claim": "Meridians are spaces rather than structures.",
+      "status": "interpretive_hypothesis",
+      "reason": "The 2020 article supports an interpretation, not unique structural validation."
+    },
+    {
+      "claim": "Historical radioisotope movement conclusively discovered meridians.",
+      "status": "requires_primary_source_recovery",
+      "reason": "The statement in the topic prompt has not been verified against the original study and cannot anchor downstream conclusions."
+    }
+  ]
+}

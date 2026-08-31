@@ -1,0 +1,11 @@
+{
+  "schema": "survey_gap_ledger_v1",
+  "accepted_gaps": [
+    {"gap_id": "G1", "title": "Rate-balance inference", "status": "accepted", "supporting_cards": ["EC2", "EC3"]},
+    {"gap_id": "G2", "title": "Repeat-family resolution", "status": "accepted", "supporting_cards": ["EC2"]},
+    {"gap_id": "G3", "title": "Post-WGD confounding", "status": "accepted", "supporting_cards": ["EC3"]},
+    {"gap_id": "G4", "title": "Constraint-causality separation", "status": "accepted", "supporting_cards": ["EC4"]},
+    {"gap_id": "G5", "title": "Measurement and annotation comparability", "status": "accepted", "supporting_cards": ["EC1", "EC2", "EC3"]}
+  ],
+  "rejected_gap": {"title": "One universal genome-size driver", "reason": "Contradicted by lineage-specific expansion, contraction, and post-WGD histories."}
+}

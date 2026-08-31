@@ -1,0 +1,79 @@
+{
+  "schema": "idea_result_v5",
+  "project_id": "med_6-meridian-system-proposal",
+  "survey_run_id": "med_6-meridian-survey-001",
+  "target_gap_ids": ["G1", "G2", "G3"],
+  "research_question": "Is there a scientific basis to the Meridian System in traditional Chinese medicine?",
+  "selected_primary_idea": {
+    "id": "D2",
+    "title": "Meridian Residual Specificity Trial: A Pre-Registered Multimodal Test of Canonical Trajectories Against Matched Anatomical Controls",
+    "summary": "Test whether canonical meridian labels explain reproducible residual variance after known anatomy, tissue properties, stimulation characteristics, expectancy, and spatial dependence are controlled.",
+    "scientific_object": "A blinded coordinate representation of canonical traditional meridian trajectories, compared with anatomy-matched and spatially shifted coordinates.",
+    "mechanism_model": [
+      "canonical labels may be entirely reducible to known anatomy and generic somatosensory physiology",
+      "canonical labels may index a reproducible physical or physiological feature not captured by measured anatomical covariates",
+      "measurement artifacts may create apparent path signals"
+    ],
+    "falsification_criteria": [
+      "No out-of-sample canonical-label increment after covariate adjustment.",
+      "No cross-trajectory replication.",
+      "Spatially shifted controls perform equivalently.",
+      "Effects are explained by tissue depth, collagen proxies, contact quality, or regional anatomy."
+    ],
+    "validation_structure": [
+      "pre-registered coordinate and analysis lock",
+      "anatomy-matched and shifted-path controls",
+      "blinded segmentation and outcome analysis",
+      "held-out trajectory validation",
+      "independent replication before any ontological conclusion"
+    ],
+    "evidence_alignment": ["C3", "C4", "C5", "C6", "C7", "C9"]
+  },
+  "competitive_ideas": [
+    {
+      "id": "D1",
+      "title": "Multi-Scale Atlas of Canonical Paths and Known Anatomy",
+      "reason_not_selected": "Useful for measurement planning but cannot alone establish specificity."
+    },
+    {
+      "id": "D4",
+      "title": "Evidence-Graph Audit of Meridian, Mechanism, and Clinical Claims",
+      "reason_not_selected": "Improves traceability but cannot resolve biological specificity without empirical data."
+    }
+  ],
+  "high_risk_ideas": [
+    {
+      "id": "D3",
+      "title": "Predictive Comparison of Canonical and Anatomy-Based Point Prescriptions",
+      "risk": "Clinical heterogeneity and ethical requirements make causal interpretation of a meridian ontology weak."
+    }
+  ],
+  "rejected_ideas": [
+    {
+      "title": "Infer meridian existence from any observed acupuncture benefit",
+      "reason": "Violates the Survey distinction between outcome efficacy and channel ontology."
+    },
+    {
+      "title": "Declare interstitial spaces to be the meridians",
+      "reason": "Treats an interpretive hypothesis as a uniquely validated anatomical identification."
+    }
+  ],
+  "mcts_evolution_summary": [
+    {
+      "stage": "root",
+      "defect": "The original question is ontologically broad and vulnerable to visual pattern matching.",
+      "revision": "Split into clinical, physiological, and meridian-specific claims."
+    },
+    {
+      "stage": "control_design",
+      "defect": "Simple point-versus-nonpoint comparisons confound ordinary anatomy.",
+      "revision": "Require anatomy-matched and spatially shifted controls."
+    },
+    {
+      "stage": "selection",
+      "defect": "Single-modality signals are artifact-prone.",
+      "revision": "Adopt preregistered multimodal residual testing with held-out trajectories."
+    }
+  ],
+  "human_review_required": true
+}

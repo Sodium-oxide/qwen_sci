@@ -8,6 +8,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from .latex_compiler import LatexCompilerError, compile_latex_project, resolve_executable
+from .page_policy import PagePolicyError, normalize_minimum_pages
 from .pdf_validator import PdfValidationError, PdfValidationResult, validate_pdf
 from .render_artifacts import AuthorRenderArtifactPaths, AuthorRenderArtifactWriter, RenderArtifactError
 from .template_profile import TemplateProfileError, load_template_profile
@@ -50,6 +51,7 @@ def render_research_plan_document(
     latex_engine: str | Path | None = None,
     bibtex: str | Path | None = None,
     pdf_renderer: str | Path | None = None,
+    minimum_pages: int | None = None,
     compile_timeout_seconds: int = 180,
     configured_rendering: Mapping[str, Any] | None = None,
     author_name: str = "Anonymous Research Plan Author",
@@ -60,6 +62,12 @@ def render_research_plan_document(
     settings = _mapping(configured_rendering)
     writer = AuthorRenderArtifactWriter(output_dir)
     paths = writer.allocate(timestamp=timestamp, preparation_collision_index=preparation_collision_index)
+    try:
+        required_page_count = normalize_minimum_pages(
+            minimum_pages if minimum_pages is not None else settings.get("minimum_pages")
+        )
+    except PagePolicyError as error:
+        raise AuthorRenderingError("page_policy", str(error), paths=paths) from error
     try:
         profile = load_template_profile(template_profile or _text(settings.get("template_profile")) or "markers_v1", main_tex=template_main or _text(settings.get("main_tex")) or None)
     except TemplateProfileError as error:
@@ -144,6 +152,7 @@ def render_research_plan_document(
         validation = validate_pdf(
             paths.staged_pdf,
             renderer=renderer,
+            minimum_pages=required_page_count,
             timeout_seconds=max(1, int(settings.get("pdf_validation_timeout_seconds") or 60)),
             logger=logger,
         )

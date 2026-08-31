@@ -1,0 +1,338 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{url}
+\newcommand{\csw}{CortexSwitch}
+\newcommand{\abstain}{\texttt{ABSTAIN}}
+\begin{document}
+
+\title{What Genetic Changes Shape Human-Specific Cortical Development?\\
+\csw: A Reciprocal, Evidence-Gated Research Design for Human-Lineage Genetic Modules}
+
+\author{}
+\maketitle
+
+\begin{abstract}
+The phrase ``genes that make us uniquely human'' obscures a harder and more tractable scientific problem. Human-lineage evolution includes duplicated genes, noncoding substitutions, deletions, and altered regulatory contacts; no single class is expected to explain human biology. This proposal asks whether a compact, evidence-qualified set of human-lineage genetic changes causally shifts a defined early cortical developmental transition in human and chimpanzee organoid models. We introduce CortexSwitch, a design-only framework that jointly evaluates duplicated-gene axes and state-active human accelerated or three-dimensional regulatory candidates. The framework locks candidates before analysis, compares chimpanzee humanization with human ancestral/orthologous reversion, requires independent stem-cell lines and matched neutral-edit controls, and evaluates cell-state trajectories, candidate-linked molecular mediators, and blinded imaging endpoints. A conclusion is permitted only when reciprocal, line-aware, quality-gated evidence supports a predeclared progenitor-to-neuron transition; otherwise the system reports a targeted abstention. The contribution is not a claim to identify a complete genetic basis of humanity. It is a falsifiable design for separating candidate sequence divergence from conditional causal support for a specific human-lineage cortical developmental module.
+\end{abstract}
+
+\begin{IEEEkeywords}
+human evolution, cortical development, cerebral organoids, human accelerated regions, gene duplication, ARHGAP11B, NOTCH2NL, comparative genomics, single-cell multiomics, causal inference
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Humans and chimpanzees share the great majority of alignable genomic sequence and many orthologous genes, but the familiar ``99\%'' shorthand depends on what is counted: aligned bases, coding sequence, structural variation, or gene content. The human genome contains roughly 20,000 protein-coding genes rather than a fixed catalogue of 30,000 uniquely explanatory genes. After the human--chimpanzee lineage split, both lineages accumulated substitutions, deletions, duplications, transposable-element changes, and chromosomal rearrangements \cite{sunt2020}. The central question is therefore not which isolated gene makes a whole organism human. It is which human-lineage genetic changes alter a measurable developmental process, by what molecular route, and with what causal confidence.
+
+The developing cerebral cortex is a useful test bed. Comparative work suggests differences in progenitor dynamics, neurogenic timing, and circuit maturation, while many core developmental pathways remain deeply conserved \cite{libe2021,vander2023}. Human-specific duplicated genes offer unusually concrete candidates. The human-specific gene \emph{ARHGAP11B}, for example, has direct reciprocal evidence in hominid organoids for a defined basal-progenitor phenotype \cite{fischer2022}. \emph{NOTCH2NL} paralogues affect Notch signalling and cortical neurogenesis \cite{fiddes2018}, and the hominid-specific duplicate \emph{CROCCP2} has been linked to ciliary dynamics, mTOR signalling, and progenitor amplification \cite{croccp2}. These studies motivate mechanistic candidates; they do not imply that any candidate alone explains the human cortex, cognition, language, or species identity.
+
+Noncoding changes are equally important to the problem. Human accelerated regions (HARs) are conserved loci that changed rapidly on the human lineage. Functional dissection has shown that some HAR substitutions have state-specific enhancer effects and may include compensatory changes \cite{whalen2023}. Comparative neural-progenitor chromatin analysis further links HAR-containing loci to human-specific three-dimensional regulatory rewiring \cite{keough2023}. The relevant unit of explanation may thus be a module that joins coding dosage, enhancer activity, chromatin contact, and progenitor state rather than a ranked list of differentially expressed genes.
+
+This paper proposes \csw{}~a design-only program to test that module-level hypothesis. It integrates genomic prioritization, reciprocal perturbation, organoid qualification, multimodal measurement, and explicit abstention. The framework is deliberately ambitious in causal design while constrained in claim type: it aims to identify a conditional effect on a predeclared cortical developmental transition, not to announce the discovery of ``the genes for humanity.''
+
+\section{Evidence Boundary and Research Gap}
+
+\subsection{What current evidence does and does not show}
+
+Human and nonhuman-primate cerebral organoids allow developmental trajectories to be compared in a controlled in-vitro setting. Kanton \emph{et al.} used single-cell transcriptomic and chromatin-accessibility profiles across great-ape organoids, reporting slower human neuronal development relative to chimpanzee and macaque models and cell-state-specific human expression and accessibility differences \cite{kanton2019}. Pollen \emph{et al.} established cerebral organoids as a platform for testing human-specific brain-evolution hypotheses \cite{pollen2019}. These observations demonstrate model value, not automatic model fidelity. Region composition, line identity, culture conditions, maturation, and stress can create apparent cross-species differences.
+
+The \emph{ARHGAP11B} evidence provides a stronger reference point because it includes perturbation in both directions: expression in chimpanzee organoids increased basal-progenitor abundance, whereas interference in human organoids reduced the relevant progenitor level \cite{fischer2022}. The correct inference is specific. It supports a role for \emph{ARHGAP11B} in the tested organoid progenitor endpoint under the reported conditions. It does not establish a universal gene for human brain evolution. The same discipline is needed for regulatory candidates: a HAR can be evolutionarily striking yet lack an identified target, a reproducible cellular effect, or a phenotype beyond one experimental context \cite{levchenko2018,whalen2023}.
+
+\begin{table}[t]
+\caption{Evidence classes and permitted conclusions in \csw{}~.}
+\label{tab:evidence}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.10}
+\begin{tabular}{|p{0.19\columnwidth}|p{0.33\columnwidth}|p{0.29\columnwidth}|}
+\hline
+\textbf{Evidence class} & \textbf{What it can establish} & \textbf{What it cannot establish} \\
+\hline
+Comparative sequence or copy number & Human-lineage candidate status & Causal developmental effect \\
+\hline
+Expression, accessibility, or contact association & State-specific correlation and candidate target map & Allele-specific, cell-autonomous mechanism \\
+\hline
+Single-direction perturbation & Model-specific sufficiency or necessity signal & Reciprocal evolutionary inference \\
+\hline
+Reciprocal, qualified perturbation & Conditional causal support for a predeclared endpoint & Cognition, language, or complete human uniqueness \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Accepted gaps}
+
+Five linked gaps motivate the study. First, sequence discovery, molecular mechanism, and progenitor phenotype are commonly separated rather than connected in one causal chain. Second, recently duplicated genes and noncoding regulatory variants are usually considered in different candidate lists despite possible convergence on the same developmental transition. Third, one-direction gain or loss experiments cannot distinguish an allele effect from species-background or dosage alternatives. Fourth, organoid quality is often described as a limitation after the fact rather than treated as a gate that determines whether comparison is allowed. Fifth, cellular findings are sometimes rhetorically inflated into claims about whole-organism cognition.
+
+The resulting scientific objective is: \emph{in qualified human and chimpanzee cortical organoid models, do a small panel of human-lineage duplicated and regulatory changes converge on a reproducible basal-progenitor persistence to neurogenic-transition module, and is the module supported by reciprocal causal evidence?} This question is testable, interpretable, and appropriately narrower than a search for a genetic essence of humanity.
+
+\section{\csw{}~Hypothesis and Architecture}
+
+\subsection{Primary hypothesis}
+
+\csw{}~posits that a selected set of human-lineage genetic changes may alter a conserved developmental transition rather than create an entirely novel cell type. The panel contains no more than two duplicated-gene axes and three regulatory candidates. A duplicated-gene axis can include a gene with replicated cortical-progenitor evidence, such as \emph{ARHGAP11B}, or a Notch-related dosage candidate; a regulatory candidate must be active in the relevant cell state, supported by a target link, and distinguishable from a generic accessible locus. The primary claim is falsified if no reciprocal and line-replicated shift remains after model-quality and molecular-mediator gates.
+
+\begin{figure*}[t]
+\centering
+\fbox{\begin{minipage}{0.92\textwidth}
+\centering\small
+\textbf{Candidate evidence} (duplicated-gene axes + HAR/3D regulatory candidates)
+\quad $\longrightarrow$ \quad
+\textbf{Evidence lock} (target links, neutral controls, predeclared endpoints)
+\quad $\longrightarrow$ \quad
+\textbf{Reciprocal panel} (chimpanzee humanization + human reversion)\\[5pt]
+$\downarrow$\\[-2pt]
+\textbf{Qualified organoid comparison} (developmental alignment, regional identity, stress, line and batch gates)
+\quad $\longrightarrow$ \quad
+\textbf{Multimodal chain} (cell state + chromatin/target link + blinded imaging)
+\quad $\longrightarrow$ \quad
+\textbf{Causal decision}\\[5pt]
+\textbf{Pass:} conditional module support for the defined progenitor transition
+\hspace{2cm}
+\textbf{Fail:} \abstain{} with a named missing evidence requirement
+\end{minipage}}
+\caption{Native rendering of the editable \csw{}~causal map. The design forces candidate evidence through reciprocal genetics and model-quality gates before permitting a cellular conclusion.}
+\label{fig:cortexswitch}
+\end{figure*}
+
+Fig.~\ref{fig:cortexswitch} separates three claims that are often conflated: a locus differs between species, a locus changes a molecular readout, and a locus causally shifts a cortical cell-state transition. The architecture preserves the possibility that candidates act independently, interact, or have no detectable effect in a qualified model. It also makes a negative result constructive: a failure may indicate inadequate target assignment, timing mismatch, background dependence, or insufficient organoid fidelity rather than evidence against all human-lineage genetics.
+
+\subsection{Candidate lock and alternatives}
+
+Candidate selection occurs before outcome inspection. A candidate must meet four criteria: human-lineage genomic support; activity in a prespecified cortical state; evidence or a testable prediction connecting it to a target gene; and feasibility of creating reciprocal, matched perturbation states. The initial list is not an open-ended discovery screen. It is a deliberately small falsification panel. An \emph{ARHGAP11B}-like axis acts as a positive mechanistic anchor, while matched neutral edits act as a process control. A HAR candidate with no stable target link may enter an exploratory tier but cannot drive the confirmatory conclusion.
+
+The main alternative is a simple additive model in which each candidate produces an independent effect. A stronger module hypothesis requires that the predeclared combination improves a qualified endpoint or mediator chain beyond all matched single-candidate conditions without introducing a quality imbalance. A second alternative is that the apparent effect is carried by species background, line, batch, or developmental timing. Reciprocal design and hierarchical analysis explicitly test this alternative rather than assuming it away.
+
+\section{Design-Only Methods}
+
+\subsection{Study units, reciprocal panel, and qualification}
+
+This section specifies a future in-vitro study; no cell culture, genome editing, sequencing, or organoid experiment has been performed for this proposal. The biological replication unit would be an independently derived, consented human or chimpanzee induced pluripotent stem-cell line. At least three independent lines per species would be required. Multiple organoids from the same line and batch improve measurement precision but are not independent species replicates. The future protocol would pair human reference lines with ancestral/orthologous reversion states and chimpanzee reference lines with humanization states. It would include matched neutral-edit and mock-process controls, single-candidate conditions, and the predeclared combination.
+
+Before comparison, each future batch must pass identity/provenance, edit-validation, regional-composition, stress-state, developmental-alignment, and minimum cell-state-representation gates. The 2024 neural-organoid atlas demonstrates why such qualification is indispensable: protocol coverage and transcriptomic fidelity vary across organoid systems \cite{he2024}. A comparison that fails a critical gate is quarantined or excluded from confirmatory analysis; it is never made favorable by substituting missing cells, using organoid size as a proxy, or silently changing the endpoint.
+
+\begin{table*}[t]
+\caption{Future CortexSwitch comparison panel and interpretation boundaries. All rows are proposed conditions, not completed experiments.}
+\label{tab:panel}
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{|p{0.18\textwidth}|p{0.23\textwidth}|p{0.23\textwidth}|p{0.20\textwidth}|}
+\hline
+\textbf{Condition} & \textbf{Purpose} & \textbf{Primary comparison} & \textbf{Failure interpretation} \\
+\hline
+Human reference and chimpanzee reference & Establish qualified baseline trajectories & Species background with line and batch terms & Baseline mismatch is not a candidate effect \\
+\hline
+Chimpanzee humanization & Test whether a human-lineage state can shift the selected endpoint & Humanized chimpanzee versus chimpanzee reference & Sufficiency may be background-specific \\
+\hline
+Human ancestral/orthologous reversion & Test whether the human state is necessary in the human background & Reversion versus human reference & Necessity may reflect editing or dosage artifact \\
+\hline
+Matched neutral-edit and mock-process controls & Isolate editing/process burden & Each perturbed state versus matched control & Control shift invalidates the affected comparison \\
+\hline
+Single and combined candidate states & Distinguish independent from module effects & Combination versus all matched singles & No incremental effect weakens the module hypothesis \\
+\hline
+\end{tabular}
+\end{table*}
+
+\subsection{Multimodal measurements and primary model}
+
+The proposal uses three future evidence layers. First, single-cell transcriptomic and chromatin-accessibility measurements would identify aligned progenitor and neuronal states. Second, targeted candidate-to-target molecular evidence would test the predicted enhancer/contact or duplicated-gene pathway link. Third, blinded imaging-derived marker estimates would provide an independent phenotype readout. No one layer substitutes for another: gene expression without a cellular shift is molecular evidence only; imaging without state identity is a descriptive phenotype only.
+
+For future organoid (o), donor line (l), batch (b), species background (S), genotype state (G), and aligned developmental state (t), the primary predeclared endpoint (Y) is modeled as
+
+\begin{equation}
+Y_{olbgt}=\beta_0+\beta_SS+\beta_GG+\beta_{SG}(S\times G)+\beta_Tt+u_l+u_b+\epsilon_{olbgt},
+\label{eq:primary}
+\end{equation}
+
+where \(u_l\) and \(u_b\) are line- and batch-level effects. The endpoint is a quality-gated contrast of basal-progenitor persistence against the neurogenic transition, not gross organoid area. The interaction term is reported with uncertainty and line-level effects rather than treated as a species essence.
+
+Reciprocal evidence is summarized by a sign-aware contrast:
+
+\begin{equation}
+R_c=\Delta_{c,\mathrm{chimp\ humanization}}-\Delta_{c,\mathrm{human\ reversion}},
+\label{eq:reciprocity}
+\end{equation}
+
+where (c) denotes a candidate or combination and each \(\Delta\) is estimated relative to its matched within-species control. A large value of \(R_c\) is not sufficient by itself. It must be accompanied by a predeclared mediator, survive quality-matched sensitivity analyses, and replicate across independent lines.
+
+\subsection{Negative controls, sensitivity, and claim tiers}
+
+Negative controls include neutral edits matched for process burden, candidate permutations in the analysis pipeline, shuffled candidate-to-target links, and analyses that match regional composition and stress-state distributions. Sensitivity analyses remove one donor line at a time, vary reasonable developmental-alignment settings, and compare a line-aware model with an intentionally inadequate organoid-as-independent-sample model. If the latter alone produces a result, the proposal classifies the apparent signal as a pseudoreplication risk.
+
+The permitted claim tier is the minimum evidence level that survives every eligible scenario. Tier 0 is candidate association. Tier 1 is a qualified molecular or cell-state perturbation in one direction. Tier 2 requires reciprocal, sign-consistent, line-replicated support for the predeclared endpoint. Tier 3 requires Tier 2 plus a reproducible molecular mediator and combination-versus-single-candidate comparison. Even Tier 3 supports only the tested module in the defined organoid context.
+
+\section{Falsification and Conditional Conclusions}
+
+\csw{}~is useful only if it can fail. If humanization changes a candidate-linked molecular readout but not the primary cell-state endpoint, the permitted conclusion is molecular activity without developmental-module support. If human reversion and chimpanzee humanization have inconsistent signs, the result is background dependent or unresolved, not evidence of an evolutionary direction. If a combination does not exceed matched single-candidate conditions, the module claim fails and individual axes remain separate candidates. If an effect vanishes after line-aware fitting, developmental alignment, or quality matching, the valid conclusion is that the present dataset cannot distinguish genetic from model variation.
+
+\begin{table}[t]
+\caption{Conditional results logic.}
+\label{tab:logic}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{|p{0.28\columnwidth}|p{0.34\columnwidth}|p{0.20\columnwidth}|}
+\hline
+\textbf{Future observation} & \textbf{Permitted statement} & \textbf{Next action} \\
+\hline
+Reciprocal, line-replicated shift plus mediator & Conditional support for the tested cortical module & Held-out-line replication \\
+\hline
+Single-direction shift only & Model-specific sufficiency or necessity signal & Diagnose dose and background dependence \\
+\hline
+Molecular change without state shift & Candidate regulates the molecular assay only & Reconsider target or time window \\
+\hline
+Quality gate fails & \abstain{} & Repair model qualification \\
+\hline
+\end{tabular}
+\end{table}
+
+The proposal will not report observed basal-progenitor changes, gene-expression shifts, chromatin contacts, or organoid differences because it does not execute the study. It will report only a future analysis plan and a vocabulary for interpreting potential outcomes. This limitation is substantive rather than cosmetic: differentiating literature evidence from new observation protects against an invalid transition from plausible hypothesis to claimed discovery.
+
+\section{Limitations and Human Review Requirements}
+
+Organoids recapitulate selected aspects of development, not an entire fetal brain, and comparative alignment cannot fully remove differences in donor history, reprogramming, or culture response. A regulatory candidate may be active in a context not represented by the chosen organoid protocol. A duplicated gene can show strong effects in one lineage without being a fixed or sufficient explanation of evolutionary anatomy. Cross-species editing requires special care around orthology, copy number, local haplotype, dosage, and unintended disruption of homologous loci. These are reasons for explicit design, not reasons to replace experiments with speculative narrative.
+
+Human review is required at multiple points. Stem-cell and ethics specialists must verify donor consent, material provenance, and governance conditions. Comparative-genomics experts must assess lineage specificity, orthology, duplication architecture, and regulatory-candidate plausibility. Cortical-development experts must judge whether selected states and endpoints correspond to the claimed developmental window. Single-cell methodologists must review integration, trajectory alignment, pseudoreplication, and batch handling. A disagreement record is preferable to averaging incompatible expert judgments into an untraceable score.
+
+\section{Discussion and Conclusion}
+
+Human genetic distinctiveness is better understood as a set of testable, context-dependent developmental mechanisms than as a short list of genes that confer humanity. Current evidence supports the relevance of human-specific duplicated genes, regulatory evolution, and comparative organoid models, while also showing why a broad causal conclusion remains premature. The most informative question is whether a candidate changes a specified developmental transition under reciprocal and well-qualified conditions.
+
+\csw{}~turns that question into a strong research program. It uses direct evidence such as the \emph{ARHGAP11B} organoid perturbation result as an anchor without elevating it into a universal explanation. It places HAR and three-dimensional regulatory candidates beside duplicated genes instead of treating coding and noncoding evolution as rival slogans. It uses independent line replication, neutral controls, organoid qualification, molecular mediation, and reciprocal humanization/reversion to decide whether a conditional module claim is allowed.
+
+The expected scientific value is not a declaration that a fixed set of genes makes a person human. It is a transparent map of which human-lineage candidate combinations can be supported, which are background dependent, which are only molecularly active, and which lack adequate evidence. A result that ends in \abstain{} is therefore an honest and useful output: it identifies the exact missing measurement, control, or model qualification required before a stronger evolutionary claim can be made.
+
+\appendices
+\section{Scenario Register and Claim-Validation Contract}
+
+Before any future outcome is inspected, the study registry must fix candidate sequences and copy-number states; orthology/ancestry definitions; donor-line eligibility; perturbation and control categories; organoid qualification metrics; sampling windows; cell-state ontology; molecular mediator criteria; primary endpoint; hierarchical model; multiplicity adjustment; sensitivity scenarios; and the allowed wording for each claim tier. The registry distinguishes observed fields, derived alignments, assumed sensitivity parameters, and unavailable values. Missing evidence is not encoded as ancestral state, absence of enhancer activity, or absence of a cell type.
+
+A comparison is ineligible for a confirmatory conclusion if identity/provenance cannot be verified, if one genotype is represented by only one independent line, if reference-atlas alignment fails, if stress or regional composition differs beyond a predeclared range, or if the intended cell state is inadequately represented. The first failed gate, rather than merely the final failed statistic, must be recorded. This prevents a future analyst from rerunning filters until a desired human--chimpanzee contrast appears.
+
+\section{Candidate Record and Minimum Evidence Matrix}
+
+Every candidate record should contain: genomic coordinates and assembly version; human-lineage evidence type; orthologue/paralogue relationship; copy-number and local-haplotype context; candidate class; predicted cell state; supporting source-card identifiers; proposed target gene or pathway; perturbation direction; matched control; molecular readout; cellular endpoint; claim tier reached; quality-gate state; and an uncertainty note. For regulatory candidates, target assignment and cell-state activity must be separately recorded. For duplicated genes, dosage, paralogue specificity, and local structural context must be separately recorded.
+
+\begin{table*}[t]
+\caption{Minimum candidate evidence matrix for a future CortexSwitch implementation. The matrix is a data contract, not a completed candidate database.}
+\label{tab:matrix}
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{|p{0.18\textwidth}|p{0.21\textwidth}|p{0.23\textwidth}|p{0.21\textwidth}|}
+\hline
+\textbf{Record block} & \textbf{Required field} & \textbf{Question answered} & \textbf{Failure response} \\
+\hline
+Lineage definition & Assembly, orthology/paralogy, ancestry evidence, structural context & Is the candidate genuinely a defined human-lineage state? & Remove from confirmatory panel \\
+\hline
+State relevance & Cell state, developmental alignment, expression/accessibility support & Is the candidate testable in the selected cortical transition? & Keep as background candidate only \\
+\hline
+Molecular link & Target/pathway hypothesis, contact or enhancer evidence, assay identity & Is there a falsifiable mediator path? & Prohibit module mechanism claim \\
+\hline
+Reciprocal genetics & Human reversion, chimpanzee humanization, neutral control, line count & Does the design distinguish background and process alternatives? & Downgrade to one-direction signal \\
+\hline
+Model quality & Identity, batch, stress, composition, atlas-fit gate & Is the comparison biologically interpretable? & \abstain{} \\
+\hline
+Claim audit & Scenario, model version, effect uncertainty, reviewer note & Why was a specific sentence permitted? & Withhold conclusion \\
+\hline
+\end{tabular}
+\end{table*}
+
+\section{Human Review and Escalation Ledger}
+
+An implementation must preserve the boundary between comparative developmental science and intervention. The output cannot be used to infer individual ability, ancestry value, clinical utility, or a hierarchy among human populations. Candidate selection is about substitutions or structural changes on an evolutionary lineage, not about ranking living people. Human material must remain within the consent, privacy, governance, and institutional limits that apply to its source. Any unexpected consequence that changes the study's scope, including a shift toward disease modelling, transplantation relevance, extended maturation, or new organismal work, requires a new review rather than a silent extension of this proposal.
+
+\section{Benchmark Protocol and Failure Taxonomy}
+
+The proposed benchmark starts with a deliberately modest question: can a predeclared candidate state improve prediction of a held-out, line-aware cortical progenitor transition beyond a species-background, batch, and quality baseline? The candidate panel is then tested in the same eligible records under three models: independent duplicated-gene axes, independent regulatory candidates, and a predeclared cross-class module. A model that appears to perform well only when organoids from the same donor line occur on both sides of a split has learned donor structure rather than a transferable developmental mechanism.
+
+The benchmark must use held-out donor lines rather than random cells or random organoids as the primary test unit. Random-cell splitting can place transcriptionally similar cells from one organoid in both training and test sets; random-organoid splitting can place sibling organoids from the same line and batch in both sets. Both procedures overstate generalization. The primary benchmark therefore reports line-held-out calibration, uncertainty, residual line structure, quality-gate failures, and the proportion of comparisons that enter \abstain{} together. A lower apparent effect with transparent abstention is scientifically preferable to a larger effect obtained by silently retaining non-comparable batches.
+
+Four failure classes should remain separate. \emph{Candidate-definition failure} occurs when lineage specificity, copy-number state, or orthology cannot be resolved. \emph{Model-qualification failure} occurs when identity, regional composition, stress, developmental alignment, or cell-state representation does not meet the registry. \emph{Causal-chain failure} occurs when a genetic change lacks a linked molecular mediator or a cellular endpoint. \emph{Transfer failure} occurs when an apparent signal does not reproduce across donor lines or reciprocal species directions. These classes point to different remedies; merging them into a single non-significant result loses scientific information.
+
+\begin{table}[t]
+\caption{CortexSwitch benchmark failure taxonomy.}
+\label{tab:taxonomy}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{|p{0.23\columnwidth}|p{0.32\columnwidth}|p{0.28\columnwidth}|}
+\hline
+\textbf{Failure class} & \textbf{Diagnostic signature} & \textbf{Required response} \\
+\hline
+Candidate definition & Unresolved orthology, ancestry, paralogue, or local structural context & Remove candidate from confirmatory panel \\
+\hline
+Model qualification & Failed atlas alignment, stress/region imbalance, or inadequate state coverage & \abstain{}; repair model before retest \\
+\hline
+Causal chain & Molecular and cellular endpoints do not cohere & Report partial evidence only \\
+\hline
+Transfer & Effect lacks reciprocal sign or line-held-out replication & Preserve heterogeneity; prohibit universal claim \\
+\hline
+\end{tabular}
+\end{table}
+
+The final benchmark artifact should preserve both passing and failing comparisons. For each candidate, candidate combination, and sensitivity scenario it should state the independent-line count, species direction, matched control, quality-gate state, molecular mediator status, cellular endpoint estimate, uncertainty interval, claim tier, reviewer note, and the strongest permitted sentence. Later studies may improve candidate annotations or organoid protocols, but they should create a new version rather than rewrite a prior abstention as though the missing evidence had always existed. This makes the proposed research program cumulative and protects against hindsight-driven mechanistic stories.
+
+\section{Cross-Modal Concordance and Counterfactual Interpretation}
+
+The decisive unit in \csw{} is a linked evidence chain, not a collection of significant features. A candidate enters the chain only when its human-lineage state is defined, its activity is localized to a relevant developmental state, and its proposed mediator can be measured. The molecular layer should then show that the perturbation changes the candidate-linked readout in the predicted direction. The cellular layer should show a corresponding shift in the predeclared progenitor transition. If any link is absent, the result is retained as partial evidence rather than promoted to a module claim.
+
+This logic also protects against a common reverse inference: selecting a cell-state difference first and searching afterward for a human-specific sequence that appears to explain it. The registry must therefore separate discovery features from confirmatory features. Discovery may use broad comparative transcriptomic or chromatin data to nominate targets. Confirmatory analysis uses only the locked candidate set, fixed contrasts, and the same line and batch gates for every candidate. The analysis code should record which features were available before perturbation labels were inspected.
+
+For a candidate \(c\), let \(M_c\) denote its standardized molecular mediator contrast and \(Y_c\) its standardized cellular endpoint contrast. A simple concordance score for prioritizing follow-up, not for replacing inference, is
+
+\begin{equation}
+Q_c=w_M M_c+w_Y Y_c+w_R R_c-w_U U_c,
+\label{eq:concordance}
+\end{equation}
+
+where \(R_c\) is the reciprocal contrast in \eqref{eq:reciprocity}, \(U_c\) summarizes declared uncertainty, and the nonnegative weights are fixed before outcome analysis. The report must display the components separately. A high \(Q_c\) cannot rescue a candidate that fails a critical quality gate, lacks a mediator, or is supported by one donor line only.
+
+Counterfactual interpretation asks what would have happened under a matched alternative state: the ancestral human state, the humanized chimpanzee state, a neutral edit, or the same perturbation in a different donor line. The strongest result is a sign-consistent pattern across these counterfactuals, not the largest single difference. If humanization changes the endpoint but neutral editing changes it by a similar amount, the candidate effect is not isolated. If human reversion changes the endpoint but the molecular mediator does not move, the phenotype may be downstream of an unmeasured background effect. If both reciprocal edits change the mediator but only one changes the cellular state, the module may be context dependent rather than universally conserved.
+
+\begin{table}[t]
+\caption{Cross-modal interpretation rules.}
+\label{tab:concordance}
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{|p{0.25\columnwidth}|p{0.34\columnwidth}|p{0.24\columnwidth}|}
+\hline
+\textbf{Evidence pattern} & \textbf{Interpretation} & \textbf{Claim ceiling} \\
+\hline
+Molecular and cellular effects agree reciprocally & Candidate-linked developmental module is supported in qualified lines & Tier 2; Tier 3 only with combination evidence \\
+\hline
+Molecular effect without cellular effect & Allele or dosage changes the assay but not the endpoint & Molecular claim only \\
+\hline
+Cellular effect without mediator & Phenotype is real or artifactual but mechanism is unresolved & Cell-state association \\
+\hline
+Neutral control matches candidate effect & Process or edit burden is not separated & \abstain{} \\
+\hline
+Effect restricted to one line or species direction & Background-dependent biology or unresolved confounding & Lineage-specific result \\
+\hline
+\end{tabular}
+\end{table}
+
+The final interpretation should therefore state both what the data support and which counterfactual remains viable. This is particularly important for the phrase ``uniquely human.'' A reproducible organoid result can show that a human-lineage state changes a developmental program under a defined in-vitro condition. It cannot by itself show that the state is necessary for consciousness, language, social behavior, or the complete human phenotype. Maintaining this claim boundary makes the study more informative, because it identifies the next experiment or comparative dataset needed to move from a cellular mechanism to a broader evolutionary interpretation.
+
+\IEEEtriggeratref{8}
+\begin{thebibliography}{00}
+\bibitem{sunt2020} M. Suntsova and A. Buzdin, ``Differences between human and chimpanzee genomes and their implications in gene expression, protein functions and biochemical properties of the two species,'' \emph{BMC Genomics}, vol. 21, suppl. 7, p. 535, 2020, doi: 10.1186/s12864-020-06962-8.
+\bibitem{libe2021} B. Lib\'{e}-Philippot and P. Vanderhaeghen, ``Cellular and molecular mechanisms linking human cortical development and evolution,'' \emph{Annual Review of Genetics}, vol. 55, pp. 555--581, 2021, doi: 10.1146/annurev-genet-071719-020705.
+\bibitem{vander2023} P. Vanderhaeghen and F. Polleux, ``Developmental mechanisms underlying the evolution of human cortical circuits,'' \emph{Nature Reviews Neuroscience}, vol. 24, no. 4, pp. 213--232, 2023, doi: 10.1038/s41583-023-00675-z.
+\bibitem{fischer2022} J. Fischer \emph{et al.}, ``Human-specific ARHGAP11B ensures human-like basal progenitor levels in hominid cerebral organoids,'' \emph{EMBO Reports}, vol. 23, no. 11, p. e54728, 2022, doi: 10.15252/embr.202254728.
+\bibitem{fiddes2018} I. T. Fiddes \emph{et al.}, ``Human-specific NOTCH2NL genes affect Notch signaling and cortical neurogenesis,'' \emph{Cell}, vol. 173, no. 6, pp. 1356--1369.e22, 2018, doi: 10.1016/j.cell.2018.03.051.
+\bibitem{croccp2} R. Van Heurck \emph{et al.}, ``CROCCP2 acts as a human-specific modifier of cilia dynamics and mTOR signaling to promote expansion of cortical progenitors,'' \emph{Neuron}, vol. 111, no. 1, pp. 65--80.e6, 2023, doi: 10.1016/j.neuron.2022.10.018.
+\bibitem{whalen2023} S. Whalen \emph{et al.}, ``Machine learning dissection of human accelerated regions in primate neurodevelopment,'' \emph{Neuron}, vol. 111, no. 6, pp. 857--873.e8, 2023, doi: 10.1016/j.neuron.2022.12.026.
+\bibitem{keough2023} K. C. Keough \emph{et al.}, ``Three-dimensional genome rewiring in loci with human accelerated regions,'' \emph{Science}, vol. 380, no. 6643, p. eabm1696, 2023, doi: 10.1126/science.abm1696.
+\bibitem{kanton2019} S. Kanton \emph{et al.}, ``Organoid single-cell genomic atlas uncovers human-specific features of brain development,'' \emph{Nature}, vol. 574, pp. 418--422, 2019, doi: 10.1038/s41586-019-1654-9.
+\bibitem{pollen2019} A. A. Pollen \emph{et al.}, ``Establishing cerebral organoids as models of human-specific brain evolution,'' \emph{Cell}, vol. 176, no. 4, pp. 743--756.e17, 2019, doi: 10.1016/j.cell.2019.01.017.
+\bibitem{he2024} Z. He \emph{et al.}, ``An integrated transcriptomic cell atlas of human neural organoids,'' \emph{Nature}, vol. 635, pp. 690--698, 2024, doi: 10.1038/s41586-024-08172-8.
+\bibitem{levchenko2018} A. Levchenko, A. Kanapin, A. Samsonova, and R. R. Gainetdinov, ``Human accelerated regions and other human-specific sequence variations in the context of evolution and their relevance for brain development,'' \emph{Genome Biology and Evolution}, vol. 10, no. 1, pp. 166--188, 2018, doi: 10.1093/gbe/evx240.
+\end{thebibliography}
+
+\end{document}

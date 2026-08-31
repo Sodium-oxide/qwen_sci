@@ -1,0 +1,57 @@
+{
+  "schema_version": "simulated_science_result_v1",
+  "project_id": "med_11_xenotransplantation",
+  "topic": "Can xenotransplantation solve the shortage of donor organs?",
+  "mode": "Simulated current four-agent workflow with evidence-constrained artifacts; design and writing only.",
+  "final_conclusion": "Xenotransplantation has meaningful short-term human feasibility and longer preclinical durability signals and may become a conditional, indication-limited supplement to human donation. Current evidence does not demonstrate that it can independently solve donor-organ shortage. Any shortage-relief claim must also satisfy manufacturing, surveillance, regulatory, and equity/access conditions.",
+  "stages": [
+    {
+      "agent": "Survey Agent",
+      "status": "completed",
+      "canonical_artifacts": ["survey/survey.md", "survey/survey_evidence_plan.json", "survey/survey_gap_ledger.json", "survey/survey_idea_handoff.json", "survey/survey_manifest.json"],
+      "output_summary": "Bounded evidence map, evidence levels, four accepted research gaps, and an Idea handoff."
+    },
+    {
+      "agent": "Idea Agent",
+      "status": "completed",
+      "canonical_artifacts": ["idea/idea_portfolio.md", "idea/idea_result_v5.json"],
+      "selected_direction": "D2: XenoReadiness mechanism-to-access readiness framework",
+      "output_summary": "Evidence-constrained portfolio that selects a falsifiable, non-clinical deployment-readiness direction."
+    },
+    {
+      "agent": "ExperimentDesign Agent",
+      "status": "completed",
+      "canonical_artifacts": ["experiment_design/research_design.md", "experiment_design/research_design.json", "experiment_design/author_handoff.json"],
+      "execution_policy": "DESIGN_ONLY",
+      "observed_results": []
+    },
+    {
+      "agent": "Research Plan Author Agent",
+      "status": "completed",
+      "canonical_artifacts": ["author/ieee_xenotransplantation_proposal.tex", "author/ieee_xenotransplantation_proposal.pdf", "author/pdf_validation.json"],
+      "document_state": "PROPOSAL_NO_OBSERVED_RESULTS",
+      "style": "IEEE conference two-column, seven pages, no author/affiliation/funding/acknowledgments"
+    }
+  ],
+  "supporting_artifact": "figures/xeno_readiness_evidence_flow.drawio",
+  "source_verification": {
+    "method": "OpenAlex plus AnySearch hybrid scholarly search",
+    "cross_validated_records": 9,
+    "browser": "A direct PubMed record URL was reached in the user-requested in-app browser; this environment exposed no readable rendered content, so substantive claims remain restricted to cross-validated scholarly metadata and recorded evidence boundaries."
+  },
+  "safety_and_scope": {
+    "human_or_animal_experiment_performed": false,
+    "pathogen_or_genetic_work_performed": false,
+    "clinical_recommendation_made": false,
+    "human_review_required": true
+  },
+  "validation": {
+    "json_parse": "passed",
+    "drawio_structural_lint": "passed with 0 errors and 0 warnings",
+    "pdf_pages": 7,
+    "pdf_font_embedding": "passed",
+    "pdf_visual_pages_checked": [1, 3, 5, 7],
+    "no_unresolved_latex_references": true,
+    "hash_check": "not performed; no deterministic-transfer or overwrite-integrity risk required it"
+  }
+}

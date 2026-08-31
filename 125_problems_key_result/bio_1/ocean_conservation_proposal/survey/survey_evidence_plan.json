@@ -1,0 +1,24 @@
+{
+  "schema_version": "survey_evidence_plan_v1",
+  "scientific_reframing": "How can an equity-constrained, climate-robust, land-sea intervention portfolio reduce nutrient and plastic pressure while protecting coastal ecosystem function and livelihood safeguards in a specified coastal seascape?",
+  "scope": {"included": ["coastal nutrient pressure", "plastic leakage", "coastal habitat and blue carbon", "area-based fisheries protection", "monitoring", "governance capacity", "equity", "climate scenarios"], "excluded": ["site-specific permits", "field intervention", "fishing restriction prescription", "financial allocation", "claims of observed outcomes"]},
+  "subhypotheses": [
+    {"id": "H1", "claim": "Multiple pressures require separate but linked portfolio levers.", "sources": ["S1", "S2", "S3", "S4", "S5"], "forbidden": "a universal single intervention"},
+    {"id": "H2", "claim": "Capacity, participation, and governance are readiness conditions.", "sources": ["S6", "S7", "S8", "S9"], "forbidden": "designation equals success"},
+    {"id": "H3", "claim": "Equity and observability influence whether a portfolio is implementable.", "sources": ["S9", "S10", "S11"], "forbidden": "aggregate benefit proves fair distribution"},
+    {"id": "H4", "claim": "Scenario robustness is needed under climate-driven uncertainty.", "sources": ["S2", "S3", "S5"], "forbidden": "historical ranking is climate robust"}
+  ],
+  "sources": [
+    {"id": "S1", "doi": "10.1007/s12237-009-9158-8", "level": "cross-validated conceptual/management evidence", "boundary": "does not supply a universal nutrient target"},
+    {"id": "S2", "doi": "10.3389/fmars.2020.00670", "level": "cross-validated coastal multistressor synthesis", "boundary": "not a site-specific prediction"},
+    {"id": "S3", "doi": "10.1126/sciadv.aar8195", "level": "cross-validated regional systems case", "boundary": "Baltic-specific evidence"},
+    {"id": "S4", "doi": "10.3390/su13179963", "level": "cross-validated plastic-policy review", "boundary": "review-level evidence"},
+    {"id": "S5", "doi": "10.3389/fclim.2021.710546", "level": "cross-validated review and browser-verified page", "boundary": "conditional co-benefit, not substitution for emissions cuts"},
+    {"id": "S6", "doi": "10.1111/j.1523-1739.2011.01771.x", "level": "cross-validated MPA governance analysis", "boundary": "governance evidence, not guaranteed ecological effect"},
+    {"id": "S7", "doi": "10.1016/j.marpol.2013.08.017", "level": "cross-validated community case", "boundary": "context-specific perceptions"},
+    {"id": "S8", "doi": "10.1038/nature21708", "level": "cross-validated global capacity evidence", "boundary": "capacity relationship, not local forecast"},
+    {"id": "S9", "doi": "10.1016/j.biocon.2016.10.006", "level": "cross-validated conservation social-science review", "boundary": "framework evidence"},
+    {"id": "S10", "doi": "10.1038/s41893-020-0522-9", "level": "cross-validated equity evidence", "boundary": "ocean-genome context"},
+    {"id": "S11", "doi": "10.3389/fmars.2019.00241", "level": "cross-validated observing synthesis", "boundary": "deep-ocean focus informs observing principles"}
+  ]
+}

@@ -1,0 +1,311 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{url}
+\renewcommand{\arraystretch}{1.12}
+\begin{document}
+
+\title{Testing Traditional Chinese Medicine Meridian Claims Without Conflating Clinical Effects, Local Physiology, and Anatomical Ontology}
+
+\author{}
+\maketitle
+
+\begin{abstract}
+The Meridian System in traditional Chinese medicine (TCM) is often treated as a single proposition, although it contains at least three distinct claims: acupuncture can improve a clinical outcome, needling can trigger physiological responses, and twelve canonical channels form a distinctive body-wide system. The first two claims can be scientifically investigated without establishing the third. This evidence-constrained proposal concludes that controlled studies support modest, condition-specific acupuncture effects in some chronic-pain and migraine-prevention contexts and that local neural, connective-tissue, autonomic, and central mechanisms are testable. The current evidence does not establish the twelve classical meridians as an independently identified anatomical network or uniquely validated transport system. We propose the Meridian Residual Specificity Trial (MRST), a preregistered multimodal framework that compares blinded canonical trajectories with anatomy-matched and spatially shifted controls. Its primary question is whether canonical membership predicts physical or physiological measurements after ordinary anatomy, acquisition factors, context, and spatial dependence have been controlled. The design makes strong outcomes possible but bounded: a residual signal would require independent replication, while null or unreliable results would favor measured covariates or abstention rather than broad cultural or clinical claims.
+\end{abstract}
+
+\begin{IEEEkeywords}
+acupuncture, traditional Chinese medicine, meridians, connective tissue, pain, preregistration, causal inference, reproducibility
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+The Meridian System is a foundational organizing language in TCM. It describes twelve main channels, associated points, and relationships among body regions and organs. In contemporary discussions, however, several very different questions are often collapsed into one: whether acupuncture may help a symptom, whether needling produces a biological response, and whether a classical channel is a discrete material pathway. A favorable answer to one question does not logically answer the others. This distinction matters because each question requires a different comparator, measurement, and standard of evidence.
+
+Clinical acupuncture trials study patient outcomes. Mechanism experiments study signals caused by stimulation. Anatomical claims require a distinctive and reproducible physical or physiological signature that cannot be reduced to known structures, ordinary regional physiology, or measurement artifacts. Treating any clinical benefit as proof of a meridian risks a category error. Conversely, the absence of an accepted gross anatomical channel does not mean that all local physiological hypotheses should be ignored. A useful scientific program must be rigorous enough to reject overextended claims while being open enough to test a genuine residual signal.
+
+The topic has practical consequences. Chronic pain and migraine are settings in which acupuncture has been studied with randomized comparators. Mechanistic work has considered peripheral afferents, connective tissue, autonomic signaling, and brain processing. Studies of impedance and tissue planes have also reported local associations at some, but not all, sampled meridian segments. The appropriate conclusion is neither that the traditional map has already been confirmed nor that every observation is meaningless. It is that the map can be expressed as a predeclared coordinate annotation and tested against alternatives.
+
+This paper develops an evidence-driven research proposal rather than reporting an executed experiment. It makes four contributions. First, it separates outcome, mechanism, and ontology claims. Second, it assesses the limits of available clinical and physical evidence. Third, it formulates the Meridian Residual Specificity Trial (MRST), which asks whether a canonical label adds predictive value beyond measured covariates. Finally, it establishes positive, negative, and abstention decision states, so that ambiguity cannot be turned into a post-hoc confirmation.
+
+\section{Claim Taxonomy and Standard of Proof}
+
+The word "meridian" can refer to a historical diagram, a clinical point-selection convention, a proposed anatomical correspondence, or a causal pathway. These meanings are not interchangeable. Table~\ref{tab:claims} fixes the claim taxonomy used throughout this proposal.
+
+\begin{table}[!t]
+\caption{Claims commonly grouped under meridian and their appropriate evidentiary standard.}
+\label{tab:claims}
+\centering
+\footnotesize
+\begin{tabular}{p{0.24\columnwidth}|p{0.285\columnwidth}|p{0.285\columnwidth}}
+\hline
+\textbf{Claim type} & \textbf{What would support it} & \textbf{What would not support it} \\
+\hline
+Clinical outcome & Controlled, condition-specific outcome comparison with transparent harms and follow-up. & A mechanistic image, uncontrolled symptom change, or a traditional label alone. \\
+\hline
+Local physiology & Reproducible local or systems response with calibrated measurement and suitable control stimulation. & An outcome comparison that did not measure the proposed mechanism. \\
+\hline
+Canonical-path specificity & A preregistered, out-of-sample effect of a canonical label beyond anatomy, context, and spatial controls. & A visual resemblance to fascia, a single site difference, or a noncanonical unadjusted contrast. \\
+\hline
+Organ-linked channel ontology & Independent replicated evidence that uniquely identifies the proposed network and its functional mapping. & Modest pain benefit, generic autonomic response, or a broad interstitial-space interpretation. \\
+\hline
+\end{tabular}
+\end{table}
+
+For the ontology claim, a "structure" need not be a visible tube. It could in principle be a reproducible distributed physiological pattern. But it must be specified prospectively, measured with reliability, and distinguishable from models based on standard anatomy. A research program that starts from a channel label and searches visually for a correlate is especially vulnerable to multiple comparison and spatial-pattern-matching errors. The minimum standard is therefore residual specificity: the canonical annotation must improve prediction after competing explanations have received a fair test.
+
+\section{Survey of Current Evidence}
+
+\subsection{Clinical outcome evidence is real but bounded}
+
+The most informative chronic-pain evidence includes an individual-patient-data meta-analysis by Vickers \emph{et al.} \cite{vickers2018}, which pooled randomized trials with adequate allocation concealment. Across several chronic-pain conditions, acupuncture outperformed both sham and no-acupuncture controls on average, although the difference from sham was generally modest. The result is scientifically important because it does not rest only on a comparison with no treatment. It is not, however, a tracer study of a channel, a demonstration of organ correspondence, or an identification of the relevant biological pathway.
+
+An earlier individual-patient-data analysis reached a similar qualitative distinction between acupuncture versus sham and acupuncture versus no-acupuncture comparisons \cite{vickers2012}. In addition, Madsen \emph{et al.} emphasized the need to interpret placebo-acupuncture comparisons carefully when reviewing pain trials \cite{madsen2009}. These sources support a nuanced position: the existence of contextual effects does not erase every condition-specific effect, but any specific effect is not automatically a meridian effect.
+
+For episodic migraine prevention, the Cochrane review by Linde \emph{et al.} provides a systematic trial synthesis \cite{linde2016}. It supports continued research and condition-specific clinical discussion, subject to the usual considerations of trial quality, patient choice, alternatives, and qualified care. For the present problem it provides a methodological lesson rather than an anatomical one: clinical endpoints and channel ontology must be evaluated in separate studies. A future MRST cannot claim to validate or invalidate migraine treatment efficacy merely by measuring tissue properties.
+
+\subsection{Local biophysical observations are heterogeneous}
+
+Physical measurements create plausible targets for a meridian hypothesis, but the existing results are not a uniform channel signature. In a four-electrode study of two meridian locations, Ahn \emph{et al.} observed lower impedance at one pericardium location but not at a sampled spleen location \cite{ahn2005}. Ultrasound observations suggested that contact with connective tissue could account for the lower value. This is a valuable result because it simultaneously offers a candidate mechanism and an alternative explanation.
+
+A later study measured impedance at three body sites and related it to ultrasound-derived subcutaneous collagenous bands \cite{ahn2010}. It found reduced impedance for one trajectory but not the others, while echogenic collagenous bands were associated with lower impedance after multivariable adjustment. The appropriate interpretation is not that the data are uninformative; rather, they show why an unadjusted canonical-versus-adjacent contrast is insufficient. If collagenous tissue, thickness, contact, or depth explains the association, then the measured property is anatomically mediated. A channel-specific claim remains open only if a canonical label contributes additional predictive information after those features have been measured.
+
+Langevin and Yandow proposed a correspondence between some points or trajectories and connective-tissue planes \cite{langevin2002}. The proposal converted an unmeasurable metaphysical assertion into imageable anatomical questions. Yet fascia is widespread, mechanically connected, and heterogeneous throughout the body. Partial correspondence therefore cannot identify a separate twelve-channel system without systematic comparator paths and transparent spatial matching.
+
+\subsection{Physiological mechanisms are plural}
+
+Mechanism research does not converge on one privileged conduit. A field assessment by Napadow \emph{et al.} described neural, muscular, and connective-tissue models as partially overlapping avenues for iterative testing \cite{napadow2008}. Such pluralism is expected for a mechanical and sensory intervention: local afferents, spinal processing, central modulation, vascular response, and tissue deformation can coexist.
+
+Recent systems work also illustrates the importance of stimulation conditions and model boundaries. Liu \emph{et al.} identified a neuroanatomical basis through which defined electroacupuncture conditions drove a vagal-adrenal pathway in mice \cite{liu2021}. That experiment is powerful evidence for a conditional neuroanatomical mechanism in its model. It is not evidence that every point prescription works through a classical channel, nor is it direct proof of a human clinical outcome. In the opposite direction, Chang \emph{et al.} reported rodent paradigms in which local anaesthesia blocked selected acupuncture-associated effects whereas collagenase disruption did not \cite{chang2019}. This counterexample cautions against making connective tissue the exclusive explanation.
+
+\subsection{Interstitial-space and tracer narratives require claim discipline}
+
+The proposal that physiological spaces provide a modern interpretive lens for meridians has appeared in the literature. Zhang's 2020 article frames bodily spaces as potentially helpful for understanding meridian concepts \cite{zhang2020}. Its claim is valuable as a hypothesis-generating interpretation, but it is not a uniquely identifying discovery of the twelve channels. A space is not a channel unless it has a declared boundary, reproducible mapping, discriminatory measurement, and a mechanism that distinguishes it from ordinary interstitial anatomy.
+
+The topic prompt also describes historical radioisotope movement studies. This proposal does not use that statement as direct proof because the primary report, methods, control injections, and alternative transport explanations have not been independently recovered here. Tracer movement can be influenced by injection volume, local tissue planes, axon-reflex vascular effects, lymphatic or vascular uptake, and imaging thresholds. Historical claims should be preserved for source recovery, not promoted to a decisive evidentiary anchor.
+
+\begin{table*}[!t]
+\caption{Evidence synthesis and the claim boundary retained by MRST.}
+\label{tab:evidence}
+\centering
+\footnotesize
+\begin{tabular}{p{0.18\textwidth}|p{0.25\textwidth}|p{0.25\textwidth}|p{0.22\textwidth}}
+\hline
+\textbf{Stream} & \textbf{Representative evidence} & \textbf{Permitted conclusion} & \textbf{Not established} \\
+\hline
+Chronic pain & Individual-patient-data meta-analyses \cite{vickers2012,vickers2018} & Modest average condition-specific effects can remain after sham comparison. & A unique pathway, qi flow, or organ correspondence. \\
+\hline
+Migraine prevention & Cochrane synthesis \cite{linde2016} & A legitimate controlled-outcome evidence stream exists. & A channel ontology or universal clinical recommendation. \\
+\hline
+Impedance and fascia & Human impedance and ultrasound studies \cite{ahn2005,ahn2010,langevin2002} & Local associations can be measured and anatomically modeled. & A universal, anatomy-independent meridian signature. \\
+\hline
+Mechanism & Systems and model studies \cite{napadow2008,liu2021,chang2019} & Neural and tissue mechanisms are conditional, competing, and testable. & Direct human efficacy or a single necessary pathway. \\
+\hline
+Physiological spaces & Interpretive perspective \cite{zhang2020} & A hypothesis for research framing. & Replicated identification of meridians as unique spaces. \\
+\hline
+\end{tabular}
+\end{table*}
+
+\section{Research Gap and Selected Idea}
+
+The literature does not lack observations. It lacks a shared design that can adjudicate competing explanations. A local impedance difference might be evidence for a meridian, a connective-tissue band, a contact artifact, or a spatially correlated regional property. A clinical effect might arise through a canonical trajectory, generic somatosensory input, expectation, treatment context, or their interaction. A robust study must make these alternatives compete in the same preregistered model.
+
+The selected idea is the \emph{Meridian Residual Specificity Trial}. MRST does not ask researchers to decide in advance whether a channel exists. Instead, it encodes declared canonical paths as blinded coordinate polylines, gathers measurements on those coordinates and comparator coordinates, and asks whether the label improves out-of-sample prediction. Figure~\ref{fig:logic} summarizes the decision logic. The design is deliberately stronger than a point-versus-random-point study. Random points can differ in tissue depth, regional anatomy, accessibility, and sensor contact; such a contrast almost guarantees ambiguity.
+
+\begin{figure*}[!t]
+\centering
+\setlength{\fboxsep}{7pt}
+\fbox{\begin{minipage}{0.91\textwidth}
+\centering
+\footnotesize
+\textbf{Historical canonical path} \(\rightarrow\) \textbf{clinical outcome evidence, local physiology, and tissue correlations} \(\rightarrow\) \textbf{not sufficient to identify a channel}. \\
+\vspace{5pt}
+\textbf{MRST coordinate lock} \(\rightarrow\) \textbf{canonical coordinates + anatomy-matched controls + shifted controls + technical repeats} \(\rightarrow\) \textbf{blinded multimodal measurement}. \\
+\vspace{5pt}
+\textbf{Model comparison} \(\rightarrow\) \textbf{canonical label adds held-out information?} \(\rightarrow\)
+\begin{tabular}{c@{\hspace{20pt}}c}
+\textbf{Yes: residual signal requiring independent replication} & \textbf{No or unreliable: anatomy explanation or abstention}
+\end{tabular}
+\end{minipage}}
+\caption{MRST does not infer a channel from a clinical effect or a local correlate. It asks whether canonical membership retains preregistered predictive value after fair comparisons with known anatomy and spatial controls.}
+\label{fig:logic}
+\end{figure*}
+
+\section{MRST: A Preregistered Multimodal Design}
+
+\subsection{Coordinate representation and control construction}
+
+Before any future measurements, an independent cartographic team creates a versioned coordinate file for selected body regions. It contains four classes of locations: canonical path coordinates derived from a declared traditional atlas; anatomy-matched noncanonical coordinates; spatially shifted controls that preserve regional geometry and measurement order; and repeated technical locations. The canonical table is locked before outcomes are available. This procedure prevents analysts from redrawing a path after seeing where an attractive signal happens to occur.
+
+Anatomy matching is a central component rather than a convenience. For each canonical coordinate, a noncanonical comparator is selected to match body region, tissue depth, visible fascial-plane class, and regional neural or vascular context as closely as the future imaging allows. Shifted controls preserve the local surface neighborhood but intentionally break canonical membership. Technical repeats quantify within-session reliability and device drift. The precise coordinate convention, matching algorithm, and exclusions must be registered before any participant-facing procedures are approved.
+
+\subsection{Measurement bundle}
+
+The measurement bundle should be multimodal because no single modality can establish a channel. Structural data can include ultrasound-derived fascial-plane category, subcutaneous thickness, and collagen-band echogenicity. Electrical data can include calibrated four-electrode impedance at declared frequencies. Surface physiology can include a validated perfusion or temperature proxy if its reliability is demonstrated. A standardized innocuous sensory-context proxy can capture regional neural differences without treating a subjective sensation as a proof of ontology. Every record includes operator, device, calibration phantom, contact-quality indicator, sequence, and exclusion reason.
+
+MRST is not a needling-treatment protocol. It is a future physical and physiological measurement design. If a later ethics-approved extension tests stimulation, it must keep the measurement-only phase distinct from any clinical endpoint and must add trained personnel, informed consent, adverse-event monitoring, and a protocol specific to the jurisdiction. The current document makes no participant contact, treatment allocation, diagnosis, or medical recommendation.
+
+\subsection{Blinding, transparency, and governance}
+
+Image annotators and primary analysts receive randomized coordinate identifiers. Canonical status is held in a sealed table until covariates, quality-control thresholds, and code are finalized. The analysis plan must distinguish confirmatory measures from exploratory measures, publish all predeclared outcomes, and report deviations and missingness. Human data, images, and coordinate records require consent-aware access control and a least-privilege workflow. The final scientific record should include the coordinate schema and analytic code when privacy permits, because a path claim is not auditable if the path itself remains opaque.
+
+\section{Statistical Test and Decision Rules}
+
+\subsection{Primary estimand}
+
+Let \(Y_{ij}\) denote one standardized physical or physiological measure at location \(j\) in individual \(i\), and let \(M_{ij}\) denote blinded canonical-path membership. Let \(A_{ij}\) contain anatomical features, \(Q_{ij}\) technical factors, \(X_{ij}\) declared contextual variables, \(u_i\) a person-level effect, and \(S_{ij}\) a prespecified spatial basis. The primary confirmatory model is
+
+\begin{equation}
+Y_{ij} = \beta_0 + \beta_M M_{ij} + \boldsymbol{\beta}_A^{\mathsf{T}} A_{ij}
++ \boldsymbol{\beta}_Q^{\mathsf{T}} Q_{ij} + \boldsymbol{\beta}_X^{\mathsf{T}} X_{ij}
++ u_i + S_{ij} + \epsilon_{ij}.
+\label{eq:mixed}
+\end{equation}
+
+The meridian-specific quantity is not simply the sign of \(\beta_M\) in \eqref{eq:mixed}. It is the preregistered held-out predictive increment of the full model relative to the covariate-only model:
+
+\begin{align}
+\Delta_{\mathrm{M}} &=
+\mathcal{S}_{\mathrm{test}}\left(f_{M,A,Q,X,u,S}\right) \nonumber\\
+&\quad - \mathcal{S}_{\mathrm{test}}\left(f_{A,Q,X,u,S}\right).
+\label{eq:increment}
+\end{align}
+
+Here \(\mathcal{S}_{\mathrm{test}}\) is a declared proper scoring or loss function on held-out observations, \(f_{M,A,Q,X,u,S}\) is the full model, and \(f_{A,Q,X,u,S}\) excludes canonical membership. The test is conducted with trajectory-level holdout, not only random point holdout, because nearby locations are correlated. A positive in-sample coefficient without a stable positive \(\Delta_{\mathrm{M}}\) is not evidence for a channel-specific signal. Multiplicity control is applied across the declared modalities, and all exploratory extensions are visibly labeled.
+
+\subsection{Confirmation and falsification}
+
+MRST uses four possible states. A residual signal is reported only if the effect direction, calibration quality, covariate balance, and held-out increment meet thresholds locked before unblinding and then replicate on an independent trajectory. If an apparent canonical effect disappears after anatomical or acquisition adjustment, the allowed conclusion is that the sampled measurement is more parsimoniously explained by the measured covariates. If shifted controls perform equally well, the allowed conclusion is lack of trajectory specificity. If matching, reliability, or coverage fails, the correct state is model-or-data abstention.
+
+\begin{table*}[!t]
+\caption{MRST result states. All states are proposal-stage decision rules, not observed results.}
+\label{tab:states}
+\centering
+\footnotesize
+\begin{tabular}{p{0.21\textwidth}|p{0.31\textwidth}|p{0.31\textwidth}}
+\hline
+\textbf{Preregistered state} & \textbf{Required pattern} & \textbf{Permitted conclusion} \\
+\hline
+Residual signal requires replication & Canonical label improves held-out prediction after adjustment, with stable direction and acceptable quality control. & A specific residual pattern merits independent replication; it is not proof of qi, organ correspondence, or clinical efficacy. \\
+\hline
+Explained by measured covariates & Unadjusted contrast is reduced or removed after tissue, acquisition, or context adjustment. & The sampled property is better explained by measured anatomy or technical factors. \\
+\hline
+No trajectory specificity & Shifted or matched noncanonical controls predict as well as canonical coordinates. & The sampled signal does not discriminate the declared canonical path. \\
+\hline
+Model or data abstain & Poor reliability, failed matching, incomplete coverage, or unplanned analytical dependence. & No ontological inference is warranted; redesign is required. \\
+\hline
+\end{tabular}
+\end{table*}
+
+\section{Protocol Quality Controls Before Any Ontological Test}
+
+\subsection{Registration sequence and measurement reliability}
+
+The order of operations is scientifically consequential. The first future milestone is not collection of a visually compelling image; it is registration of the question, coordinate convention, comparators, modalities, primary estimand, and quality-control thresholds. The coordinate file must identify which atlas edition is used, how a surface trajectory is projected onto body landmarks, how left and right sides are handled, and how uncertain or disputed route segments are represented. Coordinates that cannot be declared reproducibly should not be silently replaced by the judgment of an operator during a session.
+
+Next, the future study should establish reliability without viewing canonical status. Technical repeat locations, calibration phantoms, and repeated image annotation quantify whether a signal can be measured consistently at all. If the reliability of impedance, tissue classification, or a surface proxy is too low, a comparison of canonical and noncanonical locations becomes uninterpretable even if its nominal p-value is small. Reliability therefore gates the claim, not because it proves a result, but because an unstable instrument cannot distinguish a biological pattern from noise.
+
+The future protocol should also set modality-specific thresholds before unblinding. For example, the analysis need not require every modality to show the same effect; a channel hypothesis could in principle involve a subset of measurements. However, selecting that subset after seeing results would inflate the chance of a spurious signal. The preregistration must state which measures are confirmatory, which are exploratory, how measurement failures are encoded, and whether a composite measure is permitted. Exploratory signals may generate new hypotheses but cannot be presented as the prespecified primary confirmation.
+
+\subsection{Balance diagnostics for anatomical controls}
+
+Anatomy matching must be checked quantitatively. It is not enough to call two coordinates adjacent or visually similar. Before outcome labels are released, the protocol should report standardized differences in surface region, tissue depth, fascial-plane class, subcutaneous echogenicity, regional sensory proxy, and acquisition order. A comparator set with persistent imbalance should be redesigned or down-weighted according to the registered rule. The analysis must never compensate for poor matching by asserting that a difference is the desired meridian effect.
+
+Spatial matching is especially important. A long line on a body surface crosses gradients in skin thickness, muscle compartment, temperature, hair density, and accessibility. A naive canonical-versus-random design can confound trajectory status with these gradients. Shifted-path controls help because they preserve local neighborhood while removing the historical label. A permutation test that shuffles labels only across far-away locations is inadequate; it creates an unrealistic null that makes any regional biological pattern appear canonical. The correct null is geographically and anatomically constrained.
+
+\subsection{Analysis firewalls}
+
+MRST uses several firewalls against unintentional researcher degrees of freedom. Analysts should finalize the data dictionary, model transformations, exclusion criteria, and held-out trajectory split before the canonical status table is joined. Image segmentation can be audited independently from statistical modeling. The future protocol should record every coordinate revision, every device-calibration event, and every analyst-access event. An unblinded exploratory analysis can still be useful, but it must be explicitly labeled as such and cannot be folded back into the confirmatory result.
+
+These controls do not assume that a meridian signal is absent. They ensure that a positive signal would mean more than the known fact that different body regions have different tissue properties. They also preserve a fair route for a negative result: if known covariates account for a measurement, the design can say so without claiming to adjudicate every possible interpretation of TCM.
+
+\section{Adversarial Sensitivity Analyses}
+
+The strongest test of a subtle spatial claim is an analysis designed to defeat it. MRST therefore includes adversarial checks that are specified before data collection. First, the same analysis is applied to several geographically plausible but noncanonical shifted trajectories. A canonical model that performs no better than these shifts lacks path specificity. Second, anatomy-only models are allowed flexible nonlinear terms and interactions where justified; otherwise the canonical label may appear useful only because the competing model was artificially weak.
+
+Third, the study should compare performance across body regions and across independent trajectory families. A finding limited to one highly accessible superficial region is not evidence for a body-wide system. A robust residual claim must transfer at least to a held-out trajectory category and then to an independent laboratory. Fourth, negative technical controls test whether a device, contact force, or sequence effect can reproduce the apparent spatial pattern. Fifth, blinded reannotation of ultrasound and coordinate projections tests whether human labeling decisions drive the effect.
+
+Sensitivity analysis also needs to confront latent variables. A residual label effect does not identify its biological cause; it may reflect an unmeasured anatomical variable that happens to co-vary with historical practice. Consequently, the conclusion after a positive primary result is intentionally limited to an unresolved, replicable association. Mechanism identification would require new experiments that perturb or measure the suspected variable while retaining the same control discipline. The design rejects the tempting but invalid shortcut from statistical residual to an asserted substance or energy flow.
+
+\begin{table}[!t]
+\caption{Adversarial checks that distinguish a meaningful residual from a convenient spatial contrast.}
+\label{tab:adversarial}
+\centering
+\footnotesize
+\begin{tabular}{p{0.24\columnwidth}|p{0.285\columnwidth}|p{0.285\columnwidth}}
+\hline
+\textbf{Check} & \textbf{Failure pattern} & \textbf{Consequence} \\
+\hline
+Shifted-path comparison & Shifted paths predict as well as canonical paths. & Report no trajectory specificity. \\
+\hline
+Flexible anatomy-only model & Canonical increment vanishes with measured anatomy interactions. & Favor anatomy-plus-artifact explanation. \\
+\hline
+Held-out trajectory test & Signal remains only on fitted trajectories. & Reject confirmatory claim. \\
+\hline
+Operator and device sensitivity & Signal follows operator, sequence, or calibration status. & Treat as acquisition artifact until resolved. \\
+\hline
+Independent reannotation & Effect changes after blinded coordinate or image review. & Declare model-or-data abstention. \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Relationship to Future Clinical Research}
+
+MRST is deliberately not a treatment-efficacy trial. This separation improves, rather than weakens, the clinical science. If a future clinical study tests a condition-specific acupuncture intervention, it should define the condition, comparator, outcome, harms, follow-up, practitioner training, co-interventions, and patient-centered decision context. It should not assume that an observed symptom change validates a channel. Conversely, a physical MRST result cannot establish that a person will benefit from treatment.
+
+The two research streams can later inform each other. If MRST identifies a reproducible residual pattern, a separate confirmatory clinical protocol could investigate whether that pattern moderates a specified outcome. If MRST finds no residual specificity, clinical trials may still study generic or anatomically based somatosensory mechanisms without invoking a unique channel. The ordering prevents a mechanistic narrative from being retrofitted to a clinical result and preserves the possibility that a treatment has a useful but non-meridian-specific basis.
+
+For medical communication, the proposal supports precise statements. It is reasonable to say that acupuncture has condition-specific evidence in selected outcome domains and that its mechanisms remain under active investigation. It is not reasonable, on the present evidence, to say that a discrete twelve-channel anatomical system has been established, that an individual has a diagnosed channel blockage, or that this research plan determines treatment. Qualified clinicians, participants, and regulators would need to review any future clinical implementation independently.
+
+\section{Why This Design Is Stronger Than Common Alternatives}
+
+Several common designs cannot resolve the central claim. First, a comparison of a named point with a distant random point is confounded by regional anatomy. Second, a clinical treatment comparison can be important for patient care but typically does not identify which physical pathway produced an effect. Third, a single modality with a favorable signal can be distorted by contact, depth, segmentation, or unmodeled spatial variation. Fourth, an open-ended anatomical atlas is vulnerable to post-hoc overlay: when a body-wide tissue network is present, visual resemblance alone is weak evidence of identity.
+
+MRST addresses these limitations by making the alternative models explicit. The anatomy-plus-artifact model receives rich measurements, not a token covariate. The canonical-label model must win on trajectories held out from fitting. The design also allows a transparent negative conclusion that is narrower than "TCM is false." It can show, for example, that a particular impedance pattern is explained by collagenous tissue and sensor geometry without asserting that all clinical acupuncture research is invalid or that historical concepts have no descriptive value.
+
+The design also makes a positive result more meaningful. Suppose a canonical label repeatedly contributes predictive information after exact regional matching, calibrated acquisition, spatial controls, and independent trajectory holdout. That would not immediately validate all organ associations or every therapeutic claim. It would nevertheless be a scientifically nontrivial result: a traditional coordinate system would have captured an unresolved physical or physiological regularity. The next step would be independent replication, mechanism refinement, and only later--if appropriate--separate clinical testing.
+
+\section{Ethics, Communication, and Limits}
+
+The research question concerns a traditional medical framework that is culturally important and clinically consequential. Scientific rigor should therefore not be confused with dismissive rhetoric. The proposal tests declared claims, reports uncertainty, and avoids assigning cultural value from an anatomical measurement. It also avoids a symmetric error: respect for a tradition cannot lower the evidentiary standard for an anatomical or clinical claim.
+
+Future human work would need review of consent language, risk classification, training, adverse-event plans, privacy, and communication of incidental findings. The proposal does not approve stimulation settings, recruitment targets, or treatment protocols. It does not infer that a person has a blocked channel, that an intervention will rebalance health, or that an individual should start or stop care. These are outside the scope of a measurement design.
+
+There are substantive scientific limits as well. Canonical paths can be represented differently across atlases and traditions. Matching may be imperfect because anatomy is multiscale and variable across individuals. Some relevant variables may be unmeasured. A null result is therefore bounded to the selected trajectories, modalities, reliability, and coverage. A positive result can also be false if latent spatial or technical features survive the adjustment set. For both reasons, preregistration, replication, and release of negative results are not bureaucratic additions; they are essential to interpreting a signal that may be small and spatially structured.
+
+\section{Conclusion}
+
+There is a scientific basis for investigating acupuncture-related clinical outcomes and for measuring local neural, connective-tissue, autonomic, and central responses. There is not yet sufficient evidence to treat the twelve traditional meridians as an independently established anatomical system or uniquely identified body-wide transport network. The proper next question is not whether any anatomical feature can be made to resemble a historical line. It is whether canonical membership explains reproducible residual variance after ordinary anatomy, context, and measurement artifacts are given a fair test.
+
+MRST provides that test. It can produce a strong but appropriately bounded positive result, a parsimonious anatomy-based explanation, lack of trajectory specificity, or an explicit abstention. In each case it protects clinical research from ontological overreach and protects anatomical research from post-hoc pattern matching. The proposed work is therefore a research plan, not an observation: no experimental or clinical result is claimed here, and human expert review is required before any implementation.
+
+\begin{thebibliography}{00}
+\bibitem{vickers2018}
+A. J. Vickers, E. A. Vertosick, G. Lewith, H. MacPherson, N. E. Foster, K. J. Sherman, C. M. Witt, and K. Linde, "Acupuncture for Chronic Pain: Update of an Individual Patient Data Meta-Analysis," \emph{The Journal of Pain}, vol. 19, no. 5, pp. 455--474, 2018, doi: 10.1016/j.jpain.2017.11.005.
+\bibitem{vickers2012}
+A. J. Vickers, A. M. Cronin, A. C. Maschino, G. Lewith, H. MacPherson, N. E. Foster, K. J. Sherman, C. M. Witt, and K. Linde, "Acupuncture for Chronic Pain," \emph{Archives of Internal Medicine}, vol. 172, no. 19, pp. 1444--1453, 2012, doi: 10.1001/archinternmed.2012.3654.
+\bibitem{madsen2009}
+M. V. Madsen, P. C. Gotzsche, and A. Hrobjartsson, "Acupuncture Treatment for Pain: Systematic Review of Randomised Clinical Trials with Acupuncture, Placebo Acupuncture, and No Acupuncture Groups," \emph{BMJ}, vol. 338, a3115, 2009, doi: 10.1136/bmj.a3115.
+\bibitem{linde2016}
+K. Linde, A. Allais, B. Brinkhaus, D. Fei, A. Mehring, K. Shin, A. Vickers, and A. R. White, "Acupuncture for the Prevention of Episodic Migraine," \emph{Cochrane Database of Systematic Reviews}, no. 6, CD001218, 2016, doi: 10.1002/14651858.CD001218.pub3.
+\bibitem{ahn2005}
+A. C. Ahn, J. Wu, G. J. Badger, R. Hammerschlag, and H. M. Langevin, "Electrical Impedance Along Connective Tissue Planes Associated with Acupuncture Meridians," \emph{BMC Complementary and Alternative Medicine}, vol. 5, art. 10, 2005, doi: 10.1186/1472-6882-5-10.
+\bibitem{ahn2010}
+A. C. Ahn, M. H. Park, J. R. Shaw, C. McManus, T. J. Kaptchuk, and H. M. Langevin, "Electrical Impedance of Acupuncture Meridians: The Relevance of Subcutaneous Collagenous Bands," \emph{PLOS ONE}, vol. 5, no. 7, e11907, 2010, doi: 10.1371/journal.pone.0011907.
+\bibitem{langevin2002}
+H. M. Langevin and J. A. Yandow, "Relationship of Acupuncture Points and Meridians to Connective Tissue Planes," \emph{The Anatomical Record}, vol. 269, pp. 257--265, 2002, doi: 10.1002/ar.10185.
+\bibitem{napadow2008}
+V. Napadow, A. C. Ahn, J. C. Longhurst, L. Lao, E. Stener-Victorin, R. E. Harris, and H. M. Langevin, "The Status and Future of Acupuncture Mechanism Research," \emph{Journal of Alternative and Complementary Medicine}, vol. 14, no. 7, pp. 861--869, 2008, doi: 10.1089/acm.2008.sar-3.
+\bibitem{liu2021}
+S. Liu \emph{et al.}, "A Neuroanatomical Basis for Electroacupuncture to Drive the Vagal-Adrenal Axis," \emph{Nature}, vol. 598, pp. 641--645, 2021, doi: 10.1038/s41586-021-04001-4.
+\bibitem{chang2019}
+S. Chang \emph{et al.}, "Peripheral Sensory Nerve Tissue but Not Connective Tissue Is Involved in the Action of Acupuncture," \emph{Frontiers in Neuroscience}, vol. 13, art. 110, 2019, doi: 10.3389/fnins.2019.00110.
+\bibitem{zhang2020}
+K. Zhang, "The Significance of Physiological Spaces in the Body and Its Medical Implications," \emph{Research}, vol. 2020, art. 7989512, 2020, doi: 10.34133/2020/7989512.
+\end{thebibliography}
+\end{document}

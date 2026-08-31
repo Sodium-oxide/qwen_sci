@@ -1,0 +1,50 @@
+{
+  "schema_version": "survey_gap_ledger_v1",
+  "status_policy": "Only accepted gaps may anchor the primary idea. Candidate gaps are not evidence of a fact.",
+  "gaps": [
+    {
+      "gap_id": "G1",
+      "title": "No auditable cross-domain xenograft-readiness framework",
+      "status": "accepted",
+      "evidence_anchors": ["S1", "S2", "S3", "S5", "S6"],
+      "why_it_matters": "Single-domain efficacy claims obscure deployment blockers in other domains.",
+      "falsifiable_direction": "Test whether a domain-separated readiness model changes classification compared with biological-only assessment."
+    },
+    {
+      "gap_id": "G2",
+      "title": "Missing bridge from graft outcome to shortage-relief capacity",
+      "status": "accepted",
+      "evidence_anchors": ["S1", "S3", "S6", "S7"],
+      "why_it_matters": "The number of source organs is not equal to safe, qualified, accessible graft supply.",
+      "falsifiable_direction": "Model whether plausible biological success remains non-deployable when capacity, quality, surveillance, or access constraints fail."
+    },
+    {
+      "gap_id": "G3",
+      "title": "Infection governance and long-term follow-up are insufficiently integrated with readiness claims",
+      "status": "accepted",
+      "evidence_anchors": ["S5", "S6"],
+      "why_it_matters": "A favorable early graft signal cannot justify ordinary deployment if surveillance cannot be sustained.",
+      "falsifiable_direction": "Require infection-governance conditions as non-compensatory gates in readiness classification."
+    },
+    {
+      "gap_id": "G4",
+      "title": "Unclear transferability between evidence settings",
+      "status": "accepted",
+      "evidence_anchors": ["S1", "S2", "S3"],
+      "why_it_matters": "Brain-dead human and nonhuman-primate results offer different signals and cannot be pooled as if equivalent.",
+      "falsifiable_direction": "Represent evidence setting and observation horizon explicitly; abstain when transfer assumptions dominate."
+    }
+  ],
+  "rejected_or_deferred": [
+    {
+      "title": "Xenotransplantation already solves donor-organ shortage",
+      "status": "rejected",
+      "reason": "No identified evidence establishes durable, scalable, equitable deployment across the shortage landscape."
+    },
+    {
+      "title": "One standardized genetic modification set will suffice for all organs and indications",
+      "status": "deferred",
+      "reason": "Organ-specific biological and translational heterogeneity is material."
+    }
+  ]
+}

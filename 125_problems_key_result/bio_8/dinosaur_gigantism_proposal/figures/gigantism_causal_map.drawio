@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="drawio" version="26.0.0">
+  <diagram name="GigaCascade causal architecture">
+    <mxGraphModel dx="1200" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="2" value="Feeding architecture&#xa;Long neck, small head, dental turnover&#xa;(morphology and proxy evidence)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" vertex="1" parent="1"><mxGeometry x="60" y="80" width="230" height="90" as="geometry"/></mxCell>
+        <mxCell id="3" value="Axial pneumaticity&#xa;Structural and respiratory anatomical proxy&#xa;(not direct physiological measurement)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;" vertex="1" parent="1"><mxGeometry x="60" y="260" width="230" height="90" as="geometry"/></mxCell>
+        <mxCell id="4" value="Growth and life history&#xa;Histological state, ovipary, ontogeny&#xa;(proxy/inference)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" vertex="1" parent="1"><mxGeometry x="60" y="440" width="230" height="90" as="geometry"/></mxCell>
+        <mxCell id="5" value="Ecological opportunity&#xa;Paleoflora, facies, geography, sampling&#xa;(contextual moderation)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;" vertex="1" parent="1"><mxGeometry x="60" y="620" width="230" height="90" as="geometry"/></mxCell>
+        <mxCell id="6" value="Constraint-release latent state&#xa;feeding opportunity + mass distribution +&#xa;growth accessibility under uncertainty" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="410" y="300" width="270" height="120" as="geometry"/></mxCell>
+        <mxCell id="7" value="Repeated giant body-mass transitions&#xa;phylogenetically structured outcome&#xa;(with mass and date intervals)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="800" y="300" width="240" height="120" as="geometry"/></mxCell>
+        <mxCell id="8" value="Required gates&#xa;temporal precedence&#xa;uncertainty propagation&#xa;out-of-clade prediction&#xa;ABSTAIN on proxy overreach" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1"><mxGeometry x="770" y="560" width="270" height="130" as="geometry"/></mxCell>
+        <mxCell id="9" value="enables / mediates" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.2;entryDx=0;entryDy=0;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="2" target="6"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="10" value="relaxes selected constraints" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.4;entryDx=0;entryDy=0;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="3" target="6"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="11" value="permits adult-size access" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.6;entryDx=0;entryDy=0;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="4" target="6"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="12" value="moderates" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.8;entryDx=0;entryDy=0;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="5" target="6"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="13" value="predicts conditional transition" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=#ffffff;fontSize=12;" edge="1" parent="1" source="6" target="7"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="14" value="tests / limits claim" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=#ffffff;fontSize=12;" edge="1" parent="1" source="7" target="8"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

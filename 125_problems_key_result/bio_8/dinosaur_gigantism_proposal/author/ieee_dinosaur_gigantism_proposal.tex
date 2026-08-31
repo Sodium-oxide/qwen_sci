@@ -1,0 +1,296 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{url}
+\newcommand{\gc}{GigaCascade}
+\newcommand{\abstain}{\texttt{ABSTAIN}}
+\newcommand{\evidence}{\textit{evidence}}
+\begin{document}
+
+\title{Why Did Dinosaurs Grow So Big?\\
+\gc: An Evidence-Gated Research Design for Testing Sauropod Gigantism}
+
+\author{}
+\maketitle
+
+\begin{abstract}
+The largest terrestrial animals evolved repeatedly within sauropod dinosaurs, yet ``more food,'' predator avoidance, climate, and metabolism are often presented as competing single explanations. The fossil record instead motivates a conditional multiconstraint problem. This proposal introduces \gc, a design-only framework that tests whether feeding architecture, axial pneumaticity, growth/life-history capacity, and ecological opportunity jointly predict repeated giant body-mass transitions better than single-factor alternatives. The design compiles a time-calibrated, uncertainty-coded sauropodomorph dataset; separates directly preserved morphology from functional proxies; compares preregistered causal-path models; and demands leave-clade-out predictive improvement, temporal precedence, and sensitivity to alternative mass estimates and phylogenies. A scenario-bounded feasibility model links intake opportunity, structural loading, maintenance, and growth demand without asserting that extinct metabolism is measured. The study permits conditional support only when an integrated model generalizes to independent giant lineages and survives fossil uncertainty. Otherwise it records a targeted abstention or a narrower association. The contribution is an ambitious but claim-limited route from the established evolutionary-cascade idea to a falsifiable comparative research program for sauropod gigantism.
+\end{abstract}
+
+\begin{IEEEkeywords}
+sauropod dinosaurs, gigantism, macroevolution, paleobiology, body mass, skeletal pneumaticity, feeding ecology, bone histology, phylogenetic comparative methods, causal inference
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Why dinosaurs grew so large is a question with an important hidden qualifier: most dinosaurs were not giant, and giant size did not arise from one unchanging recipe across Dinosauria. The relevant empirical extreme is sauropod gigantism. Several sauropod lineages attained body masses that exceed those of all known terrestrial mammals, while their close and distant dinosaurian relatives retained much smaller sizes. A useful explanation must therefore distinguish a trait that merely accompanies a large animal from a trait combination that made repeated movement into an extreme body-size regime evolutionarily feasible.
+
+The traditional candidates are individually plausible. A tall feeding apparatus could reach vegetation without the energetic cost of constantly moving a huge body. A small head and limited oral processing could favor high intake rates. Axial pneumaticity could reduce skeletal mass and records anatomy related to a bird-like air-sac system. Fast growth could shorten the vulnerable interval between hatching and adult size. Ovipary could relax the reproductive constraint seen in very large live-bearing mammals. Productivity, climate, predators, and competition could alter the external opportunity for a giant herbivore. None of these propositions follows automatically from a fossil observation, and none is a complete answer by itself.
+
+Sander \emph{et al.} \cite{sander2010} synthesized these ideas as linked evolutionary cascades. Their formulation remains an unusually productive starting point because it treats gigantism as an interaction among inherited traits, innovations, selection, and constraints. Its strength, however, also exposes the next research problem: a narrative cascade can accommodate many observations unless it is converted into competing models with predeclared failure conditions. Sander's subsequent update emphasizes that the component cascades contain both observed traits and inferred advantages \cite{sander2013}. The distinction is essential. Pneumatic vertebrae are observable; a measured respiratory cost for a Jurassic sauropod is not.
+
+This paper proposes \gc, a fossil-anchored, design-only program to test a restricted claim. It asks whether an interaction model of feeding architecture, pneumatic anatomy, growth/life-history proxies, and ecological opportunity predicts repeated giant body-mass shifts more accurately than climate-only, anatomy-only, growth-only, additive, and neutral alternatives. The framework is assertive in its test design but conservative in what it will conclude: conditional support for a macroevolutionary feasibility model is not a direct estimate of dinosaur metabolism, thermoregulation, browsing height, behavior, or daily food intake.
+
+\section{Evidence Boundary and Research Gap}
+
+\subsection{What the current evidence supports}
+
+Body-mass evolution in dinosaurs is phylogenetically structured rather than a collection of isolated large specimens. Benson \emph{et al.} assembled composite dinosaur trees and a broad mass dataset derived from limb-bone robustness, recovering rapid early body-size shifts during dinosaur diversification \cite{benson2014}. This provides a macroevolutionary context for sauropod size, but it does not identify the biological mechanism behind any one shift. It also makes tree choice, mass-scaling assumptions, and time calibration part of the causal problem rather than technical details to be hidden after fitting.
+
+Long necks are central to many sauropod accounts. They enlarge the set of vegetation an individual can access from a standing position and may change the trade-off between browsing, walking, and body mass. Whole-body reconstructions show major temporal and phylogenetic change in sauropod segment properties and centre of mass; in particular, neck enlargement coincides with cranial centre-of-mass shifts in several major transitions \cite{bates2016}. Yet those authors also report that relative neck size and inferred feeding habits are not strongly correlated across their sample. The defensible statement is therefore that neck morphology creates a testable opportunity proxy, not that every long-necked taxon is known to have fed at a particular height or realized a particular energy gain.
+
+Dental evidence adds functional resolution. D'Emic \emph{et al.} measured tooth formation and replacement in coexisting \emph{Camarasaurus} and \emph{Diplodocus}, finding materially different replacement schedules and inferring differences in feeding strategies or food choice \cite{demic2013}. Such results matter because a ``feeding'' cascade cannot be reduced to neck length. They do not supply a daily food-intake meter, and sparse craniodental preservation means that missingness must be modelled rather than treated as absence of a trait.
+
+Pneumaticity is an equally important but easily overstated evidence stream. In extant birds, postcranial pneumatic bones are associated with pulmonary diverticula and air sacs. Wedel reviewed anatomical and evolutionary patterns in saurischians and argued that multiple features, including a pneumatic hiatus in \emph{Haplocanthosaurus}, support an air-sac system in sauropods \cite{wedel2009}. The fossil signal can support an anatomical inference and motivate alternative structural, respiratory, and thermal hypotheses. It cannot directly observe the direction of air flow, the cost of ventilation, basal metabolic rate, or heat dissipation in a particular extinct animal. The proposed study must preserve this proxy boundary at every stage.
+
+Growth histology supplies a different kind of evidence. Sander interpreted sauropod bone histology as evidence for accelerated evolution of giant body size \cite{sander2004}. The exceptionally complete giant titanosaur \emph{Dreadnoughtus} was still growing when it died, demonstrating that an individual with a high estimated mass need not be fully grown \cite{lacovara2014}. These observations make ontogenetic state a required uncertainty field. They do not justify a universal numerical growth rate based on a thin, taxonomically uneven fossil sample.
+
+\subsection{Why single-factor explanations are inadequate}
+
+The hypothesis that large herbivores become more efficient digesters simply because they are large is not a safe default. Clau\ss{} \emph{et al.} reviewed allometry and herbivore physiology, finding that a generic digestive advantage of increasing body mass is not well corroborated and recommending ecological scenarios based on forage quality, biomass availability, and feeding selectivity \cite{clauss2013}. A causal account of sauropod gigantism must thus explain why size would be accessible in particular lineages, not assume that size independently creates its own food-processing solution.
+
+Air-sac anatomy also cannot serve as a standalone explanation. Pneumatic postcrania occurs outside giant sauropods, and evidence for air sacs in non-avian saurischians does not imply that every carrier reached extraordinary mass. Fossil examples of extensive pneumaticity can illuminate the evolutionary distribution of an anatomical system \cite{sereno2008}, but the study must test whether a pneumatization proxy adds information in a model that already includes body plan, phylogeny, time, and ecology.
+
+These considerations produce six connected gaps. First, the cascade has rarely been tested as a preregistered comparison among causal alternatives. Second, feeding-envelope potential, dental function, and environmental opportunity are usually not analyzed together. Third, structural and physiological interpretations of pneumaticity are confounded. Fourth, mass, trait coding, age, phylogeny, and sampling uncertainty can generate false confidence. Fifth, timing is needed to distinguish an enabling trait from a consequence of gigantism. Sixth, a complex model must generalize to held-out lineages rather than merely describe famous giants.
+
+\section{\gc{} Hypothesis and Causal Architecture}
+
+\subsection{Primary hypothesis}
+
+The \gc{} hypothesis is that extreme sauropod mass was not produced by a single driver, but became accessible when several constraints were jointly relaxed. A long neck, small head, and high-throughput dental system may increase the opportunity to acquire forage. Pneumatic axial anatomy may change mass distribution and record respiratory anatomical innovation. Growth and reproductive traits may make the trajectory to a giant adult viable. Ecological opportunity may regulate the benefit of the preceding traits. The central prediction is stronger than an additive story: the integrated interaction model should predict a giant-size transition in a held-out lineage better than any individual block or a simple sum of blocks.
+
+\begin{figure*}[!t]
+\centering
+\setlength{\fboxsep}{8pt}
+\fbox{\begin{minipage}{0.94\textwidth}
+\centering\small
+\begin{tabular}{c@{\quad$\Longrightarrow$\quad}c@{\quad$\Longrightarrow$\quad}c}
+\fbox{\parbox{0.21\textwidth}{\centering\textbf{Feeding architecture}\\Long neck, small head, dental turnover\\\textit{morphology and proxy evidence}}} &
+\fbox{\parbox{0.24\textwidth}{\centering\textbf{Constraint-release state}\\Feeding opportunity, mass distribution, and growth accessibility\\\textit{scenario bounded}}} &
+\fbox{\parbox{0.21\textwidth}{\centering\textbf{Repeated giant mass transition}\\Phylogenetically structured outcome\\\textit{mass and date intervals}}}\\[7pt]
+\multicolumn{1}{c}{\fbox{\parbox{0.21\textwidth}{\centering\textbf{Pneumatic anatomy}\\Axial pneumaticity; alternative structural, respiratory, and thermal paths}}} &
+\multicolumn{1}{c}{\fbox{\parbox{0.24\textwidth}{\centering\textbf{Required gates}\\Temporal precedence; uncertainty propagation; leave-clade-out prediction; abstain on proxy overreach}}} &
+\multicolumn{1}{c}{\fbox{\parbox{0.21\textwidth}{\centering\textbf{Growth and ecology}\\Histology, life history, facies, paleoflora, sampling effort}}}
+\end{tabular}
+\end{minipage}}
+\caption{Proposed \gc{} causal architecture. Boxes denote measured or coded evidence blocks, latent interpretive states, and outcome definitions; arrows are hypotheses to be tested, not observed causal effects. The editable source map is retained separately as \texttt{figures/gigantism\_causal\_map.drawio}.}
+\label{fig:gigacascade}
+\end{figure*}
+
+Fig.~\ref{fig:gigacascade} makes the explanatory boundary explicit. The model has no arrow from ``pneumaticity'' directly to a measured metabolic rate because such a datum is unavailable. Instead, it represents a family of competing paths. Likewise, a feeding envelope is not labeled ``food intake.'' The outcome is a posterior distribution for inferred body mass and a predeclared giant-transition indicator, not a binary declaration that a taxon was or was not biologically successful.
+
+For taxon-time unit $i$, the primary latent feasibility score is specified as
+\begin{equation}
+\begin{aligned}
+\mathcal{F}_{i}={}&\alpha_{F}F_{i}+\alpha_{P}P_{i}+\alpha_{G}G_{i}+\alpha_{E}E_{i}\\
+&+\alpha_{FP}F_{i}P_{i}+\alpha_{FG}F_{i}G_{i}+\alpha_{PE}P_{i}E_{i}+u_{i},
+\end{aligned}
+\label{eq:feasibility}
+\end{equation}
+where $F_i$ is the feeding-architecture block, $P_i$ is the pneumatic-anatomy block, $G_i$ is the growth/life-history block, $E_i$ is contextual ecological opportunity, and $u_i$ represents unmeasured lineage-specific factors. Equation~\eqref{eq:feasibility} is a registered statistical structure, not a retrospective estimate. The interaction coefficients test whether a combination carries information beyond its constituent traits. Their sign, size, and even identifiability remain unknown before evidence collection.
+
+\subsection{Competing explanations and claim ceilings}
+
+The primary model competes with six alternatives: a null phylogenetic model; ecology-only; feeding-only; pneumaticity-only; growth-only; and additive multiblock models. D1, the vegetation-first direction, is retained as an ecological ablation. D2, the long-neck threshold direction, is retained as a functional ablation. The study therefore cannot declare victory merely because several plausible traits correlate with mass: it must show that their specifically preregistered arrangement predicts an independent contrast.
+
+\begin{table}[!t]
+\caption{Claim ladder for \gc{} interpretations. All rows describe possible future analysis outcomes, not findings of this proposal.}
+\label{tab:claims}
+\centering
+\scriptsize
+\begin{tabular}{|p{0.18\columnwidth}|p{0.35\columnwidth}|p{0.29\columnwidth}|}
+\hline
+Evidence state & Permitted conclusion & Prohibited conclusion \\
+\hline
+One proxy associates with mass & Conditional association after stated controls & The proxy caused gigantism \\
+\hline
+Integrated model improves in-sample fit only & Model description; no confirmation & The cascade is established \\
+\hline
+Integrated model predicts held-out lineage with stable timing & Conditional support for a macroevolutionary feasibility model & Direct measurement of metabolism or behavior \\
+\hline
+Pneumaticity path remains unresolved & Anatomical correlate retained; mechanism unassigned & Flow-through ventilation or thermal performance measured \\
+\hline
+Mass or tree sensitivity reverses ranking & \abstain{} or report model dependence & Select a preferred reconstruction as fact \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Design-Only Methods}
+
+\subsection{Corpus assembly and evidence cards}
+
+The confirmatory panel will be assembled from published taxonomic descriptions, museum-approved non-destructive records, published body-mass estimates, dated phylogenies, and traceable environmental metadata. Inclusion is not set by a convenient target number. A taxon enters the primary panel only if its mass estimate has a recorded method and interval, its temporal position has a dated range, and at least two trait blocks can be coded with explicit evidence quality. The rule prevents a model from treating missing dental or pneumatic information as biological absence.
+
+Each taxon receives an \evidence{} card with five mandatory fields: source identity and specimen context; observed morphology; proxy/inference label; alternative coding; and uncertainty distribution. For example, an axial vertebra with diagnostic pneumatic features supports a coding of postcranial pneumaticity. It does not receive a numeric ``respiratory efficiency'' value. A limb circumference can enter a mass-estimation distribution under a specified scaling relation, including its uncertainty, but it is not silently converted into a definitive adult body mass. Campione and Evans provide an important general framework because proximal limb-bone circumference has a conserved relationship with mass across extant terrestrial quadrupeds \cite{campione2012}; applying it to fossils still requires sensitivity analyses for preservation and reconstruction.
+
+Table~\ref{tab:matrix} defines the minimum evidence contract. The design deliberately favors a smaller transparent panel over an apparently comprehensive matrix filled with unmarked imputation. The excluded taxa remain useful in exploratory analyses, but exploratory results cannot upgrade the primary conclusion.
+
+\begin{table*}[!t]
+\caption{Minimum \gc{} evidence contract for a future comparative implementation.}
+\label{tab:matrix}
+\centering
+\scriptsize
+\begin{tabular}{|p{0.16\textwidth}|p{0.23\textwidth}|p{0.25\textwidth}|p{0.24\textwidth}|}
+\hline
+Record block & Required information & Question answered & Failure response \\
+\hline
+Mass outcome & estimate method, interval, skeletal completeness, ontogenetic flag & Is the outcome comparable and uncertainty-coded? & exclude from confirmatory outcome or retain only in sensitivity panel \\
+\hline
+Feeding architecture & neck/body geometry, head/oral-processing code, dental evidence where preserved & Does the taxon carry a defined intake-opportunity proxy? & prohibit realized-intake claim \\
+\hline
+Pneumatic anatomy & anatomical basis, region of skeleton, coding confidence, alternative explanation & Is a respiratory-anatomical proxy defensible? & retain as unknown; do not impute physiology \\
+\hline
+Growth/life history & tissue description, sampled element, ontogenetic interpretation, confidence & Is growth state separated from adult mass? & downgrade to non-confirmatory covariate \\
+\hline
+Ecological context & formation, time bin, facies/paleoflora source, sampling effort & Is environmental opportunity distinguished from preservation? & include sampling model or omit contextual inference \\
+\hline
+Phylogeny and time & tree source, branch/date distribution, taxonomic synonymy resolution & Does the test respect non-independence and timing? & exclude causal-order claim \\
+\hline
+\end{tabular}
+\end{table*}
+
+\subsection{Outcome definition and uncertainty propagation}
+
+The primary continuous outcome is $Y_i=\log(M_i)$, where $M_i$ is a posterior draw from the taxon's published mass-estimation distribution. The secondary outcome is a giant-transition indicator defined before fitting by a sensitivity set of mass thresholds; the analysis will report all registered thresholds rather than choose the one producing the cleanest story. Juvenile or ontogenetically ambiguous specimens are modeled with an adult-status uncertainty field and cannot anchor a negative conclusion about a lineage's maximum size.
+
+At every posterior iteration, the pipeline samples one mass reconstruction, dated tree, trait coding, and time range. This creates a distribution of model rankings rather than a single deceptively precise fit. A result that occurs only under one mass equation, one preferred topology, or one unusual titanosaur cannot meet the confirmation rule. The method thereby operationalizes the concern that spectacular but incomplete fossils can dominate intuition. The large and relatively complete \emph{Dreadnoughtus} specimen is valuable for anatomy and ontogenetic discussion \cite{lacovara2014}, but no specimen is granted automatic causal authority.
+
+\subsection{Phylogenetic causal comparison}
+
+The confirmatory mass model is
+\begin{equation}
+\begin{aligned}
+Y_{i}={}&\beta_{0}+\beta_{F}F_{i}+\beta_{P}P_{i}+\beta_{G}G_{i}+\beta_{E}E_{i}\\
+&+\beta_{FP}F_{i}P_{i}+\beta_{FG}F_{i}G_{i}+\beta_{PE}P_{i}E_{i}\\
+&+b_{\mathrm{clade}[i]}+\varepsilon_{i},
+\end{aligned}
+\label{eq:massmodel}
+\end{equation}
+where $b_{\mathrm{clade}[i]}$ follows a covariance structure induced by the sampled phylogeny and $\varepsilon_i$ is residual variation. All coefficients are hierarchical distributions, not fixed causal effects. Equation~\eqref{eq:massmodel} is compared with the preregistered reduced models using predictive density and calibration on held-out clades. A causal-path version separately models whether feeding architecture and pneumaticity contribute through the latent feasibility state in Eq.~\eqref{eq:feasibility}; both representations are retained because agreement between them is more informative than either model alone.
+
+Temporal tests are distinct from model fit. For every inferred giant-size shift, the design calculates the posterior probability that a candidate enabling trait predates or co-emerges with the shift. A trait appearing consistently after the transition may be a consequence, a correlated body-plan change, or a coding artifact; it is not classified as a prerequisite. Constrained trait-timing permutations preserve phylogenetic structure while breaking the proposed ordering, providing a null distribution for apparent precedence.
+
+\subsection{Scenario-bounded feasibility calculation}
+
+The study also uses an energy-feasibility scaffold to expose assumptions that are otherwise hidden in prose. For a scenario $s$ and body-mass draw $M_i$, define
+\begin{equation}
+\mathcal{A}_{is}=\frac{I_{is}\,\epsilon_{is}-\left(B_{0s}M_i^{3/4}+C^{\mathrm{load}}_{is}+C^{\mathrm{move}}_{is}+C^{\mathrm{growth}}_{is}\right)}{M_i},
+\label{eq:energy}
+\end{equation}
+where $I_{is}$ is intake opportunity, $\epsilon_{is}$ is usable-energy fraction, $B_{0s}$ is a scenario parameter, and the $C$ terms represent loading, movement, and growth demands. A nonnegative $\mathcal{A}_{is}$ means only that a stated parameter scenario is feasible. It is not evidence that the animal had that intake, metabolic rate, or thermal regime. Scenario inputs are bracketed across extant-herbivore and avian-reptilian comparative ranges where scientifically justified, and every assumption receives a source or an explicit unknown label.
+
+This scaffold is intentionally unable to ``solve'' extinct physiology. Its scientific role is to show whether a favored verbal pathway requires implausible parameter combinations and whether changing a feeding or loading assumption reverses model ranking. If the inference depends on an unobserved parameter range that cannot be bounded, the path is reported as unidentifiable rather than rescued with a point estimate.
+
+\subsection{Validation, negative controls, and stopping rules}
+
+The strongest validation is leave-clade-out prediction. The model is trained without one independently sampled giant lineage or a defined higher clade, then asked to predict its mass-transition distribution using the remaining data. This is more demanding than random taxon folds, which can leak closely related anatomy into both training and test sets. Additional stress tests remove one formation, one mass-estimation family, one trait block, and one high-leverage taxon at a time.
+
+Negative controls include phylogenetically constrained trait permutations, time-shuffled mass transitions, and traits selected for similar missingness but no proposed mechanism. A model that ``predicts'' equally well after the causal ordering is destroyed has identified a sampling or phylogenetic pattern rather than a plausible evolutionary pathway. The analysis code will write the availability state of every feature before outcome labels are revealed to the model-fitting stage.
+
+\section{Falsification and Conditional Conclusions}
+
+The proposal is designed to produce an informative negative result. Table~\ref{tab:failure} specifies outcomes that lower the appropriate claim rather than forcing a generic statement that the cascade ``partly works.'' The central result is not a large regression coefficient. It is an internally coherent pattern: the integrated model predicts a held-out giant transition; the result survives fossil uncertainty; component traits have compatible timing; and no required path has been overinterpreted beyond its preservation mode.
+
+\begin{table}[!t]
+\caption{\gc{} failure taxonomy and mandatory response.}
+\label{tab:failure}
+\centering
+\scriptsize
+\begin{tabular}{|p{0.20\columnwidth}|p{0.33\columnwidth}|p{0.29\columnwidth}|}
+\hline
+Failure class & Diagnostic signature & Required interpretation \\
+\hline
+Predictive failure & integrated model does not outperform simple alternatives on held-out clades & reject the interaction advantage; retain only descriptive patterns \\
+\hline
+Timing failure & candidate traits tend to appear after inferred mass shifts & prohibit prerequisite claim; consider consequence or correlation \\
+\hline
+Proxy failure & pneumatic or feeding proxy is used as measured physiology or behavior & \abstain{} on the functional path \\
+\hline
+Uncertainty failure & mass, tree, or coding alternatives reverse model ranking & report model dependence; do not select a preferred reconstruction \\
+\hline
+Leverage failure & one taxon, formation, or clade explains the signal & restrict claim to the leverage set or withhold it \\
+\hline
+Sampling failure & missingness clusters by clade, locality, or preservation mode & add missingness model or downgrade to exploratory analysis \\
+\hline
+\end{tabular}
+\end{table}
+
+If all confirmation gates are passed, the strongest allowed conclusion is: a particular interaction of fossil-coded trait blocks provides conditional support for a macroevolutionary feasibility model of repeated sauropod gigantism. This would be a meaningful advance because it would identify which parts of the cascade contribute prediction beyond shared ancestry and simple ecological opportunity. It would still not show that a giant sauropod was endothermic in a particular way, breathed with a measured flow pattern, maintained a particular temperature, or selected a particular tree canopy.
+
+If the integrated model predicts body mass but trait timing is unresolved, the permitted conclusion is weaker: the data support a lineage-structured association worth targeting with new fossils or non-destructive imaging. If the scenario calculation supports feasibility only under narrow and unverified parameters, its output is a map of empirical needs, not an inferred biological state. The report must preserve a distinction between observed fossil characters, statistically derived patterns, and assumptions supplied by a future model.
+
+\section{Benchmark Protocol and Cross-Modal Concordance}
+
+No single evidence stream should decide the outcome. A giant mass estimate, a long neck, an air-filled vertebra, and a fibrolamellar tissue pattern answer different questions. \gc{} therefore requires cross-modal concordance rather than numerical pooling by default. A proposed mechanism is strongest when morphology, temporal placement, phylogenetic comparison, and predictive behavior tell a compatible story. It is weakened when one modality requires an interpretation that another contradicts.
+
+\begin{table*}[!t]
+\caption{Cross-modal interpretation matrix for future \gc{} analyses.}
+\label{tab:concordance}
+\centering
+\scriptsize
+\begin{tabular}{|p{0.16\textwidth}|p{0.24\textwidth}|p{0.25\textwidth}|p{0.18\textwidth}|}
+\hline
+Evidence pattern & Interpretation & Maximum claim & Next action \\
+\hline
+Integrated model predicts held-out clades; timing and sensitivity agree & trait combination is conditionally consistent with a feasibility pathway & conditional macroevolutionary support & target poorly sampled sister lineages and explicit mediators \\
+\hline
+Neck/dental block predicts, but pneumatic block adds no information & feeding architecture may be informative under the current panel & conditional functional association & test whether pneumatic coding is too coarse or genuinely nonessential \\
+\hline
+Pneumaticity associates with mass but timing is late or unstable & structural correlate or consequence remains plausible & anatomical association only & improve temporal and anatomical resolution \\
+\hline
+Ecology-only model predicts as well as integrated model & extrinsic context dominates current data or proxies overlap & environmental predictive model, not cascade confirmation & audit spatial sampling and biological trait resolution \\
+\hline
+No model generalizes & available evidence does not identify a robust route to gigantism & \abstain{} & publish null comparison and identify data gaps \\
+\hline
+\end{tabular}
+\end{table*}
+
+The protocol also defines a counterfactual interpretation. What would the outcome look like if a lineage had a long neck but lacked the coded pneumatic architecture, or if an ecological setting resembled that of a giant lineage but its taxa had different feeding morphology? These are not literal experiments on extinct organisms. They are structured comparisons across posterior predictions and matched phylogenetic contrasts. The study gains explanatory value when it can say which counterfactual remains viable, rather than merely attach several traits to a large skeleton.
+
+\section{Limitations and Expert Review Requirements}
+
+The central limitation is irreversibility: extinct organisms cannot be experimentally perturbed. Fossil data are incomplete, trait proxies are heterogeneous, and phylogenetic histories are estimated. A causal graph does not erase those limitations. It makes them inspectable by requiring alternative paths, missingness rules, and explicit decision thresholds.
+
+The model has particular sensitivity to four issues. First, body-mass estimates depend on skeletal reconstruction and scaling assumptions. Second, pneumaticity may be underestimated in incompletely preserved axial skeletons and is not a direct measure of physiological function. Third, bone histology can reflect element-specific remodeling, ontogenetic stage, and preservation as well as growth. Fourth, paleofloral and facies proxies mix biological opportunity with geographic and collection bias. Each source of uncertainty is a reason to widen an interval or abstain, not to adjust a result toward the expected cascade.
+
+Human expert review is required before any future data collection. Museum curators and collection managers must approve any new scanning, handling, or sampling; destructive histology is outside this proposal and requires a separate specimen-level justification. Taxonomic specialists must audit synonymy, homology, and trait coding. Comparative physiologists must review parameter ranges used in Eq.~\eqref{eq:energy}; a scenario range borrowed from living animals is not automatically appropriate for a sauropod. Phylogenetic methodologists must review time calibration, hierarchical covariance, and missing-data assumptions. These requirements maintain the distinction between a useful research design and an automated claim about deep time.
+
+\section{Discussion}
+
+The most defensible answer to ``Why did dinosaurs grow so big?'' is therefore neither ``because there was more food'' nor ``because dinosaurs had air sacs.'' For sauropods, giant mass is best posed as a historical feasibility problem. Selection for large size can act only where body plan, growth trajectory, reproduction, and ecological context do not make the route impossible. The relevant scientific question is whether the presumed constraint releases interact in a way that leaves a predictive signature across independent lineages.
+
+\gc{} advances the question in three ways. First, it separates observation from inference: vertebral anatomy, tooth increments, limb measurements, and bone tissue are not treated as direct meters of physiology or behavior. Second, it turns the cascade into a competition among models with a negative control and an out-of-clade forecast. Third, it treats uncertainty as part of the object of study. A conclusion that vanishes under a plausible mass estimate or tree is not a small caveat; it is evidence that the fossil record has not yet identified the proposed mechanism.
+
+An integrated result would not reduce sauropod success to a deterministic sequence. It would instead identify a set of conditions that, in the preserved comparative record, jointly made giant size more predictable. A null result would be equally useful if it shows that the current cascade lacks predictive content, that ecological context carries most of the signal, or that the available proxies are too coarse. Either result moves the question from a list of attractive explanations toward a transparent research program.
+
+\appendices
+\section{Registered Analysis and Reporting Checklist}
+
+Before any model is fit, the study registry must freeze: taxonomic inclusion and synonymy decisions; the giant-transition threshold set; mass source hierarchy; coding manual and confidence levels; dated-tree ensemble; environmental and sampling fields; candidate causal paths; reduced-model comparators; posterior diagnostics; held-out clades; negative controls; sensitivity panels; and allowed claim language. The registry records whether a field is observed, inferred, assumed, unavailable, or excluded. No missing observation may be silently recoded as zero pneumaticity, zero growth potential, absence of an environmental resource, or absence of a trait.
+
+The final report must expose the number of taxa available to each model, posterior ranking distribution, exclusion reasons, taxa with disproportionate leverage, and the outcome of every sensitivity test. It must label future model outputs as derived estimates, not observations. If no model passes the preregistered gate, the final title and abstract must state that the comparative evidence did not identify a robust mechanism rather than retrofitting an exploratory story.
+
+\section{Candidate Evidence Inventory}
+
+The initial inventory combines the evolutionary-cascade syntheses of Sander \emph{et al.} \cite{sander2010} and Sander \cite{sander2013}; broad dinosaur body-mass evolution \cite{benson2014}; sauropod body-plan reconstruction \cite{bates2016}; tooth replacement \cite{demic2013}; pneumaticity and air-sac anatomy \cite{wedel2009,sereno2008}; mass scaling \cite{campione2012}; herbivore allometry cautions \cite{clauss2013}; histological acceleration \cite{sander2004}; and giant-titanosaur ontogenetic evidence \cite{lacovara2014}. This is a bounded starting registry rather than a claim of exhaustive literature coverage. Additional sources may enter a future registered update only with their evidence role and claim boundary recorded.
+
+\IEEEtriggeratref{6}
+\begin{thebibliography}{00}
+\bibitem{sander2010} P. M. Sander \emph{et al.}, ``Biology of the sauropod dinosaurs: the evolution of gigantism,'' \emph{Biological Reviews}, vol. 86, no. 1, pp. 117--155, 2011, doi: 10.1111/j.1469-185x.2010.00137.x.
+\bibitem{sander2013} P. M. Sander, ``An evolutionary cascade model for sauropod dinosaur gigantism---overview, update and tests,'' \emph{PLOS ONE}, vol. 8, no. 10, p. e78573, 2013, doi: 10.1371/journal.pone.0078573.
+\bibitem{benson2014} R. B. J. Benson \emph{et al.}, ``Rates of dinosaur body mass evolution indicate 170 million years of sustained ecological innovation on the avian stem lineage,'' \emph{PLOS Biology}, vol. 12, no. 5, p. e1001853, 2014, doi: 10.1371/journal.pbio.1001853.
+\bibitem{bates2016} K. T. Bates \emph{et al.}, ``Temporal and phylogenetic evolution of the sauropod dinosaur body plan,'' \emph{Royal Society Open Science}, vol. 3, no. 3, p. 150636, 2016, doi: 10.1098/rsos.150636.
+\bibitem{demic2013} M. D. D'Emic, J. A. Whitlock, K. M. Smith, D. C. Fisher, and J. A. Wilson, ``Evolution of high tooth replacement rates in sauropod dinosaurs,'' \emph{PLOS ONE}, vol. 8, no. 7, p. e69235, 2013, doi: 10.1371/journal.pone.0069235.
+\bibitem{wedel2009} M. J. Wedel, ``Evidence for bird-like air sacs in saurischian dinosaurs,'' \emph{Journal of Experimental Zoology Part A}, vol. 311A, no. 8, pp. 611--628, 2009, doi: 10.1002/jez.513.
+\bibitem{clauss2013} M. Clau\ss, P. Steuer, D. M\"uller, D. Codron, and J. Hummel, ``Herbivory and body size: allometries of diet quality and gastrointestinal physiology, and implications for herbivore ecology and dinosaur gigantism,'' \emph{PLOS ONE}, vol. 8, no. 7, p. e68714, 2013, doi: 10.1371/journal.pone.0068714.
+\bibitem{campione2012} N. E. Campione and D. C. Evans, ``A universal scaling relationship between body mass and proximal limb bone dimensions in quadrupedal terrestrial tetrapods,'' \emph{BMC Biology}, vol. 10, p. 60, 2012, doi: 10.1186/1741-7007-10-60.
+\bibitem{sander2004} P. M. Sander, ``Adaptive radiation in sauropod dinosaurs: bone histology indicates rapid evolution of giant body size through acceleration,'' \emph{Organisms Diversity \& Evolution}, vol. 4, no. 3, pp. 165--173, 2004, doi: 10.1016/j.ode.2003.12.002.
+\bibitem{lacovara2014} K. J. Lacovara \emph{et al.}, ``A gigantic, exceptionally complete titanosaurian sauropod dinosaur from southern Patagonia, Argentina,'' \emph{Scientific Reports}, vol. 4, p. 6196, 2014, doi: 10.1038/srep06196.
+\bibitem{sereno2008} P. C. Sereno \emph{et al.}, ``Evidence for avian intrathoracic air sacs in a new predatory dinosaur from Argentina,'' \emph{PLOS ONE}, vol. 3, no. 9, p. e3303, 2008, doi: 10.1371/journal.pone.0003303.
+\end{thebibliography}
+
+\end{document}

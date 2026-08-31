@@ -1,0 +1,34 @@
+{
+  "schema_version": "idea_result_v5",
+  "survey_run_id": "bio6-human-cortical-genes-20260831",
+  "selected_primary_idea": {
+    "direction_id": "D3",
+    "title": "CortexSwitch: Reciprocal Multiplex Causal Mapping of Human-Lineage Cortical Developmental Modules",
+    "target_gap_ids": ["G1", "G2", "G3", "G4", "G5"],
+    "scientific_object": "Early cortical progenitor-state transitions in human and chimpanzee stem-cell-derived organoid systems",
+    "central_hypothesis": "A small, evidence-qualified combination of human-lineage duplicated-gene and regulatory changes shifts a conserved progenitor-to-neuron developmental transition through a measurable molecular program; the effect requires reciprocal, line-aware, fidelity-qualified evidence.",
+    "candidate_classes": [
+      "ARHGAP11B-associated duplicated-gene axis",
+      "NOTCH2NL-associated dosage/signaling axis",
+      "state-active HAR or human-specific 3D-contact regulatory candidates"
+    ],
+    "falsification_conditions": [
+      "No reciprocal sign-consistent perturbation effect across qualified lines.",
+      "No correspondence between candidate perturbation, molecular mediator, and predeclared cell-state endpoint.",
+      "Apparent result vanishes under line, batch, regional-identity, or developmental-alignment controls.",
+      "Combination effect is no better than matched single-candidate and neutral-edit controls after multiplicity correction."
+    ],
+    "claim_ceiling": "Conditional causal support for a tested cortical developmental module; no claim about human cognition or complete species uniqueness."
+  },
+  "competitive_ideas": [
+    {"direction_id": "D1", "title": "ARHGAP11B replication and mechanistic refinement", "reason": "Strong anchor but too narrow as the main answer."},
+    {"direction_id": "D2", "title": "HAR-to-target-gene regulatory atlas", "reason": "High discovery value but insufficiently causal without reciprocal phenotype testing."}
+  ],
+  "high_risk_ideas": [
+    {"direction_id": "D4", "title": "Genome-wide comparative genetic-dependency screen", "reason": "Potentially powerful, but broad perturbation discovery complicates causal interpretation and welfare/governance review."}
+  ],
+  "rejected_ideas": [
+    {"title": "Rank all differentially expressed genes", "reason": "Violates the candidate-to-causal-chain invariant."},
+    {"title": "Use organoid size as the sole phenotype", "reason": "Fails specificity and model-fidelity requirements."}
+  ]
+}

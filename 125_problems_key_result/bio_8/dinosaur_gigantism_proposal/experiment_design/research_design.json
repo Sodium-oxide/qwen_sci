@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "survey_run_id": "bio8-sauropod-gigantism-20260831",
+  "idea_direction_id": "D3",
+  "title": "GigaCascade: A Design-Only Comparative Test of Sauropod Gigantism",
+  "execution_policy": {"mode": "DESIGN_ONLY", "observed_results": []},
+  "research_brief": {
+    "question": "Does a preregistered interaction model of feeding architecture, axial pneumaticity, growth/life-history proxies, and ecological opportunity predict repeated giant body-mass evolution in sauropodomorphs better than single-factor or additive alternatives?",
+    "central_hypothesis": "Constraint release is jointly explanatory and predictively useful only when the integrated model survives phylogenetic, temporal, and fossil uncertainty.",
+    "scientific_object": "taxon-time sauropodomorph lineages and matched dinosaur herbivore controls",
+    "claim_ceiling": "conditional macroevolutionary feasibility model"
+  },
+  "study_template": "computational_digital_with_paleobiological_evidence",
+  "variables": {
+    "outcomes": ["log_body_mass", "giant_transition_indicator"],
+    "predictors": ["neck_to_trunk_ratio", "head_or_oral_processing_proxy", "tooth_replacement_proxy", "axial_pneumaticity", "histological_growth_proxy", "ecological_opportunity_proxy"],
+    "controls": ["phylogeny", "stratigraphic_age", "formation_sampling_effort", "mass_estimation_method", "ontogenetic_status"],
+    "mediators": ["feeding_opportunity_latent_state", "constraint_release_latent_state"],
+    "unknowns": ["realized_daily_intake", "respiratory_flow_pattern", "basal_metabolic_rate", "thermoregulatory_performance"]
+  },
+  "analysis": {
+    "primary": "phylogenetically structured Bayesian path comparison with posterior propagation of mass, trait, date, and tree uncertainty",
+    "secondary": ["scenario-bounded energy-feasibility model", "matched-pair comparative analysis", "trait-timing permutation test"],
+    "validation": ["leave-clade-out prediction", "alternative mass equations", "alternative phylogenies", "drop-one-taxon and drop-one-formation sensitivity", "negative-control trait permutations"],
+    "abstention_conditions": ["unstable model ranking", "proxy overreach", "clade-dominated association", "unresolved trait timing"]
+  },
+  "human_review_required": true,
+  "review_requirements": ["paleontological trait coding", "museum data provenance", "phylogenetic model specification", "fossil mass estimation", "destructive-sampling prohibition"]
+}

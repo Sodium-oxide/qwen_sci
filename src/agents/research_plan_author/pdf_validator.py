@@ -32,13 +32,16 @@ def validate_pdf(
     pdf_path: str | Path,
     *,
     renderer: str | Path,
+    minimum_pages: int = 1,
     timeout_seconds: int = 60,
     logger: Any | None = None,
 ) -> PdfValidationResult:
-    """Require a parseable PDF with at least one renderable first page."""
+    """Require a parseable PDF with a renderable first page and page minimum."""
 
     source = Path(pdf_path).expanduser().resolve()
     renderer_path = Path(renderer).expanduser().resolve()
+    if isinstance(minimum_pages, bool) or not isinstance(minimum_pages, int) or minimum_pages < 1:
+        raise PdfValidationError("minimum_pages must be a positive integer")
     if not source.is_file() or source.stat().st_size == 0:
         raise PdfValidationError(f"generated PDF does not exist or is empty: {source}")
     if not renderer_path.is_file():
@@ -67,6 +70,8 @@ def validate_pdf(
             "backend": "pypdf",
             "status": "parsed",
             "page_count": page_count,
+            "minimum_page_count": minimum_pages,
+            "page_count_requirement_met": page_count >= minimum_pages,
             "first_page_width": width,
             "first_page_height": height,
             "extractable_text": bool(extracted.strip()),
@@ -87,6 +92,19 @@ def validate_pdf(
                 "renderer": {"backend": "pdftoppm", "status": "not_started"},
             },
         ) from error
+    if page_count < minimum_pages:
+        raise PdfValidationError(
+            f"generated PDF has {page_count} pages; minimum is {minimum_pages}",
+            report={
+                "schema_version": PDF_VALIDATION_SCHEMA_VERSION,
+                "generated_at": datetime.now(timezone.utc).isoformat(timespec="milliseconds"),
+                "valid": False,
+                "pdf_path": str(source),
+                "file_size_bytes": source.stat().st_size,
+                "parser": parser_report,
+                "renderer": {"backend": "pdftoppm", "status": "not_started"},
+            },
+        )
     with tempfile.TemporaryDirectory(prefix="research-plan-author-pdf-") as temporary_root:
         prefix = Path(temporary_root) / "page"
         command = [str(renderer_path), "-f", "1", "-l", "1", "-png", str(source), str(prefix)]

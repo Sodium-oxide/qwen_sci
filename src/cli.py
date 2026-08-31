@@ -425,6 +425,11 @@ def _build_root_parser() -> argparse.ArgumentParser:
         help="Explicit pdftoppm-compatible executable; otherwise SCIENCE_PDF_RENDERER, config, then PATH",
     )
     author.add_argument(
+        "--minimum-pages",
+        type=int,
+        help="Minimum report pages; defaults to 7 and normalizes the legacy value 8 to 7",
+    )
+    author.add_argument(
         "--compile-timeout-seconds",
         type=int,
         help="Per LaTeX/BibTeX command timeout; overrides rendering configuration",
@@ -498,6 +503,11 @@ def _build_root_parser() -> argparse.ArgumentParser:
     science.add_argument("--latex-engine", help="Author rendering LaTeX engine")
     science.add_argument("--bibtex", help="Author rendering BibTeX executable")
     science.add_argument("--pdf-renderer", help="Author rendering PDF renderer")
+    science.add_argument(
+        "--minimum-pages",
+        type=int,
+        help="Minimum Author report pages; defaults to 7 and normalizes the legacy value 8 to 7",
+    )
     science.add_argument(
         "--compile-timeout-seconds",
         type=int,
@@ -1011,6 +1021,7 @@ def _author_command(args: argparse.Namespace) -> int:
                     latex_engine=args.latex_engine,
                     bibtex=args.bibtex,
                     pdf_renderer=args.pdf_renderer,
+                    minimum_pages=args.minimum_pages,
                     compile_timeout_seconds=args.compile_timeout_seconds
                     or int(rendering_config.get("compile_timeout_seconds") or 180),
                     configured_rendering=rendering_config,
@@ -1251,6 +1262,7 @@ def _science_immutable_options(args: argparse.Namespace) -> dict[str, object]:
         "latex_engine": _science_executable_option(args.latex_engine),
         "bibtex": _science_executable_option(args.bibtex),
         "pdf_renderer": _science_executable_option(args.pdf_renderer),
+        "minimum_pages": args.minimum_pages,
         "compile_timeout_seconds": args.compile_timeout_seconds,
         "author_name": args.author_name,
         "render_required": args.render_required,

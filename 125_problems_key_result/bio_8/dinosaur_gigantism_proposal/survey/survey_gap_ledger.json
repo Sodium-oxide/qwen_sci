@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "survey_run_id": "bio8-sauropod-gigantism-20260831",
+  "accepted_gaps": [
+    {"gap_id": "G1", "title": "Narrative cascade lacks a registered causal comparison", "status": "accepted", "evidence_anchor_keys": ["Sander2010", "Sander2013"], "downstream_requirement": "Compare direct, mediated, and interaction models under shared uncertainty."},
+    {"gap_id": "G2", "title": "Feeding opportunity is not equivalent to realized energy gain", "status": "accepted", "evidence_anchor_keys": ["Bates2016", "DEmic2013", "Clauss2013"], "downstream_requirement": "Separate neck reach, dental wear/replacement, and resource proxies."},
+    {"gap_id": "G3", "title": "Functional consequences of pneumaticity remain underidentified", "status": "accepted", "evidence_anchor_keys": ["Wedel2009", "Sereno2008"], "downstream_requirement": "Treat pneumaticity as a proxy and test competing structural, respiratory, and thermal paths."},
+    {"gap_id": "G4", "title": "Fossil uncertainty can mimic mechanistic support", "status": "accepted", "evidence_anchor_keys": ["CampioneEvans2012", "Lacovara2014"], "downstream_requirement": "Propagate mass, age, coding, time, and sampling uncertainty."},
+    {"gap_id": "G5", "title": "Trait timing is needed to distinguish prerequisite from correlate", "status": "accepted", "evidence_anchor_keys": ["Benson2014", "Sander2004"], "downstream_requirement": "Require temporal and phylogenetic precedence checks."},
+    {"gap_id": "G6", "title": "Interaction models need external predictive tests", "status": "accepted", "evidence_anchor_keys": ["Sander2013", "Benson2014"], "downstream_requirement": "Use leave-clade-out prediction and neutral alternative models."}
+  ],
+  "rejected_overclaims": [
+    "A single environmental variable caused sauropod gigantism.",
+    "Pneumatic vertebrae prove a particular metabolic rate or heat-loss mechanism.",
+    "Long neck length proves browsing at treetops in every taxon.",
+    "A fitted retrospective model establishes historical causation without temporal and comparative checks."
+  ]
+}

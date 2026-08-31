@@ -1,0 +1,28 @@
+{
+  "schema_version": "author_handoff_v1",
+  "project_id": "med_11_xenotransplantation",
+  "survey_run_id": "xeno-survey-20260831-med11",
+  "selected_idea_id": "D2",
+  "artifact_paths": {
+    "survey_manifest": "../survey/survey_manifest.json",
+    "survey": "../survey/survey.md",
+    "idea_result": "../idea/idea_result_v5.json",
+    "research_design": "research_design.json"
+  },
+  "document_state": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "source_registry": ["S1", "S2", "S3", "S4", "S5", "S6", "S7"],
+  "required_claim_limits": [
+    "Call the 54-hour brain-dead-human kidney observation short-term feasibility only.",
+    "Call nonhuman-primate heart survival preclinical evidence only.",
+    "Do not claim xenotransplantation has solved organ shortage.",
+    "Do not state that rejection, coagulation dysfunction, or infection risk has been eliminated.",
+    "Do not report expected scenario outcomes as observed findings.",
+    "Do not include acknowledgments, author names, affiliations, funding text, or fictitious institutions."
+  ],
+  "required_sections": ["Abstract", "Introduction", "Evidence Boundary and Research Gap", "XenoReadiness Framework", "Design-Only Methods", "Conditional Results Logic", "Governance and Human Review", "Conclusion", "References"],
+  "render_request": {
+    "style": "IEEE conference two-column",
+    "minimum_pages": 7,
+    "template": "../../../../Conference-LaTeX-template_10-17-19/conference_101719.tex"
+  }
+}
