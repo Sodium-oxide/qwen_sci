@@ -1,0 +1,10 @@
+{
+  "schema_version": "experiment-design-v2",
+  "project_id": "astr_18_deep_biosphere_proposal",
+  "selected_idea_id": "idea-pressure-atlas-001",
+  "execution_policy": {"mode": "DESIGN_ONLY", "observed_results": [], "automatic_execution_allowed": false},
+  "research_brief": {"object": "Marine deep-biosphere compartments", "central_claim": "Joint pressure-resolved modeling can separate volume, abundance, composition, and flux uncertainty.", "outcomes": ["Calibrated compartment estimates", "Pressure artifact quantification", "Model-observation mismatch ledger"]},
+  "variables": {"strata": ["depth", "pressure", "temperature", "redox", "organic carbon", "lithology", "province"], "outcomes": ["habitat volume", "cells", "taxa", "functional potential", "activity rates", "carbon flux"], "controls": ["blanks", "replicates", "pressure state", "platform batch"]},
+  "human_review_required": true,
+  "allowed_source_keys": ["colwell", "kallmeyer", "hoshino", "orcutt", "biddle", "amano", "nagata", "wasmund", "lever", "starnawski"]
+}

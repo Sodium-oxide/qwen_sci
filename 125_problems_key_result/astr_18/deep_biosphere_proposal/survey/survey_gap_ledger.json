@@ -1,0 +1,14 @@
+{
+  "schema_version": "gap-ledger-v1",
+  "accepted_gaps": [
+    {"gap_id": "G1", "title": "Pressure-resolved global inventory", "statement": "No single framework combines compartment volumes, absolute cells, and pressure-corrected activity.", "constraint": "Report intervals separately by compartment."},
+    {"gap_id": "G2", "title": "Composition-function link", "statement": "Taxonomic and gene inventories do not establish which taxa are active in situ.", "constraint": "Pair molecular profiles with direct rate or isotope evidence."},
+    {"gap_id": "G3", "title": "Compatible upscaling", "statement": "Global cell abundance and local rates are often sampled at incompatible geochemical conditions.", "constraint": "Upscale only after depth, lithology, redox, and pressure stratification."},
+    {"gap_id": "G4", "title": "Pressure artifact", "statement": "Decompression can alter apparent bulk activity and community interpretation.", "constraint": "Use paired in situ-pressure and decompressed measurements."}
+  ],
+  "rejected_inferences": [
+    {"id": "R1", "inference": "All deep cells are equally active.", "reason": "Standing biomass, viability, and metabolic flux are distinct."},
+    {"id": "R2", "inference": "A gene proves a globally important process rate.", "reason": "Functional potential needs calibration against activity and substrate flux."},
+    {"id": "R3", "inference": "Atmospheric-pressure incubations represent deep-sea metabolism.", "reason": "Pressure response is taxon and process dependent."}
+  ]
+}

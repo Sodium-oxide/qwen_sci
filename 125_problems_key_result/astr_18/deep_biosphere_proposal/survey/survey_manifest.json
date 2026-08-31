@@ -1,0 +1,22 @@
+{
+  "schema_version": "survey-manifest-v1",
+  "project_id": "astr_18_deep_biosphere_proposal",
+  "survey_run_id": "survey-deepbiosphere-001",
+  "research_topic": "What are the volume, composition, and Earth-system significance of the marine deep biosphere?",
+  "project_context": {"discipline": "marine microbiology and biogeochemistry", "scope": "Bathypelagic water, subseafloor sediment, and oceanic crustal fluids; no single homogeneous reservoir."},
+  "evidence_policy": {"direct_browser_verification": "BLOCKED_BY_WINDOWS_ACL", "separate_abundance_composition_activity": true},
+  "theorem_evidence_registry": [
+    {"source_id": "S1", "citation_key": "colwell", "title": "Nature and extent of the deep biosphere", "year": 2013, "doi": "10.1038/nrmicro2839", "status": "REVIEW_EVIDENCE"},
+    {"source_id": "S2", "citation_key": "kallmeyer", "title": "Global distribution of microbial abundance and biomass in subseafloor sediment", "year": 2012, "doi": "10.1073/pnas.1203849109", "status": "QUANTITATIVE_EVIDENCE"},
+    {"source_id": "S3", "citation_key": "hoshino", "title": "Global diversity of microbial communities in marine sediment", "year": 2020, "doi": "10.1073/pnas.1919139117", "status": "QUANTITATIVE_EVIDENCE"},
+    {"source_id": "S4", "citation_key": "orcutt", "title": "Microbial ecology of the dark ocean above, at, and below the seafloor", "year": 2011, "doi": "10.1128/MMBR.00039-10", "status": "REVIEW_EVIDENCE"},
+    {"source_id": "S5", "citation_key": "biddle", "title": "Heterotrophic Archaea dominate sedimentary subsurface ecosystems off Peru", "year": 2006, "doi": "10.1073/pnas.0600035103", "status": "COMPOSITION_EVIDENCE"},
+    {"source_id": "S6", "citation_key": "amano", "title": "Limited carbon cycling due to high-pressure effects on the deep-sea microbiome", "year": 2022, "doi": "10.1038/s41561-022-01081-3", "status": "PRESSURE_ACTIVITY_EVIDENCE"},
+    {"source_id": "S7", "citation_key": "nagata", "title": "Emerging concepts on microbial processes in the bathypelagic ocean", "year": 2010, "doi": "10.1016/j.dsr2.2010.02.019", "status": "REVIEW_EVIDENCE"},
+    {"source_id": "S8", "citation_key": "wasmund", "title": "The life sulfuric: microbial ecology of sulfur cycling in marine sediments", "year": 2017, "doi": "10.1111/1758-2229.12538", "status": "PROCESS_EVIDENCE"},
+    {"source_id": "S9", "citation_key": "lever", "title": "A bioenergetic basis for the taxonomy of deep biosphere life", "year": 2015, "doi": "10.1038/ismej.2015.29", "status": "PROCESS_EVIDENCE"},
+    {"source_id": "S10", "citation_key": "starnawski", "title": "Microbial community assembly and evolution in subseafloor sediment", "year": 2017, "doi": "10.1073/pnas.1701728114", "status": "COMPOSITION_EVIDENCE"}
+  ],
+  "accepted_gap_ids": ["G1", "G2", "G3", "G4"],
+  "canonical_artifacts": {"survey": "survey.md", "gap_ledger": "survey_gap_ledger.json", "idea_handoff": "survey_idea_handoff.json"}
+}
