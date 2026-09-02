@@ -9,28 +9,10 @@ supported-markers = [
 ]
 
 [manifest]
-
-[[manifest.dependency-metadata]]
-name = "doclayout-yolo"
-version = "0.0.4"
-requires-dist = ["albumentations", "matplotlib", "opencv-python-headless==5.0.0.93", "pandas", "pillow", "psutil", "py-cpuinfo", "pyyaml", "requests", "scipy", "seaborn", "thop", "torch", "torchvision", "tqdm"]
-
-[[manifest.dependency-metadata]]
-name = "mineru"
-version = "3.4.5"
-requires-dist = ["beautifulsoup4", "click", "fast-langdetect", "fastapi", "httpx", "huggingface-hub", "json-repair", "loguru", "lxml", "magika", "mammoth", "mineru-vl-utils", "modelscope", "numpy", "opencv-python-headless==5.0.0.93", "openpyxl", "pdftext", "pillow", "pylatexenc", "pypdf", "pypdfium2", "pypptx-with-oxml", "python-docx", "python-multipart", "reportlab", "requests", "tqdm", "uvicorn", "accelerate ; extra == 'all'", "boto3 ; extra == 'all'", "ftfy ; extra == 'all'", "gradio ; extra == 'all'", "gradio-pdf ; extra == 'all'", "onnxruntime ; extra == 'all'", "pyclipper ; extra == 'all'", "pyyaml ; extra == 'all'", "safetensors ; extra == 'all'", "shapely ; extra == 'all'", "torch ; extra == 'all'", "torchvision ; extra == 'all'", "transformers ; extra == 'all'", "vllm ; extra == 'all'"]
-provides-extras = ["all"]
-
-[[manifest.dependency-metadata]]
-name = "paddlex"
-version = "3.4.3"
-requires-dist = ["aistudio-sdk", "chardet", "colorlog", "filelock", "huggingface-hub", "modelscope", "numpy", "packaging", "pandas", "pillow", "prettytable", "pydantic", "pyyaml", "requests", "ruamel-yaml", "typing-extensions", "ujson", "imagesize ; extra == 'ocr-core'", "opencv-python-headless==5.0.0.93 ; extra == 'ocr-core'", "pyclipper ; extra == 'ocr-core'", "pypdfium2 ; extra == 'ocr-core'", "python-bidi ; extra == 'ocr-core'", "shapely ; extra == 'ocr-core'"]
-provides-extras = ["ocr-core"]
-
-[[manifest.dependency-metadata]]
-name = "ultralytics"
-version = "8.3.243"
-requires-dist = ["matplotlib", "numpy", "opencv-python-headless==5.0.0.93", "pillow", "polars", "psutil", "pyyaml", "requests", "scipy", "torch", "torchvision", "ultralytics-thop"]
+overrides = [
+    { name = "opencv-contrib-python", marker = "python_full_version < '0'" },
+    { name = "opencv-python", marker = "python_full_version < '0'" },
+]
 
 [[package]]
 name = "absl-py"
@@ -1014,7 +996,6 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "albumentations" },
     { name = "matplotlib" },
-    { name = "opencv-python-headless" },
     { name = "pandas" },
     { name = "pillow" },
     { name = "psutil" },
@@ -2465,7 +2446,7 @@ dependencies = [
     { name = "mineru-vl-utils" },
     { name = "modelscope" },
     { name = "numpy" },
-    { name = "opencv-python-headless" },
+    { name = "openai" },
     { name = "openpyxl" },
     { name = "pdftext" },
     { name = "pillow" },
@@ -3327,6 +3308,7 @@ dependencies = [
     { name = "pandas" },
     { name = "pillow" },
     { name = "prettytable" },
+    { name = "py-cpuinfo" },
     { name = "pydantic" },
     { name = "pyyaml" },
     { name = "requests" },
@@ -3342,7 +3324,6 @@ wheels = [
 [package.optional-dependencies]
 ocr-core = [
     { name = "imagesize" },
-    { name = "opencv-python-headless" },
     { name = "pyclipper" },
     { name = "pypdfium2" },
     { name = "python-bidi" },
@@ -6075,7 +6056,7 @@ wheels = [
 
 [[package]]
 name = "qwen-sci"
-version = "0.2.2"
+version = "0.3.0"
 source = { editable = "." }
 dependencies = [
     { name = "absl-py" },
@@ -7427,7 +7408,6 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "matplotlib" },
     { name = "numpy" },
-    { name = "opencv-python-headless" },
     { name = "pillow" },
     { name = "polars" },
     { name = "psutil" },

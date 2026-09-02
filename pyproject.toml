@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "qwen-sci"
-version = "0.2.2"
+version = "0.3.0"
 description = "Qwen-Sci multi-agent research workflow"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
@@ -218,6 +218,13 @@ blog = [
 environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
 package = true
 cache-dir = ".uv-cache"
+# Some PDF/OCR dependencies declare GUI OpenCV distributions even though the
+# project runs only in headless Linux/WSL environments. `opencv-python-headless`
+# provides the required `cv2` module without the conflicting GUI packages.
+override-dependencies = [
+  "opencv-contrib-python; python_version < '0'",
+  "opencv-python; python_version < '0'",
+]
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
 
