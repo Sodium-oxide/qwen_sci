@@ -1,0 +1,46 @@
+{
+  "artifact_status": "DESIGN_ONLY",
+  "search_method": "publisher-page verification plus cross-validated OpenAlex and AnySearch discovery",
+  "queries": [
+    {
+      "query": "global species richness eukaryotes microbial diversity species concepts",
+      "openalex_total": 20,
+      "anysearch_total": 10,
+      "cross_validated": 7,
+      "selected": [
+        {"doi": "10.1371/journal.pbio.1001127", "title": "How Many Species Are There on Earth and in the Ocean?"},
+        {"doi": "10.1080/10635150701701083", "title": "Species Concepts and Species Delimitation"},
+        {"doi": "10.1093/sysbio/syt033", "title": "Delimiting Species Using Single-Locus Data"}
+      ]
+    },
+    {
+      "query": "species richness estimation sample coverage rare species DNA barcoding biodiversity",
+      "openalex_total": 20,
+      "anysearch_total": 10,
+      "cross_validated": 9,
+      "selected": [
+        {"doi": "10.1890/11-1952.1", "title": "Coverage-based rarefaction and extrapolation"},
+        {"doi": "10.1111/mec.14350", "title": "Environmental DNA metabarcoding"},
+        {"doi": "10.1038/s41467-017-01312-x", "title": "Post-clustering curation of DNA amplicon data"}
+      ]
+    }
+  ],
+  "browser_verified": [
+    {
+      "doi": "10.1371/journal.pbio.1001127",
+      "publisher_page": "https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1001127",
+      "verified_boundary": "approximately 8.7 million plus or minus 1.3 million standard error global eukaryotic species under the study's higher-taxon extrapolation"
+    },
+    {
+      "doi": "10.1073/pnas.1521291113",
+      "publisher_page": "https://www.pnas.org/doi/10.1073/pnas.1521291113",
+      "verified_boundary": "upward of one trillion microbial species under a dominance scaling law combined with a lognormal biodiversity model"
+    },
+    {
+      "doi": "10.1080/10635150701701083",
+      "publisher_page": "https://academic.oup.com/sysbio/article/56/6/879/1667403",
+      "verified_boundary": "species delimitation requires explicit evidential criteria and concept framing"
+    }
+  ],
+  "interpretation_rule": "Discovery records do not become evidence claims without manual source verification; the selected claims are cited in the report with their unit and scope boundary."
+}

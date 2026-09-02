@@ -1,0 +1,105 @@
+{
+  "candidate_ledger_id": "candidate_ledger:sci_20260901_042802_922870_survey_001:20260901_042802_922870_survey_001:28793d13aea7",
+  "candidates": [
+    {
+      "candidate_contribution_modes": [],
+      "candidate_defect_tags": [
+        "assumption_validity_condition"
+      ],
+      "candidate_id": "gap_candidate:sh1:assumption_validity_condition:validity_domain:classical_dilute_solution_biophysical_models_fail_to_predict_in_vivo_reaction_kinetics_and_saturation_concentrations_because_they_neglect_volume_exclusion_and_anomalous_diffusion_constraints_imposed_by_heterogeneous_macromolecular_crowding:436de5554f38",
+      "claim_scope": "thermodynamic and hydrodynamic modeling accuracy",
+      "confidence": 0.9,
+      "evidence_role": "required model validation constraint",
+      "evidence_summary": "",
+      "extraction_method": "survey_prose_llm",
+      "gap_kind": "assumption_validity_condition",
+      "paper_ids": [],
+      "rationale": "The introduction explicitly contrasts classical dilute models with the crowded cellular interior, stating that conventional assumptions of random mixing break down and that dilute frameworks fail to capture reduced saturation concentrations and altered kinetics due to restricted mobility.",
+      "schema_version": "survey_gap_candidate_v1",
+      "source_pointers": [
+        {
+          "artifact": "survey.md",
+          "json_pointer": "/sections/1",
+          "section": "1. Introduction"
+        }
+      ],
+      "statement": "Classical dilute-solution biophysical models fail to predict in vivo reaction kinetics and saturation concentrations because they neglect volume exclusion and anomalous diffusion constraints imposed by heterogeneous macromolecular crowding.",
+      "status": "candidate",
+      "subhypothesis_id": "SH1",
+      "support_level": "speculative",
+      "target_slot": "validity_domain"
+    },
+    {
+      "candidate_contribution_modes": [],
+      "candidate_defect_tags": [
+        "measurement limitation"
+      ],
+      "candidate_id": "gap_candidate:global:measurement_limitation:spatial_resolution_field_of_view_trade_off:the_quantitative_dose_and_alignment_boundaries_required_to_preserve_high_resolution_structural_fidelity_across_tiled_montage_reconstructions_in_low_dose_cryo_et_are_not_defined:07cc1c3bc5b6",
+      "claim_scope": "",
+      "confidence": 0.85,
+      "evidence_role": "",
+      "evidence_summary": "",
+      "extraction_method": "paper_limitation_llm",
+      "gap_kind": "measurement limitation",
+      "paper_ids": [
+        "W4206216780"
+      ],
+      "rationale": "The abstract identifies preserving high-resolution information over large fields of view as a persistent challenge and introduces montage tools integrated with FIB milling and correlative microscopy, but provides no specifications on radiation dose limits, tile stitching tolerances, or resolution decay metrics necessary to validate the claimed efficiency and structural preservation.",
+      "schema_version": "survey_gap_candidate_v1",
+      "source_pointers": [
+        {
+          "artifact": "paper",
+          "json_pointer": "/abstract",
+          "paper_id": "W4206216780",
+          "section": "Abstract"
+        }
+      ],
+      "statement": "The quantitative dose and alignment boundaries required to preserve high-resolution structural fidelity across tiled montage reconstructions in low-dose cryo-ET are not defined.",
+      "status": "candidate",
+      "subhypothesis_id": "GLOBAL",
+      "support_level": "explicit",
+      "target_slot": "spatial resolution-field of view trade-off"
+    },
+    {
+      "candidate_contribution_modes": [],
+      "candidate_defect_tags": [
+        "unresolved mechanisms"
+      ],
+      "candidate_id": "gap_candidate:global:unresolved_mechanisms:higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells:current_llps_based_synthetic_cell_systems_remain_largely_confined_to_single_compartment_dynamics_with_mechanistic_control_over_higher_order_structures_and_coordinated_multi_cellular_behaviors_still_in_early_developmental_stages:216df06139ed",
+      "claim_scope": "",
+      "confidence": 0.75,
+      "evidence_role": "",
+      "evidence_summary": "",
+      "extraction_method": "paper_limitation_llm",
+      "gap_kind": "unresolved mechanisms",
+      "paper_ids": [
+        "W2943084464"
+      ],
+      "rationale": "The abstract explicitly categorizes the design of 'higher-order structures and behaviour' as 'recent directions,' indicating that systematic methodologies, stability criteria, and scalable assembly protocols for multi-compartment or interacting synthetic cell networks are not yet established or standardized.",
+      "schema_version": "survey_gap_candidate_v1",
+      "source_pointers": [
+        {
+          "artifact": "paper",
+          "json_pointer": "/abstract",
+          "paper_id": "W2943084464",
+          "section": "Abstract"
+        }
+      ],
+      "statement": "Current LLPS-based synthetic cell systems remain largely confined to single-compartment dynamics, with mechanistic control over higher-order structures and coordinated multi-cellular behaviors still in early developmental stages.",
+      "status": "candidate",
+      "subhypothesis_id": "GLOBAL",
+      "support_level": "explicit",
+      "target_slot": "Higher-order structural organization and emergent behavior in LLPS-based synthetic cells"
+    }
+  ],
+  "created_at": "",
+  "ledger_fingerprint": "443d9de9322b97be50383aa22e94cc183c62cc8c250906b5e59b6ddc3081493f",
+  "project_context_fingerprint": "505d0e72362e0dc977a30d3fee98024a0683e39f33e3e016e33f25a77cea200d",
+  "project_id": "sci_20260901_042802_922870_survey_001",
+  "schema_version": "survey_gap_candidates_v1",
+  "source_artifacts": {
+    "survey_json": "survey.json",
+    "survey_markdown": "survey.md"
+  },
+  "survey_run_id": "20260901-042802-922870-survey-001"
+}

@@ -21,6 +21,7 @@ from src.agents.experiment_design_agent.discipline_catalog import (
     EXCLUDED_DISCIPLINE_IDS,
     PERMITTED_DISCIPLINE_IDS,
     list_discipline_catalog,
+    normalize_discipline_ids,
     resolve_design_scope,
     resolve_execution_policy,
 )
@@ -190,6 +191,15 @@ def test_scope_blocks_social_science_and_humanities_fields() -> None:
     assert scope["status"] == "BLOCKED_BY_SCOPE"
     assert scope["discipline_ids"] == ["17", "32"]
     assert scope["excluded_discipline_ids"] == ["32"]
+
+
+def test_scope_accepts_shared_taxonomy_keys_from_science_runs() -> None:
+    assert normalize_discipline_ids(["physics_astronomy"]) == ("31",)
+    scope = resolve_design_scope(["physics_astronomy"])
+
+    assert scope["status"] == "IN_SCOPE"
+    assert scope["discipline_ids"] == ["31"]
+    assert scope["unresolved_disciplines"] == []
 
 
 def test_digital_execution_is_off_by_default_even_for_computer_science() -> None:

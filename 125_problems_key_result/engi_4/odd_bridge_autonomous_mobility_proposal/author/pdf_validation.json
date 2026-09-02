@@ -1,0 +1,38 @@
+{
+  "schema_version": "pdf_validation_v1",
+  "artifact": "odd_bridge_autonomous_mobility_report.pdf",
+  "validation_status": "PASSED_WITH_NONBLOCKING_FORMAT_WARNINGS",
+  "build": {
+    "engine": "pdflatex",
+    "passes": 2,
+    "command": "pdflatex -interaction=nonstopmode -halt-on-error odd_bridge_autonomous_mobility_report.tex"
+  },
+  "pdf_properties": {
+    "pages": 7,
+    "page_size": "612 x 792 pts (Letter)",
+    "encrypted": false,
+    "embedded_or_subset_fonts": true
+  },
+  "layout_review": {
+    "renderer": "pdftoppm",
+    "dpi": 160,
+    "reviewed_pages": [1, 4, 6, 7],
+    "result": "No clipping, blank page, unreadable table, broken formula, or reference overflow found in the visually inspected pages."
+  },
+  "log_checks": {
+    "undefined_control_sequence": false,
+    "undefined_citation_or_reference": false,
+    "overfull_hbox": false,
+    "fatal_latex_marker": false,
+    "nonblocking_warnings": [
+      "The requested relative class path resolves to a class that identifies itself as IEEEtran.",
+      "Underfull hbox warnings occur in narrow justified text and bibliography entries; the rendered pages were visually checked."
+    ]
+  },
+  "content_checks": {
+    "forbidden_sections_absent": ["Acknowledgments", "Acknowledgements"],
+    "proposal_boundary_phrases_absent": ["we observed", "we measured", "we collected", "we sequenced"],
+    "unresolved_reference_marker_absent": true
+  },
+  "scope_note": "This validates a typeset research proposal, not a real-world ADS deployment, road trial, public survey, or safety assessment."
+}

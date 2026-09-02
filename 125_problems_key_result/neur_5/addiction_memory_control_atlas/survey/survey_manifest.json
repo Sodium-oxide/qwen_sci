@@ -1,0 +1,16 @@
+{
+  "schema":"survey_manifest_v1",
+  "project_id":"neur_5",
+  "survey_run_id":"neur_5-survey-001",
+  "topic":"What is addiction and how does it work?",
+  "project_context_fingerprint":"neur5-addiction-memory-context-v1",
+  "status":"COMPLETE_WITH_SCOPE_BOUNDARY",
+  "canonical_artifacts":["survey.md","survey_evidence_plan.json","survey_gap_ledger.json","survey_idea_handoff.json"],
+  "source_registry":["E1","E2","E3","E4","E5","E6","E7","E8"],
+  "accepted_gap_ids":["G1","G2","G3","G4","G5","G6","G7"],
+  "candidate_gap_ids":["G8","G9"],
+  "observed_results":[],
+  "execution_policy":{"mode":"DESIGN_ONLY","real_experiment_executed":false},
+  "scope_boundary":"Addiction mechanisms and memory-driven relapse are reviewed, but no substance exposure, withdrawal induction, neural manipulation, or treatment intervention was executed.",
+  "retrieval_audit":"NIDA Addiction Science and Drugs, Brains, and Behavior pages were verified in the application browser; no claim of artificial memory treatment is made."
+}

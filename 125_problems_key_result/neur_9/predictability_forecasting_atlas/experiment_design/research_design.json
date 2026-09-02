@@ -1,0 +1,20 @@
+{
+  "schema_version":"research_design_v1",
+  "project_id":"neur_9_pfa",
+  "topic":"Is it possible to predict the future?",
+  "design_status":"DESIGN_ONLY",
+  "selected_direction":"HCFCA-001",
+  "title":"Horizon-Conditioned Forecastability and Calibration Atlas",
+  "primary_question":"When does an intelligent forecasting system retain calibrated predictive information as lead time increases?",
+  "research_questions":["Does AI extend skill at normalized horizons?","Can calibration and uncertainty decomposition identify effective horizon?","Does forecastability transfer across domains and shifts?"],
+  "cohorts":["orbital_state","weather","climate_hindcast","economic_time_series","public_health_aggregate"],
+  "models":["persistence","seasonal_climatology","AR_VAR_state_space","mechanistic_ensemble","gradient_boosting","probabilistic_neural","transformer_or_graph","hybrid_residual"],
+  "normalized_horizons":[0.25,0.5,1,2,4,8],
+  "variables":["lead_time","domain_timescale","initial_condition_quality","observation_noise","model_class","distribution_shift","point_loss","log_score","CRPS","Brier_score","coverage","sharpness","compute_cost","inference_latency","effective_horizon"],
+  "equations":["LS=-log p(y)","CRPS(P,y)=integral(F_P(z)-1{z>=y})^2 dz","S=1-L_model/L_baseline","F=S*(1-normalized_calibration_error)*(1-shift_penalty)","H*=sup{h:S>delta,CE<epsilon,DeltaF>0}","I(h)=H(Y)-H(Y|X)"],
+  "analysis":["rolling_origin_blocked_evaluation","leakage_and_vintage_audit","mixed_effects_loss_model","block_bootstrap_confidence_intervals","FDR_correction","sensitivity_to_timescale_estimator"],
+  "falsification_rules":["No out-of-sample baseline improvement","Calibration collapses under ordinary temporal shift","Effective horizon ignores information perturbation","Pooled metric hides target-specific failures","Scenario projection is scored as an exact event forecast"],
+  "expected_outcome_branches":["bounded AI extension in observation-rich domains","calibration gains exceed point-skill gains","large shift penalty outside stable regimes","strong baseline matches AI after leakage controls"],
+  "safety_constraints":["No experiment execution in this package","No individual prediction","Public-health outputs remain aggregate and methodological","Scenario outputs are conditional projections"],
+  "observed_results":[]
+}

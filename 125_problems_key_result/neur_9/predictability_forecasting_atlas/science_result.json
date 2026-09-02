@@ -1,0 +1,21 @@
+{
+  "schema_version": "science_result_v1",
+  "run_id": "neur_9_pfa_attempt_001",
+  "status": "COMPLETED_PROPOSAL",
+  "pipeline": "Survey -> Idea -> ExperimentDesign -> Author",
+  "primary_direction": "Horizon-Conditioned Forecastability and Calibration Atlas (HCFCA)",
+  "stage_outputs": {
+    "survey": "survey/survey_manifest.json",
+    "idea": "idea/idea_result.json",
+    "experiment_design": "experiment_design/research_design.json",
+    "author": "author/author_manifest.json"
+  },
+  "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "observed_results": [],
+  "notes": [
+    "No forecasting experiment was executed.",
+    "No future event, model score, or deployment claim is reported as observed.",
+    "The report distinguishes deterministic prediction, probabilistic forecasting, and scenario projection.",
+    "No acknowledgments section is included."
+  ]
+}

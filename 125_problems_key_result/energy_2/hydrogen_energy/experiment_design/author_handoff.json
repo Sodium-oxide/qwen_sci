@@ -1,0 +1,18 @@
+{
+  "from": "ExperimentDesign",
+  "to": "Author",
+  "status": "READY",
+  "design_only": true,
+  "manuscript_title": "Hydrogen Beyond Color Labels: A Service-Normalized Portfolio Framework for Production, Infrastructure, and End Use",
+  "central_claim": "Hydrogen has a credible future as a targeted carrier and feedstock, but its value is service-specific and must be established with temporally matched lifecycle accounting, infrastructure and offtake constraints, stress testing, and direct comparison with electrification and competing fuels.",
+  "must_include": ["hydrogen as carrier and feedstock", "pathway-level lifecycle accounting", "temporal electricity matching", "four boundary states", "matched service comparators", "industrial, transport, storage, and hub roles", "leakage, safety, water, materials, and demand uncertainty", "six-stage experiment design", "design-only status"],
+  "must_not_include": ["universal hydrogen replacement claims", "unverified production or cost numbers", "announced projects presented as operating results", "color labels treated as lifecycle proof", "Acknowledgment section", "filler solely to reach a page count"],
+  "verified_source_anchors": [
+    {"key":"iea_global_hydrogen_review_2024","url":"https://www.iea.org/reports/global-hydrogen-review-2024","status":"browser_checked"},
+    {"key":"iea_netzero2050","url":"https://www.iea.org/reports/net-zero-by-2050","status":"browser_checked"},
+    {"key":"ipcc_ar6_wg3_ch6","url":"https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-6/","status":"browser_checked"}
+  ],
+  "paper_search_note": "OpenAlex and AnySearch were both attempted; both returned zero records because the connection was refused (WinError 10061).",
+  "expected_results": [],
+  "observed_results": []
+}

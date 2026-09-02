@@ -1,0 +1,37 @@
+{
+  "schema":"idea_result_v5",
+  "topic":"What are the coding principles embedded in neuronal spike trains?",
+  "project_id":"neur_2",
+  "survey_binding":{"survey_run_id":"neur_2-survey-001","project_context_fingerprint":"neur2-spike-code-context-v1","target_gap_ids":["G1","G2","G3","G4","G5","G6"]},
+  "selected_primary_idea":{
+    "id":"TSCC-A",
+    "title":"Task- and State-Conditioned Causal Neural Code Atlas",
+    "abstract":"A staged encoding-decoding-causal framework that compares rate, timing, correlation, population geometry, and hybrid coding dimensions across held-out stimuli, states, tasks, and neurons, then gates functional claims on selective perturbation.",
+    "research_object":"Neuronal spike trains and downstream-relevant behavioral or decision outputs",
+    "mechanism":"Stimulus and task variables modulate point-process intensity, event timing, coupling, and population trajectories conditional on state.",
+    "intervention":"Matched computational nulls followed, where approved and feasible, by selective spike-pattern or population-subspace perturbation.",
+    "observable_quantities":["information gain","cross-condition decoding","calibration","noise-correlation structure","manifold dimensionality","downstream behavior","selective perturbation effect"],
+    "falsification_conditions":["rate-only model matches full model across prespecified held-out conditions","timing gain disappears under count-matched jitter","correlation gain disappears under matched nulls","manifold effect is explained by nuisance variables","candidate perturbation has no selective downstream effect"],
+    "target_gap_ids":["G1","G2","G3","G4","G5","G6"],
+    "evidence_sources":["E1","E3","E4","E5","E6","E7","E8","E9","E10"]
+  },
+  "competitive_ideas":[
+    {"id":"R1","title":"Rate-timing information decomposition","target_gap_ids":["G1","G6"],"status":"competitive"},
+    {"id":"R2","title":"Correlation-aware population decoder","target_gap_ids":["G1","G4"],"status":"competitive"},
+    {"id":"R3","title":"State-conditioned neural manifold","target_gap_ids":["G2","G5"],"status":"competitive"}
+  ],
+  "high_risk_ideas":[{"id":"R4","title":"Causal downstream code assay","target_gap_ids":["G3"],"risk":"high","value":"directly tests functional use"}],
+  "rejected_ideas":[
+    {"id":"X1","title":"Single universal neural code","reason":"unfalsifiable across contexts and inconsistent with conditional evidence"},
+    {"id":"X2","title":"Decoder-only universal criterion","reason":"decodability does not establish downstream use"}
+  ],
+  "mcts_trace":[
+    {"node":"N0","defect":"rate-versus-timing debate is under-specified","edit":"add matched representations and nulls","gain":"operational comparability"},
+    {"node":"N1","defect":"population decoder can confuse availability with use","edit":"add downstream relevance gate","gain":"functional interpretation"},
+    {"node":"N2","defect":"state changes can invalidate fixed mappings","edit":"condition all models on state and task","gain":"cross-context validity"},
+    {"node":"N3","defect":"geometry is correlational","edit":"add selective perturbation gate","gain":"causal testability"}
+  ],
+  "primary_direction_id":"TSCC-A",
+  "observed_results":[],
+  "execution_policy":{"mode":"DESIGN_ONLY","real_experiment_executed":false}
+}

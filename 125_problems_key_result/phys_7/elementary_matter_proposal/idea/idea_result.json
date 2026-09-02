@@ -1,0 +1,35 @@
+{
+  "schema_version": "idea_result_v5",
+  "project_id": "phys_7_elementary_matter_20260901",
+  "survey_run_id": "survey-elementary-matter-001",
+  "project_context_fingerprint": "standard-model-pointlike-fermion-compositeness-resolution-v1",
+  "primary_direction_id": "idea-rlmc-001",
+  "survey_binding": {"manifest": "../survey/survey_manifest.json", "accepted_gap_ids": ["G1", "G2", "G3", "G4", "G5", "G6"]},
+  "selected_primary_idea": {
+    "idea_id": "idea-rlmc-001",
+    "title": "Resolution-Ladder Model Comparison for Pointlike Fermion Tests",
+    "abstract": "A versioned multi-channel likelihood framework that distinguishes pointlike Standard-Model, contact-interaction, finite-form-factor, and excited-fermion explanations while enforcing EFT validity and shared systematic uncertainty controls.",
+    "target_gap_ids": ["G1", "G2", "G3", "G4", "G5", "G6"],
+    "scientific_object": "quark and lepton pointlike behavior inferred through scattering observables, not direct visual imaging of constituents",
+    "mechanism": "A genuine short-distance deviation must have a channel-consistent dependence on momentum transfer and angular structure that remains distinguishable from nuisance and EFT-truncation effects.",
+    "intervention": "Vary momentum-transfer cut, operator set, form-factor scale, excited-state benchmark, nuisance priors, channel membership, and dimension-six/dimension-eight truncation policy.",
+    "validation_protocol": "Use synthetic closure tests, public-data-compatible interfaces when independently approved, held-out bins, and adversarial nuisance injections before any claim of a preferred hypothesis.",
+    "falsifiers": ["no hypothesis identifiability", "cutoff or EFT-order instability", "nuisance-induced apparent deviation", "cross-channel coefficient inconsistency without a declared model"],
+    "claim_boundaries": ["No absolute indivisibility claim.", "No identification of EFT coefficients with unique constituents.", "No observed collisions or new limits are claimed by this proposal."],
+    "evidence_keys": ["pdg2008", "cottingham2007", "cms_higgs2015", "allwicher2023", "brivio2017", "cms_tau2025", "arrington2021", "abada2019", "alekhin2016", "jaeckel2010", "colladay1998"]
+  },
+  "competitive_ideas": [
+    {"idea_id": "idea-dy-002", "title": "Single-channel high-mass Drell-Yan EFT scan", "target_gap_ids": ["G1", "G2", "G3"], "status": "competitive_module"},
+    {"idea_id": "idea-excited-003", "title": "Excited-fermion versus form-factor hypothesis test", "target_gap_ids": ["G4"], "status": "competitive_module"},
+    {"idea_id": "idea-eic-004", "title": "Lepton-hadron resolution transfer study", "target_gap_ids": ["G5", "G6"], "status": "high_risk_due_to_projection_and_interface_assumptions"}
+  ],
+  "rejected_ideas": [
+    {"title": "Prove that quarks and leptons are indivisible", "reason": "Exceeds the range-dependent, model-conditioned meaning of experimental pointlikeness."},
+    {"title": "Treat every EFT contact term as evidence for preons", "reason": "Violates the Survey invariant separating effective deviations from unique microscopic realization."}
+  ],
+  "mcts_evolution_summary": [
+    {"step": 1, "operation": "question_reframing", "result": "Converted an ontological question into a finite-resolution model-comparison problem."},
+    {"step": 2, "operation": "alternative_mechanism_search", "result": "Separated contact, form-factor, and excited-state signatures from common nuisance mechanisms."},
+    {"step": 3, "operation": "falsifiability_filter", "result": "Selected a cutoff- and nuisance-stress-tested cross-channel likelihood as primary direction."}
+  ]
+}

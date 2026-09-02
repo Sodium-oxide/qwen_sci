@@ -1,0 +1,32 @@
+{
+  "schema_version":"idea_result_v5",
+  "project_id":"neur_9_pfa",
+  "topic":"Is it possible to predict the future?",
+  "survey_binding":{"survey_run_id":"neur_9_pfa_survey_001","manifest":"../survey/survey_manifest.json","eligible_gap_ids":["G1","G2","G3","G4","G5","G6","G7"]},
+  "primary_direction":{
+    "id":"HCFCA-001",
+    "title":"Horizon-Conditioned Forecastability and Calibration Atlas",
+    "root_mechanism":"Forecast information decays with lead time through initial-state uncertainty, model approximation, observation noise, stochastic forcing, and distribution shift; intelligent models can slow or better characterize this decay but cannot create missing information.",
+    "target_gap_ids":["G1","G2","G3","G4","G5","G6","G7"],
+    "evidence_anchor_ids":["E1","E2","E3","E4","E5","E6","E7","E8","E9","E10"],
+    "intervention_type":"design-only rolling-origin multi-domain forecast benchmark with uncertainty perturbations and preregistered horizon tests",
+    "falsifiable_conditions":["AI fails to improve held-out skill over strong baselines.","Calibration fails under temporal shift while simple recalibration remains stable.","Perturbing observation or initial-condition information does not change estimated effective horizon.","Scenario projections are incorrectly scored as exact event forecasts.","Aggregate scores conceal target-specific horizon collapse."],
+    "feasibility":"high for public benchmark data and reproducible forecast evaluation; moderate for harmonizing domain timescales and shift annotations",
+    "scientific_value":"high"
+  },
+  "competitive_directions":[
+    {"id":"CHAOS-ONLY","title":"Local divergence horizon","decision":"component","reason":"provides physical error-growth anchor but does not address calibration or socio-technical shift"},
+    {"id":"SCALE-ONLY","title":"More compute and larger models","decision":"component","reason":"tests engineering returns but cannot stand for information availability"},
+    {"id":"SCENARIO-ONLY","title":"Conditional scenario futures","decision":"component","reason":"necessary for long-range climate planning but not an exact forecast"},
+    {"id":"ORACLE-LLM","title":"General future oracle","decision":"reject","reason":"untyped target, leakage-prone, and incompatible with calibrated scientific inference"}
+  ],
+  "selection_audit":{"novelty":0.88,"mechanism_clarity":0.93,"falsifiability":0.96,"evidence_alignment":0.95,"implementation_feasibility":0.86,"cross_domain_value":0.92},
+  "evolution_checkpoints":[
+    {"checkpoint":"C1","change":"untyped future -> deterministic, probabilistic, and scenario targets","reason":"prevents category errors and addresses G1"},
+    {"checkpoint":"C2","change":"calendar lead time -> normalized lead time relative to domain dynamics","reason":"makes cross-domain horizon comparisons meaningful and addresses G2"},
+    {"checkpoint":"C3","change":"single accuracy score -> joint skill, calibration, sharpness, and information gain","reason":"addresses G3-G4"},
+    {"checkpoint":"C4","change":"model leaderboard -> shift-aware forecastability atlas with baseline and resource controls","reason":"tests whether AI extends useful prediction rather than merely increasing compute"}
+  ],
+  "status":"SELECTED_PRIMARY_DIRECTION",
+  "observed_results":[]
+}

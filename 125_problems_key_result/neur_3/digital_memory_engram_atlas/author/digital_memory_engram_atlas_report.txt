@@ -1,0 +1,443 @@
+ Digital Memory Beyond the Upload Metaphor: An
+ Engram Fidelity Ladder and Causal Transfer Atlas
+                                                  Four-Agent Research Pipeline
+                                         Survey–Idea–ExperimentDesign–Author Workflow
+                                            Research proposal; no experiments executed
+
+
+   Abstract—The prospect of storing, manipulating, and trans-         state [1], [8]. Psychological evidence also shows that remem-
+planting human memory in a digital system is often described          bering is reconstructive: omission, source confusion, intrusion,
+as a future upload problem. That metaphor hides the scientific        and confidence errors can coexist with a correct gist [9]. A
+question: which properties of a memory must a representation
+preserve before it can be called a memory rather than a decoder,      digital representation therefore requires a declared target and
+a behavioral policy, or a neural correlate? This paper proposes       a declared error model. Without those declarations, “memory
+the Digital Engram Fidelity Ladder and Causal Transfer Atlas          upload” is not a testable scientific claim.
+(DEFL-CTA), a design-first framework that evaluates memory               At the biological level, engram research has demonstrated
+representations at five explicitly separated levels. L0 measures      that manipulating tagged neural ensembles can alter memory-
+predictive access, L1 behavioral association, L2 neural reinstate-
+ment, L3 content-preserving reconstruction, and L4 transfer or        related behavior in rodents [2]–[5]. At the human interface
+recollection under independent neural, behavioral, and content        level, neural prosthetic and closed-loop stimulation studies
+tests. The framework is grounded in evidence from human               have reported assistance in constrained memory tasks [6], [7].
+memory neuroscience, rodent engram manipulation, and human            These are important causal and translational advances. They
+neural prostheses, while refusing to equate any one of these          do not by themselves establish that a complete human episodic
+results with complete digital transplantation. We formalize a
+distributed, context-dependent state-space model; define content,     memory has been digitized, edited at will, or transplanted
+relational, omission, false-detail, and collateral-memory end-        into an independent recipient. The gap is not a semantic
+points; and specify held-out cue, cross-session, and cross-subject    technicality: it determines the measurements, controls, safety
+tests. The resulting proposal makes an ambitious claim: useful        obligations, and conclusions that a valid study may support.
+digital memory technology can be developed incrementally, but            This paper presents DEFL-CTA, a research program se-
+the decisive frontier is not higher decoding accuracy alone. It
+is selective, content-preserving, causally validated transfer that    lected from a structured Survey and Idea process. Its central
+remains distinguishable from nuisance state, rehearsal, generic       thesis is that the field should replace the binary question
+arousal, and confabulation. The protocol is design-only and re-       “Can memory be uploaded?” with a promotion ladder. Each
+ports no observed upload, editing, stimulation, or transplantation.   promotion requires new evidence, and no higher level can
+                                                                      be inferred from a lower-level success. The ladder is paired
+   Index Terms—human memory, engrams, neural prostheses,
+digital representation, causal transfer, false memory, neurotech-
+                                                                      with an atlas of causal interventions and failure modes so that
+nology                                                                a representation is evaluated for what it preserves, what it
+                                                                      changes, and what it leaves unknown.
+                                                                         The contributions are fourfold. First, we define five opera-
+                       I. I NTRODUCTION
+                                                                      tional fidelity levels and a phenotype ontology that separates
+   Science fiction asks whether a person could upload a               content, temporal order, source context, relations, neural re-
+lifetime of memories to a cloud, edit a painful event, or             instatement, behavior, and subjective recollection. Second, we
+download an episode into another body. The question is                propose a distributed dynamical model whose latent variables
+scientifically productive precisely because it forces several         can be tested against held-out cues while controlling for state,
+ordinarily conflated achievements apart. A system may predict         movement, arousal, and subject identity. Third, we specify
+which item a participant will recognize without containing            a staged storage, manipulation, and transfer protocol with
+the item’s experiential content. A stimulation pattern may            independent content scoring and collateral-memory endpoints.
+evoke a learned behavioral response without transferring an           Fourth, we provide conditional decision rules that allow strong
+episode. A generative model may produce a fluent account              progress without overstating what a result means. The com-
+that is semantically plausible but includes unsupported details.      plete artifact remains a proposal: no human or animal data
+Conversely, a useful memory technology need not reproduce             were executed in this run.
+an entire person to preserve a well-defined event, relation, or
+                                                                           II. BACKGROUND , S URVEY, AND R ESEARCH G AP
+skill.
+   Human memory is not a single file stored at one address.           A. Memory as a distributed and reconstructive process
+Cognitive systems distinguish episodic, semantic, procedural,            The computational analogy of input, encoding, storage, and
+and affective forms, and their expression depends on encoding,        retrieval is useful, but a literal file analogy is not. Memory
+consolidation, retrieval, reconsolidation, context, and current       can be expressed through several interacting systems and
+can change when it is retrieved. The neural substrate is                                        TABLE I
+distributed over hippocampal, cortical, and related networks,               E VIDENCE REGISTRY AND ADMISSIBLE INTERPRETATION
+with different temporal roles across learning and recall [1],
+                                                                       ID     Evidence family              Interpretation permitted by this
+[8]. The same event can therefore be represented by multiple                                               proposal
+features: an item, its temporal order, the place and source in         E1,E8 Human memory systems and Memory is heterogeneous, dis-
+which it was encountered, its relation to other items, and its               molecular/systems biology    tributed, and dynamic.
+affective or action value.                                             E2    Engram review                Engram evidence must be tied to
+                                                                                                          a defined task and endpoint.
+   The relevant object for a digital study is consequently a task-     E3– Rodent ensemble manipula- Causal influence on constrained
+defined memory phenotype. Let m denote an event or learned             E5    tion                         memory-related behavior.
+relation, and let Φ(m) denote a vector of prespecified features.       E6,E7 Human prosthesis and closed- Task-specific assistance is feasi-
+                                                                             loop stimulation             ble; general storage is open.
+A phenotype is not a claim that all features exhaust the original      E9    Reconstructive memory and Omission, intrusion, source error,
+experience. It is a contract that states what the experiment                 errors                       and confidence are required end-
+can measure. For example, a paired-associate task may define                                              points.
+                                                                       E10 Neurotechnology ethics         Governance, consent, agency, and
+item identity and pair relation, while an episodic task may                                               autonomy are design variables.
+additionally define temporal order and source context. A fear-
+conditioning task may define cue-specific defensive behavior,
+but that endpoint must not be renamed subjective recollection.
+   The reconstructive character of memory changes how a              constrained tasks [6]. Closed-loop temporal-cortex stimulation
+digital artifact should be scored. A fluent narrative is not         has also been associated with improved memory performance
+automatically faithful; it may contain semantic completion or        under task-specific conditions [7]. These studies motivate
+model-generated detail. A confident report is not automatically      a realistic engineering sequence: first identify task-relevant
+a ground truth; confidence and source monitoring can dissoci-        states, then design a subject-specific policy, then test whether
+ate. The survey therefore requires independent event records,        intervention effects are selective and reproducible.
+held-out probes, confidence calibration, and explicit omission          Their results are not equivalent to general digital storage.
+and false-detail measures. This makes errors visible instead of      A prosthesis may provide a cue, compensate for a disrupted
+allowing a single average accuracy to conceal them.                  computation, or improve a participant’s strategy. A decoder
+                                                                     may infer an upcoming response while the underlying content
+B. Engrams and causal manipulation                                   remains inaccessible. A stimulation policy may facilitate an
+   An engram is best treated as an experimentally defined            existing memory rather than deliver a memory to a new
+memory-related neural ensemble or state, not as a universal          subject. The proposal therefore reports assistance, decoding,
+synonym for a complete memory. Optogenetic work in rodents           and reinstatement separately, and it requires cross-context
+showed that stimulation of tagged hippocampal ensembles              content tests before using the language of transfer.
+can activate fear-memory-related behavior [3]. Related work
+used hippocampal manipulation to create a false-memory-like          D. Survey gap ledger
+behavioral expression, demonstrating that ensemble-level in-
+terventions can influence what an animal does in a constrained          The Survey Agent organized evidence into subhypothe-
+context [4]. Chen et al. reported artificial enhancement and         ses and accepted six high-confidence gaps. G1 is the lack
+suppression of hippocampus-mediated memories, providing              of a unified operational definition of memory fidelity. G2
+a further example of causal influence on memory-related              separates causal engram participation from portable content
+expression [5].                                                      representation. G3 separates human prosthetic assistance from
+   These findings establish a valuable principle: neural rep-        general digital storage. G4 concerns the distributed and dy-
+resentations can be causally relevant to memory expression.          namic character of representations across memory phases. G5
+They also establish the boundary of the inference. A ro-             concerns the measurement of omission and confabulation. G6
+dent’s freezing response does not independently validate the         concerns collateral effects, agency, autonomy, and consent.
+content, temporal structure, or subjective recollection of a         Cross-subject identity-preserving transfer and a causal equiv-
+human episode. Ensemble tagging can be sparse, task-specific,        alence criterion were retained as candidate gaps rather than
+state-dependent, and affected by the chosen behavioral assay.        established facts.
+DEFL-CTA uses engram studies as a mechanistic bridge for                The evidence policy is deliberately asymmetric. A source
+causal participation, not as proof that the brain contains a         can support a bounded claim about the paradigm it studied,
+portable binary object.                                              but a candidate paper cannot be promoted to direct evidence
+                                                                     merely because it was found through citation expansion. In
+C. Human neural assistance                                           the present registry, E1–E10 are the allowed sources. The
+   Human neural prosthetic research has moved the question           registry is summarized in Table I and retained in the machine-
+from philosophical speculation toward measurable interven-           readable Survey manifest. The verified evidence supports an
+tion. Hippocampal recording and stimulation have been used           incremental research program; it does not support a claim that
+to develop models intended to facilitate encoding and recall in      a human memory upload has already occurred.
+        III. R ESEARCH Q UESTIONS AND P LANNED                     before specifying its content. It also rejected decoder-only
+                    C ONTRIBUTIONS                                 transplantation because a decoder or stimulation policy may be
+   The primary research question is: can a content-specific        portable while the underlying event is not. A pure rodent fear-
+memory state be represented digitally with enough fidelity         engram route was retained as a mechanistic component but
+that it can be manipulated, transferred, and independently         rejected as the full direction because it lacks human episodic
+recognized after reconstruction, while preserving the distinc-     content and an independent digital transfer criterion.
+tion between neural correlation, behavioral expression, and           The evolution checkpoints were: (N0) separate content,
+subjective recollection?                                           behavior, neural state, and recollection; (N1) add held-out
+   This question is decomposed into five operational questions:    content and relational reconstruction; (N2) represent memory
+                                                                   as a time-dependent distributed state; and (N3) add collateral
+   1) Which features of a task-defined memory generalize
+                                                                   and selective-causal promotion gates. These edits convert an
+       across cues, sessions, and contexts?
+                                                                   evocative question into a sequence of increasingly demanding
+   2) Does a distributed latent state predict content-specific
+                                                                   tests without precluding a technically ambitious outcome.
+       reinstatement beyond stimulus, motor, arousal, and
+       subject-state variables?
+   3) Can a stored representation reconstruct content and                V. P ROBLEM D EFINITION , A SSUMPTIONS , AND
+       relations while bounding omissions and false details?                            H YPOTHESES
+   4) Can a targeted digital edit change one memory dimen-
+       sion without changing neighboring memories, agency,         A. Definitions
+       or general cognition?
+   5) What evidence is sufficient to promote a system from            For this proposal, a digital memory representation is a
+       decoder or association to content-preserving reconstruc-    versioned object containing a task schema, feature and rela-
+       tion and transfer?                                          tion definitions, learned parameters, uncertainty, cue-to-state
+                                                                   mappings, provenance, and explicitly unobserved details. It is
+   The planned contributions are not a single upload device.
+                                                                   not a generated narrative alone. Storage means that the object
+They are a reproducible measurement infrastructure: a memory
+                                                                   supports prespecified held-out queries after serialization and
+phenotype schema; the L0–L4 fidelity ladder; a distributed
+                                                                   reloading. Manipulation means that a defined target dimension
+state-space emulator; a versioned digital object that records
+                                                                   is changed under an intervention while non-target dimensions
+uncertainty and unknown details; and a causal transfer atlas
+                                                                   are measured. Transfer means that an independent recipient
+that maps interventions to target and collateral outcomes. This
+                                                                   system uses the representation under novel cues and passes
+infrastructure can support future clinical and neuroprosthetic
+                                                                   content, neural, behavioral, and collateral tests.
+work while making a strong scientific claim possible: digital
+                                                                      The fidelity levels are:
+memory research becomes meaningful when content-level
+identity survives held-out tests, not when a model merely            • L0, predictive access: predict recall, recognition, or item
+predicts behavior.                                                     identity on held-out trials.
+                                                                     • L1, behavioral association: produce a target-related re-
+    IV. I DEA S OURCE C HECKPOINTS AND D IRECTION                      sponse in a constrained task.
+                   S ELECTION AUDIT                                  • L2, neural reinstatement: reproduce a target-specific neu-
+   The Idea Agent began with the accepted Survey gaps                  ral state under held-out cues.
+and generated multiple independent routes. R1 proposed a             • L3, content-preserving reconstruction: recover content,
+memory phenotype ontology and fidelity ladder. R2 proposed             temporal order, and relations with bounded error.
+a distributed engram state-space emulator. R3 proposed cross-        • L4, transfer or recollection: an independent recipient
+subject content alignment. R4 proposed a closed-loop memory            expresses target content under novel probes and passes
+prosthesis. R5 combined the strongest components into DEFL-            neural, behavioral, and independent content checks.
+CTA.
+   The selection was based on coverage, falsifiability, inde-      B. Assumptions
+pendence, and feasibility. R1 directly resolves G1 and G5 but
+does not by itself model mechanism. R2 addresses G2 and G4            The protocol assumes that a memory target can be made
+but could remain a decoder if content probes are absent. R3        measurable without claiming to exhaust experience. It assumes
+directly challenges G7 but carries high risk of subject-specific   that trial-level stimulus, context, response, confidence, and
+semantic and experiential confounds. R4 addresses G3 and G6        timing metadata can be obtained under an approved data-use
+but can be mistaken for assistance rather than transfer. R5 was    protocol. It assumes that model capacity and preprocessing
+selected because it makes each route a gate in one auditable       can be locked before evaluation, and that subject and session
+sequence and preserves the failures rather than averaging them     splits can be made before feature learning. It does not assume
+away.                                                              that neural similarity equals content identity, that cross-subject
+   The search rejected a pure “memory upload” route because        alignment is unique, or that subjective recollection can be
+it assumes the conclusion: it treats memory as a stable file       directly observed from a neural trace.
+C. Hypotheses                                                        and reconsolidation. Novel probes combine features not pre-
+   H1 states that distributed context-dependent latent states        sented together as a single cue. Negative controls include
+outperform stimulus-only and nuisance-only models on held-           non-target memories, semantically related foils, state-matched
+out content and neural reinstatement, after controlling for          non-memory trials, and motor- or arousal-matched trials. The
+movement, arousal, task, and history. H2 states that L3              analysis is split by subject and session before feature learning.
+reconstruction requires joint preservation of item identity,         Within each training fold, preprocessing and hyperparameters
+temporal order, and relational structure; a system with high         are estimated only from training data.
+item accuracy but high false-detail or relation error will fail      C. D2: Distributed engram state-space model
+L3. H3 states that targeted edits will show a selective causal
+effect on the target dimension while neighboring memories              Let zt be a latent memory-related state, xt a sensory or task
+and general task performance remain within preregistered             input, ct the context, and qt measured nuisance and history
+bounds. H4 states that cross-subject transfer will be weaker         covariates. A candidate dynamical model is
+than within-subject transfer unless alignment preserves content                       zt = Act zt−1 + Bct xt + ϵt ,               (1)
+and relations rather than only semantic or motor policy. H5
+states that confidence and narrative fluency will not be treated     where ϵt represents process uncertainty. For spiking data, the
+as sufficient evidence of fidelity and may increase while false      observation model is
+details also increase.
+                                                                                  λi (t) = exp bi + wi⊤ zt + vi⊤ qt ,
+                                                                                               (︁                  )︁
+                                                                                                                                (2)
+            VI. S TUDY D ESIGN AND M ETHODS
+                                                                     where λi (t) is the conditional intensity for channel i. For
+A. D0: Fidelity ontology and preregistration                         imaging or field-potential modalities, the point-process likeli-
+   Before any analysis, the team preregisters the memory             hood is replaced by a modality-appropriate observation model
+class, task, cue set, encoding and retrieval windows, neural         while preserving the latent-state and context separation.
+modality, inclusion rule, context variables, data splits, model         Five nested model families are compared: stimulus-only,
+capacity, primary endpoints, and manipulation targets. Primary       context-only, memory-state, memory-state-plus-history, and
+endpoints are assigned by level rather than post hoc. For L0,        distributed memory-state. Evaluation uses held-out predictive
+the endpoint is held-out predictive performance. For L1, it          log likelihood, calibration, neural pattern similarity, temporal
+is target-specific behavioral association. For L2, it is neural      generalization, and content probes. The model is a measure-
+pattern similarity and temporal generalization. For L3, it is a      ment device, not a claim that the brain literally implements a
+vector of content and relation scores with error bounds. For         linear system. A candidate memory state must predict target-
+L4, all of these are required in a recipient setting.                specific held-out responses beyond state, motor, arousal, and
+   The preregistration also defines promotion and failure rules.     session controls. Subject and session leakage is assessed by
+Null results remain in the atlas. If a model violates the data       shuffled labels and a subject-shuffle baseline.
+contract or a batch fails its output schema, it is discarded
+                                                                     D. D3: Digital storage and reconstruction
+as an invalid batch rather than silently converted into evi-
+dence. Missing labels, poor synchronization, or insufficient re-        The stored object contains the task schema, learned state-
+peated trials become needs_human_input. This prevents                space parameters, uncertainty, cue-to-state map, feature rela-
+a pipeline failure from being mistaken for a biological failure      tions, provenance, and an explicit list of unknown details. Four
+and prevents an unmeasured feature from being counted as             reconstruction systems are compared: a behavioral classifier,
+preserved.                                                           a neural-state decoder, a generative latent-state model, and
+                                                                     a hybrid model. All systems receive the same preregistered
+B. D1: Data contract and structured memory task                      train/test partitions. A generated narrative may be used as a
+   The preferred source is an ethically approved, de-identified      display layer, but its details are scored against independently
+human dataset with trial-level stimuli, item and relation labels,    held-out event records; unsupported plausibility is an error.
+response, confidence, response time, and neural recordings              For a target memory m, define the content score as
+such as intracranial electroencephalography, scalp electroen-                            Eomission (m) + Efalse (m) + Erelation (m)
+cephalography, magnetoencephalography, functional magnetic           Fcontent (m) = 1−                                              ,
+                                                                                                             Zm
+resonance imaging, or a multimodal combination. If an ap-                                                                         (3)
+proved animal engram dataset is used, cell-tagging, context,         where omission, false-detail, and relational errors are indepen-
+stimulation condition, and the memory-related assay must             dently scored and Zm is a preregistered normalization. Report
+be retained. Data provenance includes subject, session, task,        the components, not only their aggregate. Additional endpoints
+modality, preprocessing, electrode or region metadata, and           include item accuracy, temporal-order accuracy, source-context
+consent or protocol identifiers.                                     accuracy, relation consistency, neural reinstatement similarity,
+   The task should contain item identity, temporal order,            response time, confidence calibration, and performance on
+source context, and relational attributes. Repeated encoding         novel cue combinations. A high behavioral score cannot hide
+and delayed retrieval separate learning, consolidation, retrieval,   a high false-detail rate.
+E. D4: Digital manipulation and collateral effects                                                 TABLE II
+                                                                                 F IDELITY GATES AND FAILURE INTERPRETATIONS
+   The first intervention is in silico. One target feature, tem-
+poral relation, or contextual attribute is changed while other           Level     Required positive evi- Interpretation if the next gate fails
+dimensions are held fixed. The system predicts target recall,                      dence
+neighboring-memory responses, affect, decision confidence,               L0        Held-out prediction of Predictive access only.
+and neural reinstatement. Matched edits to a non-target mem-                       item or recall
+                                                                         L1        Target-specific        Association or policy, not content
+ory, sham edits, and state-only edits establish specificity. The                   constrained behavior   storage.
+primary contrast is target change minus nuisance-matched and             L2        Held-out neural rein- Neural correlate without auto-
+non-target change.                                                                 statement              matic content completeness.
+                                                                         L3        Content, order, rela- Reconstruction within the tested
+   If a future approved neural intervention is feasible, a model-                  tions, bounded errors phenotype.
+defined dimension may be translated into a subject-specific              L4        Independent recipient Transfer claim only if identity
+modulation policy only after safety, feasibility, and autonomy                     passes all tests       and selectivity are justified.
+review. The design requires target, sham, non-target, and
+nuisance-matched perturbation conditions. Outcomes include
+target memory, neighboring memories, source-monitoring er-            promote L0 to L3, neural reinstatement cannot automatically
+rors, false details, confidence, agency, affect, and task strategy.   promote L2 to L3, and animal fear expression cannot promote
+A global recall increase, generalized defensive response, or          any result to human subjective recollection.
+altered arousal is not target-specific editing.
+                                                                      VII. E XPECTED O UTCOME B RANCHES AND C ONDITIONAL
+   The causal effect of a target dimension k on an outcome ϕ
+                                                                                          C ONCLUSIONS
+is written
+                                                                         The design is intended to produce informative branches
+      τk = E[ϕ | do(uk = 1), c] − E[ϕ | do(uk = 0), c],        (4)    rather than one headline number. If L0 succeeds but L1
+where uk is a targeted representation intervention and c              fails, the system has predictive access without a reliable
+fixes stimulus, task, state, nuisance variables, and recipient        intervention. If L1 succeeds but L2 fails, a behavioral policy
+context. The intervention is promoted only if the target effect       has transferred without neural reinstatement. If L2 succeeds
+generalizes to held-out cues, exceeds sham and non-specific           but L3 fails, a neural correlate has been reproduced while
+disruption, and leaves non-target endpoints within preregis-          content remains incomplete or confabulated. If L3 succeeds
+tered bounds.                                                         within a subject but L4 fails across subjects, digital storage
+                                                                      and reconstruction may be feasible for a defined phenotype
+F. D5: Cross-session and cross-subject transfer                       while transplantation is not established. If false details increase
+   Transfer is tested in increasing strength. First, a classifier     after manipulation, the fidelity gate fails even if recognition
+or retrieval policy is transferred across sessions. Next, a task-     improves.
+defined association is transferred across models or subjects.            A strong positive result would be a selective, held-out, cross-
+Then, a digital latent representation is loaded into an indepen-      context reconstruction of content and relations with calibrated
+dent recipient model and tested for neural-state and behavioral       uncertainty, low false-detail rate, and a causal perturbation ef-
+alignment. A future biological recipient study would be the           fect that is specific to the target. Such a result would justify the
+strongest test, but is outside the present execution and requires     claim that a task-defined memory representation is functionally
+separate approvals.                                                   transferable at the demonstrated level. It would not justify the
+   Representation alignment is learned only on training data.         claim that an entire autobiographical self has been uploaded.
+Baselines include subject shuffling, non-target representations,      A partial positive result is scientifically valuable: for example,
+and semantic-similarity alignment. Evaluation separates con-          preserving temporal order and relations while losing affective
+tent, temporal order, relations, neural reinstatement, behavior,      nuance would identify a concrete boundary for the next design.
+and collateral effects. A recipient that reproduces a motor              The most important negative result would also be infor-
+response but fails relational probes is classified as policy          mative. If performance collapses under novel cue combina-
+transfer, not memory transplantation. Two participants may            tions, cross-session transfer, or nuisance-matched controls, the
+share task structure without sharing one subjective episode;          apparent memory signal may be stimulus, strategy, or state
+the protocol preserves this distinction.                              decoding. If confidence and narrative fluency rise with false
+                                                                      details, the system may be optimizing plausibility rather than
+G. D6: Promotion decision                                             memory. If target edits alter neighboring memories or agency,
+   The promotion rule is conjunctive. A level is promoted             selective manipulation has failed even when the target score
+only when (i) the target content or relation was specified            improves. These branches turn speculative language into a
+before evaluation, (ii) the effect generalizes to held-out cues or    cumulative test program.
+contexts, (iii) non-target and nuisance endpoints remain within          The near-term answer to the motivating question is therefore
+bounds, (iv) the effect exceeds sham and matched non-specific         qualified but direct. Human memory can plausibly be stored
+disruption, and (v) an independent content scorer agrees with         digitally in progressively useful, task-defined representations,
+neural and behavioral evidence. Thus, classifier success cannot       and current neuroscience already supports causal manipulation
+of memory-related processes in limited settings. Complete          The versioned object should retain data identifiers, preprocess-
+digital transplantation of human episodic recollection is not      ing, model versions, fold assignments, random seeds, pertur-
+established. The decisive experiment is not a larger decoder;      bation definitions, independent scoring rubrics, null results,
+it is an independently validated, selective, content-preserving    unknowns, and all manual decisions. A failed language-model
+transfer test with explicit failure accounting.                    batch or an incomplete label must be preserved as a failure
+                                                                   record and marked needs_human_input; it must not be
+    VIII. R ISKS , L IMITATIONS , AND H UMAN R EVIEW               silently repaired into an observed result.
+                       R EQUIREMENTS
+                                                                                         IX. C ONCLUSION
+A. Scientific and technical risks
+                                                                      The upload metaphor asks for a yes-or-no answer to a
+   The representation may encode generic arousal, movement,        layered scientific problem. DEFL-CTA replaces that binary
+task structure, semantic similarity, or subject-specific strat-    with a cumulative standard. Digital memory research begins
+egy. Cross-validation leakage can make a decoder appear to         with prediction and association, advances through neural rein-
+preserve content. Neural pattern similarity can reflect shared     statement and content-preserving reconstruction, and reaches
+preprocessing or a common cue rather than reinstated memory.       transfer only when an independent recipient passes held-out
+Generative models can insert details that were never observed.     content, relational, neural, behavioral, and collateral tests. The
+These risks are addressed by subject and session splits,           ladder is demanding because memory is distributed, dynamic,
+nuisance-matched controls, novel relational probes, shuffled       and reconstructive, not because digital representation is inher-
+baselines, uncertainty reporting, and independent scoring.         ently impossible.
+   The phenotype itself can be too narrow. A system may pass          The proposal makes room for real progress now. A ver-
+a paired-associate task and fail autobiographical context, or      sioned task-defined representation could support memory pros-
+pass item identity while losing temporal order and source.         theses, experimental models of reconsolidation, and clinically
+The paper therefore does not compress all endpoints into           relevant measurement of false detail without pretending to
+one universal score. Its content score in (3) is accompanied       upload a person. At the same time, the program identifies a
+by its components and is interpreted only for the declared         clear frontier: selective causal transfer of a declared memory
+task. Subjective recollection remains an endpoint requiring        phenotype across contexts and, eventually, across independent
+careful psychophysical and source-monitoring validation, not       recipients. Until that frontier is met, the scientifically correct
+a quantity inferred from neural similarity alone.                  statement is not that human memory has been transplanted
+                                                                   digitally, but that specific components of memory-related
+B. Ethics, governance, and autonomy                                information may be decoded, modeled, and manipulated under
+                                                                   controlled conditions. DEFL-CTA provides the audit trail
+   Human neural data require consent, privacy protection,
+                                                                   needed to determine how far a future system has actually
+access governance, and controls over re-identification. Any
+                                                                   traveled.
+human intervention requires institutional approval, safety mon-
+itoring, and a clear separation between research participation                           A PPENDIX A
+and clinical benefit. Memory alteration may affect identity,           F IDELITY L ADDER AND O PERATIONAL D EFINITION
+relationships, responsibility, trauma, and decision autonomy.                             A PPENDIX
+Agency, confidence, affect, and neighboring memories must
+                                                                      Table III gives the operational separation used by the Author
+be measured rather than assumed. Participants must be able
+                                                                   Agent. The table is intentionally conjunctive: a higher level
+to understand and refuse the specific manipulation, and the
+                                                                   inherits the lower-level measurement burden and adds a new
+protocol must not treat an improved task score as evidence
+                                                                   type of evidence. The design does not allow a model to claim
+that an intervention is benign.
+                                                                   L4 by reporting only a neural or behavioral endpoint.
+   Animal engram work requires animal-welfare review and a
+                                                                      The ontology records seven separable fields: item or event
+justification that the mechanistic question cannot be answered
+                                                                   identity; temporal order; source context; relational structure;
+with a lower-burden design. It should not be used to imply hu-
+                                                                   neural reinstatement; behavioral expression; and subjective
+man subjective experience. Future biological recipient studies
+                                                                   recollection. It also records omission rate, false-detail rate,
+require additional review for consent, recipient welfare, iden-
+                                                                   confidence calibration, collateral-memory effect, agency, and
+tity claims, and reversibility. The present artifact contains no
+                                                                   autonomy. The fields may be correlated, but no field is used
+executable stimulation recipe and no authorization to perform
+                                                                   as a substitute for another. In particular, behavioral expression
+any neural manipulation.
+                                                                   is not subjective recollection, and neural reinstatement is not
+                                                                   content-complete reconstruction.
+C. Human review and reproducibility
+   Before execution, reviewers should inspect data-use permis-                          A PPENDIX B
+sions, consent, animal or human-subject approvals, power and             E VIDENCE C OVERAGE AND R EVIEW A PPENDIX
+sample assumptions, model leakage, content rubrics, false-           The      Survey-to-Author   binding           uses      project
+memory risk, stimulation safety, and autonomy safeguards.          identifier    neur_3,       Survey            run       identifier
+                              TABLE III
+                    O PERATIONAL FIDELITY LADDER
+
+   Level    Object being tested         Minimum evidence
+   L0       Access to a target label     Held-out prediction with leakage
+                                         and nuisance controls.
+   L1       Target-related action or as- Selective behavior above matched
+            sociation                    controls.
+   L2       Target-related neural state Reinstatement under held-out
+                                         cues and contexts.
+   L3       Declared memory pheno- Content, order, source, and rela-
+            type                         tion recovery with error decom-
+                                         position.
+   L4       Independent recipient ex- L3 content plus neural and behav-
+            pression                     ioral alignment, selectivity, and
+                                         independent validation.
+
+
+
+neur_3-survey-001, and project-context fingerprint
+neur3-digital-memory-context-v1. The canonical
+artifacts are the Survey evidence plan, gap ledger, Idea result,
+ExperimentDesign JSON, and Author handoff stored with
+this report. The accepted gaps are G1–G6; G7 and G8 remain
+candidate gaps requiring validation. The source registry is
+E1–E10.
+   Claims about distributed and reconstructive memory are
+anchored to E1, E2, E8, and E9. Claims about rodent engram
+manipulation are bounded by E2–E5. Claims about human
+neural assistance are bounded by E6 and E7. Ethical require-
+ments are anchored to E9 and E10. The document status
+is PROPOSAL_NO_OBSERVED_RESULTS; observed results
+remain an empty set. No chapter claims a completed up-
+load, digital edit, human memory transplant, or independently
+proven subjective recollection.
+                             R EFERENCES
+ [1] L. R. Squire and S. M. Z. Wixted, “The cognitive neuroscience of human
+     memory since H.M.,” Neuron, vol. 70, no. 3, pp. 435–445, 2011.
+ [2] S. A. Josselyn and S. Tonegawa, “Memory engrams: Recalling the past
+     and imagining the future,” Science, vol. 367, no. 6473, 2020.
+ [3] X. Liu et al., “Optogenetic stimulation of a hippocampal engram
+     activates fear memory recall,” Nature, vol. 484, pp. 381–385, 2012.
+ [4] S. Ramirez et al., “Creating a false memory in the hippocampus,”
+     Science, vol. 341, no. 6144, pp. 387–391, 2013.
+ [5] B. K. Chen et al., “Artificially enhancing and suppressing hippocampus-
+     mediated memories,” Current Biology, vol. 29, no. 11, pp. 1885–
+     1894.e4, 2019, doi: 10.1016/j.cub.2019.04.065.
+ [6] R. E. Hampson et al., “Developing a hippocampal neural prosthetic
+     to facilitate human memory encoding and recall,” Journal of Neural
+     Engineering, vol. 15, no. 3, 2018.
+ [7] M. Ezzyat et al., “Closed-loop stimulation of temporal cortex rescues
+     functional networks and improves memory,” Nature Communications,
+     vol. 9, art. no. 3658, 2018.
+ [8] E. R. Kandel, Y. Dudai, and M. R. Mayford, “The molecular and systems
+     biology of memory,” Cell, vol. 157, no. 1, pp. 163–186, 2014.
+ [9] D. L. Schacter, “The seven sins of memory: Insights from psychology
+     and cognitive neuroscience,” American Psychologist, vol. 54, no. 3, pp.
+     182–203, 1999.
+[10] M. Ienca and R. Andorno, “Towards new human rights in the age of
+     neuroscience and neurotechnology,” Life Sciences, Society and Policy,
+     vol. 13, art. no. 5, 2017.
+

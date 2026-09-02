@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "topic": "cold fusion",
+  "gaps": [
+    {"id": "G1", "name": "measurement", "risk": "calorimetric artifacts can be mistaken for excess heat", "test": "matched calibration, raw time series, complete input-output audit"},
+    {"id": "G2", "name": "materials_state", "risk": "unobserved loading, defects, impurities, and history confound replication", "test": "in-run loading diagnostics plus pre/post composition and microscopy"},
+    {"id": "G3", "name": "product_balance", "risk": "heat claims are disconnected from nuclear products", "test": "synchronized neutron, gamma, tritium, helium, activation, and calorimetry"},
+    {"id": "G4", "name": "statistics", "risk": "optional stopping and multiple comparisons inflate positive findings", "test": "preregistration, blinded labels, fixed stopping rules, Bayesian evidence"},
+    {"id": "G5", "name": "independent_replication", "risk": "protocol and materials differences prevent decisive comparison", "test": "shared materials, cross-lab transfer, and independent analysis"},
+    {"id": "G6", "name": "technology_threshold", "risk": "a real microscopic reaction may not be useful energy technology", "test": "net-power, safety, lifecycle, and incumbent comparison thresholds"}
+  ],
+  "priority_order": ["G3", "G1", "G2", "G4", "G5", "G6"]
+}

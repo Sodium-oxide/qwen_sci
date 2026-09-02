@@ -1,0 +1,19 @@
+{
+  "schema":"author_handoff_v1",
+  "project_id":"neur_2",
+  "topic":"What are the coding principles embedded in neuronal spike trains?",
+  "survey_manifest":"../survey/survey_manifest.json",
+  "survey_run_id":"neur_2-survey-001",
+  "project_context_fingerprint":"neur2-spike-code-context-v1",
+  "idea_result":"../idea/idea_result.json",
+  "primary_direction_id":"TSCC-A",
+  "design_artifact":"research_design.json",
+  "source_registry":["E1","E2","E3","E4","E5","E6","E7","E9","E10","E11"],
+  "required_claim_types":["evidence_summary","design_proposal","expected_outcome","conditional_conclusion","unknown","human_review"],
+  "forbidden_claim_types":["observed_result","completed_experiment","universal_code_discovery","causal_effect_without_perturbation"],
+  "required_sections":["Abstract","Introduction","Background, Survey, and Research Gap","Research Questions and Planned Contributions","Idea Source Checkpoints and Direction Selection Audit","Problem Definition, Assumptions, and Hypotheses","Study Design and Methods","Expected Outcome Branches and Conditional Conclusions","Risks, Limitations, and Human Review Requirements","References","Variable and Operational Definition Appendix","Evidence Coverage and Review Appendix"],
+  "unknowns":["which coding dimension dominates each condition","whether any candidate dimension is causally used downstream","transfer across species and areas","availability and quality of future recordings"],
+  "human_review_required":["ethics and safety","data governance","statistical estimation","neural recording quality","interpretation of causal perturbation"],
+  "document_status":"PROPOSAL_NO_OBSERVED_RESULTS",
+  "no_acknowledgments_section":true
+}

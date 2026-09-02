@@ -1,0 +1,28 @@
+{
+  "schema": "author_manifest.v1",
+  "project_id": "neur_10_speech_evolution_lateralization_atlas",
+  "run_id": "neur_10_speech_evolution_lateralization_atlas_run_001",
+  "stage": "author",
+  "status": "completed",
+  "design_mode": "DESIGN_ONLY",
+  "canonical_artifacts": {
+    "tex": "author/speech_evolution_lateralization_atlas_report.tex",
+    "pdf": "author/speech_evolution_lateralization_atlas_report.pdf",
+    "class": "author/IEEEtran.cls",
+    "rendered_pages": "author/rendered_pages/page-1.png through page-7.png"
+  },
+  "upstream_bindings": {
+    "survey_manifest": "survey/survey_manifest.json",
+    "idea_result": "idea/idea_result.json",
+    "experiment_design": "experiment_design/author_handoff.json"
+  },
+  "report_policy": {"minimum_pages":7,"actual_pages":7,"acknowledgment_section":false,"ieee_template":true},
+  "semantic_checks": {
+    "observed_results_empty": true,
+    "historical_dates_not_asserted": true,
+    "single_region_control_rejected": true,
+    "foXP2_only_control_rejected": true,
+    "left_hemisphere_only_control_rejected": true
+  },
+  "integrity": {"source_sha256":"58ea795dccd9d79d36fc9bc0d98cc75f85c2c0d9f051f9dda5fdbf1f715fe2e8","pdf_sha256":"4921520e5d7dc9da49fca0bbd6ca4fa8d8d6e427d87d400a0f70e29744e2aa13"}
+}

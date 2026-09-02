@@ -1,0 +1,22 @@
+{
+  "schema_version": "idea_result_v5",
+  "project_id": "phys_13_sunlight_like_laser",
+  "survey_binding": {"survey_run_id":"survey-phys13-001","manifest":"../survey/survey_manifest.json","eligible_gap_ids":["GAP-COHERENCE-001","GAP-TRADEOFF-002","GAP-TRANSFER-003","GAP-HARDWARE-004"]},
+  "selected_primary_idea": {
+    "idea_id":"idea-crisp-icf-001",
+    "title":"CRISP-ICF: Coherence-Resolved Instability Suppression Protocol for High-Power Laser Fusion",
+    "summary":"A multi-fidelity error, evidence, and tradeoff ledger for comparing coherent, spectral-smoothing, polarization-smoothing, and sunlight-like driver models without claiming unobserved fusion performance.",
+    "research_object":"High-power laser-driver coherence engineering for LPI control in ICF-relevant conditions",
+    "target_gap_ids":["GAP-COHERENCE-001","GAP-TRADEOFF-002","GAP-TRANSFER-003","GAP-HARDWARE-004"],
+    "central_hypothesis":"A matched coherence descriptor and staged coupling controls can identify when a combined spectral-phase-polarization strategy merits a specialist benchmark rather than a generic claim of suppression.",
+    "intervention":"Represent candidate drivers as stochastic coherence cards; compare matched controls; then issue only conditional outcome labels after model and sensitivity checks.",
+    "observables":["declared LPI-risk proxy","drive-uniformity proxy","useful-energy-delivery proxy","cross-beam/coupling sensitivity","model-fidelity tier","resource interval"],
+    "falsifiers":["missing matched baseline","uncontrolled spectral or intensity differences","unreported overlap sensitivity","reduced-model result presented as target-scale validation"],
+    "status":"PROPOSED_NO_OBSERVED_RESULTS"
+  },
+  "competitive_ideas":[{"idea_id":"idea-polarization-002","title":"Polarization-only LPI control dashboard","reason":"Useful component comparison but omits stochastic spectral-memory effects."}],
+  "high_risk_ideas":[{"idea_id":"idea-ignition-003","title":"End-to-end sunlight-like ignition optimizer","reason":"No validated transfer, driver, or target-scale contract exists in the frozen evidence."}],
+  "rejected_ideas":[{"idea_id":"idea-bandwidth-004","title":"Universal bandwidth threshold","reason":"No quantity, regime, spatial-statistics, or coupling contract."}],
+  "evolution_trace":["root-01","descriptor-02","tradeoff-03","transfer-04","idea-crisp-icf-001"],
+  "human_review_required":true
+}

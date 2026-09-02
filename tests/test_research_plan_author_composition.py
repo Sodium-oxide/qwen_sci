@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import hashlib
 from io import StringIO
 import json
 from pathlib import Path
@@ -2404,6 +2405,93 @@ def test_author_composition_does_not_call_the_legacy_cross_section_editor(monkey
 
     assert result["status"] == "COMPOSED_FOR_RENDERING"
     assert "research_plan_cross_section_edit" not in operations
+
+
+def test_author_appends_verified_quantitative_evidence_after_llm_composition(monkeypatch, tmp_path: Path) -> None:
+    path = _write_input(tmp_path, _author_input("26"))
+    import src.agents.research_plan_author.run as author_run
+
+    monkeypatch.setattr(author_run, "load_verified_survey_sources", lambda _path: _survey_sources(tmp_path))
+    author_dir = tmp_path / "quantitative" / "author"
+    publication_dir = tmp_path / "quantitative" / "publication"
+    author_dir.mkdir(parents=True)
+    publication_dir.mkdir(parents=True)
+    pdf_path = publication_dir / "quantitative_mathematical_models.pdf"
+    pdf_path.write_bytes(b"%PDF-1.4\nquantitative test artifact\n")
+    handoff_path = author_dir / "quantitative_author_handoff.json"
+    handoff = {
+        "schema_version": "quantitative_author_handoff_v1",
+        "source_identity": {
+            "science_run_id": "science-run",
+            "survey_run_id": "survey-run",
+            "project_id": "project",
+            "project_context_fingerprint": "fingerprint",
+            "selected_direction_id": "selected-direction",
+        },
+        "evidence": [
+            {
+                "quantitative_idea_id": "Q1",
+                "final_version": 1,
+                "question": "Does the bounded state decay under the specified rate?",
+                "model_family": "ODE_IVP",
+                "execution_mode": "NUMERICAL_SIMULATION",
+                "result_kind": "SIMULATED",
+                "empirical_claim_status": "NOT_EMPIRICAL",
+                "result_quality": "QUALIFIED",
+                "hypothesis_relation": "REFUTED_WITHIN_MODEL",
+                "result_summary": "The model-internal trajectory decays under the stated assumptions.",
+                "applicability_conditions": ["The specified rate remains constant."],
+                "limitations": ["The result is not an empirical observation."],
+                "lineage_summary": [
+                    {"version": 0, "relation": "CONSTRAINED", "reason": "The initial regime is bounded."},
+                    {"version": 1, "relation": "REFUTED_WITHIN_MODEL", "reason": "The revised regime decays."},
+                ],
+                "supplement_pdf_reference": "quantitative_mathematical_models.pdf#Q1",
+            }
+        ],
+    }
+    handoff_path.write_text(json.dumps(handoff), encoding="utf-8")
+    manifest_path = author_dir / "quantitative_author_handoff_manifest.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "quantitative_author_handoff_manifest_v1",
+                "status": "COMPLETED",
+                "source_identity": handoff["source_identity"],
+                "inputs": {"finalizations": {"Q1": {}}},
+                "artifacts": {
+                    "handoff": {
+                        "path": str(handoff_path),
+                        "sha256": hashlib.sha256(handoff_path.read_bytes()).hexdigest(),
+                    },
+                    "quantitative_models_pdf": {
+                        "path": str(pdf_path),
+                        "sha256": hashlib.sha256(pdf_path.read_bytes()).hexdigest(),
+                    },
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_research_plan_author(
+        path,
+        survey_manifest_path=tmp_path / "survey_manifest.json",
+        include_idea_evolution="off",
+        quantitative_handoff_manifest_path=manifest_path,
+        llm_call=_fake_author_llm,
+        document_quality_config={"enabled": False},
+    )
+
+    evidence_section = result["document"]["sections"][-1]
+    evidence_text = evidence_section["blocks"][0]["text"]
+    assert evidence_section["title"] == "Computational Evidence (Numerical Simulation; Non-empirical)"
+    assert evidence_section["blocks"][0]["kind"] == "quantitative_evidence"
+    assert "NUMERICAL_SIMULATION" in evidence_text
+    assert "SIMULATED" in evidence_text
+    assert "NOT_EMPIRICAL" in evidence_text
+    assert "REFUTED_WITHIN_MODEL" in evidence_text
+    assert "Acknowledg" not in json.dumps(result["document"])
 
 
 def test_author_reports_ambiguous_equation_reference_as_a_warning(monkeypatch, tmp_path: Path) -> None:

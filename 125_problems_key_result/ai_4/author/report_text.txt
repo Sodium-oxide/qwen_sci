@@ -1,0 +1,501 @@
+         Will Artificial Intelligence Replace Humans?
+          Mapping Automation, Augmentation, and
+             Complementarity Under Uncertainty
+                                                      Xcientist Research Team
+                                           Interdisciplinary Artificial Intelligence Research
+                                                      Design-only research report
+                                                            September 2026
+
+
+   Abstract—The question of whether artificial intelligence will       in verification, maintenance, and accountability. These claims
+replace humans conflates task automation, occupational change,         should not be inferred from one benchmark score.
+human augmentation, and the possibility of complementary                  This paper proposes the Uncertainty-Calibrated Human-AI
+human-AI teams. This paper proposes a preregistered, design-
+only benchmark that maps the boundary among these outcomes             Collaboration Benchmark (U-COLLAB). It turns the broad
+under routine conditions, distribution shift, and equivocality. The    future question into an experimentally tractable boundary map:
+design compares human-only, AI-only, and hybrid conditions
+using calibrated confidence, selective abstention, and assumption-
+elicitation interfaces. It measures accuracy, cost-weighted risk,        task regime × interface × expertise
+time, calibration, error dependence, delegation, human learning,               −→ automation, augmentation, or complementarity.
+deskilling, workload, and subgroup robustness. A repeated-                                                                         (1)
+exposure component tests whether productivity gains preserve             The benchmark varies routine conditions, distribution shift,
+or weaken unaided human performance. A workflow simulation
+translates task results into task bundles, exception handling,         and equivocality; compares human-only, AI-only, and hybrid
+review capacity, and newly created human work without claiming         agents; manipulates calibration and abstention; and follows
+to predict whole occupations. The primary estimands are risk-          repeated exposure with a no-AI transfer block. It also measures
+constrained expected utility per unit time and hybrid complemen-       complementary errors and human learning, because a team
+tarity relative to the best individual agent. Evidence from the 2025   can be fast but unsafe, or productive today but less capable
+Stanford AI Index, a large customer-support study, and task-
+based labor economics motivates the design. The study does not         tomorrow.
+forecast universal human replacement and reports no empirical            The report is explicitly DESIGN_ONLY. No participants
+result; it provides an auditable protocol for determining where        have been enrolled, no model has been evaluated, and no
+automation, augmentation, or complementarity is scientifically         empirical outcome is asserted. The proposed result is a
+supported.
+                                                                       preregistered protocol and interpretation matrix. Its strongest
+   Index Terms—artificial intelligence, automation, human-AI
+collaboration, uncertainty, equivocality, calibration, labor tasks     conclusion, if later supported by data, would be conditional:
+                                                                       AI automates validated task slices, augments some workers,
+                                                                       and complements humans under particular uncertainty and
+                       I. I NTRODUCTION                                workflow conditions. It would not be a forecast that all humans
+   Artificial intelligence can perform some computations at            or all occupations will be replaced.
+speeds beyond human ability, but speed is not the same as                           II. BACKGROUND AND E VIDENCE
+reliable judgment. Current systems can classify, summarize,
+generate code, and optimize decisions at scale; they can also          A. Technical progress is rapid but uneven
+fail under distribution shift, mishandle missing information,             The 2025 Stanford AI Index documents continued gains on
+express unjustified confidence, or optimize a literal objective        demanding benchmarks, falling inference costs, growing orga-
+that does not capture what a human decision maker means. The           nizational adoption, and increasing deployment in medicine,
+question “Will AI replace humans?” is therefore scientifically         transportation, and other sectors [1]. It reports that 78% of
+underspecified.                                                        organizations surveyed in 2024 used AI, and that inference for
+   There are at least four distinct claims. A system can               a system at roughly GPT-3.5 capability became much cheaper
+automate a narrow task without replacing the human job                 between 2022 and 2024. These trends make task automation
+that contains the task. It can augment a worker by reducing            economically plausible in more settings.
+search or documentation time while leaving goal selection and             The same report emphasizes a jagged capability frontier.
+exception handling to the worker. It can form a complementary          Systems improved sharply on several demanding benchmarks
+team when its errors differ from human errors and an interface         but continued to struggle with complex reasoning tasks such as
+enables useful delegation. Finally, automation can change the          structured planning and logic. This is a useful warning against
+task bundle itself by removing some tasks and creating others          equating average capability with dependable performance in
+underspecified environments. A system can be very fast on a         when it succeeds on cases that either member would miss, not
+stable input distribution and still require human supervision       merely when it averages their outputs.
+when the distribution, objective, or causal structure changes.         Human oversight can also fail. Parasuraman and Riley
+                                                                    identify automation misuse, disuse, and abuse: people may
+B. Evidence for heterogeneous augmentation                          over-trust an automation, reject useful assistance, or be placed
+   Brynjolfsson, Li, and Raymond studied the staggered in-          in a workflow that forces unsafe reliance [6]. Confidence
+troduction of a generative AI conversational assistant among        displays can help only if they are calibrated and tied to an
+5,179 customer-support agents [2]. The NBER record reports          actionable delegation policy. Amershi et al. recommend clear
+a 14% average productivity increase measured by issues              control boundaries, support for correction, and appropriate
+resolved per hour, a 34% improvement for novice and low-            communication of system limitations [7]. These principles
+skilled workers, and minimal impact for experienced and             motivate the interface manipulations in the benchmark.
+highly skilled workers. It also reports improved customer sen-         NIST’s AI Risk Management Framework recommends in-
+timent, employee retention, and suggestive evidence of worker       corporating trustworthiness considerations into the design, de-
+learning. The published version appears in the *Quarterly           velopment, use, and evaluation of AI systems [8]. U-COLLAB
+Journal of Economics*.                                              operationalizes that guidance through versioned models, confi-
+   This study is important for two reasons. First, it is evidence   dence calibration, audit logs, risk constraints, held-out testing,
+that AI can augment people rather than immediately eliminate        human accountability, and a requirement to restrict deployment
+the workflow. Second, the effect is heterogeneous: novices gain     when performance under shift is not established.
+more than experts. A benchmark that reports only an average
+productivity effect would hide this structure. U-COLLAB                    III. S CIENTIFIC P ROBLEM AND H YPOTHESES
+therefore treats expertise and repeated exposure as design             The operational question is:
+factors. It asks whether AI transfers useful practice to novices,
+                                                                          Across routine, distribution-shifted, and equivocal
+whether experts remain valuable under shift and ambiguity,
+                                                                          task environments, when does AI automation outper-
+and whether repeated assistance changes unaided performance.
+                                                                          form humans, when does human-AI complementar-
+   The result should not be overgeneralized. Customer support
+                                                                          ity outperform either alone, and which uncertainty-
+is one workflow, and its task distribution, feedback loop, and
+                                                                          aware delegation mechanisms prevent over-reliance
+language interface may differ from manufacturing, scientific
+                                                                          and loss of human capability?
+research, management, or care work. The study motivates a
+measurement strategy, not a universal conclusion.                      We define uncertainty in three parts. Aleatory uncertainty
+                                                                    reflects variability in the world that additional data may
+C. Displacement and new tasks                                       not remove. Epistemic uncertainty reflects incomplete model
+   Acemoglu and Restrepo formulate automation in terms of           knowledge that may be reduced with data or a better model.
+the allocation of tasks to capital and labor [3]. Automation        Equivocality is different: evidence supports multiple plausible
+can replace labor in existing tasks, producing a displacement       interpretations because the objective, meaning, or causal ex-
+effect. New tasks in which labor has a comparative advantage        planation is incomplete. A model can be well calibrated on a
+can create a reinstatement effect. Their empirical decomposi-       stable label distribution while still failing to ask what the task
+tion associates slower recent employment growth with stronger       means.
+displacement, weaker reinstatement, and slower productivity            The hypotheses are:
+growth. Autor similarly argues that automation substitutes             • H0 (performance-only automation): AI dominates hu-
+for some routine tasks while increasing the relative value of             man performance on routine stationary items, but a hybrid
+problem formulation, social interaction, and judgment [4].                does not reliably exceed the best individual agent after
+   These frameworks imply that a job is not a single task                 time and communication costs are included.
+and that productivity growth is not identical to labor replace-        • H1 (distribution-shift boundary): calibrated confidence
+ment. A task benchmark should therefore be connected to                   and selective abstention reduce cost-weighted loss under
+a workflow model that includes review, exception handling,                shift relative to answer-only AI, especially when confi-
+goal specification, data maintenance, and accountability. U-              dence tracks error probability.
+COLLAB reports task outcomes first and translates them into            • H2 (equivocality complementarity): a hybrid with ex-
+a simulated task bundle second. This avoids using a task-level            plicit assumption elicitation outperforms AI-only and
+win as evidence for occupation-wide substitution.                         human-only conditions on utility and calibration for
+                                                                          under-specified tasks.
+D. Human-AI symbiosis and automation behavior                          • H3 (complementary errors): hybrid value increases
+   Jarrahi describes human-AI symbiosis in organizational                 when conditional human and AI errors are less correlated,
+decision making: machines can process large volumes of                    but a persuasive interface can erase this value through
+information while humans contribute contextual interpretation             automation bias.
+and handling of ambiguity [5]. The scientific version of this          • H4 (expertise heterogeneity): novices obtain larger im-
+claim is complementary error structure. A hybrid is useful                mediate productivity gains, whereas experts contribute
+                             TABLE I                                            Calibration is manipulated by a preregistered monotone
+                  P RIMARY EXPERIMENTAL FACTORS                              transformation of confidence while holding the answer policy
+   Factor         Levels                    Scientific purpose
+                                                                             fixed. This separates the value of truthful uncertainty from the
+                                                                             persuasive effect of a numerical display. A report-length and
+   Agent          Human, AI, hybrid         Baselines and team value
+   Regime         Routine, shift, equivo-   Locate reliability boundary      time-matched control separates rationale content from extra
+                  cal                                                        interaction. Hybrid participants can accept, reject, edit, request
+   Interface      Answer, confidence,       Test delegation mechanisms
+                  abstain, assumptions                                       clarification, or delegate; they always control final submission.
+   Calibration    Calibrated, overconfi-    Separate truth from persuasion
+                  dent, underconfident
+   Expertise      Novice, intermediate,     Heterogeneous effects            C. Task families
+                  expert
+   Exposure       Single, repeated, no-AI   Learning and deskilling
+                  transfer                                                      Tasks are synthetic, low stakes, and generated from known
+   Cost           Symmetric, asymmet-       Risk-sensitive decisions         simulators. They are selected to represent distinct information
+                  ric
+                                                                             structures rather than to imitate a single profession.
+                                                                               1) Routine classification and scheduling: inputs are com-
+    more under shift and equivocality; repeated exposure can                      plete, labels are stable, and the cost matrix is known. The
+    improve learning or cause deskilling.                                         task establishes throughput and basic accuracy.
+  • H5 (uncertainty-aware delegation): an abstention and                       2) Shifted system-state diagnosis: synthetic equipment or
+    clarification policy produces a better risk-coverage curve                    logistics records change feature frequency, missingness,
+    than fixed always-answer or always-review policies at                         and causal relationships between training and held-out
+    equal time budget.                                                            distributions. It tests calibration and transfer without
+  • H6 (task-conditional replacement): strong evidence for                        making clinical claims.
+    replacement is restricted to narrow stationary task slices;                3) Ambiguous incident interpretation: a record admits
+    workflow-level human tasks persist or are newly cre-                          two plausible explanations and the objective is incom-
+    ated in verification, escalation, objective selection, and                    plete until a participant asks a fixed clarification question
+    accountability.                                                               or states an assumption. Unjustified certainty is penal-
+                                                                                  ized.
+                 IV. U-COLLAB B ENCHMARK                                       4) Asymmetric-cost allocation: false positives and false
+A. Factorial structure                                                            negatives have different costs. The task tests whether the
+                                                                                  agent adapts its threshold to consequences rather than
+   U-COLLAB uses human-only, AI-only, and human-plus-
+                                                                                  maximizing generic accuracy.
+AI conditions. The human study is a proposed repeated-
+                                                                               5) Counterfactual planning: the participant predicts how
+measures design with an illustrative planning target of 240
+                                                                                  an unchosen intervention changes a simulated system. It
+participants: 80 novices, 80 intermediate participants, and 80
+                                                                                  tests causal reasoning and whether explanations change
+experts. This number is not an observed sample and must
+                                                                                  decisions for valid reasons.
+be re-estimated by simulation for the smallest preregistered
+interaction, with attrition included, before data collection.                   For equivocal items, the data-generating process contains
+Institutional review, informed consent, privacy protection, and              multiple plausible interpretations. Participants receive credit
+debriefing are required if the study is executed.                            for identifying ambiguity and acquiring information. A forced
+   All item generators, answer policies, cost matrices, and                  label is not assumed to be the only expression of intelligence.
+interface text are frozen before confirmatory testing. The
+oracle-calibrated reference supplies a confidence signal tied                                         V. P ROTOCOL
+to held-out error probability. It is a measurement control
+and is not treated as available deployment technology. The                   A. Stage S0: preregistration and pilot
+AI checkpoint, prompt or policy, and evaluation domain are
+versioned.                                                                      The team preregisters task generators, regime labels, cost
+                                                                             matrices, model checkpoint, interface text, calibration trans-
+B. Architecture of the decision interface                                    formations, randomization schedule, exclusion rules, primary
+   The AI produces a recommendation, a confidence estimate,                  contrasts, and thresholds for interpretation. A pilot checks
+an abstention option, and a structured list of assumptions.                  comprehension, timing, and technical reliability only; pilot
+The answer-only interface exposes only the recommendation.                   observations are not included in confirmatory estimates.
+The calibrated-confidence interface exposes a probability and                   The initial work is simulation-only. If people later partic-
+a concise evidence summary. The confidence-plus-abstention                   ipate, the protocol uses low-stakes decisions, compensation
+interface permits the AI to defer. The assumption-elicitation                independent of AI acceptance, anonymized logs, and a right to
+interface asks the human to identify a missing fact or objective             withdraw. No participant is evaluated for employment, credit,
+that could change the answer before showing the recommen-                    health, immigration, or legal status. Professional participants
+dation.                                                                      do not provide confidential workplace records.
+B. Stage S1: baseline                                                 Hybrid complementarity is defined as
+   Participants complete a human-only block balanced across
+regimes. They report confidence and can abstain. The block                        Cr = UH+A,r − max(UH,r , UA,r ).                 (3)
+estimates task difficulty, natural calibration, expertise differ-     Positive Cr supports conditional team value. It is not
+ences, and baseline information acquisition. AI-only episodes       evidence that human-AI teams are universally superior and
+use the same item generator but are executed without exposing       does not by itself imply that human work should be eliminated.
+final answers to participants. Item identities and ground truth
+remain hidden.                                                      B. Calibration and selective prediction
+C. Stage S2: collaboration                                             We use Brier score, expected calibration error, reliability
+                                                                    diagrams, and risk-coverage curves. If an agent abstains,
+   Participants receive hybrid blocks in a counterbalanced
+                                                                    selective risk at coverage q is
+Latin-square order. Each block combines new item instances
+with one interface and one calibration condition. The partic-
+                                                                               SR(q) = E[L | accepted, coverage = q].              (4)
+ipant may accept, reject, edit, request evidence, or ask for
+one fixed clarification. The log records recommendation, con-          The primary shift comparison tests whether calibrated con-
+fidence, assumptions, interaction time, final answer, override,     fidence plus abstention lowers SR(q) at equal coverage and
+and post-decision confidence.                                       time relative to answer-only AI. In equivocal tasks, we add
+   In equivocal blocks, the key outcome is not just accuracy. It    assumption accuracy and value of information from clarifica-
+is whether the participant recognizes an under-specified goal,      tion. A confidence display that is numerically calibrated but
+asks for information with high value, and updates the decision      ignored is not counted as a successful delegation mechanism.
+when the answer arrives. In shifted blocks, the key outcome is
+whether confidence and abstention remain aligned with error         C. Error dependence and reliance
+risk. In routine blocks, the key outcome is whether speed and          For item i, let EH,i and EA,i be binary error indicators.
+accuracy justify narrow task automation.                            We estimate conditional dependence by regime, expertise, and
+                                                                    cost structure. The hybrid supplies complementary value when
+D. Stage S3: repeated exposure and transfer
+                                                                    it correctly resolves cases where one member errs. It supplies
+   The collaboration blocks are repeated on new task instances.     false redundancy when it accepts correlated wrong answers.
+The final block removes AI assistance, changes the task             We record false acceptance of an incorrect AI recommenda-
+distribution, and includes a delayed follow-up where feasible.      tion, false rejection of a correct one, time to override, and trust
+Learning is an improvement in unaided performance, calibra-         updates after feedback.
+tion, and explanation of disagreements relative to baseline.
+Deskilling is a decline in those outcomes after repeated            D. Human learning and workload
+assistance. Neither result is assumed in advance.                      Unaided transfer measures accuracy, calibration, explana-
+E. Stage S4: workflow bridge                                        tion of disagreement, and retention after delay. Workload
+                                                                    combines objective time and interaction count with a short
+   Item-level results feed a discrete-event workflow simulation.    validated subjective scale. The no-AI block is necessary be-
+The simulation varies staffing, review capacity, AI latency,        cause immediate productivity can increase while the human’s
+error costs, exception rates, and the creation of new human         independent capability decreases. A result that improves both
+tasks. It includes verification, missing-information collection,    productivity and transfer is stronger evidence of augmentation
+objective selection, model monitoring, maintenance, escala-         than productivity alone.
+tion, and accountability. The output is a task-bundle map, not
+an occupation forecast. Sensitivity analysis reports how con-       E. Equity and tail behavior
+clusions change when review capacity and new-task creation             Difficulty, missingness, and cost asymmetry vary across
+vary.                                                               synthetic task strata. If future studies collect demographic data,
+          VI. M EASUREMENTS AND E STIMANDS                          this requires explicit consent and a separate fairness analysis.
+                                                                    Report subgroup effects by expertise and relevant task strata
+A. Risk-constrained utility
+                                                                    rather than making speculative claims about social groups.
+  For agent condition c and regime r, define                        A mean improvement is insufficient if tail loss rises for a
+                                                                    vulnerable task slice.
+                 E[R | c, r]
+        Uc,r =               ,   Pr(L > τ | c, r) ≤ α,       (2)
+                 E[T | c, r]                                                        VII. S TATISTICAL A NALYSIS
+   where R is task reward, T is time, and L is cost-weighted          The confirmatory model is hierarchical with fixed effects for
+loss. The risk constraint prevents a fast but unsafe policy from    agent, regime, interface, calibration, expertise, exposure, cost,
+winning by ignoring rare failures. The primary comparison is        and preregistered interactions. Random intercepts and slopes
+the calibrated hybrid against the best individual member within     cover participant, task family, item generator, and session. A
+each regime.                                                        generic outcome model is
+                                                                        IX. G OVERNANCE AND R ESPONSIBLE D EPLOYMENT
+ Ypijk = β0 + βC Ci + βR Rj + βI Ik                                     X. B OUNDARY M AP AND W ORKFLOW T RANSLATION
+            + βCR Ci Rj + βCI Ci Ik + up + uf + ug + ϵpijk .         A. From task scores to task allocation
+                                                              (5)       The benchmark’s output is a boundary map, not a leader-
+   Primary contrasts are AI versus human on routine items,           board. For each task regime, the team reports the best risk-
+calibrated hybrid versus AI on shifted items, assumption-            constrained individual, the hybrid gain, the review cost, and the
+elicitation hybrid versus both baselines on equivocal items,         change in unaided human capability. A task is a candidate for
+and repeated-exposure transfer with versus without AI. Correct       narrow automation only when the AI’s expected utility satisfies
+for the preregistered primary-outcome family. Bootstrap at the       the loss constraint on held-out items and when domain drift
+participant and task-family level; repeated decisions from one       is monitored. A task is an augmentation candidate when the
+participant are not independent observations.                        human-plus-AI condition improves utility or learning without
+   Before recruitment, simulate the full design under plausible      increasing harmful reliance. A task is complementary when
+effect sizes and intraclass correlations. The illustrative target    the hybrid resolves cases that are conditionally difficult for
+of 240 is accepted only if the smallest expertise-by-regime-         either member.
+by-interface interaction has adequate power after attrition. If         Let dr denote the proportion of task instances delegated to
+recruitment or effect assumptions change, the amendment is           AI in regime r, and let vr be the value of human review after
+recorded before unblinding confirmatory outcomes.                    the AI’s confidence and assumptions are observed. A selective
+   The boundary decision is conditional. **Automation** is           delegation policy chooses
+supported for a narrow task slice when AI meets the risk con-
+straint, remains calibrated on held-out data, and does not create            d∗r = arg max {Ur (d) − λLr (d) − γTr (d)},          (6)
+                                                                                       d∈[0,1]
+unacceptable shift loss. **Augmentation** is supported when
+hybrid utility or human learning improves without a harmful            where Ur is workflow utility, Lr is cost-weighted loss, Tr is
+increase in reliance. **Complementarity** is supported when          coordination time, and λ, γ are preregistered policy weights.
+Cr is positive, error dependence is sufficiently low, and the        The policy is not optimized after observing the test set. Its
+effect survives expertise and interface sensitivity checks. None     purpose is to show how the same AI can be useful at one
+of these states implies occupation-wide replacement.                 coverage level and harmful at another.
+
+                VIII. T HREATS TO VALIDITY                           B. Routine regime
+                                                                        Routine items have stable semantics, complete information,
+   The first threat is benchmark overfitting. Hidden generators,
+                                                                     and a known cost matrix. If AI performance exceeds human
+changed surface forms, new distributions, and an independent
+                                                                     performance with lower time and the risk constraint is met, a
+replication reduce it. The second is interface confounding:
+                                                                     narrow automation claim is defensible. Even here, monitoring
+a rationale may consume time or persuade independently of
+                                                                     and exception handling remain tasks. The relevant question
+truth. Time-matched text controls and answer-only conditions
+                                                                     is not whether a person presses a button for each item,
+estimate that effect. The third is automation bias: a confi-
+                                                                     but who maintains the data pipeline, checks model drift,
+dence number may become an authority signal. Miscalibrated-
+                                                                     updates the cost matrix, and handles cases outside the validated
+confidence and abstention controls measure this failure rather
+                                                                     distribution.
+than assuming it away.
+   The fourth threat is expertise selection. Volunteers may be       C. Distribution-shift regime
+unusually favorable or skeptical about AI. Stratified recruit-          Shifted items change feature frequencies, missingness, or
+ment, preregistered targets, and a follow-up sample from a           causal relationships. A model may preserve a high average
+different population provide robustness. The fifth is learning       score while becoming overconfident on a rare but costly
+contamination: participants may memorize item answers. New           slice. The benchmark evaluates calibration, selective risk, and
+generators and changed surface forms reduce memorization.            abstention at fixed coverage. A hybrid gain is meaningful if
+The sixth is ecological validity. Synthetic tasks provide causal     human review is directed toward cases for which the AI is
+control but cannot reproduce every organizational incentive,         uncertain or systematically wrong, rather than simply asking
+social relationship, or liability structure. The workflow bridge     the human to recheck every answer. If the AI cannot identify
+is therefore a sensitivity tool, not proof of labor-market impact.   its own shift, the workflow must reduce delegation coverage
+   The seventh threat is model drift. A model can change             or pause.
+after deployment, or an interface can cause users to explore a
+distribution not represented in the test. Versioned checkpoints,     D. Equivocal regime
+domain declarations, periodic recalibration, and an abstention          Equivocal items contain multiple plausible interpretations
+default are required. The eighth is selective reporting. All         or incomplete objectives. They are not merely noisy classi-
+task-family failures, missing trials, safety exclusions, and         fication problems. The participant can state an assumption
+human overrides are included. A result that survives only after      or request one fixed clarification. A system that produces a
+removing difficult cases is not a boundary map.                      confident label without identifying the missing objective may
+be fast but not intelligent in the relevant operational sense.     B. Model and interface versioning
+The benchmark credits information acquisition and objective
+                                                                      The AI checkpoint, prompt or policy, tokenizer, retrieval
+clarification, then measures whether the final choice changes
+                                                                   data, calibration transform, interface build, and task genera-
+for the correct reason. This is a direct test of the limitation
+                                                                   tor receive version identifiers. The audit record links every
+in the topic prompt without treating human intuition as an
+                                                                   decision to those identifiers. A future model update is a
+unmeasurable essence.
+                                                                   new experimental condition, not a silent continuation of the
+E. Task-bundle simulation                                          old result. Calibration is re-estimated on a time-separated
+   The workflow bridge converts item-level results into a          validation set, and deployment coverage is reduced whenever
+directed task graph. Nodes represent input acquisition, model      the measured error distribution changes.
+inference, human review, clarification, escalation, decision,         The release package includes raw item definitions, hidden
+monitoring, maintenance, and accountability. Edges carry ar-       labels under controlled access, response logs, code for the
+rival rates, latency, and error probabilities estimated from the   utility and calibration metrics, randomization seeds, and the
+benchmark. A discrete-event simulation varies review capacity      workflow simulator. Confirmatory scripts read a frozen man-
+and the rate at which new exception tasks appear. The output       ifest and fail if an unregistered task or outcome is added.
+includes throughput, tail loss, human time, AI coverage, and       Exclusions, missing trials, participant withdrawals, and tech-
+the share of tasks that remain human-controlled.                   nical failures are reported in the denominator. These controls
+   This translation exposes two opposite errors in public dis-     prevent a favorable boundary map from being produced by
+cussion. First, high AI accuracy on one node does not prove        selective deletion.
+that the workflow can be automated because upstream data and
+downstream accountability may dominate. Second, a hybrid           C. Independent replication
+can reduce total labor on a validated slice while creating more
+valuable verification or objective-setting work. Those newly          An independent team receives the frozen model interface
+created tasks are part of technological change, not evidence       and task specification but generates a new item bank. It
+that the human has been replaced in every sense.                   evaluates the primary contrasts, error dependence, and no-AI
+                                                                   transfer without access to the original participant-level results.
+F. Decision boundary visualization
+                                                                   Replication is required for a strong complementarity claim be-
+   The intended figure can be reconstructed from released          cause interface details and local training can produce spurious
+tables by plotting risk-constrained utility against AI coverage    team gains. A result that survives a second implementation,
+for each regime. The automation region is the portion in which     new task generator, and altered ordering is more credible, but
+AI-only utility meets the loss bound. The augmentation region      it remains conditional on the tested workflow.
+is where hybrid utility or learning exceeds the best individual
+without a reliance penalty. The complementarity region is
+                                                                   D. Sensitivity to cost and review capacity
+where Cr is positive and conditional error dependence is low.
+Regions are reported separately for expertise strata and cost         Utility depends on consequences. The paper therefore re-
+asymmetry; a single global boundary would conceal precisely        ports a grid of symmetric and asymmetric cost matrices and
+the heterogeneity the study is designed to reveal.                 varies review capacity in the workflow simulation. If the
+          XI. ROBUSTNESS AND R EPRODUCIBILITY                      recommended delegation policy changes under a modest cost
+                                                                   perturbation, the result is a sensitive boundary and should not
+A. Stress tests before deployment                                  be summarized as a robust replacement claim. If the policy
+   The evaluation includes four stress-test families. Sensor and   is stable across cost and review ranges, the automation or
+feature missingness test whether the system communicates           augmentation interpretation is stronger. The analysis never
+epistemic uncertainty. Temporal drift changes the frequency of     hides a rare severe error inside an average score.
+events and the cost of mistakes. Objective perturbations change
+which outcome is preferred while keeping the observations
+                                                                   E. Human capability as a state variable
+similar. Interface removal tests whether the human can still
+make a safe decision when confidence or rationale is unavail-         A workflow model usually treats human skill as fixed, but
+able. Each stress test is held out from training and labeled by    AI assistance can change it. U-COLLAB includes a state
+the type of uncertainty it introduces.                             variable for unaided human calibration and transfer. Repeated
+   The red team also tests persuasive failure. It presents a       exposure updates that state according to observed practice,
+wrong recommendation with high displayed confidence, a cor-        feedback, and time spent on exceptions. A policy that delegates
+rect recommendation with low confidence, and a plausible but       all easy items may improve current throughput but reduce
+unsupported rationale. The outcome is not merely acceptance        opportunities for human practice. Conversely, a policy that
+rate; it is the relationship between acceptance, confidence        assigns explanation and correction tasks may preserve learning
+calibration, and final loss. A safe system should make it          while still reducing search time. This dynamic is essential for
+possible to reject a persuasive wrong answer and should not        deciding whether a short-run augmentation effect is sustain-
+punish a human for asking for clarification.                       able.
+F. Interpretation checklist                                           B. Conditional augmentation
+   Before using the result to justify a deployment or a claim            An augmentation pattern would occur if the hybrid improves
+about replacement, investigators must answer six questions:           utility or throughput while preserving or improving unaided
+Was the task distribution declared? Did the AI meet the risk          human calibration and transfer. The result is stronger when
+constraint under held-out shift? Was confidence calibrated            novices receive useful practice and experts retain authority
+and acted upon? Were human and AI errors conditionally                over exceptions and goals. If immediate productivity increases
+complementary? Did unaided human ability improve or de-               while no-AI transfer declines, the result is a mixed pattern:
+cline? Which tasks remained or were created in the workflow?          short-run augmentation with a possible long-run deskilling
+A missing answer means the evidence supports at most a                cost. The deployment response would be training, practice
+narrower task claim.                                                  rotation, and explicit review rather than simply increasing AI
+   The protocol preserves human accountability for hybrid             coverage.
+decisions. Audit logs contain model version, data provenance,         C. Complementary team performance
+confidence, abstention, clarification requests, overrides, final
+decisions, and detected shift. The system displays its validated         A complementarity pattern requires more than a higher hy-
+domain and does not present an AI recommendation as an                brid average. The hybrid must resolve cases that are condition-
+authority. If shift loss, tail risk, or calibration failure exceeds   ally hard for either member, with low or explainable human-
+a preregistered limit, the workflow defaults to human review          AI error dependence. It must survive changes in interface,
+or pauses deployment.                                                 expertise, cost asymmetry, and item generator. If a hybrid
+                                                                      succeeds only because humans check every AI output, it may
+   The design forbids unreviewed high-stakes use. No medi-
+                                                                      be a costly review system rather than a scalable complement.
+cal, legal, employment, credit, immigration, or safety-critical
+                                                                      If it succeeds because calibrated abstention routes uncertain
+decision is made in an initial study. Human-subject data
+                                                                      cases to the right reviewer, the delegation policy itself is the
+are minimized, anonymized, and retained only as needed for
+                                                                      scientifically important result.
+the preregistered analysis. Researchers disclose the model,
+limitations, cost matrix, and likely failure modes. NIST AI           D. Uncertainty failure
+RMF provides a governance vocabulary for validity, reliability,
+                                                                         An uncertainty failure pattern would occur if AI remains
+transparency, explainability, privacy, fairness, and accountabil-
+                                                                      fast but becomes overconfident under shift, or if it confidently
+ity [8].
+                                                                      chooses one interpretation when the objective is equivocal.
+   The benchmark also treats the loss of human capability as          A confidence number that does not predict errors is not a
+a system risk. If a workflow obtains a short-term productivity        reliable control signal. A rationale that persuades participants
+gain while human workers lose the ability to detect errors, the       to accept wrong answers is a risk factor, even if the rationale
+system is not classified as successful augmentation. Training,        reads fluently. In this pattern, the workflow should reduce AI
+no-AI practice, review rotation, and escalation authority be-         coverage, require clarification or human review, and preserve
+come part of the deployment design. The organization must             an audit trail. The result would reveal a boundary of safe use,
+decide which objectives remain human-controlled, especially           not a general failure of artificial intelligence.
+when the objective is equivocal rather than merely uncertain.
+                                                                      E. Labor reallocation
+   XII. E XPECTED C ONTRIBUTIONS AND L IMITATIONS                        The workflow simulation may show that automation of one
+                                                                      node reduces the time spent on routine classification while
+            XIII. E XPECTED R ESULT PATTERNS
+                                                                      increasing demand for verification, escalation, objective selec-
+   Because this paper is a design-only protocol, the following        tion, monitoring, and maintenance. This is a task reallocation
+are prospective interpretation patterns rather than results. Their    result. Its magnitude depends on review capacity, arrival rates,
+purpose is to prevent a future analysis from treating every AI        model latency, and the creation of new tasks. The simulation
+advantage as evidence for replacement.                                should therefore report sensitivity bands instead of one point
+                                                                      forecast. An outcome in which the original task is automated
+A. Narrow automation                                                  but the workflow still requires human judgment is neither a
+                                                                      simple replacement nor a claim that AI has no economic effect.
+   A narrow automation pattern would occur if AI meets the
+risk constraint, remains calibrated on held-out routine items,        F. What would falsify the proposal
+and achieves higher utility per unit time with less review than          The proposed mechanism would be weakened if calibration
+human-only performance. This pattern justifies a limited task-        interfaces do not change delegation despite truthful confidence;
+scope claim. The validated data distribution, cost matrix, and        if assumption elicitation does not help on equivocal items;
+coverage must be specified. It does not justify deployment on         if hybrid performance is no better than the best individual
+shifted or equivocal items, and it does not show that a job           after time and risk costs; if human and AI errors are strongly
+bundle has disappeared. Monitoring, maintenance, exception            correlated across all regimes; or if all apparent learning gains
+handling, and accountability remain part of the workflow.             disappear in independent no-AI transfer. The study would
+also fail as a boundary map if results depend on a single           delegation interface AI changes the allocation of tasks and
+model version, visible test labels, or post hoc task exclusions.    the performance of human-AI teams. U-COLLAB addresses
+These are falsification conditions for the benchmark’s claims,      that question with matched human-only, AI-only, and hybrid
+not reasons to reinterpret an unfavorable outcome as hidden         conditions; calibration and abstention manipulations; equivo-
+intelligence.                                                       cality tasks; error-dependence analysis; repeated exposure; and
+                                                                    a workflow bridge.
+G. Reporting standard                                                  The responsible conclusion is conditional. AI speed can
+   Every future empirical paper using this design should            support narrow automation when risk and distribution are
+report the full task-regime vector, risk constraint, coverage,      controlled. Human-AI complementarity is plausible when er-
+calibration curves, error dependence, human overrides, no-          rors differ and humans retain authority to question objectives
+AI transfer, subgroup effects, and workflow assumptions. It         and assumptions. In uncertain or equivocal environments,
+should state which claims are task-level, workflow-level, or        calibrated abstention and clarification may be more valuable
+economic extrapolations. This reporting standard makes it           than an always-answer system. A future empirical run could
+possible to compare a new model with an older one without           refine these boundaries, but this design-only report makes
+confusing capability progress with safe replacement. It also        no observed claim and does not predict universal human
+makes negative evidence valuable: a reproducible failure under      replacement.
+equivocality can guide interface and training research.
+   U-COLLAB makes five contributions. First, it separates task                                  R EFERENCES
+automation from job replacement. Second, it distinguishes           [1] Stanford Institute for Human-Centered Artificial Intelligence, AI Index
+                                                                        Report 2025, Stanford University, 2025.
+distribution shift from equivocality, where clarification and       [2] E. Brynjolfsson, D. Li, and L. R. Raymond, “Generative AI at work,”
+objective selection matter. Third, it defines complementarity           Quarterly Journal of Economics, vol. 140, no. 2, pp. 889–942, 2025,
+through risk-constrained team utility and conditional error             doi: 10.1093/qje/qjae044.
+                                                                    [3] D. Acemoglu and P. Restrepo, “Automation and new tasks: How technol-
+dependence. Fourth, it measures the temporal effect of assis-           ogy displaces and reinstates labor,” Journal of Economic Perspectives,
+tance on learning, deskilling, and over-reliance. Fifth, it links       vol. 33, no. 2, pp. 3–30, 2019, doi: 10.1257/jep.33.2.3.
+results to a workflow task-bundle simulation and a governance       [4] D. Autor, “Why are there still so many jobs? The history and future of
+                                                                        workplace automation,” Journal of Economic Perspectives, vol. 29, no.
+protocol.                                                               3, pp. 3–30, 2015, doi: 10.1257/jep.29.3.3.
+   The possible outcomes are all informative. If AI wins only       [5] M. H. Jarrahi, “Artificial intelligence and the future of work: Human-AI
+on routine tasks, the result identifies a narrow automation             symbiosis in organizational decision making,” Business Horizons, vol.
+                                                                        61, no. 4, pp. 577–586, 2018, doi: 10.1016/j.bushor.2018.03.007.
+slice. If calibrated abstention improves shifted performance,       [6] R. Parasuraman and V. Riley, “Humans and automation: Use, misuse,
+uncertainty communication is a real intervention rather than            disuse, abuse,” Human Factors, vol. 39, no. 2, pp. 230–253, 1997, doi:
+a cosmetic feature. If assumption elicitation produces hybrid           10.1518/001872097778543886.
+                                                                    [7] E. Amershi et al., “Guidelines for human-AI interaction,” in Proceedings
+gains on equivocal cases, human value is partly located in              of the CHI Conference, 2019, doi: 10.1145/3290605.3300233.
+objective and context handling. If repeated assistance helps        [8] National Institute of Standards and Technology, Artificial Intelligence
+novices but harms no-AI transfer, augmentation has a learning           Risk Management Framework (AI RMF 1.0), NIST AI 100-1, 2023,
+                                                                        doi: 10.6028/NIST.AI.100-1.
+trade-off. If human and AI errors are correlated, deploying
+both may create false redundancy.
+   The protocol cannot forecast all occupations or all future
+systems. Human intuition is operationalized as calibrated
+uncertainty handling, information acquisition, and goal clar-
+ification; this may omit tacit knowledge that is difficult to
+encode. Calibration is distribution-specific. A good interface
+may fail under different incentives, liability rules, or privacy
+constraints. The proposed sample and task generators are
+planning choices, not empirical facts.
+   The largest conceptual limit is that replacement is not a
+scalar property of AI. It is an emergent outcome of technology,
+task design, institutions, skill formation, wages, and newly
+created work. The benchmark can identify functional and
+workflow boundaries under specified assumptions. It cannot
+prove that humans as a class will or will not be replaced.
+                     XIV. C ONCLUSION
+   Artificial intelligence will likely automate some tasks and
+augment some workers, but the evidence does not support a
+universal binary forecast. The scientifically useful question
+is where, under what uncertainty regime, and with which
+

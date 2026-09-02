@@ -1,0 +1,163 @@
+\section{Research Design: Resolution-Aware Arrow Attribution}
+
+\subsection{Design objective and status}
+
+The ExperimentDesign Agent converts the selected idea into a computational design, not an executed study. Its unit of analysis is a finite trajectory ensemble paired with a fully declared model card. A model card records the generator family, state variables, system boundary, bath or environment assumptions, initial distribution, driving protocol, observation map, sampling resolution, reversal convention, permitted entropy ledger, and status of every trajectory. The only allowed trajectory status in this proposal is \texttt{SYNTHETIC\_PLANNED}; no generated sample, fitted parameter, or score is reported as an observed result.
+
+The design has two complementary objectives. The first is methodological: determine when a time-asymmetry statistic is interpretable as evidence of nonequilibrium dissipation. The second is explanatory: state exactly what remains outside that interpretation, including record formation, descriptive coarse graining, and the cosmological boundary condition. The design is ambitious because it connects classical, quantum, and cosmological language, but it is disciplined because it tests only the interfaces that have explicit generators and decision rules.
+
+\subsection{Generator families and negative controls}
+
+Table~\ref{tab:families} defines five planned generator families. E0 is a stationary detailed-balance process. It is the critical negative control: under a symmetric observation map and a correctly matched reversal, it should not support persistent physical dissipation. E1 is a driven ring network or chemostatted chemical-reaction network with a known affinity. Reaction-network thermodynamics provides a useful benchmark because its steady-state and transient contributions can be stated separately \cite{rao_esposito2016}. E2 hides or aggregates selected E1 states, exposing the difference between complete and partial observation. E3 uses a declared open-quantum dephasing or amplitude-damping model to test the system-environment and measurement-basis dependence of quantum arrow metrics. E4 is not a cosmological simulation campaign; it is a low-dimensional toy ledger whose sole purpose is to prevent a gravitational-entropy boundary parameter from being silently reclassified as an observed trajectory property.
+
+\begin{table*}[!t]
+\caption{Planned RAAT generator families and falsification controls. No family is executed by this proposal.}
+\label{tab:families}
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{p{0.11\textwidth}p{0.21\textwidth}Y Y}
+\toprule
+\textbf{ID} & \textbf{Role} & \textbf{Declared latent truth} & \textbf{Required falsification control}\\
+\midrule
+E0 & Detailed-balance negative control & Stationary zero steady-state entropy production. & Symmetric sampling and reversal; an apparent arrow indicates estimation or protocol failure.\\
+E1 & Driven stochastic positive control & Nonzero affinity and an independently computed entropy ledger. & Reverse the protocol and perturb rates, temperature, and initial distribution.\\
+E2 & Partial-observation stress test & Same underlying driven generator as E1, with hidden or merged states. & Compare each observation map with the complete-state reference; never equate them by fiat.\\
+E3 & Open-quantum bridge & Declared channel, basis, bath, and system-environment split. & Vary the measurement basis and environment model; reject an interpretation that is partition dependent without disclosure.\\
+E4 & Cosmological toy comparator & Explicit low-gravitational-entropy proxy and boundary ledger only. & Disallow claims about measured early-universe entropy or a unique gravity entropy.\\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+The design does not assume that every family produces the same kind of entropy. Instead it asks whether the operational conclusion remains stable after the correct domain-specific conditions are supplied. For E0--E2, the rate ledger in Eq.~\eqref{eq:entropy_rate} is available when transition rates and a suitable stochastic thermodynamic description are declared. For E3, an open-system entropy balance must be reviewed under the chosen channel and measurement assumptions \cite{strasberg_winter2021,landi2021}. For E4, the only valid conclusion concerns the logical role of a boundary parameter in a toy model.
+
+\subsection{Resolution ladder and estimands}
+
+Let a latent trajectory be $z_{0:T}$, and let the reported trajectory at resolution $r$ be
+\begin{equation}
+x^{(r)}_{0:T}=\mathcal{O}_{r}(z_{0:T})+\varepsilon_r,
+\label{eq:observation_map}
+\end{equation}
+where $\mathcal{O}_{r}$ encodes state aggregation and sampling, and $\varepsilon_r$ encodes a declared observation-noise model. The ladder changes one documented aspect of description at a time: sampling interval, state aggregation, accessible variable set, or measurement precision. It may reduce the recoverable entropy-production information. It may not be used to tune the answer after inspecting an outcome.
+
+For $N$ trajectories at resolution $r$, the planned mean directional score is
+\begin{equation}
+\overline{\mathcal{A}}_r=\frac{1}{N}\sum_{n=1}^{N}\log\frac{p_{\theta}(x^{(n,r)}_{0:T}\mid\Pi,\mathcal{O}_r)}{p_{\theta}(\tilde{x}^{(n,r)}_{0:T}\mid\Pi^{\mathrm{R}},\mathcal{O}_r)}.
+\label{eq:mean_asymmetry}
+\end{equation}
+The comparison of Eq.~\eqref{eq:mean_asymmetry} with Eq.~\eqref{eq:entropy_rate} is a consistency test, not an identity imposed by software. The design records an attribution discrepancy
+\begin{equation}
+D_r=\left|\overline{\mathcal{A}}_r-\widehat{\Sigma}_{r,\mathrm{ledger}}\right|,
+\label{eq:discrepancy}
+\end{equation}
+where $\widehat{\Sigma}_{r,\mathrm{ledger}}$ is defined only for a permitted ledger at the stated resolution. In a hidden-state condition, the complete-model ledger and the partial-observation estimator are stored separately. This prevents an attractive but false conclusion that a lower-resolution value has directly measured every unobserved contribution.
+
+Where an applicable fluctuation relation is available, the proposed residual is
+\begin{equation}
+R_r(s)=\log\frac{P_r(s)}{P_r(-s)}-s,
+\label{eq:fluctuation_residual}
+\end{equation}
+with $s$ the predeclared entropy-like trajectory statistic and $P_r$ its resolution-specific distribution. Equation~\eqref{eq:fluctuation_residual} is diagnostic only under its theorem's conditions. It is not applied to a cosmological toy proxy or to an arbitrary series merely because the series appears irreversible. Carberry et al. motivate the value of transient fluctuation-theorem tests in a controlled colloidal setting \cite{carberry2004}; \RAAT\ transfers the logic of matched controls, not an unearned claim of experimental replication.
+
+\subsection{Inference protocol and decision contract}
+
+Each planned condition has a training and held-out trajectory partition, a fixed candidate-model set, and a nuisance suite. The proposed likelihood is
+\begin{equation}
+\mathcal{L}(\theta,\eta)=\prod_{n=1}^{N}p_{\theta,\eta}\left(x^{(n)}_{0:T}\mid\Pi,\mathcal{O}_{r}\right)\prod_{k}\pi_k(\eta_k),
+\label{eq:likelihood}
+\end{equation}
+where $\eta$ contains nuisance parameters such as observation noise, hidden-state fraction, protocol-time offset, or temperature mismatch, and $\pi_k$ are their declared constraints. Candidate explanations are compared by held-out predictive support, the stability of $\overline{\mathcal{A}}_r$, the discrepancy in Eq.~\eqref{eq:discrepancy}, the residual in Eq.~\eqref{eq:fluctuation_residual}, and whether a nuisance configuration reproduces the apparent direction.
+
+The key output is a conditional classification rather than a single dramatic number. A condition receives \texttt{DISSIPATIVE\_SUPPORT} only if all four requirements are met: (i) the sign and size of the relevant score are stable across a prespecified valid segment of the resolution ladder; (ii) the score is compatible with the independently declared entropy ledger; (iii) a protocol-symmetric reversal does not remove the conclusion; and (iv) the nearest artifact model loses predictive support on held-out trajectories. It receives \texttt{DESCRIPTIVE\_ASYMMETRY\_ONLY} when a record or coarse variable is directionally predictive but complete physical attribution cannot be established. It receives \texttt{NON\_IDENTIFIABLE} when competing mechanisms are observationally equivalent. It receives \texttt{MODEL\_INVALID} when the system boundary, reversal map, or relevant theorem conditions cannot be justified.
+
+\section{Planned Evaluation and Expected Outcome Branches}
+
+\subsection{Predeclared analyses}
+
+For every family, the planned analysis uses paired bootstrap intervals over trajectories, with generator-level and observation-level perturbations retained as distinct uncertainty sources. The design reports the entire resolution profile rather than a selected best resolution. A calibration phase uses E0 and E1 to check that the implementation of time reversal, protocol reversal, and entropy accounting has the expected logical behavior. It does not use calibration to claim a physical discovery. The E2 family then asks whether an apparent arrow is reduced, distorted, or non-identifiable after hidden variables are introduced. E3 tests whether a conclusion is robust to an explicitly changed measurement basis or environment partition. E4 exposes where a cosmological analogy requires an initial-condition input instead of a measured dissipative trajectory.
+
+The primary comparison is not ``forward score greater than zero.'' It is a four-way contrast between a detailed-balance explanation, a driven-dissipative explanation, a partial-observation explanation, and a protocol or measurement artifact explanation. The analysis logs which assumptions distinguish these candidates. This is important because time-arrow discourse often grants an interpretation to a statistic before the statistic's alternative generative stories have been tested.
+
+\begin{table}[!t]
+\caption{Conditional conclusion branches specified before execution.}
+\label{tab:branches}
+\centering
+\footnotesize
+\begin{tabularx}{\columnwidth}{p{0.27\columnwidth}Y}
+\toprule
+\textbf{Planned pattern} & \textbf{Permitted conclusion}\\
+\midrule
+Stable score, ledger agreement, reversal control, and held-out discrimination & Support for dissipative attribution in the declared model and resolution range.\\
+Stable directional records but incomplete ledger or unresolved hidden states & Descriptive asymmetry is supported; physical dissipation is not fully attributed.\\
+Similar predictive support for driven and artifact models & Mechanism is non-identifiable from the available variables.\\
+Failure of symmetry, local detailed balance, or reversal assumptions & Model invalid for the intended thermodynamic conclusion.\\
+Toy boundary parameter required to orient a cosmological history & Boundary-condition dependence is exposed; no empirical measurement of the early universe follows.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{What a successful result would and would not establish}
+
+If the planned benchmark finds an admissible regime of \texttt{DISSIPATIVE\_SUPPORT}, the correct conclusion is narrow but valuable: in that model family, at that observation resolution, and under that reversal convention, the data pattern is better explained by the declared nonequilibrium entropy-production mechanism than by the tested alternatives. This would support a scientific link between macroscopic irreversibility and trajectory-level asymmetry. It would not show that time itself is generated by entropy, establish a universal entropy function for gravity, or prove why the universe began in a special state.
+
+Conversely, a \texttt{DESCRIPTIVE\_ASYMMETRY\_ONLY} outcome is not a failure. It would quantify how record-bearing and coarse descriptions can carry a useful temporal orientation while not licensing complete thermodynamic attribution. A \texttt{NON\_IDENTIFIABLE} outcome is also informative: it identifies what new variables, observation precision, or theoretical structure would be needed. These branches avoid the common practice of interpreting a null or ambiguous result as evidence for a preferred philosophical narrative.
+
+\subsection{Relation to cosmological claims}
+
+The benchmark's cosmology module is deliberately asymmetrical in ambition. It can test bookkeeping questions: whether a toy history has a stated low-entropy boundary, whether a proposed coarse-grained entropy proxy rises under selected dynamics, and whether a conclusion depends on the proxy. It cannot decide the origin of the boundary condition. Gravitational entropy remains an active theoretical topic, and an operational measure suitable for a black hole or a perturbed cosmological geometry does not automatically yield a universal answer \cite{clifton_ellis_tavakol2013}. This is not a defect of the design; it is the point of the boundary ledger. It tells the reader where a thermodynamic explanation ends and where a cosmological assumption begins.
+
+\input{report_expansion.tex}
+
+\section{Risks, Limitations, and Human Review}
+
+The largest technical risk is overinterpreting a coarse-grained trajectory statistic. Hidden variables can reduce or distort apparent entropy production, and nonstationary preparation can create directional signatures even when the intended stationary analysis is inapplicable. The design mitigates this by storing observation maps, using E0 and E2 controls, and allowing \texttt{MODEL\_INVALID} rather than forcing a scalar result into a physical interpretation. A second risk is treating a theorem as portable across all settings. The fluctuation residual in Eq.~\eqref{eq:fluctuation_residual} is evaluated only when its assumptions have been independently checked.
+
+The quantum bridge introduces an additional partition risk. The definition of heat, work, and entropy can depend on the chosen system-environment split, basis, and measurement protocol. The design therefore requires an open-quantum-systems review before any E3 outcome is interpreted. The cosmological comparison carries a stronger limitation: it cannot reproduce the early universe or settle a unique gravitational entropy. A cosmologist must review the E4 proxy, its relationship to the Weyl-curvature or other gravitational-entropy ideas, and every sentence that connects a toy result to cosmology.
+
+Finally, reproducibility is a scientific requirement, not merely a software preference. Every planned run must retain generator source, parameter card, seed policy, observation map, protocol, inference code version, and decision thresholds. Synthetic records must remain labeled as synthetic. This design does not authorize automatic experimental control, does not operate a physical device, and does not assert a result before those artifacts exist and are reviewed.
+
+\appendices
+\section{Evidence Coverage and Direction Selection Audit}
+
+The Survey Agent constrained the proposal to twelve registered sources. Cross-validated entries establish the main formal and review background: stochastic thermodynamics and fluctuation theorems \cite{seifert2012}, thermodynamic inference under partial observation \cite{seifert2018}, quantum-to-classical entropy-production perspectives \cite{landi2021}, and experimental context \cite{ciliberto2017}. Gell-Mann and Hartle support the treatment of coarse graining and quasiclassical descriptions \cite{gellmann_hartle2007}; Zurek supports the separate accounting of records and decoherence \cite{zurek1993}. Clifton, Ellis, and Tavakol anchor the gravitational-entropy discussion \cite{clifton_ellis_tavakol2013}.
+
+Three registry entries were discovered through OpenAlex but await publisher-page verification because the user-requested in-app browser could not start in the Windows ACL sandbox: the fluctuation analysis of cosmological lower-entropy histories \cite{aguirre_carroll_johnson2012}, the open-quantum first- and second-law framework \cite{strasberg_winter2021}, and the colloidal fluctuation-theorem demonstration \cite{carberry2004}. Rovelli's coarse-graining perspective \cite{rovelli2017} is likewise retained as a registered alternative rather than used as an unsupported assertion. These verification statuses are recorded in the Survey manifest; they do not turn metadata discovery into source-page validation.
+
+The simulated Idea Agent initially considered a monolithic entropy dashboard. It rejected that route because it would conflate G1 operational attribution, G2 partial observation, G3 records, and G4 cosmological boundary conditions. It selected \RAAT\ after requiring a common model card, a resolution ladder, competing generative models, and explicit falsifiers. The ExperimentDesign Agent then enforced a computational \texttt{DESIGN\_ONLY} policy, an empty observed-result set, and human review for stochastic, quantum, and cosmological interpretations.
+
+\section{Symbols and Operational Definitions}
+
+\begin{table}[!t]
+\caption{Symbols used in the proposed inference protocol.}
+\label{tab:symbols}
+\centering
+\footnotesize
+\begin{tabularx}{\columnwidth}{p{0.22\columnwidth}Y}
+\toprule
+\textbf{Symbol} & \textbf{Definition}\\
+\midrule
+$x_{0:T}$ and $\tilde{x}_{0:T}$ & Observed trajectory and declared time-reversed trajectory.\\
+$z_{0:T}$ & Latent trajectory before observation or aggregation.\\
+$\theta$ and $\eta$ & Generator parameters and nuisance parameters.\\
+$\Pi$ and $\Pi^{\mathrm{R}}$ & Forward and explicitly matched reverse protocols.\\
+$\mathcal{O}_{r}$ & Observation map at resolution level $r$.\\
+$\mathcal{A}$ & Forward--reverse path likelihood asymmetry.\\
+$\dot S_{\mathrm{tot}}$ & Model-specific total entropy-production rate.\\
+$R_r(s)$ & Applicable fluctuation-relation residual.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{thebibliography}{00}
+\bibitem{seifert2012} U. Seifert, ``Stochastic thermodynamics, fluctuation theorems and molecular machines,'' \emph{Reports on Progress in Physics}, vol. 75, no. 12, 2012, doi: 10.1088/0034-4885/75/12/126001.
+\bibitem{seifert2018} U. Seifert, ``From stochastic thermodynamics to thermodynamic inference,'' \emph{Annual Review of Condensed Matter Physics}, vol. 10, pp. 171--192, 2018, doi: 10.1146/annurev-conmatphys-031218-013554.
+\bibitem{landi2021} G. T. Landi and M. Paternostro, ``Irreversible entropy production: From classical to quantum,'' \emph{Reviews of Modern Physics}, vol. 93, no. 3, 2021, doi: 10.1103/RevModPhys.93.035008.
+\bibitem{ciliberto2017} S. Ciliberto, ``Experiments in stochastic thermodynamics: Short history and perspectives,'' \emph{Physical Review X}, vol. 7, no. 2, 2017, doi: 10.1103/PhysRevX.7.021051.
+\bibitem{gellmann_hartle2007} M. Gell-Mann and J. B. Hartle, ``Quasiclassical coarse graining and thermodynamic entropy,'' \emph{Physical Review A}, vol. 76, no. 2, 2007, doi: 10.1103/PhysRevA.76.022104.
+\bibitem{zurek1993} W. H. Zurek, ``Preferred states, predictability, classicality and the environment-induced decoherence,'' \emph{Progress of Theoretical Physics}, vol. 89, no. 2, pp. 281--312, 1993, doi: 10.1143/PTP.89.2.281.
+\bibitem{clifton_ellis_tavakol2013} T. Clifton, G. F. R. Ellis, and R. Tavakol, ``A gravitational entropy proposal,'' \emph{Classical and Quantum Gravity}, vol. 30, no. 12, 2013, doi: 10.1088/0264-9381/30/12/125009.
+\bibitem{aguirre_carroll_johnson2012} A. Aguirre, S. M. Carroll, and M. C. Johnson, ``Out of equilibrium: Understanding cosmological evolution to lower-entropy states,'' \emph{Journal of Cosmology and Astroparticle Physics}, vol. 2012, no. 2, 2012, doi: 10.1088/1475-7516/2012/02/024.
+\bibitem{strasberg_winter2021} P. Strasberg and A. Winter, ``First and second law of quantum thermodynamics: A consistent derivation based on a microscopic definition of entropy,'' \emph{PRX Quantum}, vol. 2, no. 3, 2021, doi: 10.1103/PRXQuantum.2.030202.
+\bibitem{carberry2004} D. M. Carberry \emph{et al.}, ``Fluctuations and irreversibility: An experimental demonstration of a second-law-like theorem using a colloidal particle held in an optical trap,'' \emph{Physical Review Letters}, vol. 92, no. 14, 2004, doi: 10.1103/PhysRevLett.92.140601.
+\bibitem{rovelli2017} C. Rovelli, ``Is time's arrow perspectival?'' in \emph{The Philosophy of Cosmology}, 2017, pp. 285--296, doi: 10.1017/9781316535783.015.
+\bibitem{rao_esposito2016} R. Rao and M. Esposito, ``Nonequilibrium thermodynamics of chemical reaction networks: Wisdom from stochastic thermodynamics,'' \emph{Physical Review X}, vol. 6, no. 4, 2016, doi: 10.1103/PhysRevX.6.041064.
+\end{thebibliography}

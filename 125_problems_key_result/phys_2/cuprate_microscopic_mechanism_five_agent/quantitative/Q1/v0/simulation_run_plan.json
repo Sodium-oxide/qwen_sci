@@ -1,0 +1,12 @@
+{
+  "schema_version": "simulation_run_plan_v1_manual",
+  "plan_identity": "q1-v0-reduced-kernel-fixed-grid-20260903",
+  "model_identity": "q1-v0-reduced-kernel-model-20260903",
+  "parameter_set_identity": "q1-v0-all-model-assumptions-20260903",
+  "execution_mode": "NUMERICAL_SIMULATION",
+  "result_kind": "SIMULATED",
+  "empirical_claim_status": "NOT_EMPIRICAL",
+  "authorization_policy": "Closed-loop authorization was explicitly assumed by the user for this manual simulation.",
+  "scenarios": ["H0 spin-only", "H1 spin-times-coherence"],
+  "qualification_requirements": ["finite_outputs", "fixed_grid_complete", "same_parameter_set"]
+}

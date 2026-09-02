@@ -1,0 +1,19 @@
+{
+  "schema_version": "survey_idea_handoff_v1",
+  "project_id": "phys_11_particle_speed",
+  "survey_run_id": "survey-phys11-001",
+  "research_object": "Ultra-relativistic charged-particle acceleration architectures",
+  "validated_constraints": [
+    "Massive particles remain subluminal in standard special relativity.",
+    "Near-c speed is not a meaningful stand-alone high-energy performance target.",
+    "Circular, linear, plasma, strong-field, and astrophysical contexts require different constraint assumptions."
+  ],
+  "eligible_gap_ids": ["GAP-EVSL-001", "GAP-CROSSPLATFORM-002"],
+  "required_invariants": [
+    "Do not state or imply that a massive particle reaches or exceeds c.",
+    "Do not convert a future design projection into an observed result.",
+    "Treat every proposed numerical threshold as a sensitivity-tested input, not a discovery.",
+    "Maintain DESIGN_ONLY boundary downstream."
+  ],
+  "recommended_problem_reframing": "When a massive particle is already ultra-relativistic, which energy, rigidity, loss, power, beam-quality, and protection constraint actually determines the credible frontier of each accelerator architecture?"
+}

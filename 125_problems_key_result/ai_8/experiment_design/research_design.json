@@ -1,0 +1,22 @@
+{
+  "stage": "ExperimentDesign",
+  "status": "COMPLETED",
+  "benchmark": "Q-BRAIN-IMITATION-BENCHMARK",
+  "artifact_status": "DESIGN_ONLY",
+  "target_scales": ["recorded_neural_population", "spiking_microcircuit_simulator", "closed_loop_neural_style_agent"],
+  "conditions": {
+    "C0": "classical recurrent baseline",
+    "C1": "spiking neural network baseline",
+    "Q0": "ideal quantum kernel or variational circuit",
+    "Q1": "ideal hybrid quantum-classical recurrent model",
+    "Q2": "noisy finite-shot hardware-aware hybrid model",
+    "A1": "entanglement ablation",
+    "A2": "matched classical feature-map surrogate",
+    "A3": "shuffled quantum encoding ablation"
+  },
+  "metrics": ["signal_fidelity", "dynamical_fidelity", "behavioral_fidelity", "learning_fidelity", "held_out_transfer", "qubits", "depth", "entangling_gates", "shots", "latency", "energy_metadata"],
+  "planned_contrasts": ["Q1_vs_C0", "Q1_vs_C1", "Q1_vs_A1", "Q1_vs_A2", "Q1_vs_Q2"],
+  "analysis": "Hierarchical models with blocked randomization, preregistered thresholds, effect sizes, and uncertainty intervals",
+  "safety": ["offline_or_sandbox_only", "deidentified_neural_data", "no_clinical_claims", "no_consciousness_inference", "provenance_and_error_logs"],
+  "result_policy": "Do not fabricate empirical results; report only after execution."
+}

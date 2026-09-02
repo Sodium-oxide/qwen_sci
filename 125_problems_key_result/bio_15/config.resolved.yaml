@@ -1,0 +1,26 @@
+project_id: bio_15
+topic: "Will the world's population keep growing indefinitely?"
+language: en
+declared_domain:
+  - demography
+  - population forecasting
+  - statistical modeling
+  - climate-risk assessment
+workflow:
+  - Survey
+  - Idea
+  - ExperimentDesign
+  - Author
+research_boundary: DESIGN_ONLY
+document:
+  template: Conference-LaTeX-template_10-17-19
+  class: IEEEtran
+  engine: pdflatex
+  minimum_pages: 7
+  output_pdf: world_population_peak_persistence_proposal.pdf
+source_discovery:
+  engines: [OpenAlex, AnySearch Academic]
+  result: connection_refused_recorded_not_fabricated
+verification_strategy:
+  development: targeted JSON and TeX checks
+  final: PDF compilation, PDF page count, PDF text inspection, rendered-page visual inspection, artifact-hash manifest

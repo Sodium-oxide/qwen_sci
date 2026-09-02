@@ -1,0 +1,854 @@
+{
+  "analysis_plan": {
+    "batch_effects": {
+      "reason": "Batch effects are not applicable to a purely formal claim."
+    },
+    "blinding": {
+      "reason": "Blinding is not applicable to a purely formal claim."
+    },
+    "missing_data": {
+      "reason": "Missing data are not applicable to a purely formal claim."
+    },
+    "randomization": {
+      "reason": "Randomization is not applicable to a purely formal claim."
+    },
+    "repetitions": {
+      "reason": "Formal claims require independent proof or verification review rather than repeats."
+    },
+    "statistical_analysis": {
+      "reason": "Use proof obligations, counterexamples, and stated numerical verification rather than statistical analysis."
+    }
+  },
+  "comparison_and_robustness": {
+    "ablation_sensitivity_robustness": [],
+    "baselines": [],
+    "comparisons": [],
+    "controls": [],
+    "groups": []
+  },
+  "counterexample_analysis": {
+    "applicability": "formal_theory",
+    "candidate_counterexamples": [],
+    "exhaustiveness": {
+      "is_exhaustive": false,
+      "reason": "No counterexample search was run.",
+      "scope": "No search domain was accepted after the upstream formal reasoning batch was discarded."
+    },
+    "limitations": [
+      "Counterexample analysis was not run; no conclusion about counterexamples may be drawn."
+    ],
+    "negated_conclusion": "",
+    "schema_version": "counterexample_analysis_v1",
+    "search_domain": "",
+    "status": "requires_human_review",
+    "target_claim_id": "",
+    "unknown_items": [
+      {
+        "field_path": "counterexample_analysis",
+        "reason": "Counterexample analysis was not run because its formal reasoning input was discarded; a qualified human must define the target claim and search domain.",
+        "status": "needs_human_input"
+      }
+    ]
+  },
+  "data_governance_and_reproducibility": {
+    "data_management": {
+      "reason": "Confirm data, artifact, privacy, retention, and access requirements."
+    },
+    "reproducibility": {
+      "reason": "Document versioning, provenance, and independent reproduction expectations."
+    }
+  },
+  "design_id": "design-astr_16",
+  "evidence_bundle": {
+    "brief_id": "astr_16",
+    "coverage": {
+      "covered_slots": [],
+      "required_slots": [
+        "mechanism",
+        "research_object_measurability",
+        "study_design",
+        "comparison_controls",
+        "measurement_calibration",
+        "statistics_bias",
+        "boundary_conditions",
+        "risk_ethics_reproducibility"
+      ],
+      "uncovered_slots": [
+        "mechanism",
+        "research_object_measurability",
+        "study_design",
+        "comparison_controls",
+        "measurement_calibration",
+        "statistics_bias",
+        "boundary_conditions",
+        "risk_ethics_reproducibility"
+      ]
+    },
+    "evidence_cards": [],
+    "field_evidence_ledger": [
+      {
+        "card_ids": [],
+        "field_path": "hypothesis_mapping",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "abstract",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      },
+      {
+        "card_ids": [],
+        "field_path": "variables_and_operationalization",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "abstract",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      },
+      {
+        "card_ids": [],
+        "field_path": "research_design",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      },
+      {
+        "card_ids": [],
+        "field_path": "sampling_and_eligibility",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      },
+      {
+        "card_ids": [],
+        "field_path": "measurement_and_calibration",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      },
+      {
+        "card_ids": [],
+        "field_path": "comparison_and_robustness",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      },
+      {
+        "card_ids": [],
+        "field_path": "analysis_plan",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      },
+      {
+        "card_ids": [],
+        "field_path": "data_governance_and_reproducibility",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      }
+    ],
+    "keynotes": [],
+    "paper_registry": [],
+    "retrieval_audit": {
+      "card_extraction_failures": [],
+      "card_extraction_warnings": [],
+      "collection_policy": "openalex_primary_semantic_scholar_fallback_only_when_openalex_unavailable",
+      "failed_card_extraction_paper_count": 0,
+      "failed_card_extraction_paper_ids": [],
+      "fulltext_acquisition_by_paper": {},
+      "paper_screening": {
+        "discovered_unique_paper_count": 0,
+        "eligible_for_fulltext_count": 0,
+        "fulltext_budget": 15,
+        "omitted_before_screening_count": 0,
+        "omitted_before_screening_paper_ids": [],
+        "pre_screen_selected_by_slot": {},
+        "requested_slots": [
+          "mechanism",
+          "research_object_measurability",
+          "study_design",
+          "comparison_controls",
+          "measurement_calibration",
+          "statistics_bias",
+          "boundary_conditions",
+          "risk_ethics_reproducibility"
+        ],
+        "schema_version": "experiment_design_paper_screening_audit_v1",
+        "screened_paper_count": 0,
+        "screening_candidate_budget": 32,
+        "screening_policy": "bounded_candidate_set_before_required_json_llm_screening",
+        "screens_by_paper": {},
+        "selected_by_slot": {},
+        "selected_paper_ids": []
+      },
+      "provider_runs": [
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ1.core"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ1.core"
+        },
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ1.design_method"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ1.design_method"
+        },
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ2.core"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ2.core"
+        },
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ2.design_method"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ2.design_method"
+        },
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ3.core"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ3.core"
+        },
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ3.design_method"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ3.design_method"
+        },
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ4.core"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ4.core"
+        },
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ4.design_method"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ4.design_method"
+        },
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ5.core"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ5.core"
+        },
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ5.design_method"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ5.design_method"
+        },
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ6.core"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ6.core"
+        },
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ6.design_method"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ6.design_method"
+        },
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ7.core"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ7.core"
+        },
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ7.design_method"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ7.design_method"
+        },
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ8.core"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ8.core"
+        },
+        {
+          "detail": "OpenAlex request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ8.design_method"
+        },
+        {
+          "detail": "Semantic Scholar request failed",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "semantic_scholar",
+          "status": "UNAVAILABLE",
+          "task_id": "EDQ8.design_method"
+        }
+      ]
+    },
+    "schema_version": "evidence_bundle_v1"
+  },
+  "evidence_status": "DESIGNED_NOT_EXECUTED",
+  "execution_policy": {
+    "allow_digital_execution": false,
+    "mode": "DESIGN_ONLY",
+    "reason": "ExperimentDesign v1 is design-only and does not delegate work to a digital or physical executor."
+  },
+  "field_statuses": {
+    "analysis_plan": "needs_human_input",
+    "analysis_plan.batch_effects": "not_applicable",
+    "analysis_plan.blinding": "not_applicable",
+    "analysis_plan.missing_data": "not_applicable",
+    "analysis_plan.randomization": "not_applicable",
+    "analysis_plan.repetitions": "not_applicable",
+    "analysis_plan.statistical_analysis": "not_applicable",
+    "comparison_and_robustness": "needs_human_input",
+    "data_governance_and_reproducibility": "needs_human_input",
+    "data_governance_and_reproducibility.data_management": "needs_human_input",
+    "data_governance_and_reproducibility.reproducibility": "needs_human_input",
+    "degraded_stages.counterexample_analyzer": "needs_human_input",
+    "degraded_stages.formal_reasoning_planner": "needs_human_input",
+    "degraded_stages.template_composer": "needs_human_input",
+    "degraded_stages.variable_claim_extraction": "needs_human_input",
+    "hypothesis_mapping": "user_declared",
+    "measurement_and_calibration": "needs_human_input",
+    "measurement_and_calibration.calibration": "not_applicable",
+    "measurement_and_calibration.measurement_plan": "needs_human_input",
+    "measurement_and_calibration.quality_control": "needs_human_input",
+    "research_design": "design_assumption",
+    "sampling_and_eligibility": "needs_human_input",
+    "sampling_and_eligibility.eligibility_criteria": "not_applicable",
+    "sampling_and_eligibility.sample_size_or_power_basis": "not_applicable",
+    "sampling_and_eligibility.source": "not_applicable",
+    "template_details.assumptions": "needs_human_input",
+    "template_details.counterexample_or_boundary_analysis": "needs_human_input",
+    "template_details.formal_claim": "needs_human_input",
+    "template_details.verification_plan": "needs_human_input",
+    "variables_and_operationalization": "needs_human_input"
+  },
+  "formal_reasoning_plan": {
+    "applicability": "formal_theory",
+    "assumptions": [],
+    "definitions": [],
+    "forward_derivation": {
+      "final_conclusion": "",
+      "final_conclusion_step": "",
+      "status": "unresolved",
+      "steps": [],
+      "target_proposition_id": ""
+    },
+    "proof_obligations": [],
+    "propositions": [],
+    "schema_version": "formal_reasoning_plan_v1",
+    "status": "requires_human_review",
+    "unknown_items": [
+      {
+        "field_path": "formal_reasoning_plan",
+        "reason": "Formal reasoning was not run because the variable and claim extraction batch was discarded; a qualified human must supply the formalization.",
+        "status": "needs_human_input"
+      }
+    ]
+  },
+  "hypothesis_mapping": [
+    {
+      "claim": "Under the assumptions of causal equation of state bounds, relaxing the static equilibrium axioms of the dense matter equation of state to incorporate the rotational support from binary mass accretion formally unifies isolated spin-down and binary evolution, predicting a distinct mass-spin relation for massive neutron stars that exceed the static TOV limit.",
+      "decision_rule": "Define a preregistered or documented decision rule after confirming the outcome definition, comparisons, and analysis plan.",
+      "hypothesis_id": "H1",
+      "observables": [
+        "The derived mechanism_mass_spin_relation predicts that massive neutron stars (>2.0 M_sun) must exhibit millisecond spin periods indicative of the rotational support required by the relaxed axioms, distinguishing them from isolated magnetic-dipole spin-down pulsars."
+      ]
+    }
+  ],
+  "measurement_and_calibration": {
+    "calibration": {
+      "reason": "Calibration is not applicable to a purely formal claim."
+    },
+    "instruments": [],
+    "measurement_plan": {
+      "reason": "Specify a measurement or verification plan supported by the appropriate evidence."
+    },
+    "quality_control": {
+      "reason": "Define quality-control or proof-checking requirements before execution."
+    }
+  },
+  "observed_results": [],
+  "open_design_questions": [
+    "Confirm each field currently marked needs_human_input before treating this design as ready for execution.",
+    "Use traceable full-text evidence or user-supplied laboratory, clinical, or governance standards before marking restricted fields evidence_backed.",
+    "Replace the discarded variable_claim_extraction batch with qualified human review before treating this design as complete.",
+    "Replace the discarded formal_reasoning_planner batch with qualified human review before treating this design as complete.",
+    "Replace the discarded counterexample_analyzer batch with qualified human review before treating this design as complete.",
+    "Replace the discarded template_composer batch with qualified human review before treating this design as complete."
+  ],
+  "outcome_branches": [
+    {
+      "branch_id": "supports_mechanism",
+      "conclusion_scope": "The claim fails if the relaxed static equilibrium axioms violate the causality bound, or if the predicted mass-spin relation contradicts the observed population of massive millisecond pulsars, or if standard rotational support models fully explain the observations without needing the relaxed axioms.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Replicate under independently confirmed conditions.",
+        "Test the most consequential declared boundary condition."
+      ],
+      "interpretation": "The result would support, but not prove, the declared relation within the design boundary.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified analysis is consistent with the declared relation while planned controls do not favor a stated alternative explanation."
+    },
+    {
+      "branch_id": "partial_or_heterogeneous",
+      "conclusion_scope": "The claim fails if the relaxed static equilibrium axioms violate the causality bound, or if the predicted mass-spin relation contradicts the observed population of massive millisecond pulsars, or if standard rotational support models fully explain the observations without needing the relaxed axioms.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Predefine and check plausible moderators.",
+        "Improve the coverage of conditions and measurement comparability."
+      ],
+      "interpretation": "The relation may be conditional or heterogeneous; no universal conclusion is warranted.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified analysis indicates variation across declared conditions, units, or measurement contexts."
+    },
+    {
+      "branch_id": "null_or_contradictory",
+      "conclusion_scope": "The claim fails if the relaxed static equilibrium axioms violate the causality bound, or if the predicted mass-spin relation contradicts the observed population of massive millisecond pulsars, or if standard rotational support models fully explain the observations without needing the relaxed axioms.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Audit construct validity and comparison adequacy.",
+        "Revise the mechanism or boundary claim before another design iteration."
+      ],
+      "interpretation": "The proposed relation is not supported in this design boundary; absence of support is not proof of absence generally.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified comparison does not support the declared relation or instead favors a declared alternative explanation."
+    },
+    {
+      "branch_id": "uninformative_or_invalid",
+      "conclusion_scope": "The claim fails if the relaxed static equilibrium axioms violate the causality bound, or if the predicted mass-spin relation contradicts the observed population of massive millisecond pulsars, or if standard rotational support models fully explain the observations without needing the relaxed axioms.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Resolve the identified validity or data-quality failure before repeating the design.",
+        "Obtain human confirmation of measurement, sampling, and analysis prerequisites."
+      ],
+      "interpretation": "No scientific conclusion is warranted because the planned design did not yield interpretable evidence.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "Prespecified quality-control, missingness, protocol-deviation, or validity criteria prevent interpretation."
+    }
+  ],
+  "reasoning_validation_report": {
+    "errors": [],
+    "status": "STRUCTURALLY_VALID_UNVERIFIED_REASONING",
+    "warnings": [
+      "Forward derivation and counterexample candidates are proposals unless an independent verifier or qualified human confirms them.",
+      "No experiment, simulation, symbolic execution, or exhaustive counterexample search was run.",
+      "One or more LLM or workflow batches were discarded and require qualified human replacement."
+    ]
+  },
+  "research_brief": {
+    "alternative_explanations": [
+      "The high masses of millisecond pulsars are explained by standard stiff EoS combined with rotational support (exceeding the static TOV limit) due to binary spin-up, without requiring any relaxation of the fundamental nuclear EoS axioms."
+    ],
+    "boundary_conditions": [
+      "The claim fails if the relaxed static equilibrium axioms violate the causality bound, or if the predicted mass-spin relation contradicts the observed population of massive millisecond pulsars, or if standard rotational support models fully explain the observations without needing the relaxed axioms."
+    ],
+    "brief_id": "astr_16",
+    "discipline_ids": [
+      "31"
+    ],
+    "discriminating_observations": [
+      "The derived mechanism_mass_spin_relation predicts that massive neutron stars (>2.0 M_sun) must exhibit millisecond spin periods indicative of the rotational support required by the relaxed axioms, distinguishing them from isolated magnetic-dipole spin-down pulsars."
+    ],
+    "evidence_status": "PROPOSED",
+    "intervention_or_transformation": "Replacing standard static equilibrium equation of state axioms with relaxed axioms that permit higher mass limits via the rotational and thermal support of binary mass accretion.",
+    "known_unknowns": [],
+    "reasoning_context": {
+      "alternative_explanations": [
+        "The high masses of millisecond pulsars are explained by standard stiff EoS combined with rotational support (exceeding the static TOV limit) due to binary spin-up, without requiring any relaxation of the fundamental nuclear EoS axioms."
+      ],
+      "assumptions": [
+        "The static equilibrium axioms of the dense matter equation of state can be formally relaxed to permit mass accumulation beyond the static Tolman-Oppenheimer-Volkoff limit via rotational and thermal support without violating the causality bound.",
+        "Binary mass accretion and angular momentum transfer can be modeled as a continuous thermodynamic and mechanical perturbation that modifies the effective equilibrium conditions of the neutron star.",
+        "Companion ablation primarily affects the surface and magnetosphere, allowing the core mass-spin relation to remain governed by the relaxed effective equilibrium axioms."
+      ],
+      "boundary_conditions": [
+        "The claim fails if the relaxed static equilibrium axioms violate the causality bound, or if the predicted mass-spin relation contradicts the observed population of massive millisecond pulsars, or if standard rotational support models fully explain the observations without needing the relaxed axioms."
+      ],
+      "claim_scope": "candidate_mechanism",
+      "evidence_roles": [
+        {
+          "allowed_support_kinds": [
+            "At least one causal pathway connecting collapse inputs to a magnetized rotating neutron star.",
+            "Admit works that propose, simulate, or test a physical mechanism for pulsar formation; exclude purely descriptive catalogs without mechanism."
+          ],
+          "anchor_ids": [
+            "anchor:gap_evidence_anchor:sh1:candidate_mechanism:survey_evidence_plan_json_subhypotheses_0_relevant_clusters_0_uncovered_required_slots_1:required_slot_candidate_mechanism_remains_uncovered_in_relevant_evidence_cluster_massive_neutron_star_masses_and_dense_matter_equations_of_state:d1d9a54cd1ff"
+          ],
+          "claim_limits": [
+            "Does not present specific observational data or simulation results on pulsar birth spins or magnetic field strengths.",
+            "Does not establish discriminative criteria between successful pulsar formation and failed/black-hole collapses.",
+            "Does not validate or test specific magnetohydrodynamic or dynamo mechanisms for field amplification."
+          ],
+          "expected_role": "MECHANISTIC_EVIDENCE",
+          "forbidden_as_direct_evidence": [
+            "W2095725842"
+          ],
+          "paper_ids": [
+            "W2187412646"
+          ],
+          "qualified_paper_ids": [
+            "W2095725842"
+          ],
+          "role_id": "evidence:sh1:candidate_mechanism:mechanistic_evidence:b336cb37621f",
+          "subhypothesis_id": "SH1",
+          "target_slot": "candidate_mechanism"
+        }
+      ],
+      "falsifiers": [
+        "A result showing the stated gap is resolved without this hypothesis, or a formal proof that the relaxed axioms inevitably violate causality or tidal deformability constraints, or that standard rotational support fully accounts for the mass-spin relation without relaxing the static axioms."
+      ],
+      "formal_symbols": [],
+      "gap_records": [
+        {
+          "gap_id": "gap:sh1:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:d7f47926ecfd",
+          "gap_kind": "mechanism_explanation_gap",
+          "statement": "Required slot 'candidate_mechanism' remains uncovered in relevant evidence cluster 'Massive Neutron Star Masses and Dense Matter Equations of State'.",
+          "target_object": "candidate_mechanism",
+          "target_slot": "candidate_mechanism",
+          "why_it_matters": "The observed relation lacks an identified mechanism that could distinguish competing explanations."
+        }
+      ],
+      "schema_version": "reasoning_context_v1",
+      "selected_direction_id": "mechanism_replacement",
+      "source_anchors": [
+        {
+          "anchor_id": "anchor:gap_evidence_anchor:sh1:candidate_mechanism:survey_evidence_plan_json_subhypotheses_0_relevant_clusters_0_uncovered_required_slots_1:required_slot_candidate_mechanism_remains_uncovered_in_relevant_evidence_cluster_massive_neutron_star_masses_and_dense_matter_equations_of_state:d1d9a54cd1ff",
+          "anchor_type": "gap_evidence_anchor",
+          "claim_anchor": "Required slot 'candidate_mechanism' remains uncovered in relevant evidence cluster 'Massive Neutron Star Masses and Dense Matter Equations of State'.",
+          "label": "SH1: candidate_mechanism",
+          "source_pointer": {
+            "artifact": "survey_evidence_plan.json",
+            "json_pointer": "/subhypotheses/0/relevant_clusters/0/uncovered_required_slots/1"
+          },
+          "subhypothesis_id": "SH1",
+          "supports_gap_ids": [
+            "gap:sh1:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:d7f47926ecfd"
+          ],
+          "target_slot": "candidate_mechanism",
+          "text_excerpt": "Required slot 'candidate_mechanism' remains uncovered in relevant evidence cluster 'Massive Neutron Star Masses and Dense Matter Equations of State'."
+        }
+      ],
+      "source_priority": [
+        "selected_direction",
+        "legacy_best_entry",
+        "selected_primary_idea",
+        "idea_candidate"
+      ],
+      "upstream_source_paths": [
+        "selected_direction.hypothesis.assumptions",
+        "selected_direction.hypothesis.claim_scope",
+        "selected_direction.falsifier",
+        "selected_direction.hypothesis.boundary_or_failure_condition",
+        "selected_direction.experiment_handoff.alternative_explanations",
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_result.json",
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_candidate.json",
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_portfolio.json",
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_directions.json",
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_route_clusters.json",
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\mature_ideas.json"
+      ]
+    },
+    "research_object": {
+      "description": "relaxed_static_equilibrium_equation_of_state_axioms"
+    },
+    "schema_version": "research_brief_v1",
+    "selected_direction": {
+      "central_hypothesis": "Under the assumptions of causal equation of state bounds, relaxing the static equilibrium axioms of the dense matter equation of state to incorporate the rotational support from binary mass accretion formally unifies isolated spin-down and binary evolution, predicting a distinct mass-spin relation for massive neutron stars that exceed the static TOV limit.",
+      "id": "mechanism_replacement",
+      "mechanism_or_relation": "candidate_mechanism",
+      "title": "Unifying Isolated Spin-Down and Binary Recycling in Massive Neutron Star Formation via Relaxed Equation of State Axioms"
+    },
+    "source": {
+      "direction_id": "mechanism_replacement",
+      "idea_result_schema": "idea_result_v5",
+      "missing_audit_sources": [],
+      "survey_binding": {
+        "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+        "manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+        "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+        "project_id": "sci_astr_16_survey_007",
+        "status": "bound",
+        "survey_run_id": "astr_16-survey-007"
+      },
+      "upstream_source_paths": {
+        "idea_candidate": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_candidate.json",
+        "idea_directions": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_directions.json",
+        "idea_portfolio": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_portfolio.json",
+        "idea_result": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_result.json",
+        "idea_route_clusters": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_route_clusters.json",
+        "mature_ideas": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\mature_ideas.json"
+      }
+    },
+    "topic": "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong magnetic field. The research should distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution, and test formation and evolution with mathematical models."
+  },
+  "research_design": {
+    "design_type": "Template-guided Formal theory and mathematics study design pending evidence and human confirmation",
+    "experimental_unit": "The experimental or analytical unit must be operationalized for the declared research object before execution.",
+    "time_structure": "The temporal structure must be preregistered or documented after the applicable design evidence is reviewed."
+  },
+  "risk_and_human_review": {
+    "approval_dependencies": [
+      "Qualified human review must replace every discarded LLM or workflow batch before execution."
+    ],
+    "execution_prohibited": true,
+    "human_review_required": true,
+    "restricted_content": [],
+    "review_triggers": [
+      "LLM_OR_WORKFLOW_DEGRADATION_REVIEW"
+    ],
+    "risk_level": "medium"
+  },
+  "sampling_and_eligibility": {
+    "eligibility_criteria": {
+      "reason": "Formal theory does not use inclusion or exclusion criteria for samples."
+    },
+    "sample_size_or_power_basis": {
+      "reason": "Formal theory has proof obligations rather than a sample-size or power calculation."
+    },
+    "source": {
+      "reason": "Formal theory does not use sampled experimental units."
+    }
+  },
+  "schema_version": "experiment_design_v1",
+  "template_composition": {
+    "llm_used": false,
+    "prompt_variant": "mathematics_theory",
+    "secondary_template": "",
+    "submode": "formal_theory",
+    "template_id": "mathematics_theory"
+  },
+  "template_details": {
+    "assumptions": {
+      "reason": "This template requirement remains unresolved until qualified evidence or a responsible human supplies it."
+    },
+    "counterexample_or_boundary_analysis": {
+      "reason": "This template requirement remains unresolved until qualified evidence or a responsible human supplies it."
+    },
+    "formal_claim": {
+      "reason": "This template requirement remains unresolved until qualified evidence or a responsible human supplies it."
+    },
+    "verification_plan": {
+      "reason": "This template requirement remains unresolved until qualified evidence or a responsible human supplies it."
+    }
+  },
+  "validation_report": {
+    "errors": [],
+    "status": "BLOCKED_BY_RISK_REVIEW",
+    "warnings": [
+      "This is a design-only draft. It contains no observed experimental result.",
+      "Unresolved fields are intentionally explicit and must not be treated as completed protocol parameters.",
+      "variable_claim_extraction was degraded after its LLM or contract-validation batch was discarded; no discarded output is retained.",
+      "formal_reasoning_planner was degraded after its LLM or contract-validation batch was discarded; no discarded output is retained.",
+      "counterexample_analyzer was degraded after its LLM or contract-validation batch was discarded; no discarded output is retained.",
+      "template_composer was degraded after its LLM or contract-validation batch was discarded; no discarded output is retained."
+    ]
+  },
+  "variable_claim_model": {
+    "claims": [],
+    "schema_version": "variable_claim_model_v1",
+    "status": "complete_or_requires_input",
+    "unknown_items": [
+      {
+        "field_path": "variable_claim_model",
+        "reason": "The variable_claim_extraction LLM batch was discarded after an unavailable or invalid response. No generated claim, formalization, counterexample, or protocol detail from that batch is retained; qualified human review is required.",
+        "status": "needs_human_input"
+      }
+    ],
+    "variables": []
+  },
+  "variables_and_operationalization": {
+    "confounders": [],
+    "control_variables": [],
+    "dependent_variables": [],
+    "independent_variables": [],
+    "operational_definitions": []
+  }
+}

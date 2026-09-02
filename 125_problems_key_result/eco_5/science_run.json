@@ -1,0 +1,18 @@
+{
+  "run_type":"four_agent_science_pipeline",
+  "workflow":["Survey","Idea","ExperimentDesign","Author"],
+  "topic":"What happens if all the ice on the planet melts?",
+  "project":"global_ice_melt",
+  "status":"completed_design_only",
+  "primary_direction":"CRYO-FINGERPRINT",
+  "outputs":{
+    "survey":["global_ice_melt/survey/survey.md","global_ice_melt/survey/survey_manifest.json","global_ice_melt/survey/survey_gap_ledger.json","global_ice_melt/survey/survey_evidence_plan.json","global_ice_melt/survey/survey_idea_handoff.json"],
+    "idea":["global_ice_melt/idea/idea.md","global_ice_melt/idea/idea_result.json"],
+    "experiment_design":["global_ice_melt/experiment_design/research_design.md","global_ice_melt/experiment_design/research_design.json","global_ice_melt/experiment_design/author_handoff.json"],
+    "author":["global_ice_melt/author/cryo_fingerprint_report.tex","global_ice_melt/author/cryo_fingerprint_report.pdf","global_ice_melt/author/author_manifest.json","global_ice_melt/author/pdf_validation.json"]
+  },
+  "expected_results":[],
+  "observed_results":[],
+  "search_status":"both_configured_engines_connection_refused",
+  "browser_status":"nasa_sea_level_page_connection_closed"
+}

@@ -1,0 +1,40 @@
+project:
+  id: material_recycling
+  output_root: C:\Users\31390\Desktop\2026tzb\aiscientist-v0820\Xcientist\125_problems_key_result\eco_7
+  topic: "Can we achieve a situation where essentially every material can be recycled and reused?"
+  subproject: "material_recycling"
+workflow:
+  stages:
+    - Survey
+    - Idea
+    - ExperimentDesign
+    - Author
+  design_mode: DESIGN_ONLY
+  minimum_pages: 7
+  no_acknowledgements_section: true
+  no_observed_results_without_execution: true
+research:
+  primary_direction: UNIVERSAL-CIRCULAR-RECOVERY
+  functional_unit: equal_delivered_service
+  candidate_streams:
+    - beverage_containers
+    - protective_food_packaging
+    - construction_products
+    - textiles_and_furnishings
+    - consumer_electronics
+    - medical_hygiene_or_hazardous_products
+  required_domains:
+    - material_flow_analysis
+    - design_for_recovery
+    - contamination_and_sorting
+    - reuse_and_refurbishment
+    - mechanical_and_chemical_recovery
+    - techno_economic_analysis
+    - life_cycle_assessment
+    - social_externality_and_resilience
+artifacts:
+  survey: survey/survey.md
+  idea: idea/idea.md
+  experiment_design: experiment_design/research_design.md
+  author_tex: author/universal_circular_recovery_report.tex
+  author_pdf: author/universal_circular_recovery_report.pdf

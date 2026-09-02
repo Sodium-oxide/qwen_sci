@@ -1,0 +1,65 @@
+{
+  "schema_version": "author_manifest_v1",
+  "project_id": "inf_1_computation_speed_physical_limits",
+  "survey_run_id": "survey-inf1-envelope-001",
+  "selected_idea_id": "idea-pec-001",
+  "workflow": [
+    "Survey",
+    "Idea",
+    "ExperimentDesign",
+    "Author"
+  ],
+  "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": []
+  },
+  "document": {
+    "title": "Is There an Upper Limit to Computer Processing Speed? A Physical Compute-Envelope Contract for Defensible Throughput Claims",
+    "language": "English",
+    "style": "IEEE conference",
+    "paper_size": "Letter",
+    "page_count": 7,
+    "minimum_page_requirement": 7,
+    "acknowledgement_section_present": false,
+    "cited_source_count": 14
+  },
+  "input_artifacts": {
+    "survey_manifest": "../survey/survey_manifest.json",
+    "survey_handoff": "../survey/survey_idea_handoff.json",
+    "idea_result": "../idea/idea_result.json",
+    "experiment_design": "../experiment_design/research_design.json",
+    "author_handoff": "../experiment_design/author_handoff.json"
+  },
+  "output_artifacts": {
+    "tex": "physical_compute_envelope_report.tex",
+    "pdf": "physical_compute_envelope_report.pdf",
+    "pdf_validation": "pdf_validation.json",
+    "editable_system_diagram": "figures/pec_contract_flow.drawio",
+    "rendered_page_previews": "rendered_pages/page-1.png through rendered_pages/page-7.png"
+  },
+  "source_controls": {
+    "discovery_method": "OpenAlex and AnySearch Academic were queried in parallel and duplicate DOI records were cross-validated.",
+    "cross_validated_query_record_counts": {
+      "physical limits computation speed quantum speed limit energy information density": 7,
+      "fundamental limits rate computation energy density information transmission speed": 6,
+      "fault tolerant quantum computing overhead logical gate cycle time surface code review": 10,
+      "photonic quantum computational advantage boson sampling 200 seconds Zhong 2020": 8
+    },
+    "browser_metadata_check": {
+      "source": "IOPscience DOI page",
+      "doi": "10.1088/1751-8121/aa86c6",
+      "verified_record": "Deffner and Campbell, Quantum speed limits: from Heisenberg's uncertainty principle to optimal quantum control, Journal of Physics A, 2017"
+    },
+    "human_review_required": "Publisher or full-text applicability review is still required for each cited source before any real research execution or submission."
+  },
+  "claim_boundary": {
+    "supported_conclusion": "Useful accepted computation is limited by a workload- and resource-bounded physical envelope rather than a single technology-independent scalar speed ceiling.",
+    "not_claimed": [
+      "a universal tight numerical upper bound for every computer and workload",
+      "executed hardware, simulation, benchmark, or measurement results",
+      "general-purpose quantum superiority from a sampling demonstration",
+      "a completed physical experiment"
+    ]
+  }
+}

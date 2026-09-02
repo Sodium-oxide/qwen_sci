@@ -1,0 +1,773 @@
+What Creates the Earth’s Magnetic Field?
+A Coupled Core-to-Space Model for Field Motion
+Research Plan Author Agent
+Xcientist four-agent simulation
+Abstract—Earth’s magnetic field is not produced by rotation
+alone and is not a rigid dipole that simply drifts through space. The
+leading physical picture is a self-sustaining geodynamo: electrically
+conducting liquid metal in the outer core moves under thermal
+and compositional buoyancy, rotation organizes the flow, induction
+amplifies magnetic structure, and magnetic diffusion and Lorentz
+feedback close the system. The field observed at Earth’s surface
+is additionally altered by lithospheric, oceanic, ionospheric, and
+magnetospheric currents. This report proposes GEODYNAMOX, a coupled core-to-space state-space and data-assimilation
+experiment designed to explain why the field changes and to
+separate internal secular variation from external disturbances.
+The Survey stage identifies core-flow non-uniqueness, source
+mixing, multi-scale coupling, and weak forecast validation as
+the central gaps. The Idea stage selects a model with latent core
+magnetic and flow states, conductivity transfer operators, explicit
+external-current states, and physics-constrained residual learning.
+The ExperimentDesign stage specifies induction and rotating-flow
+equations, synthetic-twin identifiability tests, observatory and
+satellite observation operators, rolling-origin forecasts, baselines,
+ablations, and falsification rules. This is a design-only proposal:
+it reports no completed reconstruction, pole trajectory, forecast
+score, or new geophysical measurement.
+Index Terms—geodynamo, geomagnetic field, secular variation,
+core flow, magnetic pole motion, ionosphere, magnetosphere, data
+assimilation
+
+I. I NTRODUCTION
+The Earth’s magnetic field is often summarized by saying
+that the planet’s rotation generates it. That statement identifies
+an important organizing influence but omits the energy source,
+the conducting fluid, the induction process, and the distinction
+between internal and external signals. The field is best posed
+as a coupled dynamical and inverse problem: what flow in
+the electrically conducting outer core can sustain the longlived internal field, and which parts of an observed field
+change originate in the core rather than in the ionosphere,
+magnetosphere, crust, ocean, or instrument?
+The scientific reframe used in this report is:
+How do thermal and compositional convection in
+Earth’s conducting outer core, organized by rotation
+and constrained by the core–mantle boundary, sustain
+the main field; and how can internal dynamics be
+separated from external and induced sources to
+explain and predict observed field motion?
+This reframe distinguishes field generation from field observation. A conducting fluid moving through a magnetic field
+can induce current and magnetic field. Rotation constrains
+the geometry of the flow through the Coriolis force, while
+buoyancy supplies mechanical energy and magnetic induction
+
+competes with diffusion. At the surface, the internal field is
+superposed with currents in the ionosphere and magnetosphere
+and with induced and lithospheric contributions. The magnetic
+poles therefore move in the sense that the locations inferred
+from the internal field change; no rigid magnetic object is
+required to travel through the mantle.
+The physical mechanism class is strongly supported by
+geodynamo theory and numerical dynamo work, but the Earthspecific inverse problem remains open. Reviews of Earth’s magnetism emphasize the interaction of core convection, rotation,
+electrical induction, and dissipation [1], [2]. Three-dimensional
+simulations show that a self-sustaining and reversing field
+can arise in rotating spherical shells [3]. Scaling studies
+connect numerical dynamos to planetary-field observables while
+also exposing the gap between accessible simulations and
+Earth’s extreme parameter regime [4]. Community geomagnetic
+models such as the International Geomagnetic Reference Field
+(IGRF) organize global observations into main-field and secularvariation representations, but a reference field is not by itself
+a unique causal model or a validated future forecast [5].
+This report makes three contributions. First, it turns the broad
+question into a source-aware test of field generation and motion.
+Second, it proposes GEODYNAMO-X, which assimilates
+ground and satellite observations into a constrained latentstate model containing both core and external sources. Third,
+it defines a synthetic-twin gate, held-out forecast protocol, and
+falsification criteria so that improved fit cannot be confused
+with recovered physics.
+II. S URVEY: P HYSICAL E VIDENCE AND O PEN G APS
+A. The internal geodynamo
+The outer core is a liquid, electrically conducting region.
+Secular cooling and the growth of the solid inner core can
+generate thermal and compositional buoyancy. Fluid motion
+transports magnetic flux, inducing electric currents that generate
+a field. The system remains active only if induction and
+available mechanical power offset magnetic diffusion and
+Ohmic dissipation. This is why the phrase “energy made of
+rotation” is incomplete: rotation organizes the motion but does
+not replace buoyancy or induction.
+The Coriolis force favors rapidly rotating, columnar flow
+structures and influences helicity and the conversion between
+kinetic and magnetic energy. The Lorentz force feeds back
+on the flow, so the magnetic field is not a passive tracer.
+Pressure, viscosity, compressibility, boundary heat flux, innercore morphology, electrical conductivity, and unresolved turbu-
+
+lence influence the solution. Heterogeneity at the core–mantle identifiability. Rotation, buoyancy, conductivity, boundary heat
+boundary can imprint preferred spatial structures, but the inverse flow, and unresolved closure terms can compensate for one
+mapping from a surface field to the boundary flow is non- another in an inverse model. These gaps motivate a design in
+unique.
+which recovery of known latent states precedes interpretation
+Numerical dynamos are therefore mechanism tests and prior of real records.
+generators. They can demonstrate self-sustaining induction,
+polarity reversals, and secular variation in a physically con- D. Time scales and observation geometry
+The field-motion question is best analyzed as a hierarchy
+strained system. They do not establish that one simulation has
+the same heat flux, diffusivity, turbulence, or inner-core state rather than a single time series. At the shortest relevant scales,
+as Earth. A responsible model must carry structural uncertainty external currents driven by solar-wind and auroral activity
+create rapid disturbances. At intermediate scales, ionospheric
+instead of selecting a single simulation as ground truth.
+tides, seasonal conductivity, and recurrent forcing modulate the
+B. Internal, external, and induced field motion
+external field. On annual to centennial scales, the core generates
+On years-to-centuries time scales, the main internal field secular variation that changes the internal field coefficients. On
+varies because the core magnetic field and its source flow millennial and longer scales, excursions and reversals constrain
+evolve. The time derivative of the internal spherical-harmonic the history of the dynamo. The same sensor can record several
+coefficients is called secular variation. It changes field intensity of these processes at once, so the time scale of an observation
+and direction and therefore changes the location of a modeled does not identify its source.
+Spatial geometry creates a second hierarchy. High-degree
+magnetic pole. Such motion is a projection of a changing field,
+lithospheric structure is strongest near the surface, while the
+not evidence that the magnetic axis is a solid rod.
+On seconds-to-days time scales, ionospheric and magne- large-scale core field is smoother because it passes through the
+tospheric currents respond to solar-wind forcing, auroral mantle. External current systems have characteristic local-time,
+electrodynamics, tides, conductivity, and local time. These latitude, and solar-wind dependencies. Satellite altitude and
+currents can generate large transient magnetic signals. They track direction determine which mixtures are visible; fixed
+can also induce currents in the conducting Earth and in observatories provide temporal continuity but cannot alone
+technological infrastructure. A surface observation during a resolve global spatial modes. GEODYNAMO-X therefore uses
+geomagnetic storm is not a clean measurement of core evolution. sensor geometry in the observation operator rather than treating
+Source separation must therefore be part of the model or its all field vectors as exchangeable rows.
+The field representation is a spherical-harmonic expansion
+error must be explicitly quantified.
+The observation problem is multi-scale. Ground observatories whose coefficients are indexed by degree, order, and epoch.
+offer long records at fixed locations. Satellites offer global Low-degree internal coefficients are the main target for core seccoverage and changing geometry, with simultaneous position, ular variation, while higher-degree terms and regional transfer
+attitude, and space-environment information. Paleomagnetic effects are retained as nuisance or separate latent components.
+records extend the time window to reversals and excursions but The harmonic truncation is chosen before evaluation and varied
+are sparse and filtered by geological recording processes. IGRF in sensitivity analysis. A change in a low-degree coefficient can
+and related models provide a common harmonic representation, move a derived pole substantially, whereas a local high-degree
+while Swarm-era studies demonstrate the value of combining anomaly may have little effect on the pole. Reporting both
+satellites with ground observatories for time-varying field coefficient uncertainty and pole uncertainty prevents a visually
+dramatic local anomaly from being misread as a global axis
+estimation [5], [6].
+motion.
+C. Survey gap ledger
+The table does not assign a hard cutoff to any source. Its
+The first gap is energy-to-field closure. Available heat and purpose is to define what evidence can challenge each layer.
+composition budgets are uncertain, while numerical models For example, an ionospheric model should be tested during
+cannot resolve the full diffusivity and turbulence hierarchy. changes in local time and solar forcing, while a core-flow model
+The second is core-flow non-uniqueness: surface secular should be tested on secular-variation intervals and spatially
+variation underdetermines three-dimensional flow at the core– withheld sensors. A model that achieves a low all-period error
+mantle boundary. The third is internal–external source mixing, by smoothing away storms or by fitting lithospheric structure
+especially during disturbed intervals. The fourth is multi-scale is not a successful explanation of core dynamics.
+coupling; core, mantle, ocean, ionosphere, and magnetosphere
+The observation geometry also controls identifiability. If all
+are often represented in separate stages even though their sensors sample a narrow region or a single temporal regime, an
+signals meet at the observation operator.
+internal and external source may be observationally equivalent.
+The fifth gap is time-scale transfer. Instrumental records are Adding a satellite track with a different altitude or local-time
+short compared with reversal histories, while paleomagnetic distribution can break that equivalence, but only if its calibration
+records are long but irregular. The sixth is forecast validation. and forcing metadata are retained. The synthetic twin explicitly
+Models can fit historical coefficients without forecasting varies these geometries and reports the posterior contraction
+held-out vectors or uncertainty. The seventh is parameter obtained from each observation class. This gives a measurable
+
+TABLE I
+E VIDENCE BOUNDARIES USED BY THE PROPOSED GEODYNAMO-X STUDY.
+
+Evidence layer
+
+Supported physical proposition
+
+Use in the design
+
+Inference not permitted
+
+Geodynamo theory
+
+Conducting-fluid motion,
+buoyancy, rotation, induction,
+diffusion, and Lorentz feedback
+form a coupled mechanism
+Rotating spherical-shell systems
+can sustain and reverse magnetic
+fields in a mechanism-compatible
+regime
+Global observations can be
+represented by internal-field
+coefficients and secular variation
+Field variation contains
+information about internal and
+external current systems
+Long records constrain long-term
+direction, intensity, excursions,
+and reversals
+
+Define constrained transition priors
+and energy-accounting diagnostics
+
+Rotation alone is the
+field source
+
+Generate synthetic twins and structural
+prior families
+
+One simulation is a
+unique Earth solution
+
+Define common observables and
+forecast targets
+
+A fitted reference field
+is a causal forecast
+
+Build source-aware observation
+operators and holdouts
+
+Every rapid residual is
+core flow
+
+Test time-scale consistency with a
+separate recording model
+
+Sparse records identify
+instantaneous flow
+
+Numerical dynamos
+
+Geomagnetic models
+Observatory/satellite
+records
+Paleomagnetism
+
+TABLE II
+S OURCE CLASSES , CHARACTERISTIC OBSERVABLES , AND VALIDATION
+EMPHASIS .
+Source class
+
+Typical time
+scale
+
+Validation emphasis
+
+Core
+
+Years to
+millennia
+
+Ionosphere
+
+Seconds to
+days; seasonal
+
+Secular variation,
+internal coefficients,
+flow recovery
+Local time, latitude,
+forcing response
+
+and energy. Ionospheric currents are not the primary source
+of the long-lived internal dipole. A pole track is not a literal
+trajectory of a rigid object. A numerical dynamo is not an
+observation of Earth’s core. Finally, a good historical fit is not
+a validated forecast. These boundaries permit a strong physical
+hypothesis while keeping the claims testable.
+III. I DEA : GEODYNAMO-X
+A. Competing routes
+
+The core-only inversion route is interpretable and directly
+targets secular variation, but it can absorb external-current
+residuals into an artificial core acceleration. Static-reference
+Induced
+layers
+and linear secular-variation extrapolations are transparent engiLithosphere
+neering baselines, but they do not represent a changing source
+mechanism. An uncoupled internal-plus-external regression
+Paleomagnetic
+Centuries to
+Separate recording and
+tests source separation but cannot express shared boundary
+millions of
+smoothing model
+conditions or feedback. A numerical-dynamo ensemble supplies
+years
+a physical prior but may not be identifiable or observationally
+calibrated.
+GEODYNAMO-X combines the useful parts of these routes.
+answer to the question of what additional measurement would It represents the core magnetic field and low-dimensional
+most reduce uncertainty, instead of assuming that more data boundary flow as latent states; uses conductivity operators
+are automatically informative.
+for mantle, lithosphere, and ocean transfer; includes explicit
+The design also distinguishes interpolation from extrap- ionospheric and magnetospheric states; and maps all sources
+olation. Interpolation tests whether a model can reconcile to the measurement geometry of each observatory or satellite.
+multiple sensors and source layers within an observed interval. A constrained residual model may correct unresolved closure
+Extrapolation tests whether the latent dynamics produce a error, but it is prohibited from creating magnetic monopoles,
+useful future distribution after the last assimilated observation. violating the induction constraint, or relabeling an external
+The former is necessary for a coherent field map; the latter pulse as core flow without an attribution penalty.
+is required for a forecast claim. A model can pass the
+first while failing the second, particularly when its learned B. Hypothesis and predictions
+Magneto
+sphere
+
+Seconds to
+days
+Minutes to
+years
+Static to
+geological
+
+Storm and substorm
+event holdouts
+Conductivity transfer
+and regional phase
+Spatial residual and
+harmonic separation
+
+residual captures historical instrument artifacts. All report tables
+therefore carry an explicit label for reconstruction, interpolation,
+or forecast.
+The survey rejects five tempting overclaims. Rotation does
+not create a magnetic field without conducting-fluid motion
+
+The central hypothesis is:
+A coupled core-to-space state-space model with physical priors and source-specific observation operators
+will produce better calibrated held-out predictions of
+vector-field change and internal-field pole motion
+
+than static extrapolation, core-only inversion, or
+uncoupled source separation, while recovering known
+latent states in synthetic twins.
+The first prediction is a reduction in held-out vector-field
+and secular-variation error when joint assimilation is used. The
+second is a reduction in false core-flow acceleration during
+intervals dominated by external current changes. The third is
+that physical priors improve extrapolation more than in-sample
+fit. The fourth is that synthetic twins will reveal which flow
+scales and buoyancy parameters are identifiable; unresolved
+scales should remain uncertain rather than receive spurious
+precision.
+The direction is falsifiable. If the full model does not improve
+held-out skill under equal data and model-budget accounting,
+the coupling is not justified for that domain. If it predicts well
+but fails source recovery, it remains a reconstruction tool but
+does not support the causal claim. If a simpler model matches
+it under all declared tests, the simpler model is preferred.
+IV. E XPERIMENT D ESIGN
+A. State-space formulation
+The proposed system has four layers: an outer-core magnetic
+and flow state, a conducting transfer layer, an external-current
+state, and an instrument state. Let the latent state contain
+harmonic coefficients and reduced flow modes. The core
+magnetic evolution is represented by:
+∂B
+= ∇ × (u × B) + η∇2 B,
+∂t
+
+∇ · B = 0,
+
+(1)
+
+where B is magnetic flux density, u is outer-core fluid
+velocity, and η is magnetic diffusivity. The divergence-free
+condition is enforced in the basis representation. The first term
+is field induction by flow and the second is magnetic diffusion.
+The rotating-flow prior is:
+
+TABLE III
+M ODEL COMPARISONS AND THEIR SCIENTIFIC ROLES .
+Model
+
+Role
+
+Main limitation
+tested
+
+Static reference
+
+Engineering
+baseline
+Short-horizon
+baseline
+Internal
+inversion
+baseline
+Sourceseparation
+baseline
+Physical-prior
+baseline
+Primary
+treatment
+Synthetic upper
+bound
+
+No source
+dynamics
+Trend
+extrapolation only
+External residual
+leakage
+
+Linear variation
+Core-only
+Uncoupled split
+Dynamo prior
+GEODYNAMOX
+Oracle source
+
+No shared
+dynamics
+No observational
+assimilation
+Coupling and
+identifiability cost
+Not deployable
+
+where yk,t is the vector measurement from sensor k, Hk,t
+maps all source layers to the sensor’s position and attitude, bk,t
+is calibration bias, and ν k,t is measurement noise. Different
+ground and satellite geometries share a latent source state but
+retain separate observation operators.
+The surface signal is reported as:
+Bobs = Bcore + Bext + Bind + Blith + δ inst ,
+
+(5)
+
+where the terms denote core, external, induced, lithospheric,
+and instrument contributions. The equation is a sourceaccounting interface, not a claim that all terms are equally
+identifiable at every time and location.
+B. Data inventory and splitting
+
+The proposed inventory contains vector measurements from
+geomagnetic observatories, satellite magnetic measurements
+)︃
+(︃
+with position and attitude data, solar-wind and geomagnetic∂u
+ρ
++ u · ∇u + 2Ω × u = −∇p + ρ′ g + J × B + ∇ · τ , activity covariates, global reference-field and secular-variation
+∂t
+(2) coefficients, and selected paleomagnetic records. Every record
+where ρ is reference density, Ω is planetary rotation, p is receives a coordinate frame, time standard, calibration flag,
+pressure, ρ′ g is buoyancy, J is electric current density, and τ uncertainty, source label, and availability interval.
+contains viscous and unresolved stresses. Rotation enters as an
+Preprocessing is frozen before training. It includes coordinate
+organizing force; it is not an independent magnetic source.
+conversion, quality flags, common time bins, known spike
+removal, treatment of missingness, and a predeclared rule
+The discrete transition is:
+for quiet and disturbed intervals. Future external covariates
+xt+1 = Fθ (xt , qt , wt ) + ϵt ,
+(3) are not made available to a historical forecast. Paleomagnetic
+observations use a separate geological recording operator and
+where xt is the full latent state, qt contains forcing and are not treated as dense instrumental samples.
+boundary covariates, Fθ is the constrained transition, wt is
+The temporal split uses rolling origins with a training interval,
+a learned closure residual, and ϵt is process uncertainty. The assimilation interval, and forecast horizon. Spatial holdouts
+residual is regularized by divergence, energy, and source- reserve observatories or satellite tracks. Event holdouts reserve
+attribution constraints.
+selected disturbance intervals. The final evaluation mask is
+The measurement equation is:
+locked before hyperparameter selection. This prevents a model
+from learning the forecast target through accidental overlap in
+yk,t = Hk,t (xt ) + bk,t + ν k,t ,
+(4) time, sensor, or external forcing.
+
+C. Synthetic-twin identifiability gate
+Before historical fitting, a numerical-dynamo ensemble
+generates hidden core fields and flow states. A conductivitytransfer model adds mantle, lithosphere, and ocean effects. An
+external-current generator creates quiet, storm, and missingforcing regimes. Ground and satellite observation operators
+sample the result with realistic geometry, noise, gaps, and
+calibration shifts. The inference model receives only the
+observations and covariates, not the latent truth.
+The gate measures recovery of internal-field coefficients,
+core-flow modes, external-current amplitudes, pole location,
+and predictive uncertainty. It varies sensor density, satellitetrack coverage, forcing availability, harmonic truncation, and
+structural model discrepancy. A parameter is considered
+identifiable only if posterior error shrinks with informative
+data, coverage remains calibrated, and recovery is stable across
+plausible model families.
+The synthetic twin includes an intentionally difficult case: a
+rapid external disturbance resembles a regional core secularvariation pulse. GEODYNAMO-X must assign the pulse
+to external or uncertain sources rather than automatically
+accelerating the core. A small total-field error does not excuse
+a wrong causal attribution.
+D. Historical reconstruction and forecast
+After passing the synthetic gate, all models are fit to
+historical-like records under the locked splits. The retrospective
+task estimates the field and its decomposition. The forecast
+task predicts future vector field and secular variation at short,
+intermediate, and decadal horizons. The internal-field pole
+location is derived from the inferred internal coefficients and
+reported with an uncertainty ellipse; it is not directly optimized
+as a label.
+Primary metrics are vector-field root-mean-square error, angular error, secular-variation error, pole-location error, negative
+log predictive density, interval coverage, and synthetic sourceattribution error. Secondary metrics measure degradation under
+missing sensors, calibration drift, storm contamination, spatial
+holdouts, and changed satellite coverage. Skill is reported
+relative to static and linear baselines across time blocks, not
+as one average that hides failure during important events.
+E. Ablations and sensitivity
+
+TABLE IV
+P REDECLARED INTERPRETATION AND FALSIFICATION RULES .
+Outcome
+
+Required signature
+
+Meaning
+
+Coupled gain
+
+Held-out skill and
+attribution improve;
+intervals calibrated
+Extrapolation
+improves;
+reconstruction does
+not
+External states
+improve attribution
+only
+Simple baseline
+matches or wins
+
+Coupling supported
+
+Prior gain
+
+Separation
+gain
+No-coupling
+
+Physics helps
+forecast
+Source mixing is
+binding
+Full model not
+justified
+
+parameter uncertainty. If a qualitative conclusion changes under
+a plausible structure, the output is labeled model-dependent.
+No ensemble average is permitted to erase a sign change.
+V. E XPECTED I NTERPRETATIONS AND FALSIFICATION
+Four outcome classes are preregistered. A coupled-source
+gain occurs if GEODYNAMO-X improves held-out field and
+attribution skill with calibrated uncertainty. A physical-prior
+gain occurs if the physics improves extrapolation but not
+reconstruction, indicating value mainly at longer horizons. A
+separation-only gain occurs if external states help while the
+core dynamics add no held-out benefit. A no-coupling gain
+occurs if a simpler model matches or exceeds the full model
+under equal constraints.
+GEODYNAMO-X is falsified if it fails synthetic-twin state
+recovery, falsely assigns the adversarial external pulse to core
+acceleration, produces systematically overconfident intervals,
+or loses its held-out advantage when baselines receive identical
+data, horizon, and parameter-budget treatment. It is also
+falsified as a causal model if multiple incompatible source
+decompositions fit equally well and the posterior cannot express
+that ambiguity.
+A negative result is scientifically useful. If external states
+alone improve forecasts, the field-motion problem is primarily
+a source-separation bottleneck for the tested horizon. If the
+physical prior improves only long-horizon extrapolation, the
+model informs future uncertainty without claiming detailed
+core-flow recovery. If the static model wins, added dynamical
+complexity is not justified for that operational setting. None
+of these outcomes establishes that a reversal will occur or that
+a magnetic pole will follow a predetermined path.
+
+Eight ablations isolate the mechanism: remove the Coriolis
+prior; remove compositional-buoyancy covariates; replace
+heterogeneous core–mantle boundary heat flow by a uniform
+boundary; remove external-current states; replace the conductivity transfer by an identity operator; remove divergence-free and
+VI. DATA C ONTRACT AND E VALUATION P ROTOCOL
+energy-accounting residual constraints; reduce observatory or
+satellite coverage; and remove uncertainty propagation. Each
+The experiment cannot establish a causal geodynamo claim
+ablation is evaluated with the same data split and forecast unless its observations and inferred quantities remain distinprotocol.
+guishable. Before fitting any model, each record is assigned
+Sensitivity analysis varies magnetic diffusivity, flow-mode a stable identifier, time standard, coordinate frame, sensor
+rank, harmonic degree, external-forcing lag, observation noise, geometry, calibration state, quality flag, uncertainty estimate,
+source correlation, forecast horizon, and model-discrepancy and missingness interval. Observatory measurements are tagged
+family. Nested sampling separates structural uncertainty from with site metadata and local environmental flags. Satellite
+
+measurements retain position, attitude, sampling, and externalTABLE V
+M INIMUM DATA AND OUTPUT CONTRACT FOR AN INTERPRETABLE RUN .
+forcing context. Reference-field coefficients are stored with
+their harmonic degree, epoch, and secular-variation convenObject
+Required metadata
+Prohibited shortcut
+tion. Paleomagnetic records are tagged with their geological
+Measurement
+Time, frame,
+Treat missing data
+smoothing and recording uncertainty rather than inserted as if
+geometry,
+as zero
+they were dense modern observations.
+calibration,
+uncertainty
+The data contract separates five objects. A measured field
+Internal field
+Source label,
+Call a fit a direct
+is an instrument output after declared calibration. An inferred
+harmonic degree,
+observation
+internal field is a posterior quantity attributed to the core
+posterior
+External field
+Forcing context,
+Absorb storms into
+through the source model. An external field is a posterior
+core flow
+current mode,
+quantity associated with ionospheric or magnetospheric current
+uncertainty
+modes. An induced field is the response of conducting layers
+Pole position
+Derived definition
+Optimize pole
+and confidence
+independently
+to time-varying sources. A forecast field is a prediction made
+region
+without access to the future target. These names are retained in
+Forecast
+Origin, horizon,
+Use future targets
+every output file. A pole location is stored with the internal-field
+mask, covariates
+or forcing
+definition and harmonic truncation that generated it.
+The experiment uses rolling temporal origins. For each origin,
+the training window estimates parameters, the assimilation mismatch. This makes the experiment useful even when the
+window updates the latent state, and the forecast window headline hypothesis fails.
+is sealed until prediction is written. Spatial holdouts reserve
+The final acceptance rule is conjunctive. GEODYNAMO-X
+observatory sites or satellite tracks. Event holdouts reserve must pass synthetic state recovery, improve held-out calibrated
+intervals with strong external forcing. Hyperparameters are prediction over the strongest baseline, and avoid systematic
+selected only within the development split. The final temporal, source-attribution errors under the adversarial external pulse.
+spatial, and event masks are never used to tune the model. This A gain that appears only after removing hard observations,
+design directly tests whether the model extrapolates rather than relaxing the parameter budget, or changing the target definition
+reconstructs information that leaked across a boundary.
+is not considered evidence for the full model. This protocol
+The primary score is a vector-field error paired with a keeps the report ambitious about a unified core-to-space
+ˆ︁ k,t be the predictive mean and Bk,t explanation while making every claimed improvement traceable
+calibration score. Let B
+the held-out vector. The vector loss is:
+to a declared data and evaluation choice.
+Lvec =
+
+⃦2
+1 ∑︂ ⃦
+⃦ ˆ︁
+⃦
+⃦Bk,t − Bk,t ⃦ ,
+N
+2
+k,t
+
+(6)
+
+VII. I MPLEMENTATION , G OVERNANCE , AND
+R EPRODUCIBILITY
+
+The computational stack contains a data registry, sourcewhere N is the number of held-out sensor-time pairs and specific observation operators, constrained state transitions,
+∥ · ∥2 is Euclidean vector norm. This metric treats intensity a transfer-layer module, a probabilistic assimilation engine,
+and direction jointly. Angular error, secular-variation error, and forecast evaluation, and an audit layer. Each observation,
+derived pole-location error are reported separately so that a coordinate transform, time split, parameter prior, model version,
+good total vector score cannot conceal a directional failure.
+random seed, checkpoint, and evaluation mask receives an
+Predictive distributions are evaluated with negative log identifier. Changes to the source registry create a new run
+predictive density and empirical coverage of declared intervals. rather than silently rewriting a prior result.
+Coverage is measured separately for quiet intervals, disturbed
+The registry distinguishes measured field, inferred internal
+intervals, spatial holdouts, and forecast horizons. A model field, inferred external field, and forecast field. It stores
+that reduces RMSE by producing overconfident intervals is uncertainty and missingness rather than imputing a perfect
+not accepted as an improvement. For synthetic twins, source- record. A forecast is not promoted to an observation. A pole
+attribution error is the fraction of generated external or core position is labeled by the harmonic truncation and internalpulses assigned to the wrong latent source. For inferred core- field definition used to derive it. This naming discipline makes
+flow modes, posterior rank and recovery error are reported, not it possible to compare forecasts without confusing a model
+only the posterior mean.
+artifact with a physical measurement.
+The decision table is deliberately multi-dimensional. The
+Operational geomagnetic services remain the authority for
+primary treatment must be compared on field error, secular safety-relevant warnings. GEODYNAMO-X, if ever evaluated
+variation, pole uncertainty, source attribution, and calibration. beyond this design, would be compared with established
+Secondary reports include compute cost, sensitivity to missing services and would expose uncertainty, source attribution,
+sensors, degradation under calibration drift, and stability across and failure modes. It would not issue an automatic warning
+structural transition families. The analysis records the first solely because a latent core state crossed a model threshold.
+failure mode: wrong source attribution, non-identifiability, The present work ends before deployment and contains no
+forecast drift, interval undercoverage, or observation-operator operational alert.
+
+The proposal includes no empirical result. The expectedresults fields remain empty until the synthetic and historical
+experiments are actually run. Reproducibility is achieved
+through versioned configuration, locked data splits, synthetic
+truth, saved masks, and complete parameter provenance rather
+than by claiming that the equations alone determine a unique
+answer.
+VIII. R ISKS AND S COPE
+The largest scientific risk is model discrepancy. Numerical
+dynamos, core-flow inversions, conductivity transfer models,
+external-current models, and sensor calibration models may
+disagree. GEODYNAMO-X treats this disagreement as a
+structured uncertainty rather than allowing a flexible residual
+to hide it. A recommendation that survives only one transition
+family is not robust.
+The largest inverse-problem risk is non-identifiability. Surface observations constrain only certain spatial and temporal
+modes of the core. The report therefore treats a posterior
+family of flows as a valid result. A broad uncertainty interval
+is preferable to a precise but non-identifiable flow map.
+The largest attribution risk is external contamination. Solarwind and ionospheric forcing can create rapid changes that
+resemble regional internal variation. Event holdouts and the
+adversarial synthetic twin target this failure directly. The largest
+communication risk is to describe pole motion as if it were a
+rigid object moving through Earth; the report instead defines
+pole location as a derived property of the internal field.
+This report is a research proposal, not a new geomagnetic
+model, a forecast, a reversal prediction, or an empirical estimate
+of core-flow speed. Its direct scientific claim is narrower:
+a conducting-fluid geodynamo provides the physical source
+class, rotation organizes but does not alone generate the field,
+and observed field motion should be tested with a coupled
+model that separates internal secular variation from external
+electromagnetic sources.
+IX. C ONCLUSION
+The Earth’s long-lived magnetic field is most plausibly
+sustained by induction in a moving, electrically conducting
+liquid outer core. Thermal and compositional buoyancy provide
+energy, rotation organizes the flow, magnetic diffusion removes
+structure, and Lorentz feedback couples the field back to the
+fluid. The field moves because the core state changes and
+because external current systems vary; the apparent motion of
+a magnetic pole is a derived change in the internal field, not a
+rigid axis sliding through the planet.
+GEODYNAMO-X makes this explanation testable. It combines a constrained induction model, rotating-flow priors,
+conductivity transfer, explicit ionospheric and magnetospheric
+states, and sensor-specific observation operators. It first asks
+whether the latent sources can be recovered in synthetic twins,
+then tests held-out vector-field forecasts and pole-location
+uncertainty under real-data-like sampling. Baselines, ablations,
+structural sensitivity, and falsification rules prevent a complex
+model from winning merely by fitting history.
+
+The answer to the motivating question is therefore direct
+but qualified: the field is created primarily by a self-sustaining
+geodynamo in the outer core, while rotation is an essential
+organizer rather than a standalone source. Its observed motion
+is a coupled signature of changing core dynamics, external
+currents, induction in conducting layers, and measurement
+geometry. The proposed experiment should be accepted only if
+it improves held-out calibrated prediction and source attribution
+without hiding non-identifiability. Until then, it is a rigorous
+design for learning what the field is doing, not a claim that its
+future has already been computed.
+R EFERENCES
+[1] P. H. Roberts and E. M. King, “On the genesis of the Earth’s magnetism,”
+Reports on Progress in Physics, vol. 76, no. 9, Art. no. 096801, 2013,
+doi: 10.1088/0034-4885/76/9/096801.
+[2] B. A. Buffett, “Earth’s core and the geodynamo,” Science, vol. 288, no.
+5473, pp. 2007–2012, 2000, doi: 10.1126/science.288.5473.2007.
+[3] G. A. Glatzmaier and P. H. Roberts, “A three-dimensional self-consistent
+computer simulation of a geomagnetic field reversal,” Physics of the
+Earth and Planetary Interiors, vol. 91, nos. 1–3, pp. 63–75, 1995, doi:
+10.1016/0031-9201(95)03049-7.
+[4] U. R. Christensen and J. Aubert, “Scaling properties of convection-driven
+dynamos in rotating spherical shells and application to planetary magnetic
+fields,” Geophysical Journal International, vol. 166, no. 1, pp. 97–114,
+2006, doi: 10.1111/j.1365-246X.2006.03009.x.
+[5] P. Alken et al., “International Geomagnetic Reference Field: the thirteenth
+generation,” Earth, Planets and Space, vol. 73, Art. no. 49, 2021, doi:
+10.1186/s40623-020-01288-x.
+[6] C. C. Finlay et al., “Recent geomagnetic secular variation from Swarm
+and ground observatories as estimated in the CHAOS-6 geomagnetic
+field model,” Earth, Planets and Space, vol. 68, Art. no. 112, 2016, doi:
+10.1186/s40623-016-0486-1.
+
+

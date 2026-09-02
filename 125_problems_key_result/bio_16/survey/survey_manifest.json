@@ -1,0 +1,23 @@
+{
+  "manifest_type": "survey_manifest",
+  "schema_version": "1.0",
+  "project_id": "bio_16",
+  "survey_run_id": "survey-bio_16-v1",
+  "project_context_fingerprint": "pcf:bio_16:growth_plate_closure_readiness:v1",
+  "topic": "Why do we stop growing?",
+  "scientific_reframe": "Which growth-plate, pubertal endocrine, and inherited regulatory features predict the transition from measurable longitudinal bone growth to sustained growth cessation, and does a longitudinal multimodal model improve prediction beyond chronological age and bone age alone?",
+  "stage_status": "completed",
+  "design_mode": "DESIGN_ONLY",
+  "source_registry": [
+    {"id":"smith1994","citation_key":"smith1994","title":"Estrogen resistance caused by a mutation in the estrogen-receptor gene in a man","venue":"New England Journal of Medicine","year":1994,"doi":"10.1056/NEJM199410203311604","url":"https://pubmed.ncbi.nlm.nih.gov/8090165/","verification":"browser_checked_metadata_and_abstract","verified_scope":"Human clinical evidence of incomplete epiphyseal closure and continued linear growth with estrogen-receptor disruption."},
+    {"id":"weise2001","citation_key":"weise2001","title":"Effects of estrogen on growth plate senescence and epiphyseal fusion","venue":"Proceedings of the National Academy of Sciences","year":2001,"doi":"10.1073/pnas.121180498","url":"https://pubmed.ncbi.nlm.nih.gov/11381135/","verification":"browser_checked_metadata_and_abstract","verified_scope":"Experimental estrogen-associated acceleration of growth-plate senescence and fusion."},
+    {"id":"nilsson2014","citation_key":"nilsson2014","title":"Evidence that estrogen hastens epiphyseal fusion and cessation of longitudinal bone growth by irreversibly depleting the number of resting zone progenitor cells in female rabbits","venue":"Endocrinology","year":2014,"doi":"10.1210/en.2013-2175","url":"https://pubmed.ncbi.nlm.nih.gov/24708243/","verification":"browser_checked_metadata_and_abstract","verified_scope":"Rabbit mechanism supporting a progenitor-depletion hypothesis; not a human causal estimate."},
+    {"id":"vanderEerden2003","citation_key":"vanderEerden2003","title":"Systemic and local regulation of the growth plate","venue":"Endocrine Reviews","year":2003,"doi":"10.1210/er.2002-0033","url":"https://pubmed.ncbi.nlm.nih.gov/14671005/","verification":"browser_checked_metadata_and_abstract","verified_scope":"Growth plate as a final target organ and coordinated local/systemic regulation."},
+    {"id":"nilsson2005","citation_key":"nilsson2005","title":"Impact of growth plate senescence on catch-up growth and epiphyseal fusion","venue":"Pediatric Nephrology","year":2005,"doi":"10.1007/s00467-004-1689-4","url":"https://pubmed.ncbi.nlm.nih.gov/15723267/","verification":"browser_checked_metadata_and_abstract","verified_scope":"Review of local growth-plate senescence and finite proliferative capacity."},
+    {"id":"wood2014","citation_key":"wood2014","title":"Defining the role of common variation in the genomic and biological architecture of adult human height","venue":"Nature Genetics","year":2014,"doi":"10.1038/ng.3097","url":"https://pubmed.ncbi.nlm.nih.gov/25282103/","verification":"browser_checked_metadata","verified_scope":"Polygenic architecture of adult stature; not an individual closure clock."},
+    {"id":"kronenberg2006","citation_key":"kronenberg2006","title":"PTHrP and skeletal development","venue":"Annals of the New York Academy of Sciences","year":2006,"doi":"10.1196/annals.1346.002","url":"https://pubmed.ncbi.nlm.nih.gov/16831900/","verification":"browser_checked_metadata_and_abstract","verified_scope":"PTHrP regulation of endochondral skeletal development and chondrocyte differentiation."}
+  ],
+  "accepted_gap_ids": ["GAP-GP-01", "GAP-GP-02"],
+  "artifacts": {"survey":"survey.md","structured_survey":"survey.json","evidence_plan":"survey_evidence_plan.json","claim_traceability":"survey_claim_traceability.json","gap_ledger":"survey_gap_ledger.json","gap_candidates":"survey_gap_candidates.json","gap_coverage":"survey_gap_coverage.json","gap_triage":"survey_gap_triage.json","idea_handoff":"survey_idea_handoff.json","dual_engine_search":"literature_search.json"},
+  "observed_results": []
+}

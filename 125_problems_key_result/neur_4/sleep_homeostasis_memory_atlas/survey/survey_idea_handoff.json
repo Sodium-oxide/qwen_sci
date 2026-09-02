@@ -1,0 +1,14 @@
+{
+  "schema":"survey_idea_handoff_v1",
+  "topic":"Why do we need sleep?",
+  "project_id":"neur_4",
+  "survey_run_id":"neur_4-survey-001",
+  "project_context_fingerprint":"neur4-sleep-function-context-v1",
+  "accepted_gap_ids":["G1","G2","G3","G4","G5","G6","G7"],
+  "candidate_gap_ids":["G8","G9"],
+  "anchor_sources":["E1","E2","E3","E4","E5","E6","E7","E8","E9"],
+  "recommended_direction":"Sleep Function Causal Atlas (SFCA)",
+  "required_invariants":["separate_duration_timing_stage_continuity","separate_prediction_from_causation","separate_memory_domains","model_individual_variability","retain_design_only_status"],
+  "unknowns":["which sleep features causally support each memory domain","whether clearance mediates cognitive benefit","whether immune and memory benefits share a physiological pathway","which individuals are resilient or responsive to intervention"],
+  "human_review_required":["sleep restriction safety","participant consent and compensation","medical and psychiatric exclusion review","immune and biomarker governance","privacy of longitudinal wearable and neural data","statistical review of crossover and carryover effects"]
+}

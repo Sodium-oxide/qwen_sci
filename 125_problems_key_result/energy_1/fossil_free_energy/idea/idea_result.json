@@ -1,0 +1,22 @@
+{
+  "result_type": "idea_result_v5",
+  "topic": "Could we live in a fossil-fuel-free world?",
+  "design_mode": "DESIGN_ONLY",
+  "primary_direction": "FOSSIL-FREE-SYSTEM-PORTFOLIO",
+  "research_question": "Under what combinations of renewable and other low-carbon generation, electrification, storage, transmission, demand flexibility, sustainable fuels, efficiency, and non-fossil feedstocks can a region eliminate fossil-fuel extraction and combustion while satisfying hourly reliability, energy-service, affordability, access, lifecycle-emissions, land, water, mineral, and governance constraints?",
+  "candidate_routes": [
+    {"name":"electrification_first","status":"candidate","reason":"reduces combustion and conversion losses where electricity can preserve the required service"},
+    {"name":"renewable_plus_flexibility","status":"candidate","reason":"tests wind and solar with transmission, storage, overbuild, and demand response under correlated weather stress"},
+    {"name":"firm_and_seasonal_supply","status":"candidate","reason":"addresses multi-day and seasonal adequacy with explicit resource and safety constraints"},
+    {"name":"industrial_molecules_and_feedstocks","status":"candidate","reason":"addresses aviation, shipping, steel, chemicals, and non-energy carbon needs"},
+    {"name":"demand_reduction_and_sufficiency","status":"candidate","reason":"reduces infrastructure requirements while preserving energy services and testing equity"},
+    {"name":"coordinated_transition_portfolio","status":"selected","reason":"integrates technical portfolios with networks, manufacturing, policy, affordability, and adoption lead times"}
+  ],
+  "boundary_states": ["fossil_dependent_baseline", "fossil_free_electricity", "fossil_free_energy_services", "stringent_fossil_free_materials"],
+  "objectives": ["energy_service", "hourly_reliability", "seasonal_adequacy", "affordability", "access", "lifecycle_emissions", "land", "water", "minerals", "infrastructure", "transition_speed", "adoption", "industrial_feedstocks"],
+  "falsifiable_claims": ["annual balance overstates feasibility under correlated stress", "electrification and flexibility reduce fossil backup at matched service reliability", "clean electricity does not establish full fossil independence", "lifecycle and infrastructure constraints can reorder technology choices", "no universal portfolio dominates"],
+  "required_boundaries": ["distinguish fossil-free from net-zero with CCS", "include non-energy fossil uses", "model delivered services rather than primary fuel", "include hourly and seasonal adequacy", "include distributional outcomes and transition lead times"],
+  "expected_results": [],
+  "observed_results": [],
+  "upstream_sources": ["iea_netzero2050", "ipcc_ar6_wg3_ch6"]
+}

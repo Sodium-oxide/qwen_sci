@@ -1,0 +1,23 @@
+{
+  "schema_version": "ieee_math_model_v2_manual",
+  "lineage": {"science_run_id": "phys_2_manual_five_agent", "project_id": "phys_2_cuprate_mechanism_20260903", "survey_run_id": "survey-cuprate-mechanism-20260903-manual", "selected_direction_id": "I-01", "quantitative_idea_id": "Q1", "version": 0},
+  "model_spec_identity": "q1-v0-reduced-kernel-model-20260903",
+  "scientific_question": "Does coherence weighting alter the underdoped prediction of a spin-mediated d-wave kernel?",
+  "assumptions": [
+    {"id": "A1", "statement": "S(p) is a normalized proxy for the magnetic pairing-support channel."},
+    {"id": "A2", "statement": "Z_AN(p) is a normalized antinodal coherent-weight proxy, not a direct measured quasiparticle residue in v0."},
+    {"id": "A3", "statement": "The BCS-like exponential maps the reduced eigenvalue to a comparative temperature scale only."},
+    {"id": "A4", "statement": "All numeric parameters are assumptions, not a material calibration."}
+  ],
+  "symbols": [
+    {"id": "p", "meaning": "hole doping", "unit": "holes/Cu"},
+    {"id": "S", "meaning": "spin spectral support proxy", "unit": "dimensionless"},
+    {"id": "Z_AN", "meaning": "antinodal coherent-weight proxy", "unit": "dimensionless"},
+    {"id": "lambda_d", "meaning": "d-wave pairing eigenvalue proxy", "unit": "dimensionless"},
+    {"id": "Tc_model", "meaning": "comparative model transition scale", "unit": "K"}
+  ],
+  "equations": ["S(p)=exp(-((p-0.160)/0.100)^2)", "Z_AN(p)=1-0.35 exp(-((p-0.105)/0.050)^2)", "lambda_H0=0.70S", "lambda_H1=0.70SZ_AN", "Tc_model=420 exp(-1/lambda)"],
+  "numerical_plan": {"solver_family": "deterministic fixed-grid evaluator", "grid": "p=0.06,...,0.26, increment 0.01", "scenarios": ["H0 spin-only", "H1 spin-times-coherence"], "resource_limits": {"points": 21, "randomness": "none"}},
+  "parameter_provenance": {"mode": "APPROVED_PARAMETER_SET", "parameter_set_identity": "q1-v0-all-model-assumptions-20260903", "disclosure": "MODEL_ASSUMPTION"},
+  "limitations": ["phenomenological", "no momentum-resolved integral equation", "no disorder or interlayer structure", "not fitted to a real cuprate dataset", "not empirical evidence"]
+}

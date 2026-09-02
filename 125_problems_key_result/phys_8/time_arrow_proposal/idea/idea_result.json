@@ -1,0 +1,47 @@
+{
+  "schema_version": "idea_result_v5",
+  "project_id": "phys_8_time_arrow_20260901",
+  "survey_run_id": "survey-time-arrow-001",
+  "project_context_fingerprint": "time-arrow-multiscale-inference-v1",
+  "primary_direction_id": "idea-raat-001",
+  "selected_primary_idea": {
+    "idea_id": "idea-raat-001",
+    "title": "Resolution-Aware Arrow-of-Time Attribution Benchmark",
+    "summary": "A cross-family, multiresolution inference benchmark that separates genuine nonequilibrium dissipation from preparation, hidden-state, coarse-graining, and record-formation artifacts.",
+    "target_gap_ids": ["G1", "G2", "G3", "G4", "G5", "G6"],
+    "research_object": "Finite trajectory ensembles with declared generator, system boundary, observation map, and reversal protocol.",
+    "mechanism": "Joint evaluation of forward/reverse likelihood asymmetry, entropy-production consistency, fluctuation-relation residuals, record persistence, and resolution stability.",
+    "falsifiability": [
+      "Non-identifiability among candidate generators.",
+      "Instability under valid resolution or nuisance perturbations.",
+      "Failure of the applicable fluctuation-relation check.",
+      "Inability to define a symmetric reversal operation."
+    ],
+    "evidence_alignment": ["seifert2012", "seifert2018", "landi2021", "gellmann_hartle2007", "zurek1993", "clifton_ellis_tavakol2013"],
+    "maturity": "proposal"
+  },
+  "competitive_ideas": [
+    {
+      "idea_id": "idea-record-thermo-002",
+      "title": "Record-Persistence and Entropy Ledger",
+      "reason_not_primary": "Strong for record formation but insufficiently discriminative for the cosmological boundary condition."
+    }
+  ],
+  "high_risk_ideas": [
+    {
+      "idea_id": "idea-cosmograv-003",
+      "title": "Gravitational-Entropy Toy-Model Comparator",
+      "reason_high_risk": "Useful for exposing boundary-condition dependence, but gravitational-entropy definitions remain model dependent."
+    }
+  ],
+  "rejected_ideas": [
+    {
+      "title": "Universal entropy-score explanation of time",
+      "reason": "Violates the Survey separation between dissipation, records, coarse graining, and initial conditions."
+    }
+  ],
+  "simulated_search_trace": [
+    {"iteration": 1, "operation": "problem_reframing", "outcome": "Rejected monolithic entropy narrative."},
+    {"iteration": 2, "operation": "cross-scale synthesis", "outcome": "Selected RAAT with explicit failure conditions."}
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "schema_version": "survey_evidence_plan_v1",
+  "project_id": "phys_8_time_arrow_20260901",
+  "survey_run_id": "survey-time-arrow-001",
+  "research_topic": "Why does time seem to flow in only one direction?",
+  "reframed_question": "Can a resolution-aware cross-scale inference program distinguish physical entropy production from preparation, hidden-variable, coarse-graining, and record-formation asymmetries while treating the cosmological low-gravitational-entropy problem as an explicit boundary condition?",
+  "subhypotheses": [
+    {
+      "id": "SH1",
+      "claim": "Trajectory-level entropy production is operational only under declared dynamical, bath, protocol, and observation assumptions.",
+      "allowed_sources": ["seifert2012", "seifert2018", "landi2021", "ciliberto2017"],
+      "writing_boundary": "Do not generalize a model-specific estimator into a universal cause of time."
+    },
+    {
+      "id": "SH2",
+      "claim": "Coarse graining and decoherence affect accessible records and inference without alone fixing a universal boundary condition.",
+      "allowed_sources": ["gellmann_hartle2007", "zurek1993", "strasberg_winter2021"],
+      "writing_boundary": "Keep system-environment and record statements separate from net dissipation."
+    },
+    {
+      "id": "SH3",
+      "claim": "Cosmological temporal asymmetry requires an account of low gravitational entropy rather than the simple assertion that the early universe was already maximally disordered.",
+      "allowed_sources": ["clifton_ellis_tavakol2013", "aguirre_carroll_johnson2012", "gellmann_hartle2007"],
+      "writing_boundary": "Do not claim a settled gravitational-entropy definition or an experimentally measured early-universe entropy."
+    }
+  ],
+  "allowed_claim_types": ["established-within-source-scope", "proposal-hypothesis", "conditional-conclusion", "open-gap"],
+  "prohibited_claims": [
+    "Entropy literally causes time to flow as a dynamical substance.",
+    "A state of thermodynamic equilibrium erases all microscopic temporal structure.",
+    "The proposed work measures the entropy of the early universe.",
+    "Synthetic trajectories are observed physical data."
+  ]
+}

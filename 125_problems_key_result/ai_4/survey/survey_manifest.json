@@ -1,0 +1,19 @@
+{
+  "stage": "Survey",
+  "topic": "Will artificial intelligence replace humans?",
+  "status": "DESIGN_ONLY",
+  "reframing": "task and workflow boundary between automation, augmentation, and complementarity",
+  "browser_verified_records": [
+    {"id":"S1","source":"Stanford HAI AI Index 2025","url":"https://hai.stanford.edu/ai-index/2025-ai-index-report","role":"technical progress, adoption, costs, reasoning limits"},
+    {"id":"S2","source":"NBER Working Paper 31161 / QJE 2025","url":"https://www.nber.org/papers/w31161","doi":"10.1093/qje/qjae044","role":"human productivity and heterogeneous augmentation"},
+    {"id":"S3","source":"American Economic Association JEP article","url":"https://www.aeaweb.org/articles?id=10.1257/jep.33.2.3","doi":"10.1257/jep.33.2.3","role":"automation displacement and new-task reinstatement"},
+    {"id":"S8","source":"NIST AI Risk Management Framework","url":"https://www.nist.gov/itl/ai-risk-management-framework","doi":"10.6028/NIST.AI.100-1","role":"trustworthiness, design, use, and evaluation"}
+  ],
+  "constructs": ["task automation", "job/workflow replacement", "augmentation", "complementarity", "aleatory uncertainty", "epistemic uncertainty", "equivocality", "over-reliance", "human learning"],
+  "negative_claims": [
+    "No universal forecast that AI will or will not replace humans.",
+    "No claim that benchmark performance equals occupation replacement.",
+    "No empirical result is reported in this design-only artifact."
+  ],
+  "handoff": "Design a factorial human-AI collaboration experiment with routine, shifted, and equivocal regimes, calibrated delegation, complementary-error analysis, and repeated exposure."
+}

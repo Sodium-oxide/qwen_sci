@@ -1,0 +1,15 @@
+{
+  "ledger_type":"survey_gap_ledger",
+  "topic":"Can we achieve a situation where essentially every material can be recycled and reused?",
+  "design_mode":"DESIGN_ONLY",
+  "gaps":[
+    {"id":"G1","name":"technical_to_product_grade","question":"How often does a technically processable material meet the next product specification after realistic contamination and repeated processing?","priority":"high"},
+    {"id":"G2","name":"design_for_recovery","question":"Which disassembly, joining, labeling, and additive choices improve recovery without unacceptable use-performance loss?","priority":"high"},
+    {"id":"G3","name":"regional_routing","question":"How do collection, sorting, facility capacity, transport, and market access change the preferred route?","priority":"high"},
+    {"id":"G4","name":"reuse_threshold","question":"At what successful cycle count does reuse or refurbishment outperform recycling after washing, repair, return, and loss?","priority":"high"},
+    {"id":"G5","name":"external_costs","question":"How do health, climate, ecological, and community burdens alter private versus social route rankings?","priority":"high"},
+    {"id":"G6","name":"dissipative_materials","question":"Which hazardous, contaminated, mixed, or dissipative uses should be excluded from universal recovery claims?","priority":"medium"}
+  ],
+  "unresolved_claims":["near-universal recovery is a portfolio property rather than a universal material property","not every material-product combination should be recovered when risk or burden exceeds benefit"],
+  "observed_results":[]
+}

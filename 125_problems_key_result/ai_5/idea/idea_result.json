@@ -1,0 +1,39 @@
+{
+  "stage": "Idea",
+  "status": "READY",
+  "designation": "CLOSED-LOOP-HUMAN-MACHINE-INTEGRATION-BENCHMARK",
+  "research_object": "A measurable, reversible, bidirectional human-machine coupled system for bounded tasks",
+  "hypotheses": [
+    "Bidirectional feedback improves closed-loop control under matched task demands.",
+    "Joint adaptation improves acute performance but may increase hidden dependence.",
+    "Explicit veto and independent emergency stop preserve agency and safety.",
+    "Machine-off transfer distinguishes durable integration from task-specific assistance.",
+    "Higher interface bandwidth and connectivity increase privacy and security exposure.",
+    "Reversible task-specific coupling is a safer near-term path than species-level claims or genomic modification."
+  ],
+  "independent_variables": [
+    "interface level",
+    "feedback condition",
+    "adaptation regime",
+    "governance and data architecture"
+  ],
+  "primary_outcomes": [
+    "control error",
+    "response latency",
+    "perturbation recovery",
+    "veto success",
+    "safe disengagement latency",
+    "machine-off transfer",
+    "decoder drift"
+  ],
+  "secondary_outcomes": [
+    "effort or metabolic cost",
+    "body-state prediction",
+    "workload",
+    "privacy leakage",
+    "attack success",
+    "subgroup variability"
+  ],
+  "hard_boundary": "DESIGN_ONLY; no claim of a new species, sentience, cognitive uploading, or completed human experiment",
+  "excluded_from_initial_study": "genomic or heritable modification"
+}

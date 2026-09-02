@@ -1,0 +1,115 @@
+{
+  "schema_version": "research_design_v1",
+  "project_id": "neur_1_consciousness_causal_multiscale_atlas",
+  "survey_run_id": "survey-neur1-consciousness-001",
+  "selected_idea_id": "idea-cmca-001",
+  "discipline_template": "life_veterinary_plus_computational_digital",
+  "title": "A staged Causal Multiscale Consciousness Atlas study",
+  "research_brief": {
+    "scientific_object": "Distributed human brain dynamics supporting conscious perceptual experience, with a separately governed molecular module for testing an Orch-OR bridge.",
+    "central_hypothesis": "Conscious experience is supported by a dynamically integrated causal process with a measurable spatial and temporal extent; a joint perturbational, no-report, effective-connectivity, and complexity pattern will distinguish leading theory families better than any single biomarker.",
+    "alternative_explanations": ["report and motor preparation", "attention and confidence", "unconscious recurrent processing", "arousal/state marker without conscious content", "vascular or sensor artifact", "ordinary synaptic/network dynamics", "thermal/decoherence explanation for molecular signal"],
+    "falsification_conditions": ["candidate signature vanishes under report removal", "perturbation changes report but not validated experience proxy", "control perturbation reproduces the same causal pattern", "held-out data do not support the pre-registered theory restriction", "molecular signal lacks independent consciousness-linked timing or is explained by neural/network nulls"]
+  },
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": [],
+    "prohibited_actions": ["no participant recruitment", "no patient contact", "no TMS, anesthesia, sleep, EEG, MEG, fMRI, ECoG, or molecular experiment execution", "no organoid consciousness claim", "no data acquisition", "no model training on human data", "no claim of observed neural or quantum result"],
+    "human_review_required": true
+  },
+  "constructs": {
+    "phenomenal_experience": "pre-specified conscious perceptual content assessed through convergent report and validated indirect/no-report proxy",
+    "access": "availability of stimulus information for flexible task use",
+    "report": "verbal, button, confidence, or other explicit response channel",
+    "self_awareness": "higher-order representation of one's own mental state, measured separately from basic sentience",
+    "state": "global capacity or level of conscious processing",
+    "content": "which experience is present under matched sensory conditions"
+  },
+  "stages": [
+    {
+      "stage_id": "D0",
+      "name": "Construct validation and preregistration",
+      "purpose": "Freeze definitions, theory predictions, condition contrasts, no-report proxy validation, interventions, nuisance variables, and the analysis/hold-out plan before future data are viewed.",
+      "inputs": ["theory-specific predictions", "behavioral and physiological proxy validation plan", "candidate perturbation targets", "molecular module assumptions"],
+      "outputs": ["versioned construct dictionary", "theory prediction matrix", "candidate and null model registry", "blinding and unblinding plan", "human-safety and ethics protocol draft"],
+      "gate": "No confirmatory interpretation begins until experience, access, report, self-awareness, and state are separately operationalized."
+    },
+    {
+      "stage_id": "D1",
+      "name": "Report-matched and no-report content conditions",
+      "purpose": "Create conscious/unconscious or seen/unseen contrasts with matched sensory input and separate report demands from experience-sensitive proxies.",
+      "inputs": ["pre-validated perceptual manipulation", "report and no-report task versions", "behavioral/physiological proxy calibration"],
+      "outputs": ["condition-level behavioral and proxy specification", "report-confound audit", "content/state contrast definition"],
+      "gate": "Advance only if the no-report proxy is independently calibrated and the report-matched contrast is not reducible to motor output, confidence, or attention."
+    },
+    {
+      "stage_id": "D2",
+      "name": "Multiscale recording and candidate localization",
+      "purpose": "Measure timing, spatial distribution, recurrence, long-range broadcasting, effective connectivity, and perturbational complexity at complementary scales.",
+      "inputs": ["approved noninvasive or clinically available recordings", "anatomical registration", "predefined signal-quality criteria"],
+      "outputs": ["state/content/report feature vectors", "posterior/frontoparietal/thalamocortical network summaries", "PCI-like perturbational complexity specification", "sensor and vascular artifact audit"],
+      "gate": "No location claim is made from a passive association alone; candidate regions must proceed to D3 causal testing."
+    },
+    {
+      "stage_id": "D3",
+      "name": "Targeted causal perturbation",
+      "purpose": "Perturb candidate recurrent, broadcast, higher-order, or thalamocortical processes with sham and control targets while measuring both experience proxies and report variables.",
+      "inputs": ["neuronavigation and safety-approved target plan", "D1/D2 candidate regions", "matched sham/control intervention", "predefined stopping rules"],
+      "outputs": ["causal effect estimates", "state/content/report dissociation table", "target-specific and control-specific response profiles"],
+      "gate": "Advance only when a candidate perturbation changes a validated experience-sensitive outcome beyond report/motor effects and differs from the control intervention."
+    },
+    {
+      "stage_id": "D4",
+      "name": "Theory-specific out-of-sample model comparison",
+      "purpose": "Compare GNW, IIT-inspired, recurrent, higher-order/predictive, and common-null dynamic models using frozen predictions, complexity penalties, and held-out participants/conditions.",
+      "inputs": ["D1-D3 feature and causal vectors", "pre-registered theory restrictions", "candidate and null models", "held-out data partition"],
+      "outputs": ["predictive likelihood and calibration summaries", "theory comparison matrix", "model criticism and failure localization"],
+      "gate": "A theory is not selected by fit alone; it must predict held-out condition, timing, topology, and intervention patterns better than the common null under the predeclared scoring rule."
+    },
+    {
+      "stage_id": "D5",
+      "name": "Independent Orch-OR molecular bridge stress test",
+      "purpose": "Test whether a specified microtubule-linked molecular/quantum observable has an independent, reproducible, time- and perturbation-linked relationship to the conscious-state manipulation.",
+      "inputs": ["Orch-OR prediction registry", "independent molecular measurement proposal", "neural-network and decoherence null models", "approved ex vivo/in vitro or noninvasive strategy"],
+      "outputs": ["molecular signature specification", "timescale/scale-link test", "network-versus-molecular model comparison", "specificity and reproducibility assessment"],
+      "gate": "A molecular observation cannot be labeled consciousness-generating unless it is consciousness-linked, independently measured, temporally predicted, and not explained by thermal, synaptic, network, or measurement artifacts."
+    }
+  ],
+  "theory_predictions": [
+    {"theory": "GNW", "target": "late global broadcast", "expected_pattern": "long-range ignition and cross-system availability that survives no-report in a reduced form and predicts flexible access"},
+    {"theory": "IIT", "target": "integrated causal structure", "expected_pattern": "perturbational differentiation/integration tracks conscious state and has a nontrivial causal topology"},
+    {"theory": "recurrent processing", "target": "posterior recurrence", "expected_pattern": "appropriately timed posterior feedback is sufficient for conscious content before later report-related activity"},
+    {"theory": "higher-order/predictive", "target": "metacognitive/hierarchical inference", "expected_pattern": "higher-order or precision-weighted dynamics add predictive power beyond sensory recurrence without collapsing into confidence/motor report"},
+    {"theory": "Orch-OR", "target": "microtubule-linked quantum process", "expected_pattern": "independent molecular signature with pre-specified timing and perturbation relationship to experience, beyond network/decoherence nulls"}
+  ],
+  "variables": {
+    "independent": ["conscious versus unconscious content condition", "report versus no-report", "state condition", "perturbation target", "sham/control target", "perturbation timing", "sensory content", "participant/session", "molecular perturbation condition"],
+    "dependent": ["validated experience proxy", "content decoding", "report accuracy and confidence", "effective connectivity", "recurrent feedback", "global broadcast index", "perturbational complexity", "causal effect estimate", "molecular/quantum signature if independently measured"],
+    "controls": ["sensory-matched unseen condition", "report-matched and no-report pair", "sham stimulation", "non-candidate target", "motor/report control", "attention/confidence covariate", "sensor/vascular artifact control", "neural-network and decoherence null models"],
+    "moderators": ["arousal/state", "sleep/anesthesia condition if approved", "individual anatomy", "baseline connectivity", "sensory modality", "session drift", "measurement fidelity", "molecular temperature and preparation conditions"]
+  },
+  "endpoints": {
+    "primary": "A causal evidence vector that identifies which candidate process changes validated experience-sensitive measures under report-matched/no-report conditions and predicts held-out data under theory-specific restrictions.",
+    "secondary": ["state/content/report dissociation", "front/back/topology effect estimates", "perturbational complexity relationship", "model predictive likelihood", "participant-level reproducibility", "Orch-OR molecular bridge support or rejection code"],
+    "negative_results": "A null result localizes a failed link: proxy validity, candidate location, causal necessity, theory prediction, or molecular bridge; no null is converted into a claim that consciousness is absent."
+  },
+  "formal_analysis": {
+    "state_space": "x_(t+1)=F_theta x_t+B_theta u_t+eta_t; y_t=A_theta x_t+epsilon_t",
+    "causal_effect": "tau_k=E[phi | do(u_k=1), c]-E[phi | do(u_k=0), c], where phi is a validated experience-sensitive proxy and c fixes the condition/controls",
+    "theory_score": "S_m=log p(D_holdout | M_m)-lambda C(M_m), with the same frozen scoring rule and complexity penalty for every theory model",
+    "interpretation": "F_theta, B_theta, and A_theta encode theory restrictions; u_t is the approved perturbation; y_t is the multiscale observation; eta_t and epsilon_t represent process and measurement noise; C(M_m) penalizes flexibility."
+  },
+  "quality_and_reproducibility": {
+    "pre_registration": ["construct definitions", "condition contrasts", "no-report proxy validation", "target and sham rules", "theory predictions", "model priors/restrictions", "hold-out partition", "missing-data and multiple-comparison policy", "molecular null models"],
+    "data_governance": ["ethics-approved consent/data basis", "deidentification or approved safeguards", "versioned acquisition and preprocessing", "blinded condition labels", "immutable analysis record", "separation of exploratory and confirmatory analyses"],
+    "reproduction": ["independent sessions and participants where feasible", "held-out conditions before threshold finalization", "multimodal cross-validation", "release of non-sensitive analysis specification when permitted"]
+  },
+  "risks_and_human_review": [
+    {"risk": "Report, attention, confidence, or motor activity masquerades as consciousness", "mitigation": "no-report, report-matched, motor controls, independent proxy validation, and construct separation."},
+    {"risk": "A state marker is mistaken for content or mechanism", "mitigation": "separate state/content endpoints and require targeted causal perturbation."},
+    {"risk": "Flexible models can fit any result", "mitigation": "pre-registration, frozen restrictions, complexity penalties, and held-out prediction."},
+    {"risk": "Orch-OR molecular signal is epiphenomenal or an artifact", "mitigation": "independent measurement, time/scale prediction, synaptic/network/decoherence nulls, and explicit rejection code."},
+    {"risk": "Human stimulation, sleep, anesthesia, or clinical recording risk", "mitigation": "the present artifact executes none; future work requires qualified personnel, ethics approval, consent, safety monitoring, and local clinical/laboratory procedures."},
+    {"risk": "Consciousness is inappropriately inferred in organoids or nonhuman systems", "mitigation": "no organoid consciousness claim; any future model-system work must separately justify construct validity and ethics. "}
+  ]
+}

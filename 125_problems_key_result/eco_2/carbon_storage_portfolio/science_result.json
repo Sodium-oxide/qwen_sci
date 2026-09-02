@@ -1,0 +1,17 @@
+{
+  "science_run_id": "eco-2-carbon-storage-20260902",
+  "schema_version": "science_run_result_v1",
+  "status": "COMPLETED_WITH_HUMAN_REVIEW_PENDING",
+  "execution_mode": "DESIGN_ONLY",
+  "topic": "Where do we put all the excess carbon dioxide?",
+  "primary_direction": "PERSIST-CO2",
+  "stages": {
+    "survey": {"status": "COMPLETED", "manifest": "carbon_storage_portfolio/survey/survey_manifest.json"},
+    "idea": {"status": "COMPLETED", "result": "carbon_storage_portfolio/idea/idea_result.json"},
+    "exp_design": {"status": "COMPLETED", "design": "carbon_storage_portfolio/experiment_design/research_design.json"},
+    "author": {"status": "COMPLETED", "pdf": "carbon_storage_portfolio/author/persist_co2_report.pdf"}
+  },
+  "expected_results": [],
+  "observed_results": [],
+  "until": "author"
+}

@@ -1,0 +1,39 @@
+{
+  "result_type": "idea_result_v5",
+  "project_id": "bio_16",
+  "idea_run_id": "idea-bio_16-v1",
+  "topic": "Why do we stop growing?",
+  "design_mode": "DESIGN_ONLY",
+  "survey_binding": {
+    "survey_manifest_path": "../survey/survey_manifest.json",
+    "survey_run_id": "survey-bio_16-v1",
+    "project_context_fingerprint": "pcf:bio_16:growth_plate_closure_readiness:v1",
+    "accepted_gap_ids": ["GAP-GP-01", "GAP-GP-02"],
+    "source_keys": ["smith1994", "weise2001", "nilsson2014", "vanderEerden2003", "nilsson2005", "wood2014", "kronenberg2006"]
+  },
+  "trajectory_record": {
+    "type": "evidence_bound_route_comparison",
+    "mcts_or_evolution_trajectory": null,
+    "statement": "No true MCTS or evolutionary trajectory was run. The portfolio is a transparent route comparison constrained by the frozen Survey evidence."
+  },
+  "competitive_ideas": [
+    {"idea_id":"IDEA-GP-01","name":"Cross-sectional skeletal-maturity catalogue","target_gap_ids":["GAP-GP-02"],"mechanism":"Describe associations of age, bone age, and one-time imaging state.","strength":"Low data-collection burden.","rejection_reason":"Does not establish future predictive value or solve the longitudinal alignment gap."},
+    {"idea_id":"IDEA-GP-02","name":"Longitudinal Growth-Plate Closure Readiness Atlas","target_gap_ids":["GAP-GP-01","GAP-GP-02"],"mechanism":"Jointly model repeated height velocity, MRI growth-plate features, pubertal endocrine state, and optional inherited features; evaluate interval-censored closure and sustained low-growth probability.","strength":"Directly tests incremental prediction, calibration, and transportability without intervention.","status":"selected_primary"},
+    {"idea_id":"IDEA-GP-03","name":"Direct endocrine perturbation and tissue sampling","target_gap_ids":["GAP-GP-01"],"mechanism":"Manipulate hormone exposure and assay growth-plate tissue.","strength":"Potentially direct mechanism evidence.","rejection_reason":"Inappropriate initial design for healthy minors; poor feasibility and unacceptable intervention risk."}
+  ],
+  "high_risk_ideas": [
+    {"idea_id":"IDEA-GP-HR-01","name":"Universal genetic closure clock","risk":"Conflates polygenic adult-height association with deterministic individual closure timing and would amplify ancestry and interpretation bias.","status":"not_selected"}
+  ],
+  "selected_primary_idea": {
+    "idea_id":"IDEA-GP-02",
+    "title":"Longitudinal Growth-Plate Closure Readiness Atlas",
+    "research_object":"Repeated participant-level longitudinal growth trajectories with noninvasive growth-plate imaging and developmental covariates.",
+    "central_hypothesis":"A preregistered multimodal model will improve held-out calibration and proper scoring for sustained growth cessation beyond a chronological-age-plus-bone-age baseline.",
+    "proposed_relation":"Growth-plate MRI features and puberty-related endocrine measures are candidate predictors of residual longitudinal growth; inherited features are evaluated only with ancestry-aware controls. The relation is predictive, not a causal intervention effect.",
+    "falsification_conditions":["The baseline matches or exceeds the multimodal model on held-out primary scores.","The multimodal model fails overall or subgroup calibration gates.","Incremental benefit disappears at an external site or later recruitment wave.","Signal is dependent on leakage, missingness artifacts, or a single feature family."],
+    "feasibility_path":"Recruit or reuse an ethically approved longitudinal pediatric cohort; acquire research MRI without ionizing radiation; collect serial anthropometry and limited clinically appropriate blood samples; separate training, temporal validation, and external-site evaluation.",
+    "validation_path":["locked temporal holdout", "external-site holdout", "calibration slope and intercept", "Brier score and log score", "interval-censored time-to-closure analysis", "subgroup error audit"],
+    "evidence_alignment":["CLM-GP-01","CLM-GP-02","CLM-GP-03","CLM-GP-04","CLM-GP-05"]
+  },
+  "observed_results": []
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "quantitative_model_blueprint_v1_manual",
+  "quantitative_idea_id": "Q1",
+  "version": 0,
+  "model_family": "reduced_order_d_wave_pairing_kernel",
+  "scientific_question": "Does an explicitly coherence-weighted spin-support kernel create a discriminating underdoped suppression signature relative to a spin-only baseline?",
+  "equations": [
+    "S(p)=exp(-((p-p_AF)/sigma_AF)^2)",
+    "Z_AN(p)=1-A_PG exp(-((p-p_PG)/sigma_PG)^2)",
+    "lambda_d^H0(p)=lambda0 S(p)",
+    "lambda_d^H1(p)=lambda0 S(p)Z_AN(p)",
+    "Tc_model(p)=Omega exp(-1/lambda_d(p))"
+  ],
+  "parameter_requests": [
+    {"parameter_id": "lambda0", "unit": "dimensionless", "role": "MODEL_ASSUMPTION", "applicability": "fixed v0 sensitivity study"},
+    {"parameter_id": "Omega_K", "unit": "K", "role": "MODEL_ASSUMPTION", "applicability": "common cutoff for comparator scenarios"},
+    {"parameter_id": "p_AF", "unit": "dimensionless holes per Cu", "role": "MODEL_ASSUMPTION", "applicability": "center of magnetic-support proxy"},
+    {"parameter_id": "sigma_AF", "unit": "dimensionless holes per Cu", "role": "MODEL_ASSUMPTION", "applicability": "magnetic-support width"},
+    {"parameter_id": "p_PG", "unit": "dimensionless holes per Cu", "role": "MODEL_ASSUMPTION", "applicability": "center of coherent-weight depletion"},
+    {"parameter_id": "sigma_PG", "unit": "dimensionless holes per Cu", "role": "MODEL_ASSUMPTION", "applicability": "depletion width"},
+    {"parameter_id": "A_PG", "unit": "dimensionless", "role": "MODEL_ASSUMPTION", "applicability": "depletion amplitude"}
+  ],
+  "measurement_linkage": "Future material-calibrated versions must substitute measured magnetic support and ARPES coherent weight, preserving units and uncertainty.",
+  "falsification_condition": "The joint model provides no stable held-out improvement over H0 after real-data calibration and controls."
+}

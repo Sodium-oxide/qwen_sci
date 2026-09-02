@@ -1,0 +1,10 @@
+{
+  "schema_version": "pdf_validation_v1",
+  "pdf": "spectra_loop_energy_report.pdf",
+  "validation_date": "2026-09-01",
+  "compile": {"engine": "pdflatex", "passes": 2, "exit_code": 0, "undefined_control_sequence": false, "undefined_references": false, "undefined_citations": false, "overfull_hbox": false},
+  "document_properties": {"pages": 7, "page_size": "612 x 792 pt / Letter", "encrypted": false, "fonts_embedded_or_subset": true},
+  "rendering": {"renderer": "pdftoppm", "resolution_dpi": 160, "rendered_pages": 7, "visually_inspected_pages": [1, 4, 6, 7], "visual_result": "No clipping, overlap, broken glyph, or unreadable table/Equation defect observed."},
+  "content_scan": {"forbidden_tokens_absent": ["Acknowledg", "we observed", "we measured", "we collected", "we sequenced", "??"], "proposal_boundary": "No observed results, measurement, simulation, or universal-limit-violation claim is presented."},
+  "notes": ["The relative IEEEtran class path emits a nonblocking class-name warning because the loaded class identifies itself as IEEEtran.", "Underfull hbox warnings occur in narrow bibliography/justified text but visual inspection shows no overlap or clipping."]
+}

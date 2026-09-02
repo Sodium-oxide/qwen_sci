@@ -1,0 +1,717 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{url}
+\newcommand{\pec}{\textsc{PEC}}
+\newcommand{\qsl}{\textsc{QSL}}
+\newcommand{\qec}{\textsc{QEC}}
+
+\begin{document}
+
+\title{Is There an Upper Limit to Computer Processing Speed?\\
+An Evidence-Bounded Research Proposal for Physical Compute Envelopes}
+
+\author{\IEEEauthorblockN{Anonymous Research Proposal}
+\IEEEauthorblockA{\textit{Survey to Idea to ExperimentDesign to Author Workflow}\\
+IEEE Conference Format Research Plan}}
+
+\maketitle
+
+\begin{abstract}
+There are physical limits to computer processing speed, but no single
+technology-independent number answers the question for every computer and
+every workload. A processor clock, transistor count, physical gate rate,
+sampling rate, and application time-to-solution have different denominators.
+They cannot be substituted for each other without an explicit computation
+boundary. This paper proposes the Physical Compute-Envelope Contract, a
+research protocol for evaluating a useful-throughput claim under a declared
+workload, correctness target, reliability target, architecture, energy,
+thermal environment, spatial extent, communication topology, memory
+assumptions, and input-output boundary. The proposal combines quantum speed
+limits, finite signal propagation, thermodynamic erasure cost, heat removal,
+information storage, and fault-tolerant logical overhead as separate
+constraint cards. It rejects two common overclaims: that the end of Moore
+scaling supplies a universal physical ceiling, and that quantum computation
+removes physical speed limits. Quantum processors can change algorithmic
+complexity for specified tasks, but state preparation, control, communication,
+measurement, error correction, and verification remain part of useful
+end-to-end computation. The resulting design is a falsifiable and
+architecture-neutral way to decide whether a proposed speed statement is
+supported within scope, incomplete, overgeneralized, or inconclusive. This is
+a design-only study: it reports no executed hardware experiment, simulation,
+benchmark, or observed performance result.
+\end{abstract}
+
+\begin{IEEEkeywords}
+physical limits of computation, quantum speed limit, Moore's Law, Landauer
+principle, fault-tolerant quantum computing, computer architecture,
+throughput, reproducibility
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+The statement that computers will eventually become as fast as physics allows
+is compelling but underspecified. What counts as "fast"? A contemporary
+processor may advertise a clock frequency, an accelerator may advertise
+operations per second, a high-performance system may advertise floating-point
+throughput, and a quantum processor may report physical-gate performance,
+sampling throughput, or a task-specific computational advantage. None of
+these numbers independently specifies the useful work delivered to an end
+user. The computation could differ in problem size, output representation,
+accuracy, probability of success, initialization, readout, energy boundary,
+or communication path.
+
+The historical motivation is clear. Moore's influential observation concerned
+the number of components that could be integrated economically over time
+\cite{moore}. Earlier idealized scaling also tied smaller field-effect devices
+to favorable density, speed, and power trends \cite{dennard}. Those
+relationships enabled extraordinary engineering progress, but they are not
+laws that a physical computer must obey. Leakage, variability, interconnects,
+power delivery, cooling, packaging, manufacturing cost, and architecture
+change the realized trajectory. The reported slowing of Moore-style scaling is
+therefore a reason to ask a physics question, not an answer to it
+\cite{waldrop}.
+
+Quantum information processing sharpens rather than removes the question.
+Quantum speed limits constrain how quickly specified quantum states can
+evolve under stated physical resources. Quantum algorithms can outperform
+classical alternatives for particular problem structures. Yet neither result
+creates a general-purpose, unbounded operations-per-second machine. A useful
+computation remains embodied in a device with finite energy, finite size,
+finite signal velocity, control hardware, thermal interfaces, memory,
+measurement, and a required probability of correct output.
+
+This report simulates the repository workflow
+\begin{equation}
+\text{Survey} \longrightarrow \text{Idea} \longrightarrow
+\text{ExperimentDesign} \longrightarrow \text{Author}.
+\label{eq:workflow}
+\end{equation}
+It gives a direct answer: \emph{there are upper limits, but they are
+conditional physical compute envelopes rather than one universal speed
+constant}. The proposed contribution is not a new numerical limit. It is a
+testable method for stating which limit is active for one clearly defined
+claim.
+
+\section{Survey: Why a Single Speed Number Fails}
+
+\subsection{A metric has a numerator, denominator, and scope}
+
+Table~\ref{tab:metrics} separates quantities often called computer speed.
+They should be compared only after their numerator, time boundary, and
+acceptance rule have been aligned. A clock is a periodic control signal; it is
+not an accepted answer rate. A physical quantum gate rate is not a logical
+algorithm rate. A sampling rate is not necessarily a rate for a practically
+useful task. Conversely, a slow physical operation may contribute to a faster
+algorithm if it changes computational complexity for the named workload.
+
+\begin{table}[t]
+\caption{Common Speed Metrics and Their Missing Context}
+\label{tab:metrics}
+\centering
+\footnotesize
+\begin{tabular}{p{0.20\columnwidth}p{0.29\columnwidth}p{0.29\columnwidth}}
+\toprule
+Metric & What it records & What it does not establish\\
+\midrule
+Clock frequency & Local timing cadence & Useful work, memory behavior, energy, or I/O cost\\
+Transistor count & Integration density & Architecture, yield, heat, or algorithmic work\\
+Physical gate rate & Device-level operation time & Logical reliability and full algorithm completion\\
+FLOPS or TOPS & Chosen arithmetic operation rate & Accuracy, data movement, and workload relevance\\
+Sampling rate & Samples from a named distribution & General-purpose advantage or application utility\\
+Time-to-solution & End result for one workload & Transfer to a different workload or condition\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The scope problem can be made explicit. Let \(W\) denote a workload including
+its inputs and output representation, \(\epsilon\) a correctness or
+distributional-error target, and \(\rho\) a reliability target. A claim about
+useful throughput is meaningful only after it states an end-to-end time
+boundary. The direct dependent quantity in this proposal is
+
+\begin{equation}
+R_{\mathrm{accepted}} =
+\frac{N_{\mathrm{accepted}}}{T_{\mathrm{wall}}},
+\label{eq:accepted-rate}
+\end{equation}
+
+where \(N_{\mathrm{accepted}}\) is the number of outputs meeting the declared
+\(\epsilon\) and \(\rho\) criteria and \(T_{\mathrm{wall}}\) includes or
+explicitly excludes preparation, communication, readout, verification, and
+classical postprocessing. Equation~\eqref{eq:accepted-rate} is a definition,
+not a claim of measured performance.
+
+\subsection{Moore scaling is an engineering trajectory, not a terminal theorem}
+
+Moore's original article was a projection about component density and
+cost-effective integration \cite{moore}. Dennard and colleagues analyzed a
+device-scaling regime in which electric fields and device dimensions were
+coordinated \cite{dennard}. The importance of these sources is conceptual:
+they show why density, power, and speed were historically coupled. Their
+importance is not that either predicts an unavoidable absolute speed for
+future computers.
+
+At small feature sizes, multiple bottlenecks decouple. A switching device may
+be fast while a wire, cache miss, package, analog interface, or thermal
+constraint determines wall-clock completion. Three-dimensional integration,
+special-purpose acceleration, better algorithms, reversible logic, optical
+interconnects, and heterogeneous systems can change the active bottleneck.
+The appropriate inference from an atomic-scale feature constraint is that
+specific integration routes have limits; it is not that every information
+processing architecture has reached one scalar ceiling.
+
+\subsection{Physical bounds constrain different mechanisms}
+
+Quantum speed limits offer a strong example of a real physical constraint that
+is often overextended. For an ideal closed quantum system evolving to an
+orthogonal state, the Mandelstam-Tamm and Margolus-Levitin forms can be
+written as
+
+\begin{equation}
+\tau_{\mathrm{QSL}} \geq
+\max\left\{\frac{\pi\hbar}{2\Delta E},
+\frac{\pi\hbar}{2(E-E_0)}\right\},
+\label{eq:qsl}
+\end{equation}
+
+where \(\Delta E\) is the energy standard deviation, \(E-E_0\) is mean energy
+above the ground-state reference, and \(\hbar\) is reduced Planck's constant.
+The review by Deffner and Campbell organizes these bounds as limits on
+quantum evolution and control \cite{deffner}; the original
+Margolus-Levitin result provides a related dynamical speed statement
+\cite{margolus}. Lloyd's physical-computation analysis provides a wider
+resource-bound perspective without making energy the sole whole-system
+denominator \cite{lloyd}. Equation~\eqref{eq:qsl} says neither that every quantum gate
+saturates the bound nor that the reciprocal of this time is a complete
+computer rate.
+
+Finite transmission produces a different lower bound. If the critical
+information path has length \(L\) and signal velocity
+\(v_{\mathrm{sig}}\), then
+
+\begin{equation}
+\tau_{\mathrm{signal}} \geq \frac{L}{v_{\mathrm{sig}}},
+\qquad v_{\mathrm{sig}}\leq c,
+\label{eq:signal}
+\end{equation}
+
+with \(c\) the speed of light in vacuum. The relevant velocity can be lower
+in a medium, and a real path also contains serialization, switching, and
+controller delay. This term applies to a named topology; it is not a
+replacement for a device-transition model.
+
+Landauer's principle addresses logically irreversible erasure. At temperature
+\(T\), erasing \(n_{\mathrm{erase}}\) independent bits has an ideal lower heat
+cost
+
+\begin{equation}
+Q_{\mathrm{erase}} \geq n_{\mathrm{erase}} k_{\mathrm{B}}T\ln 2,
+\label{eq:landauer}
+\end{equation}
+
+where \(k_{\mathrm{B}}\) is Boltzmann's constant \cite{landauer}. The
+assumptions matter: \eqref{eq:landauer} is not a charge for every logical
+operation and not a measured package power. It is nevertheless indispensable
+when a claim relies on repeated reset, irreversible control, measurement, or
+data disposal. Finite-time operations and heat extraction can add substantial
+cost above this ideal floor.
+
+\subsection{Quantum advantage requires task semantics}
+
+Quantum information can deliver algorithmic advantages, but the predicate is
+not "uses qubits." Preskill describes the central role of noise and circuit
+depth for near-term quantum systems \cite{preskill}, while DiVincenzo
+emphasizes the physical requirements for initialization, control,
+measurement, and communication \cite{divincenzo}. Random-sampling studies
+clarify that a computational-advantage claim depends on a task distribution,
+classical comparator, verification method, and complexity assumptions
+\cite{hangleiter}.
+
+Photonic boson-sampling demonstrations are scientifically important
+task-specific evidence. They should not be reported as a universal rate at
+which arbitrary programs become faster. A particular classical-runtime
+estimate can change with improved algorithms and hardware; the sampling task
+may have no direct application utility; and a universal, fault-tolerant
+machine has additional preparation, error-handling, and readout requirements.
+The survey therefore retains sampling as an architecture and workload card,
+not as proof that an upper speed limit vanished.
+
+\section{Idea: The Physical Compute-Envelope Contract}
+
+\subsection{From a broad question to a falsifiable object}
+
+The Idea Agent selected the \pec{} after rejecting a clock-only comparison,
+an energy-only ceiling, and a quantum escape narrative. The research object is
+one tuple
+
+\begin{equation}
+\mathcal{C}=\langle W,\epsilon,\rho,A,E,T,L,\mathcal{N},
+\mathcal{H},\mathcal{M},\mathcal{I}\rangle,
+\label{eq:contract}
+\end{equation}
+
+where \(A\) identifies hardware and algorithmic architecture;
+\(\mathcal{N}\) identifies communication topology; \(\mathcal{H}\) identifies
+the cooling and heat-extraction boundary; \(\mathcal{M}\) identifies memory
+and information-density assumptions; and \(\mathcal{I}\) identifies
+input-output, observation, and verification boundaries. The other symbols are
+defined in Section II. A missing field is not a nuisance parameter; it is an
+unresolved part of the speed claim.
+
+The PEC central hypothesis is that a layered contract distinguishes supported
+from unsupported useful-throughput statements more reliably than one component
+metric. It can be falsified. The framework fails if its complete card set
+cannot discriminate a well-supported claim from an unsupported claim, if a
+mandatory card adds no decision value across the declared workload family, or
+if independently verified logical throughput violates the stated envelope
+without a changed contract or accounting correction.
+
+\begin{figure*}[t]
+\centering
+\fbox{\begin{minipage}{0.92\textwidth}
+\centering
+\vspace{4pt}
+\textbf{Claim Contract}\\[2pt]
+\(\downarrow\)\\[-2pt]
+\textbf{Transition Card} \quad
+\(\textbf{Signal and I/O Card}\) \quad
+\textbf{Thermal and Memory Card} \quad
+\textbf{Logical Reliability Card}\\[2pt]
+\(\downarrow\)\\[-2pt]
+\textbf{PEC Envelope: applicability, exclusions, active constraints}\\[2pt]
+\(\downarrow\)\\[-2pt]
+\textbf{Conditional Decision: in-scope support, hold, redesign, or inconclusive}
+\vspace{4pt}
+\end{minipage}}
+\caption{PEC claim-to-decision architecture. The delivered editable Draw.io
+source expresses the same relationship. The diagram is a design artifact, not
+an executed benchmark.}
+\label{fig:pec-flow}
+\end{figure*}
+
+\subsection{Compositional envelope rather than a false universal theorem}
+
+For a given contract, PEC defines the following reporting envelope:
+
+\begin{align}
+R_{\mathrm{accepted}} \leq
+\min\{R_{\mathrm{transition}},R_{\mathrm{signal}},
+R_{\mathrm{thermal}}, \nonumber\\
+R_{\mathrm{memory}},R_{\mathrm{reliable}},R_{\mathrm{I/O}}\}.
+\label{eq:pec-envelope}
+\end{align}
+
+Equation~\eqref{eq:pec-envelope} is deliberately operational. It does not
+assert that the six right-hand terms are independent, tight, or exhaustive
+physical theorems. Instead, it prevents the more common error of reporting a
+favorable numerator while silently omitting a limiting system stage. A card
+may be marked inapplicable with a documented rationale; it may not be
+silently assumed favorable.
+
+Table~\ref{tab:cards} specifies the minimum information in each card. For
+example, a reported quantum physical-gate time belongs in the transition card.
+It cannot establish logical useful throughput until the reliability card
+states encoding, error model, syndrome cycles, decoder, retries, and
+accepted-output criterion. A high-speed chip-to-chip link belongs in the
+signal card. It cannot erase I/O cost if data preparation or output
+verification crosses a slower boundary.
+
+\begin{table*}[t]
+\caption{PEC Cards Required Before a Useful-Throughput Claim}
+\label{tab:cards}
+\centering
+\footnotesize
+\begin{tabular}{p{0.19\textwidth}p{0.36\textwidth}p{0.35\textwidth}}
+\toprule
+Card & Minimum evidence record & Claim invalidated when absent\\
+\midrule
+Workload semantics & Input distribution, output form, accuracy metric, reliability threshold, wall-clock start and stop. & Different computations are treated as the same unit of work.\\
+Transition & Switching or state-evolution model, control assumptions, and QSL applicability rationale. & A device-local time is promoted to a system rate.\\
+Signal and I/O & Critical paths, topology, media, controller paths, initialization, readout, and verification inclusion. & Data movement or observation is silently excluded.\\
+Thermal and memory & Irreversible operations, temperature, heat-removal limit, density assumptions, and finite-time losses. & Ideal erasure cost is reported as realized dissipation.\\
+Logical reliability & Physical error model, code, space-time overhead, decoder, postselection or retry rule, and output acceptance probability. & Physical operations are counted as logical answers.\\
+Transfer and comparator & Classical comparator, resource normalization, architecture version, and conditions of transfer. & A task-specific result is framed as universal speed.\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{ExperimentDesign: A Design-Only Evaluation Protocol}
+
+\subsection{Research unit and variable map}
+
+The ExperimentDesign Agent routes PEC to a computational-digital and
+mathematics-theory template. The unit of analysis is
+
+\begin{equation}
+U=\langle W,\epsilon,\rho,A,
+\tau_{\mathrm{transition}},\tau_{\mathrm{signal}},
+\mathcal{H},\mathcal{M},\Omega_{\mathrm{logical}},\mathcal{I}\rangle,
+\label{eq:unit}
+\end{equation}
+
+where \(\Omega_{\mathrm{logical}}\) is a physical-to-logical space-time and
+control-overhead description. The independent variables are architecture class
+and workload class. The dependent variable is
+\(R_{\mathrm{accepted}}\) from \eqref{eq:accepted-rate}. Controlled
+conditions include the correctness definition, reliability target, output
+representation, and time boundary.
+
+The protocol cannot report a scalar readiness score. A scalar would hide
+whether an attractive transition time was paid for by an implausible cooling
+assumption, an omitted decoder, a changed output distribution, or an
+unreported classical preprocessing step. Instead it provides traceable cards
+and conditional decisions.
+
+\subsection{Pre-registered reasoning obligations}
+
+First, every transition claim must say whether \eqref{eq:qsl} applies. A QSL
+may be inapplicable to an open, driven, nonorthogonal, or insufficiently
+specified process. Inapplicability is a valid result of the card, but
+substituting a reciprocal gate time for the QSL is not.
+
+Second, the transport card must list the longest critical information path and
+the relevant medium. Equation~\eqref{eq:signal} is only a propagation floor;
+queueing, routing, synchronization, and decoder feedback can be additional
+terms. A small local quantum processor can therefore be control-limited,
+while a large conventional processor can be memory- or network-limited.
+
+Third, the thermal card separates a fundamental lower bound from a realized
+engineering budget. Equation~\eqref{eq:landauer} applies to declared
+irreversible erasures. A future study would document which resets,
+measurements, and control records count, then compare their dissipation and
+heat removal with the package boundary. Reversible logic is a crucial
+counterexample: it can change the erasure accounting, but it does not make
+signal latency, finite device volume, or error handling disappear.
+
+Fourth, the reliability card converts physical process counts into accepted
+logical work. A useful reporting relation is
+
+\begin{equation}
+R_{\mathrm{logical}} =
+\frac{R_{\mathrm{physical}}Y_{\mathrm{accept}}}
+{\Omega_{\mathrm{space}}\Omega_{\mathrm{time}}\Omega_{\mathrm{control}}},
+\label{eq:logical-rate}
+\end{equation}
+
+where \(Y_{\mathrm{accept}}\) is the probability that a result passes the
+declared acceptance rule, and the three \(\Omega\) terms are documented
+resource multipliers. Equation~\eqref{eq:logical-rate} is a bookkeeping
+model, not a claim that all architectures factor exactly this way. It exposes
+why raw physical-gate speed is insufficient for a reliable algorithm.
+
+\subsection{Future evidence and conditional branches}
+
+No experiment, simulation, device operation, or cloud job is performed in
+this report. Table~\ref{tab:future} states what a future research program
+could test after qualified human review. It also prevents each evidence source
+from carrying a claim it cannot establish.
+
+\begin{table}[t]
+\caption{Future Evidence Modalities and Their Boundaries}
+\label{tab:future}
+\centering
+\footnotesize
+\begin{tabular}{p{0.27\columnwidth}p{0.25\columnwidth}p{0.26\columnwidth}}
+\toprule
+Evidence modality & Can test & Cannot establish alone\\
+\midrule
+Source-reviewed device record & Populated transition, topology, and environment fields & End-to-end accepted throughput\\
+Fixed-workload benchmark & Scoped correctness and time boundary & Universal physical ceiling\\
+QEC resource analysis & Logical overhead under one error model & Performance under another hardware model\\
+Thermal/package assessment & Compatibility with a named heat boundary & Minimum cost of all computation\\
+Independent replication & Transfer under the same contract & Transfer to an unlisted workload or scale\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The protocol yields six statuses. CONTRACT EVALUABLE means that all cards and
+exclusions are explicit, not that a speed claim is true. BOUND SUPPORTED IN
+SCOPE means that future evidence supports the named envelope only under the
+declared contract. RELIABILITY ACCOUNT INCOMPLETE holds a claim when physical
+operations have not been translated into accepted logical outputs.
+THERMAL OR I/O BOUNDARY MISSING requires a redesign when cooling, preparation,
+readout, or verification has been omitted. QUANTUM ADVANTAGE OVERGENERALIZED
+requires the task and comparator to be separated from a general processor
+claim. INCONCLUSIVE is an allowed outcome when evidence cannot discriminate
+the envelope.
+
+\section{What Quantum Computing Does and Does Not Change}
+
+Quantum computation matters because it can alter the relationship between
+workload size and required computational resources. It does not matter because
+it removes the requirement for a resource boundary. The DiVincenzo criteria
+remain a useful implementation checklist: scalable qubits, initialization,
+long coherence relative to operations, a universal gate set, measurement, and
+communications are physical requirements, not abstract algorithm steps
+\cite{divincenzo}.
+
+Error correction makes the distinction sharper. Surface-code research
+describes a practical route to large-scale fault tolerance while emphasizing
+the associated architecture \cite{fowler}. More recent cross-validated work
+reports low-overhead fault-tolerant memory and alternative code families
+\cite{bravyi,cohen}. These sources justify optimism about reducing overhead;
+they do not license the omission of overhead. The relevant performance object
+is a logical computation with a target failure probability, not a raw
+physical-qubit cycle.
+
+Random sampling demonstrates a related lesson. The photonic experiment by
+Zhong and colleagues is an important milestone in quantum computational
+advantage for a defined sampling task \cite{zhong}. The subsequent review
+literature explains why the task, verification procedure, and classical
+simulation assumptions are part of the meaning of such a claim
+\cite{hangleiter}. PEC records those conditions. It does not discount the
+demonstration; it blocks an invalid transfer from a specialized sampling
+experiment to "quantum computers are unconstrained by processing speed."
+
+\section{Expected Outcome Branches and Scientific Payoff}
+
+The anticipated contribution is a decision discipline, not a forecast.
+Table~\ref{tab:outcomes} pre-registers allowable interpretations. It makes
+clear that an evidence-complete card set can authorize specialist evaluation
+without declaring deployment readiness, and that a favorable bounded result
+does not predict a universal successor technology.
+
+\begin{table*}[t]
+\caption{Pre-Registered Conditional Interpretations}
+\label{tab:outcomes}
+\centering
+\footnotesize
+\begin{tabular}{p{0.25\textwidth}p{0.36\textwidth}p{0.29\textwidth}}
+\toprule
+Status & Authorized future interpretation & Required action\\
+\midrule
+CONTRACT EVALUABLE & The claim is sufficiently specified for a physical and architecture review. & Do not call it a measured speed or deployment approval.\\
+BOUND SUPPORTED IN SCOPE & A named active constraint is consistent with future evidence for the named workload and architecture. & Preserve all exclusions and compare only compatible contracts.\\
+RELIABILITY ACCOUNT INCOMPLETE & Raw operations cannot yet be interpreted as accepted logical work. & Add an error model, code, overhead, and acceptance criterion.\\
+THERMAL OR I/O BOUNDARY MISSING & The system boundary omits a possible limiting process. & Add cooling, data movement, preparation, readout, or verification evidence.\\
+QUANTUM ADVANTAGE OVERGENERALIZED & A specialized computational demonstration is being transferred beyond its task. & State the task, comparator, verification method, and missing utility bridge.\\
+INCONCLUSIVE & The evidence does not select an active envelope term. & Report no direction for a numerical upper limit.\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The scientific payoff is comparability. A conventional accelerator and a
+quantum processor need not have identical mechanisms to be compared fairly.
+They need compatible workload contracts. If their answers have different
+accuracy, success probability, I/O inclusion, energy boundary, or latency
+boundary, the correct result is not a leaderboard. It is a statement that
+the comparison is underdetermined.
+
+PEC also creates useful negative knowledge. A claim may be technically
+impressive but nontransferable: a new gate may reduce
+\(\tau_{\mathrm{transition}}\) without changing
+\(\tau_{\mathrm{signal}}\); a better code may reduce
+\(\Omega_{\mathrm{space}}\) while increasing controller complexity; a
+sampling benchmark may establish a nonclassical distribution without
+establishing application time-to-solution. These are not failures. They
+identify the specific next research dependency.
+
+\section{Risks, Limitations, and Human Review}
+
+The proposal has deliberate limits. First, a minimum-of-terms envelope can
+miss couplings between heat, error rate, control bandwidth, and architecture.
+The purpose of \eqref{eq:pec-envelope} is disclosure, not a proof that every
+real system is separable. A future implementation must model couplings or
+flag them as unknown.
+
+Second, physical bounds depend on assumptions. The energy reference in a
+Margolus-Levitin argument, the state distance in a QSL, the temperature and
+logical irreversibility in a Landauer calculation, and the signal path in a
+latency analysis all require careful source review. A numerical value should
+never be inserted merely because a formula exists.
+
+Third, algorithmic complexity and classical simulation methods evolve.
+Consequently, a claim of quantum advantage needs a stated classical comparator
+and date-specific method, not only a historical runtime estimate. A different
+classical algorithm can change the benchmark meaning without changing the
+quantum device.
+
+Finally, qualified device physicists, computer architects,
+quantum-information researchers, thermal engineers, and reproducibility
+reviewers must assess any real parameterization. They must verify source
+applicability, units, device version, error model, workload specification,
+software stack, measurement inclusion, and independent replication protocol.
+This report is not a safety certification, a hardware control procedure, or
+an empirical validation.
+
+\section{Research Priorities Enabled by PEC}
+
+\subsection{A three-family validation suite}
+
+The immediate research priority is not to search for a grand universal
+constant. It is to make upper-limit arguments comparable across three
+deliberately different workload families. The first family should be a
+conventional memory-intensive workload, for which data movement, cache
+hierarchy, interconnect, packaging, and heat extraction may dominate a local
+arithmetic rate. The second should be a highly structured numerical workload,
+for which a specialized accelerator may improve useful throughput even if its
+clock does not. The third should be a quantum workload with a formally stated
+input distribution, output verification criterion, and classical comparator.
+This suite prevents the protocol from being tuned to one hardware culture.
+
+For each family, the baseline and candidate must share a stated output
+semantic. A conventional method returning an approximate scalar estimate
+cannot be compared directly with a quantum sampler returning a distribution
+unless both are mapped to an agreed accuracy and utility criterion. A future
+study must therefore publish the workload generator, instance class, error
+metric, reliability threshold, and end-to-end stop condition before comparing
+rates. PEC treats this publication requirement as a scientific control, not
+as administrative documentation.
+
+\subsection{Separate fundamental floors from engineering ceilings}
+
+The proposed program also separates three kinds of statement that are often
+mixed together. A fundamental floor is an ideal constraint derived under
+explicit physical assumptions, such as \eqref{eq:qsl} or
+\eqref{eq:landauer}. An engineering ceiling is a system-specific limit set by
+a package, controller, interconnect, fabrication process, or cooling system.
+A benchmark outcome is a performance observation on one workload and one
+software stack. These layers can inform each other, but none should be
+reported as the other.
+
+This distinction gives direct hypotheses to future experiments. If a device
+improvement lowers an observed time-to-solution, the resource cards can ask
+whether the improvement came from a faster transition, a shorter data path, a
+better compiler schedule, lower error-correction overhead, changed
+postselection, relaxed accuracy, or a changed time boundary. If the answer is
+not known, the result remains valuable but cannot be used to update a
+fundamental upper-limit claim. Conversely, if an engineering ceiling becomes
+active far above an ideal floor, research may target the named engineering
+constraint rather than portraying the gap as a failure of physics.
+
+\subsection{A claim-reporting contract for reproducible comparisons}
+
+Every future PEC report should contain a compact machine-readable contract in
+addition to prose. The required fields are the workload identifier, output
+type, input distribution, accuracy target, reliability target, processor and
+compiler version, physical topology, timing boundary, energy and thermal
+boundary, memory accounting, communication paths, logical-overhead model,
+classical comparator, and uncertainty interval. Each field should record one
+of four states: supported by a primary source, independently verified in the
+future study, inapplicable with rationale, or unknown.
+
+The contract is intentionally strict about unknowns. A missing cooling
+specification does not become an implicit infinite heat sink. An omitted
+decoder does not become zero latency. A missing classical preprocessing step
+does not become free. This rule is particularly important for cross-platform
+claims, because the largest apparent speedup can result from moving a cost
+outside the denominator rather than from changing the computation itself.
+
+\subsection{Predictions that can be wrong}
+
+PEC produces several falsifiable predictions about research reporting. First,
+after I/O, reliability, and thermal cards are added, some raw device-rate
+rankings will change for useful end-to-end workloads. Second, the active
+constraint will often change as an architecture scales: a local transition
+term may dominate a small prototype while wiring, synchronization, error
+correction, or cooling dominates a larger system. Third, claims with the
+largest transfer distance from a specialized benchmark to a general-purpose
+conclusion will show the greatest number of unknown cards.
+
+These predictions can be tested by independent analysts using public
+specifications, controlled workloads, and documented assumptions. A negative
+result would be informative. If PEC cards never change an interpretation or
+if their decision statuses disagree systematically with independently
+validated comparisons, the framework should be simplified or rejected. The
+proposal therefore makes its own methodology subject to the same evidence
+discipline it asks of computing-speed claims.
+
+\section{Conclusion}
+
+Computer processing speed has physical upper limits, but the correct
+scientific answer is not one scalar measured in hertz, FLOPS, gates per
+second, or transistor count. A valid limit is conditional on what the
+computer is asked to compute, how correctness and reliability are defined,
+where wall-clock time begins and ends, and which physical resources are
+allowed. Moore-style scaling remains historically important but is not a law
+of physics. Quantum computing can alter algorithmic resource scaling for
+specified tasks but does not bypass state-evolution, signal, thermodynamic,
+thermal, information, reliability, control, and I/O constraints.
+
+The Physical Compute-Envelope Contract converts that conclusion into a
+falsifiable research program. It requires a workload contract and six linked
+constraint cards before a useful-throughput claim can be evaluated. It thereby
+replaces two misleading narratives - a universal terminal silicon speed and
+an unconstrained quantum future - with a more direct research question:
+which constraint controls a clearly stated computation, and what evidence
+would show that the constraint has changed? This is a stronger basis for
+comparing architectures and for designing the experiments that must follow.
+
+\begin{thebibliography}{00}
+\bibitem{moore}
+G. E. Moore, "Cramming more components onto integrated circuits,"
+\emph{Electronics}, vol. 38, no. 8, pp. 114--117, 1965.
+
+\bibitem{dennard}
+R. H. Dennard, F. H. Gaensslen, H.-N. Yu, V. L. Rideout, E. Bassous, and
+A. R. LeBlanc, "Design of ion-implanted MOSFET's with very small physical
+dimensions," \emph{IEEE J. Solid-State Circuits}, vol. 9, no. 5,
+pp. 256--268, 1974, doi: 10.1109/JSSC.1974.1050511.
+
+\bibitem{waldrop}
+M. M. Waldrop, "The chips are down for Moore's law," \emph{Nature},
+vol. 530, pp. 144--147, 2016, doi: 10.1038/530144a.
+
+\bibitem{margolus}
+N. Margolus and L. B. Levitin, "The maximum speed of dynamical evolution,"
+\emph{Physica D}, vol. 120, no. 1--2, pp. 188--195, 1998,
+doi: 10.1016/S0167-2789(98)00054-2.
+
+\bibitem{deffner}
+S. Deffner and S. Campbell, "Quantum speed limits: from Heisenberg's
+uncertainty principle to optimal quantum control," \emph{J. Phys. A:
+Math. Theor.}, vol. 50, no. 45, Art. no. 453001, 2017,
+doi: 10.1088/1751-8121/aa86c6.
+
+\bibitem{landauer}
+R. Landauer, "Irreversibility and heat generation in the computing process,"
+\emph{IBM J. Res. Dev.}, vol. 5, no. 3, pp. 183--191, 1961,
+doi: 10.1147/rd.53.0183.
+
+\bibitem{lloyd}
+S. Lloyd, "Ultimate physical limits to computation," \emph{Nature},
+vol. 406, pp. 1047--1054, 2000, doi: 10.1038/35023282.
+
+\bibitem{divincenzo}
+D. P. DiVincenzo, "The physical implementation of quantum computation,"
+\emph{Fortschr. Phys.}, vol. 48, no. 9--11, pp. 771--783, 2000,
+doi: 10.1002/1521-3978(200009)48:9/11<771::AID-PROP771>3.0.CO;2-E.
+
+\bibitem{preskill}
+J. Preskill, "Quantum computing in the NISQ era and beyond,"
+\emph{Quantum}, vol. 2, Art. no. 79, 2018,
+doi: 10.22331/q-2018-08-06-79.
+
+\bibitem{hangleiter}
+D. Hangleiter and J. Eisert, "Computational advantage of quantum random
+sampling," \emph{Rev. Mod. Phys.}, vol. 95, no. 3, Art. no. 035001, 2023,
+doi: 10.1103/RevModPhys.95.035001.
+
+\bibitem{zhong}
+H.-S. Zhong \emph{et al.}, "Quantum computational advantage using photons,"
+\emph{Science}, vol. 370, no. 6523, pp. 1460--1463, 2020,
+doi: 10.1126/science.abe8770.
+
+\bibitem{fowler}
+A. G. Fowler, M. Mariantoni, J. M. Martinis, and A. N. Cleland, "Surface
+codes: Towards practical large-scale quantum computation," \emph{Phys.
+Rev. A}, vol. 86, Art. no. 032324, 2012,
+doi: 10.1103/PhysRevA.86.032324.
+
+\bibitem{bravyi}
+S. Bravyi \emph{et al.}, "High-threshold and low-overhead fault-tolerant
+quantum memory," \emph{Nature}, vol. 627, no. 8005, pp. 778--782, 2024,
+doi: 10.1038/s41586-024-07107-7.
+
+\bibitem{cohen}
+L. Z. Cohen, I. H. Kim, S. D. Bartlett, and B. J. Brown, "Low-overhead
+fault-tolerant quantum computing using long-range connectivity,"
+\emph{Sci. Adv.}, vol. 8, no. 20, Art. no. eabn1717, 2022,
+doi: 10.1126/sciadv.abn1717.
+\end{thebibliography}
+
+\end{document}

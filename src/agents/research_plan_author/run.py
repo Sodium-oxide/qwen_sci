@@ -27,6 +27,12 @@ from .idea_evolution import (
     unavailable_idea_evolution,
 )
 from .input_loader import AuthorInputLoadError, load_author_input_with_identity
+from .quantitative_disclosure_validator import validate_quantitative_disclosure
+from .quantitative_evidence_adapter import (
+    QuantitativeEvidenceLoadError,
+    append_quantitative_evidence_section,
+    load_quantitative_evidence_capsule,
+)
 from .run_logging import AuthorRunLogger
 from .section_cache import SectionCompositionCache, section_cache_identity
 from .section_composer import SectionComposer, SectionCompositionError, validate_section_output
@@ -141,6 +147,7 @@ def run_author_preparation(
     include_idea_evolution: str = "auto",
     max_idea_iterations: int = 3,
     strict_survey_binding: bool = False,
+    quantitative_handoff_manifest_path: str | Path | None = None,
     logger: AuthorRunLogger | None = None,
 ) -> dict[str, Any]:
     """Verify all Batch-A sources and produce no prose, TeX, or PDF yet."""
@@ -209,6 +216,18 @@ def run_author_preparation(
         )
     provenance = author_input.get("provenance") or {}
     selected_direction_id = str(provenance.get("selected_direction_id") or "").strip()
+    quantitative_evidence: dict[str, Any] = {}
+    if quantitative_handoff_manifest_path is not None:
+        try:
+            quantitative_evidence = load_quantitative_evidence_capsule(
+                quantitative_handoff_manifest_path,
+                expected_identity={
+                    **survey_binding["resolved"],
+                    "selected_direction_id": selected_direction_id,
+                },
+            )
+        except QuantitativeEvidenceLoadError as error:
+            raise AuthorRunError("input", f"quantitative Author handoff validation failed: {error}") from error
     requested_idea_path = _resolve_optional_path(idea_result_path)
     inherited_idea_path = _resolve_optional_path(provenance.get("idea_result_path"))
     resolved_idea_path = requested_idea_path or inherited_idea_path
@@ -259,6 +278,7 @@ def run_author_preparation(
         survey_sources=survey_sources,
         survey_binding=survey_binding,
         idea_evolution=idea_evolution,
+        quantitative_evidence=quantitative_evidence,
     )
     document = build_research_plan_document_skeleton(author_input, source_bundle)
     theory_preparation = {
@@ -431,6 +451,7 @@ def run_research_plan_author(
     include_idea_evolution: str = "auto",
     max_idea_iterations: int = 3,
     strict_survey_binding: bool = False,
+    quantitative_handoff_manifest_path: str | Path | None = None,
     llm_call: Callable[..., object] | None = None,
     max_contract_repairs: int = 1,
     composer_concurrency: int = 5,
@@ -463,6 +484,7 @@ def run_research_plan_author(
         include_idea_evolution=include_idea_evolution,
         max_idea_iterations=max_idea_iterations,
         strict_survey_binding=strict_survey_binding,
+        quantitative_handoff_manifest_path=quantitative_handoff_manifest_path,
         logger=logger,
     )
     if composer_concurrency < 1:
@@ -693,6 +715,16 @@ def run_research_plan_author(
         composed_sections=composed_sections,
         repair_audits=repair_audits,
     )
+    quantitative_evidence = _mapping_value(
+        _mapping_value(preparation.get("source_bundle")).get("quantitative_evidence")
+    )
+    if quantitative_evidence:
+        document = append_quantitative_evidence_section(document, quantitative_evidence)
+        disclosure_errors = validate_quantitative_disclosure(document)
+        if disclosure_errors:
+            raise AuthorCompositionError(
+                "quantitative evidence disclosure validation failed: " + "; ".join(disclosure_errors)
+            )
     # Whole-document quality scoring and revision now owns cross-section
     # coherence, deduplication, and scholarly depth.  Do not pre-edit the
     # canonical 15-section manuscript with the legacy constrained editor:

@@ -1,0 +1,10 @@
+{
+  "stage": "Survey",
+  "gaps": [
+    {"id":"G1","name":"Target ambiguity","risk":"Whole-brain imitation cannot be falsified","control":"Declare circuit, task, recording modality, and scale"},
+    {"id":"G2","name":"Classical confounding","risk":"Quantum gains reflect model size or data","control":"Match parameters, depth, data, optimizer, and compute"},
+    {"id":"G3","name":"Noise and encoding","risk":"Hardware result differs from ideal simulation","control":"Report ideal, noisy simulator, and hardware-aware runs"},
+    {"id":"G4","name":"Mechanism blindness","risk":"Output fit is mistaken for biological similarity","control":"Evaluate dynamics, perturbations, and causal transition probes"},
+    {"id":"G5","name":"Consciousness overreach","risk":"Functional similarity becomes a mental-state claim","control":"Restrict inference to declared observables and task fidelity"}
+  ]
+}

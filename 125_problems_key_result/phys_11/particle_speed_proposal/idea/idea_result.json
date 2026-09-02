@@ -1,0 +1,29 @@
+{
+  "schema_version": "idea_result_v5",
+  "project_id": "phys_11_particle_speed",
+  "survey_binding": {"survey_run_id":"survey-phys11-001","manifest":"../survey/survey_manifest.json","eligible_gap_ids":["GAP-EVSL-001","GAP-CROSSPLATFORM-002"]},
+  "selected_primary_idea": {
+    "idea_id": "idea-evsl-001",
+    "title": "Energy-to-Velocity Saturation Ledger for Constraint-Aware Accelerator Comparison",
+    "summary": "A computational, source-bounded framework that maps energy to beta and classifies the dominant non-kinematic accelerator constraint by architecture.",
+    "research_object": "Ultra-relativistic charged-particle acceleration architectures",
+    "target_gap_ids": ["GAP-EVSL-001", "GAP-CROSSPLATFORM-002"],
+    "central_hypothesis": "Once beta is sufficiently close to one under a declared saturation rule, speed does not discriminate credible concepts; a sensitivity-aware ledger of energy, rigidity, loss, power, beam quality, and protection does.",
+    "intervention": "Compare architecture-specific model cards under an explicitly declared variable and uncertainty schema.",
+    "observables": ["gamma", "1-beta", "momentum rigidity", "per-turn energy ledger", "gradient/length", "constraint-dominance label", "sensitivity interval"],
+    "falsifiers": ["speed-only metric remains discriminating after saturation", "constraint classification unstable without disclosure", "kinematic relation violated", "projection represented as observation"],
+    "contribution_type": "methodological research proposal",
+    "status": "PROPOSED_NO_OBSERVED_RESULTS"
+  },
+  "competitive_ideas": [
+    {"idea_id":"idea-ring-002","title":"Species-aware circular-accelerator constraint map","reason":"High relevance but architecture-limited."}
+  ],
+  "high_risk_ideas": [
+    {"idea_id":"idea-strongfield-003","title":"Strong-field radiation-reaction boundary atlas","reason":"Requires specialist review; not an FTL route."}
+  ],
+  "rejected_ideas": [
+    {"idea_id":"idea-record-004","title":"Maximum speed record table","reason":"Fails the survey invariant because it treats a saturated kinematic variable as the research endpoint."}
+  ],
+  "evolution_trace": ["root-01","node-02","node-03","node-04","node-05","idea-evsl-001"],
+  "human_review_required": true
+}

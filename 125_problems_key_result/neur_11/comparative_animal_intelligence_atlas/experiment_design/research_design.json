@@ -1,0 +1,22 @@
+{
+  "schema":"experiment_design.v1",
+  "project_id":"neur_11_comparative_animal_intelligence_atlas",
+  "stage":"experiment_design",
+  "status":"completed",
+  "design_mode":"DESIGN_ONLY",
+  "title":"ECAA: An affordance-aware comparative atlas of flexible cognition and species expertise",
+  "research_question":"Which cognitive capacities are shared or independently evolved across nonhuman animals, how do ecological and social demands shape them, and how much transfers across tasks?",
+  "primary_hypothesis":"A partially shared latent flexibility factor will coexist with strong domain-specific factors, and an affordance-aware mosaic model will predict held-out behavior better than a universal intelligence factor.",
+  "species":["New Caledonian crows","rooks","chimpanzees","bottlenose dolphins","octopuses"],
+  "cohort_targets":{"common_core_per_species":30,"ecological_module_per_species":20,"note":"planning targets, not observed enrollment; existing approved data may substitute"},
+  "task_layers":{"computational_core":["reversal learning","detour or inhibition","rule or surface transfer","delayed matching","causal intervention","flexible switching"],"ecological_modules":{"corvids":["material selection","tool shaping","hook manufacture","changed-substrate transfer","rook cooperation"],"chimpanzees":["numerical working memory","object choice","social learning","sequence transfer"],"dolphins":["acoustic discrimination","vocal imitation","individual recognition","socially learned response rules"],"octopuses":["object transport","shelter selection","camouflage choice","tactile exploration","barrier opening"]},"social_conditions":["individual learning","observational learning","cooperation when species-appropriate"]},
+  "measurements":["accuracy","latency","error type","exploration diversity","switch cost","reversal trials","retention","transfer","motivation","sensory access","rearing and training history"],
+  "neural_measurements":["existing approved MRI or diffusion MRI where validated","existing approved EEG or electrophysiology","noninvasive movement and autonomic measures"],
+  "equations":{"item_response":"logit(p_ikd) = alpha_kd + lambda_d theta_i + gamma_d E_i + delta_d S_i + rho_d M_ik + u_lab + u_i","latent_trait":"theta_i = mu_species(i) + beta1 Age_i + beta2 Rearing_i + beta3 SocialExposure_i + xi_i","mosaic":"z_i = Lambda theta_i + eta_i; Cov(eta_i) = Psi","learning_curve":"q_it = q_i0 + (q_iinf - q_i0)(1 - exp(-kappa_i t))"},
+  "affordance_variables":["sensory modality","body plan","manipulation capability","diet or foraging niche","group structure","developmental exposure","human training history"],
+  "controls":["reward value","feeding schedule","session duration","age","rearing","human exposure","neophobia","sensory acuity","motor difficulty","wild versus captive environment"],
+  "falsification_rules":["shared factor absent beyond reliability","universal one-factor model matches mosaic model on held-out domains","affordance variables add no explanatory value","social learning does not alter later transfer","lack of measurement invariance across interfaces"],
+  "ethics":["prefer existing approved datasets","positive-reinforcement training","minimal deprivation and stopping rules","species-specific welfare review","no invasive neural manipulation required for core test"],
+  "observed_results":[],
+  "planned_outputs":["affordance-aware cognitive atlas","learning and transfer curves","shared and domain-specific latent estimates","social-learning contrasts","falsification report"]
+}

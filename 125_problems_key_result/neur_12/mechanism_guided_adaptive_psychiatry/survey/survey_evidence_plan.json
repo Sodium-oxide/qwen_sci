@@ -1,0 +1,69 @@
+{
+  "schema": "survey_evidence_plan.v1",
+  "project_id": "neur_12_mechanism_guided_adaptive_psychiatry",
+  "stage": "survey",
+  "topic": "Can we more effectively diagnose and treat complex mental disorders?",
+  "reframed_question": "Can a transdiagnostic, mechanism-guided, adaptive care system improve treatment matching and durability for heterogeneous psychiatric presentations?",
+  "evidence_capsules": [
+    {
+      "id": "E1",
+      "citation": "McQuaid 2021",
+      "pmid": "34589795",
+      "claim": "Symptom heterogeneity, comorbidity, and context motivate transdiagnostic biomarker approaches.",
+      "allowed_use": ["motivate dimensional phenotyping", "motivate context-aware multimodal prediction"],
+      "forbidden_use": ["claim a validated universal biomarker"]
+    },
+    {
+      "id": "E2",
+      "citation": "Goldsmith et al. 2023",
+      "pmid": "36725140",
+      "claim": "Inflammation can affect symptom-relevant circuits and is associated with differential response in a subset.",
+      "allowed_use": ["define inflammation-dysconnectivity mechanism module", "motivate subgroup calibration"],
+      "forbidden_use": ["treat inflammation as a diagnosis for every patient"]
+    },
+    {
+      "id": "E3",
+      "citation": "Chen, Liu, and Calhoun 2019",
+      "pmid": "32051642",
+      "claim": "Imaging genomics can connect genetic variation and neurobiological traits for translational precision medicine.",
+      "allowed_use": ["define multimodal feature layer", "motivate translational validation"],
+      "forbidden_use": ["equate association with clinical utility"]
+    },
+    {
+      "id": "E4",
+      "citation": "Thomas et al. 2020",
+      "pmid": "32163837",
+      "claim": "A transdiagnostic internalizing cohort can be randomized to SSRI or CBT and can show modality-specific neural correlates.",
+      "allowed_use": ["define treatment-by-biomarker test", "define response-trajectory endpoint"],
+      "forbidden_use": ["claim a universal SSRI or CBT predictor"]
+    },
+    {
+      "id": "E5",
+      "citation": "Lo and Widge 2017",
+      "pmid": "28523978",
+      "claim": "Closed-loop psychiatric treatment may improve patient specificity, but meaningful titration biomarkers remain difficult.",
+      "allowed_use": ["define supervised adaptive policy", "define safety and titration gate"],
+      "forbidden_use": ["claim autonomous neuromodulation efficacy"]
+    },
+    {
+      "id": "E6",
+      "citation": "Kelly et al. 2018",
+      "pmid": "30115193",
+      "claim": "RDoC-style dimensional constructs link neurobiology and observable behavior across diagnoses.",
+      "allowed_use": ["organize symptom dimensions", "define transdiagnostic outcomes"],
+      "forbidden_use": ["claim diagnosis is obsolete"]
+    }
+  ],
+  "subhypotheses": [
+    {"id": "H1", "claim": "A multimodal transdiagnostic model improves out-of-sample trajectory prediction over diagnosis-only and symptom-only baselines."},
+    {"id": "H2", "claim": "Mechanism strata moderate treatment response and calibration rather than producing one universal biomarker."},
+    {"id": "H3", "claim": "Repeated response signals improve treatment-switch timing and reduce avoidable nonresponse under clinician supervision."},
+    {"id": "H4", "claim": "Utility gains persist under site-held-out, demographic subgroup, and missing-modality validation."}
+  ],
+  "observed_results": [],
+  "external_search": {
+    "browser": "PubMed records inspected in the in-app browser",
+    "double_engine": "OpenAlex/AnySearch not available in this environment",
+    "status": "partial_source_verification_recorded"
+  }
+}

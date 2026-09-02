@@ -1,0 +1,22 @@
+{
+  "schema_version": "idea_result_v5",
+  "project_id": "phys_9_photon_symmetry",
+  "survey_binding": {"survey_run_id":"survey-phys9-001","manifest":"../survey/survey_manifest.json","eligible_gap_ids":["GAP-SYMMETRY-001","GAP-OPERATIONAL-002"]},
+  "selected_primary_idea": {
+    "idea_id":"idea-sopsl-001",
+    "title":"Symmetry-Operational Photon-State Ledger for Separating Self-Conjugacy from Measurable State Opposites",
+    "summary":"A computational quantum-state protocol that tests whether an alleged photon opposite is self-equivalent, measurement-distinguishable, convention-dependent, or out of scope.",
+    "research_object":"One-photon density operators with helicity, direction, polarization, and structured-mode labels",
+    "target_gap_ids":["GAP-SYMMETRY-001","GAP-OPERATIONAL-002"],
+    "central_hypothesis":"Charge conjugation is operationally identity-equivalent in the self-conjugate one-photon sector, whereas selected state transformations become distinguishable only relative to a declared measurement context.",
+    "intervention":"Apply declared symmetry/state transformations to synthetic photon density operators and evaluate invariant and observable-resolved distances.",
+    "observables":["density-matrix trace distance","Stokes-vector predictions","directional projectors","OAM-mode probabilities","process fidelity","classification label"],
+    "falsifiers":["C transformation yields an observable distinction in the standard one-photon model","missing operator or observable","reference-convention dependence concealed","nonstandard model reported as consensus"],
+    "status":"PROPOSED_NO_OBSERVED_RESULTS"
+  },
+  "competitive_ideas":[{"idea_id":"idea-pol-002","title":"Polarization-only helicity protocol","reason":"Well controlled but cannot classify OAM/directional opposites."}],
+  "high_risk_ideas":[{"idea_id":"idea-duality-003","title":"Electromagnetic duality boundary map","reason":"Requires careful gauge, material, and convention review."}],
+  "rejected_ideas":[{"idea_id":"idea-antiphoton-004","title":"Distinct antiphoton search","reason":"Conflicts with the Survey’s standard-model self-conjugacy invariant."}],
+  "evolution_trace":["root-01","node-02","node-03","node-04","node-05","idea-sopsl-001"],
+  "human_review_required":true
+}

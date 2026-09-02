@@ -1,0 +1,239 @@
+{
+  "lineage": {
+    "created_from_artifact": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\pde_rerun_20260903\\idea\\attempt-002\\quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+    "project_id": "sci_astr_16_survey_007",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "astr_16",
+    "selected_direction_id": "mechanism_replacement",
+    "survey_run_id": "astr_16-survey-007",
+    "version": 0
+  },
+  "model_scope": "First executable model: parsimonious ODE integration of single pulsar tracks for isolated magnetic-dipole spin-down with optional inclination decay and wind braking, embedded in a Monte Carlo population synthesis framework. Binary recycling is represented as an accretion-phase switch with an effective spin-up law. The model excludes glitches, magnetospheric state changes, variable moment of inertia, detailed companion ablation, and full binary evolution.",
+  "parameter_requests": [
+    {
+      "dimension": "time",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "P0",
+      "meaning": "Initial spin period at the start of the simulated isolated spin-down phase or the post-accretion spin-down phase.",
+      "parameter_id": "initial_period",
+      "required_conditions": [
+        "For isolated or recycled neutron stars at the beginning of the simulated spin-down phase, with period measured in seconds and no glitch-induced period jump at the initial epoch."
+      ],
+      "retrieval_queries": [
+        "ATNF Pulsar Catalogue spin periods for isolated and recycled pulsars",
+        "pulsar timing surveys measuring spin periods after accretion shutdown"
+      ],
+      "role": "BOUNDARY_CONDITION",
+      "unit": "s",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "angle",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "alpha0",
+      "meaning": "Initial magnetic inclination angle between the spin axis and the magnetic dipole axis.",
+      "parameter_id": "initial_inclination",
+      "required_conditions": [
+        "For dipole torque models with approximately aligned magnetic and rotational axes represented by an angle in radians; treated as the starting value before inclination decay."
+      ],
+      "retrieval_queries": [
+        "pulsar magnetic inclination angle priors used in spin-down population synthesis",
+        "geometric beaming angle assumptions for pulsar torque models"
+      ],
+      "role": "BOUNDARY_CONDITION",
+      "unit": "rad",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "magnetic_flux_density",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "B0",
+      "meaning": "Initial dipolar surface magnetic field strength of the neutron star.",
+      "parameter_id": "initial_surface_magnetic_field",
+      "required_conditions": [
+        "For isolated neutron stars with approximately dipolar surface fields inferred from timing data, expressed in tesla; not intended for magnetar-like or strongly multipolar fields."
+      ],
+      "retrieval_queries": [
+        "ATNF Pulsar Catalogue surface magnetic field estimates",
+        "pulsar timing surveys reporting period derivatives for magnetic field inference"
+      ],
+      "role": "BOUNDARY_CONDITION",
+      "unit": "T",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "time_magnetic_flux_density_inverse_squared",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "K_dipole",
+      "meaning": "Effective constant for the vacuum dipole braking law, absorbing geometry, electromagnetic constants, and moment-of-inertia factors not resolved by the parsimonious model.",
+      "parameter_id": "vacuum_dipole_braking_constant",
+      "required_conditions": [
+        "For the chosen effective spin-down law with magnetic field in tesla and period in seconds, assuming fixed stellar geometry and no unresolved internal braking physics."
+      ],
+      "retrieval_queries": [
+        "effective dipole spin-down constants from pulsar braking models",
+        "magnetic dipole torque parameterizations used in pulsar population synthesis"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "s_T^-2",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "dimensionless",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "eta",
+      "meaning": "Relative contribution of particle-wind braking compared with vacuum dipole braking.",
+      "parameter_id": "wind_braking_efficiency",
+      "required_conditions": [
+        "For pulsars with magnetospheric wind torque included as a multiplicative enhancement of the dipole term; scenario switches may disable the wind contribution."
+      ],
+      "retrieval_queries": [
+        "pulsar wind braking efficiency estimates from spin-down models",
+        "magnetospheric wind torque parameters in pulsar evolution simulations"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "time",
+      "evidence_requirement": "LITERATURE_PREFERRED",
+      "mathir_symbol": "tau_alpha",
+      "meaning": "Timescale over which the magnetic inclination angle evolves toward smaller values in the inclination-decay model.",
+      "parameter_id": "inclination_decay_timescale",
+      "required_conditions": [
+        "For isolated pulsars modeled with smooth inclination decay, expressed in seconds, excluding glitches and abrupt magnetospheric state changes."
+      ],
+      "retrieval_queries": [
+        "pulsar inclination decay timescales from braking index studies",
+        "magnetic obliquity evolution timescales in pulsar spin-down models"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "s",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "mass_time_inverse",
+      "evidence_requirement": "LITERATURE_PREFERRED",
+      "mathir_symbol": "Mdot",
+      "meaning": "Mass accretion rate onto the neutron star during the binary recycling phase.",
+      "parameter_id": "accretion_rate",
+      "required_conditions": [
+        "For recycled pulsars in a steady disk-accretion phase, expressed in kilograms per second, ignoring transient outbursts and companion ablation."
+      ],
+      "retrieval_queries": [
+        "accretion rates for low-mass X-ray binaries and recycled pulsars",
+        "binary evolution models reporting mass transfer rates onto neutron stars"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "kg_s^-1",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "time_squared_mass_inverse",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "K_acc",
+      "meaning": "Effective constant for the accretion spin-up period-derivative law, absorbing torque geometry and unresolved accretion physics.",
+      "parameter_id": "accretion_braking_constant",
+      "required_conditions": [
+        "For the effective accretion law using accretion rate in kilograms per second and dimensionless period derivative; active only during the accretion phase."
+      ],
+      "retrieval_queries": [
+        "effective accretion torque parameterizations for recycled pulsars",
+        "disk accretion spin-up coefficients in pulsar population synthesis"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "s^2_kg^-1",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "time",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "t_acc",
+      "meaning": "Duration of the accretion phase before isolated spin-down resumes.",
+      "parameter_id": "accretion_duration",
+      "required_conditions": [
+        "For binary recycling tracks represented by a finite accretion interval followed by isolated spin-down, expressed in seconds."
+      ],
+      "retrieval_queries": [
+        "low-mass X-ray binary lifetimes and accretion durations",
+        "recycled pulsar accretion phase durations from population synthesis"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "s",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "time",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "T_max",
+      "meaning": "Maximum integration age for a simulated pulsar track.",
+      "parameter_id": "maximum_simulated_age",
+      "required_conditions": [
+        "Numerical endpoint for population synthesis tracks; not a physical observable unless tied to survey selection or evolutionary assumptions."
+      ],
+      "retrieval_queries": [
+        "pulsar population synthesis age cutoffs",
+        "maximum ages used in neutron star evolutionary simulations"
+      ],
+      "role": "BOUNDARY_CONDITION",
+      "unit": "s",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "dimensionless",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "Pdot_min",
+      "meaning": "Period-derivative threshold below which a simulated track is considered undetectable and the track is stopped.",
+      "parameter_id": "minimum_detectable_period_derivative",
+      "required_conditions": [
+        "Survey-dependent detection boundary for timing observations; used as a stopping condition rather than a physical spin-down parameter."
+      ],
+      "retrieval_queries": [
+        "pulsar timing survey period derivative detection thresholds",
+        "ATNF catalogue period derivative selection limits"
+      ],
+      "role": "BOUNDARY_CONDITION",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "count",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "N_mc",
+      "meaning": "Number of Monte Carlo pulsar tracks sampled to form population distributions.",
+      "parameter_id": "monte_carlo_sample_count",
+      "required_conditions": [
+        "Numerical control for population synthesis; chosen for computational budget and statistical resolution rather than physical measurement."
+      ],
+      "retrieval_queries": [
+        "sample sizes for pulsar population Monte Carlo simulations",
+        "Monte Carlo track counts in pulsar statistical modeling"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    }
+  ],
+  "permitted_system_types": [
+    "ODE_IVP",
+    "MONTE_CARLO"
+  ],
+  "revision_context": {},
+  "schema_version": "quantitative_model_blueprint_v1",
+  "scientific_question": "Can the joint distribution of braking index n and characteristic age tau_c statistically distinguish isolated magnetic-dipole evolution from binary recycling populations, given specific torque model constraints?",
+  "symbolic_constraints": [
+    "Pdot, braking index n, and characteristic age tau_c are derived diagnostics and are not independent parameters.",
+    "The first executable model uses scalar initial conditions per Monte Carlo track; population distributions are generated by repeated sampling rather than by adding distribution parameters as state variables.",
+    "Vacuum dipole braking is the base isolated evolution law; wind braking and inclination decay are optional model terms enabled by scenario switches.",
+    "Accretion spin-up terms are active only during the accretion duration; after accretion the model switches to isolated spin-down.",
+    "The effective constants K_dipole and K_acc absorb geometry, electromagnetic constants, moment-of-inertia factors, and unresolved accretion physics not modeled explicitly.",
+    "Moment of inertia, stellar radius, neutron star mass, and speed of light are not requested separately in the parsimonious executable model because their effects are folded into the effective braking constants.",
+    "Glitches, magnetospheric state changes, variable moment of inertia, and companion ablation are outside the first executable model scope.",
+    "Units must remain consistent across the model: period in seconds, angle in radians, magnetic field in tesla, accretion rate in kilograms per second, and time in seconds."
+  ],
+  "symbolic_model_intent": "Evolve spin period P(t) and magnetic inclination angle alpha(t). In the isolated phase, the period derivative is modeled by an effective dipole braking law whose magnitude is set by the initial surface magnetic field, an effective vacuum dipole braking constant, an inclination factor, and a wind contribution scaled by wind braking efficiency. When inclination decay is enabled, alpha evolves on an inclination-decay timescale. In the recycled scenario, the isolated spin-down law is replaced during the accretion phase by an effective accretion spin-up law set by the mass accretion rate, an effective accretion constant, and the accretion duration. After accretion, the model returns to isolated spin-down. Braking index n and characteristic age tau_c are derived diagnostics from P, its first derivative, and its second derivative.",
+  "title": "Distinguishing Isolated Dipole Evolution from Binary Recycling via Braking Index and Period Derivative Correlations"
+}

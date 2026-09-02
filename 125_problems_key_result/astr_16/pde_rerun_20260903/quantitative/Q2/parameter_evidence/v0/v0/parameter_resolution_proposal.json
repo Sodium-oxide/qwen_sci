@@ -1,0 +1,362 @@
+{
+  "approval_status": "READY_FOR_APPROVAL",
+  "blueprint_identity": "c7939cac50a5239bf6c98a14576610971e8a92015f6b15af83a5db2039caaae0",
+  "entries": [
+    {
+      "candidate_id": "PEC-Q2-neutron_star_mass-003",
+      "conditions": {
+        "required_condition_1": "Isolated massive neutron star; spherical symmetry; non-recycled spin-down history; no binary accretion torque."
+      },
+      "dimension": "mass",
+      "evidence_locator": {
+        "document_type": "local_document",
+        "page": null,
+        "quoted_text": "M = 1 .42 M ⊙",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "mathir_symbol": "M_NS",
+      "parameter_id": "neutron_star_mass",
+      "provenance_status": "APPROVED_USER_INPUT",
+      "role": "SCENARIO_INPUT",
+      "selected_value": 1.42,
+      "selection_rationale": "Use the 1.42 solar-mass configuration reported in the phase-transition cooling study as the reduced-model stellar mass.",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": [
+          "user_provided"
+        ],
+        "document_id": "Q2-STEJNER2009",
+        "doi": "10.1088/0004-637X/694/2/1019",
+        "title": "Signature of Deconfinement with Spin-down Compression in Cooling Hybrid Stars",
+        "year": 2009
+      },
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "solar_mass"
+    },
+    {
+      "candidate_id": "PEC-Q2-initial_core_temperature-001",
+      "conditions": {
+        "required_condition_1": "Young isolated neutron star at the beginning of the cooling track; model assumes initial thermal state before long-term cooling; no crustal decoupling resolved."
+      },
+      "dimension": "temperature",
+      "evidence_locator": {
+        "document_type": "local_document",
+        "page": null,
+        "quoted_text": "1010 K to around 10 9 K",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "mathir_symbol": "T_c0",
+      "parameter_id": "initial_core_temperature",
+      "provenance_status": "APPROVED_USER_INPUT",
+      "role": "BOUNDARY_CONDITION",
+      "selected_value": 1000000000.0,
+      "selection_rationale": "Use the literature-reported 10^9 K initial core temperature for the young-star cooling integration.",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": [
+          "user_provided"
+        ],
+        "document_id": "Q2-STEJNER2009",
+        "doi": "10.1088/0004-637X/694/2/1019",
+        "title": "Signature of Deconfinement with Spin-down Compression in Cooling Hybrid Stars",
+        "year": 2009
+      },
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "K"
+    },
+    {
+      "candidate_id": "PEC-Q2-initial_spin_frequency-005",
+      "conditions": {
+        "required_condition_1": "Birth spin state of an isolated neutron star; magnetic dipole spin-down; no binary recycling or accretion-driven spin-up."
+      },
+      "dimension": "inverse_time",
+      "evidence_locator": {
+        "document_type": "user_provided_local_document",
+        "page": null,
+        "quoted_text": "The timing observational data correspond to P = 206.4 ms, Pdot = 9.7228 x 10^-13 s s^-1, and Pddot = -5.27(13) x 10^-24 s s^-2.",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "mathir_symbol": "Omega0",
+      "parameter_id": "initial_spin_frequency",
+      "provenance_status": "APPROVED_USER_INPUT",
+      "role": "SCENARIO_INPUT",
+      "selected_value": 30.44178928,
+      "selection_rationale": "Use the angular frequency transformed from the same PSR J1640-4631 timing record that supplies the period derivative and braking index, preserving internal timing consistency.",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": [
+          "user_provided"
+        ],
+        "document_id": "Q2-GAO2017-PDOT-EXCERPT",
+        "doi": "10.3847/1538-4357/aa68e6",
+        "title": "Controlled excerpt from On the magnetic field evolution of PSR J1640-4631",
+        "year": 2017
+      },
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "rad_s^-1"
+    },
+    {
+      "candidate_id": "",
+      "conditions": {
+        "required_condition_1": "Adopted for the first executable parsimonious model; must be internally consistent with the selected mass and EOS proxy; no full EOS integration is resolved."
+      },
+      "dimension": "mass_length^-3",
+      "evidence_locator": {},
+      "mathir_symbol": "rho_c0",
+      "parameter_id": "initial_central_density",
+      "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+      "role": "BOUNDARY_CONDITION",
+      "selected_value": 4.5E+17,
+      "selection_rationale": "Start below the selected 5.12e17 kg/m^3 transition threshold so spin-down compression can produce an observable threshold crossing in the reduced model.",
+      "source": {},
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "kg_m^-3"
+    },
+    {
+      "candidate_id": "PEC-Q2-initial_spin_period_derivative-001",
+      "conditions": {
+        "required_condition_1": "Isolated pulsar timing measurement; magnetic dipole braking; no accretion torque; no significant magnetic field evolution resolved."
+      },
+      "dimension": "dimensionless",
+      "evidence_locator": {
+        "document_type": "user_provided_local_document",
+        "page": null,
+        "quoted_text": "The timing observational data correspond to P = 206.4 ms, Pdot = 9.7228 x 10^-13 s s^-1, and Pddot = -5.27(13) x 10^-24 s s^-2.",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "mathir_symbol": "Pdot0",
+      "parameter_id": "initial_spin_period_derivative",
+      "provenance_status": "APPROVED_USER_INPUT",
+      "role": "SCENARIO_INPUT",
+      "selected_value": 9.7228E-13,
+      "selection_rationale": "Use the directly reported 9.7228e-13 s/s timing value from PSR J1640-4631.",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": [
+          "user_provided"
+        ],
+        "document_id": "Q2-GAO2017-PDOT-EXCERPT",
+        "doi": "10.3847/1538-4357/aa68e6",
+        "title": "Controlled excerpt from On the magnetic field evolution of PSR J1640-4631",
+        "year": 2017
+      },
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "s_s^-1"
+    },
+    {
+      "candidate_id": "PEC-Q2-phase_transition_critical_density-003",
+      "conditions": {
+        "required_condition_1": "Beta-equilibrated dense matter composition; EOS-dependent transition; relevant temperature and pressure regime for neutron star interiors."
+      },
+      "dimension": "mass_length^-3",
+      "evidence_locator": {
+        "document_type": "local_document",
+        "page": null,
+        "quoted_text": "about 2 times nuclear saturation",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "mathir_symbol": "rho_crit",
+      "parameter_id": "phase_transition_critical_density",
+      "provenance_status": "APPROVED_USER_INPUT",
+      "role": "MATERIAL_PROPERTY",
+      "selected_value": 5.12E+17,
+      "selection_rationale": "Use the review-reported onset near twice nuclear saturation density, with the explicit baryon-density-to-mass-density transformation recorded in the evidence candidate.",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": [
+          "user_provided"
+        ],
+        "document_id": "Q2-STEJNER2009",
+        "doi": "10.1088/0004-637X/694/2/1019",
+        "title": "Signature of Deconfinement with Spin-down Compression in Cooling Hybrid Stars",
+        "year": 2009
+      },
+      "transformation": {
+        "applied": true,
+        "formula": "2 * 0.153 fm^-3 * 1.674e-27 kg_per_baryon = 5.12e17 kg_m^-3"
+      },
+      "uncertainty": {},
+      "unit": "kg_m^-3"
+    },
+    {
+      "candidate_id": "",
+      "conditions": {
+        "required_condition_1": "EOS-dependent phase transition; beta-equilibrated dense matter; conversion from microscopic latent heat to a temperature proxy is a model assumption; no resolved heat-capacity microphysics."
+      },
+      "dimension": "temperature",
+      "evidence_locator": {},
+      "mathir_symbol": "L_latent",
+      "parameter_id": "effective_latent_heat_temperature_release",
+      "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+      "role": "MATERIAL_PROPERTY",
+      "selected_value": 50000000.0,
+      "selection_rationale": "The source gives latent-heat physics but no unique equivalent temperature increment; use 5e7 K as a declared five-percent proxy for sensitivity analysis, not a measured value.",
+      "source": {},
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "K"
+    },
+    {
+      "candidate_id": "",
+      "conditions": {
+        "required_condition_1": "First executable parsimonious model; scenario choice is explicit and not represented as a literature value."
+      },
+      "dimension": "dimensionless",
+      "evidence_locator": {},
+      "mathir_symbol": "scenario",
+      "parameter_id": "scenario_selector",
+      "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+      "role": "SCENARIO_INPUT",
+      "selected_value": 1.0,
+      "selection_rationale": "Use phase-transition cooling as the approved baseline and explicitly override this switch only in the audited comparison scenarios.",
+      "source": {},
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "dimensionless"
+    },
+    {
+      "candidate_id": "PEC-Q2-braking_index-002",
+      "conditions": {
+        "required_condition_1": "Adopted spin-down law assumption; no resolved magnetic field evolution; no accretion torque."
+      },
+      "dimension": "dimensionless",
+      "evidence_locator": {
+        "document_type": "user_provided_local_document",
+        "page": null,
+        "quoted_text": "The derived braking index is n = 3.15(3).",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "mathir_symbol": "n",
+      "parameter_id": "braking_index",
+      "provenance_status": "APPROVED_USER_INPUT",
+      "role": "MODEL_ASSUMPTION",
+      "selected_value": 3.15,
+      "selection_rationale": "Use the braking index measured in the same controlled PSR J1640-4631 timing excerpt as the initial spin quantities.",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": [
+          "user_provided"
+        ],
+        "document_id": "Q2-GAO2017-PDOT-EXCERPT",
+        "doi": "10.3847/1538-4357/aa68e6",
+        "title": "Controlled excerpt from On the magnetic field evolution of PSR J1640-4631",
+        "year": 2017
+      },
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "dimensionless"
+    },
+    {
+      "candidate_id": "",
+      "conditions": {
+        "required_condition_1": "Parsimonious first executable model; detailed Urca processes, modified Urca processes, direct Urca thresholds, and superfluid pairing are not resolved separately."
+      },
+      "dimension": "time",
+      "evidence_locator": {},
+      "mathir_symbol": "tau_cool",
+      "parameter_id": "effective_cooling_timescale",
+      "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+      "role": "MODEL_ASSUMPTION",
+      "selected_value": 3155760000000.0,
+      "selection_rationale": "Use a 10^5 yr effective cooling timescale for the first reduced energy-balance model while leaving detailed neutrino and heat-capacity microphysics unresolved.",
+      "source": {},
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "s"
+    },
+    {
+      "candidate_id": "",
+      "conditions": {
+        "required_condition_1": "Spherical symmetry; simplified atmosphere boundary; no resolved radiative transfer or crustal thermal blanketing."
+      },
+      "dimension": "dimensionless",
+      "evidence_locator": {},
+      "mathir_symbol": "alpha_cs",
+      "parameter_id": "core_surface_conversion_coefficient",
+      "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+      "role": "BOUNDARY_CONDITION",
+      "selected_value": 0.001,
+      "selection_rationale": "Use a linear 10^-3 core-to-surface temperature proxy so the 10^9 K core baseline maps to an order-10^6 K surface temperature.",
+      "source": {},
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "dimensionless"
+    },
+    {
+      "candidate_id": "",
+      "conditions": {
+        "required_condition_1": "Small spin-down induced density changes; no full rotating EOS integration; moment of inertia response is absorbed into the proxy."
+      },
+      "dimension": "mass_length^-3_time^2",
+      "evidence_locator": {},
+      "mathir_symbol": "kappa_rot",
+      "parameter_id": "rotational_compression_coefficient",
+      "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+      "role": "MODEL_ASSUMPTION",
+      "selected_value": 150000000000000.0,
+      "selection_rationale": "Choose the positive coefficient so loss of rotational support from the measured initial spin can raise central density through the selected transition threshold before complete spin-down.",
+      "source": {},
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "kg_s^2_m^-3"
+    }
+  ],
+  "lineage": {
+    "created_from_artifact": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\pde_rerun_20260903\\idea\\attempt-002\\quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+    "project_id": "sci_astr_16_survey_007",
+    "quantitative_idea_id": "Q2",
+    "science_run_id": "astr_16",
+    "selected_direction_id": "mechanism_replacement",
+    "survey_run_id": "astr_16-survey-007",
+    "version": 0
+  },
+  "proposal_identity": "aecb23f37e44bb11e594882aa56fbe8b8be23f9a45793aeaf55dd6d4a87c3b38",
+  "schema_version": "quantitative_parameter_resolution_proposal_v1",
+  "unresolved_parameter_ids": []
+}

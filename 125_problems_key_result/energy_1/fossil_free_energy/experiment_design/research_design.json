@@ -1,0 +1,24 @@
+{
+  "stage": "ExperimentDesign",
+  "status": "DESIGN_ONLY",
+  "title": "Boundary-Explicit Fossil-Free System Study",
+  "research_question": "Under what combinations of generation, electrification, storage, networks, flexible demand, non-fossil molecules, and feedstocks can a region eliminate fossil extraction and combustion while meeting hourly reliability, energy-service, affordability, access, lifecycle, land, water, mineral, and governance constraints?",
+  "boundary_states": ["B0_fossil_dependent_baseline", "B1_fossil_free_electricity", "B2_fossil_free_energy_services", "B3_stringent_fossil_free_materials"],
+  "portfolio_factors": ["efficiency_and_demand_response", "direct_electrification", "wind_and_solar", "firm_low_carbon_supply", "short_and_long_duration_storage", "transmission_and_distribution", "hydrogen_ammonia_and_sustainable_fuels", "non_fossil_chemical_carbon", "manufacturing_material_and_water_constraints", "adoption_finance_access_and_affordability"],
+  "stages": [
+    {"id":1,"name":"baseline_and_boundary_audit","purpose":"Build hourly service ledger and identify hidden fossil uses."},
+    {"id":2,"name":"technology_and_lifecycle_characterization","purpose":"Parameterize performance, lifetime, resource, replacement, and upstream burdens."},
+    {"id":3,"name":"hourly_and_seasonal_optimization","purpose":"Optimize generation, storage, networks, fuels, and sector coupling under operating constraints."},
+    {"id":4,"name":"stress_testing_and_robustness","purpose":"Test correlated weather, outage, supply-chain, and demand stresses."},
+    {"id":5,"name":"infrastructure_adoption_and_distribution","purpose":"Constrain build rates and evaluate access, burden, financing, and lead times."},
+    {"id":6,"name":"out_of_sample_validation_and_decision","purpose":"Validate held-out conditions and identify regional binding constraints."}
+  ],
+  "functional_units": ["regional_hourly_energy_service", "MWh_electricity", "passenger_km", "tonne_km", "thermal_comfort_degree_days", "tonne_steel_or_chemicals", "tonne_non_fossil_carbon_feedstock"],
+  "primary_outcomes": ["loss_of_load_probability", "unserved_energy_service", "reserve_shortfall", "storage_depletion_duration", "sector_service_delivery", "lifecycle_emissions", "fossil_extraction", "annualized_cost", "distributional_energy_burden", "transition_time", "build_rate_feasibility"],
+  "secondary_outcomes": ["curtailment", "transmission_expansion", "distribution_expansion", "land", "water", "mineral_demand", "recycling", "air_pollution", "emergency_reserves", "hydrogen_and_fuel_output", "industrial_feedstock_substitution"],
+  "equations": ["service_adequacy", "fossil_free_boundary", "lifecycle_accounting", "portfolio_utility_with_cvar", "storage_state"],
+  "analysis": ["fractional_factorial_screening", "hourly_dispatch_optimization", "unit_commitment_or_validated_approximation", "scenario_stress_testing", "hierarchical_sensitivity_analysis", "multiobjective_pareto_frontier", "robust_dominance_and_regret", "out_of_sample_validation"],
+  "safeguards": ["declare fossil-free boundary and keep net-zero-with-CCS separate", "report lifecycle emissions and extraction", "screen water land mineral and recycling constraints", "protect household and infrastructure data", "review hydrogen ammonia bioenergy carbon capture nuclear and grid safety", "do not represent modeled results as observed facts"],
+  "expected_results": [],
+  "observed_results": []
+}

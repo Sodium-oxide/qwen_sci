@@ -1,0 +1,20 @@
+{
+  "schema_version": "survey_idea_handoff_v1",
+  "project_id": "bio_15",
+  "survey_run_id": "survey-bio_15-v1",
+  "project_context_fingerprint": "pcf:bio_15:population_peak_persistence_atlas:v1",
+  "topic": "Will the world's population keep growing indefinitely?",
+  "accepted_gap_ids": ["GAP-PP-01", "GAP-PP-02"],
+  "verified_evidence_keys": ["un_wpp2024", "vollset2020", "gerland2014", "raftery2014", "azose2016", "raftery_sevcikova2023"],
+  "uncertainties_to_preserve": [
+    "Projection outputs are conditional on modeled assumptions.",
+    "Climate-disruption effects cannot be assumed to be identifiable or homogeneous.",
+    "A global total may conceal offsetting national and age-structure changes."
+  ],
+  "idea_constraints": [
+    "Do not claim a single inevitable peak year.",
+    "Use a component-resolved cohort-component framework.",
+    "Make continued growth after 2100 a testable posterior decision, not a narrative assertion.",
+    "Retain a no-climate baseline and a climate-ablation test."
+  ]
+}

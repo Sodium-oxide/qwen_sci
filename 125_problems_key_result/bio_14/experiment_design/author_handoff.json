@@ -1,0 +1,34 @@
+{
+  "from_stage": "ExperimentDesign",
+  "to_stage": "Author",
+  "allowed_claims": [
+    "Human emotion episodes are best framed as distributed, interacting brain-body processes rather than a single anatomical center.",
+    "Conserved regulatory circuits constrain affective action and physiology but do not license direct inference to a particular subjective emotion.",
+    "Distributed and predictive-interoceptive accounts are testable competing model families.",
+    "The proposed study is design-only and compares model predictions through preregistered held-out performance."
+  ],
+  "required_boundaries": [
+    "Do not fabricate empirical findings, patient outcomes, accuracy values, or causal effects.",
+    "Do not state that fMRI, EEG, HRV, cortisol, or any single signal identifies an emotion.",
+    "Do not claim a single region is the origin of a human emotion.",
+    "Label all anticipated outcomes as decision rules or prospective interpretations."
+  ],
+  "report_requirements": [
+    "IEEE conference layout",
+    "8-10 PDF pages",
+    "manual bibliography with every entry cited",
+    "every author bibliography source documented in the Survey literature_search.json provenance record",
+    "locked latent-state dimensions, model features, sample rule, and numerical primary decision threshold",
+    "numbered and cross-referenced display equations",
+    "no acknowledgements or fictional author contributions"
+  ],
+  "recommended_sections": [
+    "Introduction and scientific reframing",
+    "Evidence from circuits, networks, and brain-body regulation",
+    "Competing models and ORIGIN framework",
+    "Preregistered experimental design",
+    "Statistical inference and falsification",
+    "Ethics, limitations, and translation",
+    "Conclusion"
+  ]
+}

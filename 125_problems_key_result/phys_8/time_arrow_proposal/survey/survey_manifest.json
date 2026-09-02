@@ -1,0 +1,32 @@
+{
+  "schema_version": "survey_manifest_v1",
+  "project_id": "phys_8_time_arrow_20260901",
+  "survey_run_id": "survey-time-arrow-001",
+  "research_topic": "Why does time seem to flow in only one direction?",
+  "project_context_fingerprint": "time-arrow-multiscale-inference-v1",
+  "theorem_evidence_registry": [
+    {"key": "seifert2012", "title": "Stochastic thermodynamics, fluctuation theorems and molecular machines", "year": 2012, "doi": "10.1088/0034-4885/75/12/126001", "status": "CROSS_VALIDATED", "sources": ["openalex", "anysearch"]},
+    {"key": "seifert2018", "title": "From Stochastic Thermodynamics to Thermodynamic Inference", "year": 2018, "doi": "10.1146/annurev-conmatphys-031218-013554", "status": "CROSS_VALIDATED", "sources": ["openalex", "anysearch"]},
+    {"key": "landi2021", "title": "Irreversible entropy production: From classical to quantum", "year": 2021, "doi": "10.1103/revmodphys.93.035008", "status": "CROSS_VALIDATED", "sources": ["openalex", "anysearch"]},
+    {"key": "ciliberto2017", "title": "Experiments in Stochastic Thermodynamics: Short History and Perspectives", "year": 2017, "doi": "10.1103/physrevx.7.021051", "status": "CROSS_VALIDATED", "sources": ["openalex", "anysearch"]},
+    {"key": "gellmann_hartle2007", "title": "Quasiclassical coarse graining and thermodynamic entropy", "year": 2007, "doi": "10.1103/physreva.76.022104", "status": "CROSS_VALIDATED", "sources": ["openalex", "anysearch"]},
+    {"key": "zurek1993", "title": "Preferred States, Predictability, Classicality and the Environment-Induced Decoherence", "year": 1993, "doi": "10.1143/ptp/89.2.281", "status": "CROSS_VALIDATED", "sources": ["openalex", "anysearch"]},
+    {"key": "clifton_ellis_tavakol2013", "title": "A gravitational entropy proposal", "year": 2013, "doi": "10.1088/0264-9381/30/12/125009", "status": "CROSS_VALIDATED", "sources": ["openalex", "anysearch"]},
+    {"key": "aguirre_carroll_johnson2012", "title": "Out of equilibrium: understanding cosmological evolution to lower-entropy states", "year": 2012, "doi": "10.1088/1475-7516/2012/02/024", "status": "OPENALEX_DISCOVERY_PENDING_PUBLISHER_PAGE_REVIEW", "sources": ["openalex"]},
+    {"key": "strasberg_winter2021", "title": "First and Second Law of Quantum Thermodynamics: A Consistent Derivation Based on a Microscopic Definition of Entropy", "year": 2021, "doi": "10.1103/prxquantum.2.030202", "status": "OPENALEX_DISCOVERY_PENDING_PUBLISHER_PAGE_REVIEW", "sources": ["openalex"]},
+    {"key": "carberry2004", "title": "Fluctuations and Irreversibility: An Experimental Demonstration of a Second-Law-Like Theorem", "year": 2004, "doi": "10.1103/physrevlett.92.140601", "status": "OPENALEX_DISCOVERY_PENDING_PUBLISHER_PAGE_REVIEW", "sources": ["openalex"]},
+    {"key": "rovelli2017", "title": "Is Time's Arrow Perspectival?", "year": 2017, "doi": "10.1017/9781316535783.015", "status": "OPENALEX_DISCOVERY_PENDING_PUBLISHER_PAGE_REVIEW", "sources": ["openalex"]},
+    {"key": "rao_esposito2016", "title": "Nonequilibrium Thermodynamics of Chemical Reaction Networks: Wisdom from Stochastic Thermodynamics", "year": 2016, "doi": "10.1103/physrevx.6.041064", "status": "CROSS_VALIDATED", "sources": ["openalex", "anysearch"]}
+  ],
+  "accepted_gap_ids": ["G1", "G2", "G3", "G4", "G5", "G6"],
+  "canonical_artifacts": {
+    "survey": "survey.md",
+    "evidence_plan": "survey_evidence_plan.json",
+    "gap_ledger": "survey_gap_ledger.json",
+    "idea_handoff": "survey_idea_handoff.json"
+  },
+  "browser_page_verification": {
+    "status": "PENDING_HUMAN_REVIEW",
+    "reason": "The user-requested in-app Browser plugin could not start because the Windows ACL sandbox terminated its runtime."
+  }
+}

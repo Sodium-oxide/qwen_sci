@@ -1,0 +1,29 @@
+{
+  "stage":"idea",
+  "result_version":"persist-co2-v1",
+  "topic":"Where do we put all the excess carbon dioxide?",
+  "primary_direction":{
+    "name":"PERSIST-CO2",
+    "expanded_name":"Permanence, Energy, Reversal, Storage Integrity, and Trade-offs for CO2",
+    "claim":"A permanence-aware portfolio can reduce worst-case climate-benefit regret while meeting lifecycle, resource, monitoring, equity, and stewardship constraints better than single-pathway or nominal-cost strategies.",
+    "research_object":"A staged pathway portfolio and monitoring program evaluated in a scenario ensemble.",
+    "maturity":"design_ready",
+    "falsification":"Reject PERSIST-CO2 if it does not outperform single-pathway and nominal-cost policies on held-out durability-adjusted regret under equal accounting and physical constraints, or if its advantage requires perfect monitoring or unbounded resources."
+  },
+  "candidate_routes":[
+    {"name":"geology-first","status":"baseline","strength":"High durability potential and concentrated storage target","weakness":"Site integrity, infrastructure, pressure, monitoring, and stewardship constraints"},
+    {"name":"biology-first","status":"baseline","strength":"Co-benefits and near-term deployment options","weakness":"Reversal, additionality, land, water, and permanence risks"},
+    {"name":"engineered-removal-first","status":"baseline","strength":"Can target atmospheric CO2 and some durable pathways","weakness":"Energy, cost, material, ecological, and scale constraints"},
+    {"name":"avoidance-only","status":"control","strength":"Prevents storage liabilities","weakness":"Does not address residual emissions or legacy atmospheric CO2"},
+    {"name":"PERSIST-CO2","status":"selected","strength":"Couples durability, lifecycle, resources, monitoring, equity, and stewardship","weakness":"Requires integrated data, model calibration, and long-term governance"}
+  ],
+  "predictions":[
+    "Durability-adjusted accounting changes pathway rankings.",
+    "MRV capacity can bind before physical storage capacity.",
+    "Mixed portfolios reduce worst-case regret.",
+    "Staged deployment and liability triggers outperform delayed or unbounded scale-up."
+  ],
+  "upstream_source_ids":["eia","ipccwg3ch12","nas2019","ipccsyr"],
+  "downstream_handoff":"experiment_design/author_handoff.json",
+  "observed_results":[]
+}

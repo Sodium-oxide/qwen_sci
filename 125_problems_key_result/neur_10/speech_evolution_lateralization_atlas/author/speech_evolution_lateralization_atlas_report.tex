@@ -1,0 +1,299 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{url}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\newcommand{\PDSCEA}{PDSCEA}
+
+\begin{document}
+
+\title{How Speech Evolved: A Phylo-Developmental Model of Auditory-Vocal Circuits and Brain Lateralization}
+
+\author{\IEEEauthorblockN{Evidence-Constrained Research Plan}
+\IEEEauthorblockA{Survey--Idea--ExperimentDesign--Author pipeline\\
+Neuroscience and Comparative Biology Study}}
+
+\maketitle
+
+\begin{abstract}
+Speech is not controlled by a single brain center, and its evolutionary origin cannot be assigned to one date or one gene. This paper proposes the Phylo-Developmental Speech Circuit Evolution Atlas (PDSCEA), a testable model in which human speech arose through exaptation and reorganization of ancient primate auditory-vocal circuits. The model predicts that conserved communication-signal representations are coupled in humans to stronger auditory-to-articulatory connectivity, precise laryngeal and oro-facial control, prolonged learning, and developmentally emergent language lateralization. We synthesize evidence for a human dual-stream speech architecture, macaque voice-sensitive auditory cortex, multiscale speech-related neural dynamics, and variable partly heritable language lateralization. We then specify a cross-species and developmental design using MRI, diffusion MRI, EEG or MEG, acoustic and kinematic measurements, representational similarity analysis, hierarchical mixed-effects models, and reversible auditory-feedback perturbation. The study is explicitly a research plan: no data have been collected and no empirical result is claimed. PDSCEA is strengthened only if conserved representations, connectivity, development, and temporal coupling provide incremental held-out explanatory value over single-region, FOXP2-only, and left-hemisphere-only baselines.
+\end{abstract}
+
+\begin{IEEEkeywords}
+speech evolution, auditory-motor connectivity, language lateralization, vocal learning, comparative neuroscience, developmental neuroscience
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Speech is a biological achievement built from several problems that are often collapsed into one. An organism must detect and categorize sounds, learn which vocal patterns are useful, control respiration and the larynx, coordinate the tongue, lips, jaw, and velum, monitor the acoustic consequences of its own actions, and connect a sequence of sounds to shared meaning. These requirements are distributed over multiple timescales and multiple levels of the nervous system. Consequently, the question ``what parts of the brain control speech?'' has a more useful answer when posed as a question about pathways, feedback, and development rather than as a search for a single location.
+
+The same distinction matters for evolution. Human speech is not the same phenotype as a primate vocalization, and language is not identical to speech. A human-specific system could have been assembled from older auditory, vocal, and motor components without those components previously supporting language. Conversely, evidence that a nonhuman primate has a specialized response to conspecific calls does not show that the species possesses human language. The evolutionary problem is therefore one of identifying conserved substrates, human-specific reorganization, and the developmental processes that make their coupling useful. This layered comparison follows the broader evolutionary treatment of language as a biological system with interacting prerequisites rather than a single anatomical event \cite{fitch2010}.
+
+This paper develops the Phylo-Developmental Speech Circuit Evolution Atlas, abbreviated \PDSCEA. Its central claim is direct: the most productive explanation is an exaptation-and-reorganization account. Ancient primate circuits for recognizing communication signals and controlling vocal behavior supplied the substrate. Human evolution then increased the capacity and precision of auditory-to-articulatory coupling, integrated predictive sensory feedback with laryngeal and oro-facial control, and extended the developmental period over which vocal patterns could be learned. A population tendency toward leftward language-network specialization emerged as part of this developmental network organization, but it is not universal and does not imply that the right hemisphere is irrelevant.
+
+The contribution is a research design rather than a claim of completed discovery. It translates the synthesis into four measurable axes: cross-species representational geometry, auditory-motor structural and functional connectivity, developmental language lateralization, and speech-specific temporal coupling. It also specifies control conditions, model comparisons, and failure criteria. The design is intended to make the evolutionary claim harder to confirm by rhetoric and easier to reject with data.
+
+\section{Evidence-Constrained Survey}
+
+The evidence-to-design boundary is summarized in Table~\ref{tab:evidence}; each row is carried forward as a constraint rather than treated as a completed explanation.
+
+\subsection{A distributed human speech architecture}
+
+Hickok and Poeppel proposed a dual-stream model in which a ventral stream processes speech signals for comprehension and a dorsal stream maps acoustic speech signals to frontal articulatory networks \cite{hickok2007}. The model is useful because it links computations to pathways. It also places a constraint on the current study: the ventral component is largely bilateral, whereas the dorsal component is more strongly left dominant. A model of speech evolution should therefore predict structured asymmetry, not complete hemispheric exclusivity.
+
+The classical names of Broca's and Wernicke's areas remain useful landmarks, but the mechanistic unit is a network. Superior temporal auditory regions transform sound, frontal and premotor regions contribute to articulatory planning, sensorimotor cortex encodes vocal-tract actions, and subcortical and cerebellar systems support timing, selection, and coordination. Long-range frontotemporal connections allow auditory evidence to constrain motor commands. Damage studies, stimulation studies, functional imaging, and electrophysiology each sample different parts of this system. A result from one modality must not be treated as a complete map of the system.
+
+\subsection{An older auditory substrate for communication signals}
+
+Petkov and colleagues used functional magnetic resonance imaging in macaques and identified a high-level auditory region that preferred species-specific vocalizations to other vocalizations and sounds \cite{petkov2008}. The region was on the superior-temporal plane and responded to the vocal identity of conspecific individuals. This result supports a strong comparative premise: primate brains contain specialized auditory responses to communication signals that predate human speech.
+
+The correct inference is limited but important. The macaque result does not show speech, syntax, or human-like semantics. It shows that a communication-relevant auditory computation can be present in a nonhuman primate. Comparative auditory analyses have consequently emphasized maps and streams, asking which organizational principles are shared and which have been elaborated in humans \cite{rauschecker2009}. PDSCEA treats these shared computations as candidate substrates that can be reconnected to other systems, not as an already complete speech network.
+
+\subsection{Speech as a temporal coordination problem}
+
+Speech has nested temporal structure: slower prosodic and syllabic patterns contain faster phonetic transitions. Giraud and Poeppel reviewed evidence that delta, theta, and gamma oscillations can track distinct temporal aspects of speech and argued that such dynamics may package incoming information at appropriate granularities \cite{giraud2012}. This finding motivates a mechanism that is often missing from purely anatomical accounts. Speech may depend on synchronizing auditory inference and motor prediction across time, not just on activating the correct cortical parcel.
+
+Temporal tracking is not automatically causal. Neural signals can follow a stimulus without controlling perception, and phase measures can be affected by acoustic regularity, attention, volume conduction, or movement. The proposed design therefore uses matched non-speech stimuli, surrogate phases, overt and covert movement controls, and a reversible auditory-feedback perturbation. The objective is to test whether temporal coupling is specifically useful for learned vocal control.
+
+\subsection{Lateralization is a developmental population pattern}
+
+The majority of humans show left-hemisphere language dominance, but the pattern is not universal. Using Human Connectome Project data, Labache and colleagues identified typical leftward and atypical rightward language organization and connected language lateralization to broad macroscale functional gradients \cite{labache2023}. Their analysis also reported partial genetic contributions to language lateralization and cortical gradient asymmetries. These observations make lateralization a measurable phenotype, not a premise that can be assumed for every participant.
+
+Developmental evidence further indicates that language organization is relatively bilateral in young children and becomes more left dominant for many individuals across development \cite{skeide2016}. Left-handed individuals are more likely to show atypical organization, but handedness is neither a sufficient nor a necessary explanation. A speech-evolution model should therefore treat leftward specialization as an emergent network property shaped by inherited organization, learning, and developmental constraints.
+
+\subsection{Genes are constraints inside a circuit}
+
+FOXP2 is a valuable biological variable because it is associated with speech-related motor learning and developmental disorders. Comparative work has identified human-lineage changes relevant to its molecular evolution \cite{enard2002}. Clinical neuroanatomical evidence, however, indicates that FOXP2-related speech phenotypes involve distributed developmental systems rather than a single gene acting as a complete speech program \cite{varghakhadem2005}. PDSCEA includes gene or family information when consent permits, but predicts that gene variation will contribute through network development and learning rather than determine speech categorically.
+
+\begin{table*}[t]
+\caption{Evidence boundaries carried from Survey to ExperimentDesign}
+\label{tab:evidence}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{p{0.19\textwidth}p{0.29\textwidth}p{0.25\textwidth}p{0.20\textwidth}}
+\toprule
+Evidence layer & What is supported & What is not supported & Design consequence \\
+\midrule
+Human dual-stream model & Ventral speech analysis is largely bilateral; dorsal acoustic-to-articulatory mapping is more left dominant & A single speech center or left-only speech control & Estimate pathway-specific connectivity and bilateral responses \\
+Macaque voice-sensitive cortex & Primate auditory cortex can prefer conspecific communication signals & Macaques have human speech or language & Compare representational geometry with non-vocal controls \\
+Speech oscillations & Delta, theta, and gamma dynamics track speech structure & Stimulus tracking alone proves causal control & Add acoustic, movement, and phase-surrogate controls \\
+Language lateralization & Leftward dominance is common, variable, developmental, and partly heritable & Left dominance is universal or identical to handedness & Model age, family structure, and handedness explicitly \\
+FOXP2 evidence & Molecular and clinical variation is relevant to speech-related development & FOXP2 alone explains speech evolution & Use as a covariate and negative-control baseline \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Idea Synthesis: PDSCEA}
+
+\subsection{The evolutionary proposition}
+
+PDSCEA proposes a sequence of functional transformations rather than a single invention. First, ancestral primates already possessed auditory maps for detecting and identifying communication signals. Second, vocal behavior was coupled to motor, respiratory, and social-control systems. Third, selection and learning could improve the mapping between heard sounds and controllable vocal actions. Fourth, human development supported a long period of vocal exploration and social learning. Fifth, frontotemporal pathways and macroscale cortical organization became sufficiently specialized that leftward language dominance was common in adults, while bilateral and rightward variants remained possible.
+
+This proposition is compatible with an evolutionary origin much older than anatomically modern speech, but it does not assign a modern speech date to a deep primate ancestor. Estimates such as 200,000 years and 27 million years refer to different inferred traits and levels of evidence. The design avoids using either number as an established onset. It instead asks whether present-day comparative and developmental signatures are consistent with a gradual repurposing process.
+
+\subsection{Why a network model is more informative}
+
+A single-region model asks whether one region is more active during speech. A network model asks whether communication-signal representations, long-range connections, developmental organization, and temporal dynamics jointly predict vocal learning. The second question is closer to the evolutionary problem because exaptation concerns relations among components. It also allows a result in one component to be informative without being mistaken for a complete origin story.
+
+The main expected pattern is a division of labor. Conserved auditory representations should appear as partial cross-species alignment. Human-specific speech performance should be associated with stronger auditory-to-articulatory connectivity and more precise sensorimotor control. Leftward language specialization should increase in many participants with age but should not fully explain individual differences. Speech should elicit temporal coupling that is more specific than the coupling produced by matched non-speech acoustics or generic mouth movement.
+
+\subsection{Portfolio and negative controls}
+
+The primary direction combines three evidence streams: comparative continuity, developmental lateralization, and dynamic auditory-motor coupling. A competitive direction places connectivity and macroscale functional gradients first, using cross-species voice representations as priors. A high-risk direction adds gene-regulatory variation and multiscale causal modeling. The latter is valuable as a future extension but is difficult to identify with noninvasive data.
+
+Three baselines are required. The single-region baseline uses activation in a named speech region. The FOXP2-only baseline uses gene or family variables without a distributed circuit. The left-hemisphere-only baseline assumes that speech performance is explained by leftward activity. PDSCEA must beat these baselines in held-out prediction to earn its stronger interpretation. If it does not, the evolutionary synthesis is not supported merely because its individual components are plausible.
+
+\section{ExperimentDesign}
+
+\subsection{Cohorts and inclusion logic}
+
+The human adult target is 240 participants, balanced as far as feasible for sex, handedness, and language background. The developmental target is 180 participants aged 5--17 years, divided into three age bands, with a one-year repeat scan for a subset of 90 participants. These are planning targets, not completed enrollments. Existing datasets can replace or supplement recruitment when their tasks, imaging parameters, consent, and demographic metadata meet the preregistered criteria.
+
+The comparative layer prioritizes existing approved nonhuman-primate datasets. A usable dataset must include species identity, individual vocalization labels, acoustic metadata, anatomical localization, and a non-vocal auditory control. If new animal data are required, the design calls for the smallest feasible collection after species-specific welfare review. No animal is treated as a failed human speaker; the comparison concerns measured auditory and motor computations.
+
+The primary analysis is organized around homologous features rather than raw values. Hemodynamic response magnitudes are not assumed comparable across species. The cross-species test therefore uses condition-by-condition representational dissimilarity matrices and probabilistic anatomical correspondence, with matched acoustic controls. This is a stricter and more interpretable comparison than placing images from different species on a common color scale.
+
+\subsection{Tasks and controls}
+
+The human battery contains natural speech comprehension, nonword and syllable discrimination, overt and covert articulation, delayed vocal imitation, non-vocal environmental sounds, pure tones, spectrally rotated speech, generic oro-facial movements, and a mild reversible auditory-feedback perturbation. Nonwords are important because they reduce lexical and semantic confounds while preserving phonetic and motor structure. Covert articulation reduces acoustic output while retaining planning demands. Generic mouth movements test whether an effect is speech-specific or only motoric.
+
+The primate battery uses conspecific vocalizations, individual-identity vocalizations, heterospecific vocalizations, non-vocal natural sounds, and matched acoustic controls. The task does not test language comprehension. Its purpose is to identify communication-signal-sensitive auditory geometry and to compare that geometry with the human auditory component under an explicitly limited interpretation.
+
+Stimuli are matched for duration, intensity, and envelope where possible. Spectrally rotated speech preserves some low-level acoustic statistics while disrupting ordinary phonetic structure. Phase-scrambled and label-preserving surrogates test whether apparent synchronization is driven by stimulus regularity. Trial order, stimulus identity, and feedback perturbation are randomized under a preregistered schedule.
+
+\subsection{Neural and behavioral measurements}
+
+Structural MRI estimates cortical anatomy. Diffusion MRI estimates frontotemporal tract organization, with particular attention to arcuate and superior longitudinal systems. Resting-state and task fMRI estimate intrinsic and task-modulated network organization. EEG or MEG estimates speech-envelope tracking, phase-locking, and timing between auditory and motor signals. Acoustic and kinematic recordings quantify voice onset, pitch, phoneme timing, lip and jaw motion, and respiratory timing.
+
+The atlas includes primary and belt auditory cortex, superior temporal plane and sulcus, anterior temporal voice-sensitive cortex, inferior frontal and premotor regions, ventral and dorsal sensorimotor representations of the lips, tongue and larynx, insula, supplementary motor area, basal ganglia, cerebellum, and frontotemporal white matter. These labels are probabilistic homologues, not claims of one-to-one evolutionary identity.
+
+\subsection{Hierarchical response model}
+
+The principal response model is a hierarchical mixed-effects model:
+
+\begin{equation}
+\begin{aligned}
+Y_{idt}={}&\beta_0+\beta_1 S_i+\beta_2 A_i+\beta_3 H_d+\beta_4 T_t+\beta_5 C_{id}\\
+&+\beta_6 S_iA_i+\beta_7 T_tC_{id}+u_{site}+u_i+\epsilon_{idt}.
+\end{aligned}
+\label{eq:hierarchical}
+\end{equation}
+
+Here, $Y_{idt}$ is a neural or behavioral feature for participant or animal $i$, feature $d$, and task $t$; $S$ is species, $A$ is age, $H$ is hemisphere, $T$ is task, and $C$ is auditory-motor connectivity. The site-level term $u_{site}$ absorbs shared acquisition effects, while $u_i$ absorbs repeated-measure variation. The interaction $S A$ tests developmental differences between species, and $T C$ tests whether connectivity matters more during speech-relevant tasks.
+
+The integrated model is compared with nested models that remove connectivity, development, or species structure. It is also compared with the single-region and FOXP2-only baselines. The primary criterion is held-out predictive performance with a preregistered complexity penalty. This prevents a flexible atlas from winning merely because it has more parameters.
+
+\subsection{Lateralization and development}
+
+For each bilateral feature, the lateralization index is
+
+\begin{equation}
+LI_{idt}=\frac{L_{idt}-R_{idt}}{|L_{idt}|+|R_{idt}|+\varepsilon},
+\label{eq:lateralization}
+\end{equation}
+
+where $L$ and $R$ are left and right estimates and $\varepsilon$ prevents instability near zero. Positive values indicate relative leftward organization and negative values indicate relative rightward organization. The sign is descriptive, not normative. Developmental inference uses a nonlinear age term if preregistered diagnostics show curvature, and a repeat-scan subset estimates within-person change separately from between-person differences.
+
+Handedness, hearing status, sex, motion, language background, socioeconomic variables relevant to data quality, and site are included as covariates or balancing factors. Family structure is used as a variance component when available. A result that disappears after handedness adjustment is informative, but it cannot be interpreted as evidence that handedness caused lateralization without a causal design.
+
+\subsection{Temporal coupling}
+
+Speech-specific auditory-motor coordination is quantified with phase-locking value:
+
+\begin{equation}
+PLV_r(f)=\left|\frac{1}{N}\sum_{k=1}^{N}\exp\left(j[\phi_{r,k}(f)-\phi_{s,k}(f)]\right)\right|.
+\label{eq:plv}
+\end{equation}
+
+Here $\phi_{r,k}(f)$ and $\phi_{s,k}(f)$ are the phases of two preregistered signals at frequency $f$ in trial $k$, $N$ is the number of trials, and $j$ is the imaginary unit. The primary contrast is speech versus matched non-speech and generic movement. Surrogate phase and sensor-space controls address volume conduction and stimulus-driven synchrony. Cross-frequency coupling is secondary and is interpreted only if the primary PLV contrast is reliable.
+
+The feedback perturbation provides a stronger test than passive tracking. If a small, safe delay or frequency shift changes the predicted auditory-motor coupling and selectively degrades vocal imitation or phoneme timing, the result would support a functional role for the loop. A null perturbation result would not show that feedback is irrelevant in all contexts, but it would weaken the specific claim that the measured coupling is necessary for the targeted form of control.
+
+\subsection{Representational similarity and mediation}
+
+For each species, condition-by-condition activity patterns are transformed into representational dissimilarity matrices. Human and primate matrices are compared using cross-validated correlation and label-preserving permutations. The primary test asks whether communication-signal alignment exceeds the distribution from non-vocal controls. The conclusion is limited to shared structure in measured responses; it does not infer shared language, meaning, or subjective experience.
+
+To connect development and connectivity to behavior, the design estimates a mediation model:
+
+\begin{align}
+M_i&=a_0+a_1A_i+a_2S_i+a_3F_i+u_i+e_i,\nonumber\\
+Y_i&=c'_0+c'_1A_i+c'_2S_i+c'_3M_i+c'_4Hnd_i+v_i+\eta_i.
+\label{eq:mediation}
+\end{align}
+
+Here $M$ is auditory-motor connectivity, $Y$ is speech-learning or speech-control performance, $F$ is family structure, and $Hnd$ is handedness. The coefficient $a_3$ describes an association between family structure and the mediator, while $c'_3$ describes the mediator-outcome relation conditional on the other terms. Neither coefficient is called causal unless the feedback perturbation and sensitivity analyses justify that interpretation.
+
+\begin{table*}[t]
+\caption{Primary predictions, measurements, and failure criteria}
+\label{tab:predictions}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{p{0.18\textwidth}p{0.27\textwidth}p{0.23\textwidth}p{0.22\textwidth}}
+\toprule
+Prediction & Primary measurement & Required control & Falsifier \\
+\midrule
+Conserved communication-signal substrate & Cross-species RDM alignment & Non-vocal, heterospecific, and label permutations & Alignment does not exceed non-vocal controls \\
+Human auditory-motor specialization & Diffusion and task connectivity & Generic oro-facial movement and single-region baselines & Connectivity adds no held-out predictive value \\
+Emergent lateralization & Age trajectory of (LI) & Handedness, motion, site, and repeat scans & No reproducible trajectory or full handedness explanation \\
+Speech-specific timing & Speech-minus-control PLV and feedback response & Envelope, phase, and movement surrogates & Coupling disappears after controls \\
+Distributed biological contribution & Integrated model with family/gene covariates & FOXP2-only baseline & FOXP2-only model matches or beats integrated model \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Expected Interpretations and Falsification}
+
+PDSCEA makes a stronger prediction than ``many regions are active during speech.'' It predicts that the relationship among regions will be informative. A positive result should have four parts: partial conserved auditory representational structure; a human advantage in auditory-to-articulatory connectivity or its behavioral consequence; a developmental, non-universal trajectory of language lateralization; and speech-specific temporal coupling that responds to feedback perturbation. The parts need not be numerically identical across species, but they should converge under the preregistered model.
+
+The most important negative result would be a failure of incremental prediction. If a single-region model predicts held-out speech behavior as well as the integrated model, then a distributed evolutionary interpretation has not earned its added complexity. Similarly, if speech learning is unrelated to auditory-motor connectivity, the proposed route from conserved auditory signals to human speech control is weakened. If all lateralization variance disappears after handedness adjustment, the role assigned to developmental cortical organization must be revised. If phase-locking is explained entirely by acoustic envelope similarity, the temporal mechanism is not established.
+
+The design also protects against a common evolutionary error: reading a present-day brain map backward as a fossil record. Even a replicated cross-species correspondence would identify a conserved computational substrate, not the date or order in which human speech evolved. A developmental trajectory would identify how current human organization emerges, not prove that the same trajectory occurred in ancestral populations. Historical claims remain layered: anatomical readiness, learned vocal control, speech, and symbolic language require distinct evidence.
+
+The proposed result would be especially informative if the right hemisphere and bilateral ventral stream contribute in systematic ways. A leftward dorsal bias can coexist with bilateral perception, right-hemisphere prosodic processing, and individual variation. The objective is not to replace one oversimplification with another, but to identify which asymmetries are computationally useful and under what developmental conditions they arise. Table~\ref{tab:predictions} makes the corresponding evidence-to-falsification mapping explicit.
+
+\section{Implementation and Decision Protocol}
+
+\subsection{Pre-registration and data separation}
+
+The project is divided into a discovery-free confirmation phase and a separately labeled exploratory phase. Before any outcome is inspected, the confirmation record freezes the task contrasts, anatomical correspondences, preprocessing pipeline, lateralization formula, temporal-frequency bands, RDM construction, random-effects structure, train-test split, missing-data rule, and model-comparison penalty. The confirmation record also states which source-reported values are descriptive context and which planned quantities will be estimated from new data. Exploratory analyses may examine additional regions or frequencies, but they cannot be used to relabel a failed confirmation test as a success.
+
+To prevent leakage across species and development, all transformations that learn parameters from the data are fit inside the training partition. This includes dimensionality reduction, nuisance regression parameters when appropriate, feature selection, and normalization. The held-out partition is used once for the primary comparison. A site-stratified split is the default when multiple scanners are available; a leave-one-site-out analysis is a robustness test. This protocol is more demanding than reporting in-sample fit but is appropriate for a claim that the same network principle generalizes across people and species.
+
+\subsection{Data harmonization}
+
+The first harmonization layer operates on stimulus descriptions. Each sound is represented by duration, intensity, spectral centroid, modulation spectrum, envelope statistics, and vocal or non-vocal label. Matching is performed before neural analysis, and residual acoustic differences are included as nuisance predictors. The second layer operates on anatomical features. Cortical parcels are represented by probabilistic maps and tract endpoints, with a confidence score for each cross-species correspondence. Low-confidence correspondences are not discarded silently; they enter a sensitivity analysis and are reported separately.
+
+The third layer operates on dynamic signals. EEG or MEG epochs are aligned to stimulus onset, vocal onset, and feedback perturbation onset. Speech-production artifacts are measured with microphones, jaw and lip kinematics, and auxiliary sensors. A temporal-coupling result is accepted as speech-specific only when it survives an acoustically matched condition and a movement-matched condition. A result that survives only stimulus-envelope matching is classified as auditory entrainment, not auditory-motor control.
+
+\subsection{Statistical identification}
+
+The principal coefficients are interpreted conditionally. For example, a species effect in \eqref{eq:hierarchical} is not called a human-specific speech mechanism unless it remains after connectivity, task, and acoustic controls. Likewise, a hemisphere effect is not called language lateralization unless it is derived from a language-sensitive contrast and replicated with a network-level metric. The coefficient on connectivity is interpreted as incremental association, while the feedback perturbation supplies the main test of functional necessity.
+
+The mediation analysis is a decomposition of measured associations, not a shortcut to causality. It asks whether developmental or species differences are statistically linked to connectivity and whether connectivity is linked to speech learning after covariate adjustment. Directed causal language requires a perturbation or a longitudinal identification argument. The study will therefore distinguish three statements: ``correlated with,'' ``predicts held-out data,'' and ``changes after perturbation.'' They are not interchangeable.
+
+\subsection{Power and precision planning}
+
+Before recruitment, simulation-based power analysis will use pilot-free ranges for measurement reliability, intraclass correlation, site variance, and expected effect-size classes. The goal is not to choose a favorable effect size, but to report the smallest effect that the planned design can distinguish from noise under plausible variance structures. The analysis will include a precision target for the developmental slope of the lateralization index and for the speech-minus-control temporal-coupling contrast. If a target is not met, the result is reported as imprecise rather than converted into evidence for absence.
+
+The adult and developmental targets are intentionally separated. Adult data provide stable estimates of network geometry and connectivity; developmental data test trajectory. The repeat-scan subset estimates within-person reliability and change. Cross-sectional age trends and longitudinal change are not pooled without a model that distinguishes them. The comparative layer is similarly separated from the human layer because species differences in acquisition and anatomy can otherwise produce a misleadingly precise joint estimate.
+
+\subsection{Decision tree for the final interpretation}
+
+The final interpretation follows a four-gate decision tree. Gate 1 asks whether communication-signal RDM alignment exceeds non-vocal controls. Gate 2 asks whether human auditory-motor connectivity contributes held-out explanatory value for vocal learning or control. Gate 3 asks whether developmental lateralization is reproducible and not reducible to handedness. Gate 4 asks whether speech-specific temporal coupling changes under feedback perturbation. Passing all four gates supports the full PDSCEA synthesis. Passing only Gate 1 supports conserved auditory substrate but not human speech specialization. Passing Gates 2 and 4 without Gate 3 supports an auditory-motor mechanism without a necessary leftward developmental account. Failing Gate 1 or Gate 2 sharply weakens the exaptation bridge.
+
+This staged interpretation prevents a single spectacular result from carrying the entire theory. It also makes partial success scientifically useful. For instance, a shared primate auditory representation could be real even if the human developmental lateralization model fails. Conversely, a robust human speech network could exist without any detectable cross-species RDM alignment because the chosen comparative measurement may be too coarse. The report will identify which inference is supported rather than collapsing all outcomes into one binary verdict.
+
+\subsection{Release products}
+
+The final release will contain the atlas specification, preregistered task contrasts, de-identified feature tables, software environment, model formulas, quality-control summaries, held-out predictions, and a structured falsification report. Each figure and table will carry a provenance record linking it to a source dataset, preprocessing version, and analysis commit. The release will distinguish source-reported findings from planned estimates and will never populate an observed-results field before data collection and analysis are complete.
+
+\section{Risks and Reproducibility}
+
+\subsection{Cross-species comparability}
+
+Anatomical homology is uncertain at fine spatial scales, and species differ in vascular dynamics, head motion, vocal anatomy, and task compliance. The study reduces these risks by using probabilistic homologue maps, representational geometry, matched acoustic controls, and within-species standardization before cross-species comparison. Raw activation magnitudes are secondary. The interpretation remains at the level of shared response structure rather than identical functions.
+
+\subsection{Developmental and individual variation}
+
+Age is not a simple proxy for maturation. Puberty, education, hearing experience, bilingual exposure, and task familiarity can affect language networks. The design records these variables and separates longitudinal from cross-sectional effects. Atypical lateralization is retained as a real subgroup rather than discarded as noise. Handedness is measured, but it is not used as a replacement for a language-lateralization measure.
+
+\subsection{Causal and measurement risks}
+
+Phase synchrony may reflect common input, and connectivity may reflect correlated activity rather than directed influence. The feedback perturbation and effective-connectivity sensitivity analysis provide limited causal leverage, but the report will not call observational coefficients causal by default. MRI motion, EEG artifacts from speech, microphone latency, and kinematic synchronization are quality-control targets specified before analysis. Any exclusion rule is frozen before outcome inspection.
+
+\subsection{Ethics and data governance}
+
+Human work requires informed consent, guardian consent and child assent, institutional review, hearing-safe stimulation, and privacy-preserving handling of voice and facial-motion data. Identifiable voice recordings are stored separately or converted to approved derivatives. Existing animal data are preferred. Any new primate work requires species-specific welfare review, minimization of sample and intervention burden, and a clear scientific justification that cannot be met by existing data.
+
+\subsection{Reproducible analysis}
+
+The preregistration stores stimulus hashes, atlas versions, acquisition parameters, preprocessing decisions, exclusion thresholds, model formulas, contrasts, and software versions. A held-out split is fixed before model fitting. Multiple-comparison procedures are defined within each family of tests. Robustness analyses use alternative parcellations, motion thresholds, bilateral features, and site-stratified splits. Raw data remain under their originating governance rules; released derivatives are de-identified and accompanied by a data dictionary.
+
+\section{Conclusion}
+
+Speech most plausibly evolved as a network transformation, not as the sudden appearance of a single speech center. The evidence already supports a distributed human auditory-to-articulatory architecture, an older primate specialization for communication signals, multiscale neural dynamics, and a common but variable developmental tendency toward leftward language organization. These observations do not by themselves establish a historical pathway. PDSCEA turns them into a unified, testable proposal: ancient auditory-vocal circuitry was exapted and reorganized through stronger auditory-motor coupling, precise vocal control, prolonged learning, and emergent network lateralization.
+
+The proposed atlas is designed to fail. It requires cross-species representational alignment above matched controls, incremental predictive value from connectivity and development, speech-specific temporal coupling, and replication across sites and developmental strata. It rejects the claim that Broca's area, FOXP2, or the left hemisphere alone explains speech. If the integrated model passes these tests, it will provide a mechanistic bridge between comparative neuroscience and human speech biology. If it fails, the failure will identify which part of the bridge does not carry the explanatory load.
+
+\begin{thebibliography}{00}
+\bibitem{hickok2007} G. Hickok and D. Poeppel, ``The cortical organization of speech processing,'' \emph{Nature Reviews Neuroscience}, vol. 8, no. 5, pp. 393--402, 2007, doi: 10.1038/nrn2113.
+\bibitem{petkov2008} C. I. Petkov \emph{et al.}, ``A voice region in the monkey brain,'' \emph{Nature Neuroscience}, vol. 11, no. 3, pp. 367--374, 2008, doi: 10.1038/nn2043.
+\bibitem{rauschecker2009} R. J. Rauschecker and S. K. Scott, ``Maps and streams in the auditory cortex: Nonhuman primates illuminate human speech processing,'' \emph{Nature Neuroscience}, vol. 12, no. 6, pp. 718--724, 2009, doi: 10.1038/nn.2331.
+\bibitem{giraud2012} A.-L. Giraud and D. Poeppel, ``Cortical oscillations and speech processing: Emerging computational principles and operations,'' \emph{Nature Neuroscience}, vol. 15, no. 4, pp. 511--517, 2012, doi: 10.1038/nn.3063.
+\bibitem{labache2023} L. Labache, T. Ge, B. T. T. Yeo, and A. J. Holmes, ``Language network lateralization is reflected throughout the macroscale functional organization of cortex,'' \emph{Nature Communications}, vol. 14, Art. no. 3405, 2023, doi: 10.1038/s41467-023-39131-y.
+\bibitem{skeide2016} D. B. Skeide and A. D. Friederici, ``The ontogeny of the cortical language network,'' \emph{Nature Reviews Neuroscience}, vol. 17, no. 5, pp. 323--332, 2016, doi: 10.1038/nrn.2016.23.
+\bibitem{enard2002} S. Enard \emph{et al.}, ``Molecular evolution of FOXP2, a gene involved in speech and language,'' \emph{Nature}, vol. 418, pp. 869--872, 2002, doi: 10.1038/nature01025.
+\bibitem{varghakhadem2005} K. Vargha-Khadem \emph{et al.}, ``FOXP2 and the neuroanatomy of speech,'' \emph{Nature Reviews Neuroscience}, vol. 6, pp. 131--138, 2005, doi: 10.1038/nrn1607.
+\bibitem{fitch2010} W. T. Fitch, \emph{The Evolution of Language}. Cambridge, U.K.: Cambridge University Press, 2010.
+\end{thebibliography}
+
+\end{document}

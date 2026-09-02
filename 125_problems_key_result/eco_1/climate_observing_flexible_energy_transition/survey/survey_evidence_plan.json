@@ -1,0 +1,37 @@
+{
+  "stage": "survey",
+  "topic": "Can we stop global climate change?",
+  "scientific_reframe": "Can a coordinated data-to-decision system identify mitigation portfolios that drive anthropogenic greenhouse-gas emissions toward net zero, maintain reliable and affordable energy, and reduce residual climate risk across plausible climate and socioeconomic futures?",
+  "mode": "DESIGN_ONLY",
+  "claims": [
+    {
+      "id": "observation_infrastructure",
+      "claim": "Sustained, quality-controlled climate observations and Essential Climate Variables support monitoring, prediction, climate services, and adaptation.",
+      "allowed_sources": ["gcos"],
+      "design_use": "Represent coverage, calibration, uncertainty, continuity, openness, and latency as observation attributes.",
+      "forbidden_inference": "More observations alone stop global warming."
+    },
+    {
+      "id": "net_zero_pathway",
+      "claim": "A net-zero energy transition requires rapid, portfolio-based deployment of clean energy, efficiency, electrification, innovation, and cooperation.",
+      "allowed_sources": ["iea2021"],
+      "design_use": "Construct alternative portfolios and declare technology, demand, and deployment constraints.",
+      "forbidden_inference": "Any single technology is sufficient in every region and future."
+    },
+    {
+      "id": "grid_flexibility",
+      "claim": "Grid expansion, planning, and operation can constrain a renewable-rich transition.",
+      "allowed_sources": ["ieagrid"],
+      "design_use": "Model transmission, storage, reserves, demand response, curtailment, and outages explicitly.",
+      "forbidden_inference": "Renewable nameplate capacity equals reliable delivered energy."
+    },
+    {
+      "id": "coupled_risk",
+      "claim": "Climate risks arise from interacting hazards, exposure, vulnerability, and adaptation capacity across sectors and regions.",
+      "allowed_sources": ["ipccsyr", "ipccwg2"],
+      "design_use": "Evaluate residual multi-sector risk and distributional burden in addition to emissions.",
+      "forbidden_inference": "Net-zero annual emissions instantly removes physical risk or adaptation limits."
+    }
+  ],
+  "observed_results": []
+}

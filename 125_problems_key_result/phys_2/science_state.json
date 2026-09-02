@@ -1,0 +1,73 @@
+{
+  "created_at": "2026-09-02T19:30:54.268797Z",
+  "last_updated_at": "2026-09-02T19:30:54.309856Z",
+  "restart_history": [],
+  "revision": 3,
+  "schema_version": "science_state_v1",
+  "science_run_id": "phys_2",
+  "stages": {
+    "author": {
+      "attempt": 0,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": null,
+      "input_identity": {},
+      "invalidated_attempts": [],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": null,
+      "status": "PENDING"
+    },
+    "exp_design": {
+      "attempt": 0,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": null,
+      "input_identity": {},
+      "invalidated_attempts": [],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": null,
+      "status": "PENDING"
+    },
+    "idea": {
+      "attempt": 0,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": null,
+      "input_identity": {},
+      "invalidated_attempts": [],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": null,
+      "status": "PENDING"
+    },
+    "survey": {
+      "attempt": 1,
+      "execution_owner": {
+        "hostname": "Fantasy",
+        "pid": 47364,
+        "process_started_at": 1788377452.845774,
+        "service_pid": 49244,
+        "service_process_started_at": 1788377455.1024487,
+        "started_at": "2026-09-02T19:30:54.309856Z"
+      },
+      "failure": null,
+      "finished_at": null,
+      "input_identity": {
+        "science_run_id": "phys_2",
+        "topic_fingerprint": "fdbb0dd468647a91b2e752ee0e7cf67e7273752b643041afeb863622bfad495c"
+      },
+      "invalidated_attempts": [],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": "2026-09-02T19:30:54.309856Z",
+      "status": "RUNNING"
+    }
+  },
+  "status": "RUNNING"
+}

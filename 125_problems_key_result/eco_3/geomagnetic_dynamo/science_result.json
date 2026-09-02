@@ -1,0 +1,17 @@
+{
+  "science_run_id":"eco-3-geomagnetic-dynamo-20260902",
+  "schema_version":"science_run_result_v1",
+  "status":"COMPLETED_WITH_HUMAN_REVIEW_PENDING",
+  "execution_mode":"DESIGN_ONLY",
+  "topic":"What creates the Earth's magnetic field (and why does it move)?",
+  "primary_direction":"GEODYNAMO-X",
+  "stages":{
+    "survey":{"status":"COMPLETED","manifest":"geomagnetic_dynamo/survey/survey_manifest.json"},
+    "idea":{"status":"COMPLETED","result":"geomagnetic_dynamo/idea/idea_result.json"},
+    "exp_design":{"status":"COMPLETED","design":"geomagnetic_dynamo/experiment_design/research_design.json"},
+    "author":{"status":"COMPLETED","pdf":"geomagnetic_dynamo/author/geodynamo_x_report.pdf"}
+  },
+  "expected_results":[],
+  "observed_results":[],
+  "until":"author"
+}

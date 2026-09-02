@@ -1,0 +1,14 @@
+{
+  "schema":"survey_evidence_plan_v1",
+  "topic":"Can human memory be stored, manipulated, and transplanted digitally?",
+  "scope":"Human memory mechanisms, rodent engram manipulation, human neural prostheses, digital reconstruction, and causal transfer",
+  "subhypotheses":[
+    {"id":"SH1","question":"What biological and cognitive properties must a digital representation preserve?","allowed_sources":["E1","E2","E8","E9"],"permitted_claim":"Memory is heterogeneous, distributed, dynamic, and reconstructive.","forbidden_claim":"Memory is a static file localized to one brain region."},
+    {"id":"SH2","question":"Can tagged neural ensembles causally influence memory-related behavior?","allowed_sources":["E2","E3","E4","E5"],"permitted_claim":"Rodent engram manipulations can alter memory-related behavioral expression in constrained paradigms.","forbidden_claim":"Rodent engram activation proves complete human episodic memory transfer."},
+    {"id":"SH3","question":"Can human neural interfaces decode or facilitate memory performance?","allowed_sources":["E6","E7"],"permitted_claim":"Human prosthetic and closed-loop stimulation approaches can modulate constrained memory tasks.","forbidden_claim":"Task improvement proves arbitrary digital memory storage."},
+    {"id":"SH4","question":"What would count as digital storage or transplantation?","allowed_sources":["E1","E2","E6","E9"],"permitted_claim":"A fidelity ladder must separate decoding, behavioral association, neural reinstatement, and recollection.","forbidden_claim":"A classifier or stimulation policy is itself a transplanted memory."},
+    {"id":"SH5","question":"How should manipulation be evaluated for collateral effects and autonomy?","allowed_sources":["E9","E10"],"permitted_claim":"False detail, collateral memories, agency, and consent are essential endpoints.","forbidden_claim":"Improved recall alone establishes benign or acceptable manipulation."}
+  ],
+  "evidence_policy":{"publisher_verified":["E5"],"candidate_papers_cannot_be_upgraded_to_direct_evidence":true,"behavioral_expression_cannot_be_written_as_subjective_recollection":true,"neural_decoder_cannot_be_written_as_memory_upload":true},
+  "retrieval_audit":{"pubmed_verification":["E5"],"status":"partial_but_traceable"}
+}

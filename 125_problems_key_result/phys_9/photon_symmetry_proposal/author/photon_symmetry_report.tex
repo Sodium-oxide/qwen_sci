@@ -1,0 +1,287 @@
+\documentclass[conference]{../../../../Conference-LaTeX-template_10-17-19/IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{url}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\renewcommand{\arraystretch}{1.12}
+\title{A Photon Has No Distinct Antiphoton: A Symmetry-Operational Research Proposal for Opposite Photonic States}
+\author{\IEEEauthorblockN{Anonymous Research Proposal}}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The phrase ``antiphoton'' can suggest a particle opposite to a photon, but in the standard quantum-field description the photon is its own antiparticle. This does not mean that every photon state is physically identical to every other state. Photons can have opposite helicity, counterpropagating momentum, opposite circular-polarization labels, and opposite structured-mode or orbital-angular-momentum (OAM) indices. These contrasts refer to quantum states of one self-conjugate particle species; they do not supply a distinct antiphoton. This research proposal introduces the \emph{Symmetry-Operational Photon-State Ledger} (SOPSL), a source-bounded computational protocol that separates particle identity from measurable state transformations. SOPSL represents one-photon density operators in a declared mode basis, applies a declared charge-conjugation, parity/helicity, directional, polarization, or OAM transformation, and evaluates a trace distance and observable-resolved probability difference. The central hypothesis is that charge conjugation in the self-conjugate one-photon sector is operationally identity-equivalent, whereas selected state transformations are measurement-distinguishable only relative to a declared analyzer, axis, and mode convention. The planned work performs no optical experiment and reports no observed result. It yields a falsifiable vocabulary for deciding whether ``opposite'' means a global phase, a symmetry-related but measurable state, a convention-dependent label, or an invalid claim. The result directly answers the motivating question: no accepted distinct antiphoton is required, while genuinely contrasting photon states remain scientifically important for quantum optics, symmetry tests, and information processing.
+\end{abstract}
+
+\begin{IEEEkeywords}
+photon, antiparticle, charge conjugation, parity, helicity, polarization, orbital angular momentum, quantum state, quantum optics
+\end{IEEEkeywords}
+
+\section{Introduction}
+Are there particles that behave oppositely to the properties or states of photons? The question mixes two different levels of description. Particle identity asks what species of quantum excitation is present. Quantum state asks how that excitation is prepared: its momentum, polarization, helicity, spatial mode, frequency, and correlations with other systems. The difference is decisive for the word ``antiphoton.'' In the standard description of electromagnetism, the photon is neutral, massless, and self-conjugate: it is its own antiparticle. There is no accepted second photon species with opposite electric charge, opposite rest mass, or opposite energy that must be paired with it.
+
+The correct answer is not that all photon descriptions are interchangeable. A right-circularly polarized photon and a left-circularly polarized photon can produce different statistics at a fixed polarization analyzer. A photon travelling along $+z$ and one travelling along $-z$ can be distinguished by directional detection. Structured optical modes may carry positive or negative OAM labels. These are useful and controllable distinctions in quantum optics \cite{krenn2017,forbes_andrews2021,leach2009,erhard2017}. Calling any of them an antiphoton, however, confuses an internal particle--antiparticle relation with a state transformation.
+
+The confusion is understandable because the word ``opposite'' has several legitimate meanings in physics. Electric charge may reverse under charge conjugation. Momentum may reverse under parity or time reversal. Helicity may flip under parity for a massless particle. Circular-polarization conventions may exchange. OAM indices may have opposite signs relative to a stated propagation axis and mode family. An electromagnetic duality rotation can also reorganize electric and magnetic fields in vacuum. These operations are not interchangeable, and some require phase, gauge, frame, or antiunitary conventions. A useful scientific treatment must name both the transformation and the measurement that could tell its input from output.
+
+This paper proposes the \emph{Symmetry-Operational Photon-State Ledger} (SOPSL). Rather than searching for an unsupported distinct antiphoton, SOPSL asks: \emph{can a declared quantum-state transformation be classified as identity-equivalent, measurement-distinguishable, convention-dependent, non-identifiable, or invalid?} The method combines the standard self-conjugacy result with a computational state-and-measurement ledger. It is falsifiable: a charge-conjugation model that generates a measurable distinction in the declared one-photon sector, or a purported state opposite that changes labels only by convention, would expose a fault in the model or interpretation.
+
+The paper follows the requested four-agent process. Survey fixes the evidence and rejects the false distinct-antiphoton premise. Idea selects SOPSL after comparing narrower and higher-risk alternatives. ExperimentDesign defines a synthetic, design-only density-matrix protocol. Author produces a source-bound IEEE research proposal with no physical photon experiment, no discovered particle, and no fabricated result.
+
+\section{Photon Identity, Charge Conjugation, and State Labels}
+\subsection{Particle--antiparticle context}
+CERN’s public antimatter account describes the familiar matter-particle pattern: an antiparticle has the matching mass and opposite electric charge, and matter--antimatter annihilation commonly produces photons and pions \cite{cern_antimatter_page}. That context should not be overextended. Photons are electrically neutral gauge bosons, so an opposite-charge construction does not create an antimatter counterpart. Standard particle-physics references and quantum-field treatments instead identify the photon as a self-conjugate gauge excitation \cite{pdg2022,weinberg_qft1}.
+
+At the field level, charge conjugation changes the sign of the electromagnetic potential and field operator according to a convention such as
+\begin{equation}
+U_C A_\mu(x)U_C^\dagger=-A_\mu(x).
+\label{eq:Cfield}
+\end{equation}
+For a one-photon state, the corresponding charge-conjugation action supplies an eigenphase; with a common convention,
+\begin{equation}
+U_C\lvert\gamma\rangle=-\lvert\gamma\rangle.
+\label{eq:Cphoton}
+\end{equation}
+The minus sign in \eqref{eq:Cphoton} is not a new particle label. If the operational state is a density operator $\rho=\lvert\psi\rangle\langle\psi\rvert$, then
+\begin{equation}
+U_C\rho U_C^\dagger=\rho.
+\label{eq:Crho}
+\end{equation}
+An overall phase cancels. Thus no measurement represented solely by the one-photon density operator can identify a separate ``antiphoton'' created by this action. Equation \eqref{eq:Crho} is a statement under the declared standard one-photon model; it is not a new test result.
+
+\subsection{Helicity and parity are not charge conjugation}
+For a massless particle, helicity labels the angular-momentum projection along the momentum direction. In a momentum-helicity basis, a parity transformation has the schematic action
+\begin{equation}
+U_P\lvert\mathbf{k},\lambda\rangle
+=\eta_P\lvert-\mathbf{k},-\lambda\rangle,
+\label{eq:parity}
+\end{equation}
+where $\lambda$ is helicity and $\eta_P$ represents a convention-dependent phase. The relevant physical message is that parity reverses momentum and helicity in this representation. It is not charge conjugation, and Eq. \eqref{eq:parity} does not introduce a new particle species. The helicity formalism and its transformation rules must be specified carefully for massless representations \cite{wigner1939,jacob_wick1959,weinberg_qft1}.
+
+Time reversal poses an additional warning. It is represented antiunitarily in quantum theory, and a casual replacement by ``reverse the arrow on a photon'' can hide the complex-conjugation and convention choices that an actual calculation needs. SOPSL therefore requires a time-reversal operator and observable set to be declared before any classification. It does not hard-code a generic time-reversal state map.
+
+\subsection{Polarization, direction, and structured modes}
+Polarization provides a direct example of contrasting, observable photon states. In a chosen basis, the Stokes components summarize intensity and polarization statistics. The component associated with circular polarization changes sign when the assigned handedness is exchanged. That sign distinguishes preparation outcomes for an appropriate analyzer; it does not encode electric charge or particle identity. Entangled polarization sources and measurements have long made such state distinctions experimentally meaningful \cite{kwiat1995}.
+
+The same logic extends to spatial degrees of freedom. OAM modes can be labeled by an integer $\ell$ relative to a declared propagation axis and transverse-mode family. Positive and negative $\ell$ describe opposite wavefront twists in that convention. Single-photon OAM, high-dimensional state spaces, and controllable OAM transformations are established quantum-optics resources \cite{krenn2017,leach2009,erhard2017,gauthier2017}. They cannot be recast as a particle/antiparticle charge label. In particular, an OAM-sign claim has to retain its coordinate, propagation, and mode conventions; otherwise it can be only a naming difference.
+
+\begin{table*}[!t]
+\caption{Photon contrasts separated by SOPSL. A distinct particle category is not inferred from a state label.}
+\label{tab:distinctions}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lYYY}
+\toprule
+Candidate ``opposite'' & Declared operation or relation & Potential observable distinction & Permitted particle-identity inference \\
+\midrule
+Antiphoton & charge conjugation in the standard one-photon sector & global phase cancels from $\rho$; no separate one-photon prediction & photon is self-conjugate; no distinct antiphoton \\
+Right/left helicity & helicity preparation or parity-related state map & circular-polarization or helicity-resolved statistics & same photon species \\
+Forward/backward photon & momentum-direction reversal with fixed laboratory axis & directional projectors, detector geometry, interference context & same photon species \\
+Opposite circular polarization & polarization-basis swap and Stokes convention & opposite signed circular Stokes component in declared convention & same photon species \\
+$+\ell/-\ell$ structured mode & OAM sign within declared mode family and axis & mode-projector probabilities and interference patterns & same photon species \\
+Nonstandard composite construction & separate beyond-standard model & only separately scoped observables and evidence could assess it & never report as standard-model antiphoton \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\section{Evidence Survey and Research Gap}
+\subsection{Frozen evidence boundary}
+The Survey Agent froze twelve sources. CERN’s antimatter page was inspected through the browser for the general matter--antimatter context \cite{cern_antimatter_page}. Foundational particle and symmetry sources provide the standard model scope and helicity framework \cite{pdg2022,weinberg_qft1,wigner1939,jacob_wick1959,yang1950}. A dual-engine OpenAlex/AnySearch search cross-validated the selected modern literature on OAM, optical handedness, and high-dimensional photon-state manipulation \cite{krenn2017,forbes_andrews2021,leach2009,erhard2017,gauthier2017}. These source statuses are recorded in the Survey evidence plan. Publisher landing-page verification remains a human-review task before external publication.
+
+The survey intentionally does not elevate all discovered items to evidence. Discovery search found a nonstandard composite-photon article using the term ``antiphoton.'' A search hit, citation count, or unusual terminology cannot replace a standard quantum-field account. Since that construction is not required to explain self-conjugacy or photonic state contrasts, it is excluded from the source-bound downstream claim set. This prevents a provocative vocabulary from becoming an unsupported research premise.
+
+\subsection{Gap ledger}
+The first accepted gap is explanatory: charge conjugation is frequently conflated with reversed polarization, helicity, or propagation direction. The second is operational: claims of opposite states usually omit the analyzer, reference axis, or mode family that would make the difference measurable. Together, these gaps cause a categorical error. A phase relation at the particle-identity level may be unobservable, while a polarization or spatial-mode transformation may be measurable; neither fact entails a distinct antiparticle.
+
+The rejected gap is equally important. Under the standard-model scope, ``find the distinct antiphoton'' is not an open phenomenological requirement. It is a misframing. Research can instead ask which symmetry transformations preserve a state’s density-matrix predictions and which produce a contrast against a fixed measurement context. This question has a direct connection to quantum-state control, high-dimensional photonic encodings, and the interpretation of discrete symmetries.
+
+\section{Idea Selection: Symmetry-Operational Photon-State Ledger}
+\subsection{Portfolio search}
+The Idea Agent considered four routes. A distinct-antiphoton discovery project was rejected because it violates the Survey’s self-conjugacy invariant. A simple catalog of left/right or forward/backward photons was rejected because it lacks an operator and measurement contract. A polarization-only protocol was retained as a competitive, narrow study. A duality or nonstandard-model map was placed in a high-risk portfolio because its field-theory and convention assumptions require specialist review. SOPSL was selected because it connects all accepted gaps to a concrete computational test.
+
+The SOPSL hypothesis is: \emph{a transformation-resolved ledger will classify charge conjugation as identity-equivalent in the standard one-photon sector, while selected helicity, direction, polarization, and structured-mode operations are measurement-distinguishable only after their observables and conventions are declared.} This is more informative than asking whether any word can be placed before ``photon.'' It tells a reader which contrast is physical, which is a phase, which depends on the chosen coordinate system, and which cannot be assessed from the available information.
+
+\subsection{Mechanism and falsifiability}
+Let a finite declared mode basis be written as
+\begin{equation}
+\lvert j\rangle=\lvert\omega,\mathbf{k},\lambda,\ell,r\rangle,
+\qquad
+\rho\succeq0,\quad \mathrm{Tr}(\rho)=1,
+\label{eq:basis}
+\end{equation}
+where $\omega$ is frequency, $\mathbf{k}$ is a directional label, $\lambda$ is helicity, $\ell$ is an optional OAM index, and $r$ names a declared transverse-mode family. An alleged opposite must specify an operator $T$, a transformed state $\sigma=T\rho T^\dagger$ when $T$ is unitary, and an observable set. For an antiunitary transformation, the representation and complex-conjugation convention must be recorded explicitly.
+
+SOPSL quantifies state contrast by the trace distance
+\begin{equation}
+D(\rho,\sigma)=\frac{1}{2}\lVert\rho-\sigma\rVert_1.
+\label{eq:trace-distance}
+\end{equation}
+It also compares predicted measurement probabilities $p_i=\mathrm{Tr}(\rho\Pi_i)$ and $q_i=\mathrm{Tr}(\sigma\Pi_i)$ for a declared projector set $\{\Pi_i\}$. For charge conjugation under \eqref{eq:Crho}, $D=0$ follows from the model. For a different prepared helicity or spatial mode, $D$ may be nonzero; whether a detector sees a contrast depends on the chosen $\Pi_i$. That distinction is SOPSL’s mechanism.
+
+The proposal is falsified if a correctly declared standard one-photon charge-conjugation transformation produces a nonzero operational distinction; if a state label cannot be associated with a transformation and observable but is nevertheless classified; if the conclusion changes only because an axis or polarization convention is renamed; or if a nonstandard photon model is presented as a consequence of the standard theory. These are not mere editorial checks. They separate physical discrimination from a notational substitution.
+
+\begin{figure*}[!t]
+\centering
+\fbox{\begin{minipage}{0.94\textwidth}
+\centering\textbf{Symmetry-Operational Photon-State Ledger (SOPSL)}\\[3pt]
+\small
+\textit{Declared one-photon state $\rho$} $\rightarrow$ \textit{transformation declaration} $\rightarrow$ \textit{state/provenance checks} $\rightarrow$ \textit{measurement context} $\rightarrow$ \textit{operational classification}.\\[5pt]
+\begin{tabular}{c@{\quad}c@{\quad}c@{\quad}c}
+charge conjugation: $\rho\!\rightarrow\!\rho$ & parity/helicity & polarization/Stokes & OAM mode / directional state\\
+global phase check & momentum and handedness & analyzer-resolved & axis and convention declared
+\end{tabular}\\[5pt]
+\textit{Outputs:} identity equivalent, measurement distinguishable, convention dependent, non-identifiable, or model invalid.
+\end{minipage}}
+\caption{SOPSL decision flow. The editable Draw.io source is retained as \texttt{figures/photon\_symmetry\_state\_ledger.drawio}. The diagram is a planned analysis workflow, not a record of a measured photon transformation.}
+\label{fig:sopsl}
+\end{figure*}
+
+\section{ExperimentDesign: Computational State Protocol}
+\subsection{Design-only scope}
+The ExperimentDesign Agent chooses the computational-digital template. The unit of analysis is a state--transformation--measurement tuple. The protocol evaluates synthetic density matrices and declared idealized or noisy projector models. It does not create photons, set waveplates, align an interferometer, transmit quantum keys, collect detector counts, or test a material. This boundary keeps the proposal within a reproducible mathematical study while preserving a clear path for later specialist-reviewed laboratory work.
+
+The baseline card \texttt{C0} represents charge conjugation in the self-conjugate one-photon sector. Card \texttt{C1} represents a helicity pair at fixed direction. \texttt{C2} represents counterpropagating modes relative to fixed laboratory projectors. \texttt{C3} represents a polarization/Stokes pair. \texttt{C4} represents an OAM-sign pair in an explicitly declared transverse-mode family. \texttt{C5} stores parity and time-reversal convention choices. \texttt{C6} adds synthetic purity, leakage, efficiency-proxy, and tomography-noise sensitivity. \texttt{C7} is a strict boundary card: any nonstandard photon model must carry separate evidence and cannot alter a standard-model classification.
+
+\subsection{Variables, controls, and validation}
+Table \ref{tab:contract} gives the computational contract. Positivity and unit trace are non-negotiable. The transformation must be unitary or explicitly antiunitary within the selected convention. A state label alone is insufficient. The system also records a source/version ID, a projection/observation flag, numerical tolerance, and random seed when a synthetic noise sample is used. This allows later authors to trace a classification to its assumptions.
+
+\begin{table*}[!t]
+\caption{SOPSL data contract. All values are planned synthetic inputs or derived analysis fields; no physical-photon measurement is claimed.}
+\label{tab:contract}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lYYY}
+\toprule
+Category & Required fields & Validation rule & Failure response \\
+\midrule
+State baseline & basis, $\rho$, normalization, purity scope & $\rho\succeq0$ and $\mathrm{Tr}(\rho)=1$ & \texttt{MODEL\_INVALID} \\
+Transformation & $T$, symmetry label, unitary/antiunitary status, phase convention & operator and scope explicitly stated & \texttt{NON\_IDENTIFIABLE} \\
+Measurement & projectors, laboratory axis, polarization/OAM convention & probabilities sum to one; observable physically declared & \texttt{NON\_IDENTIFIABLE} \\
+Charge-conjugation card & one-photon self-conjugacy model, $U_C$ action & verify Eq. \eqref{eq:Crho} within tolerance & identity-equivalent or model invalid \\
+Sensitivity card & purity, leakage, noise proxy, tolerance, seed & report classification stability or switch boundary & withhold a unique label \\
+Provenance & source ID, model version, observed/proposed flag & nonstandard models never labeled consensus & \texttt{MODEL\_INVALID} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+For polarization cards, planned outputs include the Stokes-vector prediction and the probability difference in a fixed analyzer basis. For OAM cards, the outputs include projectors onto the declared $+\ell$ and $-\ell$ mode subspaces plus an overlap/fidelity record. For directional cards, the output uses forward/backward projectors defined by the laboratory geometry. The same state may be distinguishable by one projector set and not another. SOPSL does not treat this contextuality as a defect; it is the reason that a measurement-aware definition is needed.
+
+\subsection{Decision logic}
+SOPSL produces five possible labels. \texttt{IDENTITY\_EQUIVALENT} is assigned only when a declared transformation leaves the density-operator predictions invariant. It is the expected outcome for \texttt{C0} under the standard self-conjugate model. \texttt{MEASUREMENT\_DISTINGUISHABLE} is assigned when the declared observables reveal a stable contrast between $\rho$ and $\sigma$. It means that two states are physically distinguishable in that context; it never means that they are different particle species. \texttt{CONVENTION\_DEPENDENT} is assigned when relabeling the basis, axis, gauge, or observer convention removes the alleged contrast without an invariant observable difference. \texttt{NON\_IDENTIFIABLE} and \texttt{MODEL\_INVALID} block an overclaim when essential data or consistency are missing.
+
+Sensitivity testing varies only synthetic quantities: state purity, mode leakage, detector-efficiency proxy, finite tomography sample proxy, and numerical tolerance. Every classification must state whether it remains stable across those inputs or name the threshold at which it changes. A nonzero trace distance is not alone enough to publish a particle claim; it must be interpreted with the transformation’s physical meaning and the selected observables.
+
+\section{Expected Outcome Branches and Theory-to-Operational Bridge}
+Table \ref{tab:branches} contains the only result language permitted by the Author stage. The protocol predicts no particular experimental dataset. It gives conditional interpretations that a future implementation may apply after source and expert checks.
+
+\begin{table}[!t]
+\caption{Conditional outcome branches for SOPSL. These are planned interpretations, not observed findings.}
+\label{tab:branches}
+\centering
+\footnotesize
+\begin{tabularx}{\columnwidth}{lY}
+\toprule
+Label & Authorized conditional conclusion \\
+\midrule
+\texttt{IDENTITY\_EQUIVALENT} & The declared transformation leaves the density operator and all stated predictions unchanged; no antiparticle or new state is established. \\
+\texttt{MEASUREMENT\_DISTINGUISHABLE} & The selected observables distinguish two transformed photon states in their declared basis and geometry; particle identity remains the same. \\
+\texttt{CONVENTION\_DEPENDENT} & The alleged opposite is not invariant under the declared convention change; withhold a physical-opposite claim. \\
+\texttt{NON\_IDENTIFIABLE} & Missing basis, operator, observable, or uncertainty information prevents classification. \\
+\texttt{MODEL\_INVALID} & State validity, transformation representation, provenance, or scope fails; discard the scenario. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The theory-to-operational bridge is compact. Quantum-field theory determines the particle content and the charge-conjugation action. Quantum mechanics determines how a prepared state is represented and how probabilities are calculated. Quantum optics supplies realizable state degrees of freedom and analyzer concepts. None of these layers licenses an informal leap from ``opposite handedness'' to ``antiparticle.'' SOPSL forces the leap to be decomposed: What operator was used? Does it change $\rho$? Which measurement sees the change? Does the answer survive a basis and convention audit?
+
+Consider a simple illustration. Two pure circular-polarization states can be written in a declared basis as $\lvert R\rangle$ and $\lvert L\rangle$. A circular-polarization analyzer can distinguish them, and their Stokes predictions differ in the appropriate component. This is an operational contrast. Charge conjugation acting on a one-photon state does not generate a second state with opposite electric charge for the same analysis; the global phase cancels from the density matrix. The first contrast is a preparation/measurement fact; the second is a particle-identity statement. SOPSL places both in one ledger without mixing their logical roles.
+
+Similarly, an OAM pair $\lvert+\ell\rangle$ and $\lvert-\ell\rangle$ may be discriminated by a mode sorter or interference geometry, as modern structured-light literature makes plausible \cite{krenn2017,leach2009,erhard2017}. The sign is defined relative to a propagation axis and mode convention. The proposal can model state distinguishability without pretending that $-\ell$ is antimatter. A robust report must also state when an OAM/parity comparison depends on the chosen beam model; no generic sign-flip formula should be exported beyond its declared scope.
+
+\section{Research Implications and Validation Hierarchy}
+\subsection{A hierarchy for claims about an ``opposite photon''}
+SOPSL is designed to improve the claim hierarchy, not merely to rename familiar states. At the weakest level, a text can assign a contrasting label such as left/right, forward/backward, or $+\ell/-\ell$. That label becomes a quantum-state claim only after a mode basis and transformation are specified. It becomes an operational claim only after a detector model or projector set predicts a difference. It becomes a symmetry claim only after the relevant charge-conjugation, parity, time-reversal, or other transformation representation is declared. It never becomes a particle-discovery claim merely because the transformed state looks unlike its input in one basis.
+
+This hierarchy makes the standard answer more, rather than less, useful. Self-conjugacy is a precise particle-identity constraint: it rules out a distinct accepted antiphoton in the selected theory scope. It does not erase quantum-state structure. On the contrary, the ability to control and distinguish polarization, spatial modes, and correlations gives quantum optics a rich vocabulary for encoding information and probing light--matter interactions. The ledger allows these two truths to coexist without converting a state contrast into a new particle.
+
+\subsection{Planned validation layers}
+The proposed analysis passes through five layers. Layer 1 verifies that $\rho$ is a valid density operator. Layer 2 verifies that the transformation is specified and has the declared unitary or antiunitary status. Layer 3 verifies the particle-identity constraint: charge conjugation in the standard one-photon card must satisfy Eq. \eqref{eq:Crho}. Layer 4 evaluates observables in a fixed context. Layer 5 varies synthetic imperfections and tests whether a label is stable or instead sensitive to an assumption. The sequence is intentionally ordered. A result cannot use a detector statistic to override an invalid state representation, and a transformed state cannot be called an antiparticle before the identity layer has been addressed.
+
+\begin{table*}[!t]
+\caption{SOPSL claim hierarchy and validation consequence. The hierarchy prevents both underclaiming real state distinctions and overclaiming a particle distinction.}
+\label{tab:hierarchy}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lYYY}
+\toprule
+Claim level & Minimum required declaration & Example allowed statement & Prohibited escalation \\
+\midrule
+Label & basis, axis, and state notation & ``The prepared mode is labeled $+\ell$ in this convention.'' & ``The mode is an antiparticle.'' \\
+Transformation & operator, phase convention, unitary/antiunitary status & ``Parity maps the declared momentum-helicity label as in Eq. \eqref{eq:parity}.'' & ``Parity supplies an opposite electric charge.'' \\
+Operational distinction & projectors/analyzer, probability prediction, uncertainty scope & ``The selected analyzer distinguishes the two prepared states.'' & ``Any analyzer or observer must distinguish them.'' \\
+Particle identity & field-theory scope and charge-conjugation action & ``The one-photon sector is self-conjugate under the stated model.'' & ``A global phase reveals a separate antiphoton.'' \\
+Beyond-standard claim & separate model, predictions, evidence, and expert review & ``A nonstandard model is evaluated in a separate boundary study.'' & ``A nonstandard model is consensus or an observation.'' \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Why this matters for quantum technologies}
+Photonic information platforms routinely use state degrees of freedom that a casual explanation might call opposites. Polarization can encode a qubit; OAM and other spatial modes can enlarge the state space to a qudit; entanglement can correlate complementary outcomes across photons. These applications need clear operational language. An analyzer’s ability to separate two polarizations is an engineering and quantum-information resource. It does not depend on, or signal, an antiparticle relationship. Conversely, a global phase that disappears from a density operator cannot be promoted to a communication symbol without an interference reference that makes a relative phase operational.
+
+SOPSL therefore supports reproducibility in addition to conceptual clarity. Each simulated state receives a ``symmetry passport'': basis order, state matrix, transformation, axis and mode convention, projector set, numerical tolerance, source identifier, and proposed/observed flag. A later researcher can reproduce the classification, replace an ideal projector with a realistic instrument model, or identify exactly which assumption causes a classification switch. This is particularly useful for structured light, where OAM sign, beam axis, and transverse-mode choice can otherwise be detached from the physical geometry they describe.
+
+\subsection{Research questions enabled by the ledger}
+The immediate proposal asks a bounded question about state equivalence. Its follow-on questions are concrete. How robust is an OAM-sign distinction when mode leakage and partial coherence are introduced? Which Stokes or spatial-projector sets are informationally sufficient for a proposed contrast? When does a parity-related idealization stop matching an actual optical geometry? Can a tomography protocol detect the difference between a true state transformation and a calibration drift? These questions retain the distinction between standard particle identity and quantum-state engineering. They would require specialist-reviewed models or experimental data in later work, but SOPSL provides an auditable starting contract rather than an ambiguous use of the word ``antiphoton.''
+
+\section{Risks, Limitations, and Human Review}
+The main scientific risk is overinterpreting a convention. Helicity, polarization, and OAM labels depend on a declared basis or axis, and time reversal is antiunitary. A simulation that writes a matrix without specifying these choices may produce a numerical answer while failing to answer a physical question. SOPSL responds by requiring an operator, an observable, and a convention card for every classification. It also keeps electromagnetic duality and nonstandard composite-photon constructions out of the standard-model result path unless a separate theory review and evidence set are supplied.
+
+The second risk is treating an idealized density matrix as a laboratory outcome. Detector inefficiency, mode mismatch, background, phase stability, source impurity, and tomography reconstruction all affect an optical experiment. The design includes only synthetic sensitivity proxies. It cannot estimate a particular apparatus’s error budget or certify a physical test. A future laboratory study would require a quantum-optics specialist, an approved hardware plan, and independently recorded data; none is supplied here.
+
+The third risk is bibliographic. The modern OAM sources were cross-validated through OpenAlex and AnySearch, and CERN’s public page was directly inspected. Foundational references remain subject to final publisher/page and bibliographic verification before external release. This limitation does not change the source-bound standard conclusion, but it prevents treating this proposal as a finished peer-reviewed article.
+
+Required human review is therefore specific: a quantum-optics reviewer for mode, analyzer, and tomography assumptions; a quantum-field-theory reviewer for charge conjugation, parity, and antiunitary time-reversal conventions; and a bibliographic reviewer for final source pages. The execution policy remains \texttt{DESIGN\_ONLY}; no physical optical action is authorized.
+
+\section{Conclusion}
+The answer to the motivating question is direct. The photon is its own antiparticle in the standard quantum-field description. A distinct accepted antiphoton is not needed to account for a photon’s masslessness, neutrality, or charge-conjugation behavior. The familiar phrase “opposite photon” can still refer to real and useful state contrasts--opposite helicity, polarization, propagation direction, or OAM sign--but only after the relevant transformation, basis, and observable are declared.
+
+SOPSL turns that distinction into a falsifiable research design. It keeps the self-conjugacy test separate from analyzer-resolved state comparisons; it labels missing assumptions rather than filling them with a new-particle claim; and it preserves the boundary between a computational proposal and an observed experiment. The planned contribution is a rigorous vocabulary and validation ledger for photon-state oppositeness. Its anticipated value is not an antiphoton discovery but a sharper connection between symmetry, quantum-state representation, and measurable optical information.
+
+\appendices
+\section{Evidence Coverage and Claim Boundary}
+The source registry contains twelve entries. CERN’s public antimatter explanation was browser verified \cite{cern_antimatter_page}. The particle and symmetry framework is anchored to standard reference and foundational sources \cite{pdg2022,weinberg_qft1,wigner1939,jacob_wick1959,yang1950}. Dual-engine OpenAlex/AnySearch search cross-validated the selected OAM and optical-handedness references \cite{krenn2017,forbes_andrews2021,leach2009,erhard2017,gauthier2017}. No reference supports a new photon species, an observed SOPSL classification, or an experimental symmetry-violation claim.
+
+\section{Symbols and Operational Definitions}
+\begin{tabularx}{0.96\columnwidth}{lY}
+\toprule
+Symbol / term & Definition in this proposal \\
+\midrule
+$\rho$, $\sigma$ & declared input and transformed one-photon density operators \\
+$U_C$, $U_P$ & declared charge-conjugation and parity operators; phases/conventions retained \\
+$\lambda$ & helicity label in a stated momentum basis \\
+$\mathbf{k}$ & photon momentum-direction label \\
+$\ell$ & optional OAM index in a declared transverse-mode family and axis \\
+$\Pi_i$ & declared measurement projector \\
+$D(\rho,\sigma)$ & trace distance defined by Eq. \eqref{eq:trace-distance} \\
+SOPSL & Symmetry-Operational Photon-State Ledger \\
+\bottomrule
+\end{tabularx}
+
+\begin{thebibliography}{99}
+\bibitem{cern_antimatter_page} CERN, ``Antimatter,'' CERN Science: Physics. [Online]. Available: \url{https://home.cern/science/physics/antimatter/}. Accessed: Sep. 1, 2026.
+\bibitem{pdg2022} R. L. Workman \emph{et al.} (Particle Data Group), ``Review of particle physics,'' \emph{Prog. Theor. Exp. Phys.}, vol. 2022, 083C01, 2022, doi: 10.1093/ptep/ptac097.
+\bibitem{weinberg_qft1} S. Weinberg, \emph{The Quantum Theory of Fields, Vol. I: Foundations}. Cambridge, U.K.: Cambridge Univ. Press, 1995.
+\bibitem{wigner1939} E. P. Wigner, ``On unitary representations of the inhomogeneous Lorentz group,'' \emph{Ann. Math.}, vol. 40, no. 1, pp. 149--204, 1939.
+\bibitem{jacob_wick1959} M. Jacob and G. C. Wick, ``On the general theory of collisions for particles with spin,'' \emph{Ann. Phys.}, vol. 7, no. 4, pp. 404--428, 1959, doi: 10.1016/0003-4916(59)90051-X.
+\bibitem{yang1950} C. N. Yang, ``Selection rules for the dematerialization of a particle into two photons,'' \emph{Phys. Rev.}, vol. 77, pp. 242--245, 1950, doi: 10.1103/PhysRev.77.242.
+\bibitem{krenn2017} M. Krenn, M. Malik, M. Erhard, and A. Zeilinger, ``Orbital angular momentum of photons and the entanglement of Laguerre--Gaussian modes,'' \emph{Phil. Trans. R. Soc. A}, vol. 375, 20150442, 2017, doi: 10.1098/rsta.2015.0442.
+\bibitem{forbes_andrews2021} K. A. Forbes and D. L. Andrews, ``Orbital angular momentum of twisted light: Chirality and optical activity,'' \emph{J. Phys. Photonics}, vol. 3, 022007, 2021, doi: 10.1088/2515-7647/abdb06.
+\bibitem{leach2009} J. Leach \emph{et al.}, ``Violation of a Bell inequality in two-dimensional orbital angular momentum state-spaces,'' \emph{Opt. Express}, vol. 17, pp. 8287--8293, 2009, doi: 10.1364/OE.17.008287.
+\bibitem{kwiat1995} P. G. Kwiat \emph{et al.}, ``New high-intensity source of polarization-entangled photon pairs,'' \emph{Phys. Rev. Lett.}, vol. 75, pp. 4337--4341, 1995, doi: 10.1103/PhysRevLett.75.4337.
+\bibitem{erhard2017} M. Erhard, R. Fickler, M. Krenn, and A. Zeilinger, ``Twisted photons: New quantum perspectives in high dimensions,'' \emph{Light Sci. Appl.}, vol. 7, 17146, 2018, doi: 10.1038/lsa.2017.146.
+\bibitem{gauthier2017} D. Gauthier \emph{et al.}, ``Tunable orbital angular momentum in high-harmonic generation,'' \emph{Nat. Commun.}, vol. 8, 14971, 2017, doi: 10.1038/ncomms14971.
+\end{thebibliography}
+\end{document}

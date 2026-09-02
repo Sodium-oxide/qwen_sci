@@ -1,0 +1,21 @@
+{
+  "science_run_id": "ai-1-injectable-nanobots-20260902",
+  "schema_version": "science_run_v1",
+  "created_at": "2026-09-02T06:20:00+09:00",
+  "execution_mode": "DESIGN_ONLY",
+  "topic": "Will injectable, disease-fighting nanobots ever be a reality?",
+  "scientific_reframe": "Under what combinations of size, materials, propulsion or trigger mechanism, targeting logic, payload release, biodistribution, immune compatibility, and manufacturing control can an injectable nanosystem deliver a disease-modifying action at the target site with better benefit-risk performance than a non-robotic nanocarrier or free drug?",
+  "output_dir": "injectable_nanobots",
+  "stages": {
+    "survey": {"status": "COMPLETED", "manifest": "injectable_nanobots/survey/survey_manifest.json"},
+    "idea": {"status": "COMPLETED", "result": "injectable_nanobots/idea/idea_result.json"},
+    "experiment_design": {"status": "COMPLETED", "design": "injectable_nanobots/experiment_design/research_design.json"},
+    "author": {"status": "COMPLETED", "manifest": "injectable_nanobots/author/author_manifest.json", "pdf": "injectable_nanobots/author/injectable_nanobot_benchmark_report.pdf"}
+  },
+  "overall_status": "COMPLETED_WITH_HUMAN_REVIEW_PENDING",
+  "human_review_items": [
+    "Verify and update primary literature, regulatory, and preclinical source records before using the design for laboratory work.",
+    "Calibrate material, flow, trigger, payload, biodistribution, immune, toxicity, clearance, and batch-variation thresholds with domain experts.",
+    "Obtain institutional review, biosafety, donor governance, veterinary, manufacturing, and clinical-regulatory approvals before any biological escalation."
+  ]
+}

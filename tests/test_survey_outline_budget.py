@@ -19,6 +19,7 @@ from modules.survey_generator import (
 from modules.pe import SURVEY_OUTLINE_GENERATION_PAPER_ASSIGNMENT
 from src.pipeline.survey_evidence_plan import (
     EVIDENCE_BACKED_SYNTHESIS,
+    EVIDENCE_GAP_REPORT,
     QUALIFIED_SYNTHESIS,
     SURVEY_EVIDENCE_PLAN_SCHEMA_VERSION,
 )
@@ -268,6 +269,61 @@ def test_outline_prompt_projects_only_representatives_with_qualified_limits():
     assert "W-graph-candidate" in generator.survey_evidence_plan["subhypotheses"][0][
         "paper_role_constraints"
     ]
+
+
+def test_outline_projection_downgrades_missing_qualified_representative_to_gap():
+    plan = _full_plan()
+    entry = plan["subhypotheses"][0]
+    entry["slot_support"]["qualified_observation"] = {
+        "expected_evidence_role": "QUALIFIED_OBSERVATION",
+        "evidence_paper_ids": [],
+        "qualified_paper_ids": ["W-qualified"],
+        "background_paper_ids": [],
+        "qualified_paper_constraints": {
+            "W-qualified": [
+                {"semantic_claim_limits": ["Use qualified wording only."]}
+            ]
+        },
+    }
+    entry["covered_slots"].append("qualified_observation")
+    entry["qualified_paper_ids"] = ["W-qualified"]
+    entry["allowed_writing_mode"] = QUALIFIED_SYNTHESIS
+    entry["allowed_claim_modes"] = [QUALIFIED_SYNTHESIS]
+
+    generator = _generator(plan=plan)
+    prompt_plan = json.loads(
+        generator._survey_evidence_plan_prompt(representative_paper_ids=["W1"])
+    )
+    sh1 = prompt_plan["subhypotheses"][0]
+
+    assert sh1["mode"] == EVIDENCE_GAP_REPORT
+    assert sh1["outline_mode_downgrade"] == {
+        "from_mode": QUALIFIED_SYNTHESIS,
+        "reason": (
+            "No selected representative paper supplies a qualified evidence item "
+            "with its required limitation summary."
+        ),
+        "affected_slots": ["qualified_observation"],
+    }
+    assert sh1["representative_evidence"] == [
+        {
+            "paper_id": "W1",
+            "title": "W1",
+            "evidence_role": "direct",
+            "covered_slots": ["observation"],
+            "limitation_summary": "",
+            "keynote_summary": "",
+        }
+    ]
+    assert any(
+        gap["slot_name"] == "qualified_observation"
+        for gap in sh1["representative_evidence_gaps"]
+    )
+    assert any(
+        level == "warning" and "Downgrading outline projection for SH1" in message
+        for level, message in generator.logger.messages
+    )
+    assert entry["allowed_writing_mode"] == QUALIFIED_SYNTHESIS
 
 
 def test_outline_representative_projection_reports_missing_writable_slot_as_gap():

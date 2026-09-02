@@ -1,0 +1,34 @@
+{
+  "coverage": [
+    {
+      "gap_id": "GAP-FP-01",
+      "sources": [
+        "ponzi2020",
+        "laland2010",
+        "berg2019"
+      ],
+      "coverage_status": "sufficient_for_design_rationale"
+    },
+    {
+      "gap_id": "GAP-FP-02",
+      "sources": [
+        "carter2015"
+      ],
+      "coverage_status": "sufficient_for_bounded_case_study"
+    },
+    {
+      "gap_id": "GAP-FP-03",
+      "sources": [
+        "berg2019",
+        "collins2015",
+        "wolff2019"
+      ],
+      "coverage_status": "sufficient_for_validation_protocol"
+    }
+  ],
+  "uncovered_claims": [
+    "Direction and magnitude of any future phenotype trend",
+    "Causal effect of technology access",
+    "Genetic selection coefficients for selected phenotypes"
+  ]
+}

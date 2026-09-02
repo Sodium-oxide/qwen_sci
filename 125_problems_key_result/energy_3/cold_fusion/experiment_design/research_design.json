@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "stage": "experiment_design",
+  "status": "completed",
+  "topic": "Will cold fusion ever be possible?",
+  "direction": "BLINDED-PRODUCT-LINKED-REPLICATION",
+  "execution_mode": "DESIGN_ONLY",
+  "unit_of_analysis": "complete cell run nested within cathode lot, laboratory, and randomized block",
+  "arms": [
+    {"id": "D-Pd", "purpose": "canonical palladium-deuterium treatment"},
+    {"id": "H-Pd", "purpose": "isotope control"},
+    {"id": "D-Inert", "purpose": "palladium-effect control"},
+    {"id": "D-Pd-open", "purpose": "passive thermal and detector background control"}
+  ],
+  "measurement_domains": ["calorimetry", "electrical_input", "gas_inventory", "deuterium_loading", "neutrons", "gamma", "tritium", "helium_isotopes", "materials_state"],
+  "phases": [
+    {"id": "P0", "name": "metrology", "deliverable": "calibration residuals, detector efficiency, blank distributions"},
+    {"id": "P1", "name": "pilot", "deliverable": "pre-registered minimum detectable effect and run count"},
+    {"id": "P2", "name": "local_blinded_blocks", "deliverable": "locked raw data and quality report"},
+    {"id": "P3", "name": "independent_replication", "deliverable": "cross-laboratory joint analysis"},
+    {"id": "P4", "name": "technology_gate", "deliverable": "net-energy and safety assessment conditional on a verified signal"}
+  ],
+  "hypotheses": ["H0 measurement null", "H1 chemical or thermal artifact", "H2 screened D-D process", "H3 anomalous product-suppressed process"],
+  "primary_endpoint": "joint evidence score using heat, products, isotope composition, material state, and controls",
+  "decision_rule": "pre-registered Bayes factor, product-energy consistency, independent replication, and net-useful-energy gate",
+  "falsification_rules": ["no signal above calibrated controls", "artifact model explains heat", "no independent replication", "products inconsistent with claimed energy", "negative net useful energy after auxiliaries"],
+  "safety_controls": ["institutional review", "ventilation and leak detection", "pressure relief", "electrical isolation", "remote monitoring", "radiation-safety approval", "sample chain of custody"],
+  "expected_results": [],
+  "observed_results": []
+}

@@ -1,0 +1,20 @@
+{
+  "manifest_type": "survey_manifest",
+  "schema_version": "1.0",
+  "topic": "Will injectable, disease-fighting nanobots ever be a reality?",
+  "scientific_reframe": "Under what combinations of size, materials, propulsion or trigger mechanism, targeting logic, payload release, biodistribution, immune compatibility, and manufacturing control can an injectable nanosystem deliver a disease-modifying action at the target site with better benefit-risk performance than a non-robotic nanocarrier or free drug?",
+  "stage_status": "completed",
+  "scope": ["nanoparticle versus nanorobot terminology", "molecularly triggered DNA nanostructures", "externally actuated micro/nanorobots", "biological barriers and immune response", "preclinical translation and manufacturing"],
+  "evidence_registry": [
+    {"id": "DOUGLAS_2012", "type": "logic_gated_DNA_nanobot", "status": "verified", "doi": "10.1126/science.1214081"},
+    {"id": "AMIR_2014", "type": "DNA_origami_in_vivo_computing", "status": "verified", "doi": "10.1038/nnano.2014.58"},
+    {"id": "LI_2018", "type": "DNA_nanobot_tumor_therapy", "status": "verified", "doi": "10.1038/nbt.4071"},
+    {"id": "FELFOUL_2016", "type": "magnetically_guided_bacterial_carrier", "status": "verified", "doi": "10.1038/nnano.2016.137"},
+    {"id": "BLANCO_2015", "type": "biological_barriers_review", "status": "verified", "doi": "10.1038/nbt.3330"},
+    {"id": "FDA_NANOMATERIALS_2022", "type": "regulatory_guidance", "status": "verified", "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/drug-products-including-biological-products-contain-nanomaterials-guidance-industry"},
+    {"id": "SITTI_2015", "type": "mobile_microrobot_review", "status": "verified", "doi": "10.1109/JPROC.2014.2385100"},
+    {"id": "SCHULLER_2011", "type": "DNA_origami_immune_stimulation", "status": "verified", "doi": "10.1021/nn203161y"}
+  ],
+  "terminology_boundary": "A targeted or trigger-gated nanoparticle is not automatically an autonomous self-powered nanorobot; size class, actuation, sensing, computation, and recovery must be declared.",
+  "observed_results": []
+}

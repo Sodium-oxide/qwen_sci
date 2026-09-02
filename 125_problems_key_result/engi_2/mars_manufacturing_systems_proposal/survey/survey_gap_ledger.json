@@ -1,0 +1,12 @@
+{
+  "schema_version": "survey_gap_ledger_v1",
+  "project_id": "engi_2_mars_manufacturing_systems",
+  "gaps": [
+    {"gap_id": "GAP-CELL-001", "title": "Missing end-to-end manufacturing-cell evidence", "status": "ACCEPTED", "rationale": "Route demonstrations do not by themselves close resources, process, inspection, and recovery."},
+    {"gap_id": "GAP-FEEDSTOCK-002", "title": "Feedstock/simulant transfer uncertainty", "status": "ACCEPTED", "rationale": "Simulant outcomes need a declared material-card and site-transfer boundary."},
+    {"gap_id": "GAP-ENERGY-003", "title": "Resource coupling gap", "status": "ACCEPTED", "rationale": "Energy, thermal, dust, and consumable interfaces are not one secondary constraint."},
+    {"gap_id": "GAP-QUALITY-004", "title": "Quality-release gap", "status": "ACCEPTED", "rationale": "Early locally made items need inspection, quarantine, and use-class rules."},
+    {"gap_id": "GAP-RECOVERY-005", "title": "Recovery-route gap", "status": "ACCEPTED", "rationale": "A failed route needs rework, substitute, imported spare, or deferment decisions."},
+    {"gap_id": "GAP-SCOPE-006", "title": "Overbroad Mars-factory claims", "status": "ACCEPTED", "rationale": "Partial gravity and environmental constraints must not be collapsed into a generic factory narrative."}
+  ]
+}

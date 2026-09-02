@@ -1,0 +1,585 @@
+{
+  "declared_domain": "",
+  "domain": "Cellular Biomolecular Organization and Phase Separation",
+  "domain_resolution_source": "llm_primary_catalog_validated",
+  "event": "project_created",
+  "project_id": "sci_20260901_042802_922870_survey_001",
+  "requires_human_confirmation": true,
+  "research_context": {
+    "abbreviations": [],
+    "academic_operationalization": {
+      "applied": false,
+      "baseline_requirements": [],
+      "data_or_deployment_context": [],
+      "extractor": "deterministic_skip",
+      "limitation_and_failure_conditions": [],
+      "mode": "survey_scope",
+      "normalized_objective": "How are biomolecules organized in cells to function orderly and effectively? This project investigates the multiscale principles that organize proteins, nucleic acids, lipids, and carbohydrates in crowded cells. It focuses on the complementary roles of membrane-bounded organelles and biomolecular phase separation in controlling molecular localization, condensation, availability, and functional coordination. The study will synthesize mechanistic evidence from cryo-fluorescence microscopy and cryo-electron tomography to formulate testable, design-only research strategies for resolving nanoscale biomolecular organization across cellular phases. The workflow must remain computational and evidence-driven, with any proposed biological experiments explicitly marked NEED_HUMAN_INPUT for specialist feasibility and ethics review.",
+      "original_objective": "How are biomolecules organized in cells to function orderly and effectively? This project investigates the multiscale principles that organize proteins, nucleic acids, lipids, and carbohydrates in crowded cells. It focuses on the complementary roles of membrane-bounded organelles and biomolecular phase separation in controlling molecular localization, condensation, availability, and functional coordination. The study will synthesize mechanistic evidence from cryo-fluorescence microscopy and cryo-electron tomography to formulate testable, design-only research strategies for resolving nanoscale biomolecular organization across cellular phases. The workflow must remain computational and evidence-driven, with any proposed biological experiments explicitly marked NEED_HUMAN_INPUT for specialist feasibility and ethics review.",
+      "outcomes_or_readouts": [],
+      "research_object": "",
+      "rewrite_reason": "The original objective already contains sufficient scope anchors.",
+      "task_or_question": ""
+    },
+    "cache_status": "hit",
+    "catalog_conflict": {
+      "adjudicated": false,
+      "catalog_primary_label": "Unresolved Research Domain",
+      "detected": false,
+      "reason": ""
+    },
+    "catalog_resolution": {
+      "catalog_version": "research_domain_catalog_v1",
+      "declared_domain": "",
+      "primary_domain": "general",
+      "primary_label": "Unresolved Research Domain",
+      "primary_subfield": "",
+      "requested_domain_is_generic": true,
+      "requires_human_confirmation": true,
+      "research_domains": []
+    },
+    "core_entities": [
+      "proteins",
+      "nucleic acids",
+      "lipids",
+      "carbohydrates",
+      "membrane-bounded organelles",
+      "biomolecular phase separation",
+      "molecular localization",
+      "condensation",
+      "availability",
+      "functional coordination",
+      "nanoscale biomolecular organization"
+    ],
+    "declared_domain": "",
+    "discovery_taxonomy": {
+      "adjacent_disciplines": [],
+      "coverage": "unsupported",
+      "discipline_ids": [],
+      "matched_terms": [],
+      "mixed": false,
+      "out_of_scope_terms": [],
+      "primary_discipline": null,
+      "provider_filters": {
+        "arxiv": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "arxiv",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "openalex": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "openalex",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "semantic_scholar": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "semantic_scholar",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      },
+      "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence.",
+      "schema_version": "discipline_taxonomy_v1",
+      "scope": "natural_science_engineering_only",
+      "status": "unresolved"
+    },
+    "domain": "Cellular Biomolecular Organization and Phase Separation",
+    "domain_confidence": 0.95,
+    "domain_context": {
+      "primary": "Cellular Biomolecular Organization and Phase Separation",
+      "retrieval_terms": [
+        "Cellular Biomolecular Organization and Phase Separation",
+        "Biomolecular Condensates",
+        "Membrane-Bounded Organelles",
+        "Nanoscale Spatial Organization",
+        "Molecular Crowding",
+        "Functional Coordination",
+        "cellular crowding",
+        "subcellular architecture",
+        "phase separation biology",
+        "macromolecular organization",
+        "membraneless organelles",
+        "proteins",
+        "nucleic acids",
+        "lipids",
+        "carbohydrates",
+        "biomolecular phase separation",
+        "molecular localization",
+        "condensation",
+        "availability",
+        "nanoscale biomolecular organization"
+      ],
+      "secondary_labels": [
+        "Biomolecular Condensates",
+        "Membrane-Bounded Organelles",
+        "Nanoscale Spatial Organization",
+        "Molecular Crowding",
+        "Functional Coordination"
+      ],
+      "taxonomy_labels": []
+    },
+    "domain_resolution_source": "llm_primary_catalog_validated",
+    "domain_taxonomy": {
+      "catalog_version": "research_domain_catalog_v1",
+      "coverage": "validated",
+      "mappings": []
+    },
+    "evidence_spans": [
+      "How are biomolecules organized in cells to function orderly and effectively?",
+      "investigates the multiscale principles that organize proteins, nucleic acids, lipids, and carbohydrates in crowded cells",
+      "focuses on the complementary roles of membrane-bounded organelles and biomolecular phase separation in controlling molecular localization, condensation, availability, and functional coordination",
+      "formulate testable, design-only research strategies for resolving nanoscale biomolecular organization across cellular phases"
+    ],
+    "exclusion_terms": [
+      "drug discovery pipelines",
+      "population-level genomics",
+      "clinical trial design",
+      "in silico protein folding",
+      "metagenomic sequencing"
+    ],
+    "identity_source": "llm_primary_catalog_validated",
+    "identity_status": "unresolved",
+    "input_fingerprint": "505d0e72362e0dc977a30d3fee98024a0683e39f33e3e016e33f25a77cea200d",
+    "llm_attempted": true,
+    "llm_error": "",
+    "llm_payload": {
+      "abbreviations": [],
+      "core_entities": [
+        "proteins",
+        "nucleic acids",
+        "lipids",
+        "carbohydrates",
+        "membrane-bounded organelles",
+        "biomolecular phase separation",
+        "molecular localization",
+        "condensation",
+        "availability",
+        "functional coordination",
+        "nanoscale biomolecular organization"
+      ],
+      "domain_confidence": 0.95,
+      "evidence_spans": [
+        "How are biomolecules organized in cells to function orderly and effectively?",
+        "investigates the multiscale principles that organize proteins, nucleic acids, lipids, and carbohydrates in crowded cells",
+        "focuses on the complementary roles of membrane-bounded organelles and biomolecular phase separation in controlling molecular localization, condensation, availability, and functional coordination",
+        "formulate testable, design-only research strategies for resolving nanoscale biomolecular organization across cellular phases"
+      ],
+      "exclusion_terms": [
+        "drug discovery pipelines",
+        "population-level genomics",
+        "clinical trial design",
+        "in silico protein folding",
+        "metagenomic sequencing"
+      ],
+      "must_not_be_primary": [
+        "Genomics",
+        "Clinical Pharmacology",
+        "Epidemiology",
+        "Astrophysics"
+      ],
+      "operationalization": {
+        "baseline_requirements": [
+          "Complementary roles of membrane-bounded organelles and biomolecular phase separation"
+        ],
+        "data_or_deployment_context": [
+          "Crowded cells",
+          "Cellular phases"
+        ],
+        "limitation_and_failure_conditions": [
+          "Scope restricted to computational synthesis and design strategies; biological experimentation requires external feasibility and ethics review"
+        ],
+        "normalized_objective": "Synthesize mechanistic evidence to establish design strategies for resolving nanoscale biomolecular organization across cellular phases.",
+        "outcomes_or_readouts": [
+          "Testable, design-only research strategies for resolving nanoscale biomolecular organization across cellular phases"
+        ],
+        "research_object": "Multiscale principles governing the spatial arrangement and functional coordination of proteins, nucleic acids, lipids, and carbohydrates in crowded cellular environments.",
+        "rewrite_reason": "Source text conflates survey objectives with methodological constraints and execution protocols; rewritten to isolate the core scientific object, underlying mechanisms, and targeted outcomes per strict survey classification parameters.",
+        "task_or_question": "How are biomolecules organized in cells to function orderly and effectively?"
+      },
+      "preferred_research_domains": [],
+      "primary_discipline": "Cell Biology",
+      "primary_label": "Cellular Biomolecular Organization and Phase Separation",
+      "rationale": "The project explicitly targets the multiscale spatial arrangement and functional regulation of macromolecules within crowded cellular environments, centering on the mechanistic interplay between membrane-bound compartments and liquid-liquid phase separation.",
+      "retrieval_synonyms": [
+        "biomolecular condensates",
+        "cellular crowding",
+        "subcellular architecture",
+        "phase separation biology",
+        "macromolecular organization",
+        "membraneless organelles"
+      ],
+      "secondary_disciplines": [
+        "Biophysics",
+        "Structural Biology"
+      ],
+      "secondary_labels": [
+        "Biomolecular Condensates",
+        "Membrane-Bounded Organelles",
+        "Nanoscale Spatial Organization",
+        "Molecular Crowding",
+        "Functional Coordination"
+      ]
+    },
+    "llm_used": true,
+    "original_objective": "How are biomolecules organized in cells to function orderly and effectively? This project investigates the multiscale principles that organize proteins, nucleic acids, lipids, and carbohydrates in crowded cells. It focuses on the complementary roles of membrane-bounded organelles and biomolecular phase separation in controlling molecular localization, condensation, availability, and functional coordination. The study will synthesize mechanistic evidence from cryo-fluorescence microscopy and cryo-electron tomography to formulate testable, design-only research strategies for resolving nanoscale biomolecular organization across cellular phases. The workflow must remain computational and evidence-driven, with any proposed biological experiments explicitly marked NEED_HUMAN_INPUT for specialist feasibility and ethics review.",
+    "original_topic": "How are biomolecules organized in cells to function orderly and effectively? This project investigates the multiscale principles that organize proteins, nucleic acids, lipids, and carbohydrates in crowded cells. It focuses on the complementary roles of membrane-bounded organelles and biomolecular phase separation in controlling molecular localization, condensation, availability, and functional coordination. The study will synthesize mechanistic evidence from cryo-fluorescence microscopy and cryo-electron tomography to formulate testable, design-only research strategies for resolving nanoscale biomolecular organization across cellular phases. The workflow must remain computational and evidence-driven, with any proposed biological experiments explicitly marked NEED_HUMAN_INPUT for specialist feasibility and ethics review.",
+    "primary_discipline": null,
+    "recommended_sources": [
+      {
+        "native_filter": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "openalex",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "priority": 1,
+        "provider": "openalex",
+        "role": "primary_discovery"
+      },
+      {
+        "enabled_for_exact_mapping": false,
+        "native_filter": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "arxiv",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "priority": 2,
+        "provider": "arxiv",
+        "role": "conditional_preprint_discovery"
+      },
+      {
+        "native_filter": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "semantic_scholar",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "priority": 3,
+        "provider": "semantic_scholar",
+        "role": "fallback_only"
+      }
+    ],
+    "requires_human_confirmation": true,
+    "research_brief": "",
+    "research_design_inventory": {
+      "design_basis": [
+        {
+          "anchors": [
+            "proteins, nucleic acids, lipids, and carbohydrates",
+            "crowded cells"
+          ],
+          "evidence_spans": [
+            "proteins, nucleic acids, lipids, and carbohydrates in crowded cells"
+          ],
+          "id": "DB1",
+          "kind": "research_object",
+          "source": "llm_source_grounded",
+          "statement": "Define the specific macromolecular classes that require systematic categorization to establish baseline organizational parameters."
+        },
+        {
+          "anchors": [
+            "multiscale principles",
+            "nanoscale biomolecular organization"
+          ],
+          "evidence_spans": [
+            "multiscale principles",
+            "resolving nanoscale biomolecular organization"
+          ],
+          "id": "DB2",
+          "kind": "scale",
+          "source": "llm_source_grounded",
+          "statement": "Specify the dimensional resolution thresholds necessary to capture hierarchical structural arrangements without losing contextual fidelity."
+        },
+        {
+          "anchors": [
+            "complementary roles of membrane-bounded organelles and biomolecular phase separation",
+            "controlling molecular localization, condensation, availability, and functional coordination"
+          ],
+          "evidence_spans": [
+            "complementary roles of membrane-bounded organelles and biomolecular phase separation in controlling molecular localization, condensation, availability, and functional coordination"
+          ],
+          "id": "DB3",
+          "kind": "target_relation",
+          "source": "llm_source_grounded",
+          "statement": "Map the joint regulatory effects of distinct spatial confinement mechanisms on component distribution and reactivity dynamics."
+        },
+        {
+          "anchors": [
+            "synthesize mechanistic evidence from cryo-fluorescence microscopy and cryo-electron tomography",
+            "formulate testable, design-only research strategies"
+          ],
+          "evidence_spans": [
+            "synthesize mechanistic evidence from cryo-fluorescence microscopy and cryo-electron tomography",
+            "formulate testable, design-only research strategies"
+          ],
+          "id": "DB4",
+          "kind": "method_or_design",
+          "source": "llm_source_grounded",
+          "statement": "Integrate observational datasets into algorithmic pipelines to generate non-interventional experimental blueprints."
+        },
+        {
+          "anchors": [
+            "workflow must remain computational and evidence-driven",
+            "NEED_HUMAN_INPUT"
+          ],
+          "evidence_spans": [
+            "workflow must remain computational and evidence-driven",
+            "explicitly marked NEED_HUMAN_INPUT"
+          ],
+          "id": "DB5",
+          "kind": "deployment_or_context",
+          "source": "llm_source_grounded",
+          "statement": "Restrict initial analytical execution to simulated environments until independent validation pathways are established."
+        },
+        {
+          "anchors": [
+            "membrane-bounded organelles",
+            "biomolecular phase separation"
+          ],
+          "evidence_spans": [
+            "membrane-bounded organelles and biomolecular phase separation"
+          ],
+          "id": "DB6",
+          "kind": "condition_or_regime",
+          "source": "llm_source_grounded",
+          "statement": "Differentiate operational parameters that favor discrete compartmentalization versus fluid-like demixing behaviors."
+        },
+        {
+          "anchors": [
+            "molecular localization",
+            "condensation",
+            "availability",
+            "functional coordination"
+          ],
+          "evidence_spans": [
+            "molecular localization, condensation, availability, and functional coordination"
+          ],
+          "id": "DB7",
+          "kind": "outcome_or_construct",
+          "source": "llm_source_grounded",
+          "statement": "Develop quantifiable indicators to track transitions between dispersed distributions and aggregated assemblies."
+        },
+        {
+          "anchors": [
+            "cryo-fluorescence microscopy",
+            "cryo-electron tomography"
+          ],
+          "evidence_spans": [
+            "cryo-fluorescence microscopy and cryo-electron tomography"
+          ],
+          "id": "DB8",
+          "kind": "data_or_corpus",
+          "source": "llm_source_grounded",
+          "statement": "Aggregate high-fidelity imaging records to initialize and constrain computational modeling frameworks."
+        },
+        {
+          "anchors": [
+            "proteins",
+            "nucleic acids",
+            "lipids",
+            "carbohydrates",
+            "membrane-bounded organelles",
+            "biomolecular phase separation",
+            "molecular localization",
+            "condensation"
+          ],
+          "evidence_spans": [
+            "proteins",
+            "nucleic acids",
+            "lipids",
+            "carbohydrates",
+            "membrane-bounded organelles",
+            "biomolecular phase separation"
+          ],
+          "id": "DB9",
+          "kind": "research_object",
+          "source": "project_declaration_compiler",
+          "statement": "The project studies Cellular Biomolecular Organization and Phase Separation."
+        },
+        {
+          "anchors": [
+            "How are biomolecules organized in cells to function orderly and effectively? This project investigates the multiscale principles that organize proteins, nucleic acids, lipids, and carbohydrates in crowded cells. It focuses on the complement",
+            "proteins",
+            "nucleic acids",
+            "lipids",
+            "carbohydrates",
+            "membrane-bounded organelles",
+            "biomolecular phase separation",
+            "molecular localization"
+          ],
+          "evidence_spans": [
+            "How are biomolecules organized in cells to function orderly and effectively? This project investigates the multiscale principles that organize proteins, nucleic acids, lipids, and carbohydrates in crowded cells. It focuses on the complement"
+          ],
+          "id": "DB10",
+          "kind": "target_relation",
+          "source": "project_declaration_compiler",
+          "statement": "How are biomolecules organized in cells to function orderly and effectively? This project investigates the multiscale principles that organize proteins, nucleic acids, lipids, and carbohydrates in crowded cells. It focuses on the complementary roles of membrane-bounded organelles and biomolecular phase separation in controlling molecular localization, condensation, availability, and functional coordination. The study will synthesize mechanistic evidence from cryo-fluorescence microscopy and cryo-electron tomography to formulate testable, design-only research strategies for resolving nanoscale "
+        }
+      ],
+      "input_fingerprint": "13224d4452e2128790924a2b74986a4887218157562aad3ff279acd9d9d984bc",
+      "inventory_source": "llm_source_grounded_plus_project_declaration",
+      "llm_error": "",
+      "llm_used": true,
+      "project_context_fingerprint": "505d0e72362e0dc977a30d3fee98024a0683e39f33e3e016e33f25a77cea200d",
+      "schema_version": "research_design_inventory_v1"
+    },
+    "research_domains": [],
+    "research_identity": {
+      "confidence": 0.95,
+      "core_entities": [
+        "proteins",
+        "nucleic acids",
+        "lipids",
+        "carbohydrates",
+        "membrane-bounded organelles",
+        "biomolecular phase separation",
+        "molecular localization",
+        "condensation",
+        "availability",
+        "functional coordination",
+        "nanoscale biomolecular organization"
+      ],
+      "evidence_spans": [
+        "How are biomolecules organized in cells to function orderly and effectively?",
+        "investigates the multiscale principles that organize proteins, nucleic acids, lipids, and carbohydrates in crowded cells",
+        "focuses on the complementary roles of membrane-bounded organelles and biomolecular phase separation in controlling molecular localization, condensation, availability, and functional coordination",
+        "formulate testable, design-only research strategies for resolving nanoscale biomolecular organization across cellular phases"
+      ],
+      "label": "Cellular Biomolecular Organization and Phase Separation",
+      "must_not_be_primary": [
+        "Genomics",
+        "Clinical Pharmacology",
+        "Epidemiology",
+        "Astrophysics"
+      ],
+      "rationale": "The project explicitly targets the multiscale spatial arrangement and functional regulation of macromolecules within crowded cellular environments, centering on the mechanistic interplay between membrane-bound compartments and liquid-liquid phase separation.",
+      "retrieval_synonyms": [
+        "biomolecular condensates",
+        "cellular crowding",
+        "subcellular architecture",
+        "phase separation biology",
+        "macromolecular organization",
+        "membraneless organelles"
+      ],
+      "secondary_labels": [
+        "Biomolecular Condensates",
+        "Membrane-Bounded Organelles",
+        "Nanoscale Spatial Organization",
+        "Molecular Crowding",
+        "Functional Coordination"
+      ],
+      "source": "llm_primary"
+    },
+    "retrieval_plan": {
+      "baseline_query": "How are biomolecules organized in cells to function orderly and effectively? This project investigates the multiscale principles that organize proteins, nucleic acids, lipids, and carbohydrates in crowded cells. It focuses on the complementary roles of membrane-bounded organelles and biomolecular phase separation in controlling molecular localization, condensation, availability, and functional coordination. The study will synthesize mechanistic evidence from cryo-fluorescence microscopy and cryo-electron tomography to formulate testable, design-only research strategies for resolving nanoscale biomolecular organization across cellular phases. The workflow must remain computational and evidence-driven, with any proposed biological experiments explicitly marked NEED_HUMAN_INPUT for specialist",
+      "evidence_mode": "overview",
+      "exclude_anchors": [
+        "drug discovery pipelines",
+        "population-level genomics",
+        "clinical trial design",
+        "in silico protein folding",
+        "metagenomic sequencing"
+      ],
+      "execution_policy": "limited_query_lanes",
+      "include_anchors": [
+        "Cellular Biomolecular Organization and Phase Separation",
+        "Biomolecular Condensates",
+        "Membrane-Bounded Organelles",
+        "Nanoscale Spatial Organization",
+        "Molecular Crowding",
+        "Functional Coordination",
+        "cellular crowding",
+        "subcellular architecture",
+        "phase separation biology",
+        "macromolecular organization",
+        "membraneless organelles",
+        "proteins"
+      ],
+      "normalized_objective": "How are biomolecules organized in cells to function orderly and effectively? This project investigates the multiscale principles that organize proteins, nucleic acids, lipids, and carbohydrates in crowded cells. It focuses on the complementary roles of membrane-bounded organelles and biomolecular phase separation in controlling molecular localization, condensation, availability, and functional coordination. The study will synthesize mechanistic evidence from cryo-fluorescence microscopy and cryo-electron tomography to formulate testable, design-only research strategies for resolving nanoscale biomolecular organization across cellular phases. The workflow must remain computational and evidence-driven, with any proposed biological experiments explicitly marked NEED_HUMAN_INPUT for specialist",
+      "query_lanes": [
+        {
+          "discipline_filter_policy": "broad",
+          "evidence_mode": "overview",
+          "execution_phase": "initial",
+          "hard_filter_allowed": false,
+          "hard_filter_applied": false,
+          "lane": "broad_anchor",
+          "lane_id": "broad_anchor",
+          "provider": "openalex",
+          "provider_filter": {},
+          "purpose": "recall_baseline",
+          "query": "How are biomolecules organized in cells to function orderly and effectively? This project investigates the multiscale principles that organize proteins, nucleic acids, lipids, and carbohydrates in crowded cells. It focuses on the complementary roles of membrane-bounded organelles and biomolecular phase separation in controlling molecular localization, condensation, availability, and functional coordination. The study will synthesize mechanistic evidence from cryo-fluorescence microscopy and cryo-electron tomography to formulate testable, design-only research strategies for resolving nanoscale biomolecular organization across cellular phases. The workflow must remain computational and evidence-driven, with any proposed biological experiments explicitly marked NEED_HUMAN_INPUT for specialist",
+          "taxonomy_coverage": "broad"
+        }
+      ],
+      "schema_version": "retrieval_lanes_v1"
+    },
+    "retrieval_synonyms": [
+      "biomolecular condensates",
+      "cellular crowding",
+      "subcellular architecture",
+      "phase separation biology",
+      "macromolecular organization",
+      "membraneless organelles"
+    ],
+    "schema_version": "project_research_context_v3",
+    "secondary_disciplines": [],
+    "taxonomy_resolution": {
+      "adjacent_disciplines": [],
+      "coverage": "unsupported",
+      "discipline_ids": [],
+      "matched_terms": [],
+      "mixed": false,
+      "out_of_scope_terms": [],
+      "primary_discipline": null,
+      "provider_filters": {
+        "arxiv": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "arxiv",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "openalex": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "openalex",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "semantic_scholar": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "semantic_scholar",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      },
+      "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence.",
+      "schema_version": "discipline_taxonomy_v1",
+      "scope": "natural_science_engineering_only",
+      "status": "unresolved"
+    },
+    "title": ""
+  },
+  "research_domains": [],
+  "schema_version": "survey_project_context_artifact_v1"
+}

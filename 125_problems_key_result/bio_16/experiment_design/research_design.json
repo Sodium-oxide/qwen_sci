@@ -1,0 +1,25 @@
+{
+  "schema_version":"experiment_design_v1",
+  "project_id":"bio_16",
+  "design_id":"design-bio_16-growth-plate-readiness-v1",
+  "execution_policy":{"mode":"DESIGN_ONLY","observed_results":[]},
+  "selected_idea":"IDEA-GP-02",
+  "primary_question":"Does a preregistered longitudinal multimodal model improve held-out calibration and proper scoring for sustained cessation of longitudinal bone growth beyond chronological age and bone age?",
+  "hypotheses":[
+    {"id":"H1","statement":"MRI growth-plate and puberty-related feature blocks improve primary held-out calibration and Brier score beyond the baseline.","falsifier":"No repeatable improvement or failed calibration."},
+    {"id":"H2","statement":"The model retains acceptable calibration across registered sites and developmental subgroups.","falsifier":"Subgroup calibration or external-site transportability gate fails."},
+    {"id":"H3","statement":"Inherited feature summaries do not need to be retained if they add no stable predictive value after ancestry-aware controls.","falsifier":"No incremental performance, or unfairness/instability is detected."}
+  ],
+  "population":{"design":"prospective noninterventional longitudinal cohort","unit":"participant-visit","age_range":"prepubertal through late-pubertal windows fixed before enrollment","sample_size":"set by preregistered simulation; no sample-size claim is made in this proposal"},
+  "endpoints":{
+    "primary":"sustained low-growth state based on registered height-velocity threshold across two consecutive follow-up intervals",
+    "secondary":"interval-censored MRI structural growth-plate closure; residual height gain; uncertainty interval calibration",
+    "non_endpoints":["final adult height guarantee","clinical treatment recommendation","causal effect of a hormone or genotype"]
+  },
+  "feature_blocks":["chronological age and height history","bone age if approved and available","MRI growth-plate features","puberty-related endocrine measures","limited health covariates","separately consented inherited feature summaries"],
+  "comparators":["age-plus-bone-age baseline","baseline plus MRI","baseline plus endocrine","full multimodal","full multimodal without inherited summaries"],
+  "validation":{"partitions":["locked training","temporal holdout","external-site holdout"],"primary_metrics":["Brier score","calibration intercept","calibration slope"],"secondary_metrics":["log score","time-dependent discrimination","interval coverage","subgroup calibration"],"leakage_controls":["fit preprocessing and feature selection in training only","freeze thresholds before holdout inspection","lock image-quality procedures","keep repeated visits within participant-aware splits"]},
+  "ethics_and_governance":["pediatric assent and guardian consent","research MRI without ionizing radiation","no research biopsy or hormone manipulation","separate genomic consent and withdrawal process","privacy-minimized linkage","human specialist review before any interpretation"],
+  "stop_conditions":["unresolved consent or governance requirement","systematic image-quality failure","endpoint misclassification too high for a defensible analysis","subgroup sample support inadequate for declared fairness claims","unresolved data leakage"],
+  "human_review_requirements":["pediatric endocrinology","musculoskeletal radiology","biostatistics","MRI quality assurance","genomics/privacy governance","research ethics"]
+}

@@ -1,0 +1,33 @@
+{
+  "validation_type": "pdf_validation",
+  "schema_version": "1.0",
+  "status": "passed",
+  "pdf": "intelligence_frontier_benchmark_report.pdf",
+  "source": "intelligence_frontier_benchmark_report.tex",
+  "checks": {
+    "compiled": true,
+    "pages": 8,
+    "target_page_range": [8, 10],
+    "page_size_points": [612, 792],
+    "encrypted": false,
+    "unresolved_references": false,
+    "latex_errors": false,
+    "overfull_boxes": false,
+    "underfull_boxes": true,
+    "underfull_boxes_tolerated": true,
+    "acknowledgment_section": false,
+    "embedded_fonts": true,
+    "rendered_pages": 8,
+    "visual_samples": [1, 4, 8],
+    "visual_qc": "passed"
+  },
+  "commands": [
+    "pdflatex -interaction=nonstopmode -halt-on-error intelligence_frontier_benchmark_report.tex",
+    "pdflatex -interaction=nonstopmode -halt-on-error intelligence_frontier_benchmark_report.tex",
+    "pdfinfo intelligence_frontier_benchmark_report.pdf",
+    "pdffonts intelligence_frontier_benchmark_report.pdf",
+    "pdftoppm -png -r 144 intelligence_frontier_benchmark_report.pdf rendered/page",
+    "pdftotext -layout intelligence_frontier_benchmark_report.pdf report_text.txt"
+  ],
+  "environment_note": "MiKTeX reported a log4cxx permission message for its user log; the document build and PDF audit completed successfully."
+}

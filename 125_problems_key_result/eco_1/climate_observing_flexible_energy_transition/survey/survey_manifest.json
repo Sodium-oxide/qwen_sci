@@ -1,0 +1,18 @@
+{
+  "manifest_type": "survey_manifest",
+  "schema_version": "1.0",
+  "topic": "Can we stop global climate change?",
+  "scientific_reframe": "Can a coordinated data-to-decision system identify mitigation portfolios that drive anthropogenic greenhouse-gas emissions toward net zero, maintain reliable and affordable energy, and reduce residual climate risk across plausible climate and socioeconomic futures?",
+  "stage_status": "completed",
+  "design_mode": "DESIGN_ONLY",
+  "source_registry": [
+    {"id": "gcos", "title": "Global Climate Observing System", "organization": "World Meteorological Organization", "url": "https://gcos.wmo.int/", "verification": "browser_checked"},
+    {"id": "ipccsyr", "title": "Climate Change 2023: Synthesis Report", "organization": "Intergovernmental Panel on Climate Change", "url": "https://www.ipcc.ch/report/ar6/syr/", "verification": "browser_checked"},
+    {"id": "ipccwg2", "title": "Climate Change 2022: Impacts, Adaptation and Vulnerability", "organization": "Intergovernmental Panel on Climate Change", "url": "https://www.ipcc.ch/report/ar6/wg2/", "verification": "browser_checked"},
+    {"id": "iea2021", "title": "Net Zero by 2050: A Roadmap for the Global Energy Sector", "organization": "International Energy Agency", "url": "https://www.iea.org/reports/net-zero-by-2050", "verification": "browser_checked"},
+    {"id": "ieagrid", "title": "Electricity Grids and Secure Energy Transitions", "organization": "International Energy Agency", "url": "https://www.iea.org/reports/electricity-grids-and-secure-energy-transitions", "verification": "browser_checked"}
+  ],
+  "paper_search": {"openalex": {"records": 0, "status": "network_unavailable"}, "anysearch": {"records": 0, "status": "network_unavailable"}},
+  "outputs": ["survey.md", "survey_evidence_plan.json", "survey_gap_ledger.json", "survey_idea_handoff.json"],
+  "observed_results": []
+}

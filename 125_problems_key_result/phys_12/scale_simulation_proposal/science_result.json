@@ -1,0 +1,37 @@
+{
+  "schema_version": "science_result_v1",
+  "project_id": "phys_12_scale_simulation",
+  "topic": "Can we accurately simulate the macro- and microworld?",
+  "workflow": ["Survey", "Idea", "ExperimentDesign", "Author"],
+  "status": "COMPLETED_WITH_HUMAN_SOURCE_PAGE_REVIEW_PENDING",
+  "key_answer": "Accurate simulation is not a property of scale or hardware alone. It is a conditional claim about a declared quantity of interest, tolerance, physical model, numerical and algorithmic approximations, validation evidence, uncertainty, and computational resources. Classical methods remain indispensable across many micro- and macroscopic regimes; quantum computing is a candidate pathway for selected hard quantum problems, not a generic accuracy guarantee.",
+  "stage_outputs": {
+    "survey": "survey/survey_manifest.json",
+    "idea": "idea/idea_result.json",
+    "experiment_design": "experiment_design/research_design.json",
+    "author": "author/author_manifest.json"
+  },
+  "selected_idea_id": "idea-srcl-001",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": []
+  },
+  "final_report": {
+    "tex": "author/scale_simulation_report.tex",
+    "pdf": "author/scale_simulation_report.pdf",
+    "format": "IEEE conference / Letter",
+    "pages": 7
+  },
+  "quality_boundary": {
+    "acknowledgements": "not generated",
+    "fabricated_results": "not generated",
+    "source_registry_count": 12,
+    "browser_verified_source": "nist_qis_page",
+    "doi_publisher_page_review": "PENDING_HUMAN_REVIEW"
+  },
+  "known_risks": [
+    "Publisher or DOI landing-page review remains required for DOI-bearing sources before external publication.",
+    "The proposed error/evidence ledger needs numerical-analysis and domain-science review before deployment in a specific physical system.",
+    "No classical benchmark, quantum-hardware execution, or new simulation result was produced; quantum candidate status is deliberately conditional."
+  ]
+}

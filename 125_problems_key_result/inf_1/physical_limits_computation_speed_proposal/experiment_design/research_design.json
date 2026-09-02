@@ -1,0 +1,18 @@
+{
+  "schema_version": "experiment_design_v1",
+  "project_id": "inf_1_computation_speed_physical_limits",
+  "survey_run_id": "survey-inf1-envelope-001",
+  "selected_idea_id": "idea-pec-001",
+  "template": "computational_digital_with_mathematics_theory",
+  "execution_policy": {"mode": "DESIGN_ONLY", "observed_results": []},
+  "research_unit": "workload x correctness x reliability x architecture x transition x signal x thermal-memory x logical-overhead x I/O",
+  "variables": {
+    "dependent": "useful throughput under an explicit acceptance rule",
+    "independent": ["architecture class", "workload class"],
+    "mediators": ["transition time", "signal latency", "thermal boundary", "memory/information density", "logical overhead", "I/O and verification"],
+    "controls": ["accuracy", "reliability", "output representation", "wall-clock boundary"]
+  },
+  "decision_statuses": ["CONTRACT_EVALUABLE", "BOUND_SUPPORTED_IN_SCOPE", "RELIABILITY_ACCOUNT_INCOMPLETE", "THERMAL_OR_IO_BOUNDARY_MISSING", "QUANTUM_ADVANTAGE_OVERGENERALIZED", "INCONCLUSIVE"],
+  "human_review_required": true,
+  "prohibited_actions": ["hardware operation", "cloud job submission", "simulation execution", "unverified performance claim", "universal numerical upper-limit claim"]
+}

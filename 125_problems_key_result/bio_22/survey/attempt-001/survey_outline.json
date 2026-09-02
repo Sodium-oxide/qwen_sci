@@ -1,0 +1,186 @@
+{
+  "sections": [
+    {
+      "description": "This section introduces the paradigm shift in understanding cellular organization from a homogeneous solution to a crowded, phase-separated environment. It outlines the scope of the survey, covering native biomolecular condensates (BMCs), synthetic compartmentalization strategies, and the advanced imaging techniques required to resolve these structures. It highlights the critical need to distinguish between membrane-bound organelles and liquid-liquid phase separation (LLPS) driven condensates.",
+      "papers_to_use": [],
+      "subsections": [
+        {
+          "description": "Overview of intracellular crowding as a fundamental physical constraint. Discusses how macromolecular crowding acts as a porous medium, reducing diffusion and promoting aggregation or condensation. Sets the stage for understanding why traditional dilute solutions fail to model cellular behavior.",
+          "papers_to_use": [],
+          "title": "The Crowded Cellular Landscape"
+        },
+        {
+          "description": "Comparison between classical membrane-bounded compartments and emerging biomolecular condensates formed via LLPS. Introduces the concept of 'membrane-less organelles' and their functional advantages in rapid response and metabolic channeling.",
+          "papers_to_use": [],
+          "title": "From Membranes to Phase Separation"
+        },
+        {
+          "description": "Defines the boundaries of the survey, focusing on structural characterization, dynamic properties, and functional implications. Highlights SH4 regarding the validation of cryo-fluorescence and cryo-ET proxies, acknowledging that current methods provide indirect evidence requiring careful calibration.",
+          "papers_to_use": [],
+          "title": "Survey Scope and Methodological Challenges"
+        }
+      ],
+      "title": "Introduction"
+    },
+    {
+      "description": "Explores the thermodynamic and kinetic drivers of phase separation in biological systems. Integrates insights from SH1 on direct observational evidence of spatial organization and SH3 on the mechanisms distinguishing discrete compartmentalization from fluid-like demixing. Emphasizes the role of multivalent interactions and environmental responsiveness.",
+      "papers_to_use": [
+        "W4387354254",
+        "W2089466301",
+        "W4408306268",
+        "W4412813834",
+        "W2072014193"
+      ],
+      "subsections": [
+        {
+          "description": "Analyzes the balance between entropy and enthalpy in condensation. Incorporates findings from binary peptide coacervates (W4408306268) showing how mixing peptides can stabilize liquid droplets against rigid fibril formation by hindering ordered nucleation. Discusses the transition from metastable liquids to solids/gels.",
+          "papers_to_use": [
+            "W4387354254",
+            "W4408306268"
+          ],
+          "title": "Thermodynamics of Demixing and Aggregation"
+        },
+        {
+          "description": "Details how external stimuli (pH, temperature, ATP levels) modulate condensate stability. Uses evidence from oleate/PDDA/ATP systems (W2072014193) where electrostatic interactions and lipid assembly on coacervate surfaces create complex multi-layered structures. Highlights pH-dependent reversibility in peptide systems.",
+          "papers_to_use": [
+            "W4408306268",
+            "W2072014193"
+          ],
+          "title": "Environmental Responsiveness and Regulation"
+        },
+        {
+          "description": "Examines how cytoplasmic crowding affects molecular mobility within and around condensates. Synthesizes data on short-range Brownian motion (W2089466301) and porous medium effects (W4412813834), explaining how reduced diffusion enhances local reaction rates but may hinder long-range transport.",
+          "papers_to_use": [
+            "W2089466301",
+            "W4412813834"
+          ],
+          "title": "Crowding and Diffusion Constraints"
+        }
+      ],
+      "title": "Physical Principles of Biomolecular Condensates"
+    },
+    {
+      "description": "Focuses on empirical evidence of BMCs in living cells, addressing SH1's requirement for direct observation of spatial organization. Discusses specific examples like bacterial division rings and polar growth, highlighting the heterogeneity of condensate states (liquid vs. polymer vs. solid).",
+      "papers_to_use": [
+        "W2943084464",
+        "W4307743613",
+        "W7154469791"
+      ],
+      "subsections": [
+        {
+          "description": "Investigates the FtsZ ring dynamics in Alphaproteobacteria. Uses W7154469791 to show FtsZ forming condensates in polar growth. Contrasts this with W4322622499, which details the regulatory interplay between stabilizing (ZapA) and destabilizing (SlmA) proteins in switching FtsZ between polymeric and condensed states.",
+          "papers_to_use": [
+            "W4307743613",
+            "W7154469791"
+          ],
+          "title": "Bacterial Cytoskeleton and Division Rings"
+        },
+        {
+          "description": "Explores how proteins are distributed within the crowded cytoplasm. Discusses the non-uniform distribution of macromolecules and how this impacts function. References the lack of direct evidence for some lipid/carbohydrate organizations (SH1 gaps) while emphasizing protein-centric observations.",
+          "papers_to_use": [],
+          "title": "Spatial Heterogeneity and Protein Localization"
+        },
+        {
+          "description": "Describes the continuous exchange of components between condensates and the surrounding milieu. Links this to the 'dynamic synthetic cells' concept (W2943084464), noting that native condensates also exhibit controlled turnover essential for cellular homeostasis.",
+          "papers_to_use": [
+            "W2943084464"
+          ],
+          "title": "Dynamic Equilibrium and Turnover"
+        }
+      ],
+      "title": "Structural Organization in Native Systems"
+    },
+    {
+      "description": "Shifts focus to artificial systems designed to mimic or enhance natural condensation. Addresses SH2 by comparing functional outcomes of different compartment types. Highlights the use of coacervates, hydrogels, and lipid-coated droplets for creating protocells and bioreactors.",
+      "papers_to_use": [
+        "W2794654572",
+        "W4384626895",
+        "W4416719130",
+        "W2731324457"
+      ],
+      "subsections": [
+        {
+          "description": "Reviews the design of synthetic cells using coacervate droplets. Incorporates W4384626895 on general coacervate utility and W4416719130 on enzymatically reconfigurable liquid crystalline coacervates. Discusses how these systems serve as models for early life and basic cellular functions.",
+          "papers_to_use": [
+            "W2794654572",
+            "W4384626895",
+            "W4416719130"
+          ],
+          "title": "Coacervate-Based Protocells"
+        },
+        {
+          "description": "Details advanced engineering of heterogeneous particles. Uses W2756360081 to illustrate core-shell hydrogel particles for incompatible tandem reactions, emphasizing proximity effects and enhanced catalytic activity (GOX/HRP system). Compares this with W2731324457 on micro/nanocontainers for encapsulation.",
+          "papers_to_use": [
+            "W2731324457"
+          ],
+          "title": "Multi-Compartmental and Core-Shell Architectures"
+        },
+        {
+          "description": "Evaluates the performance of synthetic compartments in biochemical tasks. Highlights the ~23-fold activity enhancement in confined spaces (W2756360081) and the stability provided by low release rates. Discusses the trade-offs between permeability, stability, and reaction efficiency.",
+          "papers_to_use": [],
+          "title": "Functional Integration and Catalysis"
+        }
+      ],
+      "title": "Engineering Synthetic Compartments"
+    },
+    {
+      "description": "Addresses SH4 and SH6, focusing on the methodologies used to visualize and validate condensate structures. Critically evaluates the limitations and biases of current imaging proxies, particularly cryo-fluorescence and cryo-electron tomography (cryo-ET), and proposes correlative approaches to mitigate these issues.",
+      "papers_to_use": [
+        "W4206216780",
+        "W3015704836",
+        "W4286631405",
+        "W4224304666",
+        "W4324044849",
+        "W2953986647"
+      ],
+      "subsections": [
+        {
+          "description": "Summarizes recent breakthroughs in cryo-ET, including FIB lamellae preparation (W4324044849) and correlative montage tomography (W4206216780). Discusses how these methods enable in-situ whole-cell structural studies at near-native state.",
+          "papers_to_use": [
+            "W4206216780",
+            "W4286631405",
+            "W4224304666",
+            "W4324044849"
+          ],
+          "title": "Cryo-Electron Tomography (Cryo-ET) Advances"
+        },
+        {
+          "description": "Analyzes the integration of light microscopy with EM (PIE-scope, W2953986647). Highlights SH4's concern about proxy validity: while multimodal imaging expands horizons (W3015704836), rigorous calibration is needed to map fluorescence signals to true nanoscale molecular organization. Acknowledges missing evaluation criteria (SH6 gap).",
+          "papers_to_use": [
+            "W3015704836",
+            "W2953986647"
+          ],
+          "title": "Correlative Microscopy and Calibration Gaps"
+        },
+        {
+          "description": "Critically assesses what remains unresolved. Notes that while protein localization is well-documented, coverage of lipids, carbohydrates, and nucleic acids across all resolution regimes is incomplete (SH1 gaps). Discusses how computational modeling must fill these voids.",
+          "papers_to_use": [],
+          "title": "Limitations in Resolution and Coverage"
+        }
+      ],
+      "title": "Advanced Imaging and Structural Characterization"
+    },
+    {
+      "description": "Synthesizes the survey findings and provides specific guidance for future research, addressing SH3, SH5, and SH6. Moves beyond general directions to propose concrete experimental and computational strategies.",
+      "papers_to_use": [
+        "W4319077887"
+      ],
+      "subsections": [
+        {
+          "description": "Recaps the key distinctions between membrane-bound and phase-separated compartments. Summarizes how native crowding and synthetic engineering converge on similar physical principles (demixing, proximity, stability). Reiterates the importance of correlating structural data with functional assays.",
+          "papers_to_use": [],
+          "title": "Conclusion: Integrated View of Compartmentalization"
+        },
+        {
+          "description": "Provides actionable guidance: 1) Develop standardized calibration protocols for cryo-correlative microscopy to validate fluorescent proxies against EM ground truth (addressing SH4/SH6). 2) Expand cryo-ET datasets to include diverse macromolecular classes (lipids/carbs) to fill SH1 gaps. 3) Design experiments that explicitly test discriminating conditions for LLPS vs. aggregation (SH3), moving beyond descriptive studies to mechanistic validation. 4) Integrate computational models with experimental constraints to predict multiscale organization (SH5).",
+          "papers_to_use": [
+            "W4319077887"
+          ],
+          "title": "Specific Future Work: Bridging Scales and Modalities"
+        }
+      ],
+      "title": "Future Directions and Conclusion"
+    }
+  ],
+  "title": "Structural Dynamics of Biomolecular Condensates and Synthetic Compartments: From Native Crowding to Engineered Protocells"
+}

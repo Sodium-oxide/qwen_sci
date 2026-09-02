@@ -1,0 +1,12 @@
+{
+  "schema_version": "survey_gap_ledger_v1",
+  "project_id": "inf_2_dna_information_storage",
+  "accepted_gaps": [
+    {"id": "GAP-SERVICE-001", "title": "No common end-to-end service metric", "severity": "high", "rationale": "Existing reports expose partial metrics but not one retrieval contract spanning integrity, access, condition, latency, and cost."},
+    {"id": "GAP-CHANNEL-002", "title": "Coding is weakly coupled to storage condition", "severity": "high", "rationale": "Physical aging and repeated retrieval alter the error channel that coding must tolerate."},
+    {"id": "GAP-ACCESS-003", "title": "Random access is not evaluated as an operational service", "severity": "high", "rationale": "Selective recovery needs explicit crosstalk, coverage, index, and repeat-access accounting."},
+    {"id": "GAP-PORTABILITY-004", "title": "Future decoding lacks portable recovery metadata", "severity": "medium", "rationale": "Future users need an unambiguous encoding, constraint, checksum, and decoder manifest."},
+    {"id": "GAP-ECONOMICS-005", "title": "Theoretical density is disconnected from usable density", "severity": "high", "rationale": "Addressing, redundancy, constraints, packaging, and retained metadata change both density and cost."}
+  ],
+  "triage": {"rejected_gap": "DNA cannot store arbitrary digital information", "reason": "Directly contradicted by established demonstrations.", "needs_human_review": ["current vendor cost trajectories", "long-duration aging extrapolation", "applicability of every cited paper to the proposed protocol"]}
+}

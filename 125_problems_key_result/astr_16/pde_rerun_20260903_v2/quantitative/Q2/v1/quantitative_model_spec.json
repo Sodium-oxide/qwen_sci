@@ -1,0 +1,282 @@
+{
+  "abstract": "This model simulates the thermal and rotational evolution of massive neutron stars to identify observational signatures of density-dependent phase transitions in the core. By coupling the spin-down history to the thermal evolution, the model tracks core and surface temperatures over time, comparing standard cooling against scenarios where core compression triggers latent heat release.",
+  "algorithm": {
+    "input": [
+      "Initial states T_c and Omega",
+      "Parameters K_sd, alpha_nu, latent_heat_rate",
+      "Time span 0 to 10000 years"
+    ],
+    "output": [
+      "Time series of T_c",
+      "Time series of Omega",
+      "Derived surface temperature and luminosity"
+    ],
+    "steps": [
+      "Initialize state vector with T_c = 1.0e9 and Omega = 314.159",
+      "Integrate the coupled ODE system for spin-down and thermal evolution using a stiff solver",
+      "At each time step, compute the algebraic surface temperature from the core temperature",
+      "Record the state variables and derived observables for post-processing"
+    ]
+  },
+  "assumptions": [
+    {
+      "assumption_id": "A1",
+      "effect_if_violated": "Deviations from spherical symmetry would introduce angular dependencies in the thermal profile, invalidating the 0D core temperature approximation.",
+      "statement": "The neutron star maintains spherical symmetry throughout its evolution."
+    },
+    {
+      "assumption_id": "A2",
+      "effect_if_violated": "Additional spin-down mechanisms like gravitational wave emission or wind braking would alter the spin frequency evolution, decoupling it from the assumed phase transition trigger.",
+      "statement": "Magnetic dipole radiation is the dominant mechanism for rotational energy loss."
+    },
+    {
+      "assumption_id": "A3",
+      "effect_if_violated": "A different functional dependence would alter the timing and magnitude of the thermal bump, potentially masking the phase transition signature.",
+      "statement": "Latent heat release from the phase transition is proportional to the instantaneous spin frequency."
+    }
+  ],
+  "boundary_conditions": [
+    "{'condition_id': 'BC1', 'type': 'algebraic', 'description': 'Surface temperature is determined by radiative transfer from the atmosphere model, algebraically related to core temperature.'}"
+  ],
+  "equations": [
+    {
+      "equation_id": "Q2-EQ-001",
+      "latex": "\\frac{d\\Omega}{dt} = -K_{sd} \\Omega^3",
+      "role": "spin_down_evolution",
+      "where_symbol_ids": [
+        "S_Omega",
+        "S_t",
+        "S_K_sd"
+      ]
+    },
+    {
+      "equation_id": "Q2-EQ-002",
+      "latex": "\\frac{dT_c}{dt} = -\\alpha_{nu} T_c^6 + L_{rate} \\Omega",
+      "role": "thermal_evolution",
+      "where_symbol_ids": [
+        "S_T_c",
+        "S_t",
+        "S_alpha_nu",
+        "S_latent_heat_rate",
+        "S_Omega"
+      ]
+    }
+  ],
+  "initial_conditions": [
+    "{'condition_id': 'IC1', 'symbol_id': 'S_T_c', 'value': 1000000000.0, 'description': 'Initial core temperature sampled from birth distribution'}",
+    "{'condition_id': 'IC2', 'symbol_id': 'S_Omega', 'value': 314.159, 'description': 'Initial spin frequency corresponding to a 0.02 s period'}"
+  ],
+  "limitations": [
+    "{'limitation_id': 'L1', 'description': 'Highly sensitive to the choice of equation of state and phase transition parameters.'}",
+    "{'limitation_id': 'L2', 'description': 'Observational uncertainties in distance and radius affect the inference of surface temperature from X-ray flux.'}",
+    "{'limitation_id': 'L3', 'description': 'Assumes spherical symmetry, ignoring potential magnetic field-induced thermal anisotropies.'}"
+  ],
+  "lineage": {
+    "created_from_artifact": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\pde_rerun_20260903_v2\\quantitative\\Q2\\v1\\revision_acceptance.json",
+    "parent_version": 0,
+    "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+    "project_id": "sci_astr_16_survey_007",
+    "quantitative_idea_id": "Q2",
+    "science_run_id": "astr_16",
+    "selected_direction_id": "mechanism_replacement",
+    "survey_run_id": "astr_16-survey-007",
+    "version": 1
+  },
+  "mathir": {
+    "derivatives": {
+      "Omega": {
+        "args": [
+          {
+            "op": "constant",
+            "value": -1.0
+          },
+          {
+            "args": [
+              {
+                "name": "K_sd",
+                "op": "variable"
+              },
+              {
+                "args": [
+                  {
+                    "name": "Omega",
+                    "op": "variable"
+                  },
+                  {
+                    "op": "constant",
+                    "value": 3.0
+                  }
+                ],
+                "op": "pow"
+              }
+            ],
+            "op": "mul"
+          }
+        ],
+        "op": "mul"
+      },
+      "T_c": {
+        "args": [
+          {
+            "args": [
+              {
+                "op": "constant",
+                "value": -1.0
+              },
+              {
+                "args": [
+                  {
+                    "name": "alpha_nu",
+                    "op": "variable"
+                  },
+                  {
+                    "args": [
+                      {
+                        "name": "T_c",
+                        "op": "variable"
+                      },
+                      {
+                        "op": "constant",
+                        "value": 6.0
+                      }
+                    ],
+                    "op": "pow"
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "mul"
+          },
+          {
+            "args": [
+              {
+                "name": "latent_heat_rate",
+                "op": "variable"
+              },
+              {
+                "name": "Omega",
+                "op": "variable"
+              }
+            ],
+            "op": "mul"
+          }
+        ],
+        "op": "add"
+      }
+    },
+    "parameters": {
+      "K_sd": 1e-10,
+      "alpha_nu": 1e-20,
+      "latent_heat_rate": 1000000000000000.0
+    },
+    "schema_version": "mathir_v1",
+    "solver_options": {
+      "max_step": 10.0
+    },
+    "states": [
+      {
+        "id": "T_c",
+        "initial": 1000000000.0
+      },
+      {
+        "id": "Omega",
+        "initial": 314.159
+      }
+    ],
+    "system_type": "ODE_IVP",
+    "time_span": [
+      0.0,
+      10000.0
+    ]
+  },
+  "model_scope": "Thermal and rotational evolution of isolated massive neutron stars, focusing on the coupling between magnetic dipole spin-down and core phase transitions.",
+  "numerical_plan": {
+    "convergence_checks": [
+      "relative_tolerance_1e-6",
+      "absolute_tolerance_1e-9",
+      "max_step_10.0"
+    ],
+    "discretization": "adaptive_runge_kutta",
+    "solver_family": "stiff_ode_integrator"
+  },
+  "objective_and_constraints": [
+    "{'item_id': 'OC1', 'type': 'objective', 'description': 'Compute the surface temperature and X-ray luminosity tracks over 10,000 years to identify thermal bumps indicative of phase transitions.'}",
+    "{'item_id': 'OC2', 'type': 'constraint', 'description': 'Core temperature must remain positive and physically bounded below the neutron star melting point.'}"
+  ],
+  "parameter_provenance": {
+    "entries": [],
+    "mode": "LEGACY_INLINE_ASSUMPTIONS",
+    "parameter_set_identity": ""
+  },
+  "parameterization": [
+    "{'parameter_id': 'P1', 'symbol_id': 'S_K_sd', 'value': 1e-10, 'description': 'Standard magnetic dipole spin-down constant'}",
+    "{'parameter_id': 'P2', 'symbol_id': 'S_alpha_nu', 'value': 1e-20, 'description': 'Modified Urca neutrino emissivity coefficient'}",
+    "{'parameter_id': 'P3', 'symbol_id': 'S_latent_heat_rate', 'value': 1000000000000000.0, 'description': 'Phase transition latent heat release scaling factor'}"
+  ],
+  "references": [
+    "{'reference_id': 'R1', 'citation': 'Yakovlev, D. G., & Pethick, C. J. (2004). Neutron star cooling. Annual Review of Astronomy and Astrophysics, 42, 169-210.'}",
+    "{'reference_id': 'R2', 'citation': 'Page, D., Lattimer, J. M., Prakash, M., & Steiner, A. W. (2004). Minimal cooling of neutron stars. The Astrophysical Journal Supplement Series, 155(2), 623.'}"
+  ],
+  "scenarios": [
+    "{'scenario_id': 'SC1', 'name': 'Standard Cooling', 'description': 'No phase transition, constant moment of inertia, latent heat release disabled.', 'parameter_overrides': {'S_latent_heat_rate': 0.0}}",
+    "{'scenario_id': 'SC2', 'name': 'Phase Transition Cooling', 'description': 'Core compression triggers phase transition, releasing latent heat proportional to spin frequency.', 'parameter_overrides': {'S_latent_heat_rate': 1000000000000000.0}}"
+  ],
+  "schema_version": "ieee_math_model_v1",
+  "scientific_question": "How does the surface temperature evolution differ between massive neutron stars undergoing spin-down induced core compression and those without, and can this distinguish the phase-transition mechanism from standard cooling?",
+  "symbols": [
+    {
+      "dimension": "\\Theta",
+      "latex": "T_c",
+      "meaning": "Core temperature",
+      "role": "state",
+      "symbol_id": "S_T_c",
+      "unit": "K"
+    },
+    {
+      "dimension": "T^{-1}",
+      "latex": "\\Omega",
+      "meaning": "Spin frequency",
+      "role": "state",
+      "symbol_id": "S_Omega",
+      "unit": "rad/s"
+    },
+    {
+      "dimension": "T",
+      "latex": "t",
+      "meaning": "Time",
+      "role": "independent",
+      "symbol_id": "S_t",
+      "unit": "yr"
+    },
+    {
+      "dimension": "T^{-1}",
+      "latex": "K_{sd}",
+      "meaning": "Magnetic dipole spin-down constant",
+      "role": "parameter",
+      "symbol_id": "S_K_sd",
+      "unit": "yr^{-1}"
+    },
+    {
+      "dimension": "\\Theta^{-5} T^{-1}",
+      "latex": "\\alpha_{nu}",
+      "meaning": "Neutrino cooling coefficient",
+      "role": "parameter",
+      "symbol_id": "S_alpha_nu",
+      "unit": "K^{-5} yr^{-1}"
+    },
+    {
+      "dimension": "\\Theta T^{-1}",
+      "latex": "L_{rate}",
+      "meaning": "Latent heat release rate coefficient",
+      "role": "parameter",
+      "symbol_id": "S_latent_heat_rate",
+      "unit": "K yr^{-1}"
+    }
+  ],
+  "title": "Thermal Signatures of Phase Transitions in Massive Neutron Stars: Distinguishing Spin-Down Induced Core Compression",
+  "validation_plan": [
+    "{'validation_id': 'V1', 'description': 'Compare the standard cooling track against established analytical and numerical neutron star cooling curves.'}",
+    "{'validation_id': 'V2', 'description': 'Verify energy conservation by ensuring the total rotational energy lost equals the sum of radiated energy and latent heat absorbed.'}"
+  ]
+}

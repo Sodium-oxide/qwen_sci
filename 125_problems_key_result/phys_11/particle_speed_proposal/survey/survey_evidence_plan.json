@@ -1,0 +1,30 @@
+{
+  "schema_version": "survey_evidence_plan_v1",
+  "project_id": "phys_11_particle_speed",
+  "evidence_policy": {
+    "allowed_claim_types": ["established_theory", "source_bounded_context", "proposed_method", "conditional_conclusion"],
+    "prohibited_claim_types": ["fabricated_measurement", "unregistered_citation", "future_concept_as_observed_performance"],
+    "publisher_page_verification": "PENDING_HUMAN_REVIEW except browser-verified CERN page"
+  },
+  "sources": [
+    {"id":"S1","citation_key":"cern_lhc_page","kind":"institutional_webpage","status":"BROWSER_VERIFIED","role":"LHC 27-km ring, superconducting magnets, accelerating structures, near-light-speed protons/ions","url":"https://home.cern/science/accelerators/large-hadron-collider/"},
+    {"id":"S2","citation_key":"evans_bryant2008","kind":"journal_article","status":"CROSS_VALIDATED","role":"LHC machine design context","doi":"10.1088/1748-0221/3/08/S08001"},
+    {"id":"S3","citation_key":"bruce2014","kind":"journal_article","status":"CROSS_VALIDATED","role":"beam loss and machine-protection context","doi":"10.1103/PhysRevSTAB.17.081004"},
+    {"id":"S4","citation_key":"rossi_bottura2012","kind":"journal_article","status":"CROSS_VALIDATED","role":"superconducting magnet technology","doi":"10.1142/S1793626812300034"},
+    {"id":"S5","citation_key":"abada2019","kind":"design_report_article","status":"CROSS_VALIDATED","role":"future 100-TeV collider projection","doi":"10.1140/epjst/e2019-900087-0"},
+    {"id":"S6","citation_key":"behnke2013","kind":"technical_report","status":"CROSS_VALIDATED","role":"linear collider architecture","doi":"10.2172/1347945"},
+    {"id":"S7","citation_key":"schroeder2010","kind":"journal_article","status":"CROSS_VALIDATED","role":"laser-plasma linear-collider trade-offs","doi":"10.1103/PhysRevSTAB.13.101301"},
+    {"id":"S8","citation_key":"albert2020","kind":"roadmap","status":"CROSS_VALIDATED","role":"plasma accelerator roadmap","doi":"10.1088/1367-2630/abcc62"},
+    {"id":"S9","citation_key":"bingham2003","kind":"review","status":"CROSS_VALIDATED","role":"plasma acceleration background","doi":"10.1088/0741-3335/46/1/R01"},
+    {"id":"S10","citation_key":"zimmermann2018","kind":"review","status":"CROSS_VALIDATED","role":"future collider performance and cost trade-offs","doi":"10.1016/j.nima.2018.01.034"},
+    {"id":"S11","citation_key":"gonoskov2022","kind":"review","status":"CROSS_VALIDATED","role":"strong-field radiation and charged-particle motion","doi":"10.1103/RevModPhys.94.045001"},
+    {"id":"S12","citation_key":"hillas2005","kind":"review","status":"CROSS_VALIDATED","role":"astrophysical high-energy acceleration context","doi":"10.1088/0954-3899/31/5/R02"}
+  ],
+  "claim_anchors": [
+    {"claim_id":"C-SR-001","claim":"Massive-particle speed approaches c asymptotically under the Lorentz energy relation.","evidence_level":"established_theory","source_ids":["S2"]},
+    {"claim_id":"C-LHC-001","claim":"The LHC is a 27-km superconducting ring that brings protons or ions near light speed.","evidence_level":"institutional_context","source_ids":["S1"]},
+    {"claim_id":"C-RING-001","claim":"Magnetic rigidity, radiation, and beam protection are architecture-relevant constraints in rings.","evidence_level":"review_and_machine_context","source_ids":["S2","S3","S4"]},
+    {"claim_id":"C-ALT-001","claim":"Linear and plasma concepts trade gradient and compactness against power, staging, and beam quality.","evidence_level":"review_and_design_context","source_ids":["S6","S7","S8","S9"]},
+    {"claim_id":"C-HF-001","claim":"Strong-field extrapolations require radiation-reaction and QED-regime analysis.","evidence_level":"review","source_ids":["S11"]}
+  ]
+}

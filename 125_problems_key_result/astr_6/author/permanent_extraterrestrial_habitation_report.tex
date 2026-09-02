@@ -1,0 +1,339 @@
+\documentclass[10pt,conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{url}
+\usepackage[T1]{fontenc}
+\renewcommand{\arraystretch}{1.08}
+\begin{document}
+
+\title{Is Permanent Habitation on Another Planet Possible?\\
+A Design-Only Readiness Framework for Autonomous Extraterrestrial Settlements}
+
+\author{Survey--Idea--ExperimentDesign--Author Research Workflow}
+
+\maketitle
+
+\begin{abstract}
+Permanent habitation beyond Earth is not established by transport capability or by a single successful life-support subsystem. It is a system-of-systems capability in which a declared population, site, habitat, power architecture, resource inventory, repair chain, and health-protection plan must remain inside critical constraints throughout a preregistered horizon despite realistic faults and bounded Earth support. This paper reframes the question as an autonomy and resilience problem. The International Space Station provides an essential operational baseline for environmental control and life support but remains dependent on logistics and ground support; Mars oxygen production at experimental scale provides an ISRU proof of principle but not industrial, repairable settlement closure. We develop the PERMANENT-EXTRATERRESTRIAL-HABITATION-READINESS-BENCHMARK (PEHRB), a design-only protocol that evaluates commodity-specific resource stocks, critical power and thermal margins, food and waste closure, ISRU product quality, maintenance/manufacturing coverage, radiation and medical constraints, and human performance under correlated disturbances. The protocol uses frozen system ledgers, explicit external input and discard boundaries, integrated ground demonstrations, held-out fault/environment campaigns, independent mass-balance checks, and uncertainty ensembles. It defines permanent habitation operationally as long-horizon, fault-recoverable operation without routine consumable resupply, rather than as an untestable claim of eternal survival. The work proposes no actual mission, closure result, reliability value, crew health outcome, or settlement certification. Its conclusion is conditional: permanent extraterrestrial habitation remains unverified, but it can be investigated through progressively stronger, auditable demonstrations of autonomy.
+\end{abstract}
+
+\begin{IEEEkeywords}
+extraterrestrial habitation, environmental control and life support, in-situ resource utilization, autonomous systems, power resilience, bioregenerative life support, space radiation, systems engineering.
+\end{IEEEkeywords}
+
+\section{Introduction}
+\label{sec:introduction}
+
+The question of living permanently on another planet is often answered by listing promising technologies: reusable launch vehicles, solar arrays, nuclear power, water recycling, greenhouses, additive manufacturing, and asteroid or surface resources. Each can matter, but none establishes the requested capability in isolation. A habitat becomes permanent only under a stated operational boundary: it must sustain a population for a declared horizon, retain life-critical reserves, recover from specified faults, and disclose every continuing dependence on Earth. Otherwise a settlement can appear self-sufficient while its survival is deferred to cargo flights, remote troubleshooting, replacement hardware, medical evacuation, or disposal outside the accounting boundary.
+
+This report treats permanent habitation as an engineering proposition rather than a destination preference. The required system includes transport and initial deployment, yet its decisive functions are local: breathable air, safe water, food and nutrients, shelter and thermal control, reliable energy, waste processing, radiation protection, medical response, repair and manufacturing, operations, and a measurable response to degraded performance. These functions interact. A solar outage affects thermal control, water processing, crop lighting, communications, and repair. A leak consumes atmospheric reserve and power. A crop failure may increase water, nutrient, storage, and crew-workload demands. Assessing modules independently can therefore overstate readiness.
+
+The International Space Station demonstrates the value and sophistication of environmental control and life-support systems (ECLSS), but it is not an autonomous planetary settlement. Its architecture includes logistics, crew rotation, replacements, ground teams, and a mission context close to Earth. NASA's Mars Design Reference Architecture identifies the coupled transport, power, ISRU, habitat, and surface-operation requirements for a human Mars campaign~\cite{hoffmanprice2009}; it is a requirements scenario rather than evidence that permanent independence has been achieved. Likewise, MOXIE demonstrated oxygen production from the Mars atmosphere at an experimental scale~\cite{hecht2021}, an important local-resource milestone that does not alone establish industrial throughput, storage, contamination control, maintenance, or a complete settlement resource loop.
+
+The contribution of this paper is the PERMANENT-EXTRATERRESTRIAL-HABITATION-READINESS-BENCHMARK (PEHRB). PEHRB evaluates a proposed settlement as a fault-tolerant, resource-constrained, maintainable system of systems. It turns the word ``permanent'' into preregistered quantities: population, horizon, resupply policy, emergency assumptions, resource margins, power outage survival, health thresholds, repair coverage, and fault set. This is a design-only paper. It reports no new experiment, environmental characterization, simulation, crew trial, or certification.
+
+\section{Survey: What Current Evidence Supports}
+\label{sec:survey}
+
+\subsection{Temporary mission capability versus settlement autonomy}
+
+A temporary mission can close its resource account by carrying consumables and receiving supplies. A settlement has a stronger burden: the recurrence of all critical stocks must remain feasible after routine resupply ends. The difference is not a rhetorical one. A highly reliable water-recovery unit can still fail to support a population if its filters, catalysts, seals, sensors, power electronics, and repair materials have no local replacement path. A greenhouse can still fail to provide food if crop disease, nutrient depletion, pollination, lighting, or harvest equipment exceed the declared reserve. A successful subsystem run is evidence about that subsystem under its test conditions, not a proof of independent habitation.
+
+The International Space Station is consequently a necessary but insufficient reference. It provides long-duration experience with atmosphere and water systems, operations, maintenance, and human presence. It also embeds a terrestrial supply chain and short communication latency. A permanent settlement benchmark must explicitly count which of these supports continue. Any mass, service, data product, or critical expertise arriving from outside the habitat remains an input until a local, validated replacement is demonstrated.
+
+\subsection{Life support, food, and closed ecological boundaries}
+
+For resource $i$, a minimal stock balance over a time step is
+\begin{align}
+S_i(t+\Delta t)&=S_i(t)+P_i(t)+R_i(t)+I_i(t) \nonumber\\
+&\quad-C_i(t)-L_i(t)-D_i(t),
+\label{eq:resource-stock}
+\end{align}
+where $S_i$ is stored inventory, $P_i$ is local primary production, $R_i$ is recovered material, $I_i$ is imported input, $C_i$ is consumption, $L_i$ is loss, and $D_i$ is a tracked discard stream. Equation~\eqref{eq:resource-stock} is deliberately broad: it applies to water, oxygen, food, nutrients, filters, buffer gases, and selected spare materials after their relevant units and quality constraints are declared.
+
+An accounting boundary must state whether $I_i$ is permitted. A useful commodity-specific closure measure is
+\begin{equation}
+C_i^{\mathrm{cl}}=1-\frac{\int_0^T I_i(t)\,dt}{\int_0^T C_i(t)\,dt},
+\label{eq:closure}
+\end{equation}
+where $T$ is the preregistered horizon. Equation~\eqref{eq:closure} is not a universal score: it must be paired with minimum stock, purity, loss, and fault-recovery constraints. A nominally high water closure can coexist with unacceptable trace contamination, and a food-energy closure can coexist with nutrient or dietary failure. The benchmark therefore reports a vector of commodity-specific closure values and margins rather than one headline percentage.
+
+Bioregenerative production can contribute food, oxygen, water processing, and waste treatment. It also couples plant growth to lighting, power, thermal control, crop disease control, nutrient availability, crew labor, and inedible biomass management. Wheeler's review of agriculture for space establishes controlled-environment agriculture as a mature research domain while emphasizing the constraints of operating it in the space context~\cite{wheeler2017}. PEHRB treats crop systems as stateful production modules whose yields, quality, repair needs, and disturbance responses must be demonstrated in an integrated balance.
+
+\subsection{Power, thermal control, and ISRU}
+
+At every time, the habitat must meet a critical electrical balance,
+\begin{equation}
+P_{\mathrm{gen}}(t)+P_{\mathrm{store}}(t)-P_{\mathrm{crit}}(t)-P_{\mathrm{flex}}(t)\geq 0,
+\label{eq:power-balance}
+\end{equation}
+where $P_{\mathrm{gen}}$ is generation, $P_{\mathrm{store}}$ is net discharge from storage, $P_{\mathrm{crit}}$ is nondeferrable life-critical demand, and $P_{\mathrm{flex}}$ is a scheduled flexible load. Equation~\eqref{eq:power-balance} prevents an average-power surplus from being treated as resilience. The relevant worst case includes darkness, dust or surface degradation, storage aging, thermal rejection, and the power cost of recovery, food production, ISRU, and repair.
+
+For a specified outage interval $\mathcal{O}$, a lower-bound storage requirement is
+\begin{equation}
+E_{\mathrm{reserve}}\geq\int_{\mathcal{O}}\left[P_{\mathrm{crit}}(t)-P_{\mathrm{gen}}(t)\right]_{+}\,dt,
+\label{eq:storage-reserve}
+\end{equation}
+where $[x]_{+}=\max(x,0)$. Equation~\eqref{eq:storage-reserve} is a design constraint, not a complete power model; conversion losses, aging, peak power, distribution failures, and thermal coupling must still be represented. A nuclear system changes the generation profile but adds fuel, heat rejection, shielding, operations, and maintenance requirements. A solar system changes the storage and site requirements. Neither is automatically permanent.
+
+ISRU reduces imported mass only when a local material is characterized, processed at adequate throughput, stored, quality-assured, and repaired using the available energy and tools. MOXIE demonstrates oxygen production from carbon dioxide in the Martian environment~\cite{hecht2021}; its result is properly interpreted as a step toward a resource-processing capability. It does not demonstrate a settlement-scale oxygen, water, food, construction, or spare-parts economy. The final product specification and the full repair chain must be included in the settlement boundary.
+
+\begin{table*}[!t]
+\caption{Evidence boundary for permanent extraterrestrial habitation. A positive entry represents a capability component or design input, not settlement certification.}
+\label{tab:evidence-boundary}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{p{0.21\textwidth}p{0.33\textwidth}p{0.34\textwidth}}
+\toprule
+Evidence or asset & What it establishes & What it does not establish \\
+\midrule
+ISS life-support operations & Long-duration environmental-control experience, recovery subsystems, operations, and maintenance practice & Autonomous population support without logistics, Earth expertise, or replacement hardware. \\
+Mars design architecture~\cite{hoffmanprice2009} & Traceable trade space for transport, habitats, power, ISRU, and operations & A fielded and independently sustainable Mars settlement. \\
+MOXIE-scale oxygen production~\cite{hecht2021} & Local atmospheric oxygen-production proof of principle & Industrial-scale production, storage, purity assurance, repairability, or integrated closure. \\
+Controlled-environment crop research~\cite{wheeler2017} & Plant-growth and bioregenerative subsystem knowledge & Fault-tolerant, nutritionally complete, population-scale food closure. \\
+Human-system standards~\cite{nasastd3001} & Risk categories and crew health/performance requirements & Lifetime health outcome, multigeneration viability, or a permanent-habitation certificate. \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Human Safety and the Meaning of a Habitable System}
+\label{sec:human-safety}
+
+\subsection{Radiation, gravity, and medical autonomy}
+
+Technical operation is not identical to human habitability. A settlement must account for radiation, altered gravity, atmosphere quality, pressure, temperature, microbiology, sleep/circadian conditions, injury, illness, reproduction-related governance, and delayed or unavailable evacuation. NASA's human-system standard provides a framework for crew health requirements~\cite{nasastd3001}; it does not establish that those requirements can be maintained for an unlimited duration in a planetary settlement.
+
+For a radiation field with dose-equivalent rate $\dot{H}(t)$, cumulative exposure is represented by
+\begin{equation}
+H(T)=\int_0^T\dot{H}(t)\,dt,
+\label{eq:cumulative-exposure}
+\end{equation}
+where $H(T)$ is evaluated against a stated protection policy, uncertainty model, shielding geometry, and mission duration. Equation~\eqref{eq:cumulative-exposure} emphasizes that a shielding material claim is incomplete without trajectory/site environment, storm shelter, operational occupancy, and dose monitoring. Radiation interacts with power and construction because shielding mass, excavation, local materials, and habitat geometry alter both logistics and thermal design.
+
+Medical autonomy likewise cannot be summarized as a medicine inventory. It includes diagnosis, monitoring, sterile procedure capability, pharmaceuticals and their shelf life, consumables, training, communications policy, and thresholds for evacuation or mission termination. A system claiming permanent operation while presuming immediate terrestrial intervention has not met the autonomy definition. PEHRB models these dependencies as explicit inputs and recovery paths, not as qualitative footnotes.
+
+\section{Idea: Permanent Extraterrestrial Habitation Readiness Benchmark}
+\label{sec:idea}
+
+\subsection{Operational definition of permanence}
+
+PEHRB refuses a binary declaration that a settlement is simply ``permanent.'' An unbounded future cannot be demonstrated in a finite experiment. Instead, a scenario declares a population $N$, test horizon $T$, surface site, resupply boundary, emergency policy, and fault family $\mathcal{F}$. The central output is an autonomy horizon,
+\begin{equation}
+A=\sup\left\{t\geq 0: \mathbf{S}(\tau)\in\mathcal{K}\ \text{for all}\ 0\leq\tau\leq t\right\},
+\label{eq:autonomy-horizon}
+\end{equation}
+where $\mathbf{S}(t)$ is the vector of resource, power, environmental, health, repair, and operational states, and $\mathcal{K}$ is the preregistered safe-operating set. Equation~\eqref{eq:autonomy-horizon} makes the acceptance boundary explicit. A system that survives a nominal run but exits $\mathcal{K}$ after a declared leak, crop loss, storage failure, or communication delay has not demonstrated the same autonomy as a system that recovers from the fault.
+
+The benchmark distinguishes three levels. A resupply-dependent outpost retains routine logistics and ground intervention. A high-autonomy outpost has a quantified bounded autonomy horizon but may still require episodic import of critical commodities or hardware. A candidate permanent settlement meets its declared horizon without routine consumable resupply, maintains reserve margins, and demonstrates recoverability against the stated fault set. The labels do not erase residual risk; they expose it. A claim beyond the declared horizon is an extrapolation, not a certification.
+
+\subsection{Scenario classes}
+
+The scenario classes in Table~\ref{tab:scenario-classes} deliberately separate ground closure from planetary coupling. $S0$ establishes the present logistical baseline. $S1$ tests whether a coupled habitat can close its own stated boundary in a ground demonstrator. $S2$ and $S3$ add the distinct environments of the Moon and Mars. $S4$ adds qualified local repair/manufacturing rather than assuming that generic 3D printing solves spare supply. $S5$ turns fault propagation and uncertainty into the scientific object.
+
+\begin{table*}[!t]
+\caption{PEHRB scenario classes. Each scenario is admissible only with a frozen system ledger, explicit Earth-input/discard boundary, and an executable forward model.}
+\label{tab:scenario-classes}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{p{0.08\textwidth}p{0.26\textwidth}p{0.30\textwidth}p{0.23\textwidth}}
+\toprule
+Class & Scope & Required declared objects & Interpretation boundary \\
+\midrule
+$S0$ & Earth-resupplied outpost baseline & Cargo, spares, consumables, ground-support tasks, emergency/return policy & Quantifies dependence; it is not a permanent settlement. \\
+$S1$ & Closed-loop ground demonstrator & Habitat ledger, crew/load model, food/waste loop, power/thermal plant, maintenance inventory, fault campaign & Tests integrated closure under terrestrial test conditions only. \\
+$S2$ & Lunar surface scenario & Site illumination/thermal/radiation model, local-resource inputs, dust and communications assumptions & Does not transfer automatically to Mars or another planetary body. \\
+$S3$ & Martian surface scenario & Atmosphere/ice/regolith data, seasonal power, dust, ISRU, latency, entry/deployment assumptions & Requires site-specific resource and environmental characterization. \\
+$S4$ & Repairable local-production scenario & Qualified manufacturing processes, feedstocks, metrology, quality assurance, repair coverage, bounded resupply policy & Does not assume arbitrary manufacturing from regolith. \\
+$S5$ & Correlated-disturbance ensemble & Uncertainty distributions, fault correlations, seeds, event definitions, recovery policy, reporting horizon & Produces conditional risk/autonomy distributions, not a fate certificate. \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Falsifiable hypotheses}
+
+H0 states that an architecture requires routine Earth consumables, replacement hardware, or continuous ground intervention to remain inside its critical constraints. H1 states that a defined integrated architecture keeps all resource stocks, product-quality variables, power/thermal conditions, and human-safety thresholds within bounds over its stated horizon without routine consumable resupply. H2 states that an architecture passing isolated component failures can fail under correlated disturbances. H3 states that qualified ISRU and repair reduce external logistics mass without introducing a larger energy, reliability, or quality risk. H4 states that a specified site/power combination preserves critical loads through its worst declared outage. H5 states that an apparent permanent capability fails when a hidden import, discard stream, evacuation assumption, or ground intervention is restored to the system boundary.
+
+These hypotheses intentionally permit failure. A negative result may identify a particular consumable, power reserve, repair bottleneck, or health requirement that keeps a scenario resupply-dependent. This is more informative than a vague statement that a settlement is difficult. Conversely, a successful finite-duration integrated demonstration supports only its declared configuration and fault domain; it does not establish multigeneration habitability or an unlimited right to use the word permanent.
+
+\section{ExperimentDesign: Integrated Autonomy Protocol}
+\label{sec:experiment-design}
+
+\subsection{Frozen settlement ledger}
+
+Each PEHRB run begins with a machine-readable ledger. It lists crew size, horizon, habitat pressure/volume, atmospheric composition, initial stocks, consumption distributions, recovery hardware, filters and catalysts, food system, nutrient flows, storage capacity, waste disposition, power generation and storage, thermal control, radiation protection, ISRU processes, manufacturing/repair capacity, medical resources, communications, logistics policy, and success thresholds. For every module, the ledger records inputs, outputs, losses, quality requirements, degradation laws, sensor coverage, failure modes, repair time, spare/production path, uncertainty, and validity range.
+
+The accounting boundary is a formal object. Every imported item is represented by $I_i$ in \eqref{eq:resource-stock}; every discarded item is represented by $D_i$. Remote operational input is tracked as a service dependency, with its latency and availability. A supposedly autonomous system may still use Earth-produced reagent, calibration standard, software patch, or expert procedure. PEHRB does not forbid these dependencies; it labels them so that a high-autonomy outpost is not misclassified as a permanent settlement.
+
+\subsection{Power, maintenance, and repair coverage}
+
+Maintenance changes the interpretation of redundancy. Two pumps do not provide durable redundancy if both share a vulnerable controller, filter material, seal, or power converter. A repairable architecture therefore maps every critical function to detection, isolation, spare, manufacturing, inspection, and validation pathways. Let $g$ enumerate critical functions and let $Q_g(t)$ indicate that its required performance is available. A mission-level availability metric may be expressed as
+\begin{equation}
+\mathcal{A}_{\mathrm{crit}}=\frac{1}{T}\int_0^T\prod_{g\in\mathcal{G}_{\mathrm{crit}}}Q_g(t)\,dt,
+\label{eq:critical-availability}
+\end{equation}
+where $\mathcal{G}_{\mathrm{crit}}$ is the declared set of life-critical functions. Equation~\eqref{eq:critical-availability} is not a claim that all functions are statistically independent. On the contrary, the product defines the joint requirement and motivates explicit common-cause and correlated-fault modeling.
+
+Power resilience is tested under faulted, not merely average, loads. The outage interval in \eqref{eq:storage-reserve} includes storage aging, conversion losses, distribution failures, thermal loads, and mandatory recovery functions. Load shedding is allowed only for predeclared flexible loads; a scenario cannot rescue its power budget by silently shedding atmosphere management, water safety, medical cold storage, or a crop input that subsequently makes the food balance fail.
+
+\subsection{Experimental phases and held-out disturbances}
+
+The protocol proceeds in six phases. First, model audit verifies units, interface contracts, steady-state balances, and fault-free synthetic cases. Second, component qualification tests recovery, storage, food, ISRU, sensor, and repair modules at declared duty cycles. Third, an integrated ground demonstrator operates the coupled atmosphere-water-waste-food-power-maintenance system without routine consumable resupply for a preregistered horizon; hardware-in-the-loop and nonhuman tests precede any crew exposure. Fourth, a fault campaign injects leaks, fouling, crop/yield loss, sensor error, storage degradation, power outage, communication delay, and repair delays, including correlated events. Fifth, a site-coupled model applies lunar or Martian illumination, thermal, resource, dust, radiation, and latency assumptions. Sixth, an ensemble samples the uncertain loads, degradation, recovery, ISRU, and environmental inputs.
+
+Development runs choose numerical tolerances and validate the accounting implementation. Training intervals estimate only frozen model parameters. At least one fault sequence, environmental window, site-input set, or integrated campaign interval is held out from mechanism or architecture selection. A configuration cannot tune its power reserve after seeing every outage and then call the same outages confirmation. The held-out campaign tests whether the architecture predicts an independent disturbance response.
+
+\begin{table*}[!t]
+\caption{Primary PEHRB controls. A future execution must document each row before interpreting a closure or autonomy result.}
+\label{tab:controls}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{p{0.20\textwidth}p{0.31\textwidth}p{0.35\textwidth}}
+\toprule
+Threat & Predeclared perturbation & Required diagnostic \\
+\midrule
+Hidden logistics & Remove or explicitly count all consumables, spares, remote services, and discard pathways. & Commodity ledger and external-mass/service audit identify every continuing Earth dependence. \\
+Mass-balance error & Independently compute stocks and closure from immutable production/consumption logs. & Reconcile each resource and product-quality constraint; disclose unresolved residuals. \\
+Nominal-power bias & Apply worst declared outage, generation degradation, storage aging, and thermal coupling. & Critical-load unserved energy, reserve trajectory, and allowed load-shedding log. \\
+Isolated-fault optimism & Inject correlated leak, crop, sensor, power, and repair-delay sequences. & Safe-state exit times, fault isolation/recovery path, and common-cause dependency report. \\
+ISRU overclaim & Vary resource grade, throughput, contamination, energy, and repair availability. & Product quantity/purity, energy cost, maintenance burden, and impact on Earth logistics. \\
+Human-safety gap & Apply radiation, medical, environmental, and work-load constraints with delayed support. & Margin trajectory, monitoring coverage, intervention threshold, and policy dependency. \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Systematics, Calibration, and Decision Rules}
+\label{sec:systematics}
+
+\subsection{Synthetic fault injection and calibration}
+
+The integrated analysis is first tested on simulated resource and operational histories with known faults. Required injections include a water loss, oxygen-processing degradation, crop-yield reduction, false-positive sensor signal, battery-capacity fade, ISRU impurity, and correlated power-plus-thermal disturbance. The pipeline must detect the injected degradation, locate it to the appropriate subsystem or common cause, maintain correct uncertainty behavior, and avoid declaring a fault in null cases. A failed detection or a false positive is a property of the demonstrator or inference chain, not an inconvenient result to omit.
+
+Synthetic tests are not evidence that the planetary environment has been reproduced. They test the internal honesty of the system-accounting, control, and decision framework. A human-rated test cannot proceed from an uncalibrated resource model to a crew mission merely because nominal trajectories look stable. The design therefore separates hardware qualification, software-in-the-loop control, hardware-in-the-loop fault response, and integrated operations.
+
+\subsection{Conditional reliability and ensemble interpretation}
+
+For scenario parameters $\theta$, environmental inputs $x$, and a fault realization $f$, define the survival event $\mathcal{E}$ as maintaining the safe set through the declared horizon. The future-study quantity is
+\begin{equation}
+p(\mathcal{E}\mid\theta,x,\mathcal{F})=\int \mathbb{I}_{\mathcal{E}}(f;\theta,x)\,p(f\mid\mathcal{F})\,df,
+\label{eq:conditional-survival}
+\end{equation}
+where $\mathbb{I}_{\mathcal{E}}$ equals one when the integrated state remains safe and $p(f\mid\mathcal{F})$ is the declared disturbance distribution. Equation~\eqref{eq:conditional-survival} illustrates why a single nominal simulation cannot establish permanent habitability. Any future probability-like result is conditional on the fault family, input uncertainty, model fidelity, safe set, and mission horizon.
+
+The ensemble preserves correlations. A dust event may reduce generation and contaminate mechanisms; a power anomaly may affect thermal regulation, recovery pumps, sensors, communication, and crop lighting; a crew illness may change water, medical, and work-load demand. Treating each event as independent can overestimate resilience. The PEHRB output therefore includes event co-occurrence assumptions, common-cause maps, and sensitivity to those assumptions.
+
+\subsection{Decision rules}
+
+Conditional readiness support requires that every declared life-critical resource stock remain above reserve; all product-quality thresholds remain satisfied; critical power and thermal loads survive the declared outage; repair and recovery paths remain available; human-safety and medical margins remain above thresholds; and held-out campaigns reveal no hidden Earth supply or intervention. A high average recycling rate, a successful crop, or an average energy surplus is not sufficient. A scenario that fails an integrated fault campaign is reported as constrained by the identified dependency.
+
+Success in a ground demonstrator supports the tested configuration under terrestrial test conditions. Site-specific permanent-habitation support requires additional validated surface-resource, environmental, deployment, and operations assumptions. No decision rule permits a finite test to establish eternal survival, multigeneration viability, or unrestricted population growth. The benchmark is designed to support calibrated progress claims rather than an all-or-nothing promise.
+
+\section{Reproducibility and Interpretation Safety}
+\label{sec:reproducibility}
+
+Each future PEHRB execution releases a system ledger, schema, source and binary revisions, resource/power logs, calibration files, fault scripts, environmental inputs, seeds, scenario versions, uncertainty distributions, output diagnostics, failed runs, data licenses, and cryptographic hashes. A run identifier changes whenever a resource boundary, parameter, fault sequence, or held-out selection changes. This protects against an architecture being silently retuned after a disturbance result is observed.
+
+Every conclusion is labeled by epistemic layer. Observations are component measurements, environmental records, and test logs. Inferences are parameters conditional on a model and calibration. Site extrapolations are lunar or Martian applications of those models. Settlement claims combine all preceding layers with population, horizon, and external-support assumptions. The report does not allow a component test to be described as a settlement result, or a settlement scenario to be described as a demonstrated human future.
+
+\section{Threats to Validity and Research Priorities}
+\label{sec:validity}
+
+The primary validity threat is boundary leakage. A habitat may apparently close water, air, or food while relying on imported filters, nutrients, calibration standards, medical items, replacement electronics, or waste export. The external ledger and the import/discard terms in \eqref{eq:resource-stock} are designed to expose this leakage. A second threat is time-scale mismatch: a recovery unit may operate for a short campaign while a settlement claim concerns years or generations. Degradation, repair, product quality, and rare correlated faults must be observed or modeled over the claimed horizon.
+
+The third threat is laboratory-to-site transfer. Terrestrial tests cannot perfectly reproduce reduced gravity, surface dust, radiation, thermal cycling, local-resource variability, deployment constraints, or delayed communications. The remedy is not to reject ground demonstration; it is to label it correctly and add a versioned site-coupled model with uncertainty. A fourth threat is optimization for a nominal scenario. Designs that remove reserve or repair capacity to improve average closure can become less safe under the fault family that matters for autonomy.
+
+Finally, human safety is not a scalar engineering performance score. A power-resilient habitat can still have unacceptable radiation, medical, environmental, or work-load risks. PEHRB keeps human-system margins as separate constraints so that resource closure cannot compensate numerically for a breached health threshold. This is essential for an ethical and technically defensible permanent-habitation claim.
+
+\section{Decision Gates and a Demonstration Ladder}
+\label{sec:gates}
+
+PEHRB uses a demonstration ladder rather than a single technology-readiness score. A score can hide the difference between a convenient import and a life-critical dependency. Each gate in Table~\ref{tab:decision-gates} instead closes one class of external support, states what evidence is required, and limits the conclusion that can be drawn. Passing a lower gate is not a waiver for a higher one. In particular, a design does not become settlement-ready because its average recycling performance is strong while its medical, radiation, outage, or repair constraint remains open.
+
+The first transition is from a resupply-dependent outpost to an integrated ground demonstrator. This tests whether the declared commodity ledger, quality controls, and subsystem interfaces have been measured together rather than inferred from isolated component tests. The next transition asks whether that demonstrator can identify, isolate, and recover from a prespecified fault family without unrecorded expert intervention. It makes the operational burden visible: a procedure performed by a ground specialist, a delivered calibration item, or an overnight replacement is an external dependency and cannot be counted as autonomous recovery.
+
+The site-coupled gate is deliberately narrower than a settlement claim. It requires a versioned mapping from a validated ground configuration to a stated lunar or Martian site, including local-resource uncertainty, surface environment, communication delay, deployment constraints, and power/thermal conditions. Local production then has to be treated as an accountable process. For example, an ISRU product that meets a nominal throughput target but has uncertain purity, unqualified storage, or no repair pathway closes neither the material nor the safety dependency that it was intended to address.
+
+The final gate supports only a bounded reduced-resupply conclusion: a declared crew and horizon have met their preregistered safety, reserve, and recovery constraints under held-out correlated disturbances. It does not prove literal permanence, multigenerational viability, or unconstrained growth. This distinction is productive because it turns an unbounded question into an experiment sequence where every added claim is linked to evidence and every failed gate identifies a concrete research need.
+
+\begin{table*}[!t]
+\caption{PEHRB decision gates. Each gate eliminates a specified dependency; none is a settlement certification.}
+\label{tab:decision-gates}
+\centering
+\footnotesize
+\begin{tabular}{@{}p{0.12\textwidth}p{0.30\textwidth}p{0.28\textwidth}p{0.22\textwidth}@{}}
+\toprule
+Gate & Evidence required & Failure disqualifier & Permissible conclusion \\
+\midrule
+G0: declared outpost & Frozen population, horizon, resource ledger, resupply and evacuation boundary, and critical-load definition. & Missing input, discard, service, or intervention from the boundary. & A transparent resupply-dependent baseline is specified. \\
+G1: integrated closure & Co-timed water, atmosphere, food, waste, power, thermal, and maintenance records with commodity quality and stock margins. & A subsystem result is substituted for an integrated balance, or a quality/reserve constraint is missed. & The tested terrestrial configuration supports a bounded integrated-operation claim. \\
+G2: fault-recoverable autonomy & Preregistered, blinded or held-out fault campaigns; detection, isolation, recovery, and external-intervention logs. & Recovery relies on hidden Earth expertise, undeclared replacement hardware, or an unsafe state. & The ground configuration is fault-recoverable for the tested disturbance family. \\
+G3: site-coupled operation & Versioned surface-resource and environment model, power/thermal analysis, deployment assumptions, and uncertainty propagation. & Local-resource grade, outage, dust, radiation, or delay assumptions are omitted or unsupported. & The configuration has a conditional site-relevance case, not a demonstrated settlement. \\
+G4: bounded reduced resupply & Repeated integrated campaigns that preserve all hard safety constraints through the declared horizon under correlated disturbances. & Any breached health, reserve, quality, repair, or recovery threshold; any routine consumable import. & A bounded, condition-specific reduced-resupply autonomy claim is supported. \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Research priority should follow value of information, not novelty alone. Measurements that can change a system-level decision include the duration and covariance of power outages, recoverable resource grade, ISRU product purity and storage stability, repair time and spare-material coverage, crop-yield variance and disease response, radiation exposure, and the medical conditions that cannot be managed locally. Improving one of these bounds can remove a whole class of false autonomy claims. In contrast, an incremental nominal-efficiency improvement has limited value if it does not change the governing reserve, quality, or recovery constraint. The gate ledger makes this ordering explicit to funders and system designers.
+
+\section{Discussion}
+\label{sec:discussion}
+
+It is possible in principle to formulate a path toward permanent habitation, but current evidence does not show that the path has been completed. The most useful question is therefore not whether humans are ``meant'' to live on another planet, nor whether one technology will unlock it. It is whether a specified architecture can maintain a safe operating set under a stated population, horizon, surface environment, resupply policy, and disturbance family. This reformulation makes failure modes visible and turns claims of autonomy into auditable systems evidence.
+
+The strongest near-term research value lies in integration. Life support, food, waste, power, ISRU, repair, radiation protection, and human operations are often developed in separate programs. PEHRB requires their coupling to be tested. It identifies interfaces where a locally successful technology may produce a system-level failure: power needed for recovery, maintenance needed for ISRU, nutrients needed for food closure, shielding mass needed for health, and data/ground support needed for operations.
+
+Permanent extraterrestrial habitation should consequently be communicated as a ladder of demonstrated autonomy. Each rung has a measurable boundary: verified component duty cycle; integrated short-horizon closure; fault-recoverable ground autonomy; site-coupled operation; reduced resupply; and progressively longer, human-safe autonomy. This is more demanding than a vision statement, but it is also more constructive. It reveals which investment most reduces a specific dependency and which uncertainty prevents the next credible claim.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+This four-stage research workflow concludes that permanent habitation on another planet is an open, unverified engineering and human-systems capability. Gravity, distance, and launch cost are not the only barriers. A credible settlement must close commodity-specific resource flows, supply resilient power and thermal control, demonstrate ISRU product quality and maintainable repair paths, protect health, and recover from correlated failures without hidden Earth dependence. The International Space Station, design architectures, controlled-environment agriculture, and MOXIE-scale ISRU are enabling evidence, not proof that these coupled requirements are already met.
+
+PEHRB offers a falsifiable route to progress. It evaluates scenarios using frozen ledgers, integrated demonstrations, explicit external inputs and discard streams, held-out fault campaigns, independent balances, and conditional uncertainty ensembles. Its outcomes can identify a resupply bottleneck, validate a bounded autonomy claim, or show that a design remains dependent. It cannot certify a planet, prove multigeneration viability, or infer permanent settlement from a nominal simulation; none of those results is claimed here.
+
+\appendices
+\section{Minimal Settlement Run Manifest}
+\label{app:manifest}
+
+A PEHRB run manifest contains: site and environmental input versions; crew and horizon; habitat design; resupply/evacuation boundary; all resource inventories and quality constraints; consumption and production models; waste/discard pathways; generation/storage/thermal system; ISRU and manufacturing specifications; maintenance and medical inventories; radiation/shielding assumptions; fault scripts and correlations; state/parameter uncertainty; training/held-out selections; software and hardware versions; calibrations; seeds; failure reports; and hashes. It includes the plain-language statement, ``This run evaluates a declared autonomy boundary and does not certify permanent human habitation beyond the modeled horizon.''
+
+\section{Protocol Checklist}
+\label{app:checklist}
+
+Before a test, freeze the settlement boundary, resource ledger, power loads, health constraints, and fault set; verify units and independent mass balances; define held-out campaigns; and perform synthetic null/injection tests. During an integrated run, preserve immutable logs, account for imports/discards, monitor stock and quality margins, test common-cause faults, and retain failed repairs. Before communication, report the crew, horizon, site assumptions, resupply policy, safe set, uncertainty distribution, and every remaining Earth dependency.
+
+\begin{thebibliography}{00}
+
+\bibitem{hoffmanprice2009}
+S. J. Hoffman and S. D. Price, \emph{Mars Design Reference Architecture 5.0}, NASA SP-2009-566, 2009.
+
+\bibitem{hecht2021}
+M. H. Hecht \emph{et al.}, ``Mars Oxygen ISRU Experiment (MOXIE),'' \emph{Space Science Reviews}, vol. 217, Art. no. 9, 2021, doi: 10.1007/s11214-020-00782-8.
+
+\bibitem{wheeler2017}
+R. M. Wheeler, ``Agriculture for space: People and places paving the way,'' \emph{Open Agriculture}, vol. 2, pp. 14--32, 2017, doi: 10.1515/opag-2017-0002.
+
+\bibitem{nasastd3001}
+National Aeronautics and Space Administration, \emph{NASA Space Flight Human-System Standard, Volume 1: Crew Health}, NASA-STD-3001, Rev. B, 2022.
+
+\bibitem{nrc2002}
+National Research Council, \emph{Safe on Mars: Precursor Measurements Necessary to Support Human Operations on the Martian Surface}. Washington, DC, USA: National Academies Press, 2002, doi: 10.17226/10360.
+
+\bibitem{eckart1996}
+P. Eckart, \emph{Spaceflight Life Support and Biospherics}. Dordrecht, Netherlands: Kluwer Academic Publishers, 1996.
+
+\bibitem{mellisa2015}
+M. Lasseur, F. Brunet, G. de Weever, P. H. Dixon, and C. B. A. de Vassal, ``MELiSSA: The European project of closed life support system,'' \emph{Gravitational and Space Research}, vol. 3, no. 1, pp. 3--12, 2015.
+
+\bibitem{cucinotta2010}
+F. A. Cucinotta and M. Durante, ``Cancer risk from exposure to galactic cosmic rays: Implications for space exploration by human beings,'' \emph{The Lancet Oncology}, vol. 7, no. 5, pp. 431--435, 2006, doi: 10.1016/S1470-2045(06)70695-7.
+
+\bibitem{allen2009}
+J. P. Allen, \emph{Biosphere 2: The Human Experiment}. New York, NY, USA: Viking, 2009.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,24 @@
+{
+  "title": "SPECIESCOPE: A design for scope-specific, auditable estimates of Earth species richness",
+  "artifact_status": "DESIGN_ONLY",
+  "empirical_results_claimed": false,
+  "scientific_question": "Given a declared species concept, scope, sampling frame, and estimator, what richness interval and uncertainty are supported?",
+  "stages": ["S0_scope", "S1_evidence", "S2_coverage", "S3_estimation", "S4_integration"],
+  "primary_endpoints": [
+    "coverage_adjusted_richness_interval",
+    "held_out_calibration",
+    "uncertainty_decomposition",
+    "sensitivity_to_delimitation_and_model_choices",
+    "integration_gate_decision"
+  ],
+  "prohibited_inferences": [
+    "Do not equate OTUs, ASVs, or BINs automatically with biological species.",
+    "Do not add eukaryotic taxonomic species estimates to microbial sequence-cluster estimates.",
+    "Do not report a universal total if estimand passports are incompatible."
+  ],
+  "verified_key_sources": [
+    {"doi": "10.1371/journal.pbio.1001127", "claim_boundary": "approximately 8.7 million global eukaryotic species under a higher-taxon extrapolation"},
+    {"doi": "10.1073/pnas.1521291113", "claim_boundary": "upward of 1 trillion microbial species under a scaling-law and lognormal-model framework"},
+    {"doi": "10.1080/10635150701701083", "claim_boundary": "species delimitation requires explicit evidential criteria"}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "stage": "ExperimentDesign",
+  "status": "DESIGN_ONLY",
+  "study_title": "ORIGIN: A preregistered multimodal comparison of brain-body models of emotion episodes",
+  "primary_question": "Do distributed predictive-interoceptive state models predict held-out multichannel emotion-episode observations better than functional-circuit and general-arousal alternatives?",
+  "planned_sample": {"n_enrolled": 180, "minimum_confirmatory_analysis_set": "150 participants with at least 80% valid trials", "population": "healthy adults aged 18-40", "allocation": "within-subject and counterbalanced", "stopping_rule": "no outcome-contingent expansion after enrollment; under-target data are reported as under-target"},
+  "domains": ["threat uncertainty", "reward approach", "social evaluation/loss", "interoceptive calibration"],
+  "manipulations": ["cue contingency", "outcome probability", "contextual prior", "contingency reversal", "mild inspiratory resistance versus sham with airway-pressure and respiration verification", "matched non-affective control"],
+  "measurements": ["BOLD fMRI", "MRI-compatible EEG", "pupillometry", "electrodermal activity", "ECG", "respiration", "response time/action", "baseline/post-session salivary cortisol", "sparse trialwise report"],
+  "candidate_models": [
+    "functional-circuit",
+    "distributed-representational",
+    "predictive-interoceptive/allostatic",
+    "general-arousal/task-demand null"
+  ],
+  "model_parameterization": {"latent_dimensions": ["expected value", "uncertainty", "interoceptive prediction error", "regulatory arousal", "context/memory", "approach-avoidance policy"], "functional_circuit_features": ["amygdala", "hypothalamus", "periaqueductal gray", "ventral striatum", "anterior insula", "dorsal anterior cingulate", "ventromedial prefrontal cortex", "hippocampus"], "null_features": ["visual/auditory energy", "reaction time", "motor response", "task difficulty", "novelty", "measured respiratory mechanics"]},
+  "primary_outcome": "Nested-cross-validated, equally outcome-family-weighted expected log predictive density on held-out participant/context partitions. ORIGIN support requires at least 0.02 nats per trial mean improvement over the null, bootstrap 95% lower confidence bound above zero, and no Brier-score worsening greater than 0.005.",
+  "causal_status": "The respiratory calibration module experimentally varies a mild bodily input. The primary neural measurements remain observational; any neural perturbation extension is future work requiring a separately approved protocol and explicit causal estimand.",
+  "safety": ["low-risk stimuli", "withdrawal without penalty", "session stop criterion", "no severe stress induction", "no pharmacologic or invasive intervention"],
+  "anti_leakage": ["training-fold feature selection", "nested cross-validation", "fixed preregistered model set", "locked preprocessing plan"],
+  "no_claims": ["No human data have been collected.", "No decoding accuracy, effect size, or intervention result is claimed."]
+}

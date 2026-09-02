@@ -1,0 +1,358 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{balance}
+\newcommand{\Tc}{\ensuremath{T_{\mathrm{c}}}}
+\newcommand{\kB}{\ensuremath{k_{\mathrm{B}}}}
+\newcommand{\Acell}{\ensuremath{A_{\mathrm{cell}}}}
+\begin{document}
+
+\title{A Falsifiable Cross-Modal Program for the Microscopic Mechanism of Cuprate High-Temperature Superconductivity}
+
+\author{\IEEEauthorblockN{Five-Stage Research Workflow Artifact}
+\IEEEauthorblockA{Survey $\rightarrow$ Idea $\rightarrow$ Experiment Design $\rightarrow$ Quantitative Modeling $\rightarrow$ Author\\
+Independent research package\\
+September 2026}}
+
+\maketitle
+
+\begin{abstract}
+The microscopic origin of high-temperature superconductivity remains unresolved despite the well-established d-wave order parameter in many copper oxides. This paper turns that broad question into a falsifiable program for cuprates. The proposal contrasts a magnetic-spectral-support-only explanation with a model in which magnetic support is gated by the antinodal coherent spectral weight left after pseudogap and charge-order physics. The program links resonant inelastic x-ray scattering or neutron measurements, angle-resolved photoemission spectroscopy, resonant x-ray scattering, and transport/thermodynamic end points on common doping series. A transparent reduced pairing-kernel calculation is also supplied to close the mathematical-modeling loop. That calculation is a deterministic numerical simulation of declared phenomenological assumptions, not an empirical fit and not evidence that a microscopic mechanism has been established. It predicts that adding a coherence gate lowers the modeled underdoped pairing scale and shifts the modeled maximum relative to a spin-only baseline. The result therefore specifies measurable failure conditions rather than claiming a solution. The paper records evidence boundaries, sampling controls, model limitations, and the human review needed before material, clinical, or publication-level conclusions could be drawn.
+\end{abstract}
+
+\begin{IEEEkeywords}
+high-temperature superconductivity, cuprates, d-wave pairing, spin fluctuations, pseudogap, charge order, Hubbard model, numerical simulation, experimental design
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Superconductors carry electrical current without dc resistance and are therefore central to magnet technology, sensing, energy systems, and quantum-device platforms. The phrase \emph{high-temperature superconductor}, however, conceals a scientific problem that is narrower and harder than the engineering desire for a high transition temperature. In copper-oxide superconductors (cuprates), the superconducting gap has a predominantly d-wave sign structure in a number of phase-sensitive experiments \cite{tsuei2000}. The result constrains a successful mechanism, but it does not identify the interaction that forms pairs, explain the superconducting dome, or determine how pairing coexists with the pseudogap, charge order, and the proximate Mott state.
+
+This report addresses the question \emph{what microscopic mechanism produces high-temperature superconductivity?} by restricting the object of study to cuprates. The restriction is consequential. ``High-temperature superconductivity'' covers chemically and electronically distinct material families. A mechanism test that treats them as a single interchangeable data set would blur rather than solve the cuprate question. Reviews of the cuprate phase diagram emphasize the unusual entanglement of electronic orders and collective fluctuations \cite{keimer2015}, while reviews of correlated-electron theory show why controlled calculations remain difficult \cite{lee2006,leblanc2015}. The purpose here is not to announce a universal theory. It is to build a test capable of discriminating between two mechanisms at a shared set of experimentally observable conditions.
+
+The central proposal is a cross-modal discriminator. Its baseline hypothesis states that a d-wave pairing scale tracks a magnetic spectral-support proxy. Its alternative states that the same magnetic support must be multiplied by an antinodal coherent-spectral-weight proxy. The latter proxy represents the low-energy phase space that can be depleted by pseudogap and charge-order-related physics. The proposal does not assert that either proxy is a complete microscopic vertex. Rather, it makes the difference between them measurable, especially along an underdoped trajectory where the magnetic channel is nonzero but antinodal coherence may be strongly reduced.
+
+The workflow contains five linked stages. The survey freezes what is known and what remains open; the idea stage converts a gap into competing operational models; the experiment-design stage specifies samples, measurements, controls, and falsification; the quantitative stage executes a declared phenomenological simulation; and the author stage preserves the distinction between evidence, assumptions, and proposed tests. The computational result is therefore reported as \texttt{NUMERICAL\_SIMULATION}, \texttt{SIMULATED}, and \texttt{NOT\_EMPIRICAL}. It neither fits a cuprate data set nor demonstrates that magnetic fluctuations are the pairing glue.
+
+\section{Survey Boundary and Research Gap}
+
+\subsection{Evidence that constrains, but does not close, the mechanism}
+
+The d-wave constraint is the first fixed point. A convenient representation is
+\begin{equation}
+\Delta(\mathbf{k})=\frac{\Delta_d}{2}\left[\cos(k_xa)-\cos(k_ya)\right],
+\label{eq:dwavegap}
+\end{equation}
+where $\Delta(\mathbf{k})$ is the momentum-dependent gap, $\Delta_d$ is its d-wave amplitude, $a$ is an in-plane lattice scale, and $(k_x,k_y)$ is a crystal momentum. The sign change implied by \eqref{eq:dwavegap} narrows the class of interactions that can produce pairing. It does not select one interaction uniquely.
+
+The second fixed point is strong correlation. A minimal conceptual starting point is the square-lattice Hubbard Hamiltonian,
+\begin{equation}
+\mathcal{H}=-t\sum_{\langle i,j\rangle,\sigma}\left(c_{i\sigma}^{\dagger}c_{j\sigma}+c_{j\sigma}^{\dagger}c_{i\sigma}\right)+U\sum_i n_{i\uparrow}n_{i\downarrow},
+\label{eq:hubbard}
+\end{equation}
+where $t$ is a hopping amplitude, $U$ is on-site repulsion, $c_{i\sigma}^{\dagger}$ and $c_{i\sigma}$ create and remove an electron with spin $\sigma$, and $n_{i\sigma}$ is the number operator. Equation \eqref{eq:hubbard} is not presented as an exact material Hamiltonian. Its value here is to express the tension at the core of the problem: pairs emerge in a metal derived by doping a correlated antiferromagnetic insulator. The numerical benchmark literature finds that two-dimensional Hubbard calculations require careful treatment of finite-size, temperature, and method-dependent uncertainty before they can settle mechanism-level conclusions \cite{leblanc2015}.
+
+Spin-fluctuation-mediated pairing is a leading and physically motivated candidate. Scalapino's review frames spin fluctuations as a common thread in unconventional superconductivity \cite{scalapino2012}. This motivates an observable magnetic contribution to the test, but it is not a proof that spin fluctuations alone determine \Tc. Separately, resonant x-ray scattering establishes charge order as an experimentally observed electronic order in cuprates \cite{comin2016}. The pseudogap and charge order can remove or reconstruct low-energy spectral weight, which means that a large magnetic response need not imply an equally large coherent pairing phase space. These two findings jointly motivate a test of \emph{magnetic support times coherence}, not a post-hoc declaration that either channel has won.
+
+The often repeated 2020 report of a 287.7 K transition in a carbonaceous sulfur hydride cannot support this work. The article was retracted in 2022 \cite{snider2020}; furthermore, a high-pressure hydride would not identify the cuprate microscopic mechanism. It is therefore an excluded historical claim, not a reference point for room-pressure superconductivity or a calibration value for the model in this paper.
+
+\subsection{Operational gap and scientific question}
+
+The survey accepts one research gap:
+
+\begin{quote}
+\textbf{GAP-HTSC-01:} There is no compact, pre-specified cross-modal test that compares a magnetic-spectral-support-only description of a cuprate d-wave pairing scale with a description in which magnetic support is multiplied by the momentum-selective coherent spectral weight that remains after pseudogap/charge-order physics.
+\end{quote}
+
+The gap is intentionally operational. It does not require a researcher to solve every feature of a cuprate phase diagram before making progress. It requires a measurement program that sees a difference between two specified mappings from observables to a pairing-scale surrogate. The principal scientific question is consequently:
+
+\begin{quote}
+For a common cuprate material and doping series, does adding an antinodal coherence proxy to a magnetic spectral-support proxy improve out-of-sample description of the d-wave pairing-scale trend relative to a magnetic-only proxy?
+\end{quote}
+
+\section{Research Questions, Contributions, and Direction Selection}
+
+Three research questions guide the study. \textbf{RQ1} asks whether the magnetic-only and magnetic-times-coherence models make observably different ordering predictions along an underdoped-to-overdoped series. \textbf{RQ2} asks whether the relevant measurements can be placed on a common sample and temperature ledger with realistic measurement error. \textbf{RQ3} asks what the limited phenomenological simulation can, and cannot, contribute before experimental data exist.
+
+The selected idea, denoted I-01, is a reduced discriminator rather than a full multiorbital solution. Its contributions are as follows. First, it supplies two nested, traceable hypotheses with different underdoped behavior. Second, it makes a measurement matrix that joins magnetic spectroscopy, electronic coherence, charge order, and \Tc on matched specimens. Third, it embeds a simple numerical model in a reporting framework that prevents synthetic results from being upgraded into material claims. Fourth, it lists falsification conditions before measurements are taken.
+
+The idea stage also considered three alternatives. A multiorbital cluster-Hubbard program would be closer to a material-specific microscopic model, but the parameter-identifiability and computational-control burden is too high for a first discriminator. An observational causal machine-learning program could fuse heterogeneous spectra, but cross-instrument confounding would make a positive association difficult to interpret. A single mechanism for all high-temperature-superconducting families was rejected because the scope overwhelms the cuprate evidence base. I-01 is selected because it sacrifices completeness to gain falsifiability.
+
+\begin{figure*}[t]
+\centering
+\setlength{\unitlength}{0.52mm}
+\begin{picture}(300,69)
+\put(5,43){\framebox(52,18){\parbox{48mm}{\centering Survey\\frozen evidence and gap}}}
+\put(66,43){\framebox(52,18){\parbox{48mm}{\centering Idea\\nested hypotheses}}}
+\put(127,43){\framebox(52,18){\parbox{48mm}{\centering Experiment design\\matched observations}}}
+\put(188,43){\framebox(52,18){\parbox{48mm}{\centering Quantitative\\declared simulation}}}
+\put(249,43){\framebox(46,18){\parbox{42mm}{\centering Author\\evidence-bound report}}}
+\put(57,52){\vector(1,0){9}}
+\put(118,52){\vector(1,0){9}}
+\put(179,52){\vector(1,0){9}}
+\put(240,52){\vector(1,0){9}}
+\put(150,29){\makebox(0,0){\small Pre-registered failure conditions and human review}}
+\put(50,15){\makebox(0,0){\small No fabricated experimental measurements}}
+\put(150,15){\makebox(0,0){\small Numerical output remains simulated}}
+\put(250,15){\makebox(0,0){\small Results feed a revision, not a proof}}
+\end{picture}
+\caption{Closed research loop used in this report. Each stage may refine the next stage, but only frozen evidence and declared model assumptions may enter the final claims.}
+\label{fig:closedloop}
+\end{figure*}
+
+Fig.~\ref{fig:closedloop} distinguishes a closed modeling loop from a closed scientific case. The computational branch can be executed without an experimental confirmation step because it has no physical intervention and exposes all assumptions. The proposed spectroscopy, sample preparation, interpretation of mechanism, and any decision to publish empirical findings require domain-expert review and institutional controls.
+
+\section{Problem Definition, Assumptions, and Hypotheses}
+
+Let $p$ denote nominal hole doping in a chosen cuprate family. Let $M(p,T)$ be an experimentally constructed magnetic spectral-support proxy, using a pre-specified integration region and normalization. Let $Z_{AN}(p,T)$ be a dimensionless proxy for coherent antinodal spectral weight. Let $C(p,T)$ characterize charge-order amplitude or correlation length. Let $Y(p)$ be an empirical pairing-scale end point, selected before analysis as either a transition temperature or a gap-derived d-wave scale with the exact choice retained in the analysis plan.
+
+The primary explanatory model is deliberately parsimonious:
+\begin{equation}
+Y_{H0}(p,T)=\alpha_0+\alpha_M M(p,T)+\epsilon_{H0},
+\label{eq:h0}
+\end{equation}
+where $\alpha_0$ is an intercept, $\alpha_M$ is the magnetic-support coefficient, and $\epsilon_{H0}$ is residual variation. The competing model includes the gated term,
+\begin{equation}
+Y_{H1}(p,T)=\beta_0+\beta_{MZ}M(p,T)Z_{AN}(p,T)+\beta_C C(p,T)+\epsilon_{H1}.
+\label{eq:h1}
+\end{equation}
+The coefficient $\beta_C$ is included to prevent the coherence factor from silently absorbing all charge-order variation. Equation \eqref{eq:h1} does \emph{not} state that charge order is always pair breaking. Its role can be estimated and assessed with sign, uncertainty, and predictive performance.
+
+The proposed hypotheses are:
+
+\begin{itemize}
+\item \textbf{H0, magnetic support only:} after matching material, doping, and temperature, the magnetic proxy is sufficient for out-of-sample prediction of $Y$; adding $Z_{AN}$ does not materially improve prediction.
+\item \textbf{H1, magnetic support gated by coherence:} a model containing $MZ_{AN}$ has superior held-out predictive performance and correctly captures the suppression or displacement of the pairing-scale trend on the underdoped side.
+\item \textbf{H2, rejection branch:} neither model is stable across crystals, measurement modalities, or held-out doping values. This outcome rejects the reduced discriminator as presently specified; it does not show that superconductivity lacks a mechanism.
+\end{itemize}
+
+Several assumptions make these hypotheses testable. The selected material family must have a reproducible doping calibration and a measurable superconducting transition. The magnetic and photoemission observables must be measured at matched, or explicitly modelled, temperatures. The normal-state spectra cannot be casually imputed when the primary end point is missing. Finally, the models are intended to compare patterns over a series; a coefficient at one doping is not a mechanism claim.
+
+\section{Study Design and Methods}
+
+\subsection{Cohort, sampling, and perturbation structure}
+
+The study uses a single, preselected cuprate material family in the primary analysis. Limiting the primary comparison to one family reduces the risk that structural differences, surface preparation, or unrelated changes in disorder appear as a universal pairing signal. A secondary material family may serve as an external replication only after the primary protocol is frozen.
+
+The recommended sampling frame is nine to eleven nominal doping values spanning underdoped, near-optimal, and overdoped regions. At each $p$, at least three independently grown and characterized crystals are required. Each crystal receives an immutable specimen identifier. An experimental block contains randomized sample order, calibration standards, and repeated reference measurements. Beam-time or instrument block is recorded, not treated as a nuisance to be forgotten after inspection. When experimental conditions permit, analysts of transport and spectroscopic data are blinded to a coarse doping label until quality-control decisions have been logged.
+
+The independent variables are doping $p$, temperature $T$, material family/layer structure when replication is permitted, and controlled disorder or strain only in a separately approved extension. The primary end point is \Tc, determined with a documented transition criterion. Secondary end points include a superconducting-gap estimate, magnetic spectral support, antinodal coherence, and charge-order metrics. The study is observational across the doping series, not an intervention that proves causality. Its value lies in a pre-registered discrimination test, not in a claim that a coefficient alone identifies glue.
+
+\subsection{Measurement matrix}
+
+Table~\ref{tab:measurementmatrix} defines the joint measurement plan. Instrument names state what must be measured, not a guarantee that a given facility can collect every observable on every specimen. A pilot should confirm whether a single batch can sustain the required surface and bulk measurements. If destructive or surface-sensitive measurements require sister crystals, the batch relation and all matching metadata become part of the statistical model.
+
+\begin{table*}[t]
+\caption{Cross-modal measurement matrix. All values carry specimen, temperature, instrument, processing, and uncertainty metadata.}
+\label{tab:measurementmatrix}
+\centering
+\small
+\begin{tabular}{p{2.25cm}p{3.35cm}p{3.25cm}p{3.25cm}}
+\toprule
+Modality & Primary observable & Role in discriminator & Essential control \\
+\midrule
+RIXS or inelastic neutron scattering & Magnetic spectral-support proxy $M(p,T)$ integrated over a frozen momentum-energy window & Tests the magnetic component shared by H0 and H1 & Energy/momentum resolution, fluorescence or background subtraction, absolute or internal normalization \\
+ARPES & Antinodal coherent-weight proxy $Z_{AN}(p,T)$ and gap/spectral-line-shape metadata & Tests whether magnetic support must be gated by coherent phase space & Surface age, matrix-element geometry, temperature matching, spectral-function fit sensitivity \\
+Resonant x-ray scattering & Charge-order peak intensity and correlation length $C(p,T)$ & Separates charge-order variation from the coherence proxy & Identical reciprocal-space protocol, background regions, beam damage monitoring \\
+Transport and thermodynamics & \Tc, transition width, resistivity, susceptibility, and optional heat-capacity signatures & Supplies the primary empirical pairing-scale end point & Contact resistance, field history, transition criterion, repeat cooling/warming curves \\
+Materials characterization & Composition, oxygen stoichiometry proxy, lattice parameters, mosaicity, and defect indicators & Establishes whether nominal $p$ and cross-crystal matching are credible & Batch-level calibration and pre-defined exclusion rules \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Data processing and statistical model}
+
+Raw spectra are retained with instrument configuration and calibration files. A processing plan must specify the integration windows defining $M$, the energy/momentum region defining $Z_{AN}$, background models, and a procedure for sensitivity analysis across plausible analysis choices. Every processed value is linked to its raw source and software version. Primary end points are never filled by model-based imputation when the corresponding measurement has failed. A missing observation remains missing and is reported with its cause.
+
+Because several measurements come from crystals within batches and instrument blocks, the analysis uses a hierarchical form:
+\begin{align}
+Y_{j m} &= \gamma_0+\gamma_{MZ}M_{j m}Z_{AN,jm}+\gamma_C C_{jm}\nonumber\\
+&\quad +u_{b(j)}+v_{m}+e_{jm},\label{eq:hierarchical}
+\end{align}
+with the random-effect and residual distributions
+\begin{align}
+u_{b} &\sim \mathcal{N}(0,\tau_{b}^{2}),\nonumber\\
+v_m &\sim \mathcal{N}(0,\tau_{m}^{2}),\nonumber\\
+e_{jm} &\sim \mathcal{N}(0,\sigma_{jm}^{2}).\label{eq:randomeffects}
+\end{align}
+Here $j$ indexes a specimen and $m$ a measurement block; $u_{b(j)}$ captures batch-level variation, $v_m$ captures block variation, and $e_{jm}$ is residual error with an uncertainty that may depend on the observation. An H0 analogue replaces $MZ_{AN}$ by $M$. The model does not eliminate confounding. It makes batch, block, and measurement uncertainty visible rather than silently mixing them into a single residual.
+
+The primary comparison uses leave-one-doping-out validation. In each fold, all measurements from one nominal doping are withheld, models are fit on the remaining series, and held-out predictive error is recorded. Leave-one-crystal-out validation is a secondary check. A model will not be declared supported merely because it fits all observed dopings after looking at them. The relevant statistic is a pre-defined predictive score, its uncertainty under resampling, and the stability of the sign and scale of the interaction term.
+
+Temperature is treated as a design dimension rather than a label attached after acquisition. The superconducting transition is measured on a temperature path that resolves the stated criterion and transition width. Normal-state magnetic, photoemission, and charge-order measurements are collected at predeclared temperatures relative to the transition whenever each modality allows it. When an exact temperature match is impossible, the analysis plan records the offset, includes temperature as a covariate or stratum, and reports the unmatched comparison as a limitation. A comparison between a low-temperature ARPES spectrum and a high-temperature scattering spectrum must not be described as a simultaneous microscopic snapshot.
+
+The protocol also separates three kinds of uncertainty. \emph{Analytic uncertainty} comes from finite counts, spectral fits, and background subtraction. \emph{Specimen uncertainty} comes from batch, oxygen content, mosaicity, and inhomogeneity. \emph{Construct uncertainty} comes from the possibility that an operational proxy does not faithfully represent the intended microscopic quantity. Equation \eqref{eq:randomeffects} addresses only the first two categories statistically. The third requires sensitivity analyses, comparison with alternative estimators, and discussion by experts who understand the respective probes. This distinction blocks a common failure mode in mechanism work: narrow error bars on a convenient proxy are not narrow uncertainty about the physical construct.
+
+\subsection{Cross-modal consistency and quality assurance}
+
+Before hypothesis testing, each modality passes a modality-specific quality screen. For scattering data, the screen includes energy calibration, resolution verification, background region documentation, and inspection for beam-induced changes. For ARPES, it includes cleavage time, photon-energy and polarization geometry, surface-aging checks, and repeat spectra from an independent fresh surface. For transport, it includes current dependence, contact stability, temperature lag, and heating/cooling reproducibility. A quality failure is not repaired by replacing a point with an average from a different crystal. It triggers a documented exclusion or a repeat measurement, with both outcomes retained in the provenance record.
+
+Consistency checks connect the modalities without forcing them to agree. Nominal doping is verified through independent composition or physical-property records; the agreement tolerance is set before looking at the models. Temperature scales are calibrated against traceable standards and logged in a shared table. Each calculated proxy carries an uncertainty and the rule that produced it. A report may then identify a real conflict---for example, a magnetic trend that is not accompanied by a coherence trend---as information relevant to H0 versus H1. This is preferable to preprocessing the data until all channels follow a presumed phase diagram.
+
+The quality plan includes a negative-control analysis. The same validation pipeline is applied to a shuffled linkage between spectroscopic records and transition-temperature records within permitted batching constraints. A model that performs comparably on the shuffled linkage cannot be credited with a material-specific relationship. This control does not establish causality when it fails; it detects a less ambitious but serious risk, namely that shared trend shape or processing leakage creates apparent predictive performance.
+
+\subsection{Falsification and decision rules}
+
+The following outcomes falsify, or at least constrain, H1 in its present form: (i) $MZ_{AN}$ provides no material out-of-sample improvement over $M$; (ii) the effect reverses sign or disappears across independently grown crystals; (iii) the apparent improvement is removed after prespecified measurement-block and charge-order controls; or (iv) the conclusion depends on a single spectral preprocessing choice. H0 is constrained if it systematically overpredicts the underdoped end point while H1 predicts it without a corresponding loss of performance elsewhere. A null result is valuable because it forces a revision of the observable map rather than a rhetorical expansion of the preferred mechanism.
+
+\section{Quantitative Model and Simulated Computational Evidence}
+
+\subsection{Purpose and boundary of the computation}
+
+The mathematical-modeling stage executes a reduced pairing-kernel calculation. It is deliberately separate from the proposed empirical regression. No experimental cuprate data were ingested, no published transition-temperature series was fitted, and none of the parameters below is claimed to be a material constant. The calculation is a transparent thought experiment with a fixed doping grid. Its role is to verify that the two hypotheses produce numerically distinguishable trajectories before scarce experimental resources are committed.
+
+For the numerical branch, magnetic spectral support is represented by a Gaussian proxy,
+\begin{equation}
+S(p)=\exp\left[-\left(\frac{p-p_{AF}}{\sigma_{AF}}\right)^2\right],
+\label{eq:spinproxy}
+\end{equation}
+where $p_{AF}$ locates the maximum of the declared proxy and $\sigma_{AF}$ determines its width. Antinodal coherence is represented as a pseudogap-depleted quantity,
+\begin{equation}
+Z_{AN}(p)=1-A_{PG}\exp\left[-\left(\frac{p-p_{PG}}{\sigma_{PG}}\right)^2\right],
+\label{eq:coherenceproxy}
+\end{equation}
+where $A_{PG}$ is a depletion amplitude and $(p_{PG},\sigma_{PG})$ locates and widths the declared depletion. Equations \eqref{eq:spinproxy} and \eqref{eq:coherenceproxy} are phenomenological functions. They are neither derived from \eqref{eq:hubbard} nor validated by a spectral fit.
+
+The two kernels are
+\begin{align}
+\lambda_d^{H0}(p)&=\lambda_0S(p),\label{eq:kernelh0}\\
+\lambda_d^{H1}(p)&=\lambda_0S(p)Z_{AN}(p),\label{eq:kernelh1}
+\end{align}
+where $\lambda_0$ is a declared dimensionless scale. A BCS-like monotonic mapping is used solely to display a pairing-scale trajectory:
+\begin{equation}
+T_{c}^{\mathrm{model}}(p)=\Omega\exp\left[-\frac{1}{\lambda_d(p)}\right],
+\label{eq:tcmodel}
+\end{equation}
+where $\Omega$ is a declared temperature scale. Equation \eqref{eq:tcmodel} should not be interpreted as a cuprate microscopic gap equation. It has no self-energy, vertex, competing-order dynamics, disorder treatment, or material-specific band structure.
+
+\begin{table}[t]
+\caption{Declared parameters for the deterministic reduced-kernel simulation. Every entry is a model assumption, not an experimental fit or material constant.}
+\label{tab:parameters}
+\centering
+\small
+\begin{tabular}{l c l}
+\toprule
+Parameter & Value & Role \\
+\midrule
+$\lambda_0$ & 0.70 & overall coupling scale \\
+$\Omega$ & 420 K & displayed pairing-scale factor \\
+$p_{AF}$ & 0.160 & spin-proxy center \\
+$\sigma_{AF}$ & 0.100 & spin-proxy width \\
+$p_{PG}$ & 0.105 & coherence-depletion center \\
+$\sigma_{PG}$ & 0.050 & coherence-depletion width \\
+$A_{PG}$ & 0.35 & maximum coherence depletion \\
+$p$ grid & 0.06 to 0.26 & increment 0.01 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Execution record and result}
+
+The fixed-grid calculation produced finite outputs at all 21 grid points and used no stochastic optimization. The output is therefore numerically reproducible from the archived code and parameter record, but reproducibility of arithmetic is not empirical validity. Table~\ref{tab:simulationresults} reports the intentionally limited comparison. The spin-only trajectory has a modeled maximum of 100.6534 K at $p=0.16$ and a modeled value of 54.1979 K at $p=0.10$. The coherence-gated trajectory has a modeled maximum of 89.8108 K at $p=0.17$ and a modeled value of 18.2994 K at $p=0.10$.
+
+\begin{table}[t]
+\caption{Output of the deterministic reduced-kernel calculation. Values are simulated, not measured transition temperatures.}
+\label{tab:simulationresults}
+\centering
+\small
+\begin{tabular}{l c c}
+\toprule
+Metric & H0: spin-only & H1: spin $\times$ coherence \\
+\midrule
+Peak $T_c^{\mathrm{model}}$ & 100.6534 K & 89.8108 K \\
+Doping at peak & 0.16 & 0.17 \\
+$T_c^{\mathrm{model}}$ at $p=0.10$ & 54.1979 K & 18.2994 K \\
+Grid points & 21 & 21 \\
+Non-finite outputs & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The numerical result constrains the design in a narrow sense: a 35\% declared depletion centered at low doping creates a clear separation between H0 and H1 on the underdoped side. The program should therefore ensure that the experimental doping grid resolves this region. It does \emph{not} show that a real cuprate has 35\% antinodal depletion, that H1 is better, or that 89.8108 K is a prediction for any material. The result ledger is labeled \texttt{QUALIFIED} only for numerical completeness and finite-output checks; its empirical-claim status remains \texttt{NOT\_EMPIRICAL}.
+
+\subsection{Sensitivity, calibration path, and quantitative closure}
+
+Before any empirical inference, the simulation should be extended by a parameter sweep over $(A_{PG},p_{PG},\sigma_{PG})$, rather than selecting a visually convenient example. For each sweep point, one can calculate the difference
+\begin{equation}
+\Delta T_{\mathrm{model}}(p)=T_{c,H0}^{\mathrm{model}}(p)-T_{c,H1}^{\mathrm{model}}(p),
+\label{eq:deltat}
+\end{equation}
+where a positive value means the coherence gate lowers the displayed scale relative to H0. A useful pilot-design threshold is not a universal K-valued number; it is a separation large enough compared with the propagated experimental uncertainty of the intended end point and proxies. If the expected separation collapses under plausible parameter perturbations, the reduced test lacks power and should be redesigned before collection.
+
+The empirical calibration path is likewise constrained. Measurements first define $M$, $Z_{AN}$, and $C$ from frozen processing rules. Only then may parameterized mappings be estimated with held-out validation. Any refitting of the proxy windows or the model after examining all outcomes is exploratory and must be labeled as such. This separation is what permits a mathematical loop to inform experimental design without laundering a simulation into evidence.
+
+\section{Expected Outcome Branches and Conditional Conclusions}
+
+The study is designed to produce several scientifically useful branches. If H1 improves leave-one-doping-out prediction, remains stable across crystals, and cannot be reproduced by charge-order or measurement-block artifacts, the conclusion is conditional: the data support the need for a coherence-gated magnetic proxy in the tested material range. This would motivate a more microscopic calculation that derives or challenges the product term. It would not establish that the product is a literal pairing vertex, exclude phonons or other interactions, or generalize automatically to all cuprates.
+
+If H0 performs as well as or better than H1, the reduction is equally informative. The result would say that the particular antinodal coherence definition did not add predictive information beyond magnetic support on the tested domain. It would not prove that the pseudogap and charge order are irrelevant. A non-improvement may arise because $Z_{AN}$ is measured inadequately, because the material family is atypical, or because the product form is wrong. These alternatives must be distinguished before a mechanism-level narrative is written.
+
+If both models fail, the appropriate conclusion is that the two-proxy mapping is too simple. Candidate revisions include a momentum-resolved rather than scalar coherence field, frequency-dependent magnetic weighting, coupling to lattice degrees of freedom, a different normal-state order, or a nonmultiplicative interaction. Those revisions are new hypotheses. They must enter a later idea and design cycle rather than be silently inserted after failure.
+
+\section{Risks, Limitations, and Human Review Requirements}
+
+The most important limitation is the gap between phenomenology and microscopic derivation. Equations \eqref{eq:spinproxy}--\eqref{eq:tcmodel} are constructed to demonstrate discrimination, not to solve a Hubbard model or an Eliashberg problem. Their use of a BCS-like exponential can make modest changes in an assumed kernel look large on a temperature scale. That is a feature for experimental power analysis and a reason not to interpret the K values as forecasts.
+
+A second risk is comparability. ARPES is surface sensitive while neutron, RIXS, transport, and thermodynamics probe different volumes and selection rules. Sister crystals can reduce this mismatch but cannot erase it. The study therefore records batch and crystal identifiers, instrument blocks, mounting conditions, cleavage history where applicable, and a pre-defined tolerance for matching dopings. A third risk is proxy construction: the integration window used to define magnetic support can encode a preferred answer. Blind processing choices, alternative-window sensitivity analysis, and public release of raw and processed data mitigate this risk.
+
+The work also has governance limits. The proposed experiment involves materials, radiation facilities, cryogens, high magnetic fields, and laboratory-specific hazards. It requires facility safety approvals, trained operators, sample-provenance controls, and institutional data management. The mathematical simulation needs none of these approvals because it has no physical intervention, but its interpretation still requires a superconductivity expert. A human reviewer must approve final sample selection, spectroscopy protocols, missing-data decisions, model changes, and any public statement that extends beyond the recorded evidence boundary.
+
+\section{Conclusion}
+
+High-temperature superconductivity in cuprates is not resolved by knowing that the order parameter is d-wave. The missing step is a mechanism test that can fail. This paper develops such a test by comparing a magnetic-support-only model against a magnetic-support-times-antinodal-coherence model on a common, matched measurement series. The five-stage workflow freezes the evidence boundary, narrows the hypothesis, specifies cross-modal measurements and hold-out validation, and uses a deterministic calculation only to verify that the competing mappings are distinguishable under explicit assumptions.
+
+The computation shows a designed separation between its two phenomenological scenarios: coherence gating lowers the modeled underdoped scale and shifts the modeled maximum. Because this result is simulated, it supports neither a material claim nor a settled microscopic mechanism. Its durable contribution is a concrete next experiment: measure magnetic support, antinodal coherence, charge order, and \Tc on matched cuprate samples; test pre-specified out-of-sample predictions; and use failure to revise the model rather than to preserve a preferred explanation.
+
+\appendices
+\section{Idea-Evolution Audit}
+
+The author stage used one selected direction, I-01, and retained its rejected alternatives as context rather than as unreported options. I-01 maps a magnetic proxy and a coherence proxy into an explicitly nested test. I-02, a multiorbital cluster-Hubbard calculation, was not adopted because a first-pass study could not simultaneously control solver bias, finite-size extrapolation, realistic orbital parameters, and experimental identifiability. I-03, heterogeneous-spectra causal machine learning, was not adopted because data-source and processing confounding would dominate a claimed causal result. I-04, a universal explanation across all high-temperature-superconducting materials, was rejected for exceeding the evidence scope.
+
+No fabricated evolutionary trajectory, automated tree search, or post-hoc idea ranking is represented in this artifact. The selection criterion was operational discriminability: I-01 makes different underdoped predictions with observables that can in principle be measured independently. This audit prevents the final prose from implying that a broad search of mechanisms was empirically completed.
+
+\section{Operational Definitions and Reproducibility Checklist}
+
+For this report, a \emph{magnetic spectral-support proxy} is a reproducibly normalized integral or summary statistic of the chosen spin-sensitive spectrum over a frozen momentum-energy window. \emph{Antinodal coherent weight} is a pre-specified photoemission-derived measure of the coherent portion of a spectrum near an antinodal region; its exact estimator must be declared before outcome analysis. \emph{Charge-order metric} is a stated resonant-scattering peak statistic or correlation length. \emph{Pairing-scale end point} is the pre-registered \Tc criterion or a stated d-wave gap-derived quantity, not an after-the-fact selection.
+
+The following checklist must accompany an empirical implementation: specimen and batch identifiers; composition/doping calibration; raw-spectrum locations; calibration and resolution records; processing software versions; all failed and excluded measurements with reasons; code used to construct $M$, $Z_{AN}$, and $C$; analysis plan version; and held-out predictions. For the present numerical branch, the archived simulation code, fixed parameter set, grid, execution record, result table, and non-empirical qualification are the corresponding reproducibility materials.
+
+\section{Evidence Coverage and Review Checklist}
+
+The survey evidence supports four statements used in this paper: predominantly d-wave pairing symmetry in many cuprates \cite{tsuei2000}; an unresolved, complex cuprate phase diagram \cite{keimer2015}; a motivated spin-fluctuation candidate \cite{scalapino2012}; and observed charge order \cite{comin2016}. The theory context supports using a correlated-electron starting point \cite{lee2006} and demands computational caution \cite{leblanc2015}. The retracted hydride paper is cited only to record its exclusion \cite{snider2020}. None of these sources validates the numerical parameter values, the product kernel, or a universal mechanism.
+
+Before a claim is upgraded from proposed to empirical, reviewers should verify: that every primary observable comes from a traceable specimen and raw record; that temperature and doping matching meet the protocol; that missing primary data were not imputed; that H0/H1 comparison used frozen processing and hold-out scoring; that crystal, batch, and instrument-block sensitivity checks agree; and that all conclusions use language consistent with the observed domain. These checks are scientific requirements, not formatting formalities.
+
+\section{Numerical-Simulation Record}
+
+The quantitative execution used a fixed $p$ grid from 0.06 through 0.26 in increments of 0.01, with a declared rather than optimized parameter vector. The implementation evaluates \eqref{eq:spinproxy}, \eqref{eq:coherenceproxy}, \eqref{eq:kernelh0}, \eqref{eq:kernelh1}, and \eqref{eq:tcmodel} at each grid point, checks that each output is finite, and reports the grid maximum and the value at $p=0.10$. No random seed, training set, external database, material-specific calibration, or post-execution parameter selection is used. The numerical status is consequently stronger than an unchecked spreadsheet calculation but weaker than a model confronted with physical data.
+
+The simulation becomes useful for the experimental program only through a prospective question: over which doping interval and with what uncertainty must the experiment resolve an H0--H1 separation? It cannot answer a retrospective question such as whether a particular compound already proves H1. If future data are used to calibrate the proxy functions, the resulting analysis is a new version with a new parameter record and a held-out validation set. Keeping these versions separate is essential because an apparently small tuning step can otherwise erase the distinction between a design simulation and a fitted explanation.
+
+\balance
+
+\begin{thebibliography}{00}
+
+\bibitem{keimer2015} B. Keimer, S. A. Kivelson, M. R. Norman, S. Uchida, and J. Zaanen, ``From quantum matter to high-temperature superconductivity in copper oxides,'' \emph{Nature}, vol. 518, pp. 179--186, 2015, doi: 10.1038/nature14165.
+
+\bibitem{tsuei2000} C. C. Tsuei and J. R. Kirtley, ``Pairing symmetry in cuprate superconductors,'' \emph{Rev. Mod. Phys.}, vol. 72, pp. 969--1016, 2000, doi: 10.1103/RevModPhys.72.969.
+
+\bibitem{scalapino2012} D. J. Scalapino, ``A common thread: The pairing interaction for unconventional superconductors,'' \emph{Rev. Mod. Phys.}, vol. 84, pp. 1383--1417, 2012, doi: 10.1103/RevModPhys.84.1383.
+
+\bibitem{lee2006} P. A. Lee, N. Nagaosa, and X.-G. Wen, ``Doping a Mott insulator: Physics of high-temperature superconductivity,'' \emph{Rev. Mod. Phys.}, vol. 78, pp. 17--85, 2006, doi: 10.1103/RevModPhys.78.17.
+
+\bibitem{leblanc2015} J. P. F. LeBlanc \emph{et al.}, ``Solutions of the two-dimensional Hubbard model: Benchmarks and results from a wide range of numerical algorithms,'' \emph{Phys. Rev. X}, vol. 5, Art. no. 041041, 2015, doi: 10.1103/PhysRevX.5.041041.
+
+\bibitem{comin2016} R. Comin and A. Damascelli, ``Resonant x-ray scattering studies of charge order in cuprates,'' \emph{Annu. Rev. Condens. Matter Phys.}, vol. 7, pp. 369--405, 2016, doi: 10.1146/annurev-conmatphys-031115-011401.
+
+\bibitem{snider2020} E. Snider \emph{et al.}, ``Room-temperature superconductivity in a carbonaceous sulfur hydride,'' \emph{Nature}, vol. 586, pp. 373--377, 2020, retracted Sep. 26, 2022, doi: 10.1038/s41586-020-2801-z.
+
+\end{thebibliography}
+
+\end{document}

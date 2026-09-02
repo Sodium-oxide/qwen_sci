@@ -1,0 +1,12 @@
+{
+  "schema_version": "survey_gap_ledger_v1",
+  "project_id": "inf_3_clinical_ai_delegation_boundaries",
+  "accepted_gaps": [
+    {"id": "GAP-BOUNDARY-001", "title": "No explicit delegation boundary", "severity": "high", "rationale": "Task metrics rarely define when an AI may act, must abstain, or requires human approval."},
+    {"id": "GAP-OUTCOME-002", "title": "Technical metrics are separated from care outcomes", "severity": "high", "rationale": "Safety, downstream work, timeliness, understanding, and continuity are not captured by discrimination alone."},
+    {"id": "GAP-EQUITY-003", "title": "Subgroup failure modes are hidden by aggregate performance", "severity": "high", "rationale": "Representativeness, labels, and deployment context can create differential harms."},
+    {"id": "GAP-HUMAN-004", "title": "Human oversight is unspecified", "severity": "high", "rationale": "Authority, workload, override behavior, and escalation pathways need measurable definitions."},
+    {"id": "GAP-LIFECYCLE-005", "title": "Clinical performance is treated as static", "severity": "high", "rationale": "Deployment requires drift detection, incident response, update governance, and withdrawal criteria."}
+  ],
+  "triage": {"rejected_gap": "AI cannot contribute meaningfully to clinical care", "reason": "Contradicted by task-specific performance and workflow evidence.", "needs_human_review": ["local intended use", "regulatory classification", "institutional governance", "patient and clinician acceptability", "clinical endpoint and harm threshold"]}
+}

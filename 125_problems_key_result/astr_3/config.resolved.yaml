@@ -1,0 +1,11 @@
+workflow: Survey -> Idea -> ExperimentDesign -> Author
+topic: Where did the Big Bang start?
+research_reframe: Inference over early-universe scenario classes with no presumed spatial center or pre-existing external space
+artifact_status: DESIGN_ONLY
+benchmark: ORIGIN-OF-SPACETIME-INFERENCE-BENCHMARK
+target_directory: C:/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/125_problems_key_result/astr_3
+template_directory: C:/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/Conference-LaTeX-template_10-17-19
+report_pdf: big_bang_origin_inference_report.pdf
+page_target: 8-10
+claims_excluded: spatial Big Bang center; creation from nothing established; unique pre-Big-Bang mechanism; fabricated empirical results
+validation: pdflatex twice; pdfinfo; pdftotext; pdffonts; pdftoppm; JSON parse; SHA-256 final check

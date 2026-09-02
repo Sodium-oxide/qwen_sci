@@ -1,0 +1,22 @@
+{
+  "schema_version": "author_handoff_v1",
+  "project_id": "phys_6_quantum_uncertainty_20260901",
+  "survey_run_id": "survey-quantum-uncertainty-001",
+  "project_context_fingerprint": "quantum-uncertainty-measurement-decoherence-information-v1",
+  "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "survey_manifest": "../survey/survey_manifest.json",
+  "idea_result": "../idea/idea_result.json",
+  "research_design": "research_design.json",
+  "selected_direction_id": "idea-ubt-001",
+  "allowed_source_keys": ["busch2007", "coles2017", "baek2013", "erhart2012", "busch2013", "ringbauer2014", "buscemi2014", "ozawa2018", "zhang2015", "steane1998", "devitt2013", "daley2014", "divincenzo2000", "bharti2022"],
+  "required_claim_boundaries": [
+    "Do not equate preparation uncertainty with measurement error-disturbance.",
+    "Do not equate decoherence or classical readout noise with the uncertainty principle.",
+    "Do not claim quantum error correction removes incompatible-observable limits.",
+    "Do not state that hardware observations were obtained.",
+    "Use conditional statements for all expected outcomes."
+  ],
+  "required_sections": [
+    "Abstract", "Introduction", "Scope and Definitions", "Evidence Survey", "Research Gaps and Idea Selection", "Experiment Design", "Analysis and Decision Rules", "Expected Outcome Branches", "Limits and Human Review", "Conclusion", "References", "Provenance Appendix", "Claim-Evidence Appendix"
+  ]
+}

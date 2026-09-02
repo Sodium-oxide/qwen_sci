@@ -1,0 +1,289 @@
+\documentclass[conference]{../../../../Conference-LaTeX-template_10-17-19/IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{url}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\oddbridge}{\textsc{ODD-Bridge}}
+
+\title{Is a Future of Only Self-Driving Cars Realistic?\\
+\large An Assurance-Gated Research Proposal for Scaling Autonomous Mobility}
+\author{Anonymous Research Proposal}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The question of whether only self-driving cars will populate future roads cannot be answered by sensor accuracy or fleet mileage alone. It presumes that automated driving systems (ADS) can expand beyond their operational design domains (ODDs), handle degraded sensing and connected infrastructure, interact safely with human drivers and vulnerable road users, earn justified public trust, and operate under accountable governance. This paper proposes \oddbridge{}, an Operational Design Domain Bridging protocol with assurance, recovery, and legitimacy evidence. Rather than predict an exclusive automated future, \oddbridge{} defines a testable unit of scale: one named ODD delta between a base service and a candidate condition. The delta is evaluated through ODD, scenario/traffic-mix, sensing/degradation, connectivity/infrastructure, safe-state/recovery, assurance/monitoring, and public/governance cards. The Survey Agent freezes evidence on current automation maturity, human takeover, technical robustness, planning, connected infrastructure, security, road environment, public acceptance, and transition. The Idea Agent rejects sensor-only and infrastructure-only narratives and selects a staged, falsifiable scaling model. The ExperimentDesign Agent specifies a strict design-only protocol with no vehicle operation, simulation, measurement, or observed safety claim. The direct conclusion is conditional: bounded ADS services may expand in defined contexts when their evidence gates close; an unrestricted, self-driving-only road future is not currently a supported or necessary inference.
+\end{abstract}
+
+\begin{IEEEkeywords}
+automated driving systems, operational design domain, autonomous vehicles, mixed traffic, V2X, safety assurance, public trust, transport governance
+\end{IEEEkeywords}
+
+\section{Introduction}
+Automated driving is often discussed as an inevitable replacement of human driving. That language collapses several distinct questions. Can a vehicle perceive and plan in a limited environment? Can it remain safe when a sensor, map, localization source, software service, or connection degrades? Can it coexist with pedestrians, cyclists, emergency responders, human drivers, and roadworks? Can a city justify its operating rules, data practices, accessibility decisions, and response to incidents? Can a local service result travel to a different weather regime, roadway class, or social setting? A positive answer to one question does not answer the others.
+
+The present maturity boundary matters. NHTSA's Automated Vehicle Safety material distinguishes consumer driver-assistance technologies from future automated driving systems and states that even the highest driving automation available to consumers currently requires the driver's full engagement and undivided attention \cite{nhtsa_av_safety_2026}. This does not rule out future high automation; it does rule out treating consumer assistance availability as evidence of a finished self-driving transition.
+
+The literature likewise frames automated mobility as a sociotechnical system. Safety reviews identify blind spots in broad claims and the importance of human-systems integration and trust \cite{noy_shinar_horrey_2018}. Technical surveys cover localization, mapping, perception, planning, and interfaces, while also identifying robustness limitations \cite{yurtsever_etal_2020}. Motion-planning work identifies sensing and V2V/V2I communication as relevant research directions rather than a simple guarantee of safe behavior \cite{katrakazas_etal_2015}. Infrastructure, security, privacy, acceptance, and transition studies broaden the decision beyond the vehicle itself \cite{tengilimoglu_etal_2023,sadaf_etal_2023,othman_2021,hancock_etal_2019}.
+
+This report simulates the repository research workflow:
+\begin{center}
+Survey $\rightarrow$ Idea $\rightarrow$ ExperimentDesign $\rightarrow$ Author.
+\end{center}
+Its scoped research question is: \emph{under what safety, operational, infrastructure, communication, human-interaction, and public-legitimacy evidence conditions can an ADS mobility service expand its ODD and fleet share without converting an unvalidated capability into a city-wide or self-driving-only claim?} The goal is a rigorous scaling protocol, not a prediction that every road must or will exclude human drivers.
+
+\section{Survey: Why Exclusivity Is the Wrong Immediate Metric}
+\subsection{ODD and automation are not interchangeable}
+An ODD specifies the conditions in which an automated function is intended to operate. Its content can include road type, mapped area, speed, weather/visibility condition, time, traffic behavior, connectivity assumption, and service procedure. The exact form is implementation-specific, but the scientific principle is general: a result obtained inside one declared condition cannot be transferred automatically to a wider condition.
+
+For a base service, let $\mathcal{O}_0$ be an approved ODD and let $\delta\mathcal{O}$ be one named expansion. The candidate condition is
+\begin{equation}
+\mathcal{O}_1=\mathcal{O}_0\oplus\delta\mathcal{O},
+\label{eq:odd-delta}
+\end{equation}
+where $\oplus$ denotes an explicit change record rather than an assertion that all unlisted conditions are covered. Equation \eqref{eq:odd-delta} creates a useful research discipline: each new road class, intersection type, visibility range, traffic mix, or service condition becomes a separate claim with separate exclusions and evidence needs.
+
+Conditional automation illustrates why this matters. A dual-index review of takeover requests describes the role of ODD exit and driver state in transition requests \cite{morales_alvarez_etal_2020}. It does not establish that a human can serve as a universal fallback, especially for a service without an engaged driver. A scaling program must therefore distinguish driver-in-the-loop, remote-support, and driverless service models and must define a safe state for each. ``Ask a person to take over'' is not an adequate generic recovery policy.
+
+\subsection{Evidence map and accepted gaps}
+The Survey Agent freezes nine evidence roles. Dual-index records identify the relevant technical and social domains; the browser-verified NHTSA page supplies the current consumer-maturity correction. Table \ref{tab:gaps} turns this map into decision constraints. The gaps are not defects in a single vehicle. They are evidence interfaces that must be closed before a service expansion can be treated as credible.
+
+\begin{table*}[!t]
+\caption{Accepted Survey gaps and required downstream consequence.}
+\label{tab:gaps}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lY Y}
+\toprule
+Gap ID & Accepted gap & Required consequence \\
+\midrule
+GAP-ODD-001 & Capability is over-transferred from a declared ODD to unconstrained roads. & Name base ODD, candidate delta, exclusions, and transfer rationale. \\
+GAP-DEGRADE-002 & Sensor, map, localization, software, and communication degradations are separated from service claims. & Bind every declared degradation to detection and an accountable safe-state/recovery policy. \\
+GAP-MIXED-003 & Human drivers and vulnerable road users are treated as residual edge cases. & Use a mixed-traffic scenario register and expose coverage limits. \\
+GAP-INFRA-004 & Infrastructure/V2X support lacks a shared availability, integrity, latency, and failure boundary. & Classify support as required, assistive, or unavailable. \\
+GAP-ASSURE-005 & Test, analysis, monitoring, and learning evidence lack a common scaling contract. & Link every ODD claim to predeclared evidence and change control. \\
+GAP-TRUST-006 & Public information, privacy, responsibility, and redress are detached from rollout. & Require a public/governance card before an expansion statement. \\
+GAP-EQUITY-007 & Accessibility and service exclusions can be hidden by fleet averages. & Identify who is served, excluded, monitored, and burdened. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+Road infrastructure and connected-vehicle support require careful wording. A road-environment review identifies a broad set of infrastructure considerations for safe AV operation \cite{tengilimoglu_etal_2023}. Connected and automated-vehicle reviews address infrastructure, security, privacy, standards, and cyber risk \cite{sadaf_etal_2023}. These sources motivate explicit interface evidence; they do not support a claim that a citywide V2X system will be continuously available, trustworthy, equitable, or safe to rely upon without a local fallback. This distinction is central to the proposed idea.
+
+\section{Idea Agent: \oddbridge{} as a Scaling Unit}
+\subsection{Portfolio selection}
+The Idea Agent compares four directions. A sensor-stack benchmark race can improve a component while leaving ODD transfer, recovery, and legitimacy unresolved. An infrastructure-first corridor may improve perception or coordination in a bounded setting but is inadequate if a communications interruption creates unsafe vehicle behavior. A human-handoff-first strategy is relevant for some conditional automation but does not cover driverless mobility and can create attention-transition risk. The selected direction, \oddbridge{}, treats the ODD delta and its evidence bundle as the scale unit.
+
+\oddbridge{} expands to \emph{Operational Design Domain Bridging with assurance, recovery, and legitimacy evidence}. Its configuration is
+\begin{equation}
+\mathcal{B}=\left(s,o,m,d,c,r,a,g\right),
+\label{eq:bridge-bundle}
+\end{equation}
+where $s$ is the service boundary, $o$ the ODD card, $m$ the mixed-traffic/scenario card, $d$ the sensing/degradation card, $c$ the connectivity/infrastructure card, $r$ the safe-state/recovery card, $a$ the assurance/monitoring card, and $g$ the public/governance card. The tuple in \eqref{eq:bridge-bundle} is not a deployment score. It is a minimal disclosure bundle: an expansion statement is incomplete if any card is missing.
+
+\begin{figure*}[!t]
+\centering
+\fbox{\begin{minipage}{0.95\textwidth}
+\centering\small
+\textbf{Approved base ODD} $\longrightarrow$ \textbf{named ODD delta} $\longrightarrow$ \{\textbf{technical assurance}, \textbf{mixed-traffic evidence}, \textbf{infrastructure/V2X classification}, \textbf{public/governance review}\} $\longrightarrow$ \textbf{safe-state/recovery policy} $\longrightarrow$ \textbf{conditional status}.\\[3pt]
+\textit{No gate is replaced by fleet mileage; communications must be declared as required, assistive, or unavailable.}
+\end{minipage}}
+\caption{\oddbridge{} assurance-gated ODD expansion. The companion editable source is \texttt{figures/odd\_bridge\_flow.drawio}. The schematic is a protocol, not an operated ADS service.}
+\label{fig:bridge}
+\end{figure*}
+
+\subsection{Hypothesis and falsifiers}
+The central hypothesis is:
+
+\emph{H-ODD-001: An ADS mobility service can make more credible scaling decisions when each ODD expansion is gated by linked technical assurance, degraded-mode recovery, mixed-traffic, infrastructure/connectivity, monitoring, and public-legitimacy evidence, rather than by aggregate fleet miles or a component benchmark alone.}
+
+The proposal can be falsified or placed on hold. A claimed delta fails if its scenario argument cannot distinguish the base condition from the new one; if a sensor/map/software/communications failure lacks a safe state; if local behavior is not sufficient when an assistive service disappears; if a required connection lacks availability or integrity evidence; if human fallback is assumed without a valid transition model; if monitoring cannot connect a change to a traceable incident-learning process; or if privacy, responsibility, service access, and public information are unresolved. These are scientific results about a boundary, not merely compliance paperwork.
+
+\section{ExperimentDesign Agent: A Design-Only Assurance Protocol}
+\subsection{Scope, execution policy, and future unit}
+The ExperimentDesign output has a hard \texttt{DESIGN\_ONLY} policy. It runs no vehicle, simulator, road study, software test, data collection, safety validation, or public survey. It does not advise operators on vehicle control or imply approval of a real service. Any later work requires appropriate safety governance, road authority permissions, data-protection analysis, ethics review where human participants/data are involved, cyber-security review, and accountable organizational ownership.
+
+The future research unit is a named ODD delta joined to its evidence cards. The protocol begins with a documented base service or non-deployment reference. It then specifies exactly one additional condition. The condition may concern road class, intersection design, traffic composition, time, visibility, speed envelope, service procedure, geography, or connected-infrastructure status. Combining many changes into one ``scale-up'' hides causal ambiguity and should be treated as a new research object.
+
+\subsection{Connectivity classification and safe recovery}
+Connected support can be valuable, but it must never be an invisible assumption. The connectivity card assigns each external function one of three states: \texttt{REQUIRED}, \texttt{ASSISTIVE}, or \texttt{UNAVAILABLE}. A required service has a named availability, integrity, latency, authentication, privacy, and failure boundary; absence of this evidence blocks the ODD delta. An assistive service may improve performance, but the local system must still meet the defined minimal-safe behavior when the service is absent. An unavailable service is excluded from the evidence claim.
+
+The scaling gate is represented conceptually by
+\begin{align}
+G_{\mathrm{scale}}=\min\big\{&G_{\mathrm{odd}},G_{\mathrm{degrade}},G_{\mathrm{mixed}},\nonumber\\
+&G_{\mathrm{infra}},G_{\mathrm{assure}},G_{\mathrm{legitimacy}}\big\},
+\label{eq:scale-gate}
+\end{align}
+where each $G$ is a satisfied-or-unresolved evidence obligation, not a probabilistic safety estimate. The minimum structure in \eqref{eq:scale-gate} expresses an important principle: a favorable perception benchmark cannot compensate for an absent recovery policy, and a positive user-attitude result cannot compensate for an unbounded communications dependency.
+
+The future safe-state/recovery card must state the recognized failure condition, its detection evidence, the minimal-risk objective, operational boundaries for any human or remote support, data logging, and post-event review route. This paper supplies no maneuver, routing, timing, or control implementation. It requires only that a future safety argument be explicit about how the candidate ODD stops being valid and what accountable response is claimed.
+
+\subsection{Evidence plan and claim closure}
+Table \ref{tab:cards} specifies the planned evidence cards. Each record is required because scale claims otherwise mix incompatible evidence. A controlled technical test can establish one property under stated conditions. A scenario analysis can expose untested interactions. Supervised operational evidence can reveal service behavior but may have an exposure selection bias. Monitoring can support a bounded post-deployment update but cannot retroactively prove a broader original claim. A public review informs legitimacy but cannot decide technical performance. The proposal requires the contribution of each source to be named rather than allowing a large aggregate evidence set to obscure missing pieces.
+
+\begin{table*}[!t]
+\caption{ODD-Bridge cards for a future ODD-delta claim.}
+\label{tab:cards}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lY Y}
+\toprule
+Card & Minimum future record & Claim invalidated when absent \\
+\midrule
+ODD delta & Base/candidate ODD, addition, exclusions, service boundary, and actor classes. & The result is not attached to a reproducible operating condition. \\
+Scenario/traffic mix & Relevant interactions, vulnerable road users, emergency/roadwork contexts, uncertainty, and coverage limits. & Human and non-ADS actors are silently excluded. \\
+Sensing/degradation & Health assumptions, detectable failures, residual capability statement, and change boundary. & Continuous capability is inferred from nominal operation. \\
+Connectivity/infrastructure & Required/assistive/unavailable state, availability, integrity, latency, privacy, and degraded behavior. & An external service becomes an unexamined single point of failure. \\
+Safe state/recovery & Failure recognition, minimal-risk objective, operational support boundary, logging, and review. & ODD exit has no accountable response. \\
+Assurance/monitoring & Claim-to-evidence map, uncertainty/coverage limits, monitoring, incident triage, and configuration control. & Fleet totals conceal missing evidence for the delta. \\
+Public/governance & Information, responsibility, privacy, accessibility, redress, and affected-party review. & Technical evidence is misrepresented as legitimate rollout consent. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\section{Assurance Logic and Conditional Outcome Branches}
+\subsection{Scenario evidence and coverage limits}
+The proposed scenario register is not a list of every possible road event. It is a structured account of the conditions relevant to the ODD delta, including human drivers, pedestrians, cyclists, emergency vehicles, roadwork, infrastructure variation, perception ambiguity, abnormal system state, and connectivity state. It must state what is represented, what is excluded, and why the selected evidence relates to the added condition.
+
+Let $\mathcal{S}_0$ be the scenario set used by the base ODD and $\mathcal{S}_1$ the candidate set. The unaddressed delta is
+\begin{equation}
+\Delta\mathcal{S}=\mathcal{S}_1\setminus\mathcal{S}_0.
+\label{eq:scenario-delta}
+\end{equation}
+Equation \eqref{eq:scenario-delta} does not claim exhaustive scenario coverage. It forces a future study to identify which scenarios are newly relevant and which evidence is intended to address them. If a candidate is only safe because a hard case was not included in $\mathcal{S}_1$, the result is an incomplete boundary statement, not a safe scaling conclusion.
+
+For each future claim $q_i$, the project should maintain a traceability relation
+\begin{equation}
+\mathcal{T}(q_i)=\left\{e_i,\,b_i,\,u_i,\,f_i\right\},
+\label{eq:traceability}
+\end{equation}
+where $e_i$ is supporting evidence, $b_i$ the ODD and service boundary, $u_i$ uncertainty or coverage limitation, and $f_i$ the predeclared falsifier. The relation in \eqref{eq:traceability} prevents a generic statement such as ``the system is safe'' from being detached from conditions, uncertainty, or a possible disconfirming result.
+
+\subsection{Pre-registered status language}
+Table \ref{tab:outcomes} gives the only authorized interpretations after a future evidence process. It is deliberately more informative than a pass/fail label. A technical contribution can be useful even when a broader scaling claim remains unsupported, provided that its boundary and missing evidence are reported plainly.
+
+\begin{table*}[!t]
+\caption{Pre-registered conditional outcomes. None is an observed result of this proposal.}
+\label{tab:outcomes}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lY Y}
+\toprule
+Status & Authorized future interpretation & Required action \\
+\midrule
+\texttt{ODD\_DELTA\_EVALUABLE} & Cards and exclusions are complete enough for a specialist-reviewed future evaluation. & Do not call this a deployment approval. \\
+\texttt{LIMITED\_EXPANSION\_SUPPORTED} & Future evidence supports the named ODD delta under a stated monitoring and governance plan. & Preserve validity domain; do not infer a self-driving-only future. \\
+\texttt{DEGRADATION\_POLICY\_INVALID} & A declared failure lacks detection or a defined safe state. & Redesign; no expansion claim. \\
+\texttt{CONNECTIVITY\_DEPENDENCY\_UNRESOLVED} & A required connection lacks availability, integrity, privacy, or failure evidence. & Constrain the ODD or add safe local behavior. \\
+\texttt{MIXED\_TRAFFIC\_EVIDENCE\_INSUFFICIENT} & The added interaction conditions lack adequate scenario/evidence support. & Narrow the delta or collect future evidence. \\
+\texttt{PUBLIC\_GOVERNANCE\_HOLD} & Responsibility, information, privacy, accessibility, or redress obligations remain unresolved. & Do not treat technical evidence as legitimate rollout. \\
+\texttt{INCONCLUSIVE} & The evidence cannot discriminate supported expansion from unsupported transfer. & Report no readiness direction. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\section{Mixed Traffic, Infrastructure, and Public Legitimacy}
+\subsection{Mixed traffic is the system, not the noise}
+The transition toward any increased ADS share occurs in a road system with heterogeneous norms, vehicles, cyclist and pedestrian behavior, roadway constraints, and institutional responders. Human road users do not necessarily reveal intent in the format a machine model expects, and they do not disappear while a service is expanding. The mixed-traffic card therefore has to describe interaction types, vulnerable-road-user exposure, communication assumptions, abnormal contexts, and the limits of the evidence. A service restricted to a carefully selected route can be valuable, but it does not erase the need to state why the route is selected or which communities are not served.
+
+The current proposal does not assign fault, predict crash rates, or propose traffic-control behavior. It requires future evidence to distinguish a safety or service claim from a narrow exposure selection. The difference is important: avoiding the conditions a service cannot handle can be a responsible ODD constraint, but it is not evidence that the conditions have been solved.
+
+\subsection{Trust, privacy, responsibility, and accessibility}
+Public acceptance is not a decorative adoption statistic. Reviews associate it with perceived benefits and risks, trust, social influence, policy, and system characteristics \cite{othman_2021,nastjuk_etal_2020}. Cyber-security and privacy analyses further identify responsibility, data use, security, and communication as acceptance-relevant concerns \cite{liu_etal_2020}. These sources support the inclusion of a public/governance gate. They do not warrant treating a favorable survey as approval by all affected road users or as proof of technical safety.
+
+The public/governance card must state the system's advertised boundary, user and bystander data practices, responsibility allocation, complaint/redress route, accessibility requirements, service exclusions, and how a change in ODD is communicated. A change that improves service for one corridor while increasing exclusion or surveillance burden elsewhere is not fully characterized by average ride completion or fleet utilization. This is why GAP-EQUITY-007 is a scaling gate rather than an afterthought.
+
+\section{Operational Readiness and Change-Control Boundaries}
+\subsection{Readiness is a claim about a version in a context}
+An ADS service cannot be described as ready in the abstract. It is ready, if at all, for a named service configuration, software and map/configuration state, vehicle class, operational organization, ODD, and evidence period. This is not a semantic technicality. A system change can alter the model, the sensing/calibration behavior, the connection to an external service, the remote-support procedure, the data policy, or the exact road conditions to which the evidence relates. When the deployed configuration changes, the prior argument must be reassessed for the affected ODD delta rather than treated as a permanent property of the fleet.
+
+For a future claim $q$, let the relevant context be
+\begin{equation}
+\mathcal{K}(q)=\left(v,\mathcal{O},\mathcal{H},\mathcal{I},\mathcal{P}\right),
+\label{eq:claim-context}
+\end{equation}
+where $v$ denotes the defined system/service version, $\mathcal{O}$ the ODD, $\mathcal{H}$ the human and organizational operating boundary, $\mathcal{I}$ the infrastructure/connectivity state, and $\mathcal{P}$ the public and data-governance conditions. Equation \eqref{eq:claim-context} does not create a software-certification scheme. It makes a transfer rule explicit: evidence for $q$ cannot simply be carried into a new context when one of its material terms has changed.
+
+The monitoring role is consequently bounded. A future monitoring system may discover a previously unknown event class, a deterioration of an infrastructure service, an exposure imbalance, or a discrepancy between advertised and actual service limits. It is valuable because it can trigger investigation, a hold, or a narrowed ODD. It is not retrospective proof that the original ODD had adequate evidence, and it cannot turn an unobserved population or excluded road condition into covered evidence. Monitoring must therefore be joined to configuration control, incident triage, and a documented decision to retain, revise, or withdraw a claim.
+
+\subsection{Evidence modalities do different work}
+Table \ref{tab:modalities} separates future evidence roles. The table prevents a simple hierarchy in which more aggregate data always outweigh a missing boundary. A broad supervised operational record may be informative for the conditions it exposes, while a structured scenario analysis may identify a condition not present in that record. Controlled tests may characterize a component but cannot alone establish service-level mixed-traffic behavior. Public/governance review has a distinct role in legitimacy, data protection, responsibility, and accessibility. An expansion claim must state which obligations each modality addresses and which remain unresolved.
+
+\begin{table*}[!t]
+\caption{Future evidence modalities and their non-substitutable roles.}
+\label{tab:modalities}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lY Y}
+\toprule
+Evidence modality & What it can support within a declared context & What it cannot establish by itself \\
+\midrule
+Controlled technical test & A bounded sensing, localization, planning, health-monitoring, or interface property. & All-ODD service safety, transfer to different road users, or public legitimacy. \\
+Scenario/analysis evidence & Explicit treatment of selected interactions, degraded states, and excluded conditions. & Exhaustive real-world behavior or a numerical safety rate without a valid exposure/uncertainty basis. \\
+Supervised operational evidence & Behavior and operational process for the stated route, service boundary, and observation conditions. & A different city, vehicle version, operator model, weather envelope, or unobserved condition. \\
+Monitoring and incident process & Detection of new evidence, drift, claims mismatch, and reasons to narrow or hold the service. & Retrospective proof that an unsupported initial expansion was valid. \\
+Public/governance review & Information, privacy, responsibility, redress, accessibility, and affected-party legitimacy. & Technical assurance or a substitute for a safety argument. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+This division of labor makes the proposal less conservative in a productive way. It allows a well-evidenced bounded service to advance without waiting for a universal solution, while preventing a local success from being oversold as evidence that every road, population, or infrastructure condition is solved. The desired future is not an arbitrary fleet-size target; it is a sequence of evidence-bearing decisions whose assumptions remain inspectable after change.
+
+\section{Reproducibility and Requirement Traceability}
+\subsection{Claim-to-record contract}
+An autonomous-mobility claim should be reconstructible after the fact. A future reader should be able to determine the service, ODD, system version, evidence boundary, connectivity state, degradation assumptions, scenario coverage, incident process, and governance terms that made the claim possible. The traceability contract in Table \ref{tab:requirements} prevents a technically attractive result from being converted into an unbounded city or society claim by removing its operating conditions.
+
+\begin{table*}[!t]
+\caption{Requirement traceability for a future ODD expansion claim.}
+\label{tab:requirements}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lY Y}
+\toprule
+Requirement & Record required before claim & Failure consequence \\
+\midrule
+R1: ODD identity & Base/candidate ODD, exact delta, service boundary, exclusions, and version. & No transferable expansion statement. \\
+R2: degradation response & Failure assumptions, detection, safe-state/recovery objective, and operational boundary. & \texttt{DEGRADATION\_POLICY\_INVALID}. \\
+R3: mixed traffic & Scenario register, actor classes, vulnerable-road-user conditions, and coverage limits. & \texttt{MIXED\_TRAFFIC\_EVIDENCE\_INSUFFICIENT}. \\
+R4: connected support & Required/assistive/unavailable classification with availability, integrity, latency, privacy, and failure account. & \texttt{CONNECTIVITY\_DEPENDENCY\_UNRESOLVED}. \\
+R5: assurance evidence & Claim-to-evidence map, uncertainty, testing/analysis/monitoring roles, change control, and incident process. & \texttt{INCONCLUSIVE}. \\
+R6: governance & Public information, responsibility, data policy, accessibility/exclusion, redress, and review. & \texttt{PUBLIC\_GOVERNANCE\_HOLD}. \\
+R7: transfer & Rationale for operator, vehicle, city, roadway, weather, and institutional context transfer. & Retain only the original bounded claim. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+The same discipline applies to evidence quality. A controlled future test, an analytical argument, supervised operations, and monitoring data each support different propositions. None automatically covers a different ODD, a changed software/configuration baseline, or a different population. This report contains none of those observations. It gives a protocol for associating them with claims if a future authorized program produces them.
+
+\section{Risks, Limitations, and Human Review}
+The first limitation is scientific: no single report can prove all-road safety or a future transport endpoint. Perception, planning, human interaction, connected support, and institutional governance evolve together. The proposed gates improve the honesty of an expansion claim; they do not make a difficult condition easy or remove the need for independent scrutiny. The second limitation is operational: the safe-state/recovery response depends on service type, environment, road rules, vehicle, remote-support boundaries, and organizational accountability. It cannot be specified safely as a generic maneuver in a document.
+
+The third limitation is equity and legitimacy. A bounded service may be defensible precisely because it excludes a condition; an exclusion can also have distributional costs. A city-wide transition cannot be declared successful solely because an operator's fleet covers high-demand or well-mapped corridors. The public/governance card requires affected parties, data practices, service exclusions, accessibility, and redress to be explicit before scaling language is used.
+
+Human review is mandatory before any real deployment or empirical study. Qualified safety engineers, ADS developers, independent evaluators, road authorities, privacy/legal specialists, cybersecurity experts, accessibility representatives, and communities affected by the service must evaluate the appropriate components. This proposal does not substitute for jurisdictional law, safety certification, data-protection analysis, organizational incident response, or real-world validation.
+
+\section{Conclusion}
+An all-self-driving-car future is not a currently realistic singular conclusion. It requires simultaneous resolution of ODD transfer, degraded operation, mixed traffic, connected infrastructure, assurance, governance, and public legitimacy; none follows automatically from a sensor improvement or a fleet-scale statistic. A more realistic scientific path is to expand bounded ADS services condition by condition, preserving the conditions under which each claim is valid.
+
+\oddbridge{} operationalizes that path. It makes one ODD delta the unit of scaling and requires linked technical, recovery, traffic, infrastructure, monitoring, and governance evidence before an expansion claim is even eligible for future specialist evaluation. If the gates close, a limited service expansion may be supported within its declared domain. If they do not, the proper result is to narrow, hold, or redesign the claim. This is a more rigorous answer than either technological fatalism or blanket pessimism: automation can contribute to mobility, but exclusive autonomy is neither an evidence-free inevitability nor a necessary target.
+
+\begin{thebibliography}{99}
+\bibitem{nhtsa_av_safety_2026} National Highway Traffic Safety Administration, ``Automated vehicle safety,'' accessed Sep. 1, 2026. [Online]. Available: \url{https://www.nhtsa.gov/vehicle-safety/automated-vehicles-safety}
+\bibitem{morales_alvarez_etal_2020} W. Morales-Alvarez, O. Sipele, R. L\'eberon, H. H. Tadjine, and C. Olaverri-Monreal, ``Automated driving: A literature review of the take over request in conditional automation,'' \emph{Electronics}, vol. 9, no. 12, Art. no. 2087, 2020, doi: 10.3390/electronics9122087.
+\bibitem{noy_shinar_horrey_2018} I. Noy, D. Shinar, and W. J. Horrey, ``Automated driving: Safety blind spots,'' \emph{Safety Science}, vol. 102, pp. 68--78, 2018, doi: 10.1016/j.ssci.2017.07.018.
+\bibitem{yurtsever_etal_2020} E. Yurtsever, J. Lambert, A. Carballo, and K. Takeda, ``A survey of autonomous driving: Common practices and emerging technologies,'' \emph{IEEE Access}, vol. 8, pp. 58443--58469, 2020, doi: 10.1109/ACCESS.2020.2983149.
+\bibitem{katrakazas_etal_2015} C. Katrakazas, M. Quddus, W.-H. Chen, and L. Deka, ``Real-time motion planning methods for autonomous on-road driving: State-of-the-art and future research directions,'' \emph{Transportation Research Part C}, vol. 60, pp. 416--442, 2015, doi: 10.1016/j.trc.2015.09.011.
+\bibitem{tengilimoglu_etal_2023} O. Tengilimoglu, O. Carsten, and Z. Wadud, ``Implications of automated vehicles for physical road environment: A comprehensive review,'' \emph{Transportation Research Part E}, vol. 169, Art. no. 102989, 2023, doi: 10.1016/j.tre.2022.102989.
+\bibitem{sadaf_etal_2023} M. Sadaf \emph{et al.}, ``Connected and automated vehicles: Infrastructure, applications, security, critical challenges, and future aspects,'' \emph{Technologies}, vol. 11, no. 5, Art. no. 117, 2023, doi: 10.3390/technologies11050117.
+\bibitem{othman_2021} K. Othman, ``Public acceptance and perception of autonomous vehicles: A comprehensive review,'' \emph{AI and Ethics}, vol. 1, no. 3, pp. 355--387, 2021, doi: 10.1007/s43681-021-00041-8.
+\bibitem{nastjuk_etal_2020} I. Nastjuk, B. Herrenkind, M. Marrone, A. Brendel, and L. M. Kolbe, ``What drives the acceptance of autonomous driving? An investigation of acceptance factors from an end-user's perspective,'' \emph{Technological Forecasting and Social Change}, vol. 161, Art. no. 120319, 2020, doi: 10.1016/j.techfore.2020.120319.
+\bibitem{liu_etal_2020} N. Liu, A. Nikitas, and S. Parkinson, ``Exploring expert perceptions about the cyber security and privacy of connected and autonomous vehicles: A thematic analysis approach,'' \emph{Transportation Research Part F}, vol. 75, pp. 66--86, 2020, doi: 10.1016/j.trf.2020.09.019.
+\bibitem{hancock_etal_2019} P. A. Hancock, I. Nourbakhsh, and J. M. W. Stewart, ``On the future of transportation in an era of automated and autonomous vehicles,'' \emph{Proceedings of the National Academy of Sciences}, vol. 116, no. 16, pp. 7684--7691, 2019, doi: 10.1073/pnas.1805770115.
+\bibitem{wang_etal_2020} J. Wang, L. Zhang, Y. Huang, J. Zhao, and F. Bella, ``Safety of autonomous vehicles,'' \emph{Journal of Advanced Transportation}, vol. 2020, pp. 1--13, 2020, doi: 10.1155/2020/8867757.
+\end{thebibliography}
+
+\end{document}

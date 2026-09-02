@@ -1,0 +1,22 @@
+{
+  "stage": "survey",
+  "schema_version": "1.0",
+  "scientific_reframe": "A coupled geodynamo and observation problem with internal and external field sources.",
+  "gaps": [
+    {"id":"G1","name":"energy_to_field_closure","question":"Which combinations of thermal and compositional buoyancy, boundary heat flow, and dissipation can sustain Earth's field amplitude?","testability":"Compare calibrated dynamo ensembles under identical observation operators and evaluate amplitude, spectrum, and energy-budget residuals."},
+    {"id":"G2","name":"core_flow_nonuniqueness","question":"Can joint field and flow inference reduce the non-uniqueness of core-mantle-boundary flow?","testability":"Use synthetic twins with known latent flow and measure posterior recovery under observatory and satellite sampling."},
+    {"id":"G3","name":"source_separation","question":"How much apparent field motion is attributable to external currents rather than core secular variation?","testability":"Evaluate internal/external component recovery against simulated truth and held-out storm intervals."},
+    {"id":"G4","name":"multiscale_coupling","question":"Does explicit mantle, ocean, ionosphere, and magnetosphere coupling improve field reconstruction?","testability":"Compare coupled and uncoupled observation operators with identical data and parameter budgets."},
+    {"id":"G5","name":"forecast_validation","question":"Can a physically constrained model predict future vector-field change rather than merely fit historical coefficients?","testability":"Rolling-origin held-out forecasts of vector field, secular variation, intensity, and pole-location uncertainty."},
+    {"id":"G6","name":"parameter_identifiability","question":"Which physical parameters are actually constrained by available observations?","testability":"Fisher-information, posterior-rank, and perturbation-recovery analyses under synthetic and real-data-like sampling."
+    }
+  ],
+  "rejected_overclaims":[
+    "Rotation alone creates the geomagnetic field.",
+    "Ionospheric currents are the primary source of the long-lived internal dipole.",
+    "A pole track is a direct trajectory of a rigid magnetic object.",
+    "A fitted geomagnetic model is automatically a validated forecast.",
+    "One numerical dynamo simulation proves a unique Earth interior mechanism."
+  ],
+  "observed_results": []
+}

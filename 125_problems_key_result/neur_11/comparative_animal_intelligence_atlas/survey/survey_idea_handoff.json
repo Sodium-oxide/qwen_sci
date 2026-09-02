@@ -1,0 +1,21 @@
+{
+  "schema":"survey_idea_handoff.v1",
+  "project_id":"neur_11_comparative_animal_intelligence_atlas",
+  "research_question":"Which cognitive capacities are shared or independently evolved across nonhuman animals, how do ecological and social demands shape those capacities, and how much of apparent intelligence transfers across tasks when testing is species-appropriate?",
+  "primary_gap_ids":["G1","G2","G3","G4","G5"],
+  "primary_direction":{
+    "id":"ECAA",
+    "name":"Ecological Cognitive Architecture Atlas",
+    "thesis":"Nonhuman intelligence is a cognitive mosaic: a partially shared flexibility architecture coexists with strong species-specific expertise shaped by ecology, social learning, body plan, and sensory affordances.",
+    "novelty":"An affordance-aware, cross-species latent model combines common computational cores with species-specific modules and tests transfer rather than ranking animals.",
+    "predictions":["A partially shared latent flexibility factor will be measurable across species.","Species-specific modules will explain large residual variance in tool, acoustic, memory, and object-manipulation tasks.","Social learning and cooperation will improve selected flexible problem-solving outcomes.","Cross-domain performance rankings will reverse rather than collapse into one universal ordering."],
+    "falsifiers":["No shared covariance beyond task reliability.","Affordance variables do not explain residual species-by-task effects.","Social-learning conditions do not alter subsequent flexible problem solving.","A single factor predicts all held-out domains as well as or better than the mosaic model."]
+  },
+  "alternatives":[
+    {"id":"A1","name":"Universal intelligence leaderboard","role":"negative control","status":"not_primary"},
+    {"id":"A2","name":"Brain-size predictor","role":"negative control","status":"not_primary"},
+    {"id":"A3","name":"Domain-only specialization model","role":"competitive","status":"secondary"},
+    {"id":"A4","name":"Social-learning-first model","role":"component","status":"secondary"}
+  ],
+  "identity":{"topic":"nonhuman animal intelligence","domain":"comparative cognition and behavioral neuroscience","design_mode":"DESIGN_ONLY","observed_results":[]}
+}

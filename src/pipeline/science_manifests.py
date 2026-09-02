@@ -99,6 +99,63 @@ def _identity_error(actual: Mapping[str, object], expected: Mapping[str, object]
         raise ScienceManifestError(f"{label} differs for handoff_fingerprint")
 
 
+def normalize_verified_survey_binding(
+    binding: Mapping[str, object],
+    *,
+    label: str,
+) -> tuple[dict[str, object], bool]:
+    """Unwrap and internally verify Author's bound Survey-identity envelope."""
+
+    payload = dict(binding)
+    if _text(payload.get("status")) != "BOUND_VERIFIED":
+        return payload, False
+    if any(_text(payload.get(field)) for field in _IDENTITY_FIELDS):
+        raise ScienceManifestError(
+            f"{label} mixes BOUND_VERIFIED and flat Survey identity fields"
+        )
+    if payload.get("human_confirmation_required") is not False:
+        raise ScienceManifestError(
+            f"{label} BOUND_VERIFIED binding requires human confirmation"
+        )
+    nested_expected = _mapping(payload.get("expected"))
+    nested_resolved = _mapping(payload.get("resolved"))
+    for field in _IDENTITY_FIELDS:
+        expected_value = _text(nested_expected.get(field))
+        resolved_value = _text(nested_resolved.get(field))
+        if not expected_value:
+            raise ScienceManifestError(f"{label} is missing expected.{field}")
+        if not resolved_value:
+            raise ScienceManifestError(f"{label} is missing resolved.{field}")
+        if expected_value != resolved_value:
+            raise ScienceManifestError(
+                f"{label} expected and resolved identities differ for {field}"
+            )
+    return dict(nested_resolved), True
+
+
+def _survey_binding_error(
+    actual: Mapping[str, object],
+    expected: Mapping[str, object],
+    *,
+    label: str,
+) -> None:
+    binding = _mapping(actual)
+    status = _text(binding.get("status"))
+    if status == "UNBOUND_REQUIRES_HUMAN_CONFIRMATION":
+        raise ScienceManifestError(f"{label} is not BOUND_VERIFIED")
+    if status not in {"", "bound", "missing", "BOUND_VERIFIED"}:
+        raise ScienceManifestError(f"{label} has unsupported Survey binding status: {status}")
+    normalized, is_verified_envelope = normalize_verified_survey_binding(binding, label=label)
+    if not is_verified_envelope:
+        _identity_error(normalized, expected, label=label)
+        return
+    for field in _IDENTITY_FIELDS:
+        expected_value = _text(expected.get(field))
+        actual_value = _text(normalized.get(field))
+        if expected_value and actual_value != expected_value:
+            raise ScienceManifestError(f"{label} differs for {field}")
+
+
 def _verify_record(
     record: object,
     *,
@@ -176,8 +233,12 @@ def write_idea_manifest(
     survey_manifest_path: str | Path,
     identity: Mapping[str, object],
     selected_direction_id: str,
+    quantitative_ideas_path: str | Path | None = None,
 ) -> Path:
     attempt = Path(attempt_dir).expanduser().resolve()
+    artifacts: dict[str, str | Path] = {"idea_result": idea_result_path}
+    if quantitative_ideas_path is not None:
+        artifacts["quantitative_ideas"] = quantitative_ideas_path
     return _write_manifest(
         attempt / "idea_manifest.json",
         _build_manifest(
@@ -185,11 +246,12 @@ def write_idea_manifest(
             topic=topic,
             identity=identity,
             inputs={"survey_manifest": survey_manifest_path},
-            artifacts={"idea_result": idea_result_path},
+            artifacts=artifacts,
             canonical_artifact="idea_result",
             metadata={
                 "idea_result_schema_version": "idea_result_v5",
                 "selected_direction_id": _text(selected_direction_id),
+                "quantitative_sidecar_available": quantitative_ideas_path is not None,
             },
         ),
     )
@@ -251,11 +313,21 @@ def write_author_manifest(
     source_design_id: str,
     selected_direction_id: str,
     rendering: Mapping[str, Any],
+    document_quality: Mapping[str, Any] | None = None,
+    quantitative_handoff_manifest_path: str | Path | None = None,
 ) -> Path:
     required = ("preparation_json", "author_context_json", "document_json", "idea_evolution_json")
     artifacts = {name: artifact_paths[name] for name in required}
     for name in ("survey_source_binding", "survey_full_text_appendix", "render_status"):
         if name in artifact_paths:
+            artifacts[name] = artifact_paths[name]
+    quality_summary = dict(document_quality) if isinstance(document_quality, Mapping) else None
+    if quality_summary is not None:
+        for name in ("document_quality_json", "document_quality_report_markdown"):
+            if name not in artifact_paths:
+                raise ScienceManifestError(
+                    f"Author document quality binding has no {name} artifact"
+                )
             artifacts[name] = artifact_paths[name]
     artifacts.update(
         {
@@ -276,25 +348,33 @@ def write_author_manifest(
         raise ScienceManifestError("Author manifest rendering status has no artifact")
     if rendering_status == "COMPLETED" and "render_pdf" not in artifacts:
         raise ScienceManifestError("Completed Author rendering has no render_pdf artifact")
+    inputs: dict[str, str | Path] = {
+        "survey_manifest": survey_manifest_path,
+        "idea_manifest": idea_manifest_path,
+        "experiment_design_manifest": experiment_design_manifest_path,
+        "author_input": author_input_path,
+    }
+    if quantitative_handoff_manifest_path is not None:
+        inputs["quantitative_handoff_manifest"] = quantitative_handoff_manifest_path
+    metadata = {
+        "source_design_id": _text(source_design_id),
+        "selected_direction_id": _text(selected_direction_id),
+        "quantitative_handoff_bound": quantitative_handoff_manifest_path is not None,
+        "rendering": rendering_payload,
+    }
+    if quality_summary is not None:
+        metadata["document_quality_bound"] = True
+        metadata["document_quality"] = quality_summary
     return _write_manifest(
         attempt / "author_manifest.json",
         _build_manifest(
             stage="author",
             topic=topic,
             identity=identity,
-            inputs={
-                "survey_manifest": survey_manifest_path,
-                "idea_manifest": idea_manifest_path,
-                "experiment_design_manifest": experiment_design_manifest_path,
-                "author_input": author_input_path,
-            },
+            inputs=inputs,
             artifacts=artifacts,
             canonical_artifact="document_json",
-            metadata={
-                "source_design_id": _text(source_design_id),
-                "selected_direction_id": _text(selected_direction_id),
-                "rendering": rendering_payload,
-            },
+            metadata=metadata,
         ),
     )
 
@@ -388,7 +468,7 @@ def verify_idea_manifest(
         raise ScienceManifestError("Idea result schema is not idea_result_v5")
     if _text(result_payload.get("topic")).casefold() != topic.casefold():
         raise ScienceManifestError("Idea result topic differs from its manifest")
-    _identity_error(
+    _survey_binding_error(
         _mapping(result_payload.get("survey_binding")),
         survey.identity,
         label="Idea result Survey binding",
@@ -455,7 +535,7 @@ def verify_experiment_design_manifest(
     if _text(handoff.get("schema_version")) != "research_plan_author_input_v3":
         raise ScienceManifestError("ExperimentDesign Author handoff has an unsupported schema")
     provenance = _mapping(handoff.get("provenance"))
-    _identity_error(
+    _survey_binding_error(
         _mapping(provenance.get("survey_binding")),
         idea.identity,
         label="ExperimentDesign Author handoff Survey binding",
@@ -500,12 +580,35 @@ def verify_author_manifest(
     author_input = _verify_input(payload, "author_input", manifest_path=path)
     if author_input != design.canonical_path:
         raise ScienceManifestError("Author manifest input is not the ExperimentDesign manifest canonical handoff")
+    quantitative_handoff = _mapping(payload.get("inputs")).get("quantitative_handoff_manifest")
+    quantitative_handoff_path: Path | None = None
+    if quantitative_handoff is not None:
+        quantitative_handoff_path = _verify_input(payload, "quantitative_handoff_manifest", manifest_path=path)
+        run_root = path.parents[2]
+        try:
+            quantitative_handoff_path.relative_to((run_root / "quantitative").resolve())
+        except ValueError as exc:
+            raise ScienceManifestError("Author quantitative handoff escapes the science run") from exc
+        try:
+            from src.agents.research_plan_author.quantitative_disclosure_validator import (
+                validate_quantitative_disclosure,
+            )
+            from src.agents.research_plan_author.quantitative_evidence_adapter import (
+                load_quantitative_evidence_capsule,
+            )
+
+            load_quantitative_evidence_capsule(
+                quantitative_handoff_path,
+                expected_identity=identity,
+            )
+        except Exception as exc:
+            raise ScienceManifestError(f"Author quantitative handoff validation failed: {exc}") from exc
     document = artifacts.get("document_json")
     if document is None:
         raise ScienceManifestError("Author manifest has no document_json artifact")
     document_payload = _read_json(document, label="Author document")
     source_manifest = _mapping(document_payload.get("source_manifest"))
-    _identity_error(
+    _survey_binding_error(
         _mapping(source_manifest.get("survey_binding")),
         design.identity,
         label="Author document Survey binding",
@@ -520,6 +623,64 @@ def verify_author_manifest(
         raise ScienceManifestError("Author manifest selected direction differs from ExperimentDesign manifest")
     if _text(source_manifest.get("selected_direction_id")) != selected_direction:
         raise ScienceManifestError("Author document selected direction differs from Author manifest")
+    quality_metadata = _mapping(metadata.get("document_quality"))
+    quality_bound = metadata.get("document_quality_bound") is True
+    quality_artifact_names = ("document_quality_json", "document_quality_report_markdown")
+    quality_artifacts_present = any(name in artifacts for name in quality_artifact_names)
+    if quality_bound:
+        missing_quality_artifacts = [name for name in quality_artifact_names if name not in artifacts]
+        if missing_quality_artifacts:
+            raise ScienceManifestError(
+                "Author manifest document quality binding is missing artifact(s): "
+                + ", ".join(missing_quality_artifacts)
+            )
+        quality_payload = _read_json(
+            artifacts["document_quality_json"],
+            label="Author document quality audit",
+        )
+        if _text(quality_payload.get("schema_version")) != "research_plan_author_document_quality_v1":
+            raise ScienceManifestError("Author document quality audit has an unsupported schema")
+        candidates = quality_payload.get("candidates")
+        if not isinstance(candidates, list):
+            raise ScienceManifestError("Author document quality audit candidates must be a list")
+        selected_index = quality_payload.get("selected_candidate_index")
+        if not isinstance(selected_index, int) or selected_index < 0 or (
+            candidates and selected_index >= len(candidates)
+        ) or (not candidates and selected_index != 0):
+            raise ScienceManifestError("Author document quality audit has an invalid selected candidate")
+        selected_candidate = _mapping(candidates[selected_index]) if candidates else {}
+        selected_scorecard = _mapping(selected_candidate.get("scorecard"))
+        for field in (
+            "schema_version",
+            "selection_status",
+            "selected_candidate_index",
+            "winning_candidate_index",
+            "selected_candidate_status",
+            "selected_total_score",
+            "selected_selection_score",
+            "candidate_count",
+            "warning_count",
+        ):
+            if field == "selected_total_score":
+                actual_value = selected_scorecard.get("total_score")
+            elif field == "selected_selection_score":
+                actual_value = selected_scorecard.get("selection_score")
+            elif field == "selected_candidate_status":
+                actual_value = _text(selected_candidate.get("status"))
+            elif field == "candidate_count":
+                actual_value = len(candidates)
+            elif field == "warning_count":
+                actual_value = len(quality_payload.get("warnings") or [])
+            else:
+                actual_value = quality_payload.get(field)
+            if quality_metadata.get(field) != actual_value:
+                raise ScienceManifestError(
+                    f"Author document quality metadata differs for {field}"
+                )
+    elif quality_artifacts_present:
+        raise ScienceManifestError(
+            "Author manifest contains document quality artifacts without a verified binding"
+        )
     if not isinstance(metadata.get("rendering"), Mapping):
         raise ScienceManifestError("Author manifest has no rendering status")
     rendering = _mapping(metadata.get("rendering"))
@@ -537,6 +698,17 @@ def verify_author_manifest(
         raise ScienceManifestError("Required Author rendering was not completed")
     if status == "COMPLETED" and "render_pdf" not in artifacts:
         raise ScienceManifestError("Completed Author rendering has no render_pdf artifact")
+    if quantitative_handoff_path is not None:
+        disclosure_errors = validate_quantitative_disclosure(document_payload)
+        if disclosure_errors:
+            raise ScienceManifestError(
+                "Author document quantitative evidence disclosure is invalid: "
+                + "; ".join(disclosure_errors)
+            )
+    if bool(_mapping(payload.get("metadata")).get("quantitative_handoff_bound")) != (
+        quantitative_handoff_path is not None
+    ):
+        raise ScienceManifestError("Author manifest quantitative handoff binding metadata differs from its input")
     if expected_render_required is not None and required != expected_render_required:
         raise ScienceManifestError("Author manifest rendering requirement differs from the science run")
     return VerifiedStageManifest(

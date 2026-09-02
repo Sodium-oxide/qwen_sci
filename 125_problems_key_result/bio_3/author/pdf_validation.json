@@ -1,0 +1,33 @@
+{
+  "artifact": "why_cells_change_fate_report.pdf",
+  "validation_status": "PASS",
+  "validation_scope": "static IEEE-style design-only research document",
+  "page_count": 8,
+  "required_page_range": "8-10",
+  "page_size": "612 x 792 pts (letter)",
+  "pdflatex_passes": 2,
+  "unresolved_references": 0,
+  "overfull_boxes": 0,
+  "equation_label_check": {
+    "labels": 8,
+    "numbered_environments": 8,
+    "forbidden_unnumbered_display_environments": 0,
+    "status": "PASS"
+  },
+  "text_extraction": {
+    "tool": "pdftotext -layout",
+    "output": "report_text.txt",
+    "characters": 57821,
+    "status": "PASS"
+  },
+  "font_embedding": {
+    "tool": "pdffonts",
+    "status": "PASS",
+    "all_listed_fonts_embedded": true,
+    "font_types": ["Type 1"]
+  },
+  "rendered_pages": 8,
+  "visual_sample": ["page-1.png", "page-3.png", "page-7.png", "page-8.png"],
+  "visual_status": "PASS: title, formulas, tables, mechanism-discrimination matrix, appendices, and references have no clipping, overlap, unreadable table, or blank content page.",
+  "known_nonblocking_environment_message": "MiKTeX reported a log-file permission message, but both pdflatex passes completed and produced the validated PDF."
+}

@@ -218,7 +218,6 @@ blog = [
 environments = ["sys_platform == 'linux' and platform_machine == 'x86_64'"]
 package = true
 cache-dir = ".uv-cache"
-
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
 

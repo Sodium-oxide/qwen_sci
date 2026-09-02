@@ -1,0 +1,285 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{microtype}
+\usepackage{balance}
+\title{How Smart Are Nonhuman Animals?\\An Ecological Cognitive Architecture for Comparative Intelligence}
+\author{Research Plan Author Agent\\Xcientist four-agent simulation}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The question of animal intelligence is scientifically useful only after intelligence is decomposed into measurable capacities and tested with interfaces that respect each species' ecology. This report synthesizes evidence from New Caledonian crows, rooks, chimpanzees, bottlenose dolphins, and octopuses into a design called the Ecological Cognitive Architecture Atlas (ECAA). The central proposal is that comparative intelligence is a mosaic: species can share a latent capacity for flexible control while also expressing strong domain-specific adaptations. The design combines a common computational core with ecological modules, learning curves, transfer costs, and an affordance-aware item-response model. No empirical experiment is claimed here; all outcomes are prospective and the protocol is explicitly design-only. The expected contribution is a falsifiable framework that replaces a single animal-intelligence ranking with a calibrated map of shared flexibility, ecological specialization, and transfer.
+\end{abstract}
+
+\begin{IEEEkeywords}
+comparative cognition, animal intelligence, tool use, transfer learning, item-response theory, ecological validity, social learning
+\end{IEEEkeywords}
+
+\section{Introduction}
+Animals solve problems in ways that are often impressive. New Caledonian crows manufacture hooked tools, rooks cooperate in physical problem solving, chimpanzees can display unusually rapid numerical working memory, cetaceans combine complex brains with acoustic and social cognition, and octopuses transport objects for later defensive use. These observations establish that sophisticated cognition is distributed across distant branches of the animal tree. They do not establish that all species possess one scalar quantity called intelligence.
+
+A single ranking is attractive because it compresses a difficult comparison into one number. It is also scientifically unstable. A score from a visual touchscreen task can mix memory, motivation, visual acuity, and motor control. A tool task can mix causal understanding with beak or tentacle morphology. A social task can mix individual problem solving with tolerance, dominance, or opportunity for coordination. If these costs are not modeled, the comparison measures the testing interface as much as the cognitive capacity.
+
+This report asks which cognitive capacities are shared or independently evolved across nonhuman animals, how ecological and social demands shape those capacities, and how much of apparent intelligence transfers across tasks when testing is species-appropriate. The proposed answer is the Ecological Cognitive Architecture Atlas (ECAA). ECAA predicts a common but incomplete substrate of flexible control, surrounded by residual domain-specific abilities. It therefore predicts both positive transfer and structured dissociation.
+
+The intended result is not a leaderboard. It is a map with three outputs: a shared-flexibility estimate, species-by-domain residuals, and an explicit estimate of interface cost. This structure enables stronger claims than anecdotal comparison while preserving the fact that cognition is embodied, motivated, and situated.
+
+\section{Evidence-Constrained Survey}
+\subsection{What the evidence supports}
+The evidence base supports four direct propositions. First, flexible manipulation of materials can be expressed outside primates. In the crow study, tool manufacture involved material selection, sequential modification, and production of a functional hook~\cite{hunt2004}. This is evidence for a species-specific tool-manufacturing repertoire and action sequencing under ecological constraints, not by itself evidence for a domain-general reasoning score.
+
+Second, physical coordination can be an evolved social capacity. Rooks solved a task requiring cooperation~\cite{seed2008}. A cooperative solution is informative only if the analysis separates the computational requirement of synchrony from the social opportunity to act together.
+
+Third, chimpanzee performance illustrates a cognitive mosaic within one species. Young chimpanzees showed exceptional performance in a short-term numerical memory paradigm, while the broader comparisons included weaknesses in imitation, cross-modal matching, and symbol correspondence~\cite{matsuzawa2009}. The evidence supports a high-capacity memory component and warns against generalizing task-specific excellence without transfer tests.
+
+Fourth, complex cognition is compatible with very different bodies and sensory systems. The cetacean review relates complex brains to acoustic-social cognition and undermines brain size as a sufficient proxy~\cite{marino2007}. Octopus defensive transport demonstrates flexible object use in an invertebrate with a radically different nervous system~\cite{finn2009}. Avian social-bonding work connects recognition and coordination to social ecology~\cite{emery2007}.
+
+\subsection{Evidence boundaries}
+The sources do not justify a universal numerical ranking, the claim that tool use proves causal theory, or the claim that dolphin communication is equivalent to human language. They do not show that trained chimpanzee symbol use is generative language. The evidence is strongest for capacity-specific statements: material selection and manufacture in crows, cooperation in rooks, rapid numerical memory in chimpanzees, acoustic-social cognition in cetaceans, and object transport or defensive use in octopuses. ECAA retains these as domain modules rather than forcing them into one latent score.
+
+The proposal distinguishes a behavioral demonstration from a mechanistic explanation. Success may arise from causal reasoning, associative learning, exploration, social facilitation, or a combination. A design that measures only final success cannot distinguish these alternatives. Learning curves, transfer, causal intervention, and controls for perception and motor response are consequently required.
+
+\begin{table*}[t]
+\centering
+\caption{Evidence anchors and the corresponding ECAA measurement layer.}
+\label{tab:evidence}
+\small
+\begin{tabular}{p{2.0cm}p{3.0cm}p{5.2cm}p{4.0cm}}
+\toprule
+Species & Verified evidence anchor & What can be measured directly & What must not be inferred automatically \\
+\midrule
+New Caledonian crow & Sequential manufacture of hooked tools~\cite{hunt2004} & Material choice, action order, tool geometry, novel-material transfer & General intelligence or human-like causal concepts \\
+Rook & Cooperative physical problem solving~\cite{seed2008} & Synchrony, partner sensitivity, role flexibility, individual versus joint costs & Cooperation as a single stable trait \\
+Chimpanzee & Short-term numerical memory and domain contrasts~\cite{matsuzawa2009} & Retention, speed, rule transfer, memory-load scaling & Human-equivalent language or universal superiority \\
+Cetacean & Complex acoustic-social cognition~\cite{marino2007} & Acoustic discrimination, social learning, delayed response, communication flexibility & Brain size as an intelligence proxy \\
+Octopus & Transported coconut-shell defensive tool use~\cite{finn2009} & Object selection, transport planning, tactile exploration, shelter transfer & Human-centered tool concepts or comparable visual cost \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Research gap ledger}
+The accepted gap is not a ranking of which animal is smartest. It is whether a shared flexibility factor can be detected after species-specific affordances are modeled. Three unresolved questions follow: are reversal learning, inhibition, rule transfer, delayed matching, and causal intervention positively correlated across species; does performance acquired in one ecological domain transfer to another after perceptual and motor burden are calibrated; and does social exposure change learning rate or only final performance?
+
+The gap ledger labels these questions as testable but unresolved. It rejects the stronger claim that all animal cognition is reducible to one general factor and also rejects the claim that every cross-species difference is an interface artifact. The experiment is designed to quantify both possibilities.
+
+\section{Idea Synthesis}
+\subsection{Primary direction: ECAA}
+The primary direction is a multi-layer atlas rather than a single ranking. Let an individual animal have a latent shared-flexibility trait $F_i$, domain-specific traits $D_{id}$, and interface costs $A_{ijt}$ for animal $i$, item $j$, and trial $t$. The same animal can therefore be good at a common computational operation and exceptionally good at a specialized ecological operation. The atlas displays these estimates with uncertainty and reports transfer costs between domains.
+
+The central claim is direct: nonhuman animal intelligence is best modeled as a structured cognitive architecture, not as a one-dimensional ladder. ECAA predicts a positive but imperfect shared factor for flexible control, while expecting residual specialization to remain large. This position makes quantitative predictions about covariance, learning, and transfer.
+
+\subsection{Candidate routes considered}
+A leaderboard route would rank species on a common battery. It is easy to communicate but confounds task affordance and encourages unsupported generalization. A purely ecological route would preserve natural behaviors but make cross-species comparison weak. ECAA combines the two: a common computational core is implemented through calibrated interfaces, and ecological modules preserve the behaviors that motivated the question.
+
+A communication benchmark was rejected as the primary direction because the evidence supports complex acoustic-social cognition, not equivalence to human language. A brain-size scaling model was rejected because neural size cannot substitute for behavioral decomposition~\cite{marino2007}.
+
+\subsection{Predictions}
+ECAA predicts a positive but imperfect shared-flexibility covariance; learning-curve differences that partly shrink after interface costs are modeled; asymmetric transfer between domains; social-learning effects on acquisition rate in cooperative species; and weaker explanatory power for brain size or single-task success than for the combination of computational demand, ecological relevance, and sensorimotor affordance.
+
+\subsection{Why the direction is worth testing}
+The design can produce a common-factor result, a mosaic result, or a hybrid result. Each outcome is informative. A common factor would support convergent flexibility across distant taxa. A mosaic result would show that flexible behavior is assembled from separable capacities. A hybrid result---the expected outcome---would explain why animals can look broadly intelligent in some settings and highly specialized in others. It can also guide animal-robot systems: transfer computational principles while preserving species-appropriate sensing and action.
+
+\section{ExperimentDesign}
+\subsection{Study population and data layers}
+The protocol samples five focal taxa: New Caledonian crows, rooks, chimpanzees, bottlenose dolphins, and octopuses. The selection is theory-driven rather than a claim that these taxa exhaust animal intelligence. Each taxon contributes a documented ecological module and participates, where feasible, in a common computational core. The unit of inference is the individual animal nested within species, population, task family, and test site.
+
+The data are organized in four layers. The raw layer stores trial-level choices, latency, action sequence, object trajectories, vocal or tactile events, partner timing, and motivation checks. The annotation layer records the computational operation required by each item, the sensory modality, response geometry, motor demands, reward schedule, and whether the item is familiar or novel. The identity layer stores species, population, age class, sex where appropriate, rearing and training history, social condition, and site. The derived layer stores learning slopes, transfer costs, causal-intervention contrasts, and posterior estimates of shared and domain-specific traits.
+
+To prevent selective reporting, every item is registered before data collection with a hypothesized operation, primary outcome, nuisance variables, and a failure interpretation. Trial videos and code should be retained when ethically and technically possible. The preregistered unit is not a species mean but a distribution of individual learning and transfer profiles.
+
+\subsection{Common computational core}
+The core contains six task families.
+
+\begin{enumerate}
+\item Reversal learning changes the reward rule after criterion performance. It measures updating, inhibition of a formerly rewarded action, and the cost of perseveration.
+\item Detour and inhibition tasks require an indirect route or a waiting period. They measure response suppression while controlling for motor access and delay tolerance.
+\item Rule or surface transfer keeps the abstract relation constant while changing color, shape, material, location, or sensory modality. It tests whether the subject learned a relation rather than an item.
+\item Delayed matching introduces a retention interval and a controlled memory load. It measures decay, interference, and the benefit of repeated exposure.
+\item Causal intervention changes a component of a mechanism. The subject must choose, manipulate, or remove a part whose functional consequence is observable.
+\item Flexible switching interleaves two previously learned rules and quantifies switch cost, recovery, and spontaneous exploration.
+\end{enumerate}
+
+A common computation does not imply a common apparatus. For a crow, a relation may be expressed through beak-manipulable materials. For a dolphin, the same relation may be expressed through underwater acoustic or gestural cues. For an octopus, it may be expressed through tactile object selection and shelter affordances. The abstract task specification is shared; the perceptual and motor realization is not.
+
+\subsection{Ecological modules}
+The ecological modules protect the behaviors that generated the scientific question. The crow module varies material stiffness, branch geometry, and target depth while preserving the sequence of selection, modification, and use. Its primary outcomes are the number of modifications, action-order entropy, tool geometry, completion time, and transfer to a novel material. A crow that produces a hook only after extensive shaping is not treated as equivalent to a crow that selects a preformed hook.
+
+The rook module uses a two-agent apparatus with an independently solvable control condition. The reward becomes available only when partners act within a temporal window, but a matched solitary condition estimates physical difficulty. Measures include partner initiation, waiting, role switching, sensitivity to partner delay, and joint reward efficiency. Cooperation is therefore represented as a task-dependent computation rather than a personality score.
+
+The chimpanzee module varies numerical set size, exposure duration, spatial arrangement, and transfer surface. Speed-accuracy tradeoffs are modeled explicitly. A second route changes the irrelevant visual features while preserving ordinal or relational structure. The goal is to reproduce the documented memory contrast while testing whether the advantage transfers beyond the trained display.
+
+The dolphin module uses species-appropriate acoustic discrimination, delayed matching of sound sequences, and social-learning trials with a demonstrator. The stimuli are balanced for amplitude, duration, frequency, and novelty. No item is interpreted as a language test. The target is flexible mapping between an acoustic relation and a rewarded response, including generalization to novel sequences.
+
+The octopus module uses object transport, shelter selection, camouflage-relevant concealment, and tactile exploration. Transparent barriers and object textures are varied independently so that visual and tactile routes can be compared. The key transfer is whether an affordance rule learned with one object remains effective with a novel object or shelter geometry. The protocol records arm use, exploration order, transport persistence, and recovery after a barrier change.
+
+\begin{table*}[t]
+\centering
+\caption{Common computations translated into species-appropriate interfaces.}
+\label{tab:modules}
+\small
+\begin{tabular}{p{2.2cm}p{3.1cm}p{3.1cm}p{5.0cm}}
+\toprule
+Computational family & Core manipulation & Primary ecological interfaces & Primary outcomes \\\\ 
+\midrule
+Reversal & Reward rule changes after criterion & Food-location, material, acoustic, or object-affordance mappings & Trials to criterion, perseverative errors, switch cost \\\\ 
+Detour/inhibition & Direct response is blocked or delayed & Beak route, partner timing, visual barrier, acoustic wait, tactile barrier & Waiting, route flexibility, false starts, latency \\\\ 
+Rule transfer & Surface features change, relation remains & Tool geometry, numerical display, sound sequence, shelter affordance & Novel-item accuracy, transfer cost, exploration \\\\ 
+Delayed matching & Delay and interference vary & Material, number, sound, or object memory & Accuracy decay, load slope, interference cost \\\\ 
+Causal intervention & Mechanism component is changed & Tool part, apparatus element, partner action, shelter geometry & Intervention choice, counterfactual error, recovery \\\\ 
+Flexible switching & Two rules alternate unpredictably & Mixed ecological cues with balanced reward & Switch cost, recovery slope, spontaneous strategy change \\\\ 
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Learning, transfer, and social conditions}
+Every task family has acquisition, retention, and transfer phases. Acquisition uses a small number of repeated exemplars until the animal reaches a preregistered criterion or a maximum exposure. Retention is tested after a delay without additional shaping. Transfer changes at least one irrelevant surface feature and, in a separate condition, changes the ecological affordance itself. This distinction is essential: failure after a surface change suggests limited abstraction, whereas failure after an affordance change may reflect a legitimate domain boundary.
+
+Each focal species is assigned individual-learning and observational-learning conditions where the ecology and welfare constraints allow it. In the social condition, a demonstrator receives the reward or performs the relevant action; in the individual condition, the same sensory information is available without a conspecific model. Rooks additionally receive a species-appropriate cooperation condition with partner replacement and role reversal. Social effects are estimated on acquisition slope and strategy choice, not collapsed into a general intelligence label.
+
+Motivation is treated as data. Trials record approach, disengagement, reward consumption, side bias, arousal proxies that are valid for the species, and environmental interruptions. A no-reward or low-stakes probe can distinguish inability from refusal, but it is not used to force participation. Animals can withdraw, and stopping rules are registered before data collection.
+
+\subsection{Affordance-aware item-response model}
+For binary item success $Y_{ijt}$, an item-response model estimates the probability of success while separating animal ability from item demand:
+\begin{equation}
+\operatorname{logit} P(Y_{ijt}=1) =
+\alpha_i - \beta_j - \gamma C_{ijt}
+- \delta P_{ijt} - \eta M_{ijt} + \kappa X_{ijt}.
+\label{eq:irt}
+\end{equation}
+Here $\alpha_i$ is individual computational ability, $\beta_j$ is item demand, $C_{ijt}$ is computational complexity, $P_{ijt}$ is perceptual burden, $M_{ijt}$ is motor burden, and $X_{ijt}$ includes prior exposure, motivation, and social condition. All continuous predictors are standardized within the preregistered analysis set. The model is hierarchical by species and task family; it does not assume that equal numerical values have equal biological meaning.
+
+For a more interpretable decomposition, the individual trait is modeled as
+\begin{equation}
+\alpha_i = mu_{s[i]} + lambda_F F_i + lambda_d D_{i,d[j]} + u_i,
+\label{eq:latent}
+\end{equation}
+where $F_i$ is shared flexibility, $D_{i,d[j]}$ is the residual for the domain of item $j$, and $u_i$ is an individual residual. The loading $lambda_F$ is estimated from computationally matched items; ecological modules are allowed to have nonzero $lambda_d$. Measurement invariance is checked by fitting nested models: a shared item slope, species-specific slopes, and species-specific intercepts.
+
+The main hypothesis is not that $lambda_d=0$. It is that the shared factor explains some cross-task covariance after affordance adjustment, while domain residuals explain additional reliable variance. If a one-factor model fits no better than a model with independent domains, ECAA's shared-flexibility component is rejected. If a one-factor model fits well only before including $P_{ijt}$ and $M_{ijt}$, the apparent general factor is treated as interface confounding.
+
+\subsection{Mosaic covariance and transfer}
+Let $z_{id}$ denote a standardized latent estimate for domain $d$. The covariance is decomposed as
+\begin{equation}
+\operatorname{Cov}(z_{id},z_{id'}) =
+\rho_F + I(d=d')\sigma_D^2 + \epsilon_{idd'}.
+\label{eq:covariance}
+\end{equation}
+The shared term $\rho_F$ represents cross-domain flexibility, $\sigma_D^2$ represents domain specialization, and $\epsilon$ represents residual correlation. A Bayesian multilevel implementation gives posterior intervals for both terms and propagates uncertainty from individual trials.
+
+Transfer cost is defined for a source task $a$ and a target task $b$ as
+\begin{equation}
+T_{a\rightarrow b} =
+1 - (A_{b,novel}-A_{b,baseline})/(1-A_{b,baseline}),
+\label{eq:transfer}
+\end{equation}
+where $A$ is accuracy or a generalized success measure. The formula is interpreted together with latency and exploration, because a lower success rate may be accompanied by productive search. Positive transfer is a lower cost after matching novelty; asymmetry $T_{a\rightarrow b}\neq T_{b\rightarrow a}$ is expected in specialized systems.
+
+Learning rate is modeled using a saturating curve:
+\begin{equation}
+A_{it}=A_{i0}+(A_{i\infty}-A_{i0})(1-e^{-r_i t}).
+\label{eq:learning}
+\end{equation}
+The parameter $r_i$ is the acquisition rate, while $A_{i\infty}$ is asymptotic performance. Comparing only $A_{i\infty}$ would miss animals that rapidly discover a rule but plateau below another species because the interface remains costly. ECAA treats rate, asymptote, transfer, and recovery as distinct observables.
+
+\subsection{Controls and negative tests}
+Four negative controls are mandatory. A perceptual control keeps the response simple but matches sensory discriminability. A motor control preserves the action requirement while removing the cognitive relation. A familiar-item control estimates prior training. A reward-bias control changes reward magnitude or location without changing the correct abstract rule. These controls identify whether a species-level difference is driven by sensation, movement, history, or motivation.
+
+The protocol also runs negative generalization tests. Brain size is not entered as the primary intelligence predictor. A single striking tool behavior is not allowed to determine $F_i$. A visual touchscreen score is not used to impute acoustic or tactile competence. Symbol training is not coded as language generation. These exclusions are not rhetorical: they are preregistered constraints on interpretation.
+
+\subsection{Analysis sequence}
+The analysis proceeds in seven ordered stages. First, verify welfare, missingness, and participation criteria. Second, estimate within-species learning curves and item reliabilities. Third, fit the affordance-aware item-response model. Fourth, compare one-factor, correlated-domain, and mosaic models by predictive fit and posterior predictive checks. Fifth, estimate transfer matrices using held-out surface and affordance changes. Sixth, test social-learning effects on rate, strategy, and transfer. Seventh, perform leave-one-site-out and leave-one-interface-out validation.
+
+The confirmatory contrast is the posterior probability that the shared flexibility covariance is positive after interface adjustment, together with the proportion of cross-task variance explained by $F_i$. Secondary contrasts estimate the size of domain residuals, transfer asymmetry, social-learning changes, and learning-rate differences. Multiple species comparisons are handled through hierarchical shrinkage rather than a collection of uncorrected pairwise tests.
+
+\section{Expected Interpretations and Falsification}
+\subsection{Interpretation matrix}
+The protocol is designed to distinguish four outcomes. A shared-flexibility outcome occurs when the adjusted cross-domain covariance is positive, survives held-out interfaces, and is not explained by exposure or motivation. This would support the claim that at least some flexible control operations recur across taxa. It would not imply identical minds or a universal rank.
+
+A mosaic outcome occurs when domain residuals are reliable and the shared covariance is near zero or unstable across interfaces. This would support the claim that apparently general intelligence is assembled from specialized systems. Such a result would still permit transfer within related affordance families.
+
+A hybrid outcome occurs when a positive shared factor coexists with large domain residuals and asymmetric transfer. This is the primary prediction. It would explain how a crow can excel at sequential manufacture, a chimpanzee at rapid numerical memory, and an octopus at object-affordance manipulation without requiring one species to dominate every task.
+
+An interface-confounded outcome occurs when species differences change sharply after perceptual or motor costs are included, or when performance fails the measurement-invariance checks. The correct conclusion would be that the original comparison was not calibrated, not that all species have equal cognition.
+
+\begin{table}[t]
+\centering
+\caption{Pre-registered decision rules for the primary ECAA claim.}
+\label{tab:decisions}
+\footnotesize
+\begin{tabular}{p{2.1cm}p{2.4cm}p{2.5cm}}
+\toprule
+Outcome & Statistical signature & Scientific interpretation \\ 
+\midrule
+Shared & Positive adjusted covariance; held-out prediction retained & Cross-taxon flexibility is supported \\ 
+Mosaic & Domain residuals dominate; shared term unstable & Capabilities are substantially specialized \\ 
+Hybrid & Shared term positive and domain residuals large & Flexible control plus ecological specialization \\ 
+Confounded & Strong interface sensitivity or noninvariance & Comparison requires redesign \\ 
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Explicit falsification conditions}
+ECAA's primary claim is falsified if the posterior interval for the adjusted shared covariance is concentrated at zero or below across preregistered sensitivity models, while domain-specific models predict held-out data equally well or better. It is also falsified if the shared factor appears only in one apparatus, disappears under leave-one-site-out validation, or is fully explained by prior training, reward sensitivity, or participation.
+
+The domain claims are falsified separately. The crow module is not supported if novel-material transfer is no better than a matched motor control. The rook cooperation claim is weakened if joint success is no better than the best individual strategy after partner timing is controlled. The chimpanzee memory claim is not transferred if it vanishes under irrelevant surface changes. The dolphin acoustic-social claim is not supported by a simple discrimination advantage without delayed, novel-sequence, or social-learning evidence. The octopus object-affordance claim is weakened if transport behavior cannot recover after object or shelter geometry changes.
+
+A negative result is not converted into a deficit label. Failure can indicate high interface cost, motivational mismatch, a domain boundary, or absence of the tested computation. The model reports these possibilities separately and requires a measurement-invariance failure to be resolved before species-level conclusions are made.
+
+\section{Implementation and Decision Protocol}
+\subsection{Calibration before comparison}
+Before any cross-species inference, each site calibrates stimulus discriminability, action reachability, reward value, and trial duration. Human observers or automated classifiers score the physical complexity of actions using the same registered rubric. The calibration set is collected independently from the confirmatory set. Items that are impossible to express without a species-specific body plan are kept in ecological modules and are not forced into the common core.
+
+A pilot phase estimates participation and ceiling effects but does not select the final task based on significance. The primary dataset includes both successes and informative nonresponses. If an animal never engages with an item, the record distinguishes nonparticipation from an incorrect choice. This preserves the possibility that a task is ecologically irrelevant.
+
+\subsection{Data quality and reproducibility}
+Trial-level data use a common schema with fields for subject, species, site, task family, item, phase, condition, response, latency, action sequence, exposure count, reward, social context, and missingness reason. Video-derived variables include an annotation version and inter-rater agreement. Acoustic features are stored in physical units; object features are stored in measured geometry and texture descriptors. The analysis repository contains a frozen task manifest, preprocessing code, model code, simulation-based calibration, and a synthetic example that can be run without animal data.
+
+The statistical model is validated first on simulated data with known shared and domain factors. Recovery tests ask whether the model can distinguish a positive shared factor from a pure mosaic and whether it can recover a known interface confound. Posterior predictive checks inspect learning curves, latency distributions, error types, transfer matrices, and species-by-condition interactions. Sensitivity analyses vary priors, item difficulty coding, exclusion of low-participation trials, and the definition of transfer.
+
+\subsection{Sample allocation and power logic}
+The study should allocate enough individuals per taxon to estimate individual learning curves rather than treating repeated trials as independent animals. Exact sample size is determined by simulation after pilot estimates of item reliability and between-individual variance. The minimum simulation grid varies the number of animals, items per task family, repeated trials, and site count. A design is retained only if it recovers a positive shared factor with acceptable interval width when that factor is present and correctly rejects it under a pure-mosaic scenario.
+
+The power target is model-recovery power, not merely the probability of a significant pairwise difference. A site-stratified design is preferred over a single high-throughput site because the major risk is a hidden apparatus or training effect. If a species can only be tested at one site, the result is labeled site-limited and excluded from the strongest cross-site claim.
+
+\subsection{Ethics and welfare}
+Animal welfare is part of the design validity. Participation is voluntary within approved protocols, deprivation is minimized, and task sessions end at predefined stress or disengagement criteria. Social conditions are never created by prolonged isolation. Dolphins and octopuses are tested in environments that permit normal locomotion and shelter behavior; corvids and primates receive perches, retreat options, and appropriate enrichment. The design does not require invasive neural manipulation. Ethical approval, species-specific veterinary review, and local husbandry standards are prerequisites rather than post hoc qualifications.
+
+\section{Risks and Reproducibility}
+\subsection{Construct validity}
+The word intelligence combines memory, learning, planning, inhibition, causal understanding, communication, and social coordination. ECAA avoids pretending that the construct is settled by selecting an arbitrary battery. Its latent factor is defined operationally as covariance in flexible control after calibrated costs. If future evidence supports another decomposition, the data layers remain usable because the raw tasks and annotations are preserved.
+
+\subsection{Phylogeny and nonindependence}
+The five taxa are not statistically independent evolutionary samples. A secondary model can place species effects on a phylogenetic tree, but the primary claim concerns computational patterns in individuals and tasks, not the number of independent evolutionary origins. A phylogenetic model is reported as sensitivity analysis, with explicit uncertainty in branch-level contrasts. Convergent behavioral performance is not treated as proof of identical neural implementation.
+
+\subsection{Training and publication bias}
+Animals with extensive training may have learned the experimenter's interface rather than the target computation. Training history is therefore a covariate and a stratification variable, and transfer items are withheld from shaping. The evidence survey is also vulnerable to publication bias toward spectacular behavior. The manifest records included and excluded evidence, while the proposal includes ordinary failures, null transfer, and nonparticipation as reportable outcomes.
+
+\subsection{Statistical risks}
+Repeated trials create pseudoreplication if individual identity is ignored. Hierarchical modeling, subject-level resampling, and leave-one-site-out validation address this risk. Flexible model selection can inflate apparent evidence for a shared factor, so the one-factor, correlated-domain, and mosaic models are registered before looking at confirmatory outcomes. The transfer metric is accompanied by raw accuracy, latency, and exploration because any single normalized score can be misleading near ceiling or floor.
+
+\subsection{Scope of the present report}
+This report is a research proposal, not an empirical paper. The reported evidence consists of published source anchors and the design logic derived from them. It contains no observed-results table, no invented sample, no fitted coefficient, and no claim that a focal species has been proven smarter than another. The article's strong conclusion concerns the best next test: a calibrated shared-core plus ecological-module design is more informative than a universal animal leaderboard.
+
+\section{Conclusion}
+Nonhuman animals are smart in multiple, partially overlapping ways. The crow's hooked-tool manufacture, the rook's cooperative problem solving, the chimpanzee's rapid numerical memory, cetacean acoustic-social cognition, and the octopus's transported defensive objects are not interchangeable demonstrations, but they are also not isolated curiosities. They reveal a distributed space of cognitive solutions shaped by ecology, body, sensory access, and social life.
+
+The Ecological Cognitive Architecture Atlas turns that observation into a testable program. Its common core asks whether flexible control, inhibition, memory, causal intervention, and rule transfer share variance across species. Its ecological modules ask whether specialized abilities exceed that shared expectation. Its affordance model prevents a visual, motor, or motivational barrier from being mislabeled as low cognition. Its learning and transfer measures distinguish routine acquisition from reusable knowledge.
+
+The expected result is a hybrid architecture: a modest shared flexibility factor together with large, meaningful domain residuals. This result would answer how smart nonhuman animals are with a map rather than a rank. It would also replace an unproductive question---which species is closest to humans?---with a more scientific one: which computations recur, which are specialized, and under what ecological conditions can an animal transfer what it has learned?
+
+\balance
+\begin{thebibliography}{00}
+\bibitem{hunt2004} G. R. Hunt and R. D. Gray, The crafting of hook tools by wild New Caledonian crows, \emph{Proc. Roy. Soc. B}, vol. 271, no. 1550, pp. 89--92, 2004, \url{https://doi.org/10.1098/rsbl.2003.0085}.
+\bibitem{seed2008} A. M. Seed, N. S. Clayton, and N. J. Emery, Cooperative problem solving in rooks, \emph{Proc. Roy. Soc. B}, vol. 275, no. 1641, pp. 1421--1429, 2008, \url{https://doi.org/10.1098/rspb.2008.0111}.
+\bibitem{matsuzawa2009} T. Matsuzawa, Symbolic representation of number in chimpanzees, \emph{Curr. Opin. Neurobiol.}, vol. 19, no. 2, pp. 92--98, 2009, \url{https://doi.org/10.1016/j.conb.2009.04.007}.
+\bibitem{marino2007} L. Marino et al., Cetaceans have complex brains for complex cognition, \emph{PLoS Biol.}, vol. 5, no. 5, p. e139, 2007, \url{https://doi.org/10.1371/journal.pbio.0050139}.
+\bibitem{finn2009} J. K. Finn, T. Tregenza, and M. D. Norman, Defensive tool use in a coconut-carrying octopus, \emph{Curr. Biol.}, vol. 19, no. 23, pp. R1069--R1070, 2009, \url{https://doi.org/10.1016/j.cub.2009.10.052}.
+\bibitem{emery2007} N. J. Emery et al., Cognitive adaptations of social bonding in birds, \emph{Philos. Trans. Roy. Soc. B}, vol. 362, no. 1480, pp. 489--505, 2007, \url{https://doi.org/10.1098/rstb.2006.1991}.
+\end{thebibliography}
+\end{document}

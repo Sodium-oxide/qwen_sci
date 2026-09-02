@@ -756,6 +756,8 @@ class SurveyGenerator:
                         }
                     )
 
+            outline_mode = mode
+            outline_mode_downgrade = None
             if selected_ids and mode == QUALIFIED_SYNTHESIS and qualified_slots:
                 qualified_items = [
                     item
@@ -765,15 +767,47 @@ class SurveyGenerator:
                 if not qualified_items or any(
                     not item["limitation_summary"] for item in qualified_items
                 ):
-                    raise OutlineGenerationError(
-                        "Qualified outline evidence requires a representative paper and "
-                        f"limitation summary for {sub_hypothesis_id or 'an unnamed SH'}."
+                    qualified_gap_slots = sorted(set(qualified_slots))
+                    existing_gap_slots = {
+                        str(gap.get("slot_name") or "")
+                        for gap in representative_evidence_gaps
+                    }
+                    for slot_name in qualified_gap_slots:
+                        if slot_name in existing_gap_slots:
+                            continue
+                        representative_evidence_gaps.append(
+                            {
+                                "slot_name": slot_name,
+                                "instruction": (
+                                    "State explicitly that the selected outline input "
+                                    "does not contain a qualified representative for this "
+                                    "slot; report the evidence gap and do not make a "
+                                    "substantive claim about it."
+                                ),
+                            }
+                        )
+                    outline_mode = EVIDENCE_GAP_REPORT
+                    outline_mode_downgrade = {
+                        "from_mode": QUALIFIED_SYNTHESIS,
+                        "reason": (
+                            "No selected representative paper supplies a qualified "
+                            "evidence item with its required limitation summary."
+                        ),
+                        "affected_slots": qualified_gap_slots,
+                    }
+                    self.logger.warning(
+                        "Downgrading outline projection for %s from %s to %s because "
+                        "no selected qualified representative with a limitation summary "
+                        "is available.",
+                        sub_hypothesis_id or "an unnamed SH",
+                        QUALIFIED_SYNTHESIS,
+                        EVIDENCE_GAP_REPORT,
                     )
 
             prompt_entry = {
                     "sub_hypothesis_id": sub_hypothesis_id,
                     "summary": str(entry.get("summary") or ""),
-                    "mode": mode,
+                    "mode": outline_mode,
                     "required_slots": self._as_texts(entry.get("required_slots")),
                     "covered_slots": self._as_texts(entry.get("covered_slots")),
                     "background_only_slots": self._as_texts(
@@ -783,6 +817,8 @@ class SurveyGenerator:
                     "representative_evidence": representative_evidence,
                     "representative_evidence_gaps": representative_evidence_gaps,
             }
+            if outline_mode_downgrade:
+                prompt_entry["outline_mode_downgrade"] = outline_mode_downgrade
             multimodal_projection = self._as_mapping(entry.get("multimodal_projection"))
             if multimodal_projection:
                 prompt_entry["analysis_priority"] = str(

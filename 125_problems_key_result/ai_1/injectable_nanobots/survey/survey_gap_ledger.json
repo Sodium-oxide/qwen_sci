@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "topic": "injectable disease-fighting nanobots",
+  "gaps": [
+    {"id": "G1", "name": "terminology", "risk": "nanoparticles and autonomous robots are conflated", "test": "report size, actuation, sensing, computation, trigger, and recovery separately"},
+    {"id": "G2", "name": "biological_transport", "risk": "static binding does not predict delivery under flow and barriers", "test": "human vascular microfluidics plus biodistribution and residence measurements"},
+    {"id": "G3", "name": "control_and_energy", "risk": "external actuation or molecular triggers may lack penetration, precision, or power", "test": "low-Re transport, field exposure, trigger specificity, and energy budget"},
+    {"id": "G4", "name": "immune_and_toxicity", "risk": "acute animal tolerability hides protein-corona, complement, repeat-dose, and clearance effects", "test": "innate/adaptive immune panel, organ histology, repeat dose, and degradation"},
+    {"id": "G5", "name": "manufacturing", "risk": "batch variation changes size, folding, payload, aggregation, and function", "test": "critical quality attributes, release assays, stability, and lot comparability"},
+    {"id": "G6", "name": "clinical_translation", "risk": "animal efficacy is not linked to a patient benefit-risk threshold", "test": "staged animal study with predefined efficacy, rescue, safety, and stop rules"}
+  ],
+  "priority_order": ["G2", "G4", "G1", "G3", "G5", "G6"]
+}

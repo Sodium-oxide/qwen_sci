@@ -1,0 +1,317 @@
+\documentclass[conference]{../../../../Conference-LaTeX-template_10-17-19/IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\UBT}{\mathrm{UBT}}
+
+\begin{document}
+
+\title{What Is Quantum Uncertainty and Why Does It Matter?\\
+\large An Evidence-Bounded Program for Separating Incompatibility, Measurement Disturbance, and Decoherence}
+
+\author{\IEEEauthorblockN{Anonymous Research Proposal}}
+
+\maketitle
+
+\begin{abstract}
+Quantum uncertainty is frequently described as an inability to know position and momentum at the same time. That shorthand is useful only when it is not confused with instrumental imprecision, environmental decoherence, or ordinary readout noise. This evidence-bounded research proposal separates four contributors that can coexist in an observed qubit record: state-dependent preparation uncertainty due to incompatible observables, apparatus error and disturbance, environment-induced decoherence, and classical readout noise. The proposed Uncertainty Budget Tomography framework calibrates a prepared qubit, a generalized measurement instrument, an open-system channel, and a readout confusion matrix before asking which contribution predicts a declared information-task metric. The proposal combines variance and entropic uncertainty relations with an explicitly defined instrument model, a controlled channel model, held-out prediction, and sensitivity analyses. Its central claim is modest but testable: a calibrated decomposition should provide more transparent and more accurate out-of-sample prediction than a single aggregate-noise term, if the contributions are identifiable. The program does not claim to eliminate quantum uncertainty, to convert all environmental interactions into projective collapse, or to make quantum error correction defeat noncommutation. Rather, it supplies a falsifiable bridge between foundational quantum limits and the practical reliability of quantum-information experiments.
+\end{abstract}
+
+\begin{IEEEkeywords}
+quantum uncertainty, noncommuting observables, measurement disturbance, decoherence, quantum information, calibration, qubit characterization
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+The uncertainty principle is central to quantum mechanics because it specifies a structure of prediction that cannot be recovered merely by improving a detector. For canonical position and momentum, a commonly quoted relation states that the product of their preparation spreads cannot fall below a constant set by Planck's reduced constant. This statement is neither a generic claim that all measurements are inaccurate nor a license to describe every fluctuation in an experimental record as ``quantum uncertainty.'' Its precise content depends on what is prepared, what is measured, which uncertainty functional is used, and whether the system is treated as closed or open. A durable account therefore needs to distinguish a property of a quantum state from a property of a measuring device and from noise added by an environment or electronics.
+
+That distinction is consequential rather than semantic. Incompatible observables constrain the distributions that can be prepared jointly. A physical instrument can additionally have finite resolution and can disturb a subsequent observable. An unmonitored environment can reduce usable coherence. A detector and its processing chain can also flip, miss, or misclassify records. These mechanisms enter a laboratory data stream together but call for different calibrations and different remedies. Conflating them can lead to false conclusions in both directions: a failure of a simplified error-disturbance product can be misreported as a violation of the preparation uncertainty relation, while genuine device noise can be hidden behind an invocation of a fundamental limit.
+
+The problem has immediate relevance to quantum information. Entropic uncertainty relations express incompatibility in units natural for information processing and cryptography \cite{coles2017}. Quantum memory can change the relevant conditional uncertainty statement, but it does not make noncommuting observables commute \cite{zhang2015}. Conversely, coherence control and error correction can reduce specified noise channels while leaving the algebra of observables unchanged \cite{steane1998,devitt2013}. Present noisy intermediate-scale quantum systems make this separation particularly useful: one needs to know whether an observed performance loss is plausibly associated with a channel, a measurement interface, a calibration drift, or an intrinsic incompatibility bound \cite{bharti2022}.
+
+This report follows a four-agent research path. The Survey Agent freezes the evidence and identifies gaps. The Idea Agent selects a falsifiable direction rather than a generic explanation. The ExperimentDesign Agent turns that direction into a \texttt{DESIGN\_ONLY} protocol. The Author Agent organizes the evidence, idea, design, and limits into this IEEE-style proposal. No hardware observation, laboratory measurement, or simulated result is represented as completed. The contribution is a rigorous research program called \emph{Uncertainty Budget Tomography} (UBT), designed to separate four sources of apparent unpredictability before relating them to a qubit information task.
+
+\section{Scope and Definitions}
+
+\subsection{Four quantities that must not be merged}
+
+Table~\ref{tab:terms} states the separation that governs the report. Preparation uncertainty is a state-dependent relation for observables. Measurement error and disturbance characterize an apparatus relative to an intended measurement and a declared operational definition. Decoherence is open-system dynamics. Readout noise is a classical imperfection in turning a physical outcome into a stored label. All four can influence an experiment, but none is automatically evidence for another.
+
+\begin{table*}[!t]
+\caption{Operational separation used by the proposed uncertainty budget.}
+\label{tab:terms}
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{p{0.20\textwidth}Y Y Y}
+\toprule
+\textbf{Quantity} & \textbf{Mathematical object} & \textbf{What can change it} & \textbf{What it does not imply}\\
+\midrule
+Preparation uncertainty & Probability distribution of an observable in a prepared state; e.g., a standard deviation or entropy & State preparation and the chosen incompatible observable pair & A detector error or a universal statement about every simultaneous measurement procedure \\
+Measurement error and disturbance & A declared instrument, approximation, and disturbance functional & POVM/instrument design, strength, calibration, and definition of error & A refutation of the Robertson preparation relation when a simplified product fails \\
+Decoherence & Evolution of a reduced state under an open-system channel & Environment coupling, control sequence, channel rate, and time & A change in the commutator of two system observables \\
+Classical readout noise & Conditional distribution or confusion matrix mapping ideal outcomes to recorded labels & Detector efficiency, thresholding, electronics, and classifier drift & An intrinsic quantum limit or a substitute for an instrument model \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+The foundational review by Busch, Heinonen, and Lahti emphasizes that uncertainty-principle formulations must distinguish preparation relations from measurement relations \cite{busch2007}. This proposal adopts that distinction as a hard boundary. It will not use a device's RMS error as if it were a state's variance, nor will it use an observed loss of interference as if it directly estimated a position-momentum uncertainty product.
+
+\subsection{Preparation uncertainty}
+
+Let $A$ and $B$ be observables and let $\rho$ be a density operator describing an ensemble of identically prepared systems. The squared standard deviation of $A$ is
+\begin{equation}
+\Delta_{\rho}A^2 = \Tr(\rho A^2)-\left[\Tr(\rho A)\right]^2.
+\label{eq:variance}
+\end{equation}
+Equation~\eqref{eq:variance} defines a spread in the distribution of outcomes in state $\rho$; it does not define detector resolution. The Robertson relation is
+\begin{equation}
+\Delta_{\rho}A\,\Delta_{\rho}B \geq \frac{1}{2}\left|\Tr\left(\rho[A,B]\right)\right|,
+\label{eq:robertson}
+\end{equation}
+where $[A,B]=AB-BA$ is the commutator. For canonical $x$ and $p$, $[x,p]=i\hbar$ gives
+\begin{equation}
+\Delta_{\rho}x\,\Delta_{\rho}p \geq \frac{\hbar}{2}.
+\label{eq:xp}
+\end{equation}
+The lower bound can be state dependent, and its operational reading is a constraint on ensemble spreads associated with incompatible observables. It is a statement about quantum-state structure, not a prediction that a single detector must be noisy in a prescribed way.
+
+For a qubit, take two spin or polarization observables $A=\boldsymbol{a}\cdot\boldsymbol{\sigma}$ and $B=\boldsymbol{b}\cdot\boldsymbol{\sigma}$, with angle $\theta$ between unit vectors $\boldsymbol{a}$ and $\boldsymbol{b}$. The proposal varies $\theta$ to create compatible, near-compatible, and strongly incompatible controls. This makes incompatibility experimentally addressable without treating a qubit experiment as a direct position-momentum experiment.
+
+\subsection{Entropic uncertainty and memory}
+
+Variance is not always the appropriate information quantity. If $X$ and $Z$ denote projective measurements with outcome distributions, the Shannon entropies satisfy a representative entropic uncertainty relation
+\begin{equation}
+H(X)+H(Z) \geq -\log_2 c,
+\quad c=\max_{x,z}|\langle x|z\rangle|^2.
+\label{eq:entropic}
+\end{equation}
+Here $c$ captures the overlap of the two measurement bases. Equation~\eqref{eq:entropic} makes clear why mutually unbiased bases are useful in information tasks: their overlap yields a strong lower bound on aggregate unpredictability. Entropic formulations have applications in cryptography and related quantum-information settings \cite{coles2017}.
+
+If a second system provides quantum memory, the relevant analysis becomes conditional. A memory-assisted statement can lower the uncertainty conditioned on the correlated system, but the outcome depends on the memory model and the quality of the correlation. It must not be summarized as the disappearance of uncertainty. The proposed design treats memory strength as an optional, declared covariate and evaluates a conditional entropy only when the joint-state model is calibrated \cite{zhang2015}.
+
+\subsection{Measurement error and disturbance}
+
+Measurement uncertainty asks a different question: given an apparatus intended to approximate $A$, what is its error, and how does its intervention alter a subsequent $B$ measurement? The answer depends materially on definition. State-dependent RMS approaches, state-independent device measures, and information-theoretic notions do not make identical claims \cite{ozawa2018,buscemi2014}. A simple heuristic product of error and disturbance can fail in a particular operational setting without contradicting Eq.~\eqref{eq:robertson}. Photon and spin experiments illustrate why a universally valid and definition-explicit relation is needed \cite{baek2013,erhart2012}. State-independent approaches further show that device characteristics and worst-case performance are distinct from a property of one selected input state \cite{busch2013}.
+
+UBT therefore does not name a single scalar ``measurement uncertainty'' without an instrument contract. It stores the generalized measurement, the calibration data, the chosen metric, and whether the metric is state dependent. Joint single-photon measurements with minimum uncertainty provide a concrete precedent for testing a calibrated joint-measurement relation \cite{ringbauer2014}; they do not erase the need to specify which relation is being tested.
+
+\section{Evidence Survey: Why Uncertainty Matters}
+
+\subsection{Fundamental prediction and state characterization}
+
+The uncertainty principle matters first because it prevents a classical hidden-description reading of all quantum observables as simultaneously sharp, empirically accessible quantities. The nonzero commutator in Eq.~\eqref{eq:robertson} fixes the relation between the relevant probability distributions. This framing is stronger and more useful than a slogan about weak microscopes. It tells an experimentalist which state statistics can coexist and tells a theorist which inference targets are meaningful.
+
+For state characterization, the distinction determines what calibration must accomplish. Estimating a qubit state requires a declared collection of measurements, a detector model, and a statistical reconstruction procedure. If an apparent increase in outcome spread is caused by a drifting readout classifier, the appropriate response is calibration and uncertainty propagation. If it is caused by noncommutation between the chosen observables, no readout correction can produce simultaneous sharp preparation distributions. The two statements can coexist, and UBT is designed to make that coexistence visible in one accounting framework.
+
+\subsection{Information processing and cryptography}
+
+Entropic uncertainty makes incompatibility directly relevant to information security and communication. A task expressed through outcome entropy, conditional entropy, or a key-rate proxy can connect a measurement choice to an operational performance measure rather than only to a variance. Such a connection must remain conditional on the model: a quantum memory can change a conditional entropy bound, and a loss channel can reduce correlations that a protocol relies upon \cite{coles2017,zhang2015}.
+
+This is not an abstract concern for hardware. Physical implementations need distinguishable capabilities for initialization, coherent control, measurement, and scaling \cite{divincenzo2000}. A device can be limited by readout calibration even if its state preparation is excellent; another can have high-fidelity measurement but poor coherence retention. Modern noisy devices motivate application and validation methods that explicitly accommodate noise \cite{bharti2022}. A source-resolved account is therefore more actionable than a single observed ``uncertainty'' curve.
+
+\subsection{Decoherence and error correction}
+
+An open system can become correlated with unmonitored degrees of freedom. After the environment is ignored, interference-relevant coherences in a chosen representation can be reduced. Open-system and trajectory formalisms provide the language for this dynamics \cite{daley2014}. The key point is that decoherence is a channel-level process. It may lower a task's fidelity or visibility, but it does not change the fact that the system observables in Eq.~\eqref{eq:robertson} are incompatible.
+
+Quantum error correction and fault tolerance matter because they provide methods for reducing the logical effect of declared errors. They are central to scalable quantum computing \cite{steane1998,devitt2013}. Their relevance to uncertainty is diagnostic: an encoded or mitigated protocol can improve a task limited by a dephasing or depolarizing channel, whereas it cannot authorize simultaneous sharp values of incompatible observables. A valid research design should attribute an improvement to the channel or control model it actually tests.
+
+\section{Research Gaps and Idea Selection}
+
+The Survey stage accepts six connected gaps. First, many discussions have no shared operational budget that separates preparation uncertainty, instrument effects, decoherence, and readout noise (G1). Second, the interpretation of error-disturbance results is definition sensitive (G2). Third, studies need a predeclared connection between a decomposition and an information-task metric rather than an after-the-fact association (G3). Fourth, quantum memory and correlation require their own conditional-entropy model (G4). Fifth, mitigation must be separated from a claim to remove a fundamental incompatibility limit (G5). Sixth, a useful protocol should declare which parts may transfer between qubit platforms and which must be recalibrated (G6).
+
+The Idea Agent compared four directions: a memory-assisted entropic benchmark, a generalized error-disturbance benchmark, a decoherence-aware mitigation study, and an integrated program. The first three remain valuable modules, but none alone closes all six gaps. The selected direction is UBT: a calibrated, modular model that makes the four contributions explicit and evaluates whether this additional structure earns its complexity on held-out settings.
+
+The selected hypothesis is as follows: \emph{given separately calibrated preparation, instrument, channel, and readout models, a four-term uncertainty budget will predict a preregistered qubit information metric on held-out settings more accurately and more transparently than an aggregate-noise model}. The hypothesis does not assert that every platform permits perfect separation. Identifiability is part of the hypothesis: if multiple parameter combinations produce indistinguishable records, UBT must report an unresolved budget rather than manufacture attribution.
+
+\begin{figure*}[!t]
+\centering
+\fbox{\begin{minipage}{0.94\textwidth}
+\centering\small
+\textbf{Prepared qubit $\rho_{in}$} $\longrightarrow$ \textbf{incompatible instrument $M_{\theta,\mu}$} $\longrightarrow$ \textbf{open-system channel $\mathcal{E}_{\lambda}$} $\longrightarrow$ \textbf{readout calibration $C$} $\longrightarrow$ \textbf{observed record}\\[5pt]
+\begin{tabular}{cccc}
+\fbox{Preparation spread} & \fbox{Apparatus error/disturbance} & \fbox{Decoherence contribution} & \fbox{Classical readout noise}\\[-1pt]
+\multicolumn{4}{c}{\rule{0.85\textwidth}{0.4pt}}\\[-1pt]
+\multicolumn{4}{c}{\fbox{UBT inference, calibration ablations, and held-out prediction of conditional entropy, state prediction, or a task proxy}}
+\end{tabular}
+\end{minipage}}
+\caption{Conceptual UBT architecture. The upper chain maps a prepared quantum state to a recorded outcome. The lower chain holds four logically distinct contributions fixed as separate inferential objects; it does not add them as interchangeable types of noise. The editable source diagram is retained with the report project.}
+\label{fig:ubt}
+\end{figure*}
+
+\section{Experiment Design}
+
+\subsection{Research object and experimental modules}
+
+The ExperimentDesign Agent specifies a generic single qubit, implemented in future work as a photonic polarization or spin-compatible system, with an optional correlated ancilla. This choice supports incompatible basis choices and generalized measurements without claiming that a particular laboratory has been used. Table~\ref{tab:modules} specifies the required modules and their failure signals.
+
+\begin{table*}[!t]
+\caption{\texttt{DESIGN\_ONLY} modules for Uncertainty Budget Tomography.}
+\label{tab:modules}
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{p{0.16\textwidth}p{0.22\textwidth}Y Y}
+\toprule
+\textbf{Module} & \textbf{Inputs and controls} & \textbf{Planned output} & \textbf{Failure or review condition}\\
+\midrule
+State and basis & Bloch-vector state family; basis angle $\theta$; known-state controls & Preparation variances and entropies under declared bases & State-preparation model lacks calibration uncertainty or compatible-control behavior is inconsistent \\
+Instrument & POVM/instrument parameter $\mu$; reference settings; declared error definition & Apparatus error and disturbance under the stated metric & Metric is not declared, or distinct instruments fit equally well without an identifiability analysis \\
+Channel & Dephasing or depolarizing parameter $\lambda$; channel-on and channel-off controls & Channel contribution, process-fidelity or visibility proxy & Instrument and channel parameters are confounded or channel model residuals are structured \\
+Readout calibration & Confusion matrix $C$; detection-efficiency accounting; drift checks & Corrected likelihood and readout-noise contribution with propagated uncertainty & $C$ is ill-conditioned, stale, or treated as exact despite finite calibration data \\
+Memory extension & Joint-state or correlation model; memory parameter $m$ & Conditional-entropy analysis separate from local noise terms & Memory model is absent or correlations cannot be characterized reliably \\
+Task prediction & Training grid and held-out settings fixed before inference & Out-of-sample entropy, state-prediction, or task-proxy score & UBT yields no predictive gain over aggregate noise, or a gain is not robust to calibration ablations \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+The design begins with a computational identifiability module. Synthetic data are generated only after specifying the input-state family, instrument, channel, and confusion matrix. Its purpose is not to generate a flattering demonstration; it asks which experimental settings are needed for the four terms to be distinguishable. A system that lacks distinguishability cannot supply a defensible source attribution even if it produces many samples.
+
+The calibration module next defines measurements that a future qualified laboratory team would need to perform. State preparation must be checked against reference states. The measurement basis and generalized instrument must be represented as a positive-operator-valued measure or an explicitly chosen approximation model. The channel must be declared, for example as dephasing or depolarizing over a controlled interval. Readout calibration produces a confusion matrix rather than an assumed exact label. These are conceptual and data-structure requirements; this proposal neither starts a source nor collects a hardware record.
+
+\subsection{Generative and observation model}
+
+The system model maps a prepared state through an instrument and a channel:
+\begin{equation}
+\rho_{out}=\mathcal{E}_{\lambda}\!\left(\mathcal{M}_{\theta,\mu}(\rho_{in})\right).
+\label{eq:channel}
+\end{equation}
+Here $\mathcal{M}_{\theta,\mu}$ denotes the declared generalized measurement or instrument associated with basis angle $\theta$ and strength parameter $\mu$, and $\mathcal{E}_{\lambda}$ is the open-system channel. Equation~\eqref{eq:channel} does not say that measurement and decoherence are identical; it places their operational maps in sequence so their parameters can be calibrated separately.
+
+Let $p_{ideal}$ be the outcome probabilities predicted by the state, instrument, and channel model. The recorded probabilities obey
+\begin{equation}
+p_{obs}=C p_{ideal},
+\label{eq:readout}
+\end{equation}
+where $C$ is a calibrated readout confusion matrix. The inference does not blindly invert $C$. Instead, it propagates the uncertainty of its calibration and tests whether a readout correction is stable. An ill-conditioned $C$ is a diagnostic that readout attribution is weak; it is not a reason to reassign the error to intrinsic uncertainty.
+
+For a projective pair, the entropic task metric is anchored by Eq.~\eqref{eq:entropic}. For the memory extension, the analysis records a conditional entropy such as
+\begin{equation}
+H(X\mid M)+H(Z\mid M) \geq \mathcal{B}(X,Z,M),
+\label{eq:memory}
+\end{equation}
+where $M$ denotes the memory system and $\mathcal{B}$ is the lower bound appropriate to the specified correlation model. The proposal deliberately leaves $\mathcal{B}$ to a qualified theory review rather than importing an unspecified memory-assisted theorem.
+
+\subsection{Predeclared comparisons and controls}
+
+The primary comparator is an aggregate-noise model in which all deviations are represented by one fitted nuisance term. This comparator is intentionally simpler. It establishes whether a four-part budget earns its extra parameters in held-out prediction. The training grid is defined over input states, basis angles, instrument strengths, channel parameters, and readout settings. Held-out settings vary more than one dimension to prevent a model from winning solely by interpolation along a single calibrated axis.
+
+Controls include a near-compatible basis pair, a strongly incompatible pair, known-state references, channel-off versus channel-on conditions, and simulated confusion-matrix perturbations. Ablations omit one calibration module at a time: no readout correction, no channel module, no instrument characterization, and no memory model. If an apparent benefit disappears when a required calibration is omitted, that result is informative because it identifies the dependency rather than disguising it as a universal feature.
+
+\section{Analysis and Decision Rules}
+
+\subsection{Identifiability before attribution}
+
+The primary analytic question is not whether UBT can fit a data set with more parameters. It is whether its contribution terms are identifiable. For parameter vector $\phi=(\rho_{in},\theta,\mu,\lambda,C,m)$ and records $D$, the analysis compares the posterior or likelihood surface for the full and aggregate models. Parameters that trade off without changing predicted records should be reported as non-identifiable. For example, an uncalibrated readout flip rate and a state-preparation bias may generate the same observed imbalance. More data at the same settings may not resolve this structural ambiguity; a different calibration control may be required.
+
+The design therefore asks for a pre-execution identifiability simulation, rank or profile analysis, and residual inspection by setting. Calibration uncertainty enters the uncertainty budget rather than being treated as a zero-width correction. A model is only eligible for a positive interpretation if its independent calibration records are consistent with the fitted parameters within declared intervals.
+
+\subsection{Held-out predictive evaluation}
+
+Let $T$ denote the preregistered task metric, such as a conditional entropy estimate, state-prediction score, or cautiously defined key-rate lower-bound proxy. UBT and the aggregate baseline are fitted on the same training settings. The primary comparison is a held-out score difference,
+\begin{equation}
+\Delta S=S_{holdout}(\UBT)-S_{holdout}(\mathrm{Aggregate}),
+\label{eq:score}
+\end{equation}
+where the definition and sign convention of $S$ are declared before interpretation. A positive $\Delta S$ is insufficient by itself: the analysis also checks calibration consistency, parameter stability, residual patterns, and sensitivity to reasonable uncertainty-function choices.
+
+Definition sensitivity is not a defect to hide. A state-dependent RMS error, a state-independent device measure, and an information-theoretic noise measure answer related but different questions \cite{ozawa2018,buscemi2014}. The report should state which metric is primary, repeat selected analysis under a second appropriate metric, and explain whether conclusions are invariant, qualified, or metric specific. This rule prevents the study from treating a favorable definition as if it were a universal theorem.
+
+\begin{table}[!t]
+\caption{Predeclared decision branches.}
+\label{tab:branches}
+\centering
+\footnotesize
+\begin{tabularx}{\columnwidth}{p{0.24\columnwidth}Y}
+\toprule
+\textbf{Condition} & \textbf{Permitted conclusion}\\
+\midrule
+Identifiable and calibrated; predictive gain & The calibrated decomposition is supported as a better task-prediction model for the declared setting. It is not a general proof about all platforms. \\
+Identifiable; no predictive gain & The aggregate model is sufficient for the tested task and settings; UBT's extra structure is not justified there. \\
+Non-identifiable budget & No source-specific attribution is warranted. Revise controls or calibration design. \\
+Metric-sensitive conclusion & Report the scope of the result and do not promote it to a definition-independent uncertainty claim. \\
+Mitigation improves channel-limited score & Attribute improvement to the modeled channel or control, not to removal of noncommutation. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Cross-platform transfer}
+
+UBT is designed to transfer as a protocol skeleton, not as a universal numerical calibration. A photonic polarization experiment and a spin-compatible experiment can share state, basis, channel, and readout abstractions, but their instrument physics, losses, time scales, and error mechanisms differ. The cross-platform criterion is therefore procedural: the same four-part reporting contract is applied, then platform-specific calibrations are retained. DiVincenzo's physical criteria reinforce why a high-level information model must not be mistaken for an implementation guarantee \cite{divincenzo2000}.
+
+\section{Expected Outcome Branches and Significance}
+
+If UBT improves held-out prediction while meeting calibration and identifiability criteria, its significance is a disciplined attribution framework. The study would show that a qubit information metric is better explained by a separated model than by an undifferentiated error bar in the declared setting. It would also show which calibration is most consequential: for example, a result might be highly sensitive to readout calibration but weakly sensitive to the channel module. Such a finding can guide engineering effort without changing the foundational status of the uncertainty relation.
+
+If UBT fails to improve prediction, the negative result is also informative. It may mean that a simpler aggregate model is adequate for the selected task, that a selected contribution is too small to identify, or that the calibration protocol is insufficient. It would not show that the four quantities are mathematically identical. The correct next move would be a revised control grid, a more informative instrument calibration, or a narrower causal claim.
+
+The memory extension has a separate branch. If joint-state calibration supports a conditional entropy analysis, the research can test how a memory model changes the information metric. If that calibration is absent or weak, the study must not interpret a local entropy change as a memory-assisted reduction of fundamental uncertainty. Likewise, a mitigation extension can establish whether a declared noise channel is practically suppressible. A successful mitigation branch supports a control claim; it does not show that quantum mechanics permits simultaneous exact values for incompatible observables.
+
+This conditional design provides a more useful answer to ``why is quantum uncertainty important?'' Quantum uncertainty identifies a real limit on the joint sharpness or predictability of incompatible quantities. Measurement, decoherence, and readout modeling determine how that limit appears in an actual quantum-information workflow. The importance lies both in the limit and in the discipline required not to assign all practical failure to it.
+
+\section{Limits and Human Review Requirements}
+
+Several limits are substantive. First, a variance product, an entropic uncertainty relation, a state-dependent error measure, and a state-independent device measure are not interchangeable. The selected metric must match the scientific question. Second, a channel model is an approximation; a declared dephasing or depolarizing channel may be inadequate when residuals reveal non-Markovian behavior, leakage, or a calibration drift. Third, finite calibration data make $C$, $\mu$, and $\lambda$ uncertain. These uncertainties must be propagated rather than hidden in a point estimate.
+
+Fourth, the framework is not an execution system. It does not operate lasers, photon sources, microwave controls, cryogenic equipment, high-voltage components, or data-acquisition systems. A future laboratory implementation requires a qualified operator, local safety authorization, platform-specific measurement expertise, and review of the instrument and statistical model. The optional quantum-memory analysis also requires theory review because the bound in Eq.~\eqref{eq:memory} depends on the exact assumptions.
+
+Finally, citation verification is bounded by the frozen Survey registry. The listed sources were cross-validated as discovery metadata, while publisher or DOI landing-page verification remains a human-review task because the requested in-app browser connection was unavailable in the local Windows sandbox. This limitation concerns bibliographic page verification, not a license to add unregistered literature claims. Every citation in this report is drawn from the registry in the Survey handoff.
+
+\section{Conclusion}
+
+Quantum uncertainty is important because incompatible observables impose a structural limit on what a quantum state can make jointly sharp or predictable. That fact is central to foundations, state characterization, entropic information tasks, and the interpretation of quantum devices. Its importance is often obscured when the principle is blended with apparatus error, decoherence, and ordinary readout noise.
+
+This proposal advances UBT as a testable response. It separates preparation uncertainty, measurement error and disturbance, environment-induced decoherence, and classical readout noise into individually declared and calibrated objects. It then tests whether that separation improves prediction of a qubit information metric on held-out settings. The design can fail cleanly: non-identifiability, calibration inconsistency, and lack of predictive gain are specified outcomes rather than inconveniences. The result is not a claim of completed hardware work or a route around noncommutation. It is a source-bound research program for determining when fundamental uncertainty, device behavior, and inference error matter differently---and for making that distinction useful in quantum science.
+
+\appendices
+\section{Provenance and Research-Contract Schema}
+
+The proposal inherits the Survey identity \texttt{survey-quantum-uncertainty-001}, project identity \texttt{phys\_6\_quantum\_uncertainty\_20260901}, and context fingerprint for quantum uncertainty, measurement, decoherence, and information (version 1). The Idea Agent selects direction \texttt{idea-ubt-001}. The ExperimentDesign Agent binds the direction to a \texttt{computational\_digital} design with a future quantum-optics or spin-qubit-compatible module.
+
+The execution policy is \texttt{DESIGN\_ONLY}: observed results are an empty set, automatic execution is disabled, and human review is required. This contract prevents a planned calibration sequence or an expected outcome branch from being described as a completed experiment. It also ensures that a future platform-specific implementation can revise physical parameters without changing the evidence boundary of the present proposal.
+
+\section{Claim--Evidence Matrix and Inference Template}
+
+\begin{table*}[!t]
+\caption{Claim--evidence matrix. The report uses only sources frozen by the Survey Agent.}
+\label{tab:evidence}
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{p{0.29\textwidth}p{0.30\textwidth}Y}
+\toprule
+\textbf{Bounded report claim} & \textbf{Evidence keys} & \textbf{Inference constraint}\\
+\midrule
+Preparation and measurement uncertainty require distinct formulations & \texttt{busch2007}, \texttt{busch2013}, \texttt{ozawa2018} & Do not use a device metric as a state variance or reverse the implication. \\
+Entropic relations connect incompatibility to information tasks; memory changes conditional statements & \texttt{coles2017}, \texttt{zhang2015} & Declare the entropy, bases, and memory model. \\
+Simplified error-disturbance products are definition sensitive & \texttt{baek2013}, \texttt{erhart2012}, \texttt{buscemi2014} & Do not describe a simplified-product failure as a violation of quantum mechanics. \\
+Calibrated joint measurements and RMS definitions motivate instrument characterization & \texttt{ringbauer2014}, \texttt{ozawa2018} & Retain a declared POVM or instrument model and calibration uncertainty. \\
+Decoherence and error correction are practical but distinct from noncommutation & \texttt{daley2014}, \texttt{steane1998}, \texttt{devitt2013} & Attribute task changes to a channel or control model, not to removal of intrinsic incompatibility. \\
+Implementation and NISQ constraints motivate platform-aware validation & \texttt{divincenzo2000}, \texttt{bharti2022} & Transfer the reporting contract, not uncalibrated numerical parameters. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+For each future implementation, the inference record should state: (1) the observable pair and compatibility angle; (2) the prepared-state family and state-calibration uncertainty; (3) the instrument and selected error or disturbance definition; (4) the channel model and its diagnostic residuals; (5) the readout confusion matrix and the uncertainty of its calibration; (6) the information metric, held-out split, and comparator; and (7) the allowed conclusion from Table~\ref{tab:branches}. This record provides a compact audit trail from a physical setting to a bounded conclusion.
+
+\begin{thebibliography}{00}
+\bibitem{busch2007} P. Busch, T. Heinonen, and P. Lahti, ``Heisenberg's uncertainty principle,'' \emph{Physics Reports}, vol. 452, no. 6, pp. 155--176, 2007, doi: 10.1016/j.physrep.2007.05.006.
+\bibitem{coles2017} P. J. Coles, M. Berta, M. Tomamichel, and S. Wehner, ``Entropic uncertainty relations and their applications,'' \emph{Reviews of Modern Physics}, vol. 89, p. 015002, 2017, doi: 10.1103/RevModPhys.89.015002.
+\bibitem{baek2013} S.-Y. Baek, F. Kaneda, M. Ozawa, and K. Edamatsu, ``Experimental violation and reformulation of the Heisenberg's error-disturbance uncertainty relation,'' \emph{Scientific Reports}, vol. 3, p. 2221, 2013, doi: 10.1038/srep02221.
+\bibitem{erhart2012} J. Erhart \emph{et al.}, ``Experimental demonstration of a universally valid error-disturbance uncertainty relation in spin measurements,'' \emph{Nature Physics}, vol. 8, pp. 234--238, 2012, doi: 10.1038/nphys2194.
+\bibitem{busch2013} P. Busch, P. Lahti, and R. F. Werner, ``Proof of Heisenberg's error-disturbance relation,'' \emph{Physical Review Letters}, vol. 111, p. 160405, 2013, doi: 10.1103/PhysRevLett.111.160405.
+\bibitem{ringbauer2014} M. Ringbauer \emph{et al.}, ``Experimental joint quantum measurements with minimum uncertainty,'' \emph{Physical Review Letters}, vol. 112, p. 020401, 2014, doi: 10.1103/PhysRevLett.112.020401.
+\bibitem{buscemi2014} F. Buscemi, M. J. W. Hall, M. Ozawa, and M. M. Wilde, ``Noise and disturbance in quantum measurements: An information-theoretic approach,'' \emph{Physical Review Letters}, vol. 112, p. 050401, 2014, doi: 10.1103/PhysRevLett.112.050401.
+\bibitem{ozawa2018} M. Ozawa, ``Soundness and completeness of quantum root-mean-square errors,'' \emph{npj Quantum Information}, vol. 4, p. 53, 2018, doi: 10.1038/s41534-018-0113-z.
+\bibitem{zhang2015} L. Zhang, S.-M. Fei, and Z.-X. Zhu, ``Entropic uncertainty relation and information exclusion relation for multiple measurements in the presence of quantum memory,'' \emph{Scientific Reports}, vol. 5, p. 11701, 2015, doi: 10.1038/srep11701.
+\bibitem{steane1998} A. M. Steane, ``Quantum computing,'' \emph{Reports on Progress in Physics}, vol. 61, no. 2, pp. 117--173, 1998, doi: 10.1088/0034-4885/61/2/002.
+\bibitem{devitt2013} S. J. Devitt, W. J. Munro, and K. Nemoto, ``Quantum error correction for beginners,'' \emph{Reports on Progress in Physics}, vol. 76, p. 076001, 2013, doi: 10.1088/0034-4885/76/7/076001.
+\bibitem{daley2014} A. J. Daley, ``Quantum trajectories and open many-body quantum systems,'' \emph{Advances in Physics}, vol. 63, no. 2, pp. 77--149, 2014, doi: 10.1080/00018732.2014.933502.
+\bibitem{divincenzo2000} D. P. DiVincenzo, ``The physical implementation of quantum computation,'' \emph{Fortschritte der Physik}, vol. 48, no. 9--11, pp. 771--783, 2000, doi: 10.1002/1521-3978(200009)48:9/11<771::AID-PROP771>3.0.CO;2-E.
+\bibitem{bharti2022} K. Bharti \emph{et al.}, ``Noisy intermediate-scale quantum algorithms,'' \emph{Reviews of Modern Physics}, vol. 94, p. 015004, 2022, doi: 10.1103/RevModPhys.94.015004.
+\end{thebibliography}
+
+\end{document}

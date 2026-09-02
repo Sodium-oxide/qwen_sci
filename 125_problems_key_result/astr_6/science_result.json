@@ -1,0 +1,22 @@
+{
+  "project": "Is it possible to live permanently on another planet?",
+  "canonical_output_directory": "125_problems_key_result/astr_6",
+  "workflow": "Survey -> Idea -> ExperimentDesign -> Author",
+  "status": "FINAL_VALIDATED",
+  "artifact_status": "DESIGN_ONLY",
+  "deliverables": {
+    "survey": "survey/survey.md",
+    "idea": "idea/idea.md",
+    "experiment_design": "experiment_design/research_design.md",
+    "ieee_report_source": "author/permanent_extraterrestrial_habitation_report.tex",
+    "ieee_report_pdf": "permanent_extraterrestrial_habitation_report.pdf",
+    "pdf_validation": "author/pdf_validation.json",
+    "integrity_hashes": "integrity_hashes.json"
+  },
+  "scientific_conclusion": "Permanent off-Earth habitation is not currently demonstrated. A credible bounded-autonomy claim requires commodity-specific closure, resilient power and thermal control, qualified and repairable ISRU, human-safety margins, and recovery from correlated failures without hidden routine Earth support. ISS ECLSS and MOXIE are enabling evidence, not proof of independent settlement.",
+  "report_pages": 8,
+  "validation_status": "PASS",
+  "empirical_results": false,
+  "independent_review_agent": false,
+  "independent_review_reason": "The deliverable is a static, design-only research document with no high-risk architecture, security, persistence, or data-migration modification."
+}

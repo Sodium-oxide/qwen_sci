@@ -1,0 +1,105 @@
+{
+  "schema_version": "research_design_v1",
+  "project_id": "bio_18",
+  "survey_run_id": "survey-bio_18-v1",
+  "selected_primary_idea_id": "IDEA-FP-02",
+  "project_context_fingerprint": "pcf:bio_18:phenotype_pathway_attribution_atlas:v1",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": [],
+    "no_automatic_execution": true
+  },
+  "study_type": "longitudinal_multisite_observational_prediction_and_attribution_audit",
+  "research_question": "Does a pre-specified pathway-aware model yield better calibrated and more transportable prediction of selected population-level physical phenotypes than an age, cohort, site, and measurement-process baseline?",
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "At least one pathway-aware model will improve locked temporal and external-site proper scoring and calibration over baseline without failing robustness gates.",
+      "falsified_if": "No locked improvement is observed or calibration, robustness, or governance gates fail."
+    },
+    {
+      "id": "H2",
+      "statement": "For third-molar agenesis, separating congenital status from extraction, impaction, eruption, and treatment will change descriptive interpretation relative to an undifferentiated dental record.",
+      "falsified_if": "Endpoint harmonisation shows no material misclassification or cannot be performed."
+    }
+  ],
+  "outcomes": [
+    {
+      "outcome_id": "O1",
+      "name": "Congenital third-molar agenesis",
+      "type": "binary",
+      "measurement_rule": "Age-adequate developmental source record with explicit exclusion or separate coding of extraction, impaction, eruption, and treatment."
+    },
+    {
+      "outcome_id": "O2",
+      "name": "Pre-specified craniofacial scalar measures",
+      "type": "continuous",
+      "measurement_rule": "Approved, de-identified scalar measurements only; raw facial images are excluded from release."
+    },
+    {
+      "outcome_id": "O3",
+      "name": "Standardised anthropometric measure",
+      "type": "continuous_or_binary",
+      "measurement_rule": "Use only harmonised or explicitly modelled instrument protocols."
+    }
+  ],
+  "candidate_predictor_blocks": [
+    "age_or_developmental_stage",
+    "birth_cohort",
+    "site",
+    "measurement_process",
+    "demographic_composition",
+    "developmental_exposure",
+    "technology_and_treatment_history",
+    "optional_inherited_feature_summary"
+  ],
+  "baseline_model": "age_or_developmental_stage + birth_cohort + site + measurement_process",
+  "analysis_plan": {
+    "primary_comparison": "baseline versus pathway-aware hierarchical model",
+    "splits": [
+      "locked temporal holdout",
+      "external-site holdout"
+    ],
+    "metrics": [
+      "outcome-appropriate proper score",
+      "calibration intercept",
+      "calibration slope",
+      "reliability curve",
+      "outcome-appropriate error or discrimination"
+    ],
+    "robustness": [
+      "leave-one-site-out",
+      "leave-one-measurement-era-out",
+      "complete-case versus preregistered imputation",
+      "negative-control outcome or exposure where defensible",
+      "remove optional inherited-feature block",
+      "population-structure and relatedness sensitivity"
+    ]
+  },
+  "decision_rule": {
+    "forecast_claim_allowed_only_if": [
+      "Temporal and external-site performance improves under the registered criterion.",
+      "Calibration and reliability pass all adequately powered prespecified strata.",
+      "Results survive measurement, composition, and genetic-block sensitivity analyses.",
+      "Consent, privacy, domain-specialist, statistical, and communications reviews approve."
+    ],
+    "otherwise": "Report a descriptive or null result; do not assert a future human phenotype trajectory."
+  },
+  "human_review_required": [
+    "Ethics and consent",
+    "Data governance and reidentification assessment",
+    "Dental endpoint adjudication",
+    "Craniofacial measurement harmonisation",
+    "Population-genetic methodology",
+    "Statistical analysis plan",
+    "Equitable communication review"
+  ],
+  "stop_conditions": [
+    "No lawful data-use basis or inadequate consent",
+    "Cannot separate congenital absence from treatment history",
+    "Unharmonized measurements dominate site or cohort effects",
+    "Insufficient support for calibrated subgroup assessment",
+    "Inherited-feature analysis remains structurally confounded",
+    "Result communication cannot avoid deterministic group claims"
+  ]
+}

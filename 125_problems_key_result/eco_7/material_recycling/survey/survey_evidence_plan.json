@@ -1,0 +1,15 @@
+{
+  "plan_type":"survey_evidence_plan",
+  "topic":"Can we achieve a situation where essentially every material can be recycled and reused?",
+  "design_mode":"DESIGN_ONLY",
+  "evidence_blocks":[
+    {"block":"material_flow","methods":["material flow analysis","regional waste audits","facility throughput records"],"outputs":["collection rate","routing probability","residue fraction"]},
+    {"block":"quality_retention","methods":["contamination experiments","repeated mechanical processing","chemical recovery"],"outputs":["yield","purity","property retention","displacement of virgin material"]},
+    {"block":"reuse","methods":["cycle testing","washing and repair trials","inspection and loss tracking"],"outputs":["successful cycles","service failure","water and energy burden"]},
+    {"block":"system_economics","methods":["techno-economic analysis","market sensitivity","policy scenarios"],"outputs":["private cost","social cost","price volatility","infrastructure requirement"]},
+    {"block":"life_cycle","methods":["functional-unit LCA","uncertainty propagation","externality accounting"],"outputs":["impact vector","confidence intervals","tail risk","route comparison"]}
+  ],
+  "source_search_status":{"openalex":"network_unavailable_connection_refused","anysearch":"network_unavailable_connection_refused"},
+  "browser_verified_sources":["epa_recycling_basics"],
+  "observed_results":[]
+}

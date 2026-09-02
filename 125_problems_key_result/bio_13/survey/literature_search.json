@@ -1,0 +1,53 @@
+{
+  "artifact_status": "DESIGN_ONLY",
+  "search_method": "Cross-validated OpenAlex and AnySearch discovery, followed by publisher-page verification for central natural-science claims.",
+  "queries": [
+    {
+      "query": "human dog cat attachment oxytocin gaze neurobiology domestication comparative physiology",
+      "openalex_results": 24,
+      "anysearch_results": 10,
+      "cross_validated_results": 6,
+      "selected": [
+        {"doi": "10.1111/j.1468-5884.2009.00402.x", "title": "Attachment between humans and dogs"},
+        {"doi": "10.3389/fnbeh.2019.00162", "title": "Physiological Indicators of Attachment in Domestic Dogs and Their Owners in the Strange Situation Test"},
+        {"doi": "10.3389/fpsyg.2018.01559", "title": "Hormonal Correlates of Exploratory and Play-Soliciting Behavior in Domestic Dogs"},
+        {"doi": "10.1126/science.1261022", "title": "Oxytocin-gaze positive loop and the coevolution of human-dog bonds"}
+      ]
+    },
+    {
+      "query": "domestic cat human attachment oxytocin interaction physiology domestication genetics",
+      "openalex_results": 24,
+      "anysearch_results": 10,
+      "cross_validated_results": 9,
+      "selected": [
+        {"doi": "10.3389/fpsyg.2018.00435", "title": "Dog-Owner Attachment Is Associated With Oxytocin Receptor Gene Polymorphisms in Both Parties"},
+        {"doi": "10.3389/fvets.2020.590867", "title": "The Power of a Positive Human-Animal Relationship for Animal Welfare"},
+        {"doi": "10.1038/s41598-024-63529-3", "title": "Domestication and exposure to human social stimuli are not sufficient to trigger attachment to humans: a companion pig-dog comparative study"},
+        {"doi": "10.1163/1568539x-00003486", "title": "The importance of early life experiences for the development of behavioural disorders in domestic dogs"}
+      ]
+    }
+  ],
+  "browser_verified": [
+    {
+      "doi": "10.1126/science.1261022",
+      "publisher_page": "https://www.science.org/doi/10.1126/science.1261022",
+      "verified_boundary": "Dog-owner mutual gaze was associated with urinary oxytocin changes; intranasal oxytocin in dogs increased gazing in the reported experiment. The article supports a context-specific candidate interspecies loop, not a universal brain-oxytocin measure."
+    },
+    {
+      "doi": "10.1016/j.cub.2019.08.036",
+      "publisher_page": "https://doi.org/10.1016/j.cub.2019.08.036",
+      "verified_boundary": "Secure Base Test data reported attachment-style behavior in kittens and adult cats toward human caregivers. The study establishes a behavioral result, not a molecular pathway."
+    },
+    {
+      "doi": "10.7717/peerj.12393",
+      "publisher_page": "https://peerj.com/articles/12393/",
+      "verified_boundary": "In 30 U.S. women, pet-cat interaction did not produce a group-average salivary oxytocin change relative to reading, although selected interaction behaviors correlated with change."
+    },
+    {
+      "doi": "10.1038/s41598-024-63529-3",
+      "publisher_page": "https://www.nature.com/articles/s41598-024-63529-3",
+      "verified_boundary": "Under the study protocol, companion dogs but not companion pigs fulfilled the stated attachment-specific owner-response criteria; general domestication and human exposure alone were insufficient in that comparison."
+    }
+  ],
+  "interpretation_rule": "Discovery metadata are not results of this project. Claims in the report retain the source species, protocol, assay, control, and causal boundaries stated in the cited work."
+}

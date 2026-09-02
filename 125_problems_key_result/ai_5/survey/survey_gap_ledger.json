@@ -1,0 +1,12 @@
+{
+  "stage": "Survey",
+  "status": "DESIGN_ONLY",
+  "gaps": [
+    {"id":"G1","gap":"Acute control accuracy is often separated from long-term co-adaptation","priority":"high","addressed_by":"decoder freeze, machine-only, user-only, and joint adaptation arms"},
+    {"id":"G2","gap":"Wearable, implanted, and cognitive interfaces have different observables and risks","priority":"critical","addressed_by":"explicit integration ladder and staged gates"},
+    {"id":"G3","gap":"Body ownership and agency are not measured with functional veto and prediction tests","priority":"high","addressed_by":"agency, override latency, and machine-off transfer outcomes"},
+    {"id":"G4","gap":"Privacy leakage and cybersecurity are under-measured","priority":"high","addressed_by":"privacy probes, threat model, and hardware-in-the-loop red team"},
+    {"id":"G5","gap":"Safe disengagement and chronic biological risk are not first-class outcomes","priority":"critical","addressed_by":"reversible interfaces, emergency stop, and chronic follow-up gates"},
+    {"id":"G6","gap":"Genomic editing is conflated with computer integration","priority":"medium","addressed_by":"exclude germline modification from initial benchmark"}
+  ]
+}

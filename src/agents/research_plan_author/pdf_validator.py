@@ -5,10 +5,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
+import os
+import shutil
 import subprocess
 import tempfile
 from time import perf_counter
 from typing import Any
+import uuid
 
 
 PDF_VALIDATION_SCHEMA_VERSION = "research_plan_author_pdf_validation_v1"
@@ -105,8 +108,18 @@ def validate_pdf(
                 "renderer": {"backend": "pdftoppm", "status": "not_started"},
             },
         )
-    with tempfile.TemporaryDirectory(prefix="research-plan-author-pdf-") as temporary_root:
-        prefix = Path(temporary_root) / "page"
+    configured_work_dir = str(os.environ.get("SCIENCE_PDF_WORK_DIR") or "").strip()
+    if configured_work_dir:
+        pdf_work_root = Path(configured_work_dir).expanduser().resolve()
+        pdf_work_root.mkdir(parents=True, exist_ok=True)
+        temporary_root = pdf_work_root / f"research-plan-author-pdf-{os.getpid()}-{uuid.uuid4().hex[:8]}"
+        temporary_root.mkdir()
+        cleanup_temporary_root = False
+    else:
+        temporary_root = Path(tempfile.mkdtemp(prefix="research-plan-author-pdf-"))
+        cleanup_temporary_root = True
+    try:
+        prefix = temporary_root / "page"
         command = [str(renderer_path), "-f", "1", "-l", "1", "-png", str(source), str(prefix)]
         started_at = perf_counter()
         if logger is not None:
@@ -126,7 +139,7 @@ def validate_pdf(
             raise PdfValidationError(f"PDF first-page renderer timed out after {timeout_seconds} seconds") from error
         except OSError as error:
             raise PdfValidationError(f"PDF first-page renderer could not start: {error}") from error
-        images = sorted(Path(temporary_root).glob("page-*.png"))
+        images = sorted(temporary_root.glob("page-*.png"))
         render_success = completed.returncode == 0 and bool(images) and images[0].stat().st_size > 0
         render_report = {
             "backend": "pdftoppm",
@@ -161,6 +174,9 @@ def validate_pdf(
                 + (completed.stderr or completed.stdout or "renderer produced no PNG")[-1000:],
                 report=report,
             )
+    finally:
+        if cleanup_temporary_root:
+            shutil.rmtree(temporary_root, ignore_errors=True)
     return PdfValidationResult(valid=True, report=report)
 
 

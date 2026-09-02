@@ -1,0 +1,329 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{url}
+\usepackage{cite}
+\raggedbottom
+
+\title{Can Cold Fusion Ever Be Possible?\\A Blinded, Product-Linked Evidence Chain for Low-Energy Nuclear Claims}
+\author{\IEEEauthorblockN{Research Design Report}\IEEEauthorblockA{Four-Agent Scientific Workflow: Survey--Idea--ExperimentDesign--Author}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Cold fusion is often presented as either a revolutionary room-temperature energy source or a phenomenon already ruled out by physics. Both statements are too coarse. This paper separates four questions: whether a low-energy nuclear event can occur in condensed matter, whether the canonical 1989 palladium-deuterium claim is reproducible, whether the energy balance is compatible with nuclear products, and whether any verified effect could become useful technology. We synthesize the original electrochemical claim, contemporaneous calorimetric and upper-bound studies, the 1989 U.S. Department of Energy review, and the 2019 multi-institution reassessment that reported no evidence of the effect. We derive the standard deuterium-deuterium product and energy constraints and propose a design-only experiment: blinded, randomized palladium-deuterium cells with matched protium, inert-cathode, and open-circuit controls; synchronized calorimetry, electrical metrology, gas accounting, neutron and gamma detection, isotope assays, and materials characterization; and a preregistered joint likelihood for heat, products, detector backgrounds, and materials state. A strong claim requires a Bayes factor against calibrated chemical and thermal artifacts, product-energy consistency, independent cross-laboratory replication, and a separate net-useful-energy gate. The design does not report new laboratory results. Its conclusion is conditional: current evidence does not establish canonical cold fusion as a reproducible nuclear process or energy technology, but a future claim can be tested without confusing a heat anomaly, a materials effect, and a practical power source.
+\end{abstract}
+
+\begin{IEEEkeywords}
+cold fusion, low-energy nuclear reactions, palladium deuterium, calorimetry, nuclear products, reproducibility, energy balance
+\end{IEEEkeywords}
+
+\section{Introduction}
+\label{sec:intro}
+The question ``Will cold fusion ever be possible?'' is scientifically meaningful only after the word \emph{possible} is defined. In the usual historical usage, cold fusion refers to the 1989 report by Fleischmann and Pons that electrolysis of heavy water with a palladium cathode produced anomalous heat interpreted as deuterium-deuterium (D-D) fusion \cite{fp1989}. The appeal was immediate: a nuclear energy source apparently operating without a hot plasma, high-temperature confinement, or a large accelerator. The claim also generated a difficult physical question. If D-D fusion produced the reported heat, why were the expected neutrons, tritium, helium, gamma rays, and activation products not observed at commensurate levels?
+
+The subsequent history is not a single experiment with a single verdict. Jones and colleagues reported low-level neutron observations in condensed matter \cite{jones1989}; Miskelly and colleagues analyzed published calorimetric evidence \cite{miskelly1989}; Williams and colleagues reported upper bounds on cold-fusion signals in electrolytic cells \cite{williams1989}; and the U.S. Department of Energy (DOE) convened a panel that reviewed calorimetry, fusion products, and materials characterization \cite{doe1989}. Later discussion kept the topic alive under labels such as low-energy nuclear reactions. A 2019 multi-institution reassessment designed to revisit the claim with high scientific rigor stated that its investigations had yet to yield evidence of the effect \cite{berlinguette2019}.
+
+This record supports a precise conclusion but not an unlimited one. It is evidence against the canonical claim at the tested sensitivities and protocols. It is not a mathematical proof that every possible low-energy nuclear process in every condensed-matter environment is impossible. Conversely, the absence of such a proof does not make a heat anomaly a discovery. The required standard is a reproducible, product-linked, quantitatively closed energy balance.
+
+This paper proposes such a standard and a corresponding experimental program. The contributions are fourfold:
+\begin{enumerate}
+\item The historical and physical question is reframed into nuclear, reproducibility, energy, and technology thresholds.
+\item Standard D-D channels are used to derive a product-energy consistency constraint rather than accepting heat alone.
+\item A blinded cross-laboratory protocol is specified with isotope, electrode, passive, detector, and calibration controls.
+\item A joint statistical decision rule separates a true nuclear signal from chemistry, calorimetric artifacts, detector backgrounds, and an ultimately noncompetitive energy device.
+\end{enumerate}
+
+The report is explicitly \textbf{DESIGN-ONLY}. It contains no newly measured heat, product count, reaction rate, Bayes factor, net power, or engineering result.
+
+\section{Survey: What the Evidence Actually Establishes}
+\label{sec:survey}
+\subsection{The original proposition}
+Fleischmann and Pons proposed that deuterium electrochemically loaded into palladium could produce excess heat during electrolysis in a LiOD/D$_2$O system \cite{fp1989}. Their proposition combined several claims: that the thermal signal exceeded chemical expectations, that palladium could reach a relevant deuterium loading state, and that the excess was nuclear in origin. Those claims are logically separable. Palladium hydride formation is established materials chemistry; a heat signal can be chemical or instrumental; and a nuclear interpretation requires products and a reaction model.
+
+The public announcement and rapid dissemination of the claim created unusual pressure on replication. The experimental object was not only a vessel and electrolyte. It included palladium purity and history, surface preparation, loading dynamics, current density, cell geometry, gas recombination, thermal calibration, and detector backgrounds. A successful replication therefore requires more than repeating a nominal recipe. It requires specifying the hidden state variables that can change both chemical heat and any putative nuclear rate.
+
+\subsection{Contemporaneous counterevidence}
+The early literature already illustrates why evidence-chain design matters. Miskelly et al. examined calorimetric evidence and emphasized the difficulties of interpreting heat measurements in electrochemical cells \cite{miskelly1989}. Williams et al. measured neutron and related signatures and reported upper bounds that constrained many interpretations of the claimed effect \cite{williams1989}. Jones et al. reported low-level neutron observations, but a low-count result is meaningful only after efficiency, background, timing, and independent sample controls are established \cite{jones1989}.
+
+The DOE panel report reviewed calorimetry, fusion products, and materials characterization rather than treating any one channel as decisive \cite{doe1989}. That is the correct structure for a modern test. A positive calorimetric result should be compared with an independently measured nuclear-product rate. A product candidate should be checked against blank samples and detector-specific backgrounds. A materials correlation can be scientifically valuable without automatically being a fusion signal.
+
+\subsection{The 2019 reassessment}
+Berlinguette et al. revisited the cold-fusion claim with a multi-institution program and stated in the abstract that their efforts had not yielded evidence of such an effect \cite{berlinguette2019}. They also described useful insights into highly hydrided metals and low-energy nuclear-reaction parameter space. The result is important for two reasons. First, it is a substantive negative observation from a deliberate re-evaluation, not merely a lack of interest. Second, it preserves a distinction between a failure to reproduce a canonical effect and a universal impossibility theorem.
+
+\subsection{The evidence ladder}
+We define five thresholds:
+\begin{enumerate}
+\item \emph{Nuclear possibility:} a low-energy event has a signature that cannot be explained by chemistry or detector background.
+\item \emph{Reproducibility:} the signal occurs under fixed conditions in repeated runs and independent laboratories.
+\item \emph{Product consistency:} heat, isotopes, particles, and activation are mutually compatible with a declared reaction model.
+\item \emph{Net energy:} useful heat or electricity exceeds electrochemical input and all auxiliary loads with uncertainty included.
+\item \emph{Technology:} the process is controllable, safe, durable, scalable, and competitive for a defined service.
+\end{enumerate}
+The present record does not establish these thresholds for canonical cold fusion. The experiment in this paper is intended to make progress on thresholds 1--4 without silently substituting one for another.
+
+\section{Physical Baseline and Falsifiable Constraints}
+\label{sec:physics}
+\subsection{D-D reaction channels}
+The conventional low-energy D-D reaction has two dominant branches,
+\begin{equation}
+D+D\rightarrow T+p+4.03\;\mathrm{MeV},
+\label{eq:ddt}
+\end{equation}
+and
+\begin{equation}
+D+D\rightarrow {}^3\mathrm{He}+n+3.27\;\mathrm{MeV}.
+\label{eq:ddhe}
+\end{equation}
+The radiative branch is
+\begin{equation}
+D+D\rightarrow {}^4\mathrm{He}+\gamma+23.85\;\mathrm{MeV}.
+\label{eq:ddgamma}
+\end{equation}
+At ordinary fusion energies, the first two branches dominate and the gamma branch is strongly suppressed. A claim that invokes standard D-D fusion must therefore specify branch fractions rather than assign all released energy to an unobserved helium product.
+
+Let $N_{\mathrm{DD}}$ be the number of D-D reactions and $f_b$ the branch fraction for branch $b$. The expected product yield in channel $k$ is
+\begin{equation}
+N_k= N_{\mathrm{DD}}\sum_b f_b y_{bk},
+\label{eq:yield}
+\end{equation}
+where $y_{bk}$ is the yield of product channel $k$ for branch $b$. The nuclear energy is
+\begin{equation}
+E_{\mathrm{nuc}}=N_{\mathrm{DD}}\sum_b f_b Q_b.
+\label{eq:energy}
+\end{equation}
+Equations (\ref{eq:yield}) and (\ref{eq:energy}) create a joint constraint. If a claimed heat output implies a reaction count that should produce detectable neutrons or tritium, the corresponding upper limits must enter the hypothesis test.
+
+\subsection{Coulomb barrier and screening}
+For two positively charged nuclei with relative energy $E$, a simplified tunneling factor is
+\begin{equation}
+P(E)\propto \exp[-2\pi\eta],\qquad
+\eta=\frac{Z_1Z_2e^2}{4\pi\epsilon_0\hbar v},
+\label{eq:gamow}
+\end{equation}
+where $v$ is their relative velocity. Condensed matter can modify the effective interaction through electron screening, lattice polarization, defects, strain, or collective excitations. Screening can be physically investigated; it cannot be assigned an arbitrarily large value after observing heat. The enhancement must be predicted or measured, inserted into a reaction-rate model, and checked against products. Assenbaum, Langanke, and Rolfs established a nuclear-physics baseline for electron-screening effects at low energy \cite{assenbaum1987}; Huke et al. connected metal-related enhancement hypotheses to experimental implications \cite{huke2008}.
+
+The scientific burden is thus quantitative. A model may predict an enhancement of the cross section, but the predicted rate must be large enough to explain the claimed power and small enough to respect product limits, or it must provide a new mechanism that explains the altered branch pattern. A material correlation without this rate and product calculation is not a nuclear explanation.
+
+\subsection{The missing-energy and missing-product problems}
+The complete energy balance for a cell can be written as
+\begin{equation}
+Q_{\mathrm{nuc}}N_{\mathrm{DD}}=E_{\mathrm{heat}}+E_{\mathrm{rad}}+E_{\mathrm{stored}}+E_{\mathrm{chem}}+E_{\mathrm{escape}}.
+\label{eq:balance}
+\end{equation}
+The right-hand terms include heat deposited in the apparatus, emitted radiation and particles, energy stored in chemical or material changes, and energy leaving with gases or samples. A calorimeter measures only part of this expression. A closed cell can hide chemical energy in recombination or gas compression; an open cell can lose heat and gases. The proposed experiment measures or bounds each term.
+
+The missing-product problem is not an argument that no unknown physics can exist. It is a falsifiable objection to a specific standard-reaction interpretation. If the inferred $N_{\mathrm{DD}}$ is large, then detector efficiencies and assay limits determine whether the expected products should have been observed. A product-suppressed hypothesis is allowed only as a separate model with an explicit mechanism, not as a free parameter that is introduced solely to preserve a heat claim.
+
+\section{Idea: Blinded Product-Linked Replication}
+\label{sec:idea}
+\subsection{Hypothesis hierarchy}
+The proposed study compares four hypotheses:
+\begin{itemize}
+\item $H_0$ (measurement null): all signals are generated by calibrated controls, detector backgrounds, and measurement noise.
+\item $H_1$ (chemical or thermal artifact): an apparent excess is explained by recombination, electrochemical enthalpy, evaporation or condensation, electrical lead heating, thermal drift, or an incorrect heat-loss model.
+\item $H_2$ (screened D-D): a low-energy nuclear process occurs and its heat and products follow a screened D-D model.
+\item $H_3$ (anomalous process): a reproducible excess-energy signal occurs with a product pattern outside standard D-D expectations, requiring a new mechanism.
+\end{itemize}
+
+The hypotheses are deliberately hierarchical. A treatment-dependent heat signal that disappears after gas recombination is modeled supports $H_1$, even if it occurs only in deuterium cells. A deuterium-specific signal that tracks palladium loading but has no products may identify a materials effect or an unresolved artifact. Only a joint heat-product signal can support $H_2$ or $H_3$.
+
+\subsection{Causal variables}
+The experiment treats material state as a measured mediator. Isotope condition, palladium lot, surface morphology, defect density, deuterium loading, temperature, current density, pressure, gas composition, and electrochemical history can affect chemical heat, a putative nuclear rate, and detector background. The causal graph is
+\begin{equation}
+\begin{aligned}
+&\{\text{isotope, material, electrochemistry}\}\\
+&\quad\rightarrow\{\text{chemistry, nuclear rate, background}\}\\
+&\quad\rightarrow\{\text{heat, products, material change}\}.
+\end{aligned}
+\label{eq:causal}
+\end{equation}
+Randomization controls assignment and order. It does not remove materials physics. Loading and defect states are recorded, and treatment contrasts are stratified or modeled hierarchically so that a hidden material mixture cannot be mistaken for a nuclear effect.
+
+\subsection{Why the joint endpoint is the contribution}
+The main methodological contribution is to replace the question ``Did the temperature rise?'' with ``Is the entire observation vector more probable under a nuclear model than under the strongest calibrated artifact model?'' The observation vector includes heat, electrical input, gas inventory, loading, neutron and gamma counts, tritium, helium isotopes, and pre/post material state. A positive result can still be scientifically useful if it rejects the energy-technology threshold, but it must not be described as a practical fusion source.
+
+\section{ExperimentDesign}
+\label{sec:design}
+\subsection{Arms and randomized blocks}
+The minimum design contains four arms, summarized in Table~\ref{tab:arms}. Each randomized block contains all arms, and run order is generated by an analyst who does not operate the cells. Cathode lot, vessel, electrolyte volume, lead geometry, and gas handling are matched. Treatment codes are opaque to the operator and analysts until quality checks are complete.
+
+\begin{table*}[t]
+\centering
+\caption{Core experimental arms and their scientific purpose.}
+\label{tab:arms}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.13\textwidth}>{\raggedright\arraybackslash}p{0.28\textwidth}>{\raggedright\arraybackslash}p{0.48\textwidth}}
+\toprule
+Arm & Condition & Purpose \\
+\midrule
+D-Pd & Palladium cathode with high-purity heavy-water electrolyte & Canonical treatment condition; test loading and isotope-specific behavior. \\
+H-Pd & Matched palladium cathode with protium-water electrolyte & Isotope control for electrochemistry, heat, loading, and materials effects. \\
+D-Inert & Inert cathode with heavy-water electrolyte & Separates palladium-dependent behavior from electrolyte and apparatus effects. \\
+D-Pd-open & Palladium and heavy water with electrochemical driving disabled & Estimates passive thermal, environmental, detector, and drift backgrounds. \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Cathodes are drawn from multiple sealed lots with blind identifiers. The material record contains dimensions, mass, surface preparation, roughness, impurity screen, loading estimate, pressure, temperature, and electrochemical history. A pre-run sample archive and post-run sample archive preserve chain of custody. The study does not call a run invalid because its material state is unusual; it records the state and applies the fixed analysis rule.
+
+\subsection{Metrology phase}
+Before treatment runs, calibrated heat pulses validate the calorimeter over the declared dynamic range. Dummy cells reproduce vessel, electrolyte volume, leads, gas handling, and environmental exposure. Electrical meters are traceable to standards and sampled synchronously with thermal sensors. Multiple temperatures, coolant or environmental variables, gas pressure, flow, humidity, voltage, current, and auxiliary power are recorded. Detector calibrations quantify efficiency, energy response, dead time, shielding, and environmental background.
+
+For a run of duration $T$, integrated excess energy is estimated as
+\begin{equation}
+E_{\mathrm{exc}}=\int_0^T\left[P_{\mathrm{out}}(t)-\widehat{P}_{\mathrm{chem}}(t;M)-\widehat{P}_{\mathrm{loss}}(t;\phi)\right]dt,
+\label{eq:excess}
+\end{equation}
+where $M$ is measured materials and gas state and $\phi$ is the calibrated heat-loss parameter. Uncertainty includes sensor drift, calibration covariance, electrical metrology, gas composition, model discrepancy, and shared environmental correlations.
+
+Open cells can recombine electrolytic gases and return chemical energy as heat. Closed cells can accumulate pressure and change heat transfer. The protocol therefore records gas composition, pressure, flow, humidity, and hydrogen-oxygen balance. A run with an unexplained gas loss, leak, or pressure excursion is classified using a preregistered rule, not excluded after its thermal outcome is known.
+
+\subsection{Nuclear-product phase}
+Neutron and gamma channels are measured independently of calorimetry. Tritium and helium isotope assays use standards, reagent blanks, vessel blanks, contamination controls, and archived samples. The detector clock is synchronized with thermal and electrochemical data. For product channel $k$,
+\begin{equation}
+C_k\sim\operatorname{Poisson}\left(\epsilon_k N_k+B_kT\right),
+\label{eq:counts}
+\end{equation}
+where $\epsilon_k$ is detector efficiency and $B_k$ is background rate. Open-circuit, inert-cathode, pre-run, post-run, and environmental controls inform $B_k$. A detector excess is not called a product unless it survives its blank and calibration model.
+
+The product assay is designed to catch both false positives and false negatives. False positives can arise from contamination, cosmic or environmental backgrounds, cross-talk, or sample handling. False negatives can arise from low recovery, poor efficiency, or products leaving with gas. Samples, gas, and vessel surfaces are therefore archived and analyzed by independent procedures when practical.
+
+\subsection{Blinding and preregistration}
+Before production runs, the team preregisters the primary endpoint, minimum detectable power, product detection limits, time windows, calibration model, artifact models, exclusion rules, missing-data rules, priors, replication threshold, and stopping rule. An independent steward creates randomized allocation. The operator sees only a code. Analysts fit calibration and control distributions before treatment codes are opened. A sensor failure is retained in the log and handled by the fixed missing-data rule.
+
+The primary endpoint is a joint evidence score; secondary endpoints include integrated excess energy, loading dependence, detector-specific counts, isotope differences, and material changes. No endpoint is selected after unblinding. Protocol amendments are versioned and time-stamped before the affected code is opened.
+
+\section{Statistical Analysis and Decision Gates}
+\label{sec:stats}
+\subsection{Joint likelihood}
+Let $H(t)$ denote heat rate, $P(t)$ electrical input, $C_k(t)$ product counts, and $M(t)$ measured material state. The calibrated signal model is
+\begin{equation}
+H(t)=H_{\mathrm{chem}}(t;M)+H_{\mathrm{nuc}}(t;\theta)+H_{\mathrm{loss}}(t;\phi)+\varepsilon_H(t).
+\label{eq:heatmodel}
+\end{equation}
+The joint data likelihood retains correlations between channels that share a common environment:
+\begin{equation}
+p(D\mid H_j)=\int p(D\mid\vartheta_j,H_j)p(\vartheta_j\mid H_j)d\vartheta_j.
+\label{eq:marginal}
+\end{equation}
+The contrast between nuclear and artifact explanations is
+\begin{equation}
+BF_{\mathrm{nuc,art}}=\frac{p(D\mid H_2\;\mathrm{or}\;H_3)}{p(D\mid H_0\;\mathrm{or}\;H_1)}.
+\label{eq:bf}
+\end{equation}
+The exact prior widths and strong-evidence threshold are fixed from calibration and published before unblinding. Sensitivity analysis reports how conclusions change under reasonable prior alternatives.
+
+The Bayesian analysis is paired with a frequentist report of upper limits on excess power and product rates. Laboratory, cathode-lot, and randomized-block effects are modeled hierarchically. This avoids hiding heterogeneity in a single average and directly tests whether a putative signal travels to independent laboratories.
+
+\subsection{Power and minimum detectable effects}
+Run counts are selected by simulation before production. Synthetic data are generated under the strongest artifact model, a screened D-D model, and stress-test alternatives. The chosen design must have adequate probability of rejecting the artifact model when a prespecified minimum useful effect exists, while controlling false discovery under $H_0$. The minimum detectable power and product limits are properties of this calibration simulation; they are not experimental results in this report.
+
+The design uses fixed data windows and no optional stopping. A laboratory may stop for safety or equipment failure, but it cannot stop when the evidence looks favorable and then redefine the endpoint. All completed and failed runs are retained in the analysis archive. Missingness is described by cause and propagated through the model.
+
+\subsection{Four decision gates}
+The program advances through four gates:
+\begin{enumerate}
+\item \emph{Metrology gate:} heat-pulse residuals, drift, electrical measurement, and detector backgrounds meet preregistered criteria.
+\item \emph{Local blinded gate:} randomized treatment and control blocks are completed with codes sealed.
+\item \emph{Replication gate:} at least two external laboratories repeat the protocol using shared material lots and independently managed analyses.
+\item \emph{Technology gate:} a verified scientific signal is evaluated for auxiliary electricity, gas handling, heat removal, shielding, materials lifetime, maintenance, safety, and useful net output.
+\end{enumerate}
+
+A canonical claim is supported only if the joint evidence exceeds the threshold, passes product-energy consistency, and replicates independently. A heat-only signal is classified as unresolved or artifact-consistent. A product-only signal is subjected to contamination and detector-specificity analysis. A null result yields quantitative upper limits at the declared sensitivity rather than a universal impossibility theorem.
+
+\section{From Nuclear Anomaly to Energy Technology}
+\label{sec:technology}
+Even a confirmed low-energy nuclear event would not automatically solve an energy problem. A useful device must supply a stable service. The net power condition is
+\begin{equation}
+\begin{aligned}
+P_{\mathrm{net}}={}&P_{\mathrm{useful}}-P_{\mathrm{electrochemical}}\\
+&-P_{\mathrm{balance\;of\;plant}}-P_{\mathrm{control}}-P_{\mathrm{shielding}}>0.
+\end{aligned}
+\label{eq:net}
+\end{equation}
+with uncertainty and degradation included. The balance of plant contains pumps, gas handling, cooling, monitoring, sample replacement, and safety systems. A microscopic event rate can be scientifically real but technologically irrelevant if $P_{\mathrm{net}}$ is negative or unstable.
+
+The technology gate also requires a lifetime model. Palladium and other hydride materials can change under repeated loading, cycling, stress, impurity exposure, and thermal gradients. A demonstration that lasts one favorable run cannot establish duty cycle or maintainability. The proposed evidence chain therefore reports power density, run duration, restart behavior, materials change, and auxiliary load only after verified nuclear evidence exists.
+
+Comparison with established alternatives must be service-specific. For electricity, the comparator includes renewables, storage, fission, and conventional fusion development. For heat, it includes direct electric heating and chemical fuels. For isotope or materials science, the comparator is not an energy technology at all. This prevents a newly observed materials effect from being advertised as a power source before its delivered service has been defined.
+
+\section{Safety, Ethics, and Reproducibility}
+\label{sec:safety}
+All work requires institutional review for pressurized vessels, hydrogen and deuterium handling, chemical exposure, electrical systems, radiation sources, and any activated material. Engineering controls include ventilation, leak detection, pressure relief, electrical isolation, remote monitoring, and emergency shutdown. A radiation-safety officer approves detector calibration and sample handling. The protocol does not authorize unreviewed recipes, unlicensed sources, or uncontained gas operation.
+
+Data and samples are governed as part of the experiment. Raw sensor time series, calibration files, detector efficiencies, blank distributions, protocol versions, exclusions, and analysis code should be archived in a format that permits independent review. The treatment code is released only after the preregistered lock. Product samples remain traceable from collection through assay. These practices are not bureaucratic additions; they directly address the historical failure modes of flexible calorimetry, low-count radiation claims, and undocumented material states.
+
+\section{Interpretation Matrix and Reproducibility Deliverables}
+\label{sec:interpretation}
+The experiment is designed so that different observation patterns lead to different scientific labels. Table~\ref{tab:interpretation} summarizes the principal interpretations. This matrix prevents a favorable signal in one channel from being promoted to a stronger claim without the evidence required by the stronger claim.
+
+\begin{table*}[t]
+\centering
+\caption{Predeclared interpretation matrix for the evidence-chain experiment.}
+\label{tab:interpretation}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}p{0.33\textwidth}}
+\toprule
+Observation pattern & Permitted interpretation & Required next action \\
+\midrule
+No heat or product excess & Null at the declared sensitivity & Report upper limits and calibration performance. \\
+Heat excess in treatment and chemistry controls & Chemical or thermal explanation is favored & Refine artifact model; do not label fusion. \\
+Heat excess only in deuterium cells, no product excess & Materials-dependent anomaly or unresolved artifact & Repeat with stronger loading and contamination controls. \\
+Product candidate without heat & Detector, contamination, or low-efficiency issue is possible & Verify standards, blanks, timing, and sample custody. \\
+Heat and products in one laboratory & Candidate nuclear signal & Require code-sealed replication and product-energy balance. \\
+Heat and products across independent laboratories & Reproducible nuclear phenomenon becomes credible & Test mechanism, rate, branch fractions, safety, and net energy. \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The table is also a reporting contract. A paper may report a materials effect, a detector result, or a calorimetric result when that result is supported by the corresponding controls. It may not silently use a materials correlation to infer a nuclear reaction, or use a nuclear candidate to infer a useful generator. This distinction is especially important for a research topic with a history of strong claims based on incomplete evidence chains.
+
+The reproducibility package has five components. First, the cell package contains drawings, dimensions, material certificates, surface preparation, electrolyte composition, wiring, gas handling, and calibration records. Second, the time-series package contains synchronized raw sensor data, not only selected averages or plots. Third, the detector package contains efficiency curves, background windows, dead-time corrections, shielding geometry, and assay standards. Fourth, the analysis package contains preregistration, versioned code, priors, stopping rules, exclusions, and the exact data lock. Fifth, the sample package contains pre-run and post-run material, gas, and vessel custody records.
+
+The cross-laboratory transfer is a test of portability, not a ceremonial repeat. The receiving laboratory independently inspects the material lot, reconstructs the calibration, and runs local blanks before receiving treatment labels. Its analysis is performed with a separate code path or an independently audited implementation. Laboratory effects are retained in the hierarchical model. If the effect is real but rare, the replication result should reveal the prevalence and material-state dependence of the event; if it is an artifact, transfer should expose which environmental or procedural variable carries it.
+
+The protocol also makes a negative outcome publishable. A well-calibrated upper bound can constrain reaction rates, product branch fractions, or useful power density. A failed replication can identify a hidden materials condition that is necessary for a reported anomaly. A null detector result can narrow possible interpretations even if calorimetry is ambiguous. Publishing these outcomes reduces the incentive to repeat only favorable runs and converts historical disagreement into cumulative measurement knowledge.
+
+\subsection{Preanalysis and sensitivity checks}
+The preanalysis plan has three layers. The first layer is an instrument model. It estimates heat-loss coefficients, sensor covariance, electrical-meter error, detector efficiency, dead time, environmental backgrounds, gas-recovery fraction, and assay recovery from calibration data. The model is frozen before treatment labels are opened. Its residuals are plotted for every calibration and blank run, including failed calibrations, so that the analyst cannot improve the model only for favorable cells.
+
+The second layer is a causal and statistical model. Treatment contrasts are estimated within randomized blocks and then pooled hierarchically across cathode lots and laboratories. Loading, temperature, pressure, gas composition, and electrochemical history are included as measured covariates. They are not used to search for a favorable subgroup unless that subgroup analysis was declared before unblinding. The primary analysis reports the full population of eligible runs; exploratory material-state analyses are labeled as such.
+
+The third layer is a decision simulation. Before data collection, synthetic runs are drawn under the null, the strongest plausible chemical artifact, a screened D-D process, and stress-test models with imperfect product recovery. The simulation propagates calibration and detector uncertainty through the same code used for the real data. It determines whether the selected design can distinguish a prespecified minimum useful excess from the artifact distribution and whether the product detectors have sufficient sensitivity to reject an incompatible D-D interpretation.
+
+Sensitivity analysis must cover assumptions that could change the conclusion. The study varies heat-loss functional form, recombination fraction, background stationarity, detector efficiency, isotope-assay recovery, material-state stratification, and prior mass assigned to the anomalous-process hypothesis. It also repeats the decision using a frequentist upper-limit analysis and a Bayesian model comparison. A claim is robust only if its scientific classification is stable across these declared alternatives. If the conclusion changes under a plausible calibration model, the result is reported as unresolved rather than selected by preference.
+
+This structure distinguishes uncertainty from flexibility. Statistical uncertainty describes repeated sampling under a specified model. Model uncertainty describes whether the model includes the relevant chemistry, heat transfer, materials state, product recovery, and background processes. Both are propagated to the product-energy consistency test. A reported excess that is large relative to sensor noise but small relative to model discrepancy is not strong evidence. Conversely, a low-count product signal can become informative when the detector efficiency, blank distribution, timing, and sample custody are independently constrained.
+
+The data lock is therefore part of the scientific result. The locked archive includes all randomized runs, calibration residuals, raw time series, detector files, exclusions, missingness codes, material records, and analysis versions. The final manuscript reports the prespecified primary result, all deviations, and the exact conditions under which a result would have been classified as null, artifact-consistent, candidate nuclear, or technology-relevant. This is the minimum needed for a future laboratory to reproduce not only the apparatus but also the inference.
+
+\section{Limitations and Expected Information Gain}
+\label{sec:limits}
+The design does not prove that condensed matter cannot affect nuclear rates. Screening and metal effects are legitimate subjects of nuclear and materials research. The design also cannot make a weak detector sensitive to an arbitrarily small reaction rate. Its result is conditional on declared calibration quality, product detection limits, and the range of materials states sampled.
+
+The design is nevertheless informative for every major outcome. A calibrated null narrows the allowed canonical effect. A deuterium-specific heat signal that is explained by recombination supports an artifact model. A loading-dependent materials effect without products motivates hydride science without establishing fusion. A replicated product-linked signal would justify a mechanism-specific nuclear program. Only a positive scientific result that also passes the net-power and safety gates can support the stronger claim that cold fusion may become an energy technology.
+
+The main uncertainty is not merely statistical. It is model uncertainty: which condensed-matter variables are sufficient, whether product recovery is complete, and how to assign priors to a mechanism outside standard D-D channels. The protocol exposes these uncertainties instead of hiding them in a single color label or a single excess-heat number. Predeclared sensitivity analysis and cross-laboratory replication are therefore central outcomes, not optional robustness checks.
+
+\section{Conclusion}
+\label{sec:conclusion}
+Current evidence does not establish the canonical 1989 cold-fusion claim as a reproducible nuclear phenomenon or a useful energy technology. The 2019 multi-institution reassessment reported no evidence of the effect, while earlier calorimetric, neutron, and upper-bound studies illustrate why heat alone is insufficient. A definitive future advance would require a synchronized energy and product balance, explicit treatment of palladium and loading state, blinded randomization, fixed stopping rules, independent replication, and a separate net-useful-energy assessment.
+
+The proposed blinded product-linked replication program makes that standard operational. It is intentionally capable of producing a valuable negative result, a materials-science result, or a nuclear discovery. It does not assume that an unobserved product can be ignored, and it does not turn the absence of a universal impossibility proof into evidence of feasibility. The answer to ``Will cold fusion ever be possible?'' is therefore conditional: no accepted evidence currently supports a practical cold-fusion power source, but a future claim can be evaluated scientifically if it satisfies the full evidence chain.
+
+\begin{thebibliography}{00}
+\bibitem{fp1989} M. Fleischmann and S. Pons, ``Electrochemically induced nuclear fusion of deuterium,'' \emph{J. Electroanal. Chem. Interfacial Electrochem.}, vol. 261, pp. 301-308, 1989, doi: 10.1016/0022-0728(89)80006-3.
+\bibitem{miskelly1989} G. M. Miskelly \emph{et al.}, ``Analysis of the published calorimetric evidence for electrochemical fusion of deuterium in palladium,'' \emph{Science}, vol. 246, pp. 793-796, 1989, doi: 10.1126/science.246.4931.793.
+\bibitem{williams1989} D. E. Williams \emph{et al.}, ``Upper bounds on `cold fusion' in electrolytic cells,'' \emph{Nature}, vol. 342, pp. 375-384, 1989, doi: 10.1038/342375a0.
+\bibitem{jones1989} S. E. Jones \emph{et al.}, ``Observation of cold nuclear fusion in condensed matter,'' \emph{Nature}, vol. 338, pp. 737-740, 1989, doi: 10.1038/338737a0.
+\bibitem{doe1989} U.S. DOE Energy Research Advisory Board, \emph{Cold Fusion Research}, DOE/S-0073, 1989, doi: 10.2172/5144772.
+\bibitem{berlinguette2019} C. P. Berlinguette \emph{et al.}, ``Revisiting the cold case of cold fusion,'' \emph{Nature}, vol. 570, pp. 45-51, 2019, doi: 10.1038/s41586-019-1256-6.
+\bibitem{assenbaum1987} H. J. Assenbaum, K. Langanke, and C. Rolfs, ``Effects of electron screening on low-energy fusion cross sections,'' \emph{Z. Phys. A}, vol. 327, pp. 461-468, 1987.
+\bibitem{huke2008} A. Huke \emph{et al.}, ``Enhancement of deuteron-fusion reactions in metals and experimental implications,'' \emph{Phys. Rev. C}, vol. 78, 015803, 2008, doi: 10.1103/PhysRevC.78.015803.
+\bibitem{mullins2004} J. Mullins, ``Cold fusion back from the dead,'' \emph{IEEE Spectrum}, vol. 41, pp. 22-23, 2004, doi: 10.1109/MSPEC.2004.1330805.
+\end{thebibliography}
+
+\end{document}

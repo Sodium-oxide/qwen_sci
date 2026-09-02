@@ -1,0 +1,53 @@
+{
+  "allow_shell_escape": false,
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\31390\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\pdflatex.EXE",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "quantitative_models.tex"
+      ],
+      "elapsed_ms": 552.502,
+      "return_code": 0,
+      "stage": "latex_initial",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "C:\\Users\\31390\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\pdflatex.EXE",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "quantitative_models.tex"
+      ],
+      "elapsed_ms": 453.699,
+      "return_code": 0,
+      "stage": "latex_resolve_references_1",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "C:\\Users\\31390\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\pdflatex.EXE",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "quantitative_models.tex"
+      ],
+      "elapsed_ms": 476.479,
+      "return_code": 0,
+      "stage": "latex_resolve_references_2",
+      "timed_out": false
+    }
+  ],
+  "failure_stage": "",
+  "generated_at": "2026-09-02T11:56:15.429+00:00",
+  "main_tex": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\quantitative\\publication\\quantitative_models_project\\quantitative_models.tex",
+  "project_dir": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\quantitative\\publication\\quantitative_models_project",
+  "run_bibtex": false,
+  "schema_version": "research_plan_author_latex_compile_v1",
+  "staged_pdf": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\quantitative\\publication\\.quantitative_mathematical_models.pdf.staging",
+  "success": true,
+  "timeout_seconds": 180
+}

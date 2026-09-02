@@ -1,0 +1,8 @@
+{
+  "schema_version":"survey_gap_ledger_v1",
+  "gaps":[
+    {"gap_id":"GAP-ACCURACY-001","title":"Accuracy language lacks an explicit evidence and error decomposition","evidence_basis":["C-VVUQ-001","C-QERR-001"],"researchable_question":"Can one declared quantity-of-interest ledger separate model, numerical, sampling, data, mapping, and hardware error?","acceptance":"ACCEPTED"},
+    {"gap_id":"GAP-CROSSSCALE-002","title":"Cross-scale and cross-platform simulation claims lack comparable baselines","evidence_basis":["C-VVUQ-001","C-QSIM-001","C-CLASSICAL-001"],"researchable_question":"Can a common model-card protocol decide when a classical method is preferable, a quantum method is a candidate, or the evidence is insufficient?","acceptance":"ACCEPTED"},
+    {"gap_id":"GAP-UNIVERSAL-QUANTUM-003","title":"Quantum computing is necessary for all microscopic accuracy","evidence_basis":["C-QSIM-001","C-QERR-001"],"researchable_question":"Rejected: the claim has no evidence basis and ignores classical microscopic methods and hardware/mapping limits.","acceptance":"REJECTED_AS_MISFRAMED"}
+  ]
+}

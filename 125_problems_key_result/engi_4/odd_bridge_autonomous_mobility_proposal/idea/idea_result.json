@@ -1,0 +1,21 @@
+{
+  "schema_version": "idea_result_v5",
+  "project_id": "engi_4_autonomous_mobility_scaling",
+  "survey_run_id": "survey-engi4-odd-bridge-001",
+  "selected_primary_idea_id": "idea-odd-bridge-001",
+  "selected_primary_idea": {
+    "id": "idea-odd-bridge-001",
+    "title": "ODD-Bridge: Operational Design Domain Bridging with Assurance, Recovery, and Legitimacy Evidence",
+    "summary": "A staged ADS mobility scaling protocol in which each declared ODD expansion must close technical, degraded-mode, mixed-traffic, connected-infrastructure, safety-case, monitoring, and public-governance evidence.",
+    "target_gap_ids": ["GAP-ODD-001", "GAP-DEGRADE-002", "GAP-MIXED-003", "GAP-INFRA-004", "GAP-ASSURE-005", "GAP-TRUST-006", "GAP-EQUITY-007"],
+    "scientific_object": "ADS service x ODD card x traffic-mix card x degradation card x connectivity card x recovery card x evidence card x public/governance card",
+    "central_hypothesis": "ODD-specific assurance gates support more credible scaling decisions than aggregate deployment metrics or component benchmarks.",
+    "falsifiers": ["unbounded ODD transfer", "unsafe degradation response", "unclassified connectivity dependency", "missing mixed-traffic scenario evidence", "untraceable monitoring/incident process", "unsupported public/governance claim"],
+    "claim_class": "DESIGN_PROPOSAL_NO_OBSERVED_RESULTS"
+  },
+  "competitive_ideas": [{"id": "idea-connected-corridor-002", "title": "Infrastructure-first connected corridor", "reason": "may enhance service in a bounded corridor but cannot replace autonomous degradation handling"}],
+  "high_risk_ideas": [{"id": "idea-human-handoff-003", "title": "Human-handoff-first transition", "reason": "may be valid for some conditional automation but carries attention and transition risks and cannot cover driverless operation"}],
+  "rejected_ideas": [{"id": "idea-benchmark-race-004", "reason": "component performance alone does not establish ODD transfer, safe fallback, social legitimacy, or city-wide readiness"}],
+  "mcts_evolution": [{"node": "root", "change": "fleet-scale target", "defect": "ODD/transition ambiguity"}, {"node": "odd-delta", "change": "one named ODD expansion", "defect": "degradation and interaction evidence missing"}, {"node": "assurance", "change": "safe-state, mixed-traffic, and connectivity classification", "defect": "legitimacy/governance detached"}, {"node": "selected", "change": "public/governance review and traceability", "defect": "requires future validation"}],
+  "invariants": {"requires_real_gap_ids": true, "requires_odd_boundary": true, "requires_falsifier": true, "forbids_exclusive_future_claim": true, "forbids_observed_results": true}
+}

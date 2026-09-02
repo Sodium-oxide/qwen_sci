@@ -1,0 +1,50 @@
+{
+  "workflow": "Survey -> Idea -> ExperimentDesign -> Author",
+  "topic": "Will we ever travel at the speed of light?",
+  "scientific_reframing": "Which subluminal velocity window is credible for a declared payload and mission after jointly accounting for relativistic energy, acceleration and braking, propulsion infrastructure, ISM damage, radiation, shielding, and operational constraints?",
+  "project_status": "COMPLETED_WITH_HUMAN_VISUAL_AND_SOURCE_PAGE_REVIEW_PENDING",
+  "stages": [
+    {
+      "name": "Survey",
+      "status": "COMPLETED",
+      "canonical_artifact": "survey/survey.md",
+      "accepted_gap_ids": [
+        "G1",
+        "G2",
+        "G3",
+        "G4",
+        "G5",
+        "G6"
+      ],
+      "frozen_source_count": 13
+    },
+    {
+      "name": "Idea",
+      "status": "COMPLETED",
+      "canonical_artifact": "idea/idea_result.json",
+      "selected_direction_id": "idea-rme-001",
+      "selected_direction": "Relativistic Mission Envelope"
+    },
+    {
+      "name": "ExperimentDesign",
+      "status": "COMPLETED",
+      "canonical_artifact": "experiment_design/research_design.json",
+      "execution_mode": "DESIGN_ONLY",
+      "observed_results": []
+    },
+    {
+      "name": "Author",
+      "status": "COMPLETED",
+      "canonical_artifact": "author/light_speed_report.pdf",
+      "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+      "page_count": 7
+    }
+  ],
+  "final_pdf": "author/light_speed_report.pdf",
+  "final_pdf_validation": "author/pdf_validation.json",
+  "human_review_items": [
+    "Verify publisher and DOI landing-page metadata because the requested in-app browser could not initialize.",
+    "Inspect the final rendered PDF visually in a local viewer before external submission because model-side image preview was blocked.",
+    "Obtain facility, safety, medical, and mission-governance approval before any physical component test or crewed inference."
+  ]
+}

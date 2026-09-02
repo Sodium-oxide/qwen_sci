@@ -1,0 +1,5 @@
+# Experiment Design: Staged Torpor Safety Envelope
+
+The study is DESIGN_ONLY. It uses no healthy-volunteer prolonged hypothermia and reports no observed data. Stage 0 is a simulation and hardware-in-the-loop test of a closed-loop controller. Stage 1 is an ethically approved nonhuman translational study measuring heat flux, indirect calorimetry, substrate delivery, perfusion, oxygenation, ECG, coagulation, electrolytes, infection markers, shivering, and rewarming. Stage 2 may use only clinically indicated, short-duration temperature-management records under separate approval; it is observational and cannot claim causality.
+
+The primary efficacy endpoint is a preregistered reduction in metabolic expenditure relative to a matched normothermic protocol. Safety endpoints include perfusion adequacy, arrhythmia burden, acid-base and electrolyte stability, coagulation, neurological recovery, infection surveillance, and complete rewarming. The controller must stop and rewarm on any threshold breach. Validation requires independent holdouts, sensor-fault injection, and a human multidisciplinary review before every escalation.

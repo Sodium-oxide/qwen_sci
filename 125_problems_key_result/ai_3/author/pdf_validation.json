@@ -1,0 +1,26 @@
+{
+  "artifact": "author/sentient_robot_benchmark_report.pdf",
+  "status": "PASS",
+  "checks": {
+    "compiled_twice": true,
+    "pages": 8,
+    "page_range_8_to_10": true,
+    "page_size": "612 x 792 pt letter",
+    "encrypted": false,
+    "javascript": false,
+    "fonts_embedded": true,
+    "fonts_type1_or_builtin": true,
+    "rendered_pages": 8,
+    "visual_review_pages": [1, 3, 4, 8],
+    "text_extracted": true,
+    "undefined_references_after_second_compile": false,
+    "fatal_latex_errors": false
+  },
+  "nonblocking_warnings": [
+    "MiKTeX log4cxx permission warning",
+    "minor underfull hbox warnings in dense two-column text",
+    "IEEE class reports standard last-page column balancing reminder",
+    "minor overfull vbox below one point on the final page"
+  ],
+  "interpretation": "The PDF is a static design artifact; no experiment was executed."
+}

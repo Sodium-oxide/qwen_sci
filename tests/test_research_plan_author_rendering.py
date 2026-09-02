@@ -848,6 +848,21 @@ def test_declared_ieee_template_profile_uses_the_real_entrypoint_without_mutatio
     assert "A 50\\% Proposal" in rendered
 
 
+def test_ieee_bibliography_relies_on_class_generated_heading(tmp_path: Path) -> None:
+    repository_root = Path(__file__).resolve().parents[1]
+    template = repository_root / "Conference-LaTeX-template_10-17-19"
+    result = render_tex_project(
+        _document(),
+        template_dir=template,
+        project_dir=tmp_path / "ieee-bibliography-rendered",
+        profile=load_template_profile("ieee_conference_v1"),
+    )
+
+    rendered = result.main_tex.read_text(encoding="utf-8")
+    assert "\\bibliography{" in rendered
+    assert "\\section*{References}" not in rendered
+
+
 def test_report_page_policy_defaults_to_seven_and_normalizes_legacy_eight() -> None:
     assert normalize_minimum_pages(None) == 7
     assert normalize_minimum_pages(7) == 7

@@ -1,0 +1,39 @@
+{
+  "schema":"idea_result_v5",
+  "topic":"Can human memory be stored, manipulated, and transplanted digitally?",
+  "project_id":"neur_3",
+  "survey_binding":{"survey_run_id":"neur_3-survey-001","project_context_fingerprint":"neur3-digital-memory-context-v1","target_gap_ids":["G1","G2","G3","G4","G5","G6"]},
+  "selected_primary_idea":{
+    "id":"DEFL-CTA",
+    "title":"Digital Engram Fidelity Ladder and Causal Transfer Atlas",
+    "abstract":"A gated framework that measures how far memory representations progress from decoding to content-preserving reconstruction, selective manipulation, and causal transfer, while separating behavioral expression from neural reinstatement and subjective recollection.",
+    "research_object":"Task-defined memories represented across distributed neural states and digital models",
+    "mechanism":"Memory is a time-dependent distributed state whose encoding, consolidation, retrieval, and reconsolidation alter neural dynamics and associated behavior.",
+    "intervention":"Computational representation perturbations and, only after approval, subject-specific closed-loop neural modulation targeted to a candidate memory dimension.",
+    "observable_quantities":["content accuracy","temporal order","relational structure","neural reinstatement","behavioral expression","false-detail rate","collateral-memory effects","agency and confidence"],
+    "falsification_conditions":["held-out content is not reconstructed","cross-context transfer is at non-target baseline","target and non-target perturbations have indistinguishable effects","neural or behavioral effect is explained by nuisance state","false details rise without independent content fidelity"],
+    "target_gap_ids":["G1","G2","G3","G4","G5","G6"],
+    "evidence_sources":["E1","E2","E3","E4","E5","E6","E7","E8","E9","E10"]
+  },
+  "competitive_ideas":[
+    {"id":"R1","title":"Memory phenotype ontology and fidelity ladder","target_gap_ids":["G1","G5"],"status":"competitive_component"},
+    {"id":"R2","title":"Distributed engram state-space emulator","target_gap_ids":["G2","G4"],"status":"competitive_component"},
+    {"id":"R4","title":"Closed-loop memory prosthesis","target_gap_ids":["G3","G6"],"status":"competitive_component"}
+  ],
+  "high_risk_ideas":[
+    {"id":"R3","title":"Cross-subject content alignment","target_gap_ids":["G3","G7"],"risk":"high","value":"directly tests identity-preserving transfer"}
+  ],
+  "rejected_ideas":[
+    {"id":"X1","title":"Pure memory upload","reason":"assumes a stable file-like memory object and lacks an operational fidelity criterion"},
+    {"id":"X2","title":"Decoder-only memory transplantation","reason":"decoding or stimulation policy is weaker than content-preserving transfer"}
+  ],
+  "mcts_trace":[
+    {"node":"N0","defect":"memory upload has no agreed target","edit":"separate content, behavior, neural state, and recollection endpoints","gain":"operational fidelity ladder"},
+    {"node":"N1","defect":"engram activation can be mistaken for portable memory","edit":"add held-out content and relational reconstruction","gain":"content-specific test"},
+    {"node":"N2","defect":"memory traces are treated as static","edit":"add time-dependent distributed state-space modeling","gain":"mechanistic compatibility"},
+    {"node":"N3","defect":"decoder success can be mistaken for biological use","edit":"add collateral and selective causal promotion gates","gain":"functional interpretation"}
+  ],
+  "primary_direction_id":"DEFL-CTA",
+  "observed_results":[],
+  "execution_policy":{"mode":"DESIGN_ONLY","real_experiment_executed":false}
+}

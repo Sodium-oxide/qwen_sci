@@ -1,0 +1,24 @@
+{
+  "schema_version": "author_manifest_v1",
+  "project_id": "engi_3_energy_conversion_efficiency",
+  "survey_run_id": "survey-engi3-spectra-loop-001",
+  "selected_idea_id": "idea-spectra-loop-001",
+  "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "source_registry": {
+    "count": 12,
+    "dual_index_cross_validated_records": 8,
+    "browser_verified_record": "DOE Solar Photovoltaic Technology Basics",
+    "human_review_pending": ["publisher/DOI landing-page bibliographic verification", "full-text claim verification", "NREL efficiency-page review after browser network recovery"]
+  },
+  "report": {
+    "tex": "spectra_loop_energy_report.tex",
+    "pdf": "spectra_loop_energy_report.pdf",
+    "format": "IEEE conference / Letter / two-column",
+    "pages": 7,
+    "minimum_page_rule": 7,
+    "template": "Conference-LaTeX-template_10-17-19/IEEEtran.cls"
+  },
+  "included_sections": ["Abstract", "Introduction", "Survey", "Idea", "ExperimentDesign", "Analysis Plan", "Reproducibility Contract", "Risks", "Conclusion", "References"],
+  "excluded_content": ["observed results", "executed simulation", "fabricated efficiency value", "unregistered source", "extra non-workflow section"],
+  "companion_artifacts": {"editable_system_flow": "figures/spectra_loop_flow.drawio", "pdf_validation": "pdf_validation.json"}
+}

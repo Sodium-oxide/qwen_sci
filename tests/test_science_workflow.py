@@ -375,6 +375,47 @@ def _refresh_manifest_record(manifest_path: Path, section: str, name: str) -> No
     _write_json(manifest_path, manifest)
 
 
+def _verified_author_survey_binding(identity: dict[str, Any]) -> dict[str, Any]:
+    binding_identity = {
+        field: identity[field]
+        for field in (
+            "survey_run_id",
+            "project_id",
+            "project_context_fingerprint",
+        )
+    }
+    return {
+        "status": "BOUND_VERIFIED",
+        "human_confirmation_required": False,
+        "expected": dict(binding_identity),
+        "resolved": dict(binding_identity),
+    }
+
+
+def _set_author_document_survey_binding(
+    manifest_path: Path,
+    survey_binding: dict[str, Any],
+) -> None:
+    manifest = _read_json(manifest_path)
+    document_path = Path(manifest["artifacts"]["document_json"]["path"])
+    document = _read_json(document_path)
+    document["source_manifest"]["survey_binding"] = survey_binding
+    _write_json(document_path, document)
+    _refresh_manifest_record(manifest_path, "artifacts", "document_json")
+
+
+def _author_manifest_with_verified_survey_binding(tmp_path: Path) -> tuple[Path, dict[str, Any]]:
+    paths, metadata = _new_run(tmp_path)
+    run_science_workflow(paths=paths, metadata=metadata, services=_fake_services([]))
+    manifest_path = paths.run_dir / "author" / "attempt-001" / "author_manifest.json"
+    identity = _read_json(manifest_path)["identity"]
+    _set_author_document_survey_binding(
+        manifest_path,
+        _verified_author_survey_binding(identity),
+    )
+    return manifest_path, identity
+
+
 def test_workflow_runs_four_services_with_exact_paths_and_identity(tmp_path) -> None:
     paths, metadata = _new_run(tmp_path)
     calls: list[tuple[str, object]] = []
@@ -504,6 +545,108 @@ def test_author_manifest_rejects_noncanonical_experiment_design_handoff(tmp_path
 
     with pytest.raises(ScienceManifestError, match="not the ExperimentDesign manifest canonical handoff"):
         verify_author_manifest(author_manifest)
+
+
+def test_author_manifest_accepts_verified_survey_binding_envelope(tmp_path) -> None:
+    manifest_path, identity = _author_manifest_with_verified_survey_binding(tmp_path)
+
+    verified = verify_author_manifest(manifest_path)
+
+    assert verified.identity["survey_run_id"] == identity["survey_run_id"]
+
+
+def test_author_manifest_verifies_bound_document_quality_artifacts(tmp_path) -> None:
+    manifest_path, _identity = _author_manifest_with_verified_survey_binding(tmp_path)
+    manifest = _read_json(manifest_path)
+    attempt_dir = manifest_path.parent
+    quality_payload = {
+        "schema_version": "research_plan_author_document_quality_v1",
+        "enabled": True,
+        "selection_status": "COMPLETE_SCORECARD_SELECTED",
+        "selected_candidate_index": 0,
+        "winning_candidate_index": 0,
+        "warnings": [],
+        "candidates": [
+            {
+                "status": "SCORED",
+                "scorecard": {"total_score": 8.5, "selection_score": 8.5},
+            }
+        ],
+    }
+    quality_json = attempt_dir / "document_quality.json"
+    quality_report = attempt_dir / "document_quality.md"
+    quality_json.write_text(json.dumps(quality_payload), encoding="utf-8")
+    quality_report.write_text("# Quality\n", encoding="utf-8")
+    manifest["artifacts"]["document_quality_json"] = {
+        "path": str(quality_json),
+        "sha256": science_run.file_sha256(quality_json),
+    }
+    manifest["artifacts"]["document_quality_report_markdown"] = {
+        "path": str(quality_report),
+        "sha256": science_run.file_sha256(quality_report),
+    }
+    manifest["metadata"]["document_quality_bound"] = True
+    manifest["metadata"]["document_quality"] = {
+        "schema_version": quality_payload["schema_version"],
+        "enabled": True,
+        "selection_status": quality_payload["selection_status"],
+        "selected_candidate_index": 0,
+        "winning_candidate_index": 0,
+        "selected_candidate_status": "SCORED",
+        "selected_total_score": 8.5,
+        "selected_selection_score": 8.5,
+        "candidate_count": 1,
+        "warning_count": 0,
+    }
+    _write_json(manifest_path, manifest)
+
+    verified = verify_author_manifest(manifest_path)
+
+    assert verified.metadata["document_quality_bound"] is True
+    assert verified.artifacts["document_quality_json"] == quality_json.resolve()
+
+
+def test_author_manifest_rejects_mismatched_verified_survey_binding(tmp_path) -> None:
+    manifest_path, identity = _author_manifest_with_verified_survey_binding(tmp_path)
+    binding = _verified_author_survey_binding(identity)
+    binding["resolved"]["project_id"] = "other-project"
+    _set_author_document_survey_binding(manifest_path, binding)
+
+    with pytest.raises(ScienceManifestError, match="expected and resolved identities differ for project_id"):
+        verify_author_manifest(manifest_path)
+
+
+def test_author_manifest_rejects_verified_survey_binding_missing_identity(tmp_path) -> None:
+    manifest_path, identity = _author_manifest_with_verified_survey_binding(tmp_path)
+    binding = _verified_author_survey_binding(identity)
+    del binding["resolved"]["project_id"]
+    _set_author_document_survey_binding(manifest_path, binding)
+
+    with pytest.raises(ScienceManifestError, match="missing resolved.project_id"):
+        verify_author_manifest(manifest_path)
+
+
+@pytest.mark.parametrize(
+    ("status", "human_confirmation_required", "message"),
+    [
+        ("UNBOUND_REQUIRES_HUMAN_CONFIRMATION", True, "is not BOUND_VERIFIED"),
+        ("UNKNOWN_STATUS", False, "unsupported Survey binding status"),
+    ],
+)
+def test_author_manifest_rejects_unpublished_survey_binding_status(
+    tmp_path,
+    status: str,
+    human_confirmation_required: bool,
+    message: str,
+) -> None:
+    manifest_path, identity = _author_manifest_with_verified_survey_binding(tmp_path)
+    binding = _verified_author_survey_binding(identity)
+    binding["status"] = status
+    binding["human_confirmation_required"] = human_confirmation_required
+    _set_author_document_survey_binding(manifest_path, binding)
+
+    with pytest.raises(ScienceManifestError, match=message):
+        verify_author_manifest(manifest_path)
 
 
 def test_workflow_rejects_upstream_handoff_tampered_before_stage_commit(tmp_path) -> None:

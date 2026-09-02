@@ -1,0 +1,18 @@
+{
+  "schema_version": "survey_evidence_plan_v1",
+  "research_topic": "Will we ever travel at the speed of light?",
+  "scope": "Massive spacecraft and human/robotic interstellar mission concepts under established physics; no claim that a faster-than-light mechanism exists.",
+  "claims": [
+    {"claim_id": "C1", "claim": "Finite-energy acceleration of a nonzero-rest-mass craft cannot reach c in special relativity.", "evidence_type": "established physical law", "writing_mode": "direct"},
+    {"claim_id": "C2", "claim": "Directed-energy sails can be modeled at relativistic but subluminal speed; diffraction, material, and ISM constraints are central.", "sources": ["kulkarni2018", "lingam2020"], "writing_mode": "direct"},
+    {"claim_id": "C3", "claim": "Interstellar gas and dust create velocity-dependent damage and shielding challenges.", "sources": ["hoang2017", "droby2021"], "writing_mode": "direct"},
+    {"claim_id": "C4", "claim": "Radiation and biological constraints must be treated as mission-level requirements.", "sources": ["guo2024", "edl2012"], "writing_mode": "bounded"},
+    {"claim_id": "C5", "claim": "No currently verified anomalous-thrust result establishes a route around the relativistic boundary.", "sources": ["neunzig2021", "millis2005"], "writing_mode": "bounded"}
+  ],
+  "prohibited_inferences": [
+    "A relativistic sail model demonstrates human travel near c.",
+    "Time dilation permits a massive craft to attain or exceed c.",
+    "A laboratory null result proves every future propulsion idea impossible.",
+    "A radiation or shielding model supplies a universal safe-speed threshold."
+  ]
+}

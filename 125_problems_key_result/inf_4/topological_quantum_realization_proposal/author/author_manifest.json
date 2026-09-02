@@ -1,0 +1,27 @@
+{
+  "schema_version": "author_manifest_v1",
+  "project_id": "inf_4_topological_quantum_realization",
+  "survey_run_id": "survey-inf4-tqc-001",
+  "project_context_fingerprint": "tqc-inf4-scope-nonabelian-witness-design-only-v1",
+  "canonical_inputs": {
+    "survey_manifest": "../survey/survey_manifest.json",
+    "survey_evidence_plan": "../survey/survey_evidence_plan.json",
+    "survey_gap_ledger": "../survey/survey_gap_ledger.json",
+    "survey_idea_handoff": "../survey/survey_idea_handoff.json",
+    "idea_result": "../idea/idea_result.json",
+    "experiment_design": "../experiment_design/research_design.json",
+    "author_handoff": "../experiment_design/author_handoff.json"
+  },
+  "outputs": {
+    "tex": "topological_quantum_realization_report.tex",
+    "pdf": "topological_quantum_realization_report.pdf",
+    "pdf_validation": "pdf_validation.json"
+  },
+  "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "minimum_page_requirement": 7,
+  "page_count": 7,
+  "acknowledgement_section_present": false,
+  "execution_policy": {"mode": "DESIGN_ONLY", "observed_results": []},
+  "source_binding": {"registered_citation_keys": ["kitaev2003", "nayak2008", "lutchyn2010", "oreg2010", "lutchyn2018", "albrecht2016", "zhang2018", "vaitiekenas2020", "pan2020", "aasen2016", "karzig2017", "bravyi2005"]},
+  "known_review_items": ["full-text source applicability", "platform-specific device physics", "laboratory protocol safety", "statistical threshold selection", "universal-resource budget assumptions"]
+}

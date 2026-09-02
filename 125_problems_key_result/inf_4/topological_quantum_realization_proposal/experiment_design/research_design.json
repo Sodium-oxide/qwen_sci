@@ -1,0 +1,87 @@
+{
+  "schema_version": "research_design_v1",
+  "project_id": "inf_4_topological_quantum_realization",
+  "survey_run_id": "survey-inf4-tqc-001",
+  "selected_idea_id": "idea-brel-001",
+  "discipline_template": "computational_digital_plus_engineering_energy",
+  "title": "A staged Braiding-Readiness Evidence Ledger study for a candidate Majorana topological-qubit primitive",
+  "research_brief": {
+    "scientific_object": "A proposed gate-defined network of proximitized semiconductor-superconductor islands containing a candidate Majorana sector.",
+    "central_hypothesis": "A controllable topological Majorana sector yields a coherent multi-axis pattern across phase, nonlocality, protocol-order-dependent operation, protection scaling, and architectural resource accounting that matched trivial controls cannot reproduce.",
+    "alternative_explanations": ["local trivial Andreev bound states", "disorder-induced subgap states", "readout drift or calibration bias", "classical pulse-order artifacts", "ordinary control-induced coherence changes"],
+    "falsification_conditions": ["matched trivial control meets the same composite criterion", "order-reversal control is indistinguishable from proposed exchange protocol", "remote perturbation lacks predicted nonlocal effect", "protection trend fails or is explained by local covariates", "universal-computation budget has no viable non-Clifford path"]
+  },
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": [],
+    "prohibited_actions": ["no device fabrication", "no cryogenic operation", "no microwave/RF pulse execution", "no hardware control", "no data acquisition", "no live simulation run", "no claim of observed Majorana, braiding, or qubit result"],
+    "human_review_required": true
+  },
+  "stages": [
+    {
+      "stage_id": "D0",
+      "name": "Pre-registration and digital-twin falsification map",
+      "purpose": "Freeze the discriminating signatures, nuisance ranges, control protocols, analysis code specification, and decision boundaries before future device data are viewed.",
+      "inputs": ["effective model families", "parameter priors supplied by a qualified device team", "candidate and trivial-control protocol descriptions"],
+      "outputs": ["versioned BREL schema", "synthetic-only analysis validation plan", "blinded label key procedure", "stop/go criteria"],
+      "gate": "No physical data interpretation begins until candidate and null model families, endpoint definitions, and correction method are predeclared."
+    },
+    {
+      "stage_id": "D1",
+      "name": "Phase and reproducibility screening",
+      "purpose": "Test whether a declared candidate region and excitation-gap proxy recur across device batches and are distinguishable from intentionally trivial controls.",
+      "primary_observables": ["gap proxy map", "parameter-region stability", "device-to-device yield", "control-versus-candidate separation"],
+      "gate": "Advance only if the preregistered phase criterion and cross-device reproducibility criterion both pass; otherwise classify as phase candidate not supported."
+    },
+    {
+      "stage_id": "D2",
+      "name": "Nonlocality and parity-structure tests",
+      "purpose": "Determine whether paired-end/readout behavior contains remote, parity-constrained information that a fitted local null model cannot explain.",
+      "primary_observables": ["paired-end correlation", "remote-gate response", "parity-readout consistency", "length/separation dependence"],
+      "gate": "Advance only if held-out device and intentionally local control results reject the declared local-null envelope at the predeclared uncertainty threshold."
+    },
+    {
+      "stage_id": "D3",
+      "name": "Fusion/exchange order-dependence test",
+      "purpose": "Compare predeclared protocol orders with matched pulse, timing, and readout controls to test the predicted order-sensitive transformation.",
+      "primary_observables": ["fusion outcome distribution", "exchange-order contrast", "repeatability", "control contrast", "readout-bias calibration"],
+      "gate": "Advance only if the target order contrast is reproducible across predeclared devices, remains after blinded analysis, and is not reproduced by the matched trivial control."
+    },
+    {
+      "stage_id": "D4",
+      "name": "Protection and architecture translation",
+      "purpose": "Estimate whether the encoded operation improves a relevant error proxy with design variables and whether the resulting primitive has a quantitative universal-computation route.",
+      "primary_observables": ["operation-error proxy versus separation", "temperature/exposure/time dependence", "poisoning proxy", "readout contribution", "logical resource budget"],
+      "gate": "Classify as braiding-ready only if protection scaling survives alternative models and the universal resource budget passes a predeclared feasibility condition."
+    }
+  ],
+  "variables": {
+    "independent": ["device class", "candidate versus trivial control", "gate-defined parameter trajectory", "network path/order", "separation/length class", "temperature set point", "operation/exposure duration", "readout protocol", "device batch"],
+    "dependent": ["gap-proxy stability", "nonlocal correlation statistic", "parity/fusion outcome distribution", "order-dependent contrast", "error/poisoning proxy", "inter-device reproducibility", "logical resource overhead estimate"],
+    "controls": ["matched trivial device/network configuration", "scrambled path order", "readout calibration reference", "blinded analysis labels", "hold-out devices and temporal batches", "common exclusion and quality-control rule"],
+    "nuisance_or_moderators": ["disorder proxy", "electrostatic drift", "contact/transparency variation", "finite-size hybridization", "readout fidelity", "thermal quasiparticle environment", "operator/session effect"]
+  },
+  "endpoints": {
+    "primary": "Conjunctive BREL classification: pass only when each of phase, nonlocality, operation, protection, and architecture columns meets its preregistered threshold against its matched control.",
+    "secondary": ["effect sizes and uncertainty for every column", "null-control false-positive rate", "cross-batch reproducibility", "sensitivity to exclusions and drift", "resource-overhead scenario range"],
+    "negative_results": "A null or partial result is an informative classification, not a failed study: it identifies the earliest unsupported causal link."
+  },
+  "analysis_plan": {
+    "principles": ["freeze primary analysis before unblinding", "analyze full distributions rather than selected favorable traces", "separate exploratory diagnostics from confirmatory endpoints", "report effect sizes and compatible intervals", "use hierarchical device/batch models when adequate data exist", "perform sensitivity analyses for reasonable nuisance models"],
+    "candidate_model": "A compact effective topological model with a declared phase boundary and nonlocal parity predictions.",
+    "null_models": ["local Andreev-bound-state family", "disordered/multiband subgap-state family", "pulse/readout artifact family"],
+    "decision_rule": "A target classification needs all predeclared column gates. Failure in any target column blocks a stronger claim and triggers the corresponding diagnostic or redesign review."
+  },
+  "quality_and_reproducibility": {
+    "pre_registration": ["device inclusion/exclusion", "candidate and control definitions", "protocol orders", "analysis endpoints", "model versions", "uncertainty procedure", "multiple-comparison policy", "classification thresholds"],
+    "data_governance": ["immutable raw-data archive under laboratory policy", "instrument/configuration metadata", "versioned analysis environment", "blinded analysis labels", "traceable calibration record", "separation of exploratory and confirmatory analysis"],
+    "reproduction": ["repeat target protocols across independent device batches", "hold out at least one batch before threshold setting is finalized", "share non-sensitive analysis specification and summary-level evidence when institutional/IP rules permit"]
+  },
+  "risks_and_human_review": [
+    {"risk": "False-positive topology claim from a local mimic", "mitigation": "matched trivial controls, nonlocal endpoint, multiple null models, and conjunctive gate."},
+    {"risk": "False-negative caused by readout/calibration loss", "mitigation": "independent calibration references, recovery diagnostics, and explicit inconclusive state rather than forced classification."},
+    {"risk": "Selection bias across many device traces", "mitigation": "preregistered inclusion, blinding, distribution-level reporting, and hold-out devices."},
+    {"risk": "Overclaiming fault tolerance from a physical signal", "mitigation": "separate phase, operation, protection, and universal-computation claims in all outputs."},
+    {"risk": "Cryogenic/electrical laboratory hazards and equipment constraints", "mitigation": "the present design does not execute hardware work; any future work is performed only by qualified laboratory personnel under local safety, equipment, and institutional procedures."}
+  ]
+}

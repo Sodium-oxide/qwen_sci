@@ -223,6 +223,7 @@ def _input_identity(
     state: Mapping[str, Any],
     metadata: Mapping[str, Any],
     stage_name: str,
+    quantitative_handoff_manifest_path: Path | None = None,
 ) -> dict[str, Any]:
     topic, _options, immutable_inputs = _metadata_inputs(metadata)
     science_run_id = _text(metadata.get("science_run_id"))
@@ -266,7 +267,7 @@ def _input_identity(
         consumer_stage=stage_name,
         expected_topic=topic,
     )
-    return {
+    identity = {
         "survey_manifest_path": str(survey.canonical_path),
         "survey_identity": dict(survey.identity),
         "idea_manifest_path": str(idea.manifest_path),
@@ -276,6 +277,10 @@ def _input_identity(
         "author_input_path": str(design.canonical_path),
         "design_identity": dict(design.identity),
     }
+    if quantitative_handoff_manifest_path is not None:
+        identity["quantitative_handoff_manifest_path"] = str(quantitative_handoff_manifest_path)
+        identity["quantitative_handoff_manifest_sha256"] = file_sha256(quantitative_handoff_manifest_path)
+    return identity
 
 
 def _stage_request(
@@ -286,6 +291,7 @@ def _stage_request(
     stage_name: str,
     attempt: int,
     quiet: bool,
+    quantitative_handoff_manifest_path: Path | None = None,
 ) -> SurveyStageRequest | IdeaStageRequest | ExperimentDesignStageRequest | AuthorStageRequest:
     topic, options, _immutable_inputs = _metadata_inputs(metadata)
     attempt_dir = _stage_attempt_dir(paths, stage_name, attempt)
@@ -323,6 +329,7 @@ def _stage_request(
         expected_topic=topic,
     )
     if stage_name == "idea":
+        quantitative_options = _mapping(options.get("quantitative"))
         return IdeaStageRequest(
             config_path=paths.config_snapshot,
             topic=topic,
@@ -330,6 +337,13 @@ def _stage_request(
             survey_identity=survey.identity,
             attempt_dir=attempt_dir,
             quiet=quiet,
+            science_run_id=science_run_id,
+            quantitative_mode=(
+                _text(quantitative_options.get("mode"))
+                or _text(options.get("quantitative_mode"))
+                or "off"
+            ),
+            model=_text(_mapping(options.get("models")).get("quantitative")) or None,
         )
 
     idea = _completed_stage(
@@ -377,6 +391,7 @@ def _stage_request(
         rendering=_mapping(options.get("author_rendering")),
         render_required=bool(_mapping(options.get("author_rendering")).get("required", False)),
         survey_appendix=_text(options.get("survey_appendix")) or "source-link",
+        quantitative_handoff_manifest_path=quantitative_handoff_manifest_path,
     )
 
 
@@ -630,6 +645,7 @@ def _run_stage(
     stage_name: str,
     services: ScienceStageServices,
     quiet: bool,
+    quantitative_handoff_manifest_path: Path | None = None,
 ) -> None:
     with locked_science_run(paths):
         persisted_metadata, state = load_science_run(paths)
@@ -638,6 +654,19 @@ def _run_stage(
         stage = _mapping(_mapping(state.get("stages")).get(stage_name))
         if stage.get("status") == "COMPLETED":
             topic, options, _immutable_inputs = _metadata_inputs(persisted_metadata)
+            if stage_name == "author" and quantitative_handoff_manifest_path is not None:
+                recorded_handoff = _text(
+                    _mapping(stage.get("input_identity")).get(
+                        "quantitative_handoff_manifest_path"
+                    )
+                )
+                if recorded_handoff != str(quantitative_handoff_manifest_path):
+                    raise ScienceWorkflowError(
+                        "author",
+                        _STAGE_EXIT_CODES["author"],
+                        "Author is already completed without this quantitative handoff; "
+                        "use --restart-from author --force",
+                    )
             _completed_stage(
                 paths,
                 state,
@@ -657,7 +686,13 @@ def _run_stage(
             )
         input_identity: dict[str, Any]
         try:
-            input_identity = _input_identity(paths, state, persisted_metadata, stage_name)
+            input_identity = _input_identity(
+                paths,
+                state,
+                persisted_metadata,
+                stage_name,
+                quantitative_handoff_manifest_path,
+            )
             mark_stage_running(state, stage_name, input_identity=input_identity)
             attempt = int(_mapping(_mapping(state.get("stages")).get(stage_name)).get("attempt") or 0)
             request = _stage_request(
@@ -667,6 +702,7 @@ def _run_stage(
                 stage_name=stage_name,
                 attempt=attempt,
                 quiet=quiet,
+                quantitative_handoff_manifest_path=quantitative_handoff_manifest_path,
             )
         except Exception as exc:
             error = _coerce_stage_error(stage_name, exc)
@@ -778,6 +814,7 @@ def run_science_workflow(
     until: str = "author",
     services: ScienceStageServices | None = None,
     quiet: bool = False,
+    quantitative_handoff_manifest_path: str | Path | None = None,
 ) -> ScienceWorkflowOutcome:
     """Run pending stages serially with exact persisted handoff paths.
 
@@ -788,6 +825,23 @@ def run_science_workflow(
     if until not in SCIENCE_STAGE_NAMES:
         raise ScienceWorkflowError("survey", 2, f"Unknown science stage: {until}")
     active_services = services or default_science_stage_services()
+    handoff_path: Path | None = None
+    if quantitative_handoff_manifest_path is not None:
+        handoff_path = Path(quantitative_handoff_manifest_path).expanduser().resolve()
+        try:
+            handoff_path.relative_to((paths.run_dir / "quantitative").resolve())
+        except ValueError as exc:
+            raise ScienceWorkflowError(
+                "author",
+                _STAGE_EXIT_CODES["author"],
+                "quantitative Author handoff must remain under the science run quantitative directory",
+            ) from exc
+        if not handoff_path.is_file():
+            raise ScienceWorkflowError(
+                "author",
+                _STAGE_EXIT_CODES["author"],
+                f"quantitative Author handoff does not exist: {handoff_path}",
+            )
     _recover_interrupted_stages(paths, metadata)
     for stage_name in SCIENCE_STAGE_NAMES[: SCIENCE_STAGE_NAMES.index(until) + 1]:
         _run_stage(
@@ -796,6 +850,7 @@ def run_science_workflow(
             stage_name=stage_name,
             services=active_services,
             quiet=quiet,
+            quantitative_handoff_manifest_path=handoff_path,
         )
     return _finish_workflow(paths, until=until)
 

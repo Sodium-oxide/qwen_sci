@@ -1,0 +1,21 @@
+{
+  "schema_version":"pdf_validation_v1",
+  "pdf":"neurodegenerative_disease_cure_atlas_report.pdf",
+  "status":"VALIDATED",
+  "page_count":7,
+  "minimum_pages":7,
+  "requested_range":"8-10",
+  "repository_page_policy":"A requested minimum of 8 is interpreted as minimum 7 according to project instructions; no unrelated filler was added.",
+  "page_size":"612 x 792 pt (US letter)",
+  "fonts_embedded":true,
+  "compile_passes":2,
+  "latex_exit_status":"success",
+  "text_extraction":"success",
+  "rendered_pages":7,
+  "semantic_checks":{"acknowledgment_section":false,"observed_results_empty":true,"proposal_status_present":true,"reference_keys_resolved":true,"ieee_class_used":true,"unresolved_citations":false},
+  "visual_checks":{"all_pages_rendered":true,"first_page_readable":true,"middle_page_readable":true,"last_page_readable":true,"equations_visible":true,"tables_visible":true,"no_blank_pages":true},
+  "warnings":{"underfull_hbox":true,"overfull_hbox_in_evidence_table":false},
+  "warning_disposition":"Only non-fatal underfull-hbox typography warnings remain in justified paragraphs; the previously observed evidence-table overfull warning is absent from the final compilation log, and rendered pages were inspected with no clipped text.",
+  "pdf_marker_operation":"create marker executed once before first PDF generation",
+  "validated_at":"2026-09-01"
+}

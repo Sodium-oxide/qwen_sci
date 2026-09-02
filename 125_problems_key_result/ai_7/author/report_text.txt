@@ -1,0 +1,482 @@
+      Can Robots or AIs Have Human Creativity?
+    A Design-Only Benchmark for Product, Process,
+                  and Co-Creativity
+                                                Four-Agent Research Workflow
+                                           Survey – Idea – ExperimentDesign – Author
+                                                   Design-only research report
+
+
+   Abstract—The question of whether robots or artificial intel-      generated it. Likewise, a human-AI team can be more effective
+ligence can have human creativity mixes several empirically          than either participant without either participant satisfying a
+distinct claims. A system may generate a novel artifact, solve       human-equivalence criterion.
+a constrained design problem, surprise an evaluator, or collab-
+orate productively with a person without possessing human-like          The scientific problem addressed here is therefore:
+intention, general intelligence, or conscious experience. This pa-        Under what conditions can an AI or robot repeatedly
+per presents CREATIVE-AI-AGENCY-BENCHMARK, a design-                      produce artifacts that are novel, valuable, surprising,
+only research program that separates product creativity, process          diverse, and constraint-satisfying, while also show-
+creativity, and human-AI co-creativity. The protocol combines
+bounded task performance with novelty controls, objective value
+                                                                          ing adaptive search, transfer to held-out tasks, and
+functions, held-out transfer, search-trace logging, and provenance        useful human-AI co-creation?
+analysis. It compares human-only, AI-only, and human-AI con-            The paper makes three contributions. First, it defines
+ditions across Go, engineering design, music or visual motifs,       an evaluation vocabulary that separates product, process,
+code, scientific hypotheses, and cross-domain recombination. The
+proposed analysis uses blocked randomization and hierarchical
+                                                                     and co-creative claims. Second, it proposes CREATIVE-AI-
+models with preregistered contrasts. It explicitly tests retrieval   AGENCY-BENCHMARK, a multi-domain benchmark with
+leakage, evaluator source bias, mode collapse, and hidden human      controls for memorization and evaluation bias. Third, it gives
+contribution. The deliverable is a falsifiable measurement archi-    a reproducible experiment and analysis plan whose decision
+tecture rather than a claim that current systems are conscious       rules can falsify narrow and strong versions of the creativity
+or human. No empirical outputs, human ratings, or benchmark
+results are asserted here.
+                                                                     claim. The paper is DESIGN ONLY: it reports a protocol and
+   Index Terms—computational creativity, artificial intelligence,    expected observations, not results.
+human-AI collaboration, novelty, transfer learning, provenance,       II. S URVEY: W HAT THE E XISTING E VIDENCE S UPPORTS
+evaluation design
+                                                                     A. Bounded machine performance
+                      I. I NTRODUCTION                                  Silver et al. describe AlphaGo as an integrated system in
+                                                                     which policy networks select moves, value networks evaluate
+   In 2016, AlphaGo defeated a leading human Go player and           positions, and tree search combines those learned signals
+produced moves that many observers described as unexpected           with simulation [1]. It learned from human expert games and
+or beautiful. The event is an important milestone in machine         from self-play. This architecture matters for creativity research
+learning, but it does not settle whether a machine has human         because it contains an explicit generator-search-evaluator loop.
+creativity. The program combined policy and value networks           An unusual move can be measured as a low-frequency action
+with supervised learning, self-play, and Monte Carlo tree            under an expert reference distribution; its usefulness can be
+search, and achieved strong performance in a highly structured       measured by win probability. Neither measurement establishes
+game [1]. Its success supports a precise claim: an engineered        that AlphaGo formed a self-chosen purpose or experienced
+system can search and select effective actions in a difficult        surprise.
+domain. The stronger claim that it therefore has human-like             The historical case also illustrates a selection issue. Human
+creativity adds unmeasured requirements, including agency,           observers noticed a small number of memorable moves after
+transferable concept formation, self-directed goals, and per-        seeing the complete match. A benchmark must score all
+haps subjective experience.                                          generated candidates under a fixed protocol, not only the
+   This distinction matters because the phrase “creative AI” is      artifacts that experts later find impressive. It must also compare
+now used for systems that generate music, images, designs,           against retrieval-matched and search-matched baselines.
+code, scientific hypotheses, and game strategies. Some sys-
+tems recombine learned material, some search a space with            B. Creative systems and conceptual spaces
+explicit evaluators, and some participate in iterative workflows       Wiggins proposed a framework for describing and compar-
+with people. These mechanisms can yield useful and novel             ing creative systems in terms of spaces, rules, and exploration
+products, but a product is not identical to the process that         processes [2]. Boden distinguishes combinational, exploratory,
+                             TABLE I                                         III. I DEA : A T HREE -L AYER C REATIVITY B ENCHMARK
+             C LAIMS AND MINIMUM EVIDENCE REQUIRED
+                                                                              The proposed benchmark is called CREATIVE-AI-
+ Claim                Minimum evidence in this protocol                    AGENCY-BENCHMARK. Its central idea is to make the
+ Product creativity   Novelty and objective value above a retrieval-       word “creativity” a structured profile. A system can be strong
+                      matched baseline, with hard constraints satisfied.
+ Process creativity   Held-out transfer, adaptive error correction, and    on product novelty and weak on transfer; a human-AI team
+                      robustness to perturbations from a logged search     can be strong on complementarity and weak on autonomous
+                      process.                                             generation. Those profiles are informative, while a single rank
+ Co-creativity        Joint advantage over both solo baselines plus a
+                      measurable complementary contribution pattern.       is not.
+ Human-like agency    Not inferred from output; would require a separate
+                      theory and evidence beyond this benchmark.           A. Product layer
+                                                                              The product layer asks whether a final artifact satisfies a
+                                                                           purpose. It measures novelty relative to a declared corpus,
+and transformational creativity in conceptual spaces [3]. These            usefulness through an objective function when available, sur-
+perspectives motivate a process record: the benchmark must                 prise through blinded judgments, diversity across independent
+identify what the system was allowed to combine, which rules               samples, and satisfaction of hard constraints. A design that is
+constrained the search, how alternatives were generated, and               novel but fails its load test is not counted as useful merely
+how candidates were evaluated.                                             because it is unusual.
+   They also caution against a universal creativity scalar. Nov-
+                                                                           B. Process layer
+elty depends on a reference population, while value depends
+on a purpose. A visually unusual artifact may be unusable; a                  The process layer asks whether the system can explore
+highly useful engineering change may be close to a known                   and revise. It records the number and structural spread of
+design. The primary analysis therefore retains a vector of                 candidates, response to feedback, correction of an injected
+outcomes instead of hiding tradeoffs inside one score.                     error, and transfer to a held-out concept or domain. A system
+                                                                           that emits a good sample once may have product creativity;
+C. Generalization and human-like learning                                  process evidence requires repeated behavior under controlled
+                                                                           perturbations.
+   Lake et al. argue that high performance on selected bench-
+marks does not imply human-like learning and thinking. They                C. Co-creative layer
+emphasize compositionality, causal reasoning, learning from                   The co-creative layer compares a human-only workflow, an
+few examples, and transfer across contexts [4]. For the present            AI-only workflow, and a human-AI workflow under matched
+question, this means that an AI that generates attractive in-              time and information budgets. The joint score is not credited
+distribution outputs may still lack process-level creativity.              automatically to either party. Human edits, vetoes, accepted
+Held-out concepts, new combinations, perturbed constraints,                suggestions, and component origins are logged. The target is
+and prompt paraphrases are necessary stress tests.                         complementarity, not replacement.
+                                                                           D. Falsifiable hypotheses
+D. Human-AI co-creation
+                                                                              H0 states that apparent creativity is explained by retrieval,
+   Interactive machine learning treats the human as an active              recombination, or human selection; the advantage should dis-
+source of labels, corrections, and preferences rather than a               appear on matched held-out tests. H1 states that AI systems
+passive evaluator [5]. Hybrid-intelligence research similarly              can attain high product novelty and usefulness in bounded
+emphasizes complementary capabilities and joint problem                    domains without human-like agency. H2 predicts that search
+solving [6]. A collaborative artifact should thus be evaluated             and self-critique increase value and constraint satisfaction
+twice: once as a product and once as a record of who proposed,             but can reduce diversity when optimized directly against an
+selected, transformed, or rejected each component. Otherwise,              evaluator. H3 predicts a joint advantage for selected tasks
+a human-polished AI draft can be misreported as autonomous                 when human and AI roles are complementary and human
+creativity.                                                                veto remains available. H4 predicts that held-out concepts and
+                                                                           cross-domain tasks reduce retrieval advantages. H5 predicts
+E. Evidence gap                                                            that source labels change human ratings. H6 predicts that
+                                                                           provenance changes attribution even when the final artifact
+   The surveyed literature supports a bounded conclusion: cur-
+                                                                           is held constant.
+rent systems can produce novel-looking and useful artifacts in
+bounded settings, particularly when learning is combined with                          IV. F ORMAL O PERATIONALIZATION
+search or feedback. It does not demonstrate human-like agency                 Let x be an artifact, R a reference set, C a set of hard
+or a domain-general creative faculty. The most important gap               constraints, and V a task-specific value function. The nearest-
+is causal separation of retrieval, recombination, optimization,            reference novelty score is defined as
+adaptive search, and human selection. The benchmark below
+is designed around that separation.                                                    N (x; R) = 1 − max sim(ϕ(x), ϕ(r)),              (1)
+                                                                                                        r∈R
+where ϕ is a declared representation and similarity is calibrated                                     TABLE II
+by a held-out validation set. The maximum is used to penalize                             B ENCHMARK FACTORS AND CONTROLS
+near copies; the full similarity distribution is retained for audit.     Factor                  Controlled levels or record
+  For hard constraints C = {c1 , . . . , cm }, define                    Author                  Human-only, AI-only, human-AI; matched time
+                                                                                                 and information budget
+                                 m                                       Retrieval               Index enabled/disabled; corpus and exposure
+                             1 ∑︂
+               K(x; C) =           ⊮[cu (x) = 1].               (2)                              logged
+                             m u=1                                       Search                  Single sample, generate-and-rank, tree/search
+                                                                                                 trace
+When a task has an objective, usefulness is a normalized value           Feedback                None, model self-critique, human critique
+                                                                         Generalization          Held-out concept, domain, constraint perturba-
+                               V (x) − Vmin                                                      tion, prompt paraphrase
+                     U (x) =                ,                   (3)      Provenance              Prompts, candidates, edits, vetoes, rejected out-
+                               Vmax − Vmin                                                       puts, seeds
+
+with bounds fixed before testing. If no objective exists, blinded
+ratings are reported as a separate measurement rather than
+                                                                       B. Stages and conditions
+silently substituted for U .
+   For n independent candidates x1 , . . . , xn , diversity is the        Stage A is a controlled offline benchmark. Model ver-
+mean pairwise representation distance                                  sions, prompts, sampling parameters, retrieval indexes, task
+                                                                       instances, seeds, and evaluation code are frozen. Each family is
+                 2        ∑︂
+                                                                       partitioned into reference, development, and held-out concepts.
+   D(X) =                       (1 − sim(ϕ(xa ), ϕ(xb ))) . (4)
+             n(n − 1)                                                  At least 20 independent candidates per condition and instance
+                        1≤a<b≤n
+                                                                       are generated, with all candidates retained.
+Process transfer is the difference between held-out and devel-            Stage B is a local sandbox for co-creation. Four role
+opment performance                                                     policies are implemented: human-first, AI-first, alternating
+                                                                       turns, and critique-only. The interface provides human veto,
+                     T = P heldout − P dev ,                    (5)
+                                                                       revision, undo, provenance export, and data deletion. It has
+where P is a preregistered task performance measure. A                 no external posting, purchasing, deployment, or high-stakes
+negative value is not a failure of the benchmark; it is evidence       recommendation capability.
+against robust transfer for that condition.                               Stage C is optional blinded evaluation. Low-stakes artifacts
+   For a final human-AI artifact, a simple provenance decom-           are presented in randomized order, with source labels either
+position records the fraction of accepted operations attributable      hidden or experimentally manipulated. Raters score novelty,
+to each source                                                         usefulness, surprise, coherence, and constraint satisfaction in-
+                    ∑︁                                                 dependently, including an “insufficient information” response.
+                            ⊮[source(o) = q] w(o)
+             Aq = o∈O ∑︁                           ,          (6)      Objective tests are preferred when the domain permits them;
+                                o∈O w(o)                               ratings do not establish agency.
+where O is the operation log, q is human, AI, or shared, and              The minimum factorial comparison includes author (human-
+w(o) is a declared operation weight. This is an audit statistic,       only, AI-only, human-AI), retrieval (enabled or disabled),
+not a metaphysical account of authorship.                              search (single sample, generate-and-rank, or tree search), cri-
+                                                                       tique (absent, self-critique, or human critique), order (human-
+                   V. E XPERIMENT D ESIGN                              first or AI-first), evaluation (blind or labeled), and task split
+                                                                       (in-distribution, held-out concept, held-out domain, or per-
+A. Task families                                                       turbed constraints). Blocked randomization is used by task
+   Six families cover different notions of value. In Go, systems       family and difficulty. Compute budget, context length, tool
+propose legal moves for novel board states; win probability            access, and training exposure are reported for every model
+and legality provide objective checks. In engineering design,          comparison.
+a lightweight structure or device is generated under mass,
+cost, strength, and manufacturability constraints; simulation          C. Controls against false creativity claims
+supplies value. Music or visual motifs test structured variation          Memorization is tested by nearest-neighbor search, phrase
+with held-out combinations and supplementary blinded ratings.          overlap, training-corpus exclusion where feasible, and canary
+Code and algorithm tasks use hidden tests and a resource               concepts absent from all retrieval sources. Recombination
+objective. Scientific hypothesis tasks require predicted obser-        is represented by a retrieval-matched baseline. Diversity is
+vations, competing mechanisms, and falsification conditions.           measured across all independent generations, not only the best
+Cross-domain recombination asks for a concept that combines            candidate. Evaluator bias is tested by keeping the artifact fixed
+two held-out ideas without copying either reference artifact.          while changing the source label. Process claims are tested by
+   No single family is treated as definitive. A system may             shuffling or truncating traces and by perturbing constraints.
+excel at search in Go while failing to transfer an abstraction         Human contribution is measured from operation logs rather
+in science. The benchmark reports this heterogeneity.                  than inferred from the final prose or image.
+           VI. A NALYSIS AND R EPRODUCIBILITY                        choice. Objective value functions are easier to write for engi-
+   For task-level outcome yijkt from condition i, family j,          neering and code than for art. Human ratings reflect culture,
+instance k, and replicate t, the planned model is                    expertise, and expectations even when blinded. Provenance
+                                                                     logs expose operations but cannot fully recover hidden training
+            yijkt = µ + αi + βj + γk + δt + ϵijkt ,           (7)    data or latent causal influence. Held-out transfer is necessary
+                                                                     but not sufficient for human-like creativity. Finally, a multi-
+where condition effects are estimated with task-family and           domain benchmark can measure functional regularities without
+instance effects, and uncertainty intervals are reported. In         answering a philosophical question about experience; that
+a Bayesian implementation, weakly informative priors and             question is intentionally outside this study.
+posterior intervals are declared before inspecting held-out out-        The central risk is evaluator optimization. A system may
+comes. In a frequentist implementation, cluster-robust intervals     learn to produce artifacts that look creative to a fixed rater
+are used by task instance.                                           while reducing diversity or failing objective tests. The pro-
+   The confirmatory contrasts are AI-only versus human-only,         tocol counters this by separating surprise from value, using
+human-AI versus the better solo baseline, retrieval versus           source-label swaps, changing reference corpora, and retaining
+no retrieval, and critique versus no critique. The primary           negative results. Another risk is over-crediting the machine
+axes are novelty, usefulness, surprise, diversity, constraints,      when the human supplied the goal, selected the candidate,
+transfer, and memorization. Multiplicity is controlled across        and repaired its errors. The operation-level attribution record
+these predeclared axes; exploratory profiles are not allowed to      makes such contribution visible.
+replace an axis-level failure.
+   The data package contains task specifications, public ref-               VIII. TASK -S PECIFIC E VALUATION R ECIPES
+erence data, hashes of private data, model and tool versions,           The benchmark is intentionally heterogeneous, but hetero-
+seeds, prompts, evaluation scripts, metric definitions, exclusion    geneity must not become an excuse for vague scoring. Each
+rules, and event logs. If weights or data cannot be redistributed,   task family receives a task card before generation. The card
+an executable adapter and complete provenance record are             defines the goal, admissible operations, reference population,
+released. Compute energy may be recorded as contextual               hard constraints, objective value function, held-out split, and
+metadata, but it is not a creativity metric. Each report states      provenance schema. The following recipes illustrate the min-
+whether retrieval was available and whether a human selected         imum information required.
+the final artifact.
+                                                                     A. Game strategy
+A. Interpretation matrix
+                                                                        For Go, a task card specifies board size, legal-state genera-
+   Support for bounded product creativity requires an improve-       tion, time budget, and the opponent policy used for validation.
+ment over the retrieval-matched baseline on both novelty and         Novelty is measured against the expert-game corpus and
+value while satisfying hard constraints. Support for process         against a policy baseline. Usefulness is the change in win
+creativity additionally requires held-out transfer, adaptive er-     probability or game outcome under a fixed evaluation engine.
+ror correction, and perturbation robustness. Support for co-         A move is not called creative merely because it is rare: it
+creativity requires a predeclared joint advantage over both solo     must remain legal, survive a fixed depth of analysis, and be
+baselines and a complementary contribution pattern. Failure on       evaluated over multiple opponent policies. To measure process,
+transfer narrows the claim; it does not erase a valid product        the system receives a board-state perturbation after a candidate
+result.                                                              move and must revise without access to the original answer.
+   None of these decision rules supports a claim of con-             The trace records policy proposals, value estimates, search
+sciousness, sentience, intention, or human-equivalent general        expansions, and pruning decisions.
+intelligence. A system can satisfy a functional criterion by op-
+timization while lacking a human cognitive state. Conversely,        B. Engineering design
+a human-like state is not established by a functional score             For an engineering task, the reference set contains designs
+alone.                                                               with known dimensions and performance, but test instances
+                                                                     use new combinations of requirements. For example, a can-
+      VII. G OVERNANCE , S AFETY, AND L IMITATIONS                   didate may need to minimize mass and cost while satisfying
+   The benchmark is offline or sandboxed and must not be used        a load, displacement, thermal, and manufacturing constraint.
+for clinical, employment, educational, legal, or public author-      A deterministic simulator computes feasibility and objective
+ship decisions. Human participation is optional, low-stakes,         value. Human raters can assess intelligibility, but their score
+consent-based, and revocable. Participants can withdraw and          is secondary to the simulator. The evaluation reports Pareto
+delete their data. Dataset licenses, privacy, copyright, and         dominance, distance from known designs, and sensitivity to
+contamination are audited before release. Generated scientific       tolerance changes. A process test injects a failed component
+hypotheses remain proposals until independently checked.             into the first design and measures whether the system searches
+   Several limitations are irreducible. Embedding distance is        a genuinely different design region rather than repeating a
+a proxy for novelty and can be distorted by representation           textual justification.
+C. Music and visual motifs                                                                        TABLE III
+                                                                              A BLATION QUESTIONS AND DIAGNOSTIC OBSERVATIONS
+   Creative artifacts in music and visual media require more
+                                                                        Removed component      Diagnostic question
+careful separation of value from preference. The card specifies
+                                                                        Retrieval              Does novelty remain after reference access is
+a small symbolic grammar, an allowed palette or instrument                                     removed and leakage is tested?
+set, and held-out combinations of motifs. Structural novelty is         Search                 Does candidate breadth improve value, or
+computed on symbolic features and local repetition statistics;                                 only increase evaluator-facing style?
+                                                                        Self-critique          Does revision correct objective errors or col-
+perceptual similarity is computed with a representation fixed                                  lapse diversity?
+before the test. Raters score novelty, coherence, and usefulness        Human feedback         Which gains come from the person rather
+independently under blind and source-labeled conditions. The                                   than the model?
+                                                                        Held-out split         Does the mechanism transfer beyond familiar
+study reports the label effect, the rater reliability, and the per-                            concepts?
+centage of artifacts that satisfy the explicit grammar. A model         Provenance             Can attribution be reconstructed when the
+that exploits an evaluator’s stylistic bias without maintaining                                artifact is identical?
+structural diversity is identified as evaluator optimization.
+                                                                              IX. A BLATIONS AND C AUSAL ATTRIBUTION
+D. Code and algorithms
+                                                                         The factorial design is useful only if it can identify mech-
+   Code tasks provide unusually strong value functions. The           anisms. A staged ablation therefore removes one capability
+task card includes a hidden test suite, an execution time limit,      at a time while holding the model, budget, prompt length,
+a memory limit, and a license-safe input domain. Novelty is           task instance, and random-seed schedule fixed. The baseline
+measured on abstract syntax and behavior, not only token              emits one sample without retrieval, self-critique, or iterative
+distance. Usefulness is the hidden-test score and resource            human input. The generate-and-rank condition adds candidate
+efficiency. Process creativity is tested by changing function         comparison; the tree-search condition adds explicit branching;
+names, input ordering, or an algorithmic constraint and asking        the retrieval condition adds a frozen reference index; and the
+for a revision. The evaluator keeps failed candidates, compiler       critique condition adds revision feedback. The observed differ-
+messages, patches, and reverted patches. It therefore distin-         ence is interpreted conditionally, not as a universal contribution
+guishes an adaptive debugging loop from a single memorized            of “AI creativity.”
+solution.                                                                For human-AI interaction, contribution is logged at op-
+                                                                      eration level. An operation is a prompt, candidate accep-
+                                                                      tance, rejection, edit, parameter change, critique, or veto. The
+E. Scientific hypotheses
+                                                                      log assigns source as human, AI, or shared and stores a
+   For scientific hypothesis generation, the artifact is not          cryptographic content identifier for the affected artifact. The
+treated as a discovery. A task card describes a bounded               attribution statistic in (6) is reported with sensitivity analyses
+mechanism space and requires a proposed mechanism, pre-               for operation weights. We do not interpret a high AI fraction
+dicted observations, competing explanations, and at least one         as autonomous agency: the human may still have supplied
+falsification test. Domain experts may assess clarity and plau-       the goal, the evaluation function, and the acceptance rule.
+sibility in a low-stakes blinded review, but the primary process      Provenance describes causal workflow participation, not inner
+criterion is internal testability. Held-out transfer changes the      mental states.
+domain vocabulary while preserving the causal pattern. A                 The source-label experiment uses a fixed artifact set. Each
+generated hypothesis is never published or used to guide a            artifact is shown once with an AI label, once with a human
+real experiment without independent human review.                     label, and once with a neutral anonymous label in a bal-
+                                                                      anced design, subject to an evaluation protocol that prevents
+                                                                      repeated-memory effects. If scores change, the change is
+F. Cross-domain recombination                                         evidence of expectancy bias. It cannot be corrected by simply
+   Cross-domain tasks directly test the combination operation         averaging labels, because the direction and size of the bias
+suggested by computational creativity theories. Two source            may depend on task family and evaluator expertise.
+concepts are held out from the retrieval index and represented
+                                                                                 X. S AMPLING , P OWER , AND ROBUSTNESS
+by controlled descriptions. The system must produce a third
+concept that uses a declared relation from each source but does         The default offline sample is at least 20 independent
+not copy phrases, diagrams, or parameters. A retrieval-matched        candidates per condition and task instance. This number is
+recombination baseline receives the same source descriptions          an operational minimum for observing diversity and failure
+but no search or self-critique. Value is measured by a task-          modes, not a universal power guarantee. Before finalizing the
+specific feasibility test, and novelty is evaluated against the       sample, a pilot on development concepts estimates variance
+union of both source domains. This condition is a stress test         and the smallest practically important effect. The held-out test
+for transfer, not a claim that combination alone is human             remains untouched by tuning. If a participant evaluation is
+creativity.                                                           added, the number of raters and artifacts is chosen from a
+simulation of the preregistered hierarchical model rather than                                      TABLE IV
+from a generic rule of thumb.                                                          I NTERPRETATION OF POSSIBLE PROFILES
+   Let d denote the smallest practically important difference           Observed profile              Supported interpretation
+on a metric, s2 its pilot variance, and ρ the estimated within-         High novelty, low value       Unusual generation, not product creativity
+instance correlation. A simple planning quantity for a balanced         High novelty and value,       Bounded product creativity
+                                                                        low transfer
+two-condition comparison is                                             High value and transfer,      Evidence for transferable process capabil-
+                                 2                                      retrieval controlled          ity
+                              2s (1 − ρ)                                Joint advantage, comple-      Conditional co-creativity
+                       neff =              ,                   (8)
+                                   d2                                   mentary edits
+                                                                        Label effect without ob-      Evaluator expectancy bias
+which is then inflated for clustering, attrition, and multiplicity.     jective change
+Equation (8) is a planning aid only; the final analysis uses            Large      nearest-neighbor   Retrieval or memorization concern
+                                                                        overlap
+the hierarchical model and reports uncertainty intervals. No
+sample size is selected after viewing held-out outcomes.
+   Robustness is evaluated over random seeds, prompt para-               The strongest falsification of H1 is not a low score on
+phrases, reference-corpus swaps, and small constraint changes.        one aesthetic task. It is a replicated failure across held-
+The primary result is stable only if its direction and practical      out concepts, objective value, and perturbation tests after
+interpretation survive these perturbations. A model may show          retrieval-matched controls. The strongest falsification of H3
+a large novelty effect with one embedding model and no                is the absence of joint advantage after time, information, and
+effect with another; that pattern is reported as representation       human selection budgets are matched. H0 is weakened when
+sensitivity, not as a decisive creativity result. Similarly, if       an AI retains novelty, value, and transfer after retrieval and
+an artifact passes a simulator only after an undocumented             recombination controls. These are conditional inferences; they
+manual repair, the repaired version and the original version          do not prove or disprove a machine’s subjective experience.
+are separate observations.
+   Missing data are categorized before analysis. A timeout,              XII. I MPLEMENTATION C HECKLIST AND R EPORTING
+invalid output, and evaluator refusal are not silently removed as                           S CHEMA
+failures of convenience. The exclusion rule is declared by task          Before execution, the study operator completes a one-page
+family and applied before comparing conditions. For human             task card and freezes the configuration. The card records task
+ratings, “insufficient information” is a valid response and is        family, task generator, reference corpus version, representation
+summarized rather than imputed as a low creativity score.             model, similarity threshold, value function, hard constraints,
+For model traces, a missing log invalidates the corresponding         seed schedule, model version, retrieval setting, tool permis-
+process claim but need not invalidate an independently scored         sions, time budget, and stopping rule. A second reviewer may
+artifact.                                                             inspect the card at the milestone, but the study does not use a
+                                                                      repeated specification-and-quality gate for every small change.
+       XI. E XPECTED O BSERVATION PATTERNS AND                           During execution, the runner writes an append-only event
+                    FALSIFICATION                                     log. Each event includes a task identifier, condition, seed,
+   The design supports several informative patterns. High             model identifier, input hash, output hash, tool call, latency,
+novelty and value with low transfer would support a bounded           resource metadata, evaluator version, and error category. Hu-
+product claim but weaken a process-level claim. High transfer         man interaction events additionally record the operation type
+after retrieval removal would weaken the memorization expla-          and whether the person accepted, edited, rejected, or vetoed
+nation, especially if it survives task and prompt perturbations.      a candidate. The log is the unit of audit; screenshots or final
+Search may improve objective value while reducing diversity;          artifacts alone are insufficient for process claims.
+that result would support a search-value tradeoff rather than            The final report contains a condition-by-metric matrix, per-
+a simple “more search is more creative” story. A human-AI             task distributions, held-out transfer, nearest-neighbor exam-
+advantage that disappears when the human is prevented from            ples, failure categories, label-bias estimates, and provenance
+selecting the final artifact would reveal hidden human selection      summaries. It lists all planned and exploratory analyses sepa-
+as the main mechanism.                                                rately. It states which data were private, which model weights
+   The benchmark can also produce null results. If AI-only,           were unavailable, and whether any manual repair occurred.
+human-only, and human-AI conditions are statistically indis-          It reports negative and invalid outputs, not just successful
+tinguishable on a task family, the family may not separate the        artifacts. Every figure and table carries the task split and
+relevant mechanisms or the task may be too easy. If novelty           evaluation visibility (blind or source-labeled).
+and usefulness are negatively correlated, the result identifies a        The release package is organized into six layers: task
+product tradeoff. If source labels strongly alter ratings while       specifications; public data and licenses; model adapters; raw
+objective tests remain fixed, ratings are not suitable as the sole    provenance logs; metric implementations; and analysis note-
+criterion. If nearest-neighbor similarity remains high despite a      books or scripts. A manifest maps every reported number to
+large semantic distance score, representation choice has failed       input hashes and a code version. For private human data,
+to control memorization.                                              release aggregate statistics and deletion procedures instead of
+raw text. For copyrighted reference materials, release hashes          A third extension evaluates physical robots. Embodied tasks
+and derived features only when redistribution is not permitted.     add perception noise, actuator limits, safety constraints, and
+These procedures prevent a later reader from confusing a            material wear. The benchmark must first run in a digital twin
+reproducible protocol with an unverifiable demonstration.           with a bounded action space, then in a supervised laboratory
+                                                                    sandbox. Robots must have an emergency stop and a human
+                      XIII. D ISCUSSION                             operator. Physical embodiment can reveal whether creativity
+                                                                    depends on sensing and manipulation, but it cannot by itself
+   The proposed framework treats creativity as a family of
+                                                                    resolve the question of subjective experience. All hardware
+functional properties. This choice is scientifically conservative
+                                                                    trials should therefore report functional outcomes and safety
+but not empty. Engineering systems routinely need novelty,
+                                                                    events, not anthropomorphic interpretations.
+value, constraint satisfaction, and adaptive search; measuring
+these properties can guide design tools without deciding               The benchmark also needs an adversarial evaluation track.
+whether a machine has a mind. The framework also accom-             An evaluator-independent judge, a simulator, and a held-
+modates human-AI systems in which the most useful unit is a         out human panel can be compared on the same artifact set.
+team, while preserving the distinction between joint capability     Adversarial prompts can request a superficially surprising
+and machine replacement.                                            but infeasible object, while constraint-preserving prompts can
+   The word “human” remains important. Human creativity is          request a conservative variant. If a system changes only its
+embedded in development, language, social learning, bodily          rhetorical explanation while its objective performance remains
+interaction, and long-term goals. A benchmark that matches          fixed, that separation is evidence about presentation, not
+a human rating on a short task cannot represent this entire         creativity. If it finds a better design but cannot explain the
+history. The protocol therefore uses human-like generalization      constraint tradeoff, the artifact may still be useful, but the
+only as a stress-test analogy, not as a definition of personhood.   process trace is incomplete.
+To claim equivalence would require a much broader theory,              Finally, future benchmark versions should maintain a living
+including how goals are formed, how values are maintained,          contamination ledger. Each new public task is checked against
+and how an agent understands its own activity. Those questions      known training and retrieval sources, and any later release
+are not identifiable from a generated artifact.                     of reference material is recorded. Benchmark scores are not
+   The framework has practical implications for tool builders.      comparable across versions unless the task cards, representa-
+If a system improves value by search but loses diversity,           tions, and split definitions are aligned. The versioned ledger is
+interfaces can expose multiple candidates and preserve human        especially important for generative models whose training data
+choice. If held-out transfer fails, deployment should remain        may change without an obvious user-visible change. These
+within validated domains. If source labels dominate ratings,        extensions reinforce the main principle: measure what the
+product demonstrations should disclose uncertainty and avoid        system did, under which information and constraints, and what
+using anthropomorphic language. If provenance is incomplete,        a human contributed. Do not infer more than the measurement
+authorship and intellectual-property claims should remain con-      identifies.
+ditional. These are engineering and governance consequences
+of measured behavior, not judgments about whether a machine                                A PPENDIX A
+is alive.                                                                          M INIMAL A RTIFACT M ANIFEST
+                                                                       Every executed condition is accompanied by a machine-
+     XIV. E XTENSIONS AND B OUNDARY C ONDITIONS
+                                                                    readable manifest with the following fields: benchmark ver-
+   The first deployment of the benchmark should remain              sion, task-family identifier, task-instance hash, development
+deliberately modest. A useful extension is a longitudinal           or held-out split, model and adapter version, retrieval index
+protocol in which the same system receives feedback over            hash, prompt template hash, seed, sampling parameters, tool
+several sessions. The task card can then distinguish one-shot       permissions, time budget, objective-function version, hard-
+novelty from accumulation of a reusable strategy. Longitudinal      constraint version, output hash, and evaluator version. The
+data must preserve model checkpoints and prompt history;            manifest also records whether a human selected or edited the
+otherwise a later system update can be mistaken for learning.       final artifact. A missing field blocks the associated process or
+The analysis can compare early and late revision gain while         attribution claim until it is repaired.
+holding the task distribution fixed.                                   The minimal event schema contains event_id,
+   A second extension studies interactive goal formation with-      parent_event_id,                 source,          operation,
+out treating it as human-like motivation. The system may be         input_hash, output_hash, timestamp, condition,
+offered several explicitly stated goals and allowed to select a     task_id, and error_class. For a search trace, parent
+subgoal according to a declared policy. The benchmark can           identifiers reconstruct the candidate tree. For a co-creation
+measure whether the selection improves coverage and value           trace, source is one of human, AI, or shared, and operation
+under a budget. It cannot infer that the system “wanted” the        is one of propose, critique, accept, reject, edit, veto, or
+goal. This boundary prevents an observable control policy           revise. The schema avoids storing private participant text in
+from being converted into an unsupported psychological claim.       the public release; a salted hash and an aggregate operation
+record are sufficient for audit when raw data cannot be
+shared.
+   The minimal result table has one row per artifact and
+columns for novelty, usefulness, surprise, diversity contribu-
+tion, constraint satisfaction, held-out transfer status, nearest-
+neighbor similarity, and validity. A separate process table
+contains search breadth, revision gain, error correction, and
+perturbation robustness. A separate co-creation table contains
+human edit distance, veto rate, accepted suggestion rate, and
+source-attribution statistics. This separation prevents a high
+product score from silently substituting for evidence of a
+transferable process.
+   The release checklist is: verify licenses; remove personal
+identifiers; publish the task cards; freeze the split; validate
+hashes; run the preregistered analysis; preserve negative and
+invalid outputs; report all exclusions; and state whether the
+final artifact was human-selected. A report that omits these
+fields may still describe a demonstration, but it is not a
+reproducible creativity claim under this benchmark.
+                              A PPENDIX B
+                              C ONCLUSION
+   Robots and AIs can plausibly produce artifacts that are
+novel, useful, and surprising in bounded domains. The avail-
+able evidence, including AlphaGo, supports that functional
+claim but does not prove that a machine has human creativ-
+ity. The proposed CREATIVE-AI-AGENCY-BENCHMARK
+turns the larger question into a sequence of falsifiable tests:
+control retrieval, score value and novelty separately, test held-
+out transfer, log the search process, and measure human
+contribution. A positive result would justify a bounded claim
+about creative performance or co-creation. A negative transfer
+or memorization control would identify the boundary of that
+claim. This is a more useful scientific outcome than declaring
+a machine creative or non-creative from a memorable single
+output.
+                              R EFERENCES
+ [1] D. Silver, A. Huang, C. J. Maddison, A. Guez, L. Sifre, G. van
+     den Driessche, J. Schrittwieser, I. Antonoglou, V. Panneershelvam, M.
+     Lanctot, S. Dieleman, D. Grewe, J. Nham, N. Kalchbrenner, I. Sutskever,
+     T. Lillicrap, M. Leach, K. Kavukcuoglu, T. Graepel, and D. Hassabis,
+     “Mastering the game of Go with deep neural networks and tree search,”
+     Nature, vol. 529, pp. 484–489, 2016.
+ [2] G. A. Wiggins, “A preliminary framework for description, analysis and
+     comparison of creative systems,” Knowledge-Based Systems, vol. 19,
+     nos. 7–8, pp. 449–458, 2006.
+ [3] M. A. Boden, The Creative Mind: Myths and Mechanisms, 2nd ed.
+     London, U.K.: Routledge, 2004.
+ [4] B. M. Lake, T. D. Ullman, J. B. Tenenbaum, and S. J. Gershman,
+     “Building machines that learn and think like people,” Behavioral and
+     Brain Sciences, vol. 40, 2017.
+ [5] S. Amershi et al., “Power to the people: The role of humans in interactive
+     machine learning,” AI Magazine, vol. 35, no. 4, pp. 105–120, 2014.
+ [6] D. Dellermann, P. Ebel, M. Sollner, and J. M. Leimeister, “Hybrid
+     intelligence,” Business & Information Systems Engineering, vol. 61, pp.
+     637–643, 2019.
+

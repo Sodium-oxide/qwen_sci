@@ -1,0 +1,20 @@
+{
+  "capability": {
+    "capability": "COMPOSABLE",
+    "reason": "The model is fully represented by audited MathIR and an approved solver adapter.",
+    "solver_id": "scipy_solve_ivp",
+    "system_type": "ODE_IVP"
+  },
+  "checks": {
+    "execution_text_or_code_absent": true,
+    "mathir_valid": true,
+    "model_spec_valid": true,
+    "solver_available": true,
+    "trusted_expression_ast": true
+  },
+  "errors": null,
+  "mathir_identity": "05dc5f0dc4e9ad19d69f7f1cf7addf449a8041df50158d1252900071f9a5b53f",
+  "model_spec_identity": "cd21da58386cf6696315686bcbaec9ba28ab88da4d76e8ac1036080e7ac92f0f",
+  "schema_version": "quantitative_model_audit_v1",
+  "status": "MODEL_AUDITED"
+}

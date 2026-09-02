@@ -1,0 +1,25 @@
+{
+  "stage": "Survey",
+  "status": "DESIGN_ONLY",
+  "search_questions": [
+    "How should AI progress be separated from reliable performance under shift and ambiguity?",
+    "When do human and AI errors complement rather than correlate?",
+    "Does uncertainty-aware delegation prevent over-reliance and preserve human learning?",
+    "How do task displacement and new task creation alter claims of replacement?"
+  ],
+  "evidence_classes": {
+    "capability_and_adoption": ["S1"],
+    "human_ai_productivity": ["S2"],
+    "labor_task_framework": ["S3", "S4"],
+    "human_ai_symbiosis": ["S5"],
+    "automation_behavior": ["S6", "S7"],
+    "risk_governance": ["S8"]
+  },
+  "inclusion_rules": [
+    "Prefer primary studies, authoritative reports, and peer-reviewed reviews.",
+    "Record DOI or stable institutional URL when available.",
+    "Separate demonstrated task effects from forecasts about occupations.",
+    "Treat uncertainty communication as an intervention with measurable calibration."
+  ],
+  "planned_validation": ["citation-to-claim audit", "task regime balance", "error-dependence analysis", "held-out transfer", "human-subject ethics review if executed"]
+}

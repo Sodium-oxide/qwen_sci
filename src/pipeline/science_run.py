@@ -198,13 +198,26 @@ def normalize_immutable_options(options: Mapping[str, object]) -> dict[str, Any]
     except PagePolicyError as error:
         raise ScienceRunInputError(str(error)) from error
 
+    quantitative_mode = _optional_text(options.get("quantitative_mode"))
+    if quantitative_mode is None:
+        quantitative_mode = _optional_text(
+            options.get("quantitative", {}).get("mode")
+            if isinstance(options.get("quantitative"), Mapping)
+            else None
+        )
+    quantitative_mode = (quantitative_mode or "off").casefold()
+    if quantitative_mode not in {"off", "optional", "required"}:
+        raise ScienceRunInputError("quantitative_mode must be off, optional, or required")
+
     return {
         "discipline_ids": normalized_disciplines,
         "selected_direction": _optional_text(options.get("selected_direction")) or "",
         "models": {
             "experiment_design": _optional_text(options.get("exp_design_model")),
             "author": _optional_text(options.get("author_model")),
+            "quantitative": _optional_text(options.get("quantitative_model")),
         },
+        "quantitative": {"mode": quantitative_mode},
         "author_rendering": {
             "template_dir": _optional_text(options.get("template_dir")),
             "template_profile": _optional_text(options.get("template_profile")),
@@ -697,6 +710,51 @@ def mark_stage_completed(
     return state
 
 
+def recover_stage_completed(
+    state: dict[str, Any],
+    stage_name: str,
+    *,
+    attempt: int,
+    result_manifest_path: str,
+    outputs: Mapping[str, object],
+    result_identity: Mapping[str, object],
+) -> dict[str, Any]:
+    """Promote a verified artifact from a failed attempt without allocating a new one."""
+
+    if stage_name not in SCIENCE_STAGE_NAMES:
+        raise ScienceRunInputError(f"Unknown science stage: {stage_name}")
+    if not isinstance(attempt, int) or isinstance(attempt, bool) or attempt < 1:
+        raise ScienceRunStateError(f"Cannot recover {stage_name} with an invalid attempt")
+    _validate_science_state(state)
+    stage = state["stages"][stage_name]
+    if stage["status"] != "FAILED":
+        raise ScienceRunStateError(
+            f"Cannot recover {stage_name} while it is {stage['status']}"
+        )
+    if stage["attempt"] != attempt:
+        raise ScienceRunStateError(
+            f"Cannot recover {stage_name} attempt {attempt}; current attempt is {stage['attempt']}"
+        )
+    normalized_path = str(result_manifest_path).strip()
+    if not normalized_path:
+        raise ScienceRunStateError(f"Cannot recover {stage_name} without a result path")
+    timestamp = utc_now()
+    stage.update(
+        {
+            "status": "COMPLETED",
+            "finished_at": timestamp,
+            "result_identity": copy.deepcopy(dict(result_identity)),
+            "result_manifest_path": normalized_path,
+            "outputs": copy.deepcopy(dict(outputs)),
+            "failure": None,
+            "execution_owner": None,
+        }
+    )
+    state["status"] = "RUNNING"
+    state["last_updated_at"] = timestamp
+    return state
+
+
 def mark_stage_failed(
     state: dict[str, Any],
     stage_name: str,
@@ -810,18 +868,33 @@ def validate_resume_inputs(
         if provided != expected_options.get("discipline_ids"):
             raise ScienceRunConflictError("Resume discipline_ids differ from the science run")
 
-    scalar_fields = ("selected_direction", "survey_appendix")
+    scalar_fields = ("selected_direction", "survey_appendix", "quantitative_mode")
     for field_name in scalar_fields:
         provided = explicit_options.get(field_name)
         if provided is None:
             continue
-        normalized = normalize_immutable_options({field_name: provided}).get(field_name)
-        if normalized != expected_options.get(field_name):
+        normalized_options = normalize_immutable_options({field_name: provided})
+        normalized = (
+            normalized_options.get("quantitative", {}).get("mode")
+            if field_name == "quantitative_mode"
+            else normalized_options.get(field_name)
+        )
+        if field_name == "quantitative_mode":
+            expected_quantitative = (
+                expected_options.get("quantitative", {}).get("mode")
+                if isinstance(expected_options.get("quantitative"), Mapping)
+                else "off"
+            )
+            expected = expected_quantitative or "off"
+        else:
+            expected = expected_options.get(field_name)
+        if normalized != expected:
             raise ScienceRunConflictError(f"Resume {field_name} differs from the science run")
 
     model_fields = {
         "exp_design_model": "experiment_design",
         "author_model": "author",
+        "quantitative_model": "quantitative",
     }
     expected_models = expected_options.get("models")
     if not isinstance(expected_models, Mapping):

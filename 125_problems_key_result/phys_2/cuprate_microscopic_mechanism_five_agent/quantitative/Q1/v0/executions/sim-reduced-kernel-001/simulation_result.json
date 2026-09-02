@@ -1,0 +1,45 @@
+{
+  "schema_version": "manual_quantitative_simulation_result_v1",
+  "execution_id": "sim-reduced-kernel-001",
+  "execution_mode": "NUMERICAL_SIMULATION",
+  "result_kind": "SIMULATED",
+  "empirical_claim_status": "NOT_EMPIRICAL",
+  "plan_identity": "q1-v0-reduced-kernel-fixed-grid-20260903",
+  "deterministic": true,
+  "model_parameters": {
+    "lambda0": 0.7,
+    "omega_K": 420.0,
+    "p_af": 0.16,
+    "sigma_af": 0.1,
+    "p_pg": 0.105,
+    "sigma_pg": 0.05,
+    "pseudogap_depletion_amplitude": 0.35
+  },
+  "scenario_results": [
+    {
+      "scenario_id": "H0_spin_only",
+      "summary": {
+        "peak_Tc_K": 100.65343530554583,
+        "peak_doping": 0.16,
+        "Tc_at_p_0p10_K": 54.19785120012302
+      },
+      "numerical_checks": {
+        "finite_outputs": true,
+        "fixed_grid_complete": true
+      }
+    },
+    {
+      "scenario_id": "H1_spin_times_coherence",
+      "summary": {
+        "peak_Tc_K": 89.81079928541843,
+        "peak_doping": 0.17,
+        "Tc_at_p_0p10_K": 18.299398221271563
+      },
+      "numerical_checks": {
+        "finite_outputs": true,
+        "fixed_grid_complete": true
+      }
+    }
+  ],
+  "interpretation_boundary": "The calculation compares declared phenomenological kernels only; it neither fits a cuprate data set nor establishes a microscopic pairing mechanism."
+}

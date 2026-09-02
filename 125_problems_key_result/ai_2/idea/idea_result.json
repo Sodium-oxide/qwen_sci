@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "stage": "idea",
+  "status": "completed",
+  "topic": "Is there a limit to human intelligence?",
+  "direction": "CONSTRAINED-GENERAL-INTELLIGENCE-PLASTICITY-BENCHMARK",
+  "claim_type": "conditional latent-trait and plasticity benchmark",
+  "core_question": "Does human cognitive performance approach a reproducible upper boundary once high-range measurement, age, domain, practice, health, and environment are modeled explicitly, and can structured education or training shift that boundary or only improve task-specific performance?",
+  "hypotheses": [
+    {"id":"H0","name":"measurement_equivalence","prediction":"high-range calibration and practice adjustment relocate or reduce apparent global plateaus"},
+    {"id":"H1","name":"environmental_shift","prediction":"education, health, sleep, and enrichment shift latent performance heterogeneously across domains"},
+    {"id":"H2","name":"conditional_asymptote","prediction":"fixed task families show individual- and domain-specific asymptotes"},
+    {"id":"H3","name":"transfer_limitation","prediction":"near transfer exceeds far transfer after adaptive training"},
+    {"id":"H4","name":"network_mediation","prediction":"brain measures partially mediate frontier differences without uniquely determining them"}
+  ],
+  "function_stack": ["measurement", "latent_trait_estimation", "learning_trajectory", "cross_domain_transfer", "environmental_modulation", "neural_mediation"],
+  "primary_controls": ["alternate_form_retest", "active_training_control", "untrained_transfer_tasks", "age_and_health_strata", "high_range_item_calibration"],
+  "primary_endpoints": ["latent_general_ability", "domain_specific_ability", "individual_asymptote", "near_transfer", "far_transfer", "measurement_invariance", "neural_mediation"],
+  "decision_rule": "support a conditional limit only if a calibrated, practice-adjusted, domain-specific latent trajectory has a stable asymptote with uncertainty and the result survives alternate forms, active controls, and independent sites",
+  "execution_mode": "DESIGN_ONLY",
+  "expected_results": [],
+  "observed_results": []
+}

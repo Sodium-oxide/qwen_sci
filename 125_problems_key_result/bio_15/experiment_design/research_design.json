@@ -1,0 +1,103 @@
+{
+  "schema_version": "experiment_design_v1",
+  "project_id": "bio_15",
+  "design_id": "design-bio_15-population-peak-persistence-v1",
+  "topic": "Will the world's population keep growing indefinitely?",
+  "template": "computational_digital",
+  "upstream_binding": {
+    "survey_manifest_path": "../survey/survey_manifest.json",
+    "survey_run_id": "survey-bio_15-v1",
+    "idea_result_path": "../idea/idea_result_v5.json",
+    "selected_primary_idea_id": "IDEA-PP-02",
+    "project_context_fingerprint": "pcf:bio_15:population_peak_persistence_atlas:v1"
+  },
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "execution_permitted": false,
+    "observed_results": []
+  },
+  "research_question": "Under which joint fertility, mortality, migration, and climate-disruption trajectories does a calibrated cohort-component ensemble assign positive global population growth through 2100?",
+  "central_hypothesis": "A jointly calibrated probabilistic cohort-component ensemble can distinguish post-2100 growth-persistence conditions from earlier-peak conditions; climate-disruption covariates deserve retention only if they improve held-out prediction and calibration beyond demographic components alone.",
+  "mechanism": {
+    "state_update": "For each country, age, sex, and year, the next cohort equals survivors from the previous cohort plus net migration; the youngest cohort is generated from age-specific fertility.",
+    "component_models": ["fertility", "survival", "net_migration"],
+    "aggregation": "Country-age-sex posterior trajectories are summed to regional and global totals before calculating annual growth and first peak year.",
+    "climate_boundary": "Climate-disruption features are candidate lagged predictors in component models. They are not interpreted as universal causal effects without separate identification evidence."
+  },
+  "alternative_explanations": [
+    "Starting age structure and fertility convergence alone explain peak persistence, making climate features unnecessary.",
+    "Apparent climate value reflects correlated development, conflict, or measurement changes.",
+    "An observed model difference is a prior or aggregation artifact rather than component information.",
+    "Long-horizon disagreement is irreducible structural uncertainty, not a resolvable data deficit."
+  ],
+  "variables": {
+    "independent": [
+      {"name": "fertility_trajectory_family", "levels": ["baseline", "slower_decline", "faster_decline", "hierarchical_posterior_draw"]},
+      {"name": "mortality_trajectory_family", "levels": ["baseline", "slower_survival_gain", "faster_survival_gain", "shock_augmented_draw"]},
+      {"name": "migration_trajectory_family", "levels": ["baseline", "high_variance", "low_variance", "hierarchical_posterior_draw"]},
+      {"name": "climate_feature_set", "levels": ["none", "pre_registered_hazard_lags"], "role": "ablation rather than assumed cause"}
+    ],
+    "dependent": [
+      {"name": "positive_global_growth_2100", "type": "posterior probability"},
+      {"name": "first_global_peak_year", "type": "posterior distribution"},
+      {"name": "global_total_population_2100", "type": "posterior distribution"},
+      {"name": "country_and_region_interval_coverage", "type": "calibration metric"},
+      {"name": "held_out_log_predictive_density", "type": "forecast score"}
+    ],
+    "controls": [
+      "common input vintage per run",
+      "fixed country-age-sex harmonization table",
+      "frozen historical cutoff and holdout windows",
+      "identical posterior draw counts across compared models",
+      "no-climate demographic baseline",
+      "pre-registered aggregation hierarchy"
+    ],
+    "mediators_or_moderators": [
+      "baseline age structure",
+      "education and contraception indicators where legally available",
+      "country development stratum",
+      "hazard exposure lag",
+      "data completeness"
+    ]
+  },
+  "data_plan": {
+    "core_source": "WPP 2024 country-age-sex demographic series after license and release-version review.",
+    "supplemental_sources": "Pre-registered climate-disruption and contextual datasets only after provenance, spatial resolution, and license review.",
+    "unit_of_analysis": "country-age-sex-year",
+    "time_split": "Rolling-origin historical training and held-out forecast windows; exact cutoffs are frozen before execution.",
+    "missing_data": "Do not silently impute. Record missingness by variable-country-year; use pre-specified model-based treatment only within sensitivity analyses and compare against complete-case-calibrated subsets."
+  },
+  "comparators_and_ablations": [
+    "deterministic cohort-component baseline with common central inputs",
+    "probabilistic demographic-components-only ensemble",
+    "probabilistic ensemble with climate-disruption feature set",
+    "fertility-only, mortality-only, and migration-only counterfactual component swaps",
+    "country-level fit followed by independent region/world aggregation",
+    "alternative prior and historical-cutoff sensitivity runs"
+  ],
+  "calibration_and_statistics": {
+    "primary_metrics": ["log_predictive_density", "continuous_ranked_probability_score", "interval_coverage", "interval_width", "bias_by_country_and_age"],
+    "decision_rule": "Call post-2100 persistence supported only if the selected model is not worse than the demographic baseline on pre-specified held-out metrics, has acceptable calibration, and its posterior probability of positive global growth at 2100 exceeds a threshold fixed before execution.",
+    "uncertainty": "Report posterior intervals, between-model dispersion, and sensitivity to structural assumptions separately.",
+    "multiplicity": "Treat country and component diagnostics as hierarchical estimates; do not interpret an unadjusted collection of country-level feature coefficients as confirmed effects."
+  },
+  "replication_and_reproducibility": {
+    "replication_unit": "independent rolling-origin forecast origins and independently seeded posterior chains",
+    "minimum_rationale": "The number of forecast origins and posterior draws is selected by convergence, effective sample size, Monte Carlo error, and stability of decision outputs, not by a participant sample-size calculation.",
+    "randomization_or_blinding": "Not applicable to historical demographic records. Analysis code will hold out future observations by pre-declared time windows; model labels may be masked for a final score comparison when practical.",
+    "software_provenance": "Version-lock code, input files, configuration, random seeds, and output schema."
+  },
+  "safety_ethics_governance": {
+    "human_subjects": "No human-subject recruitment or intervention is proposed.",
+    "privacy": "Use aggregated public demographic data; do not merge personally identifying migration records.",
+    "harm_risk": "Population scenarios can be misused to justify coercive reproductive or migration policy. Results must not be translated into individual, ethnic, national, or reproductive prescriptions.",
+    "human_review": ["demographer", "statistician", "climate-risk scientist", "data-governance reviewer", "ethics reviewer for communication risks"]
+  },
+  "falsification_criteria": [
+    "Held-out calibration is materially below the pre-registered acceptance band.",
+    "The demographic-only baseline matches or exceeds the climate-feature model on primary scores.",
+    "A claimed persistence branch disappears under reasonable prior, input-vintage, or aggregation sensitivity checks.",
+    "Component swaps cannot identify a stable contribution to peak timing."
+  ],
+  "observed_results": []
+}

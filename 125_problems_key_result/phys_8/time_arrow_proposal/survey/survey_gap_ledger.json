@@ -1,0 +1,15 @@
+{
+  "schema_version": "survey_gap_ledger_v1",
+  "accepted_gaps": [
+    {"gap_id": "G1", "title": "Operational attribution of temporal asymmetry", "status": "ACCEPTED", "evidence_keys": ["seifert2012", "seifert2018", "landi2021"]},
+    {"gap_id": "G2", "title": "Multiresolution partial-observation benchmark", "status": "ACCEPTED", "evidence_keys": ["seifert2018", "gellmann_hartle2007", "strasberg_winter2021"]},
+    {"gap_id": "G3", "title": "Separation of records, decoherence, and dissipation", "status": "ACCEPTED", "evidence_keys": ["zurek1993", "gellmann_hartle2007", "landi2021"]},
+    {"gap_id": "G4", "title": "Explicit gravitational-entropy boundary ledger", "status": "ACCEPTED", "evidence_keys": ["clifton_ellis_tavakol2013", "aguirre_carroll_johnson2012"]},
+    {"gap_id": "G5", "title": "Artifact-resilient decision protocol", "status": "ACCEPTED", "evidence_keys": ["seifert2018", "carberry2004", "ciliberto2017"]},
+    {"gap_id": "G6", "title": "Reproducible benchmark artifacts", "status": "ACCEPTED", "evidence_keys": ["seifert2018", "landi2021"]}
+  ],
+  "rejected_gap_candidates": [
+    {"title": "A laboratory program can directly prove why the universe began with low entropy", "reason": "Not testable from the permitted finite-system evidence and exceeds the evidence boundary."},
+    {"title": "Decoherence independently solves the global arrow-of-time problem", "reason": "Conflates record formation with boundary conditions and entropy accounting."}
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": "idea_result_v5",
+  "project_id": "phys_6_quantum_uncertainty_20260901",
+  "survey_run_id": "survey-quantum-uncertainty-001",
+  "project_context_fingerprint": "quantum-uncertainty-measurement-decoherence-information-v1",
+  "primary_direction_id": "idea-ubt-001",
+  "survey_binding": {
+    "manifest": "../survey/survey_manifest.json",
+    "accepted_gap_ids": ["G1", "G2", "G3", "G4", "G5", "G6"],
+    "hard_invariants": [
+      "Preparation uncertainty and measurement error-disturbance are not treated as the same theorem.",
+      "Decoherence and readout noise are modeled separately from intrinsic incompatibility.",
+      "Quantum error correction is not described as removing noncommutation.",
+      "No observed hardware result is invented."
+    ]
+  },
+  "selected_primary_idea": {
+    "idea_id": "idea-ubt-001",
+    "title": "Uncertainty Budget Tomography: Calibrated Separation of Incompatibility, Instrument Disturbance, Decoherence, and Readout Noise",
+    "abstract": "A qubit-focused protocol that jointly calibrates state preparation, a generalized measurement instrument, an open-system channel, and classical readout, then tests whether the resulting decomposition improves prediction of an entropic or state-prediction task.",
+    "target_gap_ids": ["G1", "G2", "G3", "G4", "G5", "G6"],
+    "scientific_object": "A single qubit, with an optional correlated ancilla or memory qubit, measured in deliberately incompatible bases.",
+    "mechanism": "Noncommutation constrains preparation spreads; the apparatus, channel, and readout map those intrinsic distributions to observed records through distinct, calibratable transformations.",
+    "intervention": "Vary basis angle, input Bloch vector, generalized-measurement strength, channel parameter, readout confusion matrix, and optional memory correlation while holding the analysis contract fixed.",
+    "validation_protocol": "Compare a preregistered four-term model against an aggregate-noise baseline on held-out qubit settings, with calibration ablations and uncertainty propagation.",
+    "falsifiers": [
+      "The four terms are not identifiable from the declared preparation, instrument, channel, and readout calibration data.",
+      "The UBT model does not improve held-out prediction of the selected information metric relative to the aggregate-noise baseline.",
+      "Independently calibrated channel or measurement data disagree with the inferred decomposition outside stated uncertainty intervals."
+    ],
+    "claim_boundaries": [
+      "The project does not claim that uncertainty can be eliminated.",
+      "The project does not treat every environmental interaction as an instantaneous projective collapse.",
+      "The project does not interpret quantum error correction as defeating noncommutation."
+    ],
+    "evidence_keys": ["busch2007", "coles2017", "baek2013", "erhart2012", "busch2013", "ringbauer2014", "buscemi2014", "ozawa2018", "zhang2015", "steane1998", "devitt2013", "daley2014", "divincenzo2000", "bharti2022"]
+  },
+  "competitive_ideas": [
+    {
+      "idea_id": "idea-memory-002",
+      "title": "Calibrated entropic uncertainty with quantum memory",
+      "target_gap_ids": ["G3", "G4"],
+      "status": "competitive_module"
+    },
+    {
+      "idea_id": "idea-edr-003",
+      "title": "Generalized measurement error-disturbance benchmark",
+      "target_gap_ids": ["G1", "G2"],
+      "status": "competitive_module"
+    }
+  ],
+  "high_risk_ideas": [
+    {
+      "idea_id": "idea-transfer-004",
+      "title": "Cross-platform uncertainty budget transfer between photonic and spin-compatible models",
+      "target_gap_ids": ["G6"],
+      "status": "high_risk_due_to_calibration_non_equivalence"
+    }
+  ],
+  "rejected_ideas": [
+    {
+      "title": "Use quantum error correction to remove quantum uncertainty",
+      "reason": "Violates the Survey invariant separating mitigation of noise from noncommutation."
+    },
+    {
+      "title": "Treat all observed randomness as decoherence",
+      "reason": "Collapses preparation uncertainty, instrument effects, and readout noise into one unsupported category."
+    }
+  ],
+  "mcts_evolution_summary": [
+    {"step": 1, "operation": "problem_reframing", "result": "Separated preparation uncertainty from device-level noise and disturbance."},
+    {"step": 2, "operation": "mechanism_composition", "result": "Combined calibrated instrument and channel models with entropic task metrics."},
+    {"step": 3, "operation": "falsifiability_filter", "result": "Selected a held-out predictive comparison rather than a narrative-only interpretation."}
+  ]
+}

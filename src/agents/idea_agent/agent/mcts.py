@@ -617,6 +617,10 @@ class IdeaNode:
 @dataclass
 class MCTSConfig:
     max_iterations: int = _mcts_default("exploration_budget", _mcts_default("max_iterations", 128))
+    screening_max_iterations: int = _mcts_default("screening_max_iterations", 6)
+    refinement_max_iterations: int = _mcts_default(
+        "refinement_max_iterations", _mcts_default("max_iterations", 128)
+    )
     max_depth: int = _mcts_default("max_depth", 4)
     branching_factor: int = _mcts_default("branching_factor", 3)
     exploration_constant: float = _mcts_default("exploration_constant", 1.15)

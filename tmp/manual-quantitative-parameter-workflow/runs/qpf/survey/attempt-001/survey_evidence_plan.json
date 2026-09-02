@@ -1,0 +1,41 @@
+{
+  "evidence_bounded_writing": true,
+  "project_context_fingerprint": "quantitative-parameter-context",
+  "project_id": "quantitative-parameter-project",
+  "schema_version": "survey_sh_evidence_plan_v1",
+  "subhypotheses": [
+    {
+      "allowed_claim_modes": [
+        "EVIDENCE_GAP_REPORT"
+      ],
+      "background_only_slots": [],
+      "conclusion_admissibility": {
+        "blockers": []
+      },
+      "covered_slots": [],
+      "direct_writing_blocked_paper_ids": [],
+      "forbidden_paper_ids": [],
+      "limitations": {
+        "blockers": []
+      },
+      "missing_slots": [
+        "direct_observation"
+      ],
+      "relevant_clusters": [],
+      "required_slots": [
+        "direct_observation"
+      ],
+      "slot_support": {
+        "direct_observation": {
+          "background_paper_ids": [],
+          "evidence_paper_ids": [],
+          "expected_evidence_role": "DIRECT_OBSERVATION",
+          "qualified_paper_constraints": {},
+          "qualified_paper_ids": []
+        }
+      },
+      "sub_hypothesis_id": "SH1",
+      "summary": "A bounded parameter question."
+    }
+  ]
+}

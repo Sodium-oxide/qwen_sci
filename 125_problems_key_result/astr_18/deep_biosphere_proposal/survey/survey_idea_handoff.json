@@ -1,9 +1,16 @@
 {
   "schema_version": "survey-idea-handoff-v1",
   "project_id": "astr_18_deep_biosphere_proposal",
-  "survey_run_id": "survey-deepbiosphere-001",
-  "target_gap_ids": ["G1", "G2", "G3", "G4"],
-  "must_preserve": ["Separate water, sediment, and crustal-fluid compartments.", "Do not equate DNA with activity.", "Retain pressure state and contamination controls.", "Report uncertainty bands and unobserved habitat explicitly."],
-  "seed_direction": "Build a pressure-resolved inventory that estimates physical volume, absolute abundance, community composition, and carbon-linked metabolic flux in one hierarchical model.",
-  "allowed_source_keys": ["colwell", "kallmeyer", "hoshino", "orcutt", "biddle", "amano", "nagata", "wasmund", "lever", "starnawski"]
+  "survey_run_id": "survey-deep-biosphere-001",
+  "status": "VERIFIED_HANDOFF",
+  "research_object": "Habitat-resolved abundance, composition, activity, and geochemical significance of the marine deep biosphere.",
+  "target_gap_ids": ["G1", "G2", "G3", "G4", "G5"],
+  "must_preserve": [
+    "Separate aphotic water, sediment/pore water, and upper oceanic crust.",
+    "Separate volume, standing abundance, functional potential, and realized activity/flux.",
+    "Preserve sample and contamination-control lineage.",
+    "Treat deep-biosphere astrobiology as an Earth-analogue inference, not an extraterrestrial detection."
+  ],
+  "seed_direction": "Construct a hierarchical DeepBio Census that fuses habitat geometry, calibrated cell counts, multiomics, geochemistry, and rate constraints into compartment-specific uncertainty distributions.",
+  "allowed_source_keys": ["hoshino2018", "hoshino2020", "inagaki2006", "inagaki2015", "orcutt2013", "lever2015", "dhondt2019", "seyler2020", "heuer2020", "wasmund2017", "egger2018", "torti2015", "colman2017", "levin2019"]
 }

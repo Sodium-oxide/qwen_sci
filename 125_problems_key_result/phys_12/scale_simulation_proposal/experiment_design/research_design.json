@@ -1,0 +1,19 @@
+{
+  "schema_version":"experiment_design_v1",
+  "project_id":"phys_12_scale_simulation",
+  "idea_binding":{"idea_result":"../idea/idea_result.json","selected_idea_id":"idea-srcl-001","survey_run_id":"survey-phys12-001"},
+  "research_brief":{"question":"Can a scale-resolved error and evidence ledger identify which simulation pathway is credible for a declared quantity of interest?","hypothesis":"A common quantity/tolerance, error-budget, validation, and resource contract reveals when classical or quantum pathways are justified or when evidence is insufficient.","study_template":"computational_digital","unit_of_analysis":"quantity-of-interest × model card × pathway × scenario"},
+  "model_cards":[
+    {"id":"C0","architecture":"reference","required_fields":["reference_type","quantity","units","uncertainty"]},
+    {"id":"C1","architecture":"macro continuum/PDE","required_fields":["equations","conservation","mesh_time_refinement","closure","validation"]},
+    {"id":"C2","architecture":"atomistic classical/ab-initio","required_fields":["model","basis_or_force_field","finite_size","reference"]},
+    {"id":"C3","architecture":"classical quantum many-body","required_fields":["Hamiltonian","truncation_or_sampling","complexity_indicator","reference"]},
+    {"id":"C4","architecture":"NISQ quantum simulation","required_fields":["mapping","state_preparation","algorithm","noise","mitigation","sampling","classical_baseline"]},
+    {"id":"C5","architecture":"fault-tolerant projection","required_fields":["logical_error_assumption","resource_model","projection_flag","classical_baseline"]},
+    {"id":"C6","architecture":"cross-scale coupling","required_fields":["interface_variables","coupling_error","consistency","validation"]}
+  ],
+  "variables":{"outcomes":["quantity_error_interval","evidence_tier","resource_interval","status_label","sensitivity_stability"],"inputs":["model","parameters","mesh_or_basis","solver","sample_count","mapping","noise","mitigation","logical_resource_assumption"],"controls":["quantity_definition","units","tolerance","physical_scope","reference_route"],"unknowns":["model discrepancy outside validation regime","future hardware performance","coupled-scale interface error"]},
+  "decision_labels":["VERIFIED_WITHIN_TOLERANCE","VALIDATED_FOR_DECLARED_REGIME","CLASSICALLY_PREFERABLE","QUANTUM_CANDIDATE_ADVANTAGE","INCONCLUSIVE","MODEL_INVALID"],
+  "execution_policy":{"mode":"DESIGN_ONLY","observed_results":[],"automatic_execution_allowed":false,"human_review_required":true},
+  "status":"PROPOSAL_NO_OBSERVED_RESULTS"
+}

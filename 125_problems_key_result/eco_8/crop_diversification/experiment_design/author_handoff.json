@@ -1,0 +1,22 @@
+{
+  "from": "ExperimentDesign",
+  "to": "Author",
+  "status": "READY",
+  "design_only": true,
+  "manuscript_title": "Beyond Monoculture: A Shock-Aware Portfolio Framework for Crop Diversification",
+  "central_claim": "The scientifically meaningful endpoint is not the disappearance of wheat, maize, rice, or soy, but a measurable reduction in synchronized production and value-chain failure through complementary diversification layers.",
+  "must_include": ["problem reframing", "evidence synthesis", "falsifiable hypotheses", "portfolio utility and CVaR equations", "six-stage experiment design", "mechanism tests", "adoption and value-chain constraints", "design-only boundary", "limitations and policy implications"],
+  "must_not_include": ["fabricated field results", "unverified claims of universal yield gains", "a date for the end of monocultures", "Acknowledgment section", "personal contribution statements", "filler text solely to reach a page count"],
+  "source_anchors": [
+    {"key": "fao_biodiversity", "type": "institutional_web_source", "status": "browser_checked", "url": "https://www.fao.org/biodiversity/en/"},
+    {"key": "tilman2001", "type": "peer_reviewed", "doi": "10.1126/science.1057544"},
+    {"key": "garibaldi2017", "type": "peer_reviewed", "doi": "10.1016/j.tree.2017.03.001"},
+    {"key": "renard2019", "type": "peer_reviewed", "doi": "10.1038/s41586-019-1316-y"},
+    {"key": "tamburini2020", "type": "peer_reviewed", "doi": "10.1126/sciadv.aba1715"},
+    {"key": "bullock2011", "type": "peer_reviewed", "doi": "10.1016/j.tree.2011.06.011"},
+    {"key": "fao_plant_genetic_resources", "type": "international_treaty", "status": "source_anchor"}
+  ],
+  "evidence_search_note": "The local dual-engine search was attempted but both OpenAlex and AnySearch returned zero records because the connection was refused (WinError 10061). The manuscript therefore distinguishes source anchors from newly retrieved records and does not invent search hits.",
+  "expected_results": [],
+  "observed_results": []
+}

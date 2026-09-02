@@ -1,0 +1,293 @@
+\documentclass[conference]{../../../../Conference-LaTeX-template_10-17-19/IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{balance}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\spectraloop}{\textsc{SPECTRA-Loop}}
+\newcommand{\pnet}{P_{\mathrm{net}}}
+\newcommand{\psource}{P_{\mathrm{source}}}
+
+\title{How Can Current Limits on Energy-Conversion Efficiency Be Surpassed?\\
+\large A Boundary-Aware Spectral-Partition and Thermal-Recovery Research Proposal}
+\author{Anonymous Research Proposal}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Energy-conversion efficiency is often presented as a single number that can be ``broken.'' That framing is scientifically incomplete. A detailed-balance limit for an ideal single-junction photovoltaic (PV) cell is conditional on its architecture and assumptions; it is not a universal ceiling for every photovoltaic, thermophotovoltaic (TPV), thermoelectric, or hybrid energy converter. This paper proposes \spectraloop{}, a research program for Spectral Partitioning, Energy Closure, Thermal Recovery, and Assurance. The program tests a spectrally partitioned PV--TPV architecture against a matched reference configuration, but it makes no claim that a device has been fabricated, simulated, or measured. Its main contribution is an accounting and measurement contract: source spectrum, aperture, optical routing, thermal boundary, stored-energy policy, electrical load, auxiliary consumption, calibration, uncertainty, stability, and transfer conditions are fixed before the comparison. The Survey Agent freezes evidence on conditional PV limits, emerging PV routes, TPV spectral control, system accounting, and thermoelectric constraints. The Idea Agent selects a coupled architecture rather than a device-only metric. The ExperimentDesign Agent specifies a design-only protocol, pre-registered status labels, and falsifiers. The Author Agent composes an IEEE-style proposal without observed-result language. The direct conclusion is that useful efficiency advances arise from changing and validating a declared conversion architecture while closing its loss and boundary accounting; they do not arise from escaping conservation laws.
+\end{abstract}
+
+\begin{IEEEkeywords}
+energy conversion, photovoltaics, thermophotovoltaics, detailed balance, spectral splitting, thermal recovery, metrology, system efficiency
+\end{IEEEkeywords}
+
+\section{Introduction}
+Energy-conversion efficiency is a central design metric because it relates useful output to an explicitly chosen energy input. Yet the metric is routinely overstretched. A PV cell can be described by a cell-level electrical ratio, while a module adds optical and interconnect losses, a receiver adds thermal and geometric interfaces, and a deployed system adds power electronics, controls, pumps, cooling, and operating duty cycle. These are all legitimate quantities, but they do not share an automatic denominator. The DOE's basic PV description makes this structural point visible: PV cells form modules and arrays, and complete systems contain additional components that convert direct-current electricity and deliver usable power \cite{doe_pv_basics_2026}.
+
+The widely cited Shockley--Queisser treatment gives a foundational detailed-balance limit for idealized p-n junction solar cells \cite{shockley_queisser_1961}. It is consequential precisely because it exposes why an absorber with one bandgap loses energy through mechanisms such as non-absorbed sub-bandgap photons, thermalization of excess photon energy, and recombination. It is not a law stating that every future energy converter must remain beneath one fixed percentage. Tandem absorbers, spectral splitting, wavelength management, thermal recovery, selective emission, and different source conditions alter the architectural and physical assumptions to which a baseline applies \cite{shah_etal_2023,anctil_etal_2023,alharbi_kais_2015}.
+
+This report therefore answers the topic in a stronger form than a generic call for better materials. Efficiency limits can be surpassed in a scientifically valid sense only when the reference limit, altered architecture, input boundary, and all energy pathways are declared together. The research question is:
+
+\emph{Can a spectrally partitioned and thermally integrated PV--TPV architecture improve net useful electrical conversion, within a declared source spectrum, thermal boundary, optical-loss model, and measurement protocol, relative to a reference single-converter configuration?}
+
+The proposal follows the repository's four-agent workflow:
+\begin{center}
+Survey $\rightarrow$ Idea $\rightarrow$ ExperimentDesign $\rightarrow$ Author.
+\end{center}
+It is a research design, not a report of an experiment. No material composition, source temperature, spectral cutoff, component performance, numerical simulation, or measured improvement is invented below.
+
+\section{Survey: Limits, Architecture, and Evidence Boundaries}
+\subsection{A limit is a conditional statement}
+The phrase ``current limit'' combines at least four different objects: a physical bound, a device performance metric, a module performance metric, and a system net-efficiency metric. A conditional physical bound specifies a model class and assumptions; it supports reasoning within that class. A device metric reports electrical output relative to a stated incident source. A system metric must also include routing, heat rejection, auxiliary energy, conversion electronics, and temporal storage. Confusing these objects causes two opposite errors: overstating a component result as a system breakthrough, or wrongly treating a single-component bound as a ban on architectural innovation.
+
+For this work, the starting condition is represented abstractly by
+\begin{equation}
+\eta_{\mathrm{ref}}=\frac{P_{\mathrm{elec,ref}}}{P_{\mathrm{in,ref}}},
+\label{eq:reference-efficiency}
+\end{equation}
+where $P_{\mathrm{elec,ref}}$ is the useful electrical output of the reference converter and $P_{\mathrm{in,ref}}$ is radiant or thermal energy crossing its declared input boundary. Equation \eqref{eq:reference-efficiency} is intentionally not a universal numerical value. A credible comparison requires the candidate and reference to use matched definitions of input area, source spectrum, source-to-receiver boundary, observation window, and treatment of auxiliaries.
+
+The evidence ledger contains two types of support. First, the original detailed-balance literature anchors the limited single-junction statement \cite{shockley_queisser_1961}. Second, dual-index metadata search identified cross-matched records covering third-generation PV, emerging-PV light management, TPV materials, TPV energy/exergy analysis, high-temperature emitter stability, and thermoelectric material constraints \cite{shah_etal_2023,anctil_etal_2023,dada_etal_2023,utlu_onal_2017,chirumamilla_etal_2019,alfartoos_etal_2023}. The search discovers relevant evidence; it does not transform titles or abstracts into demonstrated performance for the proposed hybrid system.
+
+\subsection{Routes that change the conversion architecture}
+Multi-junction PV uses absorbers with different bandgaps to redistribute the solar spectrum. Spectral splitting instead routes portions of a spectrum to different converters, making the optical interface part of the system rather than an invisible precondition. The emerging-PV literature covers tandem structures and other approaches that seek to exceed the ideal single-junction detailed-balance baseline by changing the conversion model \cite{shah_etal_2023,anctil_etal_2023}. That observation motivates but does not guarantee a system advantage: filters, imperfect angular acceptance, reflection, absorption, thermal drift, and electrical mismatch can erase a component benefit.
+
+TPV offers a distinct route. A thermal source or receiver drives an emitter whose radiation is converted by a PV cell. Reviews identify selective emission, source temperature, cell bandgap, optical recycling, and material integration as key design variables \cite{dada_etal_2023}. Whole-system TPV analyses further demonstrate the importance of distinguishing component regions and total energy/exergy treatment \cite{utlu_onal_2017}. Selective-emitter work also makes the stability issue concrete: a useful spectral property must persist under the thermal environment for which it is claimed \cite{chirumamilla_etal_2019}.
+
+Thermoelectric conversion is relevant as a contrasting recovery route. It uses a temperature difference rather than spectral photons and carries its own material, contact, thermal-resistance, cost, and measurement constraints \cite{alfartoos_etal_2023}. Its presence in the design space is important: no single tail-harvesting mechanism should be presumed superior before the source, temperature gradient, interface losses, and system boundary are declared. This proposal selects a PV--TPV architecture as a primary research object while retaining thermoelectric recovery as a later comparison route, not as a dismissed alternative.
+
+\subsection{Evidence-grounded gaps}
+The Survey Agent accepts six linked gaps. Table \ref{tab:gaps} states them in a form that constrains later agents. The first two gaps prevent a semantic error and a component-only design. The next two require a common accounting boundary and metrology package. The final two prevent an instantaneous laboratory metric from becoming an unqualified deployment claim.
+
+\begin{table*}[!t]
+\caption{Accepted Survey gap ledger and downstream consequence.}
+\label{tab:gaps}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lY Y}
+\toprule
+Gap ID & Accepted gap & Required consequence for the proposal \\
+\midrule
+GAP-LIMIT-001 & Conditional single-junction PV limits are often conflated with all PV or all energy conversion. & Name the baseline, its assumptions, and the architecture change; forbid universal-limit wording. \\
+GAP-SPECTRAL-002 & Spectral losses, thermal reuse, and electrical conversion are frequently treated in separate literatures. & Couple optical partition, thermal receiver/emitter, and electrical branches in one research object. \\
+GAP-BOUNDARY-003 & Device, module, receiver, and system efficiencies use incompatible boundaries. & Fix the source and net-output denominator before comparison. \\
+GAP-METROLOGY-004 & Spectrum, temperature, optical loss, load, calibration, and uncertainty are not consistently co-reported. & Introduce a measurement-card registry and a closure residual. \\
+GAP-STABILITY-005 & Peak metrics do not provide a common operating-stability gate. & Predeclare drift/stability observation and invalidation rule. \\
+GAP-TRANSFER-006 & Laboratory source conditions are silently transferred to deployment narratives. & Require a separate transfer statement; retain laboratory bounds when absent. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+The resulting scientific position is direct. Better conversion is neither an empty promise nor a violation of physics. It is a claim about a converter under conditions. The proposed work must therefore make the conditions auditable enough that a negative result can be diagnosed: optical routing, thermal integration, metrology, or stability can fail separately rather than being obscured by a single peak number.
+
+\section{Idea Agent: \spectraloop{} Research Direction}
+\subsection{Portfolio and selection}
+The Idea Agent begins with the Survey's gap ledger rather than a generic request for a more efficient cell. It explores four routes: a tandem-only absorber program, a spectrally partitioned PV--TPV architecture, a thermoelectric tail-harvesting add-on, and an unqualified ``limit-breaking'' claim. The last is rejected because it violates both the conditional-limit and boundary gaps. A tandem route is technically valuable but does not, by itself, resolve the separate thermal-recovery and system-accounting gaps. Thermoelectric recovery is retained as a high-risk comparison because its benefit depends on a source-specific thermal gradient and on added thermal resistance.
+
+The selected primary direction is \spectraloop{}: \emph{Spectral Partitioning, Energy Closure, Thermal Recovery, and Assurance}. Its unit of analysis is
+\begin{equation}
+\mathcal{A}=a\times s\times o\times t\times \ell\times m\times z,
+\label{eq:architecture-unit}
+\end{equation}
+where $a$ denotes converter architecture, $s$ a source-spectrum card, $o$ an optical-partition card, $t$ a thermal-boundary card, $\ell$ an electrical-load card, $m$ a calibration/measurement card, and $z$ a stability/transfer card. Equation \eqref{eq:architecture-unit} deliberately prevents a candidate from being described as ``the same system'' after its spectrum, thermal path, or denominator has changed.
+
+The mechanism is conceptually simple. A declared optical element directs an assigned spectral interval to a direct-PV branch. A defined remaining interval is absorbed by a thermal receiver or controlled emitter and presented to a TPV branch. Both branches contribute only to a shared net electrical ledger after auxiliary consumption is included. Reflected, transmitted, absorbed, rejected, and stored energy remain visible. The editable system diagram is provided in the companion \texttt{spectra\_loop\_flow.drawio} artifact; Fig. \ref{fig:loop} preserves the same protocol logic in the report.
+
+\begin{figure*}[!t]
+\centering
+\fbox{\begin{minipage}{0.95\textwidth}
+\centering\small
+\textbf{Declared source card} $\longrightarrow$ \textbf{optical partition card} $\longrightarrow$ \{\textbf{direct PV branch} $P_{\mathrm{PV}}$, \textbf{thermal receiver/emitter} $\longrightarrow$ \textbf{TPV branch} $P_{\mathrm{TPV}}$\} $\longrightarrow$ \textbf{net electrical ledger}.\\[3pt]
+\textit{Parallel assurance loop: calibrated spectrum and temperature; optical-loss ledger; auxiliary-load ledger; uncertainty propagation; stability observation; transfer gate.}
+\end{minipage}}
+\caption{\spectraloop{} architecture and its required evidence cards. The diagram is a design schematic, not an executed apparatus or measured energy flow.}
+\label{fig:loop}
+\end{figure*}
+
+\subsection{Hypothesis, novelty, and falsifier}
+The selected hypothesis is not that every hybrid will be more efficient. It is:
+
+\emph{H-SPECTRA-001: Explicit closure of spectral, thermal, electrical, and metrology boundaries makes a hybrid PV--TPV efficiency comparison interpretable and comparable; a net gain may be claimed only if it exceeds a matched reference within its joint uncertainty and stability conditions.}
+
+The novelty is therefore dual. The physical part is a spectral-partition and thermal-recovery architecture; the epistemic part is a refusal to count energy differently for the candidate and the reference. Both are needed. A new filter, emitter, or absorber may look favorable locally while the integrated system loses power through optics, cooling, electronics, or control.
+
+The falsifiers are pre-registered. The idea is downgraded if the energy balance cannot close within the uncertainty budget, if an advantage disappears after optical and auxiliary losses enter the ledger, if an extra source is needed but not assigned to the denominator, if calibration cross-checks disagree, if the operating metric drifts outside its declared stability window, or if a claimed application depends on an unverified transfer from laboratory conditions. These are informative outcomes, not administrative failures.
+
+\section{ExperimentDesign Agent: Measurement and Energy-Closure Protocol}
+\subsection{Design-only scope and safety gate}
+This ExperimentDesign output has a hard \texttt{DESIGN\_ONLY} execution policy. It records no observed results. It does not authorize construction, operation, simulation, fabrication, high-flux illumination, thermal testing, vacuum work, semiconductor processing, or material synthesis. Any future implementation involving high-intensity radiation, hot emitters, high currents, vacuum equipment, or hazardous materials must be planned and performed only by qualified personnel under appropriate institutional and laboratory safety controls.
+
+The research design does, however, specify what evidence a future study must generate. The reference configuration is a single converter operating under a declared source and input boundary. The candidate introduces an optical partition and a thermal/TPV path. The source need not be selected in this proposal; it may be a controlled radiant source, a solar-spectrum condition, a thermal source, or a source appropriate to the intended application. Its choice changes the valid conclusion. Source selection is therefore an unresolved human-reviewed input, not an arbitrary constant.
+
+\subsection{Energy closure before efficiency comparison}
+The candidate's net electrical output is defined as
+\begin{equation}
+\pnet=P_{\mathrm{PV}}+P_{\mathrm{TPV}}-P_{\mathrm{aux}},
+\label{eq:net-power}
+\end{equation}
+where $P_{\mathrm{PV}}$ and $P_{\mathrm{TPV}}$ are electrical powers from the two branches and $P_{\mathrm{aux}}$ is measured auxiliary consumption within the declared boundary. Pumps, active cooling, source-conditioning devices, control electronics, and other supporting loads cannot be silently moved outside the comparison after the fact.
+
+At the same named boundary, future data are reconciled through
+\begin{equation}
+\psource=P_{\mathrm{PV}}+P_{\mathrm{TPV}}+Q_{\mathrm{rej}}+P_{\mathrm{opt}}+P_{\mathrm{aux}}+\frac{\mathrm{d}U}{\mathrm{d}t}+r_E,
+\label{eq:closure}
+\end{equation}
+where $\psource$ is input radiant or thermal power; $Q_{\mathrm{rej}}$ is rejected heat; $P_{\mathrm{opt}}$ is reflected, transmitted, or otherwise routed optical power that does not become useful output at the boundary; $\mathrm{d}U/\mathrm{d}t$ is stored-energy change; and $r_E$ is the residual. Equation \eqref{eq:closure} is an accounting identity to be tested with measured estimates, not a statement that every individual term can be measured perfectly. A residual outside a predeclared uncertainty range triggers reconciliation or an invalid-comparison status.
+
+The reportable candidate metric becomes
+\begin{equation}
+\eta_{\mathrm{net}}=\frac{\pnet}{\psource}.
+\label{eq:net-efficiency}
+\end{equation}
+The numerator in \eqref{eq:net-efficiency} is intentionally net of auxiliary consumption; the denominator is exactly the energy crossing the source card's boundary during the same time window. If the reference needs a different denominator, the two metrics cannot decide a system-level advantage. They may still be reported as distinct component data, but not ranked as matched net efficiency.
+
+\subsection{Source, optical, thermal, electrical, and assurance cards}
+Table \ref{tab:cards} gives the proposed information structure. The cards are not paperwork for its own sake. Each prevents a plausible hidden source of apparent gain. A spectrum that drifts over a measurement series changes the apparent allocation between branches. An optical element can concentrate or reject energy without revealing which side of the boundary pays for it. A thermal receiver can temporarily discharge stored energy. A maximum-power-point setting can favor one branch if it is not sampled with the same protocol. A calibration offset can mimic a narrow gain when two configurations are close.
+
+\begin{table*}[!t]
+\caption{\spectraloop{} evidence cards and the risk each card controls.}
+\label{tab:cards}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lY Y}
+\toprule
+Card & Minimum future record & Risk controlled \\
+\midrule
+Source-spectrum card & Source type, spectrum/thermal condition, aperture, geometry, concentration, warm-up, stability, and input-boundary instrument. & Candidate and reference receive non-equivalent inputs. \\
+Optical-partition card & Cutoff/routing logic, aperture, angle, reflectance, transmittance, absorptance, alignment, and loss route. & Spectral gain hides filter/concentrator/reflection loss. \\
+Thermal-boundary card & Receiver/emitter geometry, temperature sensors, heat-rejection path, insulation, heat capacity, and stored-energy policy. & Temporary heat storage or cooling is miscounted as conversion. \\
+Electrical-load card & Current/voltage instruments, load sweep, maximum-power-point protocol, sampling synchronization, and electronics boundary. & One configuration receives a more favorable operating point. \\
+Metrology card & Calibration traceability, zero/span checks, spectral response, timing, uncertainty model, and data-reduction version. & Instrument response or analysis change produces a false difference. \\
+Stability/transfer card & Observation duration, drift metric, cycling condition, failure criteria, claimed use environment, and exclusions. & Peak laboratory behavior becomes an unsupported lifetime/deployment claim. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Factor structure and controls}
+The future experimental unit is a configuration card set $\mathcal{A}$ from \eqref{eq:architecture-unit}. Independent factors include source spectrum or temperature, partition cutoff, optical route, thermal coupling, emitter condition, and electrical load. Dependent quantities include branch electrical output, net output, optical and thermal shares, residual, combined uncertainty, and drift. Controls include reference geometry, declared aperture, calibration state, time-window policy, randomized/interleaved acquisition order, and frozen data-reduction procedure.
+
+The primary comparison must use interleaved candidate/reference blocks rather than a single early reference and a later candidate whenever the source can drift. At the beginning, midpoint, and end of a block, the laboratory protocol should perform its predeclared calibration or check-standard procedure. The actual instruments and standards cannot be specified generically because they depend on wavelength, temperature, geometry, and power level; that is an appropriate place for human technical review. The general rule is invariant: the uncertainty model follows the claimed boundary.
+
+For a derived metric $g$ such as \eqref{eq:net-efficiency}, the future study should state its uncertainty propagation model rather than attach a generic percentage. Under a first-order independent-input approximation, a planning expression is
+\begin{equation}
+u_c^2(g)=\sum_{i=1}^{n}\left(\frac{\partial g}{\partial x_i}\right)^2u^2(x_i),
+\label{eq:uncertainty}
+\end{equation}
+where $x_i$ are measured or calibrated inputs and $u(x_i)$ are their standard uncertainties. Correlations, common-mode drift, and model-form uncertainty may invalidate the independent-input assumption in \eqref{eq:uncertainty}; those cases must be explicitly handled rather than hidden in a smaller reported interval.
+
+\section{Analysis Plan and Conditional Decision Logic}
+\subsection{Loss-vector analysis}
+Rather than ask only for the largest electrical number, the analysis decomposes the candidate into a loss vector:
+\begin{align}
+\mathbf{L}=\big(&L_{\mathrm{spectral}},L_{\mathrm{optical}},L_{\mathrm{recomb}},L_{\mathrm{thermal}},\nonumber\\
+&L_{\mathrm{electrical}},L_{\mathrm{aux}},L_{\mathrm{stability}}\big).
+\label{eq:loss-vector}
+\end{align}
+The terms in \eqref{eq:loss-vector} are a taxonomy, not automatically additive percentages. Their measurement models and boundaries must be stated. The vector is useful because a proposed improvement should identify which loss it intends to reduce and which new losses it might create. Spectral partitioning may reduce mismatch in one branch while introducing optical loss. Thermal recovery may reuse a previously rejected portion while increasing emitter losses, cooling demand, or control power. An architecture should be improved by shifting the total balance, not by relabeling a loss as an input omission.
+
+The planned analysis has four stages. First, the source-card and reference-card validity gates confirm a shared denominator. Second, branch outputs and optical/thermal terms are reconciled using \eqref{eq:closure}. Third, uncertainty in the reference-candidate difference is evaluated with a predeclared model. Fourth, a stability/transfer gate decides whether the conclusion is restricted to an operating interval or whether it is invalid for the claimed use. No simulation needs to be run to state this sequence; numerical or experimental values enter only in a future approved study.
+
+\subsection{Pre-registered statuses}
+Table \ref{tab:outcomes} provides the authorized language after a future study. It protects against a common ambiguity: a component may show an interesting mechanism even if the system comparison is not yet supported. That is not a failure of scientific communication, provided the distinction is retained.
+
+\begin{table*}[!t]
+\caption{Pre-registered conditional outcome branches. None is an observed result of this proposal.}
+\label{tab:outcomes}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lY Y}
+\toprule
+Status & Authorized future interpretation & Required statement or action \\
+\midrule
+\texttt{NET\_GAIN\_SUPPORTED} & The candidate's matched-boundary net metric exceeds the reference after closure, uncertainty, and stability criteria. & State the exact source, boundary, duration, and validity domain; do not generalize to all converters. \\
+\texttt{COMPONENT\_GAIN\_ONLY} & A branch or optical/thermal component improves, but a net-system comparison is not supported. & Report the component boundary and retain system conclusion as unresolved. \\
+\texttt{MEASUREMENT\_BOUNDARY\_INVALID} & Denominator, source input, aperture, storage, or auxiliary policy differs between conditions. & Withdraw the comparison and redesign/re-measure the boundary. \\
+\texttt{STABILITY\_LIMITED} & A predeclared metric drifts or fails within the stated observation protocol. & Report operating limitation, not peak value as an enduring result. \\
+\texttt{TRANSFER\_NOT\_JUSTIFIED} & A laboratory source condition lacks the evidence required for the target application. & Keep claims laboratory-bounded and identify the missing transfer evidence. \\
+\texttt{INCONCLUSIVE} & Joint uncertainty overlaps the reference or residual reconciliation remains unresolved. & Do not report direction of advantage; publish constraints and next discriminating measurement. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Model-to-measurement agreement}
+If a future study adds a radiative, electrical, or thermal model, the model must be treated as a testable planning tool. Its input cards inherit the same source and boundary definitions as the physical measurement. A parameter adjustment made after seeing the candidate result must be recorded as model revision rather than quietly counted as prospective prediction. This is especially important for hybrid systems: a model may fit electrical output while misrepresenting optical escape, emitter temperature distribution, or transient storage.
+
+The agreement target can be framed through a normalized discrepancy for measured quantities $y_j$ and model estimates $\hat{y}_j$:
+\begin{equation}
+\chi^2=\sum_{j=1}^{N}\frac{\left(y_j-\hat{y}_j\right)^2}{u_j^2},
+\label{eq:chi-square}
+\end{equation}
+where $u_j$ is the declared uncertainty associated with the matched quantity. Equation \eqref{eq:chi-square} is not a license to claim a valid model from a low number alone; it requires suitable uncertainty modeling, independence assumptions, and checks that the same boundary is represented on both sides. A model that cannot reproduce the energy ledger is not adequate to establish a transfer claim, even if it fits one electrical trace.
+
+\section{Reproducibility and Reporting Contract}
+\subsection{Claim-to-record traceability}
+The SPECTRA-Loop contribution is useful only if another group can determine what the reported comparison actually means. A numerical efficiency value without its source plane, optical aperture, operating period, and auxiliary-power rule is not a complete experimental result. Conversely, a lengthy apparatus description without the loss terms needed by \eqref{eq:closure} cannot determine whether two architectures are being compared fairly. The reporting contract in Table \ref{tab:traceability} ties every permitted claim to a record that is available for audit.
+
+This is particularly important for emerging energy converters because an apparently small change in boundary placement can create a large narrative difference. An optical element may concentrate radiation onto a smaller device area; the card must state whether the denominator is energy at the original aperture, energy at the device plane, or electrical input to the source. A thermal receiver may release stored energy during a short data window; the stored-energy policy must state the warm-up, cool-down, and steady-state criteria. A temperature-controlled emitter may require active control; that control's electrical consumption belongs in $P_{\mathrm{aux}}$ whenever it is inside the selected system boundary. These choices do not preordain a poorer metric. They make the metric identifiable.
+
+\begin{table*}[!t]
+\caption{Requirement traceability for a future net-efficiency claim.}
+\label{tab:traceability}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lY Y}
+\toprule
+Requirement & Evidence record required before the claim & Failure consequence \\
+\midrule
+R1: matched source & Spectrum or thermal-source condition, aperture, geometry, timing, and stability record for both configurations. & Assign \texttt{MEASUREMENT\_BOUNDARY\_INVALID}; no net comparison. \\
+R2: optical closure & Partition cutoffs plus reflectance, transmittance, absorptance, angle, alignment, and loss-path record. & Retain only an unquantified mechanism hypothesis. \\
+R3: thermal closure & Receiver/emitter temperatures, heat-rejection path, insulation, transients, and stored-energy policy. & Do not label transient release as conversion. \\
+R4: electrical closure & Synchronized branch power, load method, electronics boundary, and auxiliary-power record. & Report branch data only, if valid. \\
+R5: metrology & Calibration chain, instrument response, check-standard results, uncertainty model, and reduction version. & Mark comparison inconclusive until corrected. \\
+R6: stability & Declared operating envelope, duration, cycling, drift observable, and invalidation threshold. & Assign \texttt{STABILITY\_LIMITED} rather than promote peak data. \\
+R7: transfer & Target source/duty-cycle/environment statement plus a justified bridge from the laboratory domain. & Assign \texttt{TRANSFER\_NOT\_JUSTIFIED}. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Evidence grades and publication boundary}
+The future report should separate three evidence grades. \emph{Direct observation} is an instrumented quantity obtained under the frozen cards; it may be reported only with calibration and uncertainty. \emph{Derived comparison} is a quantity calculated from direct observations through equations such as \eqref{eq:net-efficiency}; it inherits all assumptions in the source and accounting cards. \emph{Transfer inference} extends a derived comparison to a new use environment; it needs an additional, explicit argument and cannot be made merely by changing the wording of a laboratory result. The present document contains none of the first two grades. It contains a protocol for producing them and labels all forward-looking outcomes as conditional.
+
+This grading also protects the literature review. A dual-index match establishes that a record is a relevant candidate source with compatible bibliographic metadata; it does not establish every technical claim in a paper. The DOE page was visually checked in the requested browser for its basic PV system description. The NREL efficiency-page navigation did not load, and publisher/DOI landing-page review of journal records remains a human action before external publication. These source-confidence distinctions belong in the final research record because citation traceability and energy traceability are complementary: both make a conclusion inspectable.
+
+\section{Risks, Limitations, and Human Review Requirements}
+\subsection{Scientific and engineering risks}
+The primary physical risk is that loss reduction in one part of the architecture creates a larger loss elsewhere. Optical routing can introduce absorption, reflection, angular sensitivity, or alignment instability. Thermal recovery can introduce high-temperature material limits, nonuniform emitter temperature, added rejection load, and transient stored energy. The TPV branch can require a cell/source match that is not achievable with the selected emitter. The direct-PV branch can be disadvantaged by a partition that removes photons it uses efficiently. The appropriate response is not to suppress these possibilities but to give each a measured ledger term and a conditional outcome branch.
+
+The primary metrology risk is false comparison. If source power is measured at a different plane for the candidate and reference, if a filter changes aperture or concentration while input energy is held fixed by convention, if thermal storage is ignored during warm-up, or if auxiliary cooling is counted only for one condition, the ratio in \eqref{eq:net-efficiency} is not comparable. The proposal's main practical contribution is to make such flaws visible before a performance narrative is written.
+
+The primary translation risk is an unsupported application claim. A controlled laboratory source might be appropriate for mechanism discovery but not for outdoor solar variability, industrial waste heat, a thermal battery, or a space environment. The proposal therefore permits no deployment conclusion without a separate use-case card describing spectrum, duty cycle, environmental conditions, reliability requirement, balance-of-system boundary, and human-reviewed source evidence.
+
+\subsection{What this work deliberately does not claim}
+This report does not claim an achieved efficiency, a new material, a selected commercial technology, a universal percentage target, or an experimentally proven superiority of PV--TPV over tandem PV or thermoelectrics. It does not claim that the user-provided 15--20\% commercial-cell figure is a universal current market value; that statement would need a defined product class and a verified contemporary source. It also does not claim that the presence of a high-temperature selective emitter or a published TPV analysis establishes a complete, deployable hybrid system.
+
+The restricted claims make the proposal more useful rather than less ambitious. They locate the decisive research tasks: specify the source and architecture, make the losses commensurate, test the energy residual, compare net output under matched conditions, and retain stability and transfer as gates. A successful result would be a strong, architecture-specific conclusion. A negative or inconclusive result would still identify the loss or boundary preventing the claimed advance.
+
+\section{Conclusion}
+The answer to how current energy-conversion limits can be surpassed is not to search for an exemption from thermodynamics. It is to identify a conditional benchmark, change the converter architecture in a physically stated way, and demonstrate that the new configuration wins after all energy paths and uncertainties are reconciled. \spectraloop{} proposes one such path: spectral partitioning couples a direct-PV branch to a thermal receiver/emitter and TPV branch, while a shared ledger accounts for optical loss, rejected heat, stored energy, auxiliary consumption, calibration, stability, and transfer conditions.
+
+The four-agent workflow produces a coherent proposal. The Survey Agent distinguishes conditional limits from universal claims and freezes six gaps. The Idea Agent selects a falsifiable spectral/thermal architecture. The ExperimentDesign Agent turns it into a design-only protocol with pre-registered status labels. The Author Agent binds the report to those upstream artifacts without inventing an experiment. The next scientific action is not a rhetorical efficiency claim: it is a human-reviewed, source-specific, safely implemented comparison that can either support, limit, or falsify the proposed net-gain mechanism.
+
+\balance
+\begin{thebibliography}{99}
+\bibitem{shockley_queisser_1961} W. Shockley and H. J. Queisser, ``Detailed balance limit of efficiency of p-n junction solar cells,'' \emph{Journal of Applied Physics}, vol. 32, no. 3, pp. 510--519, 1961, doi: 10.1063/1.1736034.
+\bibitem{doe_pv_basics_2026} U.S. Department of Energy, ``Solar photovoltaic technology basics,'' accessed Sep. 1, 2026. [Online]. Available: \url{https://www.energy.gov/cmei/systems/solar-photovoltaic-technology-basics}
+\bibitem{shah_etal_2023} N. Shah, A. A. Shah, P. Leung, S. Khan, K. Sun, X. Zhu, and Q. Liao, ``A review of third generation solar cells,'' \emph{Processes}, vol. 11, no. 6, Art. no. 1852, 2023, doi: 10.3390/pr11061852.
+\bibitem{anctil_etal_2023} A. Anctil \emph{et al.}, ``Status report on emerging photovoltaics,'' \emph{Journal of Photonics for Energy}, vol. 13, no. 4, 2023, doi: 10.1117/1.JPE.13.042301.
+\bibitem{alharbi_kais_2015} F. H. Alharbi and S. Kais, ``Theoretical limits of photovoltaics efficiency and possible improvements by intuitive approaches learned from photosynthesis and quantum coherence,'' \emph{Renewable and Sustainable Energy Reviews}, vol. 43, pp. 1073--1089, 2015, doi: 10.1016/j.rser.2014.11.101.
+\bibitem{dada_etal_2023} M. Dada, A. P. I. Popoola, A. Alao, F. E. Olalere, E. Mtileni, N. Lindokuhle, and M. Shamaine, ``Functional materials for solar thermophotovoltaic devices in energy conversion applications: A review,'' \emph{Frontiers in Energy Research}, vol. 11, 2023, doi: 10.3389/fenrg.2023.1124288.
+\bibitem{utlu_onal_2017} Z. Utlu and B. S. \"Onal, ``Thermodynamic analysis of thermophotovoltaic systems used in waste heat recovery systems: An application,'' \emph{International Journal of Low-Carbon Technologies}, vol. 13, no. 1, pp. 52--60, 2018, doi: 10.1093/ijlct/ctx019.
+\bibitem{chirumamilla_etal_2019} M. Chirumamilla \emph{et al.}, ``Metamaterial emitter for thermophotovoltaics stable up to 1400 $^\circ$C,'' \emph{Scientific Reports}, vol. 9, Art. no. 7241, 2019, doi: 10.1038/s41598-019-43640-6.
+\bibitem{alfartoos_etal_2023} M. M. R. Al-Fartoos, A. Roy, T. K. Mallick, and A. A. Tahir, ``Advancing thermoelectric materials: A comprehensive review exploring the significance of one-dimensional nanostructuring,'' \emph{Nanomaterials}, vol. 13, no. 13, Art. no. 2011, 2023, doi: 10.3390/nano13132011.
+\bibitem{wang_etal_2020} X. Wang, R. Liang, P. Fisher, W. R. Chan, and J. Xu, ``Radioisotope thermophotovoltaic generator design methods and performance estimates for space missions,'' \emph{Journal of Propulsion and Power}, vol. 36, no. 4, pp. 593--603, 2020, doi: 10.2514/1.B37623.
+\bibitem{chow_etal_2012} T. W. S. Chow, G. N. Tiwari, and C. M\'en\'ezo, ``Hybrid solar: A review on photovoltaic and thermal power integration,'' \emph{International Journal of Photoenergy}, vol. 2012, Art. no. 307287, 2012, doi: 10.1155/2012/307287.
+\bibitem{alashouri_etal_2020} A. Al-Ashouri \emph{et al.}, ``Monolithic perovskite/silicon tandem solar cell with $>$29\% efficiency by enhanced hole extraction,'' \emph{Science}, vol. 370, no. 6522, pp. 1300--1309, 2020, doi: 10.1126/science.abb4016.
+\end{thebibliography}
+
+\end{document}

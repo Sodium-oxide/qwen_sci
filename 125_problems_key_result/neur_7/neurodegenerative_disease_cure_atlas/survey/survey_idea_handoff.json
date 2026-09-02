@@ -1,0 +1,13 @@
+{
+  "schema_version":"survey_idea_handoff_v1",
+  "project_id":"neur_7_spirp",
+  "topic":"Can we cure neurodegenerative diseases?",
+  "survey_status":"VERIFIED",
+  "primary_gap_ids":["G1","G2","G3","G4","G5","G6","G7","G8"],
+  "evidence_anchor_ids":["E1","E2","E3","E4","E5","E6","E7","E8"],
+  "recommended_direction":"Stage-Adaptive Proteostasis–Immune–Repair Platform (SPIRP)",
+  "data_invariants":["Define cure as pathology, function, durability, and safety criteria.","Stratify by molecular state and disease stage.","Use disease-specific protein modules on a shared systems backbone.","Separate target engagement from clinical function.","Require washout and long-term rebound testing.","Treat iPSC and animal models as complementary, not interchangeable."],
+  "handoff_rule":"Idea candidates must cite at least one accepted gap_id and one evidence_anchor_id; unsupported candidates cannot become primary_direction.",
+  "unknowns_to_inherit":["optimal order of proteostasis and immune interventions","biomarker thresholds for responder selection","permissive niche requirements for neuronal repair","durability after treatment withdrawal"],
+  "human_review_requirements":["clinical trial ethics and risk-benefit review","patient genomic privacy","stem-cell tumor and integration surveillance","drug-interaction and repurposing safety review"]
+}

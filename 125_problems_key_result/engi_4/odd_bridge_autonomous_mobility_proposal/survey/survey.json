@@ -1,0 +1,23 @@
+{
+  "schema_version": "survey_v1",
+  "project_id": "engi_4_autonomous_mobility_scaling",
+  "survey_run_id": "survey-engi4-odd-bridge-001",
+  "topic": "Is a future of only self-driving cars realistic?",
+  "scoped_question": "Under what safety, operational, infrastructure, communication, human-interaction, and public-legitimacy evidence conditions can an ADS mobility service expand its ODD and fleet share without converting an unvalidated capability into a city-wide or self-driving-only claim?",
+  "scientific_conclusion": "An exclusive self-driving-car future is not currently a scientifically supported unitary target. Bounded ADS expansion can be researched through an assurance-gated, mixed-traffic transition process.",
+  "discipline": "engineering_energy",
+  "evidence_registry": [
+    {"id": "E-STATE-001", "citation_key": "nhtsa_av_safety_2026", "role": "current consumer/ADS maturity boundary", "source_confidence": "browser_visible_page_verified"},
+    {"id": "E-HUMAN-002", "citation_key": "morales_alvarez_etal_2020", "role": "conditional-automation takeover/ODD exit review", "source_confidence": "dual_index_cross_validated"},
+    {"id": "E-SAFETY-003", "citation_key": "noy_shinar_horrey_2018", "role": "sociotechnical safety blind-spot review", "source_confidence": "dual_index_cross_validated"},
+    {"id": "E-CORE-004", "citation_key": "yurtsever_etal_2020", "role": "ADS technical-stack review", "source_confidence": "dual_index_cross_validated"},
+    {"id": "E-MOTION-005", "citation_key": "katrakazas_etal_2015", "role": "motion-planning and V2X research directions", "source_confidence": "dual_index_cross_validated"},
+    {"id": "E-INFRA-006", "citation_key": "tengilimoglu_etal_2023", "role": "road-infrastructure requirements review", "source_confidence": "dual_index_cross_validated"},
+    {"id": "E-CYBER-007", "citation_key": "sadaf_etal_2023", "role": "CAV infrastructure/security/privacy review", "source_confidence": "dual_index_cross_validated"},
+    {"id": "E-TRUST-008", "citation_key": "othman_2021", "role": "public acceptance review", "source_confidence": "dual_index_cross_validated"},
+    {"id": "E-TRANSITION-009", "citation_key": "hancock_etal_2019", "role": "transport-transition framing", "source_confidence": "dual_index_cross_validated"}
+  ],
+  "accepted_gap_ids": ["GAP-ODD-001", "GAP-DEGRADE-002", "GAP-MIXED-003", "GAP-INFRA-004", "GAP-ASSURE-005", "GAP-TRUST-006", "GAP-EQUITY-007"],
+  "known_unknowns": ["No city, vehicle class, deployment ODD, sensor suite, fleet operator, safety threshold, or infrastructure protocol was supplied.", "No road test, simulation, software evaluation, crash analysis, public survey, or field measurement was performed.", "Publisher/DOI landing pages and full-text claims require human review before external use."],
+  "handoff_policy": {"requires_real_gap_ids": true, "requires_odd_boundary": true, "requires_safe_fallback": true, "forbids_exclusive_future_claim": true, "forbids_observed_results": true}
+}

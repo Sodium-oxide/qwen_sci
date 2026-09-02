@@ -1,0 +1,54 @@
+{
+  "schema_version": "manual_five_agent_author_manifest_v1",
+  "stage": "AUTHOR",
+  "status": "COMPLETE",
+  "project_id": "phys_2_cuprate_mechanism_20260903",
+  "workflow_order": [
+    "Survey",
+    "Idea",
+    "ExperimentDesign",
+    "Quantitative",
+    "Author"
+  ],
+  "deliverables": [
+    {
+      "kind": "IEEE_SOURCE",
+      "path": "ieee_project/conference_101719.tex",
+      "status": "READY"
+    },
+    {
+      "kind": "IEEE_PDF",
+      "path": "high_tc_cuprate_mechanism_report.pdf",
+      "status": "READY"
+    },
+    {
+      "kind": "AUTHOR_SUMMARY",
+      "path": "research_report.md",
+      "status": "READY"
+    },
+    {
+      "kind": "AUTHOR_METADATA",
+      "path": "author_document.json",
+      "status": "READY"
+    },
+    {
+      "kind": "PDF_VALIDATION",
+      "path": "pdf_validation.json",
+      "status": "READY"
+    }
+  ],
+  "format_requirements": {
+    "template": "Conference-LaTeX-template_10-17-19 / IEEEtran",
+    "page_target": "8-10 pages",
+    "acknowledgements_included": false,
+    "references_are_traceable": true
+  },
+  "evidence_boundary": "Only frozen survey references and explicitly marked model assumptions are used. The numerical branch is non-empirical.",
+  "validation": {
+    "pdf_page_count": 8,
+    "page_target": "8-10",
+    "visual_pages_inspected": [1, 4, 8],
+    "status": "PASS_WITH_DOCUMENTED_NONBLOCKING_LAYOUT_WARNINGS",
+    "record": "pdf_validation.json"
+  }
+}

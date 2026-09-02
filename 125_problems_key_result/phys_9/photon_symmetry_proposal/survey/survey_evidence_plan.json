@@ -1,0 +1,29 @@
+{
+  "schema_version": "survey_evidence_plan_v1",
+  "project_id": "phys_9_photon_symmetry",
+  "evidence_policy": {
+    "allowed_claim_types": ["established_theory", "source_bounded_context", "proposed_method", "conditional_conclusion"],
+    "prohibited_claim_types": ["new_particle_claim", "fabricated_measurement", "unregistered_citation", "nonstandard_model_as_consensus"],
+    "publication_check": "Publisher/DOI landing pages require human review except browser-verified CERN page."
+  },
+  "sources": [
+    {"id":"S1","citation_key":"cern_antimatter_page","kind":"institutional_webpage","status":"BROWSER_VERIFIED","role":"General matter-antimatter context; photons are prominent annihilation products","url":"https://home.cern/science/physics/antimatter/"},
+    {"id":"S2","citation_key":"pdg2022","kind":"reference_review","status":"SCHOLARLY_REFERENCE_PENDING_PAGE_REVIEW","role":"Standard particle-properties and gauge-boson reference","doi":"10.1093/ptep/ptac097"},
+    {"id":"S3","citation_key":"weinberg_qft1","kind":"textbook","status":"SCHOLARLY_REFERENCE_PENDING_PAGE_REVIEW","role":"Massless representations and discrete-symmetry framework","isbn":"9780521550017"},
+    {"id":"S4","citation_key":"wigner1939","kind":"foundational_article","status":"SCHOLARLY_REFERENCE_PENDING_PAGE_REVIEW","role":"Unitary/antiunitary symmetry representations","citation":"Annals of Mathematics 40, 149–204 (1939)"},
+    {"id":"S5","citation_key":"jacob_wick1959","kind":"foundational_article","status":"SCHOLARLY_REFERENCE_PENDING_PAGE_REVIEW","role":"Helicity-state formalism","doi":"10.1016/0003-4916(59)90051-X"},
+    {"id":"S6","citation_key":"yang1950","kind":"foundational_article","status":"SCHOLARLY_REFERENCE_PENDING_PAGE_REVIEW","role":"Two-photon symmetry and selection-rule context","doi":"10.1103/PhysRev.77.242"},
+    {"id":"S7","citation_key":"krenn2017","kind":"review","status":"CROSS_VALIDATED_OPENALEX_ANYSEARCH","role":"Single-photon OAM states and entanglement","doi":"10.1098/rsta.2015.0442"},
+    {"id":"S8","citation_key":"forbes_andrews2021","kind":"review","status":"CROSS_VALIDATED_OPENALEX_ANYSEARCH","role":"Opposite optical handedness and OAM labels","doi":"10.1088/2515-7647/abdb06"},
+    {"id":"S9","citation_key":"leach2009","kind":"journal_article","status":"CROSS_VALIDATED_OPENALEX_ANYSEARCH","role":"OAM state-space control and measurement","doi":"10.1364/OE.17.008287"},
+    {"id":"S10","citation_key":"kwiat1995","kind":"journal_article","status":"SCHOLARLY_REFERENCE_PENDING_PAGE_REVIEW","role":"Polarization-entangled photon-state source","doi":"10.1103/PhysRevLett.75.4337"},
+    {"id":"S11","citation_key":"erhard2017","kind":"review","status":"CROSS_VALIDATED_OPENALEX_ANYSEARCH","role":"High-dimensional twisted-photon state space","doi":"10.1038/lsa.2017.146"},
+    {"id":"S12","citation_key":"gauthier2017","kind":"journal_article","status":"CROSS_VALIDATED_OPENALEX_ANYSEARCH","role":"Controllable OAM sign/state context","doi":"10.1038/ncomms14971"}
+  ],
+  "claim_anchors": [
+    {"claim_id":"C-IDENTITY-001","claim":"Under the standard gauge-field description, the photon is self-conjugate and does not have a distinct antiphoton species.","evidence_level":"established_theory","source_ids":["S2","S3"]},
+    {"claim_id":"C-SYMMETRY-001","claim":"Helicity and discrete transformations require an explicit representation and measurement convention.","evidence_level":"foundational_theory","source_ids":["S3","S4","S5"]},
+    {"claim_id":"C-STATE-001","claim":"Polarization and OAM provide controllable photon-state degrees of freedom with contrasting labels.","evidence_level":"cross_validated_quantum_optics","source_ids":["S7","S8","S9","S10","S11","S12"]},
+    {"claim_id":"C-ANNIHILATION-001","claim":"Matter-antimatter pairs are a distinct concept from photonic annihilation products.","evidence_level":"institutional_context","source_ids":["S1"]}
+  ]
+}

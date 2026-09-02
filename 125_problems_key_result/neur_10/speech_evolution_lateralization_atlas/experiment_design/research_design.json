@@ -1,0 +1,79 @@
+{
+  "schema": "experiment_design.v1",
+  "project_id": "neur_10_speech_evolution_lateralization_atlas",
+  "stage": "experiment_design",
+  "status": "completed",
+  "design_mode": "DESIGN_ONLY",
+  "title": "PDSCEA: A phylo-developmental atlas of auditory-vocal circuit evolution and speech lateralization",
+  "research_question": "How did evolution repurpose ancient primate auditory-vocal circuits into a developmentally organized and partly left-lateralized human speech network?",
+  "primary_hypothesis": "An integrated model of conserved communication-signal representations, human auditory-motor connectivity, developmental lateralization, and speech-specific temporal coupling will explain learned vocal control better than single-region, FOXP2-only, or left-hemisphere-only models.",
+  "cohorts": {
+    "human_adult_target": 240,
+    "human_developmental_target": 180,
+    "developmental_repeat_subset": 90,
+    "nonhuman_primate": "existing approved datasets preferred; new collection only after species-specific review",
+    "design_note": "Targets are planning parameters, not completed enrollment or observed sample sizes."
+  },
+  "tasks": [
+    "natural speech comprehension",
+    "nonword and syllable discrimination",
+    "overt and covert articulation",
+    "delayed vocal imitation",
+    "non-vocal environmental sounds",
+    "pure-tone and spectrally rotated speech controls",
+    "generic oro-facial movement controls",
+    "reversible mild auditory-feedback perturbation"
+  ],
+  "measurements": [
+    "structural MRI",
+    "diffusion MRI",
+    "resting-state fMRI",
+    "task fMRI",
+    "EEG or MEG",
+    "acoustic and oro-facial kinematics",
+    "family structure or genotype when consent permits"
+  ],
+  "primary_features": [
+    "auditory communication-signal RDM alignment",
+    "auditory-to-articulatory tract connectivity",
+    "language network lateralization index",
+    "speech-specific phase-locking and cross-frequency coupling",
+    "speech-learning and speech-motor performance"
+  ],
+  "equations": {
+    "hierarchical_model": "Y_idt = beta0 + beta1 Species_i + beta2 Age_i + beta3 Hemisphere_d + beta4 Task_t + beta5 Connectivity_id + beta6 Species_i*Age_i + beta7 Task_t*Connectivity_id + u_site + u_i + epsilon_idt",
+    "lateralization_index": "LI_idt = (L_idt - R_idt) / (abs(L_idt) + abs(R_idt) + epsilon)",
+    "phase_locking_value": "PLV_r(f) = abs((1/N) * sum_k exp(j*(phi_rk(f)-phi_sk(f))))",
+    "mediation": "M_i = a0 + a1 Age_i + a2 Species_i + a3 Family_i + u_i + e_i; Y_i = c0' + c1' Age_i + c2' Species_i + c3' M_i + c4' Handedness_i + v_i + eta_i"
+  },
+  "controls": [
+    "non-vocal acoustic controls",
+    "generic oro-facial motor controls",
+    "matched intensity, duration, and envelope",
+    "motion, hearing status, site, age, sex, handedness, and language background covariates",
+    "phase-scrambled and label-preserving surrogate controls",
+    "alternative cortical parcellations"
+  ],
+  "falsification_rules": [
+    "cross-species alignment does not exceed matched non-vocal controls",
+    "auditory-motor connectivity adds no held-out predictive value",
+    "developmental lateralization trajectory is absent or fully explained by handedness",
+    "speech-specific dynamic coupling disappears after controls",
+    "single-region or FOXP2-only model performs as well or better under the prespecified complexity penalty"
+  ],
+  "ethics": [
+    "informed consent, guardian consent, and child assent",
+    "institutional review and privacy-preserving data governance",
+    "hearing-safe reversible feedback perturbation",
+    "prefer reuse of approved primate data and apply species-specific welfare review"
+  ],
+  "observed_results": [],
+  "planned_outputs": [
+    "cross-species speech-circuit atlas",
+    "developmental lateralization trajectory",
+    "auditory-motor connectivity estimates",
+    "speech-specific temporal coupling estimates",
+    "out-of-sample model comparison",
+    "falsification report"
+  ]
+}

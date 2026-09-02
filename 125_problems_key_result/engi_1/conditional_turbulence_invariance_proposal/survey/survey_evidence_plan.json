@@ -1,0 +1,20 @@
+{
+  "schema_version": "survey_evidence_plan_v1",
+  "project_id": "engi_1_conditional_turbulence_invariance",
+  "evidence_rules": {
+    "exact_law_rule": "State assumptions and the exact statistic alongside every exact-law claim.",
+    "universality_rule": "Treat scaling collapse or exponent agreement as conditional evidence, not a universal theorem.",
+    "discovery_source_rule": "Use OpenAlex-discovered references only within their frozen scoped roles pending publisher review.",
+    "prohibited_inferences": ["universal exponent from one flow", "new DNS/experimental result", "unqualified cross-regime transfer", "source-free fit claim"]
+  },
+  "sources": [
+    {"key":"sreenivasan_antonia_1997","tier":"PUBLISHER_VERIFIED","claim_scope":"Review of small-scale universality, intermittency, refined similarity, anomalous exponents, and homogeneous-turbulence DNS."},
+    {"key":"kolmogorov_1941","tier":"BACKGROUND_PENDING_PUBLISHER_REVIEW","claim_scope":"Classical K41 and the four-fifths relation under stated assumptions."},
+    {"key":"kolmogorov_1962","tier":"BACKGROUND_PENDING_PUBLISHER_REVIEW","claim_scope":"Refined similarity and intermittency context."},
+    {"key":"frisch_1995","tier":"BACKGROUND_PENDING_PUBLISHER_REVIEW","claim_scope":"Cascade and multifractal terminology."},
+    {"key":"eyink_sreenivasan_2006","tier":"BACKGROUND_PENDING_PUBLISHER_REVIEW","claim_scope":"Onsager/cascade regularity context."},
+    {"key":"vela_martin_jimenez_2021","tier":"OPENALEX_DISCOVERY","claim_scope":"Statistical irreversibility diagnostic motivation."},
+    {"key":"sen_2012","tier":"OPENALEX_DISCOVERY","claim_scope":"Rotating-flow anisotropy/nonuniversality control."},
+    {"key":"andres_banerjee_2019","tier":"OPENALEX_DISCOVERY","claim_scope":"Exact-relation residual diagnostic motivation."}
+  ]
+}

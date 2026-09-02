@@ -1,0 +1,23 @@
+{
+  "stage": "ExperimentDesign",
+  "status": "COMPLETED",
+  "benchmark": "CREATIVE-AI-AGENCY-BENCHMARK",
+  "artifact_status": "DESIGN_ONLY",
+  "stages": ["controlled_offline_benchmark", "sandbox_co_creation", "optional_blinded_evaluation"],
+  "factors": {
+    "author": ["human_only", "AI_only", "human_AI"],
+    "retrieval": ["enabled", "disabled"],
+    "search": ["single_sample", "generate_and_rank", "tree_search"],
+    "critique": ["absent", "self_critique", "human_critique"],
+    "order": ["human_first", "AI_first", "alternating"],
+    "evaluation": ["blind", "source_labeled"],
+    "task_split": ["in_distribution", "held_out_concept", "held_out_domain", "perturbed_constraints"]
+  },
+  "task_families": ["Go", "engineering_design", "music_or_visual_motifs", "code_and_algorithms", "scientific_hypotheses", "cross_domain_recombination"],
+  "primary_metrics": ["novelty", "usefulness", "surprise", "diversity", "constraint_satisfaction", "held_out_transfer", "memorization", "search_breadth", "revision_gain", "human_edit_distance", "veto_rate", "marginal_contribution"],
+  "planned_contrasts": ["AI_only_vs_human_only", "human_AI_vs_better_solo_baseline", "retrieval_vs_no_retrieval", "critique_vs_no_critique"],
+  "falsification_tests": ["reference_corpus_swap", "constraint_paraphrase", "canary_concepts", "trace_shuffle", "source_label_swap", "retrieval_matched_baseline", "prompt_paraphrase"],
+  "analysis": "Hierarchical task-level models with blocked randomization, preregistered contrasts, effect sizes, and uncertainty intervals",
+  "safety": ["offline_or_sandbox_only", "no_high_stakes_decisions", "consent_and_withdrawal", "provenance_logging", "license_and_privacy_audit"],
+  "result_policy": "Do not fabricate or pre-fill empirical results; report outcomes only after execution."
+}

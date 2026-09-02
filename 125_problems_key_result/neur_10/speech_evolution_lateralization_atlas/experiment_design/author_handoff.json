@@ -1,0 +1,37 @@
+{
+  "schema": "author_handoff.v1",
+  "project_id": "neur_10_speech_evolution_lateralization_atlas",
+  "stage": "experiment_design",
+  "status": "verified_handoff",
+  "design_mode": "DESIGN_ONLY",
+  "primary_direction_id": "PDSCEA",
+  "source_bindings": {
+    "survey_manifest": "../survey/survey_manifest.json",
+    "survey_evidence_plan": "../survey/survey_evidence_plan.json",
+    "survey_gap_ledger": "../survey/survey_gap_ledger.json",
+    "idea_result": "../idea/idea_result.json",
+    "research_design": "research_design.json"
+  },
+  "author_constraints": [
+    "Write a research plan, not a completed experiment report.",
+    "Keep observed_results empty and label all empirical quantities as planned targets or source-reported values.",
+    "Use only the cited sources for literature claims.",
+    "Do not add an Acknowledgment or Acknowledgements section.",
+    "Do not turn 200,000 years or 27 million years into established speech-origin dates.",
+    "Do not claim that one brain region, one gene, or one hemisphere controls speech alone.",
+    "Include mathematical definitions and explicit falsification rules.",
+    "Target an IEEE-style report of at least 7 pages without filler."
+  ],
+  "required_sections": [
+    "Abstract",
+    "Introduction",
+    "Evidence-Constrained Survey",
+    "Idea Synthesis",
+    "ExperimentDesign",
+    "Expected Interpretations and Falsification",
+    "Risks and Reproducibility",
+    "Conclusion",
+    "References"
+  ],
+  "observed_results": []
+}

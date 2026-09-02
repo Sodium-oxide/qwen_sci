@@ -1,0 +1,17 @@
+{
+  "framework": "ARCHAIC: Ancient-genome Reconstruction of Cross-Hominin Admixture and Introgression Claims",
+  "artifact_status": "DESIGN_ONLY",
+  "study_type": ["ancient DNA", "comparative genomics", "population genetics", "simulation"],
+  "primary_estimand": "Relative predictive support for an explicit demographic gene-flow model in a declared set of samples and genomic regions.",
+  "stages": [
+    {"code": "A", "name": "Authenticity and ascertainment", "output": "sample passport and damage/contamination bounds"},
+    {"code": "R", "name": "Reference and representation", "output": "declared panels, masks, outgroups, and recombination representation"},
+    {"code": "C", "name": "Competing models", "output": "tree, structure, pulse, reciprocal, and ghost-source alternatives"},
+    {"code": "H", "name": "Haplotype reconstruction", "output": "uncertainty-aware local ancestry map"},
+    {"code": "A", "name": "Admixture direction and timing", "output": "model-conditional mixture and date intervals"},
+    {"code": "I", "name": "Independent validation", "output": "replication and held-out evaluation"},
+    {"code": "C", "name": "Claim calibration", "output": "evidence-labeled report"}
+  ],
+  "claim_labels": ["allele-sharing asymmetry", "gene-flow-supported", "source-qualified and time-supported", "direct hybrid", "adaptive introgression candidate"],
+  "empirical_results_claimed": false
+}

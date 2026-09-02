@@ -1,0 +1,20 @@
+{
+  "stage": "experiment_design",
+  "design_id": "cofet-design-v1",
+  "mode": "DESIGN_ONLY",
+  "scientific_question": "Can CO-FET identify portfolios with lower held-out worst-case regret and residual climate risk while meeting reliability, affordability, and equity constraints?",
+  "study_type": "scenario ensemble plus robust optimization and ablation experiment",
+  "units": {"spatial": "connected regions with energy nodes and risk zones", "time": "staged planning intervals with finer dispatch substeps"},
+  "scenario_factors": ["climate trajectories", "socioeconomic demand and vulnerability", "technology costs and build rates", "renewable availability and correlation", "storage performance and degradation", "transmission limits and outages", "observation coverage, error, missingness, and latency", "governance and implementation capacity"],
+  "scenario_split": ["development", "stress_test", "held_out"],
+  "treatment": "CO-FET: observation, risk, energy-flexibility, and staged-policy layers coupled in one portfolio evaluation.",
+  "baselines": ["carbon-only", "technology-only", "observation-first", "delayed-action", "perfect-forecast upper bound", "naive renewable capacity substitution"],
+  "primary_metrics": ["held-out worst-case regret", "cumulative net emissions", "residual multi-sector risk", "unserved energy and loss-of-load probability", "affordability burden", "distributional burden by region and access group"],
+  "secondary_metrics": ["curtailment", "storage utilization and degradation", "transmission congestion", "decision latency", "value of information", "option value", "adaptation co-benefits"],
+  "ablations": ["remove observation upgrades", "remove grid flexibility", "remove risk and equity constraints", "remove adaptive triggers"],
+  "falsification_rules": ["CO-FET does not outperform carbon-only or technology-only on held-out worst-case regret under equal constraints", "CO-FET advantage disappears on held-out climate regimes", "advantage depends on perfect observations or hidden exclusions", "reliability, affordability, or equity constraints cannot be met"],
+  "expected_results": [],
+  "observed_results": [],
+  "upstream_identity": {"idea_result": "../idea/idea_result.json", "primary_direction": "CO-FET"},
+  "author_scope": "Research proposal only; expected outcomes are pre-specified interpretations, not empirical findings."
+}

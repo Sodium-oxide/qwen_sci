@@ -1,0 +1,58 @@
+{
+  "schema_version": "experiment_design_v1",
+  "project_id": "phys_7_elementary_matter_20260901",
+  "survey_run_id": "survey-elementary-matter-001",
+  "project_context_fingerprint": "standard-model-pointlike-fermion-compositeness-resolution-v1",
+  "idea_binding": {"idea_result": "../idea/idea_result.json", "primary_direction_id": "idea-rlmc-001", "target_gap_ids": ["G1", "G2", "G3", "G4", "G5", "G6"]},
+  "template": "computational_digital",
+  "research_brief": {
+    "central_hypothesis": "A momentum-transfer-matched cross-channel likelihood with explicit EFT validity and shared nuisance controls can discriminate coherent substructure-like patterns from pointlike-SM and systematic alternatives better than independent single-channel limits.",
+    "scientific_object": "finite-resolution scattering signatures of quarks and leptons",
+    "primary_claim": "Pointlikeness is a model- and range-conditioned inference that requires cross-channel consistency, not an assertion of absolute indivisibility.",
+    "alternative_explanations": ["PDF uncertainty", "detector response mismatch", "background normalization", "EFT truncation", "flavor-basis assumption", "non-identifiable hypothesis shapes"],
+    "falsifiers": ["no model-family identifiability", "cutoff instability", "nuisance stress reproduces deviation", "cross-channel inconsistency"]
+  },
+  "variables": {
+    "independent": [
+      {"name": "Q", "meaning": "declared momentum-transfer or invariant-mass scale"},
+      {"name": "c", "meaning": "angular observable or scattering-angle bin"},
+      {"name": "C_i/Lambda^2", "meaning": "dimension-six contact-interaction coefficients"},
+      {"name": "D_j/Lambda^4", "meaning": "declared dimension-eight sensitivity coefficients"},
+      {"name": "r_f^2", "meaning": "finite-form-factor parameter for fermion f"},
+      {"name": "m_star, f_star/Lambda", "meaning": "excited-fermion benchmark parameters"},
+      {"name": "eta", "meaning": "shared and channel-specific nuisance parameters"}
+    ],
+    "dependent": ["binned differential yields", "normalized angular distributions", "profile likelihood ratio", "held-out predictive score", "EFT stability diagnostic", "hypothesis posterior or information criterion"],
+    "controlled": ["fiducial definition", "binning version", "theory calculation order", "PDF set and variations", "response model", "luminosity treatment", "data-release provenance"]
+  },
+  "formal_model": {
+    "eft_lagrangian": "L_eff = L_SM + sum_i C_i O_i/Lambda^2 + sum_j D_j O_j/Lambda^4 + ...",
+    "form_factor": "F_f(Q^2) = 1 - r_f^2 Q^2/6 + O(Q^4)",
+    "expected_yield": "mu_cb(theta, eta) = L * integral_bin [R_cb * d sigma_c(theta, eta)] + b_cb(eta)",
+    "likelihood": "L(theta, eta) = product_cb Poisson(n_cb | mu_cb(theta, eta)) product_k pi_k(eta_k)",
+    "evidence_ratio": "Delta T = -2 log[L_pointlike_hat/L_alternative_hat]"
+  },
+  "analysis_plan": {
+    "steps": [
+      "Version channels, kinematic variables, binning, selections, theory predictions, and nuisance definitions.",
+      "Generate synthetic closure data for pointlike, contact, form-factor, and excited-state hypotheses.",
+      "Perform identifiability and parameter-degeneracy checks before any approved data interface is used.",
+      "Fit pointlike and alternative hypotheses on declared training bins; evaluate held-out bins.",
+      "Sweep EFT cutoff, dimension-six/dimension-eight truncation, flavor assumptions, PDF variations, and response perturbations.",
+      "Require cross-channel coherence only where a stated UV or EFT model predicts it.",
+      "Classify the outcome as supported preference, range-dependent constraint, model ambiguity, or non-identifiability."
+    ],
+    "primary_decision_rule": "A non-pointlike hypothesis may be preferred only if it yields identifiable, held-out, cutoff-stable, nuisance-robust, cross-channel-consistent improvement under the preregistered model family.",
+    "failure_handling": "Report instability, non-identifiability, or missing provenance as indeterminate; do not convert them into constituent claims or discovery language."
+  },
+  "controls_and_robustness": ["pointlike-SM closure", "injected contact-interaction closure", "injected finite-form-factor closure", "injected excited-state closure", "PDF ensemble stress test", "detector-response stress test", "binning and cutoff variation", "dimension-eight inclusion or truncation stress test", "held-out-bin validation"],
+  "evidence_keys": ["pdg2008", "cottingham2007", "cms_higgs2015", "allwicher2023", "brivio2017", "cms_tau2025", "arrington2021", "abada2019", "alekhin2016", "jaeckel2010", "colladay1998"],
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": [],
+    "automatic_execution_allowed": false,
+    "human_review_required": true,
+    "prohibited_automatic_actions": ["accelerator operation", "beam steering", "detector control", "trigger configuration", "collider data taking", "restricted-data retrieval", "publication of a physics limit"]
+  },
+  "needs_human_input": ["approved public-data or likelihood interface", "fiducial and detector-response definitions", "EFT operator basis and validity threshold", "PDF and theoretical-uncertainty prescription", "frequentist or Bayesian coverage procedure", "collider phenomenology and experimental-analysis review"]
+}

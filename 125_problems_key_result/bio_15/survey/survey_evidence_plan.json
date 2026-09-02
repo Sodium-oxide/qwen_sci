@@ -1,0 +1,11 @@
+{
+  "schema_version": "survey_evidence_plan_v1",
+  "coverage_targets": [
+    {"subhypothesis_id": "SH-FERTILITY", "required_evidence": "Long-run fertility and population projection model with stated uncertainty.", "anchors": ["vollset2020", "un_wpp2024"]},
+    {"subhypothesis_id": "SH-MORTALITY", "required_evidence": "Component-based mortality forecasting and probabilistic projection methodology.", "anchors": ["vollset2020", "raftery2014"]},
+    {"subhypothesis_id": "SH-MIGRATION", "required_evidence": "Migration uncertainty treatment within international projections.", "anchors": ["azose2016", "raftery_sevcikova2023"]},
+    {"subhypothesis_id": "SH-CLIMATE", "required_evidence": "Evidence separating climate-disruption uncertainty from demographic-component forecasting.", "anchors": ["un_wpp2024"], "status": "coverage_limited_design_only"},
+    {"subhypothesis_id": "SH-AGGREGATION", "required_evidence": "All-country probabilistic cohort-component methodology and out-of-sample forecast assessment.", "anchors": ["gerland2014", "raftery2014", "raftery_sevcikova2023"]}
+  ],
+  "retrieval_constraint": "OpenAlex and AnySearch calls were attempted and failed with connection refused. Browser checks are recorded in the source registry."
+}

@@ -1,0 +1,549 @@
+{
+  "schema_version": "survey_project_context_artifact_v1",
+  "event": "project_created",
+  "project_id": "sci_phys_2_survey_001",
+  "declared_domain": "",
+  "domain": "Cuprate High-Temperature Superconductivity Mechanism",
+  "research_domains": [],
+  "domain_resolution_source": "llm_primary_catalog_validated",
+  "requires_human_confirmation": true,
+  "research_context": {
+    "input_fingerprint": "a604d2235f79605036c964b1f1ee1020317cb4672bd4c2a886e6c25a0c93bfb0",
+    "original_topic": "What microscopic mechanism produces high-temperature superconductivity in cuprates, and which experimentally constrained magnetic and charge correlations distinguish a spin-fluctuation-mediated d-wave pairing route from competing explanations?",
+    "title": "",
+    "schema_version": "project_research_context_v3",
+    "declared_domain": "",
+    "domain": "Cuprate High-Temperature Superconductivity Mechanism",
+    "research_domains": [],
+    "research_identity": {
+      "label": "Cuprate High-Temperature Superconductivity Mechanism",
+      "source": "llm_primary",
+      "confidence": 0.95,
+      "rationale": "The source explicitly targets the microscopic origin of high-temperature superconductivity in cuprates, specifically evaluating spin-fluctuation-mediated d-wave pairing against alternative models using experimentally constrained magnetic and charge correlations, which aligns directly with condensed matter physics and strongly correlated electron systems research.",
+      "evidence_spans": [
+        "microscopic mechanism produces high-temperature superconductivity in cuprates",
+        "experimentally constrained magnetic and charge correlations",
+        "spin-fluctuation-mediated d-wave pairing route"
+      ],
+      "secondary_labels": [
+        "d-wave pairing",
+        "spin fluctuations",
+        "charge correlations",
+        "strongly correlated electrons",
+        "cuprate oxides"
+      ],
+      "core_entities": [
+        "cuprates",
+        "high-temperature superconductivity",
+        "spin-fluctuation-mediated d-wave pairing",
+        "magnetic correlations",
+        "charge correlations"
+      ],
+      "retrieval_synonyms": [
+        "HTS cuprates",
+        "cuprate superconductivity mechanism",
+        "spin fluctuation pairing",
+        "d-wave superconductivity",
+        "strongly correlated electron systems"
+      ],
+      "must_not_be_primary": [
+        "Particle Physics",
+        "Astrophysics",
+        "Chemical Engineering",
+        "Biophysics",
+        "Topological Insulators"
+      ]
+    },
+    "domain_taxonomy": {
+      "catalog_version": "research_domain_catalog_v1",
+      "coverage": "validated",
+      "mappings": []
+    },
+    "discovery_taxonomy": {
+      "schema_version": "discipline_taxonomy_v1",
+      "scope": "natural_science_engineering_only",
+      "status": "unresolved",
+      "primary_discipline": null,
+      "discipline_ids": [],
+      "adjacent_disciplines": [],
+      "coverage": "unsupported",
+      "matched_terms": [],
+      "out_of_scope_terms": [],
+      "mixed": false,
+      "provider_filters": {
+        "arxiv": {
+          "provider": "arxiv",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "openalex": {
+          "provider": "openalex",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "semantic_scholar": {
+          "provider": "semantic_scholar",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      },
+      "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+    },
+    "domain_context": {
+      "primary": "Cuprate High-Temperature Superconductivity Mechanism",
+      "taxonomy_labels": [],
+      "secondary_labels": [
+        "d-wave pairing",
+        "spin fluctuations",
+        "charge correlations",
+        "strongly correlated electrons",
+        "cuprate oxides"
+      ],
+      "retrieval_terms": [
+        "Cuprate High-Temperature Superconductivity Mechanism",
+        "d-wave pairing",
+        "spin fluctuations",
+        "charge correlations",
+        "strongly correlated electrons",
+        "cuprate oxides",
+        "HTS cuprates",
+        "cuprate superconductivity mechanism",
+        "spin fluctuation pairing",
+        "d-wave superconductivity",
+        "strongly correlated electron systems",
+        "cuprates",
+        "high-temperature superconductivity",
+        "spin-fluctuation-mediated d-wave pairing",
+        "magnetic correlations"
+      ]
+    },
+    "catalog_resolution": {
+      "catalog_version": "research_domain_catalog_v1",
+      "declared_domain": "",
+      "requested_domain_is_generic": true,
+      "primary_label": "Unresolved Research Domain",
+      "primary_domain": "general",
+      "primary_subfield": "",
+      "research_domains": [],
+      "requires_human_confirmation": true
+    },
+    "catalog_conflict": {
+      "detected": false,
+      "adjudicated": false,
+      "catalog_primary_label": "Unresolved Research Domain",
+      "reason": ""
+    },
+    "domain_resolution_source": "llm_primary_catalog_validated",
+    "requires_human_confirmation": true,
+    "primary_discipline": null,
+    "secondary_disciplines": [],
+    "domain_confidence": 0.95,
+    "core_entities": [
+      "cuprates",
+      "high-temperature superconductivity",
+      "spin-fluctuation-mediated d-wave pairing",
+      "magnetic correlations",
+      "charge correlations"
+    ],
+    "retrieval_synonyms": [
+      "HTS cuprates",
+      "cuprate superconductivity mechanism",
+      "spin fluctuation pairing",
+      "d-wave superconductivity",
+      "strongly correlated electron systems"
+    ],
+    "abbreviations": [
+      "HTS",
+      "cuprates"
+    ],
+    "exclusion_terms": [
+      "chemical synthesis",
+      "device fabrication",
+      "conventional phonon-mediated pairing",
+      "thin-film deposition"
+    ],
+    "llm_payload": {
+      "primary_label": "Cuprate High-Temperature Superconductivity Mechanism",
+      "primary_discipline": "Condensed Matter Physics",
+      "secondary_disciplines": [
+        "Quantum Many-Body Physics"
+      ],
+      "preferred_research_domains": [],
+      "secondary_labels": [
+        "d-wave pairing",
+        "spin fluctuations",
+        "charge correlations",
+        "strongly correlated electrons",
+        "cuprate oxides"
+      ],
+      "must_not_be_primary": [
+        "Particle Physics",
+        "Astrophysics",
+        "Chemical Engineering",
+        "Biophysics",
+        "Topological Insulators"
+      ],
+      "domain_confidence": 0.95,
+      "rationale": "The source explicitly targets the microscopic origin of high-temperature superconductivity in cuprates, specifically evaluating spin-fluctuation-mediated d-wave pairing against alternative models using experimentally constrained magnetic and charge correlations, which aligns directly with condensed matter physics and strongly correlated electron systems research.",
+      "evidence_spans": [
+        "microscopic mechanism produces high-temperature superconductivity in cuprates",
+        "experimentally constrained magnetic and charge correlations",
+        "spin-fluctuation-mediated d-wave pairing route"
+      ],
+      "core_entities": [
+        "cuprates",
+        "high-temperature superconductivity",
+        "spin-fluctuation-mediated d-wave pairing",
+        "magnetic correlations",
+        "charge correlations"
+      ],
+      "retrieval_synonyms": [
+        "HTS cuprates",
+        "cuprate superconductivity mechanism",
+        "spin fluctuation pairing",
+        "d-wave superconductivity",
+        "strongly correlated electron systems"
+      ],
+      "abbreviations": [
+        "HTS",
+        "cuprates"
+      ],
+      "exclusion_terms": [
+        "chemical synthesis",
+        "device fabrication",
+        "conventional phonon-mediated pairing",
+        "thin-film deposition"
+      ],
+      "operationalization": {
+        "normalized_objective": "Survey the microscopic mechanisms of high-temperature superconductivity in cuprates, focusing on distinguishing spin-fluctuation-mediated d-wave pairing from alternative theoretical models.",
+        "task_or_question": "Which experimentally constrained magnetic and charge correlations distinguish a spin-fluctuation-mediated d-wave pairing route from competing explanations?",
+        "research_object": "Cuprate superconductors",
+        "outcomes_or_readouts": [
+          "Identification of distinguishing magnetic and charge correlation signatures",
+          "Evaluation of spin-fluctuation-mediated d-wave pairing viability"
+        ],
+        "data_or_deployment_context": [
+          "Experimentally constrained measurements",
+          "Comparative theoretical frameworks"
+        ],
+        "baseline_requirements": [
+          "Competing theoretical explanations for cuprate superconductivity"
+        ],
+        "limitation_and_failure_conditions": [
+          "Lack of direct experimental constraints on specific correlation functions",
+          "Ambiguity in separating magnetic versus charge contributions"
+        ],
+        "rewrite_reason": "Original text poses an open research question rather than a structured survey objective; rewritten to align with survey-scoped methodology while preserving exact scientific targets and mechanisms."
+      }
+    },
+    "llm_attempted": true,
+    "llm_error": "",
+    "taxonomy_resolution": {
+      "schema_version": "discipline_taxonomy_v1",
+      "scope": "natural_science_engineering_only",
+      "status": "unresolved",
+      "primary_discipline": null,
+      "discipline_ids": [],
+      "adjacent_disciplines": [],
+      "coverage": "unsupported",
+      "matched_terms": [],
+      "out_of_scope_terms": [],
+      "mixed": false,
+      "provider_filters": {
+        "arxiv": {
+          "provider": "arxiv",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "openalex": {
+          "provider": "openalex",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "semantic_scholar": {
+          "provider": "semantic_scholar",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      },
+      "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+    },
+    "original_objective": "What microscopic mechanism produces high-temperature superconductivity in cuprates, and which experimentally constrained magnetic and charge correlations distinguish a spin-fluctuation-mediated d-wave pairing route from competing explanations?",
+    "research_brief": "",
+    "identity_status": "unresolved",
+    "evidence_spans": [
+      "microscopic mechanism produces high-temperature superconductivity in cuprates",
+      "experimentally constrained magnetic and charge correlations",
+      "spin-fluctuation-mediated d-wave pairing route"
+    ],
+    "academic_operationalization": {
+      "applied": false,
+      "mode": "survey_scope",
+      "original_objective": "What microscopic mechanism produces high-temperature superconductivity in cuprates, and which experimentally constrained magnetic and charge correlations distinguish a spin-fluctuation-mediated d-wave pairing route from competing explanations?",
+      "normalized_objective": "What microscopic mechanism produces high-temperature superconductivity in cuprates, and which experimentally constrained magnetic and charge correlations distinguish a spin-fluctuation-mediated d-wave pairing route from competing explanations?",
+      "task_or_question": "",
+      "research_object": "",
+      "outcomes_or_readouts": [],
+      "data_or_deployment_context": [],
+      "baseline_requirements": [],
+      "limitation_and_failure_conditions": [],
+      "rewrite_reason": "The original objective already contains sufficient scope anchors.",
+      "extractor": "deterministic_skip"
+    },
+    "recommended_sources": [
+      {
+        "provider": "openalex",
+        "priority": 1,
+        "role": "primary_discovery",
+        "native_filter": {
+          "provider": "openalex",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      },
+      {
+        "provider": "arxiv",
+        "priority": 2,
+        "role": "conditional_preprint_discovery",
+        "enabled_for_exact_mapping": false,
+        "native_filter": {
+          "provider": "arxiv",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      },
+      {
+        "provider": "semantic_scholar",
+        "priority": 3,
+        "role": "fallback_only",
+        "native_filter": {
+          "provider": "semantic_scholar",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      }
+    ],
+    "retrieval_plan": {
+      "schema_version": "retrieval_lanes_v1",
+      "execution_policy": "limited_query_lanes",
+      "baseline_query": "What microscopic mechanism produces high-temperature superconductivity in cuprates, and which experimentally constrained magnetic and charge correlations distinguish a spin-fluctuation-mediated d-wave pairing route from competing explanations?",
+      "normalized_objective": "What microscopic mechanism produces high-temperature superconductivity in cuprates, and which experimentally constrained magnetic and charge correlations distinguish a spin-fluctuation-mediated d-wave pairing route from competing explanations?",
+      "include_anchors": [
+        "Cuprate High-Temperature Superconductivity Mechanism",
+        "d-wave pairing",
+        "spin fluctuations",
+        "charge correlations",
+        "strongly correlated electrons",
+        "cuprate oxides",
+        "HTS cuprates",
+        "cuprate superconductivity mechanism",
+        "spin fluctuation pairing",
+        "d-wave superconductivity",
+        "strongly correlated electron systems",
+        "cuprates"
+      ],
+      "exclude_anchors": [
+        "chemical synthesis",
+        "device fabrication",
+        "conventional phonon-mediated pairing",
+        "thin-film deposition"
+      ],
+      "evidence_mode": "overview",
+      "query_lanes": [
+        {
+          "lane_id": "broad_anchor",
+          "lane": "broad_anchor",
+          "provider": "openalex",
+          "query": "What microscopic mechanism produces high-temperature superconductivity in cuprates, and which experimentally constrained magnetic and charge correlations distinguish a spin-fluctuation-mediated d-wave pairing route from competing explanations?",
+          "evidence_mode": "overview",
+          "taxonomy_coverage": "broad",
+          "hard_filter_allowed": false,
+          "hard_filter_applied": false,
+          "provider_filter": {},
+          "purpose": "recall_baseline",
+          "discipline_filter_policy": "broad",
+          "execution_phase": "initial"
+        }
+      ]
+    },
+    "identity_source": "llm_primary_catalog_validated",
+    "llm_used": true,
+    "research_design_inventory": {
+      "schema_version": "research_design_inventory_v1",
+      "input_fingerprint": "d63713af66d1555d933d4f284fd474b12e683d7d5c87a7d5c598d9ab4528df22",
+      "project_context_fingerprint": "a604d2235f79605036c964b1f1ee1020317cb4672bd4c2a886e6c25a0c93bfb0",
+      "design_basis": [
+        {
+          "id": "DB1",
+          "kind": "research_object",
+          "statement": "Define the material system and emergent phase under investigation.",
+          "anchors": [
+            "cuprates",
+            "high-temperature superconductivity"
+          ],
+          "source": "llm_source_grounded",
+          "evidence_spans": [
+            "cuprates",
+            "high-temperature superconductivity"
+          ]
+        },
+        {
+          "id": "DB2",
+          "kind": "scale",
+          "statement": "Resolve underlying interactions at the fundamental length scale governing the phase.",
+          "anchors": [
+            "microscopic mechanism"
+          ],
+          "source": "llm_source_grounded",
+          "evidence_spans": [
+            "microscopic mechanism"
+          ]
+        },
+        {
+          "id": "DB3",
+          "kind": "measurement",
+          "statement": "Quantify spatially resolved magnetic and charge ordering patterns.",
+          "anchors": [
+            "magnetic and charge correlations"
+          ],
+          "source": "llm_source_grounded",
+          "evidence_spans": [
+            "magnetic and charge correlations"
+          ]
+        },
+        {
+          "id": "DB4",
+          "kind": "condition_or_regime",
+          "statement": "Constrain model parameters to regions validated by empirical observation.",
+          "anchors": [
+            "experimentally constrained"
+          ],
+          "source": "llm_source_grounded",
+          "evidence_spans": [
+            "experimentally constrained"
+          ]
+        },
+        {
+          "id": "DB5",
+          "kind": "comparison",
+          "statement": "Systematically evaluate alternative theoretical pathways against one another.",
+          "anchors": [
+            "distinguish",
+            "competing explanations"
+          ],
+          "source": "llm_source_grounded",
+          "evidence_spans": [
+            "distinguish",
+            "competing explanations"
+          ]
+        },
+        {
+          "id": "DB6",
+          "kind": "method_or_design",
+          "statement": "Construct a testable pathway linking specific bosonic exchange to pairing symmetry.",
+          "anchors": [
+            "spin-fluctuation-mediated d-wave pairing route"
+          ],
+          "source": "llm_source_grounded",
+          "evidence_spans": [
+            "spin-fluctuation-mediated d-wave pairing route"
+          ]
+        },
+        {
+          "id": "DB7",
+          "kind": "research_object",
+          "statement": "The project studies Cuprate High-Temperature Superconductivity Mechanism.",
+          "anchors": [
+            "cuprates",
+            "high-temperature superconductivity",
+            "spin-fluctuation-mediated d-wave pairing",
+            "magnetic correlations",
+            "charge correlations",
+            "Cuprate High-Temperature Superconductivity Mechanism"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "cuprates",
+            "high-temperature superconductivity",
+            "spin-fluctuation-mediated d-wave pairing",
+            "magnetic correlations",
+            "charge correlations",
+            "Cuprate High-Temperature Superconductivity Mechanism"
+          ]
+        },
+        {
+          "id": "DB8",
+          "kind": "target_relation",
+          "statement": "What microscopic mechanism produces high-temperature superconductivity in cuprates, and which experimentally constrained magnetic and charge correlations distinguish a spin-fluctuation-mediated d-wave pairing route from competing explanations?",
+          "anchors": [
+            "What microscopic mechanism produces high-temperature superconductivity in cuprates, and which experimentally constrained magnetic and charge correlations distinguish a spin-fluctuation-mediated d-wave pairing route from competing explanatio",
+            "cuprates",
+            "high-temperature superconductivity",
+            "spin-fluctuation-mediated d-wave pairing",
+            "magnetic correlations",
+            "charge correlations"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "What microscopic mechanism produces high-temperature superconductivity in cuprates, and which experimentally constrained magnetic and charge correlations distinguish a spin-fluctuation-mediated d-wave pairing route from competing explanatio"
+          ]
+        },
+        {
+          "id": "DB9",
+          "kind": "outcome_or_construct",
+          "statement": "The project requires evidence about declared outcomes or constructs.",
+          "anchors": [
+            "What microscopic mechanism produces high-temperature superconductivity in cuprates, and which experimentally constrained magnetic and charge correlations distinguish a spin-fluctuation-mediated d-wave pairing route from competing explanatio"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "What microscopic mechanism produces high-temperature superconductivity in cuprates, and which experimentally constrained magnetic and charge correlations distinguish a spin-fluctuation-mediated d-wave pairing route from competing explanatio"
+          ]
+        },
+        {
+          "id": "DB10",
+          "kind": "condition_or_regime",
+          "statement": "The project scope includes the declared conditions, regimes, or contexts.",
+          "anchors": [
+            "What microscopic mechanism produces high-temperature superconductivity in cuprates, and which experimentally constrained magnetic and charge correlations distinguish a spin-fluctuation-mediated d-wave pairing route from competing explanatio"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "What microscopic mechanism produces high-temperature superconductivity in cuprates, and which experimentally constrained magnetic and charge correlations distinguish a spin-fluctuation-mediated d-wave pairing route from competing explanatio"
+          ]
+        }
+      ],
+      "inventory_source": "llm_source_grounded_plus_project_declaration",
+      "llm_used": true,
+      "llm_error": ""
+    },
+    "cache_status": "miss"
+  }
+}

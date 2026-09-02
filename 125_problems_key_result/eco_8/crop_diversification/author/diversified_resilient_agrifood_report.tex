@@ -1,0 +1,248 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{cite}
+\usepackage{array}
+\newcommand{\cvar}{\operatorname{CVaR}}
+\title{Beyond Monoculture: A Shock-Aware Portfolio Framework for Crop Diversification}
+\author{\IEEEauthorblockN{Research Design Report}\IEEEauthorblockA{Four-Agent Scientific Workflow: Survey--Idea--ExperimentDesign--Author}}
+\begin{document}
+\maketitle
+\begin{abstract}
+Wheat, maize, rice, and soy anchor a large share of contemporary food, feed, trade, and processing systems. Their concentration delivers scale economies, but it also couples farms and markets to common climate, pest, pathogen, and infrastructure shocks. This paper asks a more operational question than whether monoculture will end: under which conditions can a layered portfolio of rotations, intercropping, cultivar mixtures, habitat, and neglected or underutilized crops reduce lower-tail food-system losses without unacceptable penalties in yield, income, nutrition, land, water, labour, or greenhouse-gas emissions? We synthesize evidence and translate it into a falsifiable, design-only research program. The proposed program combines historical risk estimation, multi-site field experiments, farm and value-chain trials, shock-aware simulation, adoption analysis, and out-of-sample validation. A portfolio utility with conditional value-at-risk (CVaR) represents the trade-off between expected delivered nutrition and correlated failure. The central prediction is conditional: diversification should improve resilience most when its components reduce correlated exposure and when seed, processing, storage, procurement, and market systems make the alternative crops usable. The report does not claim experimental outcomes; it specifies measurements, estimands, mechanisms, and decision rules needed to determine whether diversification is a practical food-security intervention.
+\end{abstract}
+\begin{IEEEkeywords}
+crop diversification, monoculture, food-system resilience, climate shocks, pest risk, portfolio optimization, neglected crops, ecosystem services
+\end{IEEEkeywords}
+
+\section{Introduction}
+\label{sec:intro}
+The question ``Will we soon see the end of monocultures like wheat, maize, rice, and soy?'' contains two different questions. One is descriptive: will the four crops cease to dominate cultivated area, calories, protein, animal feed, and commodity infrastructure? The other is normative and scientific: what interventions can reduce the vulnerability created by concentration? The first question has no single biological threshold and no credible date. The second can be made testable.
+
+Monoculture is not merely the presence of one species in one field. It is a set of coupled choices: repeated planting, narrow genetic composition, synchronized planting and harvest, specialized machinery, standardized storage, large processing plants, and markets designed around a few commodities. A field can be diverse while the food system remains concentrated. Conversely, a farm can grow a dominant crop in rotation while gaining some temporal, soil, or pest-management benefits. This paper therefore treats monoculture as a multi-layer concentration problem rather than a binary land-cover label.
+
+The motivation is a mismatch between average efficiency and tail risk. Four crops can be productive and economical in normal years, yet a common heat wave, drought, flood, pathogen strain, or transport disruption can affect many locations at once. Climate change can increase the frequency or covariance of such stresses, while soil degradation and pollinator decline can erode the ecological foundations of production. The Food and Agriculture Organization describes biodiversity as a foundation of sustainable agricultural production and food security, and emphasizes dependencies on soil organisms, pollinators, crop diversity, and genetic resources \cite{fao_biodiversity}. These dependencies make diversification a candidate risk-management technology, not simply an aesthetic preference.
+
+The proposed answer is neither that monocultures will disappear soon nor that any mixture is automatically superior. We propose a shock-aware portfolio framework with six layers: temporal rotation, spatial intercropping, genetic mixtures, landscape habitat, neglected-crop transition corridors, and value-chain support. The hypothesis is that a combination can lower correlated failure and improve ecosystem services, but only in regions where agronomic complementarity and downstream usability outweigh added management costs.
+
+This is a design-only report. It reports no newly measured yield, income, biodiversity, or model result. Its contribution is a coherent research question, a set of falsifiable hypotheses, a measurement architecture, and an analysis plan that can distinguish field-level benefits from system-level resilience.
+
+\section{Survey: What Is Known and What Remains Unresolved}
+\label{sec:survey}
+\subsection{Concentration creates coupled exposure}
+Crop concentration can reduce unit costs through specialization, learning, and machinery utilization. The same specialization can synchronize exposure. If many farms plant genetically similar varieties at similar times and sell into one processing chain, a shock need not destroy every plant to create a food or income crisis. The relevant quantity is not just the mean yield, but the joint distribution of yield, quality, price, storage loss, and recovery across places and years.
+
+Early work on agriculturally driven global environmental change established that food production interacts with land, water, nutrient, and atmospheric systems at planetary scale \cite{tilman2001}. That framing implies that a crop choice should be evaluated jointly with externalities and resource constraints. A replacement that reduces pathogen risk but increases irrigation demand or displaces habitat may shift, rather than solve, the problem.
+
+\subsection{Diversification can provide several mechanisms}
+Diversification is a family of interventions, not one treatment. A rotation can interrupt host-specific pest and pathogen cycles, redistribute rooting depth, and alter nutrient demand. Intercropping can use complementary canopy, rooting, and phenology, while also complicating pest movement. Cultivar mixtures can reduce the probability that one genotype is uniformly susceptible. Semi-natural habitat can support pollinators and natural enemies. Forgotten or underutilized crops can widen the portfolio of calories, protein, micronutrients, and stress tolerances.
+
+Evidence syntheses have reported that farming approaches can support biodiversity, livelihoods, and food security when they are designed for local conditions \cite{garibaldi2017}. Across national production systems, crop diversity has been associated with greater production stability, although the relevant relationship depends on climate, management, and the spatial scale of analysis \cite{renard2019}. A broad synthesis of agricultural diversification reports multiple ecosystem-service benefits without a general yield penalty, but also shows heterogeneity and context dependence \cite{tamburini2020}. Habitat restoration similarly has the potential to recover ecosystem services, but its success depends on landscape configuration and management \cite{bullock2011}.
+
+These findings motivate, but do not settle, the food-security question. A plot-level increase in predator abundance does not establish a lower probability of national food shortage. A high-yield neglected crop does not become a viable alternative without seed supply, processing, storage, food-safety validation, consumer demand, and procurement. The evidence therefore supports testing mechanisms and system constraints together.
+
+\subsection{Why the four crops persist}
+The dominant crops are embedded in an infrastructure network. Breeding programs, input suppliers, agronomic expertise, harvesters, silos, mills, oilseed crushers, animal-feed formulas, contracts, futures markets, and public procurement all reinforce their use. This creates path dependence. A farmer may value resilience but still reject a new crop if a specialized harvester is unavailable, if buyers offer no price, or if the crop creates unmanageable postharvest risk.
+
+The network also creates a distinction between production diversity and consumption diversity. A region can grow a neglected crop while its calories are exported and its residents continue to depend on one imported staple. Conversely, a diverse global portfolio may still expose a local population to a single price or transport shock. Food-system resilience must therefore be evaluated using delivered nutrition and access, not only hectares planted.
+
+\subsection{Survey gap ledger}
+The most important gaps are fourfold. First, studies often examine one diversification practice at one scale, while risk is transmitted across scales. Second, average yield is reported more consistently than lower-tail losses, recovery time, and correlated failure. Third, ecological benefits and value-chain penalties are rarely measured in one design. Fourth, the category of neglected crop is often discussed as a solution before seed, safety, processing, and demand constraints are quantified. The proposed program addresses these gaps through common experimental units, explicit shock scenarios, and a value-chain module.
+
+\section{Scientific Reframing and Hypotheses}
+\label{sec:hyp}
+We define an agricultural portfolio $P$ as the allocation of area, genotypes, planting dates, habitat, and postharvest capacity across a bounded region and time window. A portfolio is more resilient when it maintains delivered nutrition and income under shocks while preserving soil and ecological services. The question is not whether every farm should maximize diversity. It is whether a feasible portfolio can lower the probability and severity of synchronized failure relative to a locally optimized dominant-crop baseline.
+
+The primary estimand is the conditional effect of each portfolio component under specified compound shocks. The following hypotheses are falsifiable:
+
+\begin{itemize}
+\item H1: At matched expected calories and protein in normal years, portfolios with lower yield covariance across crops, varieties, and sites have smaller lower-tail delivered-nutrition losses under compound climate and pest shocks.
+\item H2: Rotation, intercropping, genetic mixtures, and habitat have distinct mechanisms; combinations reduce tail risk more than the sum of their isolated effects when they reduce common exposure rather than merely add species.
+\item H3: Field diversification alone has a weak effect on food-system concentration if storage, processing, procurement, and seed systems remain specialized.
+\item H4: A neglected or underutilized crop improves resilience or nutrition only when seed availability, agronomic performance, food safety, processing, storage, and demand constraints jointly pass pre-specified feasibility thresholds.
+\item H5: Multi-year risk-adjusted income and downside protection predict adoption better than first-year yield or gross margin.
+\item H6: There is no globally dominant portfolio; treatment effects vary by agroecology, farm scale, shock regime, and market access.
+\end{itemize}
+
+H1--H2 concern biological and ecological mechanisms. H3--H5 prevent a field result from being mistaken for a food-system result. H6 is a useful positive result rather than an inconvenience: it would identify where policy should target adaptation rather than prescribe a universal crop list.
+
+\section{Portfolio Intervention}
+\label{sec:portfolio}
+Table~\ref{tab:layers} defines the intervention layers. The layers are modular because a region may have room for rotation but not intercropping, or a suitable neglected crop but no processing plant. The factorial design should include both individual and combined layers so that complementarity and antagonism are estimable.
+
+\begin{table*}[t]
+\centering
+\caption{Diversification layers and testable mechanisms.}
+\label{tab:layers}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.28\textwidth}>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.20\textwidth}}
+\toprule
+Layer & Operational treatment & Primary mechanism & Main trade-off to measure\\
+\midrule
+Temporal rotation & Alternating dominant crops with compatible legumes, cereals, or break crops across seasons & Host interruption, nutrient redistribution, soil cover & Machinery scheduling, labour, transition yield\\
+Spatial intercropping & Co-planted species or strip mixtures with randomized spatial arrangements & Resource complementarity and pest disruption & Competition, harvest separation, quality grading\\
+Genetic mixture & Multiple cultivars with documented susceptibility and maturity diversity & Reduce uniform failure and stabilize phenology & Seed multiplication, market uniformity\\
+Landscape habitat & Managed margins, hedgerows, cover, or refuges & Pollinator and natural-enemy mediation; erosion control & Land opportunity cost, maintenance\\
+Neglected-crop corridor & Locally suitable underutilized crop plus seed, safety, processing, and buyer package & Portfolio expansion and nutritional diversity & Adoption, storage, processing, consumer demand\\
+Combined portfolio & Coordinated layers with value-chain support & Reduce correlated field and downstream exposure & Coordination cost and governance\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The baseline should not be a straw-man. It should represent the best locally feasible dominant-crop system, including its normal rotation, improved cultivar, and current pest management. Treatments should be compared at matched resource budgets where possible, and separately under an equal-land and equal-labour analysis. This prevents a portfolio from appearing resilient simply because it receives more inputs.
+
+\subsection{Functional units}
+Three functional units are required. The hectare-year measures agronomic and ecological performance. The farm-year measures income, labour, risk, and adoption. The delivered nutrition basket measures calories, protein, and micronutrients after storage, processing, transport, and losses. Reporting only yield per hectare would systematically miss the central distinction between a resilient crop and a usable food system.
+
+\section{Experiment Design}
+\label{sec:design}
+\subsection{Stage 1: Baseline and historical risk}
+The first stage creates a harmonized panel of field, weather, pest, disease, price, logistics, and land-use data. Sites should span major wheat, maize, rice, and soy regions and include different farm sizes and market structures. The panel estimates yield distributions, cross-crop covariance, spatial correlation, shock coincidence, and recovery time. A shock is defined by an independently measured threshold, such as a heat or water anomaly combined with a pest or pathogen alert, rather than by a poor yield selected after seeing outcomes.
+
+The baseline analysis decomposes concentration into four terms: area share, genetic similarity, spatial correlation, and downstream capacity. A high area share is not necessarily dangerous if varieties and regions fail asynchronously; a modest area share can be dangerous if all production depends on one processor or seed source. The output is a risk map that identifies candidate trial regions and the specific covariance a treatment must reduce.
+
+\subsection{Stage 2: Controlled multi-site field experiments}
+At each selected region, a randomized block experiment should use a factorial subset of the six layers. A practical core is a $2^4$ factorial for rotation, intercropping, cultivar mixture, and habitat, with a nested neglected-crop treatment where agronomically appropriate. Sites should run for at least three production cycles so that rotation and soil effects are observable. Blocks should be stratified by soil, water regime, and baseline productivity.
+
+Measurements include harvestable yield and quality by species, phenology, soil moisture, nutrient balances, soil organic carbon, erosion proxies, pest and pathogen incidence, pollinator visitation, natural-enemy abundance, pesticide applications, irrigation, energy, labour, and greenhouse-gas proxies. Samples for pathogens and food-safety hazards require containment and phytosanitary oversight. The trial should record failed establishment and management burden, not only successful harvests.
+
+The primary field contrast is the difference in lower-tail aggregate food output between the baseline and each portfolio under naturally occurring shocks. Because rare shocks may not occur during the trial, routine-year effects and pre-registered mechanistic stress tests can be combined with historical calibration. No artificial release of a damaging organism is required; pathogen work should use contained, approved systems or observational monitoring.
+
+\subsection{Stage 3: Farm and value-chain trials}
+Field benefits become food security only if products can move through a system. Participating farms should therefore be linked to storage, processors, buyers, feed users, and local food programs. The trial records machine compatibility, planting and harvest timing, cleaning, grading, storage stability, processing yield, transport distance, contract terms, price, insurance, and labour peaks.
+
+A stepped adoption design can compare farms receiving a complete transition package with farms receiving agronomic information alone. The package may include verified seed, technical assistance, buyer contracts, storage protocols, and downside insurance. Randomization at a cluster level avoids contamination between neighbouring farms, while qualitative operational logs identify constraints that yield data cannot reveal. The principal outcome is risk-adjusted net income and the persistence of the portfolio after support is withdrawn.
+
+\subsection{Stage 4: Shock experiments and simulation}
+Observed trials will not sample every relevant shock. A calibrated simulator should combine weather fields, crop response functions, pest/pathogen susceptibility, spatial correlation, logistics, price transmission, and postharvest loss. The simulator is not a substitute for field validation; it is a stress-testing instrument whose parameters are fit only to held-out observations or external literature.
+
+Scenarios should include isolated heat, drought, flood, and disease shocks; compound heat--drought; flood--pathogen; and regional transport disruption. Scenario severity should be expressed as return periods or anomaly distributions, and uncertainty should be propagated rather than hidden in a single point estimate. Each portfolio is evaluated under both stationary historical distributions and nonstationary climate-informed distributions. The result is a range of conditional risk, not a forecast that a particular crisis will occur.
+
+\subsection{Stage 5: Adoption and policy}
+Adoption is an optimization under constraints. A farmer may choose a lower-variance portfolio only if expected utility, liquidity, labour, and market access permit it. Choice experiments and revealed adoption data can estimate the value of seed access, insurance, procurement, extension, storage, and payment timing. Policy bundles should be evaluated for additionality and leakage: a subsidy that shifts diversified production from one region to another without reducing global concentration is not a full solution.
+
+Equity is measured through heterogeneous effects by farm size, gendered labour burden where data are ethically collected, access to credit, remoteness, and market power. Participation must not expose farms to uncompensated downside risk. Compensation and data governance should be specified before enrollment.
+
+\subsection{Stage 6: Out-of-sample validation}
+The final stage withholds regions, seasons, and shock combinations from model calibration. Validation metrics include calibration of predictive intervals, ranking of portfolios by tail loss, transportability of treatment effects, and decision regret. A model that predicts average yield but misranks the safest portfolio under a compound shock fails the intended use case.
+
+\section{Mathematical Framework}
+\label{sec:model}
+Let $i$ index crops or crop--cultivar units, $s$ index shocks, and $w_i$ denote effective area or nutrition weights. Let $y_{i,s}$ be harvestable yield, $l_{i,s}$ postharvest and quality loss, and $\kappa_i$ conversion to the selected nutritional unit. Aggregate delivered food output is
+\begin{equation}
+F(P,s)=\sum_i w_i y_{i,s}(1-l_{i,s})\kappa_i .
+\label{eq:food}
+\end{equation}
+This formulation makes explicit why a high field yield may not equal a high nutrition outcome. A crop with poor storage or processing can have a large $l_{i,s}$ even when $y_{i,s}$ is stable.
+
+For a random shock distribution, define the portfolio objective as
+\begin{equation}
+U(P)=\mathbb{E}[F(P)]-\alpha\,\cvar_{\beta}[-F(P)]-\gamma A(P),
+\label{eq:utility}
+\end{equation}
+where $A(P)$ is the annualized burden of labour, machinery, storage, coordination, and transition cost. $\alpha$ expresses the decision maker's aversion to lower-tail food loss and $\beta$ selects the tail probability. A corresponding income objective replaces $F$ with risk-adjusted net income and can be analyzed jointly rather than collapsed into one arbitrary monetary conversion.
+
+The multi-objective vector is
+\begin{equation}
+J(P,r)=[F, I, R, S, B, W, G, L, D],
+\label{eq:multi}
+\end{equation}
+where $I$ is income, $R$ resilience, $S$ soil condition, $B$ biodiversity service, $W$ water use, $G$ greenhouse-gas burden, $L$ labour, and $D$ adoption persistence. The analysis reports a Pareto frontier. It does not claim that one scalar utility is universally correct.
+
+Correlated failure is central. If crop outputs have covariance matrix $\Sigma_s$, diversification lowers ordinary variance when weights spread across low-covariance units. But covariance can change under climate extremes. Therefore, the design estimates conditional covariance $\Sigma(s)$ and tail dependence, not only normal-year correlations. A portfolio that appears diversified in average years but shares the same heat sensitivity is not robust.
+
+Mechanism mediation is tested by linking treatment to intermediate variables: disease-break treatments to pathogen incidence; habitat treatments to pollinator or natural-enemy abundance; rotations and cover to soil moisture, carbon, and erosion; cultivar mixtures to susceptibility diversity; and neglected-crop corridors to nutritional and value-chain outcomes. Mediation is reported with uncertainty and does not convert association into proof where randomization is unavailable.
+
+\section{Analysis, Power, and Decision Rules}
+\label{sec:analysis}
+The primary model is a hierarchical mixed-effects model with treatment, site, season, and shock interactions, with random effects for block, farm, and region. Quantile regression estimates treatment effects on the lower tail. Repeated observations allow covariance and recovery estimates, while missingness and crop failure are retained as outcomes rather than silently removed. Spatial spillovers are assessed using pre-specified neighbourhood buffers.
+
+The factorial structure estimates main effects and interactions. An interaction is practically important if its confidence or credible interval excludes a pre-specified equivalence region and its added burden remains below the decision threshold. Equivalence regions should be set before data collection with growers, nutrition experts, and agronomists; for example, a resilience gain that costs an unacceptable amount of protein or labour should not be labeled a success.
+
+Power calculations must target rare-event and tail estimands rather than only mean yield. Simulation-based planning should vary the number of sites, seasons, farms, and shock frequency under plausible covariance structures. If a target lower-tail probability cannot be estimated precisely with the available panel, the design should report a decision interval and state which additional seasons or sites would change the decision. This is more informative than a nominal power calculation based on an unrealistic independent-observation assumption.
+
+The decision rule is layered. A portfolio advances to larger deployment only if: (1) delivered calories and protein meet the local baseline target in ordinary years; (2) lower-tail food loss or recovery time improves under the target shock set; (3) no pre-specified soil, water, food-safety, or biodiversity safeguard is violated; and (4) risk-adjusted income and labour remain feasible for participating farms. A neglected crop additionally requires reliable seed, validated processing and storage, acceptable safety, and a buyer or consumption pathway. These conditions make the claim auditable.
+
+\begin{table}[t]
+\centering
+\caption{Outcome groups and interpretation.}
+\label{tab:outcomes}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.19\columnwidth}>{\raggedright\arraybackslash}p{0.25\columnwidth}>{\raggedright\arraybackslash}p{0.33\columnwidth}}
+\toprule
+Group & Examples & Decision meaning\\
+\midrule
+Food & calories, protein, micronutrients, quality & Does the portfolio deliver usable nutrition?\\
+Resilience & CVaR loss, covariance, recovery time & Does it reduce synchronized failure?\\
+Ecology & carbon, erosion, pollinators, enemies & Are services improved without displacement?\\
+Resources & water, fertilizer, pesticide, GHG & Is the burden within safeguards?\\
+Economics & income, labour, machinery, storage, price & Can farms and chains operate it?\\
+Adoption & persistence, seed, contracts, processing & Does it survive beyond a pilot?\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Anticipated Findings and Falsification}
+\label{sec:anticipated}
+Because this is a design-only study, anticipated findings are hypotheses rather than results. The strongest expected pattern is conditional complementarity: a rotation may reduce host-specific disease, a cultivar mixture may reduce genetic uniformity, and habitat may support natural enemies, but the combination will be valuable only if the same portfolio does not create harvest and processing bottlenecks. The likely policy object is therefore a transition corridor linking agronomy to seed, storage, processing, procurement, and insurance.
+
+Several outcomes would falsify or substantially weaken the framework. If diversification does not reduce lower-tail delivered nutrition after accounting for land displacement and postharvest loss, its food-security justification is weak even if biodiversity improves. If yield covariance is not lower under relevant shocks, the portfolio has not reduced systemic risk. If the complete package improves field outcomes but adoption collapses after support ends, the intervention is not operationally viable. If a single dominant-crop system remains on the Pareto frontier for all regions and shocks, claims about broad diversification benefits should be rejected.
+
+The study should also be prepared for trade-offs. Intercropping may increase biological diversity but make mechanized harvest expensive. Habitat may improve pollination while taking productive area. A neglected crop may provide micronutrients but require energy-intensive processing. A cultivar mixture may reduce disease loss but fail commodity grading. Reporting these effects is essential because resilience cannot be purchased by moving hidden costs to workers, ecosystems, or consumers.
+
+\section{Threats to Validity and Governance}
+\label{sec:threats}
+External validity is the main scientific threat. A successful trial in a humid smallholder region may not transfer to mechanized dryland agriculture. The design responds with diverse sites, explicit treatment-by-context estimates, and out-of-sample validation. Internal validity can be threatened by farmer self-selection, treatment spillovers, and differential management effort. Cluster randomization, baseline measurement, protocol logs, and intention-to-treat analysis reduce these risks.
+
+Rare shocks create a second threat. Historical records may underrepresent unprecedented compound events, while simulated scenarios may be model-dependent. The appropriate response is not to present a single dramatic scenario as fact. It is to combine observed shocks, independently justified counterfactuals, sensitivity analysis, and uncertainty intervals. The report should distinguish predictions of the calibrated model from decisions that remain robust across scenarios.
+
+Food-system displacement is a third threat. Increasing a crop's yield or local diversity may expand total land use elsewhere if demand and prices respond. Land-use accounting must follow production changes through trade and include carbon, water, and habitat effects. Likewise, a national portfolio can still harm local nutrition if diverse crops are exported and imported staples become unaffordable.
+
+Governance is part of experimental validity. Seed movement follows plant-health rules; disease and pest studies use containment; new foods receive safety evaluation; and farmer data are collected with informed participation and controlled access. The adoption trial should offer compensation for experiment-related losses and should not make insurance or credit contingent on surrendering unrelated personal data. Pre-registration, versioned code, and release of aggregate data support reproducibility without exposing farms.
+
+\section{Implications}
+\label{sec:implications}
+The framework changes the meaning of ``the end of monocultures.'' Dominant crops are likely to remain because they are productive and deeply embedded in infrastructure. A realistic success criterion is a reduction in dangerous concentration: lower synchronization of failure, more genetic and temporal insurance, and enough downstream flexibility to convert alternatives into food. This outcome can coexist with wheat, maize, rice, and soy.
+
+Investment should follow the bottleneck identified by the risk map. Where disease covariance is the primary risk, breeding, cultivar mixtures, and rotation may dominate. Where processing concentration is the bottleneck, small-scale storage and flexible processing may deliver more resilience than adding another crop. Where pollination or erosion is limiting, habitat and soil cover may be higher-return interventions. Where nutrition is deficient, crop selection should be linked to micronutrient delivery and preparation practices rather than hectare counts.
+
+Forgotten and underutilized crops deserve a complete transition pathway, not a slogan. National programs can support seed multiplication, participatory agronomy, food-safety assessment, processing equipment, procurement, and market formation. Yet support should be conditional on measured performance and should avoid displacing locally adapted varieties or imposing a single external crop package. The International Treaty on Plant Genetic Resources for Food and Agriculture provides a relevant institutional anchor for conservation and access to plant genetic resources \cite{fao_treaty}.
+
+The results would also inform climate adaptation. A portfolio is an insurance contract with ecological co-benefits, but insurance has a price. The portfolio utility makes this explicit and allows decision makers to choose a risk tolerance while viewing the Pareto frontier. This supports transparent trade-offs rather than claims that diversification maximizes every objective simultaneously.
+
+\section{Reproducibility and Reporting Protocol}
+\label{sec:repro}
+The proposed workflow is intended to be reproducible at the level of decisions, not only at the level of code. Before treatment assignment, investigators should register the crop list, portfolio definitions, primary shock thresholds, functional units, safeguard thresholds, missing-data rules, and the order of confirmatory and exploratory analyses. A portfolio label should be versioned with its seed lots, cultivar composition, planting calendar, spatial arrangement, input schedule, and value-chain support. This avoids a common ambiguity in diversification studies in which a treatment name remains constant while its agronomic content changes across sites.
+
+Each site contributes a data dictionary that maps local observations to common variables. For example, ``yield'' must specify whether it is harvested biomass, marketable product, dry-matter equivalent, or edible nutrient after processing. Water use must distinguish irrigation withdrawal from effective crop evapotranspiration. Labour must record both machine hours and person-hours, with seasonal timing. Pollinator observations must specify taxonomic resolution, observation window, weather conditions, and sampling effort. These definitions are necessary for meaningful cross-site pooling.
+
+The analysis repository should contain immutable raw-data identifiers, quality-control reports, a treatment randomization record, model specifications, scenario files, and machine-readable output tables. Code should be tested on synthetic data that include crop failure, unequal observation counts, correlated shocks, and a missing processing observation. Synthetic tests do not establish biological validity, but they can reveal whether the estimator silently drops failures or produces impossible nutrition totals. A locked analysis environment and a small, de-identified demonstration dataset allow independent reproduction without releasing sensitive farm records.
+
+Reporting should follow a decision-oriented template. First, show the baseline concentration and the shock covariance it is intended to address. Second, report ordinary-year performance and lower-tail performance side by side. Third, connect each treatment effect to its proposed mechanism and show the degree of mediation. Fourth, expose downstream losses and costs, including storage, processing, transport, labour, and land displacement. Fifth, report heterogeneity by agroecology, farm scale, and market access. Finally, state which decision rules pass, fail, or remain unresolved under each scenario family.
+
+Negative results are especially informative. A null reduction in tail loss may mean that the diversification layer does not alter correlated exposure; a yield penalty may arise from competition or from a poor harvest protocol; an adoption failure may reflect missing processing rather than farmer preference. These possibilities should be separated using the staged design rather than collapsed into a single conclusion. The same reporting structure makes it possible to compare a portfolio with alternatives such as improved irrigation, breeding for heat tolerance, crop insurance, or investment in storage.
+
+The workflow also supports an explicit stop rule. If a portfolio violates food-safety, phytosanitary, water, biodiversity, or financial-protection safeguards at any stage, the relevant deployment arm pauses while the cause is investigated. If it meets safeguards but does not improve the target tail metric, resources should move to another layer or another bottleneck. If it improves resilience but cannot reach a feasible adoption threshold, the result should be recorded as a technology or infrastructure gap, not as proof that farms resist diversification. This distinction helps policy makers fund the constraint that the data actually identify.
+
+\section{Conclusion}
+\label{sec:conclusion}
+The near-term disappearance of wheat, maize, rice, and soy monocultures is neither a useful prediction nor a necessary target. The tractable scientific problem is to identify when layered crop diversification reduces correlated production and value-chain failure while maintaining nutrition, income, and ecological safeguards. The proposed six-stage program measures this problem from hectare to delivered food, combines randomized field evidence with calibrated stress testing, and treats adoption and processing as causal parts of the intervention.
+
+The central claim remains testable: diversified portfolios should be most valuable where their components reduce common exposure and where the surrounding seed, storage, processing, procurement, and market systems can use them. If the experiments reject that claim, diversification should be targeted narrowly or replaced by other resilience investments. If they support it, the practical future is not a world without dominant crops, but a food system in which dominance no longer implies synchronized failure.
+
+\begin{thebibliography}{10}
+\bibitem{fao_biodiversity} Food and Agriculture Organization of the United Nations, ``Biodiversity,'' FAO, accessed Sep. 2026. [Online]. Available: \url{https://www.fao.org/biodiversity/en/}
+\bibitem{tilman2001} D. Tilman, J. Fargione, B. Wolff, C. D'Antonio, A. Dobson, R. Howarth, D. Schindler, W. H. Schlesinger, D. Simberloff, and D. Swackhamer, ``Forecasting agriculturally driven global environmental change,'' \emph{Science}, vol. 292, no. 5515, pp. 281--284, 2001, doi: 10.1126/science.1057544.
+\bibitem{garibaldi2017} L. A. Garibaldi \emph{et al.}, ``Farming approaches for greater biodiversity, livelihoods, and food security,'' \emph{Trends in Ecology \& Evolution}, vol. 32, no. 1, pp. 68--80, 2017, doi: 10.1016/j.tree.2017.03.001.
+\bibitem{renard2019} D. Renard and D. Tilman, ``National food production stabilized by crop diversity,'' \emph{Nature}, vol. 571, pp. 257--260, 2019, doi: 10.1038/s41586-019-1316-y.
+\bibitem{tamburini2020} G. Tamburini \emph{et al.}, ``Agricultural diversification promotes multiple ecosystem services without compromising yield,'' \emph{Science Advances}, vol. 6, no. 45, 2020, Art. no. eaba1715, doi: 10.1126/sciadv.aba1715.
+\bibitem{bullock2011} J. M. Bullock, J. Aronson, A. Newton, R. F. Pywell, and J.-M. Rey-Benayas, ``Restoration of ecosystem services and biodiversity: Conflicts and opportunities,'' \emph{Trends in Ecology \& Evolution}, vol. 26, no. 10, pp. 541--549, 2011, doi: 10.1016/j.tree.2011.06.011.
+\bibitem{fao_treaty} Food and Agriculture Organization of the United Nations, \emph{International Treaty on Plant Genetic Resources for Food and Agriculture}. Rome, Italy: FAO, 2009.
+\bibitem{altieri1999} M. A. Altieri, ``The ecological role of biodiversity in agroecosystems,'' \emph{Agriculture, Ecosystems \& Environment}, vol. 74, no. 1--3, pp. 19--31, 1999.
+\bibitem{lin2011} B. B. Lin, ``Resilience in agriculture through crop diversification: Adaptive management for environmental change,'' \emph{BioScience}, vol. 61, no. 3, pp. 183--193, 2011.
+\bibitem{isbell2017} F. Isbell \emph{et al.}, ``Linking the influence and dependence of people on biodiversity across scales,'' \emph{Nature}, vol. 546, pp. 65--72, 2017.
+\end{thebibliography}
+\end{document}

@@ -1,0 +1,277 @@
+\documentclass[conference]{../../../../Conference-LaTeX-template_10-17-19/IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{url}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\renewcommand{\arraystretch}{1.12}
+\title{Beyond Near-Light Speed: A Constraint-Aware Research Proposal for Particle Acceleration Frontiers}
+\author{\IEEEauthorblockN{Anonymous Research Proposal}}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The question ``what is the maximum speed to which a particle can be accelerated?'' is often answered with a facility fact: the Large Hadron Collider (LHC) brings particles near the speed of light. That statement is true as context but incomplete as physics. In standard special relativity, a particle with nonzero rest mass can approach, but cannot reach, the vacuum speed of light with finite energy. Consequently, once an accelerator is ultra-relativistic, particle speed is a saturated variable rather than a useful technology target. This proposal develops the \emph{Energy-to-Velocity Saturation Ledger} (EVSL), a source-bounded, computational research design for comparing acceleration architectures. EVSL combines the exact Lorentz energy--velocity mapping with model cards for circular proton rings, circular lepton rings, linear radio-frequency systems, plasma wakefield systems, strong-field boundaries, and a separately scoped astrophysical comparator. It asks which constraint--magnetic rigidity, radiation, power or gradient, beam quality, or machine protection--dominates under explicit assumptions. The planned study contains no accelerator operation and reports no observed result. Its contribution is a falsifiable decision protocol: speed must not be used as an independent high-energy performance metric after a declared saturation condition, and no dominance label may be issued without provenance, units, and sensitivity coverage. The resulting IEEE-style research plan clarifies why future accelerator progress concerns energy, luminosity, controllability, and efficiency rather than the pursuit of a new subluminal speed record.
+\end{abstract}
+
+\begin{IEEEkeywords}
+particle accelerators, special relativity, Lorentz factor, magnetic rigidity, synchrotron radiation, plasma acceleration, beam dynamics, research design
+\end{IEEEkeywords}
+
+\section{Introduction}
+The speed of light is one of the most recognizable numbers in physics, and particle accelerators make its counterintuitive role vivid. CERN describes the LHC as its largest and most powerful accelerator: its 27-km ring uses superconducting magnets and accelerating structures to bring protons or ions to near light speed \cite{cern_lhc_page}. The phrase ``near light speed'' is scientifically useful, but it can generate a misleading research question. It may suggest that accelerators are converging on a machine-specific terminal velocity, that a sufficiently powerful facility might push a massive particle through that velocity, or that the next advance in accelerator science will be visible mainly as a speed increase. None of those inferences follows.
+
+The correct kinematic statement is sharper. For a particle with nonzero rest mass in special relativity, $c$ is an unattainable asymptote in vacuum. Adding energy moves the particle ever closer to $c$, but it never reaches $c$ through a finite energy increment. A photon is different: as a massless excitation it travels at $c$ in vacuum; it is not a massive particle accelerated from rest through the light-speed boundary. This paper therefore answers the literal question directly: there is no finite, universal maximum speed below $c$ for a massive particle in the standard model of relativistic kinematics, while $c$ itself cannot be attained by such a particle with finite energy.
+
+That answer does not make accelerator research trivial. It moves the frontier. When $v/c$ is already extremely close to one, a large change in energy can correspond to an almost invisible change in speed. The consequential questions become: How much momentum can a magnet system bend? How much radio-frequency or driver power can be supplied? Which radiative and collective losses are acceptable? Can a beam retain the emittance, energy spread, intensity, stability, and loss margins needed for a useful collision or delivery system? Can stored energy be protected safely? These questions differ by particle species and by architecture.
+
+This proposal addresses a methodological gap in how these facts are communicated and compared. It introduces an \emph{Energy-to-Velocity Saturation Ledger} (EVSL). EVSL is not a new dynamical law and not a claim that a new accelerator has been built. It is a proposed evaluation protocol that keeps the exact relativistic mapping visible while requiring the active practical limit to be declared from a source-bounded energy, rigidity, loss, power, beam-quality, and protection ledger. The protocol tests whether a constraint-dominance classification remains stable across stated input ranges. A classification that lacks a complete loss account, compatible scope, or sensitivity declaration is not an answer; it is labeled non-identifiable.
+
+The paper follows the four-agent research process. The Survey stage fixes evidence boundaries. The Idea stage selects EVSL from competing directions. The ExperimentDesign stage defines a computational, design-only protocol. The Author stage organizes those inputs as a research proposal with no fabricated observations. The objective is direct but disciplined: replace a speed-record narrative with a transparent account of what actually limits a proposed accelerator.
+
+\section{Relativistic Kinematics and the Meaning of ``Maximum Speed''}
+\subsection{The asymptotic bound for massive particles}
+Let $\beta=v/c$, where $v$ is the particle speed in an inertial frame and $c$ is the vacuum speed of light. The Lorentz factor is
+\begin{equation}
+\gamma=\frac{1}{\sqrt{1-\beta^2}}, \qquad 0\leq \beta<1
+\label{eq:gamma}
+\end{equation}
+for a massive particle. Its total energy and kinetic energy are respectively
+\begin{align}
+E&=\gamma mc^2, \label{eq:total-energy}\\
+K&=(\gamma-1)mc^2. \label{eq:kinetic-energy}
+\end{align}
+Solving \eqref{eq:total-energy} for speed gives
+\begin{equation}
+\beta=\sqrt{1-\gamma^{-2}}.
+\label{eq:beta-energy}
+\end{equation}
+As $\beta$ tends to one, $\gamma$ diverges. Equivalently, as energy tends without bound at fixed rest mass, $\beta$ approaches one from below. The apparently simple observation that speed is ``almost $c$'' therefore suppresses the quantity that changes most dramatically: energy.
+
+For large $\gamma$, the residual distance from light speed has the approximate scaling
+\begin{equation}
+1-\beta \approx \frac{1}{2\gamma^2}.
+\label{eq:saturation}
+\end{equation}
+Equation \eqref{eq:saturation} is the starting point for EVSL. It does not create a new physical cutoff. It explains why rounding $\beta$ to a handful of decimal places is unsuitable for deciding which high-energy concept is better. A report that says one option is ``faster'' without quantifying its energy and architecture assumptions can make a real relativistic effect look like a technology comparison when it is not.
+
+\subsection{Massless particles and frame boundaries}
+The conclusion above applies to nonzero rest mass. A massless particle has no rest frame and propagates at $c$ in vacuum in the standard relativistic description. It should not be treated as an existence proof that a proton, electron, ion, or other massive beam can cross the same boundary. Conversely, the absence of a speed limit below $c$ is not a guarantee of unlimited useful acceleration. It only states that kinematics does not supply a finite sub-$c$ terminal velocity. Engineering and beam physics supply the practical limits.
+
+\subsection{Speed saturation is not energy saturation}
+Energy remains operationally meaningful after speed saturates. A higher energy can change the center-of-mass reach of a collider, alter production channels, affect scattering resolution, and change radiative or protection burdens; such effects depend on the experiment and machine design, not on an isolated decimal expansion of $v/c$. Luminosity, beam current, repetition rate, polarization, emittance, detector environment, and integrated reliability can be as important as single-particle energy. The distinction matters because an architecture may be superior at delivering a specified beam quality or luminosity even when every candidate particle is already near $c$.
+
+\section{Survey of Acceleration Architectures and Constraints}
+\subsection{Circular hadron accelerators}
+The LHC machine design is a canonical example of a high-energy circular collider \cite{evans_bryant2008}. In an ultra-relativistic bending system, the planning-scale relation
+\begin{equation}
+p\simeq qB\rho
+\label{eq:rigidity}
+\end{equation}
+links momentum $p$ to charge $q$, dipole field $B$, and bending radius $\rho$. It is not a complete machine model: lattice optics, aperture, field quality, ramping, RF systems, beam-beam effects, injection and extraction, cryogenics, collimation, and reliability still matter. It does make the central geometry transparent. Holding $B$ fixed, a larger radius permits higher momentum; holding radius fixed, higher energy asks for higher field. Superconducting accelerator magnets are consequently a major technology determinant \cite{rossi_bottura2012}.
+
+At high intensity, stored beam energy and loss patterns turn protection from an afterthought into an enabling constraint. Beam-loss studies at the LHC demonstrate why localized losses, collimation, quench protection, and diagnostics must accompany high-energy operation \cite{bruce2014}. This proposal does not infer a specific protection threshold from the literature; it treats protection as a required model-card field. A scenario that proposes momentum or intensity without a loss/protection boundary cannot be called feasible by EVSL.
+
+Future-hadron-collider design reports are valuable evidence of the scale of the engineering challenge, but they are projections conditional on magnet, tunnel, power, detector, and cost assumptions \cite{abada2019}. EVSL preserves that distinction. A design report can define a parameter range or a comparison case; it cannot be cited as an observed speed or performance result.
+
+\subsection{Circular lepton accelerators}
+Electrons and positrons make especially clear why one cannot use a single ``accelerator limit.'' A ring can recover the same physical trajectory repeatedly, which is attractive for collisions, but radiative losses become severe for light charged particles at high energy. At fixed scoped assumptions, synchrotron-radiation loss rises sharply with energy and depends strongly on particle mass and bending radius. Beamstrahlung and luminosity-quality trade-offs add further conditions. Thus a lepton-ring ledger must include a radiation term and a beamstrahlung term rather than borrowing a hadron-ring conclusion.
+
+The point is not that every electron ring has the same maximum energy. It is that a statement such as ``the particle is already at nearly $c$'' leaves out the variable that decides the architecture. EVSL requires the source/model used for radiation loss, the radius convention, RF replenishment assumptions, and the allowed beam-quality range. If any of these are absent, the model cannot produce a radiation-dominance conclusion.
+
+\subsection{Linear radio-frequency accelerators}
+Linear colliders avoid the repeated bending that causes strong synchrotron-radiation burdens in rings, while replacing it with a long structure and demanding accelerating-gradient, RF-power, efficiency, beam-delivery, and luminosity constraints. The International Linear Collider technical design report provides a well-defined reference architecture for such a comparison \cite{behnke2013}. In a simplified planning view, a required energy gain relates to the usable gradient and active length. That relation is only the first ledger line. Power conversion, wakefields, alignment, emittance preservation, repetition structure, beamstrahlung at the interaction point, and availability determine whether the line can close.
+
+The EVSL protocol therefore treats ``linear'' as a model-card class, not as a claim that linear machines escape losses or resource constraints. The speed of the beam remains governed by \eqref{eq:beta-energy}; the design decision moves to the conversion of power and length into a beam of specified energy and quality.
+
+\subsection{Plasma wakefield acceleration}
+Plasma-based acceleration is promising because collective plasma fields can provide gradients far above conventional RF structures. Reviews and roadmaps document the opportunity along with system-level challenges of driver production, staging, energy transfer, energy spread, emittance preservation, repetition rate, stability, and integration \cite{bingham2003,schroeder2010,albert2020}. A high gradient alone is not a collider or a general-purpose beam source. It can reduce active acceleration length while increasing the importance of the driver and beam-control ledger.
+
+EVSL makes this trade-off auditable. A plasma model card must name the driver energy, acceleration stage count, transfer/efficiency assumption, energy-spread target, stability criterion, and diagnostic/reproducibility condition. It may return a power-or-gradient or beam-quality classification, but it may not claim that plasma acceleration changes the massive-particle speed bound. The same logic prevents a rhetorical but false contrast between ``conventional near-$c$'' and ``advanced faster-than-near-$c$'' acceleration.
+
+\subsection{Strong fields and astrophysical comparison}
+As fields and particle energies increase, radiation reaction and quantum electrodynamic effects can enter the modeling regime. The strong-field review literature provides the relevant conceptual boundary, including the need to state field regime and model applicability \cite{gonoskov2022}. EVSL includes a strong-field card precisely to prevent an extrapolation from becoming an unexamined assertion. It is a boundary check, not a superluminal pathway.
+
+Astrophysical sources also accelerate charged particles to extraordinary energies under size, magnetic-field, time, transport, and loss conditions very different from laboratory systems. The Hillas-style context is valuable for scale reasoning \cite{hillas2005}, but it cannot be combined naively with a laboratory beam-delivery ledger. An astrophysical card is therefore a separately marked comparator. It may illuminate energy reach and loss arguments; it does not relax causality or provide a laboratory speed exception.
+
+\begin{table*}[!t]
+\caption{Survey-derived architecture distinctions retained by EVSL. ``Constraint candidates'' are not observed rankings; they are fields requiring a source-bounded scenario analysis.}
+\label{tab:architectures}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lYYY}
+\toprule
+Model card & Primary opportunity & Constraint candidates that must be declared & Scope safeguard \\
+\midrule
+C1: proton circular ring & repeated collisions and high momentum reach & $B\rho$, RF, aperture, stored-beam loss, protection, power, tunnel scale & do not apply lepton-radiation conclusions without species-specific modeling \\
+C2: electron/positron ring & clean lepton collisions and repeated circulation & synchrotron radiation, beamstrahlung, RF replenishment, radius, beam quality & require scoped radiation and luminosity assumptions \\
+C3: linear RF & avoids repeated high-energy bending & gradient, active length, RF power, wakefields, emittance, delivery efficiency & energy gain alone is not a luminosity claim \\
+C4: plasma wakefield & high gradient and compact acceleration stages & driver, staging, transfer, energy spread, stability, repetition rate & high gradient does not modify $v<c$ for massive particles \\
+C5/C6: strong field or astrophysical context & boundary analysis and high-energy comparison & radiation reaction, regime validity, size/field/time/loss conditions & retain separate scope; no laboratory or FTL inference \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\section{Research Gaps and Idea Selection}
+\subsection{Survey gap ledger}
+The Survey Agent accepted two connected gaps. First, there is no common, transparent ledger for saying when an accelerator comparison has left the speed-saturation regime and entered a practical limitation regime. Public language about ``near light speed'' is concise but often fails to identify whether a design is limited by magnetic rigidity, radiation, RF/driver power, gradient and length, beam quality, or protection. Second, cross-platform comparisons often hide parameter assumptions. A ring, linear system, plasma stage, and strong-field configuration do not share a single dominant variable, so a universal score can obscure rather than clarify.
+
+The survey rejected one apparent gap: a search for a universal finite speed ceiling below $c$. Existing machine performance cannot establish such a ceiling, and special-relativistic kinematics supplies no basis for it. Rejection is productive here. It constrains the downstream idea to ask a valid question about acceleration frontiers.
+
+\subsection{Idea portfolio and primary direction}
+The Idea Agent considered four directions: a record-style speed comparison, a universal scalar accelerator formula, a ring-only rigidity/radiation study, and the cross-platform EVSL. The record comparison was rejected because it repeats the saturated-variable error. A universal formula was rejected because it would compress distinct losses and operational conditions into an opaque number. The ring-only map remains competitive but would not address linear or plasma trade-offs. The selected EVSL instead makes heterogeneity explicit through model cards.
+
+The selected hypothesis is: \emph{after a predeclared ultra-relativistic saturation condition, speed no longer differentiates credible acceleration concepts; a sensitivity-aware ledger of energy, rigidity, losses, power, beam quality, and protection does.} This is falsifiable in several ways. A speed-only metric could remain discriminating after the declared saturation condition when the ledger metrics do not. Constraint labels could change across a reasonable input range without disclosure. A purported high-speed concept could violate \eqref{eq:beta-energy}, omit loss accounting, or present a future design as an observation. Each failure has a defined response: revise the scope, mark the scenario non-identifiable, or discard it as invalid.
+
+\begin{figure*}[!t]
+\centering
+\fbox{\begin{minipage}{0.94\textwidth}
+\centering\textbf{Energy-to-Velocity Saturation Ledger (EVSL)}\\[3pt]
+\small
+\textit{Rest mass and $\gamma$--$\beta$ map} $\rightarrow$ \textit{architecture model card} $\rightarrow$ \textit{energy gain/loss ledger} $\rightarrow$ \textit{sensitivity and provenance checks} $\rightarrow$ \textit{conditional classification}.\\[5pt]
+\begin{tabular}{c@{\quad}c@{\quad}c@{\quad}c@{\quad}c}
+proton ring & lepton ring & linear RF & plasma wakefield & strong-field / astrophysical context\\
+$B\rho$, protection & radiation, beamstrahlung & gradient, power & driver, staging, spread & validity and scope
+\end{tabular}\\[5pt]
+\textit{Outputs:} kinematic saturation, rigidity limited, radiation limited, power/gradient limited, beam-quality/protection limited, non-identifiable, or model invalid.
+\end{minipage}}
+\caption{EVSL decision flow. The editable source is retained separately as \texttt{figures/energy\_velocity\_constraint\_ledger.drawio}; this schematic communicates the same design without asserting a measured classification.}
+\label{fig:evsl}
+\end{figure*}
+
+\section{ExperimentDesign: EVSL Computational Protocol}
+\subsection{Design-only study objective}
+The ExperimentDesign Agent selects the computational-digital template. The unit of analysis is one source-bounded model-card scenario, not a physical beam. The study would calculate the exact kinematic baseline, populate a compatible engineering ledger, vary declared inputs over documented intervals, and return a conditional constraint label only when the evidence and checks are complete. It does not operate an accelerator, request access to facility controls, acquire beam data, or claim a new result.
+
+The research question is therefore operational: \emph{can EVSL determine whether an acceleration concept is kinematically saturated, rigidity limited, radiation limited, power/gradient limited, beam-quality/protection limited, non-identifiable, or invalid under its stated assumptions?} The answer is evaluated by transparency and internal consistency rather than by a preselected winner.
+
+\subsection{Variables, controls, and accounting model}
+Table \ref{tab:variables} defines the data contract. The baseline records particle identity, rest mass, energy convention, $\gamma$, $\beta$, and $1-\beta$. Tracking $1-\beta$ prevents numerical rounding from erasing the energy--velocity relationship. Engineering inputs are architecture-specific. A proton ring requires at least $B$, $\rho$, RF information, a loss/protection field, and unit conventions; an electron/positron ring adds scoped radiation and beamstrahlung assumptions. A linear RF card requires gradient, active length, power, and beam-quality conditions. A plasma card requires driver, staging, efficiency/transfer assumptions, spread, and stability conditions.
+
+For a cyclic card, EVSL records a conceptual energy accounting identity,
+\begin{equation}
+\Delta E_{\mathrm{turn}}=qV_{\mathrm{RF}}\sin\phi_s-U_{\mathrm{rad}}-U_{\mathrm{collective}}-U_{\mathrm{operational}}.
+\label{eq:turn-ledger}
+\end{equation}
+Equation \eqref{eq:turn-ledger} is a planned ledger, not a fit to a named facility. It shows that an RF gain alone cannot establish sustainable acceleration. Each nonzero loss term needs a cited model and compatible regime, otherwise the scenario is incomplete. In a scoped circular-radiation comparison, a useful qualitative dependence is
+\begin{equation}
+U_{\mathrm{rad}}\propto\frac{E^4}{m^4\rho},
+\label{eq:radiation-scaling}
+\end{equation}
+where the omitted proportionality factors and applicability conditions must be supplied before any numerical use. The mass dependence in \eqref{eq:radiation-scaling} explains why species cannot be conflated, but the formula is not a universal complete loss model.
+
+\begin{table*}[!t]
+\caption{EVSL data contract and validation obligations. All values are planned inputs or derived analysis fields; none is an observed result in this proposal.}
+\label{tab:variables}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lYYY}
+\toprule
+Category & Required fields & Validation rule & Failure response \\
+\midrule
+Kinematic baseline & particle identity, $m$, total-energy convention, $\gamma$, $\beta$, $1-\beta$ & $\gamma\geq1$, units consistent, Eq. \eqref{eq:beta-energy} satisfied & \texttt{MODEL\_INVALID} \\
+Ring rigidity & $q$, $B$, $\rho$, momentum convention, aperture/field scope & compare only compatible particle and bending assumptions & \texttt{NON\_IDENTIFIABLE} if scope missing \\
+Loss ledger & RF/driver gain, radiation, collective and operational loss fields & every nonzero term has source/model and units & \texttt{NON\_IDENTIFIABLE} \\
+Beam quality / safety & intensity proxy, emittance/spread target, stability, loss/protection condition & threshold and uncertainty range declared & beam-quality/protection label or non-identifiable \\
+Sensitivity & lower/central/upper input cases, source version, scenario tag & report label stability and switching variable & withhold a unique dominance claim \\
+Provenance & source ID, date/version, projection/observation flag & future designs never marked observed & \texttt{MODEL\_INVALID} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Model cards and comparison discipline}
+The protocol instantiates seven cards. `C0` is the relativistic baseline. `C1` is a proton circular ring. `C2` is an electron/positron circular ring. `C3` is a linear RF accelerator. `C4` is a plasma wakefield concept. `C5` is a strong-field/radiation-reaction boundary. `C6` is a Hillas-like astrophysical comparator. `C6` can contextualize high-energy acceleration but cannot be allowed to dominate a laboratory conclusion because its size, time, field, and environment are categorically different.
+
+This separation provides an important control. A proton ring can be compared with another proton-ring scenario under a shared energy and unit convention; its dominant category may be rigidity or protection. A lepton ring can be compared with a lepton-ring scenario only after the radiation and beamstrahlung scope is stated. A plasma card can test whether staging, driver power, or output quality is decisive. The procedure does not force all cards into the same numeric objective. It asks whether the active constraint is identifiable within each compatible comparison set, then reports the assumptions that prevent a broader conclusion.
+
+\subsection{Sensitivity and decision rules}
+Each planned run uses a baseline, lower, and upper value for every high-impact input. The bounds must come from a cited design source, a transparent design assumption, or a \texttt{needs\_human\_input} placeholder. Parameters include field and radius, RF voltage or driver energy, active gradient and length, power, radiative-loss model, energy-spread target, stability threshold, and protection margin. A dominance label is valid only if it persists across a declared region or if the switch boundary is explicitly reported. This condition prevents an arbitrary central value from becoming a scientific conclusion.
+
+The proposed classifier produces seven outcomes. \texttt{KINEMATIC\_SATURATION} indicates that $\beta$ is within a declared numerical tolerance of one but the engineering ledger is not complete; it says speed has saturated, not that the machine has no limit. \texttt{RIGIDITY\_LIMITED} indicates that field-radius requirements dominate the stated feasible interval. \texttt{RADIATION\_LIMITED} indicates that a species- and regime-scoped radiative model dominates. \texttt{POWER\_OR\_GRADIENT\_LIMITED} indicates that the energy gain cannot be supplied under the planned power, gradient, or length bounds. \texttt{BEAM\_QUALITY\_OR\_PROTECTION\_LIMITED} indicates that spread, stability, loss, or protection requirements fail first. \texttt{NON\_IDENTIFIABLE} and \texttt{MODEL\_INVALID} are positive safeguards against overclaiming.
+
+\section{Expected Outcome Branches and Falsification}
+The Author stage may state conditional outcomes but may not write as if the planned computation has been performed. Table \ref{tab:branches} gives the authorized conclusion language. A central feature is that a \texttt{KINEMATIC\_SATURATION} label does not substitute for a practical answer. It tells the researcher that the original speed question has reached the resolution limit of its own metric. The next question must be an architecture and use-case question.
+
+\begin{table}[!t]
+\caption{Conditional results framework. Each branch is a planned interpretation, not an observed finding.}
+\label{tab:branches}
+\centering
+\footnotesize
+\begin{tabularx}{\columnwidth}{lY}
+\toprule
+Label & Authorized conditional interpretation \\
+\midrule
+\texttt{KINEMATIC\_SATURATION} & Speed no longer distinguishes the candidate under the declared numerical rule; an engineering ledger is needed. \\
+\texttt{RIGIDITY\_LIMITED} & Field-radius assumptions constrain the modeled circular momentum reach. \\
+\texttt{RADIATION\_LIMITED} & The declared radiation/beamstrahlung model is the first active constraint for this scoped card. \\
+\texttt{POWER\_OR\_GRADIENT\_LIMITED} & Planned energy gain is limited by infrastructure assumptions, not by a sub-$c$ terminal speed. \\
+\texttt{BEAM\_QUALITY\_OR\_PROTECTION\_LIMITED} & Delivery quality or safe-loss conditions prevent the specified scenario. \\
+\texttt{NON\_IDENTIFIABLE} & Missing provenance or sensitivity prevents a dominance claim. \\
+\texttt{MODEL\_INVALID} & Units, kinematics, scope, or projection/observation status fails validation. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Falsification has two levels. At the kinematic level, a result inconsistent with \eqref{eq:beta-energy} under the declared standard-relativity scope invalidates the scenario rather than proving an exception. At the methodological level, EVSL fails if its ledger does not yield a more transparent and stable distinction than a speed-only description. For example, if candidate cards all have comparable $1-\beta$ but the classification changes unpredictably because the protocol has omitted essential variables, the appropriate conclusion is not that one design is best. It is that the model-card schema must be enriched or the comparison narrowed.
+
+The protocol also rejects a common category error. A future collider, plasma roadmap, or high-field concept can motivate a parameter sweep, but it is not an observed accelerator result. Each source record carries an observation/projection flag. If an author tries to convert a projected energy or gradient into a completed performance statement, the provenance check returns \texttt{MODEL\_INVALID}.
+
+\section{Theory-to-Engineering Bridge}
+\subsection{Why the frontier is not a speed race}
+The bridge from Eqs. \eqref{eq:gamma}--\eqref{eq:saturation} to accelerator design is conceptual but exact. Special relativity tells us how a single particle's speed responds to energy. It does not select a magnet material, set a tunnel budget, preserve emittance, protect superconducting coils, or make a staged plasma beam collider-ready. Those are engineering and many-body-beam problems. The closer a massive particle moves to $c$, the less speed describes the resource increment needed to increase energy. This makes energy reach and beam delivery more scientifically and technologically informative than a wording such as ``closer to the speed of light.''
+
+In circular systems, Eq. \eqref{eq:rigidity} demonstrates a direct link between momentum and physical infrastructure. The simple relation already explains why high-field magnet development and large rings matter; the full ledger adds radiation, RF replenishment, losses, and protection. In linear systems, gradient and length replace repeated bending as the primary geometric conversion, while power, wakefields, alignment, and emittance remain. In plasma systems, high wakefields shift the attention to drivers, coupling, staging, stability, and output quality. None of these mechanisms conflicts with the relativistic limit; they reveal the meaningful design space inside it.
+
+\subsection{A comparable reporting language}
+EVSL proposes a compact reporting language for future studies. Every scenario should report: (1) particle identity and energy convention; (2) $\gamma$, $\beta$, and $1-\beta$; (3) architecture and intended use; (4) gain, loss, power, and quality ledger terms; (5) unit-checked input ranges; (6) the constraint label or a reason why no label is justified; and (7) whether each cited performance figure is observed, designed, or speculative. The language is useful even if the eventual calculation is performed in a specialized simulation package rather than a simple notebook.
+
+This discipline can make cross-platform debate more constructive. A circular hadron proposal does not have to pretend that it is ``faster'' than a linear lepton proposal. Both may already satisfy a speed-saturation criterion. Their competing merits can instead be discussed in the variables that matter for the scientific target: energy reach, collision environment, luminosity, efficiency, footprint, cost, technical maturity, and risk. EVSL is deliberately narrow: it classifies the acceleration constraint; it does not choose a global facility investment or replace domain-specific beam-dynamics simulations.
+
+\section{Risks, Limitations, and Human Review}
+Several limits belong to the proposal itself. The radiation relation in Eq. \eqref{eq:radiation-scaling} is a scaling aid, not a full machine calculation. Collective effects, beam-beam interactions, impedance, wakefields, collimation, and detector backgrounds cannot be faithfully compressed into a generic ledger without specialist models. A model card may identify missing information but must not manufacture it. Similarly, a future-collider or plasma-accelerator source may set a legitimate design range without establishing that the performance is realized at an operating facility.
+
+The protocol requires an accelerator-physics review of ring assumptions, magnetic-rigidity conventions, beam-loss/protection logic, and any luminosity-related inference. A radiation or strong-field specialist must review the scope of `C5`, including the regime where radiation reaction or quantum effects are relevant. A relativistic-theory reviewer must examine any extension beyond the standard kinematic assumptions. A bibliographic reviewer must check DOI landing pages and final citation details before publication. These reviews are not generic caveats: they determine whether the source/model fields that EVSL relies on are valid.
+
+The plan also has a deliberate safety boundary. It offers neither instructions nor authorization for facility operation. It does not prescribe magnetic settings, RF timing, beam steering, target irradiation, or experimental runs. Its execution policy is \texttt{DESIGN\_ONLY}, with no observed results. Any future implementation should operate only on public, synthetic, or appropriately authorized input data and should retain a full provenance log.
+
+\section{Conclusion}
+The maximum speed question has a concise physical answer and a richer scientific consequence. A particle with nonzero rest mass can be accelerated arbitrarily close to, but not to or through, the vacuum speed of light with finite energy in standard special relativity. Existing accelerators do not reveal a second universal ceiling below $c$. Once a beam is ultra-relativistic, speed is not the practical frontier.
+
+The proposed EVSL framework converts that conclusion into a falsifiable research design. It uses exact kinematics to identify speed saturation, then asks which architecture-specific constraint is active: rigidity, radiation, power or gradient, beam quality, or protection. Its model cards and sensitivity rules prevent a projected concept from being written as an observation and prevent missing variables from masquerading as a decisive limit. The proposal therefore makes a direct claim within its scope: advances in particle acceleration should be evaluated through energy reach and controlled beam delivery, not through a purported race to a new massive-particle speed. The next research step is a specialist-reviewed implementation of the ledger on carefully scoped accelerator scenarios.
+
+\appendices
+\section{Evidence Coverage and Claim Boundary}
+The survey registry contains twelve bounded sources. CERN's LHC webpage was inspected directly for the public facility description \cite{cern_lhc_page}. The remaining sources were cross-validated bibliographic candidates and require final publisher-page review before external dissemination. LHC design and protection context is supported by \cite{evans_bryant2008,bruce2014}; superconducting-magnet context by \cite{rossi_bottura2012}; future-collider comparison by \cite{abada2019,zimmermann2018}; linear and plasma architecture by \cite{behnke2013,schroeder2010,albert2020,bingham2003}; and high-field or astrophysical boundary context by \cite{gonoskov2022,hillas2005}. No source is used to claim that the proposed computational classification was run or that a new accelerator performance record exists.
+
+\section{Symbols and Operational Definitions}
+\begin{tabularx}{0.96\columnwidth}{lY}
+\toprule
+Symbol / term & Definition in this proposal \\
+\midrule
+$c$ & vacuum speed of light \\
+$v$, $\beta$ & particle speed and dimensionless ratio $v/c$ \\
+$\gamma$ & Lorentz factor defined by Eq. \eqref{eq:gamma} \\
+$m$, $E$, $K$ & rest mass, total energy, and kinetic energy \\
+$p$, $q$, $B$, $\rho$ & momentum, charge, dipole field, and bending radius in the scoped rigidity relation \\
+$U_{\mathrm{rad}}$ & radiation-loss ledger term; model and regime must be declared \\
+EVSL & Energy-to-Velocity Saturation Ledger, the proposed analysis protocol \\
+\bottomrule
+\end{tabularx}
+
+\begin{thebibliography}{99}
+\bibitem{cern_lhc_page} CERN, ``The Large Hadron Collider,'' CERN Science: Accelerators. [Online]. Available: \url{https://home.cern/science/accelerators/large-hadron-collider/}. Accessed: Sep. 1, 2026.
+\bibitem{evans_bryant2008} L. Evans and P. Bryant, ``LHC machine,'' \emph{J. Instrum.}, vol. 3, S08001, 2008, doi: 10.1088/1748-0221/3/08/S08001.
+\bibitem{bruce2014} R. Bruce \emph{et al.}, ``Beam losses at the LHC,'' \emph{Phys. Rev. ST Accel. Beams}, vol. 17, 081004, 2014, doi: 10.1103/PhysRevSTAB.17.081004.
+\bibitem{rossi_bottura2012} L. Rossi and L. Bottura, ``Superconducting magnets for particle accelerators,'' \emph{Rev. Accel. Sci. Technol.}, vol. 5, pp. 51--89, 2012, doi: 10.1142/S1793626812300034.
+\bibitem{abada2019} A. Abada \emph{et al.}, ``FCC-hh: The hadron collider,'' \emph{Eur. Phys. J. ST}, vol. 228, pp. 755--1107, 2019, doi: 10.1140/epjst/e2019-900087-0.
+\bibitem{behnke2013} T. Behnke \emph{et al.}, \emph{The International Linear Collider Technical Design Report}. 2013, doi: 10.2172/1347945.
+\bibitem{schroeder2010} C. B. Schroeder, E. Esarey, C. Benedetti, and W. P. Leemans, ``Physics considerations for laser-plasma linear colliders,'' \emph{Phys. Rev. ST Accel. Beams}, vol. 13, 101301, 2010, doi: 10.1103/PhysRevSTAB.13.101301.
+\bibitem{albert2020} F. Albert \emph{et al.}, ``2020 roadmap on plasma accelerators,'' \emph{New J. Phys.}, vol. 23, 031101, 2021, doi: 10.1088/1367-2630/abcc62.
+\bibitem{bingham2003} R. Bingham, J. T. Mendon\c{c}a, and P. K. Shukla, ``Plasma-based charged-particle accelerators,'' \emph{Plasma Phys. Control. Fusion}, vol. 46, R1--R37, 2004, doi: 10.1088/0741-3335/46/1/R01.
+\bibitem{zimmermann2018} F. Zimmermann, ``Future colliders: Big and small,'' \emph{Nucl. Instrum. Methods Phys. Res. A}, vol. 909, pp. 33--37, 2018, doi: 10.1016/j.nima.2018.01.034.
+\bibitem{gonoskov2022} A. Gonoskov \emph{et al.}, ``Charged particle motion and radiation in strong electromagnetic fields,'' \emph{Rev. Mod. Phys.}, vol. 94, 045001, 2022, doi: 10.1103/RevModPhys.94.045001.
+\bibitem{hillas2005} A. M. Hillas, ``Can diffusive shock acceleration in supernova remnants account for high-energy galactic cosmic rays?,'' \emph{J. Phys. G}, vol. 31, R95--R131, 2005, doi: 10.1088/0954-3899/31/5/R02.
+\end{thebibliography}
+\end{document}

@@ -1,0 +1,17 @@
+{
+  "run_id": "eco-1-climate-observing-flexible-energy-transition",
+  "overall_status": "completed_with_human_review_pending",
+  "design_mode": "DESIGN_ONLY",
+  "stages": {
+    "survey": {"status": "completed", "manifest": "survey/survey_manifest.json"},
+    "idea": {"status": "completed", "result": "idea/idea_result.json"},
+    "experiment_design": {"status": "completed", "design": "experiment_design/research_design.json"},
+    "author": {"status": "completed", "manifest": "author/author_manifest.json", "pdf": "author/climate_observing_flexible_energy_transition_report.pdf"}
+  },
+  "human_review_items": [
+    "Verify source interpretation and current source versions before external submission.",
+    "Instantiate the scenario ensemble and validate energy and risk models with domain experts.",
+    "Review equity weights, governance assumptions, environmental safeguards, and deployment feasibility."
+  ],
+  "observed_results": []
+}

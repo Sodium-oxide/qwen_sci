@@ -1,0 +1,45 @@
+{
+  "manifest_type": "author_manifest",
+  "schema_version": "1.0",
+  "topic": "Will injectable, disease-fighting nanobots ever be a reality?",
+  "scientific_reframe": "Under what combinations of size, materials, propulsion or trigger mechanism, targeting logic, payload release, biodistribution, immune compatibility, and manufacturing control can an injectable nanosystem deliver a disease-modifying action at the target site with better benefit-risk performance than a non-robotic nanocarrier or free drug?",
+  "primary_direction": "BARRIER-AWARE-TRIGGER-GATED-NANOCARRIER-BENCHMARK",
+  "execution_mode": "DESIGN_ONLY",
+  "stage_status": "completed",
+  "source_bindings": {
+    "survey_manifest": "../survey/survey_manifest.json",
+    "idea_result": "../idea/idea_result.json",
+    "experiment_design": "../experiment_design/research_design.json",
+    "author_handoff": "../experiment_design/author_handoff.json"
+  },
+  "outputs": [
+    "injectable_nanobot_benchmark_report.tex",
+    "injectable_nanobot_benchmark_report.pdf",
+    "IEEEtran.cls",
+    "report_text.txt"
+  ],
+  "rendering": {
+    "template_profile": "ieee_conference_v1",
+    "template_source": "C:/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/Conference-LaTeX-template_10-17-19",
+    "engine": "pdflatex",
+    "page_count": 8,
+    "target_page_range": [8, 10],
+    "page_policy": "Rendered at the requested lower bound of 8 pages.",
+    "visual_qc": "passed_home_middle_last_page"
+  },
+  "content_contract": {
+    "proposal_only": true,
+    "observed_results": [],
+    "acknowledgment_section": false,
+    "unsupported_deployment_claims": false,
+    "equations_numbered": true,
+    "references_bound_to_verified_registry": true
+  },
+  "validation_notes": [
+    "Final two-pass pdflatex compilation completed without LaTeX errors or unresolved references.",
+    "The final PDF is 8 pages, letter size, unencrypted, and uses embedded Type 1 fonts.",
+    "No overfull boxes remain; a small number of underfull boxes remain in narrow table cells and one bibliography paragraph and are visually acceptable.",
+    "MiKTeX reported a log4cxx user-log permission message, but it did not prevent PDF generation or alter the document.",
+    "The report contains no measured biological, animal, or clinical result."
+  ]
+}

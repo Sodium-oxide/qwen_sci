@@ -1,0 +1,16 @@
+{
+  "schema_version": "survey_gap_ledger_v1",
+  "topic": "Neuroendocrine and circuit mechanisms of romantic love",
+  "accepted_gaps": [
+    {"gap_id":"G1","statement":"Operational boundaries among sexual motivation, partner-directed reward, and durable bond maintenance are not unified across species or time.","confidence":"high","evidence_refs":["E1","E2","E3","E4"]},
+    {"gap_id":"G2","statement":"A common causal protocol has not decomposed the contributions of VTA-NAc dopamine, hypothalamic neuropeptides, and limbic recognition circuits.","confidence":"high","evidence_refs":["E1","E5","E6"]},
+    {"gap_id":"G3","statement":"The interaction and temporal order of dopamine, oxytocin, vasopressin, sex steroids, and stress hormones remain unresolved.","confidence":"medium","evidence_refs":["E1","E2","E6","E8"]},
+    {"gap_id":"G4","statement":"Human partner-cue imaging and vole receptor perturbation lack a shared cross-species measurement language.","confidence":"high","evidence_refs":["E3","E4","E5"]},
+    {"gap_id":"G5","statement":"Partner preference is difficult to separate from general social approach, sexual behavior, novelty, locomotion, stress buffering, and nonsocial reward.","confidence":"high","evidence_refs":["E3","E5","E6","E8"]},
+    {"gap_id":"G6","statement":"Receptor-genetic and endocrine associations need larger preregistered replication and explicit moderator tests.","confidence":"high","evidence_refs":["E7"]}
+  ],
+  "rejected_or_unresolved_candidates": [
+    {"statement":"There is one universal love center.","decision":"rejected","reason":"Contradicted by distributed circuit evidence and insufficiently operational."},
+    {"statement":"One hormone is the love hormone.","decision":"rejected","reason":"Receptor localization, context, and non-specific social effects require a multivariable model."}
+  ]
+}

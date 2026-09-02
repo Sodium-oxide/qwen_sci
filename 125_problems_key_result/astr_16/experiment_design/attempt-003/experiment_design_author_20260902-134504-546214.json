@@ -1,0 +1,2952 @@
+{
+  "authoring_constraints": {
+    "counterexample_must_satisfy_all_assumptions": true,
+    "formal_and_empirical_claims_must_remain_separate": true,
+    "observed_results_are_absent": true,
+    "proposal_without_observed_results": true,
+    "unsupported_claims_forbidden": true,
+    "unverified_reasoning_must_be_labeled": true
+  },
+  "counterexample_analysis": {
+    "applicability": "formal_theory",
+    "candidate_counterexamples": [],
+    "limitations": [
+      "Counterexample analysis was not run; no conclusion about counterexamples may be drawn."
+    ],
+    "negated_conclusion": "",
+    "schema_version": "counterexample_analysis_v1",
+    "status": "requires_human_review",
+    "target_claim_id": "",
+    "unknown_items": [
+      {
+        "field_path": "counterexample_analysis",
+        "reason": "The counterexample_analyzer LLM batch was discarded after an unavailable or invalid response. No generated claim, formalization, counterexample, or protocol detail from that batch is retained; qualified human review is required.",
+        "status": "needs_human_input"
+      }
+    ]
+  },
+  "field_statuses": {
+    "analysis_plan": "evidence_backed",
+    "analysis_plan.batch_effects": "not_applicable",
+    "analysis_plan.blinding": "not_applicable",
+    "analysis_plan.missing_data": "not_applicable",
+    "analysis_plan.randomization": "not_applicable",
+    "analysis_plan.repetitions": "not_applicable",
+    "analysis_plan.statistical_analysis": "not_applicable",
+    "comparison_and_robustness": "evidence_backed",
+    "data_governance_and_reproducibility": "design_assumption",
+    "data_governance_and_reproducibility.data_management": "needs_human_input",
+    "data_governance_and_reproducibility.reproducibility": "needs_human_input",
+    "degraded_stages.counterexample_analyzer": "needs_human_input",
+    "hypothesis_mapping": "evidence_backed",
+    "measurement_and_calibration": "evidence_backed",
+    "measurement_and_calibration.calibration": "not_applicable",
+    "measurement_and_calibration.measurement_plan": "needs_human_input",
+    "measurement_and_calibration.quality_control": "needs_human_input",
+    "research_design": "design_assumption",
+    "research_design.design_type": "design_assumption",
+    "research_design.experimental_unit": "design_assumption",
+    "research_design.time_structure": "design_assumption",
+    "sampling_and_eligibility": "not_applicable",
+    "sampling_and_eligibility.eligibility_criteria": "not_applicable",
+    "sampling_and_eligibility.sample_size_or_power_basis": "not_applicable",
+    "sampling_and_eligibility.source": "not_applicable",
+    "template_details.assumptions": "needs_human_input",
+    "template_details.counterexample_or_boundary_analysis": "needs_human_input",
+    "template_details.formal_claim": "needs_human_input",
+    "template_details.verification_plan": "needs_human_input",
+    "variables_and_operationalization": "evidence_backed"
+  },
+  "formal_reasoning": {
+    "applicability": "formal_theory",
+    "assumptions": [
+      {
+        "assumption_id": "A1",
+        "statement": "The static equilibrium axioms of the dense matter equation of state can be formally relaxed to permit mass accumulation beyond the static Tolman-Oppenheimer-Volkoff limit via rotational and thermal support without violating the causality bound.",
+        "status": "candidate_formalization",
+        "symbol_references": [
+          "A1",
+          "R",
+          "c"
+        ],
+        "variable_references": [
+          "V1",
+          "V5"
+        ]
+      },
+      {
+        "assumption_id": "A2",
+        "statement": "Binary mass accretion and angular momentum transfer can be modeled as a continuous thermodynamic and mechanical perturbation that modifies the effective equilibrium conditions of the neutron star.",
+        "status": "candidate_formalization",
+        "symbol_references": [
+          "A2",
+          "M"
+        ],
+        "variable_references": [
+          "V4"
+        ]
+      },
+      {
+        "assumption_id": "A3",
+        "statement": "Companion ablation primarily affects the surface and magnetosphere, allowing the core mass-spin relation to remain governed by the relaxed effective equilibrium axioms.",
+        "status": "candidate_formalization",
+        "symbol_references": [
+          "A3",
+          "R",
+          "M"
+        ],
+        "variable_references": [
+          "V1",
+          "V2",
+          "V3"
+        ]
+      }
+    ],
+    "definitions": [
+      {
+        "definition_id": "D1",
+        "statement": "Variable representing the set of relaxed static equilibrium axioms applied to the core mass-spin relation.",
+        "status": "needs_human_input",
+        "symbol": "A1",
+        "variable_references": [
+          "V1"
+        ]
+      },
+      {
+        "definition_id": "D2",
+        "statement": "Variable representing the binary accretion support mechanism (mass/angular momentum transfer).",
+        "status": "needs_human_input",
+        "symbol": "A2",
+        "variable_references": [
+          "V4"
+        ]
+      },
+      {
+        "definition_id": "D3",
+        "statement": "Variable representing the gravitational mass of the neutron star.",
+        "status": "candidate_formalization",
+        "symbol": "M",
+        "variable_references": [
+          "V2"
+        ]
+      },
+      {
+        "definition_id": "D4",
+        "statement": "Variable representing the neutron star spin period.",
+        "status": "candidate_formalization",
+        "symbol": "P",
+        "variable_references": [
+          "V3"
+        ]
+      },
+      {
+        "definition_id": "D5",
+        "statement": "Symbol representing the derived mechanism_mass_spin_relation function M = R(P).",
+        "status": "needs_human_input",
+        "symbol": "R",
+        "variable_references": [
+          "V2",
+          "V3"
+        ]
+      },
+      {
+        "definition_id": "D6",
+        "statement": "Variable representing the Evolutionary channel (Isolated vs. Binary recycling).",
+        "status": "candidate_formalization",
+        "symbol": "A3",
+        "variable_references": [
+          "V6"
+        ]
+      },
+      {
+        "definition_id": "D7",
+        "statement": "Variable representing the causal speed limit check (speed of sound constraint).",
+        "status": "needs_human_input",
+        "symbol": "c",
+        "variable_references": [
+          "V5"
+        ]
+      }
+    ],
+    "final_conclusion": "The relaxation of equilibrium axioms allows for masses beyond the static TOV limit, while the derived relation distinguishes millisecond massive stars.",
+    "forward_derivation": {
+      "status": "unverified",
+      "steps": [
+        {
+          "derived_statement": "The static equilibrium constraint is modified by a continuous perturbation term associated with binary accretion support.",
+          "premises": [
+            "A1",
+            "D1",
+            "D2"
+          ],
+          "rule_or_lemma": "apply_relaxation",
+          "status": "proposed",
+          "step_id": "S1",
+          "symbol_references": [
+            "A1",
+            "A2"
+          ],
+          "variable_references": [
+            "V1",
+            "V4"
+          ]
+        },
+        {
+          "derived_statement": "A derived mass-spin relation R(P) exists for the relaxed axioms.",
+          "premises": [
+            "S1",
+            "D5",
+            "D3",
+            "D4"
+          ],
+          "rule_or_lemma": "derive_mass_spin_relation",
+          "status": "unverified",
+          "step_id": "S2",
+          "symbol_references": [
+            "R",
+            "M",
+            "P",
+            "A1"
+          ],
+          "variable_references": [
+            "V1",
+            "V2",
+            "V3"
+          ]
+        },
+        {
+          "derived_statement": "The derived relation R(P) yields M > M_static_max for millisecond periods P.",
+          "premises": [
+            "S2",
+            "A1",
+            "D6",
+            "A3"
+          ],
+          "rule_or_lemma": "evaluate_mass_limit",
+          "status": "unverified",
+          "step_id": "S3",
+          "symbol_references": [
+            "R",
+            "P",
+            "A1",
+            "A3"
+          ],
+          "variable_references": [
+            "V1",
+            "V3",
+            "V6"
+          ]
+        },
+        {
+          "derived_statement": "The relaxation preserves the condition that the speed of sound in the dense matter remains below the speed of light.",
+          "premises": [
+            "S1",
+            "S3",
+            "A1",
+            "D7"
+          ],
+          "rule_or_lemma": "check_causality_bound",
+          "status": "unverified",
+          "step_id": "S4",
+          "symbol_references": [
+            "c",
+            "A1"
+          ],
+          "variable_references": [
+            "V1",
+            "V5"
+          ]
+        },
+        {
+          "derived_statement": "Isolated magnetic-dipole spin-down pulsars are characterized by evolution along a distinct track, different from the R(P) curve governed by core equilibrium.",
+          "premises": [
+            "A3",
+            "D5",
+            "D6"
+          ],
+          "rule_or_lemma": "assess_evolutionary_channel",
+          "status": "unverified",
+          "step_id": "S5",
+          "symbol_references": [
+            "A3",
+            "R",
+            "A3"
+          ],
+          "variable_references": [
+            "V6"
+          ]
+        },
+        {
+          "derived_statement": "Massive neutron stars with M > 2.0 M_sun correspond to millisecond periods via the R(P) relation, distinct from the isolated pulsar population.",
+          "premises": [
+            "S3",
+            "S5",
+            "A3",
+            "D6",
+            "D5"
+          ],
+          "rule_or_lemma": "distinguish_pulsar_classes",
+          "status": "unverified",
+          "step_id": "S6",
+          "symbol_references": [
+            "R",
+            "A3"
+          ],
+          "variable_references": [
+            "V2",
+            "V3",
+            "V6"
+          ]
+        }
+      ]
+    },
+    "proof_obligations": [
+      {
+        "obligation_id": "PO1",
+        "status": "needs_human_input",
+        "symbol_references": [
+          "A1",
+          "A2",
+          "A3",
+          "R",
+          "M",
+          "c"
+        ],
+        "variable_references": [
+          "V1",
+          "V4",
+          "V2",
+          "V3",
+          "V5"
+        ]
+      },
+      {
+        "obligation_id": "PO2",
+        "status": "needs_human_input",
+        "symbol_references": [
+          "R",
+          "A1",
+          "A3",
+          "M",
+          "P"
+        ],
+        "variable_references": [
+          "V1",
+          "V2",
+          "V3",
+          "V6"
+        ]
+      }
+    ],
+    "propositions": [
+      {
+        "proposition_id": "P1",
+        "statement": "Relaxing static equilibrium axioms of dense matter EoS with rotational/thermal support permits masses beyond static TOV without violating causality.",
+        "status": "candidate_formalization",
+        "symbol_references": [
+          "A1",
+          "A2",
+          "A3",
+          "R",
+          "M",
+          "c"
+        ],
+        "variable_references": [
+          "V1",
+          "V2",
+          "V3",
+          "V5"
+        ]
+      },
+      {
+        "proposition_id": "P2",
+        "statement": "The relaxed axioms predict a distinct mass-spin relation distinguishing massive NSs (>2.0 Msun) with ms periods from isolated magnetic-dipole spin-down pulsars.",
+        "status": "candidate_formalization",
+        "symbol_references": [
+          "R",
+          "A1",
+          "A3",
+          "M",
+          "P"
+        ],
+        "variable_references": [
+          "V1",
+          "V2",
+          "V3",
+          "V6"
+        ]
+      }
+    ],
+    "schema_version": "formal_reasoning_plan_v1",
+    "status": "requires_human_review",
+    "target_proposition_id": "P2",
+    "unknown_items": [
+      {
+        "field_path": "variables.V1.operational_definition",
+        "reason": "Specific mathematical relaxation of static equilibrium axioms requires formal definition.",
+        "status": "needs_formal_definition"
+      },
+      {
+        "field_path": "variables.V2.operational_definition",
+        "reason": "Measurement method for >2.0 M_sun (e.g., Shapiro delay) is not specified in brief.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "variables.V3.operational_definition",
+        "reason": "Measurement method for spin period is not specified in brief.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "variables.V4.operational_definition",
+        "reason": "Equations governing binary mass/ang. momentum transfer need formal specification.",
+        "status": "needs_formal_definition"
+      },
+      {
+        "field_path": "variables.V5.operational_definition",
+        "reason": "Formal criteria for testing causality violation are missing.",
+        "status": "needs_formal_definition"
+      },
+      {
+        "field_path": "unknown",
+        "reason": "The specific functional form of the 'mechanism_mass_spin_relation' is referenced but not defined.",
+        "status": "needs_formal_definition"
+      }
+    ]
+  },
+  "generated_at": "2026-09-02T14:24:22.958678+09:00",
+  "hypothesis_mapping": [
+    {
+      "claim": "Relaxing static equilibrium axioms of dense matter EoS with rotational/thermal support permits masses beyond static TOV without violating causality.",
+      "decision_rule": "Proof obligation verification",
+      "hypothesis_id": "C1",
+      "observables": [
+        "Derived mass-spin relation"
+      ]
+    },
+    {
+      "claim": "The relaxed axioms predict a distinct mass-spin relation distinguishing massive NSs (>2.0 Msun) with ms periods from isolated magnetic-dipole spin-down pulsars.",
+      "decision_rule": "Counterexample or numerical verification plan",
+      "hypothesis_id": "C2",
+      "observables": [
+        "Distinguish evolutionary channels via model outputs"
+      ]
+    }
+  ],
+  "outcome_branches": [
+    {
+      "branch_id": "supports_mechanism",
+      "conclusion_scope": "The claim fails if the relaxed static equilibrium axioms violate the causality bound, or if the predicted mass-spin relation contradicts the observed population of massive millisecond pulsars, or if standard rotational support models fully explain the observations without needing the relaxed axioms.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Replicate under independently confirmed conditions.",
+        "Test the most consequential declared boundary condition."
+      ],
+      "interpretation": "The result would support, but not prove, the declared relation within the design boundary.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified analysis is consistent with the declared relation while planned controls do not favor a stated alternative explanation."
+    },
+    {
+      "branch_id": "partial_or_heterogeneous",
+      "conclusion_scope": "The claim fails if the relaxed static equilibrium axioms violate the causality bound, or if the predicted mass-spin relation contradicts the observed population of massive millisecond pulsars, or if standard rotational support models fully explain the observations without needing the relaxed axioms.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Predefine and check plausible moderators.",
+        "Improve the coverage of conditions and measurement comparability."
+      ],
+      "interpretation": "The relation may be conditional or heterogeneous; no universal conclusion is warranted.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified analysis indicates variation across declared conditions, units, or measurement contexts."
+    },
+    {
+      "branch_id": "null_or_contradictory",
+      "conclusion_scope": "The claim fails if the relaxed static equilibrium axioms violate the causality bound, or if the predicted mass-spin relation contradicts the observed population of massive millisecond pulsars, or if standard rotational support models fully explain the observations without needing the relaxed axioms.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Audit construct validity and comparison adequacy.",
+        "Revise the mechanism or boundary claim before another design iteration."
+      ],
+      "interpretation": "The proposed relation is not supported in this design boundary; absence of support is not proof of absence generally.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified comparison does not support the declared relation or instead favors a declared alternative explanation."
+    },
+    {
+      "branch_id": "uninformative_or_invalid",
+      "conclusion_scope": "The claim fails if the relaxed static equilibrium axioms violate the causality bound, or if the predicted mass-spin relation contradicts the observed population of massive millisecond pulsars, or if standard rotational support models fully explain the observations without needing the relaxed axioms.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Resolve the identified validity or data-quality failure before repeating the design.",
+        "Obtain human confirmation of measurement, sampling, and analysis prerequisites."
+      ],
+      "interpretation": "No scientific conclusion is warranted because the planned design did not yield interpretable evidence.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "Prespecified quality-control, missingness, protocol-deviation, or validity criteria prevent interpretation."
+    }
+  ],
+  "provenance": {
+    "audit_source_paths": {
+      "idea_candidate": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_candidate.json",
+      "idea_directions": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_directions.json",
+      "idea_portfolio": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_portfolio.json",
+      "idea_result": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_result.json",
+      "idea_route_clusters": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_route_clusters.json",
+      "mature_ideas": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\mature_ideas.json"
+    },
+    "discipline_ids": [
+      "31"
+    ],
+    "idea_result_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_result.json",
+    "risk_level": "medium",
+    "selected_direction_id": "mechanism_replacement",
+    "survey_binding": {
+      "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+      "manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+      "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+      "project_id": "sci_astr_16_survey_007",
+      "status": "bound",
+      "survey_run_id": "astr_16-survey-007"
+    },
+    "template_id": "mathematics_theory",
+    "validation_status": "BLOCKED_BY_RISK_REVIEW"
+  },
+  "reasoning_context": {
+    "alternative_explanations": [
+      "The high masses of millisecond pulsars are explained by standard stiff EoS combined with rotational support (exceeding the static TOV limit) due to binary spin-up, without requiring any relaxation of the fundamental nuclear EoS axioms."
+    ],
+    "assumptions": [
+      "The static equilibrium axioms of the dense matter equation of state can be formally relaxed to permit mass accumulation beyond the static Tolman-Oppenheimer-Volkoff limit via rotational and thermal support without violating the causality bound.",
+      "Binary mass accretion and angular momentum transfer can be modeled as a continuous thermodynamic and mechanical perturbation that modifies the effective equilibrium conditions of the neutron star.",
+      "Companion ablation primarily affects the surface and magnetosphere, allowing the core mass-spin relation to remain governed by the relaxed effective equilibrium axioms."
+    ],
+    "boundary_conditions": [
+      "The claim fails if the relaxed static equilibrium axioms violate the causality bound, or if the predicted mass-spin relation contradicts the observed population of massive millisecond pulsars, or if standard rotational support models fully explain the observations without needing the relaxed axioms."
+    ],
+    "claim_scope": "candidate_mechanism",
+    "evidence_roles": [
+      {
+        "allowed_support_kinds": [
+          "At least one causal pathway connecting collapse inputs to a magnetized rotating neutron star.",
+          "Admit works that propose, simulate, or test a physical mechanism for pulsar formation; exclude purely descriptive catalogs without mechanism."
+        ],
+        "anchor_ids": [
+          "anchor:gap_evidence_anchor:sh1:candidate_mechanism:survey_evidence_plan_json_subhypotheses_0_relevant_clusters_0_uncovered_required_slots_1:required_slot_candidate_mechanism_remains_uncovered_in_relevant_evidence_cluster_massive_neutron_star_masses_and_dense_matter_equations_of_state:d1d9a54cd1ff"
+        ],
+        "claim_limits": [
+          "Does not present specific observational data or simulation results on pulsar birth spins or magnetic field strengths.",
+          "Does not establish discriminative criteria between successful pulsar formation and failed/black-hole collapses.",
+          "Does not validate or test specific magnetohydrodynamic or dynamo mechanisms for field amplification."
+        ],
+        "expected_role": "MECHANISTIC_EVIDENCE",
+        "forbidden_as_direct_evidence": [
+          "W2095725842"
+        ],
+        "paper_ids": [
+          "W2187412646"
+        ],
+        "qualified_paper_ids": [
+          "W2095725842"
+        ],
+        "role_id": "evidence:sh1:candidate_mechanism:mechanistic_evidence:b336cb37621f",
+        "subhypothesis_id": "SH1",
+        "target_slot": "candidate_mechanism"
+      }
+    ],
+    "falsifiers": [
+      "A result showing the stated gap is resolved without this hypothesis, or a formal proof that the relaxed axioms inevitably violate causality or tidal deformability constraints, or that standard rotational support fully accounts for the mass-spin relation without relaxing the static axioms."
+    ],
+    "formal_symbols": [],
+    "gap_records": [
+      {
+        "gap_id": "gap:sh1:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:d7f47926ecfd",
+        "gap_kind": "mechanism_explanation_gap",
+        "statement": "Required slot 'candidate_mechanism' remains uncovered in relevant evidence cluster 'Massive Neutron Star Masses and Dense Matter Equations of State'.",
+        "target_object": "candidate_mechanism",
+        "target_slot": "candidate_mechanism",
+        "why_it_matters": "The observed relation lacks an identified mechanism that could distinguish competing explanations."
+      }
+    ],
+    "schema_version": "reasoning_context_v1",
+    "selected_direction_id": "mechanism_replacement",
+    "source_anchors": [
+      {
+        "anchor_id": "anchor:gap_evidence_anchor:sh1:candidate_mechanism:survey_evidence_plan_json_subhypotheses_0_relevant_clusters_0_uncovered_required_slots_1:required_slot_candidate_mechanism_remains_uncovered_in_relevant_evidence_cluster_massive_neutron_star_masses_and_dense_matter_equations_of_state:d1d9a54cd1ff",
+        "anchor_type": "gap_evidence_anchor",
+        "claim_anchor": "Required slot 'candidate_mechanism' remains uncovered in relevant evidence cluster 'Massive Neutron Star Masses and Dense Matter Equations of State'.",
+        "label": "SH1: candidate_mechanism",
+        "source_pointer": {
+          "artifact": "survey_evidence_plan.json",
+          "json_pointer": "/subhypotheses/0/relevant_clusters/0/uncovered_required_slots/1"
+        },
+        "subhypothesis_id": "SH1",
+        "supports_gap_ids": [
+          "gap:sh1:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:d7f47926ecfd"
+        ],
+        "target_slot": "candidate_mechanism",
+        "text_excerpt": "Required slot 'candidate_mechanism' remains uncovered in relevant evidence cluster 'Massive Neutron Star Masses and Dense Matter Equations of State'."
+      }
+    ],
+    "source_priority": [
+      "selected_direction",
+      "legacy_best_entry",
+      "selected_primary_idea",
+      "idea_candidate"
+    ],
+    "upstream_source_paths": [
+      "selected_direction.hypothesis.assumptions",
+      "selected_direction.hypothesis.claim_scope",
+      "selected_direction.falsifier",
+      "selected_direction.hypothesis.boundary_or_failure_condition",
+      "selected_direction.experiment_handoff.alternative_explanations",
+      "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_result.json",
+      "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_candidate.json",
+      "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_portfolio.json",
+      "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_directions.json",
+      "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_route_clusters.json",
+      "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\mature_ideas.json"
+    ]
+  },
+  "research_design": {
+    "design_type": "Mathematical/Theoretical",
+    "experimental_unit": "Theoretical model",
+    "time_structure": "Static"
+  },
+  "review_items": [
+    {
+      "field_path": "counterexample_analysis",
+      "reason": "The final canonical counterexample_analysis status requires qualified human review.",
+      "status": "review_required"
+    },
+    {
+      "field_path": "formal_reasoning_plan",
+      "reason": "The final canonical formal_reasoning_plan status requires qualified human review.",
+      "status": "review_required"
+    },
+    {
+      "field_path": "risk_and_human_review.human_review_required",
+      "reason": "The final canonical risk gate requires qualified human review.",
+      "status": "review_required"
+    },
+    {
+      "field_path": "risk_and_human_review.review_triggers[1]",
+      "reason": "LLM_OR_WORKFLOW_DEGRADATION_REVIEW",
+      "status": "review_required"
+    }
+  ],
+  "schema_version": "research_plan_author_input_v3",
+  "selected_direction": {
+    "central_hypothesis": "Under the assumptions of causal equation of state bounds, relaxing the static equilibrium axioms of the dense matter equation of state to incorporate the rotational support from binary mass accretion formally unifies isolated spin-down and binary evolution, predicting a distinct mass-spin relation for massive neutron stars that exceed the static TOV limit.",
+    "id": "mechanism_replacement",
+    "mechanism_or_relation": "candidate_mechanism",
+    "title": "Unifying Isolated Spin-Down and Binary Recycling in Massive Neutron Star Formation via Relaxed Equation of State Axioms"
+  },
+  "source_design_id": "design-astr_16",
+  "source_registry": {
+    "allowed_source_ids": [
+      "W2095725842",
+      "W2160511150",
+      "W2805726701",
+      "W2807309204",
+      "W4307082099",
+      "W2971836485",
+      "W2103740830",
+      "W3182570346",
+      "W4310852955",
+      "W2950972746",
+      "W2162306826",
+      "W2166111552",
+      "W2783195820",
+      "W3094812309",
+      "W3209232797",
+      "W2001595193",
+      "W2152006089",
+      "W2947129118",
+      "W2002764085",
+      "W2059879627",
+      "W3024602437",
+      "W2012578543",
+      "W2081762205",
+      "W2159450174",
+      "W2181312162",
+      "W3025576192"
+    ],
+    "allowed_survey_anchor_ids": [],
+    "citation_registry": [
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Bill Paxton",
+            "Pablo Marchant",
+            "Josiah Schwab",
+            "Evan B. Bauer",
+            "Lars Bildsten",
+            "Matteo Cantiello",
+            "Luc Dessart",
+            "R. Farmer",
+            "H. Hu",
+            "N. Langer",
+            "R. H. D. Townsend",
+            "Dean M. Townsley",
+            "F. X. Timmes"
+          ],
+          "doi": "10.1088/0067-0049/220/1/15",
+          "title": "MODULES FOR EXPERIMENTS IN STELLAR ASTROPHYSICS (MESA): BINARIES, PULSATIONS, AND EXPLOSIONS",
+          "url": "https://doi.org/10.1088/0067-0049/220/1/15",
+          "venue": "The Astrophysical Journal Supplement Series",
+          "year": "2015"
+        },
+        "citation_key": "cite_c369df652181e8f7",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2095725842:mechanism:498f7921890b",
+          "EC:W2095725842:measurement_calibration:c123a9767331",
+          "EC:W2095725842:boundary_conditions:1a843b49c71e",
+          "EC:W2095725842:mechanism:e0c6017f49ac"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2095725842"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Abhay Ashtekar",
+            "B. Krishnan"
+          ],
+          "doi": "10.12942/lrr-2004-10",
+          "title": "Isolated and Dynamical Horizons and Their Applications",
+          "url": "https://doi.org/10.12942/lrr-2004-10",
+          "venue": "Living Reviews in Relativity",
+          "year": "2004"
+        },
+        "citation_key": "cite_37ecbded9d629353",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2160511150:research_object_measurability:063b6500b313"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2160511150"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "B. P. Abbott",
+            "R. Abbott",
+            "T. D. Abbott",
+            "F. Acernese",
+            "K. Ackley",
+            "C. Adams",
+            "T. Adams",
+            "P. Addesso",
+            "R. X. Adhikari",
+            "V. B. Adya",
+            "C. Affeldt",
+            "B. Agarwal",
+            "M. Agathos",
+            "K. Agatsuma",
+            "N. Aggarwal",
+            "O. D. Aguiar",
+            "L. Aiello",
+            "A. Ain",
+            "P. Ajith",
+            "B. Allen",
+            "A. Allocca",
+            "M. Á. Aloy",
+            "P. A. Altin",
+            "A. Amato",
+            "A. Ananyeva",
+            "S. B. Anderson",
+            "W. G. Anderson",
+            "S. V. Angelova",
+            "S. Antier",
+            "S. Appert",
+            "K. Arai",
+            "M. C. Araya",
+            "J. S. Areeda",
+            "M. Arène",
+            "N. Arnaud",
+            "K. G. Arun",
+            "S. Ascenzi",
+            "G. Ashton",
+            "M. Ast",
+            "S. M. Aston",
+            "P. Astone",
+            "D. V. Atallah",
+            "F. Aubin",
+            "P. Aufmuth",
+            "C. Aulbert",
+            "K. AultONeal",
+            "C. Austin",
+            "A. Avila-Alvarez",
+            "S. Babak",
+            "P. Bacon",
+            "F. Badaracco",
+            "M. K. M. Bader",
+            "S. Bae",
+            "P. T. Baker",
+            "F. Baldaccini",
+            "G. Ballardin",
+            "S. Ballmer",
+            "S. Banagiri",
+            "J. C. Barayoga",
+            "S. E. Barclay",
+            "B. C. Barish",
+            "D. Barker",
+            "K. Barkett",
+            "S. Barnum",
+            "F. Barone",
+            "B. Barr",
+            "L. Barsotti",
+            "M. Barsuglia",
+            "D. Barta",
+            "J. Bartlett",
+            "I. Bartos",
+            "R. Bassiri",
+            "A. Basti",
+            "J. C. Batch",
+            "M. Bawaj",
+            "J. C. Bayley",
+            "M. Bazzan",
+            "B. Bécsy",
+            "C. Beer",
+            "M. Bejger",
+            "I. Belahcene",
+            "A. S. Bell",
+            "D. Beniwal",
+            "M. Bensch",
+            "B. K. Berger",
+            "G. Bergmann",
+            "Sebastiano Bernuzzi",
+            "J. J. Bero",
+            "C. P. L. Berry",
+            "D. Bersanetti",
+            "A. Bertolini",
+            "J. Betzwieser",
+            "R. Bhandare",
+            "I. A. Bilenko",
+            "S. A. Bilgili",
+            "G. Billingsley",
+            "C. R. Billman",
+            "J. Birch",
+            "R. Birney"
+          ],
+          "doi": "10.1103/physrevx.9.011001",
+          "title": "Properties of the Binary Neutron Star Merger GW170817",
+          "url": "https://doi.org/10.1103/physrevx.9.011001",
+          "venue": "Physical Review X",
+          "year": "2019"
+        },
+        "citation_key": "cite_81b31d0d8218f9b8",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2805726701:study_design:b6fd760d544f",
+          "EC:W2805726701:measurement_calibration:638f75c69e94",
+          "EC:W2805726701:boundary_conditions:52791a90058f"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2805726701"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "B. P. Abbott",
+            "R. Abbott",
+            "T. D. Abbott",
+            "F. Acernese",
+            "K. Ackley",
+            "C. Adams",
+            "T. Adams",
+            "P. Addesso",
+            "R. X. Adhikari",
+            "V. B. Adya",
+            "C. Affeldt",
+            "B. Agarwal",
+            "M. Agathos",
+            "K. Agatsuma",
+            "N. Aggarwal",
+            "O. D. Aguiar",
+            "L. Aiello",
+            "A. Ain",
+            "P. Ajith",
+            "B. Allen",
+            "A. Allocca",
+            "M. Á. Aloy",
+            "P. A. Altin",
+            "A. Amato",
+            "A. Ananyeva",
+            "S. B. Anderson",
+            "W. G. Anderson",
+            "S. V. Angelova",
+            "S. Antier",
+            "S. Appert",
+            "K. Arai",
+            "M. C. Araya",
+            "J. S. Areeda",
+            "M. Arène",
+            "N. Arnaud",
+            "K. G. Arun",
+            "S. Ascenzi",
+            "G. Ashton",
+            "M. Ast",
+            "S. M. Aston",
+            "P. Astone",
+            "D. V. Atallah",
+            "F. Aubin",
+            "P. Aufmuth",
+            "C. Aulbert",
+            "K. AultONeal",
+            "C. Austin",
+            "A. Avila-Alvarez",
+            "S. Babak",
+            "P. Bacon",
+            "F. Badaracco",
+            "M. K. M. Bader",
+            "S. Bae",
+            "P. T. Baker",
+            "F. Baldaccini",
+            "G. Ballardin",
+            "S. W. Ballmer",
+            "S. Banagiri",
+            "J. C. Barayoga",
+            "S. E. Barclay",
+            "B. C. Barish",
+            "D. Barker",
+            "K. Barkett",
+            "S. Barnum",
+            "F. Barone",
+            "B. Barr",
+            "L. Barsotti",
+            "M. Barsuglia",
+            "D. Barta",
+            "J. Bartlett",
+            "I. Bartos",
+            "R. Bassiri",
+            "A. Basti",
+            "J. C. Batch",
+            "M. Bawaj",
+            "J. C. Bayley",
+            "M. Bazzan",
+            "B. Bécsy",
+            "C. Beer",
+            "M. Bejger",
+            "I. Belahcene",
+            "A. S. Bell",
+            "D. Beniwal",
+            "M. Bensch",
+            "B. K. Berger",
+            "G. Bergmann",
+            "Sebastiano Bernuzzi",
+            "J. J. Bero",
+            "C. P. L. Berry",
+            "D. Bersanetti",
+            "A. Bertolini",
+            "J. Betzwieser",
+            "R. Bhandare",
+            "I. A. Bilenko",
+            "S. A. Bilgili",
+            "G. Billingsley",
+            "C. R. Billman",
+            "J. Birch",
+            "R. Birney"
+          ],
+          "doi": "10.1103/physrevlett.121.161101",
+          "title": "GW170817: Measurements of Neutron Star Radii and Equation of State",
+          "url": "https://doi.org/10.1103/physrevlett.121.161101",
+          "venue": "Physical Review Letters",
+          "year": "2018"
+        },
+        "citation_key": "cite_42e341ff6471ce89",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2807309204:boundary_conditions:5aaeaf41fc0c"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2807309204"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "R. Abbott",
+            "T. D. Abbott",
+            "F. Acernese",
+            "K. Ackley",
+            "C. Adams",
+            "N. Adhikari",
+            "R. X. Adhikari",
+            "V. B. Adya",
+            "C. Affeldt",
+            "D. Agarwal",
+            "M. Agathos",
+            "K. Agatsuma",
+            "N. Aggarwal",
+            "O. D. Aguiar",
+            "L. Aiello",
+            "A. Ain",
+            "P. Ajith",
+            "S. Akcay",
+            "T. Akutsu",
+            "S. Albanesi",
+            "A. Allocca",
+            "P. A. Altin",
+            "A. Amato",
+            "Christopher Kumar Anand",
+            "Shreya Anand",
+            "A. Ananyeva",
+            "S. B. Anderson",
+            "W. G. Anderson",
+            "Masaki Ando",
+            "T. Andrade",
+            "N. Andres",
+            "T. Andrić",
+            "S. V. Angelova",
+            "S. Ansoldi",
+            "Javier M. Antelis",
+            "S. Antier",
+            "S. Appert",
+            "Koji Arai",
+            "Koya Arai",
+            "Y. Arai",
+            "S. Araki",
+            "A. Araya",
+            "M. C. Araya",
+            "J. S. Areeda",
+            "M. Arène",
+            "N. Aritomi",
+            "N. Arnaud",
+            "M. Arogeti",
+            "S.M Aronson",
+            "K. G. Arun",
+            "Hideki Asada",
+            "Y. Asali",
+            "G. Ashton",
+            "Y. Aso",
+            "M. Assiduo",
+            "S. M. Aston",
+            "P. Astone",
+            "F. Aubin",
+            "C. Austin",
+            "S. Babak",
+            "F. Badaracco",
+            "M. K. M. Bader",
+            "C. Badger",
+            "S. Bae",
+            "Y. Bae",
+            "A. M. Baer",
+            "S. Bagnasco",
+            "Y. Bai",
+            "L. Baiotti",
+            "J. Baird",
+            "R. Bajpai",
+            "M. Ball",
+            "G. Ballardin",
+            "S. W. Ballmer",
+            "A. Balsamo",
+            "G. Baltus",
+            "S. Banagiri",
+            "D. Bankar",
+            "J. C. Barayoga",
+            "C. Barbieri",
+            "B. C. Barish",
+            "D. Barker",
+            "P. Barneo",
+            "F. Barone",
+            "B. Barr",
+            "L. Barsotti",
+            "M. Barsuglia",
+            "D. Barta",
+            "J. Bartlett",
+            "M. A. Barton",
+            "I. Bartos",
+            "R. Bassiri",
+            "A. Basti",
+            "M. Bawaj",
+            "J. C. Bayley",
+            "A. C. Baylor",
+            "M. Bazzan",
+            "B. Bécsy",
+            "V. M. Bedakihale",
+            "M. Bejger"
+          ],
+          "doi": "10.1103/physrevx.13.041039",
+          "title": "GWTC-3: Compact Binary Coalescences Observed by LIGO and Virgo during the Second Part of the Third Observing Run",
+          "url": "https://doi.org/10.1103/physrevx.13.041039",
+          "venue": "Physical Review X",
+          "year": "2023"
+        },
+        "citation_key": "cite_f86eeddde0fc217f",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W4307082099:research_object_measurability:f2eeeeb3a72e"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W4307082099"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "B. P. Abbott",
+            "R. Abbott",
+            "T. D. Abbott",
+            "S. Abraham",
+            "F. Acernese",
+            "K. Ackley",
+            "C. Adams",
+            "R. X. Adhikari",
+            "V. B. Adya",
+            "C. Affeldt",
+            "M. Agathos",
+            "K. Agatsuma",
+            "N. Aggarwal",
+            "O. D. Aguiar",
+            "L. Aiello",
+            "A. Ain",
+            "P. Ajith",
+            "B. Allen",
+            "A. Allocca",
+            "M. Á. Aloy",
+            "P. A. Altin",
+            "A. Amato",
+            "A. Ananyeva",
+            "S. B. Anderson",
+            "W. G. Anderson",
+            "S. V. Angelova",
+            "S. Antier",
+            "S. Appert",
+            "K. Arai",
+            "M. C. Araya",
+            "J. S. Areeda",
+            "M. Arène",
+            "N. Arnaud",
+            "K. G. Arun",
+            "S. Ascenzi",
+            "G. Ashton",
+            "S. M. Aston",
+            "P. Astone",
+            "F. Aubin",
+            "P. Aufmuth",
+            "K. AultONeal",
+            "C. Austin",
+            "V. Avendano",
+            "A. Avila-Alvarez",
+            "S. Babak",
+            "P. Bacon",
+            "F. Badaracco",
+            "M. K. M. Bader",
+            "S. Bae",
+            "P. T. Baker",
+            "F. Baldaccini",
+            "G. Ballardin",
+            "S. W. Ballmer",
+            "S. Banagiri",
+            "J. C. Barayoga",
+            "S. E. Barclay",
+            "B. C. Barish",
+            "D. Barker",
+            "K. Barkett",
+            "S. Barnum",
+            "F. Barone",
+            "B. Barr",
+            "L. Barsotti",
+            "M. Barsuglia",
+            "D. Barta",
+            "J. Bartlett",
+            "I. Bartos",
+            "R. Bassiri",
+            "A. Basti",
+            "M. Bawaj",
+            "J. C. Bayley",
+            "M. Bazzan",
+            "B. Bécsy",
+            "M. Bejger",
+            "I. Belahcene",
+            "A. S. Bell",
+            "D. Beniwal",
+            "B. K. Berger",
+            "G. Bergmann",
+            "Sebastiano Bernuzzi",
+            "J. J. Bero",
+            "C. P. L. Berry",
+            "D. Bersanetti",
+            "A. Bertolini",
+            "J. Betzwieser",
+            "R. Bhandare",
+            "J. Bidler",
+            "I. A. Bilenko",
+            "S. A. Bilgili",
+            "G. Billingsley",
+            "J. Birch",
+            "R. Birney",
+            "O. Birnholtz",
+            "S. Biscans",
+            "S. Biscoveanu",
+            "A. Bisht",
+            "M. Bitossi",
+            "M. A. Bizouard",
+            "J. K. Blackburn",
+            "Jonathan Blackman"
+          ],
+          "doi": "10.1103/physrevx.9.031040",
+          "title": "GWTC-1: A Gravitational-Wave Transient Catalog of Compact Binary Mergers Observed by LIGO and Virgo during the First and Second Observing Runs",
+          "url": "https://doi.org/10.1103/physrevx.9.031040",
+          "venue": "Physical Review X",
+          "year": "2019"
+        },
+        "citation_key": "cite_7ce3b58a152b6aef",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2971836485:research_object_measurability:cbaaef942f38",
+          "EC:W2971836485:study_design:464e63112613",
+          "EC:W2971836485:boundary_conditions:e14286f70688"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2971836485"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "F. Douchin",
+            "P. Haensel"
+          ],
+          "doi": "10.1051/0004-6361:20011402",
+          "title": "A unified equation of state of dense matter and neutron star structure",
+          "url": "https://doi.org/10.1051/0004-6361:20011402",
+          "venue": "Astronomy and Astrophysics",
+          "year": "2001"
+        },
+        "citation_key": "cite_55957f4ce67bd972",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2103740830:boundary_conditions:4d1d003cf5d0",
+          "EC:W2103740830:boundary_conditions:d20dedb7b994"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2103740830"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Sabrina Huth",
+            "P. T. H. Pang",
+            "Ingo Tews",
+            "Tim Dietrich",
+            "A. Le Fèvre",
+            "A. Schwenk",
+            "W. Trautmann",
+            "Kshitij Agarwal",
+            "Mattia Bulla",
+            "M. W. Coughlin",
+            "Chris Van Den Broeck"
+          ],
+          "doi": "10.1038/s41586-022-04750-w",
+          "title": "Constraining neutron-star matter with microscopic and macroscopic collisions",
+          "url": "https://doi.org/10.1038/s41586-022-04750-w",
+          "venue": "Nature",
+          "year": "2022"
+        },
+        "citation_key": "cite_6c11517977d0b39d",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W3182570346:mechanism:1b63d62c1275"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W3182570346"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Sarthak Pati",
+            "Ujjwal Baid",
+            "Brandon Edwards",
+            "Micah Sheller",
+            "Shih‐Han Wang",
+            "G. Anthony Reina",
+            "Patrick Foley",
+            "А. Д. Груздев",
+            "Deepthi Karkada",
+            "Christos Davatzikos",
+            "Chiharu Sako",
+            "Satyam Ghodasara",
+            "Michel Bilello",
+            "Suyash Mohan",
+            "Philipp Vollmuth",
+            "Gianluca Brugnara",
+            "Chandrakanth Jayachandran Preetha",
+            "Felix Sahm",
+            "Klaus Maier‐Hein",
+            "Maximilian Zenk",
+            "Martin Bendszus",
+            "Wolfgang Wick",
+            "Evan Calabrese",
+            "Jeffrey D. Rudie",
+            "Javier Villanueva‐Meyer",
+            "Soonmee Cha",
+            "Madhura Ingalhalikar",
+            "Manali Jadhav",
+            "Umang Pandey",
+            "Jitender Saini",
+            "John W. Garrett",
+            "Matthew Larson",
+            "Robert Jeraj",
+            "Stuart Currie",
+            "Russell Frood",
+            "Kavi Fatania",
+            "Raymond Y. Huang",
+            "Ken Chang",
+            "Carmen Balañá",
+            "Jaume Capellades",
+            "Josep Puig",
+            "Johannes Trenkler",
+            "Josef Pichler",
+            "Georg Necker",
+            "Andreas Haunschmidt",
+            "Stephan Meckel",
+            "Gaurav Shukla",
+            "Spencer Liem",
+            "Gregory S. Alexander",
+            "Joseph S. Lombardo",
+            "Joshua D. Palmer",
+            "Adam E. Flanders",
+            "Adam P. Dicker",
+            "Haris I. Sair",
+            "Craig Jones",
+            "Archana Venkataraman",
+            "Meirui Jiang",
+            "Tiffany Y. So",
+            "Cheng Chen",
+            "Pheng‐Ann Heng",
+            "Qi Dou",
+            "Michal Kozubek",
+            "Filip Lux",
+            "Jan Michálek",
+            "Petr Matula",
+            "Miloš Keřkovský",
+            "Tereza Kopřivová",
+            "Marek Dostál",
+            "Václav Vybíhal",
+            "Michael A. Vogelbaum",
+            "J. Ross Mitchell",
+            "Joaquim M. Farinhas",
+            "Joseph A. Maldjian",
+            "Chandan Ganesh Bangalore Yogananda",
+            "Marco C. Pinho",
+            "Divya Reddy",
+            "James Holcomb",
+            "Benjamin Wagner",
+            "Benjamin M. Ellingson",
+            "Timothy F. Cloughesy",
+            "Catalina Raymond",
+            "Talia C. Oughourlian",
+            "Akifumi Hagiwara",
+            "Chencai Wang",
+            "Minh‐Son To",
+            "Sargam Bhardwaj",
+            "Chee Chong",
+            "Marc Agzarian",
+            "Alexandre X. Falcão",
+            "Samuel Botter Martins",
+            "Bernardo Corrêa de Almeida Teixeira",
+            "F Sprenger",
+            "David Menotti",
+            "Diego Rafael Lucio",
+            "Pamela LaMontagne",
+            "Daniel S. Marcus",
+            "Benedikt Wiestler",
+            "Florian Kofler",
+            "Ivan Ezhov",
+            "Marie Metz"
+          ],
+          "doi": "10.1038/s41467-022-33407-5",
+          "title": "Federated learning enables big data for rare cancer boundary detection",
+          "url": "https://doi.org/10.1038/s41467-022-33407-5",
+          "venue": "Nature Communications",
+          "year": "2022"
+        },
+        "citation_key": "cite_c6431af004255c73",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W4310852955:mechanism:031f7d0e8a05",
+          "EC:W4310852955:boundary_conditions:771bca860c3d",
+          "EC:W4310852955:comparison_controls:b4a3dcdbabb1"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W4310852955"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "A. A. Abdo",
+            "M. Ackermann",
+            "M. Ajello",
+            "W. B. Atwood",
+            "M. Axelsson",
+            "L. Baldini",
+            "J. Ballet",
+            "G. Barbiellini",
+            "Matthew G. Baring",
+            "D. Bastieri",
+            "B. M. Baughman",
+            "K. Bechtol",
+            "R. Bellazzini",
+            "B. Berenji",
+            "R. D. Blandford",
+            "E. D. Bloom",
+            "E. Bonamente",
+            "A. W. Borgland",
+            "J. Bregeon",
+            "A. Brez",
+            "M. Brigida",
+            "P. Bruel",
+            "T. H. Burnett",
+            "S. Buson",
+            "G. A. Caliandro",
+            "R. A. Cameron",
+            "F. Camilo",
+            "P. A. Caraveo",
+            "J. M. Casandjian",
+            "C. Cecchi",
+            "Ö. Çelik",
+            "E. Charles",
+            "A. Chekhtman",
+            "C. C. Cheung",
+            "J. Chiang",
+            "S. Ciprini",
+            "R. Claus",
+            "I. Cognard",
+            "J. Cohen-Tanugi",
+            "L. R. Cominsky",
+            "J. M. Conrad",
+            "R. Corbet",
+            "S. Cutini",
+            "P. R. den Hartog",
+            "C. D. Dermer",
+            "A. De Angelis",
+            "A. De Luca",
+            "F. de Palma",
+            "S. W. Digel",
+            "M. Dormody",
+            "E. do Couto e Silva",
+            "P. S. Drell",
+            "R. Dubois",
+            "D. Dumora",
+            "C. M. Espinoza",
+            "C. Farnier",
+            "C. Favuzzi",
+            "S. Fegan",
+            "E. C. Ferrara",
+            "W. B. Focke",
+            "P. Fortin",
+            "M. Frailis",
+            "P. C. C. Freire",
+            "Y. Fukazawa",
+            "S. Funk",
+            "P. Fusco",
+            "F. Gargano",
+            "D. Gasparrini",
+            "N. Gehrels",
+            "S. Germani",
+            "G. Giavitto",
+            "B. Giebels",
+            "N. Giglietto",
+            "P. Giommi",
+            "F. Giordano",
+            "T. Glanzman",
+            "G. Godfrey",
+            "E. V. Gotthelf",
+            "I. A. Grenier",
+            "M.-H. Grondin",
+            "J. E. Grove",
+            "L. Guillemot",
+            "S. Guiriec",
+            "C. Gwon",
+            "Y. Hanabata",
+            "A. K. Harding",
+            "M. Hayashida",
+            "E. Hays",
+            "R. E. Hughes",
+            "M. Jackson",
+            "G. Jóhannesson",
+            "A. S. Johnson",
+            "R. P. Johnson",
+            "T. J. Johnson",
+            "W. N. Johnson",
+            "S. Johnston",
+            "T. Kamae",
+            "G. Kanbach",
+            "V. M. Kaspi",
+            "H. Katagiri"
+          ],
+          "doi": "10.1088/0067-0049/187/2/460",
+          "title": "THE FIRST FERMI LARGE AREA TELESCOPE CATALOG OF GAMMA-RAY PULSARS",
+          "url": "https://doi.org/10.1088/0067-0049/187/2/460",
+          "venue": "The Astrophysical Journal Supplement Series",
+          "year": "2010"
+        },
+        "citation_key": "cite_8d1e9c1794df440d",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2950972746:mechanism:55456e33d851",
+          "EC:W2950972746:research_object_measurability:3e1907555885",
+          "EC:W2950972746:boundary_conditions:a9160682db0a"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2950972746"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Cecilia Scannapieco",
+            "Markus Wadepuhl",
+            "Owen H. Parry",
+            "Julio F. Navarro",
+            "Adrian Jenkins",
+            "Volker Springel",
+            "Romain Teyssier",
+            "E. M. Carlson",
+            "H. M. P. Couchman",
+            "Robert A. Crain",
+            "Claudio Dalla Vecchia",
+            "Carlos S. Frenk",
+            "Chiaki Kobayashi",
+            "Pierluigi Monaco",
+            "Giuseppe Murante",
+            "Takashi Okamoto",
+            "Thomas Quinn",
+            "Joop Schaye",
+            "G. S. Stinson",
+            "Tom Theuns",
+            "James Wadsley",
+            "Simon D. M. White",
+            "Rory M. Woods"
+          ],
+          "doi": "10.1111/j.1365-2966.2012.20993.x",
+          "title": "The Aquila comparison project: the effects of feedback and numerical methods on simulations of galaxy formation",
+          "url": "https://doi.org/10.1111/j.1365-2966.2012.20993.x",
+          "venue": "Monthly Notices of the Royal Astronomical Society",
+          "year": "2012"
+        },
+        "citation_key": "cite_58f0ac6612957738",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2162306826:study_design:b371e350cd6e",
+          "EC:W2162306826:mechanism:19020e2eddca",
+          "EC:W2162306826:risk_ethics_reproducibility:36e8854a0cf3",
+          "EC:W2162306826:boundary_conditions:e9a382bdb1ca"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2162306826"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "P. A. Rosado",
+            "Alberto Sesana",
+            "J. Gair"
+          ],
+          "doi": "10.1093/mnras/stv1098",
+          "title": "Expected properties of the first gravitational wave signal detected with pulsar timing arrays",
+          "url": "https://doi.org/10.1093/mnras/stv1098",
+          "venue": "Monthly Notices of the Royal Astronomical Society",
+          "year": "2015"
+        },
+        "citation_key": "cite_6f293e40636e40ac",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2166111552:statistics_bias:2e56d83a388a",
+          "EC:W2166111552:boundary_conditions:6d626c408780"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2166111552"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Z. Arzoumanian",
+            "P. T. Baker",
+            "A. Brazier",
+            "S. Burke-Spolaor",
+            "S. J. Chamberlin",
+            "S. Chatterjee",
+            "B. Christy",
+            "J. M. Cordes",
+            "N. J. Cornish",
+            "F. Crawford",
+            "H. Thankful Cromartie",
+            "K. Crowter",
+            "M. DeCesar",
+            "P. B. Demorest",
+            "T. Dolch",
+            "J. A. Ellis",
+            "R. D. Ferdman",
+            "E. Ferrara",
+            "W. M. Folkner",
+            "E. Fonseca",
+            "N. Garver-Daniels",
+            "P. A. Gentile",
+            "R. Haas",
+            "J. S. Hazboun",
+            "E. A. Huerta",
+            "K. Islo",
+            "G. Jones",
+            "M. L. Jones",
+            "D. L. Kaplan",
+            "V. M. Kaspi",
+            "M. T. Lam",
+            "T. J. W. Lazio",
+            "L. Levin",
+            "A. N. Lommen",
+            "D. R. Lorimer",
+            "J. Luo",
+            "R. S. Lynch",
+            "D. R. Madison",
+            "M. A. McLaughlin",
+            "S. T. McWilliams",
+            "C. M. F. Mingarelli",
+            "C. Ng",
+            "D. J. Nice",
+            "R. S. Park",
+            "T. T. Pennucci",
+            "N. S. Pol",
+            "S. M. Ransom",
+            "P. S. Ray",
+            "A. Rasskazov",
+            "X. Siemens",
+            "J. Simon",
+            "R. Spiewak",
+            "I. H. Stairs",
+            "D. R. Stinebring",
+            "K. Stovall",
+            "J. Swiggum",
+            "S. R. Taylor",
+            "M. Vallisneri",
+            "R. van Haasteren",
+            "S. Vigeland",
+            "W. W. Zhu"
+          ],
+          "doi": "10.3847/1538-4357/aabd3b",
+          "title": "The NANOGrav 11 Year Data Set: Pulsar-timing Constraints on the Stochastic Gravitational-wave Background",
+          "url": "https://doi.org/10.3847/1538-4357/aabd3b",
+          "venue": "The Astrophysical Journal",
+          "year": "2018"
+        },
+        "citation_key": "cite_690dac74363beb2e",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2783195820:boundary_conditions:2de28b5e60a8",
+          "EC:W2783195820:measurement_calibration:b198290a5f57",
+          "EC:W2783195820:statistics_bias:da6fa7311d2c",
+          "EC:W2783195820:research_object_measurability:7d15c08f1609"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2783195820"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "R. Abbott",
+            "T. D. Abbott",
+            "S. Abraham",
+            "F. Acernese",
+            "K. Ackley",
+            "A. Adams",
+            "C. Adams",
+            "R. X. Adhikari",
+            "V. B. Adya",
+            "C. Affeldt",
+            "M. Agathos",
+            "K. Agatsuma",
+            "N. Aggarwal",
+            "O. D. Aguiar",
+            "L. Aiello",
+            "A. Ain",
+            "P. Ajith",
+            "S. Akcay",
+            "G. Allen",
+            "A. Allocca",
+            "P. A. Altin",
+            "A. Amato",
+            "S. Anand",
+            "A. Ananyeva",
+            "S. B. Anderson",
+            "W. G. Anderson",
+            "S. V. Angelova",
+            "S. Ansoldi",
+            "J. M. Antelis",
+            "S. Antier",
+            "S. Appert",
+            "K. Arai",
+            "M. C. Araya",
+            "J. S. Areeda",
+            "M. Arène",
+            "N. Arnaud",
+            "S. M. Aronson",
+            "K. G. Arun",
+            "Y. Asali",
+            "S. Ascenzi",
+            "G. Ashton",
+            "S. M. Aston",
+            "P. Astone",
+            "F. Aubin",
+            "P. Aufmuth",
+            "K. AultONeal",
+            "C. Austin",
+            "V. Avendano",
+            "S. Babak",
+            "F. Badaracco",
+            "M. K. M. Bader",
+            "S. Bae",
+            "A. M. Baer",
+            "S. Bagnasco",
+            "J. Baird",
+            "M. Ball",
+            "G. Ballardin",
+            "S. W. Ballmer",
+            "A. Bals",
+            "A. Balsamo",
+            "G. Baltus",
+            "S. Banagiri",
+            "D. Bankar",
+            "R. S. Bankar",
+            "J. C. Barayoga",
+            "C. Barbieri",
+            "B. C. Barish",
+            "D. Barker",
+            "P. Barneo",
+            "S. Barnum",
+            "F. Barone",
+            "B. Barr",
+            "L. Barsotti",
+            "M. Barsuglia",
+            "D. Barta",
+            "J. Bartlett",
+            "I. Bartos",
+            "R. Bassiri",
+            "A. Basti",
+            "M. Bawaj",
+            "J. C. Bayley",
+            "M. Bazzan",
+            "B. R. Becher",
+            "B. Bécsy",
+            "V. M. Bedakihale",
+            "M. Bejger",
+            "I. Belahcene",
+            "D. Beniwal",
+            "M. G. Benjamin",
+            "T. F. Bennett",
+            "J. D. Bentley",
+            "F. Bergamin",
+            "B. K. Berger",
+            "G. Bergmann",
+            "S. Bernuzzi",
+            "C. P. L. Berry",
+            "D. Bersanetti",
+            "A. Bertolini",
+            "J. Betzwieser",
+            "R. Bhandare"
+          ],
+          "doi": "10.1103/physrevx.11.021053",
+          "title": "GWTC-2: Compact Binary Coalescences Observed by LIGO and Virgo during the First Half of the Third Observing Run",
+          "url": "https://doi.org/10.1103/physrevx.11.021053",
+          "venue": "Physical Review X",
+          "year": "2021"
+        },
+        "citation_key": "cite_f2c3a7bd13020815",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W3094812309:research_object_measurability:613a5b75f04a",
+          "EC:W3094812309:statistics_bias:a696af209105",
+          "EC:W3094812309:boundary_conditions:b916302d1715"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W3094812309"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Andrii V. Chumak",
+            "Pavel Kaboš",
+            "Mingzhong Wu",
+            "Claas Abert",
+            "Christoph Adelmann",
+            "A. O. Adeyeye",
+            "Johan Åkerman",
+            "F. G. Aliev",
+            "A. Anane",
+            "Ahmad A. Awad",
+            "C. H. Back",
+            "Anjan Barman",
+            "G. Bauer",
+            "Markus Becherer",
+            "E. N. Beginin",
+            "Victor A. S. V. Bittencourt",
+            "Yaroslav M. Blanter",
+            "Paolo Bortolotti",
+            "Isabella Boventer",
+            "Dmytro A. Bozhko",
+            "S. A. Bunyaev",
+            "Joris J. Carmiggelt",
+            "Rajgowrav Cheenikundil",
+            "Florin Ciubotaru",
+            "Sorin Cotöfană",
+            "György Csaba",
+            "Oleksandr V. Dobrovolskiy",
+            "Carsten Dubs",
+            "Mehrdad Elyasi",
+            "K. G. Fripp",
+            "Himanshu Fulara",
+            "I. A. Golovchanskiy",
+            "Carlos Gonzalez-Ballestero",
+            "Piotr Graczyk",
+            "Dirk Grundler",
+            "Paweł Gruszecki",
+            "G. Gubbiotti",
+            "K. Y. Guslienko",
+            "Arabinda Haldar",
+            "Said Hamdioui",
+            "Riccardo Hertel",
+            "B. Hillebrands",
+            "Tomosato Hioki",
+            "Afshin Houshang",
+            "C.‐M. Hu",
+            "Hans Huebl",
+            "Michael Huth",
+            "Ezio Iacocca",
+            "M. Benjamin Jungfleisch",
+            "G. N. Kakazeı̆",
+            "Alexander Khitun",
+            "Roman Khymyn",
+            "Takashi Kikkawa",
+            "Mathias Kläui",
+            "O. Klein",
+            "Jarosław W. Kłos",
+            "Sebastian Knauer",
+            "Sabri Koraltan",
+            "Mikhail Kostylev",
+            "Maciej Krawczyk",
+            "I. N. Krivorotov",
+            "V. V. Kruglyak",
+            "Dany Lachance-Quirion",
+            "Sam Ladak",
+            "Romain Lebrun",
+            "Yuelin Li",
+            "Morris Lindner",
+            "Rair Macêdo",
+            "Sina Mayr",
+            "G. A. Melkov",
+            "Szymon Mieszczak",
+            "Yasunobu Nakamura",
+            "Hans T. Nembach",
+            "А. А. Никитин",
+            "S. A. Nikitov",
+            "V. Novosad",
+            "Jorge A. Otálora",
+            "Y. Otani",
+            "Ádám Papp",
+            "Benjamin Pigeau",
+            "Philipp Pirro",
+            "Wolfgang Porod",
+            "Fabrizio Porrati",
+            "Huajun Qin",
+            "Bivas Rana",
+            "Timmy Reimann",
+            "Fabrizio Riente",
+            "Oriol Romero‐Isart",
+            "Andrew Ross",
+            "А. V. Sadovnikov",
+            "A. R. Safin",
+            "E Saitoh",
+            "G. Schmidt",
+            "H Schultheiss",
+            "Katrin Schultheiß",
+            "A A Serga",
+            "Sanchar Sharma",
+            "J. E. Shaw",
+            "D Suess",
+            "A. B. Surzhenko"
+          ],
+          "doi": "10.1109/tmag.2022.3149664",
+          "title": "Advances in Magnetics Roadmap on Spin-Wave Computing",
+          "url": "https://doi.org/10.1109/tmag.2022.3149664",
+          "venue": "IEEE Transactions on Magnetics",
+          "year": "2022"
+        },
+        "citation_key": "cite_4be4b7659033f7b6",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W3209232797:boundary_conditions:322208326c47"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W3209232797"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "S. E. de Mink",
+            "N. Langer",
+            "R. G. Izzard",
+            "H. Sana",
+            "A. de Koter"
+          ],
+          "doi": "10.1088/0004-637x/764/2/166",
+          "title": "THE ROTATION RATES OF MASSIVE STARS: THE ROLE OF BINARY INTERACTION THROUGH TIDES, MASS TRANSFER, AND MERGERS",
+          "url": "https://doi.org/10.1088/0004-637x/764/2/166",
+          "venue": "The Astrophysical Journal",
+          "year": "2013"
+        },
+        "citation_key": "cite_1e5d552669fc0c56",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2001595193:mechanism:835b28e52dde",
+          "EC:W2001595193:research_object_measurability:d3e71c1314d2",
+          "EC:W2001595193:study_design:585696518cdd",
+          "EC:W2001595193:boundary_conditions:9d4e24715fac"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2001595193"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "К. А. Постнов",
+            "L. R. Yungelson"
+          ],
+          "doi": "10.12942/lrr-2014-3",
+          "title": "The Evolution of Compact Binary Star Systems",
+          "url": "https://doi.org/10.12942/lrr-2014-3",
+          "venue": "Living Reviews in Relativity",
+          "year": "2014"
+        },
+        "citation_key": "cite_7e1f0038b29c01f3",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2152006089:research_object_measurability:e82d8cf8f4a7",
+          "EC:W2152006089:boundary_conditions:7d070e9162ef"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2152006089"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Henry H. Lee",
+            "Reza Kalhor",
+            "Naveen Goela",
+            "Jean Bolot",
+            "George M. Church"
+          ],
+          "doi": "10.1038/s41467-019-10258-1",
+          "title": "Terminator-free template-independent enzymatic DNA synthesis for digital information storage",
+          "url": "https://doi.org/10.1038/s41467-019-10258-1",
+          "venue": "Nature Communications",
+          "year": "2019"
+        },
+        "citation_key": "cite_76b86b38ee7d03a2",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2947129118:mechanism:2de5528758a3",
+          "EC:W2947129118:mechanism:a7a806ab190b"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2947129118"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Ben Williamson"
+          ],
+          "doi": "10.1080/02680939.2015.1035758",
+          "title": "Digital education governance: data visualization, predictive analytics, and ‘real-time’ policy instruments",
+          "url": "https://doi.org/10.1080/02680939.2015.1035758",
+          "venue": "Journal of Education Policy",
+          "year": "2015"
+        },
+        "citation_key": "cite_9b4789e779d4cbb5",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2002764085:mechanism:f916ac36d576",
+          "EC:W2002764085:mechanism:4589b5a279de"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2002764085"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Jarrod R. Hurley",
+            "Christopher A. Tout",
+            "Onno R. Pols"
+          ],
+          "doi": "10.1046/j.1365-8711.2002.05038.x",
+          "title": "Evolution of binary stars and the effect of tides on binary populations",
+          "url": "https://doi.org/10.1046/j.1365-8711.2002.05038.x",
+          "venue": "Monthly Notices of the Royal Astronomical Society",
+          "year": "2002"
+        },
+        "citation_key": "cite_3d2e6757608d5364",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2059879627:statistics_bias:8f7ae315700b",
+          "EC:W2059879627:boundary_conditions:1f905e1ef98b"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2059879627"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Md F. Alam",
+            "Zaven Arzoumanian",
+            "Paul T. Baker",
+            "Harsha Blumer",
+            "Keith E. Bohler",
+            "Adam Brazier",
+            "Paul R. Brook",
+            "Sarah Burke-Spolaor",
+            "Keeisi Caballero",
+            "Richard S. Camuccio",
+            "Rachel L. Chamberlain",
+            "Shami Chatterjee",
+            "James M. Cordes",
+            "Neil J. Cornish",
+            "Fronefield Crawford",
+            "H. Thankful Cromartie",
+            "Megan E. DeCesar",
+            "Paul B. Demorest",
+            "Timothy Dolch",
+            "Justin A. Ellis",
+            "Robert D. Ferdman",
+            "Elizabeth C. Ferrara",
+            "William Fiore",
+            "Emmanuel Fonseca",
+            "Yhamil Garcia",
+            "Nathan Garver-Daniels",
+            "Peter A. Gentile",
+            "Deborah C. Good",
+            "Jordan A. Gusdorff",
+            "Daniel Halmrast",
+            "Jeffrey S. Hazboun",
+            "Kristina Islo",
+            "Ross J. Jennings",
+            "Cody Jessup",
+            "Megan L. Jones",
+            "Andrew R. Kaiser",
+            "David L. Kaplan",
+            "Luke Zoltan Kelley",
+            "Joey Shapiro Key",
+            "Michael T. Lam",
+            "T. Joseph W. Lazio",
+            "Duncan R. Lorimer",
+            "Jing Luo",
+            "Ryan S. Lynch",
+            "Dustin R. Madison",
+            "Kaleb Maraccini",
+            "Maura A. McLaughlin",
+            "Chiara M. F. Mingarelli",
+            "Cherry Ng",
+            "Benjamin M. X. Nguyen",
+            "David J. Nice",
+            "Timothy T. Pennucci",
+            "Nihan S. Pol",
+            "Joshua Ramette",
+            "Scott M. Ransom",
+            "Paul S. Ray",
+            "Brent J. Shapiro-Albert",
+            "Xavier Siemens",
+            "Joseph Simon",
+            "Renée Spiewak",
+            "Ingrid H. Stairs",
+            "Daniel R. Stinebring",
+            "Kevin Stovall",
+            "Joseph K. Swiggum",
+            "Stephen R. Taylor",
+            "Michael Tripepi",
+            "Michele Vallisneri",
+            "Sarah J. Vigeland",
+            "Caitlin A. Witt",
+            "Weiwei Zhu"
+          ],
+          "doi": "10.3847/1538-4365/abc6a0",
+          "title": "The NANOGrav 12.5 yr Data Set: Observations and Narrowband Timing of 47 Millisecond Pulsars",
+          "url": "https://doi.org/10.3847/1538-4365/abc6a0",
+          "venue": "The Astrophysical Journal Supplement Series",
+          "year": "2020"
+        },
+        "citation_key": "cite_fd6df2b02dbddc60",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W3024602437:study_design:a9b52fb134f2",
+          "EC:W3024602437:measurement_calibration:85242bd3cb1a",
+          "EC:W3024602437:boundary_conditions:c7eefdf40e9a"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W3024602437"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Sean P. Matt",
+            "Ralph E. Pudritz"
+          ],
+          "doi": "10.1086/498066",
+          "title": "Accretion-powered Stellar Winds as a Solution to the Stellar Angular Momentum Problem",
+          "url": "https://doi.org/10.1086/498066",
+          "venue": "The Astrophysical Journal",
+          "year": "2005"
+        },
+        "citation_key": "cite_2908f4a456e2afd6",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2012578543:mechanism:0db94bc339fb",
+          "EC:W2012578543:boundary_conditions:dda29a97c3f1"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2012578543"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "N. Chamel",
+            "P. Haensel"
+          ],
+          "doi": "10.12942/lrr-2008-10",
+          "title": "Physics of Neutron Star Crusts",
+          "url": "https://doi.org/10.12942/lrr-2008-10",
+          "venue": "Living Reviews in Relativity",
+          "year": "2008"
+        },
+        "citation_key": "cite_f16cd637681fe829",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2081762205:boundary_conditions:69b83595c0e7"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2081762205"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Duncan R. Lorimer"
+          ],
+          "doi": "10.12942/lrr-2008-8",
+          "title": "Binary and Millisecond Pulsars",
+          "url": "https://doi.org/10.12942/lrr-2008-8",
+          "venue": "Living Reviews in Relativity",
+          "year": "2008"
+        },
+        "citation_key": "cite_a50fdc75b0400b49",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2159450174:research_object_measurability:306d8fb115ff",
+          "EC:W2159450174:boundary_conditions:473320230cc7"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2159450174"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "A. M. Matthews",
+            "David J. Nice",
+            "Emmanuel Fonseca",
+            "Zaven Arzoumanian",
+            "Kathryn Crowter",
+            "Paul B. Demorest",
+            "Timothy Dolch",
+            "Justin A. Ellis",
+            "R. D. Ferdman",
+            "Marjorie Gonzalez",
+            "Glenn Jones",
+            "Megan L. Jones",
+            "Michael T. Lam",
+            "L. Levin",
+            "M. A. McLaughlin",
+            "Timothy T. Pennucci",
+            "S. M. Ransom",
+            "I. H. Stairs",
+            "Kevin Stovall",
+            "Joseph K. Swiggum",
+            "Weiwei Zhu"
+          ],
+          "doi": "10.3847/0004-637x/818/1/92",
+          "title": "THE NANOGRAV NINE-YEAR DATA SET: ASTROMETRIC MEASUREMENTS OF 37 MILLISECOND PULSARS",
+          "url": "https://doi.org/10.3847/0004-637x/818/1/92",
+          "venue": "The Astrophysical Journal",
+          "year": "2016"
+        },
+        "citation_key": "cite_be7a68ae6d0cde0b",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2181312162:research_object_measurability:4fb680ddafc7",
+          "EC:W2181312162:mechanism:c8c602cb171c",
+          "EC:W2181312162:statistics_bias:cc720dd49917"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2181312162"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Md F. Alam",
+            "Zaven Arzoumanian",
+            "Paul T. Baker",
+            "Harsha Blumer",
+            "Keith E. Bohler",
+            "Adam Brazier",
+            "Paul R. Brook",
+            "Sarah Burke-Spolaor",
+            "Keeisi Caballero",
+            "Richard S. Camuccio",
+            "Rachel L. Chamberlain",
+            "Shami Chatterjee",
+            "James M. Cordes",
+            "Neil J. Cornish",
+            "Fronefield Crawford",
+            "H. Thankful Cromartie",
+            "Megan E. DeCesar",
+            "Paul B. Demorest",
+            "Timothy Dolch",
+            "Justin A. Ellis",
+            "Robert D. Ferdman",
+            "Elizabeth C. Ferrara",
+            "William Fiore",
+            "Emmanuel Fonseca",
+            "Yhamil Garcia",
+            "Nathan Garver-Daniels",
+            "Peter A. Gentile",
+            "Deborah C. Good",
+            "Jordan A. Gusdorff",
+            "Daniel Halmrast",
+            "Jeffrey S. Hazboun",
+            "Kristina Islo",
+            "Ross J. Jennings",
+            "Cody Jessup",
+            "Megan L. Jones",
+            "Andrew R. Kaiser",
+            "David L. Kaplan",
+            "Luke Zoltan Kelley",
+            "Joey Shapiro Key",
+            "Michael T. Lam",
+            "T. Joseph W. Lazio",
+            "Duncan R. Lorimer",
+            "Jing Luo",
+            "Ryan S. Lynch",
+            "Dustin R. Madison",
+            "Kaleb Maraccini",
+            "Maura A. McLaughlin",
+            "Chiara M. F. Mingarelli",
+            "Cherry Ng",
+            "Benjamin M. X. Nguyen",
+            "David J. Nice",
+            "Timothy T. Pennucci",
+            "Nihan S. Pol",
+            "Joshua Ramette",
+            "Scott M. Ransom",
+            "Paul S. Ray",
+            "Brent J. Shapiro-Albert",
+            "Xavier Siemens",
+            "Joseph Simon",
+            "Renée Spiewak",
+            "Ingrid H. Stairs",
+            "Daniel R. Stinebring",
+            "Kevin Stovall",
+            "Joseph K. Swiggum",
+            "Stephen R. Taylor",
+            "Michael Tripepi",
+            "Michele Vallisneri",
+            "Sarah J. Vigeland",
+            "Caitlin A. Witt",
+            "Weiwei Zhu"
+          ],
+          "doi": "10.3847/1538-4365/abc6a1",
+          "title": "The NANOGrav 12.5 yr Data Set: Wideband Timing of 47 Millisecond Pulsars",
+          "url": "https://doi.org/10.3847/1538-4365/abc6a1",
+          "venue": "The Astrophysical Journal Supplement Series",
+          "year": "2020"
+        },
+        "citation_key": "cite_8609757b321d8ce0",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W3025576192:mechanism:c2bff9c1e96d",
+          "EC:W3025576192:measurement_calibration:e799ff0aa6ad",
+          "EC:W3025576192:study_design:f0f24c5732e4"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W3025576192"
+      }
+    ],
+    "evidence_cards_by_id": {
+      "EC:W2001595193:boundary_conditions:9d4e24715fac": {
+        "card_id": "EC:W2001595193:boundary_conditions:9d4e24715fac",
+        "citation_key": "cite_1e5d552669fc0c56",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2001595193",
+        "source_location": "abstract:openalex",
+        "support_statement": "The abstract identifies uncertain input distributions and physical processes, specifically mass transfer efficiency and magnetic braking, as the main sources of uncertainty in the derived results."
+      },
+      "EC:W2001595193:mechanism:835b28e52dde": {
+        "card_id": "EC:W2001595193:mechanism:835b28e52dde",
+        "citation_key": "cite_1e5d552669fc0c56",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2001595193",
+        "source_location": "abstract:openalex",
+        "support_statement": "The abstract states that binary interaction (via stellar winds, expansion, tides, mass transfer, and mergers) affects the distribution of rotation rates in massive stars."
+      },
+      "EC:W2001595193:research_object_measurability:d3e71c1314d2": {
+        "card_id": "EC:W2001595193:research_object_measurability:d3e71c1314d2",
+        "citation_key": "cite_1e5d552669fc0c56",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2001595193",
+        "source_location": "abstract:openalex",
+        "support_statement": "The study defines and measures the fraction of massive main-sequence stars with projected rotational velocities in excess of 200 km s−1."
+      },
+      "EC:W2001595193:study_design:585696518cdd": {
+        "card_id": "EC:W2001595193:study_design:585696518cdd",
+        "citation_key": "cite_1e5d552669fc0c56",
+        "claim_slot": "study_design",
+        "evidence_level": "abstract",
+        "source_id": "W2001595193",
+        "source_location": "abstract:openalex",
+        "support_statement": "The research design involved simulating a massive binary-star population typical for the Galaxy, assuming continuous star formation, to investigate rotation rate distributions."
+      },
+      "EC:W2002764085:mechanism:4589b5a279de": {
+        "card_id": "EC:W2002764085:mechanism:4589b5a279de",
+        "citation_key": "cite_9b4789e779d4cbb5",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2002764085",
+        "source_location": "abstract:openalex",
+        "support_statement": "The text describes a mechanism where governing is distributed to digitized centers of calculation using technical expertise and predictive analytics."
+      },
+      "EC:W2002764085:mechanism:f916ac36d576": {
+        "card_id": "EC:W2002764085:mechanism:f916ac36d576",
+        "citation_key": "cite_9b4789e779d4cbb5",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2002764085",
+        "source_location": "abstract:openalex",
+        "support_statement": "The text asserts that digital database technologies function as new kinds of policy instruments that augment the governing of education."
+      },
+      "EC:W2012578543:boundary_conditions:dda29a97c3f1": {
+        "card_id": "EC:W2012578543:boundary_conditions:dda29a97c3f1",
+        "citation_key": "cite_2908f4a456e2afd6",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2012578543",
+        "source_location": "abstract:openalex",
+        "support_statement": "For observationally constrained typical parameters of classical T Tauri stars, the efficiency factor needs to be between a few and a few tens of percent."
+      },
+      "EC:W2012578543:mechanism:0db94bc339fb": {
+        "card_id": "EC:W2012578543:mechanism:0db94bc339fb",
+        "citation_key": "cite_2908f4a456e2afd6",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2012578543",
+        "source_location": "abstract:openalex",
+        "support_statement": "Wind-induced torques can counteract the spin-up torque from mass accretion in pre-main-sequence stars, provided the wind mass outflow rate is approximately 10% of the accretion rate."
+      },
+      "EC:W2059879627:boundary_conditions:1f905e1ef98b": {
+        "card_id": "EC:W2059879627:boundary_conditions:1f905e1ef98b",
+        "citation_key": "cite_3d2e6757608d5364",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2059879627",
+        "source_location": "abstract:openalex",
+        "support_statement": "For interacting binaries, the initial separations should be distributed according to the observed distribution of semilatera recta rather than periods or semimajor axes."
+      },
+      "EC:W2059879627:statistics_bias:8f7ae315700b": {
+        "card_id": "EC:W2059879627:statistics_bias:8f7ae315700b",
+        "citation_key": "cite_3d2e6757608d5364",
+        "claim_slot": "statistics_bias",
+        "evidence_level": "abstract",
+        "source_id": "W2059879627",
+        "source_location": "abstract:openalex",
+        "support_statement": "Omitting tidal evolution in binary system modeling introduces a systematic effect that prevents accurate conclusions from population synthesis work."
+      },
+      "EC:W2081762205:boundary_conditions:69b83595c0e7": {
+        "card_id": "EC:W2081762205:boundary_conditions:69b83595c0e7",
+        "citation_key": "cite_f16cd637681fe829",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2081762205",
+        "source_location": "abstract:openalex",
+        "support_statement": "The provided source text states that modeling neutron star crusts involves physics spanning from nuclear and condensed matter physics to general relativity."
+      },
+      "EC:W2095725842:boundary_conditions:1a843b49c71e": {
+        "card_id": "EC:W2095725842:boundary_conditions:1a843b49c71e",
+        "citation_key": "cite_c369df652181e8f7",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W2095725842",
+        "source_location": "fulltext:survey_pdf:W2095725842:markdown",
+        "support_statement": "The binary evolution module explicitly excludes the modeling of common envelope and contact binary phases."
+      },
+      "EC:W2095725842:measurement_calibration:c123a9767331": {
+        "card_id": "EC:W2095725842:measurement_calibration:c123a9767331",
+        "citation_key": "cite_c369df652181e8f7",
+        "claim_slot": "measurement_calibration",
+        "evidence_level": "fulltext",
+        "source_id": "W2095725842",
+        "source_location": "fulltext:survey_pdf:W2095725842:markdown",
+        "support_statement": "MESA software infrastructure provides bit-for-bit consistency for results across all supported platforms."
+      },
+      "EC:W2095725842:mechanism:498f7921890b": {
+        "card_id": "EC:W2095725842:mechanism:498f7921890b",
+        "citation_key": "cite_c369df652181e8f7",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2095725842",
+        "source_location": "fulltext:survey_pdf:W2095725842:markdown",
+        "support_statement": "The software implements tidal interactions by extending Hut's solid-body rotation model to differentially rotating stars, applying the result independently to each shell."
+      },
+      "EC:W2095725842:mechanism:e0c6017f49ac": {
+        "card_id": "EC:W2095725842:mechanism:e0c6017f49ac",
+        "citation_key": "cite_c369df652181e8f7",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2095725842",
+        "source_location": "fulltext:survey_pdf:W2095725842:markdown",
+        "support_statement": "Implicit mass transfer schemes are used to compute mass transfer rates and stellar radii accurately, particularly when no closed-form formula is available."
+      },
+      "EC:W2103740830:boundary_conditions:4d1d003cf5d0": {
+        "card_id": "EC:W2103740830:boundary_conditions:4d1d003cf5d0",
+        "citation_key": "cite_55957f4ce67bd972",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2103740830",
+        "source_location": "abstract:openalex",
+        "support_statement": "The equation of state for the neutron star crust is calculated under the assumption of ground state composition."
+      },
+      "EC:W2103740830:boundary_conditions:d20dedb7b994": {
+        "card_id": "EC:W2103740830:boundary_conditions:d20dedb7b994",
+        "citation_key": "cite_55957f4ce67bd972",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2103740830",
+        "source_location": "abstract:openalex",
+        "support_statement": "The equation of state for the liquid core assumes a minimal npeμ composition."
+      },
+      "EC:W2152006089:boundary_conditions:7d070e9162ef": {
+        "card_id": "EC:W2152006089:boundary_conditions:7d070e9162ef",
+        "citation_key": "cite_7e1f0038b29c01f3",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2152006089",
+        "source_location": "abstract:openalex",
+        "support_statement": "The treatment of natal kicks and common envelope phases are identified as crucial points relevant to the merging rates of NS-NS, NS-BH, and BH-BH binaries."
+      },
+      "EC:W2152006089:research_object_measurability:e82d8cf8f4a7": {
+        "card_id": "EC:W2152006089:research_object_measurability:e82d8cf8f4a7",
+        "citation_key": "cite_7e1f0038b29c01f3",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2152006089",
+        "source_location": "abstract:openalex",
+        "support_statement": "AM CVn-stars are thought to be the best verification binary GW sources for future low-frequency GW space interferometers."
+      },
+      "EC:W2159450174:boundary_conditions:473320230cc7": {
+        "card_id": "EC:W2159450174:boundary_conditions:473320230cc7",
+        "citation_key": "cite_a50fdc75b0400b49",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2159450174",
+        "source_location": "abstract:openalex",
+        "support_statement": "At least one Galactic millisecond pulsar exists in an eccentric orbit with e = 0.44 around an unevolved companion."
+      },
+      "EC:W2159450174:research_object_measurability:306d8fb115ff": {
+        "card_id": "EC:W2159450174:research_object_measurability:306d8fb115ff",
+        "citation_key": "cite_a50fdc75b0400b49",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2159450174",
+        "source_location": "abstract:openalex",
+        "support_statement": "Relativistic spin precession was measured with precision in the double pulsar system."
+      },
+      "EC:W2160511150:research_object_measurability:063b6500b313": {
+        "card_id": "EC:W2160511150:research_object_measurability:063b6500b313",
+        "citation_key": "cite_37ecbded9d629353",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2160511150",
+        "source_location": "abstract:openalex",
+        "support_statement": "The text asserts that the quasi-local framework using dynamical and isolated horizons has provided novel techniques to extract physics from numerical simulations."
+      },
+      "EC:W2162306826:boundary_conditions:e9a382bdb1ca": {
+        "card_id": "EC:W2162306826:boundary_conditions:e9a382bdb1ca",
+        "citation_key": "cite_58f0ac6612957738",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2162306826",
+        "source_location": "abstract:openalex",
+        "support_statement": "The study's conclusions hold at two different numerical resolutions, despite numerical convergence not being particularly good for any of the individual codes."
+      },
+      "EC:W2162306826:mechanism:19020e2eddca": {
+        "card_id": "EC:W2162306826:mechanism:19020e2eddca",
+        "citation_key": "cite_58f0ac6612957738",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2162306826",
+        "source_location": "abstract:openalex",
+        "support_statement": "Differences in the implementations of star formation and feedback are identified as the main drivers of code-to-code variations in galaxy properties (stellar mass, size, morphology, gas content) at z=0."
+      },
+      "EC:W2162306826:risk_ethics_reproducibility:36e8854a0cf3": {
+        "card_id": "EC:W2162306826:risk_ethics_reproducibility:36e8854a0cf3",
+        "citation_key": "cite_58f0ac6612957738",
+        "claim_slot": "risk_ethics_reproducibility",
+        "evidence_level": "abstract",
+        "source_id": "W2162306826",
+        "source_location": "abstract:openalex",
+        "support_statement": "State-of-the-art simulations cannot yet uniquely predict the properties of the baryonic component of a galaxy, even when the assembly history of its host halo is fully specified, due to code-to-code variations."
+      },
+      "EC:W2162306826:study_design:b371e350cd6e": {
+        "card_id": "EC:W2162306826:study_design:b371e350cd6e",
+        "citation_key": "cite_58f0ac6612957738",
+        "claim_slot": "study_design",
+        "evidence_level": "abstract",
+        "source_id": "W2162306826",
+        "source_location": "abstract:openalex",
+        "support_statement": "The study compares results from 13 cosmological gas-dynamical codes simulating galaxy formation in the Lambda cold dark matter paradigm, which share the same initial conditions but differ in numerical hydrodynamical treatments (SPH, moving mesh, AMR) and adopt their latest published models for gas cooling, star formation, and feedback."
+      },
+      "EC:W2166111552:boundary_conditions:6d626c408780": {
+        "card_id": "EC:W2166111552:boundary_conditions:6d626c408780",
+        "citation_key": "cite_6f293e40636e40ac",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2166111552",
+        "source_location": "abstract:openalex",
+        "support_statement": "The analysis is restricted to a simulation-based framework that covers the entire parameter space allowed by current electromagnetic observations in an unbiased way."
+      },
+      "EC:W2166111552:statistics_bias:2e56d83a388a": {
+        "card_id": "EC:W2166111552:statistics_bias:2e56d83a388a",
+        "citation_key": "cite_6f293e40636e40ac",
+        "claim_slot": "statistics_bias",
+        "evidence_level": "abstract",
+        "source_id": "W2166111552",
+        "source_location": "abstract:openalex",
+        "support_statement": "The text indicates that a commonly adopted criterion based on a signal-to-noise ratio threshold is statistic-dependent and may result in misleading conclusions for the statistics adopted in this study."
+      },
+      "EC:W2181312162:mechanism:c8c602cb171c": {
+        "card_id": "EC:W2181312162:mechanism:c8c602cb171c",
+        "citation_key": "cite_be7a68ae6d0cde0b",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2181312162",
+        "source_location": "abstract:openalex",
+        "support_statement": "Measured orbital-decay rates and spin-down rates were used to confirm two parallax distances and place distance upper limits on other sources."
+      },
+      "EC:W2181312162:research_object_measurability:4fb680ddafc7": {
+        "card_id": "EC:W2181312162:research_object_measurability:4fb680ddafc7",
+        "citation_key": "cite_be7a68ae6d0cde0b",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2181312162",
+        "source_location": "abstract:openalex",
+        "support_statement": "Radio-pulsar timing data collected at Arecibo Observatory and the Green Bank Telescope enabled the measurement of positions, proper motions, and parallaxes for 37 millisecond pulsars, including twelve significant parallax measurements."
+      },
+      "EC:W2181312162:statistics_bias:cc720dd49917": {
+        "card_id": "EC:W2181312162:statistics_bias:cc720dd49917",
+        "citation_key": "cite_be7a68ae6d0cde0b",
+        "claim_slot": "statistics_bias",
+        "evidence_level": "abstract",
+        "source_id": "W2181312162",
+        "source_location": "abstract:openalex",
+        "support_statement": "The components of the velocity dispersions follow similar proportions to other Galactic populations, suggesting that the reported results are not biased by selection effects."
+      },
+      "EC:W2783195820:boundary_conditions:2de28b5e60a8": {
+        "card_id": "EC:W2783195820:boundary_conditions:2de28b5e60a8",
+        "citation_key": "cite_690dac74363beb2e",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2783195820",
+        "source_location": "abstract:openalex",
+        "support_statement": "Pulsar-timing array constraints on the isotropic stochastic gravitational-wave background are sensitive to the solar system ephemeris (SSE) model used, as SSE errors can mimic a GWB signal."
+      },
+      "EC:W2783195820:measurement_calibration:b198290a5f57": {
+        "card_id": "EC:W2783195820:measurement_calibration:b198290a5f57",
+        "citation_key": "cite_690dac74363beb2e",
+        "claim_slot": "measurement_calibration",
+        "evidence_level": "abstract",
+        "source_id": "W2783195820",
+        "source_location": "abstract:openalex",
+        "support_statement": "A new approach was developed to bridge systematic SSE differences, producing PTA constraints that are robust against SSE errors."
+      },
+      "EC:W2783195820:research_object_measurability:7d15c08f1609": {
+        "card_id": "EC:W2783195820:research_object_measurability:7d15c08f1609",
+        "citation_key": "cite_690dac74363beb2e",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2783195820",
+        "source_location": "abstract:openalex",
+        "support_statement": "The 95% upper limit on the GW-strain amplitude for a fiducial f^-2/3 power-law spectrum is constrained to be less than 1.45 × 10^-15 at f = 1 yr^-1 using SSE-robust methods."
+      },
+      "EC:W2783195820:statistics_bias:da6fa7311d2c": {
+        "card_id": "EC:W2783195820:statistics_bias:da6fa7311d2c",
+        "citation_key": "cite_690dac74363beb2e",
+        "claim_slot": "statistics_bias",
+        "evidence_level": "abstract",
+        "source_id": "W2783195820",
+        "source_location": "abstract:openalex",
+        "support_statement": "Previous PTA upper limits on the GWB and their astrophysical and cosmological interpretations need revision in light of SSE systematic errors."
+      },
+      "EC:W2805726701:boundary_conditions:52791a90058f": {
+        "card_id": "EC:W2805726701:boundary_conditions:52791a90058f",
+        "citation_key": "cite_81b31d0d8218f9b8",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2805726701",
+        "source_location": "abstract:openalex",
+        "support_statement": "Constraints on component masses are strongly dependent on prior assumptions regarding spin magnitudes, yielding different intervals when large spins are allowed versus when spins are restricted to Galactic binary neutron star ranges."
+      },
+      "EC:W2805726701:measurement_calibration:638f75c69e94": {
+        "card_id": "EC:W2805726701:measurement_calibration:638f75c69e94",
+        "citation_key": "cite_81b31d0d8218f9b8",
+        "claim_slot": "measurement_calibration",
+        "evidence_level": "abstract",
+        "source_id": "W2805726701",
+        "source_location": "abstract:openalex",
+        "support_statement": "The analysis relies on recalibrated Virgo data and extends the gravitational-wave frequency range considered down to 23 Hz."
+      },
+      "EC:W2805726701:study_design:b6fd760d544f": {
+        "card_id": "EC:W2805726701:study_design:b6fd760d544f",
+        "citation_key": "cite_81b31d0d8218f9b8",
+        "claim_slot": "study_design",
+        "evidence_level": "abstract",
+        "source_id": "W2805726701",
+        "source_location": "abstract:openalex",
+        "support_statement": "The study utilizes data from Advanced LIGO and Advanced Virgo detectors to analyze the GW170817 inspiral, extending the frequency range down to 23 Hz and comparing multiple signal models to improve parameter estimation."
+      },
+      "EC:W2807309204:boundary_conditions:5aaeaf41fc0c": {
+        "card_id": "EC:W2807309204:boundary_conditions:5aaeaf41fc0c",
+        "citation_key": "cite_42e341ff6471ce89",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2807309204",
+        "source_location": "abstract:openalex",
+        "support_statement": "The reported neutron star radius constraints depend on whether the analysis additionally requires that the equation of state supports neutron stars with masses larger than 1.97 solar masses as indicated by electromagnetic observations."
+      },
+      "EC:W2947129118:mechanism:2de5528758a3": {
+        "card_id": "EC:W2947129118:mechanism:2de5528758a3",
+        "citation_key": "cite_76b86b38ee7d03a2",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2947129118",
+        "source_location": "abstract:openalex",
+        "support_statement": "The source describes a de novo enzymatic synthesis strategy for data storage that uses terminal deoxynucleotidyl transferase (TdT) in kinetically controlled conditions, where information is encoded in transitions between non-identical nucleotides."
+      },
+      "EC:W2947129118:mechanism:a7a806ab190b": {
+        "card_id": "EC:W2947129118:mechanism:a7a806ab190b",
+        "citation_key": "cite_76b86b38ee7d03a2",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2947129118",
+        "source_location": "abstract:openalex",
+        "support_statement": "The synthesis process involves iterative addition of nucleotide substrates to produce short homopolymeric extensions whose lengths are controlled by apyrase-mediated substrate degradation."
+      },
+      "EC:W2950972746:boundary_conditions:a9160682db0a": {
+        "card_id": "EC:W2950972746:boundary_conditions:a9160682db0a",
+        "citation_key": "cite_8d1e9c1794df440d",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2950972746",
+        "source_location": "abstract:openalex",
+        "support_statement": "The limiting flux for pulse detection varies across the sky due to differing background levels, particularly near the Galactic plane."
+      },
+      "EC:W2950972746:mechanism:55456e33d851": {
+        "card_id": "EC:W2950972746:mechanism:55456e33d851",
+        "citation_key": "cite_8d1e9c1794df440d",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2950972746",
+        "source_location": "abstract:openalex",
+        "support_statement": "For most pulsars in the catalog, gamma-ray emission appears to originate mainly from the outer magnetosphere."
+      },
+      "EC:W2950972746:research_object_measurability:3e1907555885": {
+        "card_id": "EC:W2950972746:research_object_measurability:3e1907555885",
+        "citation_key": "cite_8d1e9c1794df440d",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2950972746",
+        "source_location": "abstract:openalex",
+        "support_statement": "Pulsed energy spectra in the sample can be described by a power law with an exponential cutoff, with cutoff energies in the range of approximately 1 to 5 GeV."
+      },
+      "EC:W2971836485:boundary_conditions:e14286f70688": {
+        "card_id": "EC:W2971836485:boundary_conditions:e14286f70688",
+        "citation_key": "cite_7ce3b58a152b6aef",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2971836485",
+        "source_location": "abstract:openalex",
+        "support_statement": "No neutron star–black hole mergers were detected in the analyzed datasets from O1 and O2."
+      },
+      "EC:W2971836485:research_object_measurability:cbaaef942f38": {
+        "card_id": "EC:W2971836485:research_object_measurability:cbaaef942f38",
+        "citation_key": "cite_7ce3b58a152b6aef",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2971836485",
+        "source_location": "abstract:openalex",
+        "support_statement": "The source text reports that binary black hole detections had total masses between specific bounds and ranged in distance between specific bounds."
+      },
+      "EC:W2971836485:study_design:464e63112613": {
+        "card_id": "EC:W2971836485:study_design:464e63112613",
+        "citation_key": "cite_7ce3b58a152b6aef",
+        "claim_slot": "study_design",
+        "evidence_level": "abstract",
+        "source_id": "W2971836485",
+        "source_location": "abstract:openalex",
+        "support_statement": "The study presents results from gravitational-wave searches for coalescing compact binaries during the first and second observing runs of the advanced gravitational-wave detector network."
+      },
+      "EC:W3024602437:boundary_conditions:c7eefdf40e9a": {
+        "card_id": "EC:W3024602437:boundary_conditions:c7eefdf40e9a",
+        "citation_key": "cite_fd6df2b02dbddc60",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W3024602437",
+        "source_location": "abstract:openalex",
+        "support_statement": "The observing cadence was three to four weeks for most pulsars over most of the time span, with weekly observations of six sources."
+      },
+      "EC:W3024602437:measurement_calibration:85242bd3cb1a": {
+        "card_id": "EC:W3024602437:measurement_calibration:85242bd3cb1a",
+        "citation_key": "cite_fd6df2b02dbddc60",
+        "claim_slot": "measurement_calibration",
+        "evidence_level": "abstract",
+        "source_id": "W3024602437",
+        "source_location": "abstract:openalex",
+        "support_statement": "The TOA measurements are based on narrowband analysis, in which many TOAs are calculated within narrow radio-frequency bands for data collected simultaneously across a wide bandwidth."
+      },
+      "EC:W3024602437:study_design:a9b52fb134f2": {
+        "card_id": "EC:W3024602437:study_design:a9b52fb134f2",
+        "citation_key": "cite_fd6df2b02dbddc60",
+        "claim_slot": "study_design",
+        "evidence_level": "abstract",
+        "source_id": "W3024602437",
+        "source_location": "abstract:openalex",
+        "support_statement": "The study presents time-of-arrival (TOA) measurements and timing models for 47 millisecond pulsars observed from 2004 to 2017 at the Arecibo Observatory and the Green Bank Telescope by NANOGrav."
+      },
+      "EC:W3025576192:measurement_calibration:e799ff0aa6ad": {
+        "card_id": "EC:W3025576192:measurement_calibration:e799ff0aa6ad",
+        "citation_key": "cite_8609757b321d8ce0",
+        "claim_slot": "measurement_calibration",
+        "evidence_level": "abstract",
+        "source_id": "W3025576192",
+        "source_location": "abstract:openalex",
+        "support_statement": "High-precision, multiband measurements indicate the presence of frequency-dependent dispersion measures in several pulsars."
+      },
+      "EC:W3025576192:mechanism:c2bff9c1e96d": {
+        "card_id": "EC:W3025576192:mechanism:c2bff9c1e96d",
+        "citation_key": "cite_8609757b321d8ce0",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W3025576192",
+        "source_location": "abstract:openalex",
+        "support_statement": "Wideband timing techniques, specifically those using frequency-dependent template profiles and simultaneous TOA and DM measurements, can lead to more precise timing model parameters for certain pulsar types."
+      },
+      "EC:W3025576192:study_design:f0f24c5732e4": {
+        "card_id": "EC:W3025576192:study_design:f0f24c5732e4",
+        "citation_key": "cite_8609757b321d8ce0",
+        "claim_slot": "study_design",
+        "evidence_level": "abstract",
+        "source_id": "W3025576192",
+        "source_location": "abstract:openalex",
+        "support_statement": "The study utilizes wideband timing methods involving frequency-dependent template profiles and simultaneous time-of-arrival and dispersion measure measurements from broadband observations."
+      },
+      "EC:W3094812309:boundary_conditions:b916302d1715": {
+        "card_id": "EC:W3094812309:boundary_conditions:b916302d1715",
+        "citation_key": "cite_f2c3a7bd13020815",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W3094812309",
+        "source_location": "fulltext:survey_pdf:W3094812309:markdown",
+        "support_statement": "For events whose components could not be unambiguously identified as black holes or neutron stars, the nature cannot be determined based solely on estimates of the component masses and spins from gravitational wave data."
+      },
+      "EC:W3094812309:research_object_measurability:613a5b75f04a": {
+        "card_id": "EC:W3094812309:research_object_measurability:613a5b75f04a",
+        "citation_key": "cite_f2c3a7bd13020815",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "fulltext",
+        "source_id": "W3094812309",
+        "source_location": "fulltext:survey_pdf:W3094812309:markdown",
+        "support_statement": "The study analyzes gravitational wave discoveries from compact binary coalescences detected by Advanced LIGO and Advanced Virgo during the first half of the third observing run (O3a), specifically between 1 April 2019 15:00 UTC and 1 October 2019 15:00 UTC."
+      },
+      "EC:W3094812309:statistics_bias:a696af209105": {
+        "card_id": "EC:W3094812309:statistics_bias:a696af209105",
+        "citation_key": "cite_f2c3a7bd13020815",
+        "claim_slot": "statistics_bias",
+        "evidence_level": "fulltext",
+        "source_id": "W3094812309",
+        "source_location": "fulltext:survey_pdf:W3094812309:markdown",
+        "support_statement": "A false-alarm-rate threshold of two per year was imposed in each of the four search pipelines to identify candidate gravitational wave events, resulting in an expected contamination fraction of less than 10%."
+      },
+      "EC:W3182570346:mechanism:1b63d62c1275": {
+        "card_id": "EC:W3182570346:mechanism:1b63d62c1275",
+        "citation_key": "cite_6c11517977d0b39d",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W3182570346",
+        "source_location": "abstract:openalex",
+        "support_statement": "Incorporating data from heavy-ion collision experiments into joint analyses with astrophysical observations improves constraints on dense matter, specifically indicating an increase in pressure."
+      },
+      "EC:W3209232797:boundary_conditions:322208326c47": {
+        "card_id": "EC:W3209232797:boundary_conditions:322208326c47",
+        "citation_key": "cite_4be4b7659033f7b6",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W3209232797",
+        "source_location": "abstract:openalex",
+        "support_statement": "Magnonics is described as a field offering advantages such as scalability down to atomic dimensions, GHz-to-THz operation, utilization of nonlinear phenomena, and CMOS compatibility, while primarily remaining in the academic domain with many proof-of-concept prototypes realized in laboratories."
+      },
+      "EC:W4307082099:research_object_measurability:f2eeeeb3a72e": {
+        "card_id": "EC:W4307082099:research_object_measurability:f2eeeeb3a72e",
+        "citation_key": "cite_f86eeddde0fc217f",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W4307082099",
+        "source_location": "abstract:openalex",
+        "support_statement": "The third Gravitational-Wave Transient Catalog contains 90 probable gravitational-wave candidates including binary black holes, binary neutron stars, and black hole--neutron star binaries across a wide range of masses."
+      },
+      "EC:W4310852955:boundary_conditions:771bca860c3d": {
+        "card_id": "EC:W4310852955:boundary_conditions:771bca860c3d",
+        "citation_key": "cite_c6431af004255c73",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W4310852955",
+        "source_location": "abstract:openalex",
+        "support_statement": "The federated learning study was applied to data from 71 sites across 6 continents for glioblastoma tumor boundary detection."
+      },
+      "EC:W4310852955:comparison_controls:b4a3dcdbabb1": {
+        "card_id": "EC:W4310852955:comparison_controls:b4a3dcdbabb1",
+        "citation_key": "cite_c6431af004255c73",
+        "claim_slot": "comparison_controls",
+        "evidence_level": "abstract",
+        "source_id": "W4310852955",
+        "source_location": "abstract:openalex",
+        "support_statement": "The federated learning approach demonstrated improvement over a publicly trained model for tumor delineation."
+      },
+      "EC:W4310852955:mechanism:031f7d0e8a05": {
+        "card_id": "EC:W4310852955:mechanism:031f7d0e8a05",
+        "citation_key": "cite_c6431af004255c73",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W4310852955",
+        "source_location": "abstract:openalex",
+        "support_statement": "Federated ML provides an alternative paradigm for accurate and generalizable ML by sharing numerical model updates instead of centralizing multi-site data."
+      }
+    }
+  },
+  "unknown_items": [
+    {
+      "field_path": "counterexample_analysis",
+      "reason": "The counterexample_analyzer LLM batch was discarded after an unavailable or invalid response. No generated claim, formalization, counterexample, or protocol detail from that batch is retained; qualified human review is required.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "data_governance_and_reproducibility.data_management",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "data_governance_and_reproducibility.reproducibility",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "degraded_stages.counterexample_analyzer",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration.measurement_plan",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration.quality_control",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[1]",
+      "reason": "What are the exact mathematical relaxation conditions required for the static equilibrium axioms?",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[2]",
+      "reason": "What specific numerical methods or analytical techniques will be used to verify the mass-spin relation?",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[3]",
+      "reason": "Replace the discarded counterexample_analyzer batch with qualified human review before treating this design as complete.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.assumptions",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.counterexample_or_boundary_analysis",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.formal_claim",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.verification_plan",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "unknown",
+      "reason": "The specific functional form of the 'mechanism_mass_spin_relation' is referenced but not defined.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V1.operational_definition",
+      "reason": "Specific mathematical relaxation of static equilibrium axioms requires formal definition.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V2.operational_definition",
+      "reason": "Measurement method for >2.0 M_sun (e.g., Shapiro delay) is not specified in brief.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V3.operational_definition",
+      "reason": "Measurement method for spin period is not specified in brief.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V4.operational_definition",
+      "reason": "Equations governing binary mass/ang. momentum transfer need formal specification.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V5.operational_definition",
+      "reason": "Formal criteria for testing causality violation are missing.",
+      "status": "needs_human_input"
+    }
+  ],
+  "variables_and_operationalization": {
+    "confounders": [
+      "Unspecified numerical implementation details"
+    ],
+    "control_variables": [
+      "Causality bound (c_s <= c)",
+      "Equation of state equilibrium conditions"
+    ],
+    "dependent_variables": [
+      "Gravitational mass",
+      "Spin period"
+    ],
+    "independent_variables": [
+      "Binary accretion parameters (mass/angular momentum)"
+    ],
+    "operational_definitions": [
+      "Mass defined in solar masses",
+      "Spin period defined in milliseconds",
+      "Causality bound defined as dimensionless constraint"
+    ]
+  }
+}

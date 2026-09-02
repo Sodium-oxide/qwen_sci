@@ -1,0 +1,52 @@
+{
+  "schema_version": "author_manifest_v1",
+  "project_id": "inf_2_dna_information_storage",
+  "survey_run_id": "survey-inf2-dna-storage-001",
+  "selected_idea_id": "idea-dse-001",
+  "workflow": ["Survey", "Idea", "ExperimentDesign", "Author"],
+  "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "execution_policy": {"mode": "DESIGN_ONLY", "observed_results": []},
+  "document": {
+    "title": "Can DNA Act as an Information Storage Medium? A Serviceability-First Archival Research Proposal",
+    "language": "English",
+    "style": "IEEE conference",
+    "template_source": "Conference-LaTeX-template_10-17-19/IEEEtran.cls",
+    "paper_size": "Letter",
+    "page_count": 7,
+    "minimum_page_requirement": 7,
+    "acknowledgement_section_present": false,
+    "cited_source_count": 15
+  },
+  "input_artifacts": {
+    "survey_manifest": "../survey/survey_manifest.json",
+    "survey_handoff": "../survey/survey_idea_handoff.json",
+    "idea_result": "../idea/idea_result.json",
+    "experiment_design": "../experiment_design/research_design.json",
+    "author_handoff": "../experiment_design/author_handoff.json"
+  },
+  "output_artifacts": {
+    "tex": "dna_storage_serviceability_report.tex",
+    "pdf": "dna_storage_serviceability_report.pdf",
+    "pdf_validation": "pdf_validation.json",
+    "rendered_page_previews": "rendered_pages/page-1.png through rendered_pages/page-7.png"
+  },
+  "source_controls": {
+    "discovery_method": "OpenAlex and AnySearch Academic dual-engine search with DOI-based cross-validation where records overlap.",
+    "cross_validated_query_record_counts": {
+      "DNA data storage error correction random access review": 7,
+      "DNA data storage archival stability synthesis sequencing cost density": 10,
+      "DNA storage coding scheme fountain code random access Erlich Zielinski": 10,
+      "DNA data storage challenges oligonucleotide synthesis sequencing error review 2024": 9
+    },
+    "browser_metadata_check": {
+      "source": "Science publisher DOI page",
+      "doi": "10.1126/science.1226355",
+      "verified_record": "Church, Gao, and Kosuri, Next-Generation Digital Information Storage in DNA, Science, 16 August 2012, volume 337 issue 6102, page 1628"
+    },
+    "human_review_required": "Verify publisher or full-text methodological applicability for every cited source before real wet-lab work, deployment, or scholarly submission."
+  },
+  "claim_boundary": {
+    "supported_conclusion": "DNA is a proven digital information medium, while archive usefulness depends on a declared end-to-end service envelope rather than ideal molecular density alone.",
+    "not_claimed": ["a newly executed DNA synthesis, storage, sequencing, simulation, or benchmark", "universal cost or latency superiority", "replacement of RAM, SSDs, or active cloud databases", "living-cell, clinical, or environmental DNA storage", "a completed physical experiment"]
+  }
+}

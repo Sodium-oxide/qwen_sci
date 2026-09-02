@@ -1,0 +1,9 @@
+{
+  "schema_version": "simulation_result_qualification_v1_manual",
+  "execution_id": "sim-reduced-kernel-001",
+  "result_quality": "QUALIFIED",
+  "hypothesis_relation": "CONSTRAINED",
+  "checks": {"completed": true, "execution_mode": true, "result_kind": true, "not_empirical": true, "finite_outputs": true, "fixed_grid_complete": true, "same_parameter_set": true},
+  "numerical_quality": {"status": "NUMERICALLY_VERIFIED", "reason": "closed-form values were recomputed deterministically on the specified fixed grid."},
+  "interpretation": "H1 produces a substantially lower model scale at p=0.10 than H0 under the same assumed spin support. This constrains the experimental effect size needed to distinguish the models; it does not support the mechanism empirically."
+}

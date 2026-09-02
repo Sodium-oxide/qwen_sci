@@ -1,0 +1,43 @@
+{
+  "schema": "science_result_v1",
+  "project_id": "neur_11_comparative_animal_intelligence_atlas",
+  "research_topic": "How smart are nonhuman animals?",
+  "reframed_question": "Which cognitive capacities are shared or independently evolved across nonhuman animals, how do ecological and social demands shape those capacities, and how much of apparent intelligence transfers across tasks when testing is species-appropriate?",
+  "status": "completed",
+  "external_evidence_limitation": "OpenAlex/AnySearch network connection was refused; browser-checked PubMed records were used for the six evidence anchors.",
+  "stages": {
+    "survey": {
+      "status": "completed",
+      "canonical": "survey/survey.md",
+      "manifest": "survey/survey_manifest.json"
+    },
+    "idea": {
+      "status": "completed",
+      "canonical": "idea/idea_result.json",
+      "primary_direction": "ECAA"
+    },
+    "experiment_design": {
+      "status": "completed",
+      "canonical": "experiment_design/research_design.json",
+      "execution_policy": "DESIGN_ONLY"
+    },
+    "author": {
+      "status": "completed",
+      "canonical": "author/comparative_animal_intelligence_atlas_report.tex",
+      "minimum_pages": 7,
+      "report_source": "author/comparative_animal_intelligence_atlas_report.tex",
+      "pdf": "author/comparative_animal_intelligence_atlas_report.pdf",
+      "pdf_validation": "author/pdf_validation.json",
+      "validated_nonempty_pages": 7,
+      "ieee_template": "Conference-LaTeX-template_10-17-19"
+    }
+  },
+  "claim_boundary": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "prohibited_claims": [
+    "a universal ranking of animal intelligence",
+    "human-equivalent language or concepts inferred from trained behavior",
+    "a fitted empirical shared-flexibility factor",
+    "an executed animal experiment or observed result"
+  ],
+  "observed_results": []
+}

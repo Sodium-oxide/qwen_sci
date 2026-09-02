@@ -1,0 +1,12 @@
+{
+  "schema_version": "survey_gap_ledger_v1",
+  "gaps": [
+    {"id": "GAP-ODD-001", "status": "accepted", "statement": "Capability is over-transferred beyond declared operational design domains.", "decision_relevance": "bounds valid scaling claims"},
+    {"id": "GAP-DEGRADE-002", "status": "accepted", "statement": "Degradation and safe fallback are detached from fleet-expansion narratives.", "decision_relevance": "reveals assumption failures"},
+    {"id": "GAP-MIXED-003", "status": "accepted", "statement": "Mixed traffic and vulnerable-road-user interaction remain underrepresented as deployment conditions.", "decision_relevance": "tests transition robustness"},
+    {"id": "GAP-INFRA-004", "status": "accepted", "statement": "V2X and road infrastructure lack explicit availability, integrity, latency, and failure boundaries.", "decision_relevance": "prevents hidden infrastructure dependence"},
+    {"id": "GAP-ASSURE-005", "status": "accepted", "statement": "Safety evidence lacks a common claim-to-evidence scaling contract.", "decision_relevance": "supports auditable expansion"},
+    {"id": "GAP-TRUST-006", "status": "accepted", "statement": "Trust, privacy, responsibility, and communication are often outside technical rollout decisions.", "decision_relevance": "supports legitimate service operation"},
+    {"id": "GAP-EQUITY-007", "status": "accepted", "statement": "Service exclusion and accessibility effects can be hidden by fleet averages.", "decision_relevance": "prevents unequal transition burden"}
+  ]
+}

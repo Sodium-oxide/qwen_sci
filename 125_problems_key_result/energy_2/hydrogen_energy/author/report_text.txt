@@ -1,0 +1,389 @@
+               Hydrogen Beyond Color Labels: A
+          Service-Normalized Portfolio Framework for
+            Production, Infrastructure, and End Use
+                                                       Research Design Report
+                             Four-Agent Scientific Workflow: Survey–Idea–ExperimentDesign–Author
+
+
+    Abstract—Hydrogen is often presented either as a universal             The International Energy Agency’s (IEA) Global Hydrogen
+clean fuel or as an inefficient energy carrier with little future.      Review 2024 tracks hydrogen production and demand, infras-
+Both summaries hide the scientific problem. Hydrogen is a carrier       tructure, trade, policy, investment, innovation, and the differ-
+and a chemical feedstock whose value depends on production
+pathway, electricity timing, conversion, storage, transport, end        ence between announced ambitions and real-world progress
+use, and demand. This paper reframes the question as a service-         [1]. It also treats greenhouse-gas emissions of hydrogen supply
+normalized portfolio problem: under which combinations of               chains as an explicit analytical issue. The IEA Net Zero by
+production, renewable and firm electricity, storage, transport          2050 roadmap describes hydrogen and hydrogen-based fuels
+infrastructure, end-use conversion, and policy does hydrogen            as important where electricity cannot easily or economically
+deliver additional climate, reliability, industrial, or energy-access
+value compared with direct electrification and competing fuels?         replace fossil fuels, including parts of shipping, aviation, and
+We synthesize evidence from the International Energy Agency             heavy industry [2]. The IPCC Sixth Assessment Report Work-
+Global Hydrogen Review 2024, the IEA Net Zero by 2050                   ing Group III similarly identifies hydrogen and alternative
+roadmap, and the IPCC Sixth Assessment Report Working                   carriers as components of low-carbon systems for sectors less
+Group III Chapter 6. We then propose a design-only research             amenable to direct electrification, while emphasizing electric-
+program with four boundary states, six experimental stages,
+lifecycle and temporal electricity accounting, process-level service    ity integration, storage, transmission, and demand response
+comparisons, hub and grid optimization, safety and leakage              [3].
+analysis, and out-of-sample validation. A conditional value-at-            These assessments support a targeted systems question, not
+risk objective represents cost, unserved service, emissions, water,     the claim that hydrogen should replace all fossil fuels. The
+land, and safety trade-offs. The central claim is conditional:          relevant comparison is a delivered service: tonnes of ammonia,
+hydrogen has a credible future in selected industrial feedstocks,
+high-temperature processes, transport derivatives, resilience, and      tonnes of steel, tonne-kilometres of shipping, useful industrial
+long-duration storage, but only when its molecular or temporal          heat, recovered electricity, or a defined backup service. The
+function compensates for conversion losses and system burdens.          comparator may be direct electricity, batteries, transmission,
+No newly measured or simulated result is claimed.                       demand response, firm generation, sustainable biofuels, or a
+    Index Terms—hydrogen energy, electrolysis, lifecycle emissions,     different molecule. Hydrogen wins only if its service-specific
+sector coupling, long-duration storage, industrial decarboniza-
+tion, energy systems                                                    advantages outweigh production and conversion losses plus
+                                                                        lifecycle burdens.
+                       I. I NTRODUCTION                                    This paper makes four contributions. First, it separates
+   Hydrogen is neither a primary energy source nor a single             hydrogen production, carrier, feedstock, and end-use bound-
+technology. It is an energy carrier, a chemical reactant, and a         aries. Second, it proposes four nested boundary states that
+possible storage medium. Its production can be coupled to               prevent low-emissions electricity from being conflated with
+natural gas, coal, biomass, nuclear power, renewable elec-              a complete hydrogen transition. Third, it specifies a six-
+tricity, or carbon capture. Its use can replace an industrial           stage experiment and modeling program that links process
+feedstock, provide high-temperature heat, produce ammonia               data, hourly grid conditions, infrastructure, safety, lifecycle
+or synthetic fuels, store energy, or supply backup power.               resources, and offtake. Fourth, it provides falsification criteria
+These roles have different efficiencies, infrastructure, risk, and      for claims about hydrogen’s future.
+climate boundaries.                                                        The report is explicitly DESIGN ONLY. It does not report
+   This diversity explains why the question “What is the future         newly observed production, cost, leakage, safety, or emissions
+of hydrogen energy?” is difficult. A production target does             values, and it does not claim that any project or region has
+not prove that hydrogen creates value. A color label does not           passed the proposed tests.
+establish lifecycle emissions. A cheap electrolyser does not             II. S URVEY: H YDROGEN AS C ARRIER , F EEDSTOCK , AND
+prove that electricity, water, storage, offtake, pipelines, ports,                        S YSTEM C OMPONENT
+and safety systems are available. A hydrogen-powered device             A. Pathway diversity
+does not prove that hydrogen is preferable to direct electricity
+for the same service.                                                      Hydrogen pathway names such as grey, blue, and green
+                                                                        are useful communication shortcuts but do not replace an
+emissions inventory. Steam methane reforming and coal gasi-           D. Infrastructure and demand formation
+fication depend on fossil feedstocks and upstream methane                Hydrogen projects need production equipment, compres-
+or carbon emissions. Carbon capture changes the balance but           sion, storage, transport, refueling or delivery, users, and safety
+adds energy, equipment, transport, monitoring, and storage            systems. The IEA Global Hydrogen Review 2024 explicitly
+requirements. Electrolysis transfers demand to electricity and        tracks infrastructure, trade, policy, investment, innovation, and
+water; its emissions depend on the electricity source and on          progress against project ambitions [1]. This supports a distinc-
+when the electrolyser operates. Biomass and carbon-derived            tion between announced capacity and operating capacity. A
+pathways add land, water, biodiversity, carbon-accounting, and        project without contracted offtake can be technologically im-
+sustainability constraints.                                           pressive but economically fragile; a project without pipelines,
+   A credible comparison therefore records feedstock origin,          ports, or storage may not deliver its intended service.
+electricity source, marginal and average emissions, temporal             Demand uncertainty is amplified when hydrogen is pro-
+matching, additionality, process efficiency, capacity factor,         posed for new sectors. Existing ammonia or refining demand
+water, methane leakage, capture rate, compression, transport,         offers a service anchor, while aviation, shipping, seasonal
+storage, end-use conversion, and replacement. The same path-          storage, and synthetic materials depend on policy, prices,
+way can have different lifecycle performance in different grids       technology learning, and coordinated infrastructure. A robust
+and operating schedules.                                              portfolio should use staged investment, flexible equipment,
+B. Service diversity                                                  multiple users, and decision points that respond to verified
+                                                                      lifecycle and offtake evidence.
+   Hydrogen for ammonia is a chemical feedstock; hydrogen
+for a fuel cell is an electricity or mobility carrier; hydrogen for   E. Key barriers
+direct reduction is a reducing agent; hydrogen in a turbine is           Electrolysers face capital cost, stack degradation, efficiency,
+a combustion fuel; and hydrogen in a cavern is a seasonal             water, and electricity-utilization constraints. All hydrogen
+inventory. A kilogram of hydrogen cannot be used as the               pathways face compression, storage, transport, and end-use
+common outcome without accounting for the service obtained            conversion burdens. Hydrogen’s small molecule creates leak-
+from it. For example, electricity-to-hydrogen-to-electricity has      age and material-integrity concerns; pipelines and vessels may
+more conversions than a battery, while hydrogen can store             experience embrittlement or permeation, and safe operation re-
+energy longer or be transported in ways that change the               quires detection, ventilation, separation, and emergency plan-
+comparison.                                                           ning. Ammonia and other derivatives add toxicity and handling
+   Candidate services include existing chemical demand, direct        hazards. These risks are manageable engineering problems, but
+reduction of iron, high-temperature process heat, shipping fu-        they cannot be excluded from a system comparison.
+els, aviation-derived synthetic hydrocarbons, heavy transport,           Hydrogen can also be a poor substitute where direct elec-
+backup generation, and long-duration or seasonal storage. In          tricity is already effective. A battery-electric vehicle, heat
+each case, the experiment asks whether hydrogen supplies a            pump, or electric process may deliver the same service with
+service that cannot be supplied by direct electricity or another      fewer conversion steps. Conversely, direct electricity may be
+option at acceptable cost, reliability, lifecycle emissions, re-      constrained by mass, range, temperature, material, charging
+source burden, and safety.                                            time, or seasonal storage requirements. The scientific task is
+C. Hydrogen and the electricity system                                to map the boundary between these cases.
+   The IPCC assessment describes net-zero energy systems              F. Four boundary states
+as involving electrification, alternative carriers for difficult        The survey identifies boundary inconsistency as a central
+sectors, system integration, and flexibility [3]. Hydrogen can        gap. We therefore use four states, summarized in Table I.
+be a load on the electricity system, a flexible demand that             Fossil hydrogen with carbon capture is a separate net-zero
+absorbs renewable curtailment, or a storage medium that               sensitivity. It is not silently classified as fossil-free or low-
+returns electricity later. These roles are not automatically          emissions without its upstream and capture boundary. Like-
+compatible. An electrolyser operating during fossil-marginal          wise, hydrogen produced from electricity is not automatically
+scarcity hours can increase system emissions even if its annual       zero-carbon without temporal electricity accounting.
+electricity contract is labeled renewable. An electrolyser that
+operates only when electricity is abundant may have a lower                 III. S CIENTIFIC R EFRAMING AND H YPOTHESES
+capacity factor and higher unit cost.                                    Let a hydrogen portfolio P specify production pathways,
+   The study compares four electricity-accounting cases: an-          electricity inputs, conversion devices, storage, transport, users,
+nual average, hourly marginal, temporally matched, and ad-            and policy conditions. Let b ∈ {H0, H1, H2, H3} be its
+ditional generation. It also includes curtailment, transmission       boundary and s a scenario containing weather, electricity,
+congestion, reserve requirements, and competing electricity           outages, prices, water availability, supply-chain conditions,
+demand. Hydrogen system value depends on the joint distribu-          and demand. The scientific question is whether P delivers a
+tion of electricity price, emissions, renewable output, demand,       declared service with lower total burden than the best feasible
+and storage state rather than a single annual average.                comparator.
+                                                             TABLE I
+                                     H YDROGEN BOUNDARIES AND THE QUESTION EACH STATE ANSWERS .
+
+  State             Boundary                                      Included service                           Interpretation
+  H0 baseline       Existing fossil-derived hydrogen, fuels,      Current chemical and energy services       Reference for cost, emissions,
+                    assets, and demand                                                                       reliability, and infrastructure
+  H1 production     Compare hydrogen production pathways          Fixed end use and infrastructure           Tests production emissions and
+                    with lifecycle accounting                                                                resource burden
+  H2 substitution   Hydrogen or derivatives replace a declared    Ammonia, steel, heat, transport, backup,   Tests whether hydrogen creates service
+                    incumbent service                             or storage                                 value
+  H3 integrated     Production, grid, hubs, transport, storage,   Regional multi-sector service portfolio    Tests deployable and robust system
+  system            users, safety, and policy are coupled                                                    feasibility
+
+
+
+   The hypotheses are:                                                     fuels, and process redesign. Ore quality, hydrogen purity,
+   • H1: Hydrogen creates more climate or reliability value                furnace efficiency, thermal integration, storage, and electricity
+      than direct electricity only where its molecular, high-              capacity are included.
+      temperature, transportable, chemical, or seasonal-storage
+                                                                           C. Hydrogen-derived transport fuels
+      function compensates for conversion losses.
+   • H2: Annual-average grid emissions overstate electrolysis
+                                                                              Ammonia, methanol, and synthetic hydrocarbons can be
+      benefits when electrolysers operate during fossil-marginal           easier to handle in some transport chains than hydrogen itself.
+      or electricity-scarce hours.                                         The experiment compares their complete production, synthe-
+   • H3: Announced production capacity without contracted
+                                                                           sis, storage, transport, and use chains with direct batteries
+      offtake, transport, storage, and conversion capacity does            and sustainable biofuels. For aviation-derived fuels, carbon
+      not establish a viable hydrogen system.                              sourcing and lifecycle accounting are explicit.
+   • H4: Lifecycle emissions, methane leakage, water, land,                D. Long-duration and seasonal storage
+      material integrity, safety, and replacement constraints can
+                                                                              Hydrogen can convert low-carbon electricity into a long-
+      reorder pathway rankings based on operational cost alone.
+                                                                           lived inventory and recover electricity, heat, or fuel later. The
+   • H5: Hydrogen hubs serving multiple users are more
+                                                                           comparison includes batteries, pumped storage, transmission,
+      robust to demand uncertainty than single-user projects,
+                                                                           demand response, firm supply, and other carriers under the
+      subject to coordination, safety, and infrastructure costs.
+                                                                           same adequacy target. Round-trip efficiency is measured to-
+   • H6: The value of hydrogen storage is concentrated in rare
+                                                                           gether with duration, depletion risk, cavern or tank availability,
+      multi-day or seasonal events and is missed by average
+                                                                           and replacement.
+      utilization metrics.
+   • H7: No single hydrogen pathway or color label dominates               E. Remote resilience and backup
+      across regions, electricity conditions, and services.                   Hydrogen may provide a transportable reserve for isolated
+   H1–H4 are process and lifecycle claims. H5–H6 concern                   grids, critical infrastructure, or sites with infrequent but severe
+system and infrastructure design. H7 is a useful positive result           outages. Low annual utilization is not automatically failure
+if it identifies service-specific deployment rules rather than a           if the reserve avoids high-cost service loss; it is also not
+universal fuel prescription.                                               automatically success if storage, safety, and fuel delivery
+       IV. I DEA : A H YDROGEN -S ERVICE P ORTFOLIO                        dominate lifecycle burden.
+  The selected direction is a service-normalized, boundary-                F. Coordinated hydrogen hubs
+explicit, shock-aware hydrogen portfolio. It contains six can-                The selected system route co-locates production, storage,
+didate routes.                                                             pipelines, ports, flexible electricity demand, and multiple users
+A. Industrial feedstock replacement                                        where this improves utilization and lowers duplicated infras-
+   Existing ammonia and refining demand provides a direct                  tructure. Hub design also exposes shared failure modes and
+service anchor. The experiment replaces incumbent hydrogen                 safety zones. The route is evaluated with staged investment
+with lower-emissions pathways and measures product quality,                and offtake uncertainty, not as an assumption that a network
+throughput, certification, cost, electricity or feedstock input,           will appear automatically.
+water, and lifecycle emissions. It also tests whether new supply                                 V. E XPERIMENT D ESIGN
+displaces incumbent production rather than creating additional             A. Stage 1: Demand and boundary audit
+demand.
+                                                                              Construct an hourly service ledger for current hydrogen
+B. Direct reduction and high-temperature industry                          demand and candidate new uses. For ammonia, refining, steel,
+   Hydrogen may act as a reducing agent or heat carrier where              heat, shipping, aviation-derived fuels, backup, and storage,
+direct electricity is technically constrained. Comparisons in-             record the incumbent process, service quality, operating sched-
+clude electric reduction, electric furnaces, biomass, synthetic            ule, peak requirement, storage need, existing infrastructure,
+and fossil dependence. Separate energy, feedstock, emergency,                     VI. M ATHEMATICAL F RAMEWORK
+and routine uses. This stage produces H0 and identifies where          Let t index time, s scenarios, p hydrogen production path-
+proposed hydrogen demand is real, contracted, or speculative.       ways, and j service types. Let hp,t,s be hydrogen output, et,s
+B. Stage 2: Pathway and lifecycle characterization                  electricity input, rj,t,s direct electricity or an alternative carrier,
+                                                                    dj,t,s service demand, and uj,t,s unserved service. Service
+   Parameterize feedstock energy, electricity, water, efficiency,
+                                                                    adequacy is
+capacity factor, degradation, stack replacement, upstream                         ∑︂
+methane, carbon capture, compression, transport, storage,                             ηp,j hp,t,s + rj,t,s ≥ dj,t,s − uj,t,s ,         (1)
+leakage, end-use conversion, and material replacement. For                         p
+electrolysis, run annual-average, hourly marginal, temporally       where ηp,j includes production and end-use conversion. The
+matched, and additional-generation cases. For biomass and           functional unit is the useful service, not kilograms of hydro-
+carbon-derived inputs, include land, water, biodiversity, and       gen.
+carbon-sourcing constraints. All parameters receive prove-            Lifecycle emissions for pathway p are
+nance and are labeled observed, estimated, or assumed.
+                                                                                       feedstock    electricity    process
+                                                                               Ep,s = Ep,s       + Ep,s         + Ep,s
+C. Stage 3: Service-level process comparison                                                 transport    use    captured
+                                                                                                                                       (2)
+                                                                                          + Ep,s       + Ep,s − Ep,s      .
+   For each selected service, compare hydrogen and alterna-
+tives at matched output. Measurements include product quality,      For electrolysis, temporal electricity accounting is
+useful efficiency, purity, temperature, ramping, downtime, stor-                         electricity
+                                                                                       Ep,s          =
+                                                                                                       ∑︂
+                                                                                                          et,s ϕt,s ,                  (3)
+age, equipment life, replacement, safety, and delivered energy.                                            t
+The study does not infer value from a fuel’s ability to burn;
+                                                                    where ϕt,s is the time-specific marginal or contracted electric-
+it requires the fuel to deliver the declared process or mobility
+                                                                    ity factor. Annual-average accounting is a sensitivity because
+service with acceptable emissions and risk.
+                                                                    it can conceal operation during fossil-marginal hours.
+D. Stage 4: Hub, infrastructure, and grid simulation                   Hydrogen inventory is
+   Build a regional hourly model linking renewable and firm                            zt+1,s = zt,s + ht,s − qt,s − ℓt,s ,            (4)
+generation, electrolysers, storage, pipelines, ports, industrial
+users, power recovery, and electricity constraints. Enforce         where q is delivery and ℓ is measured leakage or inventory
+electricity balance, reserve, transmission flow, electrolyser ca-   loss. Compression, transport, and storage add power, pressure,
+pacity, hydrogen inventory, pipeline and port capacity, storage     flow, capacity, and safety constraints. Derivatives use separate
+limits, conversion capacity, and service quality. Optimize hub      synthesis and inventory equations so that conversion losses
+placement and staged investment under uncertain demand. Run         cannot be hidden in a generic carrier variable.
+direct-electrification and competing-fuel cases with the same          The screening utility is
+service target.                                                            U (P ) = − C(P ) − α CVaRβ (u(P )) − λE(P )
+                                                                                                                                       (5)
+E. Stage 5: Stress, safety, and demand uncertainty                                       − γW (P ) − ρR(P ),
+   Stress portfolios with prolonged low renewable output,           where C is annualized cost, u is unserved service, E is lifecy-
+drought affecting hydropower, electricity outages, pipeline or      cle emissions, W is water and land burden, and R aggregates
+port outages, electrolyser failures, storage leakage, water re-     leakage, material, safety, and distributional risks. The final
+strictions, commodity-price shocks, supply-chain interruption,      study reports a Pareto frontier rather than a universally correct
+and withdrawal of expected offtake. Safety scenarios include        weighting.
+detection failure, ventilation loss, embrittlement, transport          Hydrogen storage value depends on conditional covariance
+incidents, and co-location constraints. These are contained risk    between renewable output, electricity demand, outages, and
+analyses, not uncontrolled releases. The model reports service      hydrogen demand. If scarcity occurs during the same hours as
+loss, leakage, emergency operation, recovery time, and cost.        low renewable output, flexible electrolysis, stored hydrogen,
+F. Stage 6: Out-of-sample validation and adoption                   transmission, or firm supply can have different values. The
+                                                                    study estimates tail dependence rather than relying on average
+   Hold out weather years, electricity conditions, outage com-      utilization.
+binations, and project observations. Validate demand, resource,
+electrolyser, storage, outage, and cost models separately from          VII. O UTCOMES , A NALYSIS , AND D ECISION RULES
+the optimizer. Compare predicted utilization and offtake with          Table II organizes the outcomes required for a defensible
+new project data when available. Test policy withdrawal,            comparison.
+certification, contracts, financing, and staged construction. A        The primary estimand is the conditional effect of a hydrogen
+project that survives only with permanent subsidy or uncon-         layer on delivered service, lifecycle burden, and tail reliability
+tracted demand fails the robust-adoption criterion.                 relative to the best feasible comparator. Factorial screening
+                                                                    estimates production, temporal matching, storage, hub, and
+                                 TABLE II                                          If electrolysis emissions are insensitive to temporal electricity
+                    O UTCOME GROUPS AND INTERPRETATION .                           accounting, the importance of hourly grid interaction would be
+      Group              Measures                     Decision meaning
+                                                                                   lower than hypothesized. If announced projects with no offtake
+                                                                                   perform as well as contracted hubs, demand coordination
+      Climate            lifecycle emissions,         Does the pathway reduce
+                         methane, leakage, fossil     total climate burden?        would be less important. If water, safety, materials, leakage,
+                         displacement                                              and replacement never alter pathway ranking, the extended
+      Service            useful heat, steel,          Does hydrogen meet the
+                         ammonia, mobility,           required function?           lifecycle model would add little decision value.
+                         recovered electricity                                        Several outcomes are informative but not universal failures.
+      Reliability        unserved service,            Does it survive correlated
+                         storage depletion,           stress?                      A pathway may pass industrial feedstock replacement and fail
+                         reserve shortfall                                         seasonal storage. A hub may reduce infrastructure cost but
+      Resources          electricity, water, land,    Is the chain physically
+                         biomass, minerals,           feasible?                    create a shared outage or safety risk. Hydrogen may reduce
+                         replacement                                               curtailment while increasing total electricity generation and
+      Infrastructure     pipelines, ports, storage,   Can the service be
+                         hubs, utilization            delivered?                   water use. A low-emissions pathway may be inaccessible
+      Economics          cost, offtake, energy        Can it persist beyond a      to regions without finance or transmission. These outcomes
+                         burden, finance,             pilot?
+                         adoption                                                  demonstrate why a service-normalized portfolio is more in-
+      Safety             embrittlement,               Are risks controlled and     formative than a global production target.
+                         detection, transport,        monitored?
+                         emergency risk
+                                                                                         IX. T HREATS TO VALIDITY AND G OVERNANCE
+                                                                                      External validity is the principal threat. Electrolysis in a
+offtake interactions. Process trials use matched-service con-                      renewable-rich industrial region may not transfer to a water-
+trasts. Regional simulation uses multi-objective optimization                      stressed or weak-grid region. A cavern-storage case may not
+and scenario ensembles. Where empirical project data are                           transfer to a location without suitable geology. A hydrogen
+available, hierarchical panel models estimate heterogeneity by                     steel process may depend on ore quality and industrial clusters.
+grid, sector, and infrastructure context.                                          The design uses regional archetypes, held-out conditions, and
+   A pathway passes H2 only if it delivers the declared service,                   interaction terms rather than claiming a universal effect.
+meets lifecycle emissions and fossil-displacement criteria,                           Internal validity can be threatened by optimistic utilization,
+remains reliable under ordinary and stress conditions, has cred-                   double-counted flexibility, omitted outages, and inconsistent
+ible offtake and infrastructure, satisfies water, land, material,                  lifecycle boundaries. Each input receives provenance and a
+leakage, and safety safeguards, and remains feasible under                         boundary tag. The model cannot count the same electricity as
+financing and policy withdrawal. H3 additionally requires a                        both exportable surplus and firm reserve, cannot count a fuel
+coordinated system with measured utilization, multiple users                       as zero-carbon without upstream accounting, and cannot treat
+or a robust contract, and a feasible construction trajectory.                      announced capacity as operating supply. Sensitivity analysis
+Fossil hydrogen with carbon capture may pass a separate net-                       varies utilization, degradation, leakage, capture, and build-rate
+zero case but cannot be relabeled as a fossil-free pathway.                        assumptions.
+   Power calculations target tail outcomes and project persis-                        Rare-event validity is a further challenge. Historical data
+tence rather than only mean cost. Simulation varies weather                        may not contain unprecedented compound events, while sce-
+years, outage realizations, demand scenarios, and correlation                      nario models can be structurally wrong. The response is to
+structures. If a rare-event probability cannot be estimated                        combine observed conditions, physically justified counterfac-
+precisely, the result is a decision interval and a data-collection                 tuals, uncertainty propagation, and robust decisions. The paper
+requirement. A nominally precise mean cannot substitute for                        must distinguish an event forecast from a stress test intended
+an unresolved reliability tail.                                                    to reveal a weak point.
+                                                                                      Safety and governance are part of feasibility. Hydrogen,
+    VIII. A NTICIPATED F INDINGS AND FALSIFICATION                                 ammonia, storage, pipeline, transport, and industrial facilities
+   This is a design-only report, so anticipated findings are                       require process-hazard analysis, detection, ventilation, sepa-
+hypotheses rather than results. The expected pattern is that hy-                   ration, integrity monitoring, emergency plans, and regulatory
+drogen will be strongest in existing feedstocks, selected high-                    review. Infrastructure and offtake data may be commercially
+temperature or reduction processes, some transport derivatives,                    sensitive and should be aggregated or access-controlled. Com-
+remote reserves, and long-duration storage. Direct electric-                       munities and workers affected by hubs must not bear uncom-
+ity is expected to dominate many light-duty transport, low-                        pensated risk. The model can clarify trade-offs but cannot
+temperature heat, and other services where conversion chains                       replace site-specific safety authorization or public decision
+add no compensating function. The exact boundary will vary                         processes.
+with grid conditions, resource quality, water, infrastructure,
+                                                                                     X. R EPRODUCIBLE P ROTOCOL AND I MPLEMENTATION
+and demand.
+   The central framework would be weakened if hydrogen does                           The archive should contain the boundary definitions, service
+not reduce lifecycle emissions or tail service loss in any can-                    dictionaries, process parameters, hourly traces, scenario gen-
+didate sector after conversion and infrastructure are included.                    erators, infrastructure graphs, solver settings, random seeds,
+code versions, and output schemas. A change in a feedstock           deployment gate, the portfolio must pass adverse weather and
+boundary or temporal electricity rule must create a new              outage scenarios, satisfy infrastructure and replacement rates,
+scenario version. The original result is preserved rather than       and maintain acceptable service and energy-burden distribu-
+overwritten.                                                         tions. Failure at a gate does not invalidate every hydrogen
+   The input pipeline has five layers. Raw layers contain            use; it identifies the condition requiring redesign.
+demand, generation, weather, outage, water, project, and price          For reproducibility, every result is stored as a boundary–
+observations. Harmonization resolves time zones, units, spatial      scenario–portfolio record. The record includes production
+levels, missing periods, and quality flags. The service layer        pathway, electricity accounting rule, storage and transport
+converts hydrogen quantities and energy carriers to useful           assumptions, end-use comparator, lifecycle emissions, water,
+process output. The infrastructure layer describes production,       land, materials, leakage, safety risk, service output, cost,
+storage, transport, and users. The scenario layer combines or-       reliability, offtake, and adoption state. Median, lower-tail, and
+dinary and stress conditions and passes them to the optimizer.       worst safeguarded outcomes are shown together. A project that
+A data-quality report records every transformation.                  performs well only in the median case is labeled fragile. A
+   Synthetic tests should include zero renewable output, stor-       production pathway with strong lifecycle performance but no
+age saturation and depletion, a pipeline outage, an electrol-        viable user is labeled a supply opportunity with unresolved
+yser failure, a demand withdrawal, a leakage event, a water          demand, not a complete energy solution.
+restriction, and an H3 feedstock boundary violation. The tests
+                                                                                           XI. I MPLICATIONS
+verify nonnegative inventories, reserve accounting, service
+loss reporting, conversion losses, and boundary integrity. A            Hydrogen’s future is most plausibly a set of service-specific
+small de-identified demonstration dataset can reproduce model        niches connected by shared infrastructure, not a single fuel
+structure without disclosing commercially sensitive project          replacing every molecule of fossil energy. Research funding
+data.                                                                should target the binding constraint revealed by a service and
+   Reporting is organized as boundary–scenario–portfolio tu-         regional audit. In some locations the constraint will be low-
+ples. Each tuple contains service delivery, emissions, electric-     carbon electricity; in others it will be water, storage duration,
+ity, water, land, materials, leakage, safety risk, storage state,    pipelines, ports, industrial equipment, certification, safety, or
+infrastructure use, cost, offtake, and distributional outcomes.      contracted demand.
+Median results are shown with adverse tails. A portfolio                The IEA’s Global Hydrogen Review emphasizes tracking
+that works only in an average year is labeled fragile. A             production, demand, infrastructure, trade, investment, inno-
+portfolio that passes H1 but fails H2 is reported as a promising     vation, and supply-chain emissions [1]. The IEA net-zero
+production pathway with unresolved service substitution, not         roadmap places hydrogen-based fuels in the gaps where
+as a complete hydrogen solution.                                     electricity cannot easily or economically substitute for fossil
+   The deployment stop rule is explicit. A pathway pauses if it      fuels [2]. The IPCC assessment emphasizes hydrogen in
+violates safety, water, lifecycle, leakage, material-integrity, or   combination with electrification, alternative carriers, storage,
+access safeguards. If it meets safeguards but does not improve       transmission, controls, and demand response [3]. The proposed
+the target service or tail metric, resources move to another         experiment turns these system observations into measurable
+pathway or comparator. If it improves service but cannot meet        decision rules.
+offtake or construction thresholds, the result is recorded as an        Policy should avoid both premature universal deployment
+infrastructure or market gap. This separation prevents technical     and premature dismissal. Procurement can create verified
+optimism from being mistaken for deployment readiness.               demand for industrial feedstock or low-emissions steel; certi-
+   The implementation should expose the difference between           fication can align pathway boundaries; infrastructure planning
+a feasible operating point and a feasible transition. For each       can prevent stranded hubs; safety regulation can make leakage
+year, the model records new capacity, retired capacity, replace-     and integrity visible; and flexible electricity rules can reward
+ment capacity, construction labour, material throughput, grid        electrolysis that supports rather than worsens grid scarcity.
+connection queues, and financing requirements. A portfolio           Support should be conditional on delivered service, lifecycle
+cannot borrow future infrastructure without recording the lead       performance, and persistence after incentives change.
+time needed to build it. Likewise, a hydrogen hub cannot                                   XII. C ONCLUSION
+claim a mature pipeline before transport, integrity, and safety
+approvals are represented. This temporal accounting creates a           Hydrogen has a credible future, but its future is not de-
+direct bridge between the engineering model and the adoption         termined by a production volume or a color label. Hydrogen
+experiment.                                                          is valuable where its molecular, chemical, high-temperature,
+   The policy experiment uses a staged decision rule. At an          transportable, or seasonal-storage function compensates for the
+initial gate, a project must pass service definition, lifecycle      losses and burdens of making and moving it. Direct electricity
+boundary, safety pre-screening, water balance, and a credible        remains the stronger option where it can supply the same
+offtake test. At an intermediate gate, measured utilization,         service efficiently and reliably.
+electricity timing, leakage monitoring, equipment degradation,          This paper proposes a four-boundary, six-stage, service-
+and cost are compared with the registered interval. At a             normalized research program. It compares hydrogen with
+direct electrification and competing fuels using temporal elec-
+tricity accounting, lifecycle emissions, infrastructure and off-
+take constraints, storage and grid stress, safety and leakage
+analysis, water and material safeguards, affordability, and out-
+of-sample validation. The answer remains conditional and
+testable: hydrogen should be deployed by service and region,
+with its complete chain measured. The design remains open
+to rejection, and its expected and observed result arrays
+remain empty until empirical and computational validation are
+completed.
+                            R EFERENCES
+ [1] International Energy Agency, Global Hydrogen Review 2024. Paris,
+     France: IEA, 2024. [Online]. Available: https://www.iea.org/reports/
+     global-hydrogen-review-2024
+ [2] International Energy Agency, Net Zero by 2050: A Roadmap for the
+     Global Energy Sector. Paris, France: IEA, 2021. [Online]. Available:
+     https://www.iea.org/reports/net-zero-by-2050
+ [3] Intergovernmental Panel on Climate Change, Climate Change 2022:
+     Mitigation of Climate Change, Working Group III Contribution to the
+     Sixth Assessment Report. Cambridge, U.K.: Cambridge Univ. Press,
+     2022, ch. 6, “Energy Systems.” [Online]. Available: https://www.ipcc.
+     ch/report/ar6/wg3/chapter/chapter-6/
+

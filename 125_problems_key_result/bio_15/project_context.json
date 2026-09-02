@@ -1,0 +1,23 @@
+{
+  "schema_version": "project_context_v1",
+  "project_id": "bio_15",
+  "topic": "Will the world's population keep growing indefinitely?",
+  "language": "en",
+  "declared_domain": ["demography", "population forecasting", "statistical modeling", "climate-risk assessment"],
+  "scientific_reframe": "Under what jointly specified fertility, mortality, migration, and climate-disruption trajectories would global population continue increasing beyond 2100, and can a component-resolved, out-of-sample-calibrated ensemble distinguish those trajectories from trajectories that peak before 2100?",
+  "research_object": "Country-by-age-by-sex population trajectories aggregated to global population, with demographic components and climate-disruption covariates represented separately.",
+  "primary_endpoint": "Posterior probability that global population growth remains positive through 2100, together with the distribution of the first global peak year.",
+  "boundary": {
+    "execution_policy": "DESIGN_ONLY",
+    "observed_results": [],
+    "not_claimed": ["a new population forecast", "a causal estimate of climate change on fertility or mortality", "a prediction of a single inevitable population total", "policy recommendations derived from executed simulations"]
+  },
+  "subhypotheses": [
+    {"id": "SH-FERTILITY", "question": "How strongly do alternative country-level fertility convergence trajectories determine whether global growth persists beyond 2100?"},
+    {"id": "SH-MORTALITY", "question": "How do longevity improvements and episodic mortality shocks change peak timing after conditioning on fertility?"},
+    {"id": "SH-MIGRATION", "question": "When does migration redistribute age structure enough to change global peak timing, rather than only national trajectories?"},
+    {"id": "SH-CLIMATE", "question": "Do explicitly uncertain climate-disruption covariates improve calibrated forecasts of demographic components beyond non-climate baselines?"},
+    {"id": "SH-AGGREGATION", "question": "Can a coherent cohort-component ensemble maintain calibration at country, regional, and global aggregation levels?"}
+  ],
+  "project_context_fingerprint": "pcf:bio_15:population_peak_persistence_atlas:v1"
+}

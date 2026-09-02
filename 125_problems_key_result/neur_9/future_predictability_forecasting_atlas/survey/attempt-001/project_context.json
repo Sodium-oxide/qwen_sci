@@ -1,0 +1,633 @@
+{
+  "schema_version": "survey_project_context_artifact_v1",
+  "event": "project_created",
+  "project_id": "sci_future_predictability_forecasting_atlas_survey_001",
+  "declared_domain": "",
+  "domain": "Environmental And Climate Science",
+  "research_domains": [
+    {
+      "key": "environmental_climate_science",
+      "domain": "environmental_science",
+      "subfield": "environmental_climate_science",
+      "label": "Environmental And Climate Science",
+      "matched_terms": [
+        "climate"
+      ],
+      "declared_domain_matches": [],
+      "scientific_text_matches": [
+        "climate"
+      ],
+      "declared_domain_score": 0.0,
+      "scientific_text_score": 1.0,
+      "score": 11.0,
+      "source": "declared_domain_and_scientific_text",
+      "evidence_status": "DIRECT"
+    }
+  ],
+  "domain_resolution_source": "catalog_resolution_after_llm_failure",
+  "requires_human_confirmation": true,
+  "research_context": {
+    "input_fingerprint": "47f49dd8c581ffcb4a7db8d26236d43912230c3a7bf102693089a2f48ae85c46",
+    "original_topic": "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from probabilistic forecasting and scenario projection.",
+    "title": "",
+    "schema_version": "project_research_context_v3",
+    "declared_domain": "",
+    "domain": "Environmental And Climate Science",
+    "research_domains": [
+      {
+        "key": "environmental_climate_science",
+        "domain": "environmental_science",
+        "subfield": "environmental_climate_science",
+        "label": "Environmental And Climate Science",
+        "matched_terms": [
+          "climate"
+        ],
+        "declared_domain_matches": [],
+        "scientific_text_matches": [
+          "climate"
+        ],
+        "declared_domain_score": 0.0,
+        "scientific_text_score": 1.0,
+        "score": 11.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      }
+    ],
+    "research_identity": {
+      "label": "Environmental And Climate Science",
+      "source": "catalog",
+      "confidence": 0.0,
+      "rationale": "",
+      "evidence_spans": [],
+      "secondary_labels": [],
+      "core_entities": [],
+      "retrieval_synonyms": [],
+      "must_not_be_primary": []
+    },
+    "domain_taxonomy": {
+      "catalog_version": "research_domain_catalog_v1",
+      "coverage": "catalog",
+      "mappings": [
+        {
+          "key": "environmental_climate_science",
+          "domain": "environmental_science",
+          "subfield": "environmental_climate_science",
+          "label": "Environmental And Climate Science",
+          "matched_terms": [
+            "climate"
+          ],
+          "declared_domain_matches": [],
+          "scientific_text_matches": [
+            "climate"
+          ],
+          "declared_domain_score": 0.0,
+          "scientific_text_score": 1.0,
+          "score": 11.0,
+          "source": "declared_domain_and_scientific_text",
+          "evidence_status": "DIRECT"
+        }
+      ]
+    },
+    "discovery_taxonomy": {
+      "schema_version": "discipline_taxonomy_v1",
+      "scope": "natural_science_engineering_only",
+      "status": "resolved",
+      "primary_discipline": "earth_planetary_science",
+      "discipline_ids": [
+        "earth_planetary_science"
+      ],
+      "adjacent_disciplines": [
+        "environmental_science",
+        "physics_astronomy"
+      ],
+      "coverage": "exact",
+      "matched_terms": [
+        "climate science"
+      ],
+      "out_of_scope_terms": [],
+      "mixed": false,
+      "primary": {
+        "key": "earth_planetary_science",
+        "label": "Earth and Planetary Sciences",
+        "family": "earth_space_sciences",
+        "aliases": [
+          "earth science",
+          "earth sciences",
+          "planetary science",
+          "geology",
+          "geophysics",
+          "geochemistry",
+          "oceanography",
+          "meteorology",
+          "climate science"
+        ],
+        "internal_domains": [
+          "earth_environmental_science",
+          "astrobiology",
+          "physics"
+        ],
+        "openalex_field_ids": [
+          "19"
+        ],
+        "arxiv_categories": [
+          "physics.geo-ph",
+          "astro-ph.EP"
+        ],
+        "semantic_scholar_fields": [
+          "Environmental Science",
+          "Physics"
+        ],
+        "provider_applicability": [
+          "openalex",
+          "semantic_scholar",
+          "arxiv"
+        ],
+        "coverage": "exact",
+        "adjacent": [
+          "environmental_science",
+          "physics_astronomy",
+          "agricultural_biological_sciences"
+        ],
+        "wos_categories": []
+      },
+      "provider_filters": {
+        "arxiv": {
+          "provider": "arxiv",
+          "primary_discipline": "earth_planetary_science",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "environmental_science",
+            "physics_astronomy"
+          ],
+          "mode": "native_filter",
+          "policy": "hard_filter",
+          "applied": true,
+          "categories": [
+            "physics.geo-ph",
+            "astro-ph.EP"
+          ],
+          "category_expression": "(cat:physics.geo-ph OR cat:astro-ph.EP)",
+          "reason": "An exact bounded arXiv category expression is available for candidate-discovery metadata."
+        },
+        "openalex": {
+          "provider": "openalex",
+          "primary_discipline": "earth_planetary_science",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "environmental_science",
+            "physics_astronomy"
+          ],
+          "mode": "native_filter",
+          "policy": "hard_filter",
+          "applied": true,
+          "resolved_field_ids": [
+            "19"
+          ],
+          "filter": "primary_topic.field.id:19",
+          "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+        },
+        "semantic_scholar": {
+          "provider": "semantic_scholar",
+          "primary_discipline": "earth_planetary_science",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "environmental_science",
+            "physics_astronomy"
+          ],
+          "mode": "field_hint",
+          "policy": "soft_boost",
+          "applied": false,
+          "field_hints": [
+            "Environmental Science",
+            "Physics"
+          ],
+          "reason": "Semantic Scholar field values are recorded as soft hints; no hard field filter is claimed."
+        }
+      },
+      "reason": "Resolved conservatively from allowlisted aliases; provider-native filters remain metadata until a provider route consumes them."
+    },
+    "domain_context": {
+      "primary": "Environmental And Climate Science",
+      "taxonomy_labels": [
+        "Environmental And Climate Science"
+      ],
+      "secondary_labels": [],
+      "retrieval_terms": [
+        "Environmental And Climate Science"
+      ]
+    },
+    "catalog_resolution": {
+      "catalog_version": "research_domain_catalog_v1",
+      "declared_domain": "",
+      "requested_domain_is_generic": true,
+      "primary_label": "Environmental And Climate Science",
+      "primary_domain": "environmental_science",
+      "primary_subfield": "environmental_climate_science",
+      "research_domains": [
+        {
+          "key": "environmental_climate_science",
+          "domain": "environmental_science",
+          "subfield": "environmental_climate_science",
+          "label": "Environmental And Climate Science",
+          "matched_terms": [
+            "climate"
+          ],
+          "declared_domain_matches": [],
+          "scientific_text_matches": [
+            "climate"
+          ],
+          "declared_domain_score": 0.0,
+          "scientific_text_score": 1.0,
+          "score": 11.0,
+          "source": "declared_domain_and_scientific_text",
+          "evidence_status": "DIRECT"
+        }
+      ],
+      "requires_human_confirmation": true
+    },
+    "catalog_conflict": {
+      "detected": false,
+      "adjudicated": false,
+      "catalog_primary_label": "Environmental And Climate Science",
+      "reason": ""
+    },
+    "domain_resolution_source": "catalog_resolution_after_llm_failure",
+    "requires_human_confirmation": true,
+    "primary_discipline": "earth_planetary_science",
+    "secondary_disciplines": [],
+    "domain_confidence": 0.0,
+    "core_entities": [
+      "climate"
+    ],
+    "retrieval_synonyms": [
+      "Environmental And Climate Science"
+    ],
+    "abbreviations": [],
+    "exclusion_terms": [],
+    "llm_payload": {},
+    "llm_attempted": true,
+    "llm_error": "RetryError: RetryError[<Future at 0x2408b8b2e50 state=finished raised ProxyError>]",
+    "taxonomy_resolution": {
+      "schema_version": "discipline_taxonomy_v1",
+      "scope": "natural_science_engineering_only",
+      "status": "resolved",
+      "primary_discipline": "earth_planetary_science",
+      "discipline_ids": [
+        "earth_planetary_science"
+      ],
+      "adjacent_disciplines": [
+        "environmental_science",
+        "physics_astronomy"
+      ],
+      "coverage": "exact",
+      "matched_terms": [
+        "climate science"
+      ],
+      "out_of_scope_terms": [],
+      "mixed": false,
+      "primary": {
+        "key": "earth_planetary_science",
+        "label": "Earth and Planetary Sciences",
+        "family": "earth_space_sciences",
+        "aliases": [
+          "earth science",
+          "earth sciences",
+          "planetary science",
+          "geology",
+          "geophysics",
+          "geochemistry",
+          "oceanography",
+          "meteorology",
+          "climate science"
+        ],
+        "internal_domains": [
+          "earth_environmental_science",
+          "astrobiology",
+          "physics"
+        ],
+        "openalex_field_ids": [
+          "19"
+        ],
+        "arxiv_categories": [
+          "physics.geo-ph",
+          "astro-ph.EP"
+        ],
+        "semantic_scholar_fields": [
+          "Environmental Science",
+          "Physics"
+        ],
+        "provider_applicability": [
+          "openalex",
+          "semantic_scholar",
+          "arxiv"
+        ],
+        "coverage": "exact",
+        "adjacent": [
+          "environmental_science",
+          "physics_astronomy",
+          "agricultural_biological_sciences"
+        ],
+        "wos_categories": []
+      },
+      "provider_filters": {
+        "arxiv": {
+          "provider": "arxiv",
+          "primary_discipline": "earth_planetary_science",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "environmental_science",
+            "physics_astronomy"
+          ],
+          "mode": "native_filter",
+          "policy": "hard_filter",
+          "applied": true,
+          "categories": [
+            "physics.geo-ph",
+            "astro-ph.EP"
+          ],
+          "category_expression": "(cat:physics.geo-ph OR cat:astro-ph.EP)",
+          "reason": "An exact bounded arXiv category expression is available for candidate-discovery metadata."
+        },
+        "openalex": {
+          "provider": "openalex",
+          "primary_discipline": "earth_planetary_science",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "environmental_science",
+            "physics_astronomy"
+          ],
+          "mode": "native_filter",
+          "policy": "hard_filter",
+          "applied": true,
+          "resolved_field_ids": [
+            "19"
+          ],
+          "filter": "primary_topic.field.id:19",
+          "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+        },
+        "semantic_scholar": {
+          "provider": "semantic_scholar",
+          "primary_discipline": "earth_planetary_science",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "environmental_science",
+            "physics_astronomy"
+          ],
+          "mode": "field_hint",
+          "policy": "soft_boost",
+          "applied": false,
+          "field_hints": [
+            "Environmental Science",
+            "Physics"
+          ],
+          "reason": "Semantic Scholar field values are recorded as soft hints; no hard field filter is claimed."
+        }
+      },
+      "reason": "Resolved conservatively from allowlisted aliases; provider-native filters remain metadata until a provider route consumes them."
+    },
+    "original_objective": "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from probabilistic forecasting and scenario projection.",
+    "research_brief": "",
+    "identity_status": "resolved",
+    "evidence_spans": [
+      "climate"
+    ],
+    "academic_operationalization": {
+      "applied": false,
+      "mode": "survey_scope",
+      "original_objective": "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from probabilistic forecasting and scenario projection.",
+      "normalized_objective": "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from probabilistic forecasting and scenario projection.",
+      "task_or_question": "",
+      "research_object": "",
+      "outcomes_or_readouts": [],
+      "data_or_deployment_context": [],
+      "baseline_requirements": [],
+      "limitation_and_failure_conditions": [],
+      "rewrite_reason": "The original objective already contains sufficient scope anchors.",
+      "extractor": "deterministic_skip"
+    },
+    "recommended_sources": [
+      {
+        "provider": "openalex",
+        "priority": 1,
+        "role": "primary_discovery",
+        "native_filter": {
+          "provider": "openalex",
+          "primary_discipline": "earth_planetary_science",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "environmental_science",
+            "physics_astronomy"
+          ],
+          "mode": "native_filter",
+          "policy": "hard_filter",
+          "applied": true,
+          "resolved_field_ids": [
+            "19"
+          ],
+          "filter": "primary_topic.field.id:19",
+          "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+        }
+      },
+      {
+        "provider": "arxiv",
+        "priority": 2,
+        "role": "conditional_preprint_discovery",
+        "enabled_for_exact_mapping": true,
+        "native_filter": {
+          "provider": "arxiv",
+          "primary_discipline": "earth_planetary_science",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "environmental_science",
+            "physics_astronomy"
+          ],
+          "mode": "native_filter",
+          "policy": "hard_filter",
+          "applied": true,
+          "categories": [
+            "physics.geo-ph",
+            "astro-ph.EP"
+          ],
+          "category_expression": "(cat:physics.geo-ph OR cat:astro-ph.EP)",
+          "reason": "An exact bounded arXiv category expression is available for candidate-discovery metadata."
+        }
+      },
+      {
+        "provider": "semantic_scholar",
+        "priority": 3,
+        "role": "fallback_only",
+        "native_filter": {
+          "provider": "semantic_scholar",
+          "primary_discipline": "earth_planetary_science",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "environmental_science",
+            "physics_astronomy"
+          ],
+          "mode": "field_hint",
+          "policy": "soft_boost",
+          "applied": false,
+          "field_hints": [
+            "Environmental Science",
+            "Physics"
+          ],
+          "reason": "Semantic Scholar field values are recorded as soft hints; no hard field filter is claimed."
+        }
+      }
+    ],
+    "retrieval_plan": {
+      "schema_version": "retrieval_lanes_v1",
+      "execution_policy": "limited_query_lanes",
+      "baseline_query": "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from probabilistic forecasting and scenario projection.",
+      "normalized_objective": "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from probabilistic forecasting and scenario projection.",
+      "include_anchors": [
+        "Environmental And Climate Science",
+        "climate"
+      ],
+      "exclude_anchors": [],
+      "evidence_mode": "overview",
+      "query_lanes": [
+        {
+          "lane_id": "broad_anchor",
+          "lane": "broad_anchor",
+          "provider": "openalex",
+          "query": "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from probabilistic forecasting and scenario projection.",
+          "evidence_mode": "overview",
+          "taxonomy_coverage": "broad",
+          "hard_filter_allowed": false,
+          "hard_filter_applied": false,
+          "provider_filter": {},
+          "purpose": "recall_baseline",
+          "discipline_filter_policy": "broad",
+          "execution_phase": "initial"
+        },
+        {
+          "lane_id": "exact_discipline",
+          "lane": "exact_discipline",
+          "provider": "openalex",
+          "query": "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from probabilistic forecasting and scenario projection.",
+          "evidence_mode": "overview",
+          "taxonomy_coverage": "exact",
+          "hard_filter_allowed": true,
+          "hard_filter_applied": true,
+          "provider_filter": {
+            "provider": "openalex",
+            "primary_discipline": "earth_planetary_science",
+            "coverage": "exact",
+            "soft_expansion_disciplines": [
+              "environmental_science",
+              "physics_astronomy"
+            ],
+            "mode": "native_filter",
+            "policy": "hard_filter",
+            "applied": true,
+            "resolved_field_ids": [
+              "19"
+            ],
+            "filter": "primary_topic.field.id:19",
+            "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+          },
+          "purpose": "precision_expansion",
+          "discipline_filter_policy": "exact_primary",
+          "execution_phase": "initial"
+        },
+        {
+          "lane_id": "arxiv_frontier",
+          "lane": "arxiv_frontier",
+          "provider": "arxiv",
+          "query": "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from probabilistic forecasting and scenario projection.",
+          "evidence_mode": "overview",
+          "taxonomy_coverage": "exact",
+          "hard_filter_allowed": true,
+          "hard_filter_applied": true,
+          "provider_filter": {
+            "provider": "arxiv",
+            "primary_discipline": "earth_planetary_science",
+            "coverage": "exact",
+            "soft_expansion_disciplines": [
+              "environmental_science",
+              "physics_astronomy"
+            ],
+            "mode": "native_filter",
+            "policy": "hard_filter",
+            "applied": true,
+            "categories": [
+              "physics.geo-ph",
+              "astro-ph.EP"
+            ],
+            "category_expression": "(cat:physics.geo-ph OR cat:astro-ph.EP)",
+            "reason": "An exact bounded arXiv category expression is available for candidate-discovery metadata."
+          },
+          "purpose": "conditional_preprint_coverage",
+          "discipline_filter_policy": "exact_primary",
+          "execution_phase": "initial"
+        }
+      ]
+    },
+    "identity_source": "catalog_resolution_after_llm_failure",
+    "llm_used": false,
+    "research_design_inventory": {
+      "schema_version": "research_design_inventory_v1",
+      "input_fingerprint": "46257ccd1568396abaec7e9a9d7022ae0f26c8c2ca123f42933ab6add7e2601b",
+      "project_context_fingerprint": "47f49dd8c581ffcb4a7db8d26236d43912230c3a7bf102693089a2f48ae85c46",
+      "design_basis": [
+        {
+          "id": "DB1",
+          "kind": "research_object",
+          "statement": "The project studies Environmental And Climate Science.",
+          "anchors": [
+            "climate",
+            "Environmental And Climate Science"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "climate",
+            "Environmental And Climate Science",
+            "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from prob"
+          ]
+        },
+        {
+          "id": "DB2",
+          "kind": "target_relation",
+          "statement": "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from probabilistic forecasting and scenario projection.",
+          "anchors": [
+            "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from prob",
+            "climate"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from prob"
+          ]
+        },
+        {
+          "id": "DB3",
+          "kind": "outcome_or_construct",
+          "statement": "The project requires evidence about declared outcomes or constructs.",
+          "anchors": [
+            "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from prob"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from prob"
+          ]
+        },
+        {
+          "id": "DB4",
+          "kind": "condition_or_regime",
+          "statement": "The project scope includes the declared conditions, regimes, or contexts.",
+          "anchors": [
+            "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from prob"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "Is it possible to predict the future? A horizon-conditioned, calibration-aware study of predictability limits across weather, climate, orbital, economic, and public-health complex systems, separating deterministic state prediction from prob"
+          ]
+        }
+      ],
+      "inventory_source": "project_declaration_compiler",
+      "llm_used": false,
+      "llm_error": "RetryError: RetryError[<Future at 0x240c4431b30 state=finished raised ProxyError>]"
+    },
+    "cache_status": "miss"
+  }
+}

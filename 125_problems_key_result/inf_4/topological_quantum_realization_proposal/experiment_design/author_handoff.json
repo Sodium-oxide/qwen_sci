@@ -1,0 +1,24 @@
+{
+  "schema_version": "author_handoff_v1",
+  "project_id": "inf_4_topological_quantum_realization",
+  "survey_binding": {
+    "survey_run_id": "survey-inf4-tqc-001",
+    "project_context_fingerprint": "tqc-inf4-scope-nonabelian-witness-design-only-v1",
+    "survey_manifest": "../survey/survey_manifest.json",
+    "allowed_evidence_plan": "../survey/survey_evidence_plan.json",
+    "allowed_gap_ledger": "../survey/survey_gap_ledger.json"
+  },
+  "selected_idea": {"idea_id": "idea-brel-001", "title": "Braiding-Readiness Evidence Ledger (BREL)"},
+  "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "execution_policy": {"mode": "DESIGN_ONLY", "observed_results": []},
+  "required_sections": ["Abstract", "Introduction", "Survey and Research Gap", "BREL Concept", "Research Questions and Hypotheses", "Proposed Study Design", "Analysis and Decision Logic", "Expected Outcome Branches", "Risks and Human Review", "Conclusion", "References", "Idea Evolution Appendix", "Evidence and Review Appendix"],
+  "source_constraints": [
+    "Use only citation keys registered in survey_evidence_plan.json.",
+    "No assertion of observed device, braiding, performance, or simulation results.",
+    "No acknowledgment section or process-external filler.",
+    "Use English and IEEE conference style.",
+    "Retain all human review and safety boundary items."
+  ],
+  "core_conclusion": "Topological quantum computing is theoretically realizable. The research question for current candidate platforms is whether they can pass a falsifiable chain from phase to nonlocal operation and protected logical utility. BREL makes that chain testable and classifies a platform without conflating suggestive local signatures with full realization.",
+  "review_items": ["Full-text source applicability", "platform-specific device physics", "laboratory protocol safety", "institutional/IP data release policy", "statistical threshold selection", "universal-resource budget assumptions"]
+}

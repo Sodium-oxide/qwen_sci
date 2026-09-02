@@ -1,0 +1,63 @@
+{
+  "execution_id": "sim-0e4dc175ba3d41fab45bc0dc32439065",
+  "model_identity": {
+    "created_from_artifact": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\tmp\\manual-quantitative-workflow\\runs\\quantitative-flow\\idea\\attempt-001\\quantitative_ideas_manifest.json",
+    "model_spec_identity": "7a35d0ebbdb4e4c11aaca1c6ac0a8a186a8f4829937ee057e494c59d76256a74",
+    "project_context_fingerprint": "quantitative-workflow-context",
+    "project_id": "quantitative-workflow-project",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "quantitative-flow",
+    "selected_direction_id": "direction-1",
+    "survey_run_id": "survey-quantitative-flow",
+    "version": "0"
+  },
+  "plan_identity": "eaa124fc2bbb5131fde2a32adc24c3013d1d4f046c1f55bf93e90689a3463d13",
+  "scenario_results": [
+    {
+      "result": {
+        "numerical_checks": {
+          "solver_converged": true
+        },
+        "solver_id": "scipy_solve_ivp",
+        "state_series": {
+          "x": [
+            1.0,
+            0.9048374170934126,
+            0.818730752494205,
+            0.7408182203969637,
+            0.6703200459982829,
+            0.6065306598781676,
+            0.5488116364241742,
+            0.4965853042533417,
+            0.4493289646828666,
+            0.4065696603860345,
+            0.3678794422800338
+          ]
+        },
+        "status": "COMPLETED",
+        "summary": {
+          "final_state": {
+            "x": 0.3678794422800338
+          },
+          "function_evaluations": 68,
+          "time_points": 11
+        },
+        "time": [
+          0.0,
+          0.1,
+          0.2,
+          0.30000000000000004,
+          0.4,
+          0.5,
+          0.6000000000000001,
+          0.7000000000000001,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "scenario_id": "baseline"
+    }
+  ],
+  "schema_version": "simulation_result_v1"
+}

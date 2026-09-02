@@ -1,0 +1,22 @@
+{
+  "stage":"survey",
+  "schema_version":"1.0",
+  "gaps":[
+    {"id":"G1","name":"task_conflation","question":"How should exact prediction, probabilistic forecasting, nowcasting, early warning, and impact forecasting be separated?","testability":"Report hazard-specific targets, horizons, information cutoffs, and decision outputs separately."},
+    {"id":"G2","name":"rare_event_scoring","question":"Can a system improve extreme-event tail calibration without increasing unusable false alarms?","testability":"Use proper probabilistic scores, exceedance calibration, miss/false-alarm curves, and impact-weighted loss."},
+    {"id":"G3","name":"source_state_uncertainty","question":"How much do initial-condition and source-geometry uncertainties limit forecasts?","testability":"Use synthetic truth and ensemble perturbations for atmosphere, rupture, bathymetry, and coastal states."},
+    {"id":"G4","name":"latency_accounting","question":"Does model accuracy remain useful after data, compute, communication, and response latency?","testability":"Measure end-to-end warning lead time and skill at fixed latency budgets."},
+    {"id":"G5","name":"distribution_shift","question":"Do models remain calibrated under unusual events and changing sensor networks?","testability":"Use temporal, spatial, event, and sensor-domain holdouts with drift diagnostics."},
+    {"id":"G6","name":"cross_hazard_transfer","question":"Which representations transfer across hazards without forcing false physical similarities?","testability":"Compare shared, hazard-specific, and shared-backbone/separate-head architectures."},
+    {"id":"G7","name":"prospective_validation","question":"Can apparent forecast gains survive a strict information-time audit?","testability":"Lock hindcast inputs and evaluate only information available before each forecast origin."
+    }
+  ],
+  "rejected_overclaims":[
+    "A weather forecasting model automatically predicts earthquake rupture initiation.",
+    "A tsunami warning after an earthquake is an exact pre-event tsunami prediction.",
+    "An earthquake detector has discovered a reliable precursor.",
+    "Lower average error guarantees fewer deaths or better warnings.",
+    "A single universal model should replace hazard-specific physical simulators."
+  ],
+  "observed_results":[]
+}

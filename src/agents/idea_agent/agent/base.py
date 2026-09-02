@@ -1,4 +1,5 @@
 import os
+from collections.abc import Callable, Mapping
 from typing import Any, Dict, Optional
 
 try:
@@ -41,6 +42,75 @@ def _load_runtime_project_config(config: Any) -> Any:
             return load_project_config()
         except Exception:
             return config
+
+
+def _stream_fragment(value: object) -> str:
+    if isinstance(value, str):
+        return value
+    if isinstance(value, Mapping):
+        text = value.get("text") or value.get("content") or value.get("delta")
+        return text if isinstance(text, str) else ""
+    if isinstance(value, (list, tuple)):
+        return "".join(_stream_fragment(item) for item in value)
+    return str(value) if value is not None and not isinstance(value, (list, tuple)) else ""
+
+
+def _chat_stream_fragment(chunk: object) -> str:
+    if isinstance(chunk, Mapping):
+        choices = chunk.get("choices")
+    else:
+        choices = getattr(chunk, "choices", None)
+    if not choices:
+        return ""
+    choice = choices[0]
+    delta = choice.get("delta") if isinstance(choice, Mapping) else getattr(choice, "delta", None)
+    if isinstance(delta, Mapping):
+        return _stream_fragment(delta.get("content"))
+    return _stream_fragment(getattr(delta, "content", None))
+
+
+def _chat_stream_activity(chunk: object) -> str:
+    if isinstance(chunk, Mapping):
+        choices = chunk.get("choices")
+    else:
+        choices = getattr(chunk, "choices", None)
+    if not choices:
+        return ""
+    choice = choices[0]
+    delta = choice.get("delta") if isinstance(choice, Mapping) else getattr(choice, "delta", None)
+    if isinstance(delta, Mapping):
+        return _stream_fragment(delta.get("content") or delta.get("reasoning_content"))
+    return _stream_fragment(
+        getattr(delta, "content", None) or getattr(delta, "reasoning_content", None)
+    )
+
+
+def _response_stream_fragment(event: object) -> str:
+    event_type = event.get("type") if isinstance(event, Mapping) else getattr(event, "type", None)
+    if event_type not in {"response.output_text.delta", "response.text.delta"}:
+        return ""
+    return _stream_fragment(event.get("delta") if isinstance(event, Mapping) else getattr(event, "delta", None))
+
+
+def _consume_text_stream(
+    response_stream: object,
+    *,
+    fragment_reader: Callable[[object], str],
+    activity_reader: Callable[[object], str] | None,
+    callback: Callable[[str], object] | None,
+) -> str:
+    fragments: list[str] = []
+    for chunk in response_stream:  # type: ignore[union-attr]
+        fragment = fragment_reader(chunk)
+        activity = fragment or (activity_reader(chunk) if activity_reader is not None else "")
+        if not fragment and activity and callback is not None:
+            callback(activity)
+        if not fragment:
+            continue
+        fragments.append(fragment)
+        if callback is not None:
+            callback(fragment)
+    return "".join(fragments).strip()
 
 class AgentBase:
     """
@@ -96,6 +166,10 @@ class AgentBase:
             resolved_model,
             kwargs,
         )
+        stream_requested = bool(request_kwargs.pop("stream", False))
+        stream_callback = request_kwargs.pop("stream_callback", None)
+        if stream_callback is not None and not callable(stream_callback):
+            raise ValueError("stream_callback must be callable")
         if transport not in {"chat_completions", "responses"}:
             raise ValueError(
                 f"Idea Agent text chat requires Chat Completions or Responses; "
@@ -106,22 +180,40 @@ class AgentBase:
                 request_kwargs,
                 strip_reasoning=self.provider.name == "qwen",
             )
+            if stream_requested:
+                request_kwargs["stream"] = True
             response = self.chat_model.chat.completions.create(
                 model=resolved_model,
                 messages=[{"role": "user", "content": prompt}],
                 **request_kwargs,
             )
+            if stream_requested:
+                return _consume_text_stream(
+                    response,
+                    fragment_reader=_chat_stream_fragment,
+                    activity_reader=_chat_stream_activity,
+                    callback=stream_callback,
+                )
             return extract_response_text(response)
 
         request_kwargs = normalize_responses_kwargs(
             request_kwargs,
             strip_gpt_parameters=self.provider.name == "qwen",
         )
+        if stream_requested:
+            request_kwargs["stream"] = True
         response = self.chat_model.responses.create(
             model=resolved_model,
             input=[{"role": "user", "content": prompt}],
             **request_kwargs,
         )
+        if stream_requested:
+            return _consume_text_stream(
+                response,
+                fragment_reader=_response_stream_fragment,
+                activity_reader=None,
+                callback=stream_callback,
+            )
         return extract_response_text(response)
 
     def _current_base_url(self) -> Optional[str]:

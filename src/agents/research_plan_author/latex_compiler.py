@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import tempfile
 from time import perf_counter
+import uuid
 from collections.abc import Mapping
 from typing import Any
 
@@ -188,8 +189,18 @@ def compile_latex_project(
     command_reports: list[dict[str, Any]] = []
     log_parts: list[str] = []
     failure_stage = ""
-    with tempfile.TemporaryDirectory(prefix="research-plan-author-compile-") as temporary_root:
-        workspace = Path(temporary_root) / "project"
+    configured_work_dir = _text(os.environ.get("SCIENCE_LATEX_WORK_DIR"))
+    if configured_work_dir:
+        compile_root = Path(configured_work_dir).expanduser().resolve()
+        compile_root.mkdir(parents=True, exist_ok=True)
+        temporary_root = compile_root / f"research-plan-author-compile-{os.getpid()}-{uuid.uuid4().hex[:8]}"
+        temporary_root.mkdir()
+        cleanup_temporary_root = False
+    else:
+        temporary_root = Path(tempfile.mkdtemp(prefix="research-plan-author-compile-"))
+        cleanup_temporary_root = True
+    try:
+        workspace = temporary_root / "project"
         shutil.copytree(source_project, workspace)
         compile_cwd = workspace / main_relative.parent
         for stage, command in commands:
@@ -235,6 +246,9 @@ def compile_latex_project(
             shutil.copy2(compiled_pdf, temporary_pdf)
             os.replace(temporary_pdf, target_pdf)
             staged = target_pdf
+    finally:
+        if cleanup_temporary_root:
+            shutil.rmtree(temporary_root, ignore_errors=True)
     report = {
         "schema_version": LATEX_COMPILE_SCHEMA_VERSION,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="milliseconds"),

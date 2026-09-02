@@ -1,0 +1,103 @@
+\documentclass[conference]{../../../../Conference-LaTeX-template_10-17-19/IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\RAAT}{\ensuremath{\mathrm{RAAT}}}
+
+\begin{document}
+\title{Why Does Time Seem to Flow in Only One Direction?\\
+\large A Resolution-Aware Program for Attributing the Thermodynamic Arrow}
+\author{\IEEEauthorblockN{Anonymous Research Proposal}}
+\maketitle
+
+\begin{abstract}
+The apparent direction of time connects several distinct facts: microscopic laws are often reversible, nonequilibrium processes produce entropy, macroscopic observers retain records of an apparently lower-entropy past, and cosmology confronts a low-gravitational-entropy initial-condition problem. Treating these as a single claim that entropy ``makes time flow'' conceals testable assumptions. This proposal develops the Resolution-Aware Arrow-of-Time Attribution Benchmark (RAAT), a computational program that compares forward--reverse path asymmetry, entropy-production accounting, fluctuation-relation consistency, record persistence, and resolution sensitivity across equilibrium, driven, hidden-state, and open-quantum model families. The central hypothesis is that an attributed dissipative arrow is coherent under valid resolution changes, protocol reversal, and nuisance controls, whereas preparation, measurement, or model-completeness artifacts fail at least one diagnostic. Cosmological content is kept as a boundary-condition ledger and toy-model comparator, not represented as a laboratory measurement. The work is strictly a research design: it specifies no executed simulations, no acquired trajectories, and no observed physical result.
+\end{abstract}
+
+\begin{IEEEkeywords}
+arrow of time, entropy production, stochastic thermodynamics, fluctuation theorem, coarse graining, decoherence, gravitational entropy, model comparison
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Why does time seem to have a direction? Ordinary experience is asymmetric: glasses shatter but do not spontaneously reassemble, hot bodies cool in ordinary surroundings, and records are available of earlier rather than later events. Thermodynamics relates this macroscopic asymmetry to entropy increase, yet the statement needs careful scope. The underlying equations used in many microscopic models admit a time reversal operation, while the Second Law is a statistical and boundary-condition-sensitive statement about macroscopic descriptions. A rigorous answer must distinguish the arrow in a chosen system from a literal motion of time itself.
+
+The distinction becomes sharper in cosmology. The early universe was hot and near equilibrium in its matter-radiation degrees of freedom, but its smoothness made it unusually low entropy with respect to gravitational clumping. Later structure formation and black-hole formation increase the available gravitational entropy. A claim that the Big Bang simply began in a high-entropy state is therefore incomplete. Equally incomplete is the claim that an eventual approach to equilibrium removes all microscopic temporal structure. A near-equilibrium system can still fluctuate, retain correlations for finite times, and be described by time-oriented boundary conditions; what disappears is a robust macroscopic thermodynamic gradient, not the parameter used in a dynamical equation.
+
+This proposal asks a tractable, evidence-bounded question: can finite trajectory data support an attribution of an observed temporal asymmetry to physical nonequilibrium dissipation rather than to an observation map, a preparation condition, a hidden variable, or a misspecified reversal operation? The proposed Resolution-Aware Arrow-of-Time Attribution Benchmark (\RAAT) is a computational design with explicit negative controls. It does not promise an experimental solution of the cosmological initial-condition problem. Instead, it creates a common inference contract that reveals which part of a time-arrow claim is experimentally testable, which is conditional on coarse graining, and which remains a boundary-condition question.
+
+\section{Theory Spine and Evidence Survey}
+
+\subsection{From reversible dynamics to an operational arrow}
+
+For a specified stochastic process, the direction of a sampled path may be quantified by comparing the probability of the path $x_{0:T}$ with the probability of its suitably reversed counterpart $\tilde{x}_{0:T}$. A natural path-asymmetry statistic is
+\begin{equation}
+\mathcal{A}[x_{0:T}]=\log\frac{p_{\theta}(x_{0:T}\mid\mathcal{O},\Pi)}{p_{\theta}(\tilde{x}_{0:T}\mid\mathcal{O},\Pi^{\mathrm{R}})}.
+\label{eq:path_asymmetry}
+\end{equation}
+Here $\theta$ denotes the generator, $\mathcal{O}$ the observation map, $\Pi$ the forward protocol, and $\Pi^{\mathrm{R}}$ a declared reverse protocol. Equation~\eqref{eq:path_asymmetry} is not intrinsically an entropy measurement. Its physical interpretation depends on local detailed balance, correct treatment of odd variables, a stated bath, and a reversal operation matched to the driving protocol.
+
+Stochastic thermodynamics supplies this interpretation for a broad but delimited class of systems. It identifies work, heat, and entropy production at the trajectory level and derives fluctuation relations under declared assumptions \cite{seifert2012}. Thermodynamic inference then confronts the practical difficulty that observers usually access only a subset of mesostates \cite{seifert2018}. Landi and Paternostro show how entropy-production concepts extend across classical and quantum settings \cite{landi2021}; Ciliberto reviews representative experimental tests in mesoscopic systems \cite{ciliberto2017}. Together, these sources support a direct claim: entropy production is quantifiable and falsifiable for specified models. They do not support the stronger claim that any temporal pattern, under any observation, is a measurement of physical dissipation.
+
+For a finite-state continuous-time Markov model with stationary probabilities $p_i$ and transition rates $k_{ij}$, the planned reference ledger is
+\begin{equation}
+\dot{S}_{\mathrm{tot}}=\sum_{i,j}p_i k_{ij}\log\frac{p_i k_{ij}}{p_j k_{ji}}\geq 0.
+\label{eq:entropy_rate}
+\end{equation}
+Equation~\eqref{eq:entropy_rate} defines the total entropy-production rate only after the state space and rates are declared. A partial observation can provide a useful lower-resolution asymmetry measure, but it does not automatically recover the complete physical ledger.
+
+\subsection{Coarse graining, records, and decoherence}
+
+Every laboratory description compresses degrees of freedom. Gell-Mann and Hartle describe quasiclassical coarse grainings based on approximately conserved quantities and connect information loss, decoherence, predictability, and thermodynamic entropy \cite{gellmann_hartle2007}. The important methodological consequence is not that entropy becomes arbitrary. Rather, a proposed entropy or arrow inference must declare the variables retained, the correlations discarded, and the temporal resolution used.
+
+Records add another layer. Zurek analyzes how environmental coupling selects persistent pointer states and supports stable, approximately classical records \cite{zurek1993}. Record persistence can thus help explain why an observer has reliable correlations with what is called the past. It must nevertheless be tracked separately from heat flow or total entropy production: a record statistic describes accessible correlations under a system-environment split, while Eq.~\eqref{eq:entropy_rate} describes a thermodynamic ledger under a further set of assumptions. Strasberg and Winter provide a microscopic thermodynamic framework for open quantum systems and establish an appropriate fluctuation-theorem setting \cite{strasberg_winter2021}.
+
+\subsection{Cosmological arrow: boundary condition, not a shortcut}
+
+The cosmological case magnifies the issue of boundary conditions. A smooth early geometry contains less gravitational clumping than a universe filled with collapsed structures, motivating a low-gravitational-entropy past condition. Clifton, Ellis, and Tavakol propose a gravitational-entropy measure that increases with structure formation in selected cosmological geometries \cite{clifton_ellis_tavakol2013}. Their proposal is valuable precisely because it makes assumptions visible; it is not a universal, experimentally settled definition of gravitational entropy. Aguirre, Carroll, and Johnson analyze entropy-decreasing fluctuations in cosmological settings and show why reversals are conditional statistical histories rather than contradictions of all temporal ordering \cite{aguirre_carroll_johnson2012}.
+
+The report therefore reserves the phrase \emph{cosmological boundary-condition ledger} for the low-entropy assumption required to orient a toy history. No simulation in \RAAT\ measures the early universe, proves the past hypothesis, or predicts the far future. Rovelli's perspectival suggestion is retained as a competing account of the relevance of coarse graining \cite{rovelli2017}; it is evaluated as a description-level alternative, not dismissed by definition.
+
+\begin{table*}[!t]
+\caption{Four noninterchangeable components of a time-arrow claim.}
+\label{tab:components}
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{p{0.19\textwidth}Y Y Y}
+\toprule
+\textbf{Component} & \textbf{Question it answers} & \textbf{Permitted evidence} & \textbf{Prohibited shortcut}\\
+\midrule
+Nonequilibrium dissipation & Does a declared system produce entropy under its stated dynamics? & Rates, bath model, driving protocol, and path statistics. & Treating every asymmetric series as dissipation.\\
+Coarse graining & Which variables and time scales are retained by the description? & Observation map, aggregation, and sampling ledger. & Calling description dependence a proof that no physical arrow exists.\\
+Records and decoherence & Why are some correlations stable and predictively useful? & System-environment split, record persistence, and decoherence model. & Equating record formation with total entropy production.\\
+Cosmological condition & What boundary condition or gravitational-entropy proxy orients a toy cosmic history? & Explicit initial-condition and gravity-model assumptions. & Claiming that a finite benchmark measures the early universe.\\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\section{Survey Gaps and Direction Selection}
+
+The Survey Agent identified six connected gaps. First, a forward--reverse score is frequently interpreted as uniquely physical even when model completeness is not documented. Second, partial observation and coarse graining are not compared by a standard resolution ladder across classical and quantum examples. Third, record formation, decoherence, and entropy production are often collapsed into a single narrative. Fourth, cosmological explanations may obscure their reliance on low gravitational entropy. Fifth, artifact controls for preparation and reversal conventions are not carried alongside an arrow claim. Sixth, the field benefits from public, auditable benchmark artifacts that retain these decisions.
+
+The Idea Agent compared a universal entropy dashboard, a record-persistence program, a gravitational-entropy toy study, and an integrated attribution benchmark. It selected \RAAT\ because it tests a sharp conditional hypothesis: a genuine, resolved nonequilibrium arrow should remain coherent under valid resolution changes, agree with its independent entropy ledger, survive symmetric protocol reversal, and outperform artifact models on held-out trajectories. A conclusion fails if the competing models are non-identifiable, if a valid coarsening reverses the interpretation, if nuisance injection mimics the signal, or if the reversal operation cannot be justified.
+
+\begin{figure*}[!t]
+\centering
+\fbox{\begin{minipage}{0.94\textwidth}
+\centering\small
+\textbf{Boundary-condition ledger} $\longrightarrow$ \textbf{generator and environment} $\longrightarrow$ \textbf{observation ladder} $\longrightarrow$ \textbf{RAAT diagnostics} $\longrightarrow$ \textbf{conditional decision}\\[5pt]
+\begin{tabular}{ccccc}
+\fbox{equilibrium control} & \fbox{driven process} & \fbox{hidden states} & \fbox{open quantum model} & \fbox{cosmology toy}\\[-1pt]
+\multicolumn{5}{c}{\rule{0.90\textwidth}{0.4pt}}\\[-1pt]
+\multicolumn{5}{c}{\fbox{Outcomes: dissipative support, descriptive asymmetry only, non-identifiable, or model invalid}}
+\end{tabular}
+\end{minipage}}
+\caption{RAAT attribution logic. The accompanying editable Draw.io source, \texttt{figures/multiscale\_arrow\_attribution.drawio}, retains the same separation between cosmological boundary conditions, physical generators, observation maps, diagnostics, and failure controls.}
+\label{fig:raat_flow}
+\end{figure*}
+
+\input{report_remainder.tex}
+\end{document}

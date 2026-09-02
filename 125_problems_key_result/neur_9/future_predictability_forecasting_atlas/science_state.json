@@ -1,0 +1,73 @@
+{
+  "created_at": "2026-09-01T13:03:54.670856Z",
+  "last_updated_at": "2026-09-01T13:03:54.714678Z",
+  "restart_history": [],
+  "revision": 3,
+  "schema_version": "science_state_v1",
+  "science_run_id": "future_predictability_forecasting_atlas",
+  "stages": {
+    "author": {
+      "attempt": 0,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": null,
+      "input_identity": {},
+      "invalidated_attempts": [],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": null,
+      "status": "PENDING"
+    },
+    "exp_design": {
+      "attempt": 0,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": null,
+      "input_identity": {},
+      "invalidated_attempts": [],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": null,
+      "status": "PENDING"
+    },
+    "idea": {
+      "attempt": 0,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": null,
+      "input_identity": {},
+      "invalidated_attempts": [],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": null,
+      "status": "PENDING"
+    },
+    "survey": {
+      "attempt": 1,
+      "execution_owner": {
+        "hostname": "Fantasy",
+        "pid": 19816,
+        "process_started_at": 1788267833.2289896,
+        "service_pid": 35936,
+        "service_process_started_at": 1788267835.3910859,
+        "started_at": "2026-09-01T13:03:54.714678Z"
+      },
+      "failure": null,
+      "finished_at": null,
+      "input_identity": {
+        "science_run_id": "future_predictability_forecasting_atlas",
+        "topic_fingerprint": "ee3bb84b0f87574f9aa0f3a1f97e9c1e566befbb969fd0acecb03e8f82f97197"
+      },
+      "invalidated_attempts": [],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": "2026-09-01T13:03:54.714678Z",
+      "status": "RUNNING"
+    }
+  },
+  "status": "RUNNING"
+}

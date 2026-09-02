@@ -1,0 +1,534 @@
+     Is There a Limit to Human Intelligence?
+ A Conditional Intelligence Frontier Benchmark for
+  Measurement, Plasticity, and Neural Constraints
+                                                      Research Design Report
+                             Four-Agent Scientific Workflow: Survey–Idea–ExperimentDesign–Author
+
+
+   Abstract—The question of whether human intelligence has a                 Under specified task domains, ages, environments,
+limit is scientifically meaningful only after the target, task, age,         practice histories, and measurement conditions, does
+environment, and measurement scale are specified. IQ is a norm-              human cognitive performance approach a repro-
+referenced score, not a physical unit, and a historical increase in
+test performance does not by itself establish an equal increase in           ducible upper boundary, and how much of that
+a fixed biological quantity. This paper reframes the problem as              boundary is shifted by education, health, training,
+a test of a conditional intelligence frontier: does performance in           and biological variation?
+calibrated cognitive domains approach a reproducible asymptote,           The question has four requirements. First, an apparent
+and can education, health, or structured training move that
+asymptote or only improve practiced tasks? We synthesize
+                                                                       plateau must be separated from a psychometric ceiling caused
+evidence on the Flynn effect, education, polygenic architecture,       by insufficiently difficult items. Second, test-retest and training
+brain systems, and transfer. We propose a design-only benchmark        gains must be separated from generalization. Third, age and
+combining high-range item-response calibration, alternate-form         cohort effects must not be treated as interchangeable. Fourth,
+testing, a multi-age longitudinal cohort, a randomized adaptive-       brain and genetic correlates must be tested as possible media-
+training module with an active control, and an EEG/MRI sub-
+study. A hierarchical latent-state model separates a general factor,
+                                                                       tors or constraints rather than interpreted as immutable destiny.
+domain factors, speed, practice, and measurement error. A limit is        The contribution is a design-only benchmark with a falsifi-
+supported only when a near-zero trajectory slope is stable across      able decision structure. It combines evidence synthesis with a
+difficult item forms, delayed follow-up, and independent sites. The    preregistration-ready human protocol. The protocol does not
+forecast is conditional: domain-specific constraints and individual    claim to discover an absolute maximum for every possible
+asymptotes are plausible, while a universal IQ maximum is not
+identified by current evidence. No participant, neural, causal, or
+                                                                       person, task, culture, or future technology. It can test whether
+intervention results are reported.                                     a conditional frontier is stable under declared conditions and
+   Index Terms—human intelligence, IQ, Flynn effect, cognitive         whether specific inputs move it.
+plasticity, latent variable, psychometrics, neuroscience, learning
+curves                                                                           II. S URVEY: W HAT I S A LREADY K NOWN ?
+                                                                       A. The Flynn effect is a trend in measured performance
+                       I. I NTRODUCTION                                   The Flynn effect describes rising scores on many cognitive
+   The claim that IQ scores rose by roughly thirty points              tests across generations. A formal meta-analysis covering
+during the twentieth century is a popular entry point to a             1909–2013 found worldwide gains but substantial heterogene-
+deeper question: does human intelligence have an upper limit?          ity by country, period, test, and cognitive domain [1]. This is
+The observation is not trivial. Intelligence-test performance          strong evidence that measured performance is environmentally
+has changed across generations, and these changes are large            sensitive. It is not evidence that a fixed latent factor, the upper
+enough to alter the interpretation of norms and educational            tail of every ability, or the biological capacity for learning has
+comparisons. However, the observation is also not a direct             increased by the same amount.
+measurement of a universal biological quantity. An IQ score               Several mechanisms can produce cohort gains. Education
+is calibrated against a reference population, depends on the           may increase reasoning strategies and knowledge. Improved
+selected test, and is sensitive to education, nutrition, health,       nutrition and public health may reduce developmental con-
+language, motivation, and familiarity with formal testing.             straints. Technological and occupational environments may
+   The phrase human intelligence also combines distinct con-           exercise unfamiliar forms of abstraction. Changes in family
+structs. Fluid reasoning, acquired knowledge, working mem-             size, schooling access, test familiarity, and migration can alter
+ory, processing speed, spatial reasoning, and learning a novel         the sampled population. A trend can also reflect changes in
+task are related but not identical. A person can show an age-          the construct measured by an instrument. Therefore a cohort
+related decline in speed while retaining knowledge, or improve         comparison requires measurement invariance: item difficulty,
+a reasoning strategy without improving far-transfer perfor-            discrimination, and factor meaning should be sufficiently com-
+mance. A common factor can summarize covariance among                  parable across time and groups.
+domains, but it should not erase domain-specific trajectories.            The opposite risk is to treat a slowdown or reversal in
+   This paper therefore asks:                                          some national series as proof that a universal ceiling has
+been reached. A decline can reflect changing schooling, health,                                   TABLE I
+immigration, inequality, test composition, or selective partici-                L EVELS OF THE INTELLIGENCE - LIMIT QUESTION .
+pation. The scientific target is not the sign of an average trend
+                                                                       Level               Scientific object and limit interpretation
+alone, but the latent trajectory under a declared measurement
+model.                                                                 Score               Normed performance on one battery; may show a
+                                                                                           test or cohort artifact.
+                                                                       Domain ability      Latent reasoning, knowledge, memory, speed, or
+B. Education and other modifiable inputs                                                   spatial factor; may have different trajectories.
+                                                                       General factor      Higher-order covariance among domains; requires
+   Education provides a candidate causal lever. A meta-                                    invariance and model comparison.
+                                                                       Learning capacity   Improvement on new tasks; must separate prac-
+analysis of quasi-experimental and other designs reported that                             tice, near transfer, and far transfer.
+additional education improves intelligence-test performance,           Biological          Neural or genetic moderator of a trajectory; not
+with effects varying across outcomes and study designs [2].            constraint          automatically immutable.
+This finding is compatible with a finite but movable frontier.
+A person may gain access to strategies and representations
+that move performance within a task family without making           E. Why the upper tail is especially difficult
+all cognitive operations unlimited.                                    Standard batteries may not contain enough high-difficulty
+   Sleep, nutrition, disease burden, stress, language exposure,     items to distinguish very high performers. A flat curve can
+and cognitive opportunity can alter both performance and            result from a scoring ceiling, an imposed time limit, item
+measurement reliability. Their effects can be immediate, devel-     exposure, or a true performance boundary. High-range item-
+opmental, or cumulative. They also interact: a person with the      response calibration is a prerequisite for interpreting a plateau.
+same latent capacity may express it differently under fatigue,      The calibration must also test differential item functioning
+sensory load, or a time limit. A design that samples only one       across age, language, site, and education, because a numer-
+testing session cannot distinguish a stable capacity from a         ically equal score may represent different latent performance.
+state-dependent expression.
+                                                                            III. S CIENTIFIC R EFRAME AND H YPOTHESES
+C. Polygenic and distributed biological architecture                   We call the proposed direction the CONSTRAINED-
+   Behavioral-genetic and molecular-genetic results describe        GENERAL-INTELLIGENCE-PLASTICITY-BENCHMARK.
+intelligence differences as substantially heritable but highly      The word limit is operationalized as a reproducible asymptote
+polygenic. Plomin and von Stumm review a literature in              in a declared latent trajectory. The asymptote is conditional
+which many variants of small effect contribute to individual        on task family, time constraint, age, health, environment, and
+differences and emphasize that heritability does not imply im-      available practice. A vector of domain-specific boundaries
+mutability [3]. Large genome-wide association studies identify      is the primary object; a general factor is a summary, not an
+distributed associations rather than a single intelligence locus    assumed universal ruler.
+[4]. These results make a universal biological cutoff unlikely      A. Hypotheses
+to be identifiable from one gene or one pathway.
+                                                                       H0: Measurement-equivalence hypothesis. After high-
+   Neuroscience similarly points to distributed systems.
+                                                                    range calibration and practice adjustment, some apparent
+Reviews link intelligence differences to brain structure,
+                                                                    global plateaus will relocate to particular domains or weaken.
+information-processing characteristics, and network organiza-
+                                                                    A universal plateau is not expected unless measurement in-
+tion [5]. More recent work integrates genetic variation, imag-
+                                                                    variance holds.
+ing, and intelligence differences while stressing the complexity
+                                                                       H1: Environmental-shift hypothesis. Education, sleep,
+of the mapping [6]. Neural measures may help identify con-
+                                                                    health, and enrichment will shift latent performance heteroge-
+straints, efficiency, reserve, or compensation, but a correlation
+                                                                    neously, with larger effects in acquired or strategy-dependent
+with a score is not a proof of mechanism. A predictive brain
+                                                                    domains. The shift will vary by age and baseline opportunity.
+model can also fail under a new scanner, task, age group, or
+intervention.                                                          H2: Conditional-asymptote hypothesis. Within a fixed
+                                                                    task family and resource condition, repeated learning curves
+                                                                    will approach individual-specific asymptotes. These asymp-
+D. Training and the transfer problem
+                                                                    totes will differ by domain, age, baseline ability, and health.
+   Repeated testing increases scores through item memory,              H3: Transfer-limitation hypothesis. Adaptive training will
+strategy discovery, motivation, and familiarity. Adaptive train-    produce larger gains on near-transfer tasks than on far-transfer
+ing may produce genuine near-transfer while producing little        tasks. Evidence for a limit to general intelligence requires
+far-transfer. The distinction matters because a task-specific       a plateau in cross-domain latent performance rather than a
+learning curve can plateau or improve without changing a            plateau in the trained task.
+higher-order general factor. A strong experiment therefore uses        H4: Network-mediation hypothesis. Brain measures asso-
+novel stimuli, alternate forms, an active control, untrained        ciated with processing efficiency and flexible network recruit-
+transfer tasks, and delayed follow-up.                              ment will partially mediate or moderate individual differences
+in the frontier. They will not fully determine the frontier, and   Alternate forms prevent the same answer key from becoming
+compensation may preserve performance in some strata.              a memory test.
+
+B. Falsifiable outcomes                                            C. Environmental measurements
+   If a plateau disappears after difficult items and time-           Years and quality of education, sleep regularity, nutrition
+unlimited forms are added, it is classified as a measurement       indicators that can be collected ethically, chronic disease
+ceiling. If a gain appears only on trained items or the short      burden, stress exposure, language, digital-task exposure, and
+retest, it is classified as practice. If a latent cross-domain     opportunity measures are recorded longitudinally. These vari-
+effect persists in the active-training arm at delayed follow-      ables are moderators or explanatory covariates unless a design
+up, the result supports transferable plasticity. If a domain-      supports causal inference. The randomized training module
+specific slope approaches zero after calibration and remains       supplies the principal causal test of a modifiable performance
+stable across forms and sites, a conditional limit is supported    component.
+for that domain. Heterogeneous asymptotes reject the claim
+                                                                   D. Neural measurements
+that one IQ value describes all intelligence.
+                                                                      EEG estimates task-evoked timing, spectral dynamics, and
+                 IV. E XPERIMENT D ESIGN                           trial-to-trial variability. Structural and resting-state MRI esti-
+   This protocol is design-only and requires ethics approval       mate candidate regional and network features. The analysis
+before implementation. It combines a longitudinal cohort, a        uses a reliability screen, predefined feature families, and
+randomized training module, and a neural sub-study. The            nested cross-validation. Mediation is tested only with temporal
+planning target is approximately 1,200 participants across mul-    ordering and confound sensitivity analyses. A neural predictor
+tiple sites and four age strata: adolescence, early adulthood,     is not allowed to become a biological-destiny claim merely
+midlife, and later adulthood. Final enrollment should be set       because it predicts a score in one sample.
+by preregistered power simulation, expected attrition, and the                 V. F ORMAL M ODEL AND A NALYSIS
+number of language and education strata. An intervention
+subset of approximately 400 participants is a planning value         For participant i, domain d, task or item j, and time t,
+rather than a claimed sample.                                      observed performance is modeled as
+                                                                     yijdt = νj + λj git + δjd didt + βj sit + ρj pijt + ϵijdt ,   (1)
+A. Sampling and controls
+   Recruitment is stratified by education, sex, socioeconomic      where git is a higher-order general factor, didt is a domain
+conditions, language background, and health status. Testing        factor, sit is a speed or time-limit component, and pijt captures
+language, sensory accommodation, medication, chronic dis-          practice on the task family. Item parameters are estimated with
+ease, sleep, and prior exposure to digital tasks are recorded.     an item-response model. Site, language, age, and batch terms
+Age is not treated as a substitute for development, cohort,        are included hierarchically.
+or health. The neurocognitive sub-study enrolls a consented           For a fixed task family, a conditional learning trajectory is
+subset and records scanner, motion, site, and preprocessing        represented by
+batch.
+                                                                                 gi (t) = θi − Ai exp(−ki t) + ui,t ,              (2)
+   The measurement controls are alternate forms, high-range
+items, speeded and time-unlimited versions where valid, and        where θi is an individual conditional asymptote, Ai is available
+a short retest subset. The intervention controls are an adaptive   improvement, ki is a learning rate, and ui,t is time-varying
+reasoning and working-memory curriculum versus a time-             deviation. The parameter θi is not a universal maximum. It is
+matched engaging non-adaptive active control. Both arms re-        conditional on the item pool, time, health, environment, and
+ceive equivalent contact, feedback, and assessment schedules.      training history.
+Far-transfer tasks are never used as training material.               A plateau is accepted only when four conditions are met.
+                                                                   First, high-range item calibration shows that the scale still
+B. Cognitive battery                                               discriminates near the observed frontier. Second, the derivative
+   The battery contains fluid reasoning, crystallized knowl-       of the trajectory remains within a preregistered small-slope
+edge, working memory, processing speed, spatial reasoning,         interval over the declared horizon. Third, alternate forms and
+and novel-task learning. Each domain contains items extending      delayed follow-up reproduce the result. Fourth, the result is
+beyond ordinary screening ranges. A pilot calibrates item          directionally stable at an independent site or cohort. Model fit
+difficulty, discrimination, response time, and differential item   alone is not sufficient because a flexible curve can mimic a
+functioning. Items with severe non-equivalence are revised or      plateau.
+modeled before confirmatory analysis.                                 Measurement invariance is tested across age, site, language,
+   Speeded tasks are not interpreted as pure reasoning. Time-      and time. If scalar invariance fails, raw score comparisons and
+limit indicators and a speed factor are included in the measure-   a universal IQ trend are not interpreted. The training effect
+ment model. A person can gain accuracy while losing speed,         is estimated by intent-to-treat mixed-effects analysis, with
+or vice versa; the composite should not hide this tradeoff.        per-protocol analysis labeled sensitivity analysis. Technical
+repetitions estimate measurement error and do not increase            a stronger response to the limit question than silently treating
+the participant-level sample size.                                    model instability as measurement noise.
+   For a neural sub-study, let Ni be a vector of preregistered           Speed and accuracy require a separate interpretation. A
+neural features and Zi denote environmental covariates. The           time limit may create a frontier that is primarily a motor or
+prediction model is                                                   processing-speed frontier. Each speeded task is paired with
+                                                                      a time-unlimited condition when the domain permits it, and
+                 θ i = α + η T Ni + ζ T Z i + ω i ,            (3)
+                                                                      accuracy, response time, and omission are modeled jointly.
+with nested cross-validation and site-held-out validation. A          A participant who solves more difficult items slowly may
+mediation analysis asks whether a neural feature transmits part       have moved the reasoning frontier while not moving the
+of an intervention or environment association, but sensitivity        speed frontier. Conversely, a faster response with no accuracy
+analysis must quantify the effect of unmeasured confounding.          gain may reflect strategy or arousal. The analysis reports the
+Neither prediction nor mediation proves a hard ceiling.               tradeoff rather than collapsing it into one IQ number.
+                                                                         Novel-task learning is included because intelligence is partly
+  VI. C ONSTRUCT VALIDATION AND S CALE E XTENSION                     expressed as adaptation to unfamiliar structure. At baseline,
+   The most important prerequisite for an upper-limit study is        participants encounter a task family with no training history.
+a scale that remains informative near the observed upper tail.        The learning slope, strategy changes, and transfer to a struc-
+A standard score can saturate before the person does. The pilot       turally related but novel task are recorded. The asymptote in
+therefore fits an item-response model with a range of difficulty      this module is conditional on the number of trials, feedback
+values that extends above the expected sample mean. For a             schedule, and task rule. It is not a direct estimate of all future
+binary item, a two-parameter form is                                  learning. The module nevertheless distinguishes a person who
+                                                                      begins high from a person who learns rapidly, which a single
+       Pr(yij = 1 | ϑi ) = [1 + exp{−aj (ϑi − bj )}]−1 ,       (4)
+                                                                      cross-sectional score cannot do.
+where aj is item discrimination, bj is item difficulty, and ϑi           The final construct-validation report includes item informa-
+is the domain ability. The model is extended to polytomous            tion curves, cross-form correlations, factor-loading stability,
+or response-time outcomes when a binary score would discard           invariance results, high-tail precision, speed-accuracy trade-
+useful information.                                                   offs, and the relationship between observed score and latent
+   High-range calibration has three objectives. It must sepa-         estimate. It also states where the scale is uninformative. A limit
+rate people who all answer ordinary items correctly, it must          claim is suspended whenever the measurement information
+provide stable information at the relevant ability values, and        falls before the fitted asymptote, because the data then cannot
+it must keep the construct interpretable across forms. Items          distinguish a biological plateau from a scale ceiling.
+are not selected only because they are hard. An item that is
+difficult because of obscure cultural knowledge or language            VII. A NALYSIS D ELIVERABLES AND R EPRODUCIBILITY
+may reduce construct validity. The calibration records response                               PATH
+time, strategy reports where appropriate, and differential item          The project is organized as a sequence of locked deliver-
+functioning so that a high score is not simply a measure of           ables. The first is a survey and source registry that records
+familiarity with one test culture.                                    which claims concern scores, latent factors, brain measures,
+   Measurement invariance is evaluated in stages. Configural          genes, or interventions. The second is a preregistered item-
+invariance asks whether the same domain pattern is present.           calibration and measurement plan. The third is the longitudinal
+Metric invariance asks whether factor loadings are comparable.        analysis specification, including the age-cohort-environment
+Scalar invariance asks whether intercepts or thresholds permit        decomposition, missing-data model, and plateau tolerance. The
+latent mean comparisons. Strict invariance concerns residual          fourth is the randomized-training analysis plan with near- and
+scales and is desirable for some comparisons but not required         far-transfer endpoints. The fifth is the neural analysis plan with
+for every latent trajectory. When full invariance fails, partial      reliability filtering and site-held-out validation.
+invariance or item-level modeling is declared before interpret-          Each deliverable has a stop rule. If high-range items are not
+ing group or cohort differences. A failure of invariance is itself    reliable, no upper-tail conclusion is issued. If alternate forms
+an important result: it limits the meaning of a numerical score       are not equivalent, retest-adjusted trajectories are reported only
+and prevents an apparent age or cohort ceiling from being             as exploratory. If attrition is strongly performance-dependent
+overgeneralized.                                                      and sensitivity intervals are too wide, the study reports non-
+   Construct validation also compares competing structures. A         identifiability rather than a stable limit. If the active control is
+single common factor, a hierarchical general-factor model, a          not credible, training results are labeled expectancy-sensitive.
+correlated-domain model, and a bifactor model are considered          If the neural sub-study cannot reach reliability or independent
+when justified by the battery. The preferred model is chosen          validation, it remains descriptive.
+using predictive performance, residual diagnostics, reliability,         The final data package separates identifiers, raw responses,
+and interpretability rather than a single fit index. If the general   item parameters, factor scores, intervention assignments, en-
+factor is unstable across forms or ages, the study reports            vironmental records, and imaging derivatives. Analysis scripts
+domain trajectories without forcing a general score. This is          reproduce the primary tables from a versioned manifest. A
+public summary reports estimates and uncertainty without             asymptotes in domain d. The design estimates its mean,
+exposing personal scores or stigmatizing labels. This structure      spread, and moderation by age, health, education, and baseline
+makes a null result valuable: future studies can determine           opportunity. A narrow Θd after extensive calibration would
+whether the failed link was scale construction, cohort access,       make a domain boundary more reproducible. A broad distribu-
+training transfer, or neural reliability.                            tion would show that individual variation is the relevant object.
+   The model classes and the failure ledger are reported             A changing Θd across cohorts or interventions would show a
+together. The reader can therefore see whether a conclusion          movable population frontier. None of these outcomes implies
+depends on the chosen curve, a particular site, a scoring            that the distribution is fixed for all future environments.
+transformation, or a restricted task family. A reproducible             This model-class framework keeps the historical claim about
+upper boundary is a result only when these dependencies are          a thirty-point rise in perspective. Even if the observed normed
+measured and bounded.                                                score increase is replicated, it can coexist with a domain-
+                                                                     specific or moving frontier. Conversely, even if a modern
+   VIII. M ODEL C LASSES AND N ON -I DENTIFIABILITY                  cohort shows little further score increase, a new item pool
+   The answer depends on which of three model classes                or time-unlimited task can reveal additional capacity. The
+survives the preregistered checks. In a no-plateau model,            inference must follow construct validation, not the rhetoric
+the expected latent trajectory continues to change over the          of either limitless growth or inevitable saturation.
+observed horizon, although its rate may become small. In a
+domain-specific plateau model, one or more domains have                 IX. S EPARATING AGE , C OHORT, AND E NVIRONMENT
+a stable asymptote while other domains continue to change.
+                                                                        Cross-sectional age differences are not the same as de-
+In a common-plateau model, a higher-order factor and most
+                                                                     velopmental change. People born in different years have
+domains approach a shared boundary after measurement and
+                                                                     different schools, nutrition, technology, disease exposures, and
+practice are controlled. These classes have different implica-
+                                                                     selective-survival histories. A lower score in an older group
+tions and should not be collapsed into one p-value.
+                                                                     could reflect aging, a cohort difference, a health difference, or
+   The comparison uses predictive performance, residual struc-
+                                                                     a measurement problem. The design therefore combines age
+ture, and the coverage of the asymptote interval. A model that
+                                                                     strata with repeated follow-up and measures the environments
+fits the mean but predicts poorly for the upper tail is inadequate
+                                                                     that shape opportunities.
+for the limit question. A flexible spline can reproduce a flat
+                                                                        Let a denote age, c denote birth cohort, and e denote a
+segment without implying a true asymptote, while a rigid
+                                                                     vector of environmental exposures. A decomposition model
+exponential can impose one by construction. The primary
+                                                                     for a domain factor is
+analysis therefore compares a bounded curve with a flexible
+non-bounded curve and checks whether the conclusion is                 didt = µd + fd (ait ) + hd (ci ) + qdT eit + bsite(i) + rit ,   (5)
+stable when the functional form changes. Model averaging
+can be used when no single curve is clearly preferred, with          where fd is an age trajectory, hd is a cohort term, and qd
+the resulting uncertainty reported rather than hidden.               describes measured environmental moderation. The model is
+   A conditional boundary is identifiable only over a declared       not used to claim that age, cohort, and environment can always
+support. If the highest-difficulty items remain easy for the         be perfectly separated; their partial collinearity is an empirical
+top participants, the upper tail is not measured. If only one        limitation. Its purpose is to prevent an age curve from being
+age cohort is observed, age and cohort are confounded. If all        reported as a universal biological law.
+participants receive the same training and no active control is         Longitudinal observations identify within-person change
+present, practice and intervention effects are confounded. If        better than a single cross-section, but they also introduce
+all data come from one language or one high-income site, the         retest effects and selective attrition. Alternate forms, a short
+population scope is narrow. If neural scans are available only       retest calibration, and explicit practice terms are essential. The
+from the highest-performing volunteers, a brain-performance          cohort component is estimated from overlapping birth cohorts
+association can be selection-induced. These are conditions           and sites rather than from a single generational contrast. If a
+under which a universal limit cannot be estimated.                   common age curve fits poorly while domain-specific curves
+   The analysis reports an explicit non-identifiability outcome.     are stable, the conclusion is a heterogeneous frontier.
+It is used when intervals for the trajectory derivative remain          Environmental measurements are interpreted with care.
+wide, when invariance fails for a large fraction of items,           Education quality is not equivalent to years of schooling,
+when attrition makes the missing-data sensitivity range too          and sleep, nutrition, and health are partly consequences of
+broad, or when the intervention control is not credible. Non-        social conditions. A covariate association can therefore be
+identifiability means that the data and design do not distinguish    informative without being causal. The randomized training
+competing explanations. It is preferable to declaring either         module supplies a sharper causal contrast for one modifiable
+unlimited intelligence or a hard ceiling from an underpowered        input, while the broader environmental variables define the
+or saturated scale.                                                  conditions under which a conditional frontier is expressed.
+   The frontier can also be represented as a distribution rather     Interaction terms test whether the training response differs by
+than a point. Let Θd denote the distribution of conditional          baseline ability, age, health, or educational opportunity.
+   The same decomposition applies to the historical Flynn                XI. ROBUSTNESS C HECKS AND FAILURE L EDGER
+effect. A cohort gain in a crystallized knowledge factor may            The central failure mode is circularity: defining an intel-
+differ from a gain in fluid reasoning or processing speed. A         ligence scale, observing a plateau on that scale, and then
+score trend that disappears after item calibration is a measure-     calling the scale’s endpoint a human limit. The benchmark
+ment result. A latent trend that remains after invariance testing    counters this by testing more difficult items, alternate forms,
+is evidence of a population-level change in the measured             time-unlimited versions, and tasks from different domains. A
+construct, but it is still not evidence of an unbounded capacity.    plateau that survives only one scoring rule is not accepted.
+The appropriate statement is always indexed by domain and
+                                                                        The second failure mode is confusing a higher mean with
+condition.
+                                                                     a higher maximum. Environmental improvement may move
+      X. P OWER , U NCERTAINTY, AND M ISSINGNESS                     the lower and middle parts of a distribution while leaving
+                                                                     the upper tail unchanged. Conversely, a small average shift
+   The planned sample size is not treated as evidence of
+                                                                     may conceal a large shift in a disadvantaged subgroup. Dis-
+precision. Before data collection, simulations should vary fac-
+                                                                     tributional analyses therefore report quantiles, variance, rank
+tor loadings, item discrimination, attrition, site heterogeneity,
+                                                                     changes, and ceiling sensitivity rather than only the mean
+training effects, and the width of the high-range item pool.
+                                                                     factor score. The primary limit claim remains conditional on
+The simulations should quantify false detection of a plateau,
+                                                                     the observed support of the sample.
+false rejection of a plateau, coverage of the asymptote interval,
+                                                                        The third failure mode is treating a neural association as
+and power to detect a delayed cross-domain training effect. A
+                                                                     a mechanism. A larger or more efficient network measure
+sample is adequate only for the estimands that its simulated
+                                                                     may be a consequence of learning, a correlate of socioeco-
+precision supports.
+                                                                     nomic opportunity, or a compensatory response to age-related
+   The primary plateau decision is an interval decision rather
+                                                                     change. The neural sub-study reports temporal ordering, cross-
+than a test of whether a slope is exactly zero. Let md (t) be the
+                                                                     validation, site-held-out performance, and confounding sensi-
+expected slope of domain d. A practical plateau criterion is that
+                                                                     tivity. It does not use a brain measure to assign a fixed score
+the simultaneous interval for md (t) lies within [−δd , δd ] for
+                                                                     to an individual or to infer that an intervention cannot work.
+a prespecified horizon, after item calibration and practice ad-
+                                                                        The fourth failure mode is unmeasured tool use. Humans
+justment. The tolerance δd has to be expressed in interpretable
+                                                                     solve problems with language, writing, calculators, computers,
+latent units and justified before seeing the data. A very small
+                                                                     collaborators, and cultural knowledge. The design records
+tolerance can make every realistic study inconclusive; a large
+                                                                     tool availability and defines whether a task is tool-free, tool-
+tolerance can declare a limit too easily.
+                                                                     assisted, or socially supported. A limit on unaided matrix
+   Uncertainty is propagated from item parameters to factor
+                                                                     reasoning is not a limit on problem solving in a technologically
+scores and from factor scores to individual trajectories. Boot-
+                                                                     extended environment. This distinction is essential when the
+strap or posterior predictive checks assess whether the fitted
+                                                                     question is translated from a test room to real-world intelli-
+asymptote is driven by a few high performers or by a particular
+                                                                     gence.
+site. The report includes calibration uncertainty, parameter
+                                                                        Each stage maintains a failure ledger. The ledger records
+correlation, sensitivity to priors or penalization, and predictive
+                                                                     items removed for differential functioning, forms that fail
+performance in held-out forms. A high point estimate with a
+                                                                     equivalence, sites with unreliable timing, training sessions
+wide interval is not a reliable upper boundary.
+                                                                     below adherence, scanner runs with excessive motion, and
+   Missingness is modeled at the measurement occasion and
+                                                                     endpoints that fail safety or reliability criteria. The final
+participant levels. Reasons for missing data include illness,
+                                                                     report distinguishes not tested, not identifiable, null under the
+fatigue, access, scanner motion, language difficulty, technical
+                                                                     declared design, and negative evidence against the hypothesis.
+failure, and withdrawal. The primary analysis uses a de-
+                                                                     This vocabulary prevents a missing measurement from being
+clared missing-data model, with pattern-mixture and inverse-
+                                                                     silently interpreted as a zero effect.
+probability sensitivity analyses. Complete-case estimates are
+                                                                        Replication is staged. First replicate the psychometric model
+not treated as primary because dropout may depend on
+                                                                     within an independent item pool. Then replicate the latent
+performance or intervention burden. The study also reports
+                                                                     trajectory at an independent site or cohort. Finally test whether
+whether the highest-performing participants are disproportion-
+                                                                     the intervention effect is stable under a different trainer,
+ately missing difficult items because of time limits or boredom.
+                                                                     language, or delivery format. If the asymptote changes across
+   Multiple comparisons are controlled by hierarchical order-
+                                                                     these checks, the correct result is a context-dependent bound-
+ing. Confirmatory claims concern the general factor, domain
+                                                                     ary, not a failed study or a universal ceiling.
+asymptotes, measurement invariance, and delayed interven-
+tion transfer. Neural features, subgroups, and environmental               XII. S TAGED P ROTOCOL AND D ECISION G ATES
+interactions are secondary or exploratory unless preregistered.
+Exploratory discoveries can motivate new studies but cannot          A. S0: calibration and pilot
+overrule a failed primary gate. This keeps the answer to a limit        Verify high-range coverage, alternate-form equivalence,
+question from being selected from dozens of plausible curves         test-retest reliability, response-time instrumentation, and neural
+after the fact.                                                      preprocessing reliability. The pilot must include participants
+                            TABLE II                                                XIII. T HREATS TO VALIDITY, E THICS , AND
+D ECISION GATES FOR INTERPRETING AN APPARENT INTELLIGENCE LIMIT.                               R EPRODUCIBILITY
+   Evidence pattern      Permitted interpretation                              The largest threat is construct drift. If item content changes,
+   Plateau removed by Psychometric ceiling; no biological limit in-         an apparent cohort gain or decline may reflect the tested
+   hard items             ferred.                                           construct rather than a population change. Measurement in-
+   Gain only on trained Practice or near-task learning; no general trans-   variance and item-response calibration are therefore primary,
+   items                  fer.
+   Gain after active Transferable plasticity is supported.                  not optional. A second threat is selective participation. Highly
+   control on untrained                                                     educated, healthy, or technologically comfortable volunteers
+   domains                                                                  can make an upper-tail estimate appear more stable than it is.
+   Stable domain slope Conditional domain asymptote is supported.
+   near zero                                                                Stratified recruitment and transparent missingness analyses are
+   Stable     asymptote Reproducibility of the conditional boundary is      needed.
+   across sites and supported.
+   forms
+                                                                               Attrition can bias learning curves, especially when fatigue,
+   Different domains Intelligence is better represented as a frontier       illness, or poor access is related to performance. The protocol
+   show         different vector.                                           retains reasons for dropout and reports sensitivity analyses.
+   asymptotes
+   Neural correlate pre- Correlate or moderator; not a fixed destiny.
+                                                                            Site, language, scanner, and operator effects are modeled as
+   dicts but does not                                                       hierarchical sources of variation. An independent validation
+   mediate change                                                           cohort is more informative than a second analysis of the same
+                                                                            participants.
+                                                                               The intervention raises a different threat: expectancy. The
+near the upper observed range. A scoring rule is frozen before              active control is matched for contact and engagement, and the
+confirmatory data are inspected.                                            training hypothesis is stated before outcomes are inspected. A
+                                                                            short-term improvement can be caused by strategy adoption,
+B. S1: baseline cross-sectional measurement                                 motivation, or item familiarity. Delayed follow-up and far-
+                                                                            transfer tasks are necessary, but even they do not show that
+  Estimate domain factors and the higher-order factor across                all aspects of intelligence changed.
+age and environmental strata. Compare no-plateau, domain-                      Participant welfare and privacy are central. Consent or
+specific-plateau, and common-plateau models using predictive                age-appropriate assent, withdrawal without penalty, secure
+calibration, posterior or confidence intervals, residual checks,            separation of identifiers, and MRI/EEG safety screening are
+and invariance diagnostics. A common curve is not preferred                 required. Results should not be described as fixed personal
+solely because it is simpler.                                               worth or immutable ability. Genetic data are not required
+                                                                            for the core study; a future genetic extension would require
+C. S2: longitudinal follow-up                                               separate consent, governance, and careful limits on individual
+   Repeat alternate forms at preregistered intervals. Esti-                 prediction. Cognitive training is low risk but should include
+mate individual trajectories, retest effects, attrition mecha-              fatigue monitoring and stopping rules.
+nisms, cohort-by-age interactions, and time-varying health.                    Reproducibility requires release of the preregistration, item-
+The missing-data plan distinguishes dropout related to fatigue,             calibration report, form-construction rules, analysis code,
+illness, access, and performance.                                           model-checking plots, and de-identified summaries where
+                                                                            permitted. Failed calibration runs, excluded items, scanner
+D. S3: randomized plasticity module                                         failures, and negative transfer results remain in an audit trail.
+                                                                            Technical replication does not substitute for participant-level
+   Compare adaptive training with the active control at post-               replication.
+test and delayed follow-up. The primary contrast is change
+in latent domain factors and the higher-order factor. Near-                   XIV. I NTERPRETATION , L IMITATIONS , AND F ORECAST
+transfer shares component processes with training but uses
+                                                                               The design yields several scientifically distinct conclusions.
+new stimuli. Far-transfer is structurally distinct. A trained-task
+                                                                            A stable latent asymptote after high-range calibration supports
+gain without a latent cross-domain gain is not evidence that
+                                                                            a conditional limit for a specified ability. A training shift in
+general intelligence increased.
+                                                                            latent cross-domain performance supports plasticity of that
+                                                                            frontier. A domain-specific pattern rejects the idea that one IQ
+E. S4: neural mediation and external validation
+                                                                            value is a universal maximum. An environmental moderation
+   Test only the predefined neural feature families and validate            effect shows that the frontier is expressed through opportunity
+the measurement model at an independent site or cohort. If a                and state, not only biology. A neural association that fails to
+neural signature predicts the baseline asymptote but fails to               predict change is not a complete explanation.
+predict intervention response, it is a correlate or constraint                 The design cannot prove that no future educational technol-
+candidate, not a complete mechanism. If the signature fails                 ogy, social environment, or tool-assisted system could raise
+under a new scanner or language, its scope is narrowed.                     performance. It cannot identify an absolute maximum for
+every task or person. The proposed cohort may still under-                       [5] I. J. Deary, L. Penke, and W. Johnson, The neuroscience of human
+represent rare cognitive profiles, and any MRI/EEG sub-study                         intelligence differences, Nature Reviews Neuroscience, vol. 11, pp. 201–
+                                                                                     211, 2010, doi: 10.1038/nrn2793.
+will be smaller than the psychometric cohort. These limitations                  [6] I. J. Deary et al., Genetic variation, brain, and intelligence dif-
+bound the claim rather than invalidate the benchmark.                                ferences, Molecular Psychiatry, vol. 26, pp. 4047–4061, 2021, doi:
+   The most defensible forecast is conditional. Human cog-                           10.1038/s41380-021-01027-y.
+                                                                                 [7] R. E. Nisbett et al., Intelligence: New findings and theoretical develop-
+nition likely has domain- and condition-specific constraints                         ments, American Psychologist, vol. 67, no. 2, pp. 130–159, 2012, doi:
+arising from information processing, memory, speed, devel-                           10.1037/a0026699.
+opment, health, and resource allocation. Those constraints                       [8] J. B. Carroll, Human Cognitive Abilities: A Survey of Factor-Analytic
+                                                                                     Studies. Cambridge, U.K.: Cambridge University Press, 1993.
+need not be fixed at one value: education, health, sleep, and
+learning can move performance and alter the rate at which
+a person approaches a task frontier. A universal IQ ceiling
+is not supported by cohort gains, because those gains are
+heterogeneous and norm-dependent. Nor is unlimited general
+intelligence established by the existence of new problems,
+because a new problem can be solved with tools, accumulated
+culture, collaboration, or domain-specific expertise.
+   The practical answer is therefore not a binary yes-or-no
+answer in the abstract. It is: specify the ability, build a scale
+that does not saturate, separate practice from transfer, estimate
+the trajectory, and test whether the asymptote moves under a
+controlled intervention. Only then can a limit be discussed as
+a scientific property rather than a slogan.
+                       XV. C ONCLUSION
+   IQ scores can rise across generations, and structured expe-
+rience can improve measured performance, without implying
+that a single biological quantity increases without bound. The
+proposed conditional intelligence frontier benchmark treats a
+limit as a reproducible asymptote in a calibrated, domain-
+specific, and resource-defined latent trajectory. It combines
+high-range items, alternate forms, longitudinal measurement,
+active-control training, far-transfer tasks, and a carefully
+bounded neural sub-study.
+   A convincing limit claim requires measurement invariance,
+practice separation, delayed replication, and cross-site stability.
+A convincing plasticity claim requires change beyond an
+active control on untrained tasks. A neural correlate may
+explain variation or compensation but is not an immutable
+destiny. This report presents a design-only protocol and no
+participant or intervention result. Its forecast is that human
+intelligence is neither one unrestricted scalar nor one already-
+measured universal ceiling; it is a heterogeneous frontier that
+can be constrained, expressed, and partly shifted under specific
+conditions.
+                              R EFERENCES
+ [1] J. Pietschnig and M. Voracek, One century of global IQ gains: A
+     formal meta-analysis of the Flynn effect (1909–2013), Perspectives
+     on Psychological Science, vol. 10, no. 3, pp. 282–306, 2015, doi:
+     10.1177/1745691615577701.
+ [2] S. J. Ritchie and E. M. Tucker-Drob, How much does education improve
+     intelligence? A meta-analysis, Psychological Science, vol. 29, no. 8, pp.
+     1358–1369, 2018, doi: 10.1177/0956797618774253.
+ [3] R. Plomin and S. von Stumm, The new genetics of intelli-
+     gence, Nature Reviews Genetics, vol. 19, pp. 148–159, 2018, doi:
+     10.1038/nrg.2017.105.
+ [4] J. E. Savage et al., Genome-wide association study of intelligence: A
+     meta-analysis of 269,867 individuals and 1,016,443 SNPs, Molecular
+     Psychiatry, vol. 23, pp. 1169–1181, 2018, doi: 10.1038/s41588-018-
+     0147-3.
+

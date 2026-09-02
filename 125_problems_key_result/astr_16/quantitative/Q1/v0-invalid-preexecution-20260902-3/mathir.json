@@ -1,0 +1,176 @@
+{
+  "derivatives": {
+    "P": {
+      "args": [
+        {
+          "args": [
+            {
+              "args": [
+                {
+                  "args": [
+                    {
+                      "args": [
+                        {
+                          "op": "constant",
+                          "value": -1.0
+                        },
+                        {
+                          "name": "K_dipole",
+                          "op": "variable"
+                        }
+                      ],
+                      "op": "mul"
+                    },
+                    {
+                      "args": [
+                        {
+                          "name": "B0",
+                          "op": "variable"
+                        },
+                        {
+                          "op": "constant",
+                          "value": 2.0
+                        }
+                      ],
+                      "op": "pow"
+                    }
+                  ],
+                  "op": "mul"
+                },
+                {
+                  "args": [
+                    {
+                      "args": [
+                        {
+                          "name": "alpha",
+                          "op": "variable"
+                        }
+                      ],
+                      "op": "sin"
+                    },
+                    {
+                      "op": "constant",
+                      "value": 2.0
+                    }
+                  ],
+                  "op": "pow"
+                }
+              ],
+              "op": "mul"
+            },
+            {
+              "args": [
+                {
+                  "name": "P",
+                  "op": "variable"
+                },
+                {
+                  "op": "constant",
+                  "value": -3.0
+                }
+              ],
+              "op": "pow"
+            }
+          ],
+          "op": "mul"
+        },
+        {
+          "args": [
+            {
+              "args": [
+                {
+                  "name": "t",
+                  "op": "variable"
+                },
+                {
+                  "name": "t_acc",
+                  "op": "variable"
+                }
+              ],
+              "op": "lt"
+            },
+            {
+              "args": [
+                {
+                  "args": [
+                    {
+                      "op": "constant",
+                      "value": -1.0
+                    },
+                    {
+                      "name": "K_acc",
+                      "op": "variable"
+                    }
+                  ],
+                  "op": "mul"
+                },
+                {
+                  "name": "Mdot",
+                  "op": "variable"
+                }
+              ],
+              "op": "mul"
+            },
+            {
+              "op": "constant",
+              "value": 0.0
+            }
+          ],
+          "op": "if_else"
+        }
+      ],
+      "op": "add"
+    },
+    "alpha": {
+      "args": [
+        {
+          "args": [
+            {
+              "name": "alpha",
+              "op": "variable"
+            }
+          ],
+          "op": "neg"
+        },
+        {
+          "name": "tau_alpha",
+          "op": "variable"
+        }
+      ],
+      "op": "div"
+    }
+  },
+  "parameters": {
+    "B0": 100000000.0,
+    "K_acc": 6.3e-31,
+    "K_dipole": 9.765625e-32,
+    "Mdot": 630000000000000.0,
+    "N_mc": 5000.0,
+    "P0": 0.5,
+    "Pdot_min": 1e-22,
+    "T_max": 3155760000000000.0,
+    "alpha0": 0.7853981633974483,
+    "eta": 0.1,
+    "t_acc": 315576000000000.0,
+    "tau_alpha": 315576000000000.0
+  },
+  "schema_version": "mathir_v1",
+  "solver_options": {
+    "max_step": 1580000000000.0
+  },
+  "states": [
+    {
+      "id": "P",
+      "initial": 0.5
+    },
+    {
+      "id": "alpha",
+      "initial": 0.7853981633974483
+    }
+  ],
+  "system_type": "ODE_IVP",
+  "time_span": [
+    0.0,
+    3155760000000000.0
+  ]
+}

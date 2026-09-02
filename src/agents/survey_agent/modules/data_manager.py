@@ -283,6 +283,11 @@ class DataManager:
     def _fulltext_enabled(value):
         return str(value).strip().casefold() not in {"0", "false", "no", "off"}
 
+    def _fulltext_download_enabled(self):
+        return self._fulltext_enabled(
+            self._fulltext_setting("fulltext_download_enabled", True)
+        )
+
     @staticmethod
     def _safe_provenance_url(url):
         """Keep URL provenance useful without persisting signed query parameters."""
@@ -1306,6 +1311,14 @@ class DataManager:
 
     def download_and_parse_papers(self, papers: list, limit: int = -1):
         """下载并解析papers"""
+        if not self._fulltext_download_enabled():
+            selected_papers = papers if limit <= 0 else papers[:limit]
+            return [
+                paper_id
+                for paper in selected_papers
+                if (paper_id := self._paper_download_id(paper))
+            ]
+
         # 检查是否启用并行下载
         use_parallel = getattr(self.config.ModuleInfo.WorkCollector, 'download_in_parallel', False)
         

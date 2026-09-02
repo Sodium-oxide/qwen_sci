@@ -1,0 +1,321 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{url}
+\usepackage{cite}
+\raggedbottom
+
+\title{Will Injectable, Disease-Fighting Nanobots Ever Be a Reality?\\A Barrier-Aware Benchmark for Trigger-Gated Therapeutic Nanosystems}
+\author{\IEEEauthorblockN{Research Design Report}\IEEEauthorblockA{Four-Agent Scientific Workflow: Survey--Idea--ExperimentDesign--Author}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The phrase injectable nanobot combines several technologies that should not be treated as equivalent: drug-loaded nanoparticles, molecular DNA machines, externally actuated microrobots, catalytic swimmers, and living carriers. A 50--100 nm object may carry a payload and respond to a molecular trigger, but it cannot be assumed to contain a battery, computer, actuator, navigation system, and recovery mechanism. This paper reframes the question as a test of whether a nanosystem can improve disease-site therapy after accounting for biological transport, protein corona, immune recognition, payload release, clearance, manufacturing variation, and safety. We review logic-gated DNA nanorobots, the 2018 tumor-vessel DNA nanorobot study in mice, active micro/nanorobot systems, biological barriers, and FDA nanomaterial guidance. We derive low-Reynolds-number drag, diffusion, and Péclet-number constraints. We then propose a design-only benchmark for a trigger-gated, tumor-targeted therapeutic nanocarrier. The protocol compares targeted active-gate, targeted disabled-gate, non-targeted active-gate, carrier-only, and free-drug controls in human vascular flow models, ex vivo blood, and staged blinded animal studies. A joint endpoint combines target localization, trigger-specific release, pharmacodynamic action, systemic exposure, immune activation, organ toxicity, clearance, and batch reproducibility. The near-term scientific forecast is conditional: nanobot-like molecular carriers may become narrow-function therapeutics, whereas freely navigating, self-powered, general-purpose 50--100 nm medical robots remain substantially less mature. No new biological or clinical result is claimed.
+\end{abstract}
+
+\begin{IEEEkeywords}
+nanobots, nanomedicine, DNA origami, targeted drug delivery, biological barriers, microrobotics, immunotoxicity
+\end{IEEEkeywords}
+
+\section{Introduction}
+\label{sec:intro}
+The prospect of injectable disease-fighting nanobots is attractive because a sufficiently small device might travel through blood, recognize diseased tissue, deliver a payload, sample cells, and reduce collateral injury. The word ``nanobot,'' however, currently describes a wide range of systems with different capabilities. Some are passive nanoparticles. Some are molecular machines that change configuration after binding a target. Some are microrobots moved by magnetic or acoustic fields. Some couple a nanoscale drug carrier to a bacterium or another biological motor. They differ in size, power, control, observability, and clinical risk.
+
+The most useful question is therefore not whether a science-fiction robot can be injected. It is whether a defined nanosystem can perform one disease-relevant function better than a matched nanocarrier or free drug after the full biological and engineering burden is counted. We adopt the following scientific reframe:
+
+\begin{quote}
+Under what combinations of size, materials, propulsion or trigger mechanism, targeting logic, payload release, biodistribution, immune compatibility, and manufacturing control can an injectable nanosystem deliver a disease-modifying action at the target site with better benefit-risk performance than a non-robotic nanocarrier or free drug?
+\end{quote}
+
+This paper focuses on a programmable, trigger-gated therapeutic carrier for tumor-vessel targeting. It uses the 2018 DNA nanorobot study as a preclinical precedent, but does not treat that animal result as human efficacy. The study is explicitly \textbf{DESIGN-ONLY}: no new biodistribution, efficacy, immune, toxicity, or clinical result is reported.
+
+The contributions are fourfold:
+\begin{enumerate}
+\item We separate nanoparticles, nanomachines, nanorobots, and microrobots by function rather than by marketing language.
+\item We derive transport constraints showing why Brownian diffusion and low-Reynolds-number drag dominate the 50--100 nm regime.
+\item We specify a barrier-aware benchmark with molecular-gate and targeting controls, human vascular flow, blood compatibility, and staged animal testing.
+\item We define a joint endpoint and translation gates that distinguish nanoscale therapeutic function from autonomous general-purpose robotics.
+\end{enumerate}
+
+\section{Survey: What Injectable Nanobots Are Today}
+\label{sec:survey}
+\subsection{Terminology and capability boundaries}
+Table~\ref{tab:terms} separates the objects commonly placed under the nanobot label. A nanoparticle may passively carry a drug. A nanomachine can change state or perform a molecular operation. A nanorobot implies some combination of sensing, logic, actuation, or autonomous action. A microrobot is larger but may be much easier to actuate and observe. The categories overlap, but the overlap should be declared rather than assumed.
+
+\begin{table*}[t]
+\centering
+\caption{Capability boundaries for nanoscale and microscale biomedical systems.}
+\label{tab:terms}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.16\textwidth}>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.26\textwidth}>{\raggedright\arraybackslash}p{0.24\textwidth}}
+\toprule
+Class & Typical function & Power or control & Evidence needed for a medical claim \\
+\midrule
+Nanoparticle & Carry, protect, or release a payload & Passive chemistry, degradation, or a molecular cue & Pharmacokinetics, payload action, toxicity, and quality control \\
+Nanomachine & Molecular recognition or conformational operation & Chemical or binding energy & State specificity, rate, off-target opening, and degradation \\
+Nanorobot-like carrier & Target recognition plus programmed action and release & Molecular trigger or external bias & Transport, target action, immune response, clearance, and batch replication \\
+Microrobot & Physical motion, manipulation, or navigation & Magnetic, acoustic, optical, chemical, or biological propulsion & Field penetration, tracking, tissue interaction, safety, and retrieval or clearance \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The distinction matters because the user-facing goal of diagnosis, cellular sampling, organ examination, and drug delivery contains at least four different engineering tasks. A diagnostic sensor needs analyte specificity and a readout. A sampling device needs capture, containment, and retrieval. A therapeutic carrier needs stable payload, controlled release, pharmacodynamics, and safe clearance. One 50--100 nm object is unlikely to optimize all tasks simultaneously.
+
+\subsection{Molecular machines and animal demonstrations}
+DNA nanotechnology can create designed shapes and conformational changes. Douglas, Bachelet, and Church reported a logic-gated DNA nanorobot for targeted transport of molecular payloads \cite{douglas2012}. Amir and colleagues described universal computing by DNA origami robots in a living animal \cite{amir2014}. These results show that nanoscale structures can implement molecular recognition and state transitions. They do not establish autonomous navigation through a human body or onboard energy storage.
+
+The most direct therapeutic precedent is the study by Li et al. \cite{li2018}. Their DNA origami device carried thrombin inside an internal cavity and used a nucleolin-binding aptamer on the exterior. Binding to tumor-associated endothelium acted as a targeting interaction and as a molecular trigger for opening. Intravenous injection in tumor-bearing mouse models delivered thrombin to tumor-associated vessels, induced thrombosis, and inhibited tumor growth. The authors reported favorable safety and immunological observations in mice and Bama miniature pigs.
+
+This is a valuable proof of concept for a trigger-gated carrier. It is not a demonstration of a human-ready general-purpose nanobot. The mechanism intentionally alters coagulation, so off-target opening is a central safety risk. The study also leaves translation questions about tumor heterogeneity, protein corona, repeat dosing, clearance, batch manufacturing, species-specific immunity, and the fraction of injected material reaching the target. Those questions motivate the proposed benchmark.
+
+\subsection{Externally actuated systems}
+Other biomedical robots use magnetic, acoustic, optical, chemical, or biological propulsion. Sitti et al. reviewed untethered mobile milli/microrobots and their potential biomedical applications \cite{sitti2015}. Felfoul et al. used magnetically guided bacteria carrying drug-containing nanoliposomes toward hypoxic tumor regions \cite{felfoul2016}. These examples show how a larger or living carrier can supply movement to a nanoscale payload.
+
+External actuation changes the safety problem rather than removing it. A magnetic field must create a sufficient force and gradient while remaining compatible with tissue heating, implants, and spatial targeting. Ultrasound must balance penetration, cavitation, and dose. Optical control is attenuated by tissue. Catalytic propulsion needs a fuel and produces reaction products. Biological propulsion creates its own immune and containment questions. A proposed nanobot must therefore declare whether it is self-powered, externally biased, trigger-gated, or passive.
+
+\section{Physical Constraints on Injection and Motion}
+\label{sec:physics}
+\subsection{Low-Reynolds-number dynamics}
+For a nanosystem of characteristic length $L$, speed $U$, fluid density $\rho$, and viscosity $\mu$, the Reynolds number is
+\begin{equation}
+Re=\frac{\rho U L}{\mu}\ll 1.
+\label{eq:re}
+\end{equation}
+In this regime inertia is negligible. A device must continuously generate force to move, and stopping the actuation removes the trajectory memory that a macroscopic vehicle relies on. For a spherical object of radius $a$, the Stokes drag is
+\begin{equation}
+F_d=6\pi\mu aU.
+\label{eq:drag}
+\end{equation}
+
+Thermal motion is equally important. The diffusion coefficient is
+\begin{equation}
+D=\frac{k_BT}{6\pi\mu a},
+\label{eq:diffusion}
+\end{equation}
+and the one-dimensional root-mean-square Brownian displacement over time $t$ is $(2Dt)^{1/2}$. At body temperature and water-like viscosity, a particle with a radius of a few tens of nanometers has a diffusion coefficient on the order of $10^{-12}$ to $10^{-11}\;\mathrm{m^2/s}$, so Brownian displacement can reach micrometer scales on second time scales. This supports molecular encounters but complicates precise route control.
+
+The Péclet number compares directed transport with diffusion:
+\begin{equation}
+Pe=\frac{UL}{D}.
+\label{eq:pe}
+\end{equation}
+Low $Pe$ indicates diffusion-dominated motion. Consequently, a clinically meaningful experiment should measure arrival probability, residence time, target binding, opening, and payload effect rather than claim that a 50 nm object follows a planned macroscopic path.
+
+\subsection{Power and observability}
+At 50--100 nm, an onboard battery, motor, processor, sensor array, and communication link are severe constraints. Molecular triggers provide energy from binding and chemical free energy but have limited temporal control. External fields provide control but require a patient-scale source and a tissue-safe exposure. A nanosystem can be useful without autonomous motion if its molecular logic produces a disease-specific action. Conversely, a moving system is not useful if its payload never reaches the target or if it cannot be monitored.
+
+The benchmark treats control as an observable function. Trigger activation is measured independently of localization. A fluorescent particle in a tumor is not automatically an opened carrier. A payload assay is required. An apparent target response is not credited to the device if free payload or carrier-only controls produce the same response.
+
+\section{Biological Barriers and Safety}
+\label{sec:barriers}
+\subsection{The post-injection identity}
+Blanco, Shen, and Ferrari described the sequence of barriers that intravenous nanotherapeutics encounter: protein adsorption, immune recognition, nonspecific distribution, vascular transport, tissue penetration, cellular uptake, endosomal escape, payload release, and clearance \cite{blanco2015}. The protein corona can change the effective surface seen by cells, mask targeting ligands, promote aggregation, alter circulation time, and activate complement.
+
+The liver and spleen can remove particles through the mononuclear phagocyte system. Kidney and hepatobiliary pathways determine persistence and excretion. Targeting is probabilistic: a ligand that binds a receptor in a static cell assay may fail under shear flow, variable receptor density, disease heterogeneity, or species-specific plasma proteins. The enhanced permeability and retention effect varies across tumors, and active targeting does not guarantee high total delivery.
+
+For brain applications, the blood-brain barrier adds tight endothelial junctions, efflux transporters, pericytes, and astrocytic interactions. A smaller particle is not automatically brain-permeable. The target compartment must therefore be declared before the carrier is designed, and every barrier crossed must be measured or bounded.
+
+\subsection{Immune response and payload risk}
+``Immunologically inert'' is a context-dependent result, not a permanent property. DNA sequence motifs, surface charge, impurities, structure, and protein corona can stimulate innate immunity. Schuller et al. demonstrated cellular immunostimulation by CpG-sequence-coated DNA origami structures \cite{schuller2011}. The candidate must measure complement, cytokines, monocyte and macrophage uptake, anti-carrier antibodies, repeat-dose clearance, and delayed tissue injury.
+
+Payloads can create risks independently of the carrier. Thrombin is a useful example because tumor-vessel thrombosis can produce antitumor action while off-target opening can cause systemic coagulation. A thrombin-like payload therefore requires platelet activation, coagulation markers, fibrin formation, microvascular injury, and histology. A rescue plan and stopping boundary are defined before dosing.
+
+FDA guidance emphasizes that nanomaterials in drug and biological products may serve as active or inactive ingredients, including carriers, and can create product attributes requiring specific examination \cite{fda2022}. A nanobot label does not replace chemistry, manufacturing, pharmacology, toxicology, or clinical evidence.
+
+\section{Idea: Barrier-Aware Trigger-Gated Benchmark}
+\label{sec:idea}
+The proposed benchmark compares a targeted carrier with an active molecular gate against matched controls. Its central hypothesis is:
+
+\begin{quote}
+A target-recognizing nanosystem with a disease-specific opening trigger produces a higher target-to-off-target payload exposure ratio and a larger target pharmacodynamic effect per unit systemic toxicity than a carrier with a disabled gate, no targeting ligand, carrier alone, or free drug.
+\end{quote}
+
+The functional vector is
+\begin{equation}
+\mathbf{F}=(T,R,G,P,C,S),
+\label{eq:function}
+\end{equation}
+where $T$ is transport under flow, $R$ is recognition, $G$ is trigger-dependent state change, $P$ is payload action, $C$ is clearance, and $S$ is safety. A device fails at the weakest function. This representation allows a materials result, a transport result, and a therapeutic result to remain distinct.
+
+Let $A_T$ be target-compartment payload exposure and $A_O$ off-target exposure. The exposure targeting index is
+\begin{equation}
+TI_{\mathrm{exp}}=\frac{A_T}{A_O+\epsilon},
+\label{eq:tiexp}
+\end{equation}
+where $\epsilon$ is fixed before analysis. If $\Delta Y_T$ and $\Delta Y_O$ are target and off-target pharmacodynamic responses, then
+\begin{equation}
+TI_{\mathrm{PD}}=\frac{\Delta Y_T}{\Delta Y_O+\epsilon}.
+\label{eq:tipd}
+\end{equation}
+These indices are not sufficient alone: exposure, effect, immune activation, organ injury, clearance, and batch variation are reported jointly.
+
+\section{ExperimentDesign}
+\label{sec:design}
+\subsection{Candidate and control arms}
+The candidate is a programmable DNA-origami or equivalent nanosystem with a targeting ligand, molecular gate, traceable label, payload compartment, and degradation or clearance design. Critical quality attributes include size distribution, shape integrity, ligand density, gate integrity, payload loading, release kinetics, aggregation, endotoxin or bioburden, composition identity, label stability, storage stability, and degradation products.
+
+The core arms are shown in Table~\ref{tab:arms}.
+
+\begin{table*}[t]
+\centering
+\caption{Benchmark arms and the causal contrast each one supplies.}
+\label{tab:arms}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.16\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}>{\raggedright\arraybackslash}p{0.38\textwidth}}
+\toprule
+Arm & Design & Causal purpose \\
+\midrule
+TG-targeted & Target ligand, active molecular gate, and payload & Full candidate function. \\
+T-disabled & Target ligand, disabled or locked gate, and matched payload & Separates targeting from gated release. \\
+NT-gated & Active gate and payload without target ligand & Tests trigger action without active targeting. \\
+Carrier-only & Target ligand and gate without active payload & Measures carrier and trigger effects. \\
+Free drug & Active payload without nanosystem & Establishes the standard exposure and efficacy comparator. \\
+Assay controls & Blanks, labeled standards, and positive release controls & Quantifies assay recovery, background, and dynamic range. \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Payload amount, label, vehicle, and relevant physicochemical properties are matched where possible. The free-drug arm is matched on active payload; carrier-only is matched on carrier mass or particle count. Treatment codes are opaque during testing. Independent production lots are required, with lot count set by a preregistered reproducibility simulation.
+
+\subsection{Stage 0: quality and assay qualification}
+No animals are used in Stage 0. Orthogonal methods measure size and morphology. Independent assays measure payload loading, release, label stability, and gate opening. Target-positive and target-negative matrices challenge the gate. Plasma and serum tests measure aggregation and protein-corona composition. Human-cell assays measure complement activation, cytokine release, platelet interaction, hemolysis, and macrophage uptake.
+
+The trigger is accepted only if opening in the target-positive matrix exceeds opening in target-negative and normal-tissue matrices by a preregistered margin. Assay qualification includes matrix effects, recovery, limit of detection, dynamic range, inter-day precision, and analyst blinding. Failed qualification runs are retained in the archive.
+
+\subsection{Stage 1: human vascular flow model}
+Human endothelial cells and tumor-microenvironment components are incorporated into a flow-controlled microfluidic model. It includes target-positive vascular tissue, target-negative vascular tissue, plasma or serum, and an extracellular matrix compartment. Flow rates cover the declared physiological range. The experiment measures arrival probability, residence time, binding, nonspecific adhesion, internalization, gate opening, payload release, and cell response.
+
+Localization and function are measured independently. Fluorescence or another label determines position, while a chemically distinct assay determines payload release. The primary microfluidic endpoint combines target-to-off-target payload exposure, trigger specificity, and a disease-relevant cell response. Static binding experiments are retained as mechanistic controls but cannot substitute for flow.
+
+\subsection{Stage 2: ex vivo blood compatibility}
+Blood or plasma from multiple donors is used to measure protein corona, complement activation, cytokine release, platelet activation, hemolysis, coagulation, and uptake by monocytes or macrophages. Donor variation is retained as a random effect. For vaso-occlusive payloads, fibrin formation and platelet response are primary safety measurements. A systemic coagulation signal above the veterinary and safety boundary stops escalation or requires a redesigned payload.
+
+\subsection{Stage 3: staged animal study}
+Only a candidate that passes quality, flow, and blood gates proceeds to a randomized, blinded tumor-bearing mouse study. Animals are blocked by sex where relevant, baseline tumor burden, treatment day, and cage or facility. The first cohort is biodistribution and safety, not efficacy. It measures plasma exposure, tumor, liver, spleen, kidney, and lung distribution, clearance, degradation, cytokines, complement, hematology, organ injury, and histology. Target and off-target gate opening are measured separately from particle label.
+
+An efficacy cohort proceeds only if the first cohort meets its safety gate. It measures target-site payload action, tumor vascular or perfusion response, tumor growth trajectory, survival or humane endpoint as appropriate, and systemic toxicity. The candidate is compared with free drug and the gate-disabled carrier. If the target response is independent of active payload, it is not credited to the nanocarrier. Repeat-dose evaluation measures anti-carrier antibodies, complement reactivation, altered clearance, hypersensitivity, organ retention, delayed injury, and loss of efficacy.
+
+\subsection{Stage 4: conditional large-animal translation}
+Large-animal testing is not automatic. It begins only after reproducible batch performance, target-to-off-target exposure, pharmacodynamic action, and repeat-dose safety are established. The study is designed around relevant blood volume, vascular anatomy, immune response, monitoring, rescue, and pathology. If external actuation is required, human-scale field geometry, tissue heating, device interference, and spatial precision are modeled before dosing.
+
+\section{Statistical Analysis and Decision Gates}
+\label{sec:stats}
+Let $H(t)$ be a target or off-target pharmacodynamic signal, $X(t)$ payload exposure, $C_k$ assay counts, and $M$ measured material state. The hierarchical model contains treatment, time, batch, donor or animal block, and laboratory effects. The primary candidate contrast is between the targeted active-gate arm and the strongest matched control.
+
+For a hypothesis $H_j$, the marginal evidence is
+\begin{equation}
+p(D\mid H_j)=\int p(D\mid\vartheta_j,H_j)p(\vartheta_j\mid H_j)d\vartheta_j.
+\label{eq:marginal}
+\end{equation}
+The central comparison is
+\begin{equation}
+BF_{\mathrm{TG,control}}=\frac{p(D\mid H_{\mathrm{triggered}})}{p(D\mid H_{\mathrm{disabled\ or\ non-targeted}})}.
+\label{eq:bf}
+\end{equation}
+Priors, minimum effect sizes, missing-data rules, and decision thresholds are preregistered. A frequentist companion analysis reports confidence intervals. Multiple endpoints are ordered hierarchically, and exploratory subgroups cannot override the primary decision.
+
+The program has five gates: quality, biological barrier, blood compatibility, animal efficacy and safety, and translation. The nanobot-like therapeutic claim is unsupported if the candidate is not better than the strongest control, the gate is not target-specific, the response is not payload-dependent, the effect disappears across lots, or immune and organ toxicity exceed the safety boundary. A negative result identifies the failed function stack; it does not prove that all injectable nanosystems are impossible.
+
+\section{Manufacturing, Regulation, and Safety}
+\label{sec:manufacturing}
+Nanoscale function is sensitive to size distribution, morphology, surface chemistry, aggregation, payload loading, sequence or composition identity, impurities, endotoxin, and storage history. A clinical candidate needs critical material attributes, critical process parameters, release assays, stability, sterility or bioburden controls, and lot comparability. A single favorable microscopy image is not evidence of a reproducible product.
+
+The regulatory boundary is equally important. FDA guidance treats nanomaterials as components of drug and biological products whose attributes may require particular examination \cite{fda2022}. A research construct that opens in a mouse tumor is not yet a drug product. Translation requires pharmacokinetic and pharmacodynamic characterization, toxicology, immunogenicity, manufacturing controls, dose justification, and a defined clinical benefit-risk hypothesis.
+
+All animal work requires institutional approval, humane endpoints, minimum numbers justified by power simulation, independent veterinary oversight, and predefined stopping rules. Blood and human-cell work requires biosafety and donor governance. Manufacturing uses ventilation, containment, chemical handling, and appropriate waste controls. A thrombin-like payload adds coagulation and microvascular safety oversight. External magnetic, acoustic, or optical systems require exposure and device-compatibility review.
+
+\section{Preanalysis, Reproducibility, and Translation Scorecard}
+\label{sec:scorecard}
+The design is most informative when the interpretation rules are fixed before the first efficacy observation. The protocol therefore specifies the primary contrast, the exposure denominator, the acceptable safety boundary, and the conditions for escalation in advance. The primary contrast is target-site payload action in the active targeted arm versus the strongest matched control, with the disabled-gate arm preferred when it is technically valid. Secondary contrasts separate recognition, transport, gate opening, release, and biological action. This ordering prevents a favorable biodistribution image from being promoted to evidence of therapeutic function.
+
+The analysis is locked at the level of biological units rather than individual microscope fields or repeated measurements. A batch is the manufacturing unit, a donor is the blood-compatibility unit, and an animal is the in vivo efficacy unit. Technical replicates estimate measurement variation but do not increase the effective sample size. Batch and laboratory effects are modeled explicitly, and the efficacy conclusion must remain directionally consistent across independently prepared lots. If the result is present in only one lot, the appropriate interpretation is process sensitivity or discovery, followed by a manufacturing investigation, not a successful nanobot claim.
+
+Table~\ref{tab:interpretation} summarizes the minimum evidence chain. It is deliberately asymmetric: a positive interpretation requires all links, whereas a negative link is sufficient to stop a specific claim. For example, target accumulation with no target-specific release supports a carrier-distribution result, while release without disease-relevant action supports a pharmacology or dose-selection result. This decomposition makes negative findings useful because they identify the next engineering bottleneck without implying that every nanosystem shares it.
+
+\begin{table}[t]
+\caption{Predefined evidence-to-claim interpretation matrix.}
+\label{tab:interpretation}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{1.5pt}
+\begin{tabular}{p{0.27\columnwidth}p{0.60\columnwidth}}
+\hline
+Evidence pattern & Permitted interpretation \\
+\hline
+No reproducible material state & Product or process is not qualified; stop biological escalation. \\
+Target localization only & Recognition or transport is supported; therapeutic robot claim is not supported. \\
+Localization and target-specific gate opening & Conditional delivery mechanism is supported; payload action remains unproven. \\
+Payload-dependent target-site action & Narrow-function nanocarrier efficacy is supported if safety gates pass. \\
+Action with disabled gate or carrier-only control & Attribute effect to carrier, payload leakage, or confounding biology; do not credit targeting. \\
+Repeat-dose toxicity or altered clearance & Translation is stopped until the safety mechanism is resolved. \\
+Lot-consistent action and acceptable safety & Candidate is eligible for a separate translational and manufacturing study. \\
+\hline
+\end{tabular}
+\end{table}
+
+Reproducibility also requires that the identity of the active state be measurable after storage, in plasma, and after exposure to the intended trigger. The release package should therefore include size and morphology distributions, surface identity, payload loading, gate occupancy or sequence integrity, aggregation, residual reagents, sterility or bioburden, and stability under the proposed handling conditions. These attributes are not administrative details: a changed corona or aggregation state can alter clearance, vascular margination, cell uptake, and trigger access while leaving the nominal formulation name unchanged.
+
+Translation is consequently a decision problem with two separate thresholds. The first asks whether the mechanism works in a controlled biological setting. The second asks whether the mechanism survives human-relevant variability, production, repeat dosing, and clinical monitoring. A candidate can pass the first and fail the second without contradiction. The proposed work reports both thresholds separately and preserves failed lots, assay qualification records, and excluded observations in an auditable archive. This permits independent reanalysis and prevents selective reporting of the most favorable imaging field, animal, or dose.
+
+\section{Operational Definition and Falsification Logic}
+\label{sec:operational}
+The word ``nanobot'' is often used for systems that differ radically in capability. A useful operational definition must therefore describe functions rather than appearance. In this study, a nanobot-like therapeutic is a nanoscale construct that (i) reaches a biologically defined target under injectable conditions, (ii) detects a target or environmental state, (iii) changes state according to that input, and (iv) produces a localized, measurable payload action without unacceptable systemic harm. A particle that only accumulates passively is still scientifically valuable, but it occupies the nanocarrier category rather than the full functional category.
+
+The definition creates falsifiable subclaims. Let $L_T$ and $L_O$ denote target and off-target localization, and let $R_T$ and $R_O$ denote chemically measured payload release in the corresponding compartments. A targeting claim requires a prespecified separation in localization, such as $L_T/L_O>\tau_L$, but localization alone is insufficient. A gated-release claim requires both a release separation $R_T/R_O>\tau_R$ and an acceptable false-opening rate in plasma and normal tissue. A therapeutic-action claim additionally requires that the disease-relevant response in the active arm exceed the response in the free-drug, carrier-only, and disabled-gate controls after accounting for delivered exposure. These conditions prevent a fluorescent label, nonspecific toxicity, or a pharmacological effect unrelated to the proposed mechanism from being counted as autonomous action.
+
+For cross-stage comparison, the protocol records a target-to-off-target exposure index
+\begin{equation}
+E_{\mathrm{TO}}=\frac{\int_0^T C_T(t)\,dt}{\int_0^T C_O(t)\,dt+\epsilon},
+\end{equation}
+where $C_T$ and $C_O$ are chemically measured payload concentrations and $\epsilon$ prevents an unstable ratio when off-target exposure is near the detection limit. Trigger specificity is recorded separately as
+\begin{equation}
+S_{\mathrm{trig}}=\frac{P(\mathrm{open}\mid T^+)}{P(\mathrm{open}\mid T^-)+P(\mathrm{open}\mid\mathrm{plasma})+\epsilon}.
+\end{equation}
+The two scores answer different questions: a particle can have high target exposure but poor trigger specificity, or a highly specific trigger but insufficient delivery. A composite score is not used to conceal such trade-offs; the individual components remain decision gates.
+
+The principal failure modes form a sequential risk register. Aggregation can change hydrodynamic size, sedimentation, clearance, and vascular passage. Protein-corona formation can mask the intended ligand or expose immune-recognition motifs. Shear and nuclease activity can damage a DNA or polymeric gate before it encounters its target. Target heterogeneity can produce apparently inconsistent response even when the device is chemically intact. Premature opening can produce systemic toxicity, whereas excessive stability can produce no useful release. Finally, a payload may change the disease endpoint without proving target-specific delivery. Each mode has a corresponding assay in the proposed sequence, and a failed assay is recorded with its mechanism and operating range.
+
+This logic also distinguishes absence of evidence from evidence of a boundary. If $S_{\mathrm{trig}}$ is low in plasma, the studied gate is unsuitable under that condition; the result does not establish that every molecular gate will fail. If the target-to-off-target index is low across independent lots, the candidate architecture has a transport or recognition problem. If exposure is favorable but disease action is absent, the next experiment concerns payload potency, release kinetics, or target biology rather than propulsion. Only a prespecified, repeated failure across deliberately varied architectures could support a broader engineering limitation. The study therefore treats null results as model-discriminating observations rather than as a binary verdict on nanotechnology.
+
+\section{Translation Scenarios and Deployment Boundaries}
+\label{sec:translation}
+Three deployment scenarios clarify what a successful program could realistically deliver. In the first, a molecularly gated carrier remains within the vascular and tissue compartments after injection and performs one narrow task, such as exposing an anticoagulant payload in a tumor-associated vascular microenvironment. This scenario requires no onboard battery or centimeter-scale navigation. Its main translational questions are trigger specificity, clearance, repeat dosing, and whether the therapeutic index is better than an optimized non-robotic carrier. It is the primary scenario tested here because its control variables are measurable with current assays.
+
+In the second scenario, an externally actuated microrobot or hybrid biological carrier provides active transport while a nanoscale compartment supplies the payload. Active motion can improve access to selected anatomical sites, but it introduces field geometry, heating, device compatibility, tracking, retrieval, and operator-dependence constraints. A positive result in this scenario cannot be directly combined with the molecular-carrier result: the actuation system becomes part of the product and its failure modes. The appropriate benchmark is therefore against an equally instrumented non-robotic delivery procedure, with spatial accuracy and rescue procedures included in the safety analysis.
+
+The third scenario is a general-purpose autonomous medical robot that senses multiple signals, makes decisions, samples tissue, releases several agents, and exits or biodegrades safely. This is a substantially stronger claim than targeted delivery. It requires reliable energy or remote power, computation, communication or preprogrammed logic, fault containment, and an account of every possible state after administration. The present design does not claim to solve these problems. It supplies a lower-bound benchmark: if a one-trigger, one-payload system cannot be manufactured reproducibly or controlled in blood and tissue, a multi-function autonomous system should not be considered clinically ready.
+
+The clinical development path should follow the narrowest scenario that demonstrates a meaningful benefit. A first-in-human program would need a defined indication, a dose and administration route, qualified release assays, toxicology in relevant species, immune and coagulation monitoring, and a clinical endpoint that reflects patient benefit. Imaging the carrier in a tumor is not itself a clinical endpoint. Nor is a reduction in a surrogate marker sufficient if the same reduction can be achieved more safely by a conventional formulation. The relevant economic comparison includes manufacturing yield, cold-chain or storage requirements, quality-control burden, specialized instrumentation, and the cost of managing rare delayed toxicity.
+
+The answer to ``ever'' is thus conditional rather than calendar-based. Narrow injectable nanosystems may become disease-fighting technologies when their behavior is simple enough to qualify, assay, manufacture, dose, and reverse or clear. The word robot becomes less informative as the system loses active navigation and gains programmable molecular control; this is not a semantic problem if the capabilities are reported explicitly. Conversely, a general autonomous nanobot remains a long-horizon proposition because the biological environment is both the transport medium and an adversarial control system. A scientifically responsible forecast should state which function has been demonstrated, in which compartment, at what scale, with what controls, and at what safety margin.
+
+\section{Interpretation, Limitations, and Forecast}
+\label{sec:forecast}
+The benchmark produces different scientific interpretations for different outcomes. No target or payload advantage supports a null or carrier-equivalence result. Targeted localization without gated release supports a transport or recognition result but not a therapeutic nanobot. Gate opening in plasma or normal tissue supports an off-target risk. A target response without payload dependence supports a biological or carrier effect. A replicated target-site payload response with acceptable immune and organ safety supports a narrow-function nanobot-like therapeutic.
+
+The design cannot establish a universal impossibility theorem. It samples one carrier architecture, one target, one disease model, and a bounded range of materials states. It also cannot make a weak assay sensitive to arbitrarily low payload or signal. Its strength is that it exposes the uncertainty: protein corona, barriers, immune clearance, batch variation, and target heterogeneity are measured rather than hidden in a single label.
+
+The most defensible forecast is conditional. Nanobot-like molecular carriers and trigger-gated drug delivery are plausible for narrow functions, especially where a molecular cue can provide target specificity and the payload can be assayed. General-purpose 50--100 nm robots with onboard power, active navigation, diagnosis, sampling, treatment, and safe recovery remain much less mature. Larger externally actuated microrobots may reach selected procedures sooner, but their control and retrieval burdens differ. In all cases, the clinical endpoint is a safer and more effective disease treatment, not the novelty of a small shape.
+
+\section{Conclusion}
+\label{sec:conclusion}
+Injectable disease-fighting nanobots are not a single technology. Current evidence supports programmable nanoscale carriers and animal proof-of-concept for trigger-gated payload delivery, including a DNA origami thrombin carrier that altered tumor vessels in mice. It does not support a general claim that autonomous, self-powered, freely navigating 50--100 nm medical robots are ready for human use.
+
+The proposed barrier-aware benchmark turns the broad question into a falsifiable program. It compares targeted and non-targeted systems, active and disabled gates, carrier and free-drug controls, human vascular flow, blood compatibility, staged animal testing, batch replication, and safety gates. A positive result must show target-specific opening, payload-dependent disease action, acceptable immune and organ effects, clearance, and reproducibility. Only after those conditions are met should a separate translation study ask whether the system is manufacturable and clinically superior. No new biological or clinical result is claimed in this report.
+
+\begin{thebibliography}{00}
+\bibitem{douglas2012} S. M. Douglas, I. Bachelet, and G. M. Church, ``A logic-gated nanorobot for targeted transport of molecular payloads,'' \emph{Science}, vol. 335, pp. 831-834, 2012, doi: 10.1126/science.1214081.
+\bibitem{amir2014} Y. Amir \emph{et al.}, ``Universal computing by DNA origami robots in a living animal,'' \emph{Nature Nanotechnology}, vol. 9, pp. 353-357, 2014, doi: 10.1038/nnano.2014.58.
+\bibitem{li2018} S. Li \emph{et al.}, ``A DNA nanorobot functions as a cancer therapeutic in response to a molecular trigger in vivo,'' \emph{Nature Biotechnology}, vol. 36, pp. 258-264, 2018, doi: 10.1038/nbt.4071.
+\bibitem{felfoul2016} F. Felfoul \emph{et al.}, ``Magneto-aerotactic bacteria deliver drug-containing nanoliposomes to tumour hypoxic regions,'' \emph{Nature Nanotechnology}, vol. 11, pp. 941-947, 2016, doi: 10.1038/nnano.2016.137.
+\bibitem{blanco2015} E. Blanco, H. Shen, and M. Ferrari, ``Principles of nanoparticle design for overcoming biological barriers to drug delivery,'' \emph{Nature Biotechnology}, vol. 33, pp. 941-951, 2015, doi: 10.1038/nbt.3330.
+\bibitem{fda2022} U.S. Food and Drug Administration, \emph{Drug Products, Including Biological Products, that Contain Nanomaterials - Guidance for Industry}, Apr. 2022.
+\bibitem{sitti2015} M. Sitti \emph{et al.}, ``Biomedical applications of untethered mobile milli/microrobots,'' \emph{Proceedings of the IEEE}, vol. 103, pp. 205-224, 2015, doi: 10.1109/JPROC.2014.2385100.
+\bibitem{schuller2011} V. J. Schuller \emph{et al.}, ``Cellular immunostimulation by CpG-sequence-coated DNA origami structures,'' \emph{ACS Nano}, vol. 5, pp. 9696-9702, 2011, doi: 10.1021/nn203161y.
+\bibitem{mitchell2021} J. A. Mitchell \emph{et al.}, ``Engineering precision nanoparticles for drug delivery,'' \emph{Nature Reviews Drug Discovery}, vol. 20, pp. 101-124, 2021, doi: 10.1038/s41573-020-0090-8.
+\end{thebibliography}
+
+\end{document}

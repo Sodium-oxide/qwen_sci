@@ -1,10 +1,27 @@
 {
   "schema_version": "experiment-design-v2",
   "project_id": "astr_18_deep_biosphere_proposal",
-  "selected_idea_id": "idea-pressure-atlas-001",
-  "execution_policy": {"mode": "DESIGN_ONLY", "observed_results": [], "automatic_execution_allowed": false},
-  "research_brief": {"object": "Marine deep-biosphere compartments", "central_claim": "Joint pressure-resolved modeling can separate volume, abundance, composition, and flux uncertainty.", "outcomes": ["Calibrated compartment estimates", "Pressure artifact quantification", "Model-observation mismatch ledger"]},
-  "variables": {"strata": ["depth", "pressure", "temperature", "redox", "organic carbon", "lithology", "province"], "outcomes": ["habitat volume", "cells", "taxa", "functional potential", "activity rates", "carbon flux"], "controls": ["blanks", "replicates", "pressure state", "platform batch"]},
+  "selected_idea_id": "idea-deepbio-census-001",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": [],
+    "automatic_execution_allowed": false
+  },
+  "research_brief": {
+    "object": "Marine deep-biosphere habitats across aphotic water, sediment/pore water, and oceanic crustal fluids",
+    "central_claim": "A calibrated habitat-resolved hierarchy can estimate volume, cells, composition, and activity without conflating their units.",
+    "alternative_explanations": ["Sample contamination or extracellular DNA", "Pressure-temperature recovery artifacts", "Unmodeled energy/redox covariates", "Sparse geographic coverage"],
+    "falsification": "The stratified model fails to outperform depth-only baselines or conflicts with independent rate/geochemical evidence."
+  },
+  "template": "earth_environment_agro",
+  "latent_estimands": ["habitat_volume", "living_cell_density", "biomass", "functional_composition", "redox_rate", "integrated_biogeochemical_flux"],
+  "observations": ["microscopy_or_flow_counts", "digital_pcr", "lipid_biomarkers", "16S", "shotgun_metagenomes", "metatranscriptomes", "geochemistry", "reaction_transport_or_rate_constraints"],
+  "decision_rules": [
+    "Do not elevate functional potential to realized activity without rate or geochemical support.",
+    "Do not integrate abundance beyond a habitat's explicit volume and porosity model.",
+    "Do not retain biological signal without blank and contamination lineage.",
+    "Report astrobiology only as a bounded Earth-analogue inference."
+  ],
   "human_review_required": true,
-  "allowed_source_keys": ["colwell", "kallmeyer", "hoshino", "orcutt", "biddle", "amano", "nagata", "wasmund", "lever", "starnawski"]
+  "allowed_source_keys": ["hoshino2018", "hoshino2020", "inagaki2006", "inagaki2015", "orcutt2013", "lever2015", "dhondt2019", "seyler2020", "heuer2020", "wasmund2017", "egger2018", "torti2015", "colman2017", "levin2019"]
 }

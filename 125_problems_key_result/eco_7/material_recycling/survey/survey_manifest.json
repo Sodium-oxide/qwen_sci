@@ -1,0 +1,22 @@
+{
+  "manifest_type":"survey_manifest",
+  "schema_version":"1.0",
+  "topic":"Can we achieve a situation where essentially every material can be recycled and reused?",
+  "scientific_reframe":"For a defined material-product stream and required service, under what combinations of design, collection, sorting, processing, market demand, and policy can a high fraction of material be repeatedly recovered and reused without increasing life-cycle environmental burdens, toxicity, or total social cost beyond acceptable bounds?",
+  "stage_status":"completed",
+  "design_mode":"DESIGN_ONLY",
+  "source_registry":[
+    {"id":"epa_recycling_basics","title":"Recycling Basics and Benefits","organization":"U.S. Environmental Protection Agency","url":"https://www.epa.gov/recycle/recycling-basics-and-benefits","verification":"browser_checked"},
+    {"id":"geyer_plastics_2017","title":"Production, use, and fate of all plastics ever made","venue":"Science Advances","doi":"10.1126/sciadv.1700782","verification":"bibliographic_anchor_pending_online_check"},
+    {"id":"hopewell_recycling_2009","title":"Plastics recycling: challenges and opportunities","venue":"Philosophical Transactions of the Royal Society B","doi":"10.1098/rstb.2008.0311","verification":"bibliographic_anchor_pending_online_check"},
+    {"id":"iso_18604","title":"ISO 18604:2013 Packaging and the Environment - Material Recycling","organization":"International Organization for Standardization","year":2013,"verification":"standards_anchor_pending_online_check"},
+    {"id":"iso_15270","title":"ISO 15270:2008 Plastics - Guidelines for the Recovery and Recycling of Plastics Waste","organization":"International Organization for Standardization","year":2008,"verification":"standards_anchor_pending_online_check"},
+    {"id":"oecd_global_plastics_2022","title":"Global Plastics Outlook: Economic Drivers, Environmental Impacts and Policy Options","organization":"OECD","doi":"10.1787/de747aef-en","verification":"bibliographic_anchor_pending_online_check"},
+    {"id":"allwood_circular_2014","title":"Squaring the circular economy: the role of recycling within a hierarchy of material management strategies","venue":"Handbook of Recycling","verification":"bibliographic_anchor_pending_online_check"}
+  ],
+  "paper_search":{"openalex":{"records":0,"status":"network_unavailable_connection_refused"},"anysearch":{"records":0,"status":"network_unavailable_connection_refused"}},
+  "browser_checks":{"epa_recycling_basics":"browser_checked"},
+  "gaps":["technical capability versus product-grade recovery","contamination and additive effects","actual routing and facility access","repeated quality retention","reuse-cycle burden","market demand and price volatility","externalized health and environmental costs","policy and distributional effects","dissipative and hazardous materials"],
+  "outputs":["survey.md","survey_manifest.json","survey_gap_ledger.json","survey_evidence_plan.json","survey_idea_handoff.json"],
+  "observed_results":[]
+}

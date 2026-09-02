@@ -1,0 +1,34 @@
+{
+  "schema_version": "idea_result_v5",
+  "project_id": "inf_2_dna_information_storage",
+  "survey_run_id": "survey-inf2-dna-storage-001",
+  "selected_primary_idea_id": "idea-dse-001",
+  "selected_primary_idea": {
+    "id": "idea-dse-001",
+    "title": "DNA Storage Serviceability Envelope (DSE)",
+    "summary": "A portable archive packet and multidimensional acceptance contract that evaluates DNA storage by exact, selective, condition-aware payload recovery rather than raw molecular density alone.",
+    "scientific_object": "payload x coding scheme x molecular channel x storage condition x access pattern x read budget x acceptance rule",
+    "target_gap_ids": ["GAP-SERVICE-001", "GAP-CHANNEL-002", "GAP-ACCESS-003", "GAP-PORTABILITY-004", "GAP-ECONOMICS-005"],
+    "central_hypothesis": "Joint allocation of redundancy and retrieval budgets under a portable DSE contract produces a more interpretable and transferable accepted-recovery profile than density-only evaluation.",
+    "mechanism": "The archive packet makes coding, sequence constraints, indexing, storage condition, retrieval budget, decoder version, and integrity threshold explicit and testable.",
+    "falsifiers": ["DSE has no predictive or decision value beyond raw density", "condition-aware allocation fails to match a density-only baseline under declared channels", "selective recovery cannot be distinguished from whole-pool recovery", "portable metadata cannot reproduce decoding in an independent software environment"],
+    "claim_class": "DESIGN_PROPOSAL_NO_OBSERVED_RESULTS"
+  },
+  "competitive_ideas": [
+    {"id": "idea-density-002", "title": "Ultra-dense constrained code", "reason": "A necessary benchmark but not a complete archive-service design."},
+    {"id": "idea-access-003", "title": "Compartmentalized random-access layer", "reason": "Potentially improves repeated access but does not make recovery portable by itself."}
+  ],
+  "high_risk_ideas": [{"id": "idea-single-score-004", "title": "Universal DNA storage score", "reason": "Can aid comparison but may conceal noncommensurate assumptions."}],
+  "rejected_ideas": [
+    {"id": "idea-replace-ssd-005", "reason": "Archive latency and economics do not support interactive-storage replacement."},
+    {"id": "idea-living-memory-006", "reason": "Outside in-vitro, non-living DNA scope."}
+  ],
+  "mcts_evolution": [
+    {"node": "root", "defect": "raw density conflated with useful archival capacity", "change": "define accepted-recovery outcome"},
+    {"node": "channel", "defect": "physical condition excluded from code choice", "change": "add degradation and retrieval budgets"},
+    {"node": "access", "defect": "whole-pool decoding conflated with selective access", "change": "require selective-access acceptance path"},
+    {"node": "portable", "defect": "decoder assumptions are undocumented", "change": "add portable archive packet"},
+    {"node": "selected", "defect": "single score hides trade-offs", "change": "retain DSE profile and conditional decisions"}
+  ],
+  "invariants": {"requires_real_gap_ids": true, "requires_falsifier": true, "requires_end_to_end_integrity_rule": true, "forbids_living_organism_storage": true, "forbids_observed_results": true}
+}

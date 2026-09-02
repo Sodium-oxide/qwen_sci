@@ -1,0 +1,41 @@
+project:
+  id: plastic_replacement
+  output_root: C:\Users\31390\Desktop\2026tzb\aiscientist-v0820\Xcientist\125_problems_key_result\eco_6
+  topic: "Can we create an environmentally friendly replacement for plastics?"
+  subproject: "plastic_replacement"
+workflow:
+  stages:
+    - Survey
+    - Idea
+    - ExperimentDesign
+    - Author
+  design_mode: DESIGN_ONLY
+  minimum_pages: 7
+  no_acknowledgements_section: true
+  no_observed_results_without_execution: true
+research:
+  primary_direction: FUNCTIONAL-CIRCULAR-POLYMER
+  functional_unit: equal_delivered_service
+  candidate_scope:
+    - conventional_controls
+    - PLA
+    - PHA_or_PHB
+    - starch_or_cellulose_derivatives
+    - PBS_or_PBAT
+    - bio_based_polyesters_or_polyamides
+    - waste_derived_formulations
+    - chemically_recyclable_polyesters
+    - reuse_redesigns
+  required_domains:
+    - material_performance
+    - degradation_and_mineralization
+    - recycling_quality
+    - regional_end_of_life_routing
+    - life_cycle_assessment
+    - uncertainty_and_pareto_analysis
+artifacts:
+  survey: survey/survey.md
+  idea: idea/idea.md
+  experiment_design: experiment_design/research_design.md
+  author_tex: author/functional_circular_polymer_report.tex
+  author_pdf: author/functional_circular_polymer_report.pdf

@@ -1,0 +1,329 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{array}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Latency-Constrained Physics-Informed Forecasting for Multi-Hazard Catastrophic Events}
+
+\author{\IEEEauthorblockN{Xcientist Research Proposal}
+\IEEEauthorblockA{Survey, Idea, ExperimentDesign, and Author pipeline\\
+Design-only study package}}
+
+\maketitle
+
+\begin{abstract}
+Catastrophic-event prediction is often discussed as if tropical cyclones, tsunamis, and earthquakes were the same forecasting problem. They are not. A tropical cyclone can be forecast over hours to days, a tsunami warning is a sequential inference problem after a source disturbance begins, and a strict earthquake prediction would have to specify time, location, and magnitude before the event. This paper proposes MULTIHAZARD-X, a latency-constrained architecture that keeps hazard-specific physical transition models while sharing only missingness-aware fusion, probabilistic calibration, tail-risk estimation, and decision thresholds. The study is designed to test whether this combination improves probabilistic skill, reliability, useful warning lead time, and impact-weighted decision loss at matched information and compute budgets. The protocol combines controlled synthetic systems, time-locked retrospective hindcasts, and a prospective shadow evaluation. Physics-only, artificial-intelligence-only, uncalibrated hybrid, and operational-consensus baselines are compared with preregistered ablations. No experiment is claimed to have been executed. The contribution is a falsifiable evaluation path from observations to warnings, with explicit latency accounting and a scientific boundary against deterministic earthquake-prediction claims.
+\end{abstract}
+
+\begin{IEEEkeywords}
+catastrophic events, early warning, probabilistic forecasting, data assimilation, uncertainty calibration, multi-hazard systems, physics-informed machine learning
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Sudden natural hazards expose a weakness in the phrase ``predict the next disaster.'' It can mean a long-horizon probability, a forecast of an evolving event, a nowcast from newly observed signals, an early warning after an event has started, or an impact forecast that supports a decision. These tasks have different targets, information sets, and physical limits. Treating them as one task can produce a persuasive headline while hiding missed extremes, false alarms, and an alert that arrived too late to be useful.
+
+The distinction is especially important across three hazards. Tropical-cyclone guidance estimates track, intensity, rainfall, wind, surge, and impacts over a forecast horizon. It can exploit atmospheric and ocean observations, numerical weather prediction, data assimilation, ensembles, and consensus guidance. A tsunami warning is usually a sequential problem: estimate a submarine source, propagate waves, assimilate water-level observations, and update the public product. An earthquake early-warning system detects a rupture after initiation and warns locations that have not yet experienced the strongest shaking. This is not the same as forecasting a future earthquake. The U.S. Geological Survey states that a strict earthquake prediction must specify the date and time, location, and magnitude, and that no such reliable prediction is currently available \cite{usgs}.
+
+This paper asks a narrower and testable question:
+
+\begin{quote}
+At a fixed information, compute, and communication budget, can hazard-specific physics-informed ensembles with a shared calibration-and-decision layer improve probabilistic skill and warning utility over physics-only, artificial-intelligence-only, and uncalibrated hybrid baselines?
+\end{quote}
+
+The proposed answer is a system called MULTIHAZARD-X. Its central design decision is separation with controlled sharing. Cyclone, tsunami, and earthquake modules retain their own states, observation operators, and transition dynamics. A small shared layer estimates reliability, handles missing observations, scores high-consequence tails, and translates a calibrated distribution into an action under an explicit loss matrix. The system is evaluated as an end-to-end chain rather than as a neural-network benchmark.
+
+The paper makes four contributions. First, it turns a broad question into hazard-specific forecast objects and measurable outcomes. Second, it gives a mathematical formulation that combines physical propagation, learned residuals, calibrated ensembles, and latency. Third, it specifies an experiment with time locks, event-level splits, synthetic controls, hindcasts, shadow operation, and falsification tests. Fourth, it defines decision metrics that make a high-consequence miss visible even when average error improves.
+
+The rest of the paper describes a proposal, not a completed forecast study. Numerical values, model rankings, and observed improvements are intentionally absent until the protocol is executed.
+
+\section{Scientific Scope and Evidence}
+
+\subsection{Forecast objects must be separated}
+
+Let $h$ index a hazard, $t$ an issuance time, and $H$ a forecast horizon. A forecast is a distribution over future states and impacts, not merely a point estimate:
+\begin{equation}
+ p_h(y_{t+1:t+H},z_{t+1:t+H}\mid o_{h,0:t}),
+ \label{eq:forecast}
+\end{equation}
+where $y$ denotes physical variables and $z$ denotes impact variables such as inundation, damaging wind, or threshold exceedance. A nowcast updates this distribution from a newly arriving observation. An early warning maps the distribution to an action after the triggering process has begun. A long-horizon probability may describe the chance of an event in a region and time window, but it is not an exact event prediction.
+
+The distinction changes the label and the scoring rule. A cyclone model can be scored on track and intensity at multiple lead times. A tsunami model can be scored on source parameters, wave arrival, water level, and inundation after source initiation. An earthquake system can be scored on phase detection, event association, ground-motion estimation, and seconds-to-tens-of-seconds warning; its long-horizon component can be scored as a probability forecast. A detector that identifies a P-wave is not evidence that the model predicted the rupture before initiation.
+
+\subsection{What existing evidence supports}
+
+The National Hurricane Center describes dynamical, statistical, statistical-dynamical, interpolation, and consensus guidance, and evaluates them with homogeneous verification procedures \cite{nhc}. This supports a comparison against both physical guidance and consensus rather than an assumption that one algorithm must dominate at every lead time. Recent data-driven global-weather systems show that neural models can produce skillful medium-range fields \cite{lam,bi}; precipitation nowcasting also demonstrates the value of probabilistic generative models for rapidly evolving fields \cite{ravuri}. These results motivate learned corrections and emulators, but they do not establish equal skill for rare local impacts or for seismic rupture initiation.
+
+The NOAA tsunami warning system exposes a sequential operational structure with warnings, advisories, watches, and threat updates, supported by seismic observations, deep-ocean buoys, tide gauges, and forecast products \cite{noaa_tsunami}. This motivates a source-to-impact state update with explicit information cutoffs. For earthquakes, deep-learning phase detection and picking can improve the conversion of waveform streams into usable event information \cite{mousavi}. That is a valuable component of early warning, but it is scientifically distinct from a deterministic precursor predictor.
+
+Finally, the World Meteorological Organization organizes multi-hazard early warning around risk knowledge, detection and monitoring, warning dissemination, and preparedness and response \cite{wmo}. MULTIHAZARD-X follows the same chain, and adds a measurable time budget between data arrival and action. A warning is useful only when its probability is reliable, its threshold is linked to a decision, and it arrives before the relevant protective action window closes.
+
+\subsection{Research gaps}
+
+The survey identifies eight gaps that the design treats as requirements. Task conflation makes claims incomparable. Average scores underweight rare extremes. Source-state uncertainty is often hidden by a single best estimate. Model latency is reported without ingestion and communication time. Changing climate and observing networks create distribution shift. Cross-hazard transfer can impose false physical similarities. Warning thresholds rarely expose their asymmetric costs. Retrospective analyses can leak post-event information through reanalysis or revised catalogues.
+
+These gaps are not reasons to abandon artificial intelligence. They specify where it should be used. Learned components can detect signals, assimilate heterogeneous observations, emulate expensive propagation, correct systematic model error, and calibrate ensembles. The physical transition model should continue to constrain quantities such as conservation, wave propagation, or feasible atmospheric state evolution. The decision layer should be evaluated separately from the forecast layer.
+
+\section{MULTIHAZARD-X Architecture}
+
+\subsection{Design principle: separate dynamics, share uncertainty}
+
+For each hazard $h$, MULTIHAZARD-X maintains a state $x_{h,t}$, observations $o_{h,t}$, quality descriptors $q_{h,t}$, and an ensemble of future trajectories. The hazard module is allowed to use a different state dimension, graph structure, and observation operator. The common layer receives a distribution and quality summary, rather than raw physical states from another hazard. This prevents a shared representation from silently treating seismic rupture as another type of atmospheric motion.
+
+The three modules have the following scope.
+
+\begin{itemize}
+\item The cyclone module fuses satellite, aircraft, radar, ocean, and numerical-weather fields to model track, intensity, wind radius, rainfall, surge, and coastal impact. An event-aware correction model focuses capacity on rapid intensification, eyewall replacement, land interaction, and sparse observations.
+\item The tsunami module estimates source geometry and uncertainty from seismic and geodetic data, propagates waves with a shallow-water or equivalent numerical model, and updates the distribution with deep-ocean and coastal water-level observations. Its issuance clock begins after source initiation.
+\item The earthquake module detects phases, associates events, estimates ground motion, and produces early-warning probabilities. A separate long-horizon probability head is permitted, but no precursor signal is promoted to an exact prediction without prospective evidence under a fixed definition of time, location, and magnitude.
+\end{itemize}
+
+\subsection{Shared calibration and decision layer}
+
+Let $r_{h,t}$ summarize ensemble spread, observation quality, missingness, regime indicators, and elapsed time. A calibration map $C_\phi$ transforms a raw predictive distribution $p_h$ into
+\begin{equation}
+ \widetilde p_h=C_\phi(p_h,r_{h,t},\ell_h),
+ \label{eq:calibration}
+\end{equation}
+where $\ell_h$ is the remaining hazard-specific lead-time budget. Calibration can use conformal, isotonic, temperature, quantile, or distributional methods selected before the final holdout. The layer must be allowed to widen uncertainty when observations are sparse; a sharp but overconfident distribution is not a successful warning forecast.
+
+An alert is chosen by minimizing expected loss:
+\begin{equation}
+ a^*_{h,t}=\arg\min_{a\in\mathcal{A}_h}\sum_y C_h(a,y)\widetilde p_h(y\mid o_{h,0:t}),
+ \label{eq:action}
+\end{equation}
+where $C_h$ is specified before evaluation and includes missed-event cost, false-alert cost, unnecessary protective action, and delay. The action set can contain no alert, advisory, warning, or a graded regional product. The system should output both the distribution and the action rationale, so an operator can inspect whether a warning was driven by a high tail probability, a new sensor, or a latency constraint.
+
+\subsection{Latency is a first-class variable}
+
+The total time from observation availability to action is decomposed as
+\begin{equation}
+ L_h=L_{\mathrm{ingest}}+L_{\mathrm{quality}}+L_{\mathrm{infer}}+L_{\mathrm{cal}}+L_{\mathrm{communicate}}+L_{\mathrm{act}}.
+ \label{eq:latency}
+\end{equation}
+Only the first four terms are normally visible in a machine-learning benchmark. The proposed log records all six. If a model is more accurate but consumes the lead time needed for evacuation, shutdown, or protective movement, it cannot be counted as an operational improvement. A latency gate can reduce ensemble size, switch to an emulator, or use a faster calibrated approximation when the clock becomes short.
+
+\begin{table*}[t]
+\caption{Hazard-specific objects and common evaluation layer}
+\label{tab:hazards}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.16\textwidth}p{0.25\textwidth}p{0.25\textwidth}p{0.25\textwidth}}
+\toprule
+Hazard & State and observations & Forecast or warning object & Non-negotiable boundary\\
+\midrule
+Tropical cyclone & Atmospheric and ocean state; satellite, aircraft, radar, ocean, and numerical fields & Track, intensity, rainfall, wind, surge, arrival, and impact distributions over hours to days & Rare rapid-intensification and land-interaction cases must be scored, not hidden by mean track error\\
+Tsunami & Source geometry, bathymetry, shallow-water state; seismic, GNSS, DART, and tide-gauge data & Sequential source, wave-arrival, water-level, and inundation distributions after source initiation & Warning updates can upgrade, downgrade, or cancel as observations arrive\\
+Earthquake & Waveform, phase, event, geodetic, and ground-motion state & Detection, association, ground-motion and early-warning distributions; separate long-horizon probability & Early warning begins after rupture initiation; no exact precursor claim\\
+Common layer & Quality, missingness, ensemble spread, regime and latency summaries & Calibration, tail risk, action threshold, regret, and end-to-end time & Forecast skill and warning utility are reported separately\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Mathematical Formulation}
+
+\subsection{Hybrid transition model}
+
+The hazard module combines a physical transition with a learned residual:
+\begin{equation}
+ x_{h,t+1}=f_h(x_{h,t},u_{h,t};\theta_h)+r_{\psi_h}(x_{h,t},o_{h,0:t},q_{h,t})+\epsilon_{h,t},
+ \label{eq:transition}
+\end{equation}
+where $f_h$ is a numerical or mechanistic transition, $u$ contains forcing or source variables, $r_{\psi_h}$ is a learned correction, and $\epsilon$ represents unresolved uncertainty. The residual is regularized so it cannot correct an observation mismatch by producing physically impossible states. The exact constraints are hazard-specific: mass and momentum consistency for water propagation, feasible atmospheric variables for cyclone dynamics, and waveform-to-ground-motion consistency for earthquake warning.
+
+The observation model is
+\begin{equation}
+ o_{h,t}=g_h(x_{h,t})+\eta_{h,t},
+ \label{eq:observation}
+\end{equation}
+where $g_h$ may be nonlinear and incomplete. The quality vector records sensor age, uncertainty, dropout mask, spatial coverage, and calibration status. Missingness is therefore an input rather than an imputation detail hidden before scoring.
+
+An ensemble is generated by perturbing initial states, forcing, source parameters, and model residuals according to distributions fixed during training. The resulting member set $\{y_h^{(k)}\}_{k=1}^K$ defines a raw empirical distribution. The common layer can recalibrate quantiles and exceedance probabilities, but it cannot use future observations or post-event catalogue revisions.
+
+\subsection{Tail-aware objective}
+
+For a continuous predictive distribution $F$ and realization $y$, the continuous ranked probability score is a proper measure of distributional accuracy. The proposed score augments it with a tail weight $w(y)$:
+\begin{equation}
+ S_h(F,y)=\int w(z)\left(F(z)-\mathbb{1}\{y\leq z\}\right)^2 dz,
+ \label{eq:tailscore}
+\end{equation}
+where $w(z)$ increases in a predeclared high-consequence region. In multiple dimensions, an energy score and event-specific threshold scores are reported alongside the one-dimensional marginal score. The tail weight is not tuned after seeing results; otherwise it would become a rhetorical way to choose a favorable metric.
+
+For warning decisions, define impact-weighted regret as
+\begin{equation}
+ R_h=\mathbb{E}_{y\sim p_h}[C_h(a^*,y)]-\min_{a\in\mathcal{A}_h}\mathbb{E}_{y\sim p_h}[C_h(a,y)].
+ \label{eq:regret}
+\end{equation}
+In evaluation the expectation is replaced by event-level outcomes, while the cost matrix remains frozen. Separate cost matrices are necessary: a tsunami evacuation threshold, a cyclone shelter decision, and an earthquake automated shutdown do not have the same action cost or time window.
+
+\subsection{Information filtration}
+
+Let $\mathcal{F}_{h,t}$ be the sigma-algebra generated by observations available at issuance time $t$. A valid forecast satisfies
+\begin{equation}
+ \widehat p_{h,t}=P(y_{t+1:t+H}\mid\mathcal{F}_{h,t}),
+ \label{eq:filtration}
+\end{equation}
+not a conditional distribution that silently includes later quality-controlled observations. The data pipeline will store an immutable availability timestamp for each packet. Reanalysis fields may be used to define a physical benchmark, but not as an input if they were not available in real time. Revised event catalogues will be versioned and locked.
+
+\section{Experimental Protocol}
+
+\subsection{Three-layer evaluation}
+
+The first layer is controlled synthetic simulation. Cyclone-like trajectories will combine advection, growth, weakening, and ocean feedback. Tsunami-like fields will use uncertain sources and shallow-water propagation. Earthquake streams will use marked event sequences and waveform-like arrivals with variable signal-to-noise ratio. The simulator exposes latent truth and allows systematic changes in sensor density, delay, missingness, and regime shift. It is a causal test of whether each module responds to the information it is meant to use.
+
+The second layer is retrospective hindcasting. Historical cyclone tracks, intensity, rainfall, surge, and impact fields will be paired with time-stamped atmospheric and ocean observations. Tsunami hindcasts will combine seismic and geodetic streams with deep-ocean and coastal water levels, bathymetry, and topography. Earthquake hindcasts will use waveform, phase-pick, event-catalogue, and ground-motion data. Each forecast is reconstructed from the data available at its issuance time. Event-level splits prevent nearby records from the same event appearing in both training and test sets.
+
+The third layer is prospective shadow operation. After feature definitions, event lists, model versions, and cost matrices are frozen, the system runs forward without sending public alerts. It is not an operational deployment and cannot direct evacuation or safety action. Its purpose is to test changes in the observing network, novel sensor formats, and current distribution shift under a real information clock. A shadow result that fails is useful: it identifies deployment fragility before public use.
+
+\subsection{Data partition and lock procedure}
+
+The main partition is chronological and event-level: training events precede calibration events, which precede validation events, which precede a final event holdout. A separate shift holdout contains a different sensor density, season, region, or physical regime. The event list is frozen before final scoring. No random record split is accepted as the primary result because adjacent windows from one event share information.
+
+For every forecast, the pipeline stores event identifier, issuance time, data availability cutoff, software version, model hash, sensor mask, and component latency. The final label is linked only after the forecast is immutable. If an input arrives after the cutoff, it is eligible for a later issuance, not a retroactive correction. A data-audit script rejects any feature whose timestamp exceeds the cutoff.
+
+\begin{table}[t]
+\caption{Planned comparison matrix}
+\label{tab:baselines}
+\centering
+\footnotesize
+\begin{tabular}{p{0.25\columnwidth}p{0.65\columnwidth}}
+\toprule
+System & Purpose\\
+\midrule
+Persistence or climatology & Establishes a low-complexity reference and base-rate calibration.\\
+Physics-only & Measures numerical propagation and data-assimilation value without a learned correction.\\
+AI-only & Measures the benefit and failure modes of an unconstrained sequence, graph, or neural field model.\\
+Uncalibrated hybrid & Isolates the value of the shared calibration and decision layer.\\
+Operational or consensus & Reconstructs the strongest comparable guidance at the same information cutoff.\\
+MULTIHAZARD-X & Uses hazard-specific transition modules plus missingness-aware calibration, tail risk, and latency gating.\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Training and issuance parity}
+
+All systems receive the same data availability cutoff and comparable compute allowance. A stronger baseline is not weakened by removing its normal ensemble or data-assimilation cycle; instead, the computational budget and issuance schedule are disclosed. For a fair operational comparison, the system may issue at the same standard times and at event-triggered times, but the schedule is fixed before the test set is viewed.
+
+\subsection{Implementation and deployment accounting}
+
+The prototype is organized as four services around a versioned event clock. An observation service accepts packets and records their physical arrival time, reported measurement time, quality flags, and spatial coverage. A state service performs hazard-specific assimilation and maintains a checkpoint that can be reconstructed from the packet log. A forecast service generates ensembles or a fast emulator according to the remaining latency budget. A calibration and decision service converts the ensemble into probabilities, risk bands, and an action recommendation. The services communicate through immutable messages so that a later correction cannot overwrite the distribution that was available at an earlier time.
+
+The event clock is more restrictive than a file timestamp. A satellite image may describe an earlier physical state but become available after a forecast issuance. It belongs to the later information set. Similarly, a revised earthquake catalogue can improve a retrospective label without being available to an early-warning module. The protocol stores both event time and availability time and uses availability time for eligibility. When a source has an uncertain clock, the conservative upper bound is used and the uncertainty is propagated into $q_{h,t}$.
+
+The system has two operating modes. In full mode, the module uses the largest ensemble that satisfies the declared latency budget. In constrained mode, the gate reduces member count, switches to a validated emulator, or delays a low-priority impact product while preserving a rapid warning product. The choice is logged as an action, not hidden as a hardware optimization. A faster but less resolved output is compared as a distinct forecast product with its own calibration record.
+
+The common layer uses a compact input contract: marginal and joint probabilities, ensemble dispersion, quality and missingness summaries, regime indicators, and the remaining time budget. It never consumes a raw state tensor from another hazard module. This contract makes cross-hazard transfer testable. The transfer ablation can share the quality encoder and calibration parameters, while the no-transfer condition fits these pieces independently. A transfer gain is credible only if it remains after the hazard-specific physical modules and the issuance clock are held fixed.
+
+Operational logs are also part of the scientific object. For each issuance, the record contains the selected action, probability thresholds, forecast horizon, data cutoff, component durations, queue delay, communication status, and whether the action deadline had already passed. If a warning was technically accurate but arrived after the deadline, it is scored as late. This prevents a fast offline benchmark from being reported as a useful early-warning service.
+
+\subsection{Evaluation matrix and reporting order}
+
+The primary analysis is performed separately for each hazard and then summarized by a common decision curve. The report first gives the information set and event counts, then distributional scores by lead time, then reliability and tail coverage, then latency, and finally action loss. This order prevents an attractive decision curve from hiding poor probability estimates or an attractive mean error from hiding a delayed message. The pooled summary is a descriptive view, not a replacement for the three hazard-specific analyses.
+
+\begin{table}[t]
+\caption{Predeclared reporting gates}
+\label{tab:gates}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.30\columnwidth}p{0.56\columnwidth}}
+\toprule
+Gate & Required evidence\\
+\midrule
+Information validity & Every feature is available before its issuance cutoff.\\
+Probabilistic validity & Primary distributional score and reliability are reported by hazard and lead time.\\
+Tail validity & High-consequence thresholds include coverage, misses, and false alerts.\\
+Decision validity & Cost curve and regret are evaluated at a fixed false-alert budget.\\
+Latency validity & Ingestion, inference, calibration, communication, and action times are logged.\\
+Shift validity & The final event and distribution-shift holdouts are untouched until the protocol is frozen.\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This ordering provides a practical go or no-go path. A module that fails information validity is removed from the comparison. A module that passes accuracy but fails calibration cannot supply the action layer. A module that passes both but misses the latency gate is retained only as an offline forecast. A module that passes all gates may proceed to an independently reviewed regional shadow pilot. These gates are strict enough to prevent overclaiming and direct enough to reward a real improvement when it exists.
+
+\section{Metrics and Statistical Analysis}
+
+\subsection{Forecast skill}
+
+The metric suite includes track error, arrival-time error, intensity error, rainfall error, water-level error, inundation error, ground-motion error, weighted continuous ranked probability score, energy score, Brier score, and threshold exceedance skill. Scores are reported by hazard, lead time, event severity, region, and observation regime. A single pooled average is secondary because it can be dominated by common benign conditions.
+
+\subsection{Calibration and sharpness}
+
+Reliability diagrams compare predicted probabilities with empirical frequencies for threshold events. Expected calibration error, Brier decomposition, interval coverage, interval width, and sharpness are reported together. Sharpness without reliability is not rewarded. Calibration is assessed before and after the shared layer, with the same holdout and no post-hoc threshold selection.
+
+\subsection{Warning and decision utility}
+
+At fixed false-alert rates, the study measures missed-event rate, precision, recall, warning lead time, and the proportion of exposed population receiving a useful warning before its action deadline. The action deadline is hazard and region specific. A cyclone warning may support hours of preparation; a near-field tsunami warning may have only minutes; an earthquake early warning may support automatic protective action in seconds.
+
+The primary decision plot is a cost curve over plausible false-alert and missed-event ratios. It is accompanied by impact-weighted regret from \eqref{eq:regret}. For each system, the threshold is selected on calibration data and frozen. If MULTIHAZARD-X improves a mean score but raises the high-consequence regret at an equivalent false-alert budget, the result is not counted as a system improvement.
+
+\subsection{Uncertainty intervals and paired testing}
+
+Uncertainty is estimated with an event-level block bootstrap. The unit of resampling is an event, not an observation window, to preserve within-event correlation. Paired differences compare forecasts issued at the same times with the same available observations. Primary comparisons are specified before scoring and adjusted for multiplicity. Subgroup analyses are labeled as secondary. The planned report will include effect estimates, intervals, calibration plots, latency distributions, and failures, not only a best-case score.
+
+\section{Ablation, Stress, and Falsification}
+
+The architecture is intentionally easy to challenge. The no-physics ablation removes transition constraints while retaining the same learning capacity. The no-calibration ablation removes $C_\phi$. The no-missingness ablation replaces quality-aware fusion with ordinary imputation. The no-ensemble ablation reports a point or narrow distribution. The no-tail ablation removes the high-consequence weighting. The no-latency ablation disables the time gate. The no-transfer ablation prevents shared quality and uncertainty representations from crossing hazards. Each ablation removes one claimed mechanism.
+
+Stress tests target known failure regimes rather than random perturbations. Cyclone tests include rapid intensification, eyewall replacement, land interaction, sparse ocean observations, and unusual track curvature. Tsunami tests include near-field sources, uncertain fault geometry, imperfect bathymetry, delayed or missing DART data, and coastal sensor outages. Earthquake tests include dense swarms without a large mainshock, low signal-to-noise waveforms, station outages, and false precursor-like patterns. Cross-cutting tests hold out a region, season, sensor type, or climate regime.
+
+The design defines four ways to falsify the central thesis. First, the calibrated hybrid fails if its pre-registered distributional score and reliability criterion do not improve over the uncalibrated hybrid at matched cutoff. Second, the system fails its warning claim if it cannot reduce regret or increase useful lead time at a fixed false-alert budget. Third, it fails its transfer claim if sharing quality and calibration harms a hazard module relative to a fully separate implementation. Fourth, an apparent gain is discarded if it disappears after leakage audits or latency parity. A positive early-warning result for earthquakes cannot be reinterpreted as an exact prediction result.
+
+\section{Reproducibility and Safety}
+
+Before the final holdout, the study freezes the event list, feature definitions, timestamp rules, cost matrices, software environment, model configurations, random seeds, and primary metrics. Forecast files are append-only and include the full ensemble or a reproducible seed and parameter record. Model cards document training populations, known shifts, sensor dependence, and failure cases. The audit trail stores whether a forecast was issued on schedule, whether a packet was late, and whether an operator would have had time to act.
+
+The safety boundary is explicit. Synthetic and retrospective tests can be automated. Prospective operation remains shadow mode until independent review verifies the data clock, alert wording, uncertainty display, and failure behavior. No unvalidated probability is used to issue evacuation instructions, close infrastructure, or alter medical or emergency decisions. The intended output of this package is a research proposal and a reproducible evaluation protocol, not an emergency service.
+
+This boundary does not make the research timid. It enables a decisive operational test: if a model cannot sustain calibrated utility under the real information clock, it should not be promoted because of an attractive retrospective plot. Conversely, if it passes the proposed holdout, stress, calibration, and latency gates, the result supports a focused pilot for the hazard and region in which it passed.
+
+\section{Discussion}
+
+\subsection{Why a shared layer is plausible}
+
+The three hazards have different dynamics but share an engineering problem: observations are incomplete, arrival times vary, model confidence is often miscalibrated, and warnings are decisions under asymmetric loss. These commonalities justify sharing quality encoders, reliability maps, tail-risk diagnostics, and decision tooling. They do not justify a single physical state transition. The architecture therefore spends sharing capacity on uncertainty rather than on forcing a universal hazard representation.
+
+The proposal also uses artificial intelligence where it has a strong empirical role. A learned residual can correct systematic numerical-model error. A graph model can associate asynchronous stations. A neural emulator can reduce propagation latency when its error is bounded. A generative ensemble can represent multiple plausible futures. These benefits become scientifically meaningful only if they survive the same information clock and if a calibrated warning does not trade a lower average error for a higher catastrophic miss rate.
+
+\subsection{What accuracy can and cannot mean}
+
+For cyclones, improved prediction may mean narrower but reliable track and intensity distributions, better rapid-intensification probabilities, or more useful surge and rainfall footprints. For tsunamis, improvement may mean faster source characterization and fewer unnecessary regional alarms while preserving sensitivity to near-field risk. For earthquakes, improvement may mean faster phase picking, better event association, better ground-motion estimation, or improved long-horizon regional probability. None of these is evidence that the exact date of a future earthquake can be predicted.
+
+The system is therefore capable of producing a direct answer to the broad question only after specifying the hazard and the service. The defensible answer is yes for selected components and operating regimes: better observations, physical models, data assimilation, calibrated ensembles, and decision-aware AI can improve useful forecasts and warnings. The answer is not yes to an unrestricted claim that all catastrophic events will become predictable. The remaining uncertainty is not a generic software defect; it is partly a property of nonlinear dynamics, sparse observations, source ambiguity, and the distinction between an event that has begun and one that has not.
+
+\subsection{Limits of the proposed study}
+
+Synthetic systems can reveal causal failure modes but cannot establish real-world skill. Retrospective events may not represent future climate, sensor changes, or rare extremes. Cost matrices encode social choices and should be reviewed with emergency managers and affected communities before any operational use. A global shared layer may underperform a carefully tuned regional calibration. The study also cannot prove that deterministic earthquake prediction is impossible; it can only prevent the proposed system from making that claim without the required prospective evidence.
+
+These limits are handled by the three-layer design, not hidden in a general disclaimer. Each layer answers a different question: can the mechanism work when truth is known, does it improve time-locked historical forecasts, and does it remain calibrated when the world and the observing network move? The final event holdout and shadow layer are essential because a positive synthetic result alone would not justify deployment.
+
+\section{Conclusion}
+
+This paper proposes MULTIHAZARD-X, a hazard-specific, physics-informed, latency-constrained framework for forecasting and early warning. It treats tropical cyclones, tsunamis, and earthquakes as different physical inference problems, while sharing the parts that genuinely recur across them: observation quality, uncertainty calibration, tail-risk accounting, latency, and asymmetric decisions. The protocol compares strong baselines, enforces information cutoffs, tests rare-event stress cases, and defines explicit failure conditions.
+
+The research question is deliberately ambitious but measurable. It does not ask whether a black box can foresee every disaster. It asks whether a complete observation-to-action chain can deliver more reliable probabilities, more useful lead time, and lower impact-weighted regret at the same information budget. If the proposed gates are passed, the result would support focused pilots for the hazards and regions that pass. If they are not, the failure will identify which part of the chain limits progress. In both cases, prediction is advanced by making the boundary between forecast, warning, and exact prediction impossible to ignore.
+
+\begin{thebibliography}{00}
+\bibitem{usgs} U.S. Geological Survey, ``Can you predict earthquakes?'' U.S. Geological Survey, accessed Sep. 2, 2026. [Online]. Available: \url{https://www.usgs.gov/faqs/can-you-predict-earthquakes}
+\bibitem{nhc} National Hurricane Center, ``Forecast verification,'' National Oceanic and Atmospheric Administration, accessed Sep. 2, 2026. [Online]. Available: \url{https://www.nhc.noaa.gov/verification/verify6.shtml}
+\bibitem{noaa_tsunami} National Oceanic and Atmospheric Administration, ``U.S. tsunami warning system,'' accessed Sep. 2, 2026. [Online]. Available: \url{https://www.tsunami.gov/}
+\bibitem{wmo} World Meteorological Organization, ``Early Warnings for All,'' accessed Sep. 2, 2026. [Online]. Available: \url{https://wmo.int/activities/early-warnings-all}
+\bibitem{lam} R. Lam \textit{et al.}, ``Learning skillful medium-range global weather forecasting,'' \textit{Science}, 2023, doi: 10.1126/science.adi2336.
+\bibitem{bi} X. Bi \textit{et al.}, ``Accurate medium-range global weather forecasting with 3D neural networks,'' \textit{Nature}, vol. 619, pp. 533--538, 2023, doi: 10.1038/s41586-023-06185-3.
+\bibitem{ravuri} S. Ravuri \textit{et al.}, ``Skilful precipitation nowcasting using deep generative models of radar,'' \textit{Nature}, vol. 597, pp. 672--677, 2021, doi: 10.1038/s41586-021-03854-z.
+\bibitem{mousavi} S. M. Mousavi, W. Zhu, W. Sheng, and G. C. Beroza, ``Earthquake Transformer---an attentive deep-learning model for simultaneous earthquake detection and phase picking,'' \textit{Nature Communications}, vol. 11, art. no. 3952, 2020, doi: 10.1038/s41467-020-17591-w.
+\end{thebibliography}
+
+\end{document}

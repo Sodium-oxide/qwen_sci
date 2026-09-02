@@ -1,0 +1,287 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{url}
+\usepackage{cite}
+\newcommand{\cvar}{\operatorname{CVaR}}
+\raggedbottom
+\title{Can We Live in a Fossil-Fuel-Free World? A Boundary-Explicit and Shock-Aware Energy-System Framework}
+\author{\IEEEauthorblockN{Research Design Report}\IEEEauthorblockA{Four-Agent Scientific Workflow: Survey--Idea--ExperimentDesign--Author}}
+\begin{document}
+\maketitle
+\begin{abstract}
+The prospect of a fossil-fuel-free world is often discussed as though replacing fossil electricity generation were equivalent to replacing fossil fuels. It is not. Coal, oil, and natural gas provide electricity, heat, mobility, dispatchable energy, hydrogen, chemical carbon, plastics, lubricants, and other material services. This paper reframes the question as a boundary-explicit system feasibility problem: under what combinations of efficiency, direct electrification, variable renewable generation, firm low-carbon supply, storage, transmission, demand flexibility, sustainable molecules, and non-fossil feedstocks can a region eliminate fossil extraction and combustion while preserving hourly reliability, seasonal adequacy, energy services, affordability, access, lifecycle constraints, and feasible transition rates? We synthesize evidence from the IEA Net Zero by 2050 roadmap and IPCC AR6 Working Group III Chapter 6, then propose a design-only research program. Four nested boundaries separate fossil-dependent baseline, fossil-free electricity, fossil-free energy services, and stringent fossil-free materials. The experiment combines hourly dispatch optimization, lifecycle accounting, correlated weather and outage stress tests, infrastructure build-rate constraints, sector coupling, and distributional validation. A conditional value-at-risk objective represents the trade-off between system cost, unserved service, lifecycle emissions, and resource burdens. The central claim is conditional: a fossil-free energy system is technically plausible for many services, but it can only be established by complete portfolio and boundary tests; a clean grid alone is insufficient evidence. No newly measured or simulated result is claimed.
+\end{abstract}
+\begin{IEEEkeywords}
+fossil-free energy, energy-system transition, renewable integration, electrification, storage, reliability, lifecycle assessment, sector coupling
+\end{IEEEkeywords}
+
+\section{Introduction}
+\label{sec:intro}
+Fossil fuels are embedded in modern energy and material systems. Coal, oil, and natural gas supply electricity and heat, but they also support transport, industrial high-temperature processes, chemical synthesis, hydrogen production, plastics, lubricants, asphalt, and many products whose carbon is not immediately oxidized. Consequently, the question ``Could we live in a fossil-fuel-free world?'' is not answered by the annual share of renewable electricity or the number of electric vehicles. It requires a declared system boundary and a test of whether all required services remain available under stress.
+
+The distinction between \emph{net zero} and \emph{fossil free} is decisive. A net-zero pathway can retain fossil extraction or combustion if emissions are captured, offset, or balanced by removals. A fossil-free pathway is stronger: fossil extraction and combustion are excluded within a stated boundary, and any emergency reserve, feedstock, or carbon-capture exception is reported explicitly. Neither boundary is automatically preferable for every policy purpose, but they answer different scientific questions.
+
+The International Energy Agency (IEA) describes its Net Zero by 2050 roadmap as a transformation of how energy is produced, transported, and consumed, with important roles for renewables, electrification, efficiency, storage, hydrogen-based fuels, sustainable bioenergy, carbon capture, and behavior \cite{iea_nz}. The roadmap also emphasizes that a pathway must preserve reliable and affordable energy supplies. The IPCC Sixth Assessment Report Working Group III reaches a compatible systems conclusion: mitigation pathways require reduced fossil consumption, increased low- and zero-carbon supply, electrification, alternative carriers for difficult end uses, energy efficiency, integration, and in some scenarios carbon dioxide removal for residual emissions \cite{ipcc_wg3}. It further identifies storage, transmission, advanced controls, and demand response as mechanisms for integrating variable renewables, while noting that fully renewable systems become more challenging as the share increases.
+
+These assessments support a feasibility program, not a universal date. Regional resource quality, demand growth, existing assets, infrastructure, finance, manufacturing, permitting, material supply, industrial process requirements, and energy access will shape different transition paths. A portfolio that balances energy annually can still fail during a multi-day low-wind event, a winter peak, a drought that reduces hydropower, a transmission outage, or a sudden industrial demand surge.
+
+This paper makes four contributions. First, it provides a scientific reframe that treats fossil-free operation as a nested boundary problem. Second, it proposes a portfolio architecture spanning electricity, end-use sectors, molecules, materials, and institutions. Third, it specifies a six-stage experiment and modeling design with reliability, lifecycle, affordability, and transition-speed outcomes. Fourth, it states falsification criteria so that the project can reject attractive but incomplete pathways.
+
+The report is explicitly \textbf{DESIGN\_ONLY}. It includes no new field, grid, household, or simulation result. Numbers quoted from source pages describe the scope or findings of those sources and are not presented as outputs of the proposed study.
+
+\section{Survey: Evidence, Definitions, and Gaps}
+\label{sec:survey}
+\subsection{From fuel substitution to service adequacy}
+Primary fuel quantities are a poor common denominator for a fossil-free transition. A heat pump, electric motor, electrolyser, furnace, and synthetic-fuel plant transform energy with different efficiencies and different peak requirements. The right question is whether the system delivers thermal comfort, mobility, industrial throughput, illumination, food-chain services, and material functionality at each relevant time, not whether the same tonnes of fuel are replaced one for one.
+
+The IEA roadmap identifies electricity as increasingly central and describes a pathway in which renewables, electrification, efficiency, storage, and alternative fuels interact \cite{iea_nz}. This implies that generation, networks, end uses, and behavior cannot be optimized separately. It also implies that the transition includes a large infrastructure problem: distribution networks, transmission, flexible demand, storage, manufacturing capacity, and system operations must change together.
+
+The IPCC energy-systems chapter describes common characteristics of net-zero systems: near-zero-emission electricity, widespread electrification, substantially lower fossil use, alternative carriers such as hydrogen and bioenergy for difficult sectors, more efficient energy use, greater system integration, and carbon dioxide removal for residual emissions in some pathways \cite{ipcc_wg3}. Importantly, the same assessment notes that climate change can affect hydropower, bioenergy, electricity infrastructure, cooling and heating demand, and thermal plant efficiency. A transition model must therefore expose climate-sensitive supply and demand rather than assume stationary conditions.
+
+\subsection{The four boundary states}
+The survey identifies a recurring source of ambiguity: the word ``clean'' is used for systems that retain fossil inputs outside the electricity sector. We address this with four nested states.
+
+\begin{table*}[t]
+\centering
+\caption{Nested fossil-free boundaries and the question each boundary answers.}
+\label{tab:boundaries}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.12\textwidth}>{\raggedright\arraybackslash}p{0.26\textwidth}>{\raggedright\arraybackslash}p{0.28\textwidth}>{\raggedright\arraybackslash}p{0.25\textwidth}}
+\toprule
+State & Definition & Included services & Interpretation\\
+\midrule
+B0 baseline & Observed fossil-dependent system and existing policies & Electricity, heat, mobility, industry, feedstocks & Reference for service, cost, reliability, and emissions\\
+B1 fossil-free electricity & No routine fossil generation in the power system; other sectors may retain fossil fuels & Power-sector services and electrified demand & Tests whether a clean grid is operationally adequate\\
+B2 fossil-free energy services & No routine fossil combustion; direct electricity and non-fossil molecules serve all energy sectors & Buildings, transport, industry, agriculture, and reserves & Tests full energy-service substitution\\
+B3 fossil-free materials & B2 plus bounded or eliminated fossil carbon in chemicals and products & Plastics, chemicals, lubricants, asphalt, and industrial carbon & Tests a stringent fossil-independence boundary\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+B0 is not a target; it anchors comparison. B1 is useful for power-system research but must not be called a complete fossil-free world. B2 addresses routine energy use. B3 is substantially harder because material carbon can remain after combustion is eliminated. Net-zero-with-carbon-capture cases are sensitivity scenarios and are reported separately from B2 and B3.
+
+\subsection{Candidate transition levers}
+Efficiency and demand shaping can reduce both total energy and peak capacity, but their service effects, rebound, and adoption costs must be measured. Direct electrification can avoid combustion and conversion losses for vehicles, buildings, and some industrial processes, but it increases electricity peak demand and may require distribution upgrades. Wind and solar offer scalable low-carbon generation but introduce weather-correlated variability. Geographic diversity, transmission, forecasting, overbuild, curtailment, and storage are system attributes of these resources.
+
+Firm low-carbon resources, including hydropower, geothermal, nuclear, and sustainable bioenergy where locally acceptable, can reduce the need for long-duration storage. They carry distinct water, land, safety, waste, biomass, ecological, and social constraints. Storage is not a single technology: batteries, pumped storage, thermal storage, hydrogen, synthetic fuels, vehicle-to-grid, and flexible industrial loads operate at different timescales. A model that reports storage power without storage duration can conceal a seasonal adequacy failure.
+
+Hydrogen, ammonia, sustainable biofuels, and synthetic fuels can serve aviation, shipping, steel, chemicals, and other difficult-to-electrify applications. Their usefulness depends on conversion efficiency, fuel production capacity, leakage, water, sustainable biomass, carbon sourcing, infrastructure, and safety. For B3, recycled carbon, biomass-derived carbon, and carbon capture or direct-air-derived carbon must be tracked as feedstock pathways rather than silently counted as zero-carbon inputs.
+
+\subsection{Persistence and implementation}
+The technical potential of a portfolio is not its deployable capacity. Transmission corridors require permits and construction time. Heat pumps, vehicles, electrolysers, batteries, and industrial furnaces require factories, workers, supply chains, and financing. Retiring fossil assets creates stranded-asset and employment effects. Household adoption depends on upfront cost, reliability, comfort, and access to credit. The survey therefore treats transition speed and distributional energy burden as measurable outcomes.
+
+\subsection{Survey gap ledger}
+Six gaps guide the Idea Agent. First, annual energy balance does not establish hourly or seasonal reliability. Second, clean electricity is frequently conflated with full fossil independence. Third, hard-to-electrify sectors and conversion losses are under-integrated. Fourth, technology potential is often unconstrained by material, network, manufacturing, permitting, and workforce limits. Fifth, average system cost can hide household energy poverty or regional reliability loss. Sixth, policy and adoption are often exogenous even though they determine construction and replacement rates.
+
+\section{Scientific Reframing and Hypotheses}
+\label{sec:hyp}
+Let a regional portfolio $P$ contain generation, storage, networks, conversion plants, end-use devices, demand programs, fuels, and feedstock pathways. Let $b\in\{B0,B1,B2,B3\}$ denote its declared boundary. The scientific question is whether $P$ can satisfy service and safeguard constraints under a distribution of ordinary and stress scenarios.
+
+The following claims are falsifiable:
+\begin{itemize}
+\item H1: At matched delivered service and reliability targets, portfolios combining direct electrification with demand flexibility require less fossil backup than portfolios that add variable generation without changing load or networks.
+\item H2: Annual net energy balance overstates feasibility when weather-correlated low-renewable periods, outages, or seasonal demand peaks are included.
+\item H3: A portfolio can pass B1 while failing B2 because aviation, shipping, industrial heat, chemicals, and reserves require non-electric molecules or feedstocks.
+\item H4: Lifecycle material, mineral, water, replacement, and network constraints can change the ranking obtained from operational cost alone.
+\item H5: A globally low-cost portfolio can fail local access, affordability, or reliability constraints for particular regions and households.
+\item H6: Manufacturing, permitting, financing, and adoption lead times bound transition speed even when the long-run portfolio is technically feasible.
+\item H7: No single portfolio dominates across climates, demand profiles, resource endowments, and institutional conditions.
+\end{itemize}
+
+H1--H4 are engineering and lifecycle claims. H5--H6 make feasibility distributional and dynamic. H7 is a positive scientific result if it identifies where portfolios should be specialized rather than globally standardized.
+
+\section{Portfolio Architecture}
+\label{sec:portfolio}
+The selected idea is a coordinated transition portfolio. It is deliberately modular because a region may have excellent solar resources but weak transmission, abundant hydropower but seasonal drought, or industrial demand that cannot be electrified economically. Table~\ref{tab:layers} maps layers to mechanisms and failure modes.
+
+\begin{table}[t]
+\centering
+\caption{Portfolio layers, mechanisms, and failure modes.}
+\label{tab:layers}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.20\columnwidth}>{\raggedright\arraybackslash}p{0.28\columnwidth}>{\raggedright\arraybackslash}p{0.32\columnwidth}}
+\toprule
+Layer & Mechanism & Failure mode to test\\
+\midrule
+Efficiency & Reduce service demand and peaks & Rebound, comfort loss, slow retrofit\\
+Electrification & Replace combustion with efficient devices & New peaks, network congestion\\
+Variable renewables & Supply low-carbon electricity & Correlated weather, curtailment\\
+Firm supply & Reduce scarcity in long stress periods & Water, land, safety, waste, biomass\\
+Storage and flexibility & Shift energy across time & Duration, degradation, fuel loss\\
+Networks & Share resources across regions & Permitting, congestion, outages\\
+Non-fossil molecules & Serve hard-to-electrify sectors & Conversion loss, leakage, water\\
+Feedstocks and circularity & Replace fossil carbon in materials & Scale, quality, safety, land\\
+Institutions & Enable investment and adoption & Finance, access, coordination\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The baseline must be strong. It should include locally plausible efficiency, current best-practice operation, existing renewable assets, and scheduled infrastructure rather than an artificially inefficient fossil system. Treatments should be compared at equal service, and where possible at equal land, water, and investment budgets. This avoids attributing benefits to a portfolio simply because it was allowed unlimited additional resources.
+
+\section{Experiment Design}
+\label{sec:design}
+\subsection{Stage 1: Baseline and boundary audit}
+Construct an hourly energy-service ledger for electricity, transport, buildings, industry, agriculture, and chemical feedstocks. For each demand, record the carrier, useful service, peak, seasonal pattern, existing asset, conversion loss, retirement date, and fossil dependence. Classify every quantity as observed, modeled, or assumed. This stage produces B0 and identifies fossil uses hidden by an electricity-only accounting boundary.
+
+The audit also estimates the baseline's exposure structure: weather correlation between renewable resources and demand, regional dependence on transmission, reserve requirements, fuel inventories, common-mode equipment failures, industrial bottlenecks, and household reliability. A portfolio should be designed to reduce a measured exposure, not a generic notion of intermittency.
+
+\subsection{Stage 2: Technology and lifecycle characterization}
+For each technology, collect rated capacity, efficiency, ramp rate, minimum output, lifetime, degradation, outage rate, construction lead time, replacement schedule, embodied emissions, material intensity, water use, land footprint, recycling pathway, and upstream supply-chain emissions. Conversion chains are represented explicitly. For example, electricity-to-hydrogen-to-ammonia and electricity-to-synthetic-fuel pathways receive separate conversion, storage, and transport variables.
+
+Parameter ranges should preserve correlations. A technology may become cheaper while material demand, installation rate, or land pressure increases. A low operational-emission device can still create lifecycle emissions or critical-mineral bottlenecks. Data provenance must record whether a parameter is measured, estimated, or scenario-assumed.
+
+\subsection{Stage 3: Hourly and seasonal optimization}
+Optimize each boundary over representative weather and demand years, with sub-hourly resolution for selected operational windows. Constraints include power balance, spinning and non-spinning reserve, storage state of charge, transmission flow, fuel inventory, conversion capacity, ramping, minimum stable generation, demand response availability, and sector-service adequacy. Unit commitment is used where start-up and minimum-run effects materially affect feasibility; validated dispatch approximations may be used for exploratory screening.
+
+The optimization is repeated for historical high-stress years and climate-informed distributions. It reports whether the portfolio serves each sector at every time step, not merely whether total annual energy is sufficient. For B2 and B3, the model also balances molecule and carbon inventories, so a system cannot satisfy electricity demand by consuming an unmodeled fossil feedstock.
+
+\subsection{Stage 4: Stress testing}
+Stress scenarios include prolonged low wind and solar output, heat waves, cold snaps, drought-induced hydropower reduction, transmission outages, generator failures, demand surges, fuel or mineral supply interruptions, and simultaneous infrastructure failures. Compound scenarios combine physically related events, such as heat with cooling demand and transmission derating, or drought with hydropower scarcity and bioenergy stress.
+
+Scenario severity is expressed using observed anomaly distributions, return-period labels, or physically justified counterfactuals. The study propagates uncertainty and does not treat one dramatic scenario as a forecast. Stress outcomes include loss-of-load probability, unserved energy service, reserve shortfall, storage depletion duration, emergency fuel use, curtailment, recovery time, and regional inequality in service loss.
+
+\subsection{Stage 5: Infrastructure, adoption, and distribution}
+Add annual build-rate limits for generation, transmission, distribution, storage, heat pumps, vehicles, electrolysers, and industrial equipment. Include factory throughput, critical materials, construction labour, permitting, finance, and replacement waves. A long-run solution that requires an impossible short-run installation pulse fails the transition-speed criterion.
+
+Distributional analysis reports household energy burden, service reliability, access, comfort, mobility, and industrial output by region and user group. A portfolio may have low average cost while shifting risk to remote areas or low-income households. Risk-sharing instruments, tariffs, procurement, and targeted finance are treated as design variables rather than as an exogenous afterthought.
+
+\subsection{Stage 6: Out-of-sample validation}
+Hold out weather years, demand conditions, and outage combinations from calibration. Validate demand, resource, outage, and technology models separately from the optimization layer. Where reliability records are available, compare predicted and observed stress patterns. Use robust dominance, regret, and decision intervals to rank portfolios. A model that predicts average annual cost but misranks the portfolio with the best stress reliability fails the intended use.
+
+\section{Mathematical Framework}
+\label{sec:model}
+Let $t$ index time, $s$ index scenarios, $k$ index technologies, $j$ index sectors, and $x_k$ denote installed capacity. Let $g_{k,t,s}$ be dispatched output, $d_{j,t,s}$ be service demand, $q_{j,t,s}$ be delivery from stored or non-electric carriers, and $u_{j,t,s}$ be unserved service. A sector-service adequacy constraint is
+\begin{equation}
+\sum_k \eta_{kj}g_{k,t,s}+q_{j,t,s}\ge d_{j,t,s}-u_{j,t,s},
+\label{eq:adequacy}
+\end{equation}
+where $\eta_{kj}$ includes the conversion from technology output to useful service. The quantity $u$ remains an outcome even when reliability constraints impose a small target.
+
+For B2, routine fossil extraction and combustion are constrained by
+\begin{equation}
+f^{\mathrm{extract}}_s=0,\qquad f^{\mathrm{combust}}_{t,s}=0,
+\label{eq:fossil}
+\end{equation}
+while B1 applies the restriction to power generation only. B3 adds a carbon-feedstock accounting constraint. Emergency reserves, fossil feedstocks, and carbon capture are separate sensitivity variables and are never silently folded into a fossil-free result.
+
+Lifecycle emissions are represented by
+\begin{equation}
+E_s=E^{\mathrm{operation}}_s+E^{\mathrm{construction}}_s+E^{\mathrm{supply}}_s-E^{\mathrm{captured}}_s,
+\label{eq:lifecycle}
+\end{equation}
+with construction, replacement, mining, processing, transport, and end-of-life terms. Captured emissions are reported with permanence and energy requirements rather than treated as a free subtraction.
+
+The storage state for a generic store is
+\begin{equation}
+z_{t+1}=z_t+\eta_c c_t-\frac{d_t}{\eta_d}-\delta z_t,
+\label{eq:storage}
+\end{equation}
+where $c_t$ and $d_t$ are charging and discharge, $\eta_c$ and $\eta_d$ are efficiencies, and $\delta$ is standing loss. Hydrogen and synthetic fuels use their own production, compression, transport, and inventory equations because their round-trip losses and infrastructure differ from batteries.
+
+For screening, define a portfolio utility
+\begin{equation}
+U(P)= -C(P)-\alpha\,\cvar_{\beta}\left(U_s(P)\right)-\lambda E(P)-\rho B(P),
+\label{eq:utility}
+\end{equation}
+where $C$ is annualized cost, $U_s$ is unserved energy service in scenario $s$, $E$ is lifecycle emissions, and $B$ aggregates land, water, mineral, and distributional burdens. $\alpha$ expresses aversion to reliability loss and $\beta$ selects the lower tail. The final analysis should present a Pareto frontier because no universal choice of weights is scientifically neutral.
+
+Correlated stress is central. If renewable output and demand have covariance matrix $\Sigma(s)$ under scenario $s$, geographic diversity and flexible demand may reduce scarcity only when their conditional covariance is favorable. Average-year correlation is insufficient. The study estimates tail dependence and performs sensitivity analysis over weather, outage, and supply-chain correlations.
+
+\section{Outcomes, Analysis, and Decision Rules}
+\label{sec:analysis}
+Table~\ref{tab:outcomes} organizes the primary outcomes. The analysis reports each boundary separately and avoids treating annual cost as a sufficient statistic.
+
+\begin{table}[t]
+\centering
+\caption{Primary outcome groups and interpretation.}
+\label{tab:outcomes}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.19\columnwidth}>{\raggedright\arraybackslash}p{0.27\columnwidth}>{\raggedright\arraybackslash}p{0.32\columnwidth}}
+\toprule
+Group & Measures & Decision meaning\\
+\midrule
+Reliability & loss of load, unserved service, reserve shortfall, recovery & Does the portfolio survive stress?\\
+Service & mobility, heat, industrial output, comfort, access & Are useful services preserved?\\
+Climate & lifecycle emissions, fossil extraction, captured carbon & Does the declared boundary hold?\\
+Resources & land, water, minerals, recycling, replacement & Are physical burdens feasible?\\
+Economics & annualized cost, energy burden, investment, jobs & Who pays and who benefits?\\
+Transition & build rates, lead times, adoption, stranded assets & Can the pathway occur in time?\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The main statistical object is the conditional effect of each portfolio layer under a declared boundary and stress class. For model ensembles, hierarchical sensitivity analysis separates uncertainty in demand, weather, technology performance, costs, outages, and policy. For interventions with empirical adoption data, mixed-effects or causal panel models estimate heterogeneity by region, user group, and institutional context. For the optimization, robustness is evaluated by out-of-sample service shortfall, regret, and constraint violation.
+
+The first decision rule is boundary integrity: B2 or B3 cannot pass if any routine fossil extraction or combustion is hidden in a feedstock, reserve, or conversion chain. The second is service adequacy: ordinary and stress scenarios must satisfy pre-registered reliability and sector-service targets. The third is lifecycle and resource safety: emissions, water, land, mineral, waste, and recycling burdens must stay within declared safeguards. The fourth is distributional feasibility: no group should lose essential service or face an unacceptable energy burden solely because system averages improve. The fifth is transition speed: annual construction and adoption flows must be feasible under manufacturing, finance, workforce, and permitting constraints.
+
+Power calculations should target rare-event estimands rather than only mean cost. Simulation-based planning varies the number of weather years, outage realizations, and scenarios under plausible dependence structures. When a tail probability cannot be estimated precisely, the result is a decision interval and a statement of which additional data would change the decision. This is preferable to a nominal precision based on independent hourly observations.
+
+\section{Anticipated Findings and Falsification}
+\label{sec:anticipated}
+No result is observed in this design-only report. The expected pattern is conditional complementarity. Efficiency and demand response should lower both load and peak capacity in some sectors; direct electrification should be powerful where it preserves service; variable renewables should be effective when networks, storage, overbuild, and flexible demand reduce correlated scarcity; and non-fossil molecules should matter for sectors whose physical service cannot be supplied economically by direct electricity. The binding constraint is expected to vary by region.
+
+Several outcomes would falsify the central claim or narrow its scope. If portfolios meeting B2 do not retain service under relevant correlated stress, long-run technical balance is insufficient. If a portfolio passes B1 but fails B2 or B3 because of industrial or material carbon, the result confirms the need for boundary separation rather than proving fossil independence. If lifecycle materials, water, land, or recycling constraints make a portfolio infeasible, operational cost rankings must be rejected. If average affordability improves while vulnerable households lose service or face unacceptable burden, the portfolio fails the distributional rule. If a transition requires construction rates outside observed manufacturing and permitting limits, its long-run feasibility does not imply near-term feasibility.
+
+The study should be prepared for trade-offs. Batteries may improve hourly reliability but require materials and replacement. Hydrogen may bridge long gaps but introduce conversion losses and infrastructure needs. Bioenergy may provide dispatchable energy or feedstock while competing with land, water, and food. Nuclear or hydropower may reduce storage requirements but carry site-specific safety, ecological, and governance constraints. Carbon capture can support a net-zero case while remaining inconsistent with a strict fossil-free boundary. These are not reasons to omit options; they are reasons to model them distinctly.
+
+\section{Threats to Validity and Governance}
+\label{sec:threats}
+External validity is the main threat. A portfolio that works in a high-resource, interconnected region may not transfer to an isolated island, a cold continental grid, a low-income region with rapid demand growth, or a manufacturing center with industrial process heat. The design responds with multiple archetypes, held-out regions, context interactions, and region-specific constraints.
+
+Internal validity can be threatened by optimistic technology assumptions, double counting of flexibility, omitted outages, and hidden boundary leakage. Every parameter receives provenance and a boundary tag. The model must not count the same capacity as both reserve and full output, and it must not count a fuel as zero-carbon without accounting for production, transport, and storage. Sensitivity analysis is run on availability, degradation, lifetime, and build-rate assumptions.
+
+Rare events create a second threat. Historical data underrepresent unprecedented compound stress, while counterfactual scenarios are model-dependent. The correct response is to combine observed events, physically justified scenarios, uncertainty propagation, and robust decisions. The paper should distinguish a forecast of an event from a stress test designed to reveal a weak point.
+
+Distribution and rebound create a third threat. Electrification can shift emissions and burden to the power system; efficiency can produce rebound; low-cost generation can be inaccessible to households; and material substitution can shift land or water use outside the modeled region. Lifecycle and trade-aware accounting must follow these shifts rather than stop at the facility boundary.
+
+Governance is part of validity. Infrastructure and household data require aggregation and access controls. Hydrogen, ammonia, bioenergy, carbon capture, nuclear, and grid operations require domain-specific safety review before deployment. Permitting, labour, community consent, and energy-access objectives must be represented as constraints or documented decisions. No scenario output should be presented as an observed transition result.
+
+\section{Implications}
+\label{sec:implications}
+The practical meaning of a fossil-fuel-free world is a portfolio, not a single replacement fuel. The first investment should address the binding constraint revealed by the baseline audit. If the constraint is a short evening peak, efficiency, demand response, storage, and distribution may dominate. If it is a multi-week low-renewable period, firm supply, transmission, seasonal storage, or molecules may be decisive. If it is industrial carbon, feedstock substitution and circularity are more relevant than additional power capacity. If it is affordability, tariffs, efficiency finance, and access may be as important as generation.
+
+The study also clarifies communication. It is scientifically defensible to say that a fossil-free power system is feasible under a declared set of assumptions while stating that a fossil-free material system remains harder. It is not defensible to use the first statement as proof of the second. Likewise, a net-zero scenario with fossil fuels and carbon capture can be valuable for climate policy while not answering the strict fossil-free question.
+
+The IEA emphasizes the narrow but achievable nature of its net-zero pathway and the need for clean-energy investment, system flexibility, and international cooperation \cite{iea_nz}. The IPCC emphasizes that national circumstances shape the pathway and that higher variable-renewable shares require storage, transmission, controls, and demand-side response \cite{ipcc_wg3}. The proposed experiment operationalizes these statements by making the relevant conditions measurable and falsifiable.
+
+\section{Reproducible Protocol and Implementation Criteria}
+\label{sec:repro}
+The proposed study is reproducible at the level of decisions, not only at the level of code. Before calibration, investigators register the boundary state, functional units, reliability thresholds, lifecycle accounting rules, resource safeguards, distributional indicators, scenario families, and the distinction between confirmatory and exploratory analyses. Each portfolio receives a versioned specification containing generation capacities, demand technologies, storage duration, network topology, fuel and feedstock pathways, retirement schedules, and build-rate limits. This prevents a scenario from changing its meaning while retaining the same label.
+
+Every input is stored with provenance and a status tag: observed, estimated, literature-derived, or scenario-assumed. A weather time series is not interchangeable with a synthetic stress event; an announced factory is not interchangeable with installed capacity; and a nameplate efficiency is not interchangeable with delivered service efficiency. Cost, performance, degradation, lifetime, and availability are stored as distributions or bounded ranges where appropriate. Correlations are preserved when they have a physical basis, such as the relationship between temperature, cooling demand, photovoltaic output, and transmission capacity.
+
+The data pipeline has five layers. The first layer contains raw time series for load, weather, generation, outages, fuel inventories, and prices. The second harmonizes time zones, missing intervals, spatial resolution, and units. The third constructs service demand for mobility, thermal comfort, industrial throughput, and materials. The fourth generates technology and infrastructure candidates with lifecycle attributes. The fifth produces scenario-specific optimization inputs and immutable output tables. A quality-control report records unit conversions, imputation, aggregation, and all dropped or failed observations. Crop-like language about ``clean supply'' is avoided; each carrier is traced to its energy and carbon source.
+
+The computational implementation should pass synthetic tests before real data are used. Test cases include a zero-wind period, a simultaneous demand surge and transmission derating, storage saturation, storage depletion, generator failure, electrolyser conversion loss, and a feedstock pathway that violates the B3 boundary. The tests verify that the solver records unserved service, respects reserve requirements, prevents negative storage, and does not count the same asset as both energy and reserve. A small demonstration dataset allows an independent researcher to reproduce the model structure without receiving confidential household or infrastructure records.
+
+Validation is split into layers. Demand and weather models are first evaluated against held-out observations. Technology parameters are checked against independent performance or outage records where available. The dispatch model is then tested on held-out weather years and outage combinations. Finally, the policy and build-rate layer is evaluated by comparing predicted capacity additions and retirement timing with observed construction histories. This order avoids using the optimizer's own outputs as evidence that its assumptions are correct.
+
+The reporting unit is a boundary--scenario--portfolio tuple. Each tuple records service delivered by sector and hour, loss-of-load events, reserve margins, storage states, emissions, fossil extraction, lifecycle materials, water, land, cost, energy burden, and construction flows. The report must show both the best and worst relevant scenarios. A portfolio that passes the median case but fails one physically plausible tail case is described as fragile, not feasible. A portfolio that passes B1 but fails B2 is reported as a successful power-sector transition with an unresolved energy-service boundary.
+
+Implementation criteria are also explicit. A transition path is feasible only if the annual build rate is nonnegative and below the available manufacturing, workforce, material, finance, and permitting envelope; if replacement waves are included; if required transmission and distribution upgrades are timed before load connection; and if energy-service access remains above its local target. Policy scenarios are compared by robustness and regret, not by the most favorable technology cost. This makes the result useful to regional planners without implying that a model can decide political values on their behalf.
+
+The final archive should include scenario files, parameter tables, code versions, solver settings, random seeds, output schemas, and a change log. Primary results are generated once from the registered specification; exploratory results carry a separate label. If an input is updated, the affected boundary and all dependent scenarios are rerun, while unaffected checks are not mechanically repeated. This protocol supports transparent correction when new technology, climate, or cost evidence becomes available.
+
+\section{Conclusion}
+\label{sec:conclusion}
+Could humans live in a fossil-fuel-free world? The scientifically responsible answer is conditional rather than a date or a slogan. Many energy services can plausibly be supplied by efficiency, direct electrification, renewable and firm low-carbon generation, storage, networks, and flexible demand. A complete answer must also account for seasonal reliability, hard-to-electrify sectors, non-fossil molecules, industrial carbon, lifecycle resources, infrastructure lead times, and distributional access.
+
+This paper proposes a boundary-explicit, shock-aware research program with four nested system states and six linked stages. Its central claim is testable: a fossil-free transition is feasible only when a complete portfolio meets service, reliability, lifecycle, resource, affordability, and transition-speed constraints under correlated stress. A clean grid is an important milestone, but it is not by itself a fossil-free world. The design remains open to rejection, and its expected and observed result sets remain empty until empirical and computational validation are completed.
+
+\begin{thebibliography}{10}
+\bibitem{iea_nz} International Energy Agency, \emph{Net Zero by 2050: A Roadmap for the Global Energy Sector}. Paris, France: IEA, 2021. [Online]. Available: \url{https://www.iea.org/reports/net-zero-by-2050}
+\bibitem{ipcc_wg3} Intergovernmental Panel on Climate Change, \emph{Climate Change 2022: Mitigation of Climate Change, Working Group III Contribution to the Sixth Assessment Report}. Cambridge, U.K.: Cambridge Univ. Press, 2022, ch. 6, ``Energy Systems.'' [Online]. Available: \url{https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-6/}
+\bibitem{sepulveda2018} N. A. Sepulveda \emph{et al.}, ``The role of firm low-carbon electricity resources in deep decarbonization of power generation,'' \emph{Joule}, vol. 2, no. 11, pp. 2403--2420, 2018.
+\bibitem{national_academies2021} National Academies of Sciences, Engineering, and Medicine, \emph{Accelerating Decarbonization of the U.S. Energy System}. Washington, DC, USA: National Academies Press, 2021.
+\bibitem{johansson2012} T. B. Johansson \emph{et al.}, ``Global energy assessment: Toward a sustainable future,'' Cambridge Univ. Press, Cambridge, U.K., 2012.
+\bibitem{rogelj2018} J. Rogelj \emph{et al.}, ``Mitigation pathways compatible with 1.5 degrees C in the context of sustainable development,'' in \emph{Global Warming of 1.5 degrees C}, IPCC, 2018.
+\bibitem{creutzig2017} F. Creutzig \emph{et al.}, ``The underestimated potential of energy demand measures to reduce emissions,'' \emph{Nature Climate Change}, vol. 7, pp. 103--107, 2017.
+\bibitem{staffell2019} I. Staffell \emph{et al.}, ``The role of hydrogen and fuel cells in the global energy system,'' \emph{Energy \& Environmental Science}, vol. 12, pp. 463--491, 2019.
+\bibitem{ipcc_syr} Intergovernmental Panel on Climate Change, \emph{Climate Change 2023: Synthesis Report}. Geneva, Switzerland: IPCC, 2023.
+\bibitem{irena2023} International Renewable Energy Agency, \emph{World Energy Transitions Outlook 2023}. Abu Dhabi, UAE: IRENA, 2023.
+\end{thebibliography}
+\end{document}

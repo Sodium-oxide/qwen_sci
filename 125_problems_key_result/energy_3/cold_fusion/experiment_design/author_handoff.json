@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "from_stage": "experiment_design",
+  "to_stage": "author",
+  "handoff_status": "ready",
+  "primary_direction": "BLINDED-PRODUCT-LINKED-REPLICATION",
+  "scientific_reframe": "Under what precisely specified conditions could a low-temperature nuclear process produce reproducible net excess heat together with nuclear products consistent with known reaction channels and a viable energy balance?",
+  "author_requirements": [
+    "state the canonical 1989 claim and later replication record",
+    "derive the D-D energy and product constraints",
+    "describe four control arms and blinded cross-laboratory protocol",
+    "separate nuclear discovery, reproducibility, and energy-technology thresholds",
+    "report no observed results because the workflow is design-only",
+    "include safety and human-review boundaries"
+  ],
+  "source_bindings": ["../survey/survey_manifest.json", "../idea/idea_result.json", "research_design.json"],
+  "observed_results": []
+}

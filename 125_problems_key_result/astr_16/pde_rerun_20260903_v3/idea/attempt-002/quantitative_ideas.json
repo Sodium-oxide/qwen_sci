@@ -1,0 +1,132 @@
+{
+  "catalog": {
+    "entry_count": "37",
+    "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md",
+    "schema_version": "model_catalog_v1",
+    "sha256": "6b5bebfbd54c050aa482bf533dbfaf872c557cba16bb9e10de84526abbef753e",
+    "status": "AVAILABLE",
+    "truncated": "true"
+  },
+  "generation_message": "",
+  "generation_status": "READY",
+  "ideas": [
+    {
+      "base_hypothesis_reference": "Canonical Idea: Isolated magnetic-dipole spin-down validity domain and braking index deviations.",
+      "candidate_model_strategy": {
+        "catalog_model_ids": [
+          "math_phys_astronomy-ode-dae-dynamics",
+          "math_phys_astronomy-constrained-monte-carlo-mcmc"
+        ],
+        "mode": "CATALOG_COMPOSITION",
+        "rationale": "Use ODE/DAE to integrate the spin-down torque equations for individual pulsar tracks, and Monte Carlo methods to sample initial conditions (birth period, B-field, inclination) and accretion histories to generate population distributions for statistical comparison."
+      },
+      "comparator": "Observed braking indices from high-precision pulsar timing surveys (e.g., Parkes, FAST) and population statistics from the ATNF Pulsar Catalogue.",
+      "domain": "MATH_PHYS_ASTRONOMY",
+      "execution_readiness": "EXECUTABLE_CANDIDATE",
+      "falsification_condition": "If the simulated distributions for Scenario B and D cannot be separated in the (P, Pdot, n) parameter space at a significance level < 0.05, or if observed n values consistently fall outside the predicted bounds of the inclination decay model.",
+      "initial_boundary_requirements": [
+        "Initial P sampled from birth period distribution (e.g., 0.01-0.1 s)",
+        "Initial B sampled from log-normal distribution (mean 10^12 G, sigma 0.5)",
+        "Initial alpha sampled from isotropic distribution",
+        "Boundary: Evolution stops when Pdot falls below detection threshold or age exceeds 10^10 yr"
+      ],
+      "known_limitations": [
+        "Does not account for glitches or magnetospheric state changes; assumes a fixed moment of inertia; observational selection effects in the comparator data may bias the comparison."
+      ],
+      "model_intent": "To construct a population synthesis model that simulates the evolutionary tracks of isolated pulsars (subject to inclination decay) and recycled pulsars (subject to accretion history), then compares the resulting P-Pdot distributions and braking indices against observational data to identify the boundary of the isolated spin-down validity domain.",
+      "observables": [
+        "Distribution of braking index n in (P, Pdot) space",
+        "Ratio of isolated vs. recycled pulsars in the 'death line' region",
+        "Correlation between n and characteristic age tau_c"
+      ],
+      "parameters_and_sources": [
+        "Vacuum dipole constant K_dipole (derived from physical constants)",
+        "Wind braking efficiency eta (literature range 0.1-1.0)",
+        "Inclination decay timescale tau_alpha (literature range 10^3-10^5 yr)",
+        "Accretion torque coefficient K_acc (standard disk accretion theory)",
+        "Neutron star mass M and moment of inertia I (EOS-dependent, e.g., 1.4 Msun, 10^45 g cm^2)"
+      ],
+      "provisional_solver_family": "Python/NumPy for ODE integration; MCMC (emcee) for parameter estimation; SciPy for statistical tests.",
+      "quantitative_idea_id": "Q1",
+      "quantitative_question": "Can the joint distribution of braking index n and characteristic age tau_c statistically distinguish isolated magnetic-dipole evolution from binary recycling populations, given specific torque model constraints?",
+      "scenarios": [
+        "Scenario A: Pure vacuum dipole (alpha constant, eta=0)",
+        "Scenario B: Inclination decay only (alpha(t) exponential, eta=0)",
+        "Scenario C: Inclination decay + wind braking (alpha(t) + eta(t))",
+        "Scenario D: Binary recycling (accretion phase followed by isolated spin-down)"
+      ],
+      "state_variables": [
+        "Spin period P",
+        "Spin period derivative Pdot",
+        "Magnetic inclination angle alpha",
+        "Surface magnetic field strength B",
+        "Braking index n"
+      ],
+      "title": "Distinguishing Isolated Dipole Evolution from Binary Recycling via Braking Index and Period Derivative Correlations"
+    },
+    {
+      "base_hypothesis_reference": "Canonical Idea: Spin-phase-coupled dense matter equation of state and core compression triggering phase transitions.",
+      "candidate_model_strategy": {
+        "catalog_model_ids": [
+          "math_phys_astronomy-ode-dae-dynamics"
+        ],
+        "mode": "CATALOG_MATCH",
+        "rationale": "The thermal evolution of a neutron star is governed by a system of ordinary differential equations (energy balance) and algebraic constraints (EOS relations). This model directly fits the ODE/DAE category."
+      },
+      "comparator": "X-ray observations of isolated neutron stars and massive pulsars (e.g., Chandra, XMM-Newton) and theoretical cooling curves from standard literature.",
+      "domain": "MATH_PHYS_ASTRONOMY",
+      "execution_readiness": "EXECUTABLE_CANDIDATE",
+      "falsification_condition": "If the predicted temperature deviations in Scenario B are smaller than the observational error bars of current X-ray telescopes, or if the observed cooling curves of massive neutron stars are fully explained by standard cooling models without invoking phase transitions.",
+      "initial_boundary_requirements": [
+        "Initial T_c sampled from birth temperature distribution (10^8-10^9 K)",
+        "Boundary: Surface temperature determined by radiative transfer from the atmosphere model",
+        "Initial spin period P_0 (e.g., 0.02 s)"
+      ],
+      "known_limitations": [
+        "Highly sensitive to the choice of EOS and phase transition parameters; observational uncertainties in distance and radius affect temperature inference; assumes spherical symmetry."
+      ],
+      "model_intent": "To solve the thermal evolution equations for neutron stars with an equation of state that includes a density-dependent phase transition, coupled to the spin-down history, and compare the resulting X-ray luminosity and temperature tracks against standard cooling models.",
+      "observables": [
+        "Surface temperature T_s vs. age",
+        "X-ray luminosity L_X vs. age",
+        "Deviation in cooling curves from standard predictions"
+      ],
+      "parameters_and_sources": [
+        "Neutron star mass M (fixed at 2.0 Msun)",
+        "Phase transition critical density rho_crit (EOS-dependent)",
+        "Latent heat of transition L (EOS-dependent)",
+        "Neutrino emissivity coefficients (standard Urca, modified Urca, direct Urca)",
+        "Thermal conductivity k (literature values)"
+      ],
+      "provisional_solver_family": "Fortran/C++ for stiff ODE integration (e.g., LSODA); Python for post-processing and plotting.",
+      "quantitative_idea_id": "Q2",
+      "quantitative_question": "How does the surface temperature evolution T_s(t) differ between massive neutron stars (M > 2.0 Msun) undergoing spin-down induced core compression and those without, and can this distinguish the phase-transition mechanism from standard cooling?",
+      "scenarios": [
+        "Scenario A: Standard cooling (no phase transition, constant I)",
+        "Scenario B: Phase transition cooling (I changes with spin-down, latent heat release)",
+        "Scenario C: Phase transition with superfluidity (modified neutrino emissivity)"
+      ],
+      "state_variables": [
+        "Core temperature T_c",
+        "Surface temperature T_s",
+        "Central density rho_c",
+        "Moment of inertia I",
+        "Spin frequency Omega"
+      ],
+      "title": "Thermal Signatures of Phase Transitions in Massive Neutron Stars: Distinguishing Spin-Down Induced Core Compression"
+    }
+  ],
+  "schema_version": "quantitative_ideas_v1",
+  "source_identity": {
+    "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+    "idea_result_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\pde_rerun_20260903_v3\\idea\\attempt-002\\idea_result.json",
+    "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+    "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+    "project_id": "sci_astr_16_survey_007",
+    "science_run_id": "astr_16",
+    "selected_direction_id": "mechanism_replacement",
+    "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\pde_rerun_20260903_v2\\survey\\attempt-007\\survey_manifest.json",
+    "survey_run_id": "astr_16-survey-007"
+  },
+  "topic": "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong magnetic field. The research should distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution, and test formation and evolution with mathematical models."
+}

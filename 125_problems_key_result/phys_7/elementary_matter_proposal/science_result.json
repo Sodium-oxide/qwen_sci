@@ -1,0 +1,67 @@
+{
+  "schema_version": "science_result_v1",
+  "project_id": "phys_7_elementary_matter_20260901",
+  "research_topic": "What are the smallest building blocks of matter?",
+  "status": "COMPLETED_WITH_HUMAN_VISUAL_AND_SOURCE_PAGE_REVIEW_PENDING",
+  "workflow": [
+    {
+      "agent": "Survey",
+      "status": "COMPLETED",
+      "artifacts": [
+        "survey/survey.md",
+        "survey/survey_evidence_plan.json",
+        "survey/survey_gap_ledger.json",
+        "survey/survey_idea_handoff.json",
+        "survey/survey_manifest.json"
+      ]
+    },
+    {
+      "agent": "Idea",
+      "status": "COMPLETED",
+      "selected_direction_id": "idea-rlmc-001",
+      "artifacts": [
+        "idea/idea.md",
+        "idea/idea_result.json"
+      ]
+    },
+    {
+      "agent": "ExperimentDesign",
+      "status": "COMPLETED",
+      "execution_policy": "DESIGN_ONLY",
+      "observed_results_count": 0,
+      "artifacts": [
+        "experiment_design/research_design.md",
+        "experiment_design/research_design.json",
+        "experiment_design/author_handoff.json"
+      ]
+    },
+    {
+      "agent": "Author",
+      "status": "COMPLETED",
+      "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+      "artifacts": [
+        "author/elementary_matter_report.tex",
+        "author/elementary_matter_report.pdf",
+        "author/pdf_validation.json"
+      ]
+    }
+  ],
+  "scientific_reframing": "Can a momentum-transfer-matched, cross-channel inference program distinguish a pointlike-Standard-Model explanation from finite-size, contact-interaction, or excited-fermion alternatives while controlling EFT validity, PDF uncertainty, detector response, and channel-specific systematics?",
+  "primary_conclusion": "Elementarity is operational: the proposal tests whether a pointlike Standard-Model description remains preferred within stated resolution and model assumptions, rather than claiming proof of absolute indivisibility.",
+  "source_control": {
+    "survey_registry_count": 11,
+    "author_allowed_source_count": 11,
+    "acknowledgements_included": false
+  },
+  "report": {
+    "style": "IEEE conference",
+    "page_count": 7,
+    "paper_size": "Letter",
+    "minimum_page_requirement": 7
+  },
+  "remaining_human_reviews": [
+    "Publisher and DOI landing-page verification",
+    "Rendered-PDF visual inspection",
+    "Collider phenomenology and experimental-analysis review before any implementation"
+  ]
+}

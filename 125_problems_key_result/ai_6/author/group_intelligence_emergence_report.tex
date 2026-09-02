@@ -1,0 +1,329 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage[T1]{fontenc}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{balance}
+\begin{document}
+
+\title{How Group Intelligence Emerges: A Causal Benchmark for Human-AI Collectives}
+
+\author{\IEEEauthorblockN{Survey, Idea, ExperimentDesign, and Author Agents}
+\IEEEauthorblockA{Research synthesis and protocol proposal\\
+Collective Intelligence Systems Study\\
+DESIGN\_ONLY artifact}}
+
+\maketitle
+
+\begin{abstract}
+Group intelligence is often described as a group acting more intelligently than any individual member. That description is scientifically useful only when capability, diversity, independent information, communication, aggregation, coordination, and resource use are separated. This paper surveys evidence for collective intelligence factors, functional diversity, wisdom-of-crowds aggregation, social influence, and human-computer collective intelligence. We then propose the GROUP-INTELLIGENCE-EMERGENCE-BENCHMARK, a causal benchmark comparing human-only, AI-only, and hybrid groups under matched task, time, information, and compute budgets. The benchmark manipulates functional diversity, error correlation, first independent judgments, communication topology, aggregation, role allocation, and machine calibration. Its primary outcomes are group advantage over the best member, held-out cross-task generalization, calibration, error correlation, solution coverage, dissent preservation, and resource-normalized performance. The protocol proceeds from synthetic agents to a sandbox human-AI interface and, only if justified, a low-stakes longitudinal study. This is a design proposal, not a report of completed experiments. It does not claim that a group is a conscious person or that group intelligence is a new substance.
+\end{abstract}
+
+\begin{IEEEkeywords}
+collective intelligence, human-AI teams, wisdom of crowds, functional diversity, coordination, calibration, group decision making
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+People often solve problems together that are too large, uncertain, or distributed for one person. A crowd can estimate a quantity, a scientific team can search a large hypothesis space, and a network can combine partial observations of an environment. The resulting performance is sometimes called group or collective intelligence. The phrase becomes even more ambitious when computers are included: the MIT Center for Collective Intelligence asks how people and computers can be connected so that, collectively, they act more intelligently than any person, group, or computer has acted before \cite{mitcci}.
+
+The scientific challenge is that several mechanisms are mixed together. An aggregate can be accurate because independent errors cancel. A team can search effectively because its members use different representations and heuristics. A human-AI group can perform well because the machine has more computation or information. A group can also fail because communication induces herding, an overconfident agent dominates, or a coordination bottleneck wastes time. These outcomes should not be summarized by group size or by a single score.
+
+This paper converts the broad question ``How does group intelligence emerge?'' into a causal engineering problem: under what combinations of agent capability, functional diversity, independence, communication, aggregation, coordination, and feedback does a group produce a reliable task-level capability that exceeds its best member and generalizes to held-out tasks? The proposed answer is a benchmark, not a claim that groups have a mind. It compares human-only, AI-only, and hybrid groups under matched resources and logs both performance and mechanism.
+
+The design is motivated by several established findings. Woolley et al. reported two studies involving 699 people in groups of two to five and found a collective intelligence factor that explained group performance across a range of tasks; the factor was not strongly associated with average or maximum individual intelligence and was associated with social sensitivity and conversational turn-taking \cite{woolley2010}. Hong and Page gave mathematical conditions under which functionally diverse groups can outperform groups selected for high individual ability \cite{hongpage2004}. Lorenz et al. showed that mild social influence can narrow opinion diversity without improving accuracy \cite{lorenz2011}. These results suggest that the emergence problem is a balance: useful diversity must be converted into coordination without producing correlated error.
+
+The contributions are fourfold. First, we define a mechanism map that separates capability, functional diversity, independence, communication, aggregation, coordination, and feedback. Second, we propose the GROUP-INTELLIGENCE-EMERGENCE-BENCHMARK (GIEB) with resource-matched baselines and a human-AI peer versus authority comparison. Third, we specify a simulation-first experiment with cross-task transfer, calibration, dissent, and security safeguards. Fourth, we state claim boundaries: the design can test task-level collective capability, but it cannot establish group consciousness, personhood, or a new biological entity. All prospective work remains `DESIGN\_ONLY`.
+
+\section{Survey: Mechanisms Behind Collective Performance}
+
+\subsection{Wisdom of crowds is not consensus}
+
+For a numerical estimation task, an average can outperform individual estimates when errors are sufficiently independent and approximately unbiased. This is a statistical property of the error distribution. It does not require that participants talk, agree, or even know one another. Communication can add information, but it can also make errors correlated. In an open-access PNAS study, Lorenz et al. used 144 participants and found that mild social influence narrowed the diversity of estimates without improving collective error; convergence could also increase confidence without increasing accuracy \cite{lorenz2011}. Therefore, a consensus protocol is not automatically an intelligent protocol.
+
+The distinction matters for experimental design. If participants see a machine recommendation before giving a private answer, an apparent group gain can arise from copying rather than information integration. A blind-first condition preserves a counterfactual independent judgment. The final analysis can then ask whether discussion corrected the independent aggregate or merely shifted everyone toward a common, potentially wrong, value.
+
+\subsection{A collective intelligence factor}
+
+Woolley et al. operationalized a collective intelligence factor by correlating group performance across diverse tasks \cite{woolley2010}. Their abstract reports two studies with 699 people and identifies social sensitivity, equal conversational turn-taking, and group composition as correlates. This work motivates a cross-task outcome rather than a single puzzle score. It also leaves a causal question: do these correlates generate the factor, or are they markers of another process such as information access, task familiarity, or efficient coordination?
+
+A group factor should not be interpreted as a group mind. A statistical factor summarizes covariance across tasks; it does not imply subjective experience, an independent memory, or moral status. The benchmark preserves this distinction by using ``collective capability'' for measured task performance and reserving ``intelligence'' for the operational score defined by the task battery.
+
+\subsection{Functional diversity and search}
+
+Hong and Page formalized agents using problem representations and heuristics \cite{hongpage2004}. Their PNAS article states that randomly selected agents can outperform a group of individually high-performing agents under conditions where functional diversity compensates for lower individual ability. The important variable is functional diversity: different ways of representing the problem and searching for solutions. Demographic identity may correlate with experience, but it is not a measurement of a representation or heuristic and should not be used as a shortcut for either ability or value.
+
+The model creates a prediction for a benchmark. If two agents make different errors but explore complementary parts of a search space, an information-preserving aggregator should benefit. If they make different errors that cannot be reconciled, disagreement may only increase coordination cost. Thus diversity should be measured directly through representation distance, heuristic trajectories, sensor complementarity, proposal novelty, and residual error correlation.
+
+\subsection{Human-computer collective intelligence}
+
+The MIT Center for Collective Intelligence maintains projects on measuring collective intelligence, the collective-intelligence genome, generative AI and collective intelligence, and the design of human-AI teams \cite{mitcci}. Dellermann et al. frame hybrid intelligence as a design space in which human and machine capabilities are combined and complemented \cite{dellermann2019}. These programs make human-AI groups an attractive experimental platform: model family, confidence display, abstention, role assignment, and communication topology can be controlled more explicitly than in an informal human group.
+
+However, a machine can create new confounds. It may use more computation than human controls, retrieve information not available to them, or present a recommendation with an authority signal that changes human behavior. A human-AI study must therefore report machine exposure, acceptance, correction, override, abstention, and influence on the final answer. It must also match the information and time budget of the controls.
+
+\subsection{A mechanism map}
+
+The survey organizes emergence into seven mechanisms:
+
+1. **Capability:** what each agent can infer or do alone.
+2. **Functional diversity:** differences in representations, heuristics, sensors, or model families.
+3. **Independence:** whether errors retain enough diversity to cancel or complement one another.
+4. **Communication:** how proposals, confidence, evidence, and dissent move.
+5. **Aggregation:** how partial answers become a decision or plan.
+6. **Coordination:** how roles, subtasks, resources, and timing are allocated.
+7. **Feedback:** how outcomes update agents and protocols without destroying useful diversity.
+
+These mechanisms are coupled. Communication can improve coordination while reducing independence. A highly capable AI can raise the mean while suppressing human alternatives. A larger group can cover more search space while paying a greater coordination cost. The missing research object is therefore not the group label but the protocol that transforms distributed information into action.
+
+\section{Idea: The GIEB Benchmark}
+
+\subsection{Central proposition}
+
+The GROUP-INTELLIGENCE-EMERGENCE-BENCHMARK evaluates group intelligence as a vector of task-level properties. A group must improve on held-out instances, exceed a valid best-member and independent-aggregation baseline, and exhibit a measurable mechanism such as complementary search coverage or reduced error correlation. Resource use, calibration, dissent, and subgroup outcomes are reported alongside accuracy.
+
+The benchmark has five layers. Agents may be human, algorithmic, or hybrid. Diversity may be homogeneous, complementary, or intentionally correlated. Information flow may preserve private first judgments or permit immediate discussion. Decisions may use statistical aggregation, deliberative synthesis, or abstention. Coordination may use fixed roles, expertise-based roles, or a learned allocator. This decomposition turns a broad claim into controlled factors.
+
+\subsection{Hypotheses}
+
+H0 is the best-member null: after matching information, time, group size, and compute, the group adds no residual capability beyond its best member or a simple aggregator. H1 predicts that functional diversity and complementary errors improve held-out performance. H2 predicts that independent first judgments protect aggregation, whereas unrestricted early discussion can reduce accuracy through error correlation and premature convergence. H3 predicts that a calibrated peer AI with explicit abstention and a complementary role will outperform an authority AI and matched human-only controls on tasks where human context and machine search or calculation complement one another.
+
+H4 predicts a task-dependent communication optimum: communication helps until its coordination cost and conformity effects exceed its information benefit. H5 predicts that a group advantage that survives held-out tasks and changed environments is stronger evidence of emergence than a one-task gain. H6 predicts that group advantage is explained by functional diversity, residual error correlation, communication equality, calibration, and allocation efficiency better than by group size alone.
+
+\subsection{Claim boundaries}
+
+The benchmark can establish a group-level functional capability. It cannot establish that a group is a conscious subject, possesses a unified self, or has a moral status independent of its members. A high collective score is not evidence of a group mind. A human-AI group is not a biological species. These boundary conditions are included in the protocol because scientific validity depends on saying what the measurements cannot show.
+
+\section{Formal Model and Metrics}
+
+\subsection{Agents, messages, and final decisions}
+
+For task $j$, agent $i$ receives observation $o_{ij}$ and produces answer $a_{ij}$, confidence $q_{ij}$, evidence trace $e_{ij}$, and optional abstention $r_{ij}$. At communication round $t$, protocol $\mathcal{G}$ maps the available messages into a group state $m_{j,t}$. A group policy produces final answer $a_{G,j}$ and confidence $q_{G,j}$. A simple group advantage is
+\begin{equation}
+A_j=P(a_{G,j}\ \mathrm{correct})-\max_i P(a_{ij}\ \mathrm{correct}),
+\label{eq:advantage}
+\end{equation}
+where probabilities are estimated over held-out task instances under the same resource budget. For continuous estimation, performance is defined as negative absolute or squared error so that a larger value remains better.
+
+The resource-matched condition is essential. Let $B_j$ contain time, compute, retrieved information, message count, and group size. A group advantage is interpretable only when the comparison holds $B_j$ fixed or reports its difference explicitly. Otherwise, the benchmark could mistake extra computation for emergence.
+
+\subsection{Diversity and independence}
+
+Let $E_i$ be the residual error vector of agent $i$ after removing task difficulty. A mean residual correlation is
+\begin{equation}
+R=\frac{2}{n(n-1)}\sum_{i<k}\mathrm{corr}(E_i,E_k),
+\label{eq:errorcorrelation}
+\end{equation}
+where $n$ is group size. Lower $R$ indicates more independent errors, but lower correlation alone is not sufficient: random or systematically biased answers can also be uncorrelated. It is paired with calibration and functional coverage.
+
+For proposals $p_i$ represented in a fixed task space, functional diversity can be estimated from pairwise representation or heuristic distances:
+\begin{equation}
+D=\frac{2}{n(n-1)}\sum_{i<k}d(p_i,p_k),
+\label{eq:diversity}
+\end{equation}
+where $d$ is a preregistered distance that may compare features, search trajectories, sensor subsets, or model representations. The distance is not assumed to be beneficial. The benchmark tests the interaction between $D$, $R$, and group advantage.
+
+\subsection{Information flow and contribution}
+
+Let $c_i$ be the marginal contribution of agent $i$ to the final decision, estimated by a pre-registered leave-one-out or Shapley-style approximation within feasible task sizes. Contribution inequality is measured separately from accuracy. A group may be accurate because one agent dominates, which is useful in some settings but is not evidence that the group integrated diverse information. Turn-taking equality, proposal survival, and dissent survival provide complementary process measures.
+
+For a task with a known answer $Y$, the information supplied by a group action $U$ can be summarized by
+\begin{equation}
+I(Y;U)=\sum_{y,u}p(y,u)\log\frac{p(y,u)}{p(y)p(u)},
+\label{eq:information}
+\end{equation}
+where $I$ is mutual information. It quantifies predictive content, not fairness, agency, or conscious access. It is therefore reported with contribution inequality and calibration.
+
+\subsection{Calibration, confidence, and resource efficiency}
+
+For binary decisions, a calibration error can be estimated by partitioning predictions into confidence bins and comparing mean confidence with empirical accuracy:
+\begin{equation}
+\mathrm{ECE}=\sum_{b=1}^{B}\frac{|S_b|}{N}\left|\mathrm{acc}(S_b)-\mathrm{conf}(S_b)\right|,
+\label{eq:calibration}
+\end{equation}
+where $S_b$ is bin $b$, $N$ is the number of decisions, and $B$ is the number of bins. The group should not be called intelligent in an operational sense if its confidence rises while accuracy falls.
+
+Resource-normalized performance is reported as a frontier over utility, latency, message count, and compute. A deployment recommendation requires a Pareto improvement or an explicitly justified tradeoff. A machine that wins by using unreported retrieval or a larger compute budget is not a valid emergence demonstration.
+
+\section{ExperimentDesign: A Staged Protocol}
+
+\subsection{Stage A: simulation-first}
+
+The first stage builds synthetic populations with controllable individual ability, representation, heuristic, sensor, confidence calibration, error correlation, communication behavior, and abstention. It includes bounded-rational search agents, complementary sensor agents, retrieval and calculation agents, and fixed language-model-like agents. Model versions are frozen during confirmatory evaluation. Each factorial cell uses at least 30 independent seeds, with held-out task instances and held-out agent parameter combinations.
+
+The simulator exposes ground truth. For estimation it records individual error and confidence. For search it records visited regions, proposal novelty, and overlap. For distributed sensing it records which agent saw which noisy observation. For planning it records subgoals, conflict resolution, and recovery. These traces allow a mechanism audit: a group gain must be attributable to complementary information, a coordination rule, or a declared resource difference.
+
+\subsection{Stage B: sandbox human-AI interface}
+
+After manipulation checks pass, the protocol is implemented in a sandbox interface. The interface can present blind first answers, private confidence, structured discussion, machine confidence, evidence, abstention, role assignments, and final synthesis. The machine is restricted to the information and model version assigned to its condition. All messages and model outputs are logged. No production tools, external accounts, or high-consequence actions are connected.
+
+If people are recruited in a future study, the tasks remain low stakes and use informed consent, withdrawal at any time, de-identified logs, and data deletion. The initial study excludes medical, employment, legal, education-admission, and financial decisions. It tests group mechanisms, not intelligence rankings of demographic groups.
+
+\subsection{Stage C: longitudinal transfer}
+
+If a cross-sectional result replicates, a longitudinal crossover can test whether the group develops a reusable coordination policy. Participants or agent instances alternate between task families, communication topologies, and role policies. Blind-first blocks, machine-off blocks, and protocol-switch blocks prevent the group from relying on one interaction pattern. Model updates are versioned and frozen during confirmatory windows.
+
+\subsection{Experimental factors}
+
+Table \ref{tab:factors} summarizes the main factors. The primary interaction is functional diversity by communication protocol. The primary hybrid comparison is a calibrated peer AI versus an authority AI, with matched model access and time. A secondary interaction tests whether independent first answers protect diversity when the machine is highly confident.
+
+\begin{table}[t]
+\caption{Core GIEB experimental factors}
+\label{tab:factors}
+\centering
+\scriptsize
+\begin{tabular}{p{0.22\columnwidth}p{0.62\columnwidth}}
+\toprule
+Factor & Levels\\
+\midrule
+Composition & Human-only, AI-only, hybrid; matched group size.\\
+Ability & Low, medium, and high calibrated distributions.\\
+Diversity & Homogeneous, complementary heuristics, complementary sensors, diverse model families, correlated models.\\
+Independence & Blind-first, private confidence, sequential exposure, unrestricted exposure.\\
+Communication & None, pairwise network, broadcast, round-robin, centralized facilitator.\\
+Aggregation & Mean or median, majority, confidence-weighted, deliberative synthesis, abstention-aware.\\
+Coordination & Fixed roles, random roles, expertise-based roles, learned allocation.\\
+AI governance & Opaque advice, confidence and evidence, calibrated abstention, human veto, peer AI.\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Task battery}
+
+The estimation family uses numerical quantities with known answers and controlled noise. The classification family uses visual, textual, or tabular cases where agents receive complementary features. Search and planning use constrained routes, schedules, or combinatorial spaces with partial views. Distributed sensing gives each agent a different noisy observation of an evolving state and evaluates reconstruction and forecasting. An optional creative synthesis family can assess novelty and usefulness with an external rubric, but it is not the sole evidence because ground truth is less direct.
+
+Every task family has training, familiar evaluation, and held-out evaluation sets. Task order, time limit, communication budget, model access, and compute are recorded. The group receives the same external reference information as its matched baseline. A machine may abstain, but abstention rules are pre-specified and cannot be changed after seeing the answer.
+
+\subsection{Controls and ablations}
+
+The size-matched independent aggregator combines private first answers without discussion. A best-member baseline selects the best isolated agent using a validation set that is not used for final evaluation. A yoked-information control gives groups the same external evidence without interactive discussion. A replay control presents a previously generated message sequence and removes online adaptation. A blinded-machine condition lets humans answer before seeing AI advice. These controls distinguish group synergy from extra information, practice, selection, or authority.
+
+The adaptation ablation compares frozen agents, human-only learning in a future human study, machine-only updating, and joint updating. Updates are logged and limited to the assigned budget. The group is evaluated both immediately and after a washout or protocol switch. A gain that disappears when the machine is removed or the communication topology changes is described as task-specific assistance rather than general group intelligence.
+
+\subsection{Manipulation checks and protocol fidelity}
+
+Before testing the hypotheses, the benchmark verifies that each factor is actually different between conditions. The blind-first condition must prevent access to other answers until the private response and confidence are recorded. The unrestricted condition must permit the specified discussion but must not provide extra external evidence. A peer AI and an authority AI must expose the same model, retrieval, and time budget; only the presentation and final decision authority change. A learned allocator must receive the same observable task features as a fixed-role controller, otherwise allocation and information access are confounded.
+
+The diversity manipulation is checked at the agent output level and at the internal trace level. In simulation, the generator records representation parameters and heuristic families. In a sandbox model study, it records model family, prompt policy, retrieved evidence, and search trajectory. A condition labeled complementary is not accepted merely because its agents disagree. It must show a pre-specified difference in representation, sensor coverage, or search trajectory. A condition labeled independent must also show lower residual error correlation than its correlated control on a calibration set.
+
+Communication budgets are enforced at the protocol boundary. Human text, machine tokens, tool calls, and facilitator summaries are counted with an announced normalization rule. A message is not free because it is generated automatically. Time spent waiting for a machine response is included in the time budget. If a protocol uses a facilitator, the facilitator's selection and summarization operations are logged and included in the compute budget. These details protect the main comparison from a hidden advantage caused by a larger communication channel.
+
+The aggregation manipulation is checked with synthetic cases whose correct answer is known and whose individual error patterns are controlled. Mean, median, majority, and confidence-weighted rules are evaluated on the same answer set. Deliberative synthesis is evaluated with a fixed stopping criterion, such as no unresolved proposal after two rounds or a maximum number of rounds. Abstention-aware aggregation is tested on cases where no agent has enough evidence. A group should not gain by turning uncertainty into an unjustified forced answer.
+
+\subsection{Counterfactual contribution and replacement tests}
+
+The group log supports counterfactual tests that are stronger than a post hoc explanation. For each final decision, replace one agent's answer with a calibrated neutral answer while preserving the message schedule. If performance changes only when the agent's distinctive evidence is removed, the agent supplied a causal contribution. If replacing an AI recommendation with an equally long generic message produces the same gain, the result is likely a protocol or attention effect rather than machine complementarity.
+
+For feasible group sizes, leave-one-out tests estimate whether any member is necessary for a decision. A Shapley-style approximation can summarize marginal contributions across orderings, but it is treated as a descriptive diagnostic because interaction effects make exact attribution difficult. The benchmark also performs role swaps: the same agent is assigned sensing, search, verification, or synthesis in different runs. A true role-complementarity effect should depend on the match between capability and subtask, not on an arbitrary identity label.
+
+The human-AI comparison uses three replacements. First, remove the AI while keeping the human discussion budget and interface unchanged. Second, replace the AI with a same-size algorithm that has matched average accuracy but different error structure. Third, show the AI output after the human independent answer rather than before it. These tests distinguish useful machine information, mere extra attention, and anchoring. A result is called hybrid complementarity only if the machine's distinctive information adds value and the human contribution remains measurable.
+
+\subsection{Dynamic coordination and failure recovery}
+
+Some group tasks are sequential. A planner proposes a route, a verifier checks constraints, and a coordinator decides whether to revise. The benchmark records the state after each round and measures recovery from an intentionally introduced low-consequence error. A good group protocol should identify the wrong subgoal, preserve the evidence that exposed the error, and revise without restarting the entire search. A protocol that converges quickly but cannot recover from one wrong high-confidence message is fragile.
+
+Dynamic tests change the environment after training. A sensor becomes unavailable, a constraint changes, or a previously reliable model becomes less calibrated. The group can reassign roles, but it may not increase its external information or compute budget without reporting that change. Performance during recovery is separated from final performance. The time to detect a changed regime, the time to reallocate, and the number of irreversible wrong actions are all reported.
+
+This design also distinguishes coordination from conformity. A coordinator may ask one agent to verify the current leader's proposal while another searches for a counterexample. The group can then converge after alternatives have been tested. In contrast, a broadcast of a high-confidence answer before independent proposals may make all errors similar. The protocol comparison therefore includes an order manipulation and a dissent-preservation log, not only a final accuracy score.
+
+\subsection{Computational implementation and resource matching}
+
+The simulation should represent agents as modular components with separate observation, reasoning, communication, and decision logs. An agent configuration records its observation mask, model family, prompt or policy, tool permission, context limit, time limit, and random seed. This makes a claim about diversity inspectable. Two agents that use different names but share the same model, evidence, and search trajectory should not be counted as functionally diverse. Conversely, two instances that use the same model but receive complementary observations may be diverse in sensors even if their internal heuristics are similar.
+
+The protocol counts resources at the event level. A message has a sender, receiver set, timestamp, token or character length, and evidence identifiers. A tool call records the query, returned information, latency, and compute proxy. A facilitator summary records which proposals were included, which were dropped, and the cost of summarization. Human speech or text is normalized with a pre-registered unit, and machine tokens are not treated as free. If exact cross-modal equivalence is impossible, the study reports separate cost-normalized analyses instead of pretending that the modalities are identical.
+
+Model versioning is part of the independent variable. A model update may improve individual ability, change confidence calibration, or alter the type of errors that it shares with humans. Confirmatory blocks therefore freeze model weights, retrieval corpus, prompt template, and tool access. Exploratory online learning is evaluated in a separate block and reports update count and data exposure. The same policy applies to a learned task allocator: changing the allocator during a comparison can create a hidden second treatment.
+
+The benchmark uses three forms of held-out evaluation. Instance holdout tests whether the group can solve new items from the same task family. Environment holdout changes the distribution of observations, constraints, or noise. Mechanism holdout changes the communication topology or aggregation rule. A group that transfers across instances but fails when topology changes has learned a task strategy rather than a general coordination mechanism. This distinction is central to the word ``emerges.''
+
+The seed design prevents a favorable group from being selected after inspection. The preregistered seed list is generated before evaluation and includes ordinary, high-noise, and drift conditions. Every failed run is retained. If a controller or agent becomes unavailable, the event is labeled as a system failure or missing message, not silently replaced by a more favorable instance. For human data, the corresponding unit is a participant block or group session, with exclusions specified before the outcome is inspected.
+
+Finally, the benchmark should publish a minimal replay format. Given the task instance, agent observations, model versions, message graph, and random seeds, an independent evaluator should be able to recompute the final decision, remove a message, change the aggregation rule, and reproduce the reported metric. The replay format does not require releasing private human reasoning or proprietary model weights. It can use redacted traces, synthetic equivalents, or secure evaluation, provided that the causal ablation remains verifiable. Reproducibility is not an administrative appendix; without it, a reported group advantage cannot be separated from an undocumented information or compute advantage.
+
+\section{Analysis and Reproducibility}
+
+\subsection{Statistical model}
+
+Let $Y_{g,j,s}$ denote performance for group $g$, task $j$, and seed or participant block $s$. A hierarchical model is
+\begin{align}
+Y_{g,j,s} &= \beta_0+\beta_DD_g+\beta_RR_g+\beta_CC_g+\beta_KK_g+\beta_TT_j \nonumber\\
+&\quad +\mathbf{\beta}_{\mathrm{int}}\mathbf{X}_{g,j}+b_g+c_s+\epsilon_{g,j,s}.
+\label{eq:hierarchical}
+\end{align}
+where $D_g$ is functional diversity, $R_g$ is residual error correlation, $C_g$ is coordination cost, $K_g$ is communication and compute budget, $T_j$ is task family, $\mathbf{X}_{g,j}$ contains pre-registered interactions, $b_g$ is a group effect, $c_s$ is a seed or participant-block effect, and $\epsilon_{g,j,s}$ is residual error. The main confirmatory contrasts are diversity versus homogeneous composition, blind-first versus immediate discussion, calibrated peer AI versus authority AI, and adaptive versus fixed allocation.
+
+Report effect estimates with confidence intervals or Bayesian credible intervals, standardized effects, individual group trajectories, worst-decile performance, calibration curves, missing-message patterns, and sensitivity to resource differences. Primary outcomes are group advantage, held-out transfer, calibration, residual error correlation, proposal or search coverage, dissent survival, and resource-normalized utility. Secondary outcomes are communication equality, correction rate, machine influence, latency, and subgroup error.
+
+Mediation analysis may test whether communication changes group performance through error correlation or proposal coverage, but it is secondary to randomized contrasts. Multiplicity is controlled by a pre-registered hierarchy. A group cannot pass by improving only an exploratory metric while failing calibration or resource matching.
+
+\subsection{Decision rules}
+
+A strong emergence claim requires six conditions: group advantage over the best member and independent aggregator; replication in at least two task families; held-out transfer to a changed environment; a mechanism signal such as complementary coverage or reduced residual correlation; no hidden information or unreported resource advantage; and acceptable calibration with preservation of dissent. If feedback or discussion helps only training, the result is a training benefit. If hybrid accuracy rises because the AI dominates while human alternatives disappear, the result is authority dependence with governance risk.
+
+Negative findings are informative. If diversity does not predict performance, if communication never improves over independent aggregation, or if every gain disappears after resource equalization, the proposed mechanism is not supported. If a simple median beats a complex deliberative protocol, the benchmark should report that result rather than equate complexity with intelligence.
+
+\subsection{Reproducibility package}
+
+Release synthetic generators, agent configurations, task seeds, communication graphs, aggregation and allocation code, model versions, message logs, metric definitions, and analysis scripts. The preregistration records exclusions, stopped runs, missing messages, task order, model updates, and all resource budgets. Every final answer is traceable to the input observations and agent messages that produced it. Failed and unsafe sandbox runs cannot be silently removed.
+
+\section{Governance, Safety, and Interpretation}
+
+\subsection{Human and machine safeguards}
+
+The initial task battery uses low-consequence questions and simulated or sandbox actions. No agent can call a production system, send an external message, or make a medical, legal, employment, or financial decision. A human veto is present for any future external action. Model versions and prompt or protocol changes are logged. The experiment separates evaluation of reasoning quality from evaluation of representation of people or demographic categories.
+
+Group messages can contain private reasoning, personal information, or proprietary content. A future human study uses data minimization, identity separation, encryption, access control, retention limits, and deletion on request. Explanations are collected only when needed for mechanism analysis. Secondary use requires new consent. The benchmark measures machine influence without treating a human's identity as a proxy for functional diversity.
+
+Threats include prompt injection in task content, malicious agent messages, overconfident recommendations, data leakage through explanations, collusion, and denial of service. A sandbox validates message schemas, constrains tools, logs versions, and tests abstention and veto. Security testing remains isolated from production systems. A protocol that improves average accuracy while becoming vulnerable to a single malicious message has not achieved a robust collective capability.
+
+\subsection{Dissent and minority preservation}
+
+Preserving disagreement is not an end in itself. The goal is to preserve informative alternatives long enough for them to be tested. The benchmark therefore records whether a minority proposal is evaluated, whether it contains unique evidence, whether it changes the final answer when the majority is wrong, and whether confidence changes after discussion. A fair group protocol can reject a minority proposal for evidence-based reasons; it should not erase the proposal before the mechanism can be audited.
+
+Communication equality is also not a universal optimum. A highly structured round-robin may be useful for estimation but wasteful for a fast control task. The benchmark treats topology and turn-taking as factors, not as fixed moral prescriptions. The claim is empirical: under the tested task and budget, does a protocol convert diverse information into better calibrated action?
+
+\subsection{What the benchmark cannot establish}
+
+The benchmark cannot show that collective intelligence is conscious, that an organization has a unified self, or that a hybrid group is a biological or moral species. A statistical factor is not a subject of experience. An AI contribution is not proof of machine understanding. A human-AI group is a functional organization whose performance is measured on specified tasks. Extending the result beyond those tasks requires new evidence.
+
+\section{Limitations and Discussion}
+
+First, synthetic agents may make diversity and error correlation easier to control than they are in real people. A simulator can reveal causal structure but cannot reproduce every motivation, misunderstanding, fatigue pattern, or social norm. Second, future human-AI studies may not generalize from low-stakes tasks to organizations or public decisions. Third, a model's reported confidence may not be a calibrated probability, and explanations may be persuasive without being causally informative.
+
+Fourth, the best-member baseline is statistically demanding. It must be selected without leaking final test instances, and a large candidate pool can make the best member appear unusually strong. Fifth, leave-one-out contribution estimates can be unstable for interacting agents; they should be accompanied by direct ablations and causal replacement tests. Sixth, communication budgets are not perfectly comparable across human speech, text, and machine tokens. The report must state how budgets were normalized and conduct sensitivity analyses.
+
+Seventh, a group may intentionally rely on one expert or one machine in a real application. Dominance is not automatically a failure. The benchmark calls it a governance or integration issue only when the study claims that diverse collective reasoning produced the gain. Eighth, cross-task generalization can be limited by the task battery itself. A factor that transfers among estimation and classification tasks may not transfer to open-ended design. Results should therefore be reported by task family.
+
+The practical implication is that group intelligence is likely to be conditional, modular, and protocol-dependent. A human-AI group may be excellent at distributed sensing while poor at open-ended planning. Independent first answers may help numerical estimation while slowing urgent coordination. A calibrated peer AI may improve search when its information is complementary but harm decisions when it anchors humans. These are design conditions rather than universal laws.
+
+The benchmark is also a way to evaluate whether more intelligence claims are worth the cost. A group that is slightly more accurate but ten times slower may not be preferable. A group that is accurate but poorly calibrated may be unsafe. A group that reaches a good answer while suppressing unique alternatives may fail under distribution shift. Reporting a Pareto profile exposes these tradeoffs and gives organizations a basis for choosing a protocol appropriate to its task.
+
+\subsection{External validity and measurement invariance}
+
+An emergent group capability should not depend on the vocabulary of one benchmark. The study therefore tests measurement invariance across task families. The outcome definition may change from numerical error to route cost or state-estimation error, but the structural comparisons remain the same: group versus best member, group versus independent aggregation, and familiar versus held-out environment. If the direction of an effect changes across task families, the correct conclusion is a conditional mechanism rather than a universal law.
+
+The protocol also distinguishes performance invariance from process invariance. Two groups may obtain the same accuracy while one preserves diverse proposals and the other relies on a dominant member. Process metrics such as residual error correlation, proposal coverage, communication equality, and confidence calibration reveal this difference. A model that predicts only final accuracy can therefore miss a fragile group that succeeds on familiar cases but fails after a distribution shift.
+
+The strongest external-validity test is a protocol transfer. After training under one communication graph, the group is evaluated under another graph with the same task information and resource budget. A second transfer changes which agent has access to a relevant sensor or tool. These tests ask whether the group has learned a general allocation principle or merely memorized a conversation order. Transfer can be partial: a robust result may hold for distributed sensing but not for creative synthesis. Reporting that boundary is preferable to averaging incompatible tasks.
+
+For human-AI groups, measurement invariance also concerns the unit of analysis. A human contribution is not equivalent to a token count, and a machine message is not equivalent to a human explanation. The benchmark therefore reports both modality-specific costs and a sensitivity analysis under alternative normalization rules. It treats machine confidence as a prediction to be calibrated, not as an authority signal. The interface can expose uncertainty without requiring a human to accept the recommendation.
+
+These safeguards make the central claim modest but useful. If a group advantage survives resource matching, process ablations, held-out tasks, topology transfer, and calibration checks, then the evidence supports an emergent task capability produced by the group protocol. If it fails any of these checks, the failure identifies whether the apparent intelligence came from extra information, correlated authority, specialization without transfer, or an unmeasured resource. In both cases, the benchmark explains how the group worked rather than assigning a mysterious intelligence score.
+
+\section{Conclusion}
+
+Group intelligence emerges, in the operational sense proposed here, when distributed agents contribute complementary information, retain enough independence to avoid shared error, and use calibrated communication and coordination to turn partial solutions into robust action. Consensus alone is not enough, and group size is not an explanation. The GIEB benchmark makes this claim testable by comparing human-only, AI-only, and hybrid groups under matched resources, manipulating diversity, independence, topology, aggregation, allocation, and machine governance. Its staged design begins with synthetic agents, proceeds to a sandbox, and uses human validation only after review. The resulting evidence can establish task-level collective capability and its mechanisms. It cannot establish a conscious group mind, a new person, or a new biological species.
+
+\balance
+\begin{thebibliography}{00}
+\bibitem{woolley2010} A. W. Woolley, C. F. Chabris, A. Pentland, N. Hashmi, and T. W. Malone, ``Evidence for a collective intelligence factor in the performance of human groups,'' \textit{Science}, vol. 330, no. 6004, pp. 686--688, 2010, doi: 10.1126/science.1193147.
+\bibitem{hongpage2004} L. Hong and S. E. Page, ``Groups of diverse problem solvers can outperform groups of high-ability problem solvers,'' \textit{Proceedings of the National Academy of Sciences}, vol. 101, no. 46, pp. 16385--16389, 2004, doi: 10.1073/pnas.0403723101.
+\bibitem{lorenz2011} J. Lorenz, H. Rauhut, F. Schweitzer, and D. Helbing, ``How social influence can undermine the wisdom of crowd effect,'' \textit{Proceedings of the National Academy of Sciences}, vol. 108, no. 22, pp. 9020--9025, 2011, doi: 10.1073/pnas.1008636108.
+\bibitem{mitcci} MIT Center for Collective Intelligence, ``Research,'' Massachusetts Institute of Technology, accessed Sep. 2, 2026. [Online]. Available: https://cci.mit.edu/research/
+\bibitem{dellermann2019} D. Dellermann, P. Ebel, M. Soellner, and J. M. Leimeister, ``Hybrid intelligence,'' \textit{Business \& Information Systems Engineering}, vol. 61, pp. 637--643, 2019, doi: 10.1007/s12599-019-00595-2.
+\end{thebibliography}
+
+\end{document}

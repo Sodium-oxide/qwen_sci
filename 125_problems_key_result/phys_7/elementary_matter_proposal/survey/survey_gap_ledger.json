@@ -1,0 +1,12 @@
+{
+  "schema_version": "survey_gap_ledger_v1",
+  "accepted_gap_ids": ["G1", "G2", "G3", "G4", "G5", "G6"],
+  "gaps": [
+    {"gap_id": "G1", "name": "Matched resolution definition", "status": "ACCEPTED", "evidence": ["allwicher2023", "arrington2021", "abada2019"]},
+    {"gap_id": "G2", "name": "EFT interpretation boundary", "status": "ACCEPTED", "evidence": ["allwicher2023", "brivio2017", "colladay1998"]},
+    {"gap_id": "G3", "name": "Nuisance separation", "status": "ACCEPTED", "evidence": ["brivio2017", "allwicher2023"]},
+    {"gap_id": "G4", "name": "Competing substructure hypotheses", "status": "ACCEPTED", "evidence": ["cms_tau2025", "allwicher2023"]},
+    {"gap_id": "G5", "name": "Cross-program complementarity", "status": "ACCEPTED", "evidence": ["arrington2021", "abada2019", "alekhin2016"]},
+    {"gap_id": "G6", "name": "Reproducible interpretation artifacts", "status": "ACCEPTED", "evidence": ["brivio2017"]}
+  ]
+}

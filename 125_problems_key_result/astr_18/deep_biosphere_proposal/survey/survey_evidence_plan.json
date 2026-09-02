@@ -1,0 +1,12 @@
+{
+  "schema_version": "survey-evidence-plan-v1",
+  "project_id": "astr_18_deep_biosphere_proposal",
+  "estimands": [
+    {"id": "E1", "name": "habitat_volume", "allowed_evidence": ["bathymetry", "sediment-thickness model", "porosity", "crustal permeability and fluid-volume model"], "forbidden_shortcut": "use a single geometric ocean volume for all habitats"},
+    {"id": "E2", "name": "standing_abundance", "allowed_evidence": ["microscopy", "flow cytometry", "digital PCR with extraction controls", "lipids", "calibrated metagenomic coverage"], "forbidden_shortcut": "treat sequence reads as cell counts"},
+    {"id": "E3", "name": "functional_composition", "allowed_evidence": ["16S", "shotgun metagenomes", "MAGs", "metatranscriptomes", "lipid biomarkers"], "forbidden_shortcut": "treat gene presence as a realized flux"},
+    {"id": "E4", "name": "realized_activity", "allowed_evidence": ["geochemical gradients", "reaction-transport models", "rate assays with blanks and preservation controls", "isotopic constraints"], "forbidden_shortcut": "multiply biomass by a universal activity coefficient"},
+    {"id": "E5", "name": "significance", "allowed_evidence": ["upscaled flux posterior", "uncertainty decomposition", "mechanistic linkage to carbon-sulfur-methane-nitrogen cycles"], "forbidden_shortcut": "make a climate or astrobiology claim from presence alone"}
+  ],
+  "identity_requirements": ["habitat_id", "site_id", "depth_below_sea_surface", "depth_below_seafloor", "temperature", "pressure", "redox_state", "sampling_and_blank_lineage", "preservation_state"]
+}

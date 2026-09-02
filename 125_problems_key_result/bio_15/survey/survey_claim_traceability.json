@@ -1,0 +1,45 @@
+{
+  "schema_version": "survey_claim_traceability_v1",
+  "claims": [
+    {
+      "claim_id": "CLM-01",
+      "claim": "WPP 2024 supplies official estimates and projections for 237 countries or areas through 2100 and represents a range of plausible outcomes.",
+      "evidence_keys": ["un_wpp2024"],
+      "evidence_type": "institutional_primary_dataset",
+      "confidence": "high",
+      "scope": "description of the WPP 2024 dataset"
+    },
+    {
+      "claim_id": "CLM-02",
+      "claim": "The Vollset et al. reference scenario projects a global peak in 2064 at 9.73 billion and 8.79 billion in 2100, while reporting uncertainty intervals and alternative scenarios.",
+      "evidence_keys": ["vollset2020"],
+      "evidence_type": "peer_reviewed_forecasting_study",
+      "confidence": "high",
+      "scope": "that study's reference scenario, not a consensus forecast"
+    },
+    {
+      "claim_id": "CLM-03",
+      "claim": "Probabilistic population projection methods can propagate uncertainty in fertility, mortality, and migration through a cohort-component model.",
+      "evidence_keys": ["raftery2014", "azose2016", "raftery_sevcikova2023"],
+      "evidence_type": "peer_reviewed_methodology",
+      "confidence": "high",
+      "scope": "methodological capability, not evidence of perfect calibration"
+    },
+    {
+      "claim_id": "CLM-04",
+      "claim": "The end-of-century global total and even whether the population peaks depend on assumptions and information available when projections are made.",
+      "evidence_keys": ["gerland2014", "un_wpp2024", "vollset2020"],
+      "evidence_type": "cross-source_synthesis",
+      "confidence": "high",
+      "scope": "comparison across verified projections"
+    },
+    {
+      "claim_id": "CLM-05",
+      "claim": "Climate-disruption covariates should be tested as uncertain component modifiers rather than assumed to determine world population directly.",
+      "evidence_keys": ["un_wpp2024"],
+      "evidence_type": "design_inference",
+      "confidence": "moderate",
+      "scope": "proposed study boundary"
+    }
+  ]
+}

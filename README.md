@@ -24,7 +24,9 @@ evidence    proposal      design              research plan
 - a copied configuration snapshot and run metadata for reproducibility; and
 - restart support that invalidates a selected stage and its downstream stages **without deleting historical attempts**.
 
-This is deliberately a **design-only** workflow. Qwen-Sci executes its orchestration, retrieval, validation, and document-generation code, but it does **not** execute arbitrary research programs, numerical simulations, laboratory instruments, data-collection jobs, or physical experiments. `ExperimentDesign` creates and validates a plan for such work; it does not perform the work or claim experimental results.
+The default four-stage workflow is deliberately **design-only**. Qwen-Sci executes its orchestration, retrieval, validation, and document-generation code, but it does **not** execute arbitrary research programs, laboratory instruments, data-collection jobs, or physical experiments. `ExperimentDesign` creates and validates a plan for such work; it does not perform the work or claim experimental results.
+
+The repository also provides an **optional, supervised quantitative-modeling sidecar** for the bounded numerical models registered in the codebase. It is not a fifth stage in the primary science state machine, never changes `idea_result_v5` or the ExperimentDesign input, and has separate execution authorization. See [Optional supervised quantitative modeling](#optional-supervised-quantitative-modeling).
 
 ## Workflow outputs
 
@@ -36,6 +38,70 @@ This is deliberately a **design-only** workflow. Qwen-Sci executes its orchestra
 | **Author** | Composes an English research-plan package from verified Survey and ExperimentDesign handoffs. | Research-plan artifacts; optionally a copied LaTeX project and validated PDF. |
 
 The recommended entry point is `qwensci science`. Each stage is also available as an individual command when you want to inspect, supply, or reuse a particular handoff.
+
+## Optional supervised quantitative modeling
+
+When enabled, Idea can create at most two independent quantitative ideas, `Q1` and `Q2`, in `quantitative_ideas.json` and `quantitative_ideas_manifest.json`. The main four-stage artifacts remain unchanged. Quantitative modeling may start only after the same run has a completed, design-only ExperimentDesign artifact.
+
+```text
+Survey -> Idea -> ExperimentDesign -> Author
+             |          ^
+             |          | main workflow remains unchanged
+             v          |
+      Q1/Q2 sidecar -----+
+             |
+             v
+model blueprint -> parameter evidence -> human parameter approval
+             -> materialized MathIR/PDEIR plan -> explicit simulation
+             -> human qualification -> optional human-accepted revision
+             -> standalone mathematical-model PDF -> controlled Author handoff
+```
+
+The numerical sidecar supports the registered ODE, optimization, Monte Carlo, and PDE families only. PDE execution uses validated declarative `PDEIR`/`execution_ir` contracts and fixed trusted solver adapters; an LLM can propose a model contract but cannot provide or execute arbitrary Python, Julia, MATLAB, or shell code. Numerical outputs are retained as simulated, non-empirical evidence and are not presented as laboratory or observational results.
+
+### Human confirmation is required
+
+The quantitative branch is deliberately **not an autonomous closed loop**. It can generate non-executing artifacts and report the next required action, but it stops at the following human-controlled decisions:
+
+| Decision point | Required human action | Why the workflow stops |
+| --- | --- | --- |
+| Parameter selection | Review the provenance, units, conditions, and candidate values; create the explicit selection proposal and run `quantitative parameters approve --approve`. | No executable model can be materialized from the evidence-bound path until one complete parameter set is explicitly approved. |
+| Network evidence retrieval | Add `--fetch` to parameter-discovery or open-access full-text retrieval commands. | Academic metadata and full-text network requests are not implicit. |
+| Numerical execution | Run `quantitative simulate --execute --plan-identity <EXACT_PLAN_ID>`. | Authorization is bound to one immutable plan identity; changed parameters, scenarios, refinements, or revisions require a new authorization. |
+| Result interpretation | Supply the hypothesis relation and bounded result summary to `quantitative qualify`. | A solver result is not automatically interpreted as support, refutation, or a scientific conclusion. |
+| Hypothesis/model revision | Review the proposal and run `quantitative accept-revision --accept`. | A proposed revision cannot alter the model or launch a new run by itself; each Q idea is limited to `v0 -> v1 -> v2`. |
+
+`qwensci quantitative continue` and `qwensci science --continue-quantitative` may advance only safe, non-executing transitions such as blueprint generation, materialization after approval, PDF publication, or Author handoff. They never execute a solver and return at parameter review, parameter approval, execution authorization, qualification, and revision-decision states.
+
+### Main workflow remains automatically closable without quantitative execution
+
+Quantitative modeling is off by default. Therefore, when you do **not** request or execute the quantitative branch, the existing primary workflow can run its complete auditable closure:
+
+```text
+Survey -> Idea -> ExperimentDesign -> Author
+```
+
+For example, the following default command runs the primary workflow through Author, subject to normal service and artifact-validation success:
+
+```bash
+uv run qwensci science \
+  --topic "Why do black holes exist?" \
+  --discipline-id "Astrophysics" \
+  --run-id black-hole-existence
+```
+
+You may state the default explicitly with `--quantitative-mode off`. By contrast, `--quantitative-mode required` intentionally stops the primary run after ExperimentDesign until the supervised Q1/Q2 branch reaches a completed quantitative Author handoff (unless the Idea sidecar contains no quantitative candidates). Use `--quantitative-mode optional` when the sidecar may be created without making it a prerequisite for the main Author stage.
+
+### Quantitative branch entry points
+
+Start from an existing completed science run and inspect its next safe action:
+
+```bash
+uv run qwensci quantitative status \
+  --run-dir /path/to/science-run
+```
+
+The typical evidence-bound sequence is `blueprint` -> `parameters discover`/`fetch-fulltext`/`extract` -> `parameters propose` -> `parameters approve --approve` -> `materialize` -> `simulate --execute --plan-identity ...` -> `qualify` -> `finalize` -> `publish` -> `author-handoff`. Use `uv run qwensci quantitative --help` and `uv run qwensci quantitative parameters --help` for exact arguments. `pde-validate`, `pde-dry-run`, `pde-refine`, `pde-refine-plans`, `pde-convergence-plans`, and `pde-verify` inspect, estimate, refine, or verify PDE artifacts without running a solver.
 
 ## Requirements
 

@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "stage": "idea",
+  "status": "completed",
+  "topic": "Will cold fusion ever be possible?",
+  "direction": "BLINDED-PRODUCT-LINKED-REPLICATION",
+  "claim_type": "falsifiable experimental framework",
+  "core_question": "Can a specified palladium-deuterium electrochemical state produce a statistically reproducible excess-energy signal accompanied by nuclear products at rates compatible with known reaction channels?",
+  "hypotheses": [
+    {"id": "H0", "name": "measurement_null", "prediction": "all signals remain within calibrated control and background distributions"},
+    {"id": "H1", "name": "chemical_thermal_artifact", "prediction": "apparent excess is explained by recombination, enthalpy, drift, or heat-loss error"},
+    {"id": "H2", "name": "screened_dd_process", "prediction": "heat and product channels jointly follow a screened D-D rate model"},
+    {"id": "H3", "name": "product_suppressed_process", "prediction": "replicable excess energy requires a mechanism beyond standard D-D branch expectations"}
+  ],
+  "novelty": [
+    "joint likelihood for heat, nuclear products, isotope composition, detector backgrounds, and material state",
+    "blinded cross-laboratory replication with shared material lots",
+    "predeclared distinction between nuclear discovery and net-energy technology"
+  ],
+  "primary_observables": ["excess_power", "electrical_input", "deuterium_loading", "neutron_counts", "gamma_counts", "tritium", "helium_isotopes", "gas_recombination", "post_run_material_state"],
+  "decision_rule": "pre-registered Bayes factor plus product-energy consistency, independent replication, and net-power threshold",
+  "execution_mode": "DESIGN_ONLY",
+  "expected_results": [],
+  "observed_results": []
+}

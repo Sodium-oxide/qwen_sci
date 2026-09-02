@@ -1,0 +1,499 @@
+           Why Do Planetary Orbits Not Decay?
+        A Design-Only Framework for Long-Horizon
+                     Orbital Survival
+                                Survey–Idea–ExperimentDesign–Author Research Workflow
+
+   Abstract—The statement that gravity keeps planets in orbit        are evidence for structured many-body dynamics, not for a uni-
+while their orbits gradually decay into the Sun combines two         versal friction law. Conversely, tides, radiation forces on small
+different dynamical regimes. In an isolated Newtonian two-           grains, mass loss from an evolving star, and gravitational-
+body system, gravity is a conservative central force: orbital
+energy and angular momentum are conserved, and a bound               wave emission are physical mechanisms with different signs
+planet follows an ellipse rather than an inward spiral. The          and different scaling laws. Lumping them into “orbits decay”
+real Solar System is a perturbed many-body system, so or-            obscures the conservation laws that determine which effect is
+bital elements evolve, resonances and chaos matter, and rare         possible.
+instability channels exist. Yet those effects are not a univer-         This report has two aims. First, it gives a technically precise
+sal drag. Secular semimajor-axis evolution requires a specified
+nonconservative energy/angular-momentum flux or a changing           answer: in the conservative reference problem, planetary orbits
+central mass. Tidal torques can move an orbit inward or              do not generically decay. Second, it specifies an inference
+outward depending on spin-orbit state and dissipation; adiabatic     protocol for testing a claimed small secular change with-
+solar mass loss generally expands planetary orbits; radiation        out confusing an osculating-element fluctuation, a numeri-
+drag is important for small particles, not massive planets; and      cal artifact, or a state-estimation convention with a physical
+giant-branch engulfment is a coupled stellar-evolution problem
+rather than the continuation of present-day orbital decay. This      torque. The central research artifact is the LONG-HORIZON-
+paper develops the LONG-HORIZON-ORBITAL-SURVIVAL-                    ORBITAL-SURVIVAL-BENCHMARK (LHOSB). It is delib-
+BENCHMARK, a preregistration-ready, design-only framework            erately design-only. It contains no new numerical integration,
+for separating these mechanisms. It compares conservative,           no fitted ephemeris, no measured orbital drift, and no forecast
+relativistic, tidal, mass-loss, small-body drag, and ensemble-       date for a collision or engulfment.
+chaos scenario classes using frozen force/parameter ledgers, held-
+out ephemeris arcs, independent integrators, invariant-budget
+checks, and synthetic injections. The framework reports signed
+                                                                      II. S URVEY: C ONSERVATIVE O RBITS AND T HEIR L IMITS
+orbital-element changes and uncertainty-aware survival distri-       A. The two-body baseline
+butions, not a single spiral narrative. No ephemeris fit, decay
+measurement, collision probability, or future trajectory result is     For the relative coordinate r of a planet and star, with r =
+claimed.                                                             ∥r∥ and gravitational parameter µ = G(M + m), the specific
+   Index Terms—planetary dynamics, orbital stability, tides, solar   orbital energy in the Newtonian two-body problem is
+mass loss, ephemerides, celestial mechanics, long-horizon uncer-
+tainty, numerical integration.                                                                  1          µ
+                                                                                             ε=   ∥ṙ∥2 − .                      (1)
+                                                                                                2           r
+                      I. I NTRODUCTION                               In (1), G is Newton’s constant, M and m are the stellar and
+                                                                     planetary masses, and the dot denotes a time derivative. With a
+   The usual picture of a planet “falling around” a star is          time-independent central potential, ε is conserved. The specific
+useful only when its conserved quantities are kept in view.          angular-momentum vector is likewise conserved:
+Gravity certainly curves a planet’s trajectory toward the Sun,
+but an inward force does not imply an inward secular drift. A                                            dh
+                                                                                        h = r × ṙ,          = 0.                (2)
+satellite in a near-circular low-Earth orbit can decay because                                            dt
+its residual atmosphere supplies drag; a planet in near-vacuum       Equation (2) follows because the central gravitational force is
+lacks that generic dissipative channel. The appropriate first        parallel to r and hence has zero torque about the central mass.
+question is not whether gravity pulls inward, but whether the          For a bound orbit, the semimajor axis is determined by the
+complete dynamical system exports orbital energy or angular          energy relation
+momentum, or changes the central gravitational parameter, at                                           µ
+                                                                                                ε=− ,                            (3)
+a rate large enough to be observable.                                                                  2a
+   The distinction has practical and conceptual consequences.        where a > 0 is the semimajor axis. Equations (1)–(3) establish
+A Kepler ellipse is not perfectly fixed in the Solar System:         the reference result: no secular decrease of a occurs unless
+the planets perturb one another, their perihelia precess, their      the total energy changes or µ changes. The eccentricity is
+eccentricities and inclinations vary, and some degrees of free-      constrained by both ε and ∥h∥, so a visual change in perihelion
+dom are chaotic over long horizons [1], [4], [5]. These facts        or orbital orientation is not enough to diagnose energy loss.
+   This baseline is idealized but indispensable. It does not          III. P HYSICAL M ECHANISMS B EYOND THE BASELINE
+claim that a real planet is isolated, spherical, or unperturbed.
+                                                                    A. Tides are signed spin–orbit couplings
+It supplies the null model against which every proposed decay
+mechanism must specify a force, torque, power flow, and                Tidal dissipation provides a real route to orbital evolution.
+observational signature. Newtonian N -body gravity preserves        A tide raised on a spinning body develops a phase lag when
+total system energy and angular momentum up to the chosen           dissipation converts part of the deformation energy to heat.
+physical model even though individual osculating elements           The resulting torque redistributes angular momentum between
+exchange among bodies. A planet may consequently show               the body’s spin and the orbit. A schematic torque relationship
+secular or periodic element variation while the system has no       can be written as
+net drag.                                                                                                      Gm2 R5
+                                                                                τtide ∝ k2 Q−1 sgn(Ω − n)             ,           (7)
+B. Perturbed orbital budgets                                                                                    a6
+  Let fnc denote a nonconservative acceleration per unit mass       where k2 is a Love number, Q summarizes dissipation in a
+and allow a time-varying µ(t). The energy budget becomes            simplified model, R is the deformed body’s radius, Ω is its
+                                                                    spin frequency, and n is orbital mean motion. Equation (7) is
+                    dε              µ̇
+                        = ṙ · fnc − ,                       (4)    schematic rather than a substitute for a full eccentric, oblique,
+                     dt             r                               frequency-dependent tide model. Its purpose is to display
+while the angular-momentum budget is                                the key point: the torque has a sign and a strong distance
+                          dh                                        dependence.
+                             = r × fnc .                     (5)       When the deformed primary rotates faster than the orbital
+                          dt
+                                                                    motion in the relevant sense, spin angular momentum can be
+The first term in (4) is the mechanical power delivered by the
+                                                                    transferred to the orbit; the orbit may expand as the spin slows.
+nonconservative acceleration; the second comes from changing
+                                                                    The Earth–Moon system supplies the familiar qualitative ex-
+central mass. Equation (5) shows that a radial perturbation can
+                                                                    ample. In a different configuration, orbital angular momentum
+change energy without applying a torque, whereas a tangential
+                                                                    can be transferred into spin and dissipation, shrinking the
+force changes angular momentum. A defensible statement of
+                                                                    orbit. The behavior of a star–planet system cannot be inferred
+“decay” must close both budgets to a stated uncertainty instead
+                                                                    from the word “tide” alone. It requires spin evolution, stel-
+of relying on one derived element alone.
+                                                                    lar/planetary structure, dissipation law, eccentricity, obliquity,
+   If the stellar mass changes slowly and isotropically com-
+                                                                    and the competing torque of other bodies [2].
+pared with the orbital period, an adiabatic approximation gives
+                           ȧ   Ṁ                                  B. Relativity, radiation, and small-body categories
+                              ≃− .                           (6)
+                           a    M                                      First post-Newtonian gravity is normally introduced to cap-
+For mass loss, Ṁ < 0, so (6) predicts outward expansion.           ture corrections such as perihelion precession. In an isolated
+The approximation can fail for rapid or anisotropic loss, for       conservative formulation it changes the phase-space trajectory
+strong multi-body coupling, or near a stellar envelope; those       without acting as a phenomenological drag. It must therefore
+regimes require an explicit model rather than extrapolation of      be included in a precision reference model before attributing a
+this expression.                                                    residual to dissipation, but it does not make a massive planet
+                                                                    spiral into a static star.
+C. What long-term stability does and does not mean                     Radiation pressure and Poynting–Robertson drag provide
+   Planetary ephemerides demonstrate that physically rich           a useful contrast. For an absorbing grain, reradiation in the
+models can predict observations to high precision over their        moving frame produces a small tangential drag and can reduce
+calibrated intervals [3]. They do not convert a short-to-           the orbit’s semimajor axis. The scaling depends strongly on
+intermediate-time state estimate into an exact trajectory over      area-to-mass ratio, so it is central to dust dynamics but not
+billions of years. Long-horizon solar-system dynamics in-           a plausible dominant explanation for planets. Burns, Lamy,
+cludes resonant structure and chaos; nearby initial states may      and Soter provide the classic unified treatment of radiation
+diverge exponentially in some variables while sharing the           forces on small solar-system particles [8]. The LHOSB ledger
+same short-arc observations. Laskar’s work therefore motivates      forbids importing a small-body drag coefficient into a planet
+ensemble statements rather than a single claimed fate [4], [5].     calculation without the necessary coupling and scale analysis.
+   Chaos is not synonymous with imminent destruction. It               Gravitational-wave emission has a well-defined dissipative
+describes sensitivity to initial conditions and can coexist with    sign for a bound binary. The leading quadrupole expression
+broad bounded regions of phase space. A collision, ejection,        for a circular orbit is conventionally represented by a negative
+or star encounter is an event class with a probability condi-       ȧ proportional to high powers of inverse separation and to the
+tional on initial-state uncertainty, force model, and integration   reduced mass [9]. Its existence does not make it dynamically
+horizon. It is not equivalent to monotonic inward migration.        relevant at planetary precision. It is included as an audited
+The report consequently distinguishes a survival distribution       limiting term so that “formally nonzero” is never confused
+from a numerical plot of one nominal orbit.                         with “the dominant physical cause.”
+                                                              TABLE I
+     M ECHANISMS RELEVANT TO ORBITAL - ELEMENT EVOLUTION . T HE ENTRIES SPECIFY QUALITATIVE PHYSICAL DIRECTION ONLY UNDER THE
+                               CONDITIONS STATED ; NO RATE IS INFERRED IN THIS DESIGN - ONLY REPORT.
+
+
+          Mechanism                  Conserved quantity or flux              Expected qualitative behavior      Interpretation boundary
+          Newtonian two-body grav- Specific energy and angular momentum Bound ellipse; no intrinsic secular Baseline only; real planets
+          ity                         conserved                                a decay                         are perturbed.
+          Planet–planet perturbations Total multi-body budgets approximately Precession, resonant exchange, Not a drag or a universal
+                                      conserved in conservative model          secular element variation, and sign for one planet’s a.
+                                                                               possible chaos
+          Tidal dissipation           Mechanical energy dissipates; spin-orbit Inward or outward migration de- Requires a stated tide and
+                                      angular momentum is exchanged            pends on spin, mean motion, ec- spin model.
+                                                                               centricity, and dissipation
+          Stellar mass loss           Central gravitational parameter de- Adiabatic outward expansion for Giant-branch
+                                      creases                                  an isolated orbit               envelope/tide/drag physics
+                                                                                                               is a separate regime.
+          Radiation or solar-wind Momentum and energy flux coupled to Important for small particles; gen- Do not extrapolate dust
+          drag                        area-to-mass ratio                       erally negligible for planets   physics to planets.
+          Gravitational radiation     Energy and angular momentum carried Formally inward for a bound bi- Far too weak to explain or-
+                                      by waves                                 nary                            dinary planetary evolution.
+
+
+
+C. Solar evolution is not present-day orbital decay                        models mass loss only for a declared stellar-evolution inter-
+                                                                           val. S4 separates small-body non-gravitational forces from
+   The Sun will not remain a static point mass indefinitely.
+                                                                           the planet regime. S5 makes uncertainty and chaos explicit
+On sufficiently long time scales, stellar mass loss modifies the
+                                                                           through ensembles. The separation is methodological: it pre-
+central potential, and later giant-branch expansion introduces
+                                                                           vents a precession term from being mistaken for power loss,
+a stellar radius, envelope, tides, mass loss, and possibly drag.
+                                                                           or an uncertain giant-branch calculation from being quoted as
+The simple adiabatic result in (6) describes only the mass-
+                                                                           a present ephemeris result.
+loss component. An encounter with an expanded envelope is
+not a continuation of the same mechanism: it introduces a                  B. Falsifiable hypotheses
+spatially extended, dissipative environment that can remove
+orbital energy and alter the stellar structure.                               H0 states that S0 or S1 predicts the held-out observations
+   This distinction corrects the most consequential implication            within stated uncertainty and needs no measurable secular
+of the original wording. Future loss of a planet may occur                 semimajor-axis decay for the selected planet. H1 states that
+in some stellar-evolution scenarios, especially for close-in               an admissible tide or mass-loss module produces a signed,
+bodies, but it does not follow that all existing planetary                 budget-consistent improvement on held-out observables. H2
+orbits now undergo universal, slow inward decay. Post-main-                states that a claimed decay changes or disappears under
+sequence evolution must be calculated with an explicit stellar             integrator, step-size, frame, observation-model, or state-vector
+history and orbit model, including the model’s uncertainty and             perturbations and should then be treated as a numerical
+validity domain [6], [7]. The answer for a particular planet is            or estimation artifact. H3 states that long-horizon ensemble
+conditional, not a general feature of gravity in vacuum.                   spread invalidates a single-trajectory collision-date claim after
+                                                                           the relevant predictability limit. H4 states that adiabatic mass
+                                                                           loss tends outward while giant-branch engulfment requires
+      IV. I DEA : L ONG -H ORIZON O RBITAL S URVIVAL
+                                                                           extra physics. H5 states that perihelion precession alone is
+                         B ENCHMARK
+                                                                           not evidence of a decaying orbit.
+A. Benchmark objective                                                        These hypotheses allow rejection and inconclusive results. A
+                                                                           null result does not prove that every nonconservative effect is
+   The LHOSB tests mechanism attribution before extrap-
+                                                                           absent; it bounds the utility of the tested module at the selected
+olation. Its central object is a signed budget linking each
+                                                                           precision. An in-sample improvement does not establish a
+candidate force to a change in observables. The benchmark
+                                                                           mechanism. It may reflect an overflexible parameter, a mis-
+begins with a calibrated conservative multi-body integration,
+                                                                           modeled state vector, or a chance alignment of residuals. The
+then adds physically declared modules one at a time. A module
+                                                                           held-out and synthetic tests are therefore part of the definition
+earns explanatory standing only if it has a force/torque law,
+                                                                           of evidence, not an optional afterthought.
+a parameter ledger, a validity range, a predicted signature in
+observation space, and a budget-consistent improvement on                           V. E XPERIMENT D ESIGN : S TATE , F ORCE , AND
+held-out data. It cannot be selected merely because it makes                                 O BSERVATION P ROTOCOL
+an element curve look more like a preferred narrative.
+   The proposed scenario classes are summarized in Table II.               A. State and data ledger
+S0 and S1 isolate conservative Newtonian and relativistic                    The intended inputs are documented public or licensed
+dynamics. S2 tests tides as signed spin-orbit exchange. S3                 planetary ephemerides and, where access permits, their range,
+                                                          TABLE II
+LHOSB SCENARIO CLASSES . A N ENTRY WITHOUT A COMPUTABLE FORWARD MAP, PARAMETER RANGE , AND STATED VALIDITY DOMAIN IS REPORTED
+                                    AS UNDERDETERMINED RATHER THAN COMPARED NUMERICALLY.
+
+
+          Class       Model content                          Frozen ledger requirements                      Primary interpretation
+          S0          Newtonian N -body conservative ref- Masses,            initial       state/covariance, Identifies           conservative
+                      erence                                coordinate/time scale, multipole policy, exchanges               and     numerical
+                                                            integrator                                        invariants.
+          S1          S0 plus first post-Newtonian terms    Relativistic convention, implementation, valid- Separates precession physics
+                                                            ity, shared state-estimation settings             from dissipation.
+          S2          S1 plus tides                         Spins, obliquities, k2 , Q or frequency- Tests signed spin-orbit transfer.
+                                                            dependent law, radii, heat/torque accounting
+          S3          S1 plus stellar mass loss/evolution   Mass-loss function, stellar-radius history, tran- Tests outward adiabatic change
+                                                            sition conditions, tide/drag coupling             and conditional giant-branch ef-
+                                                                                                              fects.
+          S4          Size-dependent nongravitational terms Area-to-mass ratio, optical/plasma/gas cou- Restricts radiation/drag claims
+                                                            pling, force law, particle category               to their physical regime.
+          S5          Ensemble long-horizon propagation     State covariance, physical priors, seeds, hori- Reports conditional distribu-
+                                                            zon, event definitions, stopping rules            tions, not an exact future date.
+
+
+
+range-rate, astrometric, or spacecraft-tracking summaries. A                Equation (8) is an audit identity; its detailed terms depend
+run must freeze the ephemeris release, reference frame,                     on the coordinate and interaction partition used by a specific
+time scale, included observations, calibration convention,                  model.
+state-vector epoch, covariance representation, and observation                An analogous angular-momentum accounting is
+model. The JPL DE440/DE441 work illustrates the level
+of model and data bookkeeping required for a precision                                   ∆Lorb + ∆Lspin + Lexport = ∆Lexternal ,                 (9)
+ephemeris [3]; this report does not reuse or fit that data.                 where the terms are orbit, spin, exported, and externally
+   Every force module enters a machine-readable ledger. Re-                 applied angular momentum. Equation (9) guards against a tide
+quired fields include units; equations; parameter values or                 implementation that appears to change a but fails to transfer
+priors; body’s spin, radius, and mass; conditions for activation;           or export angular momentum consistently. The budget closure
+expected sign of work and torque; numerical implementation;                 tolerance is reported before any physical conclusion.
+reference source; and failure condition. Each run also stores in-
+tegrator version, compiler/runtime information, floating-point              C. Data partitioning and held-out evaluation
+tolerances, output cadence, random seeds, and an append-only                   Development inputs validate parsing, units, and synthetic
+event log. The goal is to make it possible to decide whether                forward calculations. Training arcs estimate only parameters
+two results differ because of physics, statistics, code, units, or          declared in advance. At least one independent later time arc,
+state conventions.                                                          tracking geometry, data class, or body-specific observable
+                                                                            is held out from mechanism selection. Correlations are not
+B. Forward propagation and budget checks                                    ignored: a split is valid only when it is modeled through a joint
+   The protocol first transforms inputs into one documented                 covariance or is sufficiently independent under the documented
+barycentric coordinate and time convention, retaining the un-               observation process.
+modified input record. It then propagates S0 with a high-order                 For example, an apparent drift chosen by inspecting all
+adaptive integrator and, where feasible, with an independently              available range residuals cannot be used as its own confirma-
+implemented symplectic or variational approach appropriate                  tion. The parameter range, force model, and residual statistic
+to the interval. In the conservative reference, total energy and            are frozen before the held-out arc is evaluated. A claimed
+angular momentum are monitored as numerical diagnostics.                    tide or drag signal must improve the native observation-
+Individual osculating elements may vary physically through                  space prediction, not merely smooth a derived semimajor-axis
+interactions, so they must not be used as conservation monitors             series. This requirement is critical because osculating elements
+in isolation.                                                               depend on coordinate choice and on the reference force model
+   Each added module reports the mechanical power and                       used to define them.
+torque it contributes. A useful accounting identity for a se-
+lected body is                                                               VI. S YSTEMATICS , C ALIBRATION , AND D ECISION RULES
+                                                                            A. Synthetic injection
+      ∆Eorb + ∆Espin + Ediss + Eexport = ∆Emodel ,                   (8)
+                                                                              Before real-data interpretation, the pipeline is exercised on
+where ∆Eorb and ∆Espin are changes in orbital and spin                      simulated observation sets with known states and controlled
+energy, Ediss is internally dissipated energy, Eexport is energy            perturbations. The suite includes conservative null cases; tides
+leaving through an explicitly modeled channel, and ∆Emodel                  of stated sign and amplitude; adiabatic mass loss; small-body
+accounts for a time-dependent model such as mass loss.                      radiation/drag terms; and deliberately mismatched frame, unit,
+                          TABLE III                                            signed energy and angular-momentum budget that closes
+    C ONTROLS THAT SEPARATE PHYSICAL SECULAR CHANGE FROM                       within tolerance; improvement on a predeclared held-out ob-
+             NUMERICAL OR INFERENTIAL ARTIFACTS .
+                                                                               servation; and stability under the relevant controls in Table III.
+  Threat                   Predeclared control and diagnostic                  Failure of any condition leaves the mechanism unsupported
+                                                                               or inconclusive. In particular, an in-sample fit to a derived
+  Integrator drift         Repeat with an independent method; sweep step,
+                           tolerance, output cadence, and coordinate repre-    element is not sufficient.
+                           sentation; inspect invariant-budget residuals.         Support for a long-horizon instability channel requires an
+  State-estimation leak-   Freeze epoch, frame, time scale, covariance,        ensemble result under a specified dynamical and stellar-
+  age                      and held-out arc before mechanism selection;
+                           preserve original state vectors.                    evolution model. It supports a conditional event distribution,
+  Force double count-      Audit Newtonian, multipole, relativistic, tidal,    not the generic claim that planets gradually spiral into their
+  ing                      and radiation terms against the ledger and units.   star. An inward trend due to giant-branch envelope interaction
+  Flexible mechanism       Use synthetic null and injected signals;            may be a physically meaningful future result, but it has a
+  fitting                  require held-out improvement and report
+                           prior/parameter sensitivity.                        different causal ledger from a current vacuum orbit.
+  Chaos-limited extrap-    Propagate state/physical ensembles with fixed
+  olation                  seeds and event definitions; report distributions        VII. A NALYTICAL C ONTROLS AND O BSERVABLE
+                           and horizon dependence.                                                I DENTIFIABILITY
+  Stellar-evolution mis-   Couple radius, mass loss, tides, and drag only in
+  match                    a stated regime; do not extend present-day drift    A. Control experiments with known answers
+                           formulas into an envelope.                             The numerical protocol is strengthened by analytical cases
+                                                                               whose qualitative behavior is known before an integrator is
+                                                                               selected. The first control is the exact Newtonian two-body
+or step-size cases. The pipeline must recover injected effects at
+                                                                               problem. With no perturbing acceleration and constant µ,
+the intended sensitivity, retain uncertainty coverage, and avoid
+                                                                               equations (1) and (2) require conservation of specific energy
+selecting a signal from null or numerical-error cases. Failed
+                                                                               and angular momentum. A secular fall in a in this control is
+integrations and nonconvergent parameter regions remain part
+                                                                               numerical drift, an output-processing defect, or a mismatch
+of the release record.
+                                                                               between coordinate definitions; it cannot be assigned to grav-
+   Synthetic calibration does not assert that the Solar System
+                                                                               ity.
+was generated by the simulator. It tests whether a particular
+                                                                                  The second control applies a prescribed tangential accelera-
+inference chain behaves honestly under its own declared
+                                                                               tion with a known sign. It checks whether the implementation
+assumptions. A failure to recover a known injection is a reason
+                                                                               records the sign of the work in (4) and the torque in (5)
+to repair the code or model before interpreting an ephemeris
+                                                                               consistently. The third control applies slow isotropic mass loss
+residual. A false positive from a null case exposes the exact
+                                                                               and verifies the outward mean trend predicted by (6). A fourth
+risk that a plotted inward trend could be mistaken for physical
+                                                                               control switches the mass loss from slow to impulsive, demon-
+orbital decay.
+                                                                               strating that the adiabatic expression cannot be used outside its
+B. Long-horizon ensembles                                                      time-scale domain. These cases are not merely programming
+   The S5 ensemble samples the initial-state covariance and all                tests; they teach the inference pipeline the difference between
+declared physical uncertainty. It records orbital-element dis-                 a physical flux, a changing gravitational parameter, and an
+tributions, close approaches, resonance indicators, numerical                  invalid approximation.
+diagnostics, and event outcomes at fixed reporting times. Once                    Differentiating the semimajor-axis relation in (3) and com-
+chaos causes trajectory-level divergence, the ensemble is the                  bining it with (4) gives an osculating-element diagnostic,
+scientific object; choosing one particularly dramatic member                                       2a2
+                                                                                                       [︃              (︃
+                                                                                                                           1   1
+                                                                                                                                 )︃]︃
+as the prediction is prohibited. The event definition, integration                            ȧ =       ṙ · fnc + µ̇       −        .    (10)
+                                                                                                    µ                     2a r
+horizon, removal/engulfment criterion, and stellar evolution
+model are fixed before propagation.                                            In (10), the instantaneous r and velocity make ȧ an osculating
+   An ensemble result is conditional in two ways. First, it                    quantity. It need not equal a long-time secular mean. Averaging
+depends on the modeled physics and its parameter ranges.                       must be carried out over a stated interval and model, particu-
+Second, it depends on the definition of the event–for example,                 larly for eccentric or resonant motion. The circular adiabatic
+a close approach, collision, ejection, Roche-limit crossing, or                limit of (10) recovers the sign in (6); this is an explicit cross-
+stellar-envelope entry. Reports must name both conditions next                 check that the implementation should pass.
+to any probability-like summary. The LHOSB does not convert                       The fifth control is force modularity. Add a relativistic
+a finite ensemble into a claim of inevitability or an exact                    term to the conservative baseline, then check phase/precession
+calendar date.                                                                 differences while retaining the expected conservative budget
+                                                                               behavior. Add an intentionally exaggerated tide or small-body
+C. Decision rules                                                              drag only in a synthetic test and check that the pipeline
+   Support for a physical secular-decay mechanism requires                     recovers the correct sign and that its effects vanish when
+five conditions: an explicit nonconservative flux or changing-                 the module is disabled. The use of exaggerated synthetic
+mass term; physical validity over the modeled interval; a                      amplitudes is not a claim about the Solar System; it tests
+detectability and guards against a method that would overlook        issue. If ensemble outcomes diversify, the correct product is a
+or fabricate a small signal.                                         conditional distribution rather than a trajectory narrative.
+                                                                        None of these outcomes establishes a universal fate for all
+B. From state vectors to observable evidence                         planets. The first two concern model utility on a defined data
+   Osculating elements are useful summaries, but raw observ-         set; the third concerns software/model error; and the fourth
+ables are closer to data. Range, range rate, angular position,       concerns uncertainty propagation. This taxonomy prevents a
+and Doppler products depend on light-time, reference frame,          scientifically modest but valuable dynamical result from being
+time scale, station geometry, calibration, and observation-          overstated as proof that the Solar System is either permanently
+model choices. A trend in a derived a(t) sequence can arise          immutable or inevitably spiraling inward.
+from a changed element convention even if native measure-             VIII. R EPRODUCIBILITY AND I NTERPRETATION S AFETY
+ment residuals do not support a new force. The LHOSB
+therefore requires every candidate mechanism to predict both            The final release package for a future execution contains
+a state perturbation and a native-observable consequence.            scenario definitions; force and parameter ledgers; ephemeris
+   Identifiability is the central issue. A tide-like secular trend   identifiers; permitted state vectors/covariances; observation-
+can be degenerate with an initial-condition offset over a short      model code; source revisions; compiler/runtime metadata;
+arc. A mismodeled solar quadrupole, asteroid mass, reference-        integrator settings; unit tests; seeds; synthetic inputs; en-
+frame transformation, or tracking bias can project onto element      semble draws; output diagnostics; failed runs; and hashes.
+changes. A broad empirical acceleration can improve residuals        Data licenses control whether raw tracking inputs or only a
+without identifying its physical origin. The protocol responds       reproducible acquisition recipe can be published. The release
+by using long-enough training arcs, independent observation          uses immutable run identifiers so that a parameter change after
+geometries, shared state parameters across modules, and a            a held-out result creates a new run rather than silently rewriting
+held-out prediction. It also reports correlations rather than        history.
+hiding them behind one best-fit value.                                  Interpretation is divided into four layers. Observations are
+                                                                     range, angle, Doppler, or ephemeris products with stated
+C. Regime transitions over long horizons                             calibration. Inferences are parameter estimates conditional on
+                                                                     a force and observation model. Extrapolations are integrations
+   The benchmark separates three time regimes. In the cal-           beyond the calibration interval. Scenario claims combine an
+ibrated ephemeris regime, the primary task is observational          extrapolation with a tidal or stellar-evolution assumption. A
+attribution: does a force module improve held-out data be-           sentence about one layer is not automatically evidence for the
+yond the baseline? In the secular/chaotic regime, the task           next. In particular, an observed precession does not demon-
+is distributional propagation: how do declared uncertainties         strate energy loss, and an ensemble future scenario does not
+spread through resonances and close-approach channels? In            measure today’s orbital decay.
+the stellar-evolution regime, the task changes again because
+M (t), stellar radius, spin, wind, and envelope structure modify                      IX. T HREATS TO VALIDITY
+the force model itself. It is invalid to pass an element drift          The largest conceptual threat is mistaking an inward grav-
+estimated in the first regime directly into the third without        itational acceleration for an inward secular velocity. Equa-
+changing the model ledger.                                           tions (1) and (2) show why the inference fails in the con-
+   This regime separation also limits rhetorical overreach. A        servative reference problem. A second threat is use of the
+present ephemeris can test contemporary dynamics but cannot          word “decay” for any variation in a, eccentricity, period,
+directly observe a red-giant envelope. A long-horizon N -body        or perihelion. The protocol requires a force/flux and budget
+integration can characterize a conditional instability channel       closure because these quantities can vary through conservative
+but cannot replace a stellar-evolution model. A post-main-           exchange or coordinate convention.
+sequence simulation can explore possible engulfment but must            Numerical threats are equally serious at tiny secular
+expose its mass-loss and tide prescriptions. The further the         rates. Symplectic integrators, adaptive integrators, variational
+result is extrapolated from observations, the more prominently       equations, coordinate transformations, timestep resonances,
+the model domain and ensemble conditions must be stated.             floating-point accumulation, and output sampling can each cre-
+                                                                     ate visually plausible trends. The dual-integrator and synthetic-
+D. Expected decision patterns                                        injection controls do not eliminate all numerical risk, but they
+   The benchmark has several informative outcomes. If S0             make a claim falsifiable by a method that should not share
+and S1 predict held-out data as well as models with ex-              the same error. A documented disagreement is evidence about
+tra dissipation, the selected observations do not justify the        computation, not a nuisance to be hidden.
+additional mechanism at that precision. If a tide or mass-              Statistical threats arise from adaptive model building. A
+loss instance passes all controls, the supported statement is        broad tide law or empirical acceleration can fit residual
+limited to that parameterized mechanism and its observation          structure that has no unique physical cause. Held-out arcs,
+range. If a signal disappears under an independent integrator        prior/parameter sensitivity, and a native observation-space
+or coordinate treatment, the result becomes a computational          residual prevent a fitted osculating element from becoming
+                                                                TABLE IV
+O BSERVABLE - TO - MECHANISM TRANSLATION . T HE TABLE LISTS DISCRIMINATING REQUIREMENTS FOR A FUTURE EXECUTION ; IT DOES NOT REPORT A
+                                                             DETECTED SIGNAL .
+
+
+      Candidate interpretation       Insufficient evidence by itself                     Discriminating requirement
+      Secular inward decay           Downward visual trend in osculating a, a perihe- Declared negative energy/angular-momentum flux, bud-
+                                     lion shift, or an in-sample residual reduction      get closure, stable native-observable improvement, and
+                                                                                         held-out confirmation.
+      Tidal migration                The word “tides,” a generic quality factor, or an Spin/obliquity state, dissipation law, signed torque,
+                                     orbit-only fit                                      heat/angular-momentum ledger, and sensitivity to tidal
+                                                                                         parameters.
+      Mass-loss expansion            A future stellar-evolution narrative or a constant- A time-resolved M (t) model, adiabaticity check,
+                                     rate extrapolation                                  state/element propagation, and regime boundary for
+                                                                                         envelope interaction.
+      Dust-like drag                 A force with inward sign but no scale analysis      Area-to-mass ratio, optical/plasma coupling, and a body
+                                                                                         category for which the force is not negligible.
+      Chaotic instability            One dramatic long integration                       Initial-state/physics ensemble, event definition, numer-
+                                                                                         ical replication, horizon dependence, and conditional
+                                                                                         survival distribution.
+
+
+
+self-validating. A favorable maximum fit is less informative               not to say: that a perihelion shift proves energy loss, that
+than a stable prediction of data withheld from the mechanism-              an uncalibrated numerical trend proves infall, or that present
+selection process.                                                         gravity implies all planets will eventually swirl into the Sun.
+   Finally, future stellar evolution is not a calibrated extension
+                                                                                                      XI. C ONCLUSION
+of modern ephemerides. The Sun’s mass, radius, rotation,
+wind, and envelope interaction change in a coupled manner.                    This four-stage research workflow finds that planetary or-
+The protocol therefore treats a post-main-sequence result as a             bital survival is explained first by conservative dynamics,
+conditional simulation study, requiring its own stellar inputs             not by an unexplained absence of drag. In the Newtonian
+and uncertainty analysis. This is not excessive caution: it                reference problem, orbital energy and angular momentum pre-
+preserves the difference between current orbital mechanics and             vent generic inward spiraling. Real planetary systems exhibit
+a different physical environment billions of years later.                  perturbations, tides, mass loss, radiation forces in appropriate
+                                                                           size regimes, and chaos, but these mechanisms have distinct
+                            X. D ISCUSSION                                 signs and domains. A future inner-planet engulfment scenario,
+                                                                           if supported by a coupled stellar-evolution calculation, is not
+   The direct answer is simpler than the original framing.                 evidence that all present planetary orbits are slowly decaying.
+Planets do not avoid a gravitationally mandated spiral by a                   The proposed LONG-HORIZON-ORBITAL-SURVIVAL-
+delicate coincidence. In the conservative two-body approxi-                BENCHMARK provides a falsifiable path forward: compare
+mation, a bound orbit is the normal consequence of energy                  frozen force ledgers, verify signed budgets, hold out ephemeris
+and angular-momentum conservation. The Solar System adds                   observations, calibrate against synthetic injections, and report
+perturbations and long-horizon complexity, but conservative                ensembles once chaos limits trajectory-specific prediction. The
+interactions primarily redistribute orbital quantities; they do            framework can support conditional mechanism attribution and
+not supply a universal sink. The phrase “gravity keeps planets             survival distributions. It cannot produce a measured decay rate,
+in stable orbits” is reasonable only when it is followed by the            collision probability, or exact future date without an executed
+conservation-law explanation.                                              and validated data analysis; none is claimed in this design-only
+   Some orbits genuinely evolve inward, some outward, and                  report.
+some mainly precess or exchange eccentricity. Tides illustrate
+the dependence on signed spin–orbit angular-momentum trans-                                            A PPENDIX A
+fer. Dust illustrates that radiation drag can be important when                                  M INIMAL RUN M ANIFEST
+area-to-mass ratio is large. Slow stellar mass loss illustrates               A minimum LHOSB run manifest records: scenario/version
+that a central gravitational change can expand an orbit. Giant-            identifier; bodies, masses, radii, spins, and obliquities; state-
+branch evolution illustrates a future regime in which physical             vector epoch, frame, time scale, and covariance; force
+contact and dissipation may become relevant. These mecha-                  equations and source citations; parameter units and priors;
+nisms cannot be ranked by intuition alone; each needs a model,             ephemeris/data release; observation model; integrator and tol-
+parameters, and an observable signature.                                   erance; hardware/compiler/runtime; random seeds; training
+   The LHOSB makes this conclusion useful for research. It                 and held-out partition; synthetic injection identifier; conser-
+tells an analyst what must be measured or simulated before                 vation diagnostics; invalid-point and failed-integration log;
+claiming a decay rate: a declared force law, state data, a robust          event definitions; output hashes; and the statement, “This
+integrator, a conservation audit, a held-out prediction, and an            run attributes declared model effects and does not establish
+uncertainty-aware ensemble. It also tells a communicator what              universal orbital decay or an exact planetary fate.”
+                            A PPENDIX B
+                       P ROTOCOL C HECKLIST
+   Before fitting, freeze the force and state ledgers, validate
+units and reference frames, define a held-out arc, and run
+synthetic null/injection cases. During propagation, use an
+independent numerical check, retain failed trajectories, mon-
+itor energy/angular-momentum budgets, and prevent retuning
+on held-out data. Before publication, report model domains,
+parameter sensitivity, ensemble conditions, numerical conver-
+gence, and all interpretation layers. A planetary-fate statement
+must name its stellar-evolution model and event definition.
+                             R EFERENCES
+ [1] C. D. Murray and S. F. Dermott, Solar System Dynamics. Cambridge,
+     U.K.: Cambridge Univ. Press, 1999.
+ [2] P. Hut, “Tidal evolution in close binary systems,” Astronomy and
+     Astrophysics, vol. 99, pp. 126–140, 1981.
+ [3] R. S. Park, W. M. Folkner, J. G. Williams, and D. H. Boggs, “The JPL
+     planetary and lunar ephemerides DE440 and DE441,” The Astronomical
+     Journal, vol. 161, Art. no. 105, 2021, doi: 10.3847/1538-3881/abd414.
+ [4] J. Laskar, “Large-scale chaos in the Solar System,” Astronomy and
+     Astrophysics, vol. 287, pp. L9–L12, 1994.
+ [5] J. Laskar and M. Gastineau, “Existence of collisional trajectories of
+     Mercury, Mars and Venus with the Earth,” Nature, vol. 459, pp. 817–
+     819, 2009, doi: 10.1038/nature08096.
+ [6] D. Veras, “Post-main-sequence planetary system evolution,” Royal
+     Society Open Science, vol. 3, Art. no. 150571, 2016, doi:
+     10.1098/rsos.150571.
+ [7] K.-P. Schröder and R. C. Smith, “Distant future of the Sun and Earth
+     revisited,” Monthly Notices of the Royal Astronomical Society, vol. 386,
+     no. 1, pp. 155–163, 2008, doi: 10.1111/j.1365-2966.2008.13022.x.
+ [8] J. A. Burns, P. L. Lamy, and S. Soter, “Radiation forces on small
+     particles in the Solar System,” Icarus, vol. 40, no. 1, pp. 1–48, 1979,
+     doi: 10.1016/0019-1035(79)90050-2.
+ [9] P. C. Peters, “Gravitational radiation and the motion of two point
+     masses,” Physical Review, vol. 136, no. 4B, pp. B1224–B1232, 1964,
+     doi: 10.1103/PhysRev.136.B1224.
+

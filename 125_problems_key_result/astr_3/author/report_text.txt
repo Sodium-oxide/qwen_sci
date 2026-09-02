@@ -1,0 +1,517 @@
+         Where Did the Big Bang Start?
+A Design-Only Inference Framework for the Origin
+                  of Spacetime
+                                Survey–Idea–ExperimentDesign–Author Research Workflow
+
+   Abstract—The everyday wording of “Where did the Big Bang          boundary justify a statement about an absolute beginning?
+start?” suggests an explosion at a position in an already-           These questions have different assumptions, data access, and
+existing space. This paper separates that intuition from the         failure modes. Treating any one of them as an answer to all the
+testable content of modern cosmology. In a homogeneous
+and isotropic Friedmann–Lemaître–Robertson–Walker (FLRW)             others produces stronger claims than the evidence warrants.
+spacetime, cosmic expansion changes distances between comoving          Planck’s analysis of CMB anisotropies constrains a six-
+locations across the spatial slice; it does not select a spatial     parameter flat Lambda cold-dark-matter baseline and yields
+center. Observations supporting a hot, dense early universe and      a model-dependent cosmic age close to 13.8 Gyr [1]. That
+a model-inferred age near 13.8 Gyr therefore do not identify a       result is powerful evidence for a particular late-time-to-
+location of the Big Bang or directly observe an initial instant.
+Inflationary descriptions, classical past-incompleteness theorems,   recombination cosmological description, but it is neither an
+bounce scenarios, and quantum-initial-state proposals address        observation of t = 0 nor a measurement of a spatial starting
+different parts of the extrapolation problem and must not be con-    point. Guth’s inflationary proposal addresses the horizon and
+flated. We propose the ORIGIN-OF-SPACETIME-INFERENCE-                flatness problems and supplies a framework for primordial
+BENCHMARK, a preregistration-ready, design-only protocol for         perturbations [2]; it is not by itself a verified account of why
+comparing only those early-universe scenario classes that expose
+explicit background histories, perturbation initial states, and      the entire spacetime exists. Likewise, the past-incompleteness
+forward predictions for cosmic microwave background (CMB),           result of Borde, Guth, and Vilenkin identifies the need for
+large-scale-structure, expansion-history, curvature, topology, or    physics beyond a sufficiently expanding or inflating descrip-
+primordial-tensor observables. The protocol uses frozen param-       tion at a past boundary [4]. It does not prove creation from
+eter ledgers, held-out channels, synthetic injections, posterior-    nothing, locate a center, or uniquely determine a preceding
+predictive checks, and foreground/prior robustness analyses.
+Its strongest direct conclusion is conditional but clear: under      state.
+the empirically successful homogeneous FLRW description, the            The purpose of this report is therefore twofold. First, it gives
+Big Bang was not located at one place in the universe. The           a technically precise answer to the location question within the
+physical completion of the earliest regime remains unresolved        standard homogeneous model. Second, it turns the remaining
+and requires discriminating observable predictions rather than a     origin question into a tractable model-comparison research
+verbal account of “before time.” No new data analysis, posterior,
+model ranking, or empirical result is claimed here.                  program. The proposed benchmark does not reward a scenario
+   Index Terms—Big Bang cosmology, FLRW spacetime, cosmic            for telling the most compelling narrative. It requires a declared
+microwave background, inflation, past incompleteness, bouncing       forward map from early-universe variables to observables and
+cosmology, Bayesian inference, reproducible research.                then evaluates whether a prediction survives out-of-sample,
+                                                                     foreground, and prior-sensitivity tests.
+                      I. I NTRODUCTION
+                                                                          II. S URVEY: W HAT O BSERVATIONS AND T HEORY
+   The question “Where did the Big Bang start?” is scientif-
+                                                                                            E STABLISH
+ically valuable only after its spatial presupposition is made
+explicit. A firecracker explodes at a point of a pre-existing        A. Empirical scope of the hot Big Bang
+room, so every later fragment can in principle be traced back           The hot Big Bang is best understood as an empirically
+to that point. The standard cosmological model is not this           constrained expansion history, not as a literal detonation. CMB
+picture. It models the large-scale universe as a dynamical           observations provide a snapshot of the plasma after photons
+spacetime. The successful hot Big Bang account connects              decoupled from matter, while galaxy-distance measurements,
+cosmic expansion, primordial nucleosynthesis, and the CMB            baryon acoustic oscillations, and abundance measurements
+to a hot, dense early epoch; it does not supply a camera image       constrain complementary portions of the cosmic history. In
+of a first event or a coordinate in an external space.               the baseline interpretation, these observations are mutually
+   This distinction matters because several separate questions       consistent with an early hot and dense state followed by
+are routinely compressed into one sentence. Is there a preferred     expansion and structure formation. They justify extrapolation
+location on a spatial slice? How does the scale factor evolve?       over an immense but finite physical interval only within the
+Does a classical spacetime admit arbitrarily extended past-          tested model family and its stated assumptions.
+directed geodesics? Which physical mechanism prepares the               The inferred age is a derived parameter. It follows after a
+perturbations seen in the CMB? And does a mathematical               cosmological parameterization, a likelihood, calibration infor-
+mation, and a relation between model time and observables              model. Its formal backward extrapolation to very high density
+are adopted. It must not be described as the elapsed time              is not proof that the mathematical singularity is an observed
+since a directly observed explosion point. The difference is not       physical object. Classical singularity theorems instead estab-
+semantic: a fitted parameter can change when a model, prior,           lish geodesic incompleteness under particular causal, energy,
+data combination, or systematic treatment changes, whereas             and global assumptions [3].
+a location in an external room would be a different kind of               Inflation adds a phase of accelerated expansion to ad-
+observable entirely.                                                   dress selected initial-condition problems and to generate a
+                                                                       calculable primordial fluctuation spectrum [2]. Bouncing and
+B. FLRW geometry and the absence of a center                           ekpyrotic constructions attempt a nonsingular or matched prior
+   On sufficiently large scales, the conventional background is        phase, but they introduce their own consistency, stability,
+an FLRW line element,                                                  matching, and observational challenges [5]. Quantum-initial-
+                         [︃
+                              dχ2
+                                                                ]︃     state or quantum-cosmology proposals may be scientifically
+                                        2           2
+    2      2 2       2
+                                          (︁ 2             2
+                                                             )︁
+ ds = −c dt + a (t)                  + χ dθ + sin θ dϕ             ,   comparable only when they provide a quantitative background
+                            1 − kχ2
+                                                                 (1)   and perturbation prescription. A proposal lacking a forward
+where t is cosmological proper time for comoving observers,            prediction is an interesting theoretical possibility but is under-
+c is the speed of light, a(t) is the scale factor, (χ, θ, ϕ) are       determined as an observational hypothesis.
+comoving coordinates, and k labels spatial-curvature sign and
+normalization. Equation (1) is a symmetry-based model of a                 III. I DEA : A N O RIGIN - OF -S PACETIME I NFERENCE
+spatially homogeneous and isotropic universe. Homogeneity                                       B ENCHMARK
+means that no comoving point is physically distinguished               A. Scientific reframing and objective
+by the background solution, while isotropy means that no
+                                                                          The                ORIGIN-OF-SPACETIME-INFERENCE-
+direction is distinguished at a comoving point.
+                                                                       BENCHMARK replaces the unobservable request for a
+   For neighboring comoving galaxies separated by a fixed
+                                                                       location before space with a sequence of testable questions:
+coordinate interval ∆χ, their proper separation is
+                                                                       Which background and perturbation histories reproduce the
+                        D(t) = a(t)∆χ.                          (2)    measured relics of the early universe? Do alternatives make
+                                                                       predictions that the reference model fails to make? Are
+Thus the expansion statement is about the time dependence of           apparent improvements robust to held-out data, nuisance
+D(t) in (2). It does not require an external embedding space           modeling, and prior choices? The benchmark separates a
+or a central source. Differentiating this relation gives the local     model’s observable utility from any stronger metaphysical
+recession law Ḋ = HD when the comoving separation is                  interpretation of its extrapolated boundary.
+fixed, with the Hubble rate defined by                                    The reference class S0 is a hot Big Bang late-time baseline
+                                   ȧ(t)                               with a phenomenological primordial spectrum. Candidate class
+                          H(t) =         .                      (3)    S1 contains parameterized slow-roll or effective inflationary
+                                   a(t)
+                                                                       histories. Class S2 contains parameterized bounce or ekpy-
+The dot in (3) denotes a derivative with respect to t. Every
+                                                                       rotic histories with a declared matching surface. Class S3
+ideal comoving observer in the homogeneous background
+                                                                       contains quantum-initial-state models only when they expose
+can describe other sufficiently nearby comoving observers as
+                                                                       explicit background and perturbation predictions. Class S4
+receding according to the same form. This reciprocity is the
+                                                                       contains curvature or topology extensions and is deliberately
+reason a local Hubble pattern cannot by itself identify a central
+                                                                       kept distinct from an origin-mechanism claim. This separation
+observer.
+                                                                       prevents a finite topology, nonzero curvature, or finite horizon
+   An observational horizon is also not a center. It bounds the
+                                                                       from being mistaken for evidence of a central explosion.
+region from which light has had time to reach a particular
+observer. A second observer has a different horizon centered           B. Falsifiable hypotheses
+on that observer. The finite observable universe is therefore an
+observer-dependent causal region inside a model, not a map of             The benchmark has five operational hypotheses. H0 states
+the total universe with Earth at a privileged physical position.       that S0 accounts for the selected observations as well as a
+                                                                       more complex scenario after complexity and prior sensitivity
+C. Early-universe mechanisms and classical boundaries                  are included. H1 states that an alternative yields a posterior-
+  The background expansion is commonly summarized by a                 predictive improvement on predeclared held-out observables.
+Friedmann equation such as                                             H2 states that a putative primordial feature weakens after
+                                                                       foreground, look-elsewhere, and prior-volume controls. H3
+                       8πG        kc2    Λc2                           states that a horizon, curvature estimate, or topology signature
+                  H2 =       ρ− 2 +          ,              (4)
+                         3         a      3                            does not identify a Big Bang center in a homogeneous
+where G is Newton’s constant, ρ is total energy density, and           model. H4 states that past incompleteness requires a boundary
+Λ is the cosmological constant. Equation (4) has predictive            description for a model class but does not select a unique
+content within general relativity and a specified stress-energy        physical origin. H5 states that statistical model comparison can
+                                                             TABLE I
+   S CENARIO CLASSES AND ADMISSIBILITY REQUIREMENTS IN THE PROPOSED BENCHMARK . “D ESIGN ONLY ” MEANS THAT THIS REPORT DOES NOT
+                                           EXECUTE THE COMPARISON OR CLAIM OUTCOMES .
+
+
+  Class        Role                               Required declared objects                            Interpretation boundary
+  S0           Hot Big Bang baseline              Late-time parameters, nuisance model, phe-           Reference predictive model; not a claim
+                                                  nomenological primordial spectrum, transfer cal-     about a first cause.
+                                                  culation
+  S1           Inflationary scenarios             Background potential or effective history, reheat-   Can address horizon/flatness and perturba-
+                                                  ing assumptions, scalar and tensor initial condi-    tions; does not alone establish an ultimate
+                                                  tions                                                beginning.
+  S2           Bounce/ekpyrotic scenarios         Contracting/bounce history, matching prescrip-       A candidate completion only if it has a stable
+                                                  tion, stability and validity range, perturbation     forward prediction distinct from S0.
+                                                  transfer
+  S3           Quantum-initial-state scenarios    Boundary/state prescription, calculable back-        A verbal no-boundary or tunneling label
+                                                  ground, perturbation spectrum, parameter priors      alone is not numerically comparable.
+  S4           Curvature/topology extensions      Curvature/topology parameters and predicted          Geometry is tested separately and never
+                                                  map/spectrum signatures                              treated as a coordinate center.
+
+
+
+compare predictive scenarios but cannot answer an undefined             conclusion comes from data, which from transfer physics, and
+question about an observed time “before time.”                          which from a chosen initial-state ansatz.
+   These hypotheses are intentionally asymmetric. A null result
+does not prove that no pre-hot-Big-Bang physics exists; it              B. Inference quantities
+limits the discriminating power of the tested data and parame-            For data D, model parameters θi , and scenario Mi , the
+terization. Conversely, a fit improvement does not establish an         posterior is
+origin story unless it is replicated in held-out observables, sur-                                        p(D | θi , Mi ) p(θi | Mi )
+vives the declared robustness checks, and is not reproducible                       p(θi | D, Mi ) =                                  .            (7)
+                                                                                                                 p(D | Mi )
+by a comparably flexible baseline.
+                                                                        Here p(D | θi , Mi ) is the likelihood, p(θi | Mi ) is the declared
+          IV. F ORMAL C OSMOLOGICAL F RAMEWORK
+                                                                        prior, and the denominator is the model evidence. The latter
+A. Observable mapping                                                   is the prior-weighted likelihood integral,
+  The redshift assigned to a photon emitted at scale factor                                     ∫︂
+aem and observed at a0 follows                                                   p(D | Mi ) = p(D | θi , Mi ) p(θi | Mi ) dθi .         (8)
+                                   a0
+                       1+z =           ,                   (5)          Equations (7) and (8) clarify why a bare evidence or Bayes-
+                                  aem
+                                                                        factor number cannot be treated as an origin verdict: it
+where z is redshift and the present scale factor is often nor-          changes with the parameter space, prior, likelihood, and model
+malized to a0 = 1. Equation (5) relates measured wavelength             definition being compared.
+shifts to the expansion model. It does not select a center
+                                                                           For a held-out datum Dhold , the predictive distribution is
+because every comoving observer uses the same local relation                                            ∫︂
+under the FLRW assumptions.                                                    p(Dhold | Dtrain , Mi ) = p(Dhold | θi , Mi )
+  For a specified expansion history, a comoving particle-
+horizon distance may be written as                                                                             × p(θi | Dtrain , Mi ) dθi .        (9)
+                              ∫︂ t
+                                      c dt′                             Equation (9) is the primary protection against a scenario that
+                    χph (t) =            ′
+                                            .              (6)
+                                tinit a(t )                             merely accommodates a tuned feature in the training channel.
+In (6), the lower limit tinit is a model boundary, not a directly       It evaluates whether the scenario predicts an independent
+observed first moment. A finite value constrains causal contact         observable after its parameters have been constrained without
+in that model. It cannot be used to infer a point in an external        access to that observable.
+space, and divergent or finite versions of the integral depend                    V. E XPERIMENT D ESIGN : A P REREGISTERED
+on the assumed extension of a(t).                                                          C OMPARISON P ROTOCOL
+   The benchmark takes a scenario to be a tuple Mi =
+{Bi , Ii , Fi , ηi , Πi }: background history Bi , perturbation         A. Design status and research unit
+initial-state prescription Ii , forward model Fi , nuisance/late-          This section specifies a design-only experiment. It neither
+time variables ηi , and prior specification Πi . The forward            downloads a particular data release nor executes a likelihood
+model propagates primordial scalar and tensor quantities                evaluation. Consequently, no numerical preference, posterior
+through a transfer calculation and instrument/foreground re-            interval, Bayes factor, anomaly significance, or physical con-
+sponse to the selected CMB and late-time observables. This              clusion beyond the symmetry reasoning in Section II is re-
+representation makes it possible to identify which part of a            ported. The research unit is a fully declared scenario instance
+                          TABLE II                                        C. Data partitioning and held-out tests
+ M INIMUM PREREGISTERED LEDGER FOR A SCENARIO INSTANCE . A LL
+       ENTRIES ARE FROZEN BEFORE HELD - OUT EVALUATION .                     The study partitions observables by role. Development data
+                                                                          are used only to validate the transfer code on synthetic skies,
+    Ledger item          Required content and reason                      set fixed numerical tolerances, and test the ingestion pipeline.
+    Background         a(t) or an equivalent solved history,              Training data constrain the declared parameter ledger. At least
+                       field/content assumptions, and validity range;     one predeclared channel remains held out. Suitable choices
+                       prevents an unexamined extrapolation.              include polarization or lensing withheld from a temperature-
+    Initial state      Scalar and tensor initial conditions with nor-
+                       malization and matching convention; makes          led fit; a detector or frequency split withheld from feature
+                       the primordial prediction reproducible.            selection; a multipole interval withheld from a search for oscil-
+    Transition physics Reheating, bounce matching, sound speed, or        lations or a cutoff; or low-redshift distance data withheld from
+                       effective-theory cutoff; exposes quantities that
+                       can mimic a feature.
+                                                                          an early-universe model choice. The partition must respect
+    Late-time and nui- Shared cosmological parameters, calibration,       correlations: if a data product is correlated with a training
+    sance terms        beams, masks, and foregrounds; enables             product, a joint covariance or an explicitly independent split
+                       matched treatment.                                 is required.
+    Prior file         Family, bounds, transformations, and motiva-
+                       tion; makes evidence sensitivity auditable.           The validation set is not a source of exploratory tuning. A
+    Forward            Transfer-code version, numerical tolerance,        candidate feature selected after examining a particular low-
+    implementation     solver failures, and likelihood wrapper; en-       multipole range, for example, must be treated as exploratory
+                       ables numerical replication.
+    Prediction list    Which temperature, polarization, lensing,
+                                                                          and evaluated on independently simulated or newly released
+                       spectral, curvature, topology, or tensor signa-    data. This distinction directly addresses the look-elsewhere
+                       tures are expected; prevents post hoc target       problem, in which many possible feature positions, widths,
+                       selection.
+                                                                          and shapes are searched but only the most striking fluctuation
+                                                                          is reported.
+
+rather than a named cosmological slogan. An instance is eli-              D. Forward calculation
+gible only when its background evolution, perturbation initial               For each valid parameter vector, the workflow solves the
+conditions, late-time connection, and observable likelihood are           background and perturbation equations, converts primordial
+available at a stated numerical precision.                                quantities into transfer functions, predicts angular or spatial
+    The intended data domains are CMB temperature and polar-              observables, applies the detector and foreground model, and
+ization angular spectra, CMB lensing, baryon acoustic oscilla-            evaluates the likelihood. A reference transfer implementa-
+tions, distance measures, large-scale structure, and primordial-          tion is checked against an independent implementation or
+abundance consistency. The exact release, sky masks, calibra-             independently validated mode wherever feasible. Numerical
+tion treatment, beam model, covariance, foreground parame-                agreements are assessed on a grid that includes baseline-like,
+terization, and likelihood software must be versioned before              boundary, and feature-bearing points, not merely at a single
+fitting. This rule prevents a model comparison from silently              favorable parameter vector.
+changing as the infrastructure changes. It also distinguishes a              The same masks, likelihood family, calibration priors, co-
+theoretical prediction from a data-product convention.                    variance treatment, and late-time parameterization are used for
+                                                                          the baseline and each physically compatible alternative. If a
+B. Frozen scenario and parameter ledger                                   scenario genuinely requires a different likelihood or transfer
+   Before any production analysis, every scenario must submit             structure, the departure is declared and a matched sensitivity
+a machine-readable ledger. The ledger records background                  analysis is performed. Differences in analysis convenience
+variables; scalar and tensor spectrum parameters; reheating,              must never be allowed to masquerade as physical predictive
+sound-speed, matching, or transition parameters; late-time                gain.
+cosmological variables; nuisance variables; prior distributions;
+                                                                            VI. S CENARIO T ESTS , S YSTEMATICS , AND A NALYSIS
+parameter transformations; theoretical validity domains; physi-
+cality checks; and computational settings. The baseline ledger            A. No-center geometry simulation
+is frozen alongside the alternative ledger. A new parameter                  The first task is intentionally simple and conceptually de-
+cannot be introduced after a residual is inspected unless the             cisive. Generate synthetic source catalogs in flat, open, and
+study is explicitly restarted and the change is disclosed.                closed FLRW backgrounds. Place virtual comoving observers
+   The physicality policy is as important as the sampler. A               at multiple coordinates, propagate their past light cones,
+point that violates a declared stability condition, a positivity          and estimate local recession, redshift-distance, horizon, and
+condition, an effective-theory range, or the model’s matching             angular-diameter relations. The expected invariance is not that
+assumptions is invalid rather than being assigned a convenient            all catalog realizations are identical; finite sampling, curvature,
+likelihood. Invalid points, failed solver calls, discarded chains,        and observational selection create differences. The expected
+and nonconverged runs are retained in the run record. Other-              result is that after coordinate changes and controlled selection
+wise, a numerically favorable but physically undefined region             effects, the homogeneous background supplies no location that
+can create a false appearance of support.                                 is privileged as “the Big Bang center.”
+   This simulation is a test of the interpretation of the as-         summaries are generated from baseline-like and alternative-
+sumed symmetry model, not a new measurement that chooses              like parameter points, including null signals, controlled oscilla-
+among all cosmologies. A distinct central-origin claim can be         tions, cutoffs, curvature perturbations, and topology templates
+investigated only by writing down a specified inhomogeneous           when defined. The analysis pipeline is then run unchanged.
+spacetime, providing its forward predictions, and comparing it        This exercise measures whether the sampler recovers a known
+with data under the same standards. A coordinate origin used          signal, whether its uncertainties cover the generating value at
+in numerical integration is never entered into the likelihood as      the intended frequency, and whether foreground or numerical
+an empirical variable.                                                mistakes induce a false feature.
+                                                                         Simulation-based calibration does not prove that the uni-
+B. CMB and primordial-spectrum tests                                  verse was generated by the model. It tests an inferential
+   The primary likelihood tasks compare predicted CMB                 pipeline under data generated from declared assumptions.
+temperature, polarization, and lensing observables. Candidate         When recovery fails, the relevant model family, likelihood, or
+scenarios may differ in spectral tilt, running, oscillatory struc-    numerical implementation must be repaired before real data
+ture, cutoff behavior, tensor amplitudes, or non-Gaussianity.         are used for a mechanism claim. The synthetic records are
+Each search domain must be specified before inspecting the            released with seeds, injected parameter files, software versions,
+data. For example, a feature model declares the permitted             and success/failure labels.
+frequency/width interval and its prior; a tensor model declares       E. Decision rules
+its relation to the scalar sector; and a bounce model declares
+                                                                         The decision rules are deliberately limited. A scenario may
+the transfer across its matching surface. A flexible phenomeno-
+                                                                      be described as having improved observational utility only
+logical feature is not automatically evidence for the underlying
+                                                                      if its frozen pipeline shows posterior-predictive improvement
+mechanism that inspired it, because several mechanisms can
+                                                                      on held-out observables, its result survives relevant rows of
+reproduce similar spectra.
+                                                                      Table III, and the comparison exposes its additional degrees of
+   The analysis reports a vector rather than a single origin
+                                                                      freedom. A scenario may be described as a candidate physical
+score: likelihood behavior, convergence diagnostics, predictive
+                                                                      mechanism only if it supplies a discriminating signature that
+residuals, posterior-predictive discrepancy, evidence or a stated
+                                                                      the baseline and competing alternatives cannot reproduce
+approximation, complexity, parameter degeneracy, prior sensi-
+                                                                      under matched nuisance treatment. Otherwise it is reported as
+tivity, predictive coverage, and resource cost. A maximum-
+                                                                      inconclusive, underdetermined, or unsupported by the selected
+likelihood improvement alone is insufficient, because a more
+                                                                      observables.
+flexible model can fit fluctuations without predicting them. A
+                                                                         No decision rule maps data to an observed “before time.”
+scenario earns observational utility only when it improves a
+                                                                      Past-directed incompleteness and a finite domain of validity
+predeclared held-out quantity and that improvement persists
+                                                                      identify where a model stops describing the past; they do
+under the robustness matrix described below.
+                                                                      not turn the missing extension into a measured event. This
+C. Expansion, curvature, and topology tests                           boundary discipline is not a weakness of the benchmark. It is
+                                                                      what allows a direct answer to a well-defined location question
+   Expansion-history consistency uses CMB-derived con-                while retaining intellectual honesty about unresolved initial
+straints together with baryon acoustic oscillations, dis-             physics.
+tance indicators, large-scale structure where appropriate, and
+primordial-nucleosynthesis consistency. These probes have                    VII. R EPRODUCIBILITY, G OVERNANCE , AND
+different systematics and redshift leverage. Their combination                        I NTERPRETATION S AFETY
+is valuable precisely because a background history that fits          A. Reproducible release package
+one product can fail another, but correlations and selection              An executable benchmark release should contain scenario
+functions must be propagated rather than ignored.                     definitions, parameter ledgers, prior files, data-release iden-
+   Curvature and topology are separate tests. Curvature mod-          tifiers, masks, likelihood wrappers, transfer-code versions,
+ifies distance-redshift and mode relations; nontrivial topology       compilation settings, random seeds, sampler settings, chain
+can motivate specific correlation or pattern searches. Neither        diagnostics, synthetic injections, and an append-only event
+possibility changes the fact that a homogeneous FLRW model            log. Public data are referenced by stable identifiers; restricted
+lacks a special spatial point. A finite closed spatial section need   products are described by access conditions rather than redis-
+not have a center within that section, just as a two-dimensional      tributed. Posterior samples may be released only when licenses
+sphere has no preferred location on its surface. The analogy          permit. Every figure and table produced by a future execution
+is only topological intuition; quantitative conclusions require       must be traceable to a run manifest that records exact input
+the explicit three-dimensional metric and data model.                 versions and an output checksum.
+                                                                          The release distinguishes four epistemic layers. Layer one
+D. Synthetic injection and calibration                                contains observations and calibrated data products. Layer two
+  Synthetic injection studies are performed before interpret-         contains parameter inferences conditional on a likelihood, cal-
+ing the real-data comparison. Simulated skies and late-time           ibration, and model. Layer three contains extrapolations into
+                                                          TABLE III
+  ROBUSTNESS MATRIX FOR THE BENCHMARK . A CLAIMED SCENARIO ADVANTAGE MUST REMAIN INTERPRETABLE ACROSS THE APPLICABLE ROWS .
+
+  Threat                     Predeclared perturbation                                      Required diagnostic
+  Foreground leakage         Vary foreground families, masks, frequency selections,        Compare residual morphology and held-out coverage; report
+                             and calibration nuisance priors.                              whether a feature tracks a foreground choice.
+  Prior-volume effect        Vary motivated prior families and widths without chang-       Report evidence and posterior-predictive sensitivity; do not
+                             ing data.                                                     quote a prior-dependent ranking as absolute.
+  Feature selection          Withhold a multipole interval, detector split, or synthetic   Evaluate the frozen feature on the held-out channel and
+                             realization from selection.                                   account for the declared search domain.
+  Transfer/numerical error   Use an independent implementation or validated mode,          Store deviations, solver failures, and convergence diagnostics;
+                             tolerance sweeps, and boundary tests.                         repeat only impacted calculations.
+  Late-time degeneracy       Change compatible late-time nuisance treatment and            Report parameter shifts and whether an early feature is ex-
+                             add independent background probes.                            changed for late-time freedom.
+  Model misspecification     Inject known oscillations, cutoffs, curvature, and null       Quantify recovery, false-positive behavior, and calibration of
+                             skies into synthetic data.                                    posterior summaries.
+
+
+
+epochs not directly observed. Layer four contains theoretical                 geometrical implication that can be explained clearly. Candi-
+completions outside the tested domain. The report and any                     date pre-hot-Big-Bang histories become scientific when they
+downstream communication must label which layer supports                      specify their perturbations and observational signatures. Past-
+each sentence. In particular, a data-supported parameter esti-                boundary theorems remain important because they constrain
+mate cannot be silently promoted to a verified description of                 the domain of a model, while not being misused as a full
+a primordial or pre-geometric regime.                                         ontology of the universe.
+B. Computational governance
+                                                                                     IX. T HREATS TO VALIDITY AND FALSIFIABILITY
+   Scenario authors must disclose computational budgets,
+failed attempts, filtering criteria, and any manual intervention.             A. Conceptual threats
+Sampler convergence is necessary but not sufficient: a con-
+verged chain can faithfully sample a misspecified likelihood.                    The first threat is a category mistake: taking an analogy that
+Conversely, a model with a computationally difficult but phys-                is useful for visualizing recession and treating it as a literal
+ically required region should be represented through improved                 spacetime model. A balloon analogy may convey that every
+algorithms or transparent approximation studies, not through                  point on a two-dimensional surface recedes from every other
+deletion of unfavorable parameter space.                                      point as the surface expands, but it also tempts a reader to
+   Data governance includes version pinning, blinded held-out                 identify the balloon’s unphysical embedding-space center with
+channels, review of selection effects, and a preregistered pro-               a center of the universe. The benchmark avoids that transfer
+cedure for unblinding. A compact governance rule is useful:                   by working from the metric in (1) and by declaring an external
+no analyst may change a prior, feature range, mask, transfer                  spatial embedding absent unless a competing model explicitly
+tolerance, or model parameterization after seeing held-out                    introduces one.
+performance without creating a new run identifier. The original                  The second threat is equivocation between a model bound-
+run remains visible. This prevents a history of adaptive choices              ary and a physical event. General relativity has a well-defined
+from being misrepresented as a single confirmatory test.                      domain of application, and classical singularity theorems es-
+                                                                              tablish conditions under which geodesics cannot be extended
+ VIII. E XPECTED O BSERVATION PATTERNS AND L IMITS                            within a classical spacetime [3]. The conclusion concerns the
+   Table IV summarizes interpretation patterns that a future                  incompleteness of a description under its assumptions. It does
+execution may encounter. It intentionally states outcomes                     not measure a physical point of infinite density, determine
+conditionally. The table does not contain results from the                    the relevant quantum-gravitational degrees of freedom, or
+present report.                                                               prove that ordinary temporal language extends through the
+   The limits in Table IV follow from the mapping between                     boundary. The benchmark requires each scenario to identify
+theory and observable. CMB photons were released long after                   its validity range precisely so that an extrapolation is never
+any hypothesized first instant. Even an exceptionally precise                 silently converted into an observation.
+primordial-spectrum measurement would constrain a model’s                        The third threat is theory-label ambiguity. “Inflation,”
+initial conditions through a transfer chain; it would not pho-                “bounce,” “no boundary,” and “emergent universe” each name
+tograph a singularity. The farther a conclusion is extrapolated               a family with variants rather than a single probability distri-
+from the observable epoch, the more explicitly its theoretical                bution. A comparison that uses a broad and flexible alterna-
+assumptions must be stated.                                                   tive but a narrow baseline can manufacture apparent support
+   The benchmark nevertheless advances the origin discussion.                 through unequal opportunity to fit. Conversely, a rigid toy
+It prevents an untestable location claim from blocking research               implementation can incorrectly rule out an entire family. The
+on testable remnants. A no-center conclusion becomes a                        remedy is to compare declared scenario instances, report what
+                                                          TABLE IV
+C ONDITIONAL INTERPRETATION PATTERNS FOR A FUTURE BENCHMARK EXECUTION . T HESE ARE PROTOCOL OUTCOMES , NOT EMPIRICAL FINDINGS OF
+                                                         THIS PAPER .
+
+
+ Observed protocol pattern                  Permitted inference                                Inference that remains impermissible
+ S0 predicts held-out channels as well as   Selected data do not demonstrate added utility     The baseline is the unique theory of the universe’s origin.
+ alternatives after robustness checks.      for the tested alternatives.
+ An alternative improves held-out predic-   That parameterized scenario has comparative        The mechanism is the final or unique account of why
+ tions under matched nuisance models and    predictive utility for the declared observables.   spacetime exists.
+ stable priors.
+ Feature support disappears under fre-      The feature is not robust under the chosen         The entire early-universe framework is falsified.
+ quency, mask, or prior variations.         protocol.
+ An explicit inhomogeneous model outper-    The homogeneous baseline is limited for that       A coordinate point is thereby established as the Big
+ forms FLRW on defined data.                defined comparison.                                Bang’s location without further geometric analysis.
+ Past-incompleteness assumptions apply to   That scenario needs a boundary description or      A material singularity, a spatial center, creation from
+ a scenario.                                additional past physics.                           nothing, or an observed pre-time event has been proved.
+
+
+
+the instance does not cover, and avoid global statements about               assumptions; or a topology pattern with a fixed template
+a family that was not fully parameterized.                                   family. The prediction need not be simple, but it must be
+                                                                             computable with declared uncertainties. A scenario that can
+B. Statistical threats                                                       absorb every residual by adding an unconstrained feature is
+   Cosmological data contain cosmic variance, instrumental                   not made stronger by its flexibility; it has avoided a test.
+noise, masking, foreground residuals, calibration uncertainty,                  Failure reporting is correspondingly a first-class output. The
+and correlations across derived products. Low-multipole CMB                  release records rejected parameter points, unstable solutions,
+quantities are particularly vulnerable to post-selection because             nonconverged sampling, failed synthetic recoveries, and results
+there are relatively few modes and a great many imaginable                   that disappear under an alternate foreground model. These
+patterns that may be noticed afterward. A visually unusual                   outcomes identify where the theory or computation needs
+map feature is therefore not an origin signature without a                   work. Suppressing them would bias the comparison toward
+predeclared statistic, null distribution, and independent test               narratives that happened to be numerically convenient. The
+channel. The held-out design and synthetic null ensembles                    success criterion is not confirmation of a cosmic beginning
+turn this principle into an executable constraint rather than                story; it is a transparent map from a proposed early-universe
+an editorial preference.                                                     model to what would count against it.
+   Bayesian evidence also requires care. Equation (8) averages
+likelihood over a prior volume. That is appropriate when the                 D. Scope of a future conclusion
+prior is part of the declared model, but it means evidence                     If a future execution finds no discriminating signature, the
+values are conditional on that prior and cannot be exported                  appropriate statement is that the selected observations and
+as prior-free facts. The protocol reports sensitivity to justified           protocol do not distinguish the tested scenarios at the reported
+prior alternatives and pairs any evidence calculation with                   sensitivity. If it finds a robust signature, the appropriate state-
+posterior-predictive performance. Information criteria may be                ment is that a specified scenario class has greater predictive
+reported as complementary approximations, but their assump-                  support for that observable set. Both statements are narrower
+tions and treatment of effective complexity must be docu-                    than “we know how the universe began.” The distinction
+mented.                                                                      protects the value of the scientific result while acknowledging
+   The problem of nonidentifiability is separate from statistical            that a physical theory may be incomplete outside the presently
+uncertainty. Two physically distinct histories can project to                observable domain.
+nearly the same scalar spectrum after transfer, and a primordial
+feature can be degenerate with calibration or foreground free-                                          X. D ISCUSSION
+dom. Narrow credible intervals in a restricted parameterization                 The central answer can now be stated precisely. Within
+do not resolve this structural ambiguity. A credible research                a standard homogeneous FLRW model, the Big Bang did
+claim must state which degeneracies were tested, which inde-                 not start at a distinguished place in the universe. The model
+pendent observable could break them, and which conclusion                    represents an early state of the spatial universe in which
+stays conditional because an observable mapping is shared.                   separations between comoving locations were much smaller,
+                                                                             and then grow according to the scale factor. Saying that
+C. Falsifiability and failure reporting                                      “everywhere was once hot and dense” is closer to the model
+   A model is exposed to falsification when it restricts an                  than saying that matter flew outward from a central point. This
+observable distribution before the relevant data are exam-                   does not mean that every imaginable cosmology has no center;
+ined. In this design, examples include a constrained relation                it means that a center is absent from the standard homogeneous
+among scalar tilt, tensor amplitude, non-Gaussianity, or a                   background and would require a separately specified, testable
+feature phase; a predicted consistency relation after reheating              departure.
+   The word “start” retains legitimate scientific uses, but they                           A PPENDIX A
+must be qualified. It can mean the earliest epoch to which                    M INIMAL S CENARIO AND RUN M ANIFEST
+a particular classical solution is extrapolated. It can mean a         For each submitted scenario, the minimum manifest fields
+past boundary associated with geodesic incompleteness under         are: scenario identifier and version; reference publications;
+stated conditions. It can mean the beginning of a hot, radiation-   background equations and validity regime; perturbation-state
+dominated phase in a parameterized scenario. These are not          prescription; complete parameter ledger; prior file checksum;
+interchangeable. In particular, a statement that inflation does     shared late-time and nuisance definitions; transfer/likelihood
+not by itself provide a complete past extension [4] does not        software versions; training and held-out data identifiers; blind-
+identify what precedes it, and a bouncing model review [5]          ing status; synthetic-injection identifiers; sampler configura-
+does not establish that a bounce occurred.                          tion; numerical tolerances; convergence rule; physicality and
+   The recommended scientific posture is neither to declare the     invalid-point records; output artifact hashes; and an event
+question meaningless nor to treat a popular visual metaphor as      log. The manifest includes a plain-language interpretation
+data. The location wording is a category error under the stan-      boundary: “This run compares declared observable predictions
+dard symmetry assumptions, whereas the causal and mecha-            and does not infer a spatial Big Bang center, a verified first
+nism questions motivate research. The benchmark offers a way        instant, or a state before time.”
+to investigate them with ordinary scientific disciplines: clear
+hypotheses, explicit model classes, shared nuisance treatment,                                  A PPENDIX B
+synthetic calibration, held-out prediction, and reproducible                               P ROTOCOL C HECKLIST
+artifacts.                                                             Before fitting, verify that the scenario has an explicit
+   Future extensions may incorporate new CMB polarization           forward map; freeze the scenario and prior ledgers; version
+data, spectral distortions, gravitational-wave backgrounds, or      data and masks; validate on synthetic data; and define held-out
+improved structure surveys. Such extensions should enlarge          channels. During fitting, retain failed evaluations, use matched
+observational access, not weaken the boundary discipline.           nuisance models, monitor convergence, and avoid retuning
+Each new observable must enter through a frozen forward             on held-out channels. Before interpretation, execute the ro-
+model, documented covariance, and a stated relation to the          bustness matrix, report parameter shifts and prior sensitivity,
+scenario’s perturbation physics. A new data channel can dis-        inspect posterior-predictive residuals, and classify a model
+criminate among defined models; it cannot by itself answer          with no discriminating forward prediction as underdetermined.
+a question whose terms have not been translated into an             Before release, archive manifests, code revisions, permitted
+observable spacetime construction.                                  samples, synthetic inputs, diagnostics, and an interpretation-
+                                                                    layer statement.
+                                                                                                 R EFERENCES
+                      XI. C ONCLUSION                                [1] Planck Collaboration, “Planck 2018 results. VI. Cosmological param-
+                                                                         eters,” Astronomy & Astrophysics, vol. 641, Art. no. A6, 2020, doi:
+                                                                         10.1051/0004-6361/201833910.
+                                                                     [2] A. H. Guth, “Inflationary universe: A possible solution to the horizon
+   This four-stage research workflow reaches a direct but                and flatness problems,” Physical Review D, vol. 23, no. 2, pp. 347–356,
+bounded conclusion. The observed hot, expanding universe                 1981, doi: 10.1103/PhysRevD.23.347.
+                                                                     [3] S. W. Hawking and R. Penrose, “The singularities of gravitational
+supports a model-inferred early history, yet does not reveal             collapse and cosmology,” Proceedings of the Royal Society A, vol. 314,
+a spatial point from which the universe exploded. In ho-                 no. 1519, pp. 529–548, 1970, doi: 10.1098/rspa.1970.0021.
+mogeneous FLRW cosmology, the Big Bang is not located                [4] A. Borde, A. H. Guth, and A. Vilenkin, “Inflationary spacetimes are
+                                                                         incomplete in past directions,” Physical Review Letters, vol. 90, Art.
+at one place: expansion occurs between comoving locations                no. 151301, 2003, doi: 10.1103/PhysRevLett.90.151301.
+throughout the spatial slice, and a horizon or coordinate origin     [5] R. H. Brandenberger and P. Peter, “Bouncing cosmologies: Progress and
+is not a physical center. The mechanism responsible for the              problems,” Foundations of Physics, vol. 47, pp. 797–850, 2017, doi:
+                                                                         10.1007/s10701-016-0057-0.
+earliest applicable state remains open.                              [6] S. Weinberg, Cosmology. Oxford, U.K.: Oxford Univ. Press, 2008.
+   The               ORIGIN-OF-SPACETIME-INFERENCE-
+BENCHMARK supplies a concrete next step. It compares
+only parameterized scenarios with explicit backgrounds,
+initial states, parameter ledgers, and forward predictions.
+Its held-out, prior-sensitive, and systematics-aware protocol
+can establish comparative predictive performance, expose
+underdetermined proposals, and delimit the reach of an
+extrapolation. It cannot observe a first instant, identify
+“before time,” or convert a past-boundary theorem into
+proof of a unique cosmic origin. This paper is therefore a
+reproducible research design, not an empirical model-selection
+result.
+

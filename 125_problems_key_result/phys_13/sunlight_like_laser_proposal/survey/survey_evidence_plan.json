@@ -1,0 +1,20 @@
+{
+  "schema_version": "survey_evidence_plan_v1",
+  "project_id": "phys_13_sunlight_like_laser",
+  "evidence_rules": {
+    "publisher_verified_claims": "May be stated only with their published physical scope.",
+    "cross_validated_metadata": "May identify candidate papers and constrained mechanisms; final publisher-page review remains required before external publication.",
+    "browser_verified_claims": "May state only the visible official NIF context.",
+    "prohibited_inferences": ["new experimental performance", "reactor readiness", "universal LPI suppression", "unqualified ignition implication"]
+  },
+  "sources": [
+    {"key":"nif_2026","tier":"BROWSER_VERIFIED","claim_scope":"NIF reports repeated ignition results and an approved energy-upgrade path."},
+    {"key":"ma_2021","tier":"PUBLISHER_VERIFIED_AND_CROSS_VALIDATED","claim_scope":"Defines a sunlight-like laser model and reports a scoped homogeneous-plasma PIC comparison."},
+    {"key":"rothenberg_2000","tier":"CROSS_VALIDATED","claim_scope":"Polarization smoothing and SSD complementarity."},
+    {"key":"jia_2023","tier":"CROSS_VALIDATED","claim_scope":"Vector-light route for side-scattering control in stated simulations."},
+    {"key":"hao_2023","tier":"CROSS_VALIDATED","claim_scope":"Overlapping beams can alter speckle statistics adversely in a scoped simulation."},
+    {"key":"myatt_2017","tier":"OPENALEX_DISCOVERY","claim_scope":"Wave-based CBET modeling motivation only."},
+    {"key":"betti_hurricane_2016","tier":"BACKGROUND_PENDING_PUBLISHER_REVIEW","claim_scope":"ICF systems context only."},
+    {"key":"atzeni_meyertervehn_2004","tier":"BACKGROUND_PENDING_PUBLISHER_REVIEW","claim_scope":"Standard ICF terminology and conceptual background only."}
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": "survey_gap_coverage_v1",
+  "accepted_gap_coverage": {
+    "GAP-PP-01": {
+      "evidence_anchors": ["un_wpp2024", "vollset2020", "raftery_sevcikova2023"],
+      "idea_route": "component_resolved_peak_persistence_atlas",
+      "design_tests": ["forecast calibration", "scenario attribution", "climate ablation", "post-2100 decision threshold"]
+    },
+    "GAP-PP-02": {
+      "evidence_anchors": ["raftery2014", "azose2016", "gerland2014"],
+      "idea_route": "component_resolved_peak_persistence_atlas",
+      "design_tests": ["aggregation consistency", "held-out log score", "interval coverage", "counterfactual component swaps"]
+    }
+  },
+  "unresolved_items": [
+    "Climate covariate definitions, accessibility, and causal interpretation require human methodological review before execution.",
+    "No claim is made that a finite historical holdout can validate an unprecedented end-of-century regime."
+  ]
+}

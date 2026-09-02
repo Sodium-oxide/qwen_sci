@@ -1,0 +1,515 @@
+           Where Do Human Emotions Originate?
+         A Distributed Brain-Body Research Program
+                                                  Anonymous Research Artifact
+                                             Affective Neuroscience Evidence Synthesis
+                                                     IEEE-style research report
+                                                                2026
+
+
+   Abstract—The question of where human emotions originate is         mechanisms, nor does it reduce an episode to a self-report
+often posed as a search for an emotion center in the brain. That      label. The report also avoids a false choice between a brain-
+framing is not supported by contemporary affective neuroscience.      only account and a body-only account. Interoceptive inputs,
+This evidence synthesis and prospective research program in-
+stead treats emotion episodes as distributed brain-body control       autonomic outputs, immune and endocrine context, and neu-
+processes. Conserved neural systems support defense, reward,          ral prediction are coupled in a control loop. An emotion
+pain avoidance, arousal, autonomic regulation, and action selec-      may be experienced consciously, but conscious report, facial
+tion. Cortical, hippocampal, and interoceptive systems integrate      expression, physiology, and circuit activity remain partially
+sensory context, bodily state, memory, learning, value, and behav-    dissociable measurements.
+ioral goals. The resulting episode can be measured through neural
+activity, physiology, behavior, and report, but no single channel        The first contribution is an evidence-based reframing. We
+is a complete ground truth or a universal emotion detector.           distinguish evolved functional systems from named human
+We distinguish functional-circuit, distributed-representational,      emotion concepts and show why neither an amygdala response
+predictive-interoceptive, and general-arousal model families, and     nor a heart-rate change is a direct readout of fear, anger, pride,
+propose ORIGIN, an organismal reconstruction framework for
+                                                                      or guilt. The second contribution is a research framework
+their falsifiable comparison. The proposed preregistered within-
+subject study combines fMRI, EEG, pupillometry, electroder-           named ORIGIN: Organismal Reconstruction of Integrated Gen-
+mal activity, electrocardiography, respiration, behavior, salivary    erative Neuroaffect. It turns the question of origin into a set of
+cortisol, and sparse self-report across threat, reward, social-       observable state variables, regulated bodily processes, learned
+evaluation, and mild respiratory interoceptive-calibration con-       predictions, distributed circuit features, and competing null
+texts. Nested held-out prediction, calibration, reliability, and
+                                                                      models. The third contribution is a preregistered experiment
+negative controls determine whether an integrated latent-state
+model explains data beyond stimulus category, task demand,            design intended to compare explanations rather than merely
+global arousal, and respiratory mechanics. This is a design-only      produce another association map.
+report: it introduces no new participant data or empirical results.
+                                                                                   II. W HAT I S THE E XPLANANDUM ?
+   Index Terms—affective neuroscience, emotion, interoception,
+allostasis, fMRI, autonomic physiology, predictive modeling,          A. Separate the state, episode, category, and measurement
+causal inference
+                                                                         The word “emotion” names several related but nonidenti-
+                                                                      cal targets. Adolphs argues that affective neuroscience must
+                       I. I NTRODUCTION
+                                                                      distinguish biological emotion states, conscious experiences,
+   Human emotions organize action under uncertainty, alter            expressions, and concepts [1]. This distinction is not semantic
+perception and learning, regulate internal physiology, and            housekeeping; it determines what can be measured and what a
+support communication. The everyday question “Where do                causal conclusion means. An organism may deploy defensive
+emotions originate?” is therefore scientifically important, but       autonomic and motor responses without reporting fear, and a
+potentially misleading. It suggests that an emotion should            person may label a state as fear while physiological activation
+have one physical birthplace, analogous to a component in a           is low or differently configured. A named category can be
+machine. Decades of lesion, stimulation, neuroimaging, behav-         learned and communicated while the processes maintaining
+ioral, autonomic, endocrine, and computational work instead           energy balance and action readiness continue outside aware-
+indicate that an emotion episode is assembled across inter-           ness.
+acting systems. A more precise question is: which biological             Table I defines the four levels used here. Their separation
+processes generate the coordinated neural, bodily, behavioral,        makes it possible to ask which mechanisms are shared across
+and report-level changes observed in an emotion episode, and          species, which processes vary with context and learning, and
+how can competing mechanistic models be tested?                       which measurements are appropriate at a particular temporal
+   This report constrains the answer to natural science. It           scale. For example, an electrodermal response is informative
+uses affective and systems neuroscience, autonomic and en-            about sympathetic sweat-gland activity but not sufficient to
+docrine physiology, computational modeling, and comparative           identify a category. A BOLD pattern can reveal distributed
+evidence. It does not use philosophical theories as causal            coactivation at seconds-scale resolution but cannot by itself
+                           TABLE I                                                  and survival-relevant choices. The amygdala, hypothalamus,
+       O PERATIONAL TARGETS IN AN EMOTION - ORIGIN STUDY.                           periaqueductal gray, ventral striatum, ventral tegmental area,
+                                                                                    brainstem nuclei, and cortical pathways are central compo-
+   Target              Operational definition and non-equivalence
+                                                                                    nents, with dense recurrent connectivity. Reviews of amygdala
+   Affective           Latent, time-varying regulation of valence, arousal,
+   state               bodily control, and action readiness. It is inferred
+                                                                                    anatomy and function emphasize its participation in sensory
+                       from multiple channels rather than directly ob-              valuation, associative learning, autonomic and endocrine con-
+                       served.                                                      trol, and adaptation to environmental change [2], [3].
+   Emotion             A context-bound configuration of affect, perception,
+   episode             memory, physiology, action, and sometimes con-
+                                                                                       However, identifying a circuit that controls a defensive
+                       scious experience.                                           action does not identify a universal “fear center.” LeDoux’s
+   Emotion cate-       A learned label or concept, such as fear or pride,           survival-circuit account separates neural systems that detect
+   gory                applied to an episode. It is an outcome and possible
+                       predictor, not the entire mechanism.
+                                                                                    and respond to threat from the conscious feeling that a person
+   Measurement         Neural, autonomic, endocrine, behavioral, or report          may call fear [4]. This protects against a common reverse
+   channel             variable. Each measures a component with its own             inference: if the amygdala is active, then fear must be present.
+                       noise, latency, and construct limits.
+                                                                                    The correct inference is narrower: a task recruited a region
+                                                                                    with known participation in functions that can include salience
+                                                                                    learning, attention, uncertainty, autonomic coordination, and
+establish that the activated tissue caused an experience. A self-                   threat-related behavior. Whether fear was experienced, and
+report supplies a privileged record of a participant’s accessible                   how it was constructed in context, needs additional evidence.
+appraisal, but reporting also relies on language, attention,                           Reward research gives a parallel lesson. Berridge and
+memory, and task demand.                                                            Kringelbach distinguish components such as incentive
+B. A generative systems question                                                    salience, hedonic impact, learning, and motivation [5].
+                                                                                    Dopamine-related signals can support prediction and wanting
+  Let zi,t denote an unobserved affective-regulatory state for
+                                                                                    without directly equaling pleasure. Orbitofrontal, ventromedial
+person i at time t. It has dimensions for expected and current
+                                                                                    prefrontal, cingulate, amygdalar, striatal, and brainstem inter-
+bodily condition, sensory context, learned value, uncertainty,
+                                                                                    actions connect valued sensory information to goal-directed
+and action policy. A minimal state transition model is
+                                                                                    action [6]. The existence of partially specialized mechanisms
+               zi,t = Azi,t−1 + Bui,t + Cbi + ω i,t ,                         (1)   therefore supports a functional-circuit model, but it does not
+                                                                                    entail a one-circuit/one-category taxonomy of human feelings.
+where ui,t is experimentally controlled input, bi encodes
+stable or slowly changing individual properties, A represents                       B. Distributed patterns, not invariant locations
+state dynamics, B and C are effect matrices, and ω i,t is                              Meta-analytic evidence challenges strict localization. Re-
+process noise. Equation (1) is not a claim that the brain                           viewing neuroimaging studies, Lindquist et al. found little sup-
+implements a simple linear system. It defines a falsifiable mod-                    port for a consistent, specific region dedicated to each discrete
+eling target: past state, input, and individual context should                      emotion category and instead described interacting systems
+jointly improve prospective prediction of current multichannel                      involved in both emotional and non-emotional operations [7].
+observations.                                                                       This conclusion does not mean that neural organization is
+                     (m)
+   Observed data yi,t for modality m follow a modality-                             undifferentiated. It means that a region’s contribution depends
+specific observation model,                                                         on network, task, prior learning, bodily state, and temporal
+                 (m)                                      (m)                       phase.
+               yi,t = L(m) zi,t + D(m) qi,t + ϵi,t ,                          (2)
+                                                                                       Multivariate studies provide complementary evidence.
+where L(m) maps latent state to a measurement, qi,t contains                        Kragel and LaBar decoded spontaneous emotional states from
+nuisance and control variables such as movement, visual en-                         distributed brain activity [8]; Saarimaki et al. reported that
+ergy, motor output, breathing, and task difficulty, D(m) maps                       a broad set of induced categories could be classified from
+                                          (m)
+these variables to the measurement, and ϵi,t is measurement                         widespread cortical and subcortical activity patterns [9]. These
+noise. Equation (2) formalizes why one measurement cannot                           studies support the hypothesis that category-relevant infor-
+settle the origin question. The same latent state can appear                        mation is distributed. They do not establish that a classi-
+differently across sensors, and the same sensor signal can be                       fier’s features are necessary causes of an experience, because
+caused by non-affective processes.                                                  classification can exploit correlates, task structure, sensory
+                                                                                    features, or report-related processes. The experimental design
+ III. E VIDENCE FOR D ISTRIBUTED B IOLOGICAL O RIGINS
+                                                                                    in Section V therefore makes general arousal, stimulus, motor,
+A. Evolved regulatory systems constrain emotion episodes                            and report timing explicit competitors.
+  Comparative and causal work establishes that mammals
+possess neural systems for defense, reward pursuit, pain avoid-                     C. Interoception, autonomic control, and allostasis
+ance, attachment-related behavior, arousal, and autonomous                             Every emotion episode occurs in a body. Cardiovascular,
+regulation. These systems are functionally consequential be-                        respiratory, gastrointestinal, immune, endocrine, and ther-
+cause perturbing them alters action, learning, physiology,                          moregulatory signals reach the nervous system continuously.
+         ORIGIN mechanistic schematic. Exteroceptive cues, context, and memory interact with interoceptive input and allostatic
+         demand. Distributed subcortical, brainstem, insular, cingulate, prefrontal, striatal, and hippocampal systems update a latent
+       regulatory state. The state coordinates autonomic/endocrine change, perception, action selection, learning, and optional report.
+             Neural activity, physiology, behavior, and self-report are treated as distinct observations of the process. A matched
+                         arousal/task-demand branch is modeled explicitly rather than explained away after analysis.
+Fig. 1. A distributed brain-body account replaces a single-location search with testable state transitions and multichannel observations. The diagram is
+conceptual and makes no claim that every arrow is a direct monosynaptic pathway.
+
+
+
+Interoception is the central processing of these visceral-                   a predictive-interoceptive model gains support. If only stim-
+afferent signals, while descending autonomic and endocrine                   ulus category and specialized circuit features matter, the
+pathways help regulate the same body. Schulz character-                      functional-circuit model gains support. If both perform no
+izes stress and interoception as bidirectional communication                 better than a task-demand model, neither emotion-specific
+along brain-body axes, including the hypothalamic-pituitary-                 account receives support. These discriminations motivate the
+adrenocortical axis and autonomic nervous system [10]. Craig                 prospective experiment.
+highlights the anterior insula as an important part of the path-
+way from bodily signaling to awareness, while not claiming                   E. Time, scale, and the limits of cross-modal correspondence
+it operates in isolation [11].                                                  An origin account must respect time. Neural spiking and lo-
+   The allostasis concept sharpens this biological role. A                   cal field potentials change on millisecond scales; event-related
+regulatory system must anticipate energy, temperature, fluid,                EEG components and pupil responses have different lags;
+oxygen, social safety, and other demands before deviation                    electrodermal responses are delayed and slow; BOLD signals
+threatens viability. Predictive-interoceptive accounts propose               convolve neural and vascular processes over seconds; cortisol
+that the brain uses generative models to anticipate bodily                   changes over minutes. These measures cannot be aligned by
+causes and update them using interoceptive and exteroceptive                 placing all of them in one trialwise correlation table. They
+prediction errors [12], [13]. A compact prediction-error term                must be modeled with response functions appropriate to their
+is                                                                           physiology, as in Equation (5). A failure to accommodate time
+                     δ i,t = sbody
+                              i,t  −sˆ︁body
+                                       i,t|t−1 ,             (3)             can manufacture apparent disagreement between channels or
+                                                                             make a common response look emotion-specific.
+where sbody
+         i,t   is a vector of measured or inferred bodily input,                Spatial scale also matters. A cell population, a subnucleus,
+  body
+si,t|t−1 is the predicted input before the observation, and δ i,t
+ˆ︁                                                                           a macroscopic fMRI voxel, and a large-scale functional net-
+is the residual. Equation (3) becomes scientifically meaningful              work are different scientific objects. The amygdala is not
+only when prediction sources, time windows, sensory reliabil-                homogeneous, nor is the insula, cingulate cortex, or striatum.
+ity, and alternative arousal explanations are specified.                     Conversely, a whole-brain classifier may predict a report while
+   Interoception is multidimensional. Accuracy on a cardiac                  hiding the causal pathway by which a perturbation would
+task, confidence in bodily attention, interpretation of breath-              change action. The program therefore uses predeclared regions
+lessness, and neural responses to heartbeats can dissociate                  and systems for hypothesis tests, complemented by whole-
+[14]. Therefore, the present program measures several chan-                  brain multivariate analyses whose interpretation remains pre-
+nels and does not treat heartbeat detection or heart-rate vari-              dictive rather than localized.
+ability as a summary of emotional ability. Cortisol is included                 Finally, a state may be regulated before it is reported. An au-
+only as a slow session-context signal; its temporal dynamics                 tonomic change or avoidance decision can precede a category
+make it inappropriate as a trial-by-trial detector.                          label, and a label can retrospectively reorganize memory of
+D. Learning, memory, and contextual construction                             the episode. The appropriate evidence hierarchy moves from
+                                                                             measurement reliability, to within-task association, to held-out
+   Context changes the meaning of a signal. A rapid heartbeat
+                                                                             prediction, to replication, and only then to causal perturbation.
+may accompany running, anticipation, social evaluation, heat,
+                                                                             No one rung licenses all of the conclusions available at later
+or threat. Associative learning connects cues to outcomes;
+                                                                             rungs. This hierarchy is especially important when animal
+hippocampal systems contribute context and memory; pre-
+                                                                             work constrains a circuit’s action function but human work
+frontal and striatal pathways modify value and action policy.
+                                                                             asks about conscious, social, or language-mediated episodes.
+Constructed-emotion and active-inference accounts suggest
+that categories and past experience help form predictions that               IV. C OMPETING M ODELS AND THE ORIGIN F RAMEWORK
+organize otherwise ambiguous sensory and bodily input [12].
+This is an empirical claim about learning, inference, and                    A. Model families
+biology, not a claim that the body is irrelevant or that arbitrary             Table II converts recurrent theoretical contrasts into testable
+labels create physiology.                                                    models. The models are not mutually exclusive at every
+   The prediction is conditional. If contextual priors change                biological scale. Conserved circuits can implement compo-
+reports and joint neural-physiological state estimates after sen-            nents inside a distributed predictive system. The purpose of
+sory intensity, motor requirements, and attention are matched,               comparison is to determine which components add reliable,
+generalizable explanatory value for a specified task and mea-       biomarker, or treatment result is claimed. The study enrolls
+surement set.                                                       180 healthy adults aged 18 to 40. The confirmatory analysis set
+                                                                    requires at least 150 participants with at least 80% valid trials;
+B. ORIGIN principles                                                if the threshold is missed, results are reported as under-target
+   The ORIGIN framework has six principles. O is observable         and recruitment is not expanded after outcome inspection.
+operationalization: the study separately defines neural, phys-      Exclusions, missingness handling, and the complete analysis
+iological, behavioral, and report outcomes. R is regulation         code are fixed before enrollment.
+and allostasis: body control is represented as a mechanism             The primary hypothesis is that distributed predictive-
+rather than automatically regressed away. I is interoception        interoceptive state features provide a prespecified improvement
+and neuromodulation: sensing and regulating the body are            in expected log predictive density over the null. Secondary hy-
+measured through channels with different latencies. G is            potheses test whether functional-circuit features retain domain-
+generative prediction and learning: task cues manipulate priors     specific predictive value and whether the models generalize
+and expected outcomes. The second I is integrated distributed       across held-out participants and contexts. An informative null
+circuits: statistical features span predeclared networks and        result occurs if the emotion-oriented models fail to beat a
+whole-brain tests. N is null and competing models: general          matched stimulus/arousal model, or if apparent performance
+arousal, attention, motor preparation, and demand characteris-      disappears under context-general validation.
+tics receive explicit models.
+   This framework also specifies what it cannot show. A strong      B. Tasks and experimental controls
+held-out model does not prove that its variables constitute            Participants complete four counterbalanced domains: threat
+a complete theory of subjective experience. A multimodal            uncertainty, reward approach, social evaluation/loss, and inte-
+association cannot substitute for causal perturbation. A group-     roceptive calibration. Threat trials use explicitly low-intensity
+level pattern cannot diagnose an individual. These limits are       aversive versus neutral sounds with probabilistic cues. Reward
+not generic caveats; they determine the analysis and translation    trials use small monetary gains, omissions, and neutral out-
+rules in Sections V and VI.                                         comes with identical timing and response demands. Social-
+                                                                    evaluation/loss trials use standardized non-personal feedback
+C. Causal evidence hierarchy
+                                                                    and symbolic loss cues. The health-screened interoceptive
+   The program organizes claims by the evidence they require.       module presents mild inspiratory resistance or sham following
+First, sensor validity asks whether an instrument is stable,        learned probability cues, while airway pressure and respiratory
+temporally interpretable, and responsive to the stated manipu-      measures verify actual bodily input. Each domain contains
+lation. Second, observational association asks whether a prede-     learned cue contingencies and a preregistered reversal phase,
+clared neural or bodily feature covaries with task context while    enabling tests of context and prediction error.
+known confounds are modeled. Third, held-out prediction asks           The design includes non-affective controls matched for vi-
+whether a model calibrated on one subset anticipates a new          sual complexity, motor response frequency, working-memory
+person, trial, or context. Fourth, replication asks whether the     load, novelty, and expected value where possible. The intero-
+effect survives an independent sample, apparatus, and analysis      ceptive module crosses cue probability with actual load/sham
+team. Fifth, causal evidence asks whether an ethically justified    delivery and includes respiratory-mechanics covariates. Rat-
+intervention changes a registered outcome with an explicit          ings of valence, arousal, uncertainty, bodily intensity, and an
+identification strategy.                                            optional category label are sampled on sparse randomized
+   The hierarchy has a practical consequence. A high cross-         trials. Sparse sampling minimizes the chance that continuous
+validated decoding score may be valuable measurement sci-           verbalization changes state dynamics. The label is modeled as
+ence, but it is not a license to call a selected voxel the origin   one observation in Equation (2), not as the definition of the
+of a feeling. Similarly, stimulation can provide a causal result    state.
+for an action, autonomic output, or report in a narrow context
+without proving that the stimulated node is the sole source of      C. Locked multimodal state estimation
+the full episode. The proposed study is intentionally located          The primary analysis uses a hierarchical state-space model.
+at the first three levels. It creates a compact, shareable assay    The latent state has six locked dimensions: expected value,
+that could support later clinical or perturbational studies only    uncertainty, interoceptive prediction error, regulatory arousal,
+if it generalizes.                                                  context/memory state, and approach-avoidance policy. The
+                                                                    functional-circuit model uses prespecified amygdala, hypotha-
+     V. P REREGISTERED M ULTIMODAL E XPERIMENT
+                                                                    lamus, periaqueductal gray, ventral striatum, anterior insula,
+A. Objectives and hypotheses                                        dorsal anterior cingulate, ventromedial prefrontal, and hip-
+   The primary objective is to determine whether a joint            pocampal features. The distributed model uses a fixed cortical-
+latent-state model improves held-out prediction of brain, body,     subcortical parcel set, and the null model uses visual/auditory
+action, and report data over a general-arousal/task-demand          energy, reaction time, motor response, task difficulty, nov-
+null. The study is explicitly DESIGN - ONLY: no participants        elty, and measured respiratory mechanics. Individual parame-
+have been enrolled and no effect size, classifier accuracy,         ters partially pool toward group distributions while retaining
+                                                                    TABLE II
+                                     C OMPETING MODEL FAMILIES AND PREREGISTERED DISCRIMINATIVE PREDICTIONS .
+
+          Model family                    Mechanistic claim                       Key prediction                          Critical failure condition
+          Functional-circuit              Recurrent challenges recruit par-       Threat, reward, and social-loss do-     A domain label adds no
+                                          tially specialized regulatory/action    mains retain partly separable path-     generalizable value beyond
+                                          pathways.                               way and physiological features after    common arousal and de-
+                                                                                  common controls.                        mand features.
+          Distributed-                    Categories and dimensions are en-       Held-out persons and contexts           Decoding is confined to
+          representational                coded in multiregion multichannel       show calibrated decoding using          training folds or is explained
+                                          configurations.                         distributed features, not one region.   by      sensory/motor/report
+                                                                                                                          confounds.
+          Predictive-interoceptive        Contextual         priors        and    Cue probability and mild inspira-       Prior and interoceptive terms
+                                          expected/actual body state shape        tory load/sham improve joint pre-       do not improve held-out pre-
+                                          the latent state through learning       diction beyond respiratory mechan-      diction after controls.
+                                          and allostasis.                         ics and arousal.
+          General-arousal/task-           Apparent signatures reflect salience,   Matched non-affective controls ac-      Condition-specific, replica-
+          demand null                     attention, effort, novelty, or re-      count for observed multichannel         ble multimodal structure re-
+                                          sponse preparation.                     changes.                                mains after all control vari-
+                                                                                                                          ables.
+
+
+
+                             TABLE III                                             forcing electrodermal, cardiac, pupil, EEG, and BOLD signals
+                P ROSPECTIVE DATA - ACQUISITION PLAN .                             into a common instantaneous time bin.
+                                                                                      Data quality is an output, not an afterthought. The protocol
+   Channel            Purpose and limitation
+                                                                                   records fMRI framewise displacement and censoring, MRI
+   BOLD fMRI          Estimates distributed systems including cortical             distortion and physiological-regressor decisions, EEG rejected
+                      and subcortical structures at a hemodynamic
+                      timescale; correlational and motion-sensitive.               channels/trials and residual artifacts, eye-tracking loss, ECG
+   MRI-               Captures event-locked cortical timing; requires ex-          detection failures, respiration quality, assay timing, and rea-
+   compatible         plicit gradient and pulse-artifact quality control.          sons for missing data. Feature extraction, scaling, imputation,
+   EEG
+   Pupil,     EDA,    Samples autonomic, orienting, respiratory, and               and selection are learned only on training partitions. The
+   ECG,               delivered-load dynamics; non-specific and ana-               released analysis will include complete-case and prespecified
+   respiration,       lyzed with modality-specific lags.                           missingness sensitivity analyses.
+   pressure
+   Action and re-     Captures choice, avoidance/approach, and motor
+   sponse time        preparation; can be a confound and an outcome.               D. Prediction, calibration, and reliability
+   Salivary corti-    Baseline and post-session context measure only;
+   sol                not a trial-level emotion label.                               For each model M , the principal held-out score is expected
+   Sparse report      Records accessible appraisal and category use;               log predictive density,
+                      affected by language, attention, memory, and de-
+                      mand.                                                                                ∑︂
+                                                                                           ELPD(M ) =             log pM (yi,t | Dtrain ) ,  (6)
+                                                                                                                 (i,t)∈Ttest
+
+person-specific uncertainty. For a scalar endpoint ri,t , such as                  where Ttest contains held-out participant-context observations
+a report dimension or a predeclared physiological feature, the                     and Dtrain excludes them. Equation (6) rewards calibrated
+hierarchical component can be written as                                           probability assigned to unseen data rather than a descriptive
+                                                                                   fit to the same observations used for training. The regis-
+  ri,t = αi + β T zi,t + γ T qi,t + ηi,t ,         αi ∼ N (µα , σα2 ), (4)
+                                                                                   tered primary comparison averages equally weighted fMRI,
+where αi is a participant intercept, β links latent state to                       EEG, autonomic, behavior, and report outcome-family ELPDs.
+the endpoint, γ adjusts for prespecified confounds, and ηi,t                       ORIGIN support requires ∆ELPD ≥ 0.02 nats per trial, a
+is residual noise. Equation (4) prevents an average effect from                    bootstrap 95% lower confidence bound above zero, and no
+being mistaken for an invariant personal signature.                                Brier-score worsening larger than 0.005 relative to the null.
+   Modality-specific temporal response functions are estimated                        For categorical or binned predictions, calibration is assessed
+before fusion. For example, an event-locked autonomic re-                          by the Brier score,
+sponse is represented as                                                                                        N     C
+                                                                                                           1 ∑︂ ∑︂                     2
+                                K                                                                  BS =               pn,c − I[yn = c]) ,
+                                                                                                                     (ˆ︁                                   (7)
+                               ∑︂                                                                          N n=1 c=1
+                  ai (τ ) =          θi,k hk (τ ) + ei (τ ),                (5)
+                               k=1
+                                                                                   where N is the number of held-out observations, C is the
+where ai (τ ) is an autonomic waveform relative to an event,                       number of outcome classes, pˆ︁n,c is predicted probability, and
+hk (τ ) are preregistered basis functions at latency τ , θi,k are                  I[yn = c] is an indicator. Lower values in Equation (7) indicate
+participant coefficients, and ei (τ ) is error. Equation (5) avoids                more accurate probability forecasts. Test-retest and split-half
+stability are summarized with an intraclass correlation coeffi-      tion that can be ethically delivered. None of these assumptions
+cient,                                                               is satisfied merely by observing BOLD activation.
+                               2
+                              σbetween
+                 ICC = 2              2     ,              (8)           VI. E THICS , I NTERPRETATION , AND T RANSLATION
+                         σbetween + σwithin
+where the numerator is between-person variance and the               A. Participant welfare and data governance
+denominator adds within-person error variance. Equation (8)             The proposed task uses low-risk stimuli, participant-
+is reported for measurement components and individual-level          controlled pauses, discontinuation without penalty, content
+model outputs; unreliability limits interpretation even if a         warnings, trained monitoring, and a debrief. The respiratory
+group mean differs from zero.                                        module uses only mild, health-screened inspiratory resistance
+                                                                     with real-time participant stop control and airway-pressure
+E. Model comparison and falsification                                monitoring. The protocol excludes severe stress induction,
+   Cross-validation is nested. Outer folds hold out both             deceptive threat, pharmacologic challenge, and invasive stim-
+people and a subset of contexts, while inner folds se-               ulation. These boundaries are part of measurement validity: an
+lect tuning parameters and any feature reduction. The                ethically disproportionate manipulation would change the sci-
+model set is locked before outcome analysis: functional-             entific target and reduce generalizability to everyday emotion
+circuit, distributed-representational, predictive-interoceptive,     regulation.
+and general-arousal/task-demand null. Negative controls in-             Neural and physiological recordings are sensitive data. Data
+clude non-affective high-effort blocks, permutation of condi-        governance should use coded identifiers, minimal access, sepa-
+tion labels within allowable strata, and classifiers restricted to   ration of direct identifiers from research data, auditable access
+visual, motor, and respiratory-mechanics nuisance features. A        controls, and consent language that distinguishes aggregate
+result is not called emotion-specific if these controls perform      research use from clinical use. The study should not produce
+equivalently.                                                        an individual emotion score for employment, education, insur-
+   Before recruitment, the project will release the locked           ance, policing, or clinical triage. Population-level prediction
+versioned preregistration containing hypotheses, the sampling        does not automatically support individual-level inference.
+rule, task randomization, hardware settings, preprocessing
+pipeline, all model equations, outcome-family weighting, the         B. Interpretation guardrails
+0.02-nat margin, the Brier guardrail, and the exact rules for          Table IV gives precommitted language rules. They matter
+deviations. Deviations are not forbidden; they are recorded          because the public receives claims such as “the amygdala
+with rationale and analyzed separately from the confirmatory         causes fear” or “a wearable detects emotion” more readily than
+path. A synthetic pilot dataset will test whether the pipeline       the uncertainty and scope conditions that make those claims
+can recover known simulated effects and whether missing              defensible. The present report uses evidence to constrain
+channels or trial loss produce unstable estimates. This is a         mechanisms, not to sell a detector.
+software and design validation, not evidence about human
+emotion.                                                             C. Scientific and translational limits
+   The analysis reports both aggregate and individual un-               The study tests a limited task battery in healthy adults.
+certainty. Group estimates summarize regularities but cannot         Threat uncertainty, reward approach, and social evaluation/loss
+imply that every participant expressed the same autonomic or         are useful laboratory probes, but they do not exhaust human
+neural trajectory. Participant-level posterior predictive checks     emotion. The sample cannot establish developmental mech-
+examine whether the model reproduces each person’s timing            anisms, sex-linked physiology, cross-cultural variation, psy-
+and covariance structure. Cross-context validation is decisive:      chiatric pathophysiology, or cross-species equivalence without
+training on threat and testing on a new threat cue probes            dedicated designs. Simultaneous EEG-fMRI improves tempo-
+within-domain robustness, while training across threat and           ral complementarity but creates artifact and analytic burdens.
+reward and testing social evaluation probes whether a proposed       Salivary cortisol is temporally slow and intentionally cannot
+latent variable has any broader explanatory range. These tests       adjudicate trial-level models.
+convert vague claims of “general emotion” into a measurable             The proposal also faces the reproducibility problem. Small
+scope statement.                                                     samples, flexible preprocessing, and post hoc model selection
+   Figure 2 shows the evidential sequence. The primary study         can overstate brain-behavior relations [15]. The response is not
+makes no causal claim from ordinary fMRI or physiology. A            to abandon complex measurement; it is to preregister, validate
+future perturbation study should identify a concrete interven-       out of sample, quantify uncertainty, publish exclusions, test
+tion A, a target outcome Y , and a population before estimating      negative controls, and plan independent replication. A model
+               τ = E [Y (A = 1) − Y (A = 0)] ,                (9)    that cannot generalize to a new context should be described
+                                                                     as task-bound, not as an origin theory.
+where Y (A = 1) and Y (A = 0) are counterfactual outcomes               If the integrated approach succeeds, its near-term value
+under intervention and control. Equation (9) requires ex-            is mechanistic measurement science. It could help refine
+changeability, consistency, positivity, safety, and an interven-     hypotheses about dysregulated brain-body control in anxiety,
+         Prospective inference pipeline. Preregister tasks, sensor quality rules, model set, and controls → acquire synchronized
+   brain-body-action-report data → preprocess within training folds → fit modality-specific and joint models → test held-out persons
+       and contexts → assess ELPD, calibration, reliability, and negative controls → classify evidence as support, inconclusive, or
+            contradiction for each model family. Causal claims require a later intervention module with explicit assumptions.
+                   Fig. 2. The study’s decision flow. It protects against data leakage, reverse inference, and post hoc theory selection.
+
+                                                                  TABLE IV
+                                     I NTERPRETATION GUARDRAILS FOR EVIDENCE AND ANTICIPATED OUTCOMES .
+
+  Observation                             Permitted interpretation                                  Prohibited interpretation
+  Amygdala or insula association          A task recruited a region participating in functions      A single region proves a specific conscious emotion.
+                                          relevant to salience, interoception, learning, or regu-
+                                          lation.
+  Distributed held-out decoding           A multichannel pattern contains generalizable infor-      The pattern is a universal biological fingerprint or an
+                                          mation under this task and population.                    individual diagnostic.
+  Autonomic change                        The body changed in temporal relation to the event        Heart rate, EDA, HRV, pupil, or cortisol uniquely iden-
+                                          and contributes useful state information.                 tifies an emotion category.
+  Prior/reversal model improvement        Contextual learning contributes predictive value be-      Emotions are arbitrary or entirely created by language.
+                                          yond the registered controls.
+  Causal perturbation result              The intervention changed an outcome in the defined        A manipulation identifies the sole origin of an emotion.
+                                          population under stated assumptions.
+
+
+
+depression, trauma-related syndromes, chronic pain, or auto-                     feature in the human assay, and human contexts that invalidate
+nomic disease. It must not be treated as a clinical biomarker                    the feature should update the animal model.
+until an independent clinical program demonstrates reliability,
+calibration, equity, utility, and safety for the intended use.                   C. Development, plasticity, and heterogeneity
+The distinction between a scientific association and a medical                      No origin theory is complete without development. Pre-
+decision is fundamental.                                                         natal influences, maturation of autonomic and cortical sys-
+                                                                                 tems, attachment-relevant caregiving, stress exposure, sleep,
+ VII. R ESEARCH AGENDA FOR R ESOLVING THE O RIGIN                                nutrition, learning, and environmental uncertainty can alter
+                    Q UESTION                                                    the gain and calibration of brain-body regulation. A systems
+A. From descriptive maps to intervention-ready mechanisms                        account predicts heterogeneity rather than a uniform circuitry-
+                                                                                 to-category map. Two people can both report fear while
+   An emotion-origin program should progress through dis-                        one exhibits strong cardiovascular mobilization and another
+tinct scientific milestones. The first milestone is measurement                  exhibits freezing or dissociative responses; neither pattern
+validity. Researchers need to demonstrate that each neural,                      should be declared more genuine solely because it resembles
+autonomic, endocrine, behavioral, and report feature is reliably                 a group mean.
+acquired, is temporally interpretable, and is not dominated
+by simple artifacts. The second is representational validity: a                  D. Open and adversarial science
+model must anticipate observations in held-out data and must                        The field benefits from pre-registered adversarial collabora-
+disclose where it generalizes and where it fails. The third is                   tion. Investigators representing functional-circuit, distributed-
+mechanistic validity: a model should correctly predict changes                   representational, predictive-interoceptive, and general-arousal
+produced by a specific perturbation. This order prevents a                       accounts should agree in advance on tasks, control conditions,
+familiar error in neuroscience, where a visually compelling                      feature families, evaluation scores, and interpretations of pos-
+activation map is promoted to a cause before its measurement                     sible outcomes. This is not a demand for theoretical consensus.
+reliability or out-of-sample predictability are known.                           It is a way to ensure that a result unfavorable to one account is
+                                                                                 genuinely diagnostic instead of dismissed as an unanticipated
+B. Cross-species translation with explicit limits                                design choice.
+   An effective bridge uses homologous task components                              To make such collaboration practical, the study should re-
+instead of assuming homologous folk categories. Examples                         lease a synthetic dataset before collection, task code, random-
+include probabilistic threat learning, approach under reward                     ization seeds, hardware timing tests, preprocessing containers,
+uncertainty, avoidance action, reversal learning, social-safety                  and a fully specified analysis notebook. After primary analysis,
+signaling, and interoceptive perturbation. The bridge then asks                  deidentified summary data and feature-level derivatives should
+whether neural dynamics, physiological control, and behavior                     be shared subject to consent, governance, and re-identification
+follow comparable computational variables. This approach                         risk. Independent teams should reproduce the analysis from
+respects shared mammalian biology while avoiding anthro-                         raw or controlled-access data and then repeat the task with a
+pomorphic overreach. It also provides a route for reciprocal                     new scanner site or population. Replication must target both
+validation: animal perturbation should predict an observable                     average effects and reliability: a nominally significant group
+contrast is inadequate if participant-level state estimates are      episode observed in a particular person and moment. The
+unstable.                                                            most useful next step is a preregistered multimodal com-
+                                                                     parison of competing models with held-out prediction and
+E. Decision rules for progress                                       clear causal boundaries. The ORIGIN framework provides that
+   The program advances only when evidence passes all                step without converting a complex biological process into an
+relevant gates. A candidate emotion-state feature must be            unsupported emotion detector.
+technically reliable, add held-out predictive value beyond a
+matched control model, remain calibrated under a context                                           R EFERENCES
+shift, and replicate. A causal claim must additionally identify       [1] R. Adolphs, “How should neuroscience study emotions? By distin-
+                                                                          guishing emotion states, concepts, and experiences,” Social Cognitive
+and validate an intervention pathway. A translational claim               and Affective Neuroscience, vol. 12, no. 1, pp. 24-31, 2017, doi:
+must show clinical utility, not merely association with a diag-           10.1093/scan/nsw153.
+nosis. This gate sequence is intentionally demanding because          [2] E. A. Phelps and J. E. LeDoux, “Contributions of the amygdala to
+                                                                          emotion processing: From animal models to human behavior,” Neuron,
+emotion-related measures are attractive targets for surveil-              vol. 48, no. 2, pp. 175-187, 2005, doi: 10.1016/j.neuron.2005.09.025.
+lance, manipulation, and overconfident clinical interpretation.       [3] G. Simic, M. Tkalcic, V. Vukic, D. Mulc, E. Spanic, M. Sagud, F. E.
+                                                                          Olucha-Bordonau, M. Vuksic, and P. R. Hof, “Understanding emotions:
+                      VIII. D ISCUSSION                                   Origins and roles of the amygdala,” Biomolecules, vol. 11, no. 6, Art.
+                                                                          no. 823, 2021, doi: 10.3390/biom11060823.
+   The evidence supports a layered answer to the origin               [4] J. E. LeDoux, “Rethinking the emotional brain,” Neuron, vol. 73, no. 4,
+question. At an evolutionary level, recurrent survival and re-            pp. 653-676, 2012, doi: 10.1016/j.neuron.2012.02.004.
+                                                                      [5] K. C. Berridge and M. L. Kringelbach, “Affective neuroscience of
+productive challenges have shaped circuits for defense, reward,           pleasure: Reward in humans and animals,” Psychopharmacology, vol.
+pain avoidance, arousal, caregiving, and social regulation. At            199, no. 3, pp. 457-480, 2008, doi: 10.1007/s00213-008-1099-6.
+an organismal level, these circuits are embedded in loops that        [6] E. T. Rolls, “Emotion, motivation, decision-making, the orbitofrontal
+                                                                          cortex, anterior cingulate cortex, and the amygdala,” Brain Structure and
+sense and regulate internal physiology. At a systems level,               Function, vol. 228, no. 5, pp. 1201-1257, 2023, doi: 10.1007/s00429-
+cortical, subcortical, brainstem, hippocampal, and neuromod-              023-02644-9.
+ulatory processes integrate cues, value, action possibilities, and    [7] K. A. Lindquist, T. D. Wager, H. Kober, E. Bliss-Moreau, and L.
+                                                                          F. Barrett, “The brain basis of emotion: A meta-analytic review,”
+memory. At a computational level, learning and prediction help            Behavioral and Brain Sciences, vol. 35, no. 3, pp. 121-143, 2012, doi:
+resolve ambiguity between the state of the body and the likely            10.1017/S0140525X11000446.
+causes in the world. At a report level, attention, language,          [8] P. A. Kragel and K. S. LaBar, “Decoding spontaneous emotional states
+                                                                          in the human brain,” PLoS Biology, vol. 14, no. 9, Art. no. e2000106,
+category knowledge, and social communication make part of                 2016, doi: 10.1371/journal.pbio.2000106.
+this process accessible and nameable.                                 [9] H. Saarimaki, L. F. Ejtehadian, E. Glerean, I. P. J. Jaskelainen, P.
+   This layered account explains why a single answer such as              Vuilleumier, M. Sams, and L. Nummenmaa, “Distributed affective space
+                                                                          represents multiple emotion categories across the human brain,” Social
+“the amygdala,” “hormones,” or “the body” is incomplete. It               Cognitive and Affective Neuroscience, vol. 13, no. 5, pp. 471-482, 2018,
+also resists the opposite error of treating distributed processing        doi: 10.1093/scan/nsy018.
+as a non-mechanistic cloud. Distribution is testable when            [10] A. Schulz, “Interoception and stress,” Frontiers in Psychology, vol. 6,
+                                                                          Art. no. 993, 2015, doi: 10.3389/fpsyg.2015.00993.
+state variables, pathways, timescales, inputs, and falsification     [11] A. D. Craig, “How do you feel - now? The anterior insula and human
+criteria are specified. The ORIGIN proposal makes those                   awareness,” Nature Reviews Neuroscience, vol. 10, no. 1, pp. 59-70,
+specifications explicit through Equations (1)-(9), the model              2009, doi: 10.1038/nrn2555.
+                                                                     [12] L. F. Barrett, “The theory of constructed emotion: An active infer-
+families in Table II, and the registered controls.                        ence account of interoception and categorization,” Social Cognitive
+   There is a genuine scientific dispute about how much                   and Affective Neuroscience, vol. 12, no. 1, pp. 1-23, 2017, doi:
+explanatory work is performed by specialized functional sys-              10.1093/scan/nsw154.
+                                                                     [13] I. R. Kleckner et al., “Evidence for a large-scale brain system sup-
+tems, distributed representations, and predictive-interoceptive           porting allostasis and interoception in humans,” bioRxiv, 2017, doi:
+inference. The appropriate response is neither to declare a               10.1101/098970.
+winner from a single imaging study nor to frame the dispute          [14] C. Suksasilp and S. N. Garfinkel, “Towards a comprehensive
+                                                                          assessment of interoception in a multi-dimensional framework,”
+as a purely conceptual preference. The models make different              Biological Psychology, vol. 168, Art. no. 108262, 2022, doi:
+predictions about context reversals, bodily prediction, cross-            10.1016/j.biopsycho.2022.108262.
+context generalization, and the residual explanatory value of        [15] K. S. Button et al., “Power failure: Why small sample size undermines
+                                                                          the reliability of neuroscience,” Nature Reviews Neuroscience, vol. 14,
+specialized pathway features. The proposed design measures                no. 5, pp. 365-376, 2013, doi: 10.1038/nrn3475.
+those predictions with multiple channels and requires the
+emotional account to outperform a general arousal explanation.
+                      IX. C ONCLUSION
+  Human emotions do not originate in a single brain center
+or a single chemical. They emerge from distributed, evolving
+brain-body systems that coordinate regulation, interoception,
+sensation, learning, memory, valuation, action, and report.
+Conserved functional circuits provide biologically important
+constraints, while context and prediction help shape the
+

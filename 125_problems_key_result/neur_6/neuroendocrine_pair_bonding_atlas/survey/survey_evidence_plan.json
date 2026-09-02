@@ -1,0 +1,21 @@
+{
+  "schema_version": "survey_evidence_plan_v1",
+  "topic": "Neuroendocrine and circuit mechanisms of romantic love",
+  "scope": "Biology and neuroscience only; no philosophical, cultural, literary, or general social-science analysis",
+  "status": "VERIFIED_HANDOFF",
+  "subhypotheses": [
+    {"id":"SH1","claim":"Pair-bond formation recruits an interaction between neuropeptide receptor fields and mesolimbic dopamine circuits.","allowed_sources":["E1","E2","E5","E6"],"evidence_class":"animal causal plus review","writing_mode":"direct within vole evidence; comparative extension is conditional"},
+    {"id":"SH2","claim":"Partner-directed reward engages a distributed human mesocorticolimbic network rather than a single anatomical center.","allowed_sources":["E3","E4"],"evidence_class":"human neuroimaging correlation","writing_mode":"direct as imaging association; causal claim reserved for proposed study"},
+    {"id":"SH3","claim":"Oxytocin and vasopressin effects depend on receptor localization and circuit context and are not unique labels for love.","allowed_sources":["E1","E2","E6","E8"],"evidence_class":"comparative neurobiology","writing_mode":"direct with specificity controls"},
+    {"id":"SH4","claim":"AVPR1A variation is a candidate moderator of pair-bonding biology but requires replication and cannot be treated as deterministic.","allowed_sources":["E7"],"evidence_class":"human genetic association","writing_mode":"conditional"},
+    {"id":"SH5","claim":"Sex-steroid and stress-axis state can modulate the gain of social-reward circuits.","allowed_sources":["E1","E2","E6"],"evidence_class":"mechanistic synthesis","writing_mode":"mechanistic hypothesis to test"}
+  ],
+  "prohibited_inferences": [
+    "A single hormone causes romantic love.",
+    "A brain-imaging activation proves a specific mental state or causality.",
+    "A vole partner-preference assay is identical to human love.",
+    "One receptor variant determines bonding behavior.",
+    "The hypothalamus is the exclusive source of testosterone or estrogen."
+  ],
+  "canonical_source_ids": ["E1","E2","E3","E4","E5","E6","E7","E8"]
+}

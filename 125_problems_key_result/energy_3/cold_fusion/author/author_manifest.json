@@ -1,0 +1,38 @@
+{
+  "manifest_type": "author_manifest",
+  "schema_version": "1.0",
+  "topic": "Will cold fusion ever be possible?",
+  "scientific_reframe": "Under what precisely specified materials, loading, electrical, thermal, and environmental conditions could a low-temperature nuclear process produce reproducible net excess heat together with nuclear products consistent with known reaction channels and a viable energy balance?",
+  "primary_direction": "BLINDED-PRODUCT-LINKED-REPLICATION",
+  "execution_mode": "DESIGN_ONLY",
+  "stage_status": "completed",
+  "source_bindings": {
+    "survey_manifest": "../survey/survey_manifest.json",
+    "idea_result": "../idea/idea_result.json",
+    "experiment_design": "../experiment_design/research_design.json",
+    "author_handoff": "../experiment_design/author_handoff.json"
+  },
+  "outputs": ["cold_fusion_evidence_chain_report.tex", "cold_fusion_evidence_chain_report.pdf", "IEEEtran.cls", "report_text.txt"],
+  "rendering": {
+    "template_profile": "ieee_conference_v1",
+    "template_source": "C:/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/Conference-LaTeX-template_10-17-19",
+    "engine": "pdflatex",
+    "page_count": 7,
+    "minimum_pages": 7,
+    "page_policy": "The project policy normalizes the requested 8-page lower bound to a 7-page minimum to avoid irrelevant filler.",
+    "visual_qc": "passed_home_table_last_page"
+  },
+  "content_contract": {
+    "proposal_only": true,
+    "observed_results": [],
+    "acknowledgment_section": false,
+    "unsupported_deployment_claims": false,
+    "equations_numbered": true,
+    "references_bound_to_verified_registry": true
+  },
+  "validation_notes": [
+    "Two final pdflatex passes completed without LaTeX errors, unresolved citations, unresolved references, or overfull/underfull boxes.",
+    "The MiKTeX log4cxx access message did not prevent PDF generation and did not create a document warning.",
+    "The report contains no measured heat, nuclear-product, reaction-rate, Bayes-factor, net-power, or engineering result."
+  ]
+}

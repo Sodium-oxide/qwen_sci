@@ -1,0 +1,507 @@
+ Why Can Only Some Cells Become Other Cells?
+A Design-Only Framework for Testing Cellular Fate
+  Accessibility and Reprogramming Constraints
+                                 Survey–Idea–ExperimentDesign–Author Research Workflow
+
+   Abstract—Cells differ in their normal capacity to self-renew            The central problem is thus not whether a cell carries
+and produce other identities, but cellular fate is neither a binary     a permanent label called “transformative power.” It is why
+property nor an absolutely irreversible one. Pluripotent stem           some cellular states are accessible in a particular develop-
+cells, tissue-resident stem cells, progenitors, and differentiated
+cells occupy distinct regulatory and microenvironmental states.         mental, physiological, or engineered context and why others
+Induced pluripotency and direct lineage reprogramming demon-            are strongly constrained. A source cell’s capacity to transition
+strate that selected differentiated cells can cross otherwise stable    depends on its lineage history, gene-regulatory network, chro-
+fate boundaries under specified perturbations, while incomplete         matin state, transcription-factor availability, DNA methylation,
+conversion, residual source identity, genomic alteration, off-target    replication and cell-cycle status, metabolism, stress response,
+lineages, uncontrolled proliferation, and host interaction limit
+interpretation and translation. This design-only paper reframes         and interactions with neighboring cells and extracellular ma-
+the question as a causal accessibility problem: for a declared          trix. These variables are coupled. Altering a transcription
+source cell, target identity, niche, and perturbation, which reg-       factor may change chromatin accessibility; altered accessibility
+ulatory and environmental gates permit a lineage-traced cell to         can expose new regulatory interactions; niche signaling can
+acquire a stable, functional, and safe target state? We develop         favor survival of one subpopulation over another; and a new
+Fate Accessibility and Transition Evaluation - Lineage, Omics,
+Control, and Kinetics (FATE-LOCK), an auditable protocol                marker can arise in a stressed or partially reprogrammed cell
+that integrates source-provenance controls, time-resolved single-       without producing stable target function.
+cell transcriptomic and chromatin assays, lineage tracing, per-            This distinction is consequential for regenerative medicine.
+turbation/ablation/rescue logic, target-reference atlases, function     A target-marker-positive population may still contain source-
+and cue-withdrawal tests, genomic and lineage-safety gates, and         like cells, mixed-lineage intermediates, residual pluripotent
+independent replication. The framework requires a marker,
+trajectory, functional, and safety claim to be reported separately.     cells, or proliferative cells that are unsuitable for a therapeutic
+It proposes no cell culture, reprogramming experiment, sequenc-         product. An in-vitro transition may not persist after instructive
+ing result, conversion efficiency, engraftment result, therapeutic      cues are removed. Functional behavior may depend on a host
+product, or clinical outcome. Its conclusion is conditional: cellular   niche unavailable in culture. A result in a lineage-traced model
+fate is stabilized by coupled intrinsic and niche constraints,          may therefore support a mechanistic transition claim while
+yet some boundaries can be experimentally traversed; credible
+evidence requires proving the route, identity, stability, function,     remaining far from tissue repair, cell-product qualification, or
+and safety of each claimed transition.                                  clinical safety.
+   Index Terms—stem cells, cell fate, differentiation, induced             This paper develops Fate Accessibility and Transition Eval-
+pluripotent stem cells, direct reprogramming, gene regulatory           uation - Lineage, Omics, Control, and Kinetics (FATE-LOCK).
+networks, stem-cell niche, single-cell multiomics, lineage tracing.     FATE-LOCK is a design-only framework for a bounded ques-
+                                                                        tion: given a specified source, target, microenvironment, and
+                                                                        perturbation, can lineage-traced source cells enter a preregis-
+                       I. I NTRODUCTION                                 tered target-like state, retain it after cue withdrawal, exhibit
+                                                                        target-relevant function, and pass the stated safety gates?
+   The claim that only stem cells can become other cells                The framework places source provenance, multimodal identity,
+captures an important observation about normal tissue orga-             trajectory, function, and safety on separate gates. It reports no
+nization, but it is too absolute as a scientific statement. Stem        culture, perturbation, sequencing, conversion, transplantation,
+cells are distinguished by self-renewal and by an ability to            disease-model, or clinical result.
+generate one or more differentiated lineages under appropriate
+                                                                         II. S URVEY: W HAT M AKES C ELLULAR FATE S TABLE OR
+conditions. Embryonic stem cells and induced pluripotent
+                                                                                             ACCESSIBLE ?
+stem cells can be pluripotent, whereas many tissue-resident
+adult stem cells act within a narrower, tissue-associated reper-        A. Potency is graded and context-specific
+toire [1]. Most mature cells maintain a characteristic identity           The native capacity of a cell is not captured by a single
+rather than spontaneously becoming unrelated cells. However,            hierarchy alone. Early developmental cells, pluripotent cells,
+induced pluripotency and direct lineage reprogramming show              multipotent tissue stem cells, lineage-restricted progenitors,
+that selected mature cells can be pushed across fate boundaries         and mature differentiated cells differ in their usual develop-
+using defined factors and conditions [2]–[4].                           mental options. Yet their operational potential depends on as-
+say conditions, developmental timing, species, tissue, and the        One useful way to describe accessibility is as a target-
+criterion used for “become.” A cell can express a marker with-      specific probability rather than a permanent scalar. For target
+out acquiring full target function. It can transiently resemble     identities j = 1, . . . , J, define
+a target transcriptome without stable self-maintenance. It can
+                                                                                         exp{−Φj (xi (t), ni (t), ci (t))}
+contribute to a tissue in a permissive assay without becoming               πij (t) = ∑︁J                                     ,   (2)
+broadly equivalent to the endogenous target population.                                 ℓ=1 exp{−Φℓ (xi (t), ni (t), ci (t))}
+   The NIH description of stem cells emphasizes both self-          where Φj is a preregistered model-dependent barrier or in-
+renewal and the distinction between pluripotent cells and           compatibility score. Equation (2) does not measure a literal
+adult stem cells associated with particular tissues [1]. This       physical energy barrier. It formalizes the idea that access to
+provides a useful starting point, but it should not be read         one target depends on both intrinsic and extrinsic state, and
+as an assertion that non-stem cells never change identity.          that changing ui (t) can alter the transition landscape without
+Reprogramming experiments demonstrate an engineered alter-          making every target equally reachable.
+native. Takahashi and Yamanaka showed that defined factors             Reprogramming can be incomplete because the perturbation
+could induce pluripotent-like cells from mouse fibroblasts [2];     changes only part of this coupled system. A cell may lose
+Yu et al. reported induced pluripotent stem-cell lines from         selected source markers yet retain source chromatin or DNA-
+human somatic cells [3]. These studies do not eliminate the         methylation memory. It may express a target transcription
+importance of native restriction. They show that restriction can    factor but fail to establish the enhancer network required for
+sometimes be overcome by a specified molecular program in           target function. It may survive only while exogenous cues are
+a specified model.                                                  present. FATE-LOCK therefore requires source anti-markers,
+   Table I summarizes the evidence boundary. The table avoids       target anti-markers, multimodal comparisons, and stability
+using words such as “plastic” or “stemness” as if they were         after cue withdrawal rather than a single endpoint signature.
+universal assay-independent measurements. A claim becomes
+stronger as it moves from a marker to a stable, functional, and     C. The niche and tissue architecture
+safe target identity.                                                  The stem-cell niche is not merely a growth-factor container.
+                                                                    It includes neighboring cells, extracellular matrix, physical
+B. Gene regulatory networks and epigenetic barriers                 confinement, oxygen and nutrient conditions, immune signals,
+                                                                    neural or vascular input where relevant, and temporal cues.
+   Cell identity can be modeled as a self-reinforcing regu-         Scadden describes the niche as a regulatory neighborhood that
+latory configuration. Transcription factors activate or repress     affects stem-cell behavior [6]. The intestinal crypt illustrates
+targets, recruit chromatin modifiers, and form feedback loops.      how spatial organization and signaling support continuous
+Enhancers and promoters may be accessible in one state              tissue renewal in a defined compartment [7]. These examples
+and inaccessible in another. DNA methylation, histone mod-          caution against assuming that an in-vitro transcriptional re-
+ification, nucleosome positioning, three-dimensional genome         semblance is sufficient to recreate a tissue-resident fate.
+organization, and replication history influence which regula-          Niche effects can act through several mechanisms. They
+tory interactions are readily available. Young reviewed the         may change transcription-factor activity, alter cell adhesion
+coordinated transcriptional circuitry that controls embryonic       and mechanics, create survival selection, control quiescence
+stem-cell state [5]; this type of network helps explain why an      or cell-cycle entry, and determine whether a newly induced
+identity can be stable even when the genome is shared across        state is maintained. They may also confound an experiment:
+cell types.                                                         a perturbation can enrich a rare target-like subpopulation
+   For cell i, let xi (t) be a vector of regulatory, chromatin,     instead of converting the declared source cell. FATE-LOCK
+protein, metabolic, and cell-cycle features; let ui (t) represent   therefore holds the niche explicit in the system boundary and
+an engineered perturbation; let ni (t) represent niche inputs;      uses lineage tracing and source-purity controls to distinguish
+and let ci (t) denote contextual history. A general state model     selection from transition.
+is
+                                                                    D. Reprogramming, direct conversion, and the safety bound-
+             dxi (t)                                                ary
+                     = f (xi (t), ui (t), ni (t), ci (t))
+               dt                                                      Direct lineage reprogramming and induced pluripotency are
+                       + ηi (t),                             (1)    powerful counterexamples to an absolute fate lock. Graf and
+                                                                    Enver reviewed efforts to force lineage changes using reg-
+where f represents coupled biological dynamics and ηi (t)           ulatory factors [4]. The mechanism can involve a pluripotent
+represents unmodeled and stochastic variation. Equation (1) is      intermediate, a direct route, or partial conversion. These routes
+a conceptual model, not an assertion that all fate changes are      are not interchangeable. A direct route may avoid one inter-
+deterministic or that each coordinate is measurable. It states      mediate but still have incomplete identity or off-target states;
+why a transcription factor cannot be interpreted independently      a pluripotent route may broaden differentiation options but
+of cell state and environment.                                      introduces its own quality and residual-pluripotency concerns.
+                                                               TABLE I
+ C ELL - STATE CLASSES AND EVIDENCE BOUNDARY. P OTENTIAL IS AN ASSAY- AND CONTEXT- DEPENDENT PROPERTY, NOT A PERMANENT UNIVERSAL
+                                                                LABEL .
+
+
+State class                   Native role and accessible states           Evidence needed for a transition claim           Claim that remains unsupported
+Pluripotent stem cell         Self-renewal and differentiation toward     Identity, pluripotency controls, directed dif-   Every derivative is equivalent, ma-
+                              adult-body lineages under directed con-     ferentiation, target function, and safety as-    ture, stable, or clinically usable.
+                              ditions.                                    sessment.
+Tissue-resident stem cell     Local maintenance and repair with tissue-   Source provenance, niche context, lineage        Broad unrestricted potential out-
+                              associated lineage outputs.                 readout, and functional tissue-relevant as-      side the declared tissue and con-
+                                                                          say.                                             dition.
+Lineage-restricted progeni-   Limited expansion and production of a       Clonal/lineage proof, target comparison,         Self-renewal or pluripotency from
+tor                           subset of downstream identities.            and exclusion of rare contaminating pre-         a marker alone.
+                                                                          cursors.
+Differentiated cell under     Stable specialized function with usually    Time-resolved, lineage-traced evidence that      Absolute irreversibility of identity.
+native conditions             restricted spontaneous fate change.         a perturbation yields a stable target state.
+Engineered      reprogram-    Perturbation-dependent         movement     Route, stability, source-memory, target          Complete target equivalence, tissue
+ming intermediate             through a partial, direct, or pluripotent   function, proliferation, and off-target-         repair, or clinical safety.
+                              route.                                      lineage tests.
+
+
+
+   The transition from a research model to a clinical product                  defined as
+adds independent requirements. Mandai et al. described an                                                 K
+                                                                                                         ∑︂                         K
+                                                                                                                                   ∑︂
+autologous induced stem-cell-derived retinal-cell application                               Fij (t) =          wk qijk (t),              wk = 1,             (3)
+in macular degeneration [10]. This work illustrates the im-                                              k=1                       k=1
+portance of a controlled product and clinical protocol; it                     where qijk (t) is the calibrated, direction-consistent agreement
+does not demonstrate that any reprogrammed cell product is                     of cell i with target j in domain k and wk is locked before
+safe or effective. Product identity, residual undifferentiated                 outcome review. Equation (3) is a reporting summary, not a
+cells, genomic integrity, tumor-related risk, off-target lineages,             replacement for the individual domains. RNA similarity cannot
+manufacturing consistency, delivery, biodistribution, host in-                 compensate for absent target function, unrecognized source
+teractions, and long-term follow-up cannot be inferred from a                  identity, or breached safety.
+culture-level marker panel.                                                       The framework has five principles. First, source identity
+                                                                               and lineage provenance are measured before any target claim.
+  III. I DEA : FATE-LOCK AS A C AUSAL ACCESSIBILITY
+                                                                               Second, a target state is multimodal and includes negative
+                      F RAMEWORK
+                                                                               evidence against source and off-target identities. Third, a
+   FATE-LOCK asks a bounded question: for a declared source                    transition is time-resolved, so an endpoint resemblance is not
+population s, target identity τ , culture or tissue niche n, and               mistaken for a route. Fourth, function and cue-withdrawal
+perturbation set u, which causal gates permit a lineage-traced                 persistence are tested separately from molecular resemblance.
+source cell to reach a stable and functional target-like state                 Fifth, safety is noncompensatory: a favorable target score
+without violating the stated safety boundary? The framework                    does not offset genomic instability, uncontrolled proliferation,
+does not assume that a perfect target state is described by one                residual pluripotency where relevant, or inappropriate clinical
+transcriptomic centroid. It requires a reference definition that               extrapolation.
+includes positive markers, anti-markers, chromatin features,
+                                                                                    IV. E XPERIMENT D ESIGN : L INEAGE , M ULTIOMICS ,
+morphology, function, stability, and the limitations of the
+                                                                                               C ONTROL , AND K INETICS
+model.
+   The central null hypothesis, H0 , is that an apparent con-                  A. Scenario ladder and experimental boundary
+version arises from source contamination, a rare pre-existing                     The protocol proceeds through S0 source audit, S1 baseline
+precursor, barcode collision, doublets, batch effects, selective               state atlas, S2 perturbation core, S3 stability/function, and
+survival, transient stress, or post hoc marker choice. Under H1 ,              S4 independent replication. Each scenario closes a different
+a locked perturbation changes regulatory and niche gates so                    inferential dependency. S0 validates source purity and lineage
+that lineage-traced source cells follow a reproducible trajectory              provenance. S1 maps baseline heterogeneity without asserting
+and meet the predeclared identity, stability, and function cri-                causality. S2 estimates a perturbation contrast against matched
+teria. Under H2 , selected markers arise without full function                 controls. S3 tests whether induced features persist after cues
+or stable target identity; the correct conclusion is partial or                are removed and have target-relevant consequences. S4 repeats
+ambiguous reprogramming. Under H3 , access depends on                          a frozen protocol in an independent batch, site, or donor set. A
+source lineage, donor, niche, cell-cycle, genetic background,                  later stage adds evidence but cannot erase a failed provenance
+or perturbation timing, so a universal plasticity claim fails.                 or safety gate.
+   For a reference target profile rjk across feature domains                      Table III defines these scenarios. The boundary con-
+k = 1, . . . , K, a transparent target similarity summary may be               tains the source-cell class, donor or line provenance, target
+                                                            TABLE II
+    FATE-LOCK ENDPOINT HIERARCHY. E ACH TIER HAS A DISTINCT FAILURE MODE AND CANNOT BE REPLACED BY A FAVORABLE RESULT FROM
+                                                         ANOTHER TIER .
+
+
+Tier                           Examples of locked measurements                Main inferential role                        Prohibited shortcut
+Provenance                     Source-cell audit, clone/barcode identity,     Excludes contamination and selection as      Calling a target-like contaminant
+                               sample-origin controls, doublet detection,     explanations.                                a converted source cell.
+                               and source spike-ins.
+State identity                 RNA, chromatin, protein, morphology,           Tests whether the state resembles the de-    Treating one marker or one latent
+                               positive markers, anti-markers, and            clared target across modalities.             embedding as identity.
+                               reference-target comparison.
+Trajectory                     Multiple time points, lineage branches, per-   Tests whether a plausible source-to-target   Inferring route from two endpoint
+                               turbation timing, and route-specific inter-    path is observed.                            snapshots.
+                               mediate definitions.
+Function and stability         Target-relevant assay, cue-withdrawal per-     Tests whether target-like state is durable   Equating transcriptional similar-
+                               sistence, response behavior, and source-       and consequential in the model.              ity with function.
+                               function loss where relevant.
+Safety and       translation   Proliferation,    residual     pluripotency,   Limits the safety language that may be       Calling an in-vitro state transition
+boundary                       genome integrity, off-target lineages,         used.                                        a clinical cell therapy.
+                               product purity, and host-interaction plan.
+
+
+
+identity, medium and extracellular matrix, neighboring-cell                        For a binary target-occupancy state Ti (t), the primary
+or conditioned-medium inputs, oxygen/nutrient conditions,                        comparative estimate can be written as
+cell-cycle policy, perturbation vector, delivery method, time
+                                                                                   ∆T (t) = Pr[Ti (t) = 1 | Ai = 1] − Pr[Ti (t) = 1 | Ai = 0],
+points, reference atlas, sequence and assay batches, iden-
+                                                                                                                                             (4)
+tity/function/safety endpoints, and exclusion rules. All are
+                                                                                 where Ai indicates the frozen perturbation assignment. Equa-
+frozen before the primary analysis. This is necessary because
+                                                                                 tion (4) must be stratified or modeled according to donor,
+a source-to-target claim is only as interpretable as the cell
+                                                                                 clone, batch, source state, and other declared structure. It is
+population and environment that produced it.
+                                                                                 not an estimate of conversion unless Ti (t) = 1 includes the
+   The design does not prescribe a clinical-grade vector, a                      provenance, identity, trajectory, function, and safety criteria
+transplantation route, a therapeutic dose, or an intervention                    relevant to the claim.
+in people. Such choices require separate biosafety, manufac-                        Lineage evidence can be incorporated through a corrected
+turing, toxicology, ethics, and regulatory development. The                      target occupancy,
+present protocol is intended to determine whether a mechanis-                                              ∑︁
+tic source-to-target claim is interpretable in its stated research                                             Li Ti (t) Qi (t)
+                                                                                                   T˜︁(t) = i∑︁                 ,            (5)
+model.                                                                                                           i Li Qi (t)
+                                                                                 where Li indicates verified source lineage and Qi (t) indicates
+B. Source provenance and perturbation logic                                      that the cell passed the preregistered quality filter at time t.
+                                                                                 Equation (5) makes clear that target occupancy is conditional
+   At entry, each source cell or clone is assigned a ver-
+                                                                                 on lineage and quality definitions. It does not correct for
+sioned provenance record. This record includes collection or
+                                                                                 an invalid barcode, unmeasured contamination, or a post
+derivation history, passage or division history where relevant,
+                                                                                 hoc quality filter; those risks require experimental and audit
+genetic identity controls, source-marker and anti-marker panel,
+                                                                                 controls.
+barcode or physical lineage-trace design, culture history, and
+batch. The reference target population is likewise versioned                     C. Time-resolved multimodal measurement
+with its collection conditions, target markers, anti-markers,                       FATE-LOCK requires multiple time points because fate is
+functional specification, and known heterogeneity. A target                      a trajectory, not an endpoint image. RNA assays measure
+atlas does not become a circular definition of success: it is                    transcriptional state; chromatin assays estimate accessibility;
+a comparator with stated limitations.                                            protein assays measure a different layer; morphology and
+   The perturbation core tests a preregistered factor, signaling,                function provide orthogonal evidence. Cell-cycle and stress-
+extracellular-matrix, neighboring-cell, or niche change against                  state scores are collected so that a proliferating, dying, or
+a matched control. It includes a perturbation-minus-key-factor                   acutely stressed cell is not misclassified as a developmental
+or ablation arm and, where justified, a rescue arm. These                        intermediate merely because it is distant from the source
+controls separate necessity, sufficiency, timing, and survival                   reference.
+effects. For example, if a perturbation increases target-marker                     The observed feature vector may be decomposed as
+frequency but an ablation leaves the effect unchanged, the
+                                                                                              Yikt = θik (t) + bk,batch + bk,site + εikt ,                  (6)
+initially proposed regulator is not required by the tested
+evidence. If only a pre-existing subpopulation survives, the                     where θik (t) is the underlying feature state, bk,batch and bk,site
+result is selection rather than conversion.                                      are calibrated batch and site effects, and εikt is residual
+                                                          TABLE III
+           FATE-LOCK SCENARIO LADDER . A COMPLETED LOWER RUNG NEVER LICENSES A CLINICAL OR UNIVERSAL PLASTICITY CLAIM .
+
+Scenario                   Required evidence and controls                      Failure disqualifier                            Permissible conclusion
+S0: source audit           Source identity markers and anti-markers, lin-      Source heterogeneity, rare precursor, or con-   The stated source population is
+                           eage or clonal provenance, contamination con-       tamination cannot be excluded.                  defined for the assay.
+                           trols, doublet audit, and reference samples.
+S1: state atlas            Time-resolved RNA/chromatin/protein base-           State variation is confounded by untracked      Baseline state variation is
+                           line measurements, technical and biological         batch, stress, or cell-cycle distribution.      mapped under the stated
+                           replicates, batch and site controls.                                                                conditions.
+S2: perturbation core      Frozen factor/signaling/niche perturbation,         Endpoint switching, source selection, or un-    A      bounded      perturbation-
+                           matched controls, ablation, rescue, timing          tracked delivery/culture variation.             to-state-access    contrast    is
+                           controls, and blinded assay labels.                                                                 estimated.
+S3: stability and func-    Target-relevant functional assay, cue with-         Target features are transient, nonfunctional,   Target-like behavior is sup-
+tion                       drawal, persistence window, source-function         mixed-lineage, or safety criteria fail.         ported in the stated model.
+                           assessment, and safety screening.
+S4: external replication   Locked protocol and analysis, independent           Analysis is retuned after seeing replication    Reproducibility support is ob-
+                           operator/batch/site or donor set, null-result re-   data or effect reverses.                        tained for the replicated bound-
+                           porting.                                                                                            ary.
+
+
+
+variation. Equation (6) explains why batch, sample identity,                      pattern is found without lineage proof, function, stability, or
+and processing controls are part of causal interpretation rather                  safety. It prevents a numerical average from masking a failed
+than merely technical housekeeping.                                               gate.
+   Single-cell ordering can help formulate a putative route, as
+demonstrated by pseudotemporal methods [8]. Such ordering                           V. S YSTEMATICS , C ALIBRATION , AND D ECISION RULES
+does not itself prove ancestry or direction. Lineage tracing                         Before interpreting a conversion experiment, FATE-LOCK
+links state to fate more directly and can test whether cells                      applies stress tests to the inference pipeline. Known source
+sharing a transcriptional state have different later outputs [9].                 and target mixtures test whether the classifier detects contam-
+FATE-LOCK combines both: lineage tracing identifies the                           ination. Synthetic doublets test whether paired profiles appear
+source relationship; time-resolved multiomics describes the                       as a false intermediate. Barcode collisions and sample swaps
+state path; perturbation/ablation logic tests causal influence.                   test provenance recovery. A known batch shift tests whether
+No one layer replaces the others.                                                 the normalization and reference alignment pipeline mistakes a
+                                                                                  technical transition for a biological one. Transient stress and
+D. Function, stability, and safety
+                                                                                  cell-cycle shifts test whether trajectory tools falsely infer a fate
+   Target function must be specified before data collection. Its                  branch. Null perturbation labels test whether the full analysis
+exact form depends on the target cell: an electrophysiological,                   produces an effect when no causal assignment exists.
+secretory, contractile, barrier, metabolic, structural, or tissue-                   These tests do not simulate a positive biological result. They
+organization assay may be relevant. The protocol also tests sta-                  test whether the system is capable of rejecting incorrect ex-
+bility after the instructive cue is withdrawn. A cell that satisfies              planations. A pipeline that calls conversion in a null-label set,
+a target marker only during forced expression or a specialized                    cannot detect a source spike-in, or loses source lineage after
+medium has a different status from a cell that autonomously                       integration cannot support a causal fate claim. Failed checks
+maintains the state within the declared window. Both results                      are reported, not silently removed. The required calibration
+can be scientifically informative, but their language must differ.                material, reference atlases, quality controls, code version, and
+   Safety is assessed relative to the research model and does                     preprocessing parameters are fixed before evaluation.
+not create a clinical safety certification. The protocol tracks                      For m confirmatory hypotheses with ordered p-values
+uncontrolled proliferation, residual pluripotent-state markers                    p(1) ≤ · · · ≤ p(m) , a preregistered family-wise step-down
+when a pluripotent route is used, off-target lineages, genome-                    comparison can use
+integrity signals appropriate to the method, and any model-
+                                                                                                                       α
+specific adverse phenotype. A clinical product would require                                              p(j) ≤                                   (8)
+                                                                                                                  m−j+1
+additional manufacturing consistency, product purity, deliv-
+ery, biodistribution, tumorigenicity, immune interaction, dose,                   at step j. Equation (8) makes the multiplicity family visible,
+host-tissue integration, and long-term follow-up evidence.                        but it cannot compensate for flexible source definitions, post
+These requirements cannot be replaced by a high target-                           hoc target-marker selection, or biased cell filtering. The confir-
+similarity score.                                                                 matory/exploratory distinction, target definitions, and feature-
+   The noncompensatory gate is                                                    selection procedure must be locked in advance.
+                                                                                     Table IV gives the progression logic. A passed gate sup-
+ G = Iprovenance Iidentity Itrajectory Ifunction Istability Isafety , (7)
+                                                                                  ports a carefully limited statement. A failed later gate does
+where every indicator must satisfy its preregistered criterion.                   not erase a valid earlier measurement finding, but it blocks
+Equation (7) ensures that G = 0 if a target-like molecular                        stronger language. This makes it possible to learn from partial
+reprogramming, failed stability, or safety concerns without         from average target similarity. It does not allow an attractive
+representing them as therapeutic success.                           mean state to erase a discrete safety concern.
+                                                                            VII. R EPRODUCIBILITY, T RANSLATION , AND
+    VI. M ECHANISM D ISCRIMINATION AND VALUE OF
+                                                                                     I NTERPRETATION S AFETY
+                   I NFORMATION
+                                                                       Every FATE-LOCK execution releases a versioned protocol,
+   The purpose of a cell-fate experiment is not merely to max-      source and target definitions, lineage-trace schema, perturba-
+imize a target-marker fraction. It is to distinguish competing      tion description, culture/niche parameters, sampling schedule,
+explanations for a restricted transition. A low target occupancy    assay versions, batch identifiers, source and target reference
+could arise because the source lacks a required regulator,          atlases, quality filters, code, environment specifications, cali-
+because chromatin at target loci remains inaccessible, because      bration controls, feature-selection rules, excluded-cell counts
+the niche rejects an induced intermediate, because the pertur-      and reasons, null tests, synthetic-artifact tests, failed replicates,
+bation is delivered at the wrong cell-cycle or developmental        and data-access terms. Raw and processed data are shared sub-
+window, or because a target-like state is reached but can-          ject to consent, governance, and biosafety restrictions. A run
+not persist. These possibilities call for different experiments     identifier changes whenever the source boundary, perturbation,
+and lead to different conclusions. Treating all of them as a        target definition, reference atlas, quality filtering, or analysis
+generic “low efficiency” obscures the mechanism that must be        plan changes.
+changed.                                                               Conclusions are labeled by evidence layer. An observation
+   FATE-LOCK therefore treats every study as a sequence of          is a measured marker, profile, barcode, or function readout.
+decision-changing tests. If lineage tracing reveals that apparent   A state inference is a comparison to a reference target under
+target cells pre-existed in the input, then new transcriptional     a measurement model. A causal transition inference adds the
+and chromatin assays do not answer the conversion question          perturbation and control assumptions. A translational claim
+until source purity is repaired. If source cells reach a multi-     adds product, delivery, host, safety, and clinical assumptions.
+modal target-like state but lose it after cue withdrawal, then      The framework forbids skipping directly from a cell-state
+the open dependency is stabilization, not marker induction. If      observation to a patient-outcome statement.
+state and function are present in culture but disappear after          The distinction is ethically important. People with severe
+exposure to a different matrix or neighboring-cell context,         disease may reasonably be interested in regenerative medicine,
+then the niche is part of the mechanism rather than an              while experimental state conversion carries risks that cannot
+implementation detail. These conditional statements are more        be inferred away. A research protocol must not promise repair,
+informative than a single score because they identify the next      should disclose the difference between experimental cells and
+falsifiable hypothesis.                                             standard care, and should not use mechanistic excitement to
+   Table V maps high-value uncertainties to discriminating          reduce safety oversight. FATE-LOCK is intended to improve
+measurements. The table is a planning aid, not a claim that         the quality of preclinical inference; it is not an authorization
+the listed assays have been performed or that a particular          to use experimental reprogramming interventions in people.
+result will occur. Its role is to prevent a resource-intensive
+sequencing campaign from being used when a less elaborate           VIII. T HREATS TO VALIDITY AND R ESEARCH P RIORITIES
+provenance or stability test would decide whether the biolog-          The dominant validity threat is source ambiguity. A rare
+ical question is even interpretable.                                precursor or contaminating target-like cell can make a culture
+   The value-of-information ordering also disciplines claims        appear to convert. Provenance controls, source spike-ins, anti-
+about reprogramming routes. A direct lineage transition and         markers, and time-resolved lineage tracing address this threat,
+a pluripotent intermediate are not rhetorical alternatives; they    but their own error rates must be measured. A second threat is
+lead to different quality questions. A route that appears direct    reference overfitting: a target atlas built from the same batch or
+still needs evidence against a transient intermediate, off-target   selected after results can make any nearby cell look successful.
+branches, and residual source memory. A route that passes           Independent reference material and a locked feature set are
+through a pluripotent state needs explicit residual-pluripotency,   necessary.
+differentiation, proliferation, and lineage-purity checks. The         A third threat is incomplete reprogramming. Intermediate
+appropriate experimental design follows the declared route and      or stress states can share target markers, while residual source
+target, rather than treating the word “reprogramming” as a          chromatin and function persist. The remedy is not simply
+homogeneous mechanism.                                              more markers; it is an orthogonal combination of RNA,
+   Finally, FATE-LOCK makes the safety gate noncompen-              chromatin, protein, morphology, function, cue-withdrawal per-
+satory for an epistemic reason as well as a biomedical one. A       sistence, and negative evidence. A fourth threat is survival
+high-dimensional state model may report a strong aggregate          selection. If an intervention kills most source cells but spares
+target score while a small subpopulation has an undesirable         a rare target-like population, increased target occupancy can
+proliferative or off-target program. Averaging can hide the very    be misread as conversion. Cell counts, lineage composition,
+cells that determine risk. The protocol therefore reports distri-   death/proliferation measures, and source-linked trajectories
+butions, lineage branches, and failed safety criteria separately    must accompany occupancy estimates.
+                                                             TABLE IV
+    FATE-LOCK DECISION GATES FOR A SOURCE - TO - TARGET TRANSITION CLAIM . E ACH GATE CLOSES A DISTINCT ALTERNATIVE EXPLANATION .
+
+Gate                       Required evidence                               Failure disqualifier                             Permissible conclusion
+D0: source and target      Locked source, target, niche, perturbation,     Identity words or endpoint definitions           A testable cell-fate protocol exists.
+boundary                   time horizon, anti-markers, function, and       change after outcome inspection.
+                           safety definitions.
+D1: provenance             Source purity, barcode/clonal/physical lin-     Rare precursor, contaminant, or doublet ex-      The stated source is credible for the
+                           eage record, contamination and doublet          planation remains plausible.                     analysis.
+                           controls, and sample identity audit.
+D2: multimodal state       Predeclared                                     A single marker, embedding, or endpoint          A bounded perturbation-associated
+and route                  RNA/chromatin/protein/morphology                similarity substitutes for a route.              target-like trajectory is supported.
+                           comparison, time points, batch controls,
+                           and ablation/rescue logic.
+D3: function and stabil-   Target-relevant function, persistence after     State is transient, nonfunctional, or mixed-     Stable target-like behavior is sup-
+ity                        cue withdrawal, source-function change,         lineage under the declared assay.                ported in the stated model.
+                           and complete null controls.
+D4: safety and replica-    Genome/lineage/proliferation           safety   Safety gate fails, replication reverses, or      A reproducible research-model
+tion                       screen, independent replication, full failure   analysis is retuned after replication data.      transition claim is supported.
+                           and null reporting.
+
+
+                                                               TABLE V
+ M ECHANISM - DISCRIMINATION PRIORITIES . E ACH MEASUREMENT IS VALUABLE ONLY IF IT CAN CHANGE AN EXPERIMENTAL DECISION OR CLOSE A
+                                                   STATED ALTERNATIVE EXPLANATION .
+
+
+Uncertainty                        Discriminating evidence                       Decision changed by the evidence            What the evidence still does not
+                                                                                                                             prove
+Apparent target cells may be       Lineage barcodes or clonal records,           Whether to test conversion mechanisms       Complete target identity, func-
+contaminants or rare precursors.   source spike-ins, target anti-markers, dou-   or first redefine/purify the source.        tion, or safety.
+                                   blet controls, and independent sample
+                                   identity checks.
+Target loci may be inaccessible    Time-resolved chromatin and transcrip-        Whether a proposed regulator is re-         A durable tissue contribution or
+despite factor expression.         tional measurements with factor abla-         quired, sufficient in the model, or         clinical mechanism.
+                                   tion/rescue and matched delivery con-         merely correlated.
+                                   trols.
+Niche conditions may select        Matrix, neighboring-cell, nutrient, oxy-      Whether to alter niche design, perturba-    That a culture phenotype will per-
+rather than convert cells.         gen, and cue-withdrawal comparisons           tion timing, or source selection logic.     sist in a host tissue.
+                                   with cell-count and death/proliferation
+                                   tracking.
+Target-like state may be tran-     Functional assay, persistence after cue       Whether the result remains a partial        Cell-product qualification or hu-
+sient or incomplete.               withdrawal, source-memory anti-markers,       state, can proceed to stability work, or    man therapeutic safety.
+                                   and longer declared observation window.       fails the target definition.
+Safety-relevant states may co-     Residual pluripotency, proliferation,         Whether translational language is           Absence of all long-term or in-
+occur with target features.        off-target-lineage, and genome-integrity      blocked and which safety mechanism          vivo risk.
+                                   screens appropriate to the model.             requires study.
+
+
+
+   Time-scale mismatch is another concern. An early molecu-                                             IX. D ISCUSSION
+lar transition may precede stable function by many divisions,                       Why can only some cells become other cells? In normal
+or it may never mature. Conversely, a functional change                          biology, cells usually remain within stable identity programs
+may require a tissue niche not represented in culture. The                       because regulatory networks, chromatin configurations, de-
+protocol reports the observed horizon and model rather than                      velopmental history, and niche signals reinforce their cur-
+extrapolating to lifelong tissue maintenance. The same logic                     rent state. Stem cells are specialized for self-renewal and
+applies to safety: an absence of an in-vitro signal does not                     developmental or tissue-maintenance outputs, so their na-
+demonstrate absence of a long-term or in-vivo risk.                              tive state makes certain transitions more accessible. But the
+   Research priority should follow value of information. Mea-                    premise must be qualified: engineered reprogramming and
+surements that change a decision gate deserve priority: lineage                  direct conversion show that selected differentiated cells can
+provenance; target anti-markers; independent reference con-                      cross some boundaries. The meaningful scientific question is
+trols; cue-withdrawal persistence; function; residual pluripo-                   which boundaries, routes, and conditions are accessible, and
+tent and proliferative states; genomic integrity; and replication                whether the resulting state is complete, stable, functional, and
+across source lineages, donors, and niches. A modest improve-                    safe.
+ment in one target-marker frequency has limited value if it                         FATE-LOCK converts this question into an auditable se-
+does not remove a contamination, stability, function, or safety                  quence. A researcher begins with a source and target defi-
+uncertainty.                                                                     nition, verifies lineage, maps baseline heterogeneity, tests a
+locked perturbation against controls, measures a time-resolved       observation, state inference, causal transition inference, or
+multimodal route, tests function and cue-withdrawal stability,       translational extrapolation; do not use clinical or universal-
+screens safety, and replicates the result. Each stage eliminates     plasticity language for a finite research-model result.
+a different alternative explanation. A target-like marker alone
+                                                                                                    R EFERENCES
+may be interesting, but it cannot satisfy the final gate.
+   The framework also clarifies how to communicate repro-             [1] National Institutes of Health, “Stem Cell Basics,” NIH Stem Cell In-
+                                                                          formation, accessed Sep. 2, 2026. [Online]. Available: https://stemcells.
+gramming research. A successful S2 transition can support a               nih.gov/info/basics/stc-basics
+molecular or mechanistic result in a defined model. A success-        [2] K. Takahashi and S. Yamanaka, “Induction of pluripotent stem cells
+ful S3 result can support target-like behavior in that model. An          from mouse embryonic fibroblasts by defined factors,” Cell, vol. 126,
+                                                                          no. 4, pp. 663–676, 2006, doi: 10.1016/j.cell.2006.07.024.
+S4 replication can improve confidence in the bounded research         [3] J. Yu et al., “Induced pluripotent stem cell lines derived from human
+claim. None of these automatically establishes universal cellu-           somatic cells,” Science, vol. 318, no. 5858, pp. 1917–1920, 2007, doi:
+lar plasticity, organ regeneration, or human therapy. This is not         10.1126/science.1151526.
+                                                                      [4] T. Graf and T. Enver, “Forcing cells to change lineages,” Nature, vol.
+a limitation of ambition; it is the evidence structure needed to          462, pp. 587–594, 2009, doi: 10.1038/nature08533.
+make genuine progress distinguishable from a persuasive but           [5] R. A. Young, “Control of the embryonic stem cell state,” Cell, vol. 144,
+incomplete cell-state image.                                              no. 6, pp. 940–954, 2011, doi: 10.1016/j.cell.2011.01.032.
+                                                                      [6] D. T. Scadden, “Nice neighborhood: Emerging concepts of the
+                                                                          stem cell niche,” Cell, vol. 157, no. 1, pp. 41–50, 2014, doi:
+                       X. C ONCLUSION                                     10.1016/j.cell.2014.02.013.
+   This four-stage research workflow concludes that cell-fate         [7] H. Clevers, “The intestinal crypt, a prototype stem cell compartment,”
+                                                                          Cell, vol. 154, no. 2, pp. 274–284, 2013, doi: 10.1016/j.cell.2013.07.004.
+restriction is real but conditional, not an absolute prohibi-         [8] C. Trapnell et al., “The dynamics and regulators of cell fate decisions are
+tion on identity change. Coupled gene-regulatory, epigenetic,             revealed by pseudotemporal ordering of single cells,” Nature Biotech-
+lineage-history, and niche mechanisms stabilize cellular states,          nology, vol. 32, no. 4, pp. 381–386, 2014, doi: 10.1038/nbt.2859.
+                                                                      [9] C. Weinreb et al., “Lineage tracing on transcriptional landscapes links
+while selected perturbations can make some transitions ac-                state to fate during differentiation,” Science, vol. 367, no. 6472, Art.
+cessible. A credible claim that a source cell became another              eaaw3381, 2020, doi: 10.1126/science.aaw3381.
+cell requires proof of source provenance, multimodal target          [10] M. Mandai et al., “Autologous induced stem-cell-derived retinal cells
+                                                                          for macular degeneration,” New England Journal of Medicine, vol. 376,
+identity, time-resolved route, target-relevant function, stability        no. 11, pp. 1038–1046, 2017, doi: 10.1056/NEJMoa1608368.
+after cue withdrawal, and a stated safety boundary. FATE-
+LOCK provides this design-only benchmark. It reports no
+performed reprogramming or therapeutic result, and it does
+not claim that an engineered state transition is clinically safe.
+                     A PPENDIX A
+          M INIMAL FATE-LOCK RUN M ANIFEST
+   Each future run documents: source and target defi-
+nitions; source history and provenance; donor/clone and
+genetic-identity controls; lineage-trace design; culture, matrix,
+niche, nutrient, oxygen, and timing conditions; perturbation
+and matched controls; reference atlas versions; assay and
+batch metadata; positive and anti-markers; quality filters;
+function and cue-withdrawal assays; proliferation, residual-
+pluripotency, off-target-lineage, and genome-integrity screens;
+barcode/doublet/sample-swap controls; all exclusions; all null
+and synthetic-artifact tests; replication plan; code and environ-
+ment versions; and a statement that the model cannot certify
+a clinical cell product or human therapeutic outcome.
+                         A PPENDIX B
+                    P ROTOCOL C HECKLIST
+   Before an experiment, freeze source, target, niche, per-
+turbation, route, identity, function, stability, and safety def-
+initions. Before analysis, verify source provenance, sample
+identity, batch controls, duplicate measurements, reference
+atlas independence, and assay-quality thresholds. During inter-
+pretation, report target markers and anti-markers, every cell-
+state component, source/target cell counts, proliferation/death
+context, failed replicates, excluded cells, and null tests. Be-
+fore communication, label the conclusion as a measurement
+

@@ -1,0 +1,320 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{xcolor}
+\newcommand{\DSE}{\textsc{DSE}}
+\newcommand{\DNA}{\textsc{DNA}}
+\newcommand{\NA}{\textsc{N/A}}
+\begin{document}
+
+\title{Can DNA Act as an Information Storage Medium?\\
+\large A Serviceability-First Archival Research Proposal}
+
+\author{\IEEEauthorblockN{Anonymous Research Proposal}
+\IEEEauthorblockA{\textit{Evidence-to-Design Scientific Workflow}\\
+Research Plan for Synthetic, Non-living DNA Archival Storage}}
+
+\maketitle
+
+\begin{abstract}
+DNA can act as an information storage medium: controlled sequences of the four DNA bases can encode arbitrary digital payloads, and published systems have written and read files with molecular synthesis and sequencing. The open issue is not representation alone. It is whether a DNA archive can provide an auditable service with exact integrity, selective access, condition-aware durability, portable decoding, and an explicit cost and latency boundary. This paper synthesizes the evidence base and proposes the DNA Storage Serviceability Envelope (DSE), a research framework that binds each file to a portable archive packet and evaluates success only when all declared recovery gates are met. The proposed experiment compares a constrained baseline, a fountain-style benchmark, and a DSE-guided packet under pre-registered molecular-channel, storage-condition, access, and read-budget factors. The contribution is a falsifiable design for judging when DNA storage is useful for cold, high-value archives and when raw density claims are insufficient. This is a design-only proposal: it reports no newly synthesized DNA, sequencing run, simulation, or observed recovery result.
+\end{abstract}
+
+\begin{IEEEkeywords}
+DNA data storage, archival storage, error correction, random access, molecular communication channel, digital preservation, information theory.
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Digital archives are growing while their media remain exposed to refresh cycles, component obsolescence, energy requirements, and format drift. Deoxyribonucleic acid (DNA) is compelling because biological information has persisted through an exceptionally dense molecular alphabet, while modern synthesis and sequencing can write and read user-defined sequences. Church, Gao, and Kosuri demonstrated a landmark end-to-end result by encoding a 5.27-megabit book in DNA and recovering it through next-generation sequencing \cite{church2012}. Goldman \textit{et al.} subsequently demonstrated a high-capacity synthesized-DNA approach \cite{goldman2013}. These reports answer an important feasibility question: arbitrary digital information can be represented in synthetic DNA.
+
+That feasibility result should not be overstated. An information medium is not automatically an information-storage \emph{system}. A usable archive must preserve a payload after a specified condition, locate one object without indiscriminately reading every object, reconstruct it from a noisy physical channel, verify its identity exactly, and leave a future operator enough information to repeat the process. The write stage is constrained by synthesis accuracy, sequence design rules, yield, throughput, and cost. The read stage is constrained by access chemistry, sequencing error, strand coverage, index ambiguity, decoder assumptions, latency, and cost. Storage itself is constrained by material form, humidity, temperature, oxidation, packaging, and the meaning assigned to ``long term'' \cite{matange2021,doricchi2022}.
+
+This paper takes a direct position: \DNA\ is an information-storage medium, particularly for cold and high-value archives, but its practical merit cannot be inferred from ideal nucleotide density. The proposed research tests a stronger claim: a DNA archive becomes scientifically and operationally comparable only when it carries an explicit service contract. The contract is termed the \emph{DNA Storage Serviceability Envelope} (\DSE). It is not a new claim of molecular physics or a guarantee of commercial readiness. It is a falsifiable architecture for accounting jointly for integrity, selective retrieval, storage condition, read budget, portable decoding, net density, and cost.
+
+The study uses only synthetic, non-living, noncoding oligonucleotide pools in a future validation path. It excludes living-cell storage, viral material, gene expression, clinical samples, environmental release, and any claim that DNA will replace memory or active databases. The focus is archival information preservation, where write latency may be acceptable but exact future recovery is essential.
+
+\section{Survey: What Has Been Demonstrated and What Remains Open}
+
+\subsection{From molecular representation to archive workflows}
+
+DNA stores symbols in sequences drawn from A, C, G, and T. A binary source can be transformed to a constrained quaternary sequence, partitioned into strands, indexed, synthesized, stored, sequenced, clustered, decoded, and reassembled. The apparent four-symbol capacity is only a starting point. Practical encoders avoid long homopolymers, unbalanced GC content, and other patterns that lower synthesis or sequencing quality. They also add addressing and error-correcting redundancy. Consequently, the relevant quantity is not the ideal symbolic capacity of DNA but the usable payload that survives a declared end-to-end recovery process.
+
+Published storage systems established several parts of this workflow. A DNA-based archival architecture was described by Bornholt \textit{et al.} \cite{bornholt2016}; DNA Fountain showed how fountain coding can tolerate missing strands and support robust reconstruction \cite{erlich2017}. Organick \textit{et al.} demonstrated random access in a large-scale DNA data pool \cite{organick2018}, while Yazdi \textit{et al.} reported rewritable, random-access DNA storage \cite{yazdi2015}. These demonstrations establish important capabilities but are not interchangeable service guarantees. An implementation can recover a whole pool successfully yet have poor selective access. It can achieve favorable density yet have high synthesis cost. It can decode a freshly prepared pool yet have no justified claim about durability under another storage regime.
+
+\subsection{The DNA storage channel is structured and variable}
+
+DNA storage is a molecular communication channel, not a noiseless string container. The channel includes sequence-design constraints, synthesis imperfections, strand loss, material degradation, PCR or capture bias where used for access, sequencing substitutions and indels, coverage skew, clustering decisions, and decoder logic. Heckel, Mikutis, and Grass characterized this channel explicitly \cite{heckel2019}. Antkowiak \textit{et al.} showed that advanced reconstruction and error correction can support recovery even when lower-cost photolithographic synthesis operates in a higher-error regime \cite{antkowiak2020}. DNA-Aeon further illustrates how constraint adherence, substitutions, insertions, deletions, and complete-strand loss can be addressed in a coding design \cite{welzel2023}.
+
+The lesson is productive rather than discouraging: coding, physical storage, and readout should be designed together. A code optimized for an assumed fresh synthesis/sequencing channel is not necessarily optimal after storage degradation or repeated targeted retrieval. Matange, Tuck, and Keung emphasize that DNA stability is a central design consideration for future systems \cite{matange2021}. The proposal therefore treats storage condition and access pattern as first-class factors rather than as laboratory details outside the coding model.
+
+\subsection{Selective access and systems economics}
+
+Random access is a defining storage property. PCR-addressed or compartmentalized retrieval can select particular data objects, but the access layer also creates its own burden: index namespace, primer/capture specificity, crosstalk, read-depth allocation, amplification bias, and repeated-retrieval behavior. Thermoresponsive microcapsules offer one route to repeated multiplexed access and reduced amplification bias \cite{bogels2023}; their relevance here is the broader point that access is a system component, not a label added after whole-pool decoding.
+
+The most persistent adoption barriers are writing and reading economics. High-throughput synthesis is an active technology frontier \cite{yu2024}; current reviews identify high write cost, slow read/write operation, error profiles, indexing, and practical capacity as central challenges \cite{doricchi2022,raza2023,sensintaffar2025}. A DNA archive should therefore be evaluated against a named cold-data use case, not against the latency of electronic working memory. The expected value may arise from extremely compact, low-maintenance retention of data that are written once or rarely and retrieved selectively only when needed.
+
+\begin{table*}[t]
+\caption{Evidence-backed capabilities and their non-transferable boundaries}
+\label{tab:evidence}
+\centering
+\footnotesize
+\begin{tabular}{p{0.20\textwidth} p{0.34\textwidth} p{0.36\textwidth}}
+\toprule
+\textbf{Capability} & \textbf{What the literature supports} & \textbf{What it does not establish by itself}\\
+\midrule
+Digital representation & Arbitrary files can be encoded, synthesized, sequenced, and reconstructed \cite{church2012,goldman2013,bornholt2016}. & Universal economics, unlimited capacity, or a deployment-grade archive service.\\
+Error resilience & Constrained coding and redundancy can recover through substitutions, indels, strand loss, and uneven reads \cite{erlich2017,heckel2019,antkowiak2020,welzel2023}. & Robustness under every synthesis platform, storage condition, and access method.\\
+Selective retrieval & Random or rewritable access has been demonstrated, including compartmentalized repeated access \cite{organick2018,yazdi2015,bogels2023}. & Negligible crosstalk, low cost, or unbounded repeated retrieval.\\
+Durability & DNA stability can be favorable when physical conditions and stabilization strategy are designed deliberately \cite{matange2021}. & A generic centuries-long lifetime for arbitrary sample handling.\\
+Density potential & DNA offers unusually high molecular information density \cite{church2012,doricchi2022}. & Net usable density after constraints, indexing, redundancy, packaging, and recovery metadata.\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Research Gap, Questions, and Contributions}
+
+The survey identifies five connected gaps. First, the field lacks a common end-to-end service metric: studies expose density, recovery rate, cost, access, or stability in different subsets. Second, coding choices are not consistently coupled to declared storage and access conditions. Third, random access is often treated as an isolated demonstration rather than an accepted-recovery service. Fourth, future decoding depends on undocumented local assumptions about constraints, indices, and software. Fifth, theoretical density is routinely separated from usable payload density and accepted-recovery cost.
+
+The proposed research questions are:
+
+\begin{enumerate}
+\item Can a portable archive packet make DNA-file recovery reproducible across a separate decoder environment without undocumented local state?
+\item Does a condition-aware allocation of redundancy and retrieval budget improve the accepted selective-recovery profile relative to density-only baselines under predeclared molecular channels?
+\item Which combination of coding, access, storage-condition, and read-budget factors limits net accepted density for cold archives?
+\item Can results be reported as an auditable service envelope rather than a single favorable density or recovery number?
+\end{enumerate}
+
+The proposed contributions are fourfold. First, the paper defines a \DSE\ archive packet. Second, it separates ideal molecular density from net accepted density. Third, it gives a future, preregisterable evaluation design spanning code, storage condition, access, and read budget. Fourth, it specifies conditional outcomes that distinguish scientific support, economic boundary failure, access-layer failure, and manifest-portability failure. The contribution is a research design, not a claim of a newly achieved recovery result.
+
+\section{DNA Storage Serviceability Envelope}
+
+\subsection{Archive packet and information boundary}
+
+The \DSE\ begins with a portable archive packet associated with every payload. The packet contains a payload identifier; immutable checksum; source-byte count; coding family and version; strand length; sequence constraints; index namespace; redundancy configuration; expected molecular-channel assumptions; storage condition; intended access method; read and access-round budget; decoder version; and an exact acceptance rule. A future user should not need undocumented local scripts, hidden primer lists, or oral knowledge to determine how a file was stored.
+
+Figure~\ref{fig:dse} illustrates the reporting logic. Digital bytes are transformed to constrained DNA strands together with an immutable packet. In a future study, the stored pool may be exposed to a declared condition and accessed under a declared retrieval budget. Sequencing reads are processed only by the named decoder. The output is not simply a decoded text string. It is an accepted payload only if integrity, selectivity, condition coverage, and portability gates are satisfied.
+
+\begin{figure*}[t]
+\centering
+\fbox{\begin{minipage}{0.91\textwidth}
+\centering
+\vspace{3pt}
+\textbf{Digital payload} $\longrightarrow$ \textbf{constrained encoder} $\longrightarrow$ \textbf{indexed DNA strands} $\longrightarrow$ \textbf{archive packet}\\[3pt]
+\small Payload identifier $|$ checksum $|$ code version $|$ constraints $|$ redundancy $|$ index namespace $|$ storage condition $|$ access/read budget $|$ decoder version\\[5pt]
+\textbf{Future storage and selective access} $\longrightarrow$ \textbf{sequencing reads} $\longrightarrow$ \textbf{named decoder} $\longrightarrow$ \textbf{four acceptance gates}\\[3pt]
+\small Integrity (exact checksum) \quad $\cdot$ \quad Selectivity (requested object) \quad $\cdot$ \quad Condition coverage (within declared boundary) \quad $\cdot$ \quad Portability (independent decoder reproduction)\\[-1pt]
+\vspace{3pt}
+\end{minipage}}
+\caption{The proposed DNA Storage Serviceability Envelope (DSE). The diagram is a reporting and evaluation contract, not a claim that the proposed workflow has been executed.}
+\label{fig:dse}
+\end{figure*}
+
+\subsection{Net accepted density and acceptance gates}
+
+For a requested file $f$, let $B_{\mathrm{payload}}(f)$ be the immutable payload bit count and let $N_{\mathrm{committed}}(f)$ be every nucleotide committed to its accepted recovery, including payload strands, addressing, redundancy, and preserved recovery metadata. The planning quantity is the net accepted density
+\begin{equation}
+D_{\mathrm{net}}(f)=\frac{B_{\mathrm{payload}}(f)}{N_{\mathrm{committed}}(f)}.
+\label{eq:dnet}
+\end{equation}
+Equation~\eqref{eq:dnet} prevents a density report from discarding the material needed to decode and authenticate the object. It is still not sufficient. Let $I_f$, $S_f$, $C_f$, and $P_f$ denote binary integrity, selectivity, condition-coverage, and portability gates. The archive accepts a recovery only when
+\begin{equation}
+A(f)=I_f S_f C_f P_f=1.
+\label{eq:accept}
+\end{equation}
+Here $I_f=1$ requires exact checksum agreement, $S_f=1$ requires the requested object to be recovered through the declared selective-access path, $C_f=1$ requires that test condition and resource use remain inside the declared envelope, and $P_f=1$ requires a separate environment to reproduce decoding from the packet and raw reads. Any zero converts the outcome into diagnostic evidence rather than a successful archive recovery.
+
+The complete DSE report is a vector, not an artificial universal scalar:
+\begin{equation}
+\mathrm{DSE}(f)=\left(D_{\mathrm{net}},R_{\mathrm{read}},L_{\mathrm{access}},C_{\mathrm{write}},C_{\mathrm{read}},Q_{\mathrm{channel}},A\right),
+\label{eq:dse}
+\end{equation}
+where $R_{\mathrm{read}}$ is the accepted read budget, $L_{\mathrm{access}}$ is access latency, $C_{\mathrm{write}}$ and $C_{\mathrm{read}}$ are predeclared cost-accounting quantities, $Q_{\mathrm{channel}}$ records the channel and storage boundary, and $A$ is defined by \eqref{eq:accept}. The vector preserves tradeoffs that a single ranking would conceal.
+
+\subsection{Why a serviceability envelope is testable}
+
+The DSE can fail in concrete ways. If it does not separate a code that recovers selectively within a budget from one that only succeeds after whole-pool over-sequencing, it lacks decision value. If an archive packet cannot enable independent decoding, its portability claim fails. If a condition-aware redundancy allocation cannot match a density-only baseline under the declared channels, then its claimed engineering benefit is not supported. If the DSE predicts no useful distinction across arms, it may remain a reporting checklist rather than a storage design contribution. These falsifiers keep the framework from becoming a prose-only standard.
+
+\section{Proposed Study Design and Methods}
+
+\subsection{Scope, units, and comparison arms}
+
+The proposed study is staged. The first stage is a deterministic computational planning stage that freezes payloads, coding parameters, sequence constraints, archive packets, channel scenarios, and acceptance criteria. It may use synthetic molecular-channel traces in a later implementation, but any such output must be labeled simulated. The second, optional stage is a qualified-facility validation of a synthetic, noncoding oligonucleotide pool. This paper does not perform either stage.
+
+The digital units are fixed cold-data files: text, image, binary, tabular, and mixed-format payloads. The molecular units are uniquely indexed, synthetic, noncoding oligonucleotide strands. No organism, cell line, pathogen-associated material, clinical specimen, or expression construct is within scope. Each future payload is assigned the same target net byte count across arms so that performance cannot be attributed merely to storing less information.
+
+\begin{table}[t]
+\caption{Planned comparison arms}
+\label{tab:arms}
+\centering
+\footnotesize
+\begin{tabular}{p{0.17\columnwidth}p{0.27\columnwidth}p{0.35\columnwidth}}
+\toprule
+\textbf{Arm} & \textbf{Role} & \textbf{Declared profile}\\
+\midrule
+A & Transparent baseline & Indexed constrained mapping with block error correction and a common checksum.\\
+B & Robustness benchmark & Fountain-style droplets with the same sequence constraints and packet schema.\\
+C & Selected DSE arm & Condition-aware redundancy split, explicit read/access budget, portable archive packet, and four-gate acceptance.\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The primary independent factor is coding arm. Additional planned factors are nominal storage condition, strand-dropout level, substitution/indel burden, coverage tier, and access round. The primary dependent outcome is accepted selective recovery under \eqref{eq:accept}. Secondary quantities are net accepted density, minimum read budget, access latency, expected write/read cost, loss localization, index conflict rate, and independent-decoder reproducibility. Common controls include a fixed payload suite, matched net payload, common GC/homopolymer constraints, predeclared file hashes, blinded decoder labels, a known-reference calibrant, a no-template process control, and a no-DNA negative control for a future wet-lab stage.
+
+\subsection{Encoding, storage, and retrieval plan}
+
+All future encoding inputs would be transformed from bytes to a constrained quaternary representation with a file index, strand index, payload block index, and integrity metadata. The baseline arm uses an explicit block code. The fountain arm uses constrained droplets. The DSE arm allocates redundancy in separate budgets for strand loss, base-level errors, and selective-access uncertainty, while recording the basis of the allocation in the packet. The proposed comparison does not require a claim that one code is universally optimal; its purpose is to determine which profile is acceptable under the named envelope.
+
+If an approved physical validation is later undertaken, matched aliquots would be retained at time zero and stored under predeclared dry, encapsulated, and handling conditions appropriate to a qualified laboratory. The study would record temperature, packaging, storage duration, access round, and any deviation from the packet. It would not infer century-scale performance from a short accelerated protocol. For each future retrieval, the requested file would be selected by the declared access route, sequenced at a predefined coverage tier, and decoded only with the packet-specified software. Raw reads, filtering decisions, read counts, index conflicts, decoder logs, and file checksums would be retained for audit.
+
+Selective access is deliberately a gate, not a marketing adjective. A whole-pool decode may remain a useful diagnostic control, but it cannot substitute for the requested-file path in the primary endpoint. A study that attains exact recovery only after reading every file receives $S_f=0$ for the selective-recovery endpoint even if $I_f=1$. This rule gives access overhead and crosstalk a visible effect on the final decision.
+
+\subsection{Analysis and statistical plan}
+
+Before future execution, the study should register the payload suite, seeds, code versions, packet schema, storage conditions, read tiers, acceptance threshold, excluded-read criteria, and planned contrasts. A sensitivity stage may vary dropout, substitution, indel, and coverage parameters to identify vulnerable regions of the DSE. It should generate only planning evidence unless and until it is separately executed and labeled as a simulation.
+
+For a future empirical validation, accepted recovery is modeled as a binary outcome with coding arm, storage condition, channel features, coverage, and access round. A mixed-effects logistic model or Bayesian hierarchical equivalent can account for payload and batch variability. The central preregistered contrast is the difference in accepted selective-recovery probability between Arm C and the matched baselines at comparable net density and bounded read budget. Secondary analysis can fit resource-response curves rather than merely report a best run. Confidence or credible intervals, read distributions, dropout profiles, recovery failures, and checksum outcomes must be reported together.
+
+Cost should be expressed as a transparent accounting quantity, not as a price forecast. For a file $f$, a planning cost can be decomposed as
+\begin{align}
+C_{\mathrm{archive}}(f)={}&C_{\mathrm{synthesis}}+C_{\mathrm{packaging}}+C_{\mathrm{storage}} \nonumber\\
+&+C_{\mathrm{access}}+C_{\mathrm{sequencing}}+C_{\mathrm{decode}}.
+\label{eq:cost}
+\end{align}
+Every term in \eqref{eq:cost} must name its vendor, date, assumption, and excluded labor or capital component in a future study. This prevents declining technology costs from being claimed retrospectively without context.
+
+\section{Conditional Outcomes and Decision Logic}
+
+The proposal is designed to make a future result decision-relevant even when the primary hypothesis is not supported. Table~\ref{tab:decision} records the interpretation route. It distinguishes coding benefit from reporting discipline, physical-condition failure from decoder failure, and technical recovery from an uneconomic archival service. It also prevents a single recovered file from being presented as evidence of an unrestricted storage platform.
+
+\begin{table*}[t]
+\caption{Pre-registered conditional interpretation of future outcomes}
+\label{tab:decision}
+\centering
+\footnotesize
+\begin{tabular}{p{0.28\textwidth}p{0.30\textwidth}p{0.32\textwidth}}
+\toprule
+\textbf{Future observation} & \textbf{Interpretation} & \textbf{Decision}\\
+\midrule
+Arm C meets all four gates and matches or exceeds matched baselines at comparable net density. & Supports the DSE as a technically useful archive contract under the declared envelope. & Expand to more payload types, storage conditions, and independent decoder sites.\\
+Arm C improves accepted recovery but consumes substantially more reads or redundancy. & The serviceability benefit may be real but appropriate only for high-value, rarely accessed objects. & Optimize budget allocation; retain economic boundary rather than claim generic superiority.\\
+Arm C performs no better than the fountain benchmark. & The packet may improve auditability without improving recovery. & Separate reporting-standard value from code-design value; revise the mechanism.\\
+Exact checksum recovery occurs only after whole-pool decoding. & Integrity succeeds while selective access fails. & Redesign indexing or access layer; do not label the archive random access.\\
+Independent environment cannot reproduce the decode. & Portability gate fails despite a local success. & Version the manifest and decoder interface; audit undocumented dependencies.\\
+Stored-condition trace exceeds the packet boundary. & No causal statement about archive durability is licensed. & Record as out-of-envelope; improve condition control before comparing codes.\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Risks, Limits, and Human Review Requirements}
+
+The DSE is deliberately ambitious in systems scope but bounded in claim. It does not solve synthesis throughput, lower sequencing cost by itself, guarantee long-term chemical stability, or eliminate the need for hardware and software interoperability. Its value depends on whether declaring all material conditions leads to better code selection or more reliable archival decisions. A DSE report can be complete while its result shows that DNA is not competitive for a named use case; that is an informative scientific outcome.
+
+Several limitations require expert review. First, accelerated aging does not automatically extrapolate to long-duration archival stability. Second, laboratory error distributions are platform- and protocol-specific; an error model should never be universalized from a small experiment. Third, PCR-based or affinity-based access has potential bias and crosstalk that must be measured rather than assumed away. Fourth, checksums prove byte equality of the recovered object but not the correctness of every upstream biological mechanism. Fifth, price and throughput statements become stale; synthesis and sequencing economics need dated, transparent assumptions.
+
+Human review is required before any laboratory work. It should confirm that all sequence content is noncoding and non-expressive, screen the sequence-generation policy, approve procurement and qualified-facility procedures, verify containment and waste handling, review data governance, and confirm that no laboratory step is automatically authorized. Domain experts should also inspect the full text of every cited source, validate its relevance to the chosen storage chemistry and access method, and review the statistical analysis plan before a future experiment begins. These requirements are safeguards for a future study, not evidence of a current execution.
+
+\subsection{Interoperability and archive hierarchy}
+
+The DSE treats DNA as one tier in a broader archival hierarchy rather than a solitary replacement technology. A practical archive has at least three coupled layers. The \emph{active layer} maintains the source files, packet registry, and application-facing metadata on conventional systems. The \emph{preservation layer} holds the DNA pool and its environmental record. The \emph{recovery layer} maintains reference decoder containers, test vectors, and a public specification for the packet fields. Separating these layers creates a useful research question: how much conventional metadata must remain accessible for the DNA object to be recoverable without turning the molecular archive into an opaque backup of a database?
+
+The packet is intentionally designed to be readable before any molecular operation. Its checksum, byte count, code identifier, decoder version, and storage boundary support cataloging and migration planning. Its molecular fields make future sequencing and decoding reproducible. This distinction also resolves a common ambiguity in long-term storage: bit preservation and intelligibility are different obligations. A perfectly preserved string of bases is not a recovered digital object if the code, index namespace, and decoder behavior have been lost. Conversely, a complete manifest does not compensate for molecular dropout beyond the selected code's correction capacity. Both forms of continuity must be reported.
+
+Interoperability should be evaluated in the same way that recovery is evaluated. An independent decoder environment receives only the raw reads and the archive packet, then recreates the payload and checksum. The evaluator does not receive local configuration files, hand-tuned thresholds, or undocumented sequence filters. A failure at this stage is a scientific result: it identifies a missing part of the archive interface. This emphasis is especially important for media intended to remain useful across changes in synthesis chemistry, sequencer model, operating system, or data-management institution.
+
+\subsection{Research-to-deployment boundary}
+
+The proposed protocol creates a disciplined transition path without mistaking a laboratory demonstration for deployment. Stage one establishes which arm has an acceptable DSE profile under controlled channel assumptions. Stage two, if approved, tests a synthetic pool across matched conditions and independently reproduces decoding. Stage three evaluates integration with a cold-data catalog, preserving the packet independently of a vendor's laboratory information system. Only after these stages can an archive owner compare the DSE profile with tape, optical, or electronic cold-storage alternatives for a named retention period and access pattern. This staged logic makes a negative result useful: an archive may be molecularly recoverable yet fail the cost, access, or portability criterion required by its intended service.
+
+\section{Conclusion}
+
+DNA can act as an information storage medium. The decisive question for research and eventual deployment is not whether nucleotide strings can encode bits, but whether a declared archive can recover the right bytes exactly, selectively, and reproducibly after a named storage and retrieval history. Existing work provides the necessary foundations: molecular encoding, error-tolerant reconstruction, random access, stability analysis, and continuing advances in synthesis and sequencing. The remaining challenge is to make these components legible as an archive service.
+
+The proposed DNA Storage Serviceability Envelope advances that goal by binding the archive to a portable packet and judging recovery through integrity, selectivity, condition coverage, and portability gates. Its expected contribution is an evidence-based way to decide where DNA storage belongs: not in every computational tier, but potentially as a rigorous medium for dense, durable, high-value cold archives. The next scientific test is straightforward in principle and demanding in execution: compare codes and access strategies under preregistered physical-channel and resource boundaries, then publish every gate outcome rather than only the most favorable recovery demonstration.
+
+\appendices
+\section{Minimum Portable Archive Packet}
+
+The proposed packet is a machine-readable manifest stored with the digital archive and represented redundantly in the DNA object where feasible. It contains: (1) project and payload identifiers; (2) source byte length and cryptographic checksum; (3) encoding family, version, deterministic seed, and code rate; (4) strand and index format; (5) GC, homopolymer, and forbidden-motif constraints; (6) expected synthesis/sequencing and strand-loss assumptions; (7) redundancy allocation; (8) storage material, packaging, environmental range, and handling limits; (9) access method, namespace, and maximum access rounds; (10) read budget and filtering criteria; (11) decoder name, version, environment, and test vector; (12) acceptance rule defined by \eqref{eq:accept}; and (13) an immutable change log. A future implementation can extend the schema, but it must not erase fields required to reconstruct a prior archive packet.
+
+\section{Required Future Result Record}
+
+A serviceability experiment must publish a result record for both accepted and rejected recoveries. The record is not an administrative supplement; it is the evidence needed to distinguish a molecular failure from a retrieval-budget failure, a decoder failure, or an out-of-envelope condition. Each record begins with a signed packet identifier and payload checksum. It then binds the physical observation to the declared code and resource boundary. The reporting template in Table~\ref{tab:record} is intentionally compact enough to accompany each file or batch while retaining the fields that determine whether a later operator can reproduce the claim.
+
+\begin{table*}[t]
+\caption{Minimum DSE result record for every future retrieval attempt}
+\label{tab:record}
+\centering
+\footnotesize
+\begin{tabular}{p{0.22\textwidth}p{0.32\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Record block} & \textbf{Required fields} & \textbf{Why the fields are decision-critical}\\
+\midrule
+Identity and source & Packet identifier, payload byte count, source checksum, source format, and payload class. & Prevents a favorable decode from being reported without proving that it corresponds to the requested immutable object.\\
+Encoding and synthesis & Encoder version, deterministic seed, strand length, constraint set, index namespace, code rate, redundancy allocation, synthesis lot, and retained strand count. & Separates code behavior from unreported design choices and makes a future re-encoding auditable.\\
+Storage and handling & Packaging, dry or hydrated state, temperature and humidity range, duration, handling events, aliquot identifier, and declared condition envelope. & States what physical claim is actually supported; it blocks unjustified extrapolation from a short or different storage exposure.\\
+Selective access and reads & Requested file identifier, access method, access round, primer/capture or compartment identifier where applicable, read budget, raw read count, filtering, and coverage distribution. & Makes random-access, crosstalk, and read-cost claims testable instead of conflating them with whole-pool recovery.\\
+Decoding and integrity & Decoder version and environment, parameters, reference test vector, recovered byte count, checksum result, error-correction events, and failure localization. & Enables independent reproduction and identifies whether recovery depended on undocumented local software state.\\
+Decision and resources & Values of $I_f$, $S_f$, $C_f$, $P_f$, final $A(f)$, net accepted density, dated cost assumptions, latency, and deviation notes. & Preserves the complete serviceability decision, including technically informative failures and economic limits.\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The record also supports fair comparison with non-DNA archival media. A tape or optical comparison need not mimic molecular steps, but it should expose the equivalent integrity, retrieval, environmental, interoperability, and resource boundaries. The question is not which medium has the most impressive isolated number; it is which medium meets the acceptance rule for the archive owner's declared retention and access service. This comparative discipline is especially important when technology costs and hardware capabilities evolve faster than long-duration preservation studies.
+
+For DSE Arm C, a future report must provide the arm's allocation rationale. If redundancy is shifted from strand-loss protection to selective-access protection, the record should show why, what channel feature motivated the shift, and how the change affected $D_{\mathrm{net}}$. If an apparent advantage is obtained only by raising the read budget, the DSE vector in \eqref{eq:dse} exposes that tradeoff. If an independent environment performs a recovery using only the packet and raw reads, the report should publish a reproducible test vector and decoder fingerprint. These obligations turn archive serviceability into a reproducible object of study rather than a narrative around a single reconstruction.
+
+\begin{thebibliography}{99}
+
+\bibitem{church2012}
+G. M. Church, Y. Gao, and S. Kosuri, ``Next-Generation Digital Information Storage in DNA,'' \emph{Science}, vol. 337, no. 6102, p. 1628, 2012, doi: 10.1126/science.1226355.
+
+\bibitem{goldman2013}
+N. Goldman \textit{et al.}, ``Towards practical, high-capacity, low-maintenance information storage in synthesized DNA,'' \emph{Nature}, vol. 494, pp. 77--80, 2013, doi: 10.1038/nature11875.
+
+\bibitem{bornholt2016}
+S. Bornholt \textit{et al.}, ``A DNA-Based Archival Storage System,'' in \emph{Proc. ASPLOS}, 2016, pp. 637--649, doi: 10.1145/2872397.2872407.
+
+\bibitem{erlich2017}
+Y. Erlich and D. Zielinski, ``DNA Fountain enables a robust and efficient storage architecture,'' \emph{Science}, vol. 355, no. 6328, pp. 950--954, 2017, doi: 10.1126/science.aaj2038.
+
+\bibitem{organick2018}
+C. E. Organick \textit{et al.}, ``Random access in large-scale DNA data storage,'' \emph{Nature Biotechnology}, vol. 36, pp. 242--248, 2018, doi: 10.1038/nbt.4079.
+
+\bibitem{yazdi2015}
+S. M. H. T. Yazdi, Y. Yuan, J. Ma, H. Zhao, and O. Milenkovic, ``A Rewritable, Random-Access DNA-Based Storage System,'' \emph{Scientific Reports}, vol. 5, Art. no. 14138, 2015, doi: 10.1038/srep14138.
+
+\bibitem{heckel2019}
+R. Heckel, G. Mikutis, and R. N. Grass, ``A characterization of the DNA data storage channel,'' \emph{Scientific Reports}, vol. 9, 2019, doi: 10.1038/s41598-019-45832-6.
+
+\bibitem{antkowiak2020}
+P. L. Antkowiak \textit{et al.}, ``Low cost DNA data storage using photolithographic synthesis and advanced information reconstruction and error correction,'' \emph{Nature Communications}, vol. 11, Art. no. 5345, 2020, doi: 10.1038/s41467-020-19148-3.
+
+\bibitem{matange2021}
+K. R. Matange, J. Tuck, and A. J. Keung, ``DNA stability: a central design consideration for DNA data storage systems,'' \emph{Nature Communications}, vol. 12, Art. no. 1358, 2021, doi: 10.1038/s41467-021-21587-5.
+
+\bibitem{doricchi2022}
+A. Doricchi \textit{et al.}, ``Emerging Approaches to DNA Data Storage: Challenges and Prospects,'' \emph{ACS Nano}, vol. 16, no. 11, pp. 17552--17571, 2022, doi: 10.1021/acsnano.2c06748.
+
+\bibitem{bogels2023}
+B. W. A. B\"ogels \textit{et al.}, ``DNA storage in thermoresponsive microcapsules for repeated random multiplexed data access,'' \emph{Nature Nanotechnology}, vol. 18, pp. 912--921, 2023, doi: 10.1038/s41565-023-01377-4.
+
+\bibitem{welzel2023}
+M. Welzel \textit{et al.}, ``DNA-Aeon provides flexible arithmetic coding for constraint adherence and error correction in DNA storage,'' \emph{Nature Communications}, vol. 14, Art. no. 628, 2023, doi: 10.1038/s41467-023-36297-3.
+
+\bibitem{yu2024}
+M. Yu \textit{et al.}, ``High-throughput DNA synthesis for data storage,'' \emph{Chemical Society Reviews}, vol. 53, no. 9, pp. 4463--4489, 2024, doi: 10.1039/d3cs00469d.
+
+\bibitem{raza2023}
+M. H. Raza, S. Desai, S. Aravamudhan, and R. M. Zadegan, ``An outlook on the current challenges and opportunities in DNA data storage,'' \emph{Biotechnology Advances}, vol. 66, Art. no. 108155, 2023, doi: 10.1016/j.biotechadv.2023.108155.
+
+\bibitem{sensintaffar2025}
+A. Sensintaffar, Y. Wei, L. Ou, D. H. C. Du, and B. Li, ``Advancing Archival Data Storage: The Promises and Challenges of DNA Storage System,'' \emph{ACM Transactions on Storage}, vol. 21, no. 3, pp. 1--34, 2025, doi: 10.1145/3723166.
+
+\end{thebibliography}
+
+\end{document}

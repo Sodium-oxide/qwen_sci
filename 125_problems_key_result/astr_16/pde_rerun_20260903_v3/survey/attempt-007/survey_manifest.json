@@ -1,0 +1,72 @@
+{
+  "artifacts": {
+    "claim_traceability": {
+      "path": "survey_claim_traceability.json",
+      "required": true,
+      "sha256": "e0dfed65e68f466f78aeb02e8c4d965f657e610ff77e70aef7be68e99bf73c57"
+    },
+    "evidence_plan": {
+      "path": "survey_evidence_plan.json",
+      "required": true,
+      "sha256": "d459ef6b64bc6a0a96ebe72700c10447afe952eaf8dbe4870e026c2a8b7e087b"
+    },
+    "gap_candidates": {
+      "path": "survey_gap_candidates.json",
+      "required": false,
+      "sha256": "8d3682e3d6a8979d68aeb5541873649bba35ffc8b798d8d958abc3a399039d23"
+    },
+    "gap_coverage": {
+      "path": "survey_gap_coverage.json",
+      "required": false,
+      "sha256": "08d0a4342389882f73cab3d5df4b4a5b490375a0ad7dafc4e7162201b4a2abb0"
+    },
+    "gap_ledger": {
+      "path": "survey_gap_ledger.json",
+      "required": true,
+      "sha256": "3f58dc4395101face5888de4227b2c1ecce7be5c6fe8bf255c4b1c0b9229c5ea"
+    },
+    "gap_triage": {
+      "path": "survey_gap_triage.json",
+      "required": false,
+      "sha256": "ae01dc11cfbce7fec1fca4e960cfb5f9a1d4d39415ce2e6e38b6735397de1334"
+    },
+    "idea_handoff": {
+      "path": "survey_idea_handoff.json",
+      "required": true,
+      "sha256": "d15e6c40742f54d81e4593e32f5b8a2e40ea458790deffd8de7c03ea2775cb58"
+    },
+    "project_context": {
+      "path": "project_context.json",
+      "required": true,
+      "sha256": "f2389a96d1ecd1c28b154df2cef0ffa3367051d6fc39fe39d6b74cc3e2a09eca"
+    },
+    "survey_json": {
+      "path": "survey.json",
+      "required": true,
+      "sha256": "1c52dffb1aecc3dfce95f1f2ef1c027c1e56bf1cff557ef9db59fe06c5f38134"
+    },
+    "survey_markdown": {
+      "path": "survey.md",
+      "required": true,
+      "sha256": "de5c82facb2d279104b5bf10bcc1d270a1f7d32e5f78fab76dd93aac65ac12a7"
+    },
+    "survey_outline": {
+      "path": "survey_outline.json",
+      "required": false,
+      "sha256": "8dd869ff567ffb28c30723ef26eac8635984af771e16e3760b981e7902b09447"
+    }
+  },
+  "base_dir": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\pde_rerun_20260903_v3\\survey\\attempt-007",
+  "completed_at": "2026-09-02T00:20:38Z",
+  "created_at": "2026-09-02T00:20:38Z",
+  "gap_ledger_schema_version": "survey_gap_ledger_v1",
+  "handoff_schema_version": "survey_idea_handoff_v1",
+  "manifest_fingerprint": "458549992db479d466ddc46da3aa7e5af390690d4f62ac2779057810fcfe678b",
+  "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+  "project_id": "sci_astr_16_survey_007",
+  "schema_version": "survey_manifest_v1",
+  "status": "completed",
+  "survey_run_id": "astr_16-survey-007",
+  "topic": "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong magnetic field. The research should distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution, and test formation and evolution with mathematical models.",
+  "topic_fingerprint": "219600317ef49e5c028e3508c4f58c136a2137fbfa9ac3d33973368622e8b80e"
+}

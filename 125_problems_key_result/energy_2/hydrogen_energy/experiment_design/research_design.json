@@ -1,0 +1,25 @@
+{
+  "stage": "ExperimentDesign",
+  "status": "DESIGN_ONLY",
+  "title": "Service-Normalized Hydrogen System Study",
+  "research_question": "Under which combinations of hydrogen production, electricity, storage, transport, end-use conversion, and policy does hydrogen deliver additional climate, reliability, industrial, or energy-access value compared with direct electrification and competing fuels?",
+  "boundary_states": ["H0_incumbent_baseline", "H1_low_emissions_production", "H2_service_substitution", "H3_integrated_hydrogen_system"],
+  "pathway_factors": ["reforming_and_gasification", "electrolysis", "biomass_and_carbon_capture", "temporal_electricity_matching", "electrolyser_utilization_and_degradation", "compression_and_transport", "storage_and_refueling", "industrial_feedstock", "steel_and_high_temperature_heat", "shipping_and_aviation_derivatives", "backup_and_seasonal_storage", "leakage_embrittlement_and_safety", "water_land_biomass_minerals_and_recycling", "offtake_finance_policy_and_adoption"],
+  "comparators": ["direct_electrification", "batteries", "transmission", "demand_response", "firm_low_carbon_supply", "sustainable_biofuels", "ammonia", "methanol", "synthetic_hydrocarbons", "fossil_hydrogen_with_and_without_ccs"],
+  "stages": [
+    {"id":1,"name":"demand_and_boundary_audit","purpose":"Construct hourly service ledger and separate energy, feedstock, emergency, and routine uses."},
+    {"id":2,"name":"pathway_and_lifecycle_characterization","purpose":"Parameterize energy, water, emissions, methane, capture, replacement, leakage, safety, and material burdens."},
+    {"id":3,"name":"service_level_process_comparison","purpose":"Compare hydrogen and alternatives at matched industrial, transport, chemical, and storage services."},
+    {"id":4,"name":"hub_infrastructure_and_grid_simulation","purpose":"Link production, electricity, storage, transport, offtake, and sector coupling under hourly constraints."},
+    {"id":5,"name":"stress_safety_and_demand_uncertainty","purpose":"Test correlated weather, outage, water, leakage, safety, supply-chain, and demand scenarios."},
+    {"id":6,"name":"out_of_sample_validation_and_adoption","purpose":"Validate held-out conditions and test investment, contracts, certification, and policy withdrawal."}
+  ],
+  "functional_units": ["tonne_ammonia", "tonne_steel", "tonne_km_shipping", "passenger_km_aviation_fuel", "MWh_recovered_electricity", "industrial_heat_service", "kg_hydrogen"],
+  "primary_outcomes": ["lifecycle_emissions", "delivered_service_cost", "service_efficiency", "hourly_reliability", "seasonal_reliability", "hydrogen_leakage", "fossil_displacement", "offtake_fulfillment", "transition_feasibility"],
+  "secondary_outcomes": ["water", "land", "biomass", "minerals", "replacement", "safety_risk", "storage_duration", "curtailment", "grid_congestion", "pipeline_utilization", "capacity_factor", "energy_access", "affordability", "employment", "air_pollution"],
+  "equations": ["service_adequacy", "lifecycle_emissions", "temporally_matched_electricity", "hydrogen_inventory", "portfolio_utility_with_cvar"],
+  "analysis": ["fractional_factorial_screening", "hourly_dispatch_optimization", "lifecycle_assessment", "process_comparison", "scenario_stress_testing", "multiobjective_pareto_frontier", "robust_dominance_and_regret", "out_of_sample_validation", "adoption_and_offtake_sensitivity"],
+  "safeguards": ["separate fossil-free and net-zero-with-ccs labels", "include methane, leakage, water, land, materials, and replacement", "review hydrogen, ammonia, storage, pipeline, transport, and industrial safety", "protect infrastructure and demand data", "do not use announced projects as operating evidence", "do not represent modeled results as observed facts"],
+  "expected_results": [],
+  "observed_results": []
+}

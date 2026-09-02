@@ -1,0 +1,17 @@
+{
+  "science_run_id": "ai-2-intelligence-limit-20260902",
+  "schema_version": "science_run_result_v1",
+  "status": "COMPLETED_WITH_HUMAN_REVIEW_PENDING",
+  "execution_mode": "DESIGN_ONLY",
+  "topic": "Is there a limit to human intelligence?",
+  "primary_direction": "CONSTRAINED-GENERAL-INTELLIGENCE-PLASTICITY-BENCHMARK",
+  "stages": {
+    "survey": {"status": "COMPLETED", "manifest": "ai_2/survey/survey_manifest.json"},
+    "idea": {"status": "COMPLETED", "result": "ai_2/idea/idea_result.json"},
+    "exp_design": {"status": "COMPLETED", "design": "ai_2/experiment_design/research_design.json"},
+    "author": {"status": "COMPLETED", "pdf": "ai_2/author/intelligence_frontier_benchmark_report.pdf"}
+  },
+  "expected_results": [],
+  "observed_results": [],
+  "until": "author"
+}

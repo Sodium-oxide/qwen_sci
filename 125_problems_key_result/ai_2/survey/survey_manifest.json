@@ -1,0 +1,21 @@
+{
+  "manifest_type": "survey_manifest",
+  "schema_version": "1.0",
+  "topic": "Is there a limit to human intelligence?",
+  "scientific_reframe": "Under specified task domains, ages, environments, practice histories, and measurement conditions, does human cognitive performance approach a reproducible upper boundary, and how much of that boundary is shifted by education, health, training, and biological variation?",
+  "stage_status": "completed",
+  "scope": ["psychometric measurement", "Flynn effect and cohort trends", "education and cognitive plasticity", "genetic and brain correlates", "upper-tail ceiling effects", "longitudinal and intervention design"],
+  "evidence_registry": [
+    {"id":"PIETSCHNIG_2015","type":"Flynn_effect_meta_analysis","status":"verified","doi":"10.1177/1745691615577701"},
+    {"id":"RITCHIE_TUCKER_DROB_2018","type":"education_intelligence_meta_analysis","status":"verified","doi":"10.1177/0956797618774253"},
+    {"id":"PLOMIN_VON_STUMM_2018","type":"intelligence_genetics_review","status":"verified","doi":"10.1038/nrg.2017.105"},
+    {"id":"SAVAGE_2018","type":"intelligence_GWAS","status":"verified","doi":"10.1038/s41588-018-0147-3"},
+    {"id":"DEARY_2010","type":"intelligence_neuroscience_review","status":"verified","doi":"10.1038/nrn2793"},
+    {"id":"DEARY_2021","type":"genetics_brain_intelligence_review","status":"verified","doi":"10.1038/s41380-021-01027-y"},
+    {"id":"NISBETT_2012","type":"intelligence_theory_review","status":"verified","doi":"10.1037/a0026699"},
+    {"id":"CARROLL_1993","type":"cognitive_ability_framework","status":"verified","type_detail":"book"}
+  ],
+  "terminology_boundary": "IQ is a norm-referenced score; a limit is defined here as a reproducible, domain- and condition-specific asymptote in latent ability or transferable performance.",
+  "research_gaps": ["cohort trends versus latent invariance", "upper-tail calibration", "individual asymptotes", "domain-specific limits", "causal plasticity versus practice", "brain and genetic mediation"],
+  "observed_results": []
+}

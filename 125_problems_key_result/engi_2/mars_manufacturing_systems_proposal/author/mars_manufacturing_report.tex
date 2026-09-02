@@ -1,0 +1,288 @@
+\documentclass[conference]{../../../../Conference-LaTeX-template_10-17-19/IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{url}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\marscell}{\textsc{Mars-Cell}}
+
+\title{How Can Manufacturing Systems Be Developed on Mars?\\
+\large A Resource-to-Release Research Proposal for Bounded Martian Manufacturing Cells}
+\author{Anonymous Research Proposal}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Mars manufacturing is often presented as a choice of regolith binder, a three-dimensional printer, or a local-material fraction. Those are necessary technical topics but not yet a manufacturing system. A credible early system must convert a bounded mission demand into a released, use-limited item while maintaining traceability from feedstock through processing, energy and environmental constraints, inspection, and recovery. This paper answers the topic directly: a practical path is not a general-purpose Mars factory, but a staged, resource-coupled manufacturing cell for a deliberately limited family of non-pressure, non-life-support, non-medical, non-flight-critical construction and repair products. The proposal introduces \marscell{} (Mars Adaptive Resource-to-Structure Cell with Energy, Logistics, and Lifecycle controls), a typed dossier that binds a product-use card, feedstock-lot card, process-route card, environment-energy card, inspection-release card, and recovery card. The Survey Agent freezes eight evidence records and identifies six gaps: missing end-to-end cell evidence, simulant-to-site transfer uncertainty, resource coupling, quality release, recovery planning, and overbroad scope. The Idea Agent selects \marscell{} over strength-only, route-only, and local-content-only alternatives. The ExperimentDesign Agent specifies a design-only engineering protocol with predeclared status labels and falsifiers. The Author Agent organizes the evidence and plan without claiming that a Mars factory, a Mars deployment, or a new material result has been achieved. The resulting research program makes strong but bounded claims: local resource processing can be investigated as part of a resilient manufacturing architecture only when its release and failure paths are as explicit as its material recipe.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Mars, in-situ resource utilization, additive manufacturing, regolith, systems engineering, quality assurance, resilient manufacturing
+\end{IEEEkeywords}
+
+\section{Introduction}
+The prospect of human activity on Mars makes local production attractive because materials, spare parts, and construction mass are difficult to replenish over interplanetary distance. Yet ``manufacturing on Mars'' is not one technology. It is a coupled system of resource characterization, extraction or conditioning, process selection, energy supply, thermal and dust management, instrumentation, inspection, maintenance, inventory policy, and recovery from failure. A material coupon that survives a terrestrial test does not automatically become a usable Mars part. Equally, an additive-manufacturing route that reduces geometric complexity does not automatically reduce system risk.
+
+The current literature contains important building blocks. Reviews organize Martian simulants, regolith bonding concepts, and additive-manufacturing routes \cite{karl_cannon_gurlo_2021,wang_etal_2022}. Simulant studies motivate clay-based shaping and laser-based fabrication as possible routes for comparative research \cite{karl_etal_2020,balla_etal_2012}. The MOXIE literature provides a relevant atmospheric-ISRU interface \cite{hecht_etal_2020}, while mission-architecture work highlights the coupling among local production, spares, and logistics \cite{do_etal_2016,moses_bushnell_2016}. These sources motivate a research program, not a conclusion that an economical, autonomous, human-rated, general-purpose factory already exists.
+
+One premise in the broad topic deserves correction. Surface operations on Mars involve partial gravity rather than microgravity. The manufacturing challenge is instead the conjunction of a lower-gravity environment with dust, thermal variation, a thin atmosphere, radiation exposure, finite power, communication latency, limited repair capacity, and incomplete knowledge of site-specific feedstock. This paper treats that distinction as a scope invariant.
+
+This report simulates the repository workflow:
+\begin{center}
+Survey $\rightarrow$ Idea $\rightarrow$ ExperimentDesign $\rightarrow$ Author.
+\end{center}
+The central research question is therefore reframed as follows: \emph{How can a first-generation Mars manufacturing system produce and certify a bounded family of non-critical construction and repair items from local and imported feedstocks while preserving energy, thermal, dust, quality, and recovery constraints?} The answer proposed here is \marscell{}, a resource-to-release audit rather than a claim of completed production.
+
+\section{Survey: Evidence Boundary and Research Gaps}
+\subsection{What the frozen evidence does and does not say}
+The Survey Agent uses eight source records, summarized in Table \ref{tab:evidence}. The cross-validated records were discovered through OpenAlex and AnySearch metadata matching. The in-app browser was directed to NASA and DOI pages, but its navigation was blocked by the current network policy. Accordingly, no reference is represented as publisher-page-verified in this document; landing-page verification remains a human review requirement before external publication.
+
+The most relevant technical lesson is not that one regolith route has ``won.'' Karl, Cannon, and Gurlo organize Mars-simulant research, bonding concepts, and additive-manufacturing pathways \cite{karl_cannon_gurlo_2021}; Wang \emph{et al.} similarly review regolith ISRU and habitat-oriented additive manufacturing \cite{wang_etal_2022}. Such reviews support a route portfolio. Karl \emph{et al.} and Balla \emph{et al.} motivate individual comparative process routes using simulants \cite{karl_etal_2020,balla_etal_2012}. Neither type of evidence warrants site-independent feedstock behavior, long-duration operability, crew-critical use, or Mars deployment.
+
+\begin{table*}[!t]
+\caption{Frozen evidence registry and permitted role. Discovery metadata require DOI/publisher landing-page verification before external publication.}
+\label{tab:evidence}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lY Y}
+\toprule
+Record & Permitted role in this proposal & Explicit boundary \\
+\midrule
+Karl--Cannon--Gurlo \cite{karl_cannon_gurlo_2021} & Mars simulants, bonding concepts, and additive-manufacturing route landscape. & No flight, site, or human-rating qualification. \\
+Wang \emph{et al.} \cite{wang_etal_2022} & Field-level regolith-ISRU/habitat-AM context. & Review evidence, not an integrated-cell demonstration. \\
+Karl \emph{et al.} \cite{karl_etal_2020} and Balla \emph{et al.} \cite{balla_etal_2012} & Candidate simulant shaping and laser-route comparisons. & Terrestrial/simulant route does not establish Mars reliability. \\
+Hecht \emph{et al.} \cite{hecht_etal_2020} & Atmospheric-ISRU interface for architecture. & No integrated factory inference. \\
+Do \emph{et al.} \cite{do_etal_2016}; Moses--Bushnell \cite{moses_bushnell_2016}; Rüede \emph{et al.} \cite{ruede_etal_2019} & Mission logistics, ISRU/autonomy framing, and systems-engineering motivation. & No validated settlement or manufacturing-cell feasibility claim. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Accepted gaps}
+Six evidence-grounded gaps shape the proposal. First, material or route demonstrations are not usually linked to an end-to-end resource-to-part-to-inspection-to-recovery cell. Second, a simulant result lacks a standard interface for declaring feedstock provenance, conditioning, descriptors, and site-transfer limits. Third, energy, thermal behavior, dust mitigation, consumables, and manufacturing route are commonly treated as separate concerns. Fourth, a mission-relevant acceptance and quarantine protocol for early locally made items is under-specified. Fifth, manufacturing concepts rarely predeclare rework, substitute-route, imported-spare, or deferment logic. Sixth, broad factory narratives can confuse partial gravity with microgravity and silently expand non-critical demonstrations into crew-critical claims.
+
+These gaps lead to a crucial conclusion: a local-material mass fraction is not a release criterion. An early manufacturing system must demonstrate a defensible chain of custody and a defensible refusal path. The Survey transfers this requirement, plus the bounded source registry, to the Idea Agent.
+
+\section{Idea: From Local Content to a Releaseable Product Cell}
+\subsection{Portfolio comparison}
+The Idea Agent examined three plausible directions. A route-only regolith additive-manufacturing program is compact, but it leaves inspection, energy, and recovery implicit. A maximum-local-content optimizer is logistically appealing, but it can reward a locally made item that is uninspectable, cannot be reworked, or is inappropriate for its intended use. A fully autonomous self-replicating factory is highly novel, but its safety, evidence, and mission assumptions exceed the present scope.
+
+The selected direction is \marscell{}, short for \emph{Mars Adaptive Resource-to-Structure Cell with Energy, Logistics, and Lifecycle controls}. Its primary unit of analysis is not a printer or a material alone, but a dossier:
+\begin{equation}
+\mathcal{D}=\left(\mathcal{P},\mathcal{F},\mathcal{R},\mathcal{E},\mathcal{Q},\mathcal{K},\mathcal{U}\right),
+\label{eq:dossier}
+\end{equation}
+where $\mathcal{P}$ is the product-use class, $\mathcal{F}$ the feedstock-lot card, $\mathcal{R}$ the process-route card, $\mathcal{E}$ the environment-energy card, $\mathcal{Q}$ the inspection-release card, $\mathcal{K}$ the recovery card, and $\mathcal{U}$ the unresolved-assumption and uncertainty record. Every term in \eqref{eq:dossier} must be declared before a candidate is compared with an alternative.
+
+\begin{figure*}[!t]
+\centering
+\fbox{\begin{minipage}{0.93\textwidth}
+\centering\small
+\textbf{Bounded demand} $\longrightarrow$ \textbf{F1 feedstock lot} $\longrightarrow$ \textbf{R2 process route} $\longrightarrow$ \textbf{E3 environment-energy envelope} $\longrightarrow$ \textbf{Q4 inspection/release} $\longrightarrow$ \textbf{conditional status}.\\[2pt]
+\textit{K5 recovery is connected to every stage: rework, substitute route, imported spare, or deferment.}
+\end{minipage}}
+\caption{\marscell{} resource-to-release logic. The editable source diagram is retained as \texttt{figures/mars\_cell\_flow.drawio}. The schematic represents a protocol, not an executed Mars operation.}
+\label{fig:marscell}
+\end{figure*}
+
+\subsection{Falsifiable claim}
+The primary hypothesis is: \emph{if a Mars manufacturing candidate is assessed through coupled feedstock, process, environment-energy, inspection, and recovery cards, then its readiness claim will be more reproducible and operationally meaningful than a claim based only on coupon strength, printability, or local-material fraction.} The claim is falsified if qualification cannot remain stable under declared perturbations, if an imported spare or simpler route dominates after resource and recovery accounting, if inspection cannot discriminate release from quarantine, or if the result changes materially when a simulant-to-Mars transfer assumption is correctly exposed.
+
+Figure \ref{fig:marscell} shows why the idea is not merely a checklist. The recovery card is a first-class interface: a route that can make an item but cannot identify what happens after a failed inspection is not a resilient manufacturing route. The same applies to a process that depends on an undeclared energy or dust-control condition.
+
+\section{ExperimentDesign: A Design-Only Qualification Protocol}
+\subsection{Scope gate and experimental unit}
+The ExperimentDesign Agent uses an engineering-energy template with materials-processing and computational-digital submodules. Its hard execution policy is \texttt{DESIGN\_ONLY}. This report runs no simulator, laboratory experiment, facility operation, robotic test, or Mars mission. The protocol is intended for specialist-reviewed terrestrial analog work in a later phase.
+
+The allowed initial product classes are non-pressure construction coupons, shielding/fixture demonstrators, repair fixtures, and external nonstructural components. Pressure boundaries, life-support components, medical devices, flight hardware, and any component whose failure could immediately endanger crew are excluded. The future experimental unit is
+\begin{equation}
+u= p \times f \times c \times r \times e \times q \times k,
+\label{eq:unit}
+\end{equation}
+where $p$ is the bounded product class, $f$ a feedstock lot, $c$ a conditioning state, $r$ a process route, $e$ an environment-energy profile, $q$ an inspection protocol, and $k$ a recovery route. Equation \eqref{eq:unit} prevents a result from being reported without its material, process, and decision context.
+
+\subsection{Cards, variables, and validation ladder}
+Table \ref{tab:cards} specifies the proposed cards. The variables are intentionally mixed: feedstock descriptors and process route are independent variables; quality proxies, resource-interface margins, inspection stability, and recovery outcomes are dependent variables; product use class, measurement method, recipe identity, and lot tracking are controls. Actual Mars site mineralogy, long-duration operation, power-system behavior, and human/robotic maintenance remain unknowns rather than inputs masquerading as measurements.
+
+\begin{table}[!t]
+\caption{\marscell{} cards and their minimum release question.}
+\label{tab:cards}
+\centering
+\footnotesize
+\begin{tabularx}{\columnwidth}{lY}
+\toprule
+Card & Minimum question before a release claim \\
+\midrule
+$\mathcal{P}$ product-use & Is the product explicitly non-critical and does its failure mode stay within that class? \\
+$\mathcal{F}$ feedstock lot & Are provenance, conditioning, descriptor ranges, and simulant/site-transfer limits recorded? \\
+$\mathcal{R}$ process route & Are recipe identity, consumables, operating window, and safety conditions recorded? \\
+$\mathcal{E}$ environment-energy & Are thermal, dust, exposure proxy, power, and interruption conditions declared? \\
+$\mathcal{Q}$ inspection-release & Can the protocol distinguish release, rework, quarantine, and discard without moving thresholds afterward? \\
+$\mathcal{K}$ recovery & Is rework, substitute, imported spare, or deferment feasible and documented? \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The planned validation ladder has five stages. First, a dossier-completeness gate verifies the cards. Second, a material/process gate rejects routes without bounded windows, traceable input, or a safety statement. Third, a resource-stress gate examines declared analog changes in energy availability, thermal condition, dust exposure, or feedstock state. Fourth, an inspection-release gate holds acceptance thresholds fixed while comparing predeclared methods. Fifth, a recovery and transfer gate requires an explicit fallback plus a separate justification for any Mars-transfer statement. A successful terrestrial analog step does not bypass the fifth gate.
+
+\subsection{Conditional resource and logistics reasoning}
+The proposal does not calculate economics. It uses a conditional resource comparison to prevent a narrow ``local is always better'' assumption. For a candidate item, the future study may report a transparent accounting object
+\begin{align}
+V_{\mathrm{cond}} &= M_{\mathrm{avoided}} \nonumber\\
+&\quad -\left(M_{\mathrm{cons}}+M_{\mathrm{spares}}+M_{\mathrm{rework}}+M_{\mathrm{margin}}\right),
+\label{eq:value}
+\end{align}
+where $M_{\mathrm{avoided}}$ is a declared avoided imported-item mass proxy; the remaining terms represent consumables, supporting spares, rework burden, and margin. Equation \eqref{eq:value} is not a cost model, a launch-mass forecast, or a measured value. It is a disclosure rule: a local feedstock claim cannot hide imported binder, energy hardware, inspection hardware, or recovery burden.
+
+Similarly, the route status is a conditional function
+\begin{equation}
+\sigma = \Psi\left(\mathcal{D},\, I_{\mathrm{stable}},\, B_{\mathrm{use}},\, K_{\mathrm{available}},\, T_{\mathrm{transfer}}\right),
+\label{eq:status}
+\end{equation}
+where $I_{\mathrm{stable}}$ denotes inspection-decision stability, $B_{\mathrm{use}}$ the bounded use class, $K_{\mathrm{available}}$ a recovery route, and $T_{\mathrm{transfer}}$ the Mars-transfer justification. A missing input cannot be folded into a favorable aggregate score; it must select a refusal or inconclusive label.
+
+\section{Pre-Registered Outcome Branches and Falsifiers}
+Table \ref{tab:status} gives the authorized future interpretations. Each branch is deliberately conditional and must not be written as a result of this proposal. This produces a useful negative capability: the program can identify why a candidate should not be used, rather than forcing every comparison to end in a generic ``promising'' conclusion.
+
+\begin{table*}[!t]
+\caption{Pre-registered \marscell{} status branches. These are future decision interpretations, not reported observations.}
+\label{tab:status}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lY Y}
+\toprule
+Status & Authorized interpretation & Required next action \\
+\midrule
+\texttt{ROUTE\_ELIGIBLE} & Dossier is complete enough to test the bounded route; it is not yet a released Mars product. & Proceed to declared analog qualification. \\
+\texttt{CONDITIONALLY\_RELEASEABLE} & A bounded non-critical use class, stable inspection decision, declared resource envelope, and recovery route are all supported in the stated comparison. & Preserve validity domain; do not infer Mars deployment. \\
+\texttt{FEEDSTOCK\_LIMITED} & Lot/conditioning or simulant-transfer variation prevents a stable claim. & Refine feedstock card or restrict use class. \\
+\texttt{ENERGY\_OR\_ENVIRONMENT\_LIMITED} & Declared thermal, dust, exposure, interruption, or power profile breaks the route envelope. & Change envelope, add protection, or use fallback. \\
+\texttt{INSPECTION\_INSUFFICIENT} & Inspection cannot discriminate release, rework, quarantine, or discard. & Withhold use; develop quality method. \\
+\texttt{RECOVERY\_REQUIRED} & Failure route lacks adequate rework, substitution, spare, or deferment plan. & Add recovery card before retesting. \\
+\texttt{TRANSFER\_NOT\_JUSTIFIED} & Terrestrial/simulant evidence is not enough for the proposed Mars statement. & Retain analog conclusion only. \\
+\texttt{MODEL\_INVALID} / \texttt{INCONCLUSIVE} & Scope, product class, or assumptions fail; or evidence does not separate alternatives. & Correct scope or collect specialist-reviewed evidence. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+The primary idea fails if the dossier classification is not more stable and interpretable than a strength-only or local-content-only comparison. It also fails if the classification can be made favorable by omitting inspection, consumables, energy conditions, or recovery. In that event the appropriate outcome is not a repaired narrative but a restricted, invalid, or inconclusive decision label.
+
+\section{Manufacturing Assurance Architecture}
+\subsection{From a build artifact to a safe decision}
+A manufacturing cell produces two outputs: a physical candidate and a decision record. The decision record is what makes the first output usable in a bounded system. It names the product purpose, the known failure consequences, the source of each input, the conditions under which a process was attempted, the inspection evidence that was intended to support a decision, and the action to take if that evidence is missing. This distinction is especially important when an operator cannot assume nearby resupply, unlimited metrology equipment, or unrestricted repair time.
+
+The MARS-CELL architecture therefore allocates assurance across interfaces rather than concentrating it in the final inspection. Feedstock control reduces the risk that a process recipe is applied to an incompatible lot. Process control records what was intended and what resources the route needs. Environment-energy control prevents a laboratory recipe from being silently separated from its thermal, dust, or interruption assumptions. Inspection control prevents a visually acceptable artifact from being treated as a releaseable one. Recovery control prevents a failed part from creating an unplanned operational dead end. The controls are complementary: a high-quality inspection measurement cannot repair a missing feedstock identity, and a sound material card cannot replace a failed recovery plan.
+
+Table \ref{tab:faults} assigns common failure routes to their first required response. The table does not predict their frequency. Its role is to make the program falsifiable: a route that cannot declare how it will recognize and contain a failure does not qualify as a complete manufacturing proposal. The required actions are conservative because the use classes are bounded. There is no provision for accepting an unknown defect in a pressure, life-support, medical, or flight component; such components are outside this protocol altogether.
+
+\begin{table*}[!t]
+\caption{MARS-CELL assurance routing. Failure classes are design inputs, not predicted failure rates.}
+\label{tab:faults}
+\centering
+\small
+\begin{tabularx}{\textwidth}{lY Y Y}
+\toprule
+Failure route & Detecting card and evidence & First authorized action & Claim prevented \\
+\midrule
+Feedstock inconsistency & F1 provenance, conditioning, descriptor range, and lot comparison. & Quarantine lot; restrict use or recondition; do not reuse an unqualified recipe. & A simulant or one lot is treated as a site-independent material. \\
+Process-window drift & R2 recipe identity, consumables, operating record, and stop condition. & Stop/rework or compare declared alternate route. & A one-off artifact is treated as repeatable production. \\
+Environment-energy excursion & E3 thermal, dust, exposure proxy, power, and interruption profile. & Defer, protect, lower duty cycle, or select a lower-demand route. & A terrestrial process is treated as environment-independent. \\
+Inspection ambiguity & Q4 method, fixed threshold, uncertainty route, and decision stability. & Withhold release; develop or qualify inspection before use. & Visual appearance or one proxy becomes a quality guarantee. \\
+No viable recovery & K5 rework, substitute, imported spare, or deferment record. & Escalate to mission inventory decision; do not rely on local production. & Local content is mistaken for resilience. \\
+Scope escape & P0 product use class and failure consequence review. & Label \texttt{MODEL\_INVALID}; route to a separate human-rating program. & Non-critical demonstrator is silently upgraded to crew-critical hardware. \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Configuration, data, and decision traceability}
+The value of a Mars manufacturing record depends on whether a later reviewer can reconstruct the decision without recreating the entire experiment. MARS-CELL accordingly separates immutable identity fields from revisable interpretation fields. Product identity, feedstock lot, recipe version, instrument identity, software version, calibration status, and raw acquisition provenance belong to the immutable record. A fit range, a process-window interpretation, a conditionally releaseable status, and a transfer conclusion remain revisable, but every revision must retain its preceding version and its reason. The goal is not bureaucratic volume; it is to prevent a change in recipe, detector, or product class from being mistaken for the same comparison.
+
+For a future computational or laboratory campaign, each measurement should be linked to the dossier by a typed record $z_i=(d_i, a_i, t_i, v_i, q_i)$, where $d_i$ identifies the dossier, $a_i$ the acquired artifact or simulated object, $t_i$ its time/sequence context, $v_i$ the configuration version, and $q_i$ the quality-control state. The notation is not a database implementation. It is a minimum provenance requirement. If any member is unavailable, a status label must preserve that uncertainty rather than accepting an apparently clean output.
+
+The same principle governs machine-learning assistance. A model can rank candidate process routes, detect deviations in an image or sensor signal, or recommend that a dossier is incomplete. It cannot provide a release decision without the card identities, an uncertainty route, and a named decision owner. Training data also need a regime declaration: an algorithm trained on a specific simulant, printer, camera, or power regime should not be assumed to recognize failures outside that regime. The Research Plan therefore treats AI as an auditable support component, not a source of manufacturing authority.
+
+\subsection{A bounded product portfolio}
+An early product portfolio should be selected by failure consequence and assurance tractability rather than by visual complexity or local-material percentage. Example candidate families include shielding/fixture demonstrators, tooling aids, external nonstructural brackets, test coupons, and repair fixtures that do not seal a habitat or carry crew-critical load. A portfolio should include an imported-spare baseline and a deliberately simpler local fallback. This creates a genuine comparison: if local production demands disproportionate consumables, unstable inspection, or unmanageable recovery, the protocol may recommend the spare baseline without treating that outcome as failure of the overall research program.
+
+The proposed portfolio also gives the system a learning sequence. Low-consequence artifacts can reveal feedstock classification, route sensitivity, metrology access, and recovery bottlenecks before any attempt is made to broaden the use class. A progression is permitted only when the preceding dossier remains auditable and the next product's failure consequence is independently reviewed. This is more demanding than a sequence of impressive prints, but it creates an evidence trail that mission systems engineers can actually use.
+
+\section{System Architecture and Development Roadmap}
+\subsection{Stage-gated capability growth}
+The proposed development path starts with information and interfaces, not a large facility. Stage A establishes a resource and product boundary: identify a site-agnostic analog feedstock descriptor set, choose a small non-critical product family, and document imported dependencies. Stage B compares two or more process routes under the same product-use and inspection cards; for example, a shaped/bound route and a thermally fused route may be compared without declaring either as Mars-ready. Stage C exercises energy, thermal, dust, and interruption scenarios as formal stress conditions. Stage D compares inspection methods and release decisions. Stage E runs a recovery exercise: rework, substitute, imported spare, or deferment. Only after these steps can a mission-system trade study consider a broader integration.
+
+This sequence is a systems-engineering response to the literature landscape. It does not reject additive manufacturing; it gives additive manufacturing a job inside a larger closure argument. The same principle applies to atmospheric processing. MOXIE is relevant because manufacturing cells may depend on gas handling, oxygen, or other resource interfaces, but a technology demonstrator for one interface is not evidence for the entire cell \cite{hecht_etal_2020}. Similarly, ISRU and spares must be treated together because mission architecture couples them \cite{do_etal_2016}.
+
+\subsection{Autonomy and human review}
+Autonomy is valuable for repetitive inspection, lot tracking, environment monitoring, and safe stop/restart logic, especially when communication delay and limited maintenance labor matter. It must not become an unexamined substitute for qualification. The proposed cell therefore records whether an action is autonomous, supervised, deferred to human review, or forbidden. A robotics or AI component may recommend a status only from complete cards and predeclared thresholds; it may not expand the product-use class, override an inspection quarantine, or turn a terrestrial analog result into a Mars deployment claim.
+
+The human-review boundary is specific. A materials/process specialist reviews feedstock and route assumptions; an energy/thermal and dust specialist reviews the environment-energy card; a metrology and quality specialist reviews the inspection/release card; a mission systems engineer reviews interfaces and recovery; and a domain owner reviews the use class. This is not a generic disclaimer. It identifies the expertise needed to detect a wrong but superficially coherent automation decision.
+
+\section{Engineering Implications}
+The strongest engineering contribution of \marscell{} is a validity-domain language. A project may describe a part as made from a simulant, but the dossier asks whether the feedstock is representative, whether the process window is recorded, whether power interruptions are included, how defects are found, and what happens if the item is rejected. This prevents one attractive metric from dominating: high local-content fraction, high compressive strength, or good printability can be useful while still being insufficient for operational release.
+
+The approach also supports procurement and inventory reasoning. Imported spares remain part of a resilient Mars architecture; the decision is not local manufacture versus resupply in the abstract. Instead, a product class may be allocated among imported spare, local route, substitute material, or deferment according to the dossier and recovery logic. This makes local production a managed reduction of specific vulnerabilities rather than a claim of complete independence.
+
+For terrestrial manufacturing, the same logic applies to remote, constrained, or safety-sensitive production settings. Resource-to-release traceability, fixed inspection thresholds, and declared fallback paths can make additive manufacturing more auditable. The transfer is conceptual: this paper does not imply that terrestrial factories and Mars surface operations share the same constraints or standards.
+
+\section{Risks, Limitations, and Human Review Requirements}
+This proposal does not establish the composition of a future Mars site, demonstrate a printer on Mars, manufacture any article, calculate launch economics, or qualify hardware for crew-critical service. Martian regolith diversity, dust behavior, long-duration thermal and radiation exposure, power architecture, maintenance, operations policy, and human factors remain material uncertainties. Even a rigorous terrestrial analog can leave an unbridged transfer gap.
+
+The evidence boundary also matters. All eight frozen sources are discovery-stage or cross-validated metadata records. The browser was unable to complete NASA or DOI page navigation under the current network policy. External publication must therefore include a human verification of landing pages and bibliographic details, followed by an expert review of the interpretation of each source. No source is used here to assert a new strength value, throughput, material availability estimate, cost reduction, or system performance.
+
+Finally, the release logic can fail in a productive way. An inadequate inspection method should yield \texttt{INSPECTION\_INSUFFICIENT}; an underdeclared transfer assumption should yield \texttt{TRANSFER\_NOT\_JUSTIFIED}; a missing fallback should yield \texttt{RECOVERY\_REQUIRED}. Such outcomes protect an early program from treating an attractive laboratory artifact as a manufacturing capability.
+
+\section{Conclusion}
+Mars manufacturing can be developed through a staged, bounded system rather than a premature promise of a self-sufficient factory. Regolith and atmospheric resources, additive-manufacturing routes, autonomy, and systems engineering are enabling components, but none is sufficient alone. The central requirement is a resource-to-release closure: a defined non-critical product, traceable feedstock, declared process window, explicit environment-energy envelope, stable inspection decision, and recoverable failure path.
+
+\marscell{} translates that requirement into a falsifiable research program. It establishes a dossier for each candidate product family, rejects uncontrolled scope expansion, and makes refusal labels as informative as favorable ones. If specialist-reviewed future analog work shows that a bounded product remains releaseable only under declared cards, the program can claim conditional capability. If a feedstock, power, inspection, recovery, or transfer gate fails, the program can say exactly why. That is the appropriate foundation for progressively more capable manufacturing systems on Mars.
+
+\appendices
+\section{Operational Dossier Schema}
+The Author Agent may write only from a dossier that contains the fields in Table \ref{tab:schema}. The table doubles as a handoff contract: Survey supplies source boundary and gap identifier; Idea supplies comparison and falsifier; ExperimentDesign supplies variables, thresholds, and status branches; Author preserves the uncertainty and scope rather than replacing them with a generic success narrative.
+
+\begin{table}[!t]
+\caption{Minimum reproducible \marscell{} dossier fields.}
+\label{tab:schema}
+\centering
+\footnotesize
+\begin{tabularx}{\columnwidth}{lY}
+\toprule
+Field & Required record \\
+\midrule
+Claim identity & Product use class, claim sentence, gap IDs, and forbidden use classes. \\
+Feedstock identity & Provenance, lot, conditioning, descriptor ranges, and simulant/site boundary. \\
+Process identity & Route, recipe, consumables, safety condition, and allowed operating window. \\
+Environment-energy & Thermal/dust/exposure proxy, power/interruption profile, and unmodeled conditions. \\
+Quality identity & Measurement method, fixed thresholds, uncertainty method, and release/rework/quarantine logic. \\
+Recovery identity & Rework, substitute, imported spare, deferment, owner, and stop condition. \\
+Transfer identity & What is analog-only, what needs Mars evidence, and who may authorize a broader claim. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Evidence and Symbol Boundary}
+The permitted evidence roles are set out in Table \ref{tab:evidence}; source landing-page verification is pending. In \eqref{eq:dossier}, the cards define a claim context rather than a physical constitutive law. In \eqref{eq:unit}, $u$ names the future experimental unit and has no reported sample count. In \eqref{eq:value}, all mass terms are future accounting fields, not measured mission values. In \eqref{eq:status}, $\sigma$ is a predeclared status label, not an observed manufacturing outcome.
+
+\section{Product Admission and Transfer Gate}
+The MARS-CELL product gate is intentionally conservative. A candidate is admitted only if its intended function and plausible failure consequence remain within the non-critical scope. The admission record must state what the item supports, what it does \emph{not} support, the environment in which it may be handled, and the action required after an adverse inspection decision. A part is excluded immediately if it creates or maintains a pressure boundary, controls life support, carries a flight-critical load, provides medical function, or would turn a latent manufacturing defect into an immediate crew hazard. Exclusion is not a claim that locally made versions of such parts can never exist; it is a declaration that they require a distinct, human-rated qualification program and cannot be smuggled into an early demonstrator portfolio.
+
+The transfer gate separates four statements that are often conflated. A material-processing statement may be limited to a terrestrial simulant and a named apparatus. A process-window statement may add a particular recipe and environment-energy profile. A conditionally releaseable statement may add a bounded product class, inspection stability, and recovery route. A Mars-transfer statement adds site, operations, and long-duration evidence that is absent from a terrestrial analog. Each statement is useful at its own level. The gate rejects only the leap between levels when supporting cards are missing.
+
+Before a future route can move to the next product class, reviewers should ask: has feedstock provenance changed; has the manufacturing route changed; does the new part have a different failure consequence; can the same inspection method still discriminate use from quarantine; does the recovery route remain available; and is any new environmental assumption being introduced? A ``yes'' answer does not forbid progression, but it requires a new or revised dossier. This rule preserves learning while avoiding an unsupported claim that a successful low-consequence fixture has validated a broader Mars manufacturing capability.
+
+The gate also guides communication. Technical reports should state the highest supported level explicitly---for example, ``simulant route eligible for analog testing'' or ``conditionally releaseable for a bounded terrestrial demonstrator.'' They should not write ``Mars-ready,'' ``self-sufficient,'' or ``economically viable'' without the additional mission evidence those words require. This precision allows stakeholders to identify genuine progress without converting a design proposal into a completed operational claim.
+
+\begin{thebibliography}{99}
+\bibitem{karl_cannon_gurlo_2021} D. Karl, K. M. Cannon, and A. Gurlo, ``Review of space resources processing for Mars missions: Martian simulants, regolith bonding concepts and additive manufacturing,'' \emph{Open Ceramics}, vol. 9, Art. no. 100216, 2021, doi: 10.1016/j.oceram.2021.100216.
+\bibitem{wang_etal_2022} Y. Wang \emph{et al.}, ``In-situ utilization of regolith resource and future exploration of additive manufacturing for lunar/martian habitats: A review,'' \emph{Applied Clay Science}, vol. 229, Art. no. 106673, 2022, doi: 10.1016/j.clay.2022.106673.
+\bibitem{karl_etal_2020} D. Karl \emph{et al.}, ``Clay in situ resource utilization with Mars global simulant slurries for additive manufacturing and traditional shaping of unfired green bodies,'' \emph{Acta Astronautica}, vol. 174, pp. 241--253, 2020, doi: 10.1016/j.actaastro.2020.04.064.
+\bibitem{balla_etal_2012} V. K. Balla, L. Roberson, G. W. O'Connor, S. Trigwell, S. Bose, and A. Bandyopadhyay, ``First demonstration on direct laser fabrication of lunar regolith parts,'' \emph{Rapid Prototyping Journal}, vol. 18, no. 6, pp. 451--457, 2012, doi: 10.1108/13552541211271992.
+\bibitem{hecht_etal_2020} M. H. Hecht \emph{et al.}, ``Mars Oxygen ISRU Experiment (MOXIE),'' \emph{Space Science Reviews}, vol. 216, Art. no. 128, 2020, doi: 10.1007/s11214-020-00782-8.
+\bibitem{do_etal_2016} S. Do, A. Owens, K. Ho, S. S. Schreiner, and O. de Weck, ``An independent assessment of the technical feasibility of the Mars One mission plan - Updated analysis,'' \emph{Acta Astronautica}, vol. 120, pp. 192--228, 2016, doi: 10.1016/j.actaastro.2015.11.025.
+\bibitem{moses_bushnell_2016} R. W. Moses and D. M. Bushnell, ``Frontier In-Situ Resource Utilization for Enabling Sustained Human Presence on Mars,'' NASA STI Repository, 2016, record 20160005963.
+\bibitem{ruede_etal_2019} A.-M. Rüede, A. B. Ivanov, C. Leonardi, and T. Volkova, ``Systems engineering and design of a Mars Polar Research Base with a human crew,'' \emph{Acta Astronautica}, vol. 156, pp. 234--249, 2019, doi: 10.1016/j.actaastro.2018.06.051.
+\end{thebibliography}
+
+\end{document}

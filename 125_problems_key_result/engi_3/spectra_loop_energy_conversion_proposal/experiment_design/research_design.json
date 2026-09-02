@@ -1,0 +1,22 @@
+{
+  "schema_version": "research_design_v1",
+  "project_id": "engi_3_energy_conversion_efficiency",
+  "selected_idea_id": "idea-spectra-loop-001",
+  "template": "engineering_energy",
+  "execution_policy": {"mode": "DESIGN_ONLY", "observed_results": []},
+  "research_brief": {
+    "central_hypothesis": "A hybrid PV-TPV net-efficiency comparison becomes interpretable only through matched source, spectral, thermal, electrical, metrology, uncertainty, and stability boundaries.",
+    "reference_configuration": "single-converter configuration under identical declared source and input boundary",
+    "intervention": "spectral partition into direct-PV and thermal-emitter/TPV paths"
+  },
+  "measurement_contract": {
+    "input_boundary": "named source card containing spectrum or thermal condition, geometry, aperture, and time window",
+    "net_output": "P_PV + P_TPV - P_auxiliary",
+    "required_ledgers": ["reflected/transmitted/absorbed radiation", "thermal rejection", "stored-energy change", "auxiliary loads", "energy residual", "uncertainty propagation"],
+    "comparison_rule": "reference and candidate must use the same denominator and calibrated acquisition protocol"
+  },
+  "variables": {"independent": ["source condition", "partition cutoff", "optical route", "thermal coupling", "load"], "dependent": ["net electrical output", "energy residual", "uncertainty", "drift"], "controls": ["source boundary", "calibration", "decision thresholds", "data reduction version"]},
+  "human_review_required": true,
+  "needs_human_input": ["source/material selection", "laboratory safety review", "uncertainty model", "deployment use case", "publisher-page citation verification"],
+  "status_labels": ["NET_GAIN_SUPPORTED", "COMPONENT_GAIN_ONLY", "MEASUREMENT_BOUNDARY_INVALID", "STABILITY_LIMITED", "TRANSFER_NOT_JUSTIFIED", "INCONCLUSIVE"]
+}

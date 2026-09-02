@@ -1,0 +1,13 @@
+{
+  "schema_version": "survey_idea_handoff_v1",
+  "survey_run_id": "survey-engi3-spectra-loop-001",
+  "project_id": "engi_3_energy_conversion_efficiency",
+  "research_object": "converter architecture x source-spectrum card x optical-partition card x thermal-boundary card x electrical-load card x metrology card x stability/transfer card",
+  "permitted_gap_ids": ["GAP-LIMIT-001", "GAP-SPECTRAL-002", "GAP-BOUNDARY-003", "GAP-METROLOGY-004", "GAP-STABILITY-005", "GAP-TRANSFER-006"],
+  "required_constraints": [
+    "State the exact baseline and the assumption changed by the candidate architecture.",
+    "Include an energy-closure and net-electrical-output definition.",
+    "Include a falsifier and a transfer/stability gate.",
+    "Do not assert observed improvement or universal limit breaking."
+  ]
+}

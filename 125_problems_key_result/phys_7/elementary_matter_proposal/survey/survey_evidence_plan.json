@@ -1,0 +1,18 @@
+{
+  "schema_version": "survey_evidence_plan_v1",
+  "project_id": "phys_7_elementary_matter_20260901",
+  "research_question": "Can a cross-channel analysis distinguish pointlike Standard-Model fermions from finite-size, contact-interaction, or excited-state alternatives under explicit EFT and systematic-uncertainty controls?",
+  "subhypotheses": [
+    {"id": "H1", "claim": "A common resolution ledger can connect high-energy and lepton-hadron observables without treating their systematics as identical.", "evidence_keys": ["allwicher2023", "arrington2021", "abada2019"]},
+    {"id": "H2", "claim": "A contact-interaction deviation requires explicit EFT validity and flavor assumptions before it can be interpreted as compositeness evidence.", "evidence_keys": ["allwicher2023", "brivio2017", "colladay1998"]},
+    {"id": "H3", "claim": "Excited-state and form-factor hypotheses require separate likelihood shapes and cannot be collapsed into one generic new-physics term.", "evidence_keys": ["cms_tau2025", "allwicher2023"]},
+    {"id": "H4", "claim": "The SM field inventory is a current, testable description rather than a proof against every higher-scale degree of freedom.", "evidence_keys": ["pdg2008", "cottingham2007", "cms_higgs2015"]}
+  ],
+  "claim_constraints": [
+    "Do not state that quarks or leptons are proven indivisible at all scales.",
+    "Do not describe protons or neutrons as elementary particles.",
+    "Do not say that all bosons are force carriers.",
+    "Do not convert future-facility projections into observed results.",
+    "Do not identify an EFT contact coefficient with a unique microscopic constituent model."
+  ]
+}

@@ -24,6 +24,7 @@ def build_author_source_bundle(
     survey_sources: Mapping[str, Any],
     survey_binding: Mapping[str, Any],
     idea_evolution: Mapping[str, Any],
+    quantitative_evidence: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Create a source-addressable bundle without parsing human-readable Markdown."""
 
@@ -39,6 +40,7 @@ def build_author_source_bundle(
         "survey_sources": deepcopy(dict(survey_sources)),
         "survey_binding": deepcopy(dict(survey_binding)),
         "idea_evolution": deepcopy(dict(idea_evolution)),
+        "quantitative_evidence": deepcopy(dict(quantitative_evidence or {})),
     }
     return bundle
 

@@ -1,0 +1,483 @@
+ How Do Migratory Animals Know Where They
+                  Are Going?
+A Design-Only Framework for Testing Multisensory
+        Navigation and Magnetoreception
+                                Survey–Idea–ExperimentDesign–Author Research Workflow
+
+
+   Abstract—Migration is not one sensory act. A long-distance            Long-distance routes are especially demanding. A migrant
+migrant must decide when to leave, establish a direction,             must generate an initial heading, retain or update it while
+compensate for the changing position of the sun and stars,            cues move or disappear, detect perturbations such as wind dis-
+respond to wind or water flow, recognize familiar places, estimate
+displacement from a target region, and select safe habitat. These     placement, and make route or stopover decisions. Mouritsen’s
+tasks occur at different spatial and temporal scales and cannot       synthesis emphasizes that no single cue can provide pinpoint
+be inferred from a single successful track. Magnetic information      accuracy over thousands of kilometres; multiscale and multi-
+is particularly informative because the geomagnetic field can         sensory integration is expected [1]. The appropriate scientific
+provide a directional compass and, in principle, spatial gradients.   question is therefore conditional: which information source is
+However, a behavioural bearing shift, a molecular magnetic-field
+effect, and an ecologically useful map are different claims. This     used by a particular animal, at a defined migratory phase and
+design-only paper introduces MAGNAV, the Multisensory Animal          environmental context, and what navigation computation does
+GeoNavigation Assessment and Validation framework, for testing        it support?
+those claims without treating one cue or receptor as a universal         The prompt foregrounds magnetoreception. Magnetic cues
+explanation of migration. MAGNAV separates cue availability,          are biologically plausible and experimentally tractable, but
+cue-dependent orientation, receptor or neural mediation, route-
+level contribution, and cross-context generalization. It requires a   they must be interpreted with care. A light-dependent in-
+species-, season-, developmental-stage-, and route-specific bound-    clination compass, magnetic-map-like responses, magnetite
+ary; preregistered cue-conflict and restoration controls; a cue-      hypotheses, and induction-based sensitivity are not inter-
+dependence ledger; and noncompensatory gates for manipulation         changeable. The radical-pair hypothesis is strengthened by in
+integrity, welfare, competing cues, and replication. The frame-       vitro magnetic sensitivity of European robin cryptochrome 4
+work uses an S0–S4 scenario ladder spanning sensory-context
+atlases, controlled orientation tests, receptor-to-behaviour bridge   (ErCRY4) [2]; it does not establish the complete receptor-to-
+assays, free-ranging validation, and independent replication. It      neural-circuit-to-route chain. This paper converts that bound-
+treats cryptochrome 4 magnetic photochemistry in European             ary into a staged research architecture called MAGNAV.
+robin as important discovery-stage evidence for a radical-pair
+candidate, not proof that the protein is the in vivo receptor         II. S URVEY: W HY O NE NAVIGATION E XPLANATION FAILS
+or that magnetic sensing fully explains migration. No animal,         A. Navigation is layered
+molecular, tracking, or clinical-style outcome is reported here.
+The conclusion is conditional: migratory navigation can be               Three layers should be separated. A compass supplies
+studied as multiscale cue integration, but credible claims require    direction relative to a reference frame. A map supplies a
+separate evidence for the particular species, cue, computation,       position-dependent relationship between the animal and a goal.
+ecological context, and mechanism under discussion.                   A route controller combines these estimates with energetic
+   Index Terms—animal migration, navigation, magnetoreception,
+cryptochrome, radical pairs, celestial compass, cue integration,
+                                                                      state, weather, habitat, social information, and time. Celestial,
+movement ecology.                                                     visual, olfactory, hydrodynamic, and geomagnetic information
+                                                                      may contribute at more than one layer, but evidence for one
+                                                                      layer does not automatically transfer to another.
+                       I. I NTRODUCTION
+                                                                         For individual i at time t, a measured horizontal bearing θit
+   The everyday phrase “animals know where they are going”            can be represented by the unit vector
+compresses several biological problems into one. An animal
+                                                                                          uit = (cos θit , sin θit ) ,             (1)
+can maintain a southwesterly bearing without knowing its
+geographic position. It can recognize a familiar coastline            where the coordinate origin and angle convention are frozen
+without possessing a global map. It can respond to a magnetic         before analysis. Equation (1) records a direction, not knowl-
+field in a molecular assay without using that response during a       edge of a destination. For a release block with weights wi , the
+migratory flight. These distinctions matter because migration         mean resultant vector is
+covers insects, birds, fish, turtles, marine mammals, and other
+                                                                                           ∑︁
+                                                                                              i wi uit
+taxa operating in radically different sensory environments.                          ūt = ∑︁          ,    Rt = ∥ūt ∥.           (2)
+                                                                                                i wi
+Here Rt is concentration, so a shift in the mean can be           unavailable but be downweighted when sky cues or landmarks
+distinguished from loss of orientation. Equation (2) prevents     are reliable. It does not identify the weights without data.
+a diffuse or bimodal response from being misreported as a            The framework advances through five evidence levels:
+single preferred heading.                                         cue availability, cue-dependent orientation, mechanism-to-
+                                                                  behaviour mediation, ecological route contribution, and inde-
+B. Celestial, landscape, and magnetic information                 pendent extension. A result stays at its level until the next
+   Solar and stellar patterns can provide directional reference   gate has been passed. MAGNAV’s central object is a cue-
+frames, while visual landscapes, odours, currents, and waves      dependence ledger, which records the denominator of sampled
+can add local or regional information. A solar compass re-        animals, retained cues, target manipulation, restoration control,
+quires time compensation because solar azimuth changes dur-       exclusions, and strongest permitted conclusion.
+ing the day; monarch antennae have been shown to participate
+                                                                      IV. E XPERIMENT D ESIGN : C ONTROLLED T ESTS TO
+in the circadian organization of sun-compass navigation [7],
+                                                                                E COLOGICAL C ONSEQUENCE
+and polarized skylight can remain informative when direct
+solar observations are degraded [8]. For a clock phase τ and      A. Population boundary and primary estimands
+observed solar azimuth θsun (t), a generic corrected compass         The initial demonstrator should be one preregistered noc-
+bearing can be expressed as                                       turnally migrating songbird population in one season, not
+                                                                  “birds” as a generic category. S0 fixes age/experience class,
+              θcelestial (t) = θsun (t) − g(τ, t, ℓ),       (3)   capture or observation geography, calendar window, moon
+where g is a species- and location-dependent calibration func-    and cloud conditions, light spectrum, local field vector, an-
+tion and ℓ denotes latitude or relevant geometry. Equation (3)    thropogenic electromagnetic environment, and route history
+is a model of the required computation, not a claim that every    where available. Such detail is not administrative overhead; it
+migratory species implements the same function.                   specifies which cue combinations the experiment can possibly
+   The geomagnetic field contains declination, inclination, and   distinguish.
+intensity. These may serve as directional or spatial cues            In S1, the primary estimand is the change in circular
+depending on the animal and task; sea-turtle work illustrates     bearing between a stated cue-conflict arm and a matched sham
+why a magnetic compass and an open-sea navigation account         arm. Let Ai ∈ {0, 1} indicate assigned arm and Yi be a
+must still be evaluated separately [9]. The radical-pair ac-      preregistered angular or vector response. The contrast is
+count predicts a light-dependent chemical response to field       ∆bearing = E [Yi | Ai = 1, Bi = 1] − E [Yi | Ai = 0, Bi = 1] ,
+direction and strength [3], [4]. Consistent with this class of                                                                  (5)
+mechanism, Xu et al. reported that ErCRY4 photochemistry          where Bi = 1 denotes eligibility after predeclared quality
+is magnetically sensitive in vitro and characterized radical-     checks. Equation (5) must be estimated jointly with concen-
+pair pathways that can produce magnetic-field effects [2].        tration and the complete eligibility ledger. It is not meaningful
+Birds also have behavioural evidence that visual rather than      if the experimental and sham field, illumination, or handling
+trigeminal mediation can carry magnetic-compass information       conditions are physically distinguishable in another way.
+in a defined migratory context [6]. None of these observations       S3 evaluates route-level consequences rather than an arena
+makes beak magnetite, retinal cryptochrome, and all magnetic      proxy. For route segment s, a map-relevant directional error
+behaviours the same causal system.                                can be defined as
+                    III. I DEA : MAGNAV                                                Eis = ang (his , gis ) ,                (6)
+   MAGNAV denotes Multisensory Animal GeoNavigation As-           where his is observed displacement heading and gis is a
+sessment and Validation. It is not an algorithm assigned to       preregistered goal or expected corridor vector. Equation (6)
+an animal. It is a claim-control framework that records what      requires that gis be defined without looking at the manipulated
+cue was manipulated, what cues remained available, which          tracks. A low error alone does not identify which retained cue
+computation was tested, and which inference is licensed. It       was used.
+therefore avoids reducing a navigation system to the cue that
+happened to be easiest to manipulate.                             B. Cue conflicts and restoration
+   For cue set Cit , environmental state Xit , and internal          The decisive intervention is not simple cue removal. MAG-
+state Zit , a generic integrated directional decision can be      NAV combines baseline, magnetic rotation or virtual dis-
+represented as                                                    placement, celestial-clock or polarization manipulation where
+                      ∑︁
+                              αc (Xit , Zit )vc,it                ethical and feasible, cross-cue conflict, sham, and restoration
+              d̂it = ⃦∑︁c∈Cit                      ⃦,     (4)     conditions. The planned magnetic rotation is represented by
+                        c∈Cit αc (Xit , Zit )vc,it
+                     ⃦                             ⃦
+                                                                                         B′it = Q(ϕ)Bit ,                      (7)
+where vc,it is a cue-derived directional vector and αc is an
+adaptive weight. Equation (4) captures a testable possibility:    where Bit is the measured baseline vector and Q(ϕ) is a
+a magnetic cue may dominate when celestial information is         verified rotation by angle ϕ. Equation (7) formalizes a physical
+                                                                    TABLE I
+                                           E VIDENCE BOUNDARY FOR CLAIMS ABOUT MIGRATORY NAVIGATION .
+
+Evidence class                     What it can establish                           Principal limitations                          Unsupported shortcut
+Orientation arena response         Conditional change in bearing or                Arena, light, handling, motivation, and        A geographic map or wild-route
+                                   concentration under stated cues.                cue availability may differ from migration.    consequence.
+Celestial cue manipulation         Time- or polarization-dependent                 Clock, weather, retinal state, and learned     A universal solar or stellar
+                                   directional information.                        calibration remain possible mediators.         mechanism.
+Magnetic virtual                   Sensitivity to a stated field vector or         Coil artefacts, electromagnetic noise, and     Identification of the receptor or
+displacement                       map-like gradient.                              retained cues can confound interpretation.     route-level navigation.
+Molecular magnetic effect          Candidate photochemical or cellular             Expression, localization, signalling, and in   Proof of animal-level
+                                   mechanism under assay conditions.               vivo causal role remain untested.              magnetoreception.
+Free-ranging track                 Ecological movement outcome in a                Wind, survival, tag effects, route             A single-cue causal explanation.
+                                   sampled season and location.                    experience, and missingness are coupled
+                                                                                   to movement.
+Replication                        Reproducibility within a locked                 Finite species, seasons, and conditions        A mechanism shared by all
+                                   boundary.                                       remain finite.                                 migrants.
+
+
+                                                                       TABLE II
+                                         C UE - TO - COMPUTATION HYPOTHESES THAT MUST BE TESTED SEPARATELY.
+
+Cue family                       Candidate computation                Discriminating manipulation                         Bounded conclusion
+Sun, stars, polarized light      Directional compass with time        Clock shift, sky-pattern rotation,                  Celestial information contributes to
+                                 or sky calibration.                  light-spectrum control, cue restoration.            orientation under the tested condition.
+Landmarks, olfaction,            Local recognition or regional        Familiar versus unfamiliar release, odour           Specified landscape or odour
+habitat                          map calibration.                     masking, panorama control, return test.             information affects local navigation.
+Magnetic inclina-                Compass, virtual displacement,       Controlled field rotation or displacement           Behaviour depends on the stated
+tion/declination/intensity       or map-like gradient cue.            with physical-field measurements and sham           magnetic manipulation.
+                                                                      coils.
+Radical-pair candidate           Light-dependent receptor or          Wavelength/RF prediction, receptor variant          Bounded receptor-to-response
+                                 transduction step.                   or pathway perturbation, matched sensory            contribution.
+                                                                      controls.
+Electromagnetic induction        Motion-through-water signal in       Flow, conductivity, and field-vector                Induction-like information is available
+                                 electroreceptive animals.            manipulation with electroreception controls.        and behaviourally relevant.
+
+
+                                                                        TABLE III
+                                                                  MAGNAV SCENARIO LADDER .
+
+ Stage                 System and intervention                      Primary measurement                             Advancement condition
+ S0                    Species, season, developmental state,        Provenance, sensor coverage, field and          Sampling and exposure boundaries are
+                       route, light, weather, and                   sky metadata.                                   locked.
+                       magnetic-context atlas.
+ S1                    Controlled orientation with cue              Bearing, concentration, latency, and            Predicted contrast appears against sham and
+                       rotation, virtual displacement,              individual heterogeneity.                       reverses or calibrates as declared.
+                       cross-cue conflict, sham, and
+                       restoration.
+ S2                    Candidate receptor, sensory pathway,         Manipulation integrity, cue response,           Target perturbation is interpretable and
+                       or neural computation test with              sensory function, and viability.                mechanism prediction survives controls.
+                       matched controls.
+ S3                    Free-ranging, ethically tagged or            Route deviation, correction latency,            Ecological effect is distinguishable from
+                       observational study with track-quality       stopover decision, and missingness.             weather, device, or release effects.
+                       and weather provenance.
+ S4                    Independent laboratory, site, season, or     Replication, restriction, and                   The context boundary replicates or is
+                       specified taxon with frozen analysis.        negative-result reporting.                      honestly narrowed.
+
+
+
+intervention; it does not guarantee that the animal experiences                       trast R. Equation (8) must be interpreted with circular-
+no accompanying auditory, thermal, visual, or electromagnetic                         appropriate estimators and uncertainty, but it prevents a one-
+artefact.                                                                             way perturbation from being called cue-specific without a
+   A restoration test asks whether the response returns to-                           return condition.
+ward the preregistered baseline relation when the conflict is                                  V. M ECHANISM - TO -B EHAVIOUR B RIDGE
+removed. The effect-size decomposition
+                                                                                        The radical-pair mechanism should be treated as a bridge
+   C = ∆conflict − ∆sham ,              R = ∆restore − ∆sham ,               (8)      hypothesis. Light absorption by a cryptochrome can generate
+                                                                                      spin-correlated radical pairs whose chemical yields vary with
+separates a planned conflict contrast C from restoration con-                         magnetic conditions. The relevant inference is conditional:
+                                                                  TABLE IV
+                                                E NDPOINT HIERARCHY AND PROHIBITED INFERENCE .
+
+Endpoint tier                   Required measurement                          Interpretation enabled                      Prohibited shortcut
+Manipulation integrity          Calibrated magnetic vector, light             Whether an arm differs in the intended      Assuming a coil or light device
+                                spectrum, RF noise, release and               physical cue.                               altered only one cue.
+                                handling records.
+Orientation response            Individual bearing, concentration,            Conditional cue-dependent orientation.      Calling a bearing shift a map or
+                                latency, sham, and restoration.                                                           receptor result.
+Mechanism bridge                Candidate-pathway perturbation,               Bounded causal contribution under the       Claiming complete in vivo
+                                non-target control, sensory-function          assay.                                      magnetoreception.
+                                and health checks.
+Ecological route outcome        Track error, correction timing,               Route-level contribution in the             Generalizing one season to a
+                                weather/current, tag and data-loss            sampled context.                            species-wide map.
+                                provenance.
+Replication                     Locked protocol, independent samples,         Reproducibility of a defined claim.         A universal navigation mechanism.
+                                full negative and attrition results.
+
+
+                                                                   TABLE V
+                                                       C ONFOUND AND PROVENANCE LEDGER .
+
+Threat                           Required record or control                       Failure if omitted                       Resulting limit
+Coil or device artefact          Field mapping, sham hardware,                    Behaviour reacts to apparatus rather     No cue-specific conclusion.
+                                 thermal/acoustic/light monitoring.               than magnetic vector.
+Celestial confounding            Spectrum, irradiance, cloud, polarization        Magnetic and celestial reliability       No magnetic-versus-celestial
+                                 proxy, lunar phase, clock phase.                 covary.                                  weighting inference.
+Wind, current, and release       High-resolution flow/weather and exact           Route deviation reflects transport or    No map correction claim.
+geometry                         release metadata.                                site bias.
+Health, device burden, and       Welfare thresholds, mass/drag, duration,         Disorientation reflects stress or        No sensory-mechanism claim.
+handling                         recovery, stop rules.                            impairment.
+Track missingness                Battery/duty cycle, positional error, loss       Selective attrition changes observed     No ecological effect estimate
+                                 reason, censoring time.                          route distribution.                      without sensitivity analysis.
+Experience and social context    Age, prior migration, group state, and           Cue use varies with learning or          No population-wide
+                                 release block.                                   following.                               generalization.
+
+
+
+if a candidate protein has an appropriate photochemical re-                         Track inclusion should not erase missingness. For retained
+sponse, localization, expression, signalling connection, and                     follow-up indicator Ri (t) and covariate history Li (t), an
+perturbation-to-behaviour association, it becomes a stronger                     inverse-retention sensitivity weight can be written as
+mechanistic explanation for that population and condition. It                                              ∏︂      qs (1 | Ai )
+is still not a species-general conclusion.                                                       Wi (t) =                           ,     (10)
+   For a molecular or neural readout M , a target perturbation                                                 qs (1 | Ai , Li (s))
+                                                                                                                s≤t
+P , and cue condition A, a bridge interaction may be summa-
+                                                                                 where qs models the probability that usable tracking informa-
+rized as
+                                                                                 tion remains at time s. Equation (10) exposes assumptions
+  Γ = [E(M | P = 1, A = 1) − E(M | P = 1, A = 0)]                                about selective loss; it does not create information about
+         − [E(M | P = 0, A = 1) − E(M | P = 0, A = 0)] .                         animals whose outcome is unobserved.
+                                                       (9)                          The experiment also needs a model for heterogeneity. A cue
+                                                                                 may be useful only under cloud cover, at a particular latitude,
+Equation (9) asks whether cue responsiveness depends on the                      before learning a route, or during a transition between day
+nominated perturbation. It cannot repair non-specific perturba-                  and night. Therefore, a cue-by-context interaction is a planned
+tion, altered vision, toxicity, developmental compensation, or                   scientific result, not a failed universal story. The multiplicity
+a mismatch between the assay and migratory state.                                family should be frozen before data collection. For m ordered
+                                                                                 confirmatory hypotheses, a step-down rule may compare
+         VI. F IELD T RANSLATION , A NALYSIS , AND
+                     R EPRODUCIBILITY                                                                                α
+                                                                                                         p(j) ≤            ,                 (11)
+   Laboratory orientation and field navigation answer different                                                 m−j+1
+questions. An arena can expose cue conflicts precisely but has                   at rank j. Equation (11) controls a stated family-wise error
+limited ecological realism. Tracking has ecological realism but                  target but cannot correct post hoc selection of species, route,
+introduces weather, social, device, and data-loss confounding.                   cue definition, or outcome window.
+A valid programme links them through predeclared predictions                        The reproducibility package should contain protocol ver-
+rather than assuming that a positive laboratory result will                      sion, species and route boundary, cue calibration records,
+appear unchanged in the field.                                                   sensor and device metadata, animal welfare events, release
+                                                                 TABLE VI
+                                     M ECHANISM CLAIMS AND THE EVIDENCE NEEDED BEFORE ADVANCING THEM .
+
+Candidate statement                Necessary evidence                        Critical alternatives to exclude             Maximum claim
+CRY4-like radical pair is          Reproduced field-dependent                Photochemical artefact, non-physiological    Molecular candidate.
+magnetically responsive            chemistry with calibrated light and       concentration, unrelated signalling.
+                                   molecular controls.
+Candidate receptor mediates a      Localization and target-specific          Vision or health impairment, off-target      Bounded
+compass response                   perturbation paired with                  effects, developmental compensation.         receptor-to-orientation bridge.
+                                   sensory-function and rescue controls.
+Magnetite-like particles           Independent localization, material        Contamination, macrophage/iron storage,      Context-specific
+contribute                         identification, perturbation, and         non-specific lesion effects.                 magnetic-sensing contribution.
+                                   behavioural rescue logic.
+Induction supports aquatic         Flow, conductivity, field, and            Current-following, pressure, vibration, or   Conditional induction-like cue
+orientation                        electroreception manipulations with       non-magnetic electroreception.               use.
+                                   matched hydrodynamic controls.
+
+
+                                                                   TABLE VII
+                                              D ECISION GATES AND VALUE - OF - INFORMATION PRIORITIES .
+
+Open dependency                 Discriminating evidence                       Decision changed                            Claim still not proved
+Physical manipulation           Direct field/light/noise calibration and      Whether a cue-conflict test is              Animal uses the cue.
+                                sham equivalence.                             interpretable.
+Cue dependence                  Predicted contrast plus restoration and       Whether to pursue the cue under this        A map, route benefit, or
+                                complete individual distribution.             context.                                    receptor.
+Mechanism bridge                Target-specific perturbation, rescue,         Whether the candidate pathway remains       In vivo complete receptor
+                                sensory-function and health controls.         plausible.                                  mechanism.
+Ecological consequence          Track provenance, weather/current             Whether field deployment is warranted.      Species-wide migration
+                                adjustment, missingness sensitivity, route                                                explanation.
+                                prediction.
+Cross-context extension         Independent site, season, or taxon using      Whether the boundary expands or             A cue common to all
+                                locked protocol.                              contracts.                                  migratory animals.
+
+
+
+and track provenance, all inclusion and exclusion rules, raw                       Comparative tests should first preserve a common inferential
+and cleaned bearing data, analysis code, null tests, negative                   core: physical cue calibration, sham and restoration conditions,
+results, and a statement of the strongest conclusion permitted.                 individual-level responses, welfare monitoring, and transparent
+This paper contains no empirical package because it reports                     attrition. The species-specific layer then changes the interven-
+no study outcome.                                                               tion. A magnetic coil arrangement appropriate to a songbird
+                                                                                may be irrelevant or unsafe for a marine animal; a virtual
+  VII. C ROSS -TAXON P REDICTIONS AND C OMPARATIVE
+                                                                                magnetic displacement may be more interpretable than phys-
+                             D ESIGN
+                                                                                ical relocation for a turtle; and a clock-shift design can probe
+   The framework must resist a second kind of overgeneral-                      sun-compass computation in insects without presupposing an
+ization: treating a useful bird experiment as a generic animal-                 avian receptor.
+navigation experiment. A songbird’s light-dependent retinal                        The appropriate result of comparative work is a mechanism
+candidate, an insect’s time-compensated sun compass, a sea                      map, not a species ranking. The map identifies which cues
+turtle’s open-ocean orientation, and an electroreceptive fish’s                 have evidence at what level and under which context. It allows
+induction-sensitive environment place different constraints on                  common functions to emerge without demanding identical
+the intervention. Cross-taxon work is strongest when it pre-                    receptors. It also makes genuine divergence informative: two
+dicts a contrast from anatomy, habitat, optical environment,                    animals may both follow a migratory bearing while deriving
+locomotion, or known sensory repertoire before observing the                    it from different sensory pathways or using the same cue for
+outcome.                                                                        different computations.
+   For example, a radical-pair candidate predicts sensitivity to
+the joint light regime and field geometry, whereas an induction                   VIII. DATA A RCHITECTURE , W ELFARE , AND S TOPPING
+account predicts dependence on movement, conductivity, and                                                  RULES
+electrosensory state. A landmark or olfactory hypothesis pre-                     Navigation studies often combine rich biological signals
+dicts stronger effects near familiar regions or on routes where                 with fragile observations. A high-resolution track can be miss-
+the corresponding information is present. These predictions                     ing exactly when weather is poor, a magnetic manipulation can
+can all be wrong, but they make an experiment discriminating.                   be applied unevenly across a release block, and a behavioural
+A cue is not shown to be unimportant merely because its                         score can be unknowingly influenced by an observer who
+prediction fails in a condition in which it was never physically                knows the arm. MAGNAV treats these as scientific risks rather
+available or ecologically reliable.                                             than later data-cleaning inconveniences. Every stage has a
+                                                              TABLE VIII
+                             C OMPARATIVE PREDICTIONS THAT KEEP FUNCTION SEPARATE FROM RECEPTOR IDENTITY.
+
+System boundary              Leading discriminating question       Context-appropriate manipulation and           Result that would narrow, not
+                                                                   control                                        universalize, the claim
+Nocturnal migratory          Does a light-dependent magnetic       Field rotation/displacement across             A spectral and field-dependent
+songbird                     cue contribute to a compass           controlled spectra, sham coils, restoration,   orientation effect for the stated
+                             response?                             visual-function controls.                      population and season.
+Monarch or other diurnal     Does circadian state calibrate        Clock shift, sky cue rotation, antenna or      A time-dependent celestial-compass
+insect                       solar or polarized-light direction?   sensory intervention where ethically           contribution under the tested sky
+                                                                   justified, matched handling.                   condition.
+Sea turtle or other marine   Does field information contribute     Virtual field displacement with                A field-context route correction
+migrant                      to open-sea orientation or            oceanographic, release, and tag-quality        hypothesis for a defined life stage
+                             displacement correction?              provenance.                                    and release region.
+Electroreceptive aquatic     Is an induction-like signal           Joint flow, conductivity, field, and           Conditional dependence on the
+animal                       available during movement             electroreception controls.                     predicted physical interaction.
+                             through conductive water?
+Familiar-route terrestrial   Do landscape or odour cues            Familiar/unfamiliar release and cue            A local or regional cue contribution,
+migrant                      calibrate a regional map?             masking with welfare and sensory controls.     not a global navigation theory.
+
+
+
+physical-provenance record, an animal-provenance record, and                a geographic coordinate. A molecular magnetic effect can
+an analytical-provenance record.                                            constrain mechanistic theories without identifying a sensory
+   Physical provenance includes the three-dimensional mag-                  receptor. A route shift can be ecologically important without
+netic vector, local anomaly and time variation, coil calibration,           being caused by the manipulated cue.
+RF noise, illumination spectrum and irradiance, sky condi-                     Selection is another threat. A target cue can appear decisive
+tions, weather, wind or current, and release geometry. Animal               if animals are chosen after a promising orientation assay,
+provenance includes capture or observation time, condition                  if a field season has unusually clear skies, or if track loss
+assessment, handling duration, device characteristics, release              selectively removes animals in difficult conditions. MAGNAV
+time, social context, and ethical withdrawal. Analytical prove-             requires the denominator of attempted measurements, device
+nance includes the preregistered estimator, code version, all               failures, welfare withdrawals, and environmental exclusions.
+raw and derived files, track-quality rule, blind status, and the            It also requires the mapping between a claimed cue and the
+reason for each exclusion. The record is useful even when                   measured physical signal. Without that mapping, a label such
+the experiment is negative, because it distinguishes an absent              as “magnetic condition” can conceal a mixture of field, light,
+behavioural response from an unverified cue manipulation.                   hardware, and handling differences.
+   Welfare is noncompensatory. A study cannot justify a mech-                  Transportability needs the same discipline. An effect seen
+anistic claim by producing a large orientation contrast if device           in one latitude, season, or stage can be genuine and still not
+burden, stress, or abnormal sensory function make the contrast              generalize. The scientifically useful outcome is often a nar-
+uninterpretable. The protocol therefore defines stop rules for              rower boundary: for example, a cue matters for inexperienced
+individual distress, tag or device malfunction, unexpected mor-             juveniles under overcast conditions but not for adults on famil-
+tality, adverse weather, unacceptable release conditions, and               iar routes. Restriction is a discovery about the computation;
+loss of calibrated manipulation. These rules must be applied                it should not be treated as an inconvenient deviation from a
+independently of whether preliminary responses resemble the                 universal narrative.
+expected direction.
+                                                                                            X. D ISCUSSION AND C ONCLUSION
+   Stopping rules also protect inferential integrity. If the sham
+field drifts, the light spectrum changes outside tolerance, a                  Migratory animals do not need one magical sense to nav-
+route prediction was not fixed, or tracking loss crosses a                  igate. The strongest current account is that animals integrate
+predeclared threshold, the study pauses or downgrades its                   cues across spatial and temporal scales, switching or weighting
+claim rather than continuing to accumulate an opaque average.               them as their availability and reliability change. Celestial
+The next action can be recalibration, a narrower sensory                    patterns, visual landscapes, odours, hydrodynamics, biological
+claim, or a redesigned replication. It cannot be retrospective              clocks, and magnetic information can each be valuable, but
+relabelling of the problem as biological variability.                       their roles depend on the organism and task. The 2018 long-
+                                                                            distance-navigation review makes this integration explicit [1];
+    IX. I NTERFACE FAILURE M ODES AND T HREATS TO                           the 2021 CRY4 work adds important molecular evidence for
+                       VALIDITY                                             one radical-pair candidate in one migratory bird [2].
+   The most common error occurs at the interface between                       MAGNAV makes this a constructive research programme.
+measurement and interpretation. A changed bearing can be                    It asks a candidate explanation to pass the tests required by
+an orientation response without being a navigational map. A                 its breadth: physical manipulation integrity; conditional cue-
+response to a virtual magnetic displacement may show access                 dependent orientation; mechanism-to-behaviour connection;
+to field information without proving that an animal computes                ecological route contribution; and independent replication. It
+                                                                   TABLE IX
+                                          O PERATIONAL RECORDS AND STOPPING RULES FOR A MAGNAV RUN .
+
+Domain                              Required evidence ledger                       Pause or stop trigger                    Claim consequence
+Physical cue delivery               Vector, spectrum, noise, temperature,          Calibration outside tolerance or         No cue-specific analysis for
+                                    hardware, timing, and sham equivalence.        unresolvable arm difference.             affected block.
+Animal welfare and sensory          Condition checks, handling, device             Distress, abnormal impairment,           Withdraw animal; do not code
+function                            burden, recovery, adverse events, sensory      unexpected mortality, or protocol        as navigational failure.
+                                    control.                                       breach.
+Tracking and data availability      Positional uncertainty, battery/duty cycle,    Selective loss beyond declared           Restrict ecological estimand or
+                                    contact loss, environmental coverage, time     sensitivity bound.                       suspend inference.
+                                    at risk.
+Analysis integrity                  Frozen hypotheses, randomization,              Broken blind, unlogged protocol          Label exploratory or repeat
+                                    blinding, code, exclusions, and null tests.    deviation, or post hoc primary           with locked protocol.
+                                                                                   outcome change.
+Communication                       Claim level, negative results,                 Language exceeds the strongest passed    Revise statement before
+                                    counterexamples, context boundary,             gate.                                    dissemination.
+                                    mechanism status.
+
+
+                                                                    TABLE X
+                                         I NTERFACE FAILURE MATRIX FOR MIGRATION - NAVIGATION INFERENCE .
+
+Interface                        Example failure                            Evidence needed before a stronger claim         Consequence for interpretation
+Cue to bearing                   Apparatus, handling, or altered            Sham, physical calibration, blinded scoring,    Observation is not cue-specific.
+                                 illumination changes preferred             restoration, and retained-cue ledger.
+                                 direction.
+Bearing to map                   Animal follows a compass but cannot        Virtual-displacement or release design with     Compass result is not a map
+                                 correct a displacement.                    position-dependent predictions.                 result.
+Molecule to behaviour            Candidate protein responds in vitro but    Localization, state-relevant expression,        Molecular result is not a
+                                 is not used in sensory tissue during       perturbation/rescue, sensory-function           receptor claim.
+                                 migration.                                 controls.
+Lab to field                     Cue use in an arena disappears under       Track-quality, environmental provenance,        Arena effect has limited
+                                 wind, landscape, or social context.        route prediction, and ecological replication.   transferability.
+One taxon to many                A mechanism works in a songbird but        Independent lineage-specific sensory and        Claim remains within the
+                                 is generalized to insects or marine        ecological tests.                               tested boundary.
+                                 animals.
+
+
+
+treats a negative or context-specific result as information that                  converts a nominal “magnetic” or “celestial” manipulation into
+can refine the cue-dependence ledger. It does not average away                    an auditable exposure definition.
+species differences or let a positive molecular assay stand in
+for a free-ranging migratory calculation.
+   This four-stage design-only workflow concludes that the                           Second, mechanism studies should be linked to the be-
+question “How do migratory animals know where they are                            havioural context for which they are proposed. Molecular
+going?” should be answered through bounded, multiscale                            work on cryptochromes, neural recordings, visual or trigeminal
+evidence rather than a single universal mechanism. Future                         interventions, and magnetite investigations are most informa-
+studies can demonstrate a directional cue, then a context-                        tive when their expression, localization, timing, and control
+dependent weight, then a receptor or circuit contribution, then                   phenotypes are measured in the same state in which the rele-
+a field consequence for a stated population. Each step can be                     vant orientation behaviour is tested. A mechanistic experiment
+important. No finite set of early results justifies the claim that                that excludes competing sensory impairment can substantially
+all migratory animals use the same compass, map, receptor,                        narrow theory even before a free-ranging route test is feasible.
+or navigation algorithm.
+
+                     XI. R ESEARCH P RIORITIES                                       Third, comparative programmes should coordinate standards
+                                                                                  rather than force a common receptor narrative. Shared meta-
+   The highest-value next measurements are those that dis-                        data, calibrated manipulations, complete negative results, and
+criminate between competing cue-integration accounts, not                         open cue-dependence ledgers allow genuine commonalities
+merely those that record another bearing. First, field and                        and lineage-specific differences to emerge. In this setting,
+laboratory studies should report the physical cue environment                     an unsuccessful prediction can be valuable: it may identify
+with enough resolution to establish what the animal could                         the ecological condition, developmental phase, or sensory
+have sensed: three-dimensional magnetic vector and variabil-                      combination in which a cue is absent, downweighted, or
+ity, light spectrum and irradiance, RF noise, sky condition,                      replaced. MAGNAV treats that restriction as progress toward
+wind or current, and landscape or odour availability. This                        a mechanism map.
+                     A PPENDIX A                                                                 R EFERENCES
+           M INIMAL MAGNAV RUN M ANIFEST                            [1] H. Mouritsen, “Long-distance navigation and magnetoreception in
+   Each future run records species and population; migratory            migratory animals,” Nature, vol. 558, pp. 50–59, 2018, doi:
+                                                                        10.1038/s41586-018-0176-1.
+phase and route segment; individual age/experience and social       [2] J. Xu et al., “Magnetic sensitivity of cryptochrome 4 from a migratory
+context; cue definitions and calibrated physical values; retained       songbird,” Nature, vol. 594, pp. 535–540, 2021, doi: 10.1038/s41586-
+sensory information; manipulation, sham, and restoration spec-          021-03618-9.
+                                                                    [3] T. Ritz, S. Adem, and K. Schulten, “A model for photoreceptor-based
+ifications; welfare and stop rules; sampling denominator; field,        magnetoreception in birds,” Biophysical Journal, vol. 78, no. 2, pp. 707–
+light, sky, weather, wind, water-current, and RF records; device        718, 2000, doi: 10.1016/S0006-3495(00)76629-X.
+characteristics; bearing and tracking endpoints; missingness,       [4] P. J. Hore and H. Mouritsen, “The radical-pair mechanism of magne-
+                                                                        toreception,” Annual Review of Biophysics, vol. 45, pp. 299–344, 2016,
+exclusion, and censoring ledger; predeclared analysis; null and         doi: 10.1146/annurev-biophys-032116-094545.
+negative controls; and the maximum permitted claim.                 [5] R. Wiltschko and W. Wiltschko, “Magnetic orientation and magnetore-
+                                                                        ception in birds and other animals,” Journal of Comparative Physiology
+                        A PPENDIX B                                     A, vol. 191, pp. 675–693, 2005, doi: 10.1007/s00359-005-0627-7.
+                                                                    [6] M. Zapka et al., “Visual but not trigeminal mediation of magnetic
+                   P ROTOCOL C HECKLIST                                 compass information in a migratory bird,” Nature, vol. 461, pp. 1274–
+   Before data collection, freeze the population boundary, cue          1277, 2009, doi: 10.1038/nature08528.
+                                                                    [7] C. Merlin, R. J. Gegear, and S. M. Reppert, “Antennae are circadian
+conflict, expected response, field and light calibration, sham,         clocks that orchestrate sun compass navigation in monarch butterflies,”
+restoration, outcome definitions, quality thresholds, route pre-        Science, vol. 325, no. 5948, pp. 1700–1704, 2009, doi: 10.1126/sci-
+diction, and ethical stop rules. During collection, preserve            ence.1176228.
+                                                                    [8] R. Muheim, J. B. Phillips, and S. Akesson, “Polarized light cues under
+physical measurements, handling and device records, failed              overcast skies: the role of avian skylight navigation,” Journal of Exper-
+tracks, sensory-function checks, individual-level data, and all         imental Biology, vol. 209, pp. 243–259, 2006, doi: 10.1242/jeb.02018.
+negative results. Before communication, label evidence as           [9] K. J. Lohmann and C. M. F. Lohmann, “Orientation and open-sea
+                                                                        navigation in sea turtles,” Journal of Experimental Biology, vol. 199,
+cue availability, conditional orientation, mechanism bridge,            pp. 73–81, 1996.
+ecological route contribution, or replication; do not convert
+a finite context-specific result into a universal explanation of
+migration.
+

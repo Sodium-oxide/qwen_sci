@@ -1,0 +1,24 @@
+{
+  "artifact_status": "DESIGN_ONLY",
+  "framework": "BRIDGE: Biological Routes to Interspecies Dyadic Guided Engagement",
+  "primary_question": "Which partner-specific biological variables distinguish established human-dog and human-cat affiliation from general sociability, novelty, food anticipation, handling, and shared context?",
+  "design": {
+    "established_dyads": {"dogs": 90, "cats": 90},
+    "longitudinal_adoption_substudy": 40,
+    "conditions": ["owner interaction", "familiar-nonowner interaction", "owner behind transparent barrier", "object/quiet-rest control"],
+    "sessions": "four counterbalanced 12-minute sessions at a matched circadian window"
+  },
+  "confirmatory_endpoints": [
+    "species-specific behavioral affiliation composite",
+    "owner versus familiar-nonowner mixed-model contrast",
+    "comparison of time-lagged physiological models with shared-exposure null models"
+  ],
+  "exploratory_endpoints": ["peripheral oxytocin associations", "OXTR moderation", "microbiome and immune markers if pre-specified in a later amendment"],
+  "prohibited_claims_without_new_evidence": [
+    "that peripheral oxytocin equals brain oxytocin signaling",
+    "that a dog mechanism applies unchanged to cats",
+    "that genetic association proves causation",
+    "that behavioral attachment demonstrates identical subjective experience across species"
+  ],
+  "welfare": "Noninvasive observation only; animals may disengage; no deprivation, restraint, or hormone administration."
+}

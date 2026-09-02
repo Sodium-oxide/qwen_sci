@@ -1,0 +1,32 @@
+{
+  "schema_version": "idea_result_v5",
+  "project_id": "neur_6_npbca",
+  "topic": "Why do we fall in love?",
+  "primary_direction": {
+    "id":"NPB-CA",
+    "title":"Neuroendocrine Pair-Bonding Causal Atlas",
+    "root_mechanism":"Neuropeptide receptor fields and endocrine state gate partner-cue recognition while mesolimbic dopamine assigns and stabilizes partner-directed reward.",
+    "target_gap_ids":["G1","G2","G3","G4","G5","G6"],
+    "evidence_anchor_ids":["E1","E2","E3","E4","E5","E6","E7","E8"],
+    "intervention_type":"circuit perturbation plus longitudinal multimodal measurement",
+    "falsifiable_conditions":["phase-specific loss of partner preference","selective change in partner-cue neural discrimination","cross-species bridge fails under out-of-sample validation"],
+    "feasibility":"high for staged animal mechanism study; moderate for human cross-species translation",
+    "scientific_value":"high"
+  },
+  "competitive_directions":[
+    {"id":"HUMAN-IMG","title":"Longitudinal human partner-cue imaging","decision":"component","reason":"translational but correlational"},
+    {"id":"VOLE-CAUSAL","title":"Receptor-specific vole circuit atlas","decision":"component","reason":"causal but species-bounded"}
+  ],
+  "rejected_directions":[
+    {"id":"LOVE-HORMONE","reason":"single-agent explanation cannot represent receptor localization, temporal phase, or specificity controls"},
+    {"id":"LOVE-CENTER","reason":"unfalsifiable localization claim and inconsistent with distributed-network evidence"}
+  ],
+  "selection_audit":{"novelty":0.86,"mechanism_clarity":0.91,"falsifiability":0.92,"evidence_alignment":0.95,"implementation_feasibility":0.78,"cross_species_value":0.9},
+  "evolution_checkpoints":[
+    {"checkpoint":"C1","change":"single-hormone explanation -> distributed circuit modules","reason":"covers G2 and G3"},
+    {"checkpoint":"C2","change":"imaging-only design -> matched human and vole measures","reason":"covers G4 and G5"},
+    {"checkpoint":"C3","change":"static correlation -> phase-specific perturbation and longitudinal state model","reason":"covers G1, G2, and G6"}
+  ],
+  "status":"SELECTED_PRIMARY_DIRECTION",
+  "observed_results":[]
+}

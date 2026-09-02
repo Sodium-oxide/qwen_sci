@@ -1,0 +1,24 @@
+{
+  "schema": "science_result_v1",
+  "workflow": "Survey -> Idea -> ExperimentDesign -> Author",
+  "project_id": "neur_3",
+  "topic": "Can human memory be stored, manipulated, and transplanted digitally?",
+  "project_status": "COMPLETED",
+  "primary_direction_id": "DEFL-CTA",
+  "primary_direction": "Digital Engram Fidelity Ladder and Causal Transfer Atlas",
+  "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "execution_policy": {"mode":"DESIGN_ONLY","real_experiment_executed":false,"observed_results":[]},
+  "artifacts": {
+    "survey": ["survey/survey.md","survey/survey_evidence_plan.json","survey/survey_gap_ledger.json","survey/survey_idea_handoff.json","survey/survey_manifest.json"],
+    "idea": ["idea/idea.md","idea/idea_result.json"],
+    "experiment_design": ["experiment_design/research_design.md","experiment_design/research_design.json","experiment_design/author_handoff.json"],
+    "author": ["author/digital_memory_engram_atlas_report.tex","author/digital_memory_engram_atlas_report.pdf","author/author_manifest.json","author/pdf_validation.json"]
+  },
+  "pdf": {"pages":7,"minimum_required_pages":7,"embedded_fonts":true,"validation":"PASSED_WITH_EXPECTED_LAYOUT_WARNINGS"},
+  "known_boundaries": [
+    "Rodent engram manipulation is evidence for constrained causal influence on memory-related behavior, not complete human episodic transfer.",
+    "Human neural prosthesis assistance is not equivalent to general digital storage.",
+    "A decoder, stimulation policy, or fluent narrative is not by itself a transplanted memory.",
+    "No human or animal experiment, stimulation, upload, digital edit, or transplantation was executed."
+  ]
+}

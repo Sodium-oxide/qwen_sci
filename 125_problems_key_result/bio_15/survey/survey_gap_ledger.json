@@ -1,0 +1,33 @@
+{
+  "schema_version": "survey_gap_ledger_v1",
+  "project_id": "bio_15",
+  "survey_run_id": "survey-bio_15-v1",
+  "entries": [
+    {
+      "gap_id": "GAP-PP-01",
+      "status": "accepted",
+      "reason": "The verified sources establish component forecasting and alternative scenarios, but do not furnish the requested common, falsifiable decision protocol for post-2100 persistence with climate-disruption modifiers.",
+      "target_subhypotheses": ["SH-FERTILITY", "SH-MORTALITY", "SH-MIGRATION", "SH-CLIMATE"],
+      "uncertainty": "This is a scoped synthesis gap, not a claim that no related model exists."
+    },
+    {
+      "gap_id": "GAP-PP-02",
+      "status": "accepted",
+      "reason": "A calibrated attribution and decision layer would make the scientific question testable without mistaking a scenario total for a fact.",
+      "target_subhypotheses": ["SH-AGGREGATION", "SH-FERTILITY", "SH-MORTALITY", "SH-MIGRATION"],
+      "uncertainty": "The need is methodological; performance is unobserved."
+    },
+    {
+      "gap_id": "GAP-PP-03",
+      "status": "rejected",
+      "reason": "Verified probabilistic methods explicitly handle uncertainty, so this statement is contradicted by the evidence.",
+      "target_subhypotheses": []
+    },
+    {
+      "gap_id": "GAP-PP-04",
+      "status": "uncertain",
+      "reason": "The retrieved anchors do not identify a universal causal climate effect across all demographic components. The proposal therefore treats climate variables as pre-specified model comparisons, not established causes.",
+      "target_subhypotheses": ["SH-CLIMATE"]
+    }
+  ]
+}

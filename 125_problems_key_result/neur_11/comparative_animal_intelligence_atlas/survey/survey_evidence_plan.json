@@ -1,0 +1,34 @@
+{
+  "schema": "survey_evidence_plan.v1",
+  "status": "verified_scope_with_design_gaps",
+  "research_question": "Which cognitive capacities are shared or independently evolved across nonhuman animals, how do ecological and social demands shape those capacities, and how much of apparent intelligence transfers across tasks when testing is species-appropriate?",
+  "scope_constraints": [
+    "Do not rank species on a single intelligence scale.",
+    "Separate domain-general flexibility from domain-specific expertise.",
+    "Treat sensory, motor, motivational, and training differences as explanatory variables.",
+    "Do not infer human language, theory of mind, or abstract concepts from one trained behavior.",
+    "Compare computational structure and transfer, not raw success counts alone."
+  ],
+  "subhypotheses": [
+    {"id":"SH1","claim":"A partially shared latent flexibility factor spans species, but does not explain all domain-specific performance.","evidence_ids":["E1","E2","E3","E4","E6","E7"],"allowed_language":"testable_integrative_hypothesis","direct_test":"Hierarchical latent-trait model across matched core tasks and species-specific modules."},
+    {"id":"SH2","claim":"Ecological and sensorimotor affordances explain substantial residual variance in tool, memory, acoustic, and object-manipulation tasks.","evidence_ids":["E1","E3","E4","E5"],"allowed_language":"supported_moderation_hypothesis","direct_test":"Model task-by-species-by-affordance interactions and transfer across modalities."},
+    {"id":"SH3","claim":"Social learning and coordination improve flexible problem solving in species with relevant social and ecological histories.","evidence_ids":["E2","E6"],"allowed_language":"candidate_mechanism","direct_test":"Compare individual, observational-learning, and cooperative task conditions."},
+    {"id":"SH4","claim":"Performance ordering reverses across domains, so a leaderboard obscures cognitive specialization.","evidence_ids":["E1","E2","E3","E4","E5"],"allowed_language":"supported_comparative_pattern","direct_test":"Estimate domain-specific factors and cross-task rank correlations."}
+  ],
+  "evidence": [
+    {"id":"E1","source":"Hunt and Gray 2004","status":"browser_verified","supports":"multi-step hook-tool manufacture in wild New Caledonian crows"},
+    {"id":"E2","source":"Seed, Clayton, and Emery 2008","status":"browser_verified","supports":"cooperative problem solving in rooks"},
+    {"id":"E3","source":"Matsuzawa 2009","status":"browser_verified","supports":"chimpanzee numerical working-memory advantage with domain limits"},
+    {"id":"E4","source":"Marino et al. 2007","status":"browser_verified","supports":"complex cetacean cognition and ecological specialization"},
+    {"id":"E5","source":"Finn, Tregenza, and Norman 2009","status":"browser_verified","supports":"defensive coconut-shell tool use in octopus"},
+    {"id":"E6","source":"Emery et al. 2007","status":"browser_verified","supports":"social bonding as a pressure for bird cognitive adaptations"},
+    {"id":"E7","source":"Shettleworth 2010","status":"metadata_context","supports":"comparative cognition framework"}
+  ],
+  "forbidden_inferences": [
+    "One species is globally the smartest.",
+    "Tool use automatically proves human-like causal reasoning.",
+    "Dolphin communication is equivalent to human language.",
+    "Trained chimpanzee symbols automatically demonstrate generative language.",
+    "Octopus or bird success on a human visual task measures general intelligence without qualification."
+  ]
+}

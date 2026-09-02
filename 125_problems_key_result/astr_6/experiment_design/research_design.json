@@ -1,0 +1,14 @@
+{
+  "benchmark": "PERMANENT-EXTRATERRESTRIAL-HABITATION-READINESS-BENCHMARK",
+  "status": "DESIGN_ONLY",
+  "scenario_classes": ["S0", "S1", "S2", "S3", "S4", "S5"],
+  "primary_controls": [
+    "independent mass-balance accounting",
+    "held-out fault/environment campaign",
+    "power and thermal outage simulation",
+    "synthetic resource and sensor injections",
+    "correlated-disturbance ensemble",
+    "explicit Earth logistics ledger"
+  ],
+  "decision_boundary": "No permanent-habitation claim is supported unless all critical resource, power, safety, repair, and external-dependency constraints remain inside their preregistered bounds."
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "science_run_v1",
+  "workflow": "Survey -> Idea -> ExperimentDesign -> Author",
+  "project_id": "neur_3",
+  "topic": "Can human memory be stored, manipulated, and transplanted digitally?",
+  "scientific_reframing": "Can a content-specific memory state be represented digitally with enough fidelity that it can be manipulated, transferred, and independently recognized after reconstruction, while preserving the distinction between neural correlation, behavioral expression, and subjective recollection?",
+  "configuration": {
+    "minimum_report_pages": 7,
+    "requested_report_pages_interpreted_as": "minimum 7 pages",
+    "template": "Conference-LaTeX-template_10-17-19",
+    "strict_survey_binding": true,
+    "automatic_execution_allowed": false
+  },
+  "status": "COMPLETED",
+  "stages": [
+    {"name":"Survey","status":"COMPLETED","canonical_artifact":"survey/survey_manifest.json","accepted_gap_ids":["G1","G2","G3","G4","G5","G6"],"source_count":10},
+    {"name":"Idea","status":"COMPLETED","canonical_artifact":"idea/idea_result.json","selected_direction_id":"DEFL-CTA","selected_direction":"Digital Engram Fidelity Ladder and Causal Transfer Atlas"},
+    {"name":"ExperimentDesign","status":"COMPLETED","canonical_artifact":"experiment_design/research_design.json","execution_mode":"DESIGN_ONLY","observed_results":[]},
+    {"name":"Author","status":"COMPLETED","canonical_artifact":"author/digital_memory_engram_atlas_report.pdf","document_status":"PROPOSAL_NO_OBSERVED_RESULTS","page_count":7}
+  ],
+  "final_pdf": "author/digital_memory_engram_atlas_report.pdf",
+  "final_pdf_validation": "author/pdf_validation.json",
+  "human_review_items": [
+    "Review source metadata and DOI records before external submission.",
+    "Review human neural-data governance, consent, privacy, autonomy, and clinical safety requirements before execution.",
+    "Review animal welfare requirements if a future engram study is pursued.",
+    "Review statistical power, leakage controls, independent content scoring, and false-memory safeguards."
+  ]
+}

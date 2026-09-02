@@ -1,0 +1,23 @@
+{
+  "schema":"science_result_v1",
+  "project_id":"neur_2",
+  "status":"COMPLETE_DESIGN_ONLY",
+  "topic":"What are the coding principles embedded in neuronal spike trains?",
+  "primary_direction_id":"TSCC-A",
+  "artifacts":{
+    "survey":"survey/survey.md",
+    "survey_evidence_plan":"survey/survey_evidence_plan.json",
+    "survey_gap_ledger":"survey/survey_gap_ledger.json",
+    "survey_handoff":"survey/survey_idea_handoff.json",
+    "idea":"idea/idea.md",
+    "idea_result":"idea/idea_result.json",
+    "experiment_design":"experiment_design/research_design.md",
+    "experiment_design_json":"experiment_design/research_design.json",
+    "author_handoff":"experiment_design/author_handoff.json",
+    "report_source":"author/neural_spike_code_atlas_report.tex",
+    "report_pdf":"author/neural_spike_code_atlas_report.pdf"
+  },
+  "report":{"pages":7,"format":"IEEEtran conference","observed_results":[],"no_acknowledgments":true},
+  "retrieval_limitation":"OpenAlex and AnySearch local connections were refused; established source registry and publisher-page verification were retained.",
+  "human_review_required":["ethics and safety","data governance","statistical estimation","neural recording quality","interpretation of causal perturbation"]
+}

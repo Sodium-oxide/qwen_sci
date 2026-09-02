@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "from_stage": "experiment_design",
+  "to_stage": "author",
+  "handoff_status": "ready",
+  "primary_direction": "BARRIER-AWARE-TRIGGER-GATED-NANOCARRIER-BENCHMARK",
+  "scientific_reframe": "Under what combinations of nanosystem design, biological transport, trigger specificity, payload release, immune compatibility, clearance, and manufacturing control can an injectable nanosystem improve disease-site therapy over non-robotic carriers or free drug?",
+  "author_requirements": [
+    "distinguish nanocarriers, nanomachines, nanorobots, and microrobots",
+    "anchor the animal evidence in the 2018 DNA nanorobot tumor study",
+    "derive low-Reynolds transport and target-to-off-target indices",
+    "include human flow, blood compatibility, staged animal, and translation gates",
+    "separate trigger-gated therapeutic function from general autonomous robotics",
+    "report no observed results because the workflow is design-only",
+    "include immune, toxicity, manufacturing, regulatory, and safety boundaries"
+  ],
+  "source_bindings": ["../survey/survey_manifest.json", "../idea/idea_result.json", "research_design.json"],
+  "observed_results": []
+}

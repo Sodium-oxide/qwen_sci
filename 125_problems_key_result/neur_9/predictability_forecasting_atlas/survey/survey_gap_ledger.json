@@ -1,0 +1,14 @@
+{
+  "schema_version": "survey_gap_ledger_v1",
+  "project_id": "neur_9_pfa",
+  "accepted_gaps": [
+    {"id":"G1","title":"Typed future is not operationalized","statement":"Deterministic trajectory prediction, probabilistic forecasting, and conditional scenario projection are often discussed together, preventing comparable claims.","evidence_ids":["E4","E6","E7"]},
+    {"id":"G2","title":"Forecastability has no common horizon scale","statement":"Lead time is meaningful only relative to system timescales, but cross-domain benchmarks rarely normalize horizon by intrinsic dynamics.","evidence_ids":["E1","E2","E3"]},
+    {"id":"G3","title":"Uncertainty components are confounded","statement":"Initial-state, observation, model, process, and distribution-shift uncertainty are not consistently separated in AI forecast comparisons.","evidence_ids":["E3","E6"]},
+    {"id":"G4","title":"Skill is reported more often than calibration","statement":"Point accuracy or average rank is insufficient for decisions that require reliable probabilities and tail-event behavior.","evidence_ids":["E4","E8","E9"]},
+    {"id":"G5","title":"AI gains may be domain-specific","statement":"Modern learned weather models show substantial bounded gains, but transfer across regimes and other complex systems remains unresolved.","evidence_ids":["E5","E6","E10"]},
+    {"id":"G6","title":"Computational speed is not information","statement":"Faster inference or larger models can improve access to forecasts without creating information about an unobserved or chaotic future.","evidence_ids":["E1","E3","E5"]},
+    {"id":"G7","title":"Decision usefulness is rarely tested with forecastability","statement":"A forecast can be statistically skillful yet poorly calibrated or badly timed for an operational decision.","evidence_ids":["E4","E6","E7"]}
+  ],
+  "triage": {"high_priority":["G1","G2","G3","G4","G5"],"component_only":["G6","G7"],"status":"accepted_for_idea_stage"}
+}

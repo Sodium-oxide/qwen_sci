@@ -1,0 +1,38 @@
+{
+  "schema_version": "science_result_v1",
+  "project_id": "phys_13_sunlight_like_laser",
+  "topic": "Can humans make intense lasers with incoherence comparable to sunlight?",
+  "workflow": ["Survey", "Idea", "ExperimentDesign", "Author"],
+  "status": "COMPLETED_WITH_HUMAN_SOURCE_PAGE_REVIEW_PENDING",
+  "key_answer": "Humans can plausibly create high-intensity laser fields with selected sunlight-like coherence properties, including broad spectrum, stochastic phase, and random or structured polarization. Published evidence motivates their use as candidates for selected LPI-control problems, but it does not establish universal instability suppression, a facility-ready driver, or controllable fusion ignition. A credible claim requires matched controls, propagation and coupling checks, an error/evidence ledger, and a system-tradeoff review.",
+  "stage_outputs": {
+    "survey": "survey/survey_manifest.json",
+    "idea": "idea/idea_result.json",
+    "experiment_design": "experiment_design/research_design.json",
+    "author": "author/author_manifest.json"
+  },
+  "selected_idea_id": "idea-crisp-icf-001",
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": []
+  },
+  "final_report": {
+    "tex": "author/sunlight_like_laser_report.tex",
+    "pdf": "author/sunlight_like_laser_report.pdf",
+    "format": "IEEE conference / Letter",
+    "pages": 7
+  },
+  "quality_boundary": {
+    "acknowledgements": "not generated",
+    "fabricated_results": "not generated",
+    "source_registry_count": 8,
+    "browser_verified_source": "nif_2026",
+    "publisher_verified_source": "ma_2021",
+    "doi_publisher_page_review": "PENDING_HUMAN_REVIEW_FOR_REMAINING_SOURCES"
+  },
+  "known_risks": [
+    "Publisher or DOI landing-page review remains required for cross-validated and discovery-stage references before external publication.",
+    "CRISP-ICF requires laser-plasma, ICF target, optical-driver, numerical-methods, diagnostics, and authorized-facility review before implementation.",
+    "No high-power laser, plasma simulation, target calculation, or fusion experiment was executed; all candidate-benefit statuses are deliberately conditional."
+  ]
+}

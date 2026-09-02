@@ -1,0 +1,17 @@
+{
+  "science_run_id": "eco-8-crop-diversification-20260902",
+  "schema_version": "science_run_result_v1",
+  "status": "COMPLETED_WITH_HUMAN_REVIEW_PENDING",
+  "execution_mode": "DESIGN_ONLY",
+  "topic": "Will we soon see the end of monocultures like wheat, maize, rice, and soy?",
+  "primary_direction": "DIVERSIFIED-RESILIENT-AGRIFOOD",
+  "stages": {
+    "survey": {"status": "COMPLETED", "manifest": "crop_diversification/survey/survey_manifest.json"},
+    "idea": {"status": "COMPLETED", "result": "crop_diversification/idea/idea_result.json"},
+    "exp_design": {"status": "COMPLETED", "design": "crop_diversification/experiment_design/research_design.json"},
+    "author": {"status": "COMPLETED", "pdf": "crop_diversification/author/diversified_resilient_agrifood_report.pdf"}
+  },
+  "expected_results": [],
+  "observed_results": [],
+  "until": "author"
+}

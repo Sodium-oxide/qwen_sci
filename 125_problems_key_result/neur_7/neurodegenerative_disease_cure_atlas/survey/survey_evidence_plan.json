@@ -1,0 +1,16 @@
+{
+  "schema_version":"survey_evidence_plan_v1",
+  "topic":"Can we cure neurodegenerative diseases?",
+  "scientific_scope":"Molecular neuroscience, neuroimmunology, translational pharmacology, disease modeling, and neural repair",
+  "status":"VERIFIED_HANDOFF",
+  "subhypotheses":[
+    {"id":"SH1","claim":"Protein misfolding, aggregation, synaptic injury, and neuronal vulnerability are convergent but not identical mechanisms across Alzheimer’s and Parkinson’s disease.","allowed_sources":["E1","E2","E3"],"evidence_class":"disease mechanism reviews","writing_mode":"direct with disease-specific qualification"},
+    {"id":"SH2","claim":"Pathology-targeting treatment can slow early Alzheimer’s decline but does not by itself establish cure or neuronal repair.","allowed_sources":["E1","E6"],"evidence_class":"mechanistic review plus randomized clinical trial","writing_mode":"direct for studied population; no extrapolation"},
+    {"id":"SH3","claim":"Neuroinflammation and microglial state are context-dependent therapeutic targets.","allowed_sources":["E4","E5"],"evidence_class":"review plus single-cell disease biology","writing_mode":"mechanistic and conditional"},
+    {"id":"SH4","claim":"Human iPSC models can test patient-genotype-linked autophagy and neuronal phenotypes but incompletely model aging and whole-brain disease.","allowed_sources":["E7"],"evidence_class":"human cellular-model review","writing_mode":"direct with model boundary"},
+    {"id":"SH5","claim":"Drug repurposing accelerates candidate selection but requires brain exposure, target engagement, and disease-stage-specific validation.","allowed_sources":["E8"],"evidence_class":"drug-development review","writing_mode":"direct"},
+    {"id":"SH6","claim":"Neuronal replacement is a repair module whose efficacy depends on disease-environment control and safe circuit integration.","allowed_sources":["E3","E7"],"evidence_class":"translational synthesis","writing_mode":"proposed test"}
+  ],
+  "prohibited_inferences":["A treatment that slows decline is a cure.","A single common pathway means one drug treats all neurodegenerative diseases.","Microglial suppression is always beneficial.","An iPSC phenotype proves clinical efficacy.","Repurposed approval proves efficacy or brain target engagement.","Stem-cell transplantation is safe or curative without integration and long-term follow-up."],
+  "canonical_source_ids":["E1","E2","E3","E4","E5","E6","E7","E8"]
+}

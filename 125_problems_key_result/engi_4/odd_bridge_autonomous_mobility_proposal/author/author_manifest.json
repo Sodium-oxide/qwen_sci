@@ -1,0 +1,54 @@
+{
+  "schema_version": "author_manifest_v1",
+  "project_id": "engi_4_autonomous_mobility_scaling",
+  "survey_run_id": "survey-engi4-odd-bridge-001",
+  "selected_idea_id": "idea-odd-bridge-001",
+  "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "canonical_artifacts": {
+    "tex": "odd_bridge_autonomous_mobility_report.tex",
+    "pdf": "odd_bridge_autonomous_mobility_report.pdf",
+    "editable_system_diagram": "figures/odd_bridge_flow.drawio",
+    "rendered_pages": [
+      "rendered_pages/page-1.png",
+      "rendered_pages/page-2.png",
+      "rendered_pages/page-3.png",
+      "rendered_pages/page-4.png",
+      "rendered_pages/page-5.png",
+      "rendered_pages/page-6.png",
+      "rendered_pages/page-7.png"
+    ]
+  },
+  "report": {
+    "title": "Is a Future of Only Self-Driving Cars Realistic? An Assurance-Gated Research Proposal for Scaling Autonomous Mobility",
+    "format": "IEEE conference / Letter",
+    "pages": 7,
+    "source_count": 12,
+    "has_acknowledgements": false,
+    "reporting_boundary": "Research proposal only; it reports no vehicle operation, simulation, road test, measurement, observed safety rate, or exclusive-autonomy prediction."
+  },
+  "evidence_registry": {
+    "academic_search": {
+      "engines": ["OpenAlex", "AnySearch Academic"],
+      "queries": [
+        "automated driving safety validation operational design domain V2X infrastructure public acceptance review",
+        "public acceptance trust autonomous vehicle mixed traffic transition review"
+      ],
+      "cross_validated_record_counts": [9, 9],
+      "note": "The paper uses a dual-index evidence registry; repeated records across queries are not counted as independent findings."
+    },
+    "browser_verified_source": {
+      "name": "NHTSA Automated Vehicle Safety",
+      "url": "https://www.nhtsa.gov/vehicle-safety/automated-vehicle-safety",
+      "verified_current_boundary": "NHTSA states that even the highest driving automation currently available to consumers requires full driver engagement and undivided attention."
+    },
+    "human_source_review_pending": [
+      "Publisher and DOI landing-page verification for each academic reference",
+      "Full-text applicability review for the final named ODD, jurisdiction, and ADS service"
+    ]
+  },
+  "upstream_binding": {
+    "survey_manifest": "../survey/survey_manifest.json",
+    "idea_result": "../idea/idea_result.json",
+    "experiment_design_author_handoff": "../experiment_design/author_handoff.json"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": "research_design_v1",
+  "project_id": "phys_8_time_arrow_20260901",
+  "survey_run_id": "survey-time-arrow-001",
+  "selected_direction_id": "idea-raat-001",
+  "research_type": "computational_digital",
+  "research_brief": {
+    "research_object": "Finite stochastic and open-quantum trajectory ensembles with declared observation maps.",
+    "central_hypothesis": "A physically dissipative arrow remains coherent under valid resolution changes and independent controls; an artifact does not.",
+    "alternative_explanations": ["hidden states", "preparation asymmetry", "asymmetric measurement noise", "invalid reversal map", "coarse-graining-dependent description"],
+    "falsifiers": ["non-identifiability", "resolution instability", "fluctuation-relation failure", "nuisance replication"]
+  },
+  "variables": {
+    "independent": ["generator family", "driving affinity", "sampling interval", "observation map", "noise and hidden-state condition"],
+    "dependent": ["path-likelihood asymmetry", "entropy-ledger agreement", "fluctuation residual", "held-out predictive score", "record-persistence statistic"],
+    "controls": ["initial-state protocol", "reversal convention", "random seed policy", "model family and prior specification"]
+  },
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": [],
+    "automatic_execution_allowed": false,
+    "human_review_required": true
+  },
+  "analysis": {
+    "planned_methods": ["forward-reverse likelihood ratio", "Markov entropy-production ledger", "fluctuation-relation residual", "multiresolution sensitivity", "paired bootstrap", "held-out model comparison"],
+    "outcome_classes": ["DISSIPATIVE_SUPPORT", "DESCRIPTIVE_ASYMMETRY_ONLY", "NON_IDENTIFIABLE", "MODEL_INVALID"]
+  },
+  "safety_and_scope": {
+    "no_physical_system_operation": true,
+    "no_real_cosmological_entropy_estimation": true,
+    "synthetic_data_must_be_labeled": true
+  }
+}

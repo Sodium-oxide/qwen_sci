@@ -137,7 +137,7 @@ def validate_composed_research_plan(
             if not (section_id == "references" and block_id == "bibliography") and contains_observed_result_language(block_text):
                 errors.append(f"section block {block_id} presents an observed result")
             block_claim_ids = {_text(claim_id) for claim_id in block.get("claim_ids") or [] if _text(claim_id)}
-            if block_text and not block_claim_ids:
+            if block_text and not block_claim_ids and _text(block.get("kind")) != "quantitative_evidence":
                 errors.append(f"section block {block_id} must reference at least one claim ID")
             unknown_claims = block_claim_ids - claim_id_set
             if unknown_claims:

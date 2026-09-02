@@ -1,0 +1,23 @@
+{
+  "schema":"research_design_v1",
+  "topic":"Coding principles embedded in neuronal spike trains",
+  "project_id":"neur_2",
+  "survey_binding":{"survey_run_id":"neur_2-survey-001","project_context_fingerprint":"neur2-spike-code-context-v1","target_gap_ids":["G1","G2","G3","G4","G5","G6"]},
+  "idea_binding":{"idea_result":"../idea/idea_result.json","primary_direction_id":"TSCC-A"},
+  "execution_policy":{"mode":"DESIGN_ONLY","observed_results":[],"automatic_execution_allowed":false},
+  "template":"computational_digital_with_future_causal_validation",
+  "research_brief":{"object":"neuron-by-trial spike trains paired with stimulus, state, task, and downstream-relevant output","central_hypothesis":"A functionally embedded coding dimension generalizes across held-out stimuli and states, improves a downstream-relevant decoder beyond matched nulls, and has a selective causal effect under targeted perturbation.","alternative_explanations":["firing-rate gain","movement or arousal confounding","session drift","sampling bias","spike-sorting artifacts","non-specific excitability change"],"boundary":"No result is observed by this design artifact."},
+  "stages":[
+    {"id":"D0","name":"Preregistration and data contract","outputs":["data schema","split ledger","preprocessing registry","analysis plan"]},
+    {"id":"D1","name":"Stimulus-response encoding","models":["rate-only","rate-plus-latency","history-only","coupling-aware","full point-process GLM"],"outputs":["filters","latency","tuning","state modulation","residual coupling"]},
+    {"id":"D2","name":"Information and decoder comparison","representations":["rate","timing","correlation","population","manifold","hybrid"],"outputs":["incremental information","log loss","calibration","confidence intervals"]},
+    {"id":"D3","name":"Null and robustness analysis","nulls":["count-matched jitter","trial shuffle","conditional independence","correlation-preserving shuffle","population bootstrap","state permutation","sorting sensitivity"]},
+    {"id":"D4","name":"State and task generalization","held_out_conditions":["stimulus","state","task","neuron","time window"],"outputs":["generalization matrix","hierarchical context effects"]},
+    {"id":"D5","name":"Population geometry and relevance","outputs":["dimensionality","trajectory separation","subspace alignment","downstream prediction"]},
+    {"id":"D6","name":"Future causal validation","status":"design_only","candidate_interventions":["timing with matched counts","correlation or synchrony with matched marginals","task-relevant population subspace"],"controls":["sham","non-candidate population","nuisance-matched disruption"],"endpoint":"downstream behavior, decision, motor output, or cross-area response"}
+  ],
+  "decision_rules":{"available":"held-out information in at least one prespecified condition","generalizing":"information persists under held-out context","downstream_relevant":"predicts relevant output beyond nuisance-only controls","functionally_embedded":"selective causal perturbation changes output beyond matched non-specific disruption"},
+  "unknowns":["dominant code dimension by condition","cross-species transfer","causal use by downstream circuits","power under sparse recordings"],
+  "human_review_required":["animal or human ethics","neural data governance","perturbation safety","statistical review of information estimators","spike sorting and recording quality"],
+  "author_handoff":"author_handoff.json"
+}

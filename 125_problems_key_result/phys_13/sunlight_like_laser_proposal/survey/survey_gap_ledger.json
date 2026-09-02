@@ -1,0 +1,11 @@
+{
+  "schema_version": "survey_gap_ledger_v1",
+  "project_id": "phys_13_sunlight_like_laser",
+  "gaps": [
+    {"id":"GAP-COHERENCE-001","status":"ACCEPTED","statement":"No shared coherence descriptor connects spectrum, temporal phase, polarization, and speckle statistics to a declared LPI proxy."},
+    {"id":"GAP-TRADEOFF-002","status":"ACCEPTED","statement":"A claimed LPI benefit is not jointly evaluated with drive delivery, uniformity, and coupling consequences."},
+    {"id":"GAP-TRANSFER-003","status":"ACCEPTED","statement":"Reduced or homogeneous results lack a validated transfer contract for multi-beam ICF propagation."},
+    {"id":"GAP-HARDWARE-004","status":"ACCEPTED","statement":"Driver-engineering feasibility is not established by mechanism simulations alone."}
+  ],
+  "triage": "All gaps are design gaps; none constitutes evidence of failure or success for an unrun proposal."
+}

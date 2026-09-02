@@ -1,0 +1,20 @@
+{
+  "schema_version":"pdf_validation_v1",
+  "pdf":"neuroendocrine_pair_bonding_atlas_report.pdf",
+  "status":"VALIDATED",
+  "page_count":7,
+  "minimum_pages":7,
+  "target_pages":8,
+  "page_size":"612 x 792 pt (US letter)",
+  "fonts_embedded":true,
+  "compile_passes":2,
+  "latex_exit_status":"success",
+  "text_extraction":"success",
+  "rendered_pages":7,
+  "semantic_checks":{"acknowledgment_section":false,"observed_results_empty":true,"proposal_status_present":true,"reference_keys_resolved":true,"ieee_class_used":true},
+  "visual_checks":{"first_page_readable":true,"last_page_readable":true,"equations_visible":true,"tables_visible":true,"no_blank_pages":true},
+  "warnings":{"underfull_hbox":true,"overfull_hbox_in_evidence_table":true,"overfull_vbox_pt":1.4239},
+  "warning_disposition":"Non-fatal typography warnings do not obscure text or alter page count; final rendered pages were visually inspected.",
+  "pdf_marker_operation":"create marker executed once before first PDF generation",
+  "validated_at":"2026-09-01"
+}

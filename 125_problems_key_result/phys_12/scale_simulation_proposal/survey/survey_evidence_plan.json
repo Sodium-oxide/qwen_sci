@@ -1,0 +1,25 @@
+{
+  "schema_version":"survey_evidence_plan_v1",
+  "project_id":"phys_12_scale_simulation",
+  "evidence_policy":{"allowed_claim_types":["established_methodology","source_bounded_context","proposed_method","conditional_conclusion"],"prohibited_claim_types":["universal_accuracy_claim","fabricated_benchmark","future_quantum_projection_as_observation","unregistered_citation"],"publication_check":"Publisher/DOI landing pages require human review except browser-verified NIST page."},
+  "sources":[
+    {"id":"S1","citation_key":"nist_qis_page","kind":"institutional_webpage","status":"BROWSER_VERIFIED","role":"Quantum information science and conditional quantum-simulation context","url":"https://www.nist.gov/quantum-information-science"},
+    {"id":"S2","citation_key":"oberkampf_trucano2007","kind":"verification_validation_benchmark","status":"CROSS_VALIDATED_OPENALEX_ANYSEARCH","role":"Verification, validation, and predictive capability","doi":"10.2172/901974"},
+    {"id":"S3","citation_key":"oberkampf_trucano2002","kind":"review","status":"CROSS_VALIDATED_OPENALEX_ANYSEARCH","role":"CFD verification/validation distinction","doi":"10.2172/793406"},
+    {"id":"S4","citation_key":"peherstorfer2018","kind":"review","status":"CROSS_VALIDATED_OPENALEX_ANYSEARCH","role":"Multifidelity accuracy/cost methods","doi":"10.1137/16M1082469"},
+    {"id":"S5","citation_key":"feynman1982","kind":"foundational_article","status":"SCHOLARLY_REFERENCE_PENDING_PAGE_REVIEW","role":"Quantum simulation motivation","doi":"10.1007/BF02650179"},
+    {"id":"S6","citation_key":"lloyd1996","kind":"foundational_article","status":"SCHOLARLY_REFERENCE_PENDING_PAGE_REVIEW","role":"Universal quantum simulation framework","doi":"10.1126/science.273.5278.1073"},
+    {"id":"S7","citation_key":"preskill2018","kind":"review","status":"CROSS_VALIDATED_OPENALEX_ANYSEARCH","role":"NISQ noise and limits","doi":"10.22331/q-2018-08-06-79"},
+    {"id":"S8","citation_key":"bauer2020","kind":"review","status":"SCHOLARLY_REFERENCE_PENDING_PAGE_REVIEW","role":"Quantum algorithms for chemistry and materials","doi":"10.1021/acs.chemrev.9b00829"},
+    {"id":"S9","citation_key":"obrien2023","kind":"journal_article","status":"CROSS_VALIDATED_OPENALEX_ANYSEARCH","role":"Error mitigation in correlated-electron simulation","doi":"10.1038/s41567-023-02240-y"},
+    {"id":"S10","citation_key":"google2023","kind":"journal_article","status":"CROSS_VALIDATED_OPENALEX_ANYSEARCH","role":"Logical-qubit error-suppression context","doi":"10.1038/s41586-022-05434-1"},
+    {"id":"S11","citation_key":"takeshita2020","kind":"journal_article","status":"CROSS_VALIDATED_OPENALEX_ANYSEARCH","role":"Representation accuracy/resource trade-off in quantum chemistry","doi":"10.1103/PhysRevX.10.011004"},
+    {"id":"S12","citation_key":"wendin2017","kind":"review","status":"CROSS_VALIDATED_OPENALEX_ANYSEARCH","role":"Superconducting-circuit quantum information processing context","doi":"10.1088/1361-6633/aa7e1a"}
+  ],
+  "claim_anchors":[
+    {"claim_id":"C-VVUQ-001","claim":"Verification, validation, and uncertainty quantification are distinct components of credible scientific simulation.","evidence_level":"cross_validated_methodology","source_ids":["S2","S3","S4"]},
+    {"claim_id":"C-QSIM-001","claim":"Quantum simulation is motivated for quantum systems but does not itself guarantee application-level accuracy.","evidence_level":"foundational_and_institutional","source_ids":["S1","S5","S6","S7"]},
+    {"claim_id":"C-QERR-001","claim":"Hardware noise, error mitigation/correction, and representation choices are relevant accuracy constraints.","evidence_level":"cross_validated_quantum_computing","source_ids":["S7","S9","S10","S11","S12"]},
+    {"claim_id":"C-CLASSICAL-001","claim":"Multifidelity and classical high-fidelity references remain central to accuracy assessment.","evidence_level":"cross_validated_methodology","source_ids":["S2","S3","S4"]}
+  ]
+}

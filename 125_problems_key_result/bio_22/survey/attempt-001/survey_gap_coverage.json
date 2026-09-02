@@ -1,0 +1,729 @@
+{
+  "artifact_fingerprint": "d0dcba7b404bcd84dbc219d00d7bbfb422e53809f8b4142b3202112219a31ec8",
+  "contradictions": [],
+  "coverage": {
+    "contradiction_ids": [],
+    "coverage_matrix_version": "survey_gap_coverage_v1",
+    "project_context_fingerprint": "505d0e72362e0dc977a30d3fee98024a0683e39f33e3e016e33f25a77cea200d",
+    "project_id": "sci_20260901_042802_922870_survey_001",
+    "rows": [
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:unresolved_mechanisms:higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells:current_llps_based_synthetic_cell_systems_remain_largely_confined_to_single_compartment_dynamics_with_mechanistic_control_over_higher_order_structures_and_coordinated_multi_cellular_behaviors_still_in_early_developmental_stages:216df06139ed"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W2943084464"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "Higher-order structural organization and emergent behavior in LLPS-based synthetic cells"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:measurement_limitation:spatial_resolution_field_of_view_trade_off:the_quantitative_dose_and_alignment_boundaries_required_to_preserve_high_resolution_structural_fidelity_across_tiled_montage_reconstructions_in_low_dose_cryo_et_are_not_defined:07cc1c3bc5b6"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W4206216780"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "spatial resolution-field of view trade-off"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "direct_observation"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "phenomenon"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:missing_boundary_condition:target_condition:target_condition:unknown:c04108123553"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "target_condition"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "target_object"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:sh1:assumption_validity_condition:validity_domain:classical_dilute_solution_biophysical_models_fail_to_predict_in_vivo_reaction_kinetics_and_saturation_concentrations_because_they_neglect_volume_exclusion_and_anomalous_diffusion_constraints_imposed_by_heterogeneous_macromolecular_crowding:436de5554f38"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "SH1",
+        "target_slot": "validity_domain"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:unmapped_gap_candidate:candidate:candidate:unknown:9e67de93c0d7"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "candidate"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:unmapped_gap_comparable_endpoint:comparable_endpoint:comparable_endpoint:unknown:d379a85ea157"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "comparable_endpoint"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:missing_comparator:comparator:comparator:unknown:fe7095486142"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "comparator"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:missing_comparator:comparison_condition:comparison_condition:unknown:d80863627d0e"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "comparison_condition"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:41171bf535f4"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "candidate_mechanism"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:unmapped_gap_common_outcome:common_outcome:common_outcome:unknown:44aac391b4e4"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "common_outcome"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:identifiability_gap:discriminating_observation:discriminating_observation:unknown:1ee92b215a69"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "discriminating_observation"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:unmapped_gap_input_or_condition:input_or_condition:input_or_condition:unknown:12831e178f59"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "input_or_condition"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:missing_boundary_condition:validity_domain:validity_domain:unknown:cfe644038949"
+        ],
+        "paper_ids": [],
+        "required": false,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "validity_domain"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:measurement_construct_mismatch:construct:construct:unknown:b38417809abf"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "construct"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:measurement_construct_mismatch:mapping_or_calibration:mapping_or_calibration:unknown:4878e930ce1d"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "mapping_or_calibration"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:unmapped_gap_proxy_or_measure:proxy_or_measure:proxy_or_measure:unknown:565816079ac2"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "proxy_or_measure"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:unmapped_gap_reference_or_target_measure:reference_or_target_measure:reference_or_target_measure:unknown:9d1aa6201764"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "reference_or_target_measure"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:missing_boundary_condition:validity_domain:validity_domain:unknown:ae42dd2f7779"
+        ],
+        "paper_ids": [],
+        "required": false,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "validity_domain"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh5:unmapped_gap_coverage_range:coverage_range:coverage_range:unknown:7bf44fe7bc9c"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "coverage_range"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh5:unmapped_gap_impact_on_claim:impact_on_claim:impact_on_claim:unknown:c002331d0e63"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "impact_on_claim"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh5:unmapped_gap_missing_range:missing_range:missing_range:unknown:7ab5d6db7331"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "missing_range"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh5:unmapped_gap_required_variable:required_variable:required_variable:unknown:d7481990c114"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "required_variable"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh5:missing_boundary_condition:validity_domain:validity_domain:unknown:1e8e9619210c"
+        ],
+        "paper_ids": [],
+        "required": false,
+        "status": "uncovered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "validity_domain"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": true,
+        "status": "covered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "alternative_design"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh6:unmapped_gap_current_method_or_design:current_method_or_design:current_method_or_design:unknown:05d68163b8e4"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "current_method_or_design"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh6:unmapped_gap_evaluation_criterion:evaluation_criterion:evaluation_criterion:unknown:39cd1a146e92"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "evaluation_criterion"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": true,
+        "status": "covered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "failure_or_bias"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh6:missing_boundary_condition:validity_domain:validity_domain:unknown:931e784702a7"
+        ],
+        "paper_ids": [],
+        "required": false,
+        "status": "uncovered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "validity_domain"
+      }
+    ],
+    "schema_version": "survey_gap_coverage_v1",
+    "status_counts": {
+      "candidate_pending": 3,
+      "covered": 2,
+      "uncovered": 26
+    },
+    "survey_run_id": "20260901-042802-922870-survey-001"
+  },
+  "decisions": [
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells_unresolved_mechanisms_gap_candidate_global_unresolved_mechanisms_higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells_current_llps_based_synthetic_cell_systems_remain_largely_confined_to_single_compartment_dynamics_with_mechanistic_control_over_higher_order_structures_and_coordinated_multi_cellular_behaviors_still_in_early_developmental_stages_216df06139ed_800e1092197e:862a282499b5",
+      "candidate_id": "gap_candidate:global:unresolved_mechanisms:higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells:current_llps_based_synthetic_cell_systems_remain_largely_confined_to_single_compartment_dynamics_with_mechanistic_control_over_higher_order_structures_and_coordinated_multi_cellular_behaviors_still_in_early_developmental_stages:216df06139ed",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells:unresolved_mechanisms:gap_candidate_global_unresolved_mechanisms_higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells_current_llps_based_synthetic_cell_systems_remain_largely_confined_to_single_compartment_dynamics_with_mechanistic_control_over_higher_order_structures_and_coordinated_multi_cellular_behaviors_still_in_early_developmental_stages_216df06139ed:800e1092197e",
+      "reason": "Candidate is source-grounded and meets the confidence threshold."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_spatial_resolution_field_of_view_trade_off_measurement_limitation_gap_candidate_global_measurement_limitation_spatial_resolution_field_of_view_trade_off_the_quantitative_dose_and_alignment_boundaries_required_to_preserve_high_resolution_structural_fidelity_across_tiled_montage_reconstructions_in_low_dose_cryo_et_are_not_defined_07cc1c3bc5b6_b88402e3ef38:2ed95416c28e",
+      "candidate_id": "gap_candidate:global:measurement_limitation:spatial_resolution_field_of_view_trade_off:the_quantitative_dose_and_alignment_boundaries_required_to_preserve_high_resolution_structural_fidelity_across_tiled_montage_reconstructions_in_low_dose_cryo_et_are_not_defined:07cc1c3bc5b6",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:spatial_resolution_field_of_view_trade_off:measurement_limitation:gap_candidate_global_measurement_limitation_spatial_resolution_field_of_view_trade_off_the_quantitative_dose_and_alignment_boundaries_required_to_preserve_high_resolution_structural_fidelity_across_tiled_montage_reconstructions_in_low_dose_cryo_et_are_not_defined_07cc1c3bc5b6:b88402e3ef38",
+      "reason": "Candidate is source-grounded and meets the confidence threshold."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_sh1_validity_domain_assumption_validity_condition_gap_candidate_sh1_assumption_validity_condition_validity_domain_classical_dilute_solution_biophysical_models_fail_to_predict_in_vivo_reaction_kinetics_and_saturation_concentrations_because_they_neglect_volume_exclusion_and_anomalous_diffusion_constraints_imposed_by_heterogeneous_macromolecular_crowding_436de5554f38_fc22c0f6ef92:8823a5e9e9c1",
+      "candidate_id": "gap_candidate:sh1:assumption_validity_condition:validity_domain:classical_dilute_solution_biophysical_models_fail_to_predict_in_vivo_reaction_kinetics_and_saturation_concentrations_because_they_neglect_volume_exclusion_and_anomalous_diffusion_constraints_imposed_by_heterogeneous_macromolecular_crowding:436de5554f38",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:sh1:validity_domain:assumption_validity_condition:gap_candidate_sh1_assumption_validity_condition_validity_domain_classical_dilute_solution_biophysical_models_fail_to_predict_in_vivo_reaction_kinetics_and_saturation_concentrations_because_they_neglect_volume_exclusion_and_anomalous_diffusion_constraints_imposed_by_heterogeneous_macromolecular_crowding_436de5554f38:fc22c0f6ef92",
+      "reason": "Candidate is source-grounded and meets the confidence threshold."
+    }
+  ],
+  "schema_version": "survey_gap_adjudication_v1",
+  "synthesis": {
+    "candidates": [
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "unresolved mechanisms"
+        ],
+        "candidate_fingerprint": "9a120a833aaa68a78b50760c7ef94d59be0c58d81e8f7426d3b0bdb9feb3caa0",
+        "candidate_id": "gap_candidate:global:unresolved_mechanisms:higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells:current_llps_based_synthetic_cell_systems_remain_largely_confined_to_single_compartment_dynamics_with_mechanistic_control_over_higher_order_structures_and_coordinated_multi_cellular_behaviors_still_in_early_developmental_stages:216df06139ed",
+        "candidate_ids": [
+          "gap_candidate:global:unresolved_mechanisms:higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells:current_llps_based_synthetic_cell_systems_remain_largely_confined_to_single_compartment_dynamics_with_mechanistic_control_over_higher_order_structures_and_coordinated_multi_cellular_behaviors_still_in_early_developmental_stages:216df06139ed"
+        ],
+        "claim_scope": "",
+        "confidence": 0.75,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "unresolved mechanisms",
+        "group_id": "gap_group:global:higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells:unresolved_mechanisms:gap_candidate_global_unresolved_mechanisms_higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells_current_llps_based_synthetic_cell_systems_remain_largely_confined_to_single_compartment_dynamics_with_mechanistic_control_over_higher_order_structures_and_coordinated_multi_cellular_behaviors_still_in_early_developmental_stages_216df06139ed:800e1092197e",
+        "paper_ids": [
+          "W2943084464"
+        ],
+        "rationale": "The abstract explicitly categorizes the design of 'higher-order structures and behaviour' as 'recent directions,' indicating that systematic methodologies, stability criteria, and scalable assembly protocols for multi-compartment or interacting synthetic cell networks are not yet established or standardized.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2943084464",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "Current LLPS-based synthetic cell systems remain largely confined to single-compartment dynamics, with mechanistic control over higher-order structures and coordinated multi-cellular behaviors still in early developmental stages.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "Higher-order structural organization and emergent behavior in LLPS-based synthetic cells"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "measurement limitation"
+        ],
+        "candidate_fingerprint": "d0b378876300a810f2e9627b317d0e4d586574b2b8f513a3f84e93697f605c01",
+        "candidate_id": "gap_candidate:global:measurement_limitation:spatial_resolution_field_of_view_trade_off:the_quantitative_dose_and_alignment_boundaries_required_to_preserve_high_resolution_structural_fidelity_across_tiled_montage_reconstructions_in_low_dose_cryo_et_are_not_defined:07cc1c3bc5b6",
+        "candidate_ids": [
+          "gap_candidate:global:measurement_limitation:spatial_resolution_field_of_view_trade_off:the_quantitative_dose_and_alignment_boundaries_required_to_preserve_high_resolution_structural_fidelity_across_tiled_montage_reconstructions_in_low_dose_cryo_et_are_not_defined:07cc1c3bc5b6"
+        ],
+        "claim_scope": "",
+        "confidence": 0.85,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "measurement limitation",
+        "group_id": "gap_group:global:spatial_resolution_field_of_view_trade_off:measurement_limitation:gap_candidate_global_measurement_limitation_spatial_resolution_field_of_view_trade_off_the_quantitative_dose_and_alignment_boundaries_required_to_preserve_high_resolution_structural_fidelity_across_tiled_montage_reconstructions_in_low_dose_cryo_et_are_not_defined_07cc1c3bc5b6:b88402e3ef38",
+        "paper_ids": [
+          "W4206216780"
+        ],
+        "rationale": "The abstract identifies preserving high-resolution information over large fields of view as a persistent challenge and introduces montage tools integrated with FIB milling and correlative microscopy, but provides no specifications on radiation dose limits, tile stitching tolerances, or resolution decay metrics necessary to validate the claimed efficiency and structural preservation.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W4206216780",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "The quantitative dose and alignment boundaries required to preserve high-resolution structural fidelity across tiled montage reconstructions in low-dose cryo-ET are not defined.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "spatial resolution-field of view trade-off"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "assumption_validity_condition"
+        ],
+        "candidate_fingerprint": "b48371b4a95ab88f7e96705f14933cd4c4d84c6efe81ff328dc6358f8786caf3",
+        "candidate_id": "gap_candidate:sh1:assumption_validity_condition:validity_domain:classical_dilute_solution_biophysical_models_fail_to_predict_in_vivo_reaction_kinetics_and_saturation_concentrations_because_they_neglect_volume_exclusion_and_anomalous_diffusion_constraints_imposed_by_heterogeneous_macromolecular_crowding:436de5554f38",
+        "candidate_ids": [
+          "gap_candidate:sh1:assumption_validity_condition:validity_domain:classical_dilute_solution_biophysical_models_fail_to_predict_in_vivo_reaction_kinetics_and_saturation_concentrations_because_they_neglect_volume_exclusion_and_anomalous_diffusion_constraints_imposed_by_heterogeneous_macromolecular_crowding:436de5554f38"
+        ],
+        "claim_scope": "thermodynamic and hydrodynamic modeling accuracy",
+        "confidence": 0.9,
+        "evidence_role": "required model validation constraint",
+        "evidence_summary": "",
+        "extraction_method": "survey_prose_llm",
+        "gap_kind": "assumption_validity_condition",
+        "group_id": "gap_group:sh1:validity_domain:assumption_validity_condition:gap_candidate_sh1_assumption_validity_condition_validity_domain_classical_dilute_solution_biophysical_models_fail_to_predict_in_vivo_reaction_kinetics_and_saturation_concentrations_because_they_neglect_volume_exclusion_and_anomalous_diffusion_constraints_imposed_by_heterogeneous_macromolecular_crowding_436de5554f38:fc22c0f6ef92",
+        "paper_ids": [],
+        "rationale": "The introduction explicitly contrasts classical dilute models with the crowded cellular interior, stating that conventional assumptions of random mixing break down and that dilute frameworks fail to capture reduced saturation concentrations and altered kinetics due to restricted mobility.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/1",
+            "section": "1. Introduction"
+          }
+        ],
+        "statement": "Classical dilute-solution biophysical models fail to predict in vivo reaction kinetics and saturation concentrations because they neglect volume exclusion and anomalous diffusion constraints imposed by heterogeneous macromolecular crowding.",
+        "status": "candidate",
+        "subhypothesis_id": "SH1",
+        "support_level": "speculative",
+        "target_slot": "validity_domain"
+      }
+    ],
+    "groups": [
+      {
+        "candidate_ids": [
+          "gap_candidate:global:unresolved_mechanisms:higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells:current_llps_based_synthetic_cell_systems_remain_largely_confined_to_single_compartment_dynamics_with_mechanistic_control_over_higher_order_structures_and_coordinated_multi_cellular_behaviors_still_in_early_developmental_stages:216df06139ed"
+        ],
+        "group_id": "gap_group:global:higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells:unresolved_mechanisms:gap_candidate_global_unresolved_mechanisms_higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells_current_llps_based_synthetic_cell_systems_remain_largely_confined_to_single_compartment_dynamics_with_mechanistic_control_over_higher_order_structures_and_coordinated_multi_cellular_behaviors_still_in_early_developmental_stages_216df06139ed:800e1092197e",
+        "paper_evidence": [
+          {
+            "abstract": "Living cells have long been a source of inspiration for chemists. Their capacity of performing complex tasks relies on the spatiotemporal coordination of matter and energy fluxes. Recent years have witnessed growing interest in the bottom-up construction of cell-like models capable of reproducing aspects of such dynamic organisation. Liquid-liquid phase-separation (LLPS) processes in water are increasingly recognised as representing a viable compartmentalisation strategy through which to produce dynamic synthetic cells. Herein, we highlight examples of the dynamic properties of LLPS used to assemble synthetic cells, including their biocatalytic activity, reversible condensation and dissolution, growth and division, and recent directions towards the design of higher-order structures and behaviour.",
+            "paper_id": "W2943084464",
+            "title": "Dynamic Synthetic Cells Based on Liquid–Liquid Phase Separation"
+          }
+        ],
+        "paper_ids": [
+          "W2943084464"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "unresolved mechanisms"
+          ],
+          "candidate_fingerprint": "9a120a833aaa68a78b50760c7ef94d59be0c58d81e8f7426d3b0bdb9feb3caa0",
+          "candidate_id": "gap_candidate:global:unresolved_mechanisms:higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells:current_llps_based_synthetic_cell_systems_remain_largely_confined_to_single_compartment_dynamics_with_mechanistic_control_over_higher_order_structures_and_coordinated_multi_cellular_behaviors_still_in_early_developmental_stages:216df06139ed",
+          "candidate_ids": [
+            "gap_candidate:global:unresolved_mechanisms:higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells:current_llps_based_synthetic_cell_systems_remain_largely_confined_to_single_compartment_dynamics_with_mechanistic_control_over_higher_order_structures_and_coordinated_multi_cellular_behaviors_still_in_early_developmental_stages:216df06139ed"
+          ],
+          "claim_scope": "",
+          "confidence": 0.75,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "unresolved mechanisms",
+          "group_id": "gap_group:global:higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells:unresolved_mechanisms:gap_candidate_global_unresolved_mechanisms_higher_order_structural_organization_and_emergent_behavior_in_llps_based_synthetic_cells_current_llps_based_synthetic_cell_systems_remain_largely_confined_to_single_compartment_dynamics_with_mechanistic_control_over_higher_order_structures_and_coordinated_multi_cellular_behaviors_still_in_early_developmental_stages_216df06139ed:800e1092197e",
+          "paper_ids": [
+            "W2943084464"
+          ],
+          "rationale": "The abstract explicitly categorizes the design of 'higher-order structures and behaviour' as 'recent directions,' indicating that systematic methodologies, stability criteria, and scalable assembly protocols for multi-compartment or interacting synthetic cell networks are not yet established or standardized.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W2943084464",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "Current LLPS-based synthetic cell systems remain largely confined to single-compartment dynamics, with mechanistic control over higher-order structures and coordinated multi-cellular behaviors still in early developmental stages.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "Higher-order structural organization and emergent behavior in LLPS-based synthetic cells"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2943084464",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:measurement_limitation:spatial_resolution_field_of_view_trade_off:the_quantitative_dose_and_alignment_boundaries_required_to_preserve_high_resolution_structural_fidelity_across_tiled_montage_reconstructions_in_low_dose_cryo_et_are_not_defined:07cc1c3bc5b6"
+        ],
+        "group_id": "gap_group:global:spatial_resolution_field_of_view_trade_off:measurement_limitation:gap_candidate_global_measurement_limitation_spatial_resolution_field_of_view_trade_off_the_quantitative_dose_and_alignment_boundaries_required_to_preserve_high_resolution_structural_fidelity_across_tiled_montage_reconstructions_in_low_dose_cryo_et_are_not_defined_07cc1c3bc5b6:b88402e3ef38",
+        "paper_evidence": [
+          {
+            "abstract": "Abstract Imaging large fields of view while preserving high-resolution structural information remains a challenge in low-dose cryo-electron tomography. Here, we present robust tools for montage electron tomography tailored for vitrified specimens. The integration of correlative cryo-fluorescence microscopy, focused-ion beam milling, and micropatterning produces contextual three-dimensional architecture of cells. Montage tilt series may be processed in their entirety or as individual tiles suitable for sub-tomogram averaging, enabling efficient data processing and analysis.",
+            "paper_id": "W4206216780",
+            "title": "Correlative cryogenic montage electron tomography for comprehensive in-situ whole-cell structural studies"
+          }
+        ],
+        "paper_ids": [
+          "W4206216780"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "measurement limitation"
+          ],
+          "candidate_fingerprint": "d0b378876300a810f2e9627b317d0e4d586574b2b8f513a3f84e93697f605c01",
+          "candidate_id": "gap_candidate:global:measurement_limitation:spatial_resolution_field_of_view_trade_off:the_quantitative_dose_and_alignment_boundaries_required_to_preserve_high_resolution_structural_fidelity_across_tiled_montage_reconstructions_in_low_dose_cryo_et_are_not_defined:07cc1c3bc5b6",
+          "candidate_ids": [
+            "gap_candidate:global:measurement_limitation:spatial_resolution_field_of_view_trade_off:the_quantitative_dose_and_alignment_boundaries_required_to_preserve_high_resolution_structural_fidelity_across_tiled_montage_reconstructions_in_low_dose_cryo_et_are_not_defined:07cc1c3bc5b6"
+          ],
+          "claim_scope": "",
+          "confidence": 0.85,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "measurement limitation",
+          "group_id": "gap_group:global:spatial_resolution_field_of_view_trade_off:measurement_limitation:gap_candidate_global_measurement_limitation_spatial_resolution_field_of_view_trade_off_the_quantitative_dose_and_alignment_boundaries_required_to_preserve_high_resolution_structural_fidelity_across_tiled_montage_reconstructions_in_low_dose_cryo_et_are_not_defined_07cc1c3bc5b6:b88402e3ef38",
+          "paper_ids": [
+            "W4206216780"
+          ],
+          "rationale": "The abstract identifies preserving high-resolution information over large fields of view as a persistent challenge and introduces montage tools integrated with FIB milling and correlative microscopy, but provides no specifications on radiation dose limits, tile stitching tolerances, or resolution decay metrics necessary to validate the claimed efficiency and structural preservation.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W4206216780",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "The quantitative dose and alignment boundaries required to preserve high-resolution structural fidelity across tiled montage reconstructions in low-dose cryo-ET are not defined.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "spatial resolution-field of view trade-off"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W4206216780",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:sh1:assumption_validity_condition:validity_domain:classical_dilute_solution_biophysical_models_fail_to_predict_in_vivo_reaction_kinetics_and_saturation_concentrations_because_they_neglect_volume_exclusion_and_anomalous_diffusion_constraints_imposed_by_heterogeneous_macromolecular_crowding:436de5554f38"
+        ],
+        "group_id": "gap_group:sh1:validity_domain:assumption_validity_condition:gap_candidate_sh1_assumption_validity_condition_validity_domain_classical_dilute_solution_biophysical_models_fail_to_predict_in_vivo_reaction_kinetics_and_saturation_concentrations_because_they_neglect_volume_exclusion_and_anomalous_diffusion_constraints_imposed_by_heterogeneous_macromolecular_crowding_436de5554f38:fc22c0f6ef92",
+        "paper_evidence": [],
+        "paper_ids": [],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "assumption_validity_condition"
+          ],
+          "candidate_fingerprint": "b48371b4a95ab88f7e96705f14933cd4c4d84c6efe81ff328dc6358f8786caf3",
+          "candidate_id": "gap_candidate:sh1:assumption_validity_condition:validity_domain:classical_dilute_solution_biophysical_models_fail_to_predict_in_vivo_reaction_kinetics_and_saturation_concentrations_because_they_neglect_volume_exclusion_and_anomalous_diffusion_constraints_imposed_by_heterogeneous_macromolecular_crowding:436de5554f38",
+          "candidate_ids": [
+            "gap_candidate:sh1:assumption_validity_condition:validity_domain:classical_dilute_solution_biophysical_models_fail_to_predict_in_vivo_reaction_kinetics_and_saturation_concentrations_because_they_neglect_volume_exclusion_and_anomalous_diffusion_constraints_imposed_by_heterogeneous_macromolecular_crowding:436de5554f38"
+          ],
+          "claim_scope": "thermodynamic and hydrodynamic modeling accuracy",
+          "confidence": 0.9,
+          "evidence_role": "required model validation constraint",
+          "evidence_summary": "",
+          "extraction_method": "survey_prose_llm",
+          "gap_kind": "assumption_validity_condition",
+          "group_id": "gap_group:sh1:validity_domain:assumption_validity_condition:gap_candidate_sh1_assumption_validity_condition_validity_domain_classical_dilute_solution_biophysical_models_fail_to_predict_in_vivo_reaction_kinetics_and_saturation_concentrations_because_they_neglect_volume_exclusion_and_anomalous_diffusion_constraints_imposed_by_heterogeneous_macromolecular_crowding_436de5554f38:fc22c0f6ef92",
+          "paper_ids": [],
+          "rationale": "The introduction explicitly contrasts classical dilute models with the crowded cellular interior, stating that conventional assumptions of random mixing break down and that dilute frameworks fail to capture reduced saturation concentrations and altered kinetics due to restricted mobility.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "survey.md",
+              "json_pointer": "/sections/1",
+              "section": "1. Introduction"
+            }
+          ],
+          "statement": "Classical dilute-solution biophysical models fail to predict in vivo reaction kinetics and saturation concentrations because they neglect volume exclusion and anomalous diffusion constraints imposed by heterogeneous macromolecular crowding.",
+          "status": "candidate",
+          "subhypothesis_id": "SH1",
+          "support_level": "speculative",
+          "target_slot": "validity_domain"
+        },
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/1",
+            "section": "1. Introduction"
+          }
+        ]
+      }
+    ],
+    "schema_version": "survey_gap_coverage_v1"
+  }
+}

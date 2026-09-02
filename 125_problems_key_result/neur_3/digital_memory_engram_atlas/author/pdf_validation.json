@@ -1,0 +1,36 @@
+{
+  "schema": "pdf_validation_v1",
+  "artifact": "digital_memory_engram_atlas_report.pdf",
+  "validation_status": "PASSED_WITH_EXPECTED_LAYOUT_WARNINGS",
+  "output_format": "IEEE conference PDF on Letter paper",
+  "page_count": 7,
+  "minimum_required_pages": 7,
+  "embedded_fonts": true,
+  "compile_passes": 2,
+  "undefined_references_or_citations": false,
+  "fatal_latex_errors": false,
+  "overfull_boxes": false,
+  "underfull_box_note": "Natural line-break warnings remain in narrow table cells and monospaced identifiers; no overflow-box warning was reported.",
+  "formula_policy": "Numbered equation environments with labels and cross-references",
+  "citation_keys_checked": ["Squire2011","Josselyn2020","Liu2012","Ramirez2013","Chen2019","Hampson2018","Ezzyat2018","Kandel2014","Schacter1999","Ienca2017"],
+  "frozen_source_count": 10,
+  "allowed_source_count": 10,
+  "author_document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "design_execution_mode": "DESIGN_ONLY",
+  "observed_result_count": 0,
+  "acknowledgments_present": false,
+  "text_scan": {
+    "undefined": false,
+    "fatal": false,
+    "emergency_stop": false,
+    "latex_error": false,
+    "acknowledgment_heading": false
+  },
+  "visual_review": {
+    "rendered_pages_directory": "rendered_pages",
+    "pages_rendered": 7,
+    "sampled_pages": [1,2,4,5,7],
+    "status": "PASSED"
+  },
+  "checked_at": "2026-09-01"
+}

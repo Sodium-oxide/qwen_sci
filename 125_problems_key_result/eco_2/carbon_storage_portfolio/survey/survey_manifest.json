@@ -1,0 +1,17 @@
+{
+  "manifest_type": "survey_manifest",
+  "schema_version": "1.0",
+  "topic": "Where do we put all the excess carbon dioxide?",
+  "scientific_reframe": "Which portfolio of carbon dioxide removal and storage pathways can deliver additional, measurable, durable, and equitable net atmospheric CO2 removal at meaningful scale while minimizing lifecycle energy, land, water, material, ecological, leakage, and reversal risks?",
+  "stage_status": "completed",
+  "design_mode": "DESIGN_ONLY",
+  "source_registry": [
+    {"id":"eia","title":"International Carbon Dioxide Emissions Data","organization":"U.S. Energy Information Administration","url":"https://www.eia.gov/international/data/world/environment/carbon-dioxide-co2-emissions","verification":"browser_page_loaded_data_table_not_extracted"},
+    {"id":"ipccwg3ch12","title":"Chapter 12: Cross sectoral perspectives","organization":"Intergovernmental Panel on Climate Change Working Group III","url":"https://www.ipcc.ch/report/ar6/wg3/chapter/chapter-12/","verification":"browser_checked"},
+    {"id":"nas2019","title":"Negative Emissions Technologies and Reliable Sequestration: A Research Agenda","organization":"National Academies of Sciences, Engineering, and Medicine","url":"https://www.nationalacademies.org/projects/DELS-BASCPR-16-01/publication/25259","verification":"browser_checked"},
+    {"id":"ipccsyr","title":"Climate Change 2023: Synthesis Report","organization":"Intergovernmental Panel on Climate Change","url":"https://www.ipcc.ch/report/ar6/syr/","verification":"browser_checked_in_prior_stage"}
+  ],
+  "paper_search": {"openalex":{"records":0,"status":"network_unavailable"},"anysearch":{"records":0,"status":"network_unavailable"}},
+  "outputs":["survey.md","survey_evidence_plan.json","survey_gap_ledger.json","survey_idea_handoff.json"],
+  "observed_results": []
+}

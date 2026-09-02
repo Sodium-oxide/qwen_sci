@@ -1,0 +1,316 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{array}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{CRYO-FINGERPRINT: Reservoir-Resolved Sea-Level and Earth-System Consequences of Complete Ice Loss}
+
+\author{\IEEEauthorblockN{Xcientist Research Proposal}
+\IEEEauthorblockA{Survey, Idea, ExperimentDesign, and Author pipeline\\
+Design-only study package}}
+
+\maketitle
+
+\begin{abstract}
+The statement that melting all planetary ice would raise sea level by approximately 70 m is a useful order-of-magnitude prompt, but it hides several distinct physical questions. Grounded ice sheets and glaciers add water to the ocean; floating sea ice contributes little direct eustatic volume, while changing albedo, freshwater exchange, circulation, and habitat; ice shelves can alter grounded-ice discharge; and frozen ground is a separate carbon and hydrologic reservoir. This paper proposes CRYO-FINGERPRINT, a coupled scenario emulator that resolves these reservoirs, propagates transient melt histories through climate-ocean feedbacks, computes gravitational and solid-Earth sea-level fingerprints, and downscales relative sea level into dynamic coastal and ecological impacts. A hierarchy of scalar, reservoir-resolved, coupled, and coastal models is evaluated using synthetic truth recovery, present-day process validation, historical hindcasts, and hypothetical complete-loss ensembles. The protocol compares global-mean-only and endpoint-only baselines, reports uncertainty by physical source, and tests tides, surge, waves, river discharge, and vertical land motion. No complete-loss simulation or future impact result is claimed here. The contribution is a falsifiable method for determining what is robust about the 70 m thought experiment and what depends on the transient path, Earth-system feedbacks, and regional exposure.
+\end{abstract}
+
+\begin{IEEEkeywords}
+ice-sheet melt, sea-level fingerprints, cryosphere, Earth-system modeling, coastal hazards, climate feedbacks, uncertainty quantification
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+The question ``What happens if all the ice on the planet melts?'' is memorable because it appears to have a simple answer: sea level rises by about 70 m and present coastal cities flood. The number is scientifically meaningful as a rough conversion of grounded ice volume to a global mean ocean-level equivalent. It is not, however, a complete physical prediction. The word ``ice'' includes objects with different buoyancy, mass balance, geometry, and climate effects. The word ``sea level'' may refer to a global mean, a regional dynamic field, or local relative water level measured against moving land. The word ``happens'' may refer to a rapid transient, a multi-century pathway, a multi-millennial commitment, or a final equilibrium-like state.
+
+This paper converts the thought experiment into a testable question:
+
+\begin{quote}
+How would the complete loss of terrestrial and floating marine ice alter global and regional sea level, ocean circulation, climate feedbacks, ecosystems, and coastal exposure across transient and long-term equilibrium timescales?
+\end{quote}
+
+The proposed answer is CRYO-FINGERPRINT, a reservoir-resolved scenario emulator with four nested model levels. It starts from a transparent grounded-ice volume baseline, then adds reservoir-specific mass balance, climate-ocean feedbacks, gravitational and solid-Earth fingerprints, and finally dynamic coastal and ecological impact models. The hierarchy makes it possible to separate what is caused by the total mass of grounded ice from what is caused by its location, melt history, freshwater flux, and interaction with the rest of the Earth system.
+
+The distinction between grounded and floating ice is foundational. Floating sea ice already displaces seawater, so its disappearance does not add an equivalent 70 m to global mean sea level. Its loss can still be climatically important because it changes surface reflectivity, air-sea exchange, seasonal habitat, and ocean stratification. Ice shelves are also floating, but they buttress grounded ice and can affect the rate at which land-based ice reaches the ocean. Frozen ground stores water in a different form and influences carbon, methane, runoff, and land stability; it should not be silently included in an ice-volume conversion.
+
+Even for grounded ice, a global mean does not determine local relative sea level. Removing a large ice mass changes gravitational attraction and Earth's rotation, while the crust deforms and rebounds. Ocean circulation, salinity, temperature, tides, storm surge, waves, river discharge, and local subsidence then modify the water level experienced by a coast. A 70 m global mean equivalent can therefore produce a spatially varying field and a distribution of coastal impacts.
+
+This paper makes four contributions. First, it specifies an explicit reservoir and terminology contract. Second, it presents equations for mass balance, sea-level decomposition, coupled uncertainty, and impact loss. Third, it defines a model hierarchy, scenario ensemble, validation protocol, and baselines. Fourth, it gives falsification rules that prevent a detailed-looking map or a scalar endpoint from being mistaken for a validated prediction.
+
+The work is a design-only research proposal. It reports no executed simulation, no observed result, and no date by which all ice will melt. It is intentionally direct about the physical signal while keeping path-dependent claims testable.
+
+\section{Scientific Scope and Definitions}
+
+\subsection{Four cryosphere reservoirs}
+
+Let $r$ index a cryosphere reservoir. The study separates Greenland and Antarctic grounded ice sheets, mountain glaciers, floating sea ice, floating ice shelves, and frozen ground. The first three are the primary contributors to a possible global mean eustatic rise. Sea ice is an ocean-surface reservoir whose direct volume contribution is small because it is already afloat. Ice shelves occupy a similar buoyant category but exert mechanical buttressing. Frozen ground is represented in hydrologic, carbon, and land-stability modules rather than as a direct ocean-volume term.
+
+This partition is more than bookkeeping. A model that pools every kilogram of ice can reproduce a total inventory while assigning the wrong forcing to the ocean, atmosphere, or biosphere. A reservoir-resolved model can instead ask whether a change came from surface melt, basal melt, calving, grounding-line motion, freshwater delivery, albedo, or permafrost thaw.
+
+\subsection{Global mean, regional, and local relative sea level}
+
+Global mean sea-level equivalent is a useful integral constraint. It summarizes the ocean-volume change after conventions for ice density and ocean area are fixed. Regional sea level includes spatial redistribution caused by mass removal, ocean dynamics, and Earth deformation. Local relative sea level additionally includes vertical land motion and local coastal processes. These quantities should never share one unlabeled ``sea-level rise'' column.
+
+The IPCC synthesis treats sea level as a combination of global mean change, regional variability, and local relative change \cite{ipcc}. Gregory et al. provide terminology that is useful for keeping these measures distinct \cite{gregory}. Bamber et al. show that even future ice-sheet contributions carry structured uncertainty rather than one universal scalar \cite{bamber}. CRYO-FINGERPRINT uses this distinction as a model requirement: every map includes a spatial coordinate, time slice, reference datum, and decomposition of global, regional, and local terms.
+
+\subsection{Endpoint and pathway}
+
+The complete-loss thought experiment specifies a possible endpoint but not a path. Two trajectories can remove the same final grounded-ice mass while delivering freshwater at different rates, producing different ocean stratification, circulation, atmospheric response, and coastal timing. Multi-millennial studies show that sea-level commitments can persist long after a forcing is applied \cite{levermann,clark}. Ice-sheet process uncertainty, including Antarctic dynamics, can alter the transient trajectory \cite{deconto}.
+
+Accordingly, the protocol holds final grounded-ice loss approximately fixed while varying the schedule. An endpoint comparison tests volume bookkeeping. A pathway comparison tests climate and circulation response. Neither is allowed to be summarized as a date forecast without a specified forcing and model trajectory.
+
+\section{Evidence and Open Problems}
+
+\subsection{What is already well established}
+
+The basic mass distinction is robust. Grounded ice melting or flowing into the ocean adds water to the ocean system, whereas floating ice is already displacing water. The precise contribution depends on density, geometry, ocean area, and the treatment of snow and firn. This is why approximately 70 m is a useful scale rather than an exact universal constant.
+
+The spatial response is also physically established. The gravitational pull of an ice sheet attracts nearby seawater. When the ice mass decreases, that attraction weakens, Earth's rotation and crust respond, and water is redistributed. The far-field rise can exceed a simple uniform mean while near-source regions can have a distinct response. Regional fingerprints are therefore expected even before adding circulation and coastal extremes.
+
+Ice loss has consequences beyond water volume. Golledge et al. analyze global environmental consequences of twenty-first-century ice-sheet melt, including ocean and climate effects \cite{golledge}. Arctic sea-ice loss is coupled to anthropogenic carbon emissions and is not merely a passive volume change \cite{notz}. These results support a coupled design, but they do not validate an unreachable all-ice-loss endpoint.
+
+\subsection{Nine design gaps}
+
+The first gap is reservoir ambiguity. The second is endpoint-path confusion. The third is the global-mean shortcut. The fourth is uncertainty in freshwater, albedo, clouds, ocean mixing, and ice dynamics. The fifth is impact aggregation: inundation, salinity, habitat, population, and infrastructure are different outputs. The sixth is compound extremes, because tides, surge, waves, rainfall, river flow, and subsidence can dominate episodic damage around a changed mean. The seventh is model hierarchy, since global coupled models and coastal hydrodynamics have different resolutions and costs. The eighth is validation asymmetry, because no modern observation can directly validate complete loss. The ninth is adaptation and equity assumptions, which can change exposure without changing physical sea level.
+
+These gaps define the experimental design rather than serving as generic caveats. The model must be complex enough to represent the mechanism under test and simple enough that added complexity can be evaluated against data or controlled truth.
+
+\section{CRYO-FINGERPRINT Architecture}
+
+\subsection{Nested model levels}
+
+Level 0 is a scalar grounded-ice conversion followed by a static elevation threshold map. It is transparent and intentionally incomplete. Level 1 resolves reservoir-specific mass balance and multiple melt schedules while retaining a simple ocean response. Level 2 adds climate-ocean feedbacks, freshwater and albedo forcing, sea-level fingerprints, and solid-Earth adjustment. Level 3 adds dynamic coastal hydrodynamics, compound extremes, ecological indicators, and scenario-conditioned human exposure.
+
+The levels are nested so that a result can be attributed to an added process. The same grounded-ice endpoint is passed through Level 0 and Level 2 to isolate spatial and coupled effects. The same coastal topography is passed through static and dynamic impact layers to isolate hydrodynamic effects. A more detailed output is not counted as an improvement unless it improves a predeclared process or impact metric and retains uncertainty coverage.
+
+\subsection{Module interfaces}
+
+The ice module outputs reservoir mass, geometry, grounding state, surface elevation, and freshwater flux. The climate-ocean module consumes fluxes, albedo, and surface geometry and returns temperature, salinity, circulation, sea-ice state, and steric or dynamic sea-level contributions. The fingerprint module maps source mass changes and solid-Earth response into a spatial field. The coastal module consumes relative sea level, tides, waves, surge, river discharge, bathymetry, topography, friction, and drainage connectivity. The ecological module consumes temperature, salinity, light, freshwater, habitat geometry, and seasonal timing. The exposure module is conditional: population, assets, land use, and adaptation are varied after the physical field is generated.
+
+No exposure scenario is allowed to overwrite the physical sea-level field. This separation permits a physical question and an adaptation question to be answered without implying that a projected population map is an observation of the future.
+
+\begin{table*}[t]
+\caption{Reservoir-specific processes and expected outputs}
+\label{tab:reservoirs}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.17\textwidth}p{0.26\textwidth}p{0.25\textwidth}p{0.24\textwidth}}
+\toprule
+Reservoir & Primary processes & Direct or indirect pathway & Required output\\
+\midrule
+Grounded ice sheets & Accumulation, surface melt, basal melt, calving, grounding-line migration, bed and flow dynamics & Adds ocean water and changes mass distribution, gravity, rotation, and freshwater forcing & Mass trajectory, source geometry, global mean and regional fingerprint\\
+Mountain glaciers & Seasonal accumulation and melt, runoff, debris and elevation effects & Adds water relatively rapidly and changes river discharge and sediment transport & Basin runoff, mass balance, and sea-level contribution\\
+Sea ice & Freeze-thaw, advection, concentration, albedo, air-sea exchange & Little direct eustatic addition; large radiative, habitat, and stratification effects & Concentration, seasonality, albedo, habitat and climate indicators\\
+Ice shelves & Basal melt, calving, buttressing, grounding interaction & Floating volume is not an equivalent 70 m source; dynamics can alter grounded discharge & Shelf geometry, buttressing state, and discharge effect\\
+Frozen ground & Thaw, hydrology, carbon and methane release, land subsidence & Distinct water, carbon, and land-stability pathway; not pooled with ocean ice volume & Runoff, greenhouse-gas flux, land stability, and ecosystem indicators\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Mathematical Formulation}
+
+\subsection{Mass balance and source geometry}
+
+For reservoir $r$, the mass state is represented by
+\begin{equation}
+ \frac{dM_r}{dt}=A_r(t)-S_r(t)-B_r(t)-C_r(t),
+ \label{eq:mass}
+\end{equation}
+where $A_r$ is accumulation, $S_r$ surface melt, $B_r$ basal melt, and $C_r$ calving or discharge. The implementation can use discrete time and additional terms for sublimation, snow redistribution, or firn storage. The important constraint is that the terms remain visible and are not absorbed into a fitted scalar.
+
+Let $\rho_i$ be the effective density convention and $A_o$ the ocean area. The grounded-ice global mean equivalent is approximated by
+\begin{equation}
+ \Delta \overline{\eta}_{\mathrm{ground}}(t)=\frac{1}{\rho_w A_o}\sum_{r\in\mathcal{G}}\left[M_r(0)-M_r(t)\right],
+ \label{eq:gmsl}
+\end{equation}
+where $\mathcal{G}$ is the set of grounded reservoirs and $\rho_w$ is water density. Equation \eqref{eq:gmsl} is a mass-volume check, not a local coastline prediction. Density, ocean area, ice stored below sea level, and land deformation are recorded as uncertainty inputs.
+
+\subsection{Sea-level decomposition}
+
+The local relative sea-level field at location $x$ and time $t$ is decomposed as
+\begin{equation}
+ \Delta\eta(x,t)=\Delta\eta_{\mathrm{mass}}+\Delta\eta_{\mathrm{steric}}+\Delta\eta_{\mathrm{dynamic}}+\Delta\eta_{\mathrm{solid}}+\Delta\eta_{\mathrm{local}},
+ \label{eq:sealevel}
+\end{equation}
+where the first term includes source-mass gravity and rotation, the second is thermal and haline expansion, the third is circulation and redistribution, the fourth is solid-Earth deformation and gravitational adjustment, and the fifth is vertical land motion, tides, and local coastal processes. The terms can be correlated; the decomposition is an accounting interface rather than an assumption of independence.
+
+A fingerprint operator maps an ice-source field $m_r(s,t)$ to the mass and solid-Earth terms:
+\begin{equation}
+ \Delta\eta_{\mathrm{mass+solid}}(x,t)=\sum_r\int_{\Omega_r}K_r(x,s;\vartheta)m_r(s,t)\,ds,
+ \label{eq:fingerprint}
+\end{equation}
+where $K_r$ depends on source location, Earth response parameters, and ocean redistribution. Uncertainty in bed geometry, elastic response, rotational adjustment, and source history is propagated through $K_r$ rather than hidden in an error bar attached only to the global mean.
+
+\subsection{Climate-ocean response}
+
+The coupled module advances a state $u_t$ containing temperature, salinity, circulation, sea-ice concentration, and atmospheric variables:
+\begin{equation}
+ u_{t+1}=F(u_t,\Phi_t;\theta)+\epsilon_t,
+ \label{eq:earthsystem}
+\end{equation}
+where $\Phi_t$ includes freshwater, albedo, ice elevation, greenhouse-gas, and surface-flux forcings. A process-constrained emulator may approximate $F$ for scenario exploration, but it must conserve water and track the sign and units of fluxes. The full model or an accepted process model supplies calibration targets for temperature, salinity, sea ice, and circulation.
+
+\subsection{Dynamic impact field}
+
+For a coastal cell, the total water level can be written as
+\begin{equation}
+ \begin{aligned}
+ h(x,t)={}&\Delta\eta(x,t)+T(x,t)+S(x,t)\\
+          &+W(x,t)+R(x,t)-z(x),
+ \end{aligned}
+ \label{eq:coast}
+\end{equation}
+where $T$ is tide, $S$ storm surge, $W$ wave setup or runup contribution, $R$ river or rainfall contribution, and $z$ is elevation in a fixed vertical datum. Inundation is determined from a hydrodynamic or connectivity model, not only from $h>0$ in a static map. This allows the study to distinguish a permanent mean shift from episodic compound flooding.
+
+\subsection{Uncertainty decomposition}
+
+The scenario ensemble samples uncertainty in inventory, mass balance, melt schedule, freshwater and albedo feedback, ocean response, fingerprint parameters, topography and bathymetry, coastal friction, and exposure. Let $Y$ be an impact quantity. A variance or distributional decomposition estimates contributions such as
+\begin{equation}
+ \begin{aligned}
+ \mathrm{Var}(Y)={}&V_{\mathrm{inventory}}+V_{\mathrm{path}}+V_{\mathrm{feedback}}\\
+ &+V_{\mathrm{fingerprint}}+V_{\mathrm{coast}}+V_{\mathrm{exposure}}\\
+ &+V_{\mathrm{interaction}},
+ \end{aligned}
+ \label{eq:variance}
+\end{equation}
+using a hierarchical design or global sensitivity analysis. The interaction term is retained because melt history, circulation, and coastline geometry need not contribute independently.
+
+\section{Experimental Protocol}
+
+\subsection{Validation layers}
+
+The first validation layer is synthetic truth recovery. A controlled simulator specifies reservoir masses, source geometry, melt schedule, freshwater flux, ocean response, Earth deformation, and coastline. Observations are generated with known noise, missingness, and timing. The pipeline must recover the global mean, regional field, and uncertainty coverage under sensor perturbations. This test is the only layer in which the complete hidden state is known.
+
+The second layer validates present-day processes. The model is tested against observed ice mass balance, geometry, sea-ice concentration, altimetry or gravimetry products, ocean temperature and salinity, tide gauges, GNSS vertical land motion, river discharge, and historical extremes. The goal is not to prove an all-ice-loss endpoint; it is to ensure that the mechanisms used to extrapolate from the present are not already inconsistent with the present.
+
+The third layer reconstructs historical regional sea-level patterns and compound events. It evaluates whether fingerprints and local land motion improve regional records, and whether tides, surge, waves, rainfall, and rivers improve extreme-water-level reconstruction. Historical datasets are versioned with their observation availability and vertical datums. Revised products cannot be used as hidden future information in an earlier hindcast.
+
+The fourth layer generates hypothetical complete-loss ensembles after the preceding locks are frozen. It compares matched endpoints under different transient schedules and feedback regimes. The output is a distribution of fields and impacts over scenario time, not a single date. The study reports which patterns are stable across the ensemble and which change sign, timing, or magnitude.
+
+\subsection{Temporal and spatial splits}
+
+Training and calibration products precede validation products in time. A final holdout contains later events, regions, sensor products, or climate regimes. Basin-level and coastline-type holdouts test spatial transfer. Randomly mixing adjacent tide-gauge windows or nearby pixels is not an acceptable primary split because it allows the model to memorize local autocorrelation.
+
+Every input receives an event time, availability time, product version, spatial reference, vertical datum, and uncertainty field. A feature is eligible only if it was available at the reconstruction timestamp. A later reprocessed satellite product can be used in a final reanalysis benchmark but not in a real-time emulation that claims historical operational validity.
+
+\subsection{Scenario design}
+
+The physical scenario ensemble crosses reservoir histories, melt schedules, freshwater and albedo responses, ocean mixing, fingerprint and solid-Earth parameters, bathymetry, and coastal process representations. Abrupt, fast, multi-century, and multi-millennial schedules are designed to share a final grounded-ice loss where numerical stability permits. Sea-ice and ice-shelf pathways are varied independently to expose their indirect roles.
+
+Exposure scenarios are run after physical scenarios. They include fixed present-day exposure, projected population and assets, managed retreat, protection, accommodation, and ecosystem-based pathways. A physical map is not labeled as a policy outcome, and an adaptation scenario cannot be used to reduce the estimated physical water level.
+
+\begin{table}[t]
+\caption{Model hierarchy and validation targets}
+\label{tab:levels}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.18\columnwidth}p{0.37\columnwidth}p{0.34\columnwidth}}
+\toprule
+Level & Added capability & Primary validation target\\
+\midrule
+0 & Grounded-ice scalar conversion and static elevation threshold & Inventory and global mean consistency\\
+1 & Reservoir mass balance and transient melt schedules & Mass trajectories and runoff timing\\
+2 & Climate-ocean feedbacks, fingerprints, and solid-Earth response & Present-day regional sea level, ocean state, and historical fingerprints\\
+3 & Hydrodynamic coast, compound extremes, ecosystems, and exposure scenarios & Extreme water levels, inundation, habitat indicators, and conditional exposure\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Baselines and Metrics}
+
+\subsection{Baselines and ablations}
+
+The scalar 70 m conversion is the simplest baseline. A global-mean-only model adds a spatially uniform field but no fingerprints. A reservoir-resolved uncoupled model tests mass balance without climate feedback. A coupled model without fingerprints tests whether spatial source physics matter. A coupled model without dynamic coast tests the value of compound hydrodynamics. These baselines are not straw men; they represent common shortcuts and give each added process a quantitative target.
+
+Ablations remove reservoir separation, freshwater, albedo, ocean dynamics, gravitational fingerprints, solid-Earth response, vertical land motion, compound extremes, and adaptation separation one at a time. The no-reservoir ablation pools all ice into one scalar. The no-fingerprint ablation forces local rise to equal the global mean. The no-compound ablation replaces dynamic water levels with a mean threshold. A process is retained only if its inclusion improves a predeclared metric or explains a measured residual without breaking uncertainty coverage.
+
+\subsection{Physical and probabilistic metrics}
+
+Physical metrics include reservoir mass-balance error, global mean consistency, spatial fingerprint bias, spatial correlation, timing error, ocean temperature and salinity pattern error, sea-ice concentration error, and coverage of uncertainty intervals. For distributions, use the continuous ranked probability score, energy score, interval coverage, interval width, and threshold exceedance scores. Report maps and basin distributions by time slice, not only a global average.
+
+Coastal metrics include inundation depth, area, duration, connectivity, extreme-water-level exceedance, salinity intrusion, and wetland or ice-associated habitat change. Ecological outputs use indicators appropriate to the habitat model and retain biological uncertainty separately. Exposure metrics include population, assets, ports, agriculture, and critical infrastructure under labeled scenarios.
+
+\subsection{Statistical comparison}
+
+The unit of resampling is a basin, event, or spatial block rather than an individual correlated pixel. Block bootstrap intervals quantify uncertainty in paired differences between model levels. Primary comparisons are fixed before the final holdout. Secondary maps are reported in full, including regions where added complexity worsens skill. Multiple comparisons are controlled for the declared primary metrics, while exploratory outputs are labeled as such.
+
+The model is not accepted because it produces the largest flooded polygon. It must pass mass conservation, present-day process validation, uncertainty coverage, and historical extreme reconstruction before its hypothetical endpoint output is interpreted. This ordering is particularly important because a complete-loss endpoint cannot be directly checked against modern observations.
+
+\section{Falsification and Robustness}
+
+CRYO-FINGERPRINT makes five central claims that can fail. H1 fails if fingerprints and solid-Earth response do not improve regional sea-level reconstruction or if their uncertainty coverage is worse than a uniform mean without an explicit resolution tradeoff. H2 fails if matched-endpoint melt schedules produce indistinguishable transient climate and circulation diagnostics across all predeclared tests. H3 fails if pooling grounded, floating, shelf, and frozen-ground reservoirs performs as well as separate modules for direct sea level, habitat, and discharge outputs. H4 fails if dynamic coastal and compound models do not improve historical extreme-water-level reconstruction. H5 fails if synthetic sensitivity contributions cannot be recovered in the uncertainty decomposition.
+
+Stress tests include missing altimetry, sparse tide gauges, alternative bathymetry, datum shifts, unknown vertical land motion, fast freshwater pulses, altered ocean mixing, coastline retreat, river discharge extremes, and sensor-product changes. Regional results are required to carry both physical and data-quality flags. A result that disappears when the datum or availability time is corrected is treated as a pipeline failure, not a climate discovery.
+
+The design also has an endpoint sanity check. The integrated grounded-ice mass loss must be compatible with the stated global mean equivalent under the chosen density and area conventions. Floating sea-ice loss must not create an artificial additional 70 m. If the scalar check fails, the scenario is rejected before spatial impact analysis. If it passes but regional fingerprints or present-day validation fail, the endpoint is still rejected as a reliable regional projection.
+
+\section{Discussion}
+
+\subsection{What the design can answer}
+
+The design can answer whether the global 70 m scale is consistent with a specified grounded-ice inventory, how regional sea level differs from a uniform field, how transient melt paths alter ocean and climate diagnostics, and how dynamic coastal processes change flooding metrics. It can also identify which uncertainties dominate a particular basin or impact quantity. These are direct, useful answers even if a complete-loss endpoint is physically remote.
+
+The likely qualitative structure is already constrained by physics. Grounded ice is the principal direct source of a very large eustatic rise. Floating sea ice is not an equivalent direct source, but its loss matters for albedo, habitat, and air-sea exchange. Ice shelves can matter indirectly through buttressing. Frozen ground creates separate hydrological, biogeochemical, and geotechnical consequences. The exact magnitudes, sequence, and local effects require the proposed model hierarchy and cannot be inferred from the headline number alone.
+
+\subsection{Why the answer is not uniform flooding}
+
+A uniform map assumes that every coastal point experiences the global mean. It ignores the gravity and rotation response to removing an ice mass, crustal deformation, ocean dynamics, land motion, and coastal geometry. Even if a region's long-term mean rises by a large amount, episodic flood depth depends on tides, waves, surge, rainfall, river discharge, drainage, and defenses. A static bathtub map is useful for screening but cannot stand in for a dynamic hazard estimate.
+
+The phrase ``every coastal city floods'' is also a statement about exposure and time. A city may be protected, relocated, subsided, abandoned, or transformed before a hypothetical endpoint. Conversely, a smaller mean rise combined with subsidence and storm surge can cause severe impacts earlier. CRYO-FINGERPRINT keeps the physical field and the conditional adaptation layer separate so both possibilities can be analyzed.
+
+\subsection{Long timescales and model credibility}
+
+The farther a scenario extends beyond observed conditions, the more important structural uncertainty becomes. A high-resolution coastal model does not repair an implausible ice trajectory. A sophisticated ice-sheet model does not automatically provide a reliable local flood map. The nested design makes this visible by requiring process validation at each interface and by showing how conclusions change with the model level.
+
+Long-term outputs should be presented as conditional scenario consequences: given a reservoir inventory, a melt schedule, a feedback regime, an Earth response, and an exposure pathway, the model produces a distribution of outcomes. This framing is scientifically stronger than a false precision date and more useful than an undifferentiated disclaimer.
+
+\subsection{Interpreting the 70 m scale}
+
+The headline value is most useful as a dimensional audit. Suppose the grounded-ice mass loss is converted into a water volume and divided by the ocean area. The resulting number should be of the order of tens of meters, with the exact value depending on the inventory and conventions. If a model reports a much smaller or larger value while claiming the same grounded-ice endpoint, the first investigation should be a unit, density, area, or reservoir-accounting error. This check is independent of whether a regional fingerprint model is used.
+
+The audit must also track water that is already in the ocean. Floating sea ice can melt without supplying a 70 m equivalent because it is already displacing water. A shelf can be floating while still exerting a dynamic constraint on grounded ice. Meltwater temporarily stored on land, in lakes, soils, or groundwater can change the timing of ocean delivery. These terms make the transient mass budget different from a final volume conversion, even when the final grounded-ice loss is fixed.
+
+The endpoint does not have one universal clock. A fast, physically artificial schedule is useful for separating pathway sensitivity, while a slow schedule can approximate long-term commitment. Neither schedule should be reported as the likely historical future unless a forcing trajectory, ice-dynamic model, and probability model justify that interpretation. The experiment therefore reports time since scenario initiation and the assumed schedule class on every figure. “Eventually” is a boundary condition, not a confidence interval.
+
+The same discipline applies to coastal language. A cell can be below a long-term mean water surface yet remain dry because of a defense, or it can experience repeated flooding at a smaller mean rise because surge, tide, subsidence, and drainage interact. Static elevation maps are valuable screening products, but dynamic inundation, salinity, and duration require their own model and validation. ``Flooded city'' is thus an impact category with assumptions, not a direct physical measurement.
+
+The proposed outputs use three labels. A \textit{robust consequence} is stable across the declared reservoir and pathway ensemble and survives process validation. A \textit{conditional consequence} changes with a documented melt schedule, feedback, or exposure pathway. An \textit{unresolved consequence} cannot be distinguished from structural or data uncertainty at the chosen model level. This labeling makes the result more informative than either a single deterministic map or a list of unranked caveats.
+
+\subsection{Safety and governance}
+
+The package is a research design, not an evacuation map or a city-specific engineering plan. Before adaptation use, regional geodesy, coastal engineering, hydrology, ecology, and community review are required. Exposure datasets can contain sensitive or inequitable assumptions; their provenance and version must be recorded. Physical model output should not be used to justify an irreversible relocation policy without scenario, uncertainty, and affected-community review.
+
+The safety constraint does not weaken the scientific objective. It creates a clear promotion gate: a model can support a regional planning pilot only after it passes inventory, process, spatial, uncertainty, and compound-extreme checks. A failure at any gate identifies where more data or better theory is needed.
+
+\section{Conclusion}
+
+Complete melting of all planetary ice is best treated as a coupled, multi-timescale boundary-condition experiment. The approximately 70 m figure is a useful grounded-ice volume equivalent, but it is not a uniform local rise, not a date prediction, and not a complete description of floating ice, ice shelves, frozen ground, climate feedbacks, or coastal impacts.
+
+CRYO-FINGERPRINT provides a concrete way to investigate the problem. It resolves reservoirs, propagates mass and freshwater fluxes, computes sea-level fingerprints and solid-Earth response, simulates climate-ocean feedbacks, and downscales relative sea level to dynamic coastal and ecological outputs. Synthetic truth recovery, present-day validation, historical hindcasts, and hypothetical scenario ensembles are separated. Global-mean, endpoint-only, uncoupled, and no-fingerprint shortcuts are explicit baselines. Falsification rules prevent detailed maps from being mistaken for validated predictions.
+
+The scientifically defensible conclusion is direct: eventual loss of grounded planetary ice would produce an enormous global sea-level change and transform coastal and Earth-system conditions, while the magnitude, timing, regional pattern, and ecological consequences depend on which ice is lost, how quickly it is lost, how the ocean and solid Earth respond, and how coasts and societies change. The proposed experiment is designed to measure those dependencies rather than collapse them into one dramatic number.
+
+\begin{thebibliography}{00}
+\bibitem{ipcc} Intergovernmental Panel on Climate Change, \textit{Climate Change 2021: The Physical Science Basis}, Cambridge, U.K.: Cambridge Univ. Press, 2021.
+\bibitem{gregory} J. M. Gregory \textit{et al.}, ``Concepts and terminology for sea level: Mean, variability and change, both local and global,'' \textit{Surveys in Geophysics}, vol. 40, pp. 1251--1289, 2019, doi: 10.1007/s10712-019-09525-z.
+\bibitem{bamber} J. L. Bamber \textit{et al.}, ``Ice sheet contributions to future sea-level rise from structured expert judgment,'' \textit{Proceedings of the National Academy of Sciences}, vol. 116, no. 23, pp. 11195--11200, 2019, doi: 10.1073/pnas.1817205116.
+\bibitem{golledge} N. R. Golledge \textit{et al.}, ``Global environmental consequences of twenty-first-century ice-sheet melt,'' \textit{Nature}, vol. 566, pp. 65--72, 2019, doi: 10.1038/s41586-019-0889-9.
+\bibitem{levermann} A. Levermann \textit{et al.}, ``The multimillennial sea-level commitment of global warming,'' \textit{Proceedings of the National Academy of Sciences}, vol. 110, no. 34, pp. 13745--13750, 2013, doi: 10.1073/pnas.1219414110.
+\bibitem{clark} P. U. Clark \textit{et al.}, ``Consequences of twenty-first-century policy for multi-millennial climate and sea-level change,'' \textit{Nature Climate Change}, vol. 6, pp. 360--369, 2016, doi: 10.1038/nclimate2923.
+\bibitem{deconto} R. M. DeConto and D. Pollard, ``Contribution of Antarctica to past and future sea-level rise,'' \textit{Nature}, vol. 531, pp. 591--597, 2016, doi: 10.1038/nature17145.
+\bibitem{notz} D. Notz and J. Stroeve, ``Observed Arctic sea-ice loss directly follows anthropogenic CO2 emission,'' \textit{Science}, vol. 354, no. 6313, pp. 747--750, 2016, doi: 10.1126/science.aag2345.
+\end{thebibliography}
+
+\end{document}

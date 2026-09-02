@@ -64,11 +64,43 @@ def _alias_key(value: object) -> str:
     return re.sub(r"[^a-z0-9]+", "", str(value or "").strip().lower().replace("&", " and "))
 
 
+_INTERNAL_KEY_TO_FIELD_ID = {
+    "agricultural_biological_sciences": "11",
+    "biochemistry_genetics_molecular_biology": "13",
+    "chemical_engineering": "15",
+    "chemistry": "16",
+    "computer_science": "17",
+    "earth_planetary_science": "19",
+    "energy": "21",
+    "engineering": "22",
+    "environmental_science": "23",
+    "immunology_microbiology": "24",
+    "materials_science": "25",
+    "mathematics": "26",
+    "medicine": "27",
+    "neuroscience": "28",
+    "nursing": "29",
+    "pharmacology_toxicology_pharmaceutics": "30",
+    "physics_astronomy": "31",
+    "veterinary": "34",
+    "dentistry": "35",
+    "health_professions": "36",
+    "electrical_engineering_systems": "22",
+    "quantitative_biology": "13",
+    "statistics": "26",
+    "astrobiology": "19",
+}
+
+
 _ALIASES = {
     _alias_key(alias): entry.id
     for entry in _ENTRIES
     for alias in (entry.id, entry.label, f"fields/{entry.id}", f"https://openalex.org/fields/{entry.id}")
 }
+_ALIASES.update({
+    _alias_key(key): field_id
+    for key, field_id in _INTERNAL_KEY_TO_FIELD_ID.items()
+})
 
 PERMITTED_DISCIPLINE_IDS = frozenset(entry.id for entry in _ENTRIES if entry.allowed)
 EXCLUDED_DISCIPLINE_IDS = frozenset(entry.id for entry in _ENTRIES if not entry.allowed)

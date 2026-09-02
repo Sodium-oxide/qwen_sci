@@ -1,0 +1,22 @@
+{
+  "manifest_type":"survey_manifest",
+  "schema_version":"1.0",
+  "topic":"Can we create an environmentally friendly replacement for plastics?",
+  "scientific_reframe":"For a defined product function and service lifetime, when do bio-based or biodegradable polymers reduce life-cycle greenhouse-gas emissions, fossil-resource use, persistent pollution, and human-health burden relative to a conventional plastic, while retaining required mechanical, barrier, safety, and end-of-life performance?",
+  "stage_status":"completed",
+  "design_mode":"DESIGN_ONLY",
+  "source_registry":[
+    {"id":"unep_plastic_pollution","title":"Plastic pollution","organization":"United Nations Environment Programme","url":"https://www.unep.org/interactives/beat-plastic-pollution/","verification":"browser_checked"},
+    {"id":"geyer_plastics_2017","title":"Production, use, and fate of all plastics ever made","venue":"Science Advances","doi":"10.1126/sciadv.1700782","verification":"bibliographic_anchor_pending_online_check"},
+    {"id":"song_biodegradable_2009","title":"Biodegradable and compostable alternatives to conventional plastics","venue":"Philosophical Transactions of the Royal Society B","doi":"10.1098/rstb.2008.0289","verification":"bibliographic_anchor_pending_online_check"},
+    {"id":"haider_bioplastics_2019","title":"Plastics of the future? The impact of biodegradable polymers on the environment and society","venue":"Angewandte Chemie International Edition","doi":"10.1002/anie.201805766","verification":"bibliographic_anchor_pending_online_check"},
+    {"id":"rosenboom_circular_2022","title":"Bioplastics for a circular economy","venue":"Nature Reviews Materials","doi":"10.1038/s41578-021-00407-8","verification":"bibliographic_anchor_pending_online_check"},
+    {"id":"spierling_biobased_2018","title":"Bio-based plastics - A review of environmental, social and economic impact assessments","venue":"Journal of Cleaner Production","doi":"10.1016/j.jclepro.2018.03.014","verification":"bibliographic_anchor_pending_online_check"},
+    {"id":"iso_compostability","title":"ISO 17088:2021 Plastics - Organic recycling - Specifications for compostable plastics","organization":"International Organization for Standardization","year":2021,"verification":"standards_anchor_pending_online_check"}
+  ],
+  "paper_search":{"openalex":{"records":0,"status":"network_unavailable"},"anysearch":{"records":0,"status":"network_unavailable"}},
+  "browser_checks":{"unep_plastic_pollution":"browser_checked"},
+  "gaps":["category confusion","functional-unit mismatch","end-of-life optimism","burden shifting","additive and multilayer omission","scale uncertainty","leakage and fragmentation","system interaction","decision trade-off"],
+  "outputs":["survey.md","survey_manifest.json","survey_gap_ledger.json","survey_evidence_plan.json","survey_idea_handoff.json"],
+  "observed_results":[]
+}

@@ -1,0 +1,12 @@
+{
+  "workflow": "Survey -> Idea -> ExperimentDesign -> Author",
+  "author_boundary": "The Author may synthesize the upstream survey, framework, design, risks, and references. It may not invent allele frequencies, fitness values, organ reconstructions, or experimental outcomes.",
+  "required_messages": [
+    "Evolution is population-level inherited change across generations.",
+    "Natural selection is central but must be distinguished from drift, gene flow, mutation, recombination, and demographic structure.",
+    "Complex organs are investigated through modified and co-opted developmental regulatory systems, not presumed abrupt final-state inventions.",
+    "EVOTRACE promotes claims only when each evidence gate is met."
+  ],
+  "forbidden_sections": ["Acknowledgment", "Acknowledgements"],
+  "required_report_status": "DESIGN_ONLY"
+}

@@ -1,0 +1,506 @@
+       Will It Be Possible to Cure All Cancers?
+     A Design-Only Framework for Testing Broad
+   Immune Recognition and Durable Cancer Control
+                                 Survey–Idea–ExperimentDesign–Author Research Workflow
+
+   Abstract—“Cure all cancers” is not one biomedical endpoint          alterations, invade, and metastasize [1], [2]. An immune-
+because cancers differ by tissue, genotype, antigen presentation,      recognition strategy therefore needs more than a target de-
+immune microenvironment, metastatic route, treatment history,          tected in an initial tumor panel. It must show that the recogni-
+and evolutionary capacity. Cancer immunotherapy has estab-
+lished that immune mechanisms can yield major and sometimes            tion mechanism is available across the declared cancer states,
+durable benefit in specific clinical contexts, but no discovery        remains available under pressure, produces killing rather than
+or current treatment proves universal cancer eradication. A re-        a laboratory artifact, reaches tumor sites, survives or functions
+ported MR1-restricted T-cell receptor (TCR) cancer-recognition         in suppressive microenvironments, and does not cause unac-
+strategy is an important discovery-stage hypothesis; laboratory        ceptable normal-tissue injury or systemic toxicity.
+killing of selected cancer cells does not establish tumor coverage,
+normal-tissue safety, persistence, resistance control, or clini-          The prompt highlights an MR1-related TCR discovery.
+cal benefit. This design-only paper defines Pan-cancer Antigen         Crowther et al. used genome-wide CRISPR screening to
+and Networked Cure Readiness Evaluation (PAN-CURE), a                  investigate cancer targeting through monomorphic MHC class
+staged framework for assessing a candidate immune-recognition          I-related protein MR1 [3]. This motivates a careful hypothesis:
+strategy. PAN-CURE freezes an indication set, target/normal-           a metabolically altered cancer state might create an immune-
+tissue boundary, mechanism, delivery/product definition, resis-
+tance family, and endpoint hierarchy. It requires independently        recognition opportunity that is not tied to a single conventional
+auditable target measurement, target-dependence tests, hetero-         polymorphic antigen. It does not imply that MR1 expression
+geneous tumor and microenvironment panels, escape analyses,            itself marks all cancers, that every cancer presents the same
+noncompensatory normal-tissue and systemic safety gates, staged        relevant ligand, that normal tissues are unaffected in humans,
+clinical evaluation, relapse follow-up, and replication. The paper     or that a T-cell product produces durable clinical cures. The
+reports no experiments, tumor killing, response, survival, toxicity,
+or cure result. Its conclusion is conditional: broad immune-           gap between discovery, preclinical mechanism, product qual-
+recognition strategies can be investigated systematically, but a       ification, and human benefit is central to this report.
+credible claim must be indication-specific and must survive               We introduce PAN-CURE, Pan-cancer Antigen and Net-
+heterogeneity, escape, safety, and durability tests; no current        worked Cure Readiness Evaluation. PAN-CURE is not a
+evidence establishes that all cancers can be cured by one therapy.     therapy and does not rank treatments by a universal score. It
+   Index Terms—cancer immunotherapy, pan-cancer therapy,               defines a staged evidence architecture for a candidate broad-
+tumor heterogeneity, immune escape, MR1, T-cell receptor, CAR-         recognition strategy. It separates target/normal-tissue measure-
+T, resistance, clinical translation.                                   ment, mechanistic causality, tumor heterogeneity and escape,
+                                                                       product and systemic safety, clinical activity, durable disease
+                       I. I NTRODUCTION                                control, and replication. This is a design-only paper; it reports
+                                                                       no participant, animal, cell, tumor, or clinical result.
+   Cancer is a disease in which abnormal cells can grow
+uncontrollably and spread to other parts of the body [1]. This         II. S URVEY: W HY A U NIVERSAL C ANCER -C URE C LAIM I S
+broad definition already explains why a universal cure claim                                  D IFFICULT
+is demanding. Solid tumors and hematologic malignancies                A. Cancer heterogeneity and endpoint definitions
+differ in location, cellular origin, genomic alterations, stromal
+                                                                         Cancer cure can mean eradication after local treatment,
+structure, antigen presentation, immune infiltration, metastatic
+                                                                       sustained absence of detectable disease, long-term remission,
+behavior, and treatment exposure. A treatment may be curative
+                                                                       or a population-level outcome defined after sufficient follow-
+in a local disease, useful for a molecular subtype, inactive in
+                                                                       up. These endpoints are not interchangeable. Imaging, molec-
+another subtype, or effective initially but followed by resistant
+                                                                       ular residual disease, symptoms, survival, and recurrence each
+relapse. The scientific task is not to aggregate these differences
+                                                                       have measurement limits. A short tumor shrinkage observation
+into a rhetorical average; it is to state the conditions under
+                                                                       cannot establish a durable cure, and a biomarker response
+which a specific intervention is expected to work and to reveal
+                                                                       cannot replace a patient-relevant endpoint without validation.
+conditions where it fails.
+                                                                         For individual i, an event-free probability through a stated
+   Cancer biology also creates a moving target. Cancer cells           horizon T is
+can evade immune detection, reshape immune cells, alter
+nutrient use, recruit vasculature, accumulate chromosome                          Si (T | xi , ai ) = Pr(Ei (T ) = 0 | xi , ai ),   (1)
+where Ei (T ) denotes the protocol-defined event process, xi is         For a declared resistance family R, define the conditional
+the declared disease state, and ai is assignment or exposure.         escape probability
+Equation (1) emphasizes that durability is conditional on
+                                                                              pesc (T | R, x, a) = Pr (∃r ∈ R : r persists
+disease definition, treatment context, follow-up, and censoring
+rules. It is not an all-cancer cure probability.                                                  or expands by T | x, a) .       (3)
+   Hanahan’s updated hallmarks framework describes cancer             Equation (3) is not estimated in this paper. It states the
+as a set of acquired capabilities with enabling features and          parameter a future program must bound with molecular, func-
+emerging dimensions [2]. The framework is useful for re-              tional, and longitudinal evidence before using broad durability
+sistance hypotheses because tumor proliferation, cell death,          language.
+metabolism, immune evasion, angiogenesis, invasion, and
+genome instability can interact. It is not a promise that a single                       III. I DEA : PAN-CURE
+intervention will control every capability in every tumor.               PAN-CURE converts the question into a bounded devel-
+                                                                      opment claim: for an immune modality, indication set, tar-
+B. Immune recognition and escape                                      get mechanism, product definition, and time horizon, does
+                                                                      the strategy show reproducible selective activity, resistance-
+   Immune therapies can change the treatment landscape, but
+                                                                      aware coverage, acceptable safety, and durable patient-relevant
+immune response is a system property. Checkpoint inhibition,
+                                                                      benefit? The null hypothesis H0 attributes apparent breadth
+engineered cellular products, cytokine approaches, vaccines,
+                                                                      to selected models, target overexpression, off-target assay
+and other modalities differ in target, delivery, persistence,
+                                                                      effects, reporting bias, or inadequate follow-up. Under H1 ,
+toxicity, and disease setting. Pardoll reviewed immune check-
+                                                                      the intervention passes the preregistered gates for a declared
+point blockade as a mechanism that can release anti-tumor
+                                                                      cancer set. Under H2 , activity is restricted to a subset or
+responses, while also underscoring the logic of tumor-immune
+                                                                      context. Under H3 , toxicity, escape, or microenvironmental
+interaction [4]. A therapy’s activity may depend on anti-
+                                                                      failure blocks the claim.
+gen presentation, T-cell trafficking, tumor burden, suppressive
+                                                                         The core idea is noncompensation. Strong in-vitro killing
+myeloid and stromal states, prior therapy, and host factors.
+                                                                      cannot offset credible normal-tissue injury. Response in one
+   Target availability is usefully treated as a distribution, not a
+                                                                      subtype cannot offset antigen-negative or resistant outgrowth.
+yes/no label. Let Zcg represent a target or recognition-relevant
+                                                                      A favorable short-term response cannot offset absent durabil-
+measurement for cancer state c in context g, and let Ng
+                                                                      ity. Each claim has a boundary: tumor types and molecular
+represent a matched normal-tissue measurement. A declared
+                                                                      states, disease stage, prior therapy, immune context, target
+coverage-and-safety margin is
+                                                                      assay, product/delivery, comparator, outcome, and follow-up.
+                    Mcg = Zcg − max Ng′ ,                      (2)       For a multiparameter evidence vector V = (C, M, R, S, D)
+                                ′   g ∈N                              representing coverage, mechanism, resistance, safety, and
+                                                                      durability, PAN-CURE reports component values rather than
+where N is the predeclared normal-tissue set. Equation (2)
+                                                                      a hidden aggregate. A logical readiness gate is
+is a measurement rule, not a safety certificate: expression or
+presentation values require assay calibration, spatial context,                            G = IC IM IR IS ID ,                   (4)
+and functional testing. A positive average margin can still hide
+                                                                      where every indicator must meet a preregistered criterion.
+a normal cell subset or tumor clone that determines toxicity
+                                                                      Equation (4) ensures that G = 0 whenever a coverage,
+or escape.
+                                                                      mechanism, resistance, safety, or durability condition fails.
+   MR1 is an especially instructive example. A monomorphic
+molecule could, in principle, simplify one dimension of recog-        IV. E XPERIMENT D ESIGN : S TAGED B ROAD -R ECOGNITION
+nition compared with highly polymorphic restrictions. But an                               E VALUATION
+MR1-restricted response still requires mechanistic evidence           A. Scenario ladder and controls
+about the relevant ligand, tumor-state dependence, normal-
+                                                                         S0 creates an audited target/normal-tissue and tumor-state
+tissue boundary, and selection under treatment pressure. PAN-
+                                                                      atlas. S1 tests recognition and target dependence with matched
+CURE treats MR1/TCR strategies as candidates for S0–S2
+                                                                      target-negative, irrelevant-receptor, and normal comparators.
+evaluation, not as evidence of a “one-stop” treatment.
+                                                                      S2 applies a heterogeneous panel incorporating subtypes,
+                                                                      target density, antigen-presentation states, treatment history
+C. Resistance, metastasis, and the tumor microenvironment
+                                                                      where available, stromal/myeloid context, and predefined re-
+   Therapy exerts selection. A tumor can lose or reduce a tar-        sistance challenges. S3 is a translational safety qualification
+get, alter processing/presentation, change lineage or metabolic       whose systems depend on the candidate modality. S4 is a
+state, exclude immune cells, suppress effector function, or           staged clinical program with ethics, regulator, and safety
+activate compensatory survival pathways. Resistant clones may         oversight. No lower rung licenses a higher-rung conclusion.
+pre-exist or emerge during treatment. Metastatic sites can have          The primary source/provenance ledger records speci-
+distinct microenvironments and antigen states. A strategy that        men state, assay, batch, target/ligand measurement, recep-
+succeeds in one lesion or model can fail elsewhere.                   tor/product version, culture or model condition, treatment
+                                                                 TABLE I
+                                       E VIDENCE BOUNDARY FOR A BROAD IMMUNE - RECOGNITION STRATEGY.
+
+Evidence class                 What it can establish                           Main limitations                               Unsupported conclusion
+Cell-culture recognition or    A mechanism hypothesis in stated lines          Target density, culture adaptation, miss-      Patient efficacy, safety, or universal
+killing                        and assay conditions.                           ing microenvironment, donor and assay          coverage.
+                                                                               effects.
+Target/ligand atlas            Distribution evidence for specified tu-         Sampling, subtype coverage, dynamic            Stable target availability in every
+                               mors and normal samples.                        presentation, spatial and treatment ef-        cancer.
+                                                                               fects.
+Heterogeneous model panel      Coverage and escape map across de-              Model transfer, selection, limited rare        Clinical durability or absence of re-
+                               clared models.                                  states, and incomplete immune context.         sistance.
+Early clinical study           Safety/activity signal for enrolled pop-        Small samples, follow-up, comparator,          Cure of other cancers or lifelong
+                               ulation and protocol.                           selection, and competing therapies.            disease eradication.
+Replication and long follow-   Reproducibility and durability for stated       Finite horizon and population specificity.     One treatment cures all present and
+up                             indications.                                                                                   future cancers.
+
+
+                                                                    TABLE II
+                                                           PAN-CURE ENDPOINT HIERARCHY.
+
+Tier                           Required measurement                               Inferential role                             Prohibited shortcut
+Target boundary                Tumor subtype, normal tissue, spatial and          Defines feasible recognition boundary.       Calling a molecule pan-cancer
+                               longitudinal target/ligand measurements.                                                        from limited samples.
+Mechanism                      Target dependence, receptor specificity, ab-       Tests causal recognition mechanism.          Inferring mechanism from correla-
+                               lation/restoration, functional immune read-                                                     tion or killing alone.
+                               outs.
+Heterogeneity/escape           Diverse models, low-target states, microen-        Maps coverage limits and escape.             Replacing an escape map with
+                               vironment challenges, resistant-outgrowth                                                       mean response.
+                               analyses.
+Safety                         Normal-tissue                   comparators,       Determines whether efficacy interpreta-      Offsetting safety concern by re-
+                               cytokine/systemic risk plan, product               tion is eligible.                            sponse.
+                               identity and persistence controls.
+Clinical durability            Protocol-defined activity, toxicity, relapse,      Tests patient-relevant benefit for stated    Generalizing a short response to
+                               survival/event follow-up, replication.             indication.                                  universal cure.
+
+
+
+exposure, and analysis lock. Target ablation and restoration,                      with tumors. Engineered immune products can also gener-
+where appropriate, test dependence. Multiple donors and tech-                      ate systemic inflammation, prolonged persistence, or other
+nical controls test whether a response is driven by one effector                   modality-specific risks. The study plan includes product iden-
+preparation. Blinded labels and held-out models prevent a tar-                     tity, contamination control, functional normal comparators,
+get hypothesis from being adjusted after response inspection.                      dose/exposure logic for its model, cytokine and systemic
+   For model m and time t, a bounded tumor-to-normal                               monitoring plans, biodistribution and persistence assessment
+selectivity contrast can be written                                                where applicable, and explicit pause/stop rules for later-stage
+                                                                                   work. None of these assays has been performed here.
+ ∆m (t) = E[Ytumor,m (t) | A = 1] − E[Ynormal,m (t) | A = 1],
+                                                                                      Clinical durability is modeled separately from response.
+                                                             (5)
+                                                                                   With event indicator Ei and retained follow-up indicator Ri ,
+where Y is a preregistered functional readout and A denotes
+                                                                                   an inverse-probability sensitivity weight is
+intervention exposure. Equation (5) requires exact assay defi-
+nition and does not itself establish safe human selectivity.
+                                                                                                             ∏︂      qs (1 | Ai )
+                                                                                                   Wi (t) =                           ,         (6)
+                                                                                                                 qs (1 | Ai , Li (s))
+B. Heterogeneity, escape, and safety                                                                               s≤t
+
+   Heterogeneity must be built into the test set rather than                       where Li (s) denotes preregistered covariate, disease, and
+treated as a post hoc explanation. The panel is frozen before                      treatment history. Equation (6) is only a sensitivity model; it
+analysis and includes target-low or target-variable states, dis-                   does not solve informative censoring or convert short follow-
+tinct molecular subtypes, relevant metastatic contexts where                       up into cure evidence.
+models allow, and suppressive microenvironment conditions.
+                                                                                        V. M ICROENVIRONMENT, D ELIVERY, AND C LINICAL
+Resistance experiments test target loss, pathway alteration,
+                                                                                                        E STIMANDS
+antigen-presentation changes, and phenotype/metabolic shifts
+appropriate to the recognition hypothesis. A negative model is                     A. A recognition mechanism is not a complete treatment
+not discarded merely because it contradicts a broad narrative.                     system
+   Safety requires an independent boundary. Normal tissue                            An immune receptor acts within a treatment system. The
+can share molecules, stress programs, or presentation context                      same recognition event can have different consequences de-
+                                                               TABLE III
+                                          PAN-CURE SCENARIO LADDER AND PERMISSIBLE CONCLUSIONS .
+
+Scenario                  Required evidence                                 Failure disqualifier                           Permissible conclusion
+S0 atlas                  Sample provenance, tumor/normal coverage,         Normal boundary or clinically relevant tu-     Measurement boundary is de-
+                          subtype and spatial context, assay controls.      mor states are omitted.                        fined.
+S1 mechanism              Target dependence, matched controls, normal       Killing persists without target mechanism or   Bounded recognition mecha-
+                          comparators, receptor/product identity, repli-    controls fail.                                 nism is supported.
+                          cate donors.
+S2 heterogeneous mod-     Predeclared                       subtype/low-    Coverage inferred from selected sensitive      Model-specific coverage and es-
+els                       target/microenvironment/resistance        panel   models.                                        cape map is supported.
+                          and null reporting.
+S3 safety qualification   Candidate-specific toxicology, persistence,       Credible safety issue or incomplete product    Preclinical safety package un-
+                          biodistribution, cytokine and off-tumor plans.    characterization.                              der stated limits.
+S4 clinical program       Endpoint, safety adjudication, relapse, censor-   Endpoint switching, inadequate follow-up, or   Indication-specific clinical evi-
+                          ing, molecular escape, and follow-up plan.        concealed toxicity.                            dence.
+
+
+
+pending on trafficking, immune-cell fitness, tumor burden,                       Let Yi (t) be a protocol-defined longitudinal tumor or molec-
+stromal exclusion, suppressive myeloid programs, hypoxia,                      ular measurement and let Hi (t) denote safety history. A
+nutrient competition, cytokine signals, prior treatment, and                   prospective analysis can separate short-term activity from
+anatomical site. A product can fail to reach a metastasis, reach               durable benefit using
+it but be inactivated, or generate an inflammatory response
+                                                                                        ∆Y (t) = E[Yi (t) | Ai = 1] − E[Yi (t) | Ai = 0],                (7)
+that narrows the therapeutic window. These are not secondary
+engineering details; they determine whether a receptor-level                   while reporting Hi (t) and the event process in Equation (1)
+discovery can become an indication-level intervention.                         separately. Equation (7) is not a cure criterion. A favorable
+   PAN-CURE therefore keeps the model context explicit.                        ∆Y (t) can coexist with later relapse, toxicity, or unequal
+A model panel includes not only target-high cell lines but                     follow-up.
+target-low and variable states, relevant molecular subtypes,                      The clinical program should also preserve molecular escape
+altered antigen-presentation states, and microenvironmental                    analysis. A recurrence is not merely a failed outcome; it
+conditions that challenge effector function. When a model                      can test whether the target or presentation pathway changed,
+is simplified, the conclusion is labeled as such. A successful                 whether a different clone expanded, or whether an immune
+recognition assay in an isolated culture can support a mecha-                  microenvironmental barrier dominated. These analyses are
+nism hypothesis, but it cannot answer trafficking, persistence,                hypothesis-driven and require consent, assay validation, and
+host toxicity, or relapse. A negative result in a suppressive                  predeclared interpretation rules. They should not be used to
+model is not discarded as noise; it may identify a necessary                   relabel a nonresponse as success after the fact.
+combination strategy or an indication boundary.
+   The decision-relevant question is whether an additional                     C. Combinations and interaction claims
+experiment changes a gate. For example, a broader tumor                           Combination treatments may be scientifically justified when
+atlas matters if it reveals that the candidate mechanism is                    a receptor-level strategy is constrained by a separable barrier,
+absent in clinically relevant states. A matched normal-tissue                  such as trafficking, antigen presentation, suppression, or a
+assay matters if it changes the plausible on-target/off-tumor                  resistance route. But a combination raises new attribution and
+boundary. A resistance experiment matters if it shows that                     safety questions. If exposures A and B are tested, the protocol
+target loss or pathway adaptation can defeat the approach.                     distinguishes the effect of the full strategy from a component
+Repeating only sensitive models cannot close any of these                      interaction; it does not infer synergy merely because a combi-
+dependencies.                                                                  nation seems stronger than one selected control. A transparent
+                                                                               interaction contrast is
+B. Clinical endpoints and the meaning of cure
+   Clinical translation needs an estimand before enrollment.                                        IAB = ∆AB − ∆A − ∆B ,                                (8)
+The target population, disease stage, molecular subgroup,                      where all contrasts use the same locked model, endpoint, and
+prior treatment, product exposure, comparator, rescue therapy,                 follow-up. Equation (8) is descriptive unless the experimental
+adverse-event window, and follow-up must be fixed. Safety,                     design and scale justify a causal interaction interpretation. It
+objective activity, molecular residual disease, progression,                   also does not compensate for combined toxicity.
+relapse, survival, patient-reported outcomes, and quality of life
+have distinct roles. A response endpoint can be important for                        VI. M ECHANISM C ONFIRMATION AND R ESEARCH
+early development but does not prove durable eradication. A                                          P RIORITIES
+relapse endpoint requires complete surveillance and molecular                    An MR1-restricted TCR or another broad-recognition candi-
+characterization of recurrence. Survival requires careful han-                 date should be developed as a falsifiable mechanism program.
+dling of subsequent therapy and censoring.                                     First, the molecular recognition condition must be narrowed:
+                                                              TABLE IV
+                C ONTEXT VARIABLES THAT CAN TURN AN IMMUNE - RECOGNITION FINDING INTO SUCCESS , RESISTANCE , OR TOXICITY.
+
+Context variable               Required evidence                              Failure mode if omitted                       Bounded inference enabled
+Tumor-state and target dy-     Longitudinal and subtype-resolved tar-         A static target atlas misses treatment-       Recognition boundary for stated
+namics                         get/ligand, presentation, and pathway          induced or resistant states.                  samples and times.
+                               measurements.
+Immune trafficking and fit-    Location, infiltration, persistence, activa-   Receptor activity in vitro is mistaken for    Mechanistic feasibility in the
+ness                           tion/exhaustion, and local suppressive-        activity at tumor sites.                      stated model.
+                               context measurements.
+Stroma and myeloid envi-       Matrix, cytokine, macrophage/myeloid,          An accessible culture target is assumed to    Microenvironment sensitivity or
+ronment                        and exclusion conditions matched to the        be accessible in disease.                     combination need.
+                               indication where feasible.
+Normal tissue and systemic     Matched normal comparators, product            Mean tumor selectivity hides a rare but       Restricted safety hypothesis, not
+exposure                       distribution/persistence and modality-         clinically important toxic tissue.            human safety proof.
+                               specific risk plan.
+Evolution under treatment      Target-loss, presentation-loss, phenotype,     Initial activity is misreported as durable    Preclinical escape      map   and
+                               metabolic, and clonal-outgrowth stress         control.                                      follow-up priorities.
+                               tests.
+
+
+                                                                 TABLE V
+                                   C LINICAL EVIDENCE LADDER FOR AN INDICATION - SPECIFIC IMMUNE STRATEGY.
+
+Stage                         Primary question                                Mandatory safety/durability information       Conclusion permitted
+Discovery and preclinical     Is the recognition mechanism target depen-      Normal comparators, assay controls, model     Mechanistic candidate, not a ther-
+mechanism                     dent in the declared model?                     limitations, and escape hypotheses.           apy.
+Translational qualification   Is a defined product/exposure interpretable     Product identity, distribution/persistence,   Candidate for supervised clinical
+                              and sufficiently characterized for the next     toxicology plan, stop rules, and manufac-     evaluation.
+                              study?                                          turing controls.
+Early clinical study          What safety and activity signals occur in       Adverse events, dose/exposure provenance,     Population-specific early clinical
+                              the enrolled indication and protocol?           complete response/nonresponse reporting,      evidence.
+                                                                              and follow-up.
+Comparative/durability        Does the strategy improve prespecified          Relapse, subsequent therapy, survival/event   Bounded durable-benefit claim
+study                         patient-relevant outcomes versus the com-       follow-up, patient outcomes, molecular es-    for stated indication.
+                              parator?                                        cape, and replication.
+Cross-indication extension    Does the mechanism and benefit reproduce        Independent target/normal, microenviron-      Evidence for an additional indi-
+                              under a separately specified cancer and         ment, resistance, and safety evaluation.      cation, not universal cure.
+                              patient boundary?
+
+
+
+which tumor-associated state, ligand or presentation config-                     work?” but “for which molecular, immune, disease-stage, and
+uration is necessary; whether target ablation removes recog-                     prior-treatment boundary does the benefit-risk profile support
+nition; whether restoration restores it; and whether the same                    use?” A biomarker hypothesis used for enrichment must be
+dependence holds in independent tumor contexts. Second, the                      locked and evaluated for both sensitivity and exclusion risk.
+normal-tissue boundary must be mapped using the same assays                      Excluding a patient group based on an unvalidated marker can
+and exposure conditions as the tumor comparison. Third,                          create a false safety or efficacy narrative; including all groups
+the hypothesis must face adversarial tumor states, including                     without measurement can dilute an interpretable signal.
+low-recognition, altered-presentation, stress, metabolic, and                       The same care applies to relapse. Molecular changes at
+resistant states. A result that remains strong only after those                  recurrence can indicate an escape route, but recurrent sampling
+states are excluded is a subset result, not a pan-cancer result.                 has selection and feasibility limitations. PAN-CURE records
+   The order of these tests matters. A large clinical expansion                  which samples were available, which were not, and whether
+cannot repair an unresolved target mechanism or a plausible                      recurrence analyses were predefined. A resistant clone discov-
+normal-tissue hazard. Conversely, a mechanistic failure does                     ered after treatment is evidence about a selected outcome, not
+not invalidate the general field of immunotherapy; it identifies                 proof that the same route would dominate in all cancers. The
+the specific dependency that blocked the candidate. This is                      framework turns such observations into next-stage hypotheses
+why PAN-CURE reports a dependency ledger rather than an                          rather than post hoc claims of mechanism.
+average efficacy score. The ledger helps distinguish a target-
+distribution problem, a receptor/product problem, a microenvi-                    VII. C OMMUNICATION AND T RANSLATION B OUNDARIES
+ronment problem, an evolution problem, and a safety problem.                        The phrase “cure all cancers” can create unjustified expec-
+   Patient stratification is not a failure of the cure ambition. It is           tations, especially for people facing serious disease. Research
+an empirical response to biological variation. The most ethical                  communication should name the experimental system, the can-
+and informative clinical question is often not “does the product                 didate target, the cancer boundary, the response and safety end-
+                                                                  TABLE VI
+                                     R ESEARCH PRIORITIES FOR A BROAD IMMUNE - RECOGNITION HYPOTHESIS .
+
+Open question                   Discriminating experiment or data            Decision changed by the result                Result does not establish
+What is recognized?             Target/ligand dependence, receptor mu-       Whether the candidate mechanism is causal     Human safety or clinical re-
+                                tation, ablation/restoration, and indepen-   and how to define target-positive disease.    sponse.
+                                dent tumor states.
+How broad is tumor coverage?    Frozen subtype, stage, metastatic-site,      Whether the indication should narrow, ex-     Durable benefit across patients.
+                                target-low, and treatment-history atlas.     pand, or stop.
+What normal tissue is vulner-   Matched normal-tissue and systemic-          Whether a safety gate blocks further trans-   Absence of rare or long-term
+able?                           context      functional      tests    with   lation.                                       toxicity.
+                                product/exposure controls.
+How does escape occur?          Predeclared pressure, target/presentation-   Whether resistance mitigation or combina-     Prevention of relapse in people.
+                                loss, phenotype, metabolic, and clonal-      tions are necessary.
+                                outgrowth tests.
+Which patients benefit?         Prospectively defined molecular and          Whether a clinical population can be spec-    Efficacy outside the validated
+                                immune-state stratification with complete    ified.                                        population.
+                                nonresponder reporting.
+
+
+
+point, and the remaining failure modes. It should distinguish                            IX. S YSTEMATICS , D ECISION G ATES , AND
+an immune-cell laboratory observation from a manufactured                                           R EPRODUCIBILITY
+cell product, a preclinical model from a patient, and an early                   PAN-CURE uses calibration and fault tests before a broad
+response from a durable patient-relevant outcome. This is                     claim. Synthetic target-positive/negative mixtures test atlas
+not merely cautious wording: these differences determine the                  classifiers. Target-ablation labels test whether the mechanism
+design, oversight, and evidence required for the next step.                   pipeline detects loss of dependence. Batch shifts, donor effects,
+   PAN-CURE requires a claim ledger for every release. The                    low-target states, and simulated resistant clones test whether
+ledger states the observation, mechanism inference, preclinical               an analysis reports coverage only when it is present. Null
+interpretation, or clinical result; all omitted cancer states; all            assignments test false positives. A pipeline that calls broad
+normal-tissue assumptions; resistance tests; toxicity observa-                activity in null or target-independent controls cannot support
+tions; and follow-up horizon. It also records null, resistant,                a broad recognition claim.
+and toxic results. This practice reduces the chance that a                       Multiplicity is predeclared. For m ordered confirmatory
+striking example of tumor killing becomes an implied promise                  hypotheses, a family-wise step-down criterion may compare
+of universal therapeutic success.
+                                                                                                                  α
+                                                                                                     p(j) ≤             ,                  (9)
+                                                                                                             m−j+1
+                VIII. I NTERFACE FAILURE M ODES                               at step j. Equation (9) makes the hypothesis family visible but
+                                                                              does not correct selected models, flexible target definitions, or
+   Broad cancer-control programs fail most often at interfaces                safety undermeasurement.
+rather than within a single assay. A receptor can recognize                      The reproducibility package releases protocol versions,
+a target but fail to persist; a product can persist but fail                  model/source provenance, target and normal definitions, prod-
+to traffic; immune cells can enter a lesion but face local                    uct/receptor version, assay and batch metadata, complete in-
+suppression; a tumor can be initially sensitive but evolve an                 clusion/exclusion rules, code, calibration controls, null tests,
+escape state; a trial can show activity but lack the follow-                  resistant models, negative results, safety observations, and an
+up needed to distinguish remission from durable control.                      explicit distinction between observation, mechanism inference,
+PAN-CURE assigns each interface an owner, measurement,                        preclinical evidence, and clinical extrapolation. In this paper
+contingency, and claim boundary. This makes negative results                  no empirical package exists because no experiment was run.
+informative and prevents a strong component result from being
+represented as end-to-end efficacy.                                               X. T HREATS TO VALIDITY AND C LAIM C ALIBRATION
+   This matrix is also a compact prioritization tool. When                       The principal threat is selection. A target can look common
+the main uncertainty is target distribution, expanding clinical               when samples are chosen after a promising screen, when
+enrollment is less informative than resolving the tumor-normal                target-high cell lines stand in for disease, or when rare normal
+and escape boundary. When the main uncertainty is safety,                     cells and low-target tumor states are missing. A high mean
+increasingly complex efficacy models do not remove the                        signal is not a coverage estimate unless the sampling frame,
+need for a candidate-specific safety program. When the main                   assay detection limits, subtype representation, and exclusion
+uncertainty is durability, endpoint and follow-up design must                 rules are fixed before the result is examined. PAN-CURE
+change before language about cure changes. The framework                      therefore requires every apparently favorable panel to be
+thereby links scientific progress to the particular dependency                accompanied by the denominator: which tumor states, normal
+that remains open.                                                            contexts, donors, time points, and failed measurements were
+                                                                 TABLE VII
+                                    I NTERFACE FAILURE MATRIX FOR A BROAD IMMUNE - RECOGNITION PROGRAM .
+
+Interface                      Example failure                                Evidence required before stronger claim          Consequence for interpretation
+Recognition to killing         Binding or target measurement occurs           Target-dependence,      functional    assays,    Recognition observation only; no
+                               without functional tumor-cell elimina-         matched controls, and time-resolved              anti-tumor activity claim.
+                               tion.                                          mechanism readouts.
+Product to tumor site          Product is active ex vivo but cannot           Distribution, persistence, site-context, and     Model mechanism does not es-
+                               traffic, persist, or remain functional at      immune-fitness measurements appropriate to       tablish in-disease feasibility.
+                               disease sites.                                 the modality.
+Killing to durability          Initial reduction is followed by resistant     Longitudinal molecular and event follow-up       Initial activity is not durable con-
+                               or antigen-negative outgrowth.                 with prespecified escape analyses.               trol or cure.
+Tumor selectivity to patient   Tumor-biased signal coexists with              Matched normal contexts, candidate-specific      Benefit interpretation is blocked
+safety                         normal-tissue or systemic inflammatory         safety package, adjudication, and stop rules.    by safety gate.
+                               injury.
+Single indication to broad     Benefit in one cancer type is generalized      Independent target, heterogeneity, safety, and   Only the tested indication claim
+claim                          despite distinct antigen, stroma, stage,       outcome evidence for each extension.             is supported.
+                               or host context.
+
+
+                                                                   TABLE VIII
+                                              D ECISION GATES AND VALUE - OF - INFORMATION PRIORITIES .
+
+Open dependency                Discriminating evidence                           Decision changed                               Claim still not proved
+Target      breadth/normal     Independent tumor-normal atlas with sub-          Whether a pan-cancer hypothesis is even        Clinical selectivity or cure.
+boundary                       type, spatial, and longitudinal context.          testable.
+Recognition mechanism          Ablation/restoration, receptor controls,          Whether to pursue the candidate mecha-         Coverage under immune pres-
+                               relevant-ligand and functional assays.            nism.                                          sure.
+Escape and microenviron-       Predeclared      resistant/low-target    and      Whether combinations or narrower indica-       Patient durability.
+ment                           suppressive-context panels.                       tions are required.
+Safety                         Normal comparators and candidate-specific         Whether translation language is blocked.       Absence of all human risk.
+                               systemic/product risk studies.
+Durability/replication         Longitudinal clinical events, relapse/escape      Whether a bounded durable-benefit claim        Cure of all cancers.
+                               analysis, independent confirmation.               is supported.
+
+
+
+eligible but absent. This makes an unknown boundary visible                       support a bounded patient-benefit statement.
+rather than converting it into an implied universal one.                             Finally, replication should challenge the most attractive
+   Transportability is a second threat. Tumor cells in culture,                   claim rather than merely repeat the easiest assay. Independent
+organoids, xenografts, and even selected early clinical popu-                     teams should test locked target and normal definitions, blinded
+lations differ in vasculature, immune composition, treatment                      or held-out samples where feasible, a different model source,
+exposure, and evolutionary history. A negative model may be                       and the predeclared escape and safety tests. Claim language
+uninformative when it lacks the relevant ligand or delivery                       is calibrated to the strongest replicated gate passed: discovery
+condition; a positive model may be uninformative when it                          supports a mechanism hypothesis; preclinical evidence sup-
+excludes suppressive or resistant states. The remedy is not a                     ports a bounded candidate rationale; clinical follow-up can
+generic “more models” request. It is a prespecified challenge                     support an indication-specific benefit statement. None of these
+set whose components map to a stated failure route: antigen                       labels is interchangeable with a universal cure conclusion.
+or presentation loss, metabolic adaptation, poor trafficking,
+immune suppression, product persistence, or normal-tissue ex-                                     XI. D ISCUSSION AND C ONCLUSION
+posure. Evidence can then reduce uncertainty about one route                         It may become possible to cure more cancers, and some
+without being misdescribed as evidence against all routes.                        cancers are already curable in particular settings, but no evi-
+   Clinical interpretation adds further threats. Informative cen-                 dence supports a claim that one therapy will cure all cancers.
+soring, post-protocol therapy, unequal imaging schedules, re-                     The reasons are empirical rather than merely semantic: cancers
+sponse assessment changes, and incomplete relapse character-                      are heterogeneous and evolve; immune recognition depends on
+ization can make a short observation window appear durable.                       target state and context; tumors can escape; microenvironments
+A time-to-event analysis must state the event definition, time                    can suppress therapy; normal tissues and systemic responses
+origin, censoring rule, retained follow-up, subsequent inter-                     constrain safety; and durable benefit requires long follow-up.
+ventions, and molecular sampling plan. Safety interpretation                      A universal claim must solve all of these simultaneously.
+likewise requires denominators and exposure timing, because                          PAN-CURE offers a constructive route. It does not dis-
+a rare serious normal-tissue injury cannot be neutralized by a                    miss broad immune-recognition discoveries. It asks them to
+favorable average response. These conditions are not admin-                       pass the tests required by their breadth: audited tumor and
+istrative details: they determine whether an activity signal can                  normal boundaries, causal mechanism, heterogeneous cover-
+age, resistance, safety, clinical durability, and replication. The                               R EFERENCES
+MR1/TCR discovery is appropriately valuable as a hypothesis          [1] National Cancer Institute, “What Is Cancer?” accessed Sep. 3,
+that can be tested through this ladder. It is not evidence of a          2026. [Online]. Available: https://www.cancer.gov/about-cancer/
+one-stop clinical treatment.                                             understanding/what-is-cancer
+                                                                     [2] D. Hanahan, “Hallmarks of Cancer: New Dimensions,” Cancer Discov-
+   This four-stage design-only workflow concludes that broad             ery, vol. 12, no. 1, pp. 31–46, 2022, doi: 10.1158/2159-8290.CD-21-
+cancer control should be communicated as a progressively                 1059.
+constrained, indication-specific claim. A future program may         [3] M. D. Crowther et al., “Genome-wide CRISPR-Cas9 screening reveals
+                                                                         ubiquitous T cell cancer targeting via the monomorphic MHC class I-
+show a defined recognition mechanism, then a coverage map,               related protein MR1,” Nature Immunology, vol. 21, pp. 178–185, 2020,
+then preclinical qualification, then clinical activity and durable       doi: 10.1038/s41590-019-0578-8.
+benefit for specific patients and cancers. Each successful gate      [4] D. M. Pardoll, “The blockade of immune checkpoints in cancer im-
+                                                                         munotherapy,” Nature Reviews Cancer, vol. 12, pp. 252–264, 2012, doi:
+matters; no finite set of early results can justify language that        10.1038/nrc3239.
+all cancers have been cured.                                         [5] D. S. Chen and I. Mellman, “Elements of cancer immunity and the
+                                                                         cancer-immune set point,” Nature, vol. 541, pp. 321–330, 2017, doi:
+                      A PPENDIX A                                        10.1038/nature21349.
+           M INIMAL PAN-CURE RUN M ANIFEST                           [6] A. Ribas and J. D. Wolchok, “Cancer immunotherapy using checkpoint
+                                                                         blockade,” Science, vol. 359, no. 6382, pp. 1350–1355, 2018, doi:
+   Each future run records indication and disease-state bound-           10.1126/science.aar4060.
+                                                                     [7] C. H. June, M. Sadelain, and P. D. Greenberg, “CAR T cell therapy,”
+ary; target/ligand and normal-tissue definition; sample prove-           New England Journal of Medicine, vol. 379, pp. 64–73, 2018, doi:
+nance; receptor/product version; delivery and exposure defi-             10.1056/NEJMra1706169.
+nition; target-dependence controls; model heterogeneity; mi-         [8] E. R. Mardis, “Neoantigens and genome instability: Impact on im-
+                                                                         munogenomic phenotypes and immunotherapy response,” Genome
+croenvironment and resistance family; assay batches; safety              Medicine, vol. 11, Art. 71, 2019, doi: 10.1186/s13073-019-0699-2.
+plan; clinical endpoint, censoring, toxicity, relapse, and follow-   [9] M. K. Samur et al., “Biallelic loss of BCMA as a resistance mechanism
+up rules; code; failed and null results; and a statement that the        to CAR T cell therapy,” Nature Communications, vol. 12, Art. 868, 2021,
+                                                                         doi: 10.1038/s41467-021-21178-7.
+run cannot certify a universal cancer cure.
+                         A PPENDIX B
+                    P ROTOCOL C HECKLIST
+   Before analysis, freeze target and normal definitions, model
+panel, resistance challenges, safety gates, endpoints, and
+follow-up. During a run, preserve target-negative, irrelevant-
+receptor, normal-tissue, donor, batch, and null controls; report
+all negative, resistant, and toxic findings. Before communica-
+tion, label results as measurement, mechanism, preclinical, or
+clinical evidence and do not convert a finite indication-specific
+result into an all-cancer cure claim.
+

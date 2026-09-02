@@ -79,6 +79,135 @@ def test_science_parser_exposes_required_rendering() -> None:
     assert args.render_required is True
 
 
+def test_science_parser_exposes_quantitative_pause_alias() -> None:
+    args = cli._build_root_parser().parse_args(
+        [
+            "science",
+            "--topic",
+            "topic",
+            "--allow-quantitative-modeling",
+            "--defer-author",
+            "--until",
+            "author",
+        ]
+    )
+
+    assert args.defer_author is True
+    assert cli._science_immutable_options(args)["quantitative_mode"] == "required"
+
+
+def test_science_parser_exposes_quantitative_continuation() -> None:
+    args = cli._build_root_parser().parse_args(
+        [
+            "science",
+            "--resume",
+            "run-dir",
+            "--continue-quantitative",
+            "--until",
+            "author",
+        ]
+    )
+
+    assert args.continue_quantitative is True
+    assert args.until == "author"
+
+
+def test_science_quantitative_continuation_requires_resume(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    assert cli.main(["science", "--continue-quantitative"]) == cli.SCIENCE_EXIT_INPUT_ERROR
+
+    assert "requires --resume --until author" in capsys.readouterr().err
+
+
+def test_required_quantitative_new_run_auto_pauses_before_author(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    config_path = _write_config(tmp_path)
+    calls: list[str] = []
+
+    def pause_before_author(**kwargs: object) -> ScienceWorkflowOutcome:
+        calls.append(str(kwargs["until"]))
+        paths = kwargs["paths"]
+        metadata, state = science_run.load_science_run(paths)
+        return ScienceWorkflowOutcome(metadata=metadata, state=state)
+
+    monkeypatch.setattr(cli, "run_science_workflow", pause_before_author)
+
+    assert (
+        cli.main(
+            [
+                "science",
+                "--topic",
+                "quantitative pause topic",
+                "--config",
+                str(config_path),
+                "--output-root",
+                str(tmp_path / "science-runs"),
+                "--run-id",
+                "automatic-quantitative-pause",
+                "--allow-quantitative-modeling",
+                "--json",
+            ]
+        )
+        == cli.SCIENCE_EXIT_SUCCESS
+    )
+
+    result = json.loads(capsys.readouterr().out)
+    assert calls == ["exp_design"]
+    assert result["until"] == "exp_design"
+
+
+def test_science_quantitative_continuation_binds_handoff_to_author(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    _config_path, run_dir = _initialize_run(tmp_path)
+    handoff_path = run_dir / "quantitative" / "author" / "quantitative_author_handoff_manifest.json"
+    calls: list[dict[str, object]] = []
+    quantitative_state = {
+        "status": "HANDED_OFF",
+        "ideas": {"Q1": {"status": "FINALIZED"}},
+        "next_actions": [{"action": "resume-author"}],
+    }
+
+    from src.pipeline import quantitative_orchestrator
+
+    monkeypatch.setattr(
+        quantitative_orchestrator,
+        "continue_quantitative_until_author_ready",
+        lambda **_kwargs: quantitative_state,
+    )
+
+    def run_author(**kwargs: object) -> ScienceWorkflowOutcome:
+        calls.append(kwargs)
+        metadata, state = science_run.load_science_run(kwargs["paths"])
+        return ScienceWorkflowOutcome(metadata=metadata, state=state)
+
+    monkeypatch.setattr(cli, "run_science_workflow", run_author)
+    monkeypatch.setattr(cli, "_bind_quantitative_publication_bundle", lambda **_kwargs: None)
+
+    assert (
+        cli.main(
+            [
+                "science",
+                "--resume",
+                str(run_dir),
+                "--continue-quantitative",
+                "--until",
+                "author",
+                "--json",
+            ]
+        )
+        == cli.SCIENCE_EXIT_SUCCESS
+    )
+
+    assert len(calls) == 1
+    assert calls[0]["until"] == "author"
+    assert calls[0]["quantitative_handoff_manifest_path"] == handoff_path
+    result = json.loads(capsys.readouterr().out)
+    assert result["until"] == "author"
+
+
 def test_science_parser_exposes_the_seven_page_report_policy() -> None:
     args = cli._build_root_parser().parse_args(
         ["science", "--topic", "topic", "--minimum-pages", "8"]

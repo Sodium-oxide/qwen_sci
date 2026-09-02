@@ -1,0 +1,7 @@
+{
+  "schema_version": "quantitative_model_audit_v1_manual",
+  "status": "EXECUTABLE_FOR_DECLARED_REDUCED_MODEL",
+  "checks": {"all_symbols_declared": true, "positive_eigenvalue_over_grid": true, "finite_outputs": true, "same_cutoff_across_scenarios": true, "assumption_disclosure_present": true, "empirical_claim_disclosure_present": true},
+  "capability": {"capability": "COMPOSABLE", "reason": "closed-form deterministic grid calculation; not a general many-body solver"},
+  "failure_conditions": ["lambda <= 0", "nonfinite numerical output", "scenario-specific cutoff change", "suppressed assumption disclosure"]
+}

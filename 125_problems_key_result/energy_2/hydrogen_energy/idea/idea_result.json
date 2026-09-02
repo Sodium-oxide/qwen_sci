@@ -1,0 +1,22 @@
+{
+  "result_type": "idea_result_v5",
+  "topic": "What is the future of hydrogen energy?",
+  "design_mode": "DESIGN_ONLY",
+  "primary_direction": "HYDROGEN-SERVICE-PORTFOLIO",
+  "research_question": "Under which combinations of hydrogen production pathways, renewable and firm electricity, storage, transport infrastructure, end-use conversion, and policy support does hydrogen deliver additional climate, reliability, industrial, or energy-access value compared with direct electrification and competing fuels, after accounting for lifecycle emissions, water, land, energy losses, leakage, safety, cost, and demand uncertainty?",
+  "candidate_routes": [
+    {"name":"industrial_feedstock_replacement","status":"candidate","reason":"uses existing chemical demand and infrastructure while testing displacement, certification, and lifecycle emissions"},
+    {"name":"hydrogen_direct_reduction_and_high_temperature_industry","status":"candidate","reason":"targets processes where molecular or high-temperature service may outperform direct electricity"},
+    {"name":"hydrogen_derived_transport_fuels","status":"candidate","reason":"tests shipping, aviation-derived fuels, and heavy transport with full conversion-chain accounting"},
+    {"name":"long_duration_and_seasonal_storage","status":"candidate","reason":"tests whether duration and transportability offset lower round-trip efficiency"},
+    {"name":"remote_resilience_and_backup","status":"candidate","reason":"tests low-utilization reserve value under severe outages and local logistics"},
+    {"name":"coordinated_hydrogen_hubs","status":"selected","reason":"integrates production, offtake, storage, transport, flexible power demand, safety, and staged adoption"}
+  ],
+  "comparators": ["direct_electrification", "batteries", "transmission", "demand_response", "firm_low_carbon_supply", "sustainable_biofuels", "ammonia", "methanol", "synthetic_hydrocarbons", "fossil_hydrogen_with_and_without_ccs"],
+  "objectives": ["delivered_service", "lifecycle_emissions", "hourly_grid_impact", "seasonal_reliability", "water", "land", "materials", "safety", "leakage", "cost", "offtake_risk", "infrastructure", "adoption"],
+  "falsifiable_claims": ["hydrogen value is service-specific", "annual grid emissions can misstate electrolysis benefits", "production without offtake and infrastructure is not viability", "lifecycle and safety constraints can reorder pathways", "storage value is tail-event dependent", "no universal pathway dominates"],
+  "required_boundaries": ["hydrogen is an energy carrier and feedstock", "separate color labels from lifecycle accounting", "compare delivered services", "include conversion and transport losses", "include leakage safety water materials and demand uncertainty"],
+  "expected_results": [],
+  "observed_results": [],
+  "upstream_sources": ["iea_global_hydrogen_review_2024", "iea_netzero2050", "ipcc_ar6_wg3_ch6"]
+}

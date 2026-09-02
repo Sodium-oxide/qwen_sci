@@ -1,0 +1,24 @@
+{
+  "schema":"research_design_v1",
+  "topic":"What is addiction and how does it work?",
+  "project_id":"neur_5",
+  "survey_binding":{"survey_run_id":"neur_5-survey-001","project_context_fingerprint":"neur5-addiction-memory-context-v1","target_gap_ids":["G1","G2","G3","G4","G5","G6","G7"]},
+  "idea_binding":{"idea_result":"../idea/idea_result.json","primary_direction_id":"AMMCA"},
+  "execution_policy":{"mode":"DESIGN_ONLY","observed_results":[],"automatic_execution_allowed":false},
+  "template":"longitudinal_addiction_mechanism_with_memory_cue_and_clinical_safety_review",
+  "research_brief":{"object":"Dynamic addiction-related brain-behavior-environment states","central_hypothesis":"A decomposed state-space model predicts held-out craving and relapse better than static severity or dopamine-only models, while mechanism-specific intervention preserves non-target reward, cognition, agency, and safety.","alternative_explanations":["arousal","intoxication","sedation","pain relief","sleep","stress","depression","trauma","medication","social opportunity","treatment exposure","expectancy","data leakage"],"boundary":"No substance exposure, withdrawal induction, neural manipulation, memory editing, treatment assignment, or relapse outcome has been executed by this design artifact."},
+  "stages":[
+    {"id":"D0","name":"Clinical safety, governance, and preregistration","outputs":["eligibility","stop rules","relapse definition","consent","fairness plan","crisis pathway"]},
+    {"id":"D1","name":"Longitudinal mechanism phenotype","inputs":["de-identified clinical or naturalistic data","validated assessments","ecological momentary assessment","optional neural and physiological data"],"controls":["sleep","stress","pain","medication","treatment","arousal","clinic","device"]},
+    {"id":"D2","name":"Reward, wanting, liking, habit, and control tasks","metrics":["devaluation","cue choice","response cost","contingency degradation","withdrawal relief","inhibition","cue reactivity"]},
+    {"id":"D3","name":"Memory and relapse endpoints","metrics":["cue memory","context","extinction","renewal","craving","use days","time to event","treatment retention","quality of life"]},
+    {"id":"D4","name":"Neural, physiological, and environmental measures","metrics":["neural cue reactivity","autonomic state","sleep","stress","genetic moderation","environment","treatment access"]},
+    {"id":"D5","name":"Causal contrasts and mechanism-specific intervention","status":"design_only","controls":["safe comparator","substance-label comparator","non-target reward","cognition","mood","agency","overdose risk"]},
+    {"id":"D6","name":"Genetics, environment, fairness, and recovery","outputs":["hierarchical interaction model","calibration","clinic-held-out validation","patient-defined recovery outcomes"]},
+    {"id":"D7","name":"Decision rules and failure handling","promotion_criteria":["reliable phenotype","held-out prediction","generalization","causal contrast","selectivity","fairness","clinical approval"]}
+  ],
+  "equations":["x_t=[R_t,W_t,L_t,H_t,N_t,C_t,P_t,E_t,S_t]^T","x_(i,t+1)=A_(c_i,t)x_(i,t)+B u_(i,t)+G g_i+H e_(i,t)+epsilon_(i,t)","Y_(i,t)=f(x_(i,t),d_(i,t),a_(i,t))+b_i+nu_(i,t)","tau_(k,j)=E[Y_j|do(A_k=1),X]-E[Y_j|do(A_k=0),X]"],
+  "unknowns":["which mechanism dominates each relapse episode","whether cue-memory manipulation can be selective","how gene-environment profiles alter treatment response","whether dynamic models improve prediction without discriminatory harm"],
+  "human_review_required":["clinical addiction medicine review","substance exposure and withdrawal safety","informed consent and privacy","stigmatization and fairness review","treatment access and referral plan","neuroethics review for memory or control manipulation","crisis response and overdose safety"],
+  "author_handoff":"author_handoff.json"
+}

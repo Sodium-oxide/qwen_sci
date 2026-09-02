@@ -1,10 +1,23 @@
 {
   "schema_version": "author-handoff-v1",
   "project_id": "astr_18_deep_biosphere_proposal",
-  "selected_idea_id": "idea-pressure-atlas-001",
+  "survey_run_id": "survey-deep-biosphere-001",
+  "selected_idea_id": "idea-deepbio-census-001",
   "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
-  "execution_policy": {"mode": "DESIGN_ONLY", "observed_results": []},
-  "allowed_source_keys": ["colwell", "kallmeyer", "hoshino", "orcutt", "biddle", "amano", "nagata", "wasmund", "lever", "starnawski"],
-  "must_preserve": ["No acknowledgement section.", "No claim that proposed samples, rates, or genomes were obtained.", "Do not conflate molecular potential with flux.", "State pressure and contamination limitations directly."],
-  "human_review_items": ["Official source metadata verification after browser access is restored.", "Marine permits and pressure-vessel safety review.", "Independent microbiology and geochemistry review of global upscaling."]
+  "execution_policy": {
+    "mode": "DESIGN_ONLY",
+    "observed_results": []
+  },
+  "allowed_source_keys": ["hoshino2018", "hoshino2020", "inagaki2006", "inagaki2015", "orcutt2013", "lever2015", "dhondt2019", "seyler2020", "heuer2020", "wasmund2017", "egger2018", "torti2015", "colman2017", "levin2019"],
+  "must_preserve": [
+    "Separate habitat volume, standing abundance, composition, functional potential, and realized activity.",
+    "Do not claim collected samples, observed rates, a global numerical census, or extraterrestrial-life detection.",
+    "Do not add acknowledgements, funding statements, author biographies, or unrelated page-filling material.",
+    "Keep uncertainty direct and bounded, rather than using generic disclaimers."
+  ],
+  "human_review_items": [
+    "Refresh official publisher metadata and any data-access requirements after the in-app browser connection is restored.",
+    "Review low-biomass contamination controls and pressure-preservation procedures with deep-sea operators.",
+    "Review hierarchical model priors, spatial support, and flux integration with geobiogeochemistry and statistics experts."
+  ]
 }

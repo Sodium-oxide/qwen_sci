@@ -1,0 +1,30 @@
+{
+  "schema_version": "idea_result_v5",
+  "project_id": "phys_5_light_speed_20260901",
+  "survey_run_id": "survey-light-speed-001",
+  "primary_direction_id": "idea-rme-001",
+  "selected_primary_idea": {
+    "idea_id": "idea-rme-001",
+    "title": "Relativistic Mission Envelope: a coupled subluminal feasibility frontier",
+    "summary": "Compute a provenance-preserving feasible region over beta, payload, propulsion, braking, shielding, and operations rather than presenting a cruise speed in isolation.",
+    "target_gap_ids": ["G1", "G2", "G3", "G4", "G6"],
+    "research_object": "A massive robotic or crewed spacecraft travelling between specified stellar systems under established relativity.",
+    "mechanism": "The relativistic energy divergence, beam or onboard propulsion limits, braking closure, ISM impact environment, shielding mass, and operational constraints jointly restrict beta.",
+    "hypothesis": "A coupled model yields a narrower and better calibrated feasible region than energy-only or travel-time-only screening.",
+    "falsification_conditions": [
+      "A validated self-consistent mission lies outside the predicted infeasible region using the same stated payload and environment assumptions.",
+      "Joint constraints do not improve held-out mission-architecture prediction relative to an energy-only baseline.",
+      "A verified shielding or braking architecture changes the controlling high-beta failure mode without the predicted mass or energy trade-off."
+    ],
+    "claim_boundary": "The direction does not claim observed flight, a new physical law, exact light-speed travel, or faster-than-light travel."
+  },
+  "competitive_ideas": [
+    {"idea_id": "idea-shield-002", "title": "Adaptive sacrificial shield", "target_gap_ids": ["G3"], "status": "competitive_component"},
+    {"idea_id": "idea-beam-003", "title": "Two-station beam-sail rendezvous", "target_gap_ids": ["G2", "G4"], "status": "competitive_component"},
+    {"idea_id": "idea-null-004", "title": "Null-calibrated propulsion test suite", "target_gap_ids": ["G5"], "status": "competitive_component"}
+  ],
+  "rejected_ideas": [
+    {"title": "Assume a warp or reactionless drive", "reason": "No verified evidence in the frozen Survey supports using such a mechanism as a mission premise."}
+  ],
+  "survey_binding": {"manifest": "../survey/survey_manifest.json", "required_gap_ids": ["G1", "G2", "G3", "G4", "G5", "G6"]}
+}

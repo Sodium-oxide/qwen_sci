@@ -34,13 +34,15 @@ _ALLOWED_MATH_COMMANDS = {
     "to", "rightarrow", "Rightarrow", "Leftarrow", "Leftrightarrow", "leq", "geq", "neq", "approx",
     "equiv", "times", "cdot", "pm", "mp", "partial", "nabla", "infty", "ldots", "dots", "mathrm",
     "mathcal", "mathbb", "mathbf", "operatorname", "left", "right", "langle", "rangle", "vert", "mid",
+    "dot", "land",
 }
 _ALLOWED_MATH_CHARS = re.compile(r"^[A-Za-z0-9\s+\-*/=<>(),.;:{}\[\]_\\^|!?'`]+$")
 _MATH_STRUCTURE = re.compile(
     r"(?:[=<>]|[_^]|\\(?:frac|sqrt|sum|prod|int|lim|forall|exists|leq|geq|neq|approx|equiv|to|rightarrow|Rightarrow|Leftarrow|Leftrightarrow)\b)"
 )
 _MATH_IDENTIFIER_COMMAND = re.compile(
-    r"\\(?:operatorname|mathrm|mathcal|mathbb|mathbf)\s*\{[A-Za-z]+\}"
+    r"\\(?:operatorname|mathrm|mathcal|mathbb|mathbf)\s*"
+    r"\{[A-Za-z][A-Za-z0-9]*(?:,[A-Za-z0-9]+)*\}"
 )
 _LOWERCASE_PROSE_WORD = re.compile(r"\b[a-z]{3,}\b")
 _EQUATION_FRAGMENT_BOUNDARY = re.compile(r"\n[ \t]*\n+")

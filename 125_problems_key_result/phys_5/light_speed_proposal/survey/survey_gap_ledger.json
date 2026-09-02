@@ -1,0 +1,12 @@
+{
+  "schema_version": "survey_gap_ledger_v1",
+  "accepted_gap_ids": ["G1", "G2", "G3", "G4", "G5", "G6"],
+  "gaps": [
+    {"gap_id": "G1", "name": "Mission-level speed optimum", "status": "ACCEPTED", "evidence": ["kulkarni2018", "fuzfa2019", "long2022"]},
+    {"gap_id": "G2", "name": "Acceleration-braking closure", "status": "ACCEPTED", "evidence": ["fuzfa2019", "kulkarni2018"]},
+    {"gap_id": "G3", "name": "Coupled ISM/radiation/shielding trade-off", "status": "ACCEPTED", "evidence": ["hoang2017", "droby2021", "guo2024", "edl2012"]},
+    {"gap_id": "G4", "name": "Scale transition", "status": "ACCEPTED", "evidence": ["kulkarni2018", "heller2020", "long2022"]},
+    {"gap_id": "G5", "name": "Falsifiable propulsion claims", "status": "ACCEPTED", "evidence": ["neunzig2021", "millis2005"]},
+    {"gap_id": "G6", "name": "Human-operational envelope", "status": "ACCEPTED", "evidence": ["guo2024", "edl2012"]}
+  ]
+}

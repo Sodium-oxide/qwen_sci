@@ -1,0 +1,22 @@
+{
+  "result_type":"idea_result_v5",
+  "topic":"Will we soon see the end of monocultures like wheat, maize, rice, and soy?",
+  "design_mode":"DESIGN_ONLY",
+  "primary_direction":"DIVERSIFIED-RESILIENT-AGRIFOOD",
+  "research_question":"For production systems dominated by wheat, maize, rice, or soy, when do crop rotations, intercropping, varietal diversification, mixed farming, and neglected or underutilized crops improve food-supply stability and ecological services without unacceptable penalties in yield, income, nutrition, land use, water, or labor under climate and pest shocks?",
+  "candidate_routes":[
+    {"name":"resilient_temporal_rotations","status":"candidate","reason":"uses temporal complementarity, soil cover, nutrient cycling, and disease breaks"},
+    {"name":"spatial_intercropping_and_cultivar_mixtures","status":"candidate","reason":"reduces synchronized susceptibility while testing competition and harvest cost"},
+    {"name":"genetic_and_landscape_insurance","status":"candidate","reason":"combines cultivar diversity and habitat services for pest, pollination, and water regulation"},
+    {"name":"forgotten_crop_transition_corridors","status":"candidate","reason":"links locally adapted crops to seed, processing, storage, nutrition, and markets"},
+    {"name":"shock_aware_food_system_portfolio","status":"selected","reason":"tests field and food-system resilience jointly under climate, pest, market, and trade shocks"},
+    {"name":"adoption_and_policy_co_design","status":"supporting","reason":"tests whether risk-sharing and infrastructure make diversification persist"}
+  ],
+  "crop_scope":["wheat","maize","rice","soy","legumes","oilseeds","root_and_tuber_crops","neglected_and_underutilized_crops","cover_and_forage_crops"],
+  "objectives":["food_energy","protein","micronutrients","mean_yield","tail_loss","recovery_time","soil","erosion","water","pesticides","pollination","biodiversity","greenhouse_gas","land_displacement","income","labor","price","adoption","affordability"],
+  "falsifiable_claims":["portfolios reduce lower-tail loss under compound shocks","diversification mechanisms are complementary but not universally additive","field diversity does not guarantee food-system resilience","forgotten crops require value-chain support","multi-year risk-adjusted income predicts adoption","no universal diversification package dominates"],
+  "required_boundaries":["dominant crops remain part of the transition portfolio","yield tonnes are not the only food metric","land-use displacement and food loss are explicit","first-year adoption is not persistence"],
+  "expected_results":[],
+  "observed_results":[],
+  "upstream_sources":["fao_biodiversity","tilman_global_change_2001","garibaldi_biodiversity_2017","renard_tilman_2019","tamburini_2020","bullock_restoration_2011","plant_genetic_resources_treaty"]
+}

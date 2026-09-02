@@ -1,0 +1,14 @@
+{
+  "benchmark": "LONG-HORIZON-ORBITAL-SURVIVAL-BENCHMARK",
+  "status": "DESIGN_ONLY",
+  "scenario_classes": ["S0", "S1", "S2", "S3", "S4", "S5"],
+  "primary_controls": [
+    "conservative-budget check",
+    "held-out ephemeris arc",
+    "independent integrator",
+    "synthetic injection",
+    "initial-state ensemble",
+    "tide and mass-loss sensitivity"
+  ],
+  "decision_boundary": "No orbital-decay or collision forecast may be claimed without a declared flux, held-out predictive support, numerical robustness, and a closed signed budget."
+}

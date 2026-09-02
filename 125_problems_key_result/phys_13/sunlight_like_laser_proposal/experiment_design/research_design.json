@@ -1,0 +1,19 @@
+{
+  "schema_version":"experiment_design_v1",
+  "project_id":"phys_13_sunlight_like_laser",
+  "idea_binding":{"idea_result":"../idea/idea_result.json","selected_idea_id":"idea-crisp-icf-001","survey_run_id":"survey-phys13-001"},
+  "research_brief":{"question":"Can a coherence-resolved workflow identify when a sunlight-like driver is a credible LPI-control candidate without unacceptable delivery or coupling penalties?","hypothesis":"A matched-control, multi-fidelity ledger is more reliable than bandwidth-only or polarization-only claims.","study_template":"computational_digital","unit_of_analysis":"regime card x driver card x control card x quantity-of-interest card"},
+  "model_cards":[
+    {"id":"D0","architecture":"narrowband coherent baseline","required_fields":["carrier","envelope","polarization","focal_statistics","energy_normalization"]},
+    {"id":"D1","architecture":"SSD-like/broadband phase control","required_fields":["spectral_shape","bandwidth","phase_process","smoothing_time"]},
+    {"id":"D2","architecture":"orthogonal polarization smoothing","required_fields":["component_balance","mutual_coherence","focal_statistics"]},
+    {"id":"D3","architecture":"sunlight-like stochastic candidate","required_fields":["spectrum","independent_phase_processes","Stokes_statistics","temporal_speckle_statistics"]},
+    {"id":"D4","architecture":"vector/structured polarization candidate","required_fields":["polarization_map","propagation_model","scattering_geometry"]},
+    {"id":"D5","architecture":"overlap/cross-beam adversarial control","required_fields":["geometry","beam_independence","density_gradient","coupling_model"]},
+    {"id":"R0-R3","architecture":"analytic-to-transport regime ladder","required_fields":["scope","fidelity","reference_route","uncertainty"]}
+  ],
+  "variables":{"outcomes":["LPI_risk_proxy","drive_uniformity_proxy","useful_energy_delivery_proxy","coupling_sensitivity","representation_error_interval","resource_interval"],"inputs":["spectral_support","phase_correlation_time","polarization_statistics","spatial_intensity_statistics","temporal_speckle_lifetime","profile_representation","overlap_geometry","solver_choices"],"controls":["energy_normalization","wavelength_convention","focal_envelope","physical_scope","reference_route"],"unknowns":["driver_engineering_feasibility","target_scale_transport","diagnostic_equivalence","out_of_regime_model_discrepancy"]},
+  "decision_labels":["REPRESENTATION_INVALID","BASELINE_ONLY","COHERENCE_BENEFIT_CANDIDATE","TRADEOFF_DOMINATED","COUPLING_SENSITIVE","INCONCLUSIVE","MODEL_INVALID"],
+  "execution_policy":{"mode":"DESIGN_ONLY","observed_results":[],"automatic_execution_allowed":false,"human_review_required":true},
+  "status":"PROPOSAL_NO_OBSERVED_RESULTS"
+}

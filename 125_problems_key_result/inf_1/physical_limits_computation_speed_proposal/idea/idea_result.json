@@ -1,0 +1,41 @@
+{
+  "schema_version": "idea_result_v5",
+  "project_id": "inf_1_computation_speed_physical_limits",
+  "survey_run_id": "survey-inf1-envelope-001",
+  "selected_primary_idea_id": "idea-pec-001",
+  "selected_primary_idea": {
+    "id": "idea-pec-001",
+    "title": "Physical Compute-Envelope Contract (PEC)",
+    "summary": "A resource-accounting protocol that evaluates useful computational-throughput claims under a named workload, accuracy, reliability, architecture, energy, thermal, spatial, communication, memory, and I/O boundary.",
+    "scientific_object": "workload x correctness target x reliability target x architecture x physical resource cards",
+    "target_gap_ids": ["GAP-SCOPE-001", "GAP-COMPOSE-002", "GAP-LOGICAL-003", "GAP-ADVANTAGE-004", "GAP-THERMAL-005"],
+    "central_hypothesis": "A layered, contract-bounded envelope distinguishes supported from unsupported processing-speed claims more reliably than a component-rate or benchmark-only metric.",
+    "mechanism": "Each claimed useful rate is constrained by explicit transition, signal, thermal, memory, reliability, and I/O cards, with inapplicable terms marked rather than silently assumed.",
+    "falsifiers": ["contract cannot separate supported from unsupported claims", "mandatory cards add no decision value", "validated logical throughput violates the disclosed envelope without a changed contract", "sampling advantage cannot be represented without universalizing it"],
+    "claim_class": "DESIGN_PROPOSAL_NO_OBSERVED_RESULTS"
+  },
+  "competitive_ideas": [
+    {"id": "idea-ft-score-002", "title": "Fault-Tolerance-normalized gate score", "reason": "Useful as a reliability submetric but incomplete without physical transport, thermal, and workload bounds."}
+  ],
+  "high_risk_ideas": [
+    {"id": "idea-unified-bound-003", "title": "Attempt a universal closed-form upper bound", "reason": "Conceptually attractive but likely invalid across computational models and resource assumptions."}
+  ],
+  "rejected_ideas": [
+    {"id": "idea-clock-race-004", "reason": "Frequency is not useful end-to-end throughput."},
+    {"id": "idea-quantum-escape-005", "reason": "Violates evidence that quantum processing remains physically constrained and workload-dependent."}
+  ],
+  "mcts_evolution": [
+    {"node": "root", "defect": "density and throughput conflated", "change": "introduce workload boundary"},
+    {"node": "energy", "defect": "single resource incomplete", "change": "add signal, thermal, memory, I/O cards"},
+    {"node": "quantum", "defect": "advantage generalized", "change": "separate algorithmic advantage from logical throughput"},
+    {"node": "selected", "defect": "requires future empirical evaluation", "change": "pre-register conditional outcomes"}
+  ],
+  "invariants": {
+    "requires_real_gap_ids": true,
+    "requires_workload_boundary": true,
+    "requires_falsifier": true,
+    "forbids_universal_numeric_speed_claim": true,
+    "forbids_quantum_limit_escape_claim": true,
+    "forbids_observed_results": true
+  }
+}

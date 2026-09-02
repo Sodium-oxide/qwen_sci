@@ -407,13 +407,13 @@ def _render_bibliography(result: BibtexRenderResult, *, profile: TemplateProfile
             "\\emph{No provenance-backed bibliographic records are available for rendering; see the bibliography completion ledger.}"
         )
     database = Path(profile.generated_bib).with_suffix("").as_posix()
-    return "\n".join(
-        [
-            "\\section*{References}",
-            f"\\bibliographystyle{{{profile.bibliography_style}}}",
-            f"\\bibliography{{{database}}}",
-        ]
-    )
+    lines = [
+        f"\\bibliographystyle{{{profile.bibliography_style}}}",
+        f"\\bibliography{{{database}}}",
+    ]
+    if profile.profile_id != "ieee_conference_v1":
+        lines.insert(0, "\\section*{References}")
+    return "\n".join(lines)
 
 
 def _write_text_atomically(path: Path, content: str) -> None:

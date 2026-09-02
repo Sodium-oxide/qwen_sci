@@ -1,0 +1,756 @@
+{
+  "schema_version": "idea_result_v5",
+  "topic": "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong magnetic field. The research should distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution, and test formation and evolution with mathematical models.",
+  "survey_binding": {
+    "status": "bound",
+    "manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\pde_rerun_20260903\\pde_rerun_20260903\\survey\\attempt-007\\survey_manifest.json",
+    "survey_run_id": "astr_16-survey-007",
+    "project_id": "sci_astr_16_survey_007",
+    "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+    "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf"
+  },
+  "primary_direction": "verification_reversal",
+  "directions": {
+    "idea_id": "cross_domain_transfer-01",
+    "seed_id": "cross_domain_transfer-01",
+    "route_id": "verification_reversal",
+    "route_signature": {
+      "mature_idea": {
+        "scientific_object": "rotor dynamics and control theory",
+        "mechanism_or_relation": "Time-varying misalignment angle in rotating machinery with anisotropic damping, where the effective braking torque depends on both the angle and its secular drift rate.",
+        "mechanism": "Time-varying misalignment angle in rotating machinery with anisotropic damping, where the effective braking torque depends on both the angle and its secular drift rate."
+      },
+      "route_id": "verification_reversal",
+      "required_structural_change": "Use an observable or test outcome to back-infer the mechanism"
+    },
+    "route_policy": {
+      "route_id": "verification_reversal",
+      "label": "Verification reversal",
+      "required_structural_change": "Use an observable or test outcome to back-infer the mechanism",
+      "forbidden_reuse": "Do not turn instrumentation alone into the contribution",
+      "allowed_object_transformations": "Object follows the evidence pathway",
+      "mechanism_constraints": "Derive competing mechanism predictions before selecting one",
+      "retrieval_mode": "evidence_to_hypothesis",
+      "risk_budget": "medium",
+      "falsifier_requirement": "Require a pre-registered discriminating outcome",
+      "minimum_divergence": "falsifier_or_prediction",
+      "legacy_mode": "evidence_first"
+    },
+    "legacy_direction_mode": "evidence_first",
+    "mature_idea": {
+      "idea_id": "cross_domain_transfer-01",
+      "title": "rotor dynamics and control theory",
+      "abstract": "The pulsar magnetic inclination angle alpha(t) is formally analogous to a rotor misalignment angle; the decay rate dot{alpha} acts as an anisotropic damping term that modifies the effective torque. This mapping justifies the functional form N(Omega) = -K Omega^3 [sin^2(alpha(t)) + eta(t)] and provides physical intuition for why n_eff deviates from 3 without requiring B-field decay.",
+      "hypothesis": "The pulsar magnetic inclination angle alpha(t) is formally analogous to a rotor misalignment angle; the decay rate dot{alpha} acts as an anisotropic damping term that modifies the effective torque. This mapping justifies the functional form N(Omega) = -K Omega^3 [sin^2(alpha(t)) + eta(t)] and provides physical intuition for why n_eff deviates from 3 without requiring B-field decay.",
+      "central_hypothesis": "The pulsar magnetic inclination angle alpha(t) is formally analogous to a rotor misalignment angle; the decay rate dot{alpha} acts as an anisotropic damping term that modifies the effective torque. This mapping justifies the functional form N(Omega) = -K Omega^3 [sin^2(alpha(t)) + eta(t)] and provides physical intuition for why n_eff deviates from 3 without requiring B-field decay.",
+      "scientific_object": "rotor dynamics and control theory",
+      "mechanism": "Time-varying misalignment angle in rotating machinery with anisotropic damping, where the effective braking torque depends on both the angle and its secular drift rate.",
+      "mechanism_or_relation": "Time-varying misalignment angle in rotating machinery with anisotropic damping, where the effective braking torque depends on both the angle and its secular drift rate.",
+      "intervention_or_transformation": "",
+      "assumptions": null,
+      "evidence_basis": "",
+      "target_gap_ids": null,
+      "gap_alignment": "",
+      "refinement_scope": "",
+      "falsifier": "",
+      "maturity_status": "needs_grounding",
+      "maturity": {
+        "dimensions": {
+          "specificity": 0.75,
+          "mechanism_completeness": 0.5,
+          "evidence_support": 0.0,
+          "falsifiability": 0.0,
+          "scope_clarity": 0.0,
+          "executability": 0.0,
+          "independence": 1.0
+        },
+        "aggregate": 0.321,
+        "maturity_status": "needs_grounding",
+        "maturity_is_not_rank": true
+      },
+      "maturity_is_not_rank": true,
+      "idea_source": "cross_domain_transfer",
+      "lineage": {
+        "source": "advanced_analysis",
+        "field": "cross_domain_inspiration"
+      },
+      "source_lineage": [
+        {
+          "idea_source": "cross_domain_transfer",
+          "lineage": {
+            "source": "advanced_analysis",
+            "field": "cross_domain_inspiration"
+          }
+        },
+        {
+          "idea_source": "cross_domain_transfer",
+          "idea_id": "cross_domain_transfer-01-2",
+          "lineage": {
+            "source": "advanced_analysis",
+            "field": "cross_domain_inspiration"
+          }
+        },
+        {
+          "idea_source": "cross_domain_transfer",
+          "idea_id": "cross_domain_transfer-01-2",
+          "lineage": {
+            "source": "advanced_analysis",
+            "field": "cross_domain_inspiration"
+          }
+        }
+      ],
+      "route_signature": {
+        "scientific_object": "rotor dynamics and control theory",
+        "mechanism_or_relation": "Time-varying misalignment angle in rotating machinery with anisotropic damping, where the effective braking torque depends on both the angle and its secular drift rate.",
+        "mechanism": "Time-varying misalignment angle in rotating machinery with anisotropic damping, where the effective braking torque depends on both the angle and its secular drift rate."
+      },
+      "independence_rationale": "Retained as structurally distinct in: mechanism, representation, scientific_object, mechanism_or_relation, intervention_or_transformation",
+      "independence_status": "independent",
+      "counterexamples": null,
+      "negative_evidence": null,
+      "retrieval_queries": null,
+      "mechanism_chain": null,
+      "validation_targets": null,
+      "anchor_policy": "",
+      "anti_anchor": false,
+      "anti_anchor_reason": "",
+      "reframed_problem_id": "",
+      "rejected_gap_ids": null
+    },
+    "maturity": {
+      "dimensions": {
+        "specificity": 0.75,
+        "mechanism_completeness": 0.5,
+        "evidence_support": 0.0,
+        "falsifiability": 0.0,
+        "scope_clarity": 0.0,
+        "executability": 0.0,
+        "independence": 1.0
+      },
+      "aggregate": 0.321,
+      "maturity_status": "needs_grounding",
+      "maturity_is_not_rank": true
+    },
+    "maturity_is_not_rank": true,
+    "maturity_status": "needs_grounding",
+    "lineage": {
+      "source": "advanced_analysis",
+      "field": "cross_domain_inspiration"
+    },
+    "source_lineage": [
+      {
+        "idea_source": "cross_domain_transfer",
+        "lineage": {
+          "source": "advanced_analysis",
+          "field": "cross_domain_inspiration"
+        }
+      },
+      {
+        "idea_source": "cross_domain_transfer",
+        "idea_id": "cross_domain_transfer-01-2",
+        "lineage": {
+          "source": "advanced_analysis",
+          "field": "cross_domain_inspiration"
+        }
+      },
+      {
+        "idea_source": "cross_domain_transfer",
+        "idea_id": "cross_domain_transfer-01-2",
+        "lineage": {
+          "source": "advanced_analysis",
+          "field": "cross_domain_inspiration"
+        }
+      }
+    ],
+    "anti_anchor": false,
+    "direction_mode": "verification_reversal",
+    "title": "Anisotropic Damping from Magnetic Inclination Decay: A Formal Analogy to Rotor Dynamics for Pulsar Spin-Down",
+    "abstract": "We resolve the missing assumption in isolated pulsar spin-down models by relaxing the constant magnetic inclination angle. By formally mapping the pulsar magnetic inclination angle alpha(t) to a rotor misalignment angle, we introduce its decay rate as an anisotropic damping term derived from the coupled electromagnetic torque equations. This yields a modified effective torque equation N(Omega) that naturally explains deviations of the braking index n_eff from 3 without invoking magnetic field decay. We formally derive the dominance condition under which this mechanism strictly bounds the validity domain in (P, Pdot, B) space, isolating it from multipole and wind braking confounders, and provide a protocol to ablate the damping term against binary recycling models.",
+    "hypothesis": {
+      "central_hypothesis": "The effective braking index n_eff deviates from the vacuum dipole value of 3 due to an anisotropic damping term arising from the secular decay of the magnetic inclination angle alpha(t), where the decay rate is self-consistently coupled to the spin-down torque, independent of intrinsic magnetic field decay, provided the formal dominance condition over multipole and wind braking confounders is satisfied.",
+      "scientific_object": {
+        "description": "effective_torque_equation with coupled inclination dynamics and confounder-bounding conditions"
+      },
+      "mechanism_or_relation": "The secular decay of the magnetic inclination angle acts as an anisotropic damping term, modifying the effective braking index, provided the formal dominance condition over multipole and wind braking confounders is satisfied.",
+      "intervention_or_transformation": "Relax the constant_inclination_assumption and construct the anisotropic_damping_derivation from coupled electromagnetic torques, explicitly deriving the formal condition under which the damping term strictly dominates over multipole and wind braking confounders to yield the effective_torque_equation N(Omega) = -K Omega^3 [sin^2(alpha(t)) + eta(t)].",
+      "expected_mechanism": "The time-varying magnetic inclination angle alpha(t) is formally mapped to a rotor misalignment angle, where its decay rate acts as an anisotropic damping term. The formal derivation establishes the precise parameter regime in (P, Pdot, B) space where this term strictly dominates the spin-down torque, isolating it from multipole and wind braking confounders.",
+      "discriminating_observation": "The braking_index_ablation_protocol isolates the damping term's contribution by verifying the formal dominance condition in young, isolated pulsars, specifically looking for deviations in n_eff that scale with the predicted inclination decay rate rather than multipole or wind signatures.",
+      "evidence_requirement": "A proof_or_verification demonstrating that the anisotropic_damping_derivation yields an effective_torque_equation that strictly bounds the braking_index_deviation, and formally proves the dominance of the inclination decay term over multipole and wind braking confounders in the specified validity_domain.",
+      "evidence_basis": "Formal derivation of the effective torque equation incorporating anisotropic damping, and analytical bounding of the validity domain to isolate the mechanism from competing multipole and wind braking models.",
+      "boundary_or_failure_condition": "The validity_domain is strictly bounded in (P, Pdot, B) space to regimes where the formal dominance condition holds. The mechanism fails or becomes non-identifiable if the multipole or wind braking terms exceed the anisotropic damping threshold, or if intrinsic B-field decay is non-negligible.",
+      "claim_scope": "Isolated pulsar spin-down dynamics where the secular decay of the magnetic inclination angle strictly dominates the effective braking index deviation, formally bounded to regimes where multipole components and wind braking are negligible.",
+      "assumptions": "The pulsar magnetic inclination angle alpha(t) is formally analogous to a rotor misalignment angle; its secular decay rate acts as an anisotropic damping term. Intrinsic magnetic field decay, higher-order multipole moments, and wind braking torques are formally bounded to be negligible within the specified validity domain."
+    },
+    "falsifier": "Observation of braking indices in young, isolated pulsars that strictly follow n=3 despite measurable inclination decay, or proof that the coupled torque equations cannot produce the observed n_eff deviations without invoking B-field decay, or observation that multipole/wind terms dominate in the claimed validity domain.",
+    "target_gap_ids": "topic_gap:how_are_pulsars_formed_pulsars_are_rotating_neutron_stars_that_produce_pulses_of_radio_waves_x_rays_and_gamma_rays_they_form_when_a_massive_star_runs_out_of_fuel_and_collapses_in_on_itself_the_remnant_is_a_neutron_star_with_a_strong_magnetic_field_the_research_should_distinguish_isolated_magnetic_dipole_spin_down_from_binary_recycling_and_companion_ablation_evolution_and_test_formation_and_evolution_with_mathematical_models:e1256a3d7a4b",
+    "gap_alignment": "Addresses the unresolved mechanism of braking index deviations by providing a formal derivation that isolates inclination decay from binary recycling, magnetic field decay, and other spin-down confounders through explicit dominance conditions.",
+    "scientificity_status": "SCIENTIFICALLY_QUALIFIED",
+    "debate": {
+      "status": "SCIENTIFICALLY_QUALIFIED",
+      "trace": [
+        {
+          "round": 1,
+          "direction_mode": "verification_reversal",
+          "question_type": "scientific_consistency",
+          "target_claim": "The effective braking index n_eff deviates from the vacuum dipole value of 3 due to an anisotropic damping term arising from the secular decay of the magnetic inclination angle alpha(t), independent of intrinsic magnetic field decay.",
+          "scientific_concern": "The 'anisotropic damping' analogy must explicitly account for the coupled electrodynamical evolution of alpha(t) and Omega(t), as the alignment torque is intrinsically linked to the spin-down torque in a force-free magnetosphere, rather than being an independent kinematic damping term.",
+          "opponent_concern": "Treating the inclination decay as an independent damping term ignores the self-consistent coupling between the spin-down and alignment torques in realistic pulsar magnetospheres, potentially leading to unphysical evolutionary tracks.",
+          "severity": "minor",
+          "required_revision": "Clarify that the anisotropic damping term is derived from the coupled electromagnetic torque equations, explicitly linking the inclination decay rate to the spin-down torque to ensure self-consistency in the formal derivation.",
+          "revision_applied": true,
+          "changed_field": [
+            "central_hypothesis",
+            "mechanism_or_relation",
+            "expected_mechanism",
+            "assumptions"
+          ],
+          "alternative_explanations": "Deviations in the braking index could also arise from magnetospheric multipole components, wind mass loss, or unmodeled timing noise rather than pure inclination decay.",
+          "final_scope": "Isolated pulsar spin-down dynamics, specifically the deviation of the effective braking index from 3 in the absence of intrinsic magnetic field decay, under the assumption of coupled electromagnetic torque evolution.",
+          "final_status": "SCIENTIFICALLY_QUALIFIED"
+        },
+        {
+          "round": 2,
+          "direction_mode": "verification_reversal",
+          "question_type": "scope_and_alternatives",
+          "target_claim": "The effective braking index n_eff deviates from 3 due to an anisotropic damping term arising from the secular decay of the magnetic inclination angle alpha(t), independent of intrinsic magnetic field decay.",
+          "scientific_concern": "A competing mechanism or confounder could explain the same observation.",
+          "opponent_concern": "Magnetospheric multipole components, wind braking, or unmodeled intrinsic B-field decay could produce the same braking index deviations, making the inclination decay mechanism degenerate with these confounders.",
+          "severity": "minor",
+          "required_revision": "Explicitly formalize the condition under which the inclination decay term strictly dominates over multipole and wind braking confounders in the validity domain, and tighten the claim scope to this formally bounded regime.",
+          "revision_applied": true,
+          "changed_field": [
+            "central_hypothesis",
+            "claim_scope",
+            "boundary_or_failure_condition",
+            "assumptions"
+          ],
+          "alternative_explanations": [
+            "Magnetospheric multipole components",
+            "Wind braking torque",
+            "Unmodeled intrinsic B-field decay"
+          ],
+          "final_scope": "Isolated pulsar spin-down dynamics where the secular decay of the magnetic inclination angle strictly dominates the effective braking index deviation, formally bounded to regimes where multipole components and wind braking are negligible.",
+          "final_status": "SCIENTIFICALLY_QUALIFIED"
+        }
+      ]
+    },
+    "experiment_handoff": {
+      "claim_to_test": "The effective braking index n_eff deviates from the vacuum dipole value of 3 due to an anisotropic damping term arising from the secular decay of the magnetic inclination angle alpha(t), where the decay rate is self-consistently coupled to the spin-down torque, independent of intrinsic magnetic field decay, provided the formal dominance condition over multipole and wind braking confounders is satisfied.",
+      "scientific_object": {
+        "description": "effective_torque_equation with coupled inclination dynamics and confounder-bounding conditions"
+      },
+      "mechanism_to_discriminate": "The secular decay of the magnetic inclination angle acts as an anisotropic damping term, modifying the effective braking index, provided the formal dominance condition over multipole and wind braking confounders is satisfied.",
+      "claim_scope": "Isolated pulsar spin-down dynamics where the secular decay of the magnetic inclination angle strictly dominates the effective braking index deviation, formally bounded to regimes where multipole components and wind braking are negligible.",
+      "assumptions": "The pulsar magnetic inclination angle alpha(t) is formally analogous to a rotor misalignment angle; its secular decay rate acts as an anisotropic damping term. Intrinsic magnetic field decay, higher-order multipole moments, and wind braking torques are formally bounded to be negligible within the specified validity domain.",
+      "boundary_conditions": "The validity_domain is strictly bounded in (P, Pdot, B) space to regimes where the formal dominance condition holds. The mechanism fails or becomes non-identifiable if the multipole or wind braking terms exceed the anisotropic damping threshold, or if intrinsic B-field decay is non-negligible.",
+      "alternative_explanations": [
+        "Deviations in the braking index could also arise from magnetospheric multipole components, wind mass loss, or unmodeled timing noise rather than pure inclination decay.",
+        "Magnetospheric multipole components",
+        "Wind braking torque",
+        "Unmodeled intrinsic B-field decay"
+      ],
+      "required_observations": [
+        "The braking_index_ablation_protocol isolates the damping term's contribution by verifying the formal dominance condition in young, isolated pulsars, specifically looking for deviations in n_eff that scale with the predicted inclination decay rate rather than multipole or wind signatures.",
+        "A proof_or_verification demonstrating that the anisotropic_damping_derivation yields an effective_torque_equation that strictly bounds the braking_index_deviation, and formally proves the dominance of the inclination decay term over multipole and wind braking confounders in the specified validity_domain."
+      ],
+      "risks": "The primary risk is that the formal dominance condition may be too restrictive, limiting the observational sample size, or that the anisotropic damping term remains degenerate with unmodeled multipole components. Mitigation involves strictly bounding the validity domain and using the ablation protocol to falsify the constant-inclination and pure-dipole baselines.",
+      "gap_ids": "topic_gap:how_are_pulsars_formed_pulsars_are_rotating_neutron_stars_that_produce_pulses_of_radio_waves_x_rays_and_gamma_rays_they_form_when_a_massive_star_runs_out_of_fuel_and_collapses_in_on_itself_the_remnant_is_a_neutron_star_with_a_strong_magnetic_field_the_research_should_distinguish_isolated_magnetic_dipole_spin_down_from_binary_recycling_and_companion_ablation_evolution_and_test_formation_and_evolution_with_mathematical_models:e1256a3d7a4b",
+      "gap_records": {
+        "gap_id": "topic_gap:how_are_pulsars_formed_pulsars_are_rotating_neutron_stars_that_produce_pulses_of_radio_waves_x_rays_and_gamma_rays_they_form_when_a_massive_star_runs_out_of_fuel_and_collapses_in_on_itself_the_remnant_is_a_neutron_star_with_a_strong_magnetic_field_the_research_should_distinguish_isolated_magnetic_dipole_spin_down_from_binary_recycling_and_companion_ablation_evolution_and_test_formation_and_evolution_with_mathematical_models:e1256a3d7a4b",
+        "gap_route": "exploratory_frontier",
+        "seed_status": "unanchored"
+      },
+      "evidence_roles": null,
+      "source_anchors": null
+    },
+    "idea_source": "cross_domain_transfer"
+  },
+  "legacy_best_entry": {
+    "idea_id": "cross_domain_transfer-01",
+    "seed_id": "cross_domain_transfer-01",
+    "route_id": "verification_reversal",
+    "route_signature": {
+      "mature_idea": {
+        "scientific_object": "rotor dynamics and control theory",
+        "mechanism_or_relation": "Time-varying misalignment angle in rotating machinery with anisotropic damping, where the effective braking torque depends on both the angle and its secular drift rate.",
+        "mechanism": "Time-varying misalignment angle in rotating machinery with anisotropic damping, where the effective braking torque depends on both the angle and its secular drift rate."
+      },
+      "route_id": "verification_reversal",
+      "required_structural_change": "Use an observable or test outcome to back-infer the mechanism"
+    },
+    "route_policy": {
+      "route_id": "verification_reversal",
+      "label": "Verification reversal",
+      "required_structural_change": "Use an observable or test outcome to back-infer the mechanism",
+      "forbidden_reuse": "Do not turn instrumentation alone into the contribution",
+      "allowed_object_transformations": "Object follows the evidence pathway",
+      "mechanism_constraints": "Derive competing mechanism predictions before selecting one",
+      "retrieval_mode": "evidence_to_hypothesis",
+      "risk_budget": "medium",
+      "falsifier_requirement": "Require a pre-registered discriminating outcome",
+      "minimum_divergence": "falsifier_or_prediction",
+      "legacy_mode": "evidence_first"
+    },
+    "legacy_direction_mode": "evidence_first",
+    "mature_idea": {
+      "idea_id": "cross_domain_transfer-01",
+      "title": "rotor dynamics and control theory",
+      "abstract": "The pulsar magnetic inclination angle alpha(t) is formally analogous to a rotor misalignment angle; the decay rate dot{alpha} acts as an anisotropic damping term that modifies the effective torque. This mapping justifies the functional form N(Omega) = -K Omega^3 [sin^2(alpha(t)) + eta(t)] and provides physical intuition for why n_eff deviates from 3 without requiring B-field decay.",
+      "hypothesis": "The pulsar magnetic inclination angle alpha(t) is formally analogous to a rotor misalignment angle; the decay rate dot{alpha} acts as an anisotropic damping term that modifies the effective torque. This mapping justifies the functional form N(Omega) = -K Omega^3 [sin^2(alpha(t)) + eta(t)] and provides physical intuition for why n_eff deviates from 3 without requiring B-field decay.",
+      "central_hypothesis": "The pulsar magnetic inclination angle alpha(t) is formally analogous to a rotor misalignment angle; the decay rate dot{alpha} acts as an anisotropic damping term that modifies the effective torque. This mapping justifies the functional form N(Omega) = -K Omega^3 [sin^2(alpha(t)) + eta(t)] and provides physical intuition for why n_eff deviates from 3 without requiring B-field decay.",
+      "scientific_object": "rotor dynamics and control theory",
+      "mechanism": "Time-varying misalignment angle in rotating machinery with anisotropic damping, where the effective braking torque depends on both the angle and its secular drift rate.",
+      "mechanism_or_relation": "Time-varying misalignment angle in rotating machinery with anisotropic damping, where the effective braking torque depends on both the angle and its secular drift rate.",
+      "intervention_or_transformation": "",
+      "assumptions": null,
+      "evidence_basis": "",
+      "target_gap_ids": null,
+      "gap_alignment": "",
+      "refinement_scope": "",
+      "falsifier": "",
+      "maturity_status": "needs_grounding",
+      "maturity": {
+        "dimensions": {
+          "specificity": 0.75,
+          "mechanism_completeness": 0.5,
+          "evidence_support": 0.0,
+          "falsifiability": 0.0,
+          "scope_clarity": 0.0,
+          "executability": 0.0,
+          "independence": 1.0
+        },
+        "aggregate": 0.321,
+        "maturity_status": "needs_grounding",
+        "maturity_is_not_rank": true
+      },
+      "maturity_is_not_rank": true,
+      "idea_source": "cross_domain_transfer",
+      "lineage": {
+        "source": "advanced_analysis",
+        "field": "cross_domain_inspiration"
+      },
+      "source_lineage": [
+        {
+          "idea_source": "cross_domain_transfer",
+          "lineage": {
+            "source": "advanced_analysis",
+            "field": "cross_domain_inspiration"
+          }
+        },
+        {
+          "idea_source": "cross_domain_transfer",
+          "idea_id": "cross_domain_transfer-01-2",
+          "lineage": {
+            "source": "advanced_analysis",
+            "field": "cross_domain_inspiration"
+          }
+        },
+        {
+          "idea_source": "cross_domain_transfer",
+          "idea_id": "cross_domain_transfer-01-2",
+          "lineage": {
+            "source": "advanced_analysis",
+            "field": "cross_domain_inspiration"
+          }
+        }
+      ],
+      "route_signature": {
+        "scientific_object": "rotor dynamics and control theory",
+        "mechanism_or_relation": "Time-varying misalignment angle in rotating machinery with anisotropic damping, where the effective braking torque depends on both the angle and its secular drift rate.",
+        "mechanism": "Time-varying misalignment angle in rotating machinery with anisotropic damping, where the effective braking torque depends on both the angle and its secular drift rate."
+      },
+      "independence_rationale": "Retained as structurally distinct in: mechanism, representation, scientific_object, mechanism_or_relation, intervention_or_transformation",
+      "independence_status": "independent",
+      "counterexamples": null,
+      "negative_evidence": null,
+      "retrieval_queries": null,
+      "mechanism_chain": null,
+      "validation_targets": null,
+      "anchor_policy": "",
+      "anti_anchor": false,
+      "anti_anchor_reason": "",
+      "reframed_problem_id": "",
+      "rejected_gap_ids": null
+    },
+    "maturity": {
+      "dimensions": {
+        "specificity": 0.75,
+        "mechanism_completeness": 0.5,
+        "evidence_support": 0.0,
+        "falsifiability": 0.0,
+        "scope_clarity": 0.0,
+        "executability": 0.0,
+        "independence": 1.0
+      },
+      "aggregate": 0.321,
+      "maturity_status": "needs_grounding",
+      "maturity_is_not_rank": true
+    },
+    "maturity_is_not_rank": true,
+    "maturity_status": "needs_grounding",
+    "lineage": {
+      "source": "advanced_analysis",
+      "field": "cross_domain_inspiration"
+    },
+    "source_lineage": [
+      {
+        "idea_source": "cross_domain_transfer",
+        "lineage": {
+          "source": "advanced_analysis",
+          "field": "cross_domain_inspiration"
+        }
+      },
+      {
+        "idea_source": "cross_domain_transfer",
+        "idea_id": "cross_domain_transfer-01-2",
+        "lineage": {
+          "source": "advanced_analysis",
+          "field": "cross_domain_inspiration"
+        }
+      },
+      {
+        "idea_source": "cross_domain_transfer",
+        "idea_id": "cross_domain_transfer-01-2",
+        "lineage": {
+          "source": "advanced_analysis",
+          "field": "cross_domain_inspiration"
+        }
+      }
+    ],
+    "anti_anchor": false,
+    "title": "Anisotropic Damping from Magnetic Inclination Decay: A Formal Analogy to Rotor Dynamics for Pulsar Spin-Down",
+    "abstract": "We resolve the missing assumption in isolated pulsar spin-down models by relaxing the constant magnetic inclination angle. By formally mapping the pulsar magnetic inclination angle alpha(t) to a rotor misalignment angle, we introduce its decay rate as an anisotropic damping term derived from the coupled electromagnetic torque equations. This yields a modified effective torque equation N(Omega) that naturally explains deviations of the braking index n_eff from 3 without invoking magnetic field decay. We formally derive the dominance condition under which this mechanism strictly bounds the validity domain in (P, Pdot, B) space, isolating it from multipole and wind braking confounders, and provide a protocol to ablate the damping term against binary recycling models.",
+    "core_contribution": "The secular decay of the pulsar magnetic inclination angle acts as an anisotropic damping term in the spin-down torque, derived from coupled electromagnetic torque equations, providing a formal mechanical analogy to rotor misalignment that explains braking index deviations without requiring intrinsic magnetic field decay, subject to a formally derived dominance condition over multipole and wind braking confounders.",
+    "method": "We first relax the constant_inclination_assumption by constructing the anisotropic_damping_derivation, mapping the time-varying magnetic inclination angle alpha(t) to a rotor misalignment angle and its decay rate to an anisotropic damping term. We then derive the effective_torque_equation N(Omega) incorporating this damping term. Finally, we apply the braking_index_ablation_protocol to isolate the contribution of the damping term, deriving the effective braking index n_eff and explicitly bounding the validity_domain in (P, Pdot, B) space where this isolated mechanism holds, distinguishing it from binary recycling.",
+    "risks": "The primary risk is that the formal dominance condition may be too restrictive, limiting the observational sample size, or that the anisotropic damping term remains degenerate with unmodeled multipole components. Mitigation involves strictly bounding the validity domain and using the ablation protocol to falsify the constant-inclination and pure-dipole baselines.",
+    "tags": [
+      "seed",
+      "mature_idea",
+      "contract_root",
+      "cross_domain_transfer-01",
+      "mechanism-commit-innovation",
+      "missing_assumption",
+      "proof_gap",
+      "missing_counterexample",
+      "invalid_generalization",
+      "unresolved_alternative_explanation",
+      "unsupported_causal_link",
+      "nonidentifiable_mechanism",
+      "missing_boundary_condition"
+    ],
+    "operator": "mechanism-commit-innovation",
+    "target_defects": [
+      "missing_assumption",
+      "proof_gap",
+      "missing_counterexample",
+      "invalid_generalization",
+      "unresolved_alternative_explanation",
+      "unsupported_causal_link",
+      "nonidentifiable_mechanism",
+      "missing_boundary_condition"
+    ],
+    "rationale": "This skill application resolves the missing_assumption of constant inclination and the unresolved_alternative_explanation of braking index deviations by committing to a single, physically motivated mechanism (anisotropic damping from inclination decay). It sharpens the parent idea by providing a rigorous formal derivation and a clear ablation protocol to distinguish it from binary recycling or B-field decay.",
+    "components": [
+      "inclination_angle_mapping",
+      "anisotropic_damping_term",
+      "effective_torque_equation",
+      "braking_index_deviation",
+      "anisotropic_damping_derivation"
+    ],
+    "component_explanations": {
+      "inclination_angle_mapping": "Maps the pulsar magnetic inclination angle to a rotor misalignment angle to establish a formal mechanical analogy.",
+      "anisotropic_damping_term": "Assumes the inclination angle decay rate acts as an anisotropic damping term that modifies the effective torque.",
+      "effective_torque_equation": "The target relation defining the torque functional form N(Omega) incorporating the inclination angle and damping term.",
+      "braking_index_deviation": "The validity domain demonstrating the conditions under which the effective braking index deviates from 3 without requiring magnetic field decay.",
+      "anisotropic_damping_derivation": "The formal derivation that maps the time-varying magnetic inclination angle to a rotor misalignment angle and its decay rate to an anisotropic damping term, modifying the effective torque."
+    },
+    "root_domains": "physics_astronomy",
+    "discipline_resolution": {
+      "schema_version": "discipline_taxonomy_v1",
+      "scope": "natural_science_engineering_only",
+      "status": "resolved",
+      "primary_discipline": "physics_astronomy",
+      "discipline_ids": "physics_astronomy",
+      "adjacent_disciplines": [
+        "mathematics",
+        "earth_planetary_science"
+      ],
+      "coverage": "exact",
+      "matched_terms": [
+        "physics_astronomy",
+        "physics",
+        "astronomy"
+      ],
+      "out_of_scope_terms": null,
+      "mixed": false,
+      "primary": {
+        "key": "physics_astronomy",
+        "label": "Physics and Astronomy",
+        "family": "physical_sciences",
+        "aliases": [
+          "physics",
+          "astronomy",
+          "astrophysics",
+          "quantum physics",
+          "quantum mechanics",
+          "particle physics",
+          "condensed matter",
+          "plasma physics",
+          "optics"
+        ],
+        "internal_domains": [
+          "physics",
+          "astrobiology"
+        ],
+        "openalex_field_ids": "31",
+        "arxiv_categories": [
+          "physics.gen-ph",
+          "astro-ph.GA",
+          "cond-mat.mtrl-sci"
+        ],
+        "semantic_scholar_fields": "Physics",
+        "provider_applicability": [
+          "openalex",
+          "semantic_scholar",
+          "arxiv"
+        ],
+        "coverage": "exact",
+        "adjacent": [
+          "mathematics",
+          "earth_planetary_science",
+          "materials_science"
+        ],
+        "wos_categories": null
+      },
+      "provider_filters": {
+        "arxiv": {
+          "provider": "arxiv",
+          "primary_discipline": "physics_astronomy",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "mathematics",
+            "earth_planetary_science"
+          ],
+          "mode": "native_filter",
+          "policy": "hard_filter",
+          "applied": true,
+          "categories": [
+            "physics.gen-ph",
+            "astro-ph.GA",
+            "cond-mat.mtrl-sci"
+          ],
+          "category_expression": "(cat:physics.gen-ph OR cat:astro-ph.GA OR cat:cond-mat.mtrl-sci)",
+          "reason": "An exact bounded arXiv category expression is available for candidate-discovery metadata."
+        },
+        "openalex": {
+          "provider": "openalex",
+          "primary_discipline": "physics_astronomy",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "mathematics",
+            "earth_planetary_science"
+          ],
+          "mode": "native_filter",
+          "policy": "hard_filter",
+          "applied": true,
+          "resolved_field_ids": "31",
+          "filter": "primary_topic.field.id:31",
+          "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+        },
+        "semantic_scholar": {
+          "provider": "semantic_scholar",
+          "primary_discipline": "physics_astronomy",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "mathematics",
+            "earth_planetary_science"
+          ],
+          "mode": "field_hint",
+          "policy": "soft_boost",
+          "applied": false,
+          "field_hints": "Physics",
+          "reason": "Semantic Scholar field values are recorded as soft hints; no hard field filter is claimed."
+        }
+      },
+      "reason": "Resolved conservatively from allowlisted aliases; provider-native filters remain metadata until a provider route consumes them.",
+      "source": "survey_project_context_domain",
+      "source_domain_value": "Astrophysics"
+    },
+    "scientific_intervention": {
+      "schema_version": "scientific_intervention_v1",
+      "profile_id": "formal_theoretical",
+      "contribution_mode": "theorem_or_condition_relaxation",
+      "seed_id": "cross_domain_transfer-01",
+      "route_id": "verification_reversal",
+      "route_policy": {
+        "route_id": "verification_reversal",
+        "label": "Verification reversal",
+        "required_structural_change": "Use an observable or test outcome to back-infer the mechanism",
+        "forbidden_reuse": "Do not turn instrumentation alone into the contribution",
+        "allowed_object_transformations": "Object follows the evidence pathway",
+        "mechanism_constraints": "Derive competing mechanism predictions before selecting one",
+        "retrieval_mode": "evidence_to_hypothesis",
+        "risk_budget": "medium",
+        "falsifier_requirement": "Require a pre-registered discriminating outcome",
+        "minimum_divergence": "falsifier_or_prediction",
+        "legacy_mode": "evidence_first"
+      },
+      "direction_mode": "evidence_first",
+      "direction_summary": "Prefer ideas that are easy to validate, ablate, and defend with strong theoretical and observational evidence over flashy but brittle novelty, focusing on the lightest mechanism that yields strong ablations and fair comparisons.",
+      "scientific_object_schema": {
+        "schema_version": "scientific_object_schema_v1",
+        "profile_id": "formal_theoretical",
+        "object_types": [
+          "formal_object",
+          "assumptions_or_axioms",
+          "target_relation",
+          "derivation_or_construction",
+          "validity_domain",
+          "counterexample_boundary",
+          "proof_or_verification"
+        ],
+        "allowed_operations": [
+          "assume",
+          "relax",
+          "derive",
+          "construct",
+          "unify",
+          "falsify",
+          "bound",
+          "verify"
+        ],
+        "target_object_roles": [
+          "formal_object",
+          "target_relation"
+        ],
+        "claim_delta_roles": [
+          "target_relation",
+          "validity_domain"
+        ],
+        "mechanism_delta_roles": [
+          "assumptions_or_axioms",
+          "derivation_or_construction"
+        ],
+        "evidence_obligation_roles": "proof_or_verification",
+        "boundary_condition_roles": [
+          "validity_domain",
+          "counterexample_boundary"
+        ],
+        "measurement_or_observation_roles": "proof_or_verification"
+      },
+      "hypothesis_contract": {
+        "central_hypothesis": "The effective braking index n_eff deviates from the vacuum dipole value of 3 due to an anisotropic damping term arising from the secular decay of the magnetic inclination angle alpha(t), independent of intrinsic magnetic field decay.",
+        "scientific_object": {
+          "object_type": "formal_object",
+          "target_object": "effective_torque_equation"
+        },
+        "mechanism_or_relation": "The secular decay of the magnetic inclination angle acts as an anisotropic damping term in the spin-down torque, modifying the effective braking index.",
+        "intervention_or_transformation": "Relax the constant_inclination_assumption and construct the anisotropic_damping_derivation to yield the effective_torque_equation N(Omega) = -K Omega^3 [sin^2(alpha(t)) + eta(t)].",
+        "expected_mechanism": "The time-varying magnetic inclination angle alpha(t) is formally mapped to a rotor misalignment angle, where its decay rate acts as an anisotropic damping term. This modifies the effective torque, naturally producing deviations in the effective braking index n_eff without requiring the neutron star's magnetic field to decay.",
+        "discriminating_observation": "The braking_index_ablation_protocol isolates the damping term's contribution by comparing the predicted n_eff against the constant-inclination baseline and binary recycling models, specifically looking for deviations in young, isolated pulsars where B-field decay is negligible.",
+        "boundary_or_failure_condition": "The validity_domain is bounded in (P, Pdot, B) space to young, isolated pulsars. The mechanism fails or becomes non-identifiable if intrinsic B-field decay or binary companion interactions dominate the spin-down torque.",
+        "evidence_requirement": "A proof_or_verification demonstrating that the anisotropic_damping_derivation yields an effective_torque_equation that strictly bounds the braking_index_deviation in the specified validity_domain, falsifying the constant-inclination baseline.",
+        "direction_mode": "evidence_first",
+        "direction_summary": "Prefer ideas that are easy to validate, ablate, and defend with strong theoretical and observational evidence over flashy but brittle novelty, focusing on the lightest mechanism that yields strong ablations and fair comparisons.",
+        "claim_scope": "Isolated pulsar spin-down dynamics, specifically the deviation of the effective braking index from 3 in the absence of intrinsic magnetic field decay.",
+        "assumptions": "The pulsar magnetic inclination angle alpha(t) is formally analogous to a rotor misalignment angle; its secular decay rate acts as an anisotropic damping term. Intrinsic magnetic field decay is negligible in the bounded validity domain.",
+        "target_gap_ids": "topic_gap:how_are_pulsars_formed_pulsars_are_rotating_neutron_stars_that_produce_pulses_of_radio_waves_x_rays_and_gamma_rays_they_form_when_a_massive_star_runs_out_of_fuel_and_collapses_in_on_itself_the_remnant_is_a_neutron_star_with_a_strong_magnetic_field_the_research_should_distinguish_isolated_magnetic_dipole_spin_down_from_binary_recycling_and_companion_ablation_evolution_and_test_formation_and_evolution_with_mathematical_models:e1256a3d7a4b",
+        "gap_alignment": "Addresses the unresolved mechanism of braking index deviations in isolated pulsars by providing a formal derivation that distinguishes inclination decay from binary recycling and magnetic field decay.",
+        "evidence_basis": "Formal derivation of the effective torque equation incorporating anisotropic damping, and analytical bounding of the validity domain in (P, Pdot, B) space to isolate the mechanism from competing models."
+      },
+      "hypothesis_seed_refs": {
+        "seed_id": "gap_seed:topic_gap_how_are_pulsars_formed_pulsars_are_rotating_neutron_stars_that_produce_pulses_of_radio_waves_x_rays_and_gamma_rays_they_form_when_a_massive_star_runs_out_of_fuel_and_collapses_in_on_itself_the_remnant_is_a_neutron_star_with_a_strong_magnetic_field_the_research_should_distinguish_isolated_magnetic_dipole_spin_down_from_binary_recycling_and_companion_ablation_evolution_and_test_formation_and_evolution_with_mathematical_models_e1256a3d7a4b:topic_seed:formal_theoretical:bc46ac841adf",
+        "gap_id": "topic_gap:how_are_pulsars_formed_pulsars_are_rotating_neutron_stars_that_produce_pulses_of_radio_waves_x_rays_and_gamma_rays_they_form_when_a_massive_star_runs_out_of_fuel_and_collapses_in_on_itself_the_remnant_is_a_neutron_star_with_a_strong_magnetic_field_the_research_should_distinguish_isolated_magnetic_dipole_spin_down_from_binary_recycling_and_companion_ablation_evolution_and_test_formation_and_evolution_with_mathematical_models:e1256a3d7a4b",
+        "gap_route": "exploratory_frontier",
+        "seed_status": "unanchored",
+        "target_slot": "scientific_constraint"
+      },
+      "gap_seed_status": {
+        "schema_version": "gap_hypothesis_bridge_v1",
+        "seed_count": 1,
+        "seed_ids": "gap_seed:topic_gap_how_are_pulsars_formed_pulsars_are_rotating_neutron_stars_that_produce_pulses_of_radio_waves_x_rays_and_gamma_rays_they_form_when_a_massive_star_runs_out_of_fuel_and_collapses_in_on_itself_the_remnant_is_a_neutron_star_with_a_strong_magnetic_field_the_research_should_distinguish_isolated_magnetic_dipole_spin_down_from_binary_recycling_and_companion_ablation_evolution_and_test_formation_and_evolution_with_mathematical_models_e1256a3d7a4b:topic_seed:formal_theoretical:bc46ac841adf",
+        "gap_ids": "topic_gap:how_are_pulsars_formed_pulsars_are_rotating_neutron_stars_that_produce_pulses_of_radio_waves_x_rays_and_gamma_rays_they_form_when_a_massive_star_runs_out_of_fuel_and_collapses_in_on_itself_the_remnant_is_a_neutron_star_with_a_strong_magnetic_field_the_research_should_distinguish_isolated_magnetic_dipole_spin_down_from_binary_recycling_and_companion_ablation_evolution_and_test_formation_and_evolution_with_mathematical_models:e1256a3d7a4b",
+        "route_counts": {
+          "exploratory_frontier": 1
+        },
+        "status_counts": {
+          "unanchored": 1
+        },
+        "fallback_used": true,
+        "admission_mode": "fail_open_except_explicit_exclusion"
+      }
+    },
+    "direction_mode": "verification_reversal",
+    "direction_summary": "Prefer ideas that are easy to validate, ablate, and defend with strong theoretical and observational evidence over flashy but brittle novelty, focusing on the lightest mechanism that yields strong ablations and fair comparisons.",
+    "central_hypothesis": "The effective braking index n_eff deviates from the vacuum dipole value of 3 due to an anisotropic damping term arising from the secular decay of the magnetic inclination angle alpha(t), where the decay rate is self-consistently coupled to the spin-down torque, independent of intrinsic magnetic field decay, provided the formal dominance condition over multipole and wind braking confounders is satisfied.",
+    "scientific_object": {
+      "description": "effective_torque_equation with coupled inclination dynamics and confounder-bounding conditions"
+    },
+    "mechanism_or_relation": "The secular decay of the magnetic inclination angle acts as an anisotropic damping term, modifying the effective braking index, provided the formal dominance condition over multipole and wind braking confounders is satisfied.",
+    "intervention_or_transformation": "Relax the constant_inclination_assumption and construct the anisotropic_damping_derivation from coupled electromagnetic torques, explicitly deriving the formal condition under which the damping term strictly dominates over multipole and wind braking confounders to yield the effective_torque_equation N(Omega) = -K Omega^3 [sin^2(alpha(t)) + eta(t)].",
+    "expected_mechanism": "The time-varying magnetic inclination angle alpha(t) is formally mapped to a rotor misalignment angle, where its decay rate acts as an anisotropic damping term. The formal derivation establishes the precise parameter regime in (P, Pdot, B) space where this term strictly dominates the spin-down torque, isolating it from multipole and wind braking confounders.",
+    "discriminating_observation": "The braking_index_ablation_protocol isolates the damping term's contribution by verifying the formal dominance condition in young, isolated pulsars, specifically looking for deviations in n_eff that scale with the predicted inclination decay rate rather than multipole or wind signatures.",
+    "boundary_or_failure_condition": "The validity_domain is strictly bounded in (P, Pdot, B) space to regimes where the formal dominance condition holds. The mechanism fails or becomes non-identifiable if the multipole or wind braking terms exceed the anisotropic damping threshold, or if intrinsic B-field decay is non-negligible.",
+    "claim_scope": "Isolated pulsar spin-down dynamics where the secular decay of the magnetic inclination angle strictly dominates the effective braking index deviation, formally bounded to regimes where multipole components and wind braking are negligible.",
+    "falsifier": "Observation of braking indices in young, isolated pulsars that strictly follow n=3 despite measurable inclination decay, or proof that the coupled torque equations cannot produce the observed n_eff deviations without invoking B-field decay, or observation that multipole/wind terms dominate in the claimed validity domain.",
+    "assumptions": "The pulsar magnetic inclination angle alpha(t) is formally analogous to a rotor misalignment angle; its secular decay rate acts as an anisotropic damping term. Intrinsic magnetic field decay, higher-order multipole moments, and wind braking torques are formally bounded to be negligible within the specified validity domain.",
+    "target_gap_ids": "topic_gap:how_are_pulsars_formed_pulsars_are_rotating_neutron_stars_that_produce_pulses_of_radio_waves_x_rays_and_gamma_rays_they_form_when_a_massive_star_runs_out_of_fuel_and_collapses_in_on_itself_the_remnant_is_a_neutron_star_with_a_strong_magnetic_field_the_research_should_distinguish_isolated_magnetic_dipole_spin_down_from_binary_recycling_and_companion_ablation_evolution_and_test_formation_and_evolution_with_mathematical_models:e1256a3d7a4b",
+    "gap_alignment": "Addresses the unresolved mechanism of braking index deviations by providing a formal derivation that isolates inclination decay from binary recycling, magnetic field decay, and other spin-down confounders through explicit dominance conditions.",
+    "evidence_requirement": "A proof_or_verification demonstrating that the anisotropic_damping_derivation yields an effective_torque_equation that strictly bounds the braking_index_deviation, and formally proves the dominance of the inclination decay term over multipole and wind braking confounders in the specified validity_domain.",
+    "evidence_basis": "Formal derivation of the effective torque equation incorporating anisotropic damping, and analytical bounding of the validity domain to isolate the mechanism from competing multipole and wind braking models.",
+    "evaluation": {
+      "novelty": 4,
+      "surprise": 4,
+      "feasibility": 5,
+      "clarity": 5,
+      "impact": 4,
+      "risk": 2,
+      "conciseness": 5,
+      "alignment_score": 5,
+      "complexity_penalty": 1,
+      "protocol_score": 4,
+      "explanatory_power": 5,
+      "identifiability": 4,
+      "boundary_calibration": 5,
+      "claim_overreach_penalty": 1,
+      "novelty_axes": {
+        "proposition_or_assumption": 4.0,
+        "proof_or_construction": 4.0,
+        "counterexample_or_validity_domain": 4.0,
+        "formal_evidence_obligation": 3.0,
+        "scientific_novelty": 4.0
+      },
+      "profile_id": "formal_theoretical",
+      "confidence": 0.85,
+      "failure_modes": [
+        "The anisotropic damping term may remain mathematically degenerate with B-field decay in the torque equation, making them indistinguishable even in young pulsars.",
+        "The rotor misalignment analogy may break down for highly magnetized neutron stars (magnetars) where higher-order multipole moments dominate the spin-down torque."
+      ],
+      "fairness_protocol": "The proposal establishes a fair comparator by restricting the analysis to young, isolated pulsars where B-field decay is negligible, and explicitly ablates the anisotropic damping term against the constant-inclination baseline and binary recycling models to isolate its specific contribution to the braking index.",
+      "feedback": "The candidate effectively operationalizes the mature idea by relaxing the constant inclination assumption and deriving a modified torque equation. The rotor analogy provides a strong theoretical grounding. However, to fully resolve the risk of observational degeneracy, the derivation must explicitly demonstrate that the functional form of the anisotropic damping term is mathematically distinct from standard B-field decay within the bounded validity domain. Additionally, providing a limiting case (e.g., aligned vs. orthogonal rotator) would strengthen the boundary calibration.",
+      "detected_defects": [
+        "nonidentifiable_mechanism",
+        "missing_counterexample"
+      ],
+      "defect_fix_summary": "The selected skill mechanism-commit-innovation successfully addresses the missing_assumption defect by replacing the constant inclination assumption with a physically motivated anisotropic damping derivation. It also mitigates the unresolved_alternative_explanation defect by introducing a targeted ablation protocol and validity domain bounding to distinguish the proposed mechanism from B-field decay and binary recycling."
+    },
+    "search_score": 4.332067995786503,
+    "search_path": "rotor dynamics and control theory [seed] -> defects ['missing_assumption', 'proof_gap', 'missing_counterexample', 'invalid_generalization', 'unresolved_alternative_explanation', 'unsupported_causal_link', 'nonidentifiable_mechanism', 'missing_boundary_condition'] | Anisotropic Damping from Magnetic Inclination Decay: A Formal Analogy to Rotor Dynamics for Pulsar Spin-Down [mechanism-commit-innovation] -> defects ['missing_assumption', 'proof_gap', 'missing_counterexample', 'invalid_generalization', 'unresolved_alternative_explanation', 'unsupported_causal_link', 'nonidentifiable_mechanism', 'missing_boundary_condition'] | Anisotropic Damping from Magnetic Inclination Decay: A Formal Analogy to Rotor Dynamics for Pulsar Spin-Down [mechanism-commit-innovation] -> defects ['missing_assumption', 'proof_gap', 'missing_counterexample', 'invalid_generalization', 'unresolved_alternative_explanation', 'unsupported_causal_link', 'nonidentifiable_mechanism', 'missing_boundary_condition']",
+    "idea_taste_mode": "evidence_first",
+    "idea_source": "cross_domain_transfer",
+    "source_modes": "verification_reversal",
+    "scientificity_status": "SCIENTIFICALLY_QUALIFIED",
+    "debate_status": "SCIENTIFICALLY_QUALIFIED"
+  },
+  "persistence": {
+    "mode": "public_compact",
+    "omitted_fields": [
+      "search_trace",
+      "pareto_candidates",
+      "raw_direction_synthesis_directions",
+      "raw_debate_result_directions",
+      "nested_idea_result",
+      "full_legacy_best_entry"
+    ]
+  }
+}

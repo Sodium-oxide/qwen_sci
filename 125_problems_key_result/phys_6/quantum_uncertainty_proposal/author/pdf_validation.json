@@ -1,0 +1,36 @@
+{
+  "schema_version": "pdf_validation_v1",
+  "status": "COMPLETED_WITH_HUMAN_VISUAL_AND_SOURCE_PAGE_REVIEW_PENDING",
+  "pdf": "quantum_uncertainty_report.pdf",
+  "source": "quantum_uncertainty_report.tex",
+  "template": "../../../../Conference-LaTeX-template_10-17-19/IEEEtran.cls",
+  "pdf_structure": {
+    "pages": 7,
+    "page_size": "612 x 792 pt (US Letter)",
+    "all_fonts_embedded": true,
+    "encrypted": false,
+    "rendered_page_count": 7
+  },
+  "latex": {
+    "engine": "pdflatex",
+    "final_passes_after_source_change": 2,
+    "undefined_citations": false,
+    "undefined_references": false,
+    "overfull_hbox": false,
+    "known_nonblocking_warnings": [
+      "The supplied IEEEtran class is loaded through its explicit template path and identifies itself as IEEEtran.",
+      "Underfull boxes remain in compact IEEE table cells; no content is clipped or overfull."
+    ]
+  },
+  "content_checks": {
+    "acknowledgement_heading_found": false,
+    "unresolved_marker_found": false,
+    "fabricated_observation_phrases_found": false,
+    "design_only_status_present": true,
+    "frozen_source_keys_cited": 14,
+    "source_registry_keys_allowed": 14
+  },
+  "visual_check": "PENDING_HUMAN_REVIEW: rendered pages were created, but model-side image inspection was blocked by Windows ACL sandbox restrictions, including a review-copy attempt. Inspect the local PDF before external submission.",
+  "source_page_check": "PENDING_HUMAN_REVIEW: the requested in-app browser could not connect in the Windows ACL sandbox; publisher and DOI landing pages were not browser-verified in this run.",
+  "diagram_note": "The editable Draw.io source passed structural validation. Native Draw.io export was unavailable on this host, so the report uses a self-contained LaTeX vector diagram and retains the editable source."
+}

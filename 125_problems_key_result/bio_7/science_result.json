@@ -1,0 +1,44 @@
+{
+  "status": "FINAL_VALIDATED",
+  "project": "How do migratory animals know where they are going?",
+  "scientific_reframing": "For a specified migratory population and context, which cues and computations contribute to directional orientation, geographic correction, route choice, and seasonal timing?",
+  "workflow": [
+    "Survey",
+    "Idea",
+    "ExperimentDesign",
+    "Author"
+  ],
+  "deliverables": {
+    "survey": "survey/survey.md",
+    "idea": "idea/idea.md",
+    "experiment_design": "experiment_design/research_design.md",
+    "ieee_report_source": "author/migratory_navigation_report.tex",
+    "ieee_report_pdf": "migratory_navigation_report.pdf"
+  },
+  "artifact_status": "DESIGN_ONLY",
+  "empirical_results_claimed": false,
+  "evidence_checked_with_browser": [
+    {
+      "source": "Mouritsen, Nature (2018)",
+      "finding_used": "Long-distance navigation is multiscale and multisensory; no single cue provides pinpoint navigation over thousands of kilometres."
+    },
+    {
+      "source": "Xu et al., Nature (2021)",
+      "finding_used": "European robin CRY4 exhibited magnetically sensitive photochemistry in vitro, supporting a radical-pair candidate rather than an in vivo universal receptor conclusion."
+    }
+  ],
+  "main_conclusion": "Migratory navigation is best investigated as context-specific integration of celestial, landscape, timing, hydrodynamic, and magnetic information. Magnetic and cryptochrome findings are important but require separate evidence for cue dependence, mechanism, ecological route contribution, and replication.",
+  "design_contribution": "MAGNAV supplies a cue-dependence ledger, noncompensatory decision gates, and an S0-S4 ladder that separates compass, map, mechanism, and ecological claims.",
+  "independent_review_agent": {
+    "used": false,
+    "reason": "The deliverable is a static design-only research artifact with no code, public interface, security, persistence, or data-migration change; compilation, static checks, and PDF visual validation were proportionate to risk."
+  },
+  "validation_summary": {
+    "final_pdf_pages": 8,
+    "final_pdflatex_passes": 2,
+    "unresolved_references_or_citations": 0,
+    "overfull_boxes": 0,
+    "rendered_visual_review": true,
+    "embedded_type_1_fonts": true
+  }
+}

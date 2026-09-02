@@ -1,0 +1,337 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{url}
+\usepackage{xcolor}
+\newcommand{\CDBC}{\textsc{CDBC}}
+\newcommand{\AI}{\textsc{AI}}
+\begin{document}
+
+\title{Can AI Replace a Doctor?\\
+\large A Clinical Delegation Boundary Research Proposal}
+
+\author{\IEEEauthorblockN{Anonymous Research Proposal}
+\IEEEauthorblockA{\textit{Evidence-to-Design Scientific Workflow}\\
+Research Plan for Human-Accountable Clinical Artificial Intelligence}}
+
+\maketitle
+
+\begin{abstract}
+Artificial intelligence (AI) can equal or exceed clinician comparison groups on selected, well-defined clinical tasks, especially in image analysis. This capability does not by itself establish that an AI system can replace a doctor across the care episode. Physician work includes uncertainty management, physical and social context, communication, consent, treatment responsibility, coordination, follow-up, and accountable response to system failure. This paper synthesizes the evidence and proposes the Clinical Delegation Boundary Contract (CDBC), a task-level framework that makes AI authority conditional on intended use, uncertainty-aware abstention, clinician escalation, subgroup equity, traceability, and continual monitoring. A future multi-site, retrospective-to-shadow-mode study in screening-mammography triage compares clinician standard practice, an AI-only counterfactual, and a clinician-plus-CDBC pathway. The primary endpoint is safety-adjusted delegation success: correct case handling within a declared authority tier, calibration boundary, equity gate, and auditable decision record. The central claim is direct: AI can replace some bounded tasks, but replacement of the doctor as an independently accountable general clinical agent is not established by current task benchmarks. This is a design-only proposal and reports no patient-level analysis, model training, clinical deployment, diagnosis, or treatment outcome.
+\end{abstract}
+
+\begin{IEEEkeywords}
+clinical artificial intelligence, decision support, delegation, human-AI collaboration, patient safety, health equity, clinical governance, screening mammography.
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Artificial intelligence is already changing the informational substrate of medicine. Models can read images, summarize records, identify risk patterns, triage queues, draft documentation, and integrate more variables than a clinician can manually inspect at one time. In selected image-analysis settings, systems have been compared favorably with expert readers. For example, McKinney \textit{et al.} reported an international evaluation of an AI system for breast-cancer screening with comparison to radiologists and a simulated double-reading pathway \cite{mckinney2020}. Such results make the question ``Can AI replace a doctor?'' reasonable, but the ordinary wording is scientifically underspecified.
+
+A doctor is not one task. Clinical work combines pattern recognition with data-quality appraisal, physical examination, uncertainty management, differential diagnosis, treatment choice, procedural skill, patient communication, consent, coordination with other professionals, surveillance over time, and responsibility when a decision causes harm. Some of these functions may be decomposed and delegated; others require contextual judgment and an accountable relationship even when an algorithm contributes information. A high area under the receiver operating characteristic curve (AUC) on a defined dataset is therefore neither a complete model of clinical work nor a license for unrestricted decision authority.
+
+This paper advances a precise position. \AI\ will replace, compress, or transform portions of doctors' work, particularly standardized information-processing subtasks. It is not currently positioned to replace the physician role as a general, independently accountable clinical service. The relevant scientific problem is not a binary contest between machine and person. It is to determine the \emph{delegation boundary}: which task, for which population and setting, under which uncertainty and oversight conditions, may an AI-enabled pathway perform; when must it abstain; and which evidence revokes that authority.
+
+We propose the \emph{Clinical Delegation Boundary Contract} (\CDBC). The CDBC binds every model output to an intended use, authority tier, confidence and out-of-distribution rule, human escalation path, equity audit, decision record, monitoring process, and pause criterion. The initial study context is screening-mammography triage because its outputs, reference standards, reader workflow, and patient-safety consequences can be specified. This is a research design for a future retrospective and shadow-mode evaluation, not a clinical tool. It gives no patient-specific advice and authorizes no autonomous treatment or live care action.
+
+\section{Survey: Evidence, Achievements, and Limits}
+
+\subsection{What task benchmarks demonstrate}
+
+In tightly framed tasks, AI can attain notable diagnostic discrimination. McKinney \textit{et al.} used representative and enriched mammography datasets from the United Kingdom and United States and reported reductions in false positives and false negatives together with a reader comparison \cite{mckinney2020}. Systematic reviews of AI-clinician comparisons similarly identify performance that is often comparable to experts and sometimes better than less experienced clinicians, particularly for image-recognition problems \cite{shen2019,topol2019}. These results matter: they establish that a model can become a clinically relevant perception, prioritization, or decision-support component.
+
+They do not establish physician replacement. A systematic review by Nagendran \textit{et al.} found that few comparison studies were prospective or evaluated in real-world clinical settings; many had high risk of bias, small clinician comparator groups, limited code/data availability, and incomplete reporting \cite{nagendran2020}. The appropriate inference is not that task benchmarks are unimportant. It is that task benchmarks validate a task under stated conditions, whereas replacement requires a complete clinical service across conditions that may differ from those benchmarks.
+
+Table~\ref{tab:evidence} separates capabilities from non-transferable claims. The distinction protects a promising area of research from two opposite mistakes: rejecting AI because it cannot be a general doctor today, or treating a narrow task result as proof that it can be one.
+
+\begin{table*}[t]
+\caption{Evidence-backed clinical-AI capabilities and non-transferable inferences}
+\label{tab:evidence}
+\centering
+\footnotesize
+\begin{tabular}{p{0.21\textwidth} p{0.34\textwidth} p{0.35\textwidth}}
+\toprule
+\textbf{Evidence area} & \textbf{What current evidence can support} & \textbf{What it cannot establish by itself}\\
+\midrule
+Task-level diagnostic performance & Defined systems can match or exceed clinician comparison groups on selected imaging or classification tasks \cite{mckinney2020,shen2019}. & Competence in general medicine, treatment selection, communication, or full responsibility for the care episode.\\
+Model-clinician comparison & AI and clinician outputs can be compared against a stated reference standard. & A fair clinical workflow comparison when readers, sites, case mix, downstream actions, and time are not controlled.\\
+Human-AI collaboration & AI can inform prioritization, detection, or review and may reduce workload in a specified workflow \cite{mckinney2020,kelly2019}. & That a vague ``human in the loop'' is safe, effective, equitable, or acceptable.\\
+External validation & Cross-site testing can provide evidence of generalization for named distributions. & Persistent performance after changes in scanners, referral patterns, prevalence, policy, documentation, or treatment practice.\\
+Ethical and regulatory guidance & Lifecycle governance can define fairness, traceability, robustness, usability, and accountability requirements \cite{who2021,futureai2025}. & That an AI system itself bears legal or ethical responsibility for patient care.\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Why clinical impact exceeds discrimination}
+
+Clinical deployment changes a socio-technical system. A risk score can improve a classifier's apparent sensitivity but add false alarms, delay attention to other patients, cause automation bias, or redistribute work inequitably. Conversely, a model that is less accurate in isolation may improve a pathway by identifying cases that deserve earlier review. Kelly \textit{et al.} describe translation challenges that include local representativeness, unintended confounding, workflow adoption, meaningful metrics, regulation, and post-market surveillance \cite{kelly2019}. The outcome of interest is therefore not an AUC alone, but a traceable care-pathway outcome: which cases were prioritized, reviewed, escalated, missed, delayed, or handled differently.
+
+Several reporting frameworks support this shift. CONSORT-AI extends clinical-trial reporting for AI interventions \cite{liu2020}; DECIDE-AI focuses on early-stage clinical evaluation of AI decision-support systems \cite{vasey2022}. They do not eliminate the need for study-specific design, but they make intended use, human factors, error analysis, and intervention description visible. A replace-the-doctor claim that cannot state its intended use, comparator, safety endpoint, and accountability chain should not be treated as a scientific conclusion.
+
+\subsection{Bias, equity, and distribution shift}
+
+Clinical data encode unequal access, recording practices, labels, clinical pathways, and historical allocation decisions. Obermeyer \textit{et al.} showed how a population-health algorithm could yield racial bias through the target it optimized \cite{obermeyer2019}. Celi \textit{et al.} report concentration of clinical-AI datasets in particular countries, specialties, and high-income settings, warning that representativeness cannot be assumed \cite{celi2022}. Challen \textit{et al.} emphasize that bias is a clinical safety issue, not only a technical concern \cite{challen2019}.
+
+These findings make aggregate performance insufficient for delegation. A model that has acceptable overall accuracy but clinically meaningful degradation for a subgroup cannot be authorized merely because its global score is high. Equity has to be pre-specified as a gate: define relevant groups and outcome measures, estimate uncertainty, state an action threshold, document any tradeoff, and pause the authority tier when the threshold is crossed. The same logic applies to temporal and site distribution shift. A model must have a safe response to uncertainty, not just a prediction under familiar inputs.
+
+\section{Research Gap, Questions, and Contributions}
+
+The survey identifies five connected gaps. First, model performance claims seldom specify a clinical delegation boundary: what decision right, patient context, and consequence may be delegated? Second, technical metrics are often separated from care-episode outcomes. Third, subgroup failure modes are obscured by aggregate reporting. Fourth, human oversight is usually stated but not operationalized as authority, workload, override, and escalation behavior. Fifth, models are treated as static even though their clinical environment changes.
+
+The proposal addresses these gaps through four questions:
+\begin{enumerate}
+\item Can a CDBC convert a task-level prediction into a reproducible, bounded delegation decision with an explicit abstention and escalation path?
+\item Does a clinician-plus-CDBC pathway improve a safety-adjusted delegation endpoint over a clinician-standard pathway and an offline AI-only counterfactual?
+\item Can subgroup, calibration, and drift gates identify a condition in which delegation should be paused even when aggregate discrimination remains high?
+\item Can an independent auditor reconstruct why a particular case received an AI authority tier and who remained responsible for the clinical action?
+\end{enumerate}
+
+The contribution is not another accuracy model. It is a testable architecture for clinical authority. The \CDBC\ makes a delegation claim conditional on evidence. It declares a narrow task and authority tier, preserves clinician responsibility, records why the system abstained or escalated, requires subgroup evidence, and turns monitoring into a revocation mechanism. This architecture is designed to make the answer to the title more useful: AI may replace defined subtasks only when it can meet a stronger standard than a favorable benchmark.
+
+\section{Clinical Delegation Boundary Contract}
+
+\subsection{Authority as an explicit contract}
+
+The CDBC has five linked components: (i) intended use and prohibited use; (ii) input, uncertainty, and out-of-distribution gates; (iii) a named authority tier and clinician escalation path; (iv) subgroup and patient-safety gates; and (v) lifecycle monitoring, incident review, and revocation. Figure~\ref{fig:cdbc} gives the logic. The output of a prediction model is not automatically a decision. It is first inspected against the contract. If a gate fails, the case is escalated and the reason is recorded. If all gates pass, the system may receive only the authority justified by its tier.
+
+\begin{figure*}[t]
+\centering
+\fbox{\begin{minipage}{0.91\textwidth}
+\centering
+\vspace{3pt}
+\textbf{Deidentified future case} $\rightarrow$ \textbf{task model} $\rightarrow$ \textbf{CDBC gate evaluation} $\rightarrow$ \textbf{authority tier}\\[3pt]
+\small Intended use $|$ data completeness $|$ uncertainty/OOD $|$ calibration $|$ subgroup equity $|$ model version $|$ monitoring status\\[5pt]
+\textbf{Gate failure or uncertainty} $\rightarrow$ \textbf{qualified clinician escalation} $\rightarrow$ \textbf{override and incident record}\\[3pt]
+\small Tier 0: no AI \quad $\cdot$ \quad Tier 1: information/shadow \quad $\cdot$ \quad Tier 2: supervised triage \quad $\cdot$ \quad Tier 3: narrowly bounded non-diagnostic routing\\[-1pt]
+\vspace{3pt}
+\end{minipage}}
+\caption{Clinical Delegation Boundary Contract (CDBC). It is a proposed evaluation and governance architecture. This paper reports no clinical deployment or patient-level result.}
+\label{fig:cdbc}
+\end{figure*}
+
+The tiers are deliberately asymmetric. Tier 0 is standard clinician work with no model output. Tier 1 permits a retrospective or shadow-mode information record that cannot affect care. Tier 2 would allow a future clinician-facing triage recommendation only if the clinician retains final interpretation, action, and override authority. Tier 3 is not autonomous diagnosis or treatment; it is a potential future non-diagnostic routing action, limited to a low-intervention pathway and available only after all evidence, safety, equity, governance, and regulatory gates pass. The present proposal authorizes only Tier 1 research.
+
+\subsection{Safety-adjusted delegation success}
+
+Let $y_i$ denote the predeclared reference outcome for case $i$, $a_i$ the authority-tier decision, $r_i$ the final accountable clinical review state in a future evaluation, and $g_i$ the product of eligibility gates. The gates cover intended-use membership, data completeness, uncertainty/OOD status, calibration, subgroup condition, traceability, and monitoring state. A planning indicator of delegation admissibility is
+\begin{equation}
+G_i=G_{\mathrm{use},i}G_{\mathrm{input},i}G_{\mathrm{uncertainty},i}G_{\mathrm{equity},i}G_{\mathrm{trace},i}G_{\mathrm{lifecycle},i}.
+\label{eq:gates}
+\end{equation}
+Each factor in \eqref{eq:gates} equals one only when its declared criterion is met. A zero does not mean that the patient has a negative finding; it means the algorithm may not hold the requested delegation authority for that case.
+
+For future study planning, safety-adjusted delegation success is defined as
+\begin{equation}
+S_{\mathrm{delegation}}=\frac{1}{n}\sum_{i=1}^{n}\mathbb{I}\{r_i\ \mathrm{is\ correct}\}\,\mathbb{I}\{a_i\ \mathrm{is\ permitted}\}\,G_i.
+\label{eq:success}
+\end{equation}
+The indicator in \eqref{eq:success} does not replace standard clinical measures. Sensitivity, specificity, predictive values, calibration curves, time-to-review, referral burden, false-reassurance events, and subgroup disparities remain necessary. Its purpose is to prevent an apparently accurate but non-auditable, out-of-scope, inequitable, or stale system from being counted as a successful delegation.
+
+\subsection{Decision records and revocation}
+
+Every future CDBC event is associated with a decision record: case and data lineage identifiers; model and contract version; intended use; input completeness; prediction and uncertainty; OOD status; assigned tier; clinician identity/role; action and override; timing; subgroup-audit context; final reference outcome; incident category; and monitoring status. The record supports accountability without implying that the AI is the responsible party. A qualified clinician and institution remain responsible for care; the record makes the contribution of the model inspectable.
+
+Revocation is equally important. A tier is paused if a predeclared threshold for harmful error, calibration deviation, subgroup disparity, drift, traceability failure, or unresolved incident is crossed. The system must not silently compensate by updating a model on the same outcome stream that reveals the problem. A governed change process establishes the new version, validation evidence, and reopening decision. This lifecycle perspective aligns with calls for clinical AI quality-improvement units and continual monitoring \cite{feng2022} and with broad trustworthy-AI guidance \cite{who2021,nist2023,futureai2025}.
+
+\section{Proposed Study Design and Methods}
+
+\subsection{Scope and ethical boundary}
+
+The proposed study is limited to screening-mammography triage. It does not provide a diagnosis or treatment recommendation. It begins with retrospective multi-site, temporal external validation and then moves, only after independent approvals, to a prospective shadow-mode phase. In shadow mode, the model and CDBC results are stored for evaluation but are not shown to clinicians and cannot alter patient care. No patient records have been accessed for this proposal, and no model has been trained, tested, or deployed.
+
+Any future study requires a lawful data basis, privacy impact assessment, deidentification or other approved safeguards, clinical and statistical protocol review, ethics approval where applicable, local standard-of-care definition, intended-use and medical-device assessment, patient/public involvement, and an incident-management plan. These are study-entry conditions, not optional post-hoc documentation.
+
+\subsection{Units, sites, and comparison arms}
+
+The future unit is one screening-mammography episode drawn from multiple sites. Site, calendar time, scanner/acquisition pathway, reader workflow, follow-up horizon, and reference standard must be fixed before analysis. Splitting is performed by site and time rather than by individual images alone, reducing leakage from correlated cases or local practice patterns. The dataset protocol must report provenance, exclusions, missingness, label verification, and representation of clinically relevant groups.
+
+\begin{table}[t]
+\caption{Planned comparison arms and their patient-care boundary}
+\label{tab:arms}
+\centering
+\footnotesize
+\begin{tabular}{p{0.18\columnwidth}p{0.28\columnwidth}p{0.37\columnwidth}}
+\toprule
+\textbf{Arm} & \textbf{Evaluation role} & \textbf{Boundary}\\
+\midrule
+A & Clinician standard workflow & Reference pathway; observed only in retrospective or separately approved study data.\\
+B & Offline AI-only counterfactual & Model predictions without CDBC escalation; never used for actual care.\\
+C & Clinician plus CDBC & Shadow-mode score, abstention, tier, and review record; isolated from care until all future approvals and gates pass.\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All arms use a common reference standard and predeclared endpoint definitions. The AI-only arm is an analytic counterfactual, not a proposal for unsupervised practice. The CDBC arm shares the prediction model but adds the authority, abstention, equity, escalation, and monitoring architecture. This isolates the scientific question: does a well-specified human-accountable delegation policy improve the pathway compared with simply placing a model in a workflow?
+
+\subsection{Endpoints and analysis plan}
+
+The primary endpoint is the safety-adjusted delegation success in \eqref{eq:success}. A future case receives credit only if it is correctly handled against the reference outcome, its authority tier is permitted, it stays within calibration and subgroup bounds, and its escalation/override record is complete. Secondary endpoints include sensitivity, specificity, positive and negative predictive values, calibration, abstention rate, OOD flag rate, reader and workflow time, override rate, referral volume, false-reassurance events, downstream follow-up, subgroup-specific errors, and incident-record completeness.
+
+Before any execution, the protocol must preregister inclusion/exclusion rules, harm thresholds, subgroup definitions, missing-data strategy, model and contract versions, code-freeze date, calibration method, OOD method, statistical approach, and pause criteria. Retrospective results should be reported by site, time, and subgroup with uncertainty intervals. A mixed-effects logistic model or Bayesian hierarchical equivalent can account for site, reader, and subgroup variation. Paired analyses are used when the same episode is evaluated under more than one arm. The study must report absolute differences in clinically meaningful events and workload, not only changes in AUC.
+
+The shadow-mode record is central. For each future episode, it records the input status, AI score, explanation display if one is tested, uncertainty, OOD state, CDBC tier, abstention reason, clinician's independent interpretation, hypothetical override, final follow-up outcome, time, and incident classification. Because the result is invisible to care teams, the shadow phase can evaluate whether the contract would have performed safely without creating an unreviewable experiment on patients. Any later clinician-facing phase would be a separate study decision.
+
+\subsection{Equity, monitoring, and pause rules}
+
+Equity analysis must be specified before inspecting results. Relevant patient groups should be defined with clinical, legal, and community input rather than inferred opportunistically from easy-to-measure variables. For each group and site, the future report should show sample size, outcome prevalence, discrimination, calibration, false-negative and false-positive burden, abstention rate, time to review, and uncertainty. An aggregate improvement cannot override a predeclared clinically meaningful harm signal in a subgroup.
+
+Monitoring starts with the first shadow-mode record. Input quality, missingness, acquisition shift, feature-distribution shift, calibration, performance proxy, subgroup outcomes, override behavior, workflow delay, and incident rates are trended against predeclared ranges. A pause is triggered by a threshold breach. During a pause, the CDBC freezes authority at Tier 1, convenes a root-cause review, preserves artifacts, and determines whether revalidation, workflow redesign, or withdrawal is necessary. This makes a negative or deteriorating result a valid safety outcome rather than a reason to hide a model update.
+
+\section{Conditional Outcomes and Decision Logic}
+
+The CDBC is valuable only if it can produce decision-relevant outcomes. Table~\ref{tab:decisions} describes the interpretation of possible future results. It prevents an impressive accuracy number from overwhelming calibration, equity, traceability, or workflow evidence. It also gives a route for productive progress: a promising model may remain in a low authority tier until the missing evidence is supplied.
+
+\begin{table*}[t]
+\caption{Pre-registered interpretation of future CDBC outcomes}
+\label{tab:decisions}
+\centering
+\footnotesize
+\begin{tabular}{p{0.28\textwidth}p{0.30\textwidth}p{0.32\textwidth}}
+\toprule
+\textbf{Future observation} & \textbf{Interpretation} & \textbf{Required action}\\
+\midrule
+Arm C improves safety-adjusted delegation success without calibration, equity, traceability, or monitoring failure. & Supports a bounded clinician-AI triage pathway in the declared setting. & Seek independent governance review for a next-stage study; do not generalize to full physician replacement.\\
+Arm B has favorable AUC but fails calibration, subgroup, or traceability gates. & Technical discrimination is insufficient for authority. & Retain Tier 1 only; repair evidence, data, and governance before any clinical use.\\
+Arm C increases workload, overrides, or delay without a safety benefit. & The interaction or delegation policy is ineffective. & Redesign workflow; do not equate automation with efficiency.\\
+Input shift, missingness, OOD flags, or drift thresholds rise. & The case or system is outside the evidence envelope. & Pause the tier, preserve records, and conduct root-cause review.\\
+Independent audit cannot reproduce a tier decision. & Accountability and traceability are inadequate. & Revise the contract, data lineage, and decision record before rerunning evaluation.\\
+Clinicians or patients cannot understand authority and escalation. & The pathway lacks usable accountability. & Co-design communication and test it before a subsequent study.\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Risks, Human Review, and the Research-to-Deployment Boundary}
+
+The central risk is not simply a low AUC. It is a mismatch between apparent model performance and the authority granted to the system. This mismatch can arise from biased labels, nonrepresentative populations, hidden confounding, drift, overreliance by clinicians, poor interface design, undocumented model updates, unclear patient communication, or an institutional failure to respond to incidents. Explainability can support review, but an explanation interface does not by itself verify causal reasoning or remove responsibility. Amann \textit{et al.} emphasize that explainability in healthcare has technological, legal, medical, ethical, and patient dimensions \cite{amann2020}; human-centered co-design studies similarly show that explanations and workflow interaction are empirical questions \cite{panigutti2023}.
+
+Human review is therefore not a ritual disclaimer. It is the mechanism that establishes valid authority. Breast-imaging specialists must define the clinical task and harm thresholds. Clinicians and workflow designers must define escalation and workload constraints. Statisticians and machine-learning specialists must review data partitioning, calibration, uncertainty, and subgroup analyses. Data stewards and privacy officers must approve lawful and secure data handling. Ethicists, patient/public representatives, safety teams, and regulatory specialists must review fairness, communication, accountability, and intended use. The institution must define who can pause, update, or withdraw the system.
+
+The transition path is staged. Stage one is retrospective external validation. Stage two is prospective shadow mode with no influence on patient care. Stage three, if justified by evidence and separately approved, is a tightly monitored clinician-facing evaluation. Stage four, if ever appropriate, would consider a narrow routing function, never a generic “AI doctor,” and only under the applicable clinical, regulatory, and accountability framework. This sequence makes the future ambitious without making an unearned autonomy claim.
+
+\section{Conclusion}
+
+AI can replace some clinical tasks. It can already assist with and sometimes outperform human comparison groups in narrowly specified perceptual or predictive work. That is a major opportunity for medicine, especially when it gives clinicians better information, protects time for patient communication and complex judgment, and extends high-quality review to settings that lack specialist capacity. But task superiority is not doctor replacement. It does not automatically supply a physical examination, a therapeutic relationship, informed consent, accountable judgment under uncertainty, or a safe response to a changing clinical environment.
+
+The proposed Clinical Delegation Boundary Contract makes this distinction scientifically useful. Rather than asking whether AI replaces doctors in the abstract, it asks whether a named task can be delegated under a clear authority tier, with abstention, escalation, equity, traceability, monitoring, and revocation. The answer may become ``yes'' for selected tasks and settings. It remains ``not established'' for the full physician role. Progress should be judged by whether AI-enabled pathways improve patient-relevant outcomes while preserving accountable human care, not by whether a benchmark can be narrated as a general replacement story.
+
+\appendices
+\section{Minimum CDBC Decision Record}
+
+Every future CDBC evaluation must publish a decision record for both eligible and abstained cases. The record binds a model result to the limits of its authority. It includes: (1) case, site, and data-lineage identifiers; (2) intended-use and prohibited-use version; (3) model, contract, calibration, and OOD-detector versions; (4) input completeness and acquisition context; (5) prediction, uncertainty, explanation display state, and tier; (6) gate values from \eqref{eq:gates}; (7) clinician role, independent interpretation, final action, and override rationale; (8) timing and workflow events; (9) reference outcome and follow-up horizon; (10) subgroup-audit fields permitted by governance; (11) incident, safety, and monitoring status; and (12) pause, update, or withdrawal decision. The record permits future auditors to distinguish model error, workflow error, out-of-scope use, and a legitimate abstention.
+
+\section{Minimum Future Result Record}
+
+Table~\ref{tab:record} shows the minimum result record for each future study batch. It protects against reporting only favorable cases or only aggregate discrimination. The table is a research instrument: it captures the information required to decide whether a delegation boundary is credible.
+
+\begin{table*}[t]
+\caption{Minimum CDBC result record for every future evaluation batch}
+\label{tab:record}
+\centering
+\footnotesize
+\begin{tabular}{p{0.21\textwidth}p{0.33\textwidth}p{0.34\textwidth}}
+\toprule
+\textbf{Record block} & \textbf{Required fields} & \textbf{Decision relevance}\\
+\midrule
+Intended use and cohort & Task definition, sites, time window, eligibility, exclusions, prevalence, reference standard, and follow-up horizon. & Defines the population to which a result may apply and prevents hidden changes in scope.\\
+Model and contract & Model, calibration, OOD, CDBC, data-lineage, and interface versions; training freeze date; update status. & Enables audit and prevents an undeclared model or workflow change from being presented as stable evidence.\\
+Performance and uncertainty & Discrimination, calibration, confidence intervals, abstention, OOD, sensitivity analysis, and error taxonomy. & Shows whether useful accuracy is accompanied by an honest response to uncertainty.\\
+Equity and sites & Per-site and per-group sample size, prevalence, error, calibration, abstention, delay, and uncertainty. & Reveals differential safety or access burdens that aggregate metrics can conceal.\\
+Human interaction & Tier distribution, clinician workload, time, overrides, escalation reasons, explanation display, and usability findings. & Tests whether the human-accountable workflow improves care rather than merely adding an alert.\\
+Safety and lifecycle & Incidents, harmful misses, false reassurance, referral burden, drift signals, pause events, corrective actions, and audit outcome. & Makes deployment reversible and links observed failure to a responsible response.\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{CDBC Gate Specification and Audit Package}
+
+The CDBC is only useful if every gate has an observable definition, a named owner, a measurement frequency, and a consequence when it fails. An organization must not define an ``AI oversight'' process that depends on a reviewer noticing a problem informally after the model has influenced care. The contract instead distinguishes gate evaluation from the model score. A score can be available while the delegation tier is unavailable. This separation prevents a familiar but unsafe inference: that a confident prediction deserves more clinical authority merely because it is confident.
+
+Table~\ref{tab:gatespec} defines the minimum gate specification for a future screening-triage study. Thresholds are intentionally not assigned universal numerical values in this proposal. A clinically meaningful miss, acceptable calibration deviation, permitted disparity, and maximum review delay depend on the intended use, local standard of care, prevalence, available specialist capacity, and patient/public input. The scientific requirement is that thresholds be declared before outcome analysis, not that every organization use the same number.
+
+\begin{table*}[t]
+\caption{Minimum CDBC gate specification for a future authority-tier evaluation}
+\label{tab:gatespec}
+\centering
+\footnotesize
+\begin{tabular}{p{0.19\textwidth}p{0.29\textwidth}p{0.22\textwidth}p{0.20\textwidth}}
+\toprule
+\textbf{Gate} & \textbf{Future observable evidence} & \textbf{Responsible owner} & \textbf{Failure response}\\
+\midrule
+Intended-use and input gate & Correct task, site, acquisition pathway, required fields, image-quality criteria, and absence of excluded context. & Clinical service lead and data steward. & Assign Tier 1 only; route to qualified clinician; log out-of-scope reason.\\
+Uncertainty and OOD gate & Calibrated uncertainty, missingness, acquisition anomaly, and distribution-shift signal measured against preregistered criteria. & Model-performance and clinical-safety leads. & Withhold higher tier; investigate whether the case, site, or model is outside the evidence envelope.\\
+Clinical safety gate & Harm-sensitive error profile, false reassurance, delayed review, referral burden, and reference-outcome comparison. & Imaging specialists and patient-safety team. & Pause tier after threshold breach; conduct root-cause and affected-case review.\\
+Equity gate & Per-site and per-group discrimination, calibration, abstention, delay, and error burden with uncertainty intervals. & Equity reviewer, clinicians, and patient/public representatives. & Stop delegation for affected scope; revise data, threshold, or workflow before revalidation.\\
+Human-authority gate & Clinician role, response time, workload, override behavior, escalation completion, and user understanding. & Clinical workflow lead. & Redesign interface or authority map; do not replace documented oversight with a checkbox.\\
+Traceability gate & Versioned code, model, contract, data lineage, decision record, audit reproduction, and incident record. & Institution, developer, and independent auditor. & Freeze the tier until a separate auditor can reproduce the decision path.\\
+Lifecycle gate & Drift trend, update proposal, validation evidence, governance approval, post-update comparison, and withdrawal plan. & AI quality-improvement unit and governance board. & Maintain or revert to Tier 1; prohibit silent model update.\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The gate package also clarifies what is meant by clinician accountability. Accountability is not an expectation that a clinician rubber-stamp a complex system after the fact. The clinician must have authority appropriate to the tier, sufficient contextual information, time to respond, and an escalation process that produces a record. If an AI recommendation is designed so that a clinician cannot feasibly inspect or challenge it, then assigning a nominal human reviewer does not transfer the model's risk into a safe clinical pathway. The CDBC therefore evaluates workload and override behavior as outcomes, not merely as implementation details.
+
+An independent audit consumes the same evidence as a future quality-improvement meeting but applies it without access to hidden local state. The audit reconstructs a sample of decisions from governed data lineage, model/version artifacts, contract gates, and recorded human actions. It checks whether a patient episode was eligible for the tier it received; whether abstention and escalation occurred when required; whether a subgroup or drift signal was present; and whether a subsequent update changed the effective contract. A failure to reconstruct this path means the system has not demonstrated traceable delegation, even if its predictions happen to be accurate in a retrospective file.
+
+Finally, the audit package makes room for an affirmative result. If a future CDBC trial shows that a carefully bounded AI-enabled triage pathway is safe, equitable, auditable, and beneficial, the evidence can support a real expansion of delegated work. That result would be meaningful progress for patients and clinicians. It would still be a statement about the specified authority tier and care setting, not a shortcut from one successful model to the conclusion that doctors as a profession have been replaced.
+
+\begin{thebibliography}{99}
+
+\bibitem{mckinney2020}
+S. M. McKinney \textit{et al.}, ``International evaluation of an AI system for breast cancer screening,'' \emph{Nature}, vol. 577, pp. 89--94, 2020, doi: 10.1038/s41586-019-1799-6.
+
+\bibitem{nagendran2020}
+M. Nagendran \textit{et al.}, ``Artificial intelligence versus clinicians: systematic review of design, reporting standards, and claims of deep learning studies,'' \emph{BMJ}, vol. 368, m689, 2020, doi: 10.1136/bmj.m689.
+
+\bibitem{shen2019}
+J. Shen \textit{et al.}, ``Artificial Intelligence Versus Clinicians in Disease Diagnosis: Systematic Review,'' \emph{JMIR Medical Informatics}, vol. 7, no. 3, e10010, 2019, doi: 10.2196/10010.
+
+\bibitem{topol2019}
+E. J. Topol, ``High-performance medicine: the convergence of human and artificial intelligence,'' \emph{Nature Medicine}, vol. 25, pp. 44--56, 2019, doi: 10.1038/s41591-018-0300-7.
+
+\bibitem{kelly2019}
+C. J. Kelly, A. Karthikesalingam, M. Suleyman, G. S. Corrado, and D. King, ``Key challenges for delivering clinical impact with artificial intelligence,'' \emph{BMC Medicine}, vol. 17, Art. no. 195, 2019, doi: 10.1186/s12916-019-1426-2.
+
+\bibitem{obermeyer2019}
+Z. Obermeyer, B. Powers, C. Vogeli, and S. Mullainathan, ``Dissecting racial bias in an algorithm used to manage the health of populations,'' \emph{Science}, vol. 366, no. 6464, pp. 447--453, 2019, doi: 10.1126/science.aax2342.
+
+\bibitem{celi2022}
+L. A. Celi \textit{et al.}, ``Sources of bias in artificial intelligence that perpetuate healthcare disparities---A global review,'' \emph{PLOS Digital Health}, vol. 1, no. 3, e0000022, 2022, doi: 10.1371/journal.pdig.0000022.
+
+\bibitem{challen2019}
+R. Challen \textit{et al.}, ``Artificial intelligence, bias and clinical safety,'' \emph{BMJ Quality \& Safety}, vol. 28, no. 3, pp. 231--237, 2019, doi: 10.1136/bmjqs-2018-008370.
+
+\bibitem{who2021}
+World Health Organization, \emph{Ethics and Governance of Artificial Intelligence for Health}. Geneva, Switzerland: WHO, 2021.
+
+\bibitem{liu2020}
+X. Liu \textit{et al.}, ``Reporting guidelines for clinical trial reports for interventions involving artificial intelligence: the CONSORT-AI extension,'' \emph{Nature Medicine}, vol. 26, pp. 1364--1374, 2020, doi: 10.1038/s41591-020-1034-x.
+
+\bibitem{vasey2022}
+B. Vasey \textit{et al.}, ``Reporting guideline for the early-stage clinical evaluation of decision support systems driven by artificial intelligence: DECIDE-AI,'' \emph{Nature Medicine}, vol. 28, pp. 924--933, 2022, doi: 10.1038/s41591-022-01772-9.
+
+\bibitem{feng2022}
+J. Feng \textit{et al.}, ``Clinical artificial intelligence quality improvement: towards continual monitoring and updating of AI algorithms in healthcare,'' \emph{npj Digital Medicine}, vol. 5, Art. no. 66, 2022, doi: 10.1038/s41746-022-00611-y.
+
+\bibitem{nist2023}
+National Institute of Standards and Technology, \emph{Artificial Intelligence Risk Management Framework (AI RMF 1.0)}, NIST AI 100-1, 2023, doi: 10.6028/NIST.AI.100-1.
+
+\bibitem{gmlp2021}
+U.S. Food and Drug Administration, Health Canada, and Medicines and Healthcare products Regulatory Agency, \emph{Good Machine Learning Practice for Medical Device Development: Guiding Principles}, 2021.
+
+\bibitem{futureai2025}
+K. Lekadir \textit{et al.}, ``FUTURE-AI: international consensus guideline for trustworthy and deployable artificial intelligence in healthcare,'' \emph{BMJ}, vol. 388, e081554, 2025, doi: 10.1136/bmj-2024-081554.
+
+\bibitem{mesko2023}
+B. Mesk\'o and E. J. Topol, ``The imperative for regulatory oversight of large language models (or generative AI) in healthcare,'' \emph{npj Digital Medicine}, vol. 6, Art. no. 120, 2023, doi: 10.1038/s41746-023-00873-0.
+
+\bibitem{amann2020}
+J. Amann \textit{et al.}, ``Explainability for artificial intelligence in healthcare: a multidisciplinary perspective,'' \emph{BMC Medical Informatics and Decision Making}, vol. 20, Art. no. 310, 2020, doi: 10.1186/s12911-020-01332-6.
+
+\bibitem{panigutti2023}
+C. Panigutti \textit{et al.}, ``Co-design of Human-centered, Explainable AI for Clinical Decision Support,'' \emph{ACM Transactions on Interactive Intelligent Systems}, vol. 13, no. 4, pp. 1--35, 2023, doi: 10.1145/3587271.
+
+\end{thebibliography}
+
+\end{document}

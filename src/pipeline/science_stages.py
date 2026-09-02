@@ -20,6 +20,7 @@ from omegaconf import OmegaConf
 from src.pipeline.science_run import atomic_write_json, atomic_write_text, file_sha256, text_sha256
 from src.pipeline.science_manifests import (
     ScienceManifestError,
+    normalize_verified_survey_binding,
     write_author_manifest,
     write_experiment_design_manifest,
     write_idea_manifest,
@@ -29,11 +30,6 @@ from src.pipeline.survey_idea_loader import SurveyIdeaLoadError, load_survey_ide
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 _WINDOWS_DRIVE_PATH = re.compile(r"^[A-Za-z]:[\\/]")
-_SURVEY_BINDING_FIELDS = (
-    "survey_run_id",
-    "project_id",
-    "project_context_fingerprint",
-)
 
 
 class ScienceStageError(RuntimeError):
@@ -74,6 +70,9 @@ class IdeaStageRequest:
     survey_identity: Mapping[str, str]
     attempt_dir: Path
     quiet: bool = False
+    science_run_id: str = ""
+    quantitative_mode: str = "off"
+    model: str | None = None
 
 
 @dataclass(frozen=True)
@@ -105,6 +104,7 @@ class AuthorStageRequest:
     rendering: Mapping[str, Any]
     render_required: bool = False
     survey_appendix: str = "source-link"
+    quantitative_handoff_manifest_path: Path | None = None
 
 
 @dataclass(frozen=True)
@@ -166,49 +166,6 @@ def _identity_from_survey_context(context: object) -> dict[str, str]:
     }
 
 
-def _normalize_verified_survey_binding(actual: Mapping[str, object]) -> tuple[dict[str, object], bool]:
-    """Normalize Author's verified Survey-binding envelope for stage validation."""
-
-    binding = dict(actual)
-    direct_identity = [_text(binding.get(field)) for field in _SURVEY_BINDING_FIELDS]
-    if any(direct_identity):
-        return binding, False
-    if _text(binding.get("status")) != "BOUND_VERIFIED":
-        return binding, False
-    if binding.get("human_confirmation_required") is not False:
-        raise ScienceStageError(
-            "author",
-            40,
-            "Verified Survey binding must not require human confirmation",
-        )
-    nested_expected = _mapping(binding.get("expected"))
-    nested_resolved = _mapping(binding.get("resolved"))
-    missing = [
-        field
-        for field in _SURVEY_BINDING_FIELDS
-        if not _text(nested_expected.get(field)) or not _text(nested_resolved.get(field))
-    ]
-    if missing:
-        raise ScienceStageError(
-            "author",
-            40,
-            "Verified Survey binding is incomplete; missing " + ", ".join(sorted(set(missing))),
-        )
-    mismatched = [
-        field
-        for field in _SURVEY_BINDING_FIELDS
-        if _text(nested_expected.get(field)) != _text(nested_resolved.get(field))
-    ]
-    if mismatched:
-        raise ScienceStageError(
-            "author",
-            40,
-            "Verified Survey binding expected and resolved identities differ for "
-            + ", ".join(mismatched),
-        )
-    return {**binding, **nested_resolved}, True
-
-
 def _require_identity(
     actual: Mapping[str, object],
     expected: Mapping[str, str],
@@ -221,7 +178,13 @@ def _require_identity(
         "project_id",
         "project_context_fingerprint",
     )
-    normalized_actual, author_verified = _normalize_verified_survey_binding(actual)
+    try:
+        normalized_actual, author_verified = normalize_verified_survey_binding(
+            actual,
+            label=f"{stage} Survey binding",
+        )
+    except ScienceManifestError as exc:
+        raise ScienceStageError(stage, exit_code, str(exc)) from exc
     normalized = {field: _text(normalized_actual.get(field)) for field in required}
     missing = [field for field, value in normalized.items() if not value]
     if missing:
@@ -406,6 +369,62 @@ def run_idea_stage(request: IdeaStageRequest) -> ScienceStageResult:
     if not selected_direction:
         raise ScienceStageError("idea", 21, "Idea result has no primary_direction")
     identity["selected_direction_id"] = selected_direction
+    quantitative_mode = _text(request.quantitative_mode).casefold() or "off"
+    if quantitative_mode not in {"off", "optional", "required"}:
+        raise ScienceStageError("idea", 22, "quantitative_mode must be off, optional, or required")
+    quantitative_ideas_path: Path | None = None
+    quantitative_ideas_manifest_path: Path | None = None
+    quantitative_payload: dict[str, Any] | None = None
+    if quantitative_mode != "off":
+        source_identity = {
+            **dict(request.survey_identity),
+            "science_run_id": _text(request.science_run_id),
+            "selected_direction_id": selected_direction,
+            "idea_result_path": str(idea_result_path.resolve()),
+        }
+        try:
+            from src.agents.quantitative_modeling.idea_generation import (
+                build_quantitative_json_llm_call,
+                generate_quantitative_idea_set,
+            )
+            from src.config import load_config
+
+            quantitative_payload = generate_quantitative_idea_set(
+                topic=request.topic,
+                idea_result=payload,
+                source_identity=source_identity,
+                llm_call=build_quantitative_json_llm_call(
+                    config=load_config(str(request.config_path)),
+                    model=request.model,
+                ),
+            )
+            if (
+                quantitative_mode == "required"
+                and _text(_mapping(quantitative_payload).get("generation_status")) != "READY"
+            ):
+                raise ScienceStageError(
+                    "idea",
+                    22,
+                    "Quantitative mode is required but no executable quantitative idea was generated",
+                )
+        except Exception as exc:
+            if isinstance(exc, ScienceStageError):
+                raise
+            if quantitative_mode == "required":
+                raise ScienceStageError(
+                    "idea", 22, f"Quantitative idea generation failed: {type(exc).__name__}: {exc}"
+                ) from exc
+            from src.agents.quantitative_modeling.idea_generation import (
+                build_failed_optional_quantitative_idea_set,
+            )
+
+            quantitative_payload = build_failed_optional_quantitative_idea_set(
+                topic=request.topic,
+                source_identity=source_identity,
+                message=f"{type(exc).__name__}: {exc}",
+            )
+        quantitative_ideas_path = result_dir / "quantitative_ideas.json"
+        atomic_write_json(quantitative_ideas_path, quantitative_payload)
     try:
         manifest_path = write_idea_manifest(
             attempt_dir=request.attempt_dir,
@@ -414,19 +433,45 @@ def run_idea_stage(request: IdeaStageRequest) -> ScienceStageResult:
             survey_manifest_path=request.survey_manifest_path,
             identity=identity,
             selected_direction_id=selected_direction,
+            quantitative_ideas_path=quantitative_ideas_path,
         )
+        if quantitative_ideas_path is not None:
+            from src.pipeline.quantitative_manifests import write_quantitative_ideas_manifest
+
+            quantitative_ideas_manifest_path = write_quantitative_ideas_manifest(
+                attempt_dir=request.attempt_dir,
+                topic=request.topic,
+                idea_manifest_path=manifest_path,
+                ideas_path=quantitative_ideas_path,
+                identity=identity,
+            )
     except ScienceManifestError as exc:
         raise ScienceStageError("idea", 21, f"Idea manifest publication failed: {exc}") from exc
+    except Exception as exc:
+        raise ScienceStageError("idea", 22, f"Quantitative sidecar publication failed: {exc}") from exc
+    outputs = {
+        "idea_manifest": str(manifest_path),
+        "idea_result": str(idea_result_path),
+        "idea_run_dir": str(result_dir),
+    }
+    if quantitative_ideas_path is not None and quantitative_ideas_manifest_path is not None:
+        outputs.update(
+            {
+                "quantitative_ideas": str(quantitative_ideas_path),
+                "quantitative_ideas_manifest": str(quantitative_ideas_manifest_path),
+            }
+        )
     return ScienceStageResult(
         stage="idea",
         result_path=manifest_path,
-        outputs={
-            "idea_manifest": str(manifest_path),
-            "idea_result": str(idea_result_path),
-            "idea_run_dir": str(result_dir),
-        },
+        outputs=outputs,
         identity=identity,
-        metadata={"selected_direction_id": selected_direction},
+        metadata={
+            "selected_direction_id": selected_direction,
+            "quantitative_generation_status": _text(
+                _mapping(quantitative_payload).get("generation_status")
+            ),
+        },
     )
 
 
@@ -625,6 +670,9 @@ def run_author_stage(request: AuthorStageRequest) -> ScienceStageResult:
         logger = AuthorRunLogger(f"science-author-{timestamp}", jsonl_path=log_path)
         idea_config = _mapping(author_config.get("idea_evolution"))
         authoring_config = _mapping(author_config.get("authoring"))
+        document_quality_config = _mapping(author_config.get("document_quality"))
+        quality_enabled = bool(document_quality_config.get("enabled", True))
+        quality_model = _text(document_quality_config.get("model")) or None
         configured_section_repairs = authoring_config.get(
             "max_contract_repairs_per_section",
             authoring_config.get("max_contract_repairs", 1),
@@ -637,10 +685,30 @@ def run_author_stage(request: AuthorStageRequest) -> ScienceStageResult:
                 include_idea_evolution=str(idea_config.get("default_mode") or "auto"),
                 max_idea_iterations=int(idea_config.get("max_iterations") or 3),
                 strict_survey_binding=True,
+                quantitative_handoff_manifest_path=request.quantitative_handoff_manifest_path,
                 llm_call=build_author_json_llm_call(config=config, model=request.model),
                 max_contract_repairs=int(1 if configured_section_repairs is None else configured_section_repairs),
                 composer_concurrency=int(authoring_config.get("composer_concurrency") or 5),
                 section_cache_config=_mapping(authoring_config.get("section_cache")),
+                document_quality_config=document_quality_config,
+                quality_judge_llm_call=(
+                    build_author_json_llm_call(
+                        config=config,
+                        model=quality_model,
+                        temperature=float(document_quality_config.get("judge_temperature") or 0.0),
+                    )
+                    if quality_enabled
+                    else None
+                ),
+                quality_revision_llm_call=(
+                    build_author_json_llm_call(
+                        config=config,
+                        model=quality_model,
+                        temperature=float(document_quality_config.get("revision_temperature") or 0.5),
+                    )
+                    if quality_enabled
+                    else None
+                ),
                 logger=logger,
             )
             with logger.stage("artifacts", output_dir=str(request.attempt_dir)):
@@ -733,9 +801,36 @@ def run_author_stage(request: AuthorStageRequest) -> ScienceStageResult:
     }
     string_artifacts.update(rendered_files)
     string_artifacts["render_status"] = str(render_status_path)
+    for quality_artifact_name in ("document_quality_json", "document_quality_report_markdown"):
+        quality_artifact_path = artifacts.get(quality_artifact_name)
+        if quality_artifact_path:
+            string_artifacts[quality_artifact_name] = quality_artifact_path
     string_artifacts.update(survey_artifacts)
     selected_direction = _text(result.get("selected_direction_id"))
     manifest_identity = {**identity, "selected_direction_id": selected_direction}
+    quality_audit = _mapping(result.get("document_quality"))
+    selected_candidate_index = quality_audit.get("selected_candidate_index", 0)
+    quality_candidates = quality_audit.get("candidates") or []
+    selected_candidate = (
+        quality_candidates[selected_candidate_index]
+        if isinstance(selected_candidate_index, int)
+        and 0 <= selected_candidate_index < len(quality_candidates)
+        and isinstance(quality_candidates[selected_candidate_index], Mapping)
+        else {}
+    )
+    selected_scorecard = _mapping(selected_candidate.get("scorecard"))
+    quality_summary = {
+        "schema_version": _text(quality_audit.get("schema_version")),
+        "enabled": bool(quality_audit.get("enabled", False)),
+        "selection_status": _text(quality_audit.get("selection_status")),
+        "selected_candidate_index": selected_candidate_index,
+        "winning_candidate_index": quality_audit.get("winning_candidate_index"),
+        "selected_candidate_status": _text(selected_candidate.get("status")),
+        "selected_total_score": selected_scorecard.get("total_score"),
+        "selected_selection_score": selected_scorecard.get("selection_score"),
+        "candidate_count": len(quality_candidates),
+        "warning_count": len(quality_audit.get("warnings") or []),
+    }
     try:
         manifest_path = write_author_manifest(
             attempt_dir=request.attempt_dir,
@@ -749,6 +844,8 @@ def run_author_stage(request: AuthorStageRequest) -> ScienceStageResult:
             source_design_id=_text(result.get("source_design_id")),
             selected_direction_id=selected_direction,
             rendering=render_status,
+            document_quality=quality_summary,
+            quantitative_handoff_manifest_path=request.quantitative_handoff_manifest_path,
         )
     except (KeyError, ScienceManifestError) as exc:
         raise ScienceStageError("author", 41, f"Author manifest publication failed: {exc}") from exc
@@ -763,5 +860,6 @@ def run_author_stage(request: AuthorStageRequest) -> ScienceStageResult:
             "selected_direction_id": _text(result.get("selected_direction_id")),
             "log_file": str(log_path),
             "rendering": render_status,
+            "document_quality": quality_summary,
         },
     )

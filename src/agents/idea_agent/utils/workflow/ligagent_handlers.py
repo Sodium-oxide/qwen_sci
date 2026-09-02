@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from copy import deepcopy
 from typing import Any, Dict, List
@@ -81,6 +82,13 @@ from src.agents.idea_agent.utils.workflow.stage_contract import (
 )
 
 
+def _safe_result_filename_component(value: object) -> str:
+    text = str(value or "").strip()
+    text = re.sub(r'[<>:"/\\|?*\x00-\x1f]', "_", text)
+    text = text.rstrip(" .")
+    return text[:180] or "legacy-primary"
+
+
 def _logger(agent: Any, ctx: StageContext) -> Any:
     return ctx.logger or getattr(agent, "logger", None)
 
@@ -91,6 +99,93 @@ def _runtime(agent: Any, ctx: StageContext) -> Any:
 
 def _session(agent: Any, ctx: StageContext) -> Any:
     return ctx.session or getattr(agent, "session", None)
+
+
+def _select_refinement_seeds(
+    seed_specs: list[Dict[str, Any] | None],
+    best_scores_by_seed: Dict[str, float],
+    top_seed_count: int,
+) -> list[Dict[str, Any]]:
+    """Select the highest-scoring mature seeds for the refinement phase.
+
+    Seeds without a successful screening score are retained only when there
+    are fewer successful seeds than the requested slot count. This keeps the
+    two-stage search fail-open while ensuring failed screening results do not
+    displace viable candidates when enough successful seeds exist.
+    """
+
+    if top_seed_count <= 0:
+        return []
+    successful = [
+        seed
+        for seed in seed_specs
+        if seed is not None and str(seed.get("idea_id") or "").strip() in best_scores_by_seed
+    ]
+    unsuccessful = [
+        seed
+        for seed in seed_specs
+        if seed is not None and str(seed.get("idea_id") or "").strip() not in best_scores_by_seed
+    ]
+    successful.sort(
+        key=lambda seed: (
+            float(best_scores_by_seed[str(seed.get("idea_id") or "")]),
+            str(seed.get("idea_id") or ""),
+        ),
+        reverse=True,
+    )
+    unsuccessful.sort(key=lambda seed: str(seed.get("idea_id") or ""))
+    return (successful + unsuccessful)[:top_seed_count]
+
+
+def _build_route_matrix_tasks(
+    seed_specs: list[Dict[str, Any] | None],
+    route_specs: list[Any],
+) -> list[tuple[Dict[str, Any] | None, Any]]:
+    """Return the deterministic seed-by-route task matrix for one MCTS phase."""
+
+    return [(seed, route) for seed in seed_specs for route in route_specs]
+
+
+def _resolve_screening_routes(
+    configured_route_ids: Any,
+    route_count: int,
+) -> list[Any]:
+    """Resolve the compact screening set while retaining a deterministic fallback."""
+
+    route_by_id = {route.route_id: route for route in IDEA_ROUTE_POLICIES}
+    if isinstance(configured_route_ids, (list, tuple)):
+        routes = [
+            route_by_id[str(route_id)]
+            for route_id in configured_route_ids
+            if str(route_id) in route_by_id
+        ]
+        if routes:
+            return routes[: max(1, route_count)]
+    return list(IDEA_ROUTE_POLICIES)[: max(1, route_count)]
+
+
+def _two_stage_mcts_budget(
+    *,
+    screening_seed_count: int,
+    screening_route_count: int,
+    screening_iterations: int,
+    refinement_seed_count: int,
+    refinement_route_count: int,
+    refinement_iterations: int,
+) -> Dict[str, int]:
+    """Calculate ordinary MCTS searches and iteration budget for both phases."""
+
+    screening_searches = screening_seed_count * screening_route_count
+    refinement_searches = refinement_seed_count * refinement_route_count
+    screening_total = screening_searches * screening_iterations
+    refinement_total = refinement_searches * refinement_iterations
+    return {
+        "screening_searches": screening_searches,
+        "refinement_searches": refinement_searches,
+        "screening_iterations": screening_total,
+        "refinement_iterations": refinement_total,
+        "total_iterations": screening_total + refinement_total,
+    }
 
 
 def _chat(agent: Any, ctx: StageContext, op_name: str):
@@ -772,21 +867,43 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
     seed_specs: List[Dict[str, Any] | None] = [
         idea for idea in active_mature_ideas if not is_data_anchored(idea)
     ]
+    two_stage_matrix_enabled = route_matrix_enabled and bool(seed_specs)
     if not seed_specs:
         seed_specs = [None]
     if route_matrix_enabled and (mature_ideas or ligagent_pro):
-        max_route_expansions = int(get_config_value(agent.config, "portfolio.max_route_expansions_per_seed", len(IDEA_ROUTE_POLICIES)) or len(IDEA_ROUTE_POLICIES))
-        route_specs = list(IDEA_ROUTE_POLICIES)[: max(1, max_route_expansions)]
+        if two_stage_matrix_enabled:
+            screening_route_expansions = int(
+                get_config_value(
+                    agent.config,
+                    "portfolio.screening_route_expansions_per_seed",
+                    2,
+                )
+                or 2
+            )
+            route_specs = _resolve_screening_routes(
+                get_config_value(agent.config, "portfolio.screening_route_ids", None),
+                screening_route_expansions,
+            )
+        else:
+            max_route_expansions = int(
+                get_config_value(
+                    agent.config,
+                    "portfolio.max_route_expansions_per_seed",
+                    len(IDEA_ROUTE_POLICIES),
+                )
+                or len(IDEA_ROUTE_POLICIES)
+            )
+            route_specs = list(IDEA_ROUTE_POLICIES)[: max(1, max_route_expansions)]
     else:
         route_specs = [None]
-    tasks = [(seed, route) for seed in seed_specs for route in route_specs]
-    iterations_per_search = int(
+    tasks = _build_route_matrix_tasks(seed_specs, route_specs)
+    screening_iterations_per_search = int(
         get_config_value(
             agent.config,
-            "mcts.max_iterations",
-            getattr(agent.mcts.config, "max_iterations", 0),
+            "mcts.screening_max_iterations",
+            getattr(agent.mcts.config, "screening_max_iterations", 6),
         )
-        or getattr(agent.mcts.config, "max_iterations", 0)
+        or getattr(agent.mcts.config, "screening_max_iterations", 6)
     )
     raw_data_budget_cap = get_config_value(
         agent.config,
@@ -801,7 +918,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
     data_schedule = build_data_anchored_coverage_schedule(
         shared_context.get("gap_hypothesis_seeds", []) if isinstance(shared_context, dict) else [],
         ordinary_task_count=len(tasks),
-        iterations_per_search=iterations_per_search,
+        iterations_per_search=screening_iterations_per_search,
         budget_cap=data_budget_cap,
     )
     data_seed_by_subhypothesis = {
@@ -838,11 +955,11 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
         coverage_tasks.append((coverage_seed, assignment))
     total_mcts_searches = len(coverage_tasks) + len(tasks)
     logger.info(
-        "🧭 MCTS schedule: %s search(es), including %s data-SH coverage pass(es) before %s ordinary task(s); %s iteration(s) per ordinary search.",
+        "🧭 MCTS screening schedule: %s search(es), including %s data-SH coverage pass(es) before %s ordinary task(s); %s iteration(s) per ordinary search.",
         total_mcts_searches,
         len(coverage_tasks),
         len(tasks),
-        iterations_per_search,
+        screening_iterations_per_search,
     )
 
     def _mcts_task_identity(seed: Dict[str, Any] | None, route: Any) -> tuple[str, str]:
@@ -1017,6 +1134,90 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
                 sorted(required_branch_ids - materialized_branch_ids),
             )
 
+    def _run_matrix_tasks(
+        task_batch: list[tuple[Dict[str, Any] | None, Any]],
+        *,
+        phase: str,
+        iterations: int,
+    ) -> dict[tuple[str, str], Any]:
+        """Run one route-matrix phase and return results keyed by seed/route."""
+
+        if not task_batch:
+            return {}
+        agent.mcts.symbolic_memory_path.parent.mkdir(parents=True, exist_ok=True)
+        agent.mcts.symbolic_memory.save(str(agent.mcts.symbolic_memory_path))
+        max_workers = min(
+            max(1, int(get_config_value(agent.config, "run.idea_route_matrix_max_workers", 8) or 8)),
+            max(1, int(get_config_value(agent.config, "mcts.max_parallel_seeds", 4) or 4))
+            * max(1, int(get_config_value(agent.config, "mcts.max_parallel_routes", 5) or 5)),
+            len(task_batch),
+        )
+        logger.info(
+            "🧵 MCTS %s phase will use up to %s parallel worker(s) for %s task(s) × %s iteration(s).",
+            phase,
+            max_workers,
+            len(task_batch),
+            iterations,
+        )
+
+        def _run_task(
+            task_number: int,
+            seed: Dict[str, Any] | None,
+            route: Any,
+        ) -> Any:
+            seed_id, route_id = _mcts_task_identity(seed, route)
+            logger.info(
+                "🚀 MCTS %s %s/%s started (seed_id=%s, route_id=%s, iterations=%s).",
+                phase,
+                task_number,
+                len(task_batch),
+                seed_id,
+                route_id,
+                iterations,
+            )
+            task_context = _route_context(seed, route)
+            task_context["mcts_iteration_budget"] = iterations
+            if route is None:
+                return agent.mcts.search(topic=topic, context=task_context)
+            return agent.build_mcts_for_mode(
+                route.legacy_mode,
+                seed_id=str(seed.get("idea_id") if seed else "legacy-primary"),
+                route_id=route.route_id,
+            ).search(topic, task_context)
+
+        results: dict[tuple[str, str], Any] = {}
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = {
+                executor.submit(_run_task, task_number, seed, route): (seed, route)
+                for task_number, (seed, route) in enumerate(task_batch, start=1)
+            }
+            for future in as_completed(futures):
+                seed, route = futures[future]
+                mode = route.route_id if route is not None else "default"
+                seed_id, route_id = _mcts_task_identity(seed, route)
+                key = (seed_id, route_id)
+                result = None
+                try:
+                    result = future.result()
+                except Exception as exc:
+                    logger.warning(
+                        "⚠️ MCTS %s failed (seed_id=%s, route_id=%s); fallback may be used: %s",
+                        phase,
+                        seed_id,
+                        route_id,
+                        exc,
+                    )
+                results[key] = result
+                mode_results[f"{seed_id}:{mode}"] = result
+                logger.info(
+                    "✅ MCTS %s completed (seed_id=%s, route_id=%s; candidate=%s).",
+                    phase,
+                    seed_id,
+                    route_id,
+                    "yes" if result is not None and result.best else "no",
+                )
+        return results
+
     if len(tasks) == 1 and tasks[0][0] is None and tasks[0][1] is None:
         logger.info("🚀 MCTS 1/1 started (seed_id=legacy-primary, route_id=default).")
         with suspend_console_handlers(logger):
@@ -1029,69 +1230,108 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
         )
         if result.best:
             _complete_mode(mode_label, result)
-    elif tasks:
-        agent.mcts.symbolic_memory_path.parent.mkdir(parents=True, exist_ok=True)
-        agent.mcts.symbolic_memory.save(str(agent.mcts.symbolic_memory_path))
-        max_workers = min(
-            max(1, int(get_config_value(agent.config, "run.idea_route_matrix_max_workers", 8) or 8)),
-            max(1, int(get_config_value(agent.config, "mcts.max_parallel_seeds", 4) or 4))
-            * max(1, int(get_config_value(agent.config, "mcts.max_parallel_routes", 5) or 5)),
-            len(tasks),
+    elif two_stage_matrix_enabled and tasks:
+        screening_results = _run_matrix_tasks(
+            tasks,
+            phase="screening",
+            iterations=screening_iterations_per_search,
         )
-
-        logger.info("🧵 MCTS schedule will use up to %s parallel worker(s).", max_workers)
-
-        def _run_task(task_number: int, seed: Dict[str, Any] | None, route: Any) -> Any:
+        initial_best_by_seed: dict[str, tuple[float, Any, Any]] = {}
+        for seed, route in tasks:
             seed_id, route_id = _mcts_task_identity(seed, route)
-            logger.info(
-                "🚀 MCTS %s/%s started (seed_id=%s, route_id=%s).",
-                task_number,
-                total_mcts_searches,
-                seed_id,
-                route_id,
-            )
-            if route is None:
-                return agent.mcts.search(topic=topic, context=_route_context(seed, route))
-            return agent.build_mcts_for_mode(
-                route.legacy_mode,
-                seed_id=str(seed.get("idea_id") if seed else "legacy-primary"),
-                route_id=route.route_id,
-            ).search(topic, _route_context(seed, route))
+            result = screening_results.get((seed_id, route_id))
+            if result is None or not result.best or seed is None:
+                continue
+            try:
+                score = float(result.best.evaluation.composite)
+            except (AttributeError, TypeError, ValueError):
+                score = 0.0
+            previous = initial_best_by_seed.get(seed_id)
+            if previous is None or score > previous[0]:
+                initial_best_by_seed[seed_id] = (score, result, route)
 
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            futures = {
-                executor.submit(_run_task, task_number, seed, route): (task_number, seed, route)
-                for task_number, (seed, route) in enumerate(tasks, start=1)
-            }
-            for future in as_completed(futures):
-                task_number, seed, route = futures[future]
+        top_seed_count = int(
+            get_config_value(agent.config, "portfolio.refinement_top_seeds", 3) or 3
+        )
+        top_seeds = _select_refinement_seeds(
+            seed_specs,
+            {
+                seed_id: score_and_result[0]
+                for seed_id, score_and_result in initial_best_by_seed.items()
+            },
+            top_seed_count,
+        )
+        refinement_iterations = int(
+            get_config_value(
+                agent.config,
+                "mcts.refinement_max_iterations",
+                getattr(agent.mcts.config, "max_iterations", 8),
+            )
+            or getattr(agent.mcts.config, "max_iterations", 8)
+        )
+        refinement_route_count = int(
+            get_config_value(
+                agent.config,
+                "portfolio.refinement_route_expansions_per_seed",
+                len(IDEA_ROUTE_POLICIES),
+            )
+            or len(IDEA_ROUTE_POLICIES)
+        )
+        refinement_routes = list(IDEA_ROUTE_POLICIES)[: max(1, refinement_route_count)]
+        refinement_tasks = _build_route_matrix_tasks(top_seeds, refinement_routes)
+        mcts_budget = _two_stage_mcts_budget(
+            screening_seed_count=len(seed_specs),
+            screening_route_count=len(route_specs),
+            screening_iterations=screening_iterations_per_search,
+            refinement_seed_count=len(top_seeds),
+            refinement_route_count=len(refinement_routes),
+            refinement_iterations=refinement_iterations,
+        )
+        logger.info(
+            "🧭 MCTS two-stage budget: screening=%s seed(s) × %s route(s) × %s iteration(s)=%s; "
+            "refinement=%s seed(s) × %s route(s) × %s iteration(s)=%s; total ordinary iterations=%s.",
+            len(seed_specs),
+            len(route_specs),
+            screening_iterations_per_search,
+            mcts_budget["screening_iterations"],
+            len(top_seeds),
+            len(refinement_routes),
+            refinement_iterations,
+            mcts_budget["refinement_iterations"],
+            mcts_budget["total_iterations"],
+        )
+        refinement_results = _run_matrix_tasks(
+            refinement_tasks,
+            phase="refinement",
+            iterations=refinement_iterations,
+        )
+        refined_seed_ids: set[str] = set()
+        for seed, route in refinement_tasks:
+            seed_id, route_id = _mcts_task_identity(seed, route)
+            result = refinement_results.get((seed_id, route_id))
+            if result is not None and result.best:
+                _complete_mode(route.route_id, result, seed=seed, route=route)
+                refined_seed_ids.add(seed_id)
+        for seed in top_seeds:
+            seed_id = str(seed.get("idea_id") or "")
+            if seed_id in refined_seed_ids:
+                continue
+            fallback = initial_best_by_seed.get(seed_id)
+            if fallback is not None:
+                _, result, route = fallback
+                _complete_mode(route.route_id, result, seed=seed, route=route)
+    elif tasks:
+        standard_results = _run_matrix_tasks(
+            tasks,
+            phase="standard",
+            iterations=int(getattr(agent.mcts.config, "max_iterations", 0) or 0),
+        )
+        for seed, route in tasks:
+            seed_id, route_id = _mcts_task_identity(seed, route)
+            result = standard_results.get((seed_id, route_id))
+            if result is not None and result.best:
                 mode = route.route_id if route is not None else "default"
-                seed_id, route_id = _mcts_task_identity(seed, route)
-                key = f"{seed_id}:{mode}"
-                try:
-                    result = future.result()
-                except Exception as exc:
-                    logger.warning(
-                        "⚠️ MCTS %s/%s failed (seed_id=%s, route_id=%s); synthesis will use fallback: %s",
-                        task_number,
-                        total_mcts_searches,
-                        seed_id,
-                        route_id,
-                        exc,
-                    )
-                    mode_results[key] = None
-                    continue
-                mode_results[key] = result
-                logger.info(
-                    "✅ MCTS %s/%s completed (seed_id=%s, route_id=%s; candidate=%s).",
-                    task_number,
-                    total_mcts_searches,
-                    seed_id,
-                    route_id,
-                    "yes" if result.best else "no",
-                )
-                if result.best:
-                    _complete_mode(mode, result, seed=seed, route=route)
+                _complete_mode(mode, result, seed=seed, route=route)
 
     if not completed_modes:
         logger.warning("⚠️ MCTS search returned no candidate; keeping latest candidate unchanged.")
@@ -1282,8 +1522,8 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
             agent.run_dir
             / "mode_idea_results"
             / (
-                f"{str(direction.get('idea_id') or direction.get('seed_id') or 'legacy-primary')}_"
-                f"{mode}.json"
+                f"{_safe_result_filename_component(direction.get('idea_id') or direction.get('seed_id'))}_"
+                f"{_safe_result_filename_component(mode)}.json"
             ),
             logger,
         )

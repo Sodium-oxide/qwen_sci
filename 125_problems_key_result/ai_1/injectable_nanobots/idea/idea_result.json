@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "stage": "idea",
+  "status": "completed",
+  "topic": "Will injectable, disease-fighting nanobots ever be a reality?",
+  "direction": "BARRIER-AWARE-TRIGGER-GATED-NANOCARRIER-BENCHMARK",
+  "claim_type": "preclinical, function-stack benchmark",
+  "core_question": "Does trigger-gated, disease-targeted nanosystem delivery improve target-site payload action while reducing systemic exposure relative to matched nanocarrier and free-drug controls?",
+  "hypotheses": [
+    {"id": "H0", "name": "carrier_equivalence", "prediction": "no target benefit after exposure normalization"},
+    {"id": "H1", "name": "trigger_specificity", "prediction": "targeted opening and payload action are enriched in disease compartment"},
+    {"id": "H2", "name": "barrier_penalty", "prediction": "protein corona, flow, matrix, or immune clearance attenuates function"},
+    {"id": "H3", "name": "translational_robustness", "prediction": "function persists across lots and staged models within safety limits"}
+  ],
+  "function_stack": ["transport", "recognition", "triggered_state_change", "payload_action", "clearance", "safety"],
+  "primary_controls": ["targeted_trigger_gated", "targeted_trigger_disabled", "non_targeted_trigger_gated", "carrier_only", "free_drug"],
+  "primary_endpoints": ["target_compartment_payload_exposure", "off_target_exposure", "trigger_specificity", "disease_pharmacodynamics", "immune_activation", "organ_toxicity", "batch_variability"],
+  "decision_rule": "joint target localization, trigger-dependent release, pharmacodynamic effect, benefit-risk, and batch-replication threshold",
+  "execution_mode": "DESIGN_ONLY",
+  "expected_results": [],
+  "observed_results": []
+}

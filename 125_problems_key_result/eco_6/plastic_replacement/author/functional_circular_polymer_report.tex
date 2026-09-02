@@ -1,0 +1,323 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{array}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{FUNCTIONAL-CIRCULAR-POLYMER: Co-Designing Plastic Replacement Materials and Waste Systems}
+
+\author{\IEEEauthorblockN{Xcientist Research Proposal}
+\IEEEauthorblockA{Survey, Idea, ExperimentDesign, and Author pipeline\\
+Design-only study package}}
+
+\maketitle
+
+\begin{abstract}
+The request for an environmentally friendly replacement for plastics is scientifically incomplete unless the required product service and the receiving waste system are specified. Bio-based, biodegradable, compostable, recyclable, reusable, and circular describe different attributes. This paper proposes FUNCTIONAL-CIRCULAR-POLYMER, a multi-objective framework that co-designs polymer formulation, product performance, regional waste routing, and life-cycle assessment. Candidates are compared per delivered service rather than per kilogram of resin. The design evaluates flexible food film, rigid food containers, durable consumer components, and biocompatible medical or laboratory products against conventional controls and reuse-oriented alternatives. It measures mechanical and barrier performance, processing yield, degradation and mineralization, recycling quality, additives, product loss, infrastructure access, greenhouse-gas emissions, land and water use, toxicity, persistence, cost, and social burden. A Pareto frontier is reported instead of a universal green score. Synthetic routing tests, material experiments, regional system scenarios, and uncertainty decomposition expose where a feedstock or degradation label fails to predict system benefit. This is a design-only proposal: no candidate has been tested or declared superior. The intended contribution is a falsifiable method for identifying applications in which a replacement genuinely lowers total harm and applications in which reduction, reuse, collection, or recycling is the better intervention.
+\end{abstract}
+
+\begin{IEEEkeywords}
+bioplastics, biodegradable polymers, life-cycle assessment, circular economy, recycling, compostability, functional equivalence, multi-objective optimization
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Plastic is not one material and plastic pollution is not one failure mode. The world has produced several billion tonnes of plastic, and a large fraction has not been recycled into an equivalent material stream \cite{geyer}. The result is a real environmental, economic, and social imperative to reduce virgin production, improve circularity, prevent leakage, and develop materials that can deliver necessary services with less harm. Yet the phrase ``environmentally friendly replacement'' can obscure a difficult scientific comparison. A new film may be renewable but land-intensive. A biodegradable container may require an industrial composting facility that most users cannot access. A recyclable polymer may be technically recoverable but incompatible with the local sorting line. A lighter package may save material but shorten shelf life and increase food waste.
+
+This paper reformulates the question as:
+
+\begin{quote}
+For a defined product function and service lifetime, when do bio-based or biodegradable polymers reduce life-cycle greenhouse-gas emissions, fossil-resource use, persistent pollution, and human-health burden relative to a conventional plastic while retaining required mechanical, barrier, safety, and end-of-life performance?
+\end{quote}
+
+The proposed system, FUNCTIONAL-CIRCULAR-POLYMER, co-designs the polymer, the product, and its waste pathway. It compares equal delivered service rather than equal resin mass. It treats a material's end of life as a probability distribution over reuse, mechanical recycling, chemical recycling, industrial composting, home composting, anaerobic digestion, landfill, incineration, and environmental leakage. It includes intended and actual routing, facility access, contamination, and consumer behavior. It also tests the effects of additives, coatings, inks, adhesives, multilayers, processing yield, and product loss.
+
+The distinction between feedstock and fate is central. Bio-based means that some carbon originates from renewable biomass or biological processes; it does not guarantee biodegradation. Biodegradable means that microorganisms can transform a material under specified conditions; it does not guarantee rapid degradation in soil, freshwater, or marine environments. Compostable is a standards-based claim tied to conditions and pass criteria; it is not a synonym for home compostability or safe environmental disappearance \cite{song,haider,iso}. A serious comparison must therefore measure not only mass loss but molecular-weight change, carbon conversion, residual fragments, additive release, and ecotoxicity.
+
+The paper makes four contributions. First, it defines a function-first comparison and a material vocabulary that prevents category errors. Second, it specifies a coupled architecture for formulation, product performance, waste routing, and life-cycle impact. Third, it gives equations and a study protocol for feasibility, multi-objective ranking, degradation, recycling, and uncertainty. Fourth, it defines falsification rules that can reject a candidate when its apparent advantage depends on ideal composting, omitted additives, optimistic feedstocks, or a resin-only functional unit.
+
+This work is a design-only research proposal. It reports no completed material test, life-cycle inventory, or candidate ranking. Its conclusion is nevertheless direct: environmentally preferable replacements are plausible for selected functions, but a universal material substitution is unlikely to be the scientifically correct objective. The correct objective is a verified product-and-system service.
+
+\section{Scientific Scope and Evidence}
+
+\subsection{Production and pollution are system problems}
+
+Geyer, Jambeck, and Law estimated the historical scale of global plastic production, use, and fate, showing that recycling has not kept pace with production and that substantial material has accumulated in landfills or the environment \cite{geyer}. The exact total depends on the year and accounting boundary, but the implication for this study is stable: replacing a polymer without changing collection, sorting, use, or leakage can leave the dominant system failure untouched.
+
+The United Nations Environment Programme frames plastic pollution as a value-chain problem involving production, design, reuse, recycling, financing, regulation, and behavior \cite{unep}. Its current plastic-pollution material describes a circular-economy transition and notes that waste could nearly triple by 2060 under business as usual. This motivates a portfolio comparison. Material substitution belongs beside reduction, reuse, redesign, improved collection, mechanical recycling, chemical recycling, and leakage prevention. It should not be allowed to claim the entire solution by itself.
+
+\subsection{Material categories are orthogonal}
+
+Candidate families include starch and cellulose derivatives, PLA, PHA and PHB, PBS and PBAT systems, bio-derived polyesters and polyamides, waste-derived formulations, chemically recyclable polyesters, and reuse-oriented redesigns. They differ in monomer source, synthesis route, additives, crystallinity, barrier, toughness, thermal window, and treatment compatibility.
+
+Song et al. explain why biodegradable and compostable alternatives must be assessed under their actual receiving conditions \cite{song}. Haider et al. emphasize that biodegradable polymers can bring benefits but can also generate misleading environmental expectations when degradation conditions are not stated \cite{haider}. Rosenboom, Langer, and Traverso place bioplastics within a circular-economy transition and identify the need to connect materials, production, and end of life \cite{rosenboom}. These sources support an application-specific design rather than a universal label.
+
+\subsection{Functional equivalence}
+
+The primary functional unit is a delivered service. For a food film it can be one package that protects a specified food mass for a specified shelf life with a specified oxygen and water-vapor barrier. For a rigid container it can be one container that survives a defined number of filling, transport, and cleaning cycles. For a durable component it can be one part meeting a mechanical and thermal duty cycle for a specified lifetime. For a medical or laboratory product it can be one sterile article that meets barrier, strength, biocompatibility, and disposal requirements.
+
+This definition prevents a thin but weak film from winning by mass alone. It also captures indirect effects. If lower barrier causes food loss, the replacement inherits the environmental burden of producing the wasted food. If a reusable container requires frequent washing or has a high loss rate, the system comparison must include those processes. If a medical polymer fails sterilization or introduces a safety risk, low resin emissions do not make it a feasible replacement.
+
+\subsection{Life-cycle and end-of-life evidence}
+
+Spierling et al. review environmental, social, and economic assessment of bio-based plastics and show why cultivation, energy, land, and processing assumptions matter \cite{spierling}. A life-cycle study must include feedstock production or collection, land and water, fertilizer, polymerization, solvents and catalysts, compounding, conversion yield, scrap, transport, use, collection, sorting, treatment, leakage, and avoided virgin production. For reuse, it must include washing, repair, loss, and cycles. For packaging, it must include product preservation and waste.
+
+The receiving environment determines whether biodegradation occurs. Industrial composting, home composting, soil, freshwater, marine water, anaerobic digestion, landfill, and incineration are separate pathways. ISO 17088 defines specifications and test conditions for compostable plastics; a pass under that standard does not establish degradation in an arbitrary environment \cite{iso}. Fragmentation into small pieces is not mineralization. The test package therefore measures mass, molecular weight, carbon conversion, gases, fragments, additives, and ecotoxicity.
+
+\section{FUNCTIONAL-CIRCULAR-POLYMER Architecture}
+
+\subsection{Separation with controlled integration}
+
+The architecture has five linked modules. The material module generates chemistry, formulation, additive, and processing candidates. The product module maps those candidates to geometry, thickness, coatings, barrier, lifetime, and safety. The waste module routes products through regional systems and treatment probabilities. The life-cycle module converts flows into impact distributions. The decision module reports feasibility and Pareto frontiers.
+
+The modules integrate through explicit contracts, not one opaque score. Material properties cannot be averaged with carbon emissions before a service constraint is checked. End-of-life claims cannot be inferred from feedstock identity. Exposure or social scenarios cannot modify the measured polymer chemistry. This structure makes it possible to attribute a gain to formulation, product redesign, collection, treatment, or reuse.
+
+\subsection{Candidate representation}
+
+Each candidate is represented by
+\begin{equation}
+ c=(m,f,p,e,w,r),
+ \label{eq:candidate}
+\end{equation}
+where $m$ is material chemistry and formulation, $f$ is feedstock, $p$ is product design and performance, $e$ is process energy and yield, $w$ is waste-system routing, and $r$ is regional context. The representation includes additives, coatings, inks, adhesives, and multilayers rather than treating them as invisible implementation details.
+
+The product-service constraint is written as
+\begin{equation}
+ g_j(c)=v_j(c)-b_j\geq 0, \quad j=1,\ldots,J,
+ \label{eq:constraint}
+\end{equation}
+where $v_j(c)$ is measured performance and $b_j$ is the minimum requirement. Constraints can include tensile and impact strength, stiffness, thermal processing range, oxygen barrier, water-vapor barrier, sealability, chemical resistance, dimensional stability, shelf life, sterility, or biocompatibility. A candidate that fails any non-negotiable requirement is infeasible even if its life-cycle score is attractive.
+
+\subsection{End-of-life routing}
+
+Let $q_k(r)$ be the probability that product $c$ in region $r$ enters route $k$, with $\sum_k q_k(r)=1$. The route set contains reuse, mechanical recycling, chemical recycling, industrial composting, home composting, anaerobic digestion, landfill, incineration, and uncontrolled release. A route probability is estimated from collection coverage, sorting accuracy, contamination, facility capacity, consumer behavior, and product labeling. The model reports both intended routing and plausible actual routing.
+
+For route $k$, let $I_{i,k}(c,r)$ be the life-cycle impact for impact category $i$. The system impact distribution is
+\begin{equation}
+ I_i(c,r)=\sum_k q_k(r)I_{i,k}(c,r)+I_{i,\mathrm{leak}}(c,r),
+ \label{eq:routing}
+\end{equation}
+where leakage can include persistence, fragmentation, and ecotoxicity. The term is not set to zero merely because a product was designed for a formal collection stream. A sensitivity scenario tests low collection and mis-sorting.
+
+\begin{table*}[t]
+\caption{Product classes, functional constraints, and system risks}
+\label{tab:functions}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.18\textwidth}p{0.29\textwidth}p{0.27\textwidth}p{0.20\textwidth}}
+\toprule
+Product class & Equal-service unit & Key measured constraints & Main system risks\\
+\midrule
+Flexible food film & Protect a specified food mass for a specified shelf life & Oxygen and water-vapor barrier, sealability, toughness, transparency, migration & Food loss, multilayer sorting, composting access\\
+Rigid food container & Deliver a specified volume over filling and transport cycles & Stiffness, impact, heat resistance, chemical resistance, dimensional stability & Washing, contamination, reuse loss, recycling quality\\
+Durable component & Perform a defined mechanical and thermal duty cycle for a lifetime & Fatigue, creep, impact, temperature, repairability & Shorter lifetime, replacement frequency, additives\\
+Medical or laboratory product & Meet a sterile, safe, and biocompatible service requirement & Sterilization, barrier, strength, controlled degradation, toxicity & Safety failure, regulated disposal, incomplete degradation\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Material and Waste Experiments}
+
+\subsection{Candidate matrix}
+
+The first screen includes conventional polyethylene, polypropylene, PET, or product-specific fossil controls. It compares them with PLA, PHA or PHB, starch and cellulose derivatives, PBS or PBAT blends, bio-based polyesters or polyamides, waste-derived formulations, chemically recyclable polyesters, and reuse-oriented redesigns where technically appropriate. A candidate is not transferred between product classes without rechecking its service constraints.
+
+For each formulation, record monomer and feedstock origin, agricultural inputs, waste preprocessing, catalyst and solvent use, additive package, coating, conversion yield, scrap rate, and processing energy. Material tests measure tensile and impact behavior, stiffness, thermal transitions, oxygen and water-vapor transmission, heat sealing, chemical resistance, dimensional stability, and relevant food-contact, cytotoxicity, or sterility endpoints. The design stores specimen thickness, humidity, temperature, conditioning, and measurement uncertainty.
+
+The candidate search may use a constrained Bayesian or MCTS-like exploration of formulation and product variables. It generates diverse routes across natural polymers, synthetic biopolymers, waste-derived inputs, depolymerizable systems, and reuse. A feasibility filter removes service failures before environmental ranking. A diversity filter prevents a final set containing only minor variants of one chemistry. The search is not allowed to use post-test environmental outcomes to alter the primary performance thresholds.
+
+\subsection{Degradation and mineralization}
+
+For every biodegradable claim, the protocol identifies the receiving environment, temperature, humidity, oxygen condition, inoculum, specimen thickness, time horizon, and pass criterion. It measures
+\begin{itemize}
+\item mass loss and molecular-weight distribution;
+\item carbon conversion to carbon dioxide, methane, biomass, or soluble products;
+\item residual fragments and microplastic-sized particles;
+\item additive and catalyst release; and
+\item toxicity or ecotoxicity of products and residues.
+\end{itemize}
+
+Industrial composting and home composting are separate experiments. Soil, freshwater, marine, anaerobic, landfill, and incineration pathways are not substituted for an industrial composting certificate. The primary degradation claim requires mineralization or a defined biological transformation, not just visible fragmentation. If a material degrades only under a facility that is unavailable in the modeled region, the benefit is reported as conditional on infrastructure.
+
+\subsection{Recycling and contamination}
+
+Mechanical recycling tests measure collection, sorting, melt processing, mechanical-property retention, additive carryover, color or odor, and the number of cycles before quality loss. Chemical recycling tests measure depolymerization yield, solvent and catalyst recovery, energy, purification, and whether recovered monomer can displace virgin feedstock. Mixed-stream experiments test whether a biodegradable candidate contaminates a conventional recycling line or whether labels and coatings prevent correct routing.
+
+The study also tests reuse. A reusable container is not automatically better than a single-use item. The comparison includes washing energy and water, transport, repair, loss, breakage, replacement, and the number of successful cycles. It also includes the product-preservation effect of each system. This prevents a favorable material from winning by transferring burden to cleaning, food waste, or frequent replacement.
+
+\section{Life-Cycle Formulation}
+
+\subsection{System boundary}
+
+The life-cycle inventory begins with feedstock extraction, cultivation, or collection. It then includes land-use change, fertilizer, irrigation, waste preprocessing, polymerization, catalysts, solvents, compounding, additives, conversion, scrap, packaging, transport, use, collection, sorting, treatment, leakage, and avoided virgin material. Bio-based carbon is tracked with its timing, land-use assumptions, and end-of-life carbon gases. Methane, energy mix, allocation, and avoided-product assumptions are sensitivity dimensions rather than hidden constants.
+
+For service unit $s$, candidate impact is
+\begin{equation}
+ J(c,r,s)=\left(G,F,L,W,T,P,C,Q,E\right),
+ \label{eq:objective}
+\end{equation}
+where $G$ is greenhouse-gas emissions, $F$ fossil-resource use, $L$ land occupation or land-use change, $W$ water consumption, $T$ toxicity, $P$ persistence or environmental residence, $C$ cost, $Q$ circularity, and $E$ social or equity burden. The vector is reported without assuming that one objective is always more important than another.
+
+The service-level impact per product item is derived from the full product design. If candidate $c$ requires mass $M(c)$, processing energy $E_p(c)$, and has a failure or product-loss rate $\lambda(c)$, its system inventory includes the additional material and lost-product consequences. This is why a lower impact per kilogram does not guarantee a lower impact per package.
+
+\subsection{Pareto decision rule}
+
+For two feasible candidates $c_1$ and $c_2$, $c_1$ dominates $c_2$ if it is no worse in every objective and strictly better in at least one. The nondominated set is
+\begin{equation}
+ \mathcal{P}=\left\{c:g_j(c)\geq0\ \forall j,\; \nexists c'\text{ that dominates }c\right\}.
+ \label{eq:pareto}
+\end{equation}
+
+The study reports $\mathcal{P}$ by product class and region. A policy-weighted score can be shown as a secondary analysis after impact weights are frozen. If a candidate is preferable only under a high composting rate, a low-carbon electricity mix, or a low food-loss penalty, that condition is displayed rather than averaged away.
+
+\subsection{Uncertainty decomposition}
+
+Uncertainty is sampled over material properties, process yield, electricity, feedstock emissions, land and water inputs, degradation rate, recycling yield, collection, sorting, facility access, leakage, and service failure. For impact $Y$, a hierarchical design estimates
+\begin{equation}
+ \begin{aligned}
+ \mathrm{Var}(Y)={}&V_{\mathrm{material}}+V_{\mathrm{process}}+V_{\mathrm{routing}}+V_{\mathrm{end}}\\
+ &+V_{\mathrm{service}}+V_{\mathrm{region}}+V_{\mathrm{interaction}}.
+ \end{aligned}
+ \label{eq:uncertainty}
+\end{equation}
+The interaction term is retained because a formulation can change thickness, barrier, routing, and recycling quality simultaneously. Laboratory batch uncertainty is estimated from independent specimens; system uncertainty is propagated by scenario sampling. Confidence intervals and tail outcomes are reported for every functional unit.
+
+\begin{table}[t]
+\caption{Planned comparison and ablation matrix}
+\label{tab:comparison}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.29\columnwidth}p{0.57\columnwidth}}
+\toprule
+Comparison & Purpose\\
+\midrule
+Conventional regional control & Measures the current product and waste system.\\
+Resin-mass ranking & Exposes the error from ignoring equal service.\\
+Bio-based drop-in & Tests feedstock substitution and burden shifting.\\
+Ideal industrial composting & Separates chemistry potential from facility access.\\
+Reuse redesign & Tests a system alternative to material substitution.\\
+No additives or multilayers & Measures formulation and structure effects.\\
+No product-loss penalty & Tests whether shelf-life assumptions drive the ranking.\\
+Ideal routing or no leakage & Measures end-of-life optimism.\\
+No agricultural burden & Measures land, water, and fertilizer omission.\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Experimental Protocol}
+
+\subsection{Study stages}
+
+Stage 1 is a material-property and formulation study. It measures performance under controlled conditions and identifies feasible product designs. Stage 2 is a degradation and recycling study, with separate receiving environments, contamination conditions, and recycling cycles. Stage 3 is a regional routing and life-cycle study that combines measured properties with collection and treatment probabilities. Stage 4 is an out-of-sample scenario and uncertainty study that varies energy, feedstock, infrastructure, and behavior.
+
+This staged order prevents environmental claims from rescuing a material that cannot perform its function. It also prevents a promising chemistry from being rejected because an initial system assumption used an unrealistic waste route. Each stage produces a versioned output and uncertainty record that becomes an input to the next stage.
+
+\subsection{Regions and routing scenarios}
+
+At least three contrasting regional systems are required: one with high collection and industrial composting, one with established mechanical recycling but limited composting, and one with low collection and high leakage risk. Regional electricity mix, transport distance, feedstock geography, sorting technology, landfill practice, and treatment capacity are varied. Intended labeling and actual consumer disposal are modeled separately.
+
+Routing probabilities are stress-tested with low collection, high contamination, absent composting, high mis-sorting, and facility failure. A claim of environmental superiority must survive plausible routing, not only ideal treatment. A candidate that performs well only when every user accesses a specific industrial facility is reported as a conditional infrastructure strategy.
+
+\subsection{Temporal and experimental controls}
+
+Freeze product functional units, material recipes, specimen conditioning, test standards, LCA boundaries, allocation rules, route probabilities, and impact weights before the final comparison. Randomize laboratory test order where appropriate. Use independent batches and retain failed specimens. Use an untouched product class or region as a transfer holdout. The holdout tests whether a candidate's apparent advantage survives a change in product geometry, energy system, or waste infrastructure.
+
+All data receive a source, measurement condition, version, uncertainty, and whether they are measured or scenario-assumed. A published value without its test condition is not treated as directly comparable to a laboratory value. Missing data trigger an uncertainty range or an explicit exclusion; they are not silently replaced by the most favorable candidate value.
+
+\subsection{Metrics}
+
+Primary functional metrics are service pass rate, mechanical safety margin, barrier margin, thermal margin, product lifetime, and product-loss rate. Primary environmental metrics are greenhouse gases, fossil-resource use, land and water, toxicity, persistence, and leakage. Circularity metrics are collection, sorting, recycling yield, recovered-product quality, composting completion, and reuse cycles. Economic and social metrics include cost per service unit, infrastructure requirement, worker exposure, and distribution of burdens.
+
+The primary environmental comparison is impact per equal service unit. Per-kilogram impact is secondary. Report median, interval, and high-impact tail for each candidate, product class, region, and end-of-life path. Use block bootstrap for independent laboratory batches and scenario sampling for system uncertainty. Do not pool product classes into a single average that lets an easy packaging case conceal a medical or durable-component failure.
+
+\section{Falsification and Robustness}
+
+The framework is designed to reject attractive but incomplete claims. H1, the functional-equivalence claim, is falsified if equal-service constraints do not change any candidate ranking relative to resin mass, or if performance penalties are negligible under all product classes. H2, the end-of-life claim, is falsified if actual routing and facility access do not change outcomes relative to ideal routing across the declared regions. H3, the trade-off claim, is falsified if one candidate dominates every feasible candidate across all impact, cost, persistence, and social objectives under all scenarios.
+
+H4, the formulation-completeness claim, is falsified if additives, coatings, adhesives, and multilayers do not change functional or waste-system outcomes. H5, the co-design claim, is falsified if material-only screening finds the same feasible Pareto set as the full material-product-end-of-life search. A candidate's environmental claim is rejected if it fails the service constraint, if degradation is only fragmentation, if recycling contamination is omitted, or if the advantage disappears under plausible infrastructure conditions.
+
+Stress tests include a fossil-heavy and low-carbon electricity mix, crop-feedstock expansion, waste-feedstock contamination, low collection, absent composting, cold marine release, high sorting error, short shelf life, high reuse loss, high additive loading, and different transport distances. An outcome that changes sign under a realistic scenario is labeled conditional rather than averaged into a universal conclusion.
+
+The final decision rule is a gate, not a single weighted number. A candidate advances only if it is functionally feasible, its dominant life-cycle impacts are measured or bounded, its intended end-of-life path is available or explicitly identified as required infrastructure, and its advantage remains within a declared uncertainty interval under plausible routing. Otherwise, it may remain a promising material for further study but is not called an environmentally friendly replacement in the present system.
+
+\section{Discussion}
+
+\subsection{What can be created}
+
+There is a strong scientific basis for creating better alternatives for selected applications. Natural polymers can be modified for films and coatings. PLA, PHA, cellulose derivatives, and other bio-based systems can provide useful mechanical or barrier properties in defined designs. Chemically recyclable polymers can target closed-loop feedstock recovery. Reuse redesign can reduce single-use demand where washing, logistics, and cycle counts are favorable. These are engineering opportunities, not merely labels.
+
+The decisive question is context. A compostable food-service item can be useful where food contamination makes mechanical recycling difficult and industrial composting is actually available. A durable reusable item can dominate where cycles are high and washing is efficient. A mechanically recyclable PET or polypropylene product can remain preferable where the recycling stream is mature and a biodegradable substitute would contaminate it. A waste-derived polymer can reduce land competition if preprocessing energy and contamination are controlled. The proposed Pareto analysis makes these cases visible.
+
+\subsection{Why no universal replacement is expected}
+
+Plastics combine low mass, low cost, adjustable barrier, chemical resistance, sterility, and processing flexibility. Replacing all of these functions with one material would require ignoring either performance or system constraints. A material optimized for rapid industrial composting may not provide long-term barrier. A material optimized for durability may not be biodegradable, and that can be appropriate if it is recovered and reused. A bio-based feedstock may lower fossil use while increasing land, fertilizer, water, or biodiversity pressure.
+
+The existence of trade-offs is not an excuse for inaction. It is a reason to choose high-value targets. The first candidates should be selected where the product function is clear, the waste pathway is controllable, the main environmental burden is measurable, and an alternative can pass a realistic service test. The result should be a ranked portfolio of material-and-system opportunities, not a marketing category.
+
+\subsection{Environmental claims and public communication}
+
+The study's terminology is intentionally precise. “Bio-based” reports feedstock origin. “Biodegradable” reports a tested biological pathway and conditions. “Compostable” reports compliance with a specified standard and facility type. “Recyclable” reports actual or modeled recovery quality and route access. “Circular” reports repeated material value retention under a system boundary. None of these words alone means low greenhouse-gas emissions, low toxicity, or low social burden.
+
+An environmental claim should therefore disclose the functional unit, product mass and lifetime, feedstock, energy mix, additives, treatment route, facility access, collection and sorting assumptions, leakage scenario, and impact categories. A claim that omits these variables is not necessarily false, but it is incomplete and cannot be transferred safely to another region or application.
+
+\subsection{Implementation limits and safety}
+
+Food-contact and medical products require independent toxicological, sterilization, regulatory, and migration review. Laboratory biodegradation tests do not authorize uncontrolled environmental release. Pilot manufacturing must verify process emissions, worker exposure, product consistency, and waste-stream compatibility. Waste-system changes should be tested with operators and communities because a new label can alter sorting behavior and contamination.
+
+ The study package is not an environmental certification and does not authorize a product claim. Its purpose is to define an evidence path. A candidate can be promoted from laboratory material to product pilot only after it passes function, degradation or recycling, routing, and life-cycle gates. A candidate that fails a gate remains a research option with a documented limitation.
+
+\section{Scale-Up and Burden Trade-offs}
+
+\subsection{From specimen to supply chain}
+
+A material that performs well in a laboratory coupon can fail when converted into a roll, tray, bottle, or molded component. Scale-up changes residence time, cooling rate, crystallinity, moisture sensitivity, defect frequency, and the amount of scrap. The proposed pilot therefore uses a mass balance from feedstock to saleable product. For each kilogram of finished product, it records feedstock conversion, solvent and catalyst recovery, off-specification material, regrind fraction, water demand, process heat, and emissions controls. The same product is then tested after pilot conversion rather than assuming that coupon properties survive manufacturing.
+
+Scale-up also changes the waste stream. A formulation can be technically recyclable while its coating, pigment, adhesive, or food residue makes the recovered stream commercially unusable. Conversely, a product with modest laboratory degradation can be advantageous if it is reliably collected and recycled many times. The pilot must therefore send representative post-use articles through sorting and treatment equipment, with mass-balance closure for rejects, recovered polymer, dissolved products, and unrecovered carbon. This connects chemistry to the actual material flow instead of treating end of life as a label.
+
+\subsection{Performance penalties and avoided burdens}
+
+A replacement should be evaluated against the burden it avoids and the burden it introduces. In packaging, the avoided burden includes the conventional polymer and the product protected by the package. If barrier loss increases food waste, the additional food production can exceed the saving from the package. In reusable systems, the avoided single-use items must be compared with washing, transport, breakage, and replacement. In durable products, shorter lifetime multiplies all upstream impacts. The model therefore includes a service-failure multiplier:
+
+\begin{equation}
+N_{\mathrm{items}}(c)=\frac{1}{(1-\lambda(c))\,n_{\mathrm{reuse}}(c)},
+\label{eq:service_multiplier}
+\end{equation}
+
+where $\lambda(c)$ is the probability that an item fails to deliver its required service and $n_{\mathrm{reuse}}(c)$ is the expected number of successful uses. This expression is not a substitute for a complete inventory; it makes explicit why a low-mass or low-emission material can lose after failures and extra replacements are counted.
+
+\subsection{Scale-up decision gates}
+
+The pilot is divided into three gates. The process gate requires repeatable production, controlled worker exposure, acceptable scrap, and a measured energy and water inventory. The service gate requires that the converted product meet the frozen mechanical, barrier, thermal, safety, and lifetime thresholds after aging and realistic contamination. The system gate requires a verified route, an acceptable recovery or degradation outcome, and an environmental advantage that remains visible under regional scenarios. A candidate that passes only the process gate is a promising formulation; one that passes all three can be considered for a product-specific demonstration.
+
+This staged interpretation preserves ambition while preventing premature universal claims. It also identifies useful failure modes. If the chemistry is sound but the route is unavailable, infrastructure investment is the intervention. If the route works but barrier performance causes product loss, multilayer redesign or a different product target is needed. If performance and routing are strong but agricultural burdens dominate, waste feedstock, perennial crops, or a non-biological feedstock should be tested. The output is consequently actionable even when a candidate does not advance.
+
+\section{Conclusion}
+
+Environmentally friendly replacement for plastics is not a single-material discovery problem. It is a function, formulation, infrastructure, and life-cycle problem. Bio-based and biodegradable polymers are valuable research directions, but their labels do not determine their total environmental performance. Equal service, realistic end of life, additives, product loss, land and water, toxicity, persistence, and regional infrastructure must be evaluated together.
+
+FUNCTIONAL-CIRCULAR-POLYMER provides a concrete research route. It compares food films, rigid containers, durable components, medical or laboratory products, and reuse alternatives under matched service units. It measures material performance, degradation and mineralization, recycling quality, routing, life-cycle impacts, and uncertainty. It reports Pareto frontiers and conditional outcomes rather than forcing one universal score. Its falsification rules can reject a candidate whose benefit depends on ideal composting, omitted burdens, or a resin-only comparison.
+
+The direct scientific conclusion is that better replacements can be created for selected applications and waste systems, but no single polymer should be expected to replace every plastic. The most effective future is likely a portfolio: reduce unnecessary use, reuse durable products, improve collection and recycling where those systems work, and deploy bio-based or biodegradable materials where their measured service and end-of-life pathway create a genuine net benefit. This proposal defines how to identify those cases without confusing a promising chemistry with a complete environmental solution.
+
+\begin{thebibliography}{00}
+\bibitem{geyer} R. Geyer, J. R. Jambeck, and K. L. Law, ``Production, use, and fate of all plastics ever made,'' \textit{Science Advances}, vol. 3, no. 7, art. no. e1700782, 2017, doi: 10.1126/sciadv.1700782.
+\bibitem{unep} United Nations Environment Programme, ``Plastic pollution,'' accessed Sep. 2, 2026. [Online]. Available: \url{https://www.unep.org/interactives/beat-plastic-pollution/}
+\bibitem{song} J. Song \textit{et al.}, ``Biodegradable and compostable alternatives to conventional plastics,'' \textit{Philosophical Transactions of the Royal Society B}, vol. 364, no. 1526, pp. 2127--2139, 2009, doi: 10.1098/rstb.2008.0289.
+\bibitem{haider} T. P. Haider \textit{et al.}, ``Plastics of the future? The impact of biodegradable polymers on the environment and society,'' \textit{Angewandte Chemie International Edition}, vol. 58, no. 1, pp. 50--62, 2019, doi: 10.1002/anie.201805766.
+\bibitem{rosenboom} J.-G. Rosenboom, R. Langer, and G. Traverso, ``Bioplastics for a circular economy,'' \textit{Nature Reviews Materials}, vol. 7, pp. 117--137, 2022, doi: 10.1038/s41578-021-00407-8.
+\bibitem{spierling} S. Spierling \textit{et al.}, ``Bio-based plastics---A review of environmental, social and economic impact assessments,'' \textit{Journal of Cleaner Production}, vol. 185, pp. 476--491, 2018, doi: 10.1016/j.jclepro.2018.03.014.
+\bibitem{iso} International Organization for Standardization, \textit{ISO 17088:2021 Plastics---Organic recycling---Specifications for compostable plastics}, Geneva, Switzerland, 2021.
+\end{thebibliography}
+
+\end{document}

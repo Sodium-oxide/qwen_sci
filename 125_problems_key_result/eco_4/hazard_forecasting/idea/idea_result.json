@@ -1,0 +1,24 @@
+{
+  "result_type": "idea_result_v5",
+  "topic": "Will we be able to predict catastrophic weather events more accurately?",
+  "design_mode": "DESIGN_ONLY",
+  "primary_direction": "MULTIHAZARD-X",
+  "research_question": "At a fixed information and communication budget, can hazard-specific hybrid models plus a shared calibration-and-decision layer improve probabilistic skill and warning utility over physics-only, AI-only, and uncalibrated ensemble baselines?",
+  "candidate_routes": [
+    {"name":"universal_multimodal_model","status":"rejected_as_primary","reason":"risks conflating distinct physical dynamics and observation processes"},
+    {"name":"independent_best_in_class_models","status":"partial","reason":"respects hazard physics but omits shared calibration and end_to_end warning utility"},
+    {"name":"hazard_specific_modules_shared_calibration","status":"selected","reason":"preserves physical separation while addressing uncertainty, latency, and decision gaps"}
+  ],
+  "hazard_modules":["tropical_cyclone","tsunami","earthquake_early_warning_and_probability"],
+  "shared_components":["missingness_aware_fusion","probability_calibration","tail_risk_estimation","latency_budgeting","asymmetric_decision_thresholds"],
+  "falsifiable_claims":[
+    "calibration improves weighted probabilistic score and reliability at matched information cutoffs",
+    "latency-aware decisions improve lead time or impact-weighted regret at a fixed false-alert budget",
+    "removing physical constraints, latency gating, or calibration causes hazard-specific degradation",
+    "cross-hazard transfer helps representation and calibration but does not require shared physical transition parameters"
+  ],
+  "required_boundaries":["no deterministic earthquake precursor claim","tsunami warning begins after source initiation","forecast skill is distinct from warning utility","no observed results before execution"],
+  "expected_results": [],
+  "observed_results": [],
+  "upstream_sources":["usgs_earthquake_prediction_faq","noaa_tsunami_warning_system","noaa_nhc_forecast_verification","wmo_early_warnings_all","lam_graphcast_2023","bi_pangu_2023","mousavi_eqtransformer_2020"]
+}

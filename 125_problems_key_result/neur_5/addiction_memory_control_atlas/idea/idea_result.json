@@ -1,0 +1,39 @@
+{
+  "schema":"idea_result_v5",
+  "topic":"What is addiction and how does it work?",
+  "project_id":"neur_5",
+  "survey_binding":{"survey_run_id":"neur_5-survey-001","project_context_fingerprint":"neur5-addiction-memory-context-v1","target_gap_ids":["G1","G2","G3","G4","G5","G6","G7"]},
+  "selected_primary_idea":{
+    "id":"AMMCA",
+    "title":"Addiction Mechanism and Memory-Control Atlas",
+    "abstract":"A longitudinal multimodal and causal framework that separates reward learning, wanting, liking, habit, withdrawal, executive control, cue-memory reactivation, and gene-environment context to predict and safely modify relapse mechanisms.",
+    "research_object":"Dynamic addiction-related brain-behavior-environment states and their relation to compulsive seeking, treatment response, and relapse",
+    "mechanism":"Repeated substance exposure and learned cues alter reward, stress, habit, memory, and control systems, with person-specific interactions among biology, development, environment, and treatment.",
+    "intervention":"Computational latent-state perturbation followed, only after approval, by mechanism-specific treatment or neural modulation studies; no intervention executed in this artifact.",
+    "observable_quantities":["reward prediction","wanting and liking","cue reactivity","craving","habit persistence","outcome devaluation sensitivity","withdrawal and negative affect","executive control","sleep and stress","use and relapse","treatment response","quality of life","agency","fairness calibration"],
+    "falsification_conditions":["static severity matches dynamic model","mechanisms cannot be separated from arousal and state","cue memory adds no held-out predictive value","mechanism-specific matching fails safe comparator","prediction relies on demographic or clinic proxy leakage"],
+    "target_gap_ids":["G1","G2","G3","G4","G5","G6","G7"],
+    "evidence_sources":["E1","E2","E3","E4","E5","E6","E7","E8"]
+  },
+  "competitive_ideas":[
+    {"id":"R1","title":"Addiction control-balance state space","target_gap_ids":["G1","G4","G6"],"status":"competitive_component"},
+    {"id":"R2","title":"Cue-memory and relapse atlas","target_gap_ids":["G2","G3","G7"],"status":"competitive_component"},
+    {"id":"R3","title":"Gene-environment developmental model","target_gap_ids":["G5","G6"],"status":"competitive_component"},
+    {"id":"R4","title":"Mechanism-specific recovery controller","target_gap_ids":["G6","G7"],"status":"competitive_component"}
+  ],
+  "high_risk_ideas":[{"id":"R6","title":"Subject-specific mechanism controller","target_gap_ids":["G8","G9"],"risk":"high","value":"Tests whether relapse prevention improves when target mechanisms rather than substance labels guide care"}],
+  "rejected_ideas":[
+    {"id":"X1","title":"Dopamine-only addiction","reason":"Ignores stress, withdrawal, habit, executive control, memory, and environment"},
+    {"id":"X2","title":"Artificial memory as addiction cure","reason":"Confuses a constrained memory manipulation paradigm with human treatment and subjective recovery"},
+    {"id":"X3","title":"Static genetic destiny score","reason":"Turns probabilistic gene-environment risk into a deterministic and potentially discriminatory label"}
+  ],
+  "mcts_trace":[
+    {"node":"N0","defect":"addiction is framed as willpower failure","edit":"define longitudinal brain-behavior-environment phenotype","gain":"non-stigmatizing mechanistic object"},
+    {"node":"N1","defect":"dopamine is treated as a complete explanation","edit":"separate wanting, liking, habit, withdrawal, and control","gain":"multi-process state representation"},
+    {"node":"N2","defect":"memory manipulation is overclaimed as transplant or cure","edit":"treat cues and memory as one endpoint with independent subjective and behavioral measures","gain":"bounded memory-control hypothesis"},
+    {"node":"N3","defect":"population averages hide relapse mechanisms","edit":"add individual trajectory, gene-environment moderation, fairness, and clinical safety gates","gain":"mechanism-specific recovery atlas"}
+  ],
+  "primary_direction_id":"AMMCA",
+  "observed_results":[],
+  "execution_policy":{"mode":"DESIGN_ONLY","real_experiment_executed":false}
+}

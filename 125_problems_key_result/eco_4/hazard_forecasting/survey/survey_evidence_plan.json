@@ -1,0 +1,11 @@
+{
+  "stage":"survey",
+  "plan_id":"multi-hazard-evidence-v1",
+  "evidence_questions":[
+    {"question":"What is forecastable for each hazard?","preferred_sources":["USGS earthquake prediction and early-warning guidance","NOAA tsunami warning system","NOAA/NHC forecast verification","WMO early-warning framework"],"variables":["horizon","target","latency","uncertainty","action"]},
+    {"question":"How can AI improve forecasting?","preferred_sources":["peer-reviewed weather AI studies","earthquake detection studies","data-assimilation and ensemble studies"],"variables":["skill","calibration","tail risk","distribution shift"]},
+    {"question":"What constitutes a safe warning?","preferred_sources":["multi-hazard warning guidance","operational verification reports","decision-theoretic evaluation"],"variables":["miss cost","false-alarm cost","lead time","coverage","communication"]}
+  ],
+  "retrieval_status":{"openalex":"network_unavailable","anysearch":"network_unavailable","browser":"USGS, NOAA tsunami, NOAA NHC, and WMO pages checked; some alternative institutional URLs unavailable"},
+  "observed_results":[]
+}

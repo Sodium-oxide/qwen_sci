@@ -196,6 +196,7 @@ _BLOCK_SCHEMA: dict[str, Any] = {
                 "protocol",
                 "outcome_branch",
                 "review_checklist",
+                "quantitative_evidence",
             ]
         },
         "text": {"type": "string"},
@@ -323,6 +324,7 @@ AUTHOR_SOURCE_BUNDLE_SCHEMA: dict[str, Any] = {
             },
         },
         "idea_evolution": _OBJECT,
+        "quantitative_evidence": _OBJECT,
     },
 }
 
@@ -525,14 +527,18 @@ def validate_research_plan_document(payload: object) -> list[str]:
                         skip_observed_result_detection=is_bibliographic_inventory_block(
                             section_id,
                             block_id,
-                        ),
+                        ) or (section_id == "computational_evidence" and _text(block.get("kind")) == "quantitative_evidence"),
                     )
                     block_claim_ids = {
                         _text(claim_id)
                         for claim_id in block.get("claim_ids") or []
                         if _text(claim_id)
                     }
-                    if block_text and not block_claim_ids:
+                    is_quantitative_evidence = (
+                        section_id == "computational_evidence"
+                        and _text(block.get("kind")) == "quantitative_evidence"
+                    )
+                    if block_text and not block_claim_ids and not is_quantitative_evidence:
                         errors.append(f"visible section block {block_id} must reference at least one claim ID")
                     if block_claim_ids - claim_id_set:
                         errors.append(f"visible section block {block_id} references an unknown claim ID")

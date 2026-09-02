@@ -1,0 +1,20 @@
+{
+  "schema_version": "experiment_design_v1",
+  "project_id": "inf_2_dna_information_storage",
+  "survey_run_id": "survey-inf2-dna-storage-001",
+  "selected_idea_id": "idea-dse-001",
+  "template": "computational_digital_with_nonliving_in_vitro_validation",
+  "execution_policy": {"mode": "DESIGN_ONLY", "observed_results": []},
+  "research_unit": "payload x code x storage condition x molecular channel x access pattern x read budget x checksum acceptance rule",
+  "variables": {
+    "dependent": "accepted selective recovery with exact checksum match",
+    "independent": ["coding arm", "storage condition", "channel burden", "coverage tier", "access round"],
+    "mediators": ["strand dropout", "substitution/indel burden", "index crosstalk", "amplification bias", "decoder portability"],
+    "controls": ["common payload suite", "target net payload", "sequence constraints", "predeclared acceptance rule", "blinded decoder labels"]
+  },
+  "study_arms": ["constrained baseline", "fountain benchmark", "DSE-guided packet"],
+  "primary_endpoint": "requested file is selectively retrieved, decoded within the declared budget, and exactly matches its pre-registered checksum",
+  "decision_statuses": ["ARCHIVE_PACKET_ADMISSIBLE", "INTEGRITY_GATE_FAILED", "SELECTIVE_ACCESS_GATE_FAILED", "CONDITION_COVERAGE_INCOMPLETE", "PORTABILITY_GATE_FAILED", "COST_BOUNDARY_UNMET", "INCONCLUSIVE"],
+  "human_review_required": true,
+  "prohibited_actions": ["living-cell storage", "pathogen or clinical material handling", "unreviewed DNA ordering", "laboratory execution", "sequencing execution", "cloud submission", "claiming observed recovery or commercial readiness"]
+}

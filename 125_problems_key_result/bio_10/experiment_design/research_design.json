@@ -1,0 +1,25 @@
+{
+  "title": "EVOTRACE: Evolutionary Trait Reconstruction and Causal Evidence",
+  "artifact_status": "DESIGN_ONLY",
+  "empirical_results_claimed": false,
+  "scientific_question": "In a declared lineage and environment, what evidence supports the contributions of variation, selection, drift, migration, and developmental mechanism to evolutionary trait change?",
+  "stages": ["E0_scope", "E1_variation", "E2_transmission", "E3_mechanism", "E4_evaluation"],
+  "primary_endpoints": [
+    "relative_predictive_support_for_population_process_models",
+    "calibrated_frequency_or_trait_change_interval",
+    "genotype_intermediate_trait_evidence",
+    "held_out_prediction_error",
+    "sensitivity_to_demographic_and_developmental_assumptions"
+  ],
+  "prohibited_inferences": [
+    "Do not infer selection from allele-frequency change alone.",
+    "Do not treat trait association as a developmental mechanism.",
+    "Do not describe an endpoint as inevitable without testing contingency and alternative histories.",
+    "Do not claim empirical results from this design document."
+  ],
+  "browser_verified_key_sources": [
+    {"doi": "10.1126/science.1243357", "boundary": "50,000-generation experimental E. coli fitness trajectories in 12 populations"},
+    {"doi": "10.1038/nature07891", "boundary": "review evidence for novelty through modification of pre-existing regulatory circuits"},
+    {"doi": "10.1038/nrg2499", "boundary": "hierarchical developmental gene regulatory network framework"}
+  ]
+}

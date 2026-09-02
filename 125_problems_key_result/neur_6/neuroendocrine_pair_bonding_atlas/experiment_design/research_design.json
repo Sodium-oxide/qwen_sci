@@ -1,0 +1,29 @@
+{
+  "schema_version":"experiment_design_v1",
+  "project_id":"neur_6_npbca",
+  "title":"Neuroendocrine Pair-Bonding Causal Atlas",
+  "status":"DESIGN_ONLY",
+  "research_questions":[
+    "Which receptor and mesolimbic circuit perturbations selectively alter partner preference during formation versus maintenance?",
+    "How do dopamine, oxytocin, vasopressin, sex-steroid, and stress-axis variables interact over the bond trajectory?",
+    "Can a prespecified partner-cue neural representation be compared across prairie voles and humans without equating their behaviors?"
+  ],
+  "hypotheses":[
+    {"id":"H1","phase":"formation_and_maintenance","claim":"OXTR/AVPR1A perturbation selectively reduces partner-cue preference after locomotion and general social approach controls.","gap_ids":["G2","G5"]},
+    {"id":"H2","phase":"formation_vs_maintenance","claim":"NAc D1/D2 perturbations have phase-specific effects on partner preference and persistence.","gap_ids":["G1","G2"]},
+    {"id":"H3","phase":"formation","claim":"VTA-NAc dopamine response is more partner-selective than matched stranger and nonsocial reward responses.","gap_ids":["G2","G5"]},
+    {"id":"H4","phase":"all","claim":"Endocrine and stress-axis state moderates but does not replace circuit-level prediction of partner selectivity.","gap_ids":["G3","G6"]},
+    {"id":"H5","phase":"human","claim":"Partner-cue neural representations replicate across sessions and remain distinct from familiar-person and nonsocial reward representations.","gap_ids":["G4","G5"]},
+    {"id":"H6","phase":"cross_species","claim":"A low-dimensional feature geometry is directionally shared across vole neural readouts and human imaging, with species-specific deviations.","gap_ids":["G4"]}
+  ],
+  "arms":{
+    "animal":{"species":"Microtus ochrogaster","planning_sample":"96 adults, sex-balanced where feasible","phases":["baseline","formation","established maintenance","delayed retention"],"perturbations":["OXTR","AVPR1A","NAc D1","NAc D2","VTA-NAc dopamine","vehicle/sham control"],"primary_endpoint":"PSI=log((partner_contact+epsilon)/(stranger_contact+epsilon))","controls":["general social approach","locomotion","object investigation","nonsocial reward","stress physiology"]},
+    "human":{"planning_sample":"120 adults in established pair relationships","sessions":2,"measurements":["fMRI","pulse","respiration","skin conductance","saliva or blood endocrine covariates"],"conditions":["partner","familiar non-partner","stranger","nonsocial object/reward"],"interventions":[],"primary_endpoint":"cross-session partner-versus-familiar neural decoding and region-level contrast"}
+  },
+  "causal_estimand":"Delta(k,m,phase)=E[Y_m|do(U_k=1),phase]-E[Y_m|do(U_k=0),phase]",
+  "analysis":{"animal":"mixed-effects phase-by-perturbation model with block random effects","human":"cross-validated multivoxel decoding plus hierarchical ROI model","cross_species":"feature-space representational similarity plus hierarchical Bayesian shared-effect model","multiplicity":"prespecified endpoint families with correction","power":"pilot-variance-based a priori calculation; planning targets are not observed results"},
+  "safety":{"animal":"IACUC/3R review, minimized separation, humane endpoints","human":"IRB, informed consent, MRI safety, no hormone or circuit manipulation, privacy-preserving data governance"},
+  "observed_results":[],
+  "unknowns_to_inherit":["temporal order of peptide and dopamine effects","specificity of receptor perturbations","cross-species stability of neural geometry"],
+  "human_review_requirements":["animal welfare","human imaging consent","genetic privacy if optional genotyping is used","no clinical or relationship prediction claims"]
+}

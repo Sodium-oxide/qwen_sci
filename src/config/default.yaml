@@ -206,6 +206,40 @@ api:
     endpoint: "https://hf-mirror.com"
 
 # ============================================
+# Independent quantitative-modeling branch
+# ============================================
+quantitative_modeling:
+  provider: ""
+  model: "qwen3.8-max"
+  repair_model: ""
+  llm_timeout_seconds: 1800
+  max_output_tokens: 24000
+  repair_max_output_tokens: 16000
+  synthesis_max_grid_cells: 4096
+  stream: true
+  progress_to_stderr: true
+  progress_interval_tokens: 256
+  parameter_evidence:
+    enabled: true
+    # Academic metadata only discovers candidate works. Numerical values must
+    # later be quote-anchored in legal OA full text or a user-provided source.
+    discovery_providers: ["openalex", "unpaywall"]
+    max_papers_per_parameter: 12
+    max_fulltext_documents_per_parameter: 5
+    max_document_chars_for_extraction: 40000
+    fulltext_max_bytes: 20971520
+    request_timeout_seconds: 30
+    max_oa_pdf_candidates_per_paper: 3
+    fulltext_http_max_retries: 0
+    fulltext_connect_timeout_seconds: 5
+    fulltext_read_timeout_seconds: 30
+    openalex_base_url: "https://api.openalex.org"
+    semantic_scholar_base_url: "https://api.semanticscholar.org/graph/v1"
+    unpaywall_base_url: "https://api.unpaywall.org/v2"
+    allow_single_literature_source: true
+    allow_user_provided_documents: true
+
+# ============================================
 # Survey Agent Configuration
 # ============================================
 survey:
@@ -302,6 +336,7 @@ survey:
       download_in_parallel: true
       download_parallel_workers: 4
       pdf_parse_batch_size: 1
+      fulltext_download_enabled: true
       # Legal OA full-text acquisition is independent from paper/SH relevance.
       # `access_context_generation` must change when a legitimate TDM or other
       # authorized provider is introduced, so anonymous 403 caches are ignored.
@@ -744,7 +779,11 @@ idea:
       max_output_tokens: 65536
 
   mcts:
+    # Two-stage route-matrix budget: screen every seed cheaply, then fully
+    # explore only the highest-scoring seeds.
     max_iterations: 8
+    screening_max_iterations: 6
+    refinement_max_iterations: 8
     max_depth: 3
     branching_factor: 3
     exploration_constant: 1.2
@@ -781,6 +820,10 @@ idea:
   portfolio:
     min_independent_ideas: 2
     max_candidates_per_seed: 5
+    screening_route_expansions_per_seed: 2
+    screening_route_ids: ["object_substitution", "mechanism_replacement"]
+    refinement_top_seeds: 3
+    refinement_route_expansions_per_seed: 5
     max_route_expansions_per_seed: 5
     primary_selection_policy: "scientific_maturity_diversity_validation"
 

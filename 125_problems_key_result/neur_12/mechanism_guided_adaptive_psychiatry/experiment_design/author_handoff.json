@@ -1,0 +1,40 @@
+{
+  "schema": "author_handoff.v1",
+  "project_id": "neur_12_mechanism_guided_adaptive_psychiatry",
+  "stage": "experiment_design",
+  "status": "verified_handoff",
+  "design_mode": "DESIGN_ONLY",
+  "primary_direction_id": "MGAP",
+  "source_bindings": {
+    "survey_manifest": "../survey/survey_manifest.json",
+    "survey_evidence_plan": "../survey/survey_evidence_plan.json",
+    "survey_gap_ledger": "../survey/survey_gap_ledger.json",
+    "idea_result": "../idea/idea_result.json",
+    "research_design": "research_design.json"
+  },
+  "author_constraints": [
+    "write a research plan, not a completed clinical study",
+    "keep observed_results empty",
+    "separate association, prediction, treatment moderation, and clinical utility",
+    "compare diagnosis-only and symptom-dimensional baselines",
+    "model treatment response as a time-varying trajectory",
+    "include missing-modality, subgroup, drift, and leakage checks",
+    "keep clinician supervision mandatory",
+    "do not make treatment recommendations for an individual",
+    "do not add an Acknowledgment or Acknowledgements section",
+    "target at least 7 IEEE-style pages without filler"
+  ],
+  "required_sections": [
+    "Abstract",
+    "Introduction",
+    "Evidence-Constrained Survey",
+    "Idea Synthesis",
+    "ExperimentDesign",
+    "Expected Interpretations and Falsification",
+    "Implementation and Governance",
+    "Risks and Reproducibility",
+    "Conclusion",
+    "References"
+  ],
+  "observed_results": []
+}

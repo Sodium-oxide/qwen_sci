@@ -1,0 +1,40 @@
+{
+  "schema_version": "science_result_v1",
+  "project_id": "inf_3_clinical_ai_delegation_boundaries",
+  "research_question": "Can AI replace a doctor?",
+  "workflow": ["Survey", "Idea", "ExperimentDesign", "Author"],
+  "status": "COMPLETED_WITH_HUMAN_SOURCE_AND_CLINICAL_GOVERNANCE_REVIEW_PENDING",
+  "selected_idea_id": "idea-cdbc-001",
+  "execution_policy": {"mode": "DESIGN_ONLY", "observed_results": []},
+  "stage_artifacts": {
+    "survey": {
+      "report": "survey/survey.md",
+      "structured_report": "survey/survey.json",
+      "manifest": "survey/survey_manifest.json",
+      "handoff": "survey/survey_idea_handoff.json"
+    },
+    "idea": {
+      "report": "idea/idea.md",
+      "result": "idea/idea_result.json"
+    },
+    "experiment_design": {
+      "report": "experiment_design/research_design.md",
+      "result": "experiment_design/research_design.json",
+      "author_handoff": "experiment_design/author_handoff.json"
+    },
+    "author": {
+      "tex": "author/clinical_ai_delegation_boundary_report.tex",
+      "pdf": "author/clinical_ai_delegation_boundary_report.pdf",
+      "manifest": "author/author_manifest.json",
+      "pdf_validation": "author/pdf_validation.json"
+    }
+  },
+  "final_report": {
+    "format": "IEEE conference / Letter",
+    "pages": 7,
+    "minimum_page_requirement": 7,
+    "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+    "acknowledgement_section_present": false
+  },
+  "core_conclusion": "AI can replace bounded clinical subtasks when its authority is constrained by evidence, calibrated abstention, equity, accountable clinician escalation, traceability, and lifecycle monitoring. Current evidence does not establish independent general replacement of a doctor."
+}

@@ -1,0 +1,15 @@
+{
+  "pipeline": "Survey -> Idea -> ExperimentDesign -> Author",
+  "current_stage": "Author",
+  "status": "complete",
+  "design_only": true,
+  "artifact_count_expected": 22,
+  "report_pages": 8,
+  "known_risks": [
+    "AI benchmark progress does not directly predict occupation replacement.",
+    "Calibration is distribution-specific and may fail under shift.",
+    "Hybrid teams can inherit correlated errors and automation bias.",
+    "Repeated assistance may improve productivity while changing human learning."
+  ],
+  "next_safe_step": "If empirical work is authorized, preregister a simulation and low-stakes human-subject protocol with ethics review before deployment claims."
+}

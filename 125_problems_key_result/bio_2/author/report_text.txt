@@ -1,0 +1,480 @@
+         Can We Stop Ourselves from Aging?
+     A Design-Only Framework for Testing Bounded
+         Changes in Human Aging Trajectories
+                                Survey–Idea–ExperimentDesign–Author Research Workflow
+
+   Abstract—Whether people can “stop aging” is not a sin-             molecular damage, nutrient sensing, immune function, tissue
+gle biomedical endpoint. Chronological time, biological change,       repair, metabolic state, cognition, mobility, disease susceptibil-
+functional decline, disease incidence, and mortality are related      ity, and mortality can diverge. A valid study must make such
+but nonidentical quantities. A late-life plateau in a conditional
+mortality hazard, where supported by a specified demographic          divergence visible. It must not choose a favorable readout after
+data set, neither proves that an individual has stopped biological    treatment, call a demographic pattern a biological mechanism,
+aging nor establishes an intervention. Likewise, an intervention-     or call a mechanism result a clinical cure.
+associated shift in one epigenetic, metabolic, inflammatory, or
+physiologic measure is not a validated proof of health-span              The biological literature provides a productive but incom-
+extension. This design-only paper develops the Systematic Trial       plete map. The original hallmarks of aging organized processes
+Architecture for Biological Longevity and Aging Evaluation            including genomic instability, telomere attrition, epigenetic
+(STABLE-AGE), an auditable protocol for assessing a candidate
+geroscience intervention in a declared population and time            alteration, loss of proteostasis, deregulated nutrient sensing,
+horizon. STABLE-AGE requires a frozen endpoint hierarchy              mitochondrial dysfunction, cellular senescence, stem-cell ex-
+spanning safety, calibrated multidomain biomarkers, function,         haustion, and altered intercellular communication [1]. The ex-
+and clinical-event follow-up; a randomized comparative core           panded framework adds or elevates disabled macroautophagy,
+where ethical and feasible; blinded assay and outcome proce-          chronic inflammation, and dysbiosis [2]. These categories
+dures; explicit missing-data and survival-selection analyses; held-
+out quality tests; and external replication. It treats molecular      support hypotheses about how an intervention might act and
+hallmarks as mechanism hypotheses, not a clinical diagnosis, and      where harm might emerge. They do not define a universal
+requires concordance across domains without allowing average          laboratory test for whether a person is “aging,” and they do not
+biomarker improvement to compensate for a safety breach. The          establish that manipulating one category will safely improve
+proposal reports no participant enrollment, treatment exposure,       all others.
+laboratory result, functional outcome, adverse event, mortality
+effect, or efficacy estimate. Its conclusion is conditional: no          The question has also been linked to exceptional-age de-
+current evidence establishes that human aging can be stopped,
+but carefully bounded causal claims about specified aging-related     mography. Barbi et al. reported a late-life mortality plateau in
+trajectories can be made progressively more informative through       a carefully constructed population of longevity pioneers [3].
+reproducible, safety-centered studies.                                This observation deserves careful interpretation. A mortality
+   Index Terms—aging biology, geroscience, biological age,            hazard at age a, conditional on having survived to age a,
+biomarkers, health span, randomized trials, senescence, clinical      is a population quantity; it is not a measurement of damage
+translation, causal inference.
+                                                                      accumulation inside every survivor. Errors in age validation,
+                       I. I NTRODUCTION                               population selection, frailty heterogeneity, migration, model
+                                                                      choices, sparse event counts, and confidence intervals can alter
+   The wish to stop aging compresses several scientific ques-         an apparent late-age pattern. Even if a plateau were accepted
+tions into one phrase. It may refer to avoiding a particular age-     for a specified population, it would not mean that all molecular
+related disease, maintaining mobility and cognition, extending        or functional change has ended, nor that a tested intervention
+life, lowering a mortality hazard, repairing a cellular defect,       created the plateau.
+changing a biomarker, or preventing every future biological
+change. These are not interchangeable endpoints. A clock                 The contribution of this report is STABLE-AGE: the Sys-
+can advance while a person remains functional; a clock can            tematic Trial Architecture for Biological Longevity and Aging
+change after an exposure without demonstrating a durable              Evaluation. It creates a design-only route from mechanism
+health benefit; a clinical event can be delayed by disease-           hypothesis to bounded inference. The framework requires
+specific care without modifying the broad biology of aging.           researchers to declare the population, intervention class, com-
+The first requirement for research in this area is therefore a        parator, follow-up window, safety boundary, biological as-
+precise claim boundary.                                               says, functional outcomes, clinical-event policy, missing-data
+   This paper uses aging-related trajectory to denote a pre-          model, and replication threshold before examining outcomes.
+registered, multidomain pattern of change measured over a             It does not propose a treatment regimen or give medical
+declared horizon. It does not claim that a single latent variable     advice. It reports no new experiment, human result, clinical
+completely describes human aging. Rather, it recognizes that          benefit, or proof that aging can be stopped.
+    II. S URVEY: W HAT E XISTING E VIDENCE C AN AND                 repeatable but biologically nonspecific. These properties do
+                  C ANNOT E STABLISH                                not make the assay useless; they define the interpretation it
+A. Chronological age, biological change, and conditional            can support.
+mortality                                                              Table I distinguishes evidence classes. It deliberately refuses
+                                                                    a shortcut from mechanism to clinical claim. A cell or ani-
+   Chronological age is measured without a biological assay;
+                                                                    mal result can motivate target selection. A human biomarker
+it is time since birth. Biological aging is an explanatory
+                                                                    result can support target engagement. A randomized human
+concept for age-associated change, and its proposed measures
+                                                                    functional outcome can support a bounded comparative claim.
+must be validated for a stated use. Mortality is an outcome
+                                                                    None, individually, establishes that aging as a whole has
+caused by many proximal pathways, including disease, injury,
+                                                                    stopped.
+infection, environmental exposure, care access, and biological
+vulnerability. Conflating these quantities invites false claims.    C. Biomarkers and the surrogate problem
+A lower mortality rate in one cohort does not reveal a single
+cause. A favorable cellular readout does not guarantee a lower         Epigenetic clocks, proteomic panels, metabolomic signa-
+hazard. A person who reaches an exceptional age is not a            tures, inflammatory indices, imaging measures, physiologic
+control experiment showing that aging has vanished.                 tests, and composite scores each answer different measure-
+   For a population with covariates X and survival indicator        ment questions. Horvath’s DNA-methylation age work il-
+S, the relevant late-age quantity is a conditional hazard,          lustrates how chronological-age-associated information can
+                                                                    be extracted across tissues [4]. Levine et al. developed a
+  h(a | X, S(a) = 1) = lim                                          biomarker intended to link methylation patterns to lifespan and
+                          ∆a→0
+                                                                    health-span-related phenotypes [5]. Such work is important
+                       Pr[a ≤ A < a + ∆a | A ≥ a, X]
+                                                           , (1)    for measurement science. It does not make every clock inter-
+                                       ∆a                           changeable or automatically validate its change as a surrogate
+where A is age at death and a is attained age. Equation (1)         for an intervention’s clinical benefit.
+makes the survivor conditioning explicit. A comparison of              Surrogacy has a causal requirement. A biomarker must do
+h(105 | X, S(105) = 1) and h(106 | X, S(106) = 1)                   more than correlate with age or future risk; its change under
+concerns successive selected survivor populations. It cannot        intervention must reliably convey the intervention’s effect
+by itself identify the within-person rate of change of molec-       on outcomes of interest within the intended population and
+ular damage, functional capacity, or a latent biological-age        setting. A treatment can improve a biomarker while producing
+construct.                                                          no functional benefit, or even net harm, through an off-
+   There are several reasons to maintain this distinction. First,   target pathway. Conversely, a functional benefit can occur
+exceptional ages are rare, so a result can be sensitive to record   without a large change in the chosen biomarker. STABLE-
+verification and model specification. Second, unobserved het-       AGE consequently makes all component domains visible and
+erogeneity means that individuals with different vulnerabilities    treats discordance as a result requiring explanation rather than
+are not equally represented among later survivors. Third, an        as a reason to select the most favorable assay.
+age-specific death rate is not an intervention endpoint unless         Let Yikt be an observed value for participant i, domain k,
+the intervention, population, exposure duration, confounding        and visit t. A useful measurement decomposition is
+structure, and competing risks are identified. STABLE-AGE
+separates an S0 demographic reanalysis from an S2 interven-                    Yikt = θik (t) + bk,site + bk,batch + εikt ,       (2)
+tion experiment for this reason.
+                                                                    where θik (t) is the underlying domain state, bk,site and bk,batch
+B. Mechanism frameworks are maps, not efficacy certificates         are premeasured site and batch effects, and εikt is residual
+   The hallmarks literature is valuable because it resists          measurement variation. Equation (2) is not a proof that a latent
+a single-cause account. An intervention affecting nutrient          state is identified; it states the sources of variation that must
+sensing, for example, may also affect immune function,              be calibrated before a biological interpretation is made.
+metabolism, wound healing, muscle, cancer biology, or medi-
+cation interactions. A senescence-targeting strategy may have       D. Intervention evidence and the health-span boundary
+distinct effects across cell types and disease contexts. The sys-      Human intervention studies supply candidate evidence, not
+tems nature of the framework implies that a favorable response      a present solution to aging. Calorie restriction has been
+in one pathway should be accompanied by measurement of              examined in CALERIE for cardiometabolic risk and other
+plausible countervailing pathways and function.                     intermediate outcomes [6]; a later analysis reported a slowed
+   This is especially important for translation. Molecular pro-     pace-of-aging measure in healthy adults under the trial’s con-
+cesses have different time scales and tissue distributions. Blood   ditions [7]. These studies make an important methodological
+can be practical to sample but may not represent brain, muscle,     contribution because they expose intervention assignment,
+liver, bone marrow, or a disease-relevant tissue. A transient       adherence, measured outcomes, and time horizon. They do not
+inflammatory response may be harmful, beneficial, or simply         show that all forms of aging have stopped, and their eligibility
+a context-dependent response. An assay may be analytically          and burden conditions matter for transportability.
+                                                             TABLE I
+  E VIDENCE BOUNDARY FOR CLAIMS ABOUT STOPPING AGING . E ACH CLASS MAY BE SCIENTIFICALLY USEFUL , BUT IT SUPPORTS ONLY THE STATED
+                                                           CONCLUSION .
+
+
+Evidence class                 What it can establish                      Critical limitations                          Claim that remains unsupported
+Verified            late-age   A conditional hazard pattern for the       Survival selection, sparse events, mea-       Individuals have stopped biological
+demographic data               specified population, ages, model, and     surement error, heterogeneity, and no         aging, or an intervention has been
+                               data-quality rules.                        intervention contrast.                        validated.
+Mechanistic cell or animal     A hypothesis about a pathway, expo-        Species, dose, tissue, environment, and       Human health-span, safety, or lifespan
+study                          sure, or tissue-specific mechanism un-     outcome transfer may fail in humans.          benefit.
+                               der stated conditions.
+Human biomarker change         Analytical response or target engage-      Surrogacy, assay drift, tissue specificity,   Slowed aging or reduced disease risk
+                               ment for the measured specimen and         regression to mean, and multiplicity.         without functional and clinical concor-
+                               assay.                                                                                   dance.
+Randomized             func-   A bounded causal contrast for enrolled     Adherence, missingness, external valid-       Permanent, universal, or risk-free ces-
+tion/clinical comparison       participants, comparator, endpoints, and   ity, competing risks, and limited hori-       sation of aging.
+                               follow-up.                                 zon.
+Replication and long follow-   Reproducibility and more credible dura-    Still finite, population-specific, and un-    Immortality or unrestricted longevity.
+up                             bility for the replicated boundary.        able to prove eternal survival.
+
+
+
+   Nutrient-sensing modulation is another active area. Mannick                 missingness handling. Fifth, label every conclusion by its
+et al. reported immune-function-related findings following                     evidence layer: observation, measurement inference, causal
+mTOR inhibition in older adults [8]. This supports continued                   estimate, or long-horizon extrapolation.
+hypothesis-driven clinical investigation, not an inference that                   For calibrated domain summaries Zk (t) with locked direc-
+mTOR modulation is a broadly safe anti-aging treatment.                        tions and scaling, STABLE-AGE may define a transparent
+Senescence-targeting work provides a complementary exam-                       composite,
+ple: Justice et al. reported an early, open-label pilot in idio-
+pathic pulmonary fibrosis [9]. A pilot can establish feasibility,                                          K
+                                                                                                          ∑︂                      K
+                                                                                                                                 ∑︂
+tolerability signals, and endpoint learning, but it cannot settle                                B(t) =         wk Zk (t),             wk = 1,              (3)
+comparative clinical efficacy or general biological aging.                                                k=1                    k=1
+   Public-health evidence and clinical geroscience must also
+be separated. The National Institute on Aging summarizes                       where wk is prespecified from external validation or a protocol
+established actions associated with healthy aging and the main-                rule and K is the number of retained domains. Equation (3)
+tenance of function [10]. These are valuable health practices,                 is a reporting device, not a claim that all domains share a
+but they are not a license to label a behavior or product as                   single biological cause. The full vector (Z1 , . . . , ZK ) must
+having stopped aging. The research question in this report is                  accompany B(t) so that a benefit in one domain cannot
+whether a future, specified candidate intervention satisfies a                 conceal deterioration in another.
+demanding causal and safety standard. It should not be read                       The corresponding within-person change rate over a de-
+as a recommendation to start, stop, substitute, or combine any                 clared horizon T is
+medication, diet, supplement, or procedure.
+                                                                                                                    Bi (T ) − Bi (0)
+                                                                                                       ri (T ) =                     ,                      (4)
+III. I DEA : STABLE-AGE AS A B OUNDED C AUSAL C LAIM                                                                        T
+
+   STABLE-AGE is a study architecture rather than a therapy.                   where Bi (0) and Bi (T ) use the same locked assay and quality-
+Its core question is: for a declared eligible population, does in-             control rules. Equation (4) permits a bounded comparison of
+tervention class a change a preregistered multidomain aging-                   rates; it does not establish that ri (T ) = 0 in an unmeasured
+related trajectory compared with a defined control during a                    future or that all relevant biological changes share the same
+stated horizon, with compatible functional or clinical evidence                rate.
+and without an unacceptable safety signal? The question is                        STABLE-AGE therefore defines four hypotheses. Under
+deliberately narrower than “Can we stop aging?” because it                     H0 , an apparent result is attributable to chance, imbalance,
+can be falsified by an endpoint, a safety event, failed assay                  batch drift, selective retention, behavior change, regression to
+calibration, absent concordance, or nonreplication.                            the mean, or survival selection. Under H1 , treatment assign-
+   The architecture has five principles. First, define the claimed             ment changes the preregistered trajectory and is concordant
+object before measuring it. Second, distinguish technical as-                  with independently measured function or clinical evidence
+say validity from biological interpretation and from clinical                  in the enrolled population. Under H2 , a biomarker moves
+surrogacy. Third, make health and safety hard constraints                      without such concordance, which supports target engagement
+rather than weights that can be offset by a favorable average                  or measurement research only. Under H3 , effects are heteroge-
+biomarker. Fourth, protect causal inference with comparison,                   neous, context-dependent, or offset by harm; broad anti-aging
+blinding where feasible, prespecified analysis, and transparent                language is then prohibited.
+                                                               TABLE II
+                          STABLE-AGE ENDPOINT HIERARCHY. T HE SAFETY AND QUALITY GATES ARE NONCOMPENSATORY.
+
+Tier                         Examples of preregistered content                  Main inferential role                      Prohibited shortcut
+Safety hard gates            Serious adverse events, clinically meaningful      Determines whether benefit claims are      Offsetting a safety failure with a
+                             laboratory changes, deterioration in function,     eligible for interpretation.               favorable composite score.
+                             intervention-specific risks, and stop rules.
+Assay and quality gates      Sample identity, technical replicates, blinded     Determines whether observed change is      Calling a batch effect biological
+                             duplicates, batch/site controls, calibration ac-   measurement-credible.                      target engagement.
+                             ceptance, and drift monitoring.
+Primary multidomain tra-     Locked molecular, physiologic, immune, and         Tests the bounded trajectory hypothesis.   Replacing the component vector
+jectory                      functional-domain summaries with complete                                                     with a single favorable clock.
+                             component reporting.
+Concordance outcomes         Independent functional measures and, when          Tests whether the trajectory has com-      Treating correlation with age as
+                             feasible, blinded clinical adjudication.           patible consequences.                      clinical validation.
+Long-horizon event exten-    Incident multimorbidity, hospitalization, dis-     Describes durability and event patterns.   Inferring mortality benefit from a
+sion                         ability, and mortality with follow-up com-                                                    short biomarker study.
+                             pleteness.
+
+
+
+           IV. E XPERIMENT D ESIGN : I NTEGRATED                                 timing, and functional assessment. Randomization, when used,
+               H UMAN -R ESEARCH P ROTOCOL                                       is stratified on only the predeclared factors that affect interven-
+                                                                                 tion safety, assay interpretation, or expected clinical risk. The
+A. Scenario ladder and study boundary
+                                                                                 allocation procedure, concealment method, unblinding condi-
+   The protocol progresses through scenario classes rather than                  tions, visit window, specimen logistics, laboratory assignment,
+claiming that one study can settle a universal question. S0                      and data lock date are maintained in a protocol register.
+is a demographic reanalysis used to keep exceptional-age                            Endpoint freezing protects against flexible interpretation.
+hazard models separate from intervention efficacy. S1 is an                      Before unblinding, the protocol fixes domain direction, trans-
+assay-calibration program. S2 is a randomized comparative                        formations, weights, quality thresholds, visit windows, primary
+core where ethical and feasible. S3 is a longer observational                    contrast, covariate set, missing-data primary model, multi-
+event extension, which retains association language unless its                   plicity family, and sensitivity analyses. It also states which
+causal assumptions are met. S4 is an external replication in an                  measures are confirmatory and which are exploratory. No
+independent site or cohort. The ladder prevents an investigator                  biomarker, subgroup, time window, or composite weight may
+from promoting an early mechanistic or measurement result                        be substituted merely because it provides a more attractive
+directly to a public claim of stopped aging.                                     result. The purpose is not to suppress discovery; exploratory
+   Table III specifies the evidence each scenario may provide.                   findings may be reported as such, with their full search context.
+The boundary includes population eligibility, baseline pheno-                       The primary mixed model can be expressed as
+type, comorbidities, medication stability, relevant reproductive
+considerations, frailty limits, access to usual care, specimen                                Yikt = β0k + β1k t + β2k Ai + β3k (Ai t)
+schedule, intervention exposure, comparator, follow-up policy,                                          + γkT Xi + uik + vsite(i),k + εikt ,              (5)
+and endpoints. These choices must be documented before re-
+                                                                                 where Ai denotes assignment, Xi is the locked baseline co-
+cruitment. They are scientific assumptions, not administrative
+                                                                                 variate vector, uik is a participant-level random effect, vsite(i),k
+details, because they determine the population to which an
+                                                                                 is a site-level effect, and β3k is the prespecified differential
+inference applies.
+                                                                                 change parameter for domain k. Equation (5) is illustrative;
+   The report does not select a dose, product, supplement, off-
+                                                                                 the final model family must match the scale and distribution
+label medicine, or invasive procedure. Such selection would
+                                                                                 of each endpoint. Its key feature is that treatment-by-time is
+require candidate-specific pharmacology, toxicology, interac-
+                                                                                 prespecified rather than inferred from a selected before-after
+tion, manufacturing, clinical, ethics, and regulatory review.
+                                                                                 comparison.
+STABLE-AGE instead accepts a versioned intervention de-                             For the locked composite, the principal contrast is
+scription a, a matched control c, and a protocol stating
+what concomitant care, rescue treatment, adherence support,                              ∆B (T ) = E[ri (T ) | Ai = 1] − E[ri (T ) | Ai = 0],             (6)
+and discontinuation conditions are permitted. This preserves
+                                                                                 with ri (T ) defined in Equation (4). Equation (6) is reported
+clinical equipoise and prevents the general framework from
+                                                                                 with its uncertainty, the component-domain estimates, and all
+becoming disguised treatment advice.
+                                                                                 safety outcomes. It does not make the composite a replacement
+B. Sampling, randomization, and endpoint freezing                                for function or clinical events.
+
+   At baseline, each participant receives a versioned phenotype                  C. Safety, function, and clinical-event follow-up
+record that includes the protocol-defined eligibility measures,                    Safety is a gate, not a utility weight. The study safety
+clinical history, medication record, exposure context, specimen                  plan must include adverse-event capture, clinically meaningful
+                                                            TABLE III
+              STABLE-AGE SCENARIO LADDER . A LATER SCENARIO ADDS EVIDENCE BUT DOES NOT ERASE LIMITS OF A FINITE STUDY.
+
+Scenario                Required evidence and controls                         Failure disqualifier                                Permissible conclusion
+S0: demographic re-     Verified age records, inclusion logic, censoring       Apparent plateau depends on unexamined              A conditional demographic pat-
+analysis                policy, competing-risk model, and sensitivity          age errors, population definition, or model         tern is described for the stated
+                        analyses.                                              choice.                                             data boundary.
+S1: assay calibration   Technical replicates, blinded duplicates, sample       Identity, repeatability, drift, or cross-platform   The assay is qualified for a
+                        swaps, batch/site controls, and predeclared qual-      agreement is inadequate.                            stated measurement purpose.
+                        ity thresholds.
+S2: randomized com-     Concealed allocation, comparator, outcome              Safety breach, protocol instability, unblind-       A bounded causal contrast is
+parative core           schedule, adherence records, blinded assays and        ing bias, or endpoint switching.                    estimated for enrolled partici-
+                        adjudication where feasible.                                                                               pants.
+S3: event extension     Complete event definitions, follow-up prove-           Informative attrition or care changes are ig-       Longer-horizon event associa-
+                        nance, loss-to-follow-up report, and competing-        nored.                                              tion or protocol-specified exten-
+                        risk analysis.                                                                                             sion evidence is reported.
+S4: external replica-   Frozen analysis, independent staff/site, prespec-      Interpretation depends on retuning analysis         Reproducibility support for the
+tion                    ified population differences, and full null-result     after seeing replication data.                      replicated boundary is obtained.
+                        reporting.
+
+
+
+laboratory monitoring, intervention-specific surveillance, func-                     One sensitivity approach uses stabilized inverse-probability
+tional deterioration checks, independent oversight, protocol-                     weights. Let Li (s) denote the locked baseline, outcome-
+defined pause or stopping conditions, and care-referral pro-                      history, health, and adherence covariates that predict retention
+cedures. The choice of monitoring depends on the candidate                        at visit s. Then
+intervention and must be evaluated by qualified clinicians,                                                 ∏︂     qs (1 | Ai )
+ethics boards, and regulators. Participants remain entitled to                                     Wi (t) =                         ,          (8)
+                                                                                                               qs (1 | Ai , Li (s))
+usual clinical care; research measurements do not substitute                                                        s≤t
+for diagnosis or management.                                                      where qs is the specified conditional probability of observed
+   Function is measured through a preregistered set of out-                       retention. Equation (8) is a model-based sensitivity tool, not a
+comes suited to the enrolled population and capable of blinded                    guarantee that missingness is solved. Its assumptions, weight
+or standardized collection when feasible. A function signal that                  diagnostics, alternative models, and departures from positivity
+is compatible with a biomarker direction is more informative                      must be reported.
+than a biomarker alone, but it remains finite and population-                        Survival selection receives a separate analysis. A partici-
+specific. Clinical events are retained in the protocol even when                  pant’s absence after death cannot be imputed as an ordinary
+the primary horizon cannot credibly estimate event differences.                   biomarker value. Event analyses must state the estimand,
+This prevents a short study from implying disease prevention                      competing-risk handling, censoring rule, and relation between
+simply because the intended clinical endpoint was omitted.                        survival and repeated measurement. The demographic S0
+   The safety-and-concordance gate can be stated as a logical                     analysis also cannot be used to infer the causal effect of S2
+rule,                                                                             treatment assignment. These separations protect against the
+      G = Isafety Iquality Itrajectory Iconcordance Ireplication ,       (7)      attractive but incorrect inference that observed later survivors
+                                                                                  demonstrate treatment-induced arrest of aging.
+where each indicator equals one only if its preregistered
+criterion is met. Equation (7) means that G = 0 whenever                            V. S YSTEMATICS , C ALIBRATION , AND D ECISION RULES
+a hard safety gate, assay-quality criterion, primary trajectory                      Before any participant-level result is interpreted, STABLE-
+rule, concordance rule, or replication requirement fails. It                      AGE executes a calibration and fault-injection campaign.
+intentionally prevents a high average biological score from                       Technical replicates establish repeatability. Blinded duplicate
+compensating for a serious adverse outcome or a failed repli-                     specimens test operator and laboratory agreement. Sample
+cation.                                                                           swaps test identity controls. Batch and site controls test
+                                                                                  whether a laboratory transition can imitate a biological change.
+D. Missing data, adherence, and survivor bias                                     Null analyses test whether a pipeline creates a treatment effect
+   Older populations and long studies can have hospitalization,                   when assignment is absent. Synthetic injections add a known
+changing care, frailty, inability to travel, withdrawal, death,                   batch shift, temporary acute illness, nonadherence, selective
+and assay failure. These processes may be affected by the                         dropout, or delayed follow-up so the analysis can be tested
+intervention or by the outcome, so deleting incomplete records                    for false reassurance.
+can create a false benefit or obscure harm. STABLE-AGE                               The point of these tests is not to create synthetic evidence
+requires visit provenance, reason-for-missingness coding, dis-                    of efficacy. They test the honesty of the measurement and
+continuation dates, intervention adherence, rescue care, assay                    analysis pipeline. If a known batch shift is reported as target
+failure logs, and event follow-up for all possible participants.                  engagement, if a null allocation produces a treatment benefit,
+or if selective dropout is hidden by complete-case analysis,        conflated with experimental proof for a candidate geroscience
+the system is not ready for a biological conclusion. Failed         intervention.
+calibration is an informative result that narrows the claim            Equity and external validity also require attention. A
+boundary.                                                           biomarker model calibrated in one ancestry, sex, age range,
+   Multiplicity must also be explicit. For m confirmatory           disease profile, socioeconomic context, or care setting may
+hypotheses with ordered p-values p(1) ≤ · · · ≤ p(m) , a simple     not transport to another. Recruitment and retention procedures
+family-wise step-down criterion compares                            may preferentially include healthier, more resourced people.
+                                 α                                  Medication access and monitoring capacity can affect apparent
+                      p(j) ≤                                (9)     safety. STABLE-AGE therefore reports population coverage,
+                             m−j+1
+                                                                    representation gaps, site context, data provenance, and the
+at step j under the prespecified procedure. Equation (9) is         limits on generalization rather than treating a statistically
+included to make the confirmatory family visible; an im-            adjusted estimate as universal.
+plementation must specify the hypotheses, alpha allocation,
+multiplicity method, and exploratory analyses before data lock.     VII. T HREATS TO VALIDITY AND R ESEARCH P RIORITIES
+It is not a substitute for well-chosen endpoints or external           The most immediate validity threat is outcome substitution.
+replication.                                                        A study may advertise a general anti-aging result after observ-
+   Table IV gives the progression rule. Each gate closes a          ing one selected clock or laboratory value. The countermeasure
+specific inferential dependency. This is more useful than a         is the locked endpoint hierarchy and component reporting in
+generic maturity score because it identifies whether the block-     Table II. A second threat is survivor bias, particularly when
+ing uncertainty is safety, measurement, causal comparison,          extreme-age demography is cited as biological evidence. The
+functional relevance, long-horizon events, or reproducibility.      countermeasure is to preserve the conditioning in Equation (1),
+A failed gate does not invalidate all upstream evidence; it         audit records, and keep S0 separate from the treatment com-
+restricts the language that evidence may support.                   parison.
+                                                                       A third threat is intervention complexity. A combination of
+  VI. R EPRODUCIBILITY, E THICS , AND I NTERPRETATION
+                                                                    diet, exercise, medication changes, monitoring, social support,
+                       S AFETY
+                                                                    and study attention can affect measured outcomes through
+   The reproducibility package includes the registered proto-       several pathways. A global result may be valuable, but it
+col, analysis plan, endpoint dictionary, intervention version,      cannot automatically be attributed to one biological target. The
+randomization method as permitted, consent and privacy con-         protocol must state the estimand: the effect of assignment to
+straints, assay specifications, sample-processing metadata, cal-    the complete strategy, the effect while adhering to it, or a
+ibration logs, laboratory and batch identifiers, code, container    specified component effect. Claims stronger than the design
+or software versions, all exclusions, missingness diagnostics,      can identify are prohibited.
+adverse-event summaries, and the distinction between confir-           A fourth threat is time-scale mismatch. Mechanistic signals
+matory and exploratory analyses. De-identified analysis-ready       may change in days or weeks, whereas disability, multi-
+data should be released where participant consent, privacy, and     morbidity, or mortality can require much longer observation
+governance permit. Where release is not possible, an access         and different sample structures. This does not make short
+process and an independent reproducibility audit plan should        studies futile. It makes their conclusion narrower: analytical
+be stated.                                                          calibration, target engagement, or a short-horizon trajectory
+   Every conclusion must also identify its evidence layer. An       comparison. Long-horizon outcomes require their own follow-
+observation is a measured value or event. A measurement             up design, event definitions, retention plan, and uncertainty
+inference states what a calibrated assay represents within its      reporting.
+scope. A causal estimate relies on its comparison design               Research priority should follow value of information. The
+and assumptions. A long-horizon extrapolation combines the          most valuable questions are those whose answers change a
+preceding layers with unobserved future conditions. The report      decision gate: whether a biomarker is sufficiently repeatable
+cannot turn a short-duration biomarker observation into a           and responsive; whether an intervention’s plausible harms ex-
+lifetime claim without clearly crossing these layers.               ceed its anticipated benefit; whether an observed change maps
+   Ethical interpretation is inseparable from design. Aging-        to function; whether retention depends on emerging health;
+related claims can be commercially and emotionally salient,         whether the effect persists after intervention discontinuation;
+especially for people with illness or fear of disability. A study   and whether an independent cohort reproduces the result. An
+should not imply that enrollment confers treatment, should          incremental gain in a selected clock has limited research value
+disclose uncertainty and alternatives to potential participants,    if it cannot change safety, function, causal interpretation, or
+and should maintain independent safety oversight. Research          replication readiness.
+communication must distinguish an intervention hypothesis
+from clinical availability. The NIA’s public discussion of                               VIII. D ISCUSSION
+healthy aging emphasizes that many factors affect health and           Can people stop aging? Current science does not support an
+function with age [10]; that public-health context should not be    affirmative answer. The question becomes more useful when
+                                                             TABLE IV
+D ECISION GATES FOR A BOUNDED CLAIM ABOUT AN AGING - RELATED TRAJECTORY. PASSING A GATE DOES NOT ESTABLISH THAT AGING HAS STOPPED .
+
+Gate                     Required evidence                               Failure disqualifier                             Permissible conclusion
+D0:   construct    and   Population, intervention, comparator, hori-     The phrase “aging” is undefined or the claim     A testable protocol exists.
+boundary                 zon, endpoint dictionary, safety plan, and      changes after data review.
+                         intended claim are locked.
+D1: measurement cred-    Identity checks, technical replicates, du-      Assay, site, batch, or sample effects are un-    A stated assay is credible for its
+ibility                  plicate specimens, calibration, drift assess-   resolved.                                        declared measurement purpose.
+                         ment, and source logs pass.
+D2: comparative causal   Allocation/comparator, adherence, miss-         Endpoint switching, unaddressed informa-         A bounded assignment contrast
+core                     ingness model, blinded procedures where         tive attrition, or loss of protocol integrity.   may be estimated.
+                         feasible, and complete outcome provenance
+                         are preserved.
+D3: health relevance     Functional or clinical measures are com-        Biomarker-only result, functional deteriora-     Target engagement plus limited
+                         patible with primary trajectory direction       tion, or clinically important safety concern.    health relevance is supported for
+                         and every safety gate remains satisfied.                                                         the stated horizon.
+D4: durability     and   Event extension, frozen analysis, indepen-      Retuned replication analysis, failed replica-    A reproducible, condition-specific
+replication              dent replication, and full null/harm report-    tion, or concealed adverse outcomes.             trajectory claim is supported.
+                         ing are available.
+
+
+
+transformed from a promise into a set of falsifiable, ethically                passes the gates, its resulting claim remains finite but becomes
+supervised measurements. An intervention can be investigated                   more useful and more trustworthy.
+for its effect on a specified biological process, a multidomain
+trajectory, a functional endpoint, or a clinical event pattern.                                            IX. C ONCLUSION
+Each claim needs the population, exposure, comparator, out-                       This four-stage research workflow concludes that human
+come, duration, and uncertainty to be visible. None should                     aging cannot currently be claimed to be stopped. A late-life
+be expanded into “aging has stopped” because a finite study                    mortality plateau is not equivalent to cessation of biological
+has not observed all future physiological, environmental, and                  change, and mechanism or biomarker results are not equivalent
+disease pathways.                                                              to health-span or lifespan proof. STABLE-AGE provides a
+   This conclusion is not pessimistic. It identifies a produc-                 design-only framework for a more scientific question: whether
+tive scientific path. Hallmarks research can guide mechanism                   a declared intervention changes a preregistered, multidomain
+hypotheses. Biomarker science can improve measurement and                      aging-related trajectory for a specified population and horizon
+trial efficiency. Randomized comparative studies can estimate                  while meeting noncompensatory safety, measurement, func-
+bounded causal effects. Functional and clinical outcomes                       tional, clinical, and replication requirements. It reports no
+can protect against surrogate optimism. Event extensions can                   experiment or therapeutic result. Its value is to make future
+examine durability. Replication can test whether an apparent                   evidence auditable, to prevent surrogate overclaiming, and to
+effect is robust. The ladder is demanding because public claims                define the conditions under which a bounded causal conclusion
+in this area are consequential, but it turns unknowns into                     could be justified.
+experiments instead of leaving them as rhetorical possibilities.                                       A PPENDIX A
+   The framework also clarifies how to describe exceptional-                               M INIMAL STABLE-AGE RUN M ANIFEST
+age demography. A carefully verified hazard plateau, if repro-                    Each future execution records: protocol and consent ver-
+duced under stated assumptions, is an interesting observation                  sions; eligibility and exclusion rules; intervention and com-
+about mortality among survivors. It should stimulate work on                   parator definitions; randomization and concealment method;
+heterogeneity, resilience, record validation, and the relation                 site, visit, and specimen schedule; assay and calibration spec-
+between demographic risk and biological state. It should not                   ifications; endpoint dictionary and direction rules; composite
+be used to infer that a person’s aging rate is zero, that health               weights; safety monitoring and stop rules; adherence, rescue-
+deterioration is absent, or that a therapy has been discovered.                care, and discontinuation policy; event definitions; missingness
+STABLE-AGE maintains this distinction by design rather than                    and competing-risk plan; analysis code and environment; data-
+by a disclaimer after results are known.                                       access conditions; all deviations; all adverse events; all exclu-
+   For translation, the next credible advance is not a universal               sions; null and synthetic-injection tests; replication protocol;
+biological-age number or a dramatic longevity promise. It is a                 and an explicit statement that the run cannot certify permanent
+transparent study that can fail cleanly: a candidate intervention              cessation of human aging.
+with a measured exposure, a comparator, calibrated assays,
+a frozen endpoint hierarchy, safety oversight, a plan for                                                    A PPENDIX B
+missingness and survivor selection, and a replication boundary.                                         P ROTOCOL C HECKLIST
+If its result is null, harmful, discordant, or nonreplicable, the                Before data collection, freeze the construct, population,
+research program learns which dependency remains open. If it                   horizon, intervention boundary, comparator, endpoints, and
+safety plan. Before unblinding, verify assay identity, repli-
+cates, batch controls, duplicate specimens, calibration rules,
+missingness provenance, and analysis code. During interpre-
+tation, report every component domain, adverse event, loss
+to follow-up, protocol deviation, and exploratory analysis.
+Before communication, state whether the conclusion is an
+observation, measurement inference, causal estimate, or long-
+horizon extrapolation; do not use permanent, universal, or
+immortalizing language for a finite study.
+                               R EFERENCES
+ [1] C. López-Otín, M. A. Blasco, L. Partridge, M. Serrano, and G. Kroemer,
+     “The hallmarks of aging,” Cell, vol. 153, no. 6, pp. 1194–1217, 2013,
+     doi: 10.1016/j.cell.2013.05.039.
+ [2] C. López-Otín, M. A. Blasco, L. Partridge, M. Serrano, and G. Kroemer,
+     “Hallmarks of aging: An expanding universe,” Cell, vol. 186, no. 2, pp.
+     243–278, 2023, doi: 10.1016/j.cell.2022.11.001.
+ [3] E. Barbi et al., “The plateau of human mortality: Demography of
+     longevity pioneers,” Science, vol. 360, no. 6396, pp. 1459–1461, 2018,
+     doi: 10.1126/science.aat3119.
+ [4] S. Horvath, “DNA methylation age of human tissues and cell types,”
+     Genome Biology, vol. 14, Art. R115, 2013, doi: 10.1186/gb-2013-14-
+     10-r115.
+ [5] M. E. Levine et al., “An epigenetic biomarker of aging for lifespan and
+     healthspan,” Aging, vol. 10, no. 4, pp. 573–591, 2018, doi: 10.18632/ag-
+     ing.101414.
+ [6] W. E. Kraus et al., “2 years of calorie restriction and cardiometabolic
+     risk (CALERIE): Exploratory outcomes of a multicentre, phase 2,
+     randomised controlled trial,” The Lancet Diabetes & Endocrinology, vol.
+     7, no. 9, pp. 673–683, 2019, doi: 10.1016/S2213-8587(19)30151-2.
+ [7] D. W. Belsky et al., “Caloric restriction slows pace of biological
+     aging in healthy adults,” Nature Aging, vol. 3, pp. 248–257, 2023, doi:
+     10.1038/s43587-022-00357-y.
+ [8] J. B. Mannick et al., “mTOR inhibition improves immune function in the
+     elderly,” Science Translational Medicine, vol. 6, no. 268, Art. 268ra179,
+     2014, doi: 10.1126/scitranslmed.3009892.
+ [9] J. N. Justice et al., “Senolytics in idiopathic pulmonary fibrosis: Results
+     from a first-in-human, open-label, pilot study,” EBioMedicine, vol. 40,
+     pp. 554–563, 2019, doi: 10.1016/j.ebiom.2018.12.052.
+[10] National Institute on Aging, “What do we know about healthy
+     aging?” U.S. National Institutes of Health, accessed Sep. 2,
+     2026. [Online]. Available: https://www.nia.nih.gov/health/healthy-aging/
+     what-do-we-know-about-healthy-aging
+

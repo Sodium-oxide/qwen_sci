@@ -1,0 +1,36 @@
+{
+  "schema_version":"idea_result_v5",
+  "project_id":"neur_8_hda",
+  "topic":"Why are most people right-handed?",
+  "survey_binding":{"survey_run_id":"survey-neur8-001","manifest":"../survey/survey_manifest.json","eligible_gap_ids":["G1","G2","G3","G4","G5","G6","G7"]},
+  "primary_direction":{
+    "id":"DCCEM-001",
+    "title":"Developmental Canalization and Context Expression Model",
+    "root_mechanism":"A distributed polygenic and rare-variant liability influences neurodevelopmental lateralization; early developmental conditions shape the latent motor state; task and cultural environments transform that state into preference, performance, and writing-hand phenotypes.",
+    "target_gap_ids":["G1","G2","G3","G4","G5","G6","G7"],
+    "evidence_anchor_ids":["E1","E2","E3","E4","E5","E6","E7","E8","E9","E10"],
+    "intervention_type":"longitudinal observational multimodal study with preregistered causal-structure tests",
+    "falsifiable_conditions":["Early latent lateralization does not predict later phenotype out of sample.","Genetic terms fail replication or add no variance after developmental and family covariates.","Culture shifts performance as much as preference, contradicting the expression-layer prediction.","Brain-asymmetry mediation fails across sessions or populations."],
+    "feasibility":"high for existing-cohort harmonization and non-invasive follow-up; moderate for new longitudinal imaging and rare-variant sampling",
+    "scientific_value":"high"
+  },
+  "competitive_directions":[
+    {"id":"GWAS-ONLY","title":"Expanded association scan for handedness","decision":"component","reason":"strong for locus discovery but insufficient for developmental directionality and environment"},
+    {"id":"BRAIN-LOCAL","title":"Single-region cortical localization","decision":"reject","reason":"distributed and heterogeneous imaging evidence cannot support one location"},
+    {"id":"CULTURE-ONLY","title":"Task instruction and cultural pressure model","decision":"component","reason":"explains expression and forced switching but not inherited developmental liability"},
+    {"id":"EVOLUTION-RATIO","title":"Frequency-dependent population model","decision":"component","reason":"addresses majority stability but needs individual developmental mediators"}
+  ],
+  "rejected_directions":[
+    {"id":"ONE-GENE","reason":"incompatible with polygenic GWAS, small rare-variant contribution, and twin evidence"},
+    {"id":"ONE-REGION","reason":"unfalsifiable as a universal localization claim and inconsistent with distributed brain asymmetry"}
+  ],
+  "selection_audit":{"novelty":0.87,"mechanism_clarity":0.91,"falsifiability":0.94,"evidence_alignment":0.96,"implementation_feasibility":0.82,"population_explanatory_value":0.9},
+  "evolution_checkpoints":[
+    {"checkpoint":"C1","change":"binary right-versus-left phenotype -> preference, performance, writing-hand, and latent-state decomposition","reason":"addresses G1 and prevents measurement conflation"},
+    {"checkpoint":"C2","change":"locus list -> polygenic and rare-variant developmental liability","reason":"aligns with E2, E4, and E8 and addresses G2-G3"},
+    {"checkpoint":"C3","change":"adult association -> longitudinal genotype-brain-performance-preference model","reason":"addresses G4-G6"},
+    {"checkpoint":"C4","change":"culture as competing explanation -> context expression moderator","reason":"tests whether environment changes latent performance or only reported preference and addresses G5-G7"}
+  ],
+  "status":"SELECTED_PRIMARY_DIRECTION",
+  "observed_results":[]
+}

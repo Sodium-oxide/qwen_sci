@@ -1,0 +1,310 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{What Is Addiction and How Does It Work? A Mechanism and Memory-Control Atlas for Relapse and Recovery}
+
+\author{\IEEEauthorblockN{Four-Agent Research Pipeline}
+\IEEEauthorblockA{Survey--Idea--ExperimentDesign--Author Workflow\\
+Research proposal; no experiments executed}}
+
+\maketitle
+
+\begin{abstract}
+Addiction is often described either as a failure of willpower or as a single dopamine abnormality. Neither description captures the dynamic interaction among reward learning, incentive salience, habit formation, withdrawal and stress, executive control, memory-driven cues, genetics, development, and environment. This paper proposes the Addiction Mechanism and Memory-Control Atlas (AMMCA), a design-first framework for determining which mechanism is active in a person and episode, how it changes over time, and which intervention could target it without globally suppressing motivation or agency. The framework separates wanting from liking, cue reactivity from subjective craving, behavioral expression from recollection, and probabilistic genetic and environmental risk from deterministic labeling. It formalizes a longitudinal state-space model, mechanism-specific behavioral endpoints, memory and relapse measures, causal contrasts, fairness calibration, and recovery outcomes. A staged protocol combines naturalistic and clinically approved observations with outcome devaluation, cue, habit, stress, control, and treatment-response tasks. The strongest planned test is a held-out, mechanism-specific intervention comparison against safe standard-care and substance-label baselines. The proposal does not expose participants to drugs, induce withdrawal, edit memories, stimulate the brain, assign treatment, or claim a clinical result. Its central conclusion is nevertheless direct: addiction works as a learned, self-reinforcing control disorder in which drug-related cues acquire motivational power, reward and stress systems adapt, habits become less outcome-sensitive, and control is challenged by context and state. Recovery research should therefore target the active mechanism, not moral blame or a single substance label.
+\end{abstract}
+
+\begin{IEEEkeywords}
+addiction, substance use disorder, reward learning, incentive salience, habit, withdrawal, memory cues, relapse, causal inference, recovery
+\end{IEEEkeywords}
+
+\section{Introduction}
+The question ``What is addiction and how does it work?'' is both scientific and social. A moralized answer treats compulsive use as a voluntary failure that should disappear with sufficient intention. A reductionist answer treats addiction as a single dopamine disorder. Both approaches obscure why people continue use despite harm, why cues can trigger craving after years of abstinence, why withdrawal can motivate drug seeking for relief, why adolescents and adults respond differently, and why treatment works for some people but not others.
+
+The National Institute on Drug Abuse (NIDA) defines addiction as a complex disease in which repeated drug use changes the brain and makes quitting difficult, including for people who want to stop \cite{NIDAAddiction,NIDABrain}. The definition is compatible with a strong mechanistic research program. Addiction can be studied as a time-dependent interaction among reward prediction, incentive salience, outcome value, habit persistence, withdrawal and negative affect, executive control, cue-memory reactivation, sleep and stress, genetic liability, and environment. The resulting phenotype is not one brain scan or one score; it is a trajectory across episodes, contexts, treatment, and recovery.
+
+The prompt combines this addiction question with a claim about reverse-engineering an artificial memory in a mouse. That result is relevant to the general idea that neural ensembles can causally influence memory-related behavior, but it is not evidence that addiction is an artificial memory, that a human memory has been uploaded, or that memory transplantation is a treatment for substance use disorder. This paper treats memory as one mechanism in addiction: learned drug-associated cues and contexts can reactivate motivational states and contribute to relapse, while cue behavior, neural activation, and subjective recollection remain distinct endpoints.
+
+This paper presents the Addiction Mechanism and Memory-Control Atlas (AMMCA), selected through the Survey and Idea stages of the four-agent workflow. AMMCA asks which mechanism is active in a given person and episode, whether that mechanism predicts held-out craving or relapse, and whether a targeted intervention changes the mechanism without suppressing general motivation, cognition, agency, or quality of life. The goal is not to make the field cautious by default. It is to make a stronger claim possible: a treatment mechanism should be called effective when a declared process changes selectively and the clinical trajectory improves under independent validation.
+
+The contributions are fourfold. First, we define a multi-process addiction phenotype that separates wanting, liking, habit, withdrawal, control, cue memory, behavior, and subjective report. Second, we propose a longitudinal state-space model that connects these processes to genetic, developmental, treatment, and environmental state. Third, we define causal and fairness gates for mechanism-specific recovery matching. Fourth, we establish conditional conclusions that distinguish predictive access, proximal cue markers, causal mechanism, and clinically useful recovery. The full artifact is a design-only proposal: no substance exposure, withdrawal induction, neural manipulation, memory editing, treatment assignment, or relapse outcome was executed.
+
+\section{Background, Survey, and Research Gap}
+\subsection{Addiction as a chronic brain and behavior disorder}
+Addiction is characterized by compulsive seeking or use, continued use despite harmful consequences, impaired control, craving, tolerance, withdrawal, and relapse vulnerability. These features can coexist in different combinations and change over time. A person may have strong cue-triggered wanting but low subjective liking, or may use to avoid withdrawal rather than to obtain euphoria. Treatment, housing, stress, pain, sleep, social support, and availability can alter the same person's trajectory.
+
+NIDA emphasizes that addiction is a complex disease and that quitting often requires more than good intentions or willpower \cite{NIDAAddiction}. This is not a claim that agency is absent. It is a claim that the conditions under which agency operates have been altered by learning, neuroadaptation, stress, and environment. A scientifically useful model must therefore explain both compulsive behavior and the capacity for recovery, without treating a diagnosis as a fixed identity.
+
+\subsection{Drug action and the reward-control system}
+Drugs interfere with neuronal signaling through receptors, transporters, neurotransmitter release, and network interactions \cite{NIDABrain}. NIDA describes three interacting circuit families. The basal ganglia contribute to motivation, reward, and habit formation. The extended amygdala contributes to stress, anxiety, irritability, and unease during withdrawal. The prefrontal cortex contributes to planning, decision making, problem solving, and self-control \cite{NIDABrain,KoobVolkow2016}. Repeated exposure shifts the balance among these systems.
+
+The common shorthand that ``dopamine causes pleasure'' is inadequate. Dopamine is central to reinforcement learning and the assignment of motivational significance, but pleasure, wanting, learning, habit, and decision control are not interchangeable \cite{BerridgeRobinson2016}. Large drug-induced signals can teach the brain to prioritize drug-associated actions and contexts. With repeated exposure, the reward system adapts, natural rewards may become less salient, and tolerance can increase. A reward-circuit signal is therefore a candidate teaching and motivation mechanism, not a complete diagnosis.
+
+\subsection{Learning, memory, and cue-driven relapse}
+Addiction is partly a memory problem. Drug effects become associated with locations, people, paraphernalia, internal states, actions, and temporal sequences. Later exposure to these cues can trigger craving and seeking even when the drug is absent. The learned association can persist through abstinence and return through renewal, reinstatement, or spontaneous recovery \cite{EverittRobbins2005,HymanMalenkaNestler2006}. Extinction may reduce the expression of an association without erasing every underlying learning trace.
+
+Memory in this context must be decomposed. Cue identity, expected reward, action value, temporal context, affective state, and confidence can be measured separately. A cue-induced physiological response is not identical to conscious recollection. A mouse's freezing or approach response is not an independently verified human craving episode. The artificial-memory work referenced by the prompt is therefore used only as a bounded motivation for causal memory science. AMMCA asks whether a drug-associated cue state predicts and causally influences relapse-related behavior; it does not call that state a transplanted memory.
+
+\subsection{Wanting, liking, and incentive sensitization}
+Incentive-sensitization theory distinguishes wanting from liking. Repeated drug exposure can increase the motivational pull of drug-associated cues even when the hedonic value of the drug does not increase proportionally \cite{RobinsonBerridge2008}. This distinction explains why a person may report intense craving while anticipating little pleasure, and why a cue can command attention or action before conscious deliberation.
+
+The theory produces testable predictions. Outcome devaluation should reduce goal-directed pursuit more than sensitized cue-driven pursuit. Progressive response cost should reveal motivational vigor. Cue exposure should alter wanting and action selection, while liking may change differently. Stress and withdrawal can amplify wanting for relief. AMMCA uses these dissociations rather than collapsing them into a general reward score.
+
+\subsection{Habit and executive control}
+Repeated reinforcement can shift behavior from goal-directed action toward stimulus-response habit. Habits are not inherently pathological; they make routine behavior efficient. In addiction, however, behavior may become less sensitive to outcome devaluation and more persistent when consequences are harmful \cite{EverittRobbins2005}. The prefrontal system must manage competing short-term and long-term values, delayed consequences, stress, and social context.
+
+Executive control is not a constant trait. Sleep loss, pain, intoxication, withdrawal, trauma, depression, and environmental scarcity can reduce available control. A control failure in one context should not be treated as evidence that a person lacks agency in every context. The proposed design measures response inhibition, delay discounting, planning, and context-specific choice while retaining patient-defined goals.
+
+\subsection{Withdrawal, stress, and negative reinforcement}
+After the acute drug effect fades, withdrawal can produce anxiety, irritability, dysphoria, sleep disturbance, pain, and autonomic discomfort. NIDA describes the extended amygdala as a system involved in stressful withdrawal feelings that can motivate drug seeking for temporary relief rather than euphoria \cite{NIDABrain}. This creates a negative-reinforcement loop: drug use becomes a rapid way to escape an aversive state, which strengthens future use under similar states.
+
+Withdrawal is not a single binary event. Acute intoxication, acute withdrawal, post-acute symptoms, craving, stress reactivity, and long-term relapse vulnerability have different time courses. A design that samples only one clinic visit cannot distinguish them. AMMCA models sleep, pain, stress, mood, and physiological arousal as time-varying moderators and preserves the distinction between pharmacological withdrawal and social or environmental distress.
+
+\subsection{Genetics, development, and environment}
+Addiction risk is probabilistic. Genetic variation can influence reward sensitivity, impulsivity, stress responsivity, metabolism, and treatment response, while environment influences availability, trauma, peer exposure, housing, poverty, policy, social support, and access to care \cite{KreekNielsenButelmanLaForge2005,VolkowKoobMcLellan2016}. Adolescence can increase vulnerability because control systems and social learning continue to develop \cite{ChambersTaylorPotenza2003}. Genetic and environmental effects are not independent fixed labels; they interact over development.
+
+The research consequence is important. A genetic score should not be used as destiny, nor should an environmental exposure become a permanent risk identity. Models must be calibrated across ancestry, clinic, socioeconomic context, and treatment access. Fairness is part of scientific validity: a relapse predictor that succeeds by encoding unequal access to care is not a mechanism model and should not be deployed without correction and review.
+
+\subsection{Treatment and recovery}
+Addiction is treatable. Medications can reduce withdrawal or craving for some disorders; behavioral therapies can change cue contexts, reinforcement contingencies, coping, and control; social support, harm reduction, and recovery services can alter exposure and opportunity \cite{NIDAAddiction,VolkowKoobMcLellan2016}. A treatment may work by stabilizing physiology, reducing cue salience, restoring goal-directed control, improving sleep, or changing environment.
+
+Relapse is not proof of moral failure or treatment impossibility. It is an outcome that can reveal which mechanisms remain active and which support conditions are missing. Recovery should be measured by patient-defined goals, use reduction or abstinence where appropriate, treatment retention, quality of life, safety, social function, and agency. AMMCA treats these as outcomes rather than assuming that one abstinence indicator exhausts recovery.
+
+\subsection{Survey gap ledger}
+The Survey Agent accepted seven high-confidence gaps. G1 is the lack of a longitudinal model that separates reward learning, wanting, liking, habit, withdrawal, executive control, and cue-memory reactivation. G2 concerns wanting versus liking, subjective craving, arousal, and motor vigor. G3 concerns the causal role of cue-memory representations across context and time. G4 concerns interactions among withdrawal, stress, sleep, pain, and negative reinforcement. G5 concerns gene-by-development-by-environment interaction. G6 concerns calibrated multimodal prediction of treatment response and relapse. G7 concerns selective memory or control manipulation versus global motivational suppression.
+
+Two candidate gaps were retained rather than promoted to established facts: whether a dynamic addiction control-balance state improves relapse prediction beyond static severity, and whether intervention targets can be chosen from the dominant mechanism rather than the substance label. The evidence registry and admissible interpretations are summarized in Table~\ref{tab:evidence}.
+
+\begin{table}[t]
+\caption{Evidence registry and admissible interpretation}
+\label{tab:evidence}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{p{0.12\columnwidth}p{0.36\columnwidth}p{0.40\columnwidth}}
+\toprule
+Sources & Evidence family & Interpretation permitted in AMMCA \\
+\midrule
+E1,E2 & NIDA definition and brain science & Addiction is a complex disease involving persistent changes in circuits, behavior, and control. \\
+E3,E4 & Neurocircuitry and learning & Reward, stress, habit, and control interact over time. \\
+E5 & Incentive salience & Wanting and liking are separable motivational processes. \\
+E6 & Cue and habit mechanisms & Drug-associated cues can guide relapse-related seeking. \\
+E7,E8 & Genetics and development & Risk is probabilistic and interactive with environment. \\
+E9 & Treatment and recovery & Treatment exists, but response and recovery are heterogeneous. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Research Questions and Planned Contributions}
+The primary question is: how do reward learning, incentive salience, stress and withdrawal, executive control, memory-driven cues, and genetic/environmental risk interact over time to produce compulsive use and relapse, and which mechanisms can be measured and safely modified?
+
+The question is decomposed into five tests:
+\begin{enumerate}
+\item Does a dynamic mechanism representation predict held-out craving and relapse better than a static severity score or dopamine-only model?
+\item Can wanting, liking, habit persistence, withdrawal relief, control, and cue-memory reactivation be separated beyond arousal, sleep, pain, medication, and recent use?
+\item Do cue-memory measures generalize across contexts and explain relapse beyond recent use and self-reported craving?
+\item Can a mechanism-specific intervention change a target process while preserving general reward, cognition, mood, agency, and non-target behavior?
+\item Can gene-environment and developmental features improve individualized recovery matching without discriminatory or deterministic risk labeling?
+\end{enumerate}
+
+The planned output is an auditable atlas rather than one risk number. It records the mechanism phenotype, context, intervention, target endpoint, non-target endpoints, uncertainty, fairness calibration, and patient-defined recovery outcome. It can support clinical research, prevention, and computational neuroscience while refusing to make a high-stakes decision without human review.
+
+\section{Idea Source Checkpoints and Direction Selection Audit}
+The Idea Agent explored four component routes. R1 proposed an addiction control-balance state space. R2 proposed a cue-memory and relapse atlas. R3 proposed a developmental gene-environment model. R4 proposed mechanism-specific recovery matching. R5 combined them as AMMCA.
+
+R1 provides a coherent computational representation but could remain abstract. R2 gives a direct test of memory-driven relapse but could mistake cue reactivity for subjective craving. R3 captures etiological complexity but risks turning probabilistic risk into a static label. R4 is clinically attractive but can optimize a proxy or suppress motivation globally. AMMCA was selected because it retains the strongest component of each route while adding held-out context tests, causal controls, fairness analysis, and clinical safety gates.
+
+The search rejected dopamine-only addiction because it ignores stress, withdrawal, habit, executive control, memory, and environment. It rejected artificial-memory-as-cure because a constrained memory manipulation in a mouse is not a human addiction treatment. It rejected static genetic destiny because a probabilistic gene-environment interaction cannot justify deterministic classification. These rejections sharpen the scientific target rather than narrowing it: the selected atlas can discover that one mechanism dominates in one episode and another dominates later.
+
+The evolution checkpoints were: (N0) replace moral failure with a longitudinal brain-behavior-environment phenotype; (N1) separate wanting, liking, habit, withdrawal, control, and memory; (N2) add held-out context and treatment tests; and (N3) add individual trajectories, fairness, autonomy, and mechanism-specific safety. This trajectory turns a broad question into a testable program.
+
+\section{Problem Definition, Assumptions, and Hypotheses}
+\subsection{Definitions}
+AMMCA defines addiction as a declared, longitudinal phenotype involving persistent or recurrent use-related behavior, impaired control, craving or cue-driven motivation, harmful consequences, and relapse vulnerability in a specified substance, context, and care setting. The definition is compatible with clinical diagnosis but does not replace it. A mechanism state is a latent construct inferred from multiple indicators; it is not a brain region or biomarker in isolation.
+
+The mechanism vector contains reward prediction $R$, wanting $W$, liking $L$, habit persistence $H$, withdrawal and negative affect $N$, executive control $C$, cue-memory reactivation $P$, environmental opportunity $E$, and physiological state $S$. The outcome vector includes choice, craving, use, relapse, treatment retention, quality of life, safety, and patient-defined recovery. Subjective craving and observed seeking are related but not interchangeable.
+
+\subsection{Assumptions}
+The design assumes that ethically approved clinical or naturalistic observations can be collected repeatedly without requiring a person to relapse. It assumes that cue, habit, control, stress, sleep, pain, medication, treatment, and environmental opportunity can be measured sufficiently to test competing explanations. It assumes that participant and clinic holdouts are feasible. It does not assume that neural activation equals memory content, that a genetic score determines behavior, that a substance label identifies a mechanism, or that abstinence is the only meaningful recovery endpoint.
+
+\subsection{Hypotheses}
+H1 states that the dynamic decomposed model outperforms static severity and dopamine-only models on held-out craving and relapse. H2 states that outcome devaluation, response cost, cue exposure, withdrawal relief, and inhibition tasks reveal separable components of wanting, liking, habit, negative reinforcement, and control. H3 states that cue-memory reactivation predicts relapse across novel contexts only when it preserves context and outcome structure beyond recent use and arousal. H4 states that mechanism-specific matching improves a declared recovery endpoint relative to safe standard-care or substance-label matching while preserving non-target reward and agency. H5 states that gene-environment and developmental moderators improve calibration for some subgroups but will not produce deterministic individual predictions. H6 states that confidence and self-reported craving can rise without corresponding behavioral or clinical improvement and must not be treated as sufficient evidence.
+
+\section{Study Design and Methods}
+\subsection{D0: Clinical safety, governance, and preregistration}
+Before recruitment, preregister the population, substance and severity strata, diagnostic instrument, inclusion and exclusion criteria, follow-up duration, relapse definition, craving schedule, treatment status, genetic variables, fairness metrics, missing-data process, and adverse-event pathway. Controlled exposure, withdrawal monitoring, pharmacological treatment, neuroimaging, and neuromodulation require separate clinical and institutional approvals. This paper does not prescribe substance administration or withdrawal induction.
+
+Consent must explain that participation is not treatment, refusal has no effect on care, and neural, genetic, location, smartphone, and treatment data can reveal sensitive information. Models cannot be used to deny care, assign blame, or impose an unreviewed high-stakes decision. Crisis response, overdose safety, referral, and treatment access must be available.
+
+\subsection{D1: Longitudinal mechanism phenotype}
+Use repeated observations spanning baseline, naturally occurring use where ethically observed, treatment or recovery, high-risk cues, and follow-up. Preferred data include validated assessments, ecological momentary assessment, behavioral tasks, sleep and stress measures, medication and treatment records, and optional neural or physiological recordings. Do not require an individual to relapse for research value.
+
+The mechanism state at time $t$ is
+\begin{equation}
+x_t=[R_t,W_t,L_t,H_t,N_t,C_t,P_t,E_t,S_t]^{\top},
+\label{eq:mechanism_state}
+\end{equation}
+where $R_t$ is reward prediction, $W_t$ wanting, $L_t$ liking, $H_t$ habit persistence, $N_t$ withdrawal and negative affect, $C_t$ executive control, $P_t$ cue-memory reactivation, $E_t$ environmental opportunity, and $S_t$ physiological state. The variables are inferred from multiple indicators and carry uncertainty.
+
+Drug-associated memory is represented by cue identity, context, expected outcome, temporal history, affect, confidence, and action choice. It is not defined as a subjective autobiographical memory unless that endpoint is separately measured. The animal artificial-memory example in the prompt motivates causal memory work but cannot be promoted to human treatment evidence.
+
+\subsection{D2: Reward, wanting, liking, habit, and control tasks}
+Use outcome devaluation and omission for goal-directed value; progressive response cost and cue-triggered choice for incentive salience; contingency degradation for stimulus-response habit; stress and withdrawal symptom measures for negative reinforcement; response inhibition, delay discounting, and planning for executive control; and cue-reactivity tasks for learned context. Matched non-drug rewards, neutral cues, motor controls, and arousal controls are required.
+
+Primary behavioral endpoints include choice probability, response vigor, latency, persistence after devaluation, cue-induced craving, subjective wanting, subjective liking, withdrawal relief seeking, response inhibition, general reward engagement, and social function. A high cue-wanting score with low liking is an informative dissociation, not a contradiction.
+
+\subsection{D3: Memory and relapse endpoints}
+Measure cue-memory reactivation across multiple contexts and sessions. Include extinction, renewal, stress-related reinstatement, treatment context, and delayed follow-up where approved. Relapse is defined prospectively for the declared substance and care setting, with use-day, heavy-use, treatment-return, or clinically validated event definitions reported separately. Time-to-event and recurrent-event models are preregistered.
+
+The dynamic transition is
+\begin{equation}
+x_{i,t+1}=A_{c_{i,t}}x_{i,t}+B u_{i,t}+G g_i+H e_{i,t}+\epsilon_{i,t},
+\label{eq:state_transition}
+\end{equation}
+where $c_{i,t}$ is context, $u_{i,t}$ contains treatment or naturally observed events, $g_i$ represents stable genetic or biological features, $e_{i,t}$ represents environmental and social exposures, and $\epsilon_{i,t}$ is process uncertainty. The clinical and behavioral observation model is
+\begin{equation}
+Y_{i,t}=f(x_{i,t},d_{i,t},a_{i,t})+b_i+\nu_{i,t},
+\label{eq:outcome_model}
+\end{equation}
+where $d_{i,t}$ is drug or treatment exposure, $a_{i,t}$ is arousal, sleep, pain, medication, and acute-state measurement, $b_i$ is a person-specific baseline, and $\nu_{i,t}$ is observation noise.
+
+\subsection{D4: Neural, physiological, and environmental measures}
+Where approved, measure neural cue reactivity, frontostriatal and extended-amygdala network activity, autonomic responses, sleep, stress hormones, and treatment-relevant physiology. Neural signals are evaluated against behavior and subjective report rather than interpreted alone. Wearable and smartphone data require minimization, consent, access control, retention limits, and a plan for crisis signals.
+
+Genetic data are used only for preregistered probabilistic moderation analyses. Variant- or polygenic-level predictors must be ancestry-calibrated and tested for transportability. Environmental features can include housing stability, trauma and stress, social exposure, availability, transportation, policy, employment, and treatment access when consent permits. They are never turned into a deterministic risk label.
+
+\subsection{D5: Causal contrasts and intervention matching}
+The causal effect of an intervention $A_k$ on outcome $Y_j$ is
+\begin{equation}
+\tau_{k,j}=\mathbb{E}[Y_j\mid do(A_k=1),X]-\mathbb{E}[Y_j\mid do(A_k=0),X],
+\label{eq:causal_effect}
+\end{equation}
+where $X$ includes declared baseline, context, treatment, and safety variables. Candidate interventions can include evidence-based medication, behavioral therapy, contingency management, cue-context modification, sleep support, or approved neuromodulation. The present artifact selects none for clinical use.
+
+Mechanism-specific matching compares a model-selected component against safe standard-care and substance-label comparators. Promotion requires that the selected component changes the target mechanism, improves the declared clinical endpoint, and does not worsen non-target reward, cognition, mood, agency, overdose risk, or care access. A reduction in all motivation is not successful cue-memory treatment.
+
+\subsection{D6: Genetics, environment, fairness, and recovery}
+Fit hierarchical interaction models for gene-by-development-by-environment effects. Use participant- and clinic-held-out validation, calibration by clinical and demographic strata, and sensitivity analyses for missingness and unequal treatment access. Fairness metrics are selected according to the justified use; no single metric resolves every clinical tradeoff.
+
+Recovery outcomes include use reduction, abstinence where appropriate, treatment retention, craving burden, quality of life, safety events, social function, and patient-defined goals. The model retains successful coping episodes, non-response, and changes in support conditions. Relapse is not treated as moral failure.
+
+\subsection{D7: Decision rules and failure handling}
+A mechanism is promoted only if it has a declared definition and reliable indicators; predicts held-out behavior or clinical outcome beyond generic state and recent use; generalizes across sessions and settings; has a justified causal contrast; separates target and non-target outcomes; is calibrated and fair for its proposed use; and receives clinical and ethics approval.
+
+If a static severity score matches AMMCA, the dynamic model does not earn a complexity claim. If cue reactivity predicts craving but not relapse, it is a proximal marker rather than a complete relapse mechanism. If an intervention lowers drug seeking by suppressing all reward, it fails selectivity. If a genetic model loses calibration across ancestry or clinic, it is not deployable. Missing treatment records, unreliable exposure dates, acute intoxication, withdrawal danger, or crisis signals become `needs\_human\_input` and are routed for review.
+
+\begin{table}[t]
+\caption{AMMCA promotion gates}
+\label{tab:gates}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{p{0.22\columnwidth}p{0.57\columnwidth}}
+\toprule
+Gate & Required evidence \\
+\midrule
+Phenotype & Mechanism and clinical endpoint are defined before testing. \\
+Separation & Effect survives arousal, sleep, pain, medication, recent-use, and practice controls. \\
+Generalization & Result transfers across held-out sessions, contexts, participants, or clinics. \\
+Causality & Randomized or justified intervention contrast supports the direction. \\
+Selectivity & Target improves without global motivational, cognitive, affective, or agency suppression. \\
+Fairness and safety & Calibration, access, privacy, and adverse outcomes are acceptable. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Expected Outcome Branches and Conditional Conclusions}
+AMMCA is designed to produce informative branches rather than one addiction score. If the dynamic model outperforms static severity, the result supports a time-varying mechanism representation. If a static model performs equally well, the added complexity is not justified for that use. If mechanisms separate only during withdrawal or stress, the atlas identifies state-dependent control rather than a permanent trait.
+
+If cue-memory reactivation predicts craving but not relapse, it is a proximal motivational marker. If it predicts relapse across new contexts beyond recent use and arousal, it becomes a stronger candidate mechanism. If outcome devaluation rapidly changes seeking, goal-directed control remains important; if seeking persists under devaluation and high response cost, habit-like control is supported. If subjective wanting rises without liking, incentive salience is supported more directly than a pleasure explanation.
+
+If an intervention improves a declared endpoint while preserving non-target reward, cognition, mood, agency, and safety, it supports mechanism-specific recovery matching. If it reduces all reward or activity, it fails selectivity even if use declines. If it changes withdrawal but not cue-triggered relapse, it may be useful as a physiological stabilization component without solving cue memory. If it improves treatment retention or quality of life without immediate abstinence, that can still be a meaningful recovery outcome.
+
+A strong positive result would be a held-out longitudinal map in which a declared mechanism predicts a clinically relevant trajectory, a targeted intervention changes that mechanism, and an independent outcome improves without a non-target cost. Such a result would justify mechanism-specific treatment research. It would not make relapse perfectly predictable or eliminate the role of environment and social support.
+
+A strong negative result is also valuable. If cue and neural measures add no information beyond recent use and self-report, the field should not call them portable relapse engrams. If genetic moderation is unstable across ancestry or clinic, it should not guide care. If a dynamic model fails to generalize, it may still describe one dataset but not a deployable mechanism. These branches prevent a persuasive narrative from becoming an unsupported clinical label.
+
+The near-term answer is direct. Addiction works as a learned and neuroadapted control disorder. Drug effects teach the reward system that drug-linked actions and cues are important; repeated exposure changes reward sensitivity and habit; withdrawal and stress make use a route to relief; and prefrontal control must compete with these processes under changing context. Memory is one bridge through which the past controls the present, but it is not the whole disorder. Recovery is most likely to improve when treatment identifies and changes the active mechanism while preserving agency and access to care.
+
+\section{Risks, Limitations, and Human Review Requirements}
+\subsection{Scientific and technical risks}
+The largest risk is confounding. Intoxication, withdrawal, sleep loss, pain, stress, trauma, medication, social opportunity, treatment exposure, and device or clinic differences can all mimic or modify addiction mechanisms. Repeated craving questionnaires can create practice and demand effects. Neural cue reactivity can reflect arousal or motor preparation. These risks require counterbalancing, state controls, repeated measurement, participant and clinic holdouts, and preregistered missing-data rules.
+
+The memory interpretation has a specific risk. A model can decode a cue or predict a response without storing the underlying memory content. A stimulation policy can evoke a behavior without transferring an episode. A mouse behavior can demonstrate causal ensemble participation without validating human subjective craving. The protocol therefore measures cue identity, context, outcome expectation, temporal structure, behavior, confidence, and subjective report separately. A fluent explanation or high classifier accuracy is not called an addiction memory.
+
+Prediction can also cause harm. A relapse score may be treated as a verdict, change the treatment a person receives, or intensify surveillance in communities already subject to unequal care. Genetic and environmental variables can reproduce structural inequity rather than reveal biology. Calibration, subgroup performance, data minimization, access governance, patient control, and human clinical review are essential. AMMCA is a research framework, not an automated denial or triage system.
+
+\subsection{Clinical safety and ethics}
+Substance exposure and withdrawal induction can create overdose, seizure, cardiovascular, psychiatric, and other risks. They require specialist monitoring and are outside the present artifact. Participants need consent, stop rules, crisis response, overdose planning, referral, compensation, and the ability to withdraw without penalty. Recruitment must avoid coercion and must not make treatment access conditional on research participation.
+
+Memory or control manipulation raises additional concerns about identity, responsibility, agency, and consent. No intervention should be described as selective merely because a target behavior changes. Non-target reward, mood, cognition, neighboring memories, confidence, and felt agency must be measured. Any future neural modulation requires separate safety, institutional, and neuroethics review.
+
+\subsection{Human review and reproducibility}
+Before execution, addiction clinicians, statisticians, neuroscientists, community representatives, ethicists, and privacy experts should inspect the phenotype, power assumptions, relapse definition, handling of treatment access, genetic calibration, fairness metrics, and adverse-event plan. The data record should retain model versions, random seeds, fold assignments, protocol deviations, raw and processed measures, treatment dates, missingness, null results, and patient-defined goals. Failed batches or crisis-relevant records are preserved and marked `needs\_human\_input`.
+
+\section{Conclusion}
+Addiction is not best explained by weak character, a single neurotransmitter, or a single remembered event. It is a dynamic disorder of learning and control in which repeated drug exposure changes reward and stress systems, cues acquire motivational power, habits can become less sensitive to consequences, withdrawal can reinforce use for relief, and executive control is challenged by state and context. Genetic, developmental, social, and environmental conditions shape this process and the possibility of recovery.
+
+AMMCA turns that account into a cumulative research program. It defines a mechanism vector, tests wanting, liking, habit, withdrawal, control, and cue memory separately, follows trajectories across contexts, and applies causal, fairness, safety, and autonomy gates before promotion. The framework is ambitious: it seeks individualized mechanism-specific recovery matching and a selective understanding of memory-driven relapse. It is also precise about what would count as failure. A decoder is not a memory, a mouse behavior is not human subjective craving, a genetic risk is not destiny, and a reduction in all motivation is not a successful treatment.
+
+The proposal remains design-only and reports no treatment, memory edit, neural manipulation, or relapse result. Its scientific answer is nonetheless clear enough to guide the next experiment: addiction works when learned drug value and cue salience, neuroadapted reward and stress states, habit, and context repeatedly outcompete longer-term goals. Recovery research should measure which part of that competition is active, change it selectively, and keep the person's agency and future options visible.
+
+\appendices
+\section{Addiction Mechanism and Decision Rules Appendix}
+Table~\ref{tab:ontology} records the ontology that must be preserved when results are written. The fields may correlate, but no field substitutes for another.
+
+\begin{table}[h]
+\caption{Operational addiction mechanism ontology}
+\label{tab:ontology}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{p{0.25\columnwidth}p{0.56\columnwidth}}
+\toprule
+Field & Operational role \\
+\midrule
+Reward prediction & Expected value and prediction error for a reward or outcome. \\
+Wanting & Motivational pull and action vigor toward a cue or outcome. \\
+Liking & Experienced hedonic value, measured separately from wanting. \\
+Habit & Persistence under devaluation, omission, or altered outcome value. \\
+Withdrawal & Aversive physiological, affective, cognitive, and sleep state. \\
+Executive control & Inhibition, planning, delay, and context-sensitive choice. \\
+Cue memory & Cue, context, outcome, temporal history, and relation structure. \\
+Environment & Availability, stress, housing, social exposure, and care access. \\
+Recovery & Use, treatment retention, quality of life, safety, agency, and patient goals. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The decision hierarchy is: define the mechanism; measure it reliably; test held-out generalization; separate it from arousal, recent use, sleep, pain, medication, and practice; estimate a causal contrast; inspect target and non-target effects; evaluate calibration and fairness; then obtain clinical and ethics approval. The hierarchy does not authorize automatic treatment assignment.
+
+\section{Evidence Coverage and Review Appendix}
+The Survey-to-Author binding uses project identifier \texttt{neur\_5}, Survey run identifier \texttt{neur\_5-survey-001}, and project-context fingerprint \texttt{neur5-addiction-memory-context-v1}. Canonical upstream artifacts are the Survey evidence plan, gap ledger, Idea result, ExperimentDesign JSON, and Author handoff stored with this report. Accepted gaps are G1--G7; G8 and G9 remain candidate gaps requiring validation. The source registry is E1--E8.
+
+Claims about addiction definition and treatment are bounded by E1 and E9. Claims about brain circuits, reinforcement, stress, and control are bounded by E2--E4. Incentive salience claims are bounded by E5. Cue and habit claims are bounded by E6. Genetic and developmental claims are bounded by E7 and E8. The document status is \texttt{PROPOSAL\_NO\_OBSERVED\_RESULTS}; no substance exposure, withdrawal, neural manipulation, memory editing, treatment assignment, or relapse outcome was executed.
+
+\begin{thebibliography}{9}
+\bibitem{NIDAAddiction} National Institute on Drug Abuse, ``Addiction science,'' U.S. National Institutes of Health, accessed Sep. 1, 2026. [Online]. Available: \url{https://nida.nih.gov/research-topics/addiction-science}
+\bibitem{NIDABrain} National Institute on Drug Abuse, ``Drugs and the brain,'' in \textit{Drugs, Brains, and Behavior: The Science of Addiction}, July 2020. [Online]. Available: \url{https://nida.nih.gov/publications/drugs-brains-behavior-science-addiction/drugs-brain}
+\bibitem{KoobVolkow2016} G. F. Koob and N. D. Volkow, ``Neurobiology of addiction: A neurocircuitry analysis,'' \textit{The Lancet Psychiatry}, vol. 3, no. 8, pp. 760--773, 2016.
+\bibitem{BerridgeRobinson2016} K. C. Berridge and T. E. Robinson, ``Liking, wanting, and the incentive-sensitization theory of addiction,'' \textit{American Psychologist}, vol. 71, no. 8, pp. 670--679, 2016.
+\bibitem{EverittRobbins2005} B. J. Everitt and T. W. Robbins, ``Neural systems of reinforcement for drug addiction: From actions to habits to compulsion,'' \textit{Nature Neuroscience}, vol. 8, pp. 1481--1489, 2005.
+\bibitem{HymanMalenkaNestler2006} S. E. Hyman, R. C. Malenka, and E. J. Nestler, ``Neural mechanisms of addiction: The role of reward-related learning and memory,'' \textit{Annual Review of Neuroscience}, vol. 29, pp. 565--598, 2006.
+\bibitem{RobinsonBerridge2008} T. E. Robinson and K. C. Berridge, ``The incentive sensitization theory of addiction: Some current issues,'' \textit{Philosophical Transactions of the Royal Society B}, vol. 363, no. 1507, pp. 3137--3146, 2008.
+\bibitem{KreekNielsenButelmanLaForge2005} M. J. Kreek, D. A. Nielsen, E. R. Butelman, and K. S. LaForge, ``Genetic influences on impulsivity, risk taking, stress responsivity and vulnerability to drug abuse and addiction,'' \textit{Nature Neuroscience}, vol. 8, pp. 1450--1457, 2005.
+\bibitem{ChambersTaylorPotenza2003} R. A. Chambers, J. R. Taylor, and M. N. Potenza, ``Developmental neurocircuitry of motivation in adolescence: A critical period of addiction vulnerability,'' \textit{American Journal of Psychiatry}, vol. 160, no. 6, pp. 1041--1052, 2003.
+\bibitem{VolkowKoobMcLellan2016} N. D. Volkow, G. F. Koob, and A. T. McLellan, ``Neurobiologic advances from the brain disease model of addiction,'' \textit{New England Journal of Medicine}, vol. 374, pp. 363--371, 2016.
+\end{thebibliography}
+
+\end{document}

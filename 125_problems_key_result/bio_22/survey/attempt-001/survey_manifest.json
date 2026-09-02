@@ -1,0 +1,72 @@
+{
+  "artifacts": {
+    "claim_traceability": {
+      "path": "survey_claim_traceability.json",
+      "required": true,
+      "sha256": "92b0da4b318ff09132cb215a9c4de20fbfae81e61dbb3f652bd14f865ebbae83"
+    },
+    "evidence_plan": {
+      "path": "survey_evidence_plan.json",
+      "required": true,
+      "sha256": "54a9237081b7ffc7ca58c584797f1c3b91d3e9d243c077245febd0dbeba4c1ce"
+    },
+    "gap_candidates": {
+      "path": "survey_gap_candidates.json",
+      "required": false,
+      "sha256": "68805fc4d9faa66b615f2e32294fb08530e1950aaccef5fdee32d4231b320e1b"
+    },
+    "gap_coverage": {
+      "path": "survey_gap_coverage.json",
+      "required": false,
+      "sha256": "d11cc23be9732de1d9aa959cfe7168fd53c398421b76361abc95122cebf04a9b"
+    },
+    "gap_ledger": {
+      "path": "survey_gap_ledger.json",
+      "required": true,
+      "sha256": "161b5594ae11c46a44671af641fd853982054006970270eb983d9882e2bc8641"
+    },
+    "gap_triage": {
+      "path": "survey_gap_triage.json",
+      "required": false,
+      "sha256": "e261859063799fb0a007f022748ab83d6fa28f0c3f2caa69a49aef87ce92da17"
+    },
+    "idea_handoff": {
+      "path": "survey_idea_handoff.json",
+      "required": true,
+      "sha256": "71b9b6c3bc1a426a9134ac424a55823a8e239ecde55902dd277a7e0dcbdcebef"
+    },
+    "project_context": {
+      "path": "project_context.json",
+      "required": true,
+      "sha256": "59ec89252d792af809501b6013625fb0213ec50cc8fd93d32e3cb140d0329d07"
+    },
+    "survey_json": {
+      "path": "survey.json",
+      "required": true,
+      "sha256": "ca8f77ca264bf2e0437c7014df67085f746462fffa4ba1884651b7a7f37b86f4"
+    },
+    "survey_markdown": {
+      "path": "survey.md",
+      "required": true,
+      "sha256": "f102a5e3b7698918d2ed148f85d8be98b9bfc955713f2e807a2af4bed11ee7fd"
+    },
+    "survey_outline": {
+      "path": "survey_outline.json",
+      "required": false,
+      "sha256": "aee5c447dbf46cbbcb765d9129122615acec713968f2415b3eea68046dde5fce"
+    }
+  },
+  "base_dir": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/survey/attempt-001",
+  "completed_at": "2026-08-31T20:12:58Z",
+  "created_at": "2026-08-31T20:12:58Z",
+  "gap_ledger_schema_version": "survey_gap_ledger_v1",
+  "handoff_schema_version": "survey_idea_handoff_v1",
+  "manifest_fingerprint": "3cef2d51d5c6e62718727e5eeeaf17b534a65a29bba4619f45d77a9a38402b98",
+  "project_context_fingerprint": "505d0e72362e0dc977a30d3fee98024a0683e39f33e3e016e33f25a77cea200d",
+  "project_id": "sci_20260901_042802_922870_survey_001",
+  "schema_version": "survey_manifest_v1",
+  "status": "completed",
+  "survey_run_id": "20260901-042802-922870-survey-001",
+  "topic": "How are biomolecules organized in cells to function orderly and effectively? This project investigates the multiscale principles that organize proteins, nucleic acids, lipids, and carbohydrates in crowded cells. It focuses on the complementary roles of membrane-bounded organelles and biomolecular phase separation in controlling molecular localization, condensation, availability, and functional coordination. The study will synthesize mechanistic evidence from cryo-fluorescence microscopy and cryo-electron tomography to formulate testable, design-only research strategies for resolving nanoscale biomolecular organization across cellular phases. The workflow must remain computational and evidence-driven, with any proposed biological experiments explicitly marked NEED_HUMAN_INPUT for specialist feasibility and ethics review.",
+  "topic_fingerprint": "197a7826a2bcf8aa5c82796f3c1454a98031cc60bb0a6067754acc9f053fea00"
+}

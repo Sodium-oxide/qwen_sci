@@ -1,0 +1,22 @@
+{
+  "manifest_type":"survey_manifest",
+  "schema_version":"1.0",
+  "topic":"Will we soon see the end of monocultures like wheat, maize, rice, and soy?",
+  "scientific_reframe":"For production systems dominated by wheat, maize, rice, or soy, when do crop rotations, intercropping, varietal diversification, mixed farming, and neglected or underutilized crops improve food-supply stability and ecological services without unacceptable penalties in yield, income, nutrition, land use, water, or labor under climate and pest shocks?",
+  "stage_status":"completed",
+  "design_mode":"DESIGN_ONLY",
+  "source_registry":[
+    {"id":"fao_biodiversity","title":"Biodiversity","organization":"Food and Agriculture Organization of the United Nations","url":"https://www.fao.org/biodiversity/en/","verification":"browser_checked"},
+    {"id":"tilman_global_change_2001","title":"Forecasting agriculturally driven global environmental change","venue":"Science","doi":"10.1126/science.1057544","verification":"bibliographic_anchor_pending_online_check"},
+    {"id":"garibaldi_biodiversity_2017","title":"Farming approaches for greater biodiversity, livelihoods, and food security","venue":"Trends in Ecology and Evolution","doi":"10.1016/j.tree.2017.03.001","verification":"bibliographic_anchor_pending_online_check"},
+    {"id":"renard_tilman_2019","title":"National food production stabilized by crop diversity","venue":"Nature","doi":"10.1038/s41586-019-1316-y","verification":"bibliographic_anchor_pending_online_check"},
+    {"id":"tamburini_2020","title":"Agricultural diversification promotes multiple ecosystem services without compromising yield","venue":"Science Advances","doi":"10.1126/sciadv.aba1715","verification":"bibliographic_anchor_pending_online_check"},
+    {"id":"bullock_restoration_2011","title":"Restoration of ecosystem services and biodiversity","venue":"Trends in Ecology and Evolution","doi":"10.1016/j.tree.2011.06.011","verification":"bibliographic_anchor_pending_online_check"},
+    {"id":"plant_genetic_resources_treaty","title":"International Treaty on Plant Genetic Resources for Food and Agriculture","organization":"FAO","url":"https://www.fao.org/plant-treaty/en/","verification":"bibliographic_anchor_pending_online_check"}
+  ],
+  "paper_search":{"openalex":{"records":0,"status":"network_unavailable_connection_refused"},"anysearch":{"records":0,"status":"network_unavailable_connection_refused"}},
+  "browser_checks":{"fao_biodiversity":"browser_checked"},
+  "gaps":["mean yield versus tail-risk stability","field versus landscape versus food-system diversity","genetic diversity and pathogen adaptation","soil and pollinator mechanisms","neglected-crop seed and value chains","transition labor and machinery","nutrition and processing","land-use displacement","policy and adoption"],
+  "outputs":["survey.md","survey_manifest.json","survey_gap_ledger.json","survey_evidence_plan.json","survey_idea_handoff.json"],
+  "observed_results":[]
+}
