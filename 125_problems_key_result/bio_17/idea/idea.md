@@ -1,5 +1,0 @@
-# Idea: Human Torpor Safety Envelope
-
-Three routes were compared. A literature-only comparison of natural hibernators is descriptive and cannot establish human reversibility. Direct prolonged cooling of healthy volunteers is rejected as unethical. The selected route is a staged **Human Torpor Safety Envelope**: first validate closed-loop thermometabolic control in nonhuman translational models and in clinically indicated, short-duration temperature-management settings; only then consider tightly supervised micro-duration human feasibility work. The primary claim is not that humans can hibernate. It is that a protocol can test whether a bounded low-metabolic state remains physiologically reversible.
-
-The selected hypothesis is falsifiable: a closed-loop controller that supplies substrate and monitors perfusion, shivering, oxygen delivery, coagulation, electrolytes, and rewarming can reduce measured metabolic expenditure relative to normothermic matched care without crossing preregistered safety or reversibility gates. Any safety-gate failure rejects escalation.

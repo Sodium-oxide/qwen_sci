@@ -1,9 +1,0 @@
-{
-  "schema_version": "survey_gap_ledger_v1",
-  "gaps": [
-    {"gap_id": "GAP-01", "title": "Completion-definition gap", "problem": "Institutional, observational, technological, and physical endpoints are conflated.", "evidence_basis": ["S1", "S2", "S3"], "research_need": "Use a multi-layer completion taxonomy and evidence-state labels.", "confidence": "high", "triage": "accepted"},
-    {"gap_id": "GAP-02", "title": "Coupled-reachability gap", "problem": "Nuclear stability and technology/evidence feasibility lack a common uncertainty-aware decision object.", "evidence_basis": ["S3", "S4"], "research_need": "Model physical stability, production/detection feasibility, and uncertainty jointly but distinctly.", "confidence": "medium", "triage": "accepted"},
-    {"gap_id": "GAP-03", "title": "Proof-chain gap", "problem": "New methods require a transparent path from an observation to an identity/priority claim.", "evidence_basis": ["S1", "S2", "S5", "S6"], "research_need": "Encode evidence obligations independently of a particular instrument generation.", "confidence": "high", "triage": "accepted"},
-    {"gap_id": "GAP-04", "title": "Forecast-validation gap", "problem": "Conditional reachability forecasts need historical calibration rather than narrative plausibility.", "evidence_basis": ["S2", "S3", "S4"], "research_need": "Benchmark prospectively declared forecasts on a time-sliced historical corpus.", "confidence": "medium", "triage": "accepted"}
-  ]
-}

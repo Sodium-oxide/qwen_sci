@@ -165,6 +165,7 @@ _UNICODE_TEX_REPLACEMENTS = {
     "\u2032": "'",
     "\u2033": "''",
     "\u2116": "No.",
+    "\u211d": r"$\mathbb{R}$",
     "\u2126": r"$\Omega$",
     "\u2190": r"$\leftarrow$",
     "\u2192": r"$\rightarrow$",
