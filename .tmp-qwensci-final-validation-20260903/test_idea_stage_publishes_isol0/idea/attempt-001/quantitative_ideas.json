@@ -1,0 +1,62 @@
+{
+  "catalog": {
+    "entry_count": "37",
+    "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md",
+    "schema_version": "model_catalog_v1",
+    "sha256": "6b5bebfbd54c050aa482bf533dbfaf872c557cba16bb9e10de84526abbef753e",
+    "status": "AVAILABLE",
+    "truncated": "true"
+  },
+  "generation_message": "",
+  "generation_status": "READY",
+  "ideas": [
+    {
+      "base_hypothesis_reference": "directions[0].hypothesis",
+      "candidate_model_strategy": {
+        "catalog_model_ids": [],
+        "mode": "OUTSIDE_CATALOG",
+        "rationale": "The boundary forcing is problem-specific."
+      },
+      "comparator": "reference forcing gradient",
+      "domain": "EARTH_ENVIRONMENT",
+      "execution_readiness": "EXECUTABLE_CANDIDATE",
+      "falsification_condition": "No parameter range reproduces the observed direction.",
+      "initial_boundary_requirements": [
+        "initial profile and boundary flux"
+      ],
+      "known_limitations": [
+        "one-dimensional approximation"
+      ],
+      "model_intent": "Compare reaction-transport scenarios.",
+      "observables": [
+        "steady gradient"
+      ],
+      "parameters_and_sources": [
+        "diffusivity range"
+      ],
+      "provisional_solver_family": "finite_difference_1d",
+      "quantitative_idea_id": "Q1",
+      "quantitative_question": "Can transport explain the observed gradient?",
+      "scenarios": [
+        "reference",
+        "reduced forcing"
+      ],
+      "state_variables": [
+        "concentration"
+      ],
+      "title": "Reaction transport test"
+    }
+  ],
+  "schema_version": "quantitative_ideas_v1",
+  "source_identity": {
+    "handoff_fingerprint": "7f6a72e88c7958cd07b98f9e983ee4dfa25de83f01be7aa63096191a5d221f2c",
+    "idea_result_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_idea_stage_publishes_isol0\\idea\\attempt-001\\idea_result.json",
+    "manifest_fingerprint": "07ae4243dcf58b0d3cdda2398e5cbdbae02acddf7c78ab97717301c2a980a1bf",
+    "project_context_fingerprint": "context-fingerprint",
+    "project_id": "quantitative-stage",
+    "selected_direction_id": "primary-direction",
+    "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_idea_stage_publishes_isol0\\survey\\survey_manifest.json",
+    "survey_run_id": "survey-quantitative"
+  },
+  "topic": "quantitative sidecar topic"
+}

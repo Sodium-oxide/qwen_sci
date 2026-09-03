@@ -1,0 +1,458 @@
+{
+  "authoring_constraints": {
+    "counterexample_must_satisfy_all_assumptions": true,
+    "formal_and_empirical_claims_must_remain_separate": true,
+    "observed_results_are_absent": true,
+    "proposal_without_observed_results": true,
+    "unsupported_claims_forbidden": true,
+    "unverified_reasoning_must_be_labeled": true
+  },
+  "counterexample_analysis": {
+    "applicability": "not_applicable",
+    "candidate_counterexamples": [],
+    "limitations": [
+      "Counterexample analysis is not applicable outside a formal claim."
+    ],
+    "negated_conclusion": "",
+    "schema_version": "counterexample_analysis_v1",
+    "status": "not_run",
+    "target_claim_id": "",
+    "unknown_items": []
+  },
+  "field_statuses": {
+    "analysis_plan": "needs_human_input",
+    "analysis_plan.batch_effects": "needs_human_input",
+    "analysis_plan.blinding": "needs_human_input",
+    "analysis_plan.missing_data": "needs_human_input",
+    "analysis_plan.randomization": "needs_human_input",
+    "analysis_plan.repetitions": "needs_human_input",
+    "analysis_plan.statistical_analysis": "needs_human_input",
+    "comparison_and_robustness": "needs_human_input",
+    "data_governance_and_reproducibility": "needs_human_input",
+    "data_governance_and_reproducibility.data_management": "needs_human_input",
+    "data_governance_and_reproducibility.reproducibility": "needs_human_input",
+    "degraded_stages.template_composer": "needs_human_input",
+    "degraded_stages.variable_claim_extraction": "needs_human_input",
+    "hypothesis_mapping": "user_declared",
+    "measurement_and_calibration": "needs_human_input",
+    "measurement_and_calibration.calibration": "needs_human_input",
+    "measurement_and_calibration.measurement_plan": "needs_human_input",
+    "measurement_and_calibration.quality_control": "needs_human_input",
+    "research_design": "design_assumption",
+    "sampling_and_eligibility": "needs_human_input",
+    "sampling_and_eligibility.eligibility_criteria": "needs_human_input",
+    "sampling_and_eligibility.sample_size_or_power_basis": "needs_human_input",
+    "sampling_and_eligibility.source": "needs_human_input",
+    "template_details.characterization_plan": "needs_human_input",
+    "template_details.comparison_samples": "needs_human_input",
+    "template_details.process_variables": "needs_human_input",
+    "template_details.replicate_strategy": "needs_human_input",
+    "template_details.sample_or_material": "needs_human_input",
+    "variables_and_operationalization": "needs_human_input"
+  },
+  "formal_reasoning": {
+    "applicability": "not_applicable",
+    "assumptions": [],
+    "definitions": [],
+    "final_conclusion": "",
+    "forward_derivation": {
+      "status": "not_applicable",
+      "steps": []
+    },
+    "proof_obligations": [],
+    "propositions": [],
+    "schema_version": "formal_reasoning_plan_v1",
+    "status": "not_applicable",
+    "target_proposition_id": "",
+    "unknown_items": []
+  },
+  "generated_at": "2026-08-31T12:01:35.999322+09:00",
+  "hypothesis_mapping": [
+    {
+      "claim": "Engineered interlayer twist angles designed to suppress cross-plane thermal conductivity in van der Waals heterostructures remain structurally stable under sustained thermal cycling and operational stress gradients, provided the interlayer binding energy exceeds a critical threshold determined by the twist-angle-dependent moiré potential landscape, and in the absence of confounding defect-mediated or chemically-induced interlayer pinning.",
+      "decision_rule": "Define a preregistered or documented decision rule after confirming the outcome definition, comparisons, and analysis plan.",
+      "hypothesis_id": "H1",
+      "observables": [
+        "Compare the retention of cross-plane thermal anisotropy across different van der Waals material families with varying moiré potential depths but similar intrinsic defect densities, or utilize low-temperature cycling regimes to suppress chemical bonding, thereby isolating the moiré potential mechanism via a material-dependent binding energy ablation."
+      ]
+    }
+  ],
+  "outcome_branches": [
+    {
+      "branch_id": "supports_mechanism",
+      "conclusion_scope": "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Replicate under independently confirmed conditions.",
+        "Test the most consequential declared boundary condition."
+      ],
+      "interpretation": "The result would support, but not prove, the declared relation within the design boundary.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified analysis is consistent with the declared relation while planned controls do not favor a stated alternative explanation."
+    },
+    {
+      "branch_id": "partial_or_heterogeneous",
+      "conclusion_scope": "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Predefine and check plausible moderators.",
+        "Improve the coverage of conditions and measurement comparability."
+      ],
+      "interpretation": "The relation may be conditional or heterogeneous; no universal conclusion is warranted.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified analysis indicates variation across declared conditions, units, or measurement contexts."
+    },
+    {
+      "branch_id": "null_or_contradictory",
+      "conclusion_scope": "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Audit construct validity and comparison adequacy.",
+        "Revise the mechanism or boundary claim before another design iteration."
+      ],
+      "interpretation": "The proposed relation is not supported in this design boundary; absence of support is not proof of absence generally.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified comparison does not support the declared relation or instead favors a declared alternative explanation."
+    },
+    {
+      "branch_id": "uninformative_or_invalid",
+      "conclusion_scope": "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Resolve the identified validity or data-quality failure before repeating the design.",
+        "Obtain human confirmation of measurement, sampling, and analysis prerequisites."
+      ],
+      "interpretation": "No scientific conclusion is warranted because the planned design did not yield interpretable evidence.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "Prespecified quality-control, missingness, protocol-deviation, or validity criteria prevent interpretation."
+    }
+  ],
+  "provenance": {
+    "audit_source_paths": {
+      "idea_candidate": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_candidate.json",
+      "idea_directions": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_directions.json",
+      "idea_portfolio": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_portfolio.json",
+      "idea_result": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+      "idea_route_clusters": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_route_clusters.json",
+      "mature_ideas": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/mature_ideas.json"
+    },
+    "discipline_ids": [
+      "25"
+    ],
+    "idea_result_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+    "risk_level": "medium",
+    "selected_direction_id": "mechanism_replacement",
+    "survey_binding": {
+      "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+      "manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+      "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+      "project_id": "sci_20260831_051401_339967_survey_001",
+      "status": "bound",
+      "survey_run_id": "20260831-051401-339967-survey-001"
+    },
+    "template_id": "materials_chemical",
+    "validation_status": "BLOCKED_BY_RISK_REVIEW"
+  },
+  "reasoning_context": {
+    "alternative_explanations": [
+      "Thermal cycling induces interlayer diffusion or chemical bonding that pins the layers independently of the moiré potential.",
+      "Changes in thermal contact resistance during cycling mimic changes in intrinsic cross-plane thermal conductivity.",
+      "Defect-mediated interlayer pinning (e.g., via chalcogen vacancies) or thermally induced chemical bonding could maintain suppressed cross-plane thermal conductivity, mimicking the effect of moiré potential energy barriers.",
+      "Strain relaxation via wrinkle formation or localized delamination could alter thermal transport without actual twist-angle relaxation."
+    ],
+    "assumptions": [
+      "Interlayer binding energy and moiré potential depths can be accurately calculated or measured for diverse van der Waals material families.",
+      "Thermal cycling conditions can be selected to minimize interlayer diffusion and chemical bonding, ensuring moiré potential pinning is the dominant retention mechanism."
+    ],
+    "boundary_conditions": [
+      "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold."
+    ],
+    "claim_scope": "The structural stability of twist-angle-engineered thermal anisotropy in van der Waals heterostructures under operational thermal cycling, bounded by the moiré potential landscape in regimes free from defect-mediated or chemically-induced interlayer pinning.",
+    "evidence_roles": [],
+    "falsifiers": [
+      "Demonstration that engineered twist angles relax to equilibrium stacking within device-relevant thermal cycling conditions in the absence of defect-mediated or chemical pinning, resulting in recovery of cross-plane conductivity to within 20% of pristine aligned values."
+    ],
+    "formal_symbols": [],
+    "gap_records": [
+      {
+        "gap_id": "gap:global:boundary_condition:material_generality:unknown:unknown:c3105d78c8c5",
+        "gap_kind": "boundary condition",
+        "statement": "The extreme thermal anisotropy mechanism is validated only for MoS2 and WS2, leaving its applicability to other van der Waals materials unverified.",
+        "target_slot": "material generality",
+        "why_it_matters": "The abstract explicitly reports measurements and molecular dynamics simulations exclusively for MoS2 and WS2, without addressing whether random interlayer rotations yield similar anisotropy ratios in materials with different phonon dispersion or interlayer bonding characteristics."
+      },
+      {
+        "gap_id": "gap:global:missing_assumption:structural_stability_under_operation:unknown:unknown:14c1007de5b8",
+        "gap_kind": "missing assumption",
+        "statement": "The persistence of random interlayer rotations under sustained thermal cycling and operational stress gradients is unaddressed.",
+        "target_slot": "structural stability under operation",
+        "why_it_matters": "While the abstract establishes interlayer rotation as a design degree of freedom for directed heat transport, it does not discuss whether these rotational configurations remain stable or relax over time when subjected to the very thermal gradients they are engineered to mitigate."
+      }
+    ],
+    "schema_version": "reasoning_context_v1",
+    "selected_direction_id": "mechanism_replacement",
+    "source_anchors": [
+      {
+        "anchor_id": "anchor:gap_evidence_anchor:global:material_generality:paper_abstract_w3202213959_abstract:the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified:7202c295c03b",
+        "anchor_type": "gap_evidence_anchor",
+        "claim_anchor": "The extreme thermal anisotropy mechanism is validated only for MoS2 and WS2, leaving its applicability to other van der Waals materials unverified.",
+        "label": "GLOBAL: material generality",
+        "paper_ids": [
+          "W3202213959"
+        ],
+        "source_pointer": {
+          "artifact": "paper",
+          "json_pointer": "/abstract",
+          "paper_id": "W3202213959",
+          "section": "Abstract"
+        },
+        "subhypothesis_id": "GLOBAL",
+        "supports_gap_ids": [
+          "gap:global:boundary_condition:material_generality:unknown:unknown:c3105d78c8c5"
+        ],
+        "target_slot": "material generality",
+        "text_excerpt": "The extreme thermal anisotropy mechanism is validated only for MoS2 and WS2, leaving its applicability to other van der Waals materials unverified."
+      },
+      {
+        "anchor_id": "anchor:gap_evidence_anchor:global:structural_stability_under_operation:paper_abstract_w3202213959_abstract:the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed:4d627a17dae6",
+        "anchor_type": "gap_evidence_anchor",
+        "claim_anchor": "The persistence of random interlayer rotations under sustained thermal cycling and operational stress gradients is unaddressed.",
+        "label": "GLOBAL: structural stability under operation",
+        "paper_ids": [
+          "W3202213959"
+        ],
+        "source_pointer": {
+          "artifact": "paper",
+          "json_pointer": "/abstract",
+          "paper_id": "W3202213959",
+          "section": "Abstract"
+        },
+        "subhypothesis_id": "GLOBAL",
+        "supports_gap_ids": [
+          "gap:global:missing_assumption:structural_stability_under_operation:unknown:unknown:14c1007de5b8"
+        ],
+        "target_slot": "structural stability under operation",
+        "text_excerpt": "The persistence of random interlayer rotations under sustained thermal cycling and operational stress gradients is unaddressed."
+      }
+    ],
+    "source_priority": [
+      "selected_direction",
+      "legacy_best_entry",
+      "selected_primary_idea",
+      "idea_candidate"
+    ],
+    "upstream_source_paths": [
+      "selected_direction.hypothesis.assumptions",
+      "selected_direction.hypothesis.claim_scope",
+      "selected_direction.falsifier",
+      "selected_direction.hypothesis.boundary_or_failure_condition",
+      "selected_direction.experiment_handoff.alternative_explanations",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_candidate.json",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_portfolio.json",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_directions.json",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_route_clusters.json",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/mature_ideas.json"
+    ]
+  },
+  "research_design": {
+    "design_type": "Template-guided Chemistry, materials, and chemical engineering study design pending evidence and human confirmation",
+    "experimental_unit": "The experimental or analytical unit must be operationalized for the declared research object before execution.",
+    "time_structure": "The temporal structure must be preregistered or documented after the applicable design evidence is reviewed."
+  },
+  "review_items": [
+    {
+      "field_path": "risk_and_human_review.human_review_required",
+      "reason": "The final canonical risk gate requires qualified human review.",
+      "status": "review_required"
+    },
+    {
+      "field_path": "risk_and_human_review.review_triggers[1]",
+      "reason": "LLM_OR_WORKFLOW_DEGRADATION_REVIEW",
+      "status": "review_required"
+    }
+  ],
+  "schema_version": "research_plan_author_input_v3",
+  "selected_direction": {
+    "central_hypothesis": "Engineered interlayer twist angles designed to suppress cross-plane thermal conductivity in van der Waals heterostructures remain structurally stable under sustained thermal cycling and operational stress gradients, provided the interlayer binding energy exceeds a critical threshold determined by the twist-angle-dependent moiré potential landscape, and in the absence of confounding defect-mediated or chemically-induced interlayer pinning.",
+    "id": "mechanism_replacement",
+    "mechanism_or_relation": "The twist-angle-dependent moiré potential landscape creates fundamental energy barriers that pin specific twist angles, dictating the critical threshold for interlayer binding energy and structural stability under thermal stress, distinct from and dominant over defect-mediated or chemical pinning mechanisms.",
+    "title": "Moiré Potential Landscapes Dictate the Thermal Cycling Stability of Twist-Angle-Engineered Thermal Anisotropy in Van Der Waals Heterostructures"
+  },
+  "source_design_id": "design-20260831-051401-339967",
+  "source_registry": {
+    "allowed_source_ids": [],
+    "allowed_survey_anchor_ids": [],
+    "citation_registry": [],
+    "evidence_cards_by_id": {}
+  },
+  "unknown_items": [
+    {
+      "field_path": "analysis_plan",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.batch_effects",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.blinding",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.missing_data",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.randomization",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.repetitions",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.statistical_analysis",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "comparison_and_robustness",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "data_governance_and_reproducibility",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "data_governance_and_reproducibility.data_management",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "data_governance_and_reproducibility.reproducibility",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "degraded_stages.template_composer",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "degraded_stages.variable_claim_extraction",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration.calibration",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration.measurement_plan",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration.quality_control",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[1]",
+      "reason": "Confirm each field currently marked needs_human_input before treating this design as ready for execution.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[2]",
+      "reason": "Use traceable full-text evidence or user-supplied laboratory, clinical, or governance standards before marking restricted fields evidence_backed.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[3]",
+      "reason": "Replace the discarded variable_claim_extraction batch with qualified human review before treating this design as complete.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[4]",
+      "reason": "Replace the discarded template_composer batch with qualified human review before treating this design as complete.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "sampling_and_eligibility",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "sampling_and_eligibility.eligibility_criteria",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "sampling_and_eligibility.sample_size_or_power_basis",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "sampling_and_eligibility.source",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.characterization_plan",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.comparison_samples",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.process_variables",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.replicate_strategy",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.sample_or_material",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variable_claim_model",
+      "reason": "The variable_claim_extraction LLM batch was discarded after an unavailable or invalid response. No generated claim, formalization, counterexample, or protocol detail from that batch is retained; qualified human review is required.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables_and_operationalization",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    }
+  ],
+  "variables_and_operationalization": {
+    "confounders": [],
+    "control_variables": [],
+    "dependent_variables": [],
+    "independent_variables": [],
+    "operational_definitions": []
+  }
+}

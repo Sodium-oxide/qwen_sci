@@ -1,0 +1,244 @@
+{
+  "lineage": {
+    "created_from_artifact": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+    "project_id": "sci_astr_16_survey_007",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "astr_16",
+    "selected_direction_id": "mechanism_replacement",
+    "survey_run_id": "astr_16-survey-007",
+    "version": 0
+  },
+  "model_scope": "Covers isolated dipole spin-down, inclination decay, wind braking, and simplified binary recycling in a dimensionless ODE/Monte Carlo framework; excludes glitches, magnetospheric state changes, variable moment of inertia, and full observational selection effects.",
+  "parameter_requests": [
+    {
+      "dimension": "MOMENT_OF_INERTIA",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "I",
+      "meaning": "Effective moment of inertia controlling angular momentum response to spin-down torque",
+      "parameter_id": "neutron_star_moment_of_inertia",
+      "required_conditions": [
+        "representative neutron-star mass and radius equation of state selected",
+        "moment of inertia held fixed during a single evolutionary track"
+      ],
+      "retrieval_queries": [
+        "neutron star moment of inertia from mass-radius relation for selected equation of state and composition",
+        "reference database moment of inertia for representative neutron star mass and radius"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "mass_length_squared",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "DIMENSIONLESS",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "K_dipole",
+      "meaning": "Dimensionless prefactor encoding vacuum dipole torque scaling in the chosen unit system",
+      "parameter_id": "dipole_torque_prefactor",
+      "required_conditions": [
+        "dimensionless unit system chosen",
+        "vacuum dipole torque active"
+      ],
+      "retrieval_queries": [
+        "modeling convention for dimensionless vacuum dipole spin-down torque prefactor in pulsar evolution models"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "MAGNETIC_FLUX_DENSITY",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "B_0",
+      "meaning": "Surface dipole magnetic field strength at the start of the selected evolutionary track",
+      "parameter_id": "initial_surface_magnetic_field",
+      "required_conditions": [
+        "isolated or recycled track initial field specified",
+        "surface dipole field approximation used"
+      ],
+      "retrieval_queries": [
+        "pulsar surface magnetic field measurements from timing surveys",
+        "pulsar catalogue magnetic field distribution for isolated pulsars"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "magnetic_flux_density",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "TIME",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "P_0",
+      "meaning": "Spin period at the start of the selected evolutionary track",
+      "parameter_id": "initial_spin_period",
+      "required_conditions": [
+        "initial spin period before isolated spin-down or after accretion phase specified",
+        "birth period distribution or single-track input available"
+      ],
+      "retrieval_queries": [
+        "pulsar birth period distribution from timing surveys",
+        "observed spin period distribution for young pulsars"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "time",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "ANGLE",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "alpha_0",
+      "meaning": "Magnetic inclination angle at the start of the selected evolutionary track",
+      "parameter_id": "initial_inclination_angle",
+      "required_conditions": [
+        "dipole inclination active",
+        "isotropic or scenario-specified initial inclination convention used"
+      ],
+      "retrieval_queries": [
+        "pulsar magnetic inclination angle constraints from emission geometry models"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "radian",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "TIME",
+      "evidence_requirement": "LITERATURE_PREFERRED",
+      "mathir_symbol": "tau_alpha",
+      "meaning": "Characteristic timescale for magnetic inclination decay when the inclination-decay scenario is active",
+      "parameter_id": "inclination_decay_timescale",
+      "required_conditions": [
+        "inclination decay scenario active",
+        "exponential inclination decay law selected"
+      ],
+      "retrieval_queries": [
+        "observed or theoretical pulsar inclination decay timescale",
+        "magnetic inclination evolution timescale in pulsar braking models"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "time",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "DIMENSIONLESS",
+      "evidence_requirement": "LITERATURE_PREFERRED",
+      "mathir_symbol": "eta",
+      "meaning": "Relative efficiency of particle-wind braking compared with the dipole torque when wind braking is active",
+      "parameter_id": "wind_braking_efficiency",
+      "required_conditions": [
+        "wind braking scenario active",
+        "constant or scenario-specified wind efficiency convention used"
+      ],
+      "retrieval_queries": [
+        "pulsar wind braking efficiency from magnetospheric models",
+        "braking index deviations attributed to particle wind"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "DIMENSIONLESS",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "K_acc",
+      "meaning": "Dimensionless coefficient scaling the accretion torque during the recycling phase",
+      "parameter_id": "accretion_torque_coefficient",
+      "required_conditions": [
+        "binary recycling scenario active",
+        "standard disk accretion torque approximation used"
+      ],
+      "retrieval_queries": [
+        "modeling convention for disk accretion torque coefficient in recycled pulsar models"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "TIME",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "t_acc",
+      "meaning": "Duration of the accretion phase before isolated spin-down in a recycled track",
+      "parameter_id": "accretion_phase_duration",
+      "required_conditions": [
+        "binary recycling scenario active",
+        "accretion history simplified to a single duration"
+      ],
+      "retrieval_queries": [
+        "accretion phase duration for recycled pulsars from binary population models"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "time",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "DIMENSIONLESS",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "s_scenario",
+      "meaning": "Discrete scenario switch selecting the active torque terms and accretion history",
+      "parameter_id": "scenario_selector",
+      "required_conditions": [
+        "a selected scenario is used for each simulated track",
+        "scenario switch controls inclination decay, wind braking, and accretion phase"
+      ],
+      "retrieval_queries": [
+        "modeling convention for scenario switches in pulsar spin-down population synthesis"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "TIME",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "t_term",
+      "meaning": "Model-defined age boundary at which an evolutionary track is truncated",
+      "parameter_id": "evolutionary_termination_age",
+      "required_conditions": [
+        "evolutionary integration boundary selected",
+        "termination applied when track age reaches the boundary"
+      ],
+      "retrieval_queries": [
+        "pulsar evolutionary age boundary used in population synthesis"
+      ],
+      "role": "BOUNDARY_CONDITION",
+      "unit": "time",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "TIME_INVERSE",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "Pdot_floor",
+      "meaning": "Model-defined period-derivative floor below which tracks are truncated for observational comparability",
+      "parameter_id": "period_derivative_detection_floor",
+      "required_conditions": [
+        "observational truncation boundary selected",
+        "termination applied when period derivative falls below the floor"
+      ],
+      "retrieval_queries": [
+        "pulsar timing survey period derivative detection threshold"
+      ],
+      "role": "BOUNDARY_CONDITION",
+      "unit": "time_inverse",
+      "value_kind": "SCALAR"
+    }
+  ],
+  "permitted_system_types": [
+    "ODE_IVP",
+    "MONTE_CARLO"
+  ],
+  "revision_context": {},
+  "schema_version": "quantitative_model_blueprint_v1",
+  "scientific_question": "Can the joint distribution of braking index n and characteristic age tau_c statistically distinguish isolated magnetic-dipole evolution from binary recycling populations, given specific torque model constraints?",
+  "symbolic_constraints": [
+    "Spin period, surface magnetic field, and period derivative are non-negative.",
+    "Inclination is restricted to the physically meaningful aligned-to-perpendicular range.",
+    "Moment of inertia is fixed for an individual track.",
+    "Braking index and characteristic age are derived diagnostics, not independent states.",
+    "Scenario switches select active torque terms without double counting.",
+    "Accretion torque is applied only during the recycled scenario.",
+    "Monte Carlo sampling must preserve the requested initial-condition and boundary-condition semantics.",
+    "Termination rules stop integration when either boundary condition is reached."
+  ],
+  "symbolic_model_intent": "Integrate spin period, magnetic inclination, and surface field under scenario-selected torque terms; derive period derivative, braking index, and characteristic age as diagnostics; optionally sample initial period, field, inclination, and accretion controls with Monte Carlo to form population distributions.",
+  "title": "Distinguishing Isolated Dipole Evolution from Binary Recycling via Braking Index and Period Derivative Correlations"
+}

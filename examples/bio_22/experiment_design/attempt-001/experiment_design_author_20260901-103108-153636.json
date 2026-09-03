@@ -1,0 +1,576 @@
+{
+  "authoring_constraints": {
+    "counterexample_must_satisfy_all_assumptions": true,
+    "formal_and_empirical_claims_must_remain_separate": true,
+    "observed_results_are_absent": true,
+    "proposal_without_observed_results": true,
+    "unsupported_claims_forbidden": true,
+    "unverified_reasoning_must_be_labeled": true
+  },
+  "counterexample_analysis": {
+    "applicability": "not_applicable",
+    "candidate_counterexamples": [],
+    "limitations": [
+      "Counterexample analysis is not applicable outside a formal claim."
+    ],
+    "negated_conclusion": "",
+    "schema_version": "counterexample_analysis_v1",
+    "status": "not_run",
+    "target_claim_id": "",
+    "unknown_items": []
+  },
+  "field_statuses": {
+    "analysis_plan": "needs_human_input",
+    "analysis_plan.batch_effects": "needs_human_input",
+    "analysis_plan.blinding": "needs_human_input",
+    "analysis_plan.missing_data": "needs_human_input",
+    "analysis_plan.randomization": "needs_human_input",
+    "analysis_plan.repetitions": "needs_human_input",
+    "analysis_plan.statistical_analysis": "needs_human_input",
+    "comparison_and_robustness": "needs_human_input",
+    "data_governance_and_reproducibility": "needs_human_input",
+    "data_governance_and_reproducibility.data_management": "needs_human_input",
+    "data_governance_and_reproducibility.reproducibility": "needs_human_input",
+    "degraded_stages.template_composer": "needs_human_input",
+    "degraded_stages.variable_claim_extraction": "needs_human_input",
+    "hypothesis_mapping": "user_declared",
+    "measurement_and_calibration": "needs_human_input",
+    "measurement_and_calibration.calibration": "needs_human_input",
+    "measurement_and_calibration.measurement_plan": "needs_human_input",
+    "measurement_and_calibration.quality_control": "needs_human_input",
+    "research_design": "design_assumption",
+    "sampling_and_eligibility": "needs_human_input",
+    "sampling_and_eligibility.eligibility_criteria": "needs_human_input",
+    "sampling_and_eligibility.sample_size_or_power_basis": "needs_human_input",
+    "sampling_and_eligibility.source": "needs_human_input",
+    "template_details.biological_system": "needs_human_input",
+    "template_details.perturbation": "needs_human_input",
+    "template_details.phenotype_or_pathway_readout": "needs_human_input",
+    "template_details.positive_and_negative_controls": "needs_human_input",
+    "template_details.technical_and_biological_replicates": "needs_human_input",
+    "variables_and_operationalization": "needs_human_input"
+  },
+  "formal_reasoning": {
+    "applicability": "not_applicable",
+    "assumptions": [],
+    "definitions": [],
+    "final_conclusion": "",
+    "forward_derivation": {
+      "status": "not_applicable",
+      "steps": []
+    },
+    "proof_obligations": [],
+    "propositions": [],
+    "schema_version": "formal_reasoning_plan_v1",
+    "status": "not_applicable",
+    "target_proposition_id": "",
+    "unknown_items": []
+  },
+  "generated_at": "2026-09-01T10:44:19.629802+09:00",
+  "hypothesis_mapping": [
+    {
+      "claim": "Under controlled hyperosmotic perturbation, membrane-bounded organelles resist internal densification and maintain sharp lipid-defined boundaries, whereas fluid-like phase-separated condensates undergo continuous density shifts and boundary coarsening; this distinction holds provided that global cytoskeletal integrity is maintained and non-specific macromolecular precipitation is excluded.",
+      "decision_rule": "Define a preregistered or documented decision rule after confirming the outcome definition, comparisons, and analysis plan.",
+      "hypothesis_id": "H1",
+      "observables": [
+        "Differential boundary sharpness and internal spatial density profiles measured via cryo_tomography_assay: condensates exhibit continuous density gradients and fusion, while membrane-bounded organelles exhibit sharp density discontinuities and volume reduction without fusion, under conditions where cytoskeletal artifacts are controlled."
+      ]
+    }
+  ],
+  "outcome_branches": [
+    {
+      "branch_id": "supports_mechanism",
+      "conclusion_scope": "The claim fails if membrane-bounded organelles exhibit continuous density gradients and fusion due to cytoskeletal compression, or if phase-separated condensates maintain sharp boundaries, or if non-specific salting-out produces identical density profiles across all compartments.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Replicate under independently confirmed conditions.",
+        "Test the most consequential declared boundary condition."
+      ],
+      "interpretation": "The result would support, but not prove, the declared relation within the design boundary.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified analysis is consistent with the declared relation while planned controls do not favor a stated alternative explanation."
+    },
+    {
+      "branch_id": "partial_or_heterogeneous",
+      "conclusion_scope": "The claim fails if membrane-bounded organelles exhibit continuous density gradients and fusion due to cytoskeletal compression, or if phase-separated condensates maintain sharp boundaries, or if non-specific salting-out produces identical density profiles across all compartments.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Predefine and check plausible moderators.",
+        "Improve the coverage of conditions and measurement comparability."
+      ],
+      "interpretation": "The relation may be conditional or heterogeneous; no universal conclusion is warranted.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified analysis indicates variation across declared conditions, units, or measurement contexts."
+    },
+    {
+      "branch_id": "null_or_contradictory",
+      "conclusion_scope": "The claim fails if membrane-bounded organelles exhibit continuous density gradients and fusion due to cytoskeletal compression, or if phase-separated condensates maintain sharp boundaries, or if non-specific salting-out produces identical density profiles across all compartments.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Audit construct validity and comparison adequacy.",
+        "Revise the mechanism or boundary claim before another design iteration."
+      ],
+      "interpretation": "The proposed relation is not supported in this design boundary; absence of support is not proof of absence generally.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified comparison does not support the declared relation or instead favors a declared alternative explanation."
+    },
+    {
+      "branch_id": "uninformative_or_invalid",
+      "conclusion_scope": "The claim fails if membrane-bounded organelles exhibit continuous density gradients and fusion due to cytoskeletal compression, or if phase-separated condensates maintain sharp boundaries, or if non-specific salting-out produces identical density profiles across all compartments.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Resolve the identified validity or data-quality failure before repeating the design.",
+        "Obtain human confirmation of measurement, sampling, and analysis prerequisites."
+      ],
+      "interpretation": "No scientific conclusion is warranted because the planned design did not yield interpretable evidence.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "Prespecified quality-control, missingness, protocol-deviation, or validity criteria prevent interpretation."
+    }
+  ],
+  "provenance": {
+    "audit_source_paths": {
+      "idea_candidate": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/idea/attempt-001/idea_candidate.json",
+      "idea_directions": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/idea/attempt-001/idea_directions.json",
+      "idea_portfolio": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/idea/attempt-001/idea_portfolio.json",
+      "idea_result": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/idea/attempt-001/idea_result.json",
+      "idea_route_clusters": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/idea/attempt-001/idea_route_clusters.json",
+      "mature_ideas": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/idea/attempt-001/mature_ideas.json"
+    },
+    "discipline_ids": [
+      "24"
+    ],
+    "idea_result_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/idea/attempt-001/idea_result.json",
+    "risk_level": "high",
+    "selected_direction_id": "mechanism_replacement",
+    "survey_binding": {
+      "handoff_fingerprint": "a3a05f7b8bab2e52c45f45d6dcf51bc68168c9539e4bbf28de46610355151e73",
+      "manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/survey/attempt-001/survey_manifest.json",
+      "project_context_fingerprint": "505d0e72362e0dc977a30d3fee98024a0683e39f33e3e016e33f25a77cea200d",
+      "project_id": "sci_20260901_042802_922870_survey_001",
+      "status": "bound",
+      "survey_run_id": "20260901-042802-922870-survey-001"
+    },
+    "template_id": "life_veterinary",
+    "validation_status": "BLOCKED_BY_RISK_REVIEW"
+  },
+  "reasoning_context": {
+    "alternative_explanations": [
+      "Hyperosmotic shock induces non-specific protein aggregation or global cellular collapse rather than specific phase-separated condensate densification.",
+      "Membrane-bounded organelles may also exhibit internal density gradients or undergo structural changes that blur the distinction in boundary sharpness under extreme osmotic stress.",
+      "Global cytoskeletal collapse under hyperosmotic stress mechanically compresses membrane-bounded organelles, causing apparent boundary blurring and internal density shifts that mimic phase-separated condensate behavior.",
+      "Non-specific protein salting-out or precipitation at high osmolyte concentrations causes artificial aggregation and density gradients in all compartments, obscuring the specific phase-separation mechanism."
+    ],
+    "assumptions": [
+      "Cryo-ET can resolve nanoscale spatial density profiles without fixation artifacts; aquaporin inhibition specifically blocks water flux; hyperosmotic conditions can be applied without inducing global cytoskeletal collapse or non-specific protein precipitation."
+    ],
+    "boundary_conditions": [
+      "The claim fails if membrane-bounded organelles exhibit continuous density gradients and fusion due to cytoskeletal compression, or if phase-separated condensates maintain sharp boundaries, or if non-specific salting-out produces identical density profiles across all compartments."
+    ],
+    "claim_scope": "Nanoscale biomolecular organization in crowded cellular environments, specifically proposing a design-only computational strategy to distinguish membrane-bounded organelles from fluid-like phase-separated condensates via modeled osmotic and macromolecular crowding gradients, bounded by conditions where global cytoskeletal collapse and non-specific salting-out are controlled.",
+    "evidence_roles": [
+      {
+        "allowed_support_kinds": [
+          "A defined input, perturbation, or condition change with reported effect on biomolecular organization.",
+          "Admissible if the input is specified and connected to a measurable organizational transition, not merely mentioned as background."
+        ],
+        "anchor_ids": [
+          "anchor:gap_evidence_anchor:sh3:input_or_condition:survey_evidence_plan_json_subhypotheses_2_missing_slots_0:required_evidence_slot_input_or_condition_is_missing_from_the_survey_evidence_plan_for_sub_hypothesis_sh3_what_discriminating_observations_distinguish_conditions_that_favor_discrete_membrane_bounded_compartmentalization_from_conditions_that_favor_fluid_like_biomolecular_demixing_and_which_mechanisms_best_explain_transitions_between_dispersed_distributions_and_aggregated_assemblies:947552583fd9"
+        ],
+        "background_paper_ids": [
+          "W2794654572",
+          "W2149453359"
+        ],
+        "claim_limits": [
+          "Does not address membrane-bounded compartmentalization or explicit transitions between membrane-bound and fluid-like demixed states.",
+          "Lacks primary experimental data; findings are synthesized from existing literature rather than newly measured.",
+          "Does not provide explicit discriminating observations or metrics to differentiate membrane-enclosed compartments from LLPS condensates.",
+          "Does not address or compare membrane-bounded organelle formation versus fluid-like biomolecular phase separation.",
+          "Lacks quantitative thresholds, discriminating observations, or mechanistic models for dispersed-to-aggregated transitions.",
+          "Focuses exclusively on protein-level effects without integrating lipids, carbohydrates, or nucleic acid structural organization."
+        ],
+        "expected_role": "DIRECT_OBSERVATION",
+        "forbidden_as_direct_evidence": [
+          "W3049249652",
+          "W2012500478"
+        ],
+        "paper_ids": [
+          "W4384626895"
+        ],
+        "qualified_paper_ids": [
+          "W3049249652",
+          "W2012500478"
+        ],
+        "role_id": "evidence:sh3:input_or_condition:direct_observation:f0cb8f5d563c",
+        "subhypothesis_id": "SH3",
+        "target_slot": "input_or_condition"
+      },
+      {
+        "allowed_support_kinds": [
+          "At least one explicit mechanism proposed or tested for producing the organizational outcome.",
+          "Admissible if the mechanism is mechanistically stated and tied to biomolecular organization, not merely a descriptive label."
+        ],
+        "anchor_ids": [
+          "anchor:gap_evidence_anchor:sh3:candidate_mechanism:survey_evidence_plan_json_subhypotheses_2_relevant_clusters_0_uncovered_required_slots_2:required_slot_candidate_mechanism_remains_uncovered_in_relevant_evidence_cluster_fundamental_thermodynamics_energetics_and_non_equilibrium_landscapes_of_phase_separation:e7ceb75bde01"
+        ],
+        "background_paper_ids": [
+          "W2794654572",
+          "W2149453359"
+        ],
+        "claim_limits": [
+          "Does not address membrane-bounded compartmentalization or explicit transitions between membrane-bound and fluid-like demixed states.",
+          "Lacks primary experimental data; findings are synthesized from existing literature rather than newly measured.",
+          "Does not provide explicit discriminating observations or metrics to differentiate membrane-enclosed compartments from LLPS condensates.",
+          "Does not address or compare membrane-bounded organelle formation versus fluid-like biomolecular phase separation.",
+          "Lacks quantitative thresholds, discriminating observations, or mechanistic models for dispersed-to-aggregated transitions.",
+          "Focuses exclusively on protein-level effects without integrating lipids, carbohydrates, or nucleic acid structural organization."
+        ],
+        "expected_role": "MECHANISTIC_EVIDENCE",
+        "forbidden_as_direct_evidence": [
+          "W3049249652",
+          "W2012500478"
+        ],
+        "paper_ids": [
+          "W4323350303",
+          "W4408306268",
+          "W2943084464",
+          "W4296465407",
+          "W4384626895",
+          "W4319077887"
+        ],
+        "qualified_paper_ids": [
+          "W3049249652",
+          "W2012500478"
+        ],
+        "role_id": "evidence:sh3:candidate_mechanism:mechanistic_evidence:0e0bd6a4c090",
+        "subhypothesis_id": "SH3",
+        "target_slot": "candidate_mechanism"
+      },
+      {
+        "allowed_support_kinds": [
+          "A measurement or observation that would differ predictably under competing mechanisms.",
+          "Admissible if the observation has logical power to favor, weaken, or distinguish at least two candidate mechanisms."
+        ],
+        "anchor_ids": [
+          "anchor:gap_evidence_anchor:sh3:discriminating_observation:survey_evidence_plan_json_subhypotheses_2_missing_slots_1:required_evidence_slot_discriminating_observation_is_missing_from_the_survey_evidence_plan_for_sub_hypothesis_sh3_what_discriminating_observations_distinguish_conditions_that_favor_discrete_membrane_bounded_compartmentalization_from_conditions_that_favor_fluid_like_biomolecular_demixing_and_which_mechanisms_best_explain_transitions_between_dispersed_distributions_and_aggregated_assemblies:174e9dc4e84c"
+        ],
+        "background_paper_ids": [
+          "W2794654572",
+          "W2149453359"
+        ],
+        "expected_role": "DIRECT_OBSERVATION",
+        "paper_ids": [
+          "W4384626895"
+        ],
+        "role_id": "evidence:sh3:discriminating_observation:direct_observation:3527862f9ba1",
+        "subhypothesis_id": "SH3",
+        "target_slot": "discriminating_observation"
+      }
+    ],
+    "falsifiers": [
+      "If no measurable observables consistently differentiate membrane-bounded from phase-separated compartments across multiple biological contexts under controlled osmotic stress, or if both mechanisms produce identical density profiles when cytoskeletal and salting-out confounders are excluded."
+    ],
+    "formal_symbols": [],
+    "gap_records": [
+      {
+        "gap_id": "gap:sh3:unmapped_gap_input_or_condition:input_or_condition:input_or_condition:unknown:12831e178f59",
+        "gap_kind": "unmapped_gap:input_or_condition",
+        "statement": "Required evidence slot 'input_or_condition' is missing from the Survey evidence plan for sub-hypothesis SH3: What discriminating observations distinguish conditions that favor discrete membrane-bounded compartmentalization from conditions that favor fluid-like biomolecular demixing, and which mechanisms best explain transitions between dispersed distributions and aggregated assemblies?",
+        "target_object": "input_or_condition",
+        "target_slot": "input_or_condition",
+        "why_it_matters": "The structured Survey artifacts identify an unresolved research constraint."
+      },
+      {
+        "gap_id": "gap:sh3:identifiability_gap:discriminating_observation:discriminating_observation:unknown:1ee92b215a69",
+        "gap_kind": "identifiability_gap",
+        "statement": "Required evidence slot 'discriminating_observation' is missing from the Survey evidence plan for sub-hypothesis SH3: What discriminating observations distinguish conditions that favor discrete membrane-bounded compartmentalization from conditions that favor fluid-like biomolecular demixing, and which mechanisms best explain transitions between dispersed distributions and aggregated assemblies?",
+        "target_object": "discriminating_observation",
+        "target_slot": "discriminating_observation",
+        "why_it_matters": "The available observations do not identify which explanation or parameter generated the result."
+      },
+      {
+        "gap_id": "gap:sh3:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:41171bf535f4",
+        "gap_kind": "mechanism_explanation_gap",
+        "statement": "Required slot 'candidate_mechanism' remains uncovered in relevant evidence cluster 'Fundamental Thermodynamics, Energetics, and Non-Equilibrium Landscapes of Phase Separation'.",
+        "target_object": "candidate_mechanism",
+        "target_slot": "candidate_mechanism",
+        "why_it_matters": "The observed relation lacks an identified mechanism that could distinguish competing explanations."
+      }
+    ],
+    "schema_version": "reasoning_context_v1",
+    "selected_direction_id": "mechanism_replacement",
+    "source_anchors": [
+      {
+        "anchor_id": "anchor:gap_evidence_anchor:sh3:input_or_condition:survey_evidence_plan_json_subhypotheses_2_missing_slots_0:required_evidence_slot_input_or_condition_is_missing_from_the_survey_evidence_plan_for_sub_hypothesis_sh3_what_discriminating_observations_distinguish_conditions_that_favor_discrete_membrane_bounded_compartmentalization_from_conditions_that_favor_fluid_like_biomolecular_demixing_and_which_mechanisms_best_explain_transitions_between_dispersed_distributions_and_aggregated_assemblies:947552583fd9",
+        "anchor_type": "gap_evidence_anchor",
+        "claim_anchor": "Required evidence slot 'input_or_condition' is missing from the Survey evidence plan for sub-hypothesis SH3: What discriminating observations distinguish conditions that favor discrete membrane-bounded compartmentalization from conditions that favor fluid-like biomolecular demixing, and which mechanisms best explain transitions between dispersed distributions and aggregated assemblies?",
+        "label": "SH3: input_or_condition",
+        "source_pointer": {
+          "artifact": "survey_evidence_plan.json",
+          "json_pointer": "/subhypotheses/2/missing_slots/0"
+        },
+        "subhypothesis_id": "SH3",
+        "supports_gap_ids": [
+          "gap:sh3:unmapped_gap_input_or_condition:input_or_condition:input_or_condition:unknown:12831e178f59"
+        ],
+        "target_slot": "input_or_condition",
+        "text_excerpt": "Required evidence slot 'input_or_condition' is missing from the Survey evidence plan for sub-hypothesis SH3: What discriminating observations distinguish conditions that favor discrete membrane-bounded compartmentalization from conditions that favor fluid-like biomolecular demixing, and which mechanisms best explain transitions between dispersed distributions and aggregated assemblies?"
+      },
+      {
+        "anchor_id": "anchor:gap_evidence_anchor:sh3:discriminating_observation:survey_evidence_plan_json_subhypotheses_2_missing_slots_1:required_evidence_slot_discriminating_observation_is_missing_from_the_survey_evidence_plan_for_sub_hypothesis_sh3_what_discriminating_observations_distinguish_conditions_that_favor_discrete_membrane_bounded_compartmentalization_from_conditions_that_favor_fluid_like_biomolecular_demixing_and_which_mechanisms_best_explain_transitions_between_dispersed_distributions_and_aggregated_assemblies:174e9dc4e84c",
+        "anchor_type": "gap_evidence_anchor",
+        "claim_anchor": "Required evidence slot 'discriminating_observation' is missing from the Survey evidence plan for sub-hypothesis SH3: What discriminating observations distinguish conditions that favor discrete membrane-bounded compartmentalization from conditions that favor fluid-like biomolecular demixing, and which mechanisms best explain transitions between dispersed distributions and aggregated assemblies?",
+        "label": "SH3: discriminating_observation",
+        "source_pointer": {
+          "artifact": "survey_evidence_plan.json",
+          "json_pointer": "/subhypotheses/2/missing_slots/1"
+        },
+        "subhypothesis_id": "SH3",
+        "supports_gap_ids": [
+          "gap:sh3:identifiability_gap:discriminating_observation:discriminating_observation:unknown:1ee92b215a69"
+        ],
+        "target_slot": "discriminating_observation",
+        "text_excerpt": "Required evidence slot 'discriminating_observation' is missing from the Survey evidence plan for sub-hypothesis SH3: What discriminating observations distinguish conditions that favor discrete membrane-bounded compartmentalization from conditions that favor fluid-like biomolecular demixing, and which mechanisms best explain transitions between dispersed distributions and aggregated assemblies?"
+      },
+      {
+        "anchor_id": "anchor:gap_evidence_anchor:sh3:candidate_mechanism:survey_evidence_plan_json_subhypotheses_2_relevant_clusters_0_uncovered_required_slots_2:required_slot_candidate_mechanism_remains_uncovered_in_relevant_evidence_cluster_fundamental_thermodynamics_energetics_and_non_equilibrium_landscapes_of_phase_separation:e7ceb75bde01",
+        "anchor_type": "gap_evidence_anchor",
+        "claim_anchor": "Required slot 'candidate_mechanism' remains uncovered in relevant evidence cluster 'Fundamental Thermodynamics, Energetics, and Non-Equilibrium Landscapes of Phase Separation'.",
+        "label": "SH3: candidate_mechanism",
+        "source_pointer": {
+          "artifact": "survey_evidence_plan.json",
+          "json_pointer": "/subhypotheses/2/relevant_clusters/0/uncovered_required_slots/2"
+        },
+        "subhypothesis_id": "SH3",
+        "supports_gap_ids": [
+          "gap:sh3:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:41171bf535f4"
+        ],
+        "target_slot": "candidate_mechanism",
+        "text_excerpt": "Required slot 'candidate_mechanism' remains uncovered in relevant evidence cluster 'Fundamental Thermodynamics, Energetics, and Non-Equilibrium Landscapes of Phase Separation'."
+      }
+    ],
+    "source_priority": [
+      "selected_direction",
+      "legacy_best_entry",
+      "selected_primary_idea",
+      "idea_candidate"
+    ],
+    "upstream_source_paths": [
+      "selected_direction.hypothesis.assumptions",
+      "selected_direction.hypothesis.claim_scope",
+      "selected_direction.falsifier",
+      "selected_direction.hypothesis.boundary_or_failure_condition",
+      "selected_direction.experiment_handoff.alternative_explanations",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/idea/attempt-001/idea_result.json",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/idea/attempt-001/idea_candidate.json",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/idea/attempt-001/idea_portfolio.json",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/idea/attempt-001/idea_directions.json",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/idea/attempt-001/idea_route_clusters.json",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/idea/attempt-001/mature_ideas.json"
+    ]
+  },
+  "research_design": {
+    "design_type": "Template-guided Life sciences and veterinary science study design pending evidence and human confirmation",
+    "experimental_unit": "The experimental or analytical unit must be operationalized for the declared research object before execution.",
+    "time_structure": "The temporal structure must be preregistered or documented after the applicable design evidence is reviewed."
+  },
+  "review_items": [
+    {
+      "field_path": "risk_and_human_review.human_review_required",
+      "reason": "The final canonical risk gate requires qualified human review.",
+      "status": "review_required"
+    },
+    {
+      "field_path": "risk_and_human_review.review_triggers[1]",
+      "reason": "LIFE_SCIENCE_OR_VETERINARY_REVIEW",
+      "status": "review_required"
+    },
+    {
+      "field_path": "risk_and_human_review.review_triggers[2]",
+      "reason": "LLM_OR_WORKFLOW_DEGRADATION_REVIEW",
+      "status": "review_required"
+    }
+  ],
+  "schema_version": "research_plan_author_input_v3",
+  "selected_direction": {
+    "central_hypothesis": "Under controlled hyperosmotic perturbation, membrane-bounded organelles resist internal densification and maintain sharp lipid-defined boundaries, whereas fluid-like phase-separated condensates undergo continuous density shifts and boundary coarsening; this distinction holds provided that global cytoskeletal integrity is maintained and non-specific macromolecular precipitation is excluded.",
+    "id": "mechanism_replacement",
+    "mechanism_or_relation": "Osmotic pressure gradients modulate macromolecular crowding and multivalent interactions to drive dispersed-to-aggregated transitions in phase-separated condensates, while lipid bilayer impermeability restricts membrane-bounded organelles to volume reduction without internal densification.",
+    "title": "Osmotic and Macromolecular Crowding Gradients Discriminate Membrane-Bounded from Phase-Separated Compartmentalization via Cryo-Electron Tomography"
+  },
+  "source_design_id": "design-20260901-042802-922870",
+  "source_registry": {
+    "allowed_source_ids": [],
+    "allowed_survey_anchor_ids": [],
+    "citation_registry": [],
+    "evidence_cards_by_id": {}
+  },
+  "unknown_items": [
+    {
+      "field_path": "analysis_plan",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.batch_effects",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.blinding",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.missing_data",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.randomization",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.repetitions",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.statistical_analysis",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "comparison_and_robustness",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "data_governance_and_reproducibility",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "data_governance_and_reproducibility.data_management",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "data_governance_and_reproducibility.reproducibility",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "degraded_stages.template_composer",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "degraded_stages.variable_claim_extraction",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration.calibration",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration.measurement_plan",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration.quality_control",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[1]",
+      "reason": "Confirm each field currently marked needs_human_input before treating this design as ready for execution.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[2]",
+      "reason": "Use traceable full-text evidence or user-supplied laboratory, clinical, or governance standards before marking restricted fields evidence_backed.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[3]",
+      "reason": "Replace the discarded variable_claim_extraction batch with qualified human review before treating this design as complete.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[4]",
+      "reason": "Replace the discarded template_composer batch with qualified human review before treating this design as complete.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "sampling_and_eligibility",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "sampling_and_eligibility.eligibility_criteria",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "sampling_and_eligibility.sample_size_or_power_basis",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "sampling_and_eligibility.source",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.biological_system",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.perturbation",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.phenotype_or_pathway_readout",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.positive_and_negative_controls",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.technical_and_biological_replicates",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variable_claim_model",
+      "reason": "The variable_claim_extraction LLM batch was discarded after an unavailable or invalid response. No generated claim, formalization, counterexample, or protocol detail from that batch is retained; qualified human review is required.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables_and_operationalization",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    }
+  ],
+  "variables_and_operationalization": {
+    "confounders": [],
+    "control_variables": [],
+    "dependent_variables": [],
+    "independent_variables": [],
+    "operational_definitions": []
+  }
+}

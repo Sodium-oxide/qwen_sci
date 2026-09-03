@@ -1,0 +1,912 @@
+project:
+  name: qwen-sci
+  root: /mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist
+workspace:
+  root: /mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace
+llm:
+  default_provider: qwen
+  providers:
+    openai:
+      api_key_env: OPENAI_API_KEY
+      api_key: sk-TynqFFZfmVXsg5mfzuw6jiqgFJK9GEjPuOpOFOtxsvb9pa7B
+      base_url: https://slb-v1.api.fan
+      api_style: chat_completions
+      openhands_model_prefix: openai
+      tokenizer_fallback: o200k_base
+      token_limit_parameter: ''
+      default_models:
+        survey: gpt-5.4-mini
+        judge: gpt-5.5
+        blog: gpt-5.5
+        idea: gpt-5.5
+        idea_generation: gpt-5-mini
+        idea_evaluation: gpt-5.5
+        experiment: gpt-5.4
+        experiment_design: gpt-5.4
+        author: gpt-5.4
+        planner: gpt-5.4
+        worker: gpt-5-mini
+        reviewer: gpt-5.4
+        master: gpt-5.4
+        memory_filter: gpt-5-mini
+        memory_router: gpt-5-mini
+        memory_synthesis: gpt-5.4
+    qwen:
+      api_key_env: DASHSCOPE_API_KEY
+      api_key: sk-ws-H.EMHEPPD.jYHu.MEYCIQDt52EuWtYehz_T3DEckelbVnu1kOMfz_0TkSXwT7xThQIhALd1ATV_3TLnSv6S8TgdxL7jjENDDIVRYvp3vdREKb8U
+      base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      api_style: chat_completions
+      openhands_model_prefix: openai
+      tokenizer_fallback: utf8_bytes
+      token_limit_parameter: max_tokens
+      default_models:
+        survey: qwen3.6-flash
+        judge: qwen3.8-max
+        blog: qwen3.8-max
+        idea: qwen3.8-flash
+        idea_generation: qwen3.8-flash
+        idea_evaluation: qwen3-max-2026-01-23
+        experiment: qwen3.7-plus
+        experiment_design: qwen3.8-flash
+        author: qwen3.8-flash
+        planner: qwen3.7-plus
+        worker: qwen3.7-plus
+        reviewer: qwen3.7-plus
+        master: qwen3.7-plus
+        memory_filter: qwen3.6-flash
+        memory_router: qwen3.6-flash
+        memory_synthesis: qwen3.8-max
+  models:
+    qwen3-max-2026-01-23:
+      provider: qwen
+      api_style: responses
+      capabilities:
+        responses: true
+        reasoning: true
+        json_schema: true
+        json_object: true
+    qwen3.7-plus:
+      provider: qwen
+      api_style: chat_completions
+      capabilities:
+        chat_completions: true
+        streaming: true
+        tools: true
+        streaming_tools: true
+        vision: true
+        json_object: true
+    qwen3.8-max:
+      provider: qwen
+      api_style: chat_completions
+      capabilities:
+        chat_completions: true
+        streaming: true
+        vision: true
+        json_object: true
+    qwen3.8-flash:
+      provider: qwen
+      api_style: chat_completions
+      capabilities:
+        chat_completions: true
+        streaming: true
+        json_object: true
+      max_output_tokens: 128000
+    qwen3.6-flash:
+      provider: qwen
+      api_style: chat_completions
+      capabilities:
+        chat_completions: true
+        streaming: true
+        json_object: true
+    qwen3-vl-plus:
+      provider: qwen
+      api_style: chat_completions
+      capabilities:
+        chat_completions: true
+        streaming: true
+        vision: true
+        json_object: true
+    qwen3-vl-flash:
+      provider: qwen
+      api_style: chat_completions
+      capabilities:
+        chat_completions: true
+        streaming: true
+        vision: true
+        json_object: true
+    wan2.7-image-pro:
+      provider: qwen
+      api_style: images
+      capabilities:
+        image_generation: true
+    qwen-image-3.0-pro:
+      provider: qwen
+      api_style: images
+      capabilities:
+        image_generation: true
+    z-image-turbo:
+      provider: qwen
+      api_style: images
+      capabilities:
+        image_generation: true
+vision:
+  provider: qwen
+  quality_model: qwen3-vl-plus
+  batch_model: qwen3-vl-flash
+  api_key: sk-ws-H.EMHEPPD.jYHu.MEYCIQDt52EuWtYehz_T3DEckelbVnu1kOMfz_0TkSXwT7xThQIhALd1ATV_3TLnSv6S8TgdxL7jjENDDIVRYvp3vdREKb8U
+  base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+  timeout_seconds: 120
+  max_tokens: 2048
+image_generation:
+  provider: qwen
+  api_key: sk-ws-H.EMHEPPD.jYHu.MEYCIQDt52EuWtYehz_T3DEckelbVnu1kOMfz_0TkSXwT7xThQIhALd1ATV_3TLnSv6S8TgdxL7jjENDDIVRYvp3vdREKb8U
+  base_url: https://dashscope.aliyuncs.com/api/v1
+  timeout_seconds: 180
+  poll_interval_seconds: 1
+  role_models:
+    academic_figure: wan2.7-image-pro
+    text_rich_figure: qwen-image-3.0-pro
+    draft: z-image-turbo
+  models:
+    wan2.7-image-pro:
+      endpoint_style: dashscope_multimodal
+      endpoint_path: services/aigc/multimodal-generation/generation
+      supports_reference: false
+      supports_edit: false
+      supports_mask: false
+      supports_4k: true
+    qwen-image-3.0-pro:
+      endpoint_style: dashscope_multimodal
+      endpoint_path: services/aigc/multimodal-generation/generation
+      supports_reference: false
+      supports_edit: false
+      supports_mask: false
+      supports_4k: false
+    z-image-turbo:
+      endpoint_style: dashscope_multimodal
+      endpoint_path: services/aigc/multimodal-generation/generation
+      supports_reference: false
+      supports_edit: false
+      supports_mask: false
+      supports_4k: false
+api:
+  openai:
+    api_key: sk-TynqFFZfmVXsg5mfzuw6jiqgFJK9GEjPuOpOFOtxsvb9pa7B
+    api_base: ''
+    base_url: https://slb-v1.api.fan
+  semantic_scholar:
+    api_key: s2k-VYwzgcaIeU7xOMk5eSkB0PM3oS9J6RxEEKrBH9Le
+    base_url: https://api.semanticscholar.org
+  github_ai:
+    token: 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
+  serper:
+    api_key: 18616c8dca733dcc5bc7d3fffdc96bada9b68fd2
+  jina:
+    api_key: jina_221e099ba9cd467d84957ca46d89d88dzxJ2UW8aR7YXbjczESsOMUDy6OmK
+  tavily:
+    api_key: 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
+    remote_url_template: https://mcp.tavily.com/mcp/?tavilyApiKey={api_key}
+  huggingface:
+    endpoint: https://hf-mirror.com
+survey:
+  output:
+    root_dir: /mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/src/agents/survey_agent/outputs
+  multimodal_evidence:
+    enabled: false
+    allow_remote_perception: false
+    quality_model: qwen3-vl-plus
+    max_data_anchored_sh: 3
+    max_vl_calls: 8
+    max_preview_pixels: 1600000
+    max_preview_bytes: 4194304
+    max_records_per_modality: 24
+    max_input_file_bytes: 52428800
+    max_total_input_bytes: 268435456
+    sampling_policy: stratified_by_label_group_condition_timepoint_round_robin_v1
+    input_spec: {}
+    local_input_context: {}
+    runtime_evidence: {}
+  BasicInfo:
+    topic: ''
+    research_title: ''
+    declared_domain: ''
+    research_objective: ''
+    research_brief: ''
+    research_context_path: ''
+    research_context_use_llm: true
+    research_context: {}
+    research_design_inventory: {}
+    project_context_artifact_path: ''
+    survey_run_id: ''
+    subhypotheses: []
+    subhypothesis_decomposition: {}
+    subhypothesis_decomposition_path: ''
+    subhypothesis_retrieval: {}
+    cache_path: ./database
+    debug: false
+    error_conservatism_mode: false
+    skip_exist: false
+    adapter_mode: false
+  APIInfo:
+    llm_provider: qwen
+    llm_api_key: ''
+    llm_api_base_url: ''
+    llm_model_name: ''
+    llm_max_context_length: 880000
+    use_stream_mode: false
+    batch_chat_agent_worker: 4
+    chat_timeout: 900
+    batch_chat_timeout: 1800
+    openalex_base_url: https://api.openalex.org
+    openalex_api_key: Uit9DkgYmWGpYvcPKnrPe3
+    openalex_email: 3139000284@qq.com
+    openalex_requests_per_second: 8
+    openalex_connect_timeout_seconds: 10
+    openalex_read_timeout_seconds: 30
+    openalex_api_max_retry: 2
+    openalex_retry_base_delay_seconds: 1
+    openalex_retry_max_delay_seconds: 60
+    openalex_search_per_page: 10
+    openalex_graph_candidate_per_page: 100
+    openalex_graph_recent_quota: 15
+    openalex_graph_high_impact_quota: 15
+    openalex_graph_cache_schema_version: 2
+    unpaywall_base_url: https://api.unpaywall.org/v2
+    unpaywall_email: neyc200704@mail.dlut.edu.cn
+    unpaywall_timeout: 30
+    semantic_scholar_api_key: s2k-VYwzgcaIeU7xOMk5eSkB0PM3oS9J6RxEEKrBH9Le
+    low_flow_mode: false
+    low_flow_latency: 0
+    exponential_backoff: true
+    exponential_backoff_time: 1
+    exponential_backoff_max_time: 60
+    arxiv_api_max_retry: 3
+    semantic_scholar_api_max_retry: 3
+  ModuleInfo:
+    WorkCollector:
+      download_safe_mode: false
+      download_timeout: 60
+      download_in_parallel: true
+      download_parallel_workers: 4
+      pdf_parse_batch_size: 1
+      fulltext_resolution_enabled: true
+      fulltext_unpaywall_all_locations_enabled: true
+      fulltext_generic_metadata_urls_enabled: true
+      fulltext_doi_landing_fallback_enabled: true
+      fulltext_max_candidates_per_paper: 12
+      fulltext_max_declared_pdf_links_per_landing_page: 8
+      fulltext_max_doi_landing_recovery_pdf_attempts: 4
+      fulltext_landing_page_timeout_seconds: 20
+      fulltext_landing_page_max_bytes: 1500000
+      fulltext_landing_page_max_redirects: 5
+      fulltext_pdf_max_bytes: 50000000
+      fulltext_per_host_concurrency: 2
+      fulltext_http_max_retries: 2
+      fulltext_http_retry_base_delay_seconds: 1
+      fulltext_http_retry_max_delay_seconds: 10
+      fulltext_connect_timeout_seconds: 10
+      fulltext_read_timeout_seconds: 60
+      fulltext_oa_resolution_cache_ttl_seconds: 604800
+      fulltext_pdf_success_cache_ttl_seconds: 2592000
+      fulltext_failure_404_ttl_seconds: 86400
+      fulltext_failure_access_denied_ttl_seconds: 1800
+      fulltext_failure_rate_limited_ttl_seconds: 900
+      fulltext_failure_non_pdf_ttl_seconds: 21600
+      fulltext_failure_signed_url_ttl_seconds: 300
+      fulltext_failure_transient_first_ttl_seconds: 60
+      fulltext_failure_transient_ttl_seconds: 180
+      fulltext_host_denial_threshold: 2
+      fulltext_host_denial_window_seconds: 600
+      fulltext_host_circuit_ttl_seconds: 3600
+      fulltext_access_context_generation: anonymous-v1
+      invalidate_fulltext_failure_cache: false
+      fulltext_provenance_enabled: true
+      cache_enabled: true
+      max_seed_paper_num: 18
+      use_seed_filter_LLM: true
+      LLM_seed_threshold: 4
+      auto_decompose_subhypotheses: true
+      subhypothesis_decomposition_provider: qwen
+      subhypothesis_decomposition_model: qwen3.8-max
+      subhypothesis_decomposition_min_count: 3
+      subhypothesis_decomposition_max_count: 6
+      subhypothesis_decomposition_temperature: 0.1
+      subhypothesis_decomposition_max_output_tokens: 16000
+      subhypothesis_decomposition_cache_enabled: true
+      enable_subhypothesis_retrieval: true
+      sh_retrieval_cache_enabled: true
+      sh_retrieval_cache_success_ttl_seconds: 604800
+      sh_retrieval_cache_empty_ttl_seconds: 21600
+      refresh_sh_retrieval_cache: false
+      invalidate_sh_retrieval_cache: false
+      enable_sh_paper_semantic_assessment: true
+      sh_paper_semantic_assessment_cache_enabled: true
+      enable_arxiv_discovery: false
+      subhypothesis_relevance_threshold: 3
+      subhypothesis_max_unique_papers: 10
+      subhypothesis_max_slots_per_paper: 2
+      max_query_variants_per_slot: 5
+      max_terms_per_query_variant: 6
+      min_slot_candidates_before_relaxation: 5
+      enable_adjacent_discipline_precision_lane: true
+      max_adjacent_discipline_fields: 3
+      enable_slot_semantic_scholar_fallback: true
+      slot_retrieval_parallel_workers: 4
+      reference_graph_depth: 1
+      exploration_seed_reference_graph_depth: 1
+      sentence_transformer_model: models/bge-m3
+      sentence_transformer_batch_size: 4
+      expand_in_local_paper_graph: false
+      advanced_filter_in_local_paper_graph_expansion: true
+      related_work_top_k: 30
+      log_related_work_num: -1
+      related_work_threshold: 0.5
+      related_work_threshold_for_llm: 4
+      fulltext_download_max_papers: 70
+      enable_fulltext_expanded_promotion: true
+      expanded_fulltext_promotion_candidate_multiplier: 2
+      expanded_fulltext_promotion_max_candidates_per_sh: 40
+      relatedness_temperature: 0.1
+      RAG_source_use_embedding_filter: true
+      RAG_source_use_LLM_filter: false
+      RAG_source_downloadable_only: false
+      use_ds_when_graph_fail: true
+    Database:
+      default_top_k: 20
+    PaperGraphRetriever:
+      db_path: data/processed/graph.db
+    WorkAnalyzer:
+      abstract_only_mode: false
+      abstract_when_full_text_fail: true
+      cache_enabled: true
+      use_local_paper_graph_keynotes: false
+      paper_reading_temperature: 0.3
+      paper_reading_max_retry: 5
+      llm_max_context_overhead_length_in_paper_reading: 20000
+      fulltext_section_packing_enabled: true
+      fulltext_section_max_tokens: 512000
+      fulltext_section_prompt_reserve_tokens: 24000
+      fulltext_section_max_output_tokens: 16000
+      fulltext_section_batch_worker: 10
+      fulltext_section_max_in_flight_tokens: 800000
+      oversized_unsplittable_section_policy: abstract
+      clustering_batch_size: 8
+      clustering_temperature: 1.0
+      clustering_in_steps: true
+      clustering_batch_size_in_creation: 6
+      clustering_batch_size_in_assignment: 10
+      cluster_assign_fast_mode: true
+      paper_clustering_max_retry: 10
+      paper_clustering_creation_max_retry: 3
+      paper_clustering_assignment_max_retry: 4
+      propose_question_temperature: 0.5
+      anwer_question_temperature: 0.2
+      intra_cluster_analysis_max_retry: 5
+      intra_cluster_analysis_temperature: 1.0
+      intra_clustering_probelm_proposing_max_retry: 10
+      graph_keynote_extraction_batch_retry: 7
+      graph_graph_keynote_extraction_temperature: 0.1
+      use_ds_keynotes_when_graph_fail: true
+    SurveyGenerator:
+      include_initial_analysis: false
+      include_relation_graph: true
+      include_relation_table: true
+      include_code_report: false
+      include_env_report: false
+      omit_error_preserve_retry_time: 2
+      outline_generation_in_steps: true
+      outline_generation_draft_max_retry: 3
+      outline_generation_draft_batch_size: 20
+      outline_generation_draft_max_iterations: 5
+      outline_generation_draft_empty_keynotes_iteration: 1
+      outline_draft_RAG_topk: 60
+      outline_generation_assign_max_retry: 10
+      outline_generation_assign_batch_size: 20
+      outline_assign_RAG_topk: 20
+      outline_assign_fast_mode: true
+      outline_generation_temperature: 0.5
+      outline_prompt_max_input_tokens: 240000
+      outline_max_output_tokens: 16000
+      outline_evidence_plan_max_input_tokens: 100000
+      outline_current_outline_max_input_tokens: 20000
+      outline_keynotes_max_input_tokens: 70000
+      outline_analysis_max_input_tokens: 12000
+      outline_rag_max_input_tokens: 12000
+      outline_repair_previous_response_max_input_tokens: 8000
+      outline_repair_current_outline_max_input_tokens: 8000
+      outline_representative_papers_per_sh: 4
+      outline_representative_max_papers: 30
+      outline_representative_include_context_papers: true
+      survey_target_words: 32000
+      survey_max_words: 40000
+      writing_max_papers_per_sh: 20
+      outline_min_sections: 5
+      outline_target_sections: 6
+      outline_max_sections: 7
+      outline_min_subsections_per_section: 1
+      outline_target_subsections_per_section: 3
+      outline_max_subsections_per_section: 3
+      subsection_target_min_words: 875
+      subsection_target_max_words: 2000
+      subsection_target_citations: 3
+      subsection_max_citations: 5
+      section_preamble_target_words: 250
+      section_preamble_max_words: 400
+      section_preamble_target_citations: 1
+      section_preamble_max_citations: 2
+      outline_generation_batch_size: 16
+      outline_generation_max_retry: 3
+      outline_generation_max_retry_in_generation_loop: 6
+      subsection_draft_temperature: 0.5
+      subsection_draft_max_retry: 5
+      claim_trace_validation_enabled: false
+      claim_trace_repair_max_attempts: 2
+      claim_trace_repair_max_output_tokens: 2048
+      section_draft_max_retry: 3
+      always_omit_error_in_draft_validation: true
+      section_draft_temperature: 0.1
+      draft_refinement_temperature: 1.0
+      section_draft_max_error_info_length: 500
+      subsection_draft_max_error_info_length: 500
+      outline_max_error_info_length: 500
+      llm_max_context_overhead_length_generation: 20000
+      llm_max_context_overhead_length_outline_generation: 10000
+      subsection_least_words: 875
+      subsection_least_citations: 3
+      section_least_words: 4250
+      section_least_citations: 3
+      section_preamable_least_words: 250
+      section_preamble_least_words: 250
+      section_preamble_least_citations: 3
+      draft_length_relax_ratio: 0.1
+      use_full_text_in_survey_generation: false
+      include_other_relevant_papers_RAG_in_outline: true
+      outline_RAG_topk: 200
+      include_other_relevant_papers_RAG: true
+      section_RAG_topk: 60
+      subsection_RAG_topk: 60
+      use_title_in_draft: true
+      enable_review_and_revise: true
+      agentic_refine_section: true
+      section_review_temperature: 1.0
+      section_review_retry: 3
+      evidence_bounded_section_quality_review_enabled: true
+      evidence_bounded_section_quality_score_threshold: 8.0
+      evidence_bounded_section_quality_max_improvements: 2
+      evidence_bounded_section_quality_review_retry: 2
+      evidence_bounded_section_quality_revise_retry: 2
+      reviewer_max_suggestions: 5
+      section_revision_RAG_topk: 30
+      section_revise_temperature: 0.5
+      section_revise_retry: 3
+      no_suggestion_run_each_iteration: 2
+      max_review_revise_iterations: 3
+      revise_section_in_parallel: 4
+      draft_refinement_in_parts: true
+      refine_in_parts_mode: 2
+      draft_refinement_max_retry: 7
+      review_and_revise_whole_survey_in_refinement: true
+      agentic_refine_survey: true
+      review_and_revise_whole_survey_max_iteration: 5
+      valid_title_min_similarity: 0.5
+    SurveyVisualization:
+      enabled: true
+      output_mode: companion_markdown
+      write_back_to_survey_md: false
+      image_output_location: survey_output_directory
+      image_filename_template: fig_{index:02d}_{slug}.png
+      min_figures: 3
+      max_figures: 5
+      candidates_per_figure: 2
+      allowed_figure_types:
+      - overview_framework
+      - mechanism
+      - causal_pathway
+      - evidence_to_inference
+      - method_comparison
+      - multiscale_synthesis
+      - conceptual_workflow
+      - research_landscape
+      - future_roadmap
+      draft_image_role: draft
+      final_image_role: academic_figure
+      optional_text_rich_image_role: text_rich_figure
+      final_image_size: 2048x1536
+      compatible_image_size: 2048x1536
+      reader_facing_language: en
+      caption_language: en
+      alt_text_language: en
+      overlay_label_language: en
+      prompt_language: en
+      append_english_label_strip: true
+      generate_article_style_profile: true
+      palette_source: llm
+      lock_palette_per_survey: true
+      palette_min_colors: 4
+      palette_max_colors: 6
+      planner_section_max_chars: 6000
+      planner_temperature: 0.2
+      require_evidence_anchor: true
+      require_visual_brief: true
+      visual_brief_repair_enabled: true
+      visual_brief_repair_max_output_tokens: 2400
+      allow_unsupported_claims: false
+      allow_generated_numeric_charts: false
+      show_explicit_evidence_gaps: true
+      visual_qc_enabled: true
+      regenerate_on_palette_mismatch: true
+      max_regeneration_attempts: 1
+      fail_open: true
+    Judge:
+      skip_evaluation: false
+      use_different_api_for_judge: false
+      provider: ''
+      model: qwen3.7-plus
+      judge_llm_api_key: ''
+      judge_llm_api_base_url: ''
+      nli_temperature: 0.1
+      citation_quality_threshold: 0.5
+      remove_failed_citation_in_eval: true
+      rubrics_eval_10_dimensions: true
+      rubrics_eval_4_dimensions: false
+      rubrics_deep_survey_eval: false
+      explanation_in_rubric: false
+      citation_eval: false
+    CodeAnalysis:
+      PseudoCreator:
+        planner_temperature: 0.5
+        planner_max_retry: 3
+idea:
+  enabled: true
+  input: ''
+  topic: ''
+  mature_idea: ''
+  mature_ideas: []
+  refinement_scope: ''
+  run:
+    LigAgent-Pro: true
+    route_matrix_enabled: true
+    idea_route_matrix_max_workers: 8
+    max_mature_ideas: 12
+    allow_problem_reframing: true
+    allow_unanchored_seed: true
+    allow_high_risk_seed: true
+    input: ''
+    topic: ''
+    mature_idea: ''
+    mature_ideas: []
+    refinement_scope: ''
+    survey_manifest: ''
+    ablation_results_path: ''
+    input_interpreter_model: qwen3.7-plus
+    output_root: runs
+    console_logs: true
+    rag_config: src/config/default.yaml
+    openai_api_key: sk-TynqFFZfmVXsg5mfzuw6jiqgFJK9GEjPuOpOFOtxsvb9pa7B
+    openai_base_url: https://slb-v1.api.fan
+  agent:
+    model: qwen3.7-plus
+    paper_keynote_keep_top_k: 10
+    workflow_models:
+      default: qwen3.7-plus
+      main:
+        knowledge_aquisition: qwen3.7-plus
+        advanced_analysis: qwen3.7-plus
+        re_analysis_replan: qwen3.7-plus
+        idea_generation: qwen3.7-plus
+        mature_idea_portfolio_generation: qwen3.7-plus
+        mature_idea_adjudication: qwen3.7-plus
+        route_context_preparation: qwen3.7-plus
+        diversity_adjudication: qwen3.7-plus
+        cross_seed_debate: qwen3.7-plus
+        portfolio_synthesis: qwen3.7-plus
+        primary_idea_materialization: qwen3.7-plus
+      knowledge_acquisition:
+        ka_query_generation: qwen3.7-plus
+        ka_paper_triage: qwen3.7-plus
+      stage_overrides:
+        algorithm_structuring: qwen3.7-plus
+        algorithm_alignment: qwen3.7-plus
+    chat_max_retries: 3
+    chat_retry_backoff: 2.0
+    advanced_analysis_contract_retries: 2
+    introduction_max_output_tokens: 25600
+    introduction_json_repair_attempts: 2
+    paper_enrichment_timeout_sec: 7200
+    experiment_findings_extraction:
+      model: qwen3.7-plus
+      temperature: 0.1
+      max_output_tokens: 65536
+  mcts:
+    max_iterations: 8
+    max_depth: 3
+    branching_factor: 3
+    exploration_constant: 1.2
+    idea_taste_mode: moonshot_inventor
+    prompt_mode: conceptual_surprise
+    generation_model: qwen3.7-plus
+    evaluation_model: qwen3.7-plus
+    generation_temperature: 0.7
+    evaluation_temperature: 0.001
+    generation_max_tokens: 16384
+    evaluation_max_tokens: 16384
+    component_novelty_model_path: /mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/models/bge-m3
+    component_novelty_index_dir: null
+    component_novelty_retrieval_top_k: 50
+    component_novelty_evidence_top_k: 5
+    component_novelty_eval_model: qwen3.7-plus
+    component_novelty_eval_temperature: 0.001
+    component_novelty_eval_max_tokens: 16384
+    mechanism_commit_retrieval_top_k: 3
+    mechanism_commit_similarity_threshold: 0.6
+    theory_transfer_retrieval_top_k: 3
+    theory_transfer_similarity_threshold: 0.6
+    enable_vector_memory: true
+    enable_symbolic_memory: true
+    max_parallel_seeds: 4
+    max_parallel_routes: 5
+    exploration_budget: 24
+    high_risk_budget: 32
+  portfolio:
+    min_independent_ideas: 2
+    max_candidates_per_seed: 5
+    max_route_expansions_per_seed: 5
+    primary_selection_policy: scientific_maturity_diversity_validation
+  diversity:
+    enabled: true
+    min_route_distance: 0.35
+    max_same_route_ratio: 0.6
+    regenerate_collapsed_routes: false
+    preserve_high_risk_unique_candidates: true
+    min_confidence_for_memory: 0.6
+    pareto_top_k: 5
+    symbolic_memory_path: output/symbolic_memory
+    skill_prior_success_threshold: 0.7
+  debate:
+    enabled: true
+    internal_max_rounds: 2
+    max_parallel_internal: 6
+    cross_seed_max_rounds: 1
+    max_parallel_cross_seed: 6
+    prompt_char_limit: 120000
+    internal_debate_prompt_limit: 80000
+    cross_seed_debate_prompt_limit: 60000
+  fusion:
+    enabled: true
+    only_when_ligagent_pro: true
+    model: ''
+    temperature: 0.7
+    max_tokens: 16384
+    min_candidates: 2
+    repair_max_steps: 10
+    repair_patience: 5
+    repair_epsilon: 0.02
+  memory:
+    vector_store:
+      model_path: /mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/models/all-MiniLM-L6-v2
+      llm_name: ''
+      llm_backend: openai
+      llm_provider: ''
+experiment:
+  enabled: true
+  backend: openharness
+  openharness:
+    provider: ''
+    default_model: ''
+    api_key: ''
+    base_url: ''
+    role_models:
+      planner: ''
+      worker: ''
+      reviewer: ''
+      master: ''
+    timeout_seconds: 7200
+    request_max_retries: 6
+    request_retry_base_delay: 1.0
+    request_retry_max_delay: 60.0
+    structured_output_max_hook_blocks: 6
+    max_tokens: 16384
+    max_turns: 0
+    runtime_dir_name: .openharness_runtime
+    max_budget_usd: 0
+  external_tools:
+    huggingface_endpoint: https://hf-mirror.com
+    github_ai_token: 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
+    serper_api_key: 18616c8dca733dcc5bc7d3fffdc96bada9b68fd2
+    jina_api_key: jina_221e099ba9cd467d84957ca46d89d88dzxJ2UW8aR7YXbjczESsOMUDy6OmK
+  execution:
+    max_iterations: 20
+    delegate_max_children: 1
+    planner_max_turns: 0
+    worker_max_turns: 0
+    prepare_review_feedback_rounds: 4
+    code_review_feedback_rounds: 2
+    science_review_feedback_rounds: 2
+    bash_timeout_seconds: 600000
+    mcp_timeout_seconds: 120
+    slurm:
+      partition: gpu_llm
+      gpus: 8
+      gpu_type: NVIDIA A800-80G
+      cpu_cores: 60
+      memory: 128G
+      time_limit: '24:00:00'
+      log_dir_template: '{workspace}/logs/slurm'
+      job_name_template: '{experiment_condition}_{pde_type}_{timestamp}'
+  memory:
+    enabled: true
+    shared_dir: ~/.researchagent/shared_memory
+    embedding_model_path: /mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/models/all-MiniLM-L6-v2
+    llm_provider: ''
+    llm_name: ''
+    llm_backend: openai
+    query_method: embedding
+    writeback_enabled: true
+    tool_logs_enabled: false
+    prompt_injection_enabled: true
+    max_slots_per_task: 100
+  workspace:
+    root: /mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace
+    prepare_clone_depth: 1
+    model_candidate_seed: ~/.researchagent/model_seed/
+    tavily_enabled: true
+    tavily_api_key: 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
+    tavily_remote_url_template: https://mcp.tavily.com/mcp/?tavilyApiKey={api_key}
+experiment_design:
+  enabled: true
+  provider: qwen
+  model: qwen3.8-flash
+  execution:
+    allow_digital_execution: false
+  retrieval:
+    max_results_per_query: 6
+    max_fulltext_papers: 15
+    cache:
+      enabled: true
+      root: .science/cache/experiment_design/v1
+      mode: read_write
+    paper_screening:
+      fulltext_budget: 15
+      max_candidates_before_llm: 32
+      parallel_workers: 8
+    evidence_card_extraction:
+      parallel_workers: 3
+    fulltext:
+      enabled: true
+      cache_dir: workspace/experiment_design/fulltext_cache
+      max_papers: 15
+      max_candidates_per_paper: 12
+      max_pdf_bytes: 50000000
+      timeout_seconds: 30
+      per_host_concurrency: 2
+      parser_backend: survey_mineru
+      parser_batch_size: 1
+      enable_landing_page_recovery: true
+      enable_unpaywall_resolution: false
+      max_landing_page_bytes: 1500000
+      max_declared_pdf_links_per_landing_page: 8
+      max_redirects: 5
+      failure_non_pdf_ttl_seconds: 21600
+      failure_access_denied_ttl_seconds: 1800
+      failure_rate_limited_ttl_seconds: 900
+    openalex:
+      api_key: Uit9DkgYmWGpYvcPKnrPe3
+      email: 3139000284@qq.com
+      base_url: https://api.openalex.org
+    semantic_scholar:
+      api_key: s2k-VYwzgcaIeU7xOMk5eSkB0PM3oS9J6RxEEKrBH9Le
+      base_url: https://api.semanticscholar.org/graph/v1
+research_plan_author:
+  enabled: true
+  output_root: ''
+  provider: qwen
+  model: qwen3.8-flash
+  authoring:
+    require_survey_manifest: true
+    proposal_without_observed_results: true
+    unsupported_claims_forbidden: true
+    max_contract_repairs_per_section: 1
+    composer_concurrency: 5
+    section_cache:
+      enabled: true
+      mode: read_write
+      root: .science/cache/research_plan_author/v1
+    temperature: 0.5
+    require_survey_binding: false
+  document_quality:
+    enabled: true
+    model: qwen3.7-plus
+    judge_temperature: 0.0
+    revision_temperature: 0.5
+    judge_max_retries: 3
+    max_iterations: 2
+    score_concurrency: 3
+    max_revision_block_edits: 14
+    special_score_weight: 0.25
+  idea_evolution:
+    default_mode: auto
+    max_iterations: 3
+    allow_raw_internal_reasoning: false
+    require_source_anchors: true
+  rendering:
+    template_dir: /mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/Conference-LaTeX-template_10-17-19
+    template_profile: ieee_conference_v1
+    main_tex: ''
+    engine: pdflatex
+    bibtex: bibtex
+    pdf_renderer: pdftoppm
+    compile_timeout_seconds: 180
+    pdf_validation_timeout_seconds: 60
+    allow_shell_escape: false
+blog:
+  source_workspace_root: /mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace
+  provider: ''
+  retrieval:
+    mode: auto
+    graph_db_path: data/processed/graph.db
+  openai:
+    api_key: ''
+    base_url: ''
+  gemini:
+    api_key: ''
+    base_url: https://generativelanguage.googleapis.com/v1beta
+  gengraph:
+    provider: qwen
+    api_key: sk-ws-H.EMHEPPD.jYHu.MEYCIQDt52EuWtYehz_T3DEckelbVnu1kOMfz_0TkSXwT7xThQIhALd1ATV_3TLnSv6S8TgdxL7jjENDDIVRYvp3vdREKb8U
+    providers:
+      qwen:
+        base_url: https://dashscope.aliyuncs.com/api/v1
+        model: wan2.7-image-pro
+      dashscope:
+        base_url: https://dashscope.aliyuncs.com/api/v1
+        model: wan2.7-image-pro
+      openai:
+        base_url: https://api.openai.com/v1
+        model: gpt-image-2
+      openrouter:
+        base_url: https://openrouter.ai/api/v1
+        model: google/gemini-3-pro-image-preview
+      gemini:
+        base_url: https://generativelanguage.googleapis.com/v1beta
+        model: gemini-3-pro-image-preview
+  deeperaser:
+    use_cuda: false
+  semantic_scholar:
+    api_key: s2k-VYwzgcaIeU7xOMk5eSkB0PM3oS9J6RxEEKrBH9Le
+  model: ''
+  illustrate:
+    only_gen_img: true
+pipeline:
+  name: ''
+  state_file: pipeline.yaml
+  resume_enabled: true
+  skip_survey: false
+  iterate:
+    max_iterations: 5
+    stop_conditions:
+      min_ideas_generated: 5
+      max_consecutive_failures: 3
+    feedback:
+      include_metrics: true
+      include_errors: true
+      max_feedback_length: 8192
+  output:
+    root: pipeline_runs
+    idea_result_filename: idea_result.json
+    experiment_result_filename: experiment_result.json
+    resume_from_iteration: null
+  symbolic_memory_path: idea_skill_priors
+  default_macro_roles:
+  - generator
+  - encoder
+  - decoder
+  - loss
+  - regularizer
+  - optimizer
+  - architecture
+  - attention
+  - embedding
+  - representation
+  - constraint
+  - retrieval
+  - augmentation

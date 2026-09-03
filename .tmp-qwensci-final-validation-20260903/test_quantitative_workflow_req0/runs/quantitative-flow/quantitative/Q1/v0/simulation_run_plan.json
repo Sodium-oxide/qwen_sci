@@ -1,0 +1,94 @@
+{
+  "capability": {
+    "capability": "COMPOSABLE",
+    "reason": "The model is fully represented by audited MathIR and an approved solver adapter.",
+    "solver_id": "scipy_solve_ivp",
+    "system_type": "ODE_IVP"
+  },
+  "empirical_claim_status": "NOT_EMPIRICAL",
+  "execution_mode": "NUMERICAL_SIMULATION",
+  "mathir": {
+    "derivatives": {
+      "x": {
+        "args": [
+          {
+            "args": [
+              {
+                "name": "k",
+                "op": "variable"
+              }
+            ],
+            "op": "neg"
+          },
+          {
+            "name": "x",
+            "op": "variable"
+          }
+        ],
+        "op": "mul"
+      }
+    },
+    "parameters": {
+      "k": 1.0
+    },
+    "schema_version": "mathir_v1",
+    "solver_options": {
+      "max_step": 0.1
+    },
+    "states": [
+      {
+        "id": "x",
+        "initial": 1.0
+      }
+    ],
+    "system_type": "ODE_IVP",
+    "time_span": [
+      0.0,
+      1.0
+    ]
+  },
+  "model_identity": {
+    "created_from_artifact": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_quantitative_workflow_req0\\runs\\quantitative-flow\\idea\\attempt-001\\quantitative_ideas_manifest.json",
+    "model_spec_identity": "06b77fe67a1edd913607e93410ecb28236fe875db24398d1e28ce337da243f0f",
+    "project_context_fingerprint": "quantitative-workflow-context",
+    "project_id": "quantitative-workflow-project",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "quantitative-flow",
+    "selected_direction_id": "direction-1",
+    "survey_run_id": "survey-quantitative-flow",
+    "version": "0"
+  },
+  "parameter_provenance": {
+    "mode": "LEGACY_INLINE_ASSUMPTIONS"
+  },
+  "plan_identity": "d4f5040ce7dea546da249af26811315915632a8f39e69ef1b092ce99df37a25f",
+  "qualification_requirements": [
+    "solver_converged"
+  ],
+  "resource_limits": {
+    "atol": 1e-09,
+    "max_cells": 100000,
+    "max_fields": 8,
+    "max_grid_points": 512,
+    "max_matrix_nonzeros": 200000,
+    "max_matrix_size": 20000,
+    "max_memory_mb": 512,
+    "max_nx": 4096,
+    "max_ny": 1024,
+    "max_nz": 128,
+    "max_output_points": 2000,
+    "max_pde_snapshots": 200,
+    "max_samples": 100000,
+    "max_time_steps": 20000,
+    "max_wall_seconds": 120,
+    "rtol": 1e-06
+  },
+  "result_kind": "SIMULATED",
+  "scenarios": [
+    {
+      "parameter_overrides": {},
+      "scenario_id": "baseline"
+    }
+  ],
+  "schema_version": "simulation_run_plan_v1"
+}

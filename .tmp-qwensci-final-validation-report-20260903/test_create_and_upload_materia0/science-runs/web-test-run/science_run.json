@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-09-03T14:39:20.975787Z",
+  "execution_mode": "DESIGN_ONLY",
+  "immutable_inputs": {
+    "config": {
+      "snapshot_path": "config.resolved.yaml",
+      "snapshot_sha256": "47c3ece1b9b9abdc8b82fb4d55bc78d0677c918676b1c2d5a9fd63bc4761f00d",
+      "source_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\src\\config\\default.yaml",
+      "source_sha256": "6429618018b644f385dab16c49bd193a97604fe297617fe4db0fc7704518142d"
+    },
+    "materials": {
+      "manifest_path": "inputs/materials_manifest.json",
+      "manifest_sha256": "03a4310ab0614cf47ce418443bc2d8d6c57aa5b3902103e3f419056d56343555",
+      "multimodal_manifest_path": "inputs/multimodal_input_manifest.json",
+      "multimodal_manifest_sha256": "7112aa1e1527720a788e879915fc395bb9d8741b6b46b8d42b329edd20b5c2f8",
+      "records": [
+        {
+          "contains_sensitive_data": false,
+          "file_size_bytes": 70,
+          "material_id": "mat-1039886717ad4f499a1040e730ccc622",
+          "metadata": {
+            "label": "electrode microscopy"
+          },
+          "modality": "image",
+          "original_name": "microscopy.png",
+          "scope": "survey_evidence",
+          "sha256": "aa7bb0431aaeb198a77c26a14fe6dd714a75e4d7db94e3e1238a1fdcbfe1f8d4",
+          "stored_name": "77cdf2840fa04e91a870e1b7fb71f9a9.png"
+        },
+        {
+          "contains_sensitive_data": true,
+          "file_size_bytes": 70,
+          "material_id": "mat-553b5d7095bc402498da0e3ef3d3e392",
+          "metadata": {
+            "label": "private background reference"
+          },
+          "modality": "image",
+          "original_name": "private-reference.png",
+          "scope": "context_only",
+          "sha256": "aa7bb0431aaeb198a77c26a14fe6dd714a75e4d7db94e3e1238a1fdcbfe1f8d4",
+          "stored_name": "98201b20924c4ff88b32223036091f5c.png"
+        }
+      ],
+      "remote_perception_authorized": false
+    },
+    "options": {
+      "author_rendering": {
+        "author_name": "Anonymous Research Plan Author",
+        "bibtex": null,
+        "compile_timeout_seconds": null,
+        "latex_engine": null,
+        "minimum_pages": 7,
+        "pdf_renderer": null,
+        "required": false,
+        "template_dir": null,
+        "template_main": null,
+        "template_profile": null
+      },
+      "discipline_ids": [
+        "25",
+        "16"
+      ],
+      "models": {
+        "author": null,
+        "experiment_design": null,
+        "quantitative": null
+      },
+      "quantitative": {
+        "mode": "optional"
+      },
+      "selected_direction": "",
+      "survey_appendix": "source-link"
+    },
+    "topic": "How can controlled image evidence improve battery electrode stability research?",
+    "topic_fingerprint": "4b9e3ed7e1e0cc0109dd820e75863a30c150fca76da704dd86da21f86a6ef032",
+    "web": {
+      "language": "en"
+    }
+  },
+  "schema_version": "science_run_v1",
+  "science_run_id": "web-test-run"
+}

@@ -1,0 +1,73 @@
+{
+  "authoring_constraints": {
+    "all_displayed_checkpoints_require_source_anchors": true,
+    "do_not_describe_checkpoints_as_temporal_iterations": true,
+    "do_not_invent_missing_iterations": true,
+    "do_not_present_idea_history_as_empirical_evidence": true,
+    "language": "en",
+    "temporal_order_is_unknown_without_iteration_id_timestamp_parent_or_auditable_diff": true
+  },
+  "checkpoints": [
+    {
+      "checkpoint_id": "checkpoint-1",
+      "checkpoint_type": "available_audit_snapshot",
+      "snapshot": {
+        "central_hypothesis": "Under controlled hyperosmotic perturbation, membrane-bounded organelles resist internal densification and maintain sharp lipid-defined boundaries, whereas fluid-like phase-separated condensates undergo continuous density shifts and boundary coarsening; this distinction holds provided that global cytoskeletal integrity is maintained and non-specific macromolecular precipitation is excluded.",
+        "claim_scope": "Nanoscale biomolecular organization in crowded cellular environments, specifically proposing a design-only computational strategy to distinguish membrane-bounded organelles from fluid-like phase-separated condensates via modeled osmotic and macromolecular crowding gradients, bounded by conditions where global cytoskeletal collapse and non-specific salting-out are controlled.",
+        "direction_mode": "mechanism_replacement",
+        "mechanism_or_relation": "Osmotic pressure gradients modulate macromolecular crowding and multivalent interactions to drive dispersed-to-aggregated transitions in phase-separated condensates, while lipid bilayer impermeability restricts membrane-bounded organelles to volume reduction without internal densification.",
+        "target_gap_ids": [
+          "gap:sh3:identifiability_gap:discriminating_observation:discriminating_observation:unknown:1ee92b215a69",
+          "gap:sh3:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:41171bf535f4",
+          "gap:sh3:unmapped_gap_input_or_condition:input_or_condition:input_or_condition:unknown:12831e178f59"
+        ],
+        "title": "Osmotic and Macromolecular Crowding Gradients Discriminate Membrane-Bounded from Phase-Separated Compartmentalization via Cryo-Electron Tomography"
+      },
+      "source_file": "idea_candidate.json",
+      "source_json_pointer": "/",
+      "source_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/idea/attempt-001/idea_candidate.json",
+      "temporal_order": "unknown"
+    },
+    {
+      "checkpoint_id": "checkpoint-2",
+      "checkpoint_type": "available_audit_snapshot",
+      "snapshot": {
+        "direction_mode": "mechanism_replacement",
+        "hypothesis": {
+          "assumptions": [
+            "Cryo-ET can resolve nanoscale spatial density profiles without fixation artifacts; aquaporin inhibition specifically blocks water flux; hyperosmotic conditions can be applied without inducing global cytoskeletal collapse or non-specific protein precipitation."
+          ],
+          "boundary_or_failure_condition": "The claim fails if membrane-bounded organelles exhibit continuous density gradients and fusion due to cytoskeletal compression, or if phase-separated condensates maintain sharp boundaries, or if non-specific salting-out produces identical density profiles across all compartments.",
+          "central_hypothesis": "Under controlled hyperosmotic perturbation, membrane-bounded organelles resist internal densification and maintain sharp lipid-defined boundaries, whereas fluid-like phase-separated condensates undergo continuous density shifts and boundary coarsening; this distinction holds provided that global cytoskeletal integrity is maintained and non-specific macromolecular precipitation is excluded.",
+          "claim_scope": "Nanoscale biomolecular organization in crowded cellular environments, specifically proposing a design-only computational strategy to distinguish membrane-bounded organelles from fluid-like phase-separated condensates via modeled osmotic and macromolecular crowding gradients, bounded by conditions where global cytoskeletal collapse and non-specific salting-out are controlled.",
+          "discriminating_observation": "Differential boundary sharpness and internal spatial density profiles measured via cryo_tomography_assay: condensates exhibit continuous density gradients and fusion, while membrane-bounded organelles exhibit sharp density discontinuities and volume reduction without fusion, under conditions where cytoskeletal artifacts are controlled.",
+          "evidence_basis": "Computational synthesis of cryo-fluorescence microscopy and cryo-electron tomography measurements of spatial density profiles under osmotic gradients, supplemented by design-only experimental proposals marked NEED_HUMAN_INPUT.",
+          "evidence_requirement": "Computational synthesis and proposed measurement of spatial density profiles and boundary sharpness differentials between membrane-bounded and phase-separated compartments under osmotic gradients, contrasted against water-flux ablation and swelling stress boundaries, with explicit controls for cytoskeletal and salting-out artifacts.",
+          "expected_mechanism": "Hyperosmotic shock increases macromolecular crowding, driving phase-separated condensates to densify or undergo Ostwald ripening via steric exclusion, while membrane-bounded organelles shrink but maintain sharp boundaries; this mechanism is contingent on the absence of global cytoskeletal collapse.",
+          "intervention_or_transformation": "Computational modeling and proposed design-only biological perturbation of osmotic_crowding_gradients (hyperosmotic shock) and aquaporin_inhibition_ablation, marked NEED_HUMAN_INPUT for feasibility and ethics review.",
+          "mechanism_or_relation": "Osmotic pressure gradients modulate macromolecular crowding and multivalent interactions to drive dispersed-to-aggregated transitions in phase-separated condensates, while lipid bilayer impermeability restricts membrane-bounded organelles to volume reduction without internal densification.",
+          "scientific_object": {
+            "description": "cellular_biomolecular_system_comprising_membrane_bounded_organelles_and_phase_separated_condensates"
+          }
+        },
+        "target_gap_ids": [
+          "gap:sh3:identifiability_gap:discriminating_observation:discriminating_observation:unknown:1ee92b215a69",
+          "gap:sh3:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:41171bf535f4",
+          "gap:sh3:unmapped_gap_input_or_condition:input_or_condition:input_or_condition:unknown:12831e178f59"
+        ],
+        "title": "Osmotic and Macromolecular Crowding Gradients Discriminate Membrane-Bounded from Phase-Separated Compartmentalization via Cryo-Electron Tomography"
+      },
+      "source_file": "idea_result.json",
+      "source_json_pointer": "/directions/0",
+      "source_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260901-042802-922870/idea/attempt-001/idea_result.json",
+      "temporal_order": "unknown"
+    }
+  ],
+  "iterations": [],
+  "max_iterations": 3,
+  "missing_audit_sources": [],
+  "schema_version": "idea_evolution_appendix_v1",
+  "selected_direction_id": "mechanism_replacement",
+  "status": "CHECKPOINTS_AVAILABLE",
+  "temporal_order": "unknown"
+}

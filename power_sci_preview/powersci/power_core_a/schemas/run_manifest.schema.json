@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qwen-zhikan.local/schemas/run_manifest_v1.json",
+  "title": "RunManifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "run_kind", "state", "started_at", "completed_at", "random_seed", "protocol_hash", "input_artifacts", "output_artifacts", "state_event_hashes", "environment", "reproduction"],
+  "properties": {
+    "schema_version": {"const": "run_manifest_v1"},
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "run_kind": {"enum": ["OFFLINE_B0", "INTEGRATED"]},
+    "state": {"const": "PROTOCOL_FROZEN"},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "random_seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+    "protocol_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "input_artifacts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/descriptor"}},
+    "output_artifacts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/descriptor"}},
+    "state_event_hashes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}},
+    "environment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["python", "platform", "power_core_version", "llm_used"],
+      "properties": {"python": {"type": "string", "minLength": 1}, "platform": {"type": "string", "minLength": 1}, "power_core_version": {"type": "string", "minLength": 1}, "source_revision": {"type": "string"}, "llm_used": {"const": false}}
+    },
+    "reproduction": {
+      "type": "object", "additionalProperties": false,
+      "required": ["entrypoint", "arguments", "network_required"],
+      "properties": {"entrypoint": {"type": "string", "minLength": 1}, "arguments": {"type": "array", "items": {"type": "string"}}, "network_required": {"const": false}}
+    }
+  },
+  "$defs": {
+    "descriptor": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "artifact_id", "artifact_type", "artifact_version", "contract_schema", "content_hash", "byte_size", "relative_path", "created_at", "producer", "lineage_hashes"],
+      "properties": {
+        "schema_version": {"const": "artifact_descriptor_v1"}, "artifact_id": {"type": "string"}, "artifact_type": {"type": "string"},
+        "artifact_version": {"type": "integer", "minimum": 1}, "contract_schema": {"type": "string"},
+        "content_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "byte_size": {"type": "integer", "minimum": 1},
+        "relative_path": {"type": "string"}, "created_at": {"type": "string", "format": "date-time"}, "producer": {"type": "string"},
+        "lineage_hashes": {"type": "array", "items": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+      }
+    }
+  }
+}
+

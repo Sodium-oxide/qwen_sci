@@ -1,0 +1,62 @@
+{
+  "artifacts": {
+    "claim_traceability": {
+      "path": "survey_claim_traceability.json",
+      "required": true,
+      "sha256": "8cef39cebc540d3ae84afa44ab91e359b19ee248dceac076776d51bfa844b03e"
+    },
+    "evidence_plan": {
+      "path": "survey_evidence_plan.json",
+      "required": true,
+      "sha256": "fd70bd9673246fed17fb7391d911a52bdc928d3276ff1d97d029706449bd366c"
+    },
+    "gap_ledger": {
+      "path": "survey_gap_ledger.json",
+      "required": true,
+      "sha256": "ee359a02b94a96fa5af4e0fb7c2f75d9e66045d18c92bf7c989f175c32116812"
+    },
+    "gap_triage": {
+      "path": "survey_gap_triage.json",
+      "required": false,
+      "sha256": "4178845fa1a8aa20cb90bd862f2310d3d4b47d7f2d4f92424da2418c2514ca61"
+    },
+    "idea_handoff": {
+      "path": "survey_idea_handoff.json",
+      "required": true,
+      "sha256": "35202d736e65d0afe7c65fac10f452046c6fcea0ab91eb48aa10771be14a0107"
+    },
+    "project_context": {
+      "path": "project_context.json",
+      "required": true,
+      "sha256": "a5a189c42d246c9572ae98868254cef637975cddf90ff5153f6adc8fc52a3836"
+    },
+    "survey_json": {
+      "path": "survey.json",
+      "required": true,
+      "sha256": "a9687ff0ad8e1bcca8d173f1198d4fd0c44c6836e1dcd8db1ab322464a4b9ce3"
+    },
+    "survey_markdown": {
+      "path": "survey.md",
+      "required": true,
+      "sha256": "4f4fff972ffb5a2b0bfb40e2a4ca8b54c6a67e1b88e3692c6cf487d71c067120"
+    },
+    "survey_outline": {
+      "path": "survey_outline.json",
+      "required": false,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    }
+  },
+  "base_dir": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_experiment_design_manifes1\\science-runs\\closed-loop\\survey\\attempt-001",
+  "completed_at": "2026-09-03T14:37:22Z",
+  "created_at": "2026-09-03T14:37:22Z",
+  "gap_ledger_schema_version": "survey_gap_ledger_v1",
+  "handoff_schema_version": "survey_idea_handoff_v1",
+  "manifest_fingerprint": "c369d45f7e77bbe1dc4b6cfdb5d9b0ee5be9c81ec4a1e8a642bad0b38c19d44e",
+  "project_context_fingerprint": "science-workflow-context",
+  "project_id": "science-workflow",
+  "schema_version": "survey_manifest_v1",
+  "status": "completed",
+  "survey_run_id": "closed-loop-survey-001",
+  "topic": "exact handoff topic",
+  "topic_fingerprint": "46e7369612ae3738e20597df6c451af2fa7732efc16d46359daa54d231b6d47e"
+}

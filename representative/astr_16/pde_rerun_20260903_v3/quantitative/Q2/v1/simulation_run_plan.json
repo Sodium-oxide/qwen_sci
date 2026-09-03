@@ -1,0 +1,247 @@
+{
+  "capability": {
+    "capability": "COMPOSABLE",
+    "kind": "PDE",
+    "reason": "The PDEIR is valid and has an approved fixed solver adapter.",
+    "solver_id": "pde_fd_spherical_radial_thermal",
+    "solver_implementation_version": "pde-fixed-backends-v1",
+    "system_type": "SPHERICAL_RADIAL_THERMAL"
+  },
+  "empirical_claim_status": "NOT_EMPIRICAL",
+  "execution_ir": {
+    "document": {
+      "boundary_conditions": {
+        "left": {
+          "type": "SPHERICAL_ORIGIN_REGULARITY"
+        },
+        "right": {
+          "type": "DIRICHLET",
+          "value": {
+            "name": "surface_temperature",
+            "op": "variable"
+          }
+        }
+      },
+      "diffusion_coefficient": {
+        "name": "kappa",
+        "op": "variable"
+      },
+      "discretization": {
+        "grid_type": "UNIFORM",
+        "method": "FINITE_DIFFERENCE_SPHERICAL_RADIAL",
+        "space_order": 1
+      },
+      "fields": [
+        {
+          "bounds": {},
+          "id": "T",
+          "symbol": "T",
+          "unit": "10^9 K"
+        }
+      ],
+      "grid": {
+        "nx": 33
+      },
+      "heat_capacity": {
+        "name": "c_v",
+        "op": "variable"
+      },
+      "initial_condition": {
+        "profile": "UNIFORM",
+        "type": "ANALYTIC_PROFILE",
+        "value": 1.0
+      },
+      "parameters": {
+        "c_v": 1.0,
+        "cooling_amp": 0.02,
+        "decay_rate": 0.6,
+        "kappa": 0.01,
+        "latent_amp": 0.0,
+        "surface_temperature": 0.1,
+        "transition_center": 0.35,
+        "transition_width": 0.12
+      },
+      "schema_version": "pdeir_v1",
+      "solver_options": {
+        "time_integrator": "EXPLICIT_EULER",
+        "time_step": 0.005
+      },
+      "source": {
+        "args": [
+          {
+            "args": [
+              {
+                "name": "latent_amp",
+                "op": "variable"
+              },
+              {
+                "args": [
+                  {
+                    "args": [
+                      {
+                        "args": [
+                          {
+                            "args": [
+                              {
+                                "args": [
+                                  {
+                                    "args": [
+                                      {
+                                        "name": "x",
+                                        "op": "variable"
+                                      },
+                                      {
+                                        "name": "transition_center",
+                                        "op": "variable"
+                                      }
+                                    ],
+                                    "op": "sub"
+                                  },
+                                  {
+                                    "op": "constant",
+                                    "value": 2.0
+                                  }
+                                ],
+                                "op": "pow"
+                              },
+                              {
+                                "args": [
+                                  {
+                                    "op": "constant",
+                                    "value": 2.0
+                                  },
+                                  {
+                                    "args": [
+                                      {
+                                        "name": "transition_width",
+                                        "op": "variable"
+                                      },
+                                      {
+                                        "op": "constant",
+                                        "value": 2.0
+                                      }
+                                    ],
+                                    "op": "pow"
+                                  }
+                                ],
+                                "op": "mul"
+                              }
+                            ],
+                            "op": "div"
+                          }
+                        ],
+                        "op": "neg"
+                      }
+                    ],
+                    "op": "exp"
+                  },
+                  {
+                    "args": [
+                      {
+                        "args": [
+                          {
+                            "args": [
+                              {
+                                "name": "decay_rate",
+                                "op": "variable"
+                              },
+                              {
+                                "name": "t",
+                                "op": "variable"
+                              }
+                            ],
+                            "op": "mul"
+                          }
+                        ],
+                        "op": "neg"
+                      }
+                    ],
+                    "op": "exp"
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "mul"
+          },
+          {
+            "args": [
+              {
+                "name": "cooling_amp",
+                "op": "variable"
+              },
+              {
+                "name": "T",
+                "op": "field"
+              }
+            ],
+            "op": "mul"
+          }
+        ],
+        "op": "sub"
+      },
+      "spatial_dimension": 1,
+      "spatial_domain": {
+        "x": [
+          0.0,
+          1.0
+        ]
+      },
+      "system_type": "SPHERICAL_RADIAL_THERMAL",
+      "time_span": [
+        0.0,
+        10.0
+      ]
+    },
+    "kind": "PDE",
+    "schema_version": "execution_ir_v1"
+  },
+  "execution_mode": "NUMERICAL_SIMULATION",
+  "model_identity": {
+    "created_from_artifact": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\pde_rerun_20260903_v3\\quantitative\\Q2\\v1\\revision_acceptance.json",
+    "model_spec_identity": "52e74c8ac555dacff9a258d7a7311b2186c13650f65259d5d5c21375739245fc",
+    "parent_version": "0",
+    "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+    "project_id": "sci_astr_16_survey_007",
+    "quantitative_idea_id": "Q2",
+    "science_run_id": "astr_16",
+    "selected_direction_id": "mechanism_replacement",
+    "survey_run_id": "astr_16-survey-007",
+    "version": "1"
+  },
+  "parameter_provenance": {
+    "mode": "LEGACY_INLINE_ASSUMPTIONS"
+  },
+  "plan_identity": "4b72418dc8c89694b35c1a3ce3aab967ce87b9459d59c95282e9b54659635d9c",
+  "qualification_requirements": [
+    "explicit_stability",
+    "spherical_origin_regularity",
+    "finite_field"
+  ],
+  "resource_limits": {
+    "atol": 1e-09,
+    "max_cells": 100000,
+    "max_fields": 8,
+    "max_grid_points": 512,
+    "max_matrix_nonzeros": 200000,
+    "max_matrix_size": 20000,
+    "max_memory_mb": 512,
+    "max_nx": 4096,
+    "max_ny": 1024,
+    "max_nz": 128,
+    "max_output_points": 2000,
+    "max_pde_snapshots": 200,
+    "max_samples": 100000,
+    "max_time_steps": 20000,
+    "max_wall_seconds": 120,
+    "rtol": 1e-06
+  },
+  "result_kind": "SIMULATED",
+  "scenarios": [
+    {
+      "parameter_overrides": {},
+      "scenario_id": "baseline"
+    }
+  ],
+  "schema_version": "simulation_run_plan_v1"
+}

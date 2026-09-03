@@ -1,0 +1,543 @@
+{
+  "schema_version": "survey_project_context_artifact_v1",
+  "event": "project_created",
+  "project_id": "sci_astr_16_survey_003",
+  "declared_domain": "",
+  "domain": "Pulsar Formation and Evolution Pathways",
+  "research_domains": [],
+  "domain_resolution_source": "llm_primary_catalog_validated",
+  "requires_human_confirmation": true,
+  "research_context": {
+    "input_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+    "original_topic": "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong magnetic field. The research should distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution, and test formation and evolution with mathematical models.",
+    "title": "",
+    "schema_version": "project_research_context_v3",
+    "declared_domain": "",
+    "domain": "Pulsar Formation and Evolution Pathways",
+    "research_domains": [],
+    "research_identity": {
+      "label": "Pulsar Formation and Evolution Pathways",
+      "source": "llm_primary",
+      "confidence": 0.95,
+      "rationale": "The source explicitly defines pulsars as rotating neutron stars formed from collapsed massive stars, outlines specific evolutionary mechanisms (isolated spin-down versus binary recycling and companion ablation), and mandates testing these pathways using mathematical models. The focus is strictly on formation mechanics and evolutionary differentiation.",
+      "evidence_spans": [
+        "Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays.",
+        "They form when a massive star runs out of fuel and collapses in on itself.",
+        "The remnant is a neutron star with a strong magnetic field.",
+        "distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution",
+        "test formation and evolution with mathematical models."
+      ],
+      "secondary_labels": [
+        "Magnetic Dipole Spin-Down",
+        "Binary Recycling",
+        "Companion Ablation"
+      ],
+      "core_entities": [
+        "pulsars",
+        "neutron stars",
+        "massive star collapse",
+        "strong magnetic field",
+        "magnetic-dipole spin-down",
+        "binary recycling",
+        "companion-ablation evolution"
+      ],
+      "retrieval_synonyms": [
+        "pulsar genesis",
+        "neutron star formation",
+        "stellar core collapse",
+        "millisecond pulsar evolution",
+        "high-energy transient sources"
+      ],
+      "must_not_be_primary": [
+        "Exoplanet Science",
+        "Solar Physics",
+        "Dark Matter Detection",
+        "Gravitational Wave Astronomy"
+      ]
+    },
+    "domain_taxonomy": {
+      "catalog_version": "research_domain_catalog_v1",
+      "coverage": "validated",
+      "mappings": []
+    },
+    "discovery_taxonomy": {
+      "schema_version": "discipline_taxonomy_v1",
+      "scope": "natural_science_engineering_only",
+      "status": "unresolved",
+      "primary_discipline": null,
+      "discipline_ids": [],
+      "adjacent_disciplines": [],
+      "coverage": "unsupported",
+      "matched_terms": [],
+      "out_of_scope_terms": [],
+      "mixed": false,
+      "provider_filters": {
+        "arxiv": {
+          "provider": "arxiv",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "openalex": {
+          "provider": "openalex",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "semantic_scholar": {
+          "provider": "semantic_scholar",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      },
+      "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+    },
+    "domain_context": {
+      "primary": "Pulsar Formation and Evolution Pathways",
+      "taxonomy_labels": [],
+      "secondary_labels": [
+        "Magnetic Dipole Spin-Down",
+        "Binary Recycling",
+        "Companion Ablation"
+      ],
+      "retrieval_terms": [
+        "Pulsar Formation and Evolution Pathways",
+        "Magnetic Dipole Spin-Down",
+        "Binary Recycling",
+        "Companion Ablation",
+        "pulsar genesis",
+        "neutron star formation",
+        "stellar core collapse",
+        "millisecond pulsar evolution",
+        "high-energy transient sources",
+        "pulsars",
+        "neutron stars",
+        "massive star collapse",
+        "strong magnetic field",
+        "magnetic-dipole spin-down",
+        "companion-ablation evolution"
+      ]
+    },
+    "catalog_resolution": {
+      "catalog_version": "research_domain_catalog_v1",
+      "declared_domain": "",
+      "requested_domain_is_generic": true,
+      "primary_label": "Unresolved Research Domain",
+      "primary_domain": "general",
+      "primary_subfield": "",
+      "research_domains": [],
+      "requires_human_confirmation": true
+    },
+    "catalog_conflict": {
+      "detected": false,
+      "adjudicated": false,
+      "catalog_primary_label": "Unresolved Research Domain",
+      "reason": ""
+    },
+    "domain_resolution_source": "llm_primary_catalog_validated",
+    "requires_human_confirmation": true,
+    "primary_discipline": null,
+    "secondary_disciplines": [],
+    "domain_confidence": 0.95,
+    "core_entities": [
+      "pulsars",
+      "neutron stars",
+      "massive star collapse",
+      "strong magnetic field",
+      "magnetic-dipole spin-down",
+      "binary recycling",
+      "companion-ablation evolution"
+    ],
+    "retrieval_synonyms": [
+      "pulsar genesis",
+      "neutron star formation",
+      "stellar core collapse",
+      "millisecond pulsar evolution",
+      "high-energy transient sources"
+    ],
+    "abbreviations": [],
+    "exclusion_terms": [
+      "planetary formation",
+      "galactic dynamics",
+      "cosmological redshift surveys",
+      "interstellar medium chemistry"
+    ],
+    "llm_payload": {
+      "primary_label": "Pulsar Formation and Evolution Pathways",
+      "primary_discipline": "Astrophysics",
+      "secondary_disciplines": [
+        "Stellar Evolution",
+        "Neutron Star Physics"
+      ],
+      "preferred_research_domains": [],
+      "secondary_labels": [
+        "Magnetic Dipole Spin-Down",
+        "Binary Recycling",
+        "Companion Ablation"
+      ],
+      "must_not_be_primary": [
+        "Exoplanet Science",
+        "Solar Physics",
+        "Dark Matter Detection",
+        "Gravitational Wave Astronomy"
+      ],
+      "domain_confidence": 0.95,
+      "rationale": "The source explicitly defines pulsars as rotating neutron stars formed from collapsed massive stars, outlines specific evolutionary mechanisms (isolated spin-down versus binary recycling and companion ablation), and mandates testing these pathways using mathematical models. The focus is strictly on formation mechanics and evolutionary differentiation.",
+      "evidence_spans": [
+        "Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays.",
+        "They form when a massive star runs out of fuel and collapses in on itself.",
+        "The remnant is a neutron star with a strong magnetic field.",
+        "distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution",
+        "test formation and evolution with mathematical models."
+      ],
+      "core_entities": [
+        "pulsars",
+        "neutron stars",
+        "massive star collapse",
+        "strong magnetic field",
+        "magnetic-dipole spin-down",
+        "binary recycling",
+        "companion-ablation evolution"
+      ],
+      "retrieval_synonyms": [
+        "pulsar genesis",
+        "neutron star formation",
+        "stellar core collapse",
+        "millisecond pulsar evolution",
+        "high-energy transient sources"
+      ],
+      "abbreviations": [],
+      "exclusion_terms": [
+        "planetary formation",
+        "galactic dynamics",
+        "cosmological redshift surveys",
+        "interstellar medium chemistry"
+      ],
+      "operationalization": {
+        "normalized_objective": "Characterize pulsar formation mechanisms and differentiate evolutionary pathways through theoretical modeling.",
+        "task_or_question": "How do isolated magnetic-dipole spin-down and binary recycling/companion-ablation processes differentially shape pulsar evolution?",
+        "research_object": "Rotating neutron stars (pulsars)",
+        "outcomes_or_readouts": [
+          "Pulses of radio waves, X-rays, and gamma rays",
+          "Mathematical models of formation and evolution"
+        ],
+        "data_or_deployment_context": [
+          "Post-supernova remnant phase",
+          "Strong magnetic field environments"
+        ],
+        "baseline_requirements": [
+          "Isolated magnetic-dipole spin-down model",
+          "Binary recycling and companion-ablation evolution model"
+        ],
+        "limitation_and_failure_conditions": [
+          "Relies on accurate mathematical modeling of stellar collapse and magnetic field dynamics",
+          "Cannot directly observe initial collapse events"
+        ],
+        "rewrite_reason": "Source text mixes definitional background with explicit research directives; operationalization isolates the survey-scoped question and theoretical modeling task while preserving verbatim evidence."
+      }
+    },
+    "llm_attempted": true,
+    "llm_error": "",
+    "taxonomy_resolution": {
+      "schema_version": "discipline_taxonomy_v1",
+      "scope": "natural_science_engineering_only",
+      "status": "unresolved",
+      "primary_discipline": null,
+      "discipline_ids": [],
+      "adjacent_disciplines": [],
+      "coverage": "unsupported",
+      "matched_terms": [],
+      "out_of_scope_terms": [],
+      "mixed": false,
+      "provider_filters": {
+        "arxiv": {
+          "provider": "arxiv",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "openalex": {
+          "provider": "openalex",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "semantic_scholar": {
+          "provider": "semantic_scholar",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      },
+      "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+    },
+    "original_objective": "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong magnetic field. The research should distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution, and test formation and evolution with mathematical models.",
+    "research_brief": "",
+    "identity_status": "unresolved",
+    "evidence_spans": [
+      "Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays.",
+      "They form when a massive star runs out of fuel and collapses in on itself.",
+      "The remnant is a neutron star with a strong magnetic field.",
+      "distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution",
+      "test formation and evolution with mathematical models."
+    ],
+    "academic_operationalization": {
+      "applied": false,
+      "mode": "survey_scope",
+      "original_objective": "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong magnetic field. The research should distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution, and test formation and evolution with mathematical models.",
+      "normalized_objective": "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong magnetic field. The research should distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution, and test formation and evolution with mathematical models.",
+      "task_or_question": "",
+      "research_object": "",
+      "outcomes_or_readouts": [],
+      "data_or_deployment_context": [],
+      "baseline_requirements": [],
+      "limitation_and_failure_conditions": [],
+      "rewrite_reason": "The original objective already contains sufficient scope anchors.",
+      "extractor": "deterministic_skip"
+    },
+    "recommended_sources": [
+      {
+        "provider": "openalex",
+        "priority": 1,
+        "role": "primary_discovery",
+        "native_filter": {
+          "provider": "openalex",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      },
+      {
+        "provider": "arxiv",
+        "priority": 2,
+        "role": "conditional_preprint_discovery",
+        "enabled_for_exact_mapping": false,
+        "native_filter": {
+          "provider": "arxiv",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      },
+      {
+        "provider": "semantic_scholar",
+        "priority": 3,
+        "role": "fallback_only",
+        "native_filter": {
+          "provider": "semantic_scholar",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "applied": false,
+          "coverage": "unsupported",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      }
+    ],
+    "retrieval_plan": {
+      "schema_version": "retrieval_lanes_v1",
+      "execution_policy": "limited_query_lanes",
+      "baseline_query": "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong magnetic field. The research should distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution, and test formation and evolution with mathematical models.",
+      "normalized_objective": "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong magnetic field. The research should distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution, and test formation and evolution with mathematical models.",
+      "include_anchors": [
+        "Pulsar Formation and Evolution Pathways",
+        "Magnetic Dipole Spin-Down",
+        "Binary Recycling",
+        "Companion Ablation",
+        "pulsar genesis",
+        "neutron star formation",
+        "stellar core collapse",
+        "millisecond pulsar evolution",
+        "high-energy transient sources",
+        "pulsars",
+        "neutron stars",
+        "massive star collapse"
+      ],
+      "exclude_anchors": [
+        "planetary formation",
+        "galactic dynamics",
+        "cosmological redshift surveys",
+        "interstellar medium chemistry"
+      ],
+      "evidence_mode": "overview",
+      "query_lanes": [
+        {
+          "lane_id": "broad_anchor",
+          "lane": "broad_anchor",
+          "provider": "openalex",
+          "query": "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong magnetic field. The research should distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution, and test formation and evolution with mathematical models.",
+          "evidence_mode": "overview",
+          "taxonomy_coverage": "broad",
+          "hard_filter_allowed": false,
+          "hard_filter_applied": false,
+          "provider_filter": {},
+          "purpose": "recall_baseline",
+          "discipline_filter_policy": "broad",
+          "execution_phase": "initial"
+        }
+      ]
+    },
+    "identity_source": "llm_primary_catalog_validated",
+    "llm_used": true,
+    "research_design_inventory": {
+      "schema_version": "research_design_inventory_v1",
+      "input_fingerprint": "aea2145a7727a8a4f3ea60b2ab9a586187652724fc74b8315ba61d761beaf9b3",
+      "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+      "design_basis": [
+        {
+          "id": "DB1",
+          "kind": "comparison",
+          "statement": "Differentiate between isolated rotational energy dissipation and interacting binary histories to isolate pathway-specific evolutionary signatures.",
+          "anchors": [
+            "isolated magnetic-dipole spin-down",
+            "binary recycling",
+            "companion-ablation evolution"
+          ],
+          "source": "llm_source_grounded",
+          "evidence_spans": [
+            "distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution"
+          ]
+        },
+        {
+          "id": "DB2",
+          "kind": "method_or_design",
+          "statement": "Apply computational frameworks to simulate and validate proposed stellar collapse sequences and subsequent remnant development.",
+          "anchors": [
+            "mathematical models",
+            "formation and evolution"
+          ],
+          "source": "llm_source_grounded",
+          "evidence_spans": [
+            "test formation and evolution with mathematical models"
+          ]
+        },
+        {
+          "id": "DB3",
+          "kind": "research_object",
+          "statement": "Define the multi-wavelength emission profiles and rotational dynamics of collapsed stellar cores to establish observational baselines.",
+          "anchors": [
+            "rotating neutron stars",
+            "pulses of radio waves, X-rays, and gamma rays"
+          ],
+          "source": "llm_source_grounded",
+          "evidence_spans": [
+            "Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays."
+          ]
+        },
+        {
+          "id": "DB4",
+          "kind": "condition_or_regime",
+          "statement": "Identify the thermodynamic and structural thresholds that initiate core implosion following nuclear fuel depletion.",
+          "anchors": [
+            "massive star runs out of fuel",
+            "collapses in on itself"
+          ],
+          "source": "llm_source_grounded",
+          "evidence_spans": [
+            "when a massive star runs out of fuel and collapses in on itself."
+          ]
+        },
+        {
+          "id": "DB5",
+          "kind": "measurement",
+          "statement": "Quantify the intensity and spatial configuration of post-collapse electromagnetic fields to constrain dynamo parameters.",
+          "anchors": [
+            "strong magnetic field",
+            "remnant"
+          ],
+          "source": "llm_source_grounded",
+          "evidence_spans": [
+            "The remnant is a neutron star with a strong magnetic field."
+          ]
+        },
+        {
+          "id": "DB6",
+          "kind": "research_object",
+          "statement": "The project studies Pulsar Formation and Evolution Pathways.",
+          "anchors": [
+            "pulsars",
+            "neutron stars",
+            "massive star collapse",
+            "strong magnetic field",
+            "magnetic-dipole spin-down",
+            "binary recycling",
+            "companion-ablation evolution",
+            "Pulsar Formation and Evolution Pathways"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "pulsars",
+            "neutron stars",
+            "massive star collapse",
+            "strong magnetic field",
+            "magnetic-dipole spin-down",
+            "binary recycling"
+          ]
+        },
+        {
+          "id": "DB7",
+          "kind": "target_relation",
+          "statement": "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong magnetic field. The research should distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution, and test formation and evolution with mathematical models.",
+          "anchors": [
+            "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong ma",
+            "pulsars",
+            "neutron stars",
+            "massive star collapse",
+            "strong magnetic field",
+            "magnetic-dipole spin-down",
+            "binary recycling",
+            "companion-ablation evolution"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong ma"
+          ]
+        },
+        {
+          "id": "DB8",
+          "kind": "outcome_or_construct",
+          "statement": "The project requires evidence about declared outcomes or constructs.",
+          "anchors": [
+            "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong ma"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong ma"
+          ]
+        },
+        {
+          "id": "DB9",
+          "kind": "condition_or_regime",
+          "statement": "The project scope includes the declared conditions, regimes, or contexts.",
+          "anchors": [
+            "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong ma"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong ma"
+          ]
+        }
+      ],
+      "inventory_source": "llm_source_grounded_plus_project_declaration",
+      "llm_used": true,
+      "llm_error": ""
+    },
+    "cache_status": "hit"
+  }
+}

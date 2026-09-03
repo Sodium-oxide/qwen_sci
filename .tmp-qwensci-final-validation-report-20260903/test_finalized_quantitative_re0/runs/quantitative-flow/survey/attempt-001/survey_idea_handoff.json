@@ -1,0 +1,192 @@
+{
+  "anchors": [
+    {
+      "anchor_id": "anchor:gap_evidence_anchor:sh1:direct_observation:survey_evidence_plan_json_subhypotheses_0_missing_slots_0:required_evidence_slot_direct_observation_is_missing_from_the_survey_evidence_plan_for_sub_hypothesis_sh1_a_bounded_quantitative_question:758715e6c0b6",
+      "anchor_type": "gap_evidence_anchor",
+      "claim_anchor": "Required evidence slot 'direct_observation' is missing from the Survey evidence plan for sub-hypothesis SH1: A bounded quantitative question.",
+      "label": "SH1: direct_observation",
+      "paper_ids": [],
+      "source_pointer": {
+        "artifact": "survey_evidence_plan.json",
+        "json_pointer": "/subhypotheses/0/missing_slots/0"
+      },
+      "subhypothesis_id": "SH1",
+      "supports_gap_ids": [
+        "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5"
+      ],
+      "target_slot": "direct_observation",
+      "text_excerpt": "Required evidence slot 'direct_observation' is missing from the Survey evidence plan for sub-hypothesis SH1: A bounded quantitative question."
+    }
+  ],
+  "constraints": {
+    "accepted_candidate_decisions": [
+      "accept",
+      "merge"
+    ],
+    "evidence_bounded_writing": true,
+    "may_generate_new_gap": false,
+    "requires_human_confirmation": false
+  },
+  "created_at": "",
+  "evidence_roles": [
+    {
+      "allowed_support_kinds": [],
+      "anchor_ids": [
+        "anchor:gap_evidence_anchor:sh1:direct_observation:survey_evidence_plan_json_subhypotheses_0_missing_slots_0:required_evidence_slot_direct_observation_is_missing_from_the_survey_evidence_plan_for_sub_hypothesis_sh1_a_bounded_quantitative_question:758715e6c0b6"
+      ],
+      "background_paper_ids": [],
+      "claim_limits": [],
+      "expected_role": "DIRECT_OBSERVATION",
+      "forbidden_as_direct_evidence": [],
+      "paper_ids": [],
+      "qualified_paper_ids": [],
+      "role_id": "evidence:sh1:direct_observation:direct_observation:a41eb979a4ba",
+      "subhypothesis_id": "SH1",
+      "target_slot": "direct_observation"
+    }
+  ],
+  "gap_triage": {
+    "excluded_gap_ids": [],
+    "future_work_seed_ids": [],
+    "gaps": [
+      {
+        "audit_status": "verified",
+        "candidate_id": "",
+        "eligibility_route": "provisional_hypothesis",
+        "existence_confidence": 0.85,
+        "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+        "hypothesis_seed": true,
+        "mechanism_link": "none",
+        "novelty_role": "secondary",
+        "predicate_audit": {
+          "has_research_object": true,
+          "has_scientific_relation": false,
+          "has_statement": true,
+          "has_unresolved_predicate": true,
+          "profile_object_compatible": true
+        },
+        "source_alignment": "aligned",
+        "verification_required": false,
+        "verification_status": "verified"
+      }
+    ],
+    "profile_id": "",
+    "provisional_gap_ids": [
+      "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5"
+    ],
+    "schema_version": "survey_gap_triage_v1",
+    "supporting_constraint_ids": [],
+    "top_k": 15,
+    "triage_fingerprint": "58262671689fc235fbd6c8b446fd833af78d781ff405720ce727fde66be0318b",
+    "verification_only_gap_ids": [],
+    "verified_gap_ids": [
+      "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5"
+    ]
+  },
+  "gaps": [
+    {
+      "anchor_ids": [
+        "anchor:gap_evidence_anchor:sh1:direct_observation:survey_evidence_plan_json_subhypotheses_0_missing_slots_0:required_evidence_slot_direct_observation_is_missing_from_the_survey_evidence_plan_for_sub_hypothesis_sh1_a_bounded_quantitative_question:758715e6c0b6"
+      ],
+      "candidate_contribution_modes": [
+        "targeted_evidence_acquisition",
+        "discriminating_observation"
+      ],
+      "candidate_defect_tags": [
+        "evidence_role_deficit"
+      ],
+      "evidence_eligibility": {
+        "allowed_claim_modes": [
+          "EVIDENCE_GAP_REPORT"
+        ],
+        "claim_limits": [],
+        "direct_writing_blocked_paper_ids": [],
+        "forbidden_paper_ids": [],
+        "required_roles": [
+          "DIRECT_OBSERVATION"
+        ]
+      },
+      "gap_audit": {
+        "audit_status": "verified",
+        "candidate_id": "",
+        "eligibility_route": "provisional_hypothesis",
+        "existence_confidence": 0.85,
+        "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+        "hypothesis_seed": true,
+        "mechanism_link": "none",
+        "novelty_role": "secondary",
+        "predicate_audit": {
+          "has_research_object": true,
+          "has_scientific_relation": false,
+          "has_statement": true,
+          "has_unresolved_predicate": true,
+          "profile_object_compatible": true
+        },
+        "source_alignment": "aligned",
+        "verification_required": false,
+        "verification_status": "verified"
+      },
+      "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+      "gap_kind": "evidence_role_deficit",
+      "priority": "high",
+      "source_kind": "missing_slot",
+      "source_pointer": {
+        "artifact": "survey_evidence_plan.json",
+        "json_pointer": "/subhypotheses/0/missing_slots/0"
+      },
+      "statement": "Required evidence slot 'direct_observation' is missing from the Survey evidence plan for sub-hypothesis SH1: A bounded quantitative question.",
+      "status": "open",
+      "subhypothesis_id": "SH1",
+      "support_level": "authoritative",
+      "target_object": "direct_observation",
+      "target_slot": "direct_observation",
+      "why_it_matters": "The available paper roles do not support the evidence strength required by this slot."
+    }
+  ],
+  "handoff_fingerprint": "5646198e17202d312d125325c1b68717121764efde3f8699e2ab14de2b19683b",
+  "handoff_id": "handoff:quantitative_workflow_project:survey_quantitative_flow:de26b1195f3e",
+  "profile_resolution": {
+    "discipline_ids": [],
+    "openalex_field_ids": [],
+    "paperseek_field_ids": [],
+    "primary_discipline": "",
+    "profile_id_hint": "",
+    "requires_human_confirmation": false,
+    "source": "",
+    "status": "unresolved",
+    "unresolved_reason": ""
+  },
+  "project_context_fingerprint": "quantitative-workflow-context",
+  "project_id": "quantitative-workflow-project",
+  "schema_version": "survey_idea_handoff_v1",
+  "scope": {
+    "claim_strength": "qualified",
+    "comparators": [],
+    "in_scope": [
+      "Physics"
+    ],
+    "intervention_or_perturbation": [],
+    "out_of_scope": [],
+    "outcomes_or_readouts": [],
+    "phenomenon": [],
+    "population_or_system": [],
+    "research_object": [],
+    "spatiotemporal_scope": [],
+    "target_conditions": []
+  },
+  "source_artifacts": {
+    "claim_traceability": "survey_claim_traceability.json",
+    "evidence_plan": "survey_evidence_plan.json",
+    "gap_ledger": "survey_gap_ledger.json",
+    "gap_triage": "survey_gap_triage.json",
+    "idea_handoff": "survey_idea_handoff.json",
+    "manifest": "survey_manifest.json",
+    "project_context": "project_context.json",
+    "survey_json": "survey.json",
+    "survey_markdown": "survey.md"
+  },
+  "status": "ready",
+  "survey_run_id": "survey-quantitative-flow",
+  "topic": "bounded decay",
+  "topic_fingerprint": "3949a490119916bcee15e642383b7c2922050f3b99bb6d3ce734dcb40fb6de22"
+}

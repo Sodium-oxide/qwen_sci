@@ -1,0 +1,565 @@
+{
+  "advisory_only": true,
+  "entries": [
+    {
+      "assumptions": [],
+      "canonical_name": "Poisson–fluid coupling",
+      "catalog_model_id": "math_phys_astronomy-poisson-fluid-coupling",
+      "domain": "MATH_PHYS_ASTRONOMY",
+      "governing_form": "`nabla^2 Phi = 4 pi G rho`; `dU/dt + div F(U) = S(U,Phi)`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Conservation of mass, momentum, and energy; initial and boundary conditions",
+      "scientific_use_case": "Gas density, temperature, shocks; subgrid physics can be added for galaxy-formation applications",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "ODE/DAE dynamics",
+      "catalog_model_id": "math_phys_astronomy-ode-dae-dynamics",
+      "domain": "MATH_PHYS_ASTRONOMY",
+      "governing_form": "`dx/dt = f(x,u,theta,t)`; `0 = g(x,u,theta,t)`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Initial conditions, conserved quantities, physically feasible domain",
+      "scientific_use_case": "Steady states, cycles, bifurcations, response times",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "1D advection–diffusion–reaction",
+      "catalog_model_id": "math_phys_astronomy-1d-advection-diffusion-reaction",
+      "domain": "MATH_PHYS_ASTRONOMY",
+      "governing_form": "`dc/dt + u dc/dx = D d2c/dx2 + R(c)`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Initial and boundary conditions, non-negativity, numerical stability",
+      "scientific_use_case": "Wave fronts, diffusion lengths, concentration profiles",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Stochastic-background hierarchical model",
+      "catalog_model_id": "math_phys_astronomy-stochastic-background-hierarchical-model",
+      "domain": "MATH_PHYS_ASTRONOMY",
+      "governing_form": "`h_c(f) = A(f/f_ref)^alpha`; `C = S_noise + S_gw Gamma_HD`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Spectral index, spatial correlations, positive-definite covariance",
+      "scientific_use_case": "Background amplitude, spectral shape, model comparison",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Constrained Monte Carlo/MCMC",
+      "catalog_model_id": "math_phys_astronomy-constrained-monte-carlo-mcmc",
+      "domain": "MATH_PHYS_ASTRONOMY",
+      "governing_form": "`E[g] approx (1/N) sum_i g(x_i)`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Physically feasible domain, convergence, effective sample size",
+      "scientific_use_case": "Uncertainty propagation and interval estimates",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Capacity expansion planning",
+      "catalog_model_id": "engineering_energy-capacity-expansion-planning",
+      "domain": "ENGINEERING_ENERGY",
+      "governing_form": "`min sum_i C_inv,i x_i + sum_t C_op(p_t)`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Installed capacity, hourly dispatch, demand balance, carbon constraints",
+      "scientific_use_case": "Optimal technology portfolios and system cost",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Siting-and-construction MILP",
+      "catalog_model_id": "engineering_energy-siting-and-construction-milp",
+      "domain": "ENGINEERING_ENERGY",
+      "governing_form": "`x_i in {0,1}`; `0 <= p_it <= CF_it Pbar_i x_i`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Candidate sites, resource/land availability, budget",
+      "scientific_use_case": "Siting of plants, lines, and storage",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Multi-energy flow network",
+      "catalog_model_id": "engineering_energy-multi-energy-flow-network",
+      "domain": "ENGINEERING_ENERGY",
+      "governing_form": "`sum_in f - sum_out f + s = d`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Electricity–heat–hydrogen–gas balance and conversion efficiency",
+      "scientific_use_case": "Energy flows and sector-coupling pathways",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Storage state-space model",
+      "catalog_model_id": "engineering_energy-storage-state-space-model",
+      "domain": "ENGINEERING_ENERGY",
+      "governing_form": "`E_(t+1) = E_t + eta_c P_c dt - P_d dt/eta_d`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "State of charge (SOC), power limits, no simultaneous charging and discharging",
+      "scientific_use_case": "Capacity requirements and charge/discharge schedules",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Transmission/pipeline expansion",
+      "catalog_model_id": "engineering_energy-transmission-pipeline-expansion",
+      "domain": "ENGINEERING_ENERGY",
+      "governing_form": "`f_l,t = B_l(theta_i,t-theta_j,t)`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Thermal limits, connectivity, construction cost",
+      "scientific_use_case": "Expansion locations and congestion relief",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Time-series dispatch",
+      "catalog_model_id": "engineering_energy-time-series-dispatch",
+      "domain": "ENGINEERING_ENERGY",
+      "governing_form": "`min sum_t(c_fuel p_t + c_shed L_shed,t)`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Load balance, ramping, unit commitment, availability",
+      "scientific_use_case": "Hourly operating schedules",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Stochastic/robust planning",
+      "catalog_model_id": "engineering_energy-stochastic-robust-planning",
+      "domain": "ENGINEERING_ENERGY",
+      "governing_form": "`min_x cT x + sum_s pi_s Q(x,xi_s)` or `min_x max_(xi in U) Q(x,xi)`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Weather, load, and price scenarios or uncertainty sets",
+      "scientific_use_case": "Cost–risk trade-offs",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Reliability and resilience",
+      "catalog_model_id": "engineering_energy-reliability-and-resilience",
+      "domain": "ENGINEERING_ENERGY",
+      "governing_form": "`Pr(loss of load)`, EENS, LOLE",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Failure rates, reserves, restoration sequence",
+      "scientific_use_case": "Unserved load and restoration strategies",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Technology learning curve",
+      "catalog_model_id": "engineering_energy-technology-learning-curve",
+      "domain": "ENGINEERING_ENERGY",
+      "governing_form": "`C_t = C_0(Q_t/Q_0)^(-b)`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Cumulative deployment and learning exponent",
+      "scientific_use_case": "Long-term costs and deployment pathways",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Multi-objective optimization",
+      "catalog_model_id": "engineering_energy-multi-objective-optimization",
+      "domain": "ENGINEERING_ENERGY",
+      "governing_form": "`min {cost, CO2, EENS, -resilience}`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Weights or epsilon constraints",
+      "scientific_use_case": "Pareto fronts",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Coupled Earth System Model",
+      "catalog_model_id": "earth_environment-coupled-earth-system-model",
+      "domain": "EARTH_ENVIRONMENT",
+      "governing_form": "`dy/dt = F_atm + F_ocean + F_land + F_ice`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Component-wise conservation and coupling fluxes",
+      "scientific_use_case": "Temperature, precipitation, circulation, carbon sinks",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Energy-balance model",
+      "catalog_model_id": "earth_environment-energy-balance-model",
+      "domain": "EARTH_ENVIRONMENT",
+      "governing_form": "`C dT/dt = F(t) - lambda T`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Radiative forcing, feedback, initial conditions",
+      "scientific_use_case": "Temperature response and climate sensitivity",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Hydrological water balance",
+      "catalog_model_id": "earth_environment-hydrological-water-balance",
+      "domain": "EARTH_ENVIRONMENT",
+      "governing_form": "`S_(t+1) = S_t + P_t - ET_t - R_t - D_t`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Non-negative storage and soil water-holding capacity",
+      "scientific_use_case": "Soil moisture, runoff, drought",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "1D transport–reaction",
+      "catalog_model_id": "earth_environment-1d-transport-reaction",
+      "domain": "EARTH_ENVIRONMENT",
+      "governing_form": "`dC/dt + u dC/dx = d(D dC/dx)/dx + R(C)`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Initial/boundary conditions, reaction rates, diffusion coefficients",
+      "scientific_use_case": "Pollutant or nutrient transport",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Crop growth/yield",
+      "catalog_model_id": "earth_environment-crop-growth-yield",
+      "domain": "EARTH_ENVIRONMENT",
+      "governing_form": "`B_(t+1)=B_t+RUE*PAR*f_T*f_W*f_N-R_m`; `Y=HI*B`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Temperature, water, nitrogen, phenology",
+      "scientific_use_case": "Biomass, yield, climate shocks",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Multi-pool carbon–nitrogen model",
+      "catalog_model_id": "earth_environment-multi-pool-carbon-nitrogen-model",
+      "domain": "EARTH_ENVIRONMENT",
+      "governing_form": "`dC_k/dt = I_k - sum_j k_kj C_k`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Pool capacity, stoichiometry, temperature/moisture response",
+      "scientific_use_case": "Soil carbon, nitrogen losses, fluxes",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "MEGAN emission factors",
+      "catalog_model_id": "earth_environment-megan-emission-factors",
+      "domain": "EARTH_ENVIRONMENT",
+      "governing_form": "`E = epsilon gamma_T gamma_PAR gamma_LAI gamma_age ...`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Emission factors, temperature, radiation, leaf area, vegetation type",
+      "scientific_use_case": "VOC/isoprene fluxes",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Niche/species-distribution model",
+      "catalog_model_id": "earth_environment-niche-species-distribution-model",
+      "domain": "EARTH_ENVIRONMENT",
+      "governing_form": "`Pr(presence=1)=sigmoid(betaT X + eta_spatial)`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Climate covariates, spatial correlation, detectability",
+      "scientific_use_case": "Suitable habitat and migration risk",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Ensemble simulation and assimilation",
+      "catalog_model_id": "earth_environment-ensemble-simulation-and-assimilation",
+      "domain": "EARTH_ENVIRONMENT",
+      "governing_form": "`x_a=x_f+K(y-Hx_f)`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Observation errors, model errors, scenario ensembles",
+      "scientific_use_case": "Posterior states and predictive intervals",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "DFT/Kohn–Sham",
+      "catalog_model_id": "materials_chemistry-dft-kohn-sham",
+      "domain": "MATERIALS_CHEMISTRY",
+      "governing_form": "`[-hbar^2/(2m) nabla^2 + V_eff] psi_i = epsilon_i psi_i`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Electron count, periodic boundaries, exchange-correlation functional",
+      "scientific_use_case": "Energy, electronic states, formation energies, barriers",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Molecular dynamics",
+      "catalog_model_id": "materials_chemistry-molecular-dynamics",
+      "domain": "MATERIALS_CHEMISTRY",
+      "governing_form": "`m_i d2r_i/dt2 = -nabla_(r_i) U(r)`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Temperature/pressure ensemble, potential function, time step",
+      "scientific_use_case": "Phase transitions, diffusion, interface evolution",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Machine-learning interatomic potential",
+      "catalog_model_id": "materials_chemistry-machine-learning-interatomic-potential",
+      "domain": "MATERIALS_CHEMISTRY",
+      "governing_form": "`U(R) approx sum_i u_phi(N_i)`; `F_i=-nabla_i U`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Symmetry and energy–force consistency",
+      "scientific_use_case": "Large-scale atomistic simulation",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Crystal graph neural network",
+      "catalog_model_id": "materials_chemistry-crystal-graph-neural-network",
+      "domain": "MATERIALS_CHEMISTRY",
+      "governing_form": "`h_i^(l+1)=Phi(h_i^(l),sum_j Psi(h_i,h_j,e_ij))`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Atomic nodes, bond edges, periodic graph",
+      "scientific_use_case": "Band gap, formation energy, stability",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "CALPHAD",
+      "catalog_model_id": "materials_chemistry-calphad",
+      "domain": "MATERIALS_CHEMISTRY",
+      "governing_form": "`min G(T,P,{n_alpha,x_alpha})`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Element conservation and non-negative phase fractions",
+      "scientific_use_case": "Phase diagrams and phase stability",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Cahn–Hilliard phase field",
+      "catalog_model_id": "materials_chemistry-cahn-hilliard-phase-field",
+      "domain": "MATERIALS_CHEMISTRY",
+      "governing_form": "`dc/dt = div(M grad mu)+R`; `mu=delta F/delta c`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Composition conservation, free energy, interfacial energy",
+      "scientific_use_case": "Phase separation, dendrites, diffusion-driven phase transitions",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Allen–Cahn phase field",
+      "catalog_model_id": "materials_chemistry-allen-cahn-phase-field",
+      "domain": "MATERIALS_CHEMISTRY",
+      "governing_form": "`deta/dt = -L delta F/delta eta`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Non-conserved order parameter and interface mobility",
+      "scientific_use_case": "Grain growth and interface motion",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Microkinetics",
+      "catalog_model_id": "materials_chemistry-microkinetics",
+      "domain": "MATERIALS_CHEMISTRY",
+      "governing_form": "`dtheta/dt = S r(theta,T,p)`; `k=A exp(-Ea/RT)`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Site conservation and reaction network",
+      "scientific_use_case": "Surface coverage, selectivity, rate-determining steps",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Electrochemical kinetics",
+      "catalog_model_id": "materials_chemistry-electrochemical-kinetics",
+      "domain": "MATERIALS_CHEMISTRY",
+      "governing_form": "`i=i0[exp(alpha_a F eta/RT)-exp(-alpha_c F eta/RT)]`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Charge conservation, mass transport, electric potential",
+      "scientific_use_case": "Polarization, capacity, reaction rates",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Reactor model",
+      "catalog_model_id": "materials_chemistry-reactor-model",
+      "domain": "MATERIALS_CHEMISTRY",
+      "governing_form": "CSTR: `dC/dt=(F/V)(C_in-C)+nu r`; PFR: `dF_i/dV=nu_i r`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Mass/energy conservation, heat and mass transfer",
+      "scientific_use_case": "Conversion, selectivity, operating window",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Structural finite elements",
+      "catalog_model_id": "materials_chemistry-structural-finite-elements",
+      "domain": "MATERIALS_CHEMISTRY",
+      "governing_form": "`div sigma+b=0`; `sigma=C:epsilon`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Constitutive laws, boundary loads, damage",
+      "scientific_use_case": "Strength, lifetime, failure location",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "KMC/master equation",
+      "catalog_model_id": "materials_chemistry-kmc-master-equation",
+      "domain": "MATERIALS_CHEMISTRY",
+      "governing_form": "`dp_i/dt=sum_j(k_ji p_j-k_ij p_i)`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Event rates and detailed balance",
+      "scientific_use_case": "Rare events, diffusion, deposition",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    },
+    {
+      "assumptions": [],
+      "canonical_name": "Parameter scanning/Bayesian optimization",
+      "catalog_model_id": "materials_chemistry-parameter-scanning-bayesian-optimization",
+      "domain": "MATERIALS_CHEMISTRY",
+      "governing_form": "`theta*=argmin J(theta)`; `f approx GP`",
+      "known_failure_modes": [],
+      "required_parameters": "Review the source model and task-specific parameterization.",
+      "required_variables": "Experimental budget, feasible domain, noise",
+      "scientific_use_case": "Optimal formulations and process windows",
+      "source_references": [
+        "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md"
+      ],
+      "supported_solver_families": []
+    }
+  ],
+  "schema_version": "model_catalog_v1",
+  "source": {
+    "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\five_domain_top_journal_model_catalog_en.md",
+    "sha256": "6b5bebfbd54c050aa482bf533dbfaf872c557cba16bb9e10de84526abbef753e"
+  }
+}

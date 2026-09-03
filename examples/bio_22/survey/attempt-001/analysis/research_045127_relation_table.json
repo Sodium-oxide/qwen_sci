@@ -1,0 +1,375 @@
+{
+  "Advanced Cryo-Electron Tomography, Integrated Correlative Microscopy, and High-Throughput Workflows": {
+    "comparison_dimensions": [
+      "Primary Technical Focus",
+      "Correlative Microscopy Integration Strategy",
+      "Data Acquisition Paradigm",
+      "Computational & Automation Level",
+      "Key Biological Application Context"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W4206216780",
+        "paper_title": "Robust workflow for correlative cryo-montage electron tomography",
+        "columns": {
+          "Primary Technical Focus": "Montage Cryo-ET workflow to overcome field-of-view limitations",
+          "Correlative Microscopy Integration Strategy": "External 2D/3D CLEM with CorRelator; internal fiducial markers for FIB targeting",
+          "Data Acquisition Paradigm": "Image-shift montage acquisition with global translational dose distribution",
+          "Computational & Automation Level": "High (TomoGrapher simulation, automated stitching, flexible STA pipelines)",
+          "Key Biological Application Context": "Large-scale cellular architecture in HeLa, A549, and primary neurons (RSV infection)"
+        }
+      },
+      {
+        "paper_id": "W3015704836",
+        "paper_title": "Correlated multimodal imaging in life sciences: expanding the biomedical horizon",
+        "columns": {
+          "Primary Technical Focus": "Review of CMI frameworks bridging preclinical hybrid imaging and ex-vivo CLEM",
+          "Correlative Microscopy Integration Strategy": "Multi-modal pipelines (NIR branding, fiducials, intermediate CT) and standardization efforts",
+          "Data Acquisition Paradigm": "N/A (Review/Synthesis of multiple modalities)",
+          "Computational & Automation Level": "Focus on software challenges, registration algorithms, and ontologies (COMULIS)",
+          "Key Biological Application Context": "General biomedical horizon from nano- to millimeter scales"
+        }
+      },
+      {
+        "paper_id": "W4286631405",
+        "paper_title": "Quantitative Cryo-Electron Tomography",
+        "columns": {
+          "Primary Technical Focus": "Transition from qualitative to quantitative analysis via computational pillars",
+          "Correlative Microscopy Integration Strategy": "Discusses integration needs but focuses on post-acquisition quantification tools",
+          "Data Acquisition Paradigm": "Montage ET, HVEM, and cryo-FIB milling strategies",
+          "Computational & Automation Level": "Heavy reliance on AI/ML for denoising, segmentation, and template matching",
+          "Key Biological Application Context": "Mitochondrial division, bacterial cell wall biogenesis, axon growth, nuclear pore complexes"
+        }
+      },
+      {
+        "paper_id": "W4224304666",
+        "paper_title": "Parallel cryo electron tomography on in situ lamellae",
+        "columns": {
+          "Primary Technical Focus": "PACE-tomo: High-throughput parallel tilt-series acquisition using beam image shifts",
+          "Correlative Microscopy Integration Strategy": "N/A (Focuses on efficient data collection on pre-milled lamellae)",
+          "Data Acquisition Paradigm": "Parallel acquisition via geometric modeling and iterative error correction",
+          "Computational & Automation Level": "Python-based SerialEM script for precise tracking and defocus control",
+          "Key Biological Application Context": "In vitro ribosomes and in situ eukaryotic ribosomes in EpH4 cells"
+        }
+      },
+      {
+        "paper_id": "W2561972626",
+        "paper_title": "Cryo-CLEM Experimental Resources and Protocols for Viral Infection Studies",
+        "columns": {
+          "Primary Technical Focus": "Standardized experimental resources and protocols for viral cryo-CLEM",
+          "Correlative Microscopy Integration Strategy": "Protocol definition for cell lines, viral strains, and plasmids for targeted freezing",
+          "Data Acquisition Paradigm": "N/A (Resource catalog rather than method development)",
+          "Computational & Automation Level": "N/A",
+          "Key Biological Application Context": "RSV, HIV-1, and Measles Virus interactions in various human/primate cell lines"
+        }
+      },
+      {
+        "paper_id": "W4324044849",
+        "paper_title": "Cryo-electron tomography on focused ion beam lamellae transforms structural cell biology",
+        "columns": {
+          "Primary Technical Focus": "Review of cryo-ET/FIB revolution enabling in situ structural cell biology",
+          "Correlative Microscopy Integration Strategy": "Critical role of CLEM for target identification in crowded environments",
+          "Data Acquisition Paradigm": "Automated FIB fabrication, fast-incremental tilt schemes, and advanced processing",
+          "Computational & Automation Level": "Advanced data processing including subtomogram averaging and machine learning",
+          "Key Biological Application Context": "Sarcomere filaments, coronavirus pore complexes, proteasome heterogeneity, nuclear pore complexes"
+        }
+      },
+      {
+        "paper_id": "W2953986647",
+        "paper_title": "PIE-scope: An Integrated Cryo-Correlative Light and FIB/SEM Microscope",
+        "columns": {
+          "Primary Technical Focus": "Integrated hardware design eliminating intermediate cryo-transfers",
+          "Correlative Microscopy Integration Strategy": "Direct LM integration into FIB/SEM vacuum chamber for real-time targeting",
+          "Data Acquisition Paradigm": "Real-time optical verification during milling and subsequent EM imaging",
+          "Computational & Automation Level": "Custom software (PIE-scope-commander) for simultaneous LM/FIB control",
+          "Key Biological Application Context": "C. elegans neurons, Drosophila larval brains, and yeast cells"
+        }
+      }
+    ]
+  },
+  "Fundamental Thermodynamics, Energetics, and Non-Equilibrium Landscapes of Phase Separation": {
+    "comparison_dimensions": [
+      "Primary Methodological Paradigm",
+      "Scope of Sequence/Protein Analysis",
+      "Thermodynamic Predictive Framework",
+      "Treatment of Non-Equilibrium and Aging Dynamics",
+      "Key Structural Insights on Interfaces"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W4387354254",
+        "paper_title": "Universal liquid-liquid phase separation of proteins and polypeptides in crowded milieus",
+        "columns": {
+          "Primary Methodological Paradigm": "Experimental validation with coarse-grained predictive modeling (SASA regression)",
+          "Scope of Sequence/Protein Analysis": "Diverse library of 23 proteins (folded globular, IDPs) and minimalistic homo-polypeptides",
+          "Thermodynamic Predictive Framework": "Logarithmic model correlating $C_{sat}$ to solvent-accessible surface area (SASA) contributions and homotypic binding affinity ($K_D$)",
+          "Treatment of Non-Equilibrium and Aging Dynamics": "Observes viscoelastic transition/rigidification upon aging; distinguishes liquid-like behavior from amyloid formation",
+          "Key Structural Insights on Interfaces": "N/A"
+        }
+      },
+      {
+        "paper_id": "W4319077887",
+        "paper_title": "Open questions on liquid–liquid phase separation",
+        "columns": {
+          "Primary Methodological Paradigm": "Theoretical perspective and synthesis of open questions",
+          "Scope of Sequence/Protein Analysis": "Broad scope: simple coacervates (prebiotic) vs. biomolecular condensates (cellular)",
+          "Thermodynamic Predictive Framework": "Highlights limitations of current equilibrium models; calls for quantitative partitioning laws and non-ideal thermodynamics",
+          "Treatment of Non-Equilibrium and Aging Dynamics": "Central focus: out-of-equilibrium environments, stability against Ostwald ripening, and Liquid-to-Solid Transitions (LST)",
+          "Key Structural Insights on Interfaces": "Emphasizes the need to decipher interfacial structure, adsorption layers, and their role in stabilization and client sequestration"
+        }
+      },
+      {
+        "paper_id": "W4399303420",
+        "paper_title": "Prediction of phase separation propensities of disordered proteins from sequence",
+        "columns": {
+          "Primary Methodological Paradigm": "Machine learning (Neural Networks) trained on active-learning-selected coarse-grained MD simulations",
+          "Scope of Sequence/Protein Analysis": "High-throughput screening of human IDRome (27,663 IDRs); focus on intrinsically disordered regions",
+          "Thermodynamic Predictive Framework": "Predicts transfer free energy ($\\Delta G$) and saturation concentration ($c_{sat}$) using sequence features (hydrophobicity, charge decoration)",
+          "Treatment of Non-Equilibrium and Aging Dynamics": "N/A (Focuses on equilibrium phase behavior under fixed conditions)",
+          "Key Structural Insights on Interfaces": "Identifies structural heterogeneity at interfaces; chains prefer perpendicular orientation correlated with strong phase separation propensity"
+        }
+      }
+    ]
+  },
+  "Intracellular Crowding, Macromolecular Mobility, and Viscoelastic Material Dynamics": {
+    "comparison_dimensions": [
+      "Primary Physical Model",
+      "Dominant Hindrance Mechanism",
+      "Spatial Scale of Analysis",
+      "Crowding Agent Nature",
+      "Key Regulatory/Structural Insight"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2089466301",
+        "paper_title": "Normal Brownian motion of inert nanoproteins at short timescales in the living cytoplasm",
+        "columns": {
+          "Primary Physical Model": "Heterogeneous Environment with Distinct Nano- and Micro-viscosities",
+          "Dominant Hindrance Mechanism": "Excluded volume effects from immobile structures (long-range)",
+          "Spatial Scale of Analysis": "Short range (<100 nm) vs. Long range (>100 nm)",
+          "Crowding Agent Nature": "Immobile structural obstacles (e.g., internal membranes)",
+          "Key Regulatory/Structural Insight": "Cytoplasm acts as water-like at nano-scale; diffusion is normal Brownian below 100 nm crossover"
+        }
+      },
+      {
+        "paper_id": "W4412813834",
+        "paper_title": "Cytoplasmic Crowding Acts as a Hierarchical Porous Medium Governing Macromolecular Diffusion",
+        "columns": {
+          "Primary Physical Model": "Hierarchical Porous Medium (Multi-scale Upscaling)",
+          "Dominant Hindrance Mechanism": "Porous hydrodynamic drag and tortuous hindrance",
+          "Spatial Scale of Analysis": "Nano-scale (~100 nm) and Micro-scale (~1 µm)",
+          "Crowding Agent Nature": "Nanometric obstacles (ribosomes, ER, actin filaments)",
+          "Key Regulatory/Structural Insight": "Diffusivity anti-correlated with nano-obstacle volume fraction; non-linear size dependence"
+        }
+      },
+      {
+        "paper_id": "W4322622499",
+        "paper_title": "Antagonistic Regulation of Bacterial Division Protein FtsZ via Biomolecular Condensates",
+        "columns": {
+          "Primary Physical Model": "Phase-Separated Biomolecular Condensates (Concentration Hubs)",
+          "Dominant Hindrance Mechanism": "Macromolecular crowding enhancing regulatory efficacy",
+          "Spatial Scale of Analysis": "Condensate interior vs. Bulk cytoplasm/Membrane interface",
+          "Crowding Agent Nature": "Inert crowders (dextran) mimicking intracellular environment",
+          "Key Regulatory/Structural Insight": "Crowding lowers saturation thresholds, allowing antagonistic regulators to tune Z-ring assembly dynamics"
+        }
+      }
+    ]
+  },
+  "Bottom-Up Engineering of Hybrid Synthetic Compartments, Metabolic Networks, and Programmable Protocells": {
+    "comparison_dimensions": [
+      "Primary Compartmentalization Mechanism",
+      "Membrane/Interface Strategy",
+      "Functional Complexity & Logic",
+      "Dynamic Control & Stimuli Response"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W4408306268",
+        "paper_title": "Binary peptide coacervates for programmable artificial cells and logic gates",
+        "columns": {
+          "Primary Compartmentalization Mechanism": "Binary peptide coacervates (BPCs) via LLPS",
+          "Membrane/Interface Strategy": "Complex coacervate shell (Q-Am/C-Am) stabilized by BSA-MnO2 nanoparticles",
+          "Functional Complexity & Logic": "Boolean logic gates (OR, AND); catalytic enhancement of Ru/Cu reactions",
+          "Dynamic Control & Stimuli Response": "pH, temperature, oxidation (H2O2), solvent changes; reversible liquid-liquid transitions"
+        }
+      },
+      {
+        "paper_id": "W2943084464",
+        "paper_title": "Dynamic synthetic cells based on liquid-liquid phase separation",
+        "columns": {
+          "Primary Compartmentalization Mechanism": "Aqueous LLPS (Segregative ATPS or Associative Coacervation)",
+          "Membrane/Interface Strategy": "Open (membrane-free) to Closed (stabilized by NPs/lipids/copolymers) transitions",
+          "Functional Complexity & Logic": "Growth, division, predatory/prey interactions, population-level coupling",
+          "Dynamic Control & Stimuli Response": "Enzymatic regulation (kinase/phosphatase/protease), light, pH, temperature"
+        }
+      },
+      {
+        "paper_id": "W2769909608",
+        "paper_title": "Hierarchical protocell model stabilized by asymmetric triblock copolymer membranes",
+        "columns": {
+          "Primary Compartmentalization Mechanism": "Complex coacervation (Q-Am/Cm-Am)",
+          "Membrane/Interface Strategy": "Asymmetric triblock copolymer (PEG-PCLgTMC-PGlu) interfacial self-assembly",
+          "Functional Complexity & Logic": "Chemical communication via enzymatic cascade (GOX/HRP) across discrete populations",
+          "Dynamic Control & Stimuli Response": "Concentration-dependent stability; semipermeable diffusion control"
+        }
+      },
+      {
+        "paper_id": "W4319077887",
+        "paper_title": "Open questions on liquid–liquid phase separation",
+        "columns": {
+          "Primary Compartmentalization Mechanism": "LLPS in Protocells vs. Cellular Condensates",
+          "Membrane/Interface Strategy": "N/A (Theoretical perspective on interface structure and aging)",
+          "Functional Complexity & Logic": "Identifies gaps in partitioning laws, catalytic mechanisms, and evolutionary potential",
+          "Dynamic Control & Stimuli Response": "Focuses on out-of-equilibrium dynamics, Ostwald ripening, and Liquid-to-Solid Transitions"
+        }
+      },
+      {
+        "paper_id": "W4384626895",
+        "paper_title": "Coacervate droplets for synthetic cells",
+        "columns": {
+          "Primary Compartmentalization Mechanism": "Coacervates as Organelles or Cytosol Templates",
+          "Membrane/Interface Strategy": "Encapsulation within lipid/polymer membranes or template-driven membrane assembly",
+          "Functional Complexity & Logic": "Switchable condensation, intracellular trafficking, organelle division, cytoskeleton shaping",
+          "Dynamic Control & Stimuli Response": "Stimuli-responsive (light/pH/enzyme) and energy-fueled active processes"
+        }
+      },
+      {
+        "paper_id": "W4416719130",
+        "paper_title": "Enzymatically Reconfigurable Liquid Crystalline Coacervate Microdroplets for Programmable Protocells",
+        "columns": {
+          "Primary Compartmentalization Mechanism": "Liquid crystalline coacervates (Cm-Am/DDAB)",
+          "Membrane/Interface Strategy": "Enzymatic transition to hollow vesicles; 'Yolk-shell' structures with internal organelles",
+          "Functional Complexity & Logic": "Cellular differentiation mimicry; enhanced ribozyme catalysis in structured compartments",
+          "Dynamic Control & Stimuli Response": "Amylase-mediated hydrolysis triggering vacuolization and coalescence"
+        }
+      },
+      {
+        "paper_id": "W2731324457",
+        "paper_title": "Engineering Biomimetic Micro- and Nanocontainers: Compartmentalization for Synthetic Biology and Therapeutics",
+        "columns": {
+          "Primary Compartmentalization Mechanism": "Lipid Vesicles, Polymersomes, DIBs, Multisomes, Capsosomes",
+          "Membrane/Interface Strategy": "Synthetic bilayers, polymer membranes, droplet interfaces",
+          "Functional Complexity & Logic": "Multicompartment cascades, cell-free expression, tissue-like networks",
+          "Dynamic Control & Stimuli Response": "Stimuli-responsive release, membrane protein gating, microfluidic formation control"
+        }
+      },
+      {
+        "paper_id": "W2072014193",
+        "paper_title": "Fatty acid membrane assembly on coacervate microdroplets as a step towards a hybrid protocell model",
+        "columns": {
+          "Primary Compartmentalization Mechanism": "Polyelectrolyte/Ribonucleotide Coacervates",
+          "Membrane/Interface Strategy": "Monomer-directed fatty acid (oleate) bilayer assembly on coacervate surface",
+          "Functional Complexity & Logic": "Selective partitioning; retention of matrix components; salt stability enhancement",
+          "Dynamic Control & Stimuli Response": "pH-dependent oleate assembly; viscosity mapping via FLIM"
+        }
+      },
+      {
+        "paper_id": "W7127945665",
+        "paper_title": "Compositional Heterogeneity of Single-Chain Amphiphile Membranes Enhances Stability in Hybrid Protocells",
+        "columns": {
+          "Primary Compartmentalization Mechanism": "PAH/ADP Coacervate Core",
+          "Membrane/Interface Strategy": "Heterogeneous single-chain amphiphile membranes (OA+GMO/OOH)",
+          "Functional Complexity & Logic": "Sub-compartment formation; population-level permeability variability",
+          "Dynamic Control & Stimuli Response": "Enhanced resilience to acidic pH fluctuations compared to homogeneous membranes"
+        }
+      },
+      {
+        "paper_id": "W7152749233",
+        "paper_title": "Bottom-Up Coacervate-Based Artificial Cells: Integrating Cellular Hallmarks into Complex Life-Like Systems",
+        "columns": {
+          "Primary Compartmentalization Mechanism": "Coacervates with Organelles and Cytoskeletons",
+          "Membrane/Interface Strategy": "Hybrid systems (Coacervate core + Lipid/Polymer membrane)",
+          "Functional Complexity & Logic": "Metabolism, growth/division, bidirectional communication (Artificial-Living)",
+          "Dynamic Control & Stimuli Response": "Energy-coupled non-equilibrium behaviors; light-controlled signaling"
+        }
+      },
+      {
+        "paper_id": "W2756360081",
+        "paper_title": "Cell-Inspired Heterogeneous Multi-Compartmental Hydrogel Particle System for Tandem Enzymatic Reactions",
+        "columns": {
+          "Primary Compartmentalization Mechanism": "Microfluidic Core-Shell Hydrogel Particles",
+          "Membrane/Interface Strategy": "PEGDA/PEG-co-AA hydrogel matrices with tailored pH microenvironments",
+          "Functional Complexity & Logic": "Tandem enzymatic reactions (GOX/HRP/MNP); glucose-powered anticancer therapy",
+          "Dynamic Control & Stimuli Response": "Glucose-triggered radical generation; pH-modulated enzyme compatibility"
+        }
+      }
+    ]
+  },
+  "Biological Regulation, Spatiotemporal Control, and Functional Maturation of Biomolecular Condensates": {
+    "comparison_dimensions": [
+      "Primary Biological System",
+      "Phase Separation Driver",
+      "Regulatory Mechanism",
+      "Material State Dynamics",
+      "Physiological Context"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2794654572",
+        "paper_title": "Protein phase separation as the mechanism driving membraneless organelles and neurodegenerative pathologies",
+        "columns": {
+          "Primary Biological System": "Eukaryotic Membraneless Organelles (MLOs) & Neurodegeneration",
+          "Phase Separation Driver": "Multivalency via IDRs/LCDs and RNA scaffolds",
+          "Regulatory Mechanism": "PTMs, ATP levels, chaperones, concentration control",
+          "Material State Dynamics": "Liquid-to-Gel-to-Solid transition; pathological solidification",
+          "Physiological Context": "General eukaryotic cellular organization and disease pathology"
+        }
+      },
+      {
+        "paper_id": "W4319077887",
+        "paper_title": "Open questions on liquid–liquid phase separation",
+        "columns": {
+          "Primary Biological System": "Protocells (Prebiotic) and Cellular Condensates",
+          "Phase Separation Driver": "Simple coacervation vs. Complex biomolecular interactions",
+          "Regulatory Mechanism": "Interfacial structure, partitioning thermodynamics, aging",
+          "Material State Dynamics": "Stability against Ostwald ripening; Liquid-to-Solid Transition (LST)",
+          "Physiological Context": "Out-of-equilibrium environments; origins of life and cell biology"
+        }
+      },
+      {
+        "paper_id": "W4307743613",
+        "paper_title": "Lipid Surfaces and Glutamate Anions Enhance Formation of Dynamic Biomolecular Condensates Containing Bacterial Cell Division Protein FtsZ and Its DNA-Bound Regulator SlmA",
+        "columns": {
+          "Primary Biological System": "Bacterial Cell Division (FtsZ/SlmA in E. coli)",
+          "Phase Separation Driver": "FtsZ·SlmA·DNA complex enhanced by lipid surfaces and KGlu",
+          "Regulatory Mechanism": "GTP-dependent reversible disassembly to protofilaments",
+          "Material State Dynamics": "Dynamic fusion; reversible transition between condensate and polymer",
+          "Physiological Context": "In vitro reconstitution mimicking physiological anion/membrane conditions"
+        }
+      },
+      {
+        "paper_id": "W7154469791",
+        "paper_title": "FtsZ forms biomolecular condensates in a polar-growing Alphaproteobacterium",
+        "columns": {
+          "Primary Biological System": "Alphaproteobacteria (Agrobacterium tumefaciens)",
+          "Phase Separation Driver": "Extended C-terminal Intrinsically Disordered Region (IDR) linker",
+          "Regulatory Mechanism": "Self-assembly driven by IDR length; GTP-induced filamentation",
+          "Material State Dynamics": "Spontaneous liquid-like foci; rapid subunit exchange (FRAP)",
+          "Physiological Context": "Native bacterial growth and asymmetric division cycles"
+        }
+      },
+      {
+        "paper_id": "W7167329955",
+        "paper_title": "Biomolecular Condensation and L-Cysteine Signaling Activates Dormant Protease Activity of Papain Droplets",
+        "columns": {
+          "Primary Biological System": "Structured Enzyme (Papain)",
+          "Phase Separation Driver": "Homotypic hydrophobic interactions (no IDRs required)",
+          "Regulatory Mechanism": "L-cysteine signaling breaks intermolecular disulfide bonds",
+          "Material State Dynamics": "Dormant state via disulfide cross-linking; reactivation upon reduction",
+          "Physiological Context": "Macromolecular crowding; industrial enzymatic processing"
+        }
+      },
+      {
+        "paper_id": "W4322622499",
+        "paper_title": "Antagonistic Regulation of Bacterial Division Protein FtsZ via Biomolecular Condensates",
+        "columns": {
+          "Primary Biological System": "Bacterial Cell Division (FtsZ/ZapA/SlmA in E. coli)",
+          "Phase Separation Driver": "Ternary complex formation (FtsZ-ZapA-SlmA-DNA) under crowding",
+          "Regulatory Mechanism": "Antagonistic balance of ZapA (stabilizer) and SlmA (destabilizer)",
+          "Material State Dynamics": "Concentration-tuned equilibrium between storage condensates and active polymers",
+          "Physiological Context": "Crowded cytomimetic systems; spatial control of cytokinesis"
+        }
+      }
+    ]
+  }
+}

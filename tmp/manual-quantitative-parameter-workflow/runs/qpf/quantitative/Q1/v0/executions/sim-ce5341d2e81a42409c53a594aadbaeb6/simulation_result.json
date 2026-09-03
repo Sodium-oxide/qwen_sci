@@ -1,0 +1,64 @@
+{
+  "execution_id": "sim-ce5341d2e81a42409c53a594aadbaeb6",
+  "model_identity": {
+    "created_from_artifact": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\tmp\\manual-quantitative-parameter-workflow\\runs\\qpf\\idea\\attempt-001\\quantitative_ideas_manifest.json",
+    "model_spec_identity": "bc8c92fcaa562a9b5adde80f31eca279781f899c4a5e0d48eb6cd0e8b9f3cd70",
+    "parameter_set_identity": "20c22d0f401addc44dd4e14b7ab495f9dc7714ceb1cfff01517de9d706941bcc",
+    "project_context_fingerprint": "quantitative-parameter-context",
+    "project_id": "quantitative-parameter-project",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "qpf",
+    "selected_direction_id": "direction-1",
+    "survey_run_id": "survey-quantitative-parameter",
+    "version": "0"
+  },
+  "plan_identity": "13cba1086f1217106dbe5de52312c2dc10a98eb191c5527e13bba7541c2d9d9d",
+  "scenario_results": [
+    {
+      "result": {
+        "numerical_checks": {
+          "solver_converged": true
+        },
+        "solver_id": "scipy_solve_ivp",
+        "state_series": {
+          "x": [
+            1.0,
+            0.8187307416289995,
+            0.6703200532456844,
+            0.5488116555746803,
+            0.44932899118300496,
+            0.3678794724323482,
+            0.301194244957995,
+            0.24659699709800875,
+            0.20189655013573043,
+            0.1652989186259587,
+            0.13533531425728293
+          ]
+        },
+        "status": "COMPLETED",
+        "summary": {
+          "final_state": {
+            "x": 0.13533531425728293
+          },
+          "function_evaluations": 68,
+          "time_points": 11
+        },
+        "time": [
+          0.0,
+          0.1,
+          0.2,
+          0.30000000000000004,
+          0.4,
+          0.5,
+          0.6000000000000001,
+          0.7000000000000001,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "scenario_id": "baseline"
+    }
+  ],
+  "schema_version": "simulation_result_v1"
+}

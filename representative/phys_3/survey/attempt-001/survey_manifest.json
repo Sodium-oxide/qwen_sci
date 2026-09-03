@@ -1,0 +1,72 @@
+{
+  "artifacts": {
+    "claim_traceability": {
+      "path": "survey_claim_traceability.json",
+      "required": true,
+      "sha256": "c95a1cc91a1165854f84f18b397005ca5968067b16cad4dbf3f14f66a51f3473"
+    },
+    "evidence_plan": {
+      "path": "survey_evidence_plan.json",
+      "required": true,
+      "sha256": "9d2649a9ce8169102b033feac4820e946f79de4c10fb4f007b5b3111fa45e19c"
+    },
+    "gap_candidates": {
+      "path": "survey_gap_candidates.json",
+      "required": false,
+      "sha256": "d970355d57de43317b0519a381960fb6eead4251cf0ea8ab7350d3bb81912615"
+    },
+    "gap_coverage": {
+      "path": "survey_gap_coverage.json",
+      "required": false,
+      "sha256": "dbbf2e5fc63422d21caba8419509992fd3df75ca4f8459448ef0eeba4cd1afdf"
+    },
+    "gap_ledger": {
+      "path": "survey_gap_ledger.json",
+      "required": true,
+      "sha256": "d42fb9c787a9a1a6c82800ddcfe24c613212d923f3622813b1e7d2884d9818d7"
+    },
+    "gap_triage": {
+      "path": "survey_gap_triage.json",
+      "required": false,
+      "sha256": "b2c549d003ee17e5b0f0781933da58792403223a34bcd051346540be595441b7"
+    },
+    "idea_handoff": {
+      "path": "survey_idea_handoff.json",
+      "required": true,
+      "sha256": "11c628814957fae3b6a40e904016da8a6b2ae55b9b826f9bac49b511f4358d9a"
+    },
+    "project_context": {
+      "path": "project_context.json",
+      "required": true,
+      "sha256": "b6d2e8c63be08be85d6f664b969783e3ccf341c1cfa508092897d6c4481978c3"
+    },
+    "survey_json": {
+      "path": "survey.json",
+      "required": true,
+      "sha256": "a7544ec791f2606f104557663f6d3c04d3cfefd0741b5af4bfb4d25d53a254bf"
+    },
+    "survey_markdown": {
+      "path": "survey.md",
+      "required": true,
+      "sha256": "160eaad73b531cdf4857ae84e0ba5267d361917fe182e5d5372175e5589bd0d4"
+    },
+    "survey_outline": {
+      "path": "survey_outline.json",
+      "required": false,
+      "sha256": "e87805e3d926da0eb8ae35400b9376e873a7b828df5066b6593a5552dd61fdc0"
+    }
+  },
+  "base_dir": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001",
+  "completed_at": "2026-08-30T20:50:38Z",
+  "created_at": "2026-08-30T20:50:38Z",
+  "gap_ledger_schema_version": "survey_gap_ledger_v1",
+  "handoff_schema_version": "survey_idea_handoff_v1",
+  "manifest_fingerprint": "396a8154fa2602b2f57a701a0673fb43d67d4093ec0c1a561a089c46c0a75e48",
+  "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+  "project_id": "sci_20260831_051401_339967_survey_001",
+  "schema_version": "survey_manifest_v1",
+  "status": "completed",
+  "survey_run_id": "20260831-051401-339967-survey-001",
+  "topic": "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes such as power plants. The research focus is to identify fundamental and material-dependent limits on thermal transport, interfacial thermal resistance, phonon and electron heat conduction, and heat dissipation under high power density.",
+  "topic_fingerprint": "aa60a2ccbbf829e28d5f450b81b3b3e834e6d70da52a70b53c6dcfd04c0bb51e"
+}

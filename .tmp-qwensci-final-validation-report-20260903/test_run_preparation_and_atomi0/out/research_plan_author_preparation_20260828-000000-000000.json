@@ -1,0 +1,546 @@
+{
+  "document": {
+    "abstract": {
+      "claim_ids": [],
+      "text": ""
+    },
+    "appendices": [
+      {
+        "applicability": "optional",
+        "blocks": [],
+        "section_id": "appendix_idea_evolution",
+        "title": "Idea Evolution and Direction Selection Audit"
+      },
+      {
+        "applicability": "required",
+        "blocks": [],
+        "section_id": "appendix_variables_and_definitions",
+        "title": "Variables, Symbols, and Operational Definitions"
+      },
+      {
+        "applicability": "required",
+        "blocks": [],
+        "section_id": "appendix_evidence_and_review",
+        "title": "Evidence Coverage, Unknown Items, and Review Checklist"
+      }
+    ],
+    "authoring_blueprint": {},
+    "authoring_constraints": {
+      "counterexample_must_satisfy_all_assumptions": true,
+      "formal_and_empirical_claims_must_remain_separate": true,
+      "observed_results_are_absent": true,
+      "proposal_without_observed_results": true,
+      "unsupported_claims_forbidden": true,
+      "unverified_reasoning_must_be_labeled": true
+    },
+    "citation_registry": [],
+    "claim_provenance": [],
+    "contract_repair_audit": [],
+    "document_metadata": {
+      "discipline_ids": [
+        "17"
+      ],
+      "source_title": "Reliable Scientific Image Analysis",
+      "study_type": "comparative computational study",
+      "title": "",
+      "title_status": "requires_llm_composition"
+    },
+    "document_status": "PREPARATION_ONLY",
+    "keywords": [],
+    "language": "en",
+    "open_items": [
+      {
+        "field_path": "analysis_plan.batch_effects",
+        "reason": "The final canonical field status requires human input.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "analysis_plan.missing_data",
+        "reason": "The final canonical field status requires human input.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "analysis_plan.randomization",
+        "reason": "The final canonical field status requires human input.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "analysis_plan.repetitions",
+        "reason": "The final canonical field status requires human input.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "analysis_plan.statistical_analysis",
+        "reason": "The final canonical field status requires human input.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "data_governance_and_reproducibility.data_management",
+        "reason": "The final canonical field status requires human input.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "data_governance_and_reproducibility.reproducibility",
+        "reason": "The final canonical field status requires human input.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "measurement_and_calibration.measurement_plan",
+        "reason": "The final canonical field status requires human input.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "measurement_and_calibration.quality_control",
+        "reason": "The final canonical field status requires human input.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "open_design_questions[1]",
+        "reason": "Select the final dataset and baseline.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "research_brief.known_unknowns[1]",
+        "reason": "The deployment distribution is not yet known.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "sampling_and_eligibility.eligibility_criteria",
+        "reason": "The final canonical field status requires human input.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "sampling_and_eligibility.sample_size_or_power_basis",
+        "reason": "The final canonical field status requires human input.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "sampling_and_eligibility.source",
+        "reason": "The final canonical field status requires human input.",
+        "status": "needs_human_input"
+      }
+    ],
+    "review_items": [],
+    "schema_version": "research_plan_document_v1",
+    "sections": [
+      {
+        "applicability": "required",
+        "blocks": [],
+        "section_id": "introduction",
+        "title": "Introduction"
+      },
+      {
+        "applicability": "required",
+        "blocks": [],
+        "section_id": "survey_and_research_gap",
+        "title": "Background, Survey, and Research Gap"
+      },
+      {
+        "applicability": "required",
+        "blocks": [],
+        "section_id": "research_questions_and_contributions",
+        "title": "Research Questions and Planned Contributions"
+      },
+      {
+        "applicability": "required",
+        "blocks": [],
+        "section_id": "idea_origin_and_selection",
+        "title": "Idea Origin and Direction Selection"
+      },
+      {
+        "applicability": "required",
+        "blocks": [],
+        "section_id": "formal_problem_and_hypotheses",
+        "title": "Problem Definition, Assumptions, and Hypotheses"
+      },
+      {
+        "applicability": "required",
+        "blocks": [],
+        "section_id": "study_design_and_methods",
+        "title": "Study Design and Methods"
+      },
+      {
+        "applicability": "required",
+        "blocks": [],
+        "section_id": "expected_outcomes",
+        "title": "Expected Outcome Branches and Conditional Conclusions"
+      },
+      {
+        "applicability": "required",
+        "blocks": [],
+        "section_id": "risk_limitations_and_review",
+        "title": "Risks, Limitations, and Human Review Requirements"
+      },
+      {
+        "applicability": "required",
+        "blocks": [],
+        "section_id": "references",
+        "title": "References"
+      }
+    ],
+    "source_design_id": "design-1",
+    "source_manifest": {
+      "author_input_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_run_preparation_and_atomi0\\experiment_design_author.json",
+      "selected_direction_id": "selected-route",
+      "source_bundle_schema_version": "research_plan_author_source_bundle_v2"
+    },
+    "theory_spine": {}
+  },
+  "generated_at": "2026-09-03T14:38:53.284+00:00",
+  "language": "en",
+  "schema_version": "research_plan_author_preparation_v1",
+  "section_cache": {
+    "corrupt": 0,
+    "hits": 0,
+    "misses": 15,
+    "mode": "read_write",
+    "root": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_run_preparation_and_atomi0\\.science\\cache\\research_plan_author\\v1",
+    "schema_version": "research_plan_author_section_cache_v1",
+    "writes": 15
+  },
+  "selected_direction_id": "selected-route",
+  "source_bundle": {
+    "author_context": {
+      "authoring_constraints": {
+        "counterexample_must_satisfy_all_assumptions": true,
+        "formal_and_empirical_claims_must_remain_separate": true,
+        "observed_results_are_absent": true,
+        "proposal_without_observed_results": true,
+        "unsupported_claims_forbidden": true,
+        "unverified_reasoning_must_be_labeled": true
+      },
+      "counterexample_analysis": {
+        "applicability": "",
+        "candidate_counterexamples": [],
+        "limitations": [],
+        "negated_conclusion": "",
+        "schema_version": "",
+        "status": "",
+        "target_claim_id": "",
+        "unknown_items": []
+      },
+      "field_statuses": {
+        "analysis_plan.batch_effects": "needs_human_input",
+        "analysis_plan.blinding": "not_applicable",
+        "analysis_plan.missing_data": "needs_human_input",
+        "analysis_plan.randomization": "needs_human_input",
+        "analysis_plan.repetitions": "needs_human_input",
+        "analysis_plan.statistical_analysis": "needs_human_input",
+        "data_governance_and_reproducibility.data_management": "needs_human_input",
+        "data_governance_and_reproducibility.reproducibility": "needs_human_input",
+        "measurement_and_calibration.calibration": "not_applicable",
+        "measurement_and_calibration.measurement_plan": "needs_human_input",
+        "measurement_and_calibration.quality_control": "needs_human_input",
+        "sampling_and_eligibility.eligibility_criteria": "needs_human_input",
+        "sampling_and_eligibility.sample_size_or_power_basis": "needs_human_input",
+        "sampling_and_eligibility.source": "needs_human_input"
+      },
+      "formal_reasoning": {
+        "applicability": "",
+        "assumptions": [],
+        "definitions": [],
+        "final_conclusion": "",
+        "forward_derivation": {
+          "status": "",
+          "steps": []
+        },
+        "proof_obligations": [],
+        "propositions": [],
+        "schema_version": "",
+        "status": "",
+        "target_proposition_id": "",
+        "unknown_items": []
+      },
+      "generated_at": "2026-09-03T23:38:53.280732+09:00",
+      "hypothesis_mapping": [
+        {
+          "claim": "The representation improves robustness.",
+          "decision_rule": "Compare against the preregistered baseline.",
+          "hypothesis_id": "H1",
+          "observables": [
+            "shifted-distribution error"
+          ]
+        }
+      ],
+      "outcome_branches": [
+        {
+          "branch_id": "supports_mechanism",
+          "conclusion_scope": "The stated scientific image dataset family.",
+          "evidence_status": "EXPECTED_NOT_OBSERVED",
+          "improvement_actions": [
+            "Update the next design iteration from this branch."
+          ],
+          "interpretation": "Interpret the result only within the declared design boundary.",
+          "schema_version": "outcome_branch_v1",
+          "trigger": "The preregistered decision rule for this branch is met."
+        },
+        {
+          "branch_id": "partial_or_heterogeneous",
+          "conclusion_scope": "The stated scientific image dataset family.",
+          "evidence_status": "EXPECTED_NOT_OBSERVED",
+          "improvement_actions": [
+            "Update the next design iteration from this branch."
+          ],
+          "interpretation": "Interpret the result only within the declared design boundary.",
+          "schema_version": "outcome_branch_v1",
+          "trigger": "The preregistered decision rule for this branch is met."
+        },
+        {
+          "branch_id": "null_or_contradictory",
+          "conclusion_scope": "The stated scientific image dataset family.",
+          "evidence_status": "EXPECTED_NOT_OBSERVED",
+          "improvement_actions": [
+            "Update the next design iteration from this branch."
+          ],
+          "interpretation": "Interpret the result only within the declared design boundary.",
+          "schema_version": "outcome_branch_v1",
+          "trigger": "The preregistered decision rule for this branch is met."
+        },
+        {
+          "branch_id": "uninformative_or_invalid",
+          "conclusion_scope": "The stated scientific image dataset family.",
+          "evidence_status": "EXPECTED_NOT_OBSERVED",
+          "improvement_actions": [
+            "Update the next design iteration from this branch."
+          ],
+          "interpretation": "Interpret the result only within the declared design boundary.",
+          "schema_version": "outcome_branch_v1",
+          "trigger": "The preregistered decision rule for this branch is met."
+        }
+      ],
+      "provenance": {
+        "audit_source_paths": {},
+        "discipline_ids": [
+          "17"
+        ],
+        "idea_result_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_run_preparation_and_atomi0\\idea_result.json",
+        "risk_level": "medium",
+        "selected_direction_id": "selected-route",
+        "survey_binding": {},
+        "template_id": "",
+        "validation_status": "DRAFT_REQUIRES_INPUT"
+      },
+      "reasoning_context": {
+        "alternative_explanations": [
+          "A declared alternative explanation."
+        ],
+        "assumptions": [],
+        "boundary_conditions": [
+          "The stated boundary."
+        ],
+        "claim_scope": "The declared image-analysis proposal.",
+        "evidence_roles": [],
+        "falsifiers": [],
+        "formal_symbols": [],
+        "gap_records": [],
+        "schema_version": "reasoning_context_v1",
+        "selected_direction_id": "selected-route",
+        "source_anchors": [],
+        "source_priority": [
+          "selected_direction"
+        ],
+        "upstream_source_paths": []
+      },
+      "research_design": {
+        "design_type": "comparative computational study",
+        "experimental_unit": "held-out scientific image",
+        "time_structure": "fixed train-validation-test split"
+      },
+      "review_items": [],
+      "schema_version": "research_plan_author_input_v3",
+      "selected_direction": {
+        "central_hypothesis": "The representation improves robust image analysis.",
+        "id": "selected-route",
+        "mechanism_or_relation": "The representation changes error behavior under shift.",
+        "title": "Reliable Scientific Image Analysis"
+      },
+      "source_design_id": "design-1",
+      "source_registry": {
+        "allowed_source_ids": [],
+        "allowed_survey_anchor_ids": [],
+        "citation_registry": [],
+        "evidence_cards_by_id": {}
+      },
+      "unknown_items": [
+        {
+          "field_path": "analysis_plan.batch_effects",
+          "reason": "The final canonical field status requires human input.",
+          "status": "needs_human_input"
+        },
+        {
+          "field_path": "analysis_plan.missing_data",
+          "reason": "The final canonical field status requires human input.",
+          "status": "needs_human_input"
+        },
+        {
+          "field_path": "analysis_plan.randomization",
+          "reason": "The final canonical field status requires human input.",
+          "status": "needs_human_input"
+        },
+        {
+          "field_path": "analysis_plan.repetitions",
+          "reason": "The final canonical field status requires human input.",
+          "status": "needs_human_input"
+        },
+        {
+          "field_path": "analysis_plan.statistical_analysis",
+          "reason": "The final canonical field status requires human input.",
+          "status": "needs_human_input"
+        },
+        {
+          "field_path": "data_governance_and_reproducibility.data_management",
+          "reason": "The final canonical field status requires human input.",
+          "status": "needs_human_input"
+        },
+        {
+          "field_path": "data_governance_and_reproducibility.reproducibility",
+          "reason": "The final canonical field status requires human input.",
+          "status": "needs_human_input"
+        },
+        {
+          "field_path": "measurement_and_calibration.measurement_plan",
+          "reason": "The final canonical field status requires human input.",
+          "status": "needs_human_input"
+        },
+        {
+          "field_path": "measurement_and_calibration.quality_control",
+          "reason": "The final canonical field status requires human input.",
+          "status": "needs_human_input"
+        },
+        {
+          "field_path": "open_design_questions[1]",
+          "reason": "Select the final dataset and baseline.",
+          "status": "needs_human_input"
+        },
+        {
+          "field_path": "research_brief.known_unknowns[1]",
+          "reason": "The deployment distribution is not yet known.",
+          "status": "needs_human_input"
+        },
+        {
+          "field_path": "sampling_and_eligibility.eligibility_criteria",
+          "reason": "The final canonical field status requires human input.",
+          "status": "needs_human_input"
+        },
+        {
+          "field_path": "sampling_and_eligibility.sample_size_or_power_basis",
+          "reason": "The final canonical field status requires human input.",
+          "status": "needs_human_input"
+        },
+        {
+          "field_path": "sampling_and_eligibility.source",
+          "reason": "The final canonical field status requires human input.",
+          "status": "needs_human_input"
+        }
+      ],
+      "variables_and_operationalization": {
+        "confounders": [],
+        "control_variables": [],
+        "dependent_variables": [],
+        "independent_variables": [],
+        "operational_definitions": []
+      }
+    },
+    "author_input_identity": {
+      "byte_size": 7547,
+      "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_run_preparation_and_atomi0\\experiment_design_author.json",
+      "sha256": "6f46e00cb306a9e8f156e4263f0152e03718497c28e6f568eb2bd589d7d57ae1"
+    },
+    "author_input_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_run_preparation_and_atomi0\\experiment_design_author.json",
+    "idea_evolution": {
+      "authoring_constraints": {
+        "all_displayed_checkpoints_require_source_anchors": true,
+        "do_not_describe_checkpoints_as_temporal_iterations": true,
+        "do_not_invent_missing_iterations": true,
+        "do_not_present_idea_history_as_empirical_evidence": true,
+        "language": "en",
+        "temporal_order_is_unknown_without_iteration_id_timestamp_parent_or_auditable_diff": true
+      },
+      "checkpoints": [
+        {
+          "checkpoint_id": "checkpoint-1",
+          "checkpoint_type": "available_audit_snapshot",
+          "snapshot": {
+            "hypothesis": "Initial hypothesis.",
+            "title": "Initial Candidate"
+          },
+          "source_file": "idea_candidate.json",
+          "source_json_pointer": "/",
+          "source_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_run_preparation_and_atomi0\\idea_candidate.json",
+          "temporal_order": "unknown"
+        },
+        {
+          "checkpoint_id": "checkpoint-2",
+          "checkpoint_type": "available_audit_snapshot",
+          "snapshot": {
+            "boundary_conditions": [
+              "Declared boundary."
+            ],
+            "central_hypothesis": "The final hypothesis.",
+            "id": "selected-route",
+            "title": "Final Direction"
+          },
+          "source_file": "idea_result.json",
+          "source_json_pointer": "/directions/0",
+          "source_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_run_preparation_and_atomi0\\idea_result.json",
+          "temporal_order": "unknown"
+        }
+      ],
+      "iterations": [],
+      "max_iterations": 3,
+      "missing_audit_sources": [
+        "idea_portfolio.json",
+        "idea_directions.json",
+        "idea_route_clusters.json",
+        "mature_ideas.json"
+      ],
+      "schema_version": "idea_evolution_appendix_v1",
+      "selected_direction_id": "selected-route",
+      "status": "CHECKPOINTS_AVAILABLE",
+      "temporal_order": "unknown"
+    },
+    "language": "en",
+    "quantitative_evidence": {},
+    "schema_version": "research_plan_author_source_bundle_v2",
+    "selected_direction_id": "selected-route",
+    "source_design_id": "design-1",
+    "survey_binding": {
+      "expected": {
+        "project_context_fingerprint": "",
+        "project_id": "",
+        "survey_run_id": ""
+      },
+      "human_confirmation_required": true,
+      "resolved": {
+        "project_context_fingerprint": "fingerprint",
+        "project_id": "project-1",
+        "survey_run_id": "survey-run-1"
+      },
+      "status": "UNBOUND_REQUIRES_HUMAN_CONFIRMATION"
+    },
+    "survey_sources": {
+      "artifact_paths": {},
+      "artifacts": {},
+      "base_dir": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_run_preparation_and_atomi0",
+      "manifest": {},
+      "manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_run_preparation_and_atomi0\\survey_manifest.json",
+      "project_context_fingerprint": "fingerprint",
+      "project_id": "project-1",
+      "schema_version": "research_plan_author_survey_sources_v1",
+      "survey_run_id": "survey-run-1",
+      "topic": "Test Topic"
+    }
+  },
+  "source_design_id": "design-1",
+  "status": "COMPOSED_FOR_RENDERING",
+  "theory_spine": {
+    "compiler_status": "not_applicable",
+    "decision_branches": [],
+    "enabled": false,
+    "falsifiers": [],
+    "lemma_units": [],
+    "proof_obligations": [],
+    "schema_version": "research_plan_theory_spine_v1",
+    "template_family": "computational_digital"
+  }
+}

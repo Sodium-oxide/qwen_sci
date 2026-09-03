@@ -1,0 +1,93 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Test and build release distributions
+    if: ${{ !github.event.release.prerelease && !github.event.release.draft }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out the published tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: |
+          python -m pip install --upgrade pip uv
+
+      - name: Create complete locked test environment
+        run: uv sync --all-groups --locked
+
+      - name: Verify a final version is published from its matching tag
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          uv run --no-sync python - <<'PY'
+          import os
+          import tomllib
+          from pathlib import Path
+          from packaging.version import Version
+
+          version_text = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
+          version = Version(version_text)
+          expected_tag = f"v{version_text}"
+          if os.environ["RELEASE_TAG"] != expected_tag:
+              raise SystemExit(
+                  f"Release tag {os.environ['RELEASE_TAG']!r} does not match "
+                  f"pyproject.toml version {version_text!r}; expected {expected_tag!r}."
+              )
+          if version.is_prerelease or version.is_devrelease:
+              raise SystemExit(
+                  f"PyPI releases require a final version, but {version_text!r} is a pre-release."
+              )
+          PY
+
+      - name: Run test suite
+        run: uv run --no-sync python -m pytest
+
+      - name: Build source and wheel distributions
+        run: uv run --no-sync python -m build
+
+      - name: Validate distribution metadata
+        run: uv run --no-sync python -m twine check dist/*
+
+      - name: Upload verified distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: qwen-sci-dist
+          path: dist/
+          if-no-files-found: error
+
+  publish:
+    name: Publish verified distributions to PyPI
+    if: ${{ !github.event.release.prerelease && !github.event.release.draft }}
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - name: Download verified distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: qwen-sci-dist
+          path: dist/
+
+      - name: Publish to PyPI with Trusted Publishing
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/

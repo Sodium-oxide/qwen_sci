@@ -1,0 +1,92 @@
+{
+  "created_at": "2026-09-03T14:39:00.866164Z",
+  "last_updated_at": "2026-09-03T14:39:00.930985Z",
+  "restart_history": [
+    {
+      "invalidated_stages": [
+        "idea",
+        "exp_design",
+        "author"
+      ],
+      "requested_at": "2026-09-03T14:39:00.930985Z",
+      "restart_from": "idea"
+    }
+  ],
+  "revision": 3,
+  "schema_version": "science_state_v1",
+  "science_run_id": "demo-run",
+  "stages": {
+    "author": {
+      "attempt": 0,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": null,
+      "input_identity": {},
+      "invalidated_attempts": [],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": null,
+      "status": "PENDING"
+    },
+    "exp_design": {
+      "attempt": 0,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": null,
+      "input_identity": {},
+      "invalidated_attempts": [],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": null,
+      "status": "PENDING"
+    },
+    "idea": {
+      "attempt": 2,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": null,
+      "input_identity": {},
+      "invalidated_attempts": [
+        {
+          "attempt": 2,
+          "execution_owner": null,
+          "failure": null,
+          "finished_at": "2026-08-29T00:01:00Z",
+          "input_identity": {
+            "idea": "old"
+          },
+          "invalidated_at": "2026-09-03T14:39:00.930985Z",
+          "outputs": {
+            "idea_result": "idea/attempt-002/idea_result.json"
+          },
+          "reason": "restart-from:idea",
+          "result_identity": {},
+          "result_manifest_path": "idea/attempt-002/idea_manifest.json",
+          "started_at": "2026-08-29T00:00:00Z",
+          "status": "COMPLETED"
+        }
+      ],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": null,
+      "status": "PENDING"
+    },
+    "survey": {
+      "attempt": 0,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": null,
+      "input_identity": {},
+      "invalidated_attempts": [],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": null,
+      "status": "PENDING"
+    }
+  },
+  "status": "PENDING"
+}

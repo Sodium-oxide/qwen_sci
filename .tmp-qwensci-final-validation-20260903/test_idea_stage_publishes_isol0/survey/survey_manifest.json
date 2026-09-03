@@ -1,0 +1,62 @@
+{
+  "artifacts": {
+    "claim_traceability": {
+      "path": "survey_claim_traceability.json",
+      "required": true,
+      "sha256": "fbb6b0ce9a8e8738566fc77b027f1a31468e45e30a121d9147012cbb40122873"
+    },
+    "evidence_plan": {
+      "path": "survey_evidence_plan.json",
+      "required": true,
+      "sha256": "4f6dac570d8b542abf95aa5dc8f76ddacc9d757c67a3e50e0068c16ee12b317d"
+    },
+    "gap_ledger": {
+      "path": "survey_gap_ledger.json",
+      "required": true,
+      "sha256": "daba13cd52cd65d23c2b617ce1cdc607c63c67e47df5247b3b504a90edf45a76"
+    },
+    "gap_triage": {
+      "path": "survey_gap_triage.json",
+      "required": false,
+      "sha256": "4178845fa1a8aa20cb90bd862f2310d3d4b47d7f2d4f92424da2418c2514ca61"
+    },
+    "idea_handoff": {
+      "path": "survey_idea_handoff.json",
+      "required": true,
+      "sha256": "132d1e6e0dea83675980dee4c7e3d2b483156f909009fb9dfa913346f9e951ae"
+    },
+    "project_context": {
+      "path": "project_context.json",
+      "required": true,
+      "sha256": "4c7526f638d390365109a55f5b4d09b78e8fe166059c4787a8a1cbd1c6d736c0"
+    },
+    "survey_json": {
+      "path": "survey.json",
+      "required": true,
+      "sha256": "710d615b666a2649cb9d4fe0e036d6223165d4e3ee2664bd64c2613eedb5ccd7"
+    },
+    "survey_markdown": {
+      "path": "survey.md",
+      "required": true,
+      "sha256": "4f4fff972ffb5a2b0bfb40e2a4ca8b54c6a67e1b88e3692c6cf487d71c067120"
+    },
+    "survey_outline": {
+      "path": "survey_outline.json",
+      "required": false,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    }
+  },
+  "base_dir": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_idea_stage_publishes_isol0\\survey",
+  "completed_at": "2026-09-03T14:37:04Z",
+  "created_at": "2026-09-03T14:37:04Z",
+  "gap_ledger_schema_version": "survey_gap_ledger_v1",
+  "handoff_schema_version": "survey_idea_handoff_v1",
+  "manifest_fingerprint": "98214b008ee30a458e982ba6ad2c473f36fdb517faf0857bda250f5ff98dd798",
+  "project_context_fingerprint": "context-fingerprint",
+  "project_id": "quantitative-stage",
+  "schema_version": "survey_manifest_v1",
+  "status": "completed",
+  "survey_run_id": "survey-quantitative",
+  "topic": "quantitative sidecar topic",
+  "topic_fingerprint": "8467f6a7cf22194f3fac955b509b3b3304fcc21a6a10efa76bb91ba196199290"
+}

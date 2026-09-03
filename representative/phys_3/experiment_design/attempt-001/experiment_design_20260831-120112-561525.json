@@ -1,0 +1,2751 @@
+{
+  "analysis_plan": {
+    "batch_effects": {
+      "reason": "Assess and plan for batch, site, or temporal effects where applicable."
+    },
+    "blinding": {
+      "reason": "Determine whether blinding is applicable and document the safeguards."
+    },
+    "missing_data": {
+      "reason": "Predefine handling for unavailable, excluded, or missing observations."
+    },
+    "randomization": {
+      "reason": "Determine whether randomization is applicable and document the method."
+    },
+    "repetitions": {
+      "reason": "Specify independent repetitions after the unit and batch structure are known."
+    },
+    "statistical_analysis": {
+      "reason": "Select the estimand and analysis plan after evidence and measurement decisions are confirmed."
+    }
+  },
+  "comparison_and_robustness": {
+    "ablation_sensitivity_robustness": [],
+    "baselines": [],
+    "comparisons": [],
+    "controls": [],
+    "groups": []
+  },
+  "counterexample_analysis": {
+    "applicability": "not_applicable",
+    "candidate_counterexamples": [],
+    "exhaustiveness": {
+      "is_exhaustive": false,
+      "reason": "No formal proposition applies.",
+      "scope": ""
+    },
+    "limitations": [
+      "Counterexample analysis is not applicable outside a formal claim."
+    ],
+    "negated_conclusion": "",
+    "schema_version": "counterexample_analysis_v1",
+    "search_domain": "",
+    "status": "not_run",
+    "target_claim_id": "",
+    "unknown_items": []
+  },
+  "data_governance_and_reproducibility": {
+    "data_management": {
+      "reason": "Confirm data, artifact, privacy, retention, and access requirements."
+    },
+    "reproducibility": {
+      "reason": "Document versioning, provenance, and independent reproduction expectations."
+    }
+  },
+  "design_id": "design-20260831-051401-339967",
+  "evidence_bundle": {
+    "brief_id": "20260831-051401-339967",
+    "coverage": {
+      "covered_slots": [],
+      "required_slots": [
+        "mechanism",
+        "research_object_measurability",
+        "study_design",
+        "comparison_controls",
+        "measurement_calibration",
+        "statistics_bias",
+        "boundary_conditions",
+        "risk_ethics_reproducibility"
+      ],
+      "uncovered_slots": [
+        "mechanism",
+        "research_object_measurability",
+        "study_design",
+        "comparison_controls",
+        "measurement_calibration",
+        "statistics_bias",
+        "boundary_conditions",
+        "risk_ethics_reproducibility"
+      ]
+    },
+    "evidence_cards": [],
+    "field_evidence_ledger": [
+      {
+        "card_ids": [],
+        "field_path": "hypothesis_mapping",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "abstract",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      },
+      {
+        "card_ids": [],
+        "field_path": "variables_and_operationalization",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "abstract",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      },
+      {
+        "card_ids": [],
+        "field_path": "research_design",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      },
+      {
+        "card_ids": [],
+        "field_path": "sampling_and_eligibility",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      },
+      {
+        "card_ids": [],
+        "field_path": "measurement_and_calibration",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      },
+      {
+        "card_ids": [],
+        "field_path": "comparison_and_robustness",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      },
+      {
+        "card_ids": [],
+        "field_path": "analysis_plan",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      },
+      {
+        "card_ids": [],
+        "field_path": "data_governance_and_reproducibility",
+        "reason": "No traceable card meets the field's required source level; the field remains an assumption.",
+        "required_evidence_levels": [
+          "fulltext",
+          "user_supplied"
+        ],
+        "source_ids": [],
+        "status": "design_assumption"
+      }
+    ],
+    "keynotes": [
+      {
+        "canonical_paper_id": "W2916674581",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W3005821439",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W1994319933",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W4385118605",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2151957987",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2153994860",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2140214409",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2580610811",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2736556908",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2969385702",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W3159502980",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W4317791678",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2782638258",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2973574987",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2063224499",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W4312112856",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2020360871",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2748919737",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W3208272224",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W4293109976",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W4412727754",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W4367059916",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2041634992",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2063607318",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2807277466",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2970382734",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W4285049165",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W4406847096",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_CARDS_EXTRACTED"
+      },
+      {
+        "canonical_paper_id": "W2028277511",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_ELIGIBLE_TEXT"
+      },
+      {
+        "canonical_paper_id": "W4206540440",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_ELIGIBLE_TEXT"
+      },
+      {
+        "canonical_paper_id": "W4211175804",
+        "covered_slots": [],
+        "evidence_card_ids": [],
+        "source_locations": [],
+        "status": "NO_ELIGIBLE_TEXT"
+      }
+    ],
+    "paper_registry": [
+      {
+        "authors": [
+          "Alfred Leitenstorfer",
+          "A. S. Moskalenko",
+          "Tobias Kampfrath",
+          "Junichiro Kono",
+          "Enrique Castro-Camus",
+          "Kun Peng",
+          "Naser Qureshi",
+          "Dmitry Turchinovich",
+          "Kōichiro Tanaka",
+          "Andrea Markelz",
+          "Martina Havenith",
+          "Cameron M. Hough",
+          "Hannah J. Joyce",
+          "Willie J. Padilla",
+          "Binbin Zhou",
+          "Ki‐Yong Kim",
+          "X.-C. Zhang",
+          "Peter Uhd Jepsen",
+          "Sukhdeep Dhillon",
+          "Miriam S. Vitiello",
+          "E. H. Linfield",
+          "A. G. Davies",
+          "Matthias C. Hoffmann",
+          "R. A. Lewis",
+          "Masayoshi Tonouchi",
+          "Pernille Klarskov",
+          "Tom S. Seifert",
+          "Yaroslav A. Gerasimenko",
+          "D. Mihailović",
+          "R. Huber",
+          "Jessica L. Boland",
+          "Oleg Mitrofanov",
+          "Paul Dean",
+          "Brian Ellison",
+          "Peter G. Huggard",
+          "Simon Rea",
+          "Christopher Walker",
+          "David Leisawitz",
+          "J. R. Gao",
+          "Chong Li",
+          "Qin Chen",
+          "Gintaras Valušis",
+          "Vincent P. Wallace",
+          "Emma Pickwell‐MacPherson",
+          "Xiaobang Shang",
+          "Jeffrey L. Hesler",
+          "Nick Ridler",
+          "Cyril C. Renaud",
+          "Ingmar Kallfass",
+          "Tadao Nagatsuma",
+          "J. Axel Zeitler",
+          "Don Arnone",
+          "Michael B. Johnston",
+          "J. E. Cunningham"
+        ],
+        "canonical_paper_id": "W2916674581",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1088/1361-6463/acbe4c",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1088/1361-6463/acbe4c",
+          "openalex": "https://openalex.org/W2916674581"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ1.design_method",
+          "EDQ2.design_method",
+          "EDQ3.design_method",
+          "EDQ5.design_method"
+        ],
+        "title": "The 2023 terahertz science and technology roadmap",
+        "url": "https://doi.org/10.1088/1361-6463/acbe4c",
+        "venue": "Journal of Physics D Applied Physics",
+        "year": "2023"
+      },
+      {
+        "authors": [
+          "Gerhard Gompper",
+          "Roland G. Winkler",
+          "Thomas Speck",
+          "Alexandre Solon",
+          "Cesare Nardini",
+          "Fernando Peruani",
+          "Hartmut Löwen",
+          "Ramin Golestanian",
+          "U. Benjamin Kaupp",
+          "Luis Álvarez",
+          "Thomas Kiørboe",
+          "Eric Lauga",
+          "Wilson C. K. Poon",
+          "Antonio DeSimone",
+          "Santiago Muíños-Landín",
+          "Alexander Fischer",
+          "Nicola Andreas Söker",
+          "Frank Cichos",
+          "Raymond Kapral",
+          "Pierre Gaspard",
+          "Marisol Ripoll",
+          "Francesc Sagués",
+          "Amin Doostmohammadi",
+          "Julia M. Yeomans",
+          "Igor S. Aranson",
+          "Clemens Bechinger",
+          "Holger Stark",
+          "Charlotte K. Hemelrijk",
+          "François Nédélec",
+          "Trinish Sarkar",
+          "Thibault Aryaksama",
+          "Mathilde Lacroix",
+          "Guillaume Duclos",
+          "Victor Yashunsky",
+          "Pascal Silberzan",
+          "Marino Arroyo",
+          "Sohan Kale"
+        ],
+        "canonical_paper_id": "W3005821439",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1088/1361-648x/ab6348",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1088/1361-648x/ab6348",
+          "openalex": "https://openalex.org/W3005821439"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ1.design_method",
+          "EDQ3.design_method",
+          "EDQ6.design_method",
+          "EDQ7.design_method"
+        ],
+        "title": "The 2020 motile active matter roadmap",
+        "url": "https://doi.org/10.1088/1361-648x/ab6348",
+        "venue": "Journal of Physics Condensed Matter",
+        "year": "2020"
+      },
+      {
+        "authors": [
+          "Doo Seok Jeong",
+          "Reji Thomas",
+          "Ram S. Katiyar",
+          "J. F. Scott",
+          "H. Kohlstedt",
+          "A. Petraru",
+          "Cheol Seong Hwang"
+        ],
+        "canonical_paper_id": "W1994319933",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1088/0034-4885/75/7/076502",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1088/0034-4885/75/7/076502",
+          "openalex": "https://openalex.org/W1994319933"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ1.design_method",
+          "EDQ2.design_method",
+          "EDQ3.design_method",
+          "EDQ6.design_method"
+        ],
+        "title": "Emerging memories: resistive switching mechanisms and current status",
+        "url": "https://doi.org/10.1088/0034-4885/75/7/076502",
+        "venue": "Reports on Progress in Physics",
+        "year": "2012"
+      },
+      {
+        "authors": [
+          "Katherine Calvin",
+          "Dipak Dasgupta",
+          "Gerhard Krinner",
+          "Aditi Mukherji",
+          "Peter Thorne",
+          "Christopher H. Trisos",
+          "José Romero",
+          "Paulina Aldunce",
+          "Ko Barrett",
+          "Gabriel Blanco",
+          "William W. L. Cheung",
+          "Sarah Connors",
+          "Fatima Denton",
+          "Aïda Diongue‐Niang",
+          "David Dodman",
+          "Matthias Garschagen",
+          "Oliver Geden",
+          "Bronwyn Hayward",
+          "Chris Jones",
+          "Frank Jotzo",
+          "Thelma Krug",
+          "Rodel D. Lasco",
+          "Yune-Yi Lee",
+          "Valérie Masson‐Delmotte",
+          "Malte Meinshausen",
+          "Katja Mintenbeck",
+          "Abdalah Mokssit",
+          "Friederike E. L. Otto",
+          "Minal Pathak",
+          "Anna Pirani",
+          "Elvira S. Poloczanska",
+          "Hans‐Otto Pörtner",
+          "Aromar Revi",
+          "Debra Roberts",
+          "Joyashree Roy",
+          "Alex C. Ruane",
+          "Jim Skea",
+          "P.R. Shukla",
+          "Raphael Slade",
+          "Aimée B. A. Slangen",
+          "Youba Sokona",
+          "Anna A. Sörensson",
+          "Melinda Tignor",
+          "Detlef P. van Vuuren",
+          "Yi‐Ming Wei",
+          "Harald Winkler",
+          "Panmao Zhai",
+          "Zinta Zommers",
+          "Jean-Charles Hourcade",
+          "Francis X. Johnson",
+          "Shonali Pachauri",
+          "Nicholas P. Simpson",
+          "Chandni Singh",
+          "Adelle Thomas",
+          "Edmond Totin",
+          "Andrés Alegría",
+          "Kyle C. Armour",
+          "Birgit Bednar‐Friedl",
+          "Kornelis Blok",
+          "Guéladio Cissé",
+          "Frank Dentener",
+          "Siri Eriksen",
+          "Erich Fischer",
+          "Gregory G. Garner",
+          "Céline Guivarch",
+          "Marjolijn Haasnoot",
+          "Gerrit Hansen",
+          "Mathias Hauser",
+          "Ed Hawkins",
+          "Tim H. J. Hermans",
+          "Robert E. Kopp",
+          "Noëmie Leprince-Ringuet",
+          "Jared Lewis",
+          "Débora Ley",
+          "Chloé Ludden",
+          "Leila Niamir",
+          "Zebedee Nicholls",
+          "Shreya Some",
+          "Sophie Szopa",
+          "Blair Trewin",
+          "Kaj-Ivar van der Wijst",
+          "Gundula Winter",
+          "Maximilian Witting",
+          "Arlene Birt",
+          "Meeyoung Ha"
+        ],
+        "canonical_paper_id": "W4385118605",
+        "citation_missing_fields": [
+          "venue"
+        ],
+        "citation_rendering_status": "NOT_RENDERABLE_NEEDS_HUMAN_METADATA",
+        "content_availability": "abstract",
+        "doi": "10.59327/ipcc/ar6-9789291691647",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.59327/ipcc/ar6-9789291691647",
+          "openalex": "https://openalex.org/W4385118605"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ4.design_method",
+          "EDQ6.design_method",
+          "EDQ8.design_method"
+        ],
+        "title": "IPCC, 2023: Climate Change 2023: Synthesis Report. Contribution of Working Groups I, II and III to the Sixth Assessment Report of the Intergovernmental Panel on Climate Change [Core Writing Team, H. Lee and J. Romero (eds.)]. IPCC, Geneva, Switzerland.",
+        "url": "https://doi.org/10.59327/ipcc/ar6-9789291691647",
+        "year": "2023"
+      },
+      {
+        "authors": [
+          "Paolo Biagioni",
+          "Jer‐Shing Huang",
+          "Bert Hecht"
+        ],
+        "canonical_paper_id": "W2151957987",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1088/0034-4885/75/2/024402",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1088/0034-4885/75/2/024402",
+          "openalex": "https://openalex.org/W2151957987"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ1.design_method",
+          "EDQ3.design_method",
+          "EDQ6.design_method"
+        ],
+        "title": "Nanoantennas for visible and infrared radiation",
+        "url": "https://doi.org/10.1088/0034-4885/75/2/024402",
+        "venue": "Reports on Progress in Physics",
+        "year": "2012"
+      },
+      {
+        "authors": [
+          "I. W. McCrea",
+          "Anita Aikio",
+          "Lucilla Alfonsi",
+          "Evgenia Belova",
+          "S. Buchert",
+          "Mark A. Clilverd",
+          "N. Engler",
+          "B. Gustavsson",
+          "C. J. Heinselman",
+          "Johan Kero",
+          "Mike Kosch",
+          "H. Lamy",
+          "T. B. Leyser",
+          "Yasunobu Ogawa",
+          "Kjellmar Oksavik",
+          "Asta Pellinen‐Wannberg",
+          "F. Pitout",
+          "Markus Rapp",
+          "I. Stanisławska",
+          "Juha Vierinen"
+        ],
+        "canonical_paper_id": "W2153994860",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1186/s40645-015-0051-8",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1186/s40645-015-0051-8",
+          "openalex": "https://openalex.org/W2153994860"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ2.design_method",
+          "EDQ4.design_method"
+        ],
+        "title": "The science case for the EISCAT_3D radar",
+        "url": "https://doi.org/10.1186/s40645-015-0051-8",
+        "venue": "Progress in Earth and Planetary Science",
+        "year": "2015"
+      },
+      {
+        "authors": [
+          "E. Weckert"
+        ],
+        "canonical_paper_id": "W2140214409",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1107/s2052252514024269",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1107/s2052252514024269",
+          "openalex": "https://openalex.org/W2140214409"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ2.design_method",
+          "EDQ4.design_method"
+        ],
+        "title": "The potential of future light sources to explore the structure and function of matter",
+        "url": "https://doi.org/10.1107/s2052252514024269",
+        "venue": "IUCrJ",
+        "year": "2015"
+      },
+      {
+        "authors": [
+          "Renaud de Richter",
+          "Tingzhen Ming",
+          "P.A. Davies",
+          "Wei Liu",
+          "Sylvain Caillol"
+        ],
+        "canonical_paper_id": "W2580610811",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1016/j.pecs.2017.01.001",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1016/j.pecs.2017.01.001",
+          "openalex": "https://openalex.org/W2580610811"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ1.design_method",
+          "EDQ4.design_method"
+        ],
+        "title": "Removal of non-CO 2 greenhouse gases by large-scale atmospheric solar photocatalysis",
+        "url": "https://doi.org/10.1016/j.pecs.2017.01.001",
+        "venue": "Progress in Energy and Combustion Science",
+        "year": "2017"
+      },
+      {
+        "authors": [
+          "Georges Limbert"
+        ],
+        "canonical_paper_id": "W2736556908",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1098/rspa.2017.0257",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1098/rspa.2017.0257",
+          "openalex": "https://openalex.org/W2736556908"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ5.design_method",
+          "EDQ8.design_method"
+        ],
+        "title": "Mathematical and computational modelling of skin biophysics: a review",
+        "url": "https://doi.org/10.1098/rspa.2017.0257",
+        "venue": "Proceedings of the Royal Society A Mathematical Physical and Engineering Sciences",
+        "year": "2017"
+      },
+      {
+        "authors": [
+          "C. Danson",
+          "C. Haefner",
+          "J. Bromage",
+          "Thomas Butcher",
+          "Jean-Christophe Chanteloup",
+          "Enam Chowdhury",
+          "Almantas Galvanauskas",
+          "L. A. Gizzi",
+          "Joachim Hein",
+          "David Hillier",
+          "N. W. Hopps",
+          "Y. Kato",
+          "Е. А. Хазанов",
+          "Ryosuke Kodama",
+          "G. Korn",
+          "Ruxin Li",
+          "Yutong Li",
+          "Jens Limpert",
+          "Jingui Ma",
+          "Chang Hee Nam",
+          "D. Neely",
+          "Dimitrios Papadopoulos",
+          "Rory Penman",
+          "Liejia Qian",
+          "J. J. Rocca",
+          "A. A. Shaykin",
+          "C. W. Siders",
+          "C. Spindloe",
+          "S. Szatmári",
+          "R. M. G. M. Trines",
+          "Jianqiang Zhu",
+          "Ping Zhu",
+          "J. D. Zuegel"
+        ],
+        "canonical_paper_id": "W2969385702",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1017/hpl.2019.36",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1017/hpl.2019.36",
+          "openalex": "https://openalex.org/W2969385702"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ4.design_method"
+        ],
+        "title": "Petawatt and exawatt class lasers worldwide",
+        "url": "https://doi.org/10.1017/hpl.2019.36",
+        "venue": "High Power Laser Science and Engineering",
+        "year": "2019"
+      },
+      {
+        "authors": [
+          "James Lloyd‐Hughes",
+          "Peter M. Oppeneer",
+          "Tatiane Pereira dos Santos",
+          "André Schleife",
+          "Sheng Meng",
+          "Michael A. Sentef",
+          "Michael Ruggenthaler",
+          "Ángel Rubio",
+          "I Radu",
+          "Margaret M. Murnane",
+          "Xun Shi",
+          "Henry C. Kapteyn",
+          "Benjamin Stadtmüller",
+          "Keshav M. Dani",
+          "Felipe H. da Jornada",
+          "Eva Prinz",
+          "Martin Aeschlimann",
+          "Rebecca L. Milot",
+          "Maria G. Burdanova",
+          "Jessica L. Boland",
+          "Tyler L. Cocker",
+          "Frank A. Hegmann"
+        ],
+        "canonical_paper_id": "W3159502980",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1088/1361-648x/abfe21",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1088/1361-648x/abfe21",
+          "openalex": "https://openalex.org/W3159502980"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ6.design_method"
+        ],
+        "title": "The 2021 ultrafast spectroscopic probes of condensed matter roadmap",
+        "url": "https://doi.org/10.1088/1361-648x/abfe21",
+        "venue": "Journal of Physics Condensed Matter",
+        "year": "2021"
+      },
+      {
+        "authors": [
+          "Giovanni Volpe",
+          "Onofrio M. Maragò",
+          "Halina Rubinsztein‐Dunlop",
+          "Giuseppe Pesce",
+          "Alexander B. Stilgoe",
+          "Giorgio Volpe",
+          "Georgiy Tkachenko",
+          "Viet Giang Truong",
+          "Síle Nic Chormaic",
+          "Fatemeh Kalantarifard",
+          "Parviz Elahi",
+          "Mikael Käll",
+          "Agnese Callegari",
+          "Manuel I. Marqués",
+          "Antônio A. R. Neves",
+          "Wendel L. Moreira",
+          "Adriana Fontes",
+          "Carlos L. Cesar",
+          "Rosalba Saija",
+          "A. Saidi",
+          "Paul A. Beck",
+          "Jörg S. Eismann",
+          "Peter Banzer",
+          "Thales F. D. Fernandes",
+          "Francesco Pedaci",
+          "Warwick P. Bowen",
+          "Rahul Vaippully",
+          "Muruga Lokesh",
+          "Basudev Roy",
+          "Gregor Thalhammer",
+          "Monika Ritsch‐Marte",
+          "Laura Pérez García",
+          "Alejandro V. Arzola",
+          "Isaac Pérez Castillo",
+          "Aykut Argun",
+          "Till M. Muenker",
+          "Bart E. Vos",
+          "Timo Betz",
+          "Ilaria Cristiani",
+          "P. Minzioni",
+          "Peter J. Reece",
+          "Fan Wang",
+          "David McGloin",
+          "Justus C. Ndukaife",
+          "Romain Quidant",
+          "Reece P. Roberts",
+          "Cyril Laplane",
+          "Thomas Volz",
+          "Reuven Gordon",
+          "D. Hanstorp",
+          "Javier Tello Marmolejo",
+          "Graham D. Bruce",
+          "Kishan Dholakia",
+          "Tongcang Li",
+          "Oto Brzobohatý",
+          "Stephen H. Simpson",
+          "Pavel Zemánek",
+          "Félix Ritort",
+          "Yael Roichman",
+          "Valeriia Bobkova",
+          "Raphael Wittkowski",
+          "Cornelia Denz",
+          "G. V. Pavan Kumar",
+          "Antonino Foti",
+          "M. G. Donato",
+          "P. G. Gucciardi",
+          "Lucia Gardini",
+          "Giulio Bianchi",
+          "Anatolii V. Kashchuk",
+          "Marco Capitanio",
+          "Lynn Paterson",
+          "Philip H. Jones",
+          "Kirstine Berg‐Sørensen",
+          "Younes Farhangi Barooji",
+          "Lene B. Oddershede",
+          "Pegah Pouladian",
+          "Daryl Preece",
+          "Caroline B. Adiels",
+          "Anna Chiara De Luca",
+          "Alessandro Magazzù",
+          "David Bronte Ciriza",
+          "Maria Antonia Iatì",
+          "Grover A. Swartzlander"
+        ],
+        "canonical_paper_id": "W4317791678",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1088/2515-7647/acb57b",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1088/2515-7647/acb57b",
+          "openalex": "https://openalex.org/W4317791678"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ5.design_method"
+        ],
+        "title": "Roadmap for optical tweezers",
+        "url": "https://doi.org/10.1088/2515-7647/acb57b",
+        "venue": "Journal of Physics Photonics",
+        "year": "2023"
+      },
+      {
+        "authors": [
+          "Mark I. Stockman",
+          "Katrin Kneipp",
+          "Sergey I. Bozhevolnyi",
+          "Soham Saha",
+          "Aveek Dutta",
+          "Justus C. Ndukaife",
+          "Nathaniel Kinsey",
+          "Harsha Reddy",
+          "Urcan Guler",
+          "Vladimir M. Shalaev",
+          "Alexandra Boltasseva",
+          "Behrad Gholipour",
+          "Harish N. S. Krishnamoorthy",
+          "Kevin F. MacDonald",
+          "Cesare Soci",
+          "Nikolay I. Zheludev",
+          "Vassili Savinov",
+          "Ranjan Singh",
+          "Petra Groß",
+          "Christoph Lienau",
+          "Michal Vadai",
+          "Michelle L. Solomon",
+          "David R. Barton",
+          "Mark Lawrence",
+          "Jennifer A. Dionne",
+          "Svetlana V. Boriskina",
+          "Rubén Esteban",
+          "Javier Aizpurua",
+          "Xiang Zhang",
+          "Sui Yang",
+          "Danqing Wang",
+          "Weijia Wang",
+          "Teri W. Odom",
+          "Nicolò Accanto",
+          "Pablo M. de Roque",
+          "Ion M. Hancu",
+          "Łukasz Piątkowski",
+          "N.F. van Hulst",
+          "Matthias F. Kling"
+        ],
+        "canonical_paper_id": "W2782638258",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1088/2040-8986/aaa114",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1088/2040-8986/aaa114",
+          "openalex": "https://openalex.org/W2782638258"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ7.design_method"
+        ],
+        "title": "Roadmap on plasmonics",
+        "url": "https://doi.org/10.1088/2040-8986/aaa114",
+        "venue": "Journal of Optics",
+        "year": "2018"
+      },
+      {
+        "authors": [
+          "Abbas Mohajerani",
+          "Lucas Burnett",
+          "John Smith",
+          "Halenur Kurmus",
+          "John Milas",
+          "Arul Arulrajah",
+          "Suksun Horpibulsuk",
+          "Aeslina Abdul Kadir"
+        ],
+        "canonical_paper_id": "W2973574987",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.3390/ma12193052",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.3390/ma12193052",
+          "openalex": "https://openalex.org/W2973574987"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ3.design_method"
+        ],
+        "title": "Nanoparticles in Construction Materials and Other Applications, and Implications of Nanoparticle Use",
+        "url": "https://doi.org/10.3390/ma12193052",
+        "venue": "Materials",
+        "year": "2019"
+      },
+      {
+        "authors": [
+          "R S Balmer",
+          "J R Brandon",
+          "S L Clewes",
+          "H K Dhillon",
+          "J M Dodson",
+          "I Friel",
+          "P N Inglis",
+          "T D Madgwick",
+          "M L Markham",
+          "T P Mollart",
+          "N Perkins",
+          "G A Scarsbrook",
+          "D J Twitchen",
+          "A J Whitehead",
+          "J J Wilman",
+          "S M Woollard"
+        ],
+        "canonical_paper_id": "W2063224499",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1088/0953-8984/21/36/364221",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1088/0953-8984/21/36/364221",
+          "openalex": "https://openalex.org/W2063224499"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ1.design_method"
+        ],
+        "title": "Chemical vapour deposition synthetic diamond: materials, technology and applications",
+        "url": "https://doi.org/10.1088/0953-8984/21/36/364221",
+        "venue": "Journal of Physics Condensed Matter",
+        "year": "2009"
+      },
+      {
+        "authors": [
+          "Cefe López"
+        ],
+        "canonical_paper_id": "W4312112856",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1002/adma.202208683",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1002/adma.202208683",
+          "openalex": "https://openalex.org/W4312112856"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ4.design_method"
+        ],
+        "title": "Artificial Intelligence and Advanced Materials",
+        "url": "https://doi.org/10.1002/adma.202208683",
+        "venue": "Advanced Materials",
+        "year": "2022"
+      },
+      {
+        "authors": [
+          "Richard Bowman",
+          "Miles J. Padgett"
+        ],
+        "canonical_paper_id": "W2020360871",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1088/0034-4885/76/2/026401",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1088/0034-4885/76/2/026401",
+          "openalex": "https://openalex.org/W2020360871"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ5.design_method"
+        ],
+        "title": "Optical trapping and binding",
+        "url": "https://doi.org/10.1088/0034-4885/76/2/026401",
+        "venue": "Reports on Progress in Physics",
+        "year": "2013"
+      },
+      {
+        "authors": [
+          "OECD"
+        ],
+        "canonical_paper_id": "W2748919737",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1787/9789264271036-11-en",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1787/9789264271036-11-en",
+          "openalex": "https://openalex.org/W2748919737"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ8.design_method"
+        ],
+        "title": "The next production revolution and institutions for technology diffusion",
+        "url": "https://doi.org/10.1787/9789264271036-11-en",
+        "venue": "OECD eBooks",
+        "year": "2017"
+      },
+      {
+        "authors": [
+          "Shukri Afazov",
+          "Adam Roberts",
+          "Louise Wright",
+          "Prashant Jadhav",
+          "Adam Holloway",
+          "Hector Basoalto",
+          "Katy Milne",
+          "Nick Brierley"
+        ],
+        "canonical_paper_id": "W3208272224",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1007/s40964-021-00230-1",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1007/s40964-021-00230-1",
+          "openalex": "https://openalex.org/W3208272224"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ5.design_method"
+        ],
+        "title": "Metal powder bed fusion process chains: an overview of modelling techniques",
+        "url": "https://doi.org/10.1007/s40964-021-00230-1",
+        "venue": "Progress in Additive Manufacturing",
+        "year": "2021"
+      },
+      {
+        "authors": [
+          "Sareh Mosleh-Shirazi",
+          "Milad Abbasi",
+          "Mohammad reza Moaddeli",
+          "Ahmad Vaez",
+          "Mostafa Shafiee",
+          "Seyed Reza Kasaee",
+          "Ali Mohammad Amani",
+          "Saeid Hatam"
+        ],
+        "canonical_paper_id": "W4293109976",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.7150/ntno.74613",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.7150/ntno.74613",
+          "openalex": "https://openalex.org/W4293109976"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ7.design_method"
+        ],
+        "title": "Nanotechnology Advances in the Detection and Treatment of Cancer: An Overview",
+        "url": "https://doi.org/10.7150/ntno.74613",
+        "venue": "Nanotheranostics",
+        "year": "2022"
+      },
+      {
+        "authors": [
+          "Zhexu Xi"
+        ],
+        "canonical_paper_id": "W4412727754",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1039/d5ra04311e",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1039/d5ra04311e",
+          "openalex": "https://openalex.org/W4412727754"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ7.design_method"
+        ],
+        "title": "Revisiting the Marcus inverted regime: modulation strategies for photogenerated ultrafast carrier transfer from semiconducting quantum dots to metal oxides",
+        "url": "https://doi.org/10.1039/d5ra04311e",
+        "venue": "RSC Advances",
+        "year": "2025"
+      },
+      {
+        "authors": [
+          "Karen Scrivener",
+          "Mohsen Ben Haha",
+          "Patrick Juilland",
+          "Christophe Lévy"
+        ],
+        "canonical_paper_id": "W4367059916",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.21809/rilemtechlett.2022.165",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.21809/rilemtechlett.2022.165",
+          "openalex": "https://openalex.org/W4367059916"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ7.design_method"
+        ],
+        "title": "Research needs for cementitious building materials with focus on Europe",
+        "url": "https://doi.org/10.21809/rilemtechlett.2022.165",
+        "venue": "RILEM Technical Letters",
+        "year": "2023"
+      },
+      {
+        "authors": [
+          "David R. McKenzie"
+        ],
+        "canonical_paper_id": "W2041634992",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1088/0034-4885/59/12/002",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1088/0034-4885/59/12/002",
+          "openalex": "https://openalex.org/W2041634992"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ2.design_method"
+        ],
+        "title": "Tetrahedral bonding in amorphous carbon",
+        "url": "https://doi.org/10.1088/0034-4885/59/12/002",
+        "venue": "Reports on Progress in Physics",
+        "year": "1996"
+      },
+      {
+        "authors": [
+          "Juhn‐Jong Lin",
+          "F. Bird"
+        ],
+        "canonical_paper_id": "W2063607318",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1088/0953-8984/14/18/201",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1088/0953-8984/14/18/201",
+          "openalex": "https://openalex.org/W2063607318"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ3.design_method"
+        ],
+        "title": "Recent experimental studies of electron dephasing in metal and semiconductor mesoscopic structures",
+        "url": "https://doi.org/10.1088/0953-8984/14/18/201",
+        "venue": "Journal of Physics Condensed Matter",
+        "year": "2002"
+      },
+      {
+        "authors": [
+          "Alán Aspuru‐Guzik",
+          "Kristin Persson"
+        ],
+        "canonical_paper_id": "W2807277466",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "openalex": "https://openalex.org/W2807277466"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ2.design_method"
+        ],
+        "title": "Materials Acceleration Platform: Accelerating Advanced Energy Materials Discovery by Integrating High-Throughput Methods and Artificial Intelligence.",
+        "url": "http://nrs.harvard.edu/urn-3:HUL.InstRepos:35164974",
+        "venue": "Digital Access to Scholarship at Harvard (DASH) (Harvard University)",
+        "year": "2018"
+      },
+      {
+        "authors": [
+          "Parliamentary Office of Science and Technology",
+          "Jonathan Wentworth",
+          "Peter Border",
+          "Lydia Harriss",
+          "Rowena Bermingham",
+          "Lorna Christie",
+          "Sarah Bunn",
+          "Jack M. Miller",
+          "Abbi Hobbs"
+        ],
+        "canonical_paper_id": "W2970382734",
+        "citation_missing_fields": [
+          "venue"
+        ],
+        "citation_rendering_status": "NOT_RENDERABLE_NEEDS_HUMAN_METADATA",
+        "content_availability": "abstract",
+        "doi": "10.58248/pb33",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.58248/pb33",
+          "openalex": "https://openalex.org/W2970382734"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ8.design_method"
+        ],
+        "title": "Research for Parliament: Preparing for a changing world",
+        "url": "https://doi.org/10.58248/pb33",
+        "year": "2019"
+      },
+      {
+        "authors": [
+          "Sinan Küfeoğlu"
+        ],
+        "canonical_paper_id": "W4285049165",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1007/978-3-031-07127-0_2",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1007/978-3-031-07127-0_2",
+          "openalex": "https://openalex.org/W4285049165"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ8.design_method"
+        ],
+        "title": "Emerging Technologies",
+        "url": "https://doi.org/10.1007/978-3-031-07127-0_2",
+        "venue": "Sustainable development goals series",
+        "year": "2022"
+      },
+      {
+        "authors": [
+          "OECD"
+        ],
+        "canonical_paper_id": "W4406847096",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "abstract",
+        "doi": "10.1787/fd1153c3-en",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_CARDS_EXTRACTED",
+        "provider_ids": {
+          "doi": "10.1787/fd1153c3-en",
+          "openalex": "https://openalex.org/W4406847096"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ8.design_method"
+        ],
+        "title": "A quantum technologies policy primer",
+        "url": "https://doi.org/10.1787/fd1153c3-en",
+        "venue": "OECD digital economy papers",
+        "year": "2025"
+      },
+      {
+        "authors": [
+          "Saurav Goel",
+          "Xichun Luo",
+          "Anupam Agrawal",
+          "R.L. Reuben"
+        ],
+        "canonical_paper_id": "W2028277511",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "metadata",
+        "doi": "10.1016/j.ijmachtools.2014.09.013",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_ELIGIBLE_TEXT",
+        "provider_ids": {
+          "doi": "10.1016/j.ijmachtools.2014.09.013",
+          "openalex": "https://openalex.org/W2028277511"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ6.design_method"
+        ],
+        "title": "Diamond machining of silicon: A review of advances in molecular dynamics simulation",
+        "url": "https://doi.org/10.1016/j.ijmachtools.2014.09.013",
+        "venue": "International Journal of Machine Tools and Manufacture",
+        "year": "2014"
+      },
+      {
+        "authors": [
+          "Belenchia A.",
+          "Carlesso M.",
+          "Bayraktar O.",
+          "Dequal D.",
+          "Derkach I.",
+          "Gasbarri G.",
+          "Herr W.",
+          "Li Y. L.",
+          "Rademacher M.",
+          "Sidhu J.",
+          "Oi D. K. L.",
+          "Seidel S. T.",
+          "Kaltenbaek R.",
+          "Marquardt C.",
+          "Ulbricht H.",
+          "Usenko V. C.",
+          "Worner L.",
+          "Xuereb A.",
+          "Paternostro M.",
+          "Bassi A."
+        ],
+        "canonical_paper_id": "W4206540440",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "metadata",
+        "doi": "10.1016/j.physrep.2021.11.004",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_ELIGIBLE_TEXT",
+        "provider_ids": {
+          "doi": "10.1016/j.physrep.2021.11.004",
+          "openalex": "https://openalex.org/W4206540440"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ5.design_method"
+        ],
+        "title": "Quantum physics in space",
+        "url": "https://doi.org/10.1016/j.physrep.2021.11.004",
+        "venue": "ArTS Archivio della ricerca di Trieste (University of Trieste https://www.units.it/)",
+        "year": "2022"
+      },
+      {
+        "authors": [
+          "Andreja Kutnar",
+          "Marcin Brzezicki",
+          "Jakub Sandak",
+          "Anna Sandak"
+        ],
+        "canonical_paper_id": "W4211175804",
+        "citation_missing_fields": [],
+        "citation_rendering_status": "RENDERABLE",
+        "content_availability": "metadata",
+        "doi": "10.1007/978-981-13-3747-5",
+        "fulltext_source_location": "",
+        "keynote_status": "NO_ELIGIBLE_TEXT",
+        "provider_ids": {
+          "doi": "10.1007/978-981-13-3747-5",
+          "openalex": "https://openalex.org/W4211175804"
+        },
+        "providers": [
+          "openalex"
+        ],
+        "query_task_ids": [
+          "EDQ7.design_method"
+        ],
+        "title": "Bio-based Building Skin",
+        "url": "https://doi.org/10.1007/978-981-13-3747-5",
+        "venue": "Directory of Open access Books (OAPEN Foundation)",
+        "year": "2019"
+      }
+    ],
+    "retrieval_audit": {
+      "card_extraction_failures": [
+        {
+          "canonical_paper_id": "W2916674581",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2916674581: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-5ccae0c1-2d08-9ee1-bc5f-89bd9322d09c', 'request_id': '5ccae0c1-2d08-9ee1-bc5f-89bd9322d09c'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W3005821439",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W3005821439: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-24f4acf6-cda2-95ea-91ed-b5683cd2385a', 'request_id': '24f4acf6-cda2-95ea-91ed-b5683cd2385a'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W1994319933",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W1994319933: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-e30c36d4-11cc-9b62-a524-3ff660d242bd', 'request_id': 'e30c36d4-11cc-9b62-a524-3ff660d242bd'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W4385118605",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W4385118605: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-60b72bed-489b-9f88-b7cb-bc7e0a68ef97', 'request_id': '60b72bed-489b-9f88-b7cb-bc7e0a68ef97'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W2151957987",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2151957987: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-e32ba7a1-07f0-9ab7-9990-7dee08839468', 'request_id': 'e32ba7a1-07f0-9ab7-9990-7dee08839468'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W2153994860",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2153994860: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-10ddea60-58fd-9b7f-a382-0286bfc8776b', 'request_id': '10ddea60-58fd-9b7f-a382-0286bfc8776b'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W2140214409",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2140214409: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-d675fb2f-53c8-9ffd-bf5e-c7dd4d096e80', 'request_id': 'd675fb2f-53c8-9ffd-bf5e-c7dd4d096e80'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W2580610811",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2580610811: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-2f1f0bdf-5156-9656-9de6-fc2236d73350', 'request_id': '2f1f0bdf-5156-9656-9de6-fc2236d73350'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W2736556908",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2736556908: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-76ce1167-9b25-96ab-b7e3-f19cb6439eb5', 'request_id': '76ce1167-9b25-96ab-b7e3-f19cb6439eb5'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W2969385702",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2969385702: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-d3c4cc27-7dea-9333-a5eb-be60a8d9c35b', 'request_id': 'd3c4cc27-7dea-9333-a5eb-be60a8d9c35b'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W3159502980",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W3159502980: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-78c5c023-059d-911f-acb6-c28c815ac5ba', 'request_id': '78c5c023-059d-911f-acb6-c28c815ac5ba'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W4317791678",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W4317791678: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-b51afa01-70d8-9216-b444-f8a6281e4a1a', 'request_id': 'b51afa01-70d8-9216-b444-f8a6281e4a1a'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W2782638258",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2782638258: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-371ff56e-056f-9b11-b8fc-b4c99c8c0f1c', 'request_id': '371ff56e-056f-9b11-b8fc-b4c99c8c0f1c'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W2973574987",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2973574987: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-f4203950-5af7-9f77-be37-00b09d7a65fe', 'request_id': 'f4203950-5af7-9f77-be37-00b09d7a65fe'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W2063224499",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2063224499: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-983a6040-f1e6-928d-8ac1-08fab5764ff0', 'request_id': '983a6040-f1e6-928d-8ac1-08fab5764ff0'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W4312112856",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W4312112856: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-874a979d-9dd7-98d4-bce9-285c2a729dcd', 'request_id': '874a979d-9dd7-98d4-bce9-285c2a729dcd'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W2020360871",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2020360871: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-0fec2925-2adf-99e6-881e-f3d8535b58de', 'request_id': '0fec2925-2adf-99e6-881e-f3d8535b58de'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W2748919737",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2748919737: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-f157a7d2-726b-9ef3-9ef8-831a87d8ecc1', 'request_id': 'f157a7d2-726b-9ef3-9ef8-831a87d8ecc1'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W3208272224",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W3208272224: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-1355f11e-5f22-9bcf-9710-209d251d0cfa', 'request_id': '1355f11e-5f22-9bcf-9710-209d251d0cfa'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W4293109976",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W4293109976: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-84a03a57-ac04-9bb8-8b27-956978248a4e', 'request_id': '84a03a57-ac04-9bb8-8b27-956978248a4e'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W4412727754",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W4412727754: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-1e9f92c5-01c6-9270-b902-eaa834fffaa9', 'request_id': '1e9f92c5-01c6-9270-b902-eaa834fffaa9'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W4367059916",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W4367059916: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-b492bc53-f567-93f6-b9a6-03d38b1b3442', 'request_id': 'b492bc53-f567-93f6-b9a6-03d38b1b3442'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W2041634992",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2041634992: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-4c12ad9d-2b04-930e-87df-b058408e75a4', 'request_id': '4c12ad9d-2b04-930e-87df-b058408e75a4'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W2063607318",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2063607318: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-a49d75ec-2674-9d3b-973b-e99a6dee9924', 'request_id': 'a49d75ec-2674-9d3b-973b-e99a6dee9924'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W2807277466",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2807277466: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-5ce29da5-74ba-9ad3-bd74-cb5c06db26e9', 'request_id': '5ce29da5-74ba-9ad3-bd74-cb5c06db26e9'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W2970382734",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W2970382734: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-38610aad-0ad2-9be0-9669-42120e3b64eb', 'request_id': '38610aad-0ad2-9be0-9669-42120e3b64eb'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W4285049165",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W4285049165: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-7a45fd81-95ea-9f42-bfc1-aabacfaf918c', 'request_id': '7a45fd81-95ea-9f42-bfc1-aabacfaf918c'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        },
+        {
+          "canonical_paper_id": "W4406847096",
+          "continue_on_failure": true,
+          "error": "evidence_card_extractor:W4406847096: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-3dffc369-6fa2-907e-8872-c965263f51ce', 'request_id': '3dffc369-6fa2-907e-8872-c965263f51ce'}",
+          "error_type": "RequiredJsonLLMError",
+          "evidence_level": "abstract",
+          "source_location": "abstract:openalex",
+          "status": "FAILED"
+        }
+      ],
+      "card_extraction_warnings": [
+        "evidence_card_extraction_failed:W2916674581:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W3005821439:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W1994319933:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W4385118605:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W2151957987:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W2153994860:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W2140214409:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W2580610811:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W2736556908:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W2969385702:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W3159502980:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W4317791678:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W2782638258:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W2973574987:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W2063224499:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W4312112856:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W2020360871:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W2748919737:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W3208272224:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W4293109976:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W4412727754:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W4367059916:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W2041634992:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W2063607318:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W2807277466:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W2970382734:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W4285049165:RequiredJsonLLMError",
+        "evidence_card_extraction_failed:W4406847096:RequiredJsonLLMError",
+        "no_extractable_source_text:W2028277511",
+        "no_extractable_source_text:W4206540440",
+        "no_extractable_source_text:W4211175804"
+      ],
+      "collection_policy": "openalex_primary_semantic_scholar_fallback_only_when_openalex_unavailable",
+      "failed_card_extraction_paper_count": 28,
+      "failed_card_extraction_paper_ids": [
+        "W2916674581",
+        "W3005821439",
+        "W1994319933",
+        "W4385118605",
+        "W2151957987",
+        "W2153994860",
+        "W2140214409",
+        "W2580610811",
+        "W2736556908",
+        "W2969385702",
+        "W3159502980",
+        "W4317791678",
+        "W2782638258",
+        "W2973574987",
+        "W2063224499",
+        "W4312112856",
+        "W2020360871",
+        "W2748919737",
+        "W3208272224",
+        "W4293109976",
+        "W4412727754",
+        "W4367059916",
+        "W2041634992",
+        "W2063607318",
+        "W2807277466",
+        "W2970382734",
+        "W4285049165",
+        "W4406847096"
+      ],
+      "fulltext_acquisition_by_paper": {},
+      "paper_screening": {
+        "discovered_unique_paper_count": 31,
+        "eligible_for_fulltext_count": 0,
+        "failed_screening_paper_count": 31,
+        "failed_screening_paper_ids": [
+          "W2916674581",
+          "W3005821439",
+          "W1994319933",
+          "W4385118605",
+          "W2151957987",
+          "W2153994860",
+          "W2140214409",
+          "W2580610811",
+          "W2736556908",
+          "W2969385702",
+          "W3159502980",
+          "W4317791678",
+          "W2782638258",
+          "W2973574987",
+          "W2063224499",
+          "W4312112856",
+          "W2020360871",
+          "W2748919737",
+          "W3208272224",
+          "W4293109976",
+          "W4412727754",
+          "W4367059916",
+          "W2041634992",
+          "W2063607318",
+          "W2807277466",
+          "W2970382734",
+          "W4285049165",
+          "W4406847096",
+          "W2028277511",
+          "W4206540440",
+          "W4211175804"
+        ],
+        "failed_screens_by_paper": {
+          "W1994319933": {
+            "canonical_paper_id": "W1994319933",
+            "error": "design_evidence_paper_screener:W1994319933: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-d42e314b-6ca8-9949-a3b0-5f6574054590', 'request_id': 'd42e314b-6ca8-9949-a3b0-5f6574054590'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2020360871": {
+            "canonical_paper_id": "W2020360871",
+            "error": "design_evidence_paper_screener:W2020360871: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-3e1d3e9b-4f02-907c-a838-941c1012cd05', 'request_id': '3e1d3e9b-4f02-907c-a838-941c1012cd05'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2028277511": {
+            "canonical_paper_id": "W2028277511",
+            "error": "design_evidence_paper_screener:W2028277511: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-2ea7d8d6-8e22-9574-ac3a-a5c382da83b8', 'request_id': '2ea7d8d6-8e22-9574-ac3a-a5c382da83b8'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2041634992": {
+            "canonical_paper_id": "W2041634992",
+            "error": "design_evidence_paper_screener:W2041634992: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-66f5bb18-049b-9e99-bfae-a3f04a519e9e', 'request_id': '66f5bb18-049b-9e99-bfae-a3f04a519e9e'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2063224499": {
+            "canonical_paper_id": "W2063224499",
+            "error": "design_evidence_paper_screener:W2063224499: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-8d5e8f6f-7289-94ac-b514-b295d2b6bcc6', 'request_id': '8d5e8f6f-7289-94ac-b514-b295d2b6bcc6'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2063607318": {
+            "canonical_paper_id": "W2063607318",
+            "error": "design_evidence_paper_screener:W2063607318: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-22a580e7-c509-9f92-b8b0-8cdfc75a0a17', 'request_id': '22a580e7-c509-9f92-b8b0-8cdfc75a0a17'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2140214409": {
+            "canonical_paper_id": "W2140214409",
+            "error": "design_evidence_paper_screener:W2140214409: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-897de66f-da78-9bde-886b-8aa67dcf54dc', 'request_id': '897de66f-da78-9bde-886b-8aa67dcf54dc'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2151957987": {
+            "canonical_paper_id": "W2151957987",
+            "error": "design_evidence_paper_screener:W2151957987: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-cb238533-3c0e-915a-b919-de9c565bdb5d', 'request_id': 'cb238533-3c0e-915a-b919-de9c565bdb5d'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2153994860": {
+            "canonical_paper_id": "W2153994860",
+            "error": "design_evidence_paper_screener:W2153994860: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-94834a59-b4da-91a9-9869-602ae97e73bd', 'request_id': '94834a59-b4da-91a9-9869-602ae97e73bd'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2580610811": {
+            "canonical_paper_id": "W2580610811",
+            "error": "design_evidence_paper_screener:W2580610811: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-71fdef43-cee4-9f37-b1cb-1e5bee3908e0', 'request_id': '71fdef43-cee4-9f37-b1cb-1e5bee3908e0'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2736556908": {
+            "canonical_paper_id": "W2736556908",
+            "error": "design_evidence_paper_screener:W2736556908: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-9626c691-34e1-925b-9cdd-c0b4a9e79827', 'request_id': '9626c691-34e1-925b-9cdd-c0b4a9e79827'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2748919737": {
+            "canonical_paper_id": "W2748919737",
+            "error": "design_evidence_paper_screener:W2748919737: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-a776d32f-5790-9b8f-8d66-199456b2d21a', 'request_id': 'a776d32f-5790-9b8f-8d66-199456b2d21a'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2782638258": {
+            "canonical_paper_id": "W2782638258",
+            "error": "design_evidence_paper_screener:W2782638258: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-6cbfa7c1-21e5-918c-b8c3-7c83405ac9d6', 'request_id': '6cbfa7c1-21e5-918c-b8c3-7c83405ac9d6'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2807277466": {
+            "canonical_paper_id": "W2807277466",
+            "error": "design_evidence_paper_screener:W2807277466: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-bbf80d94-947a-9314-a4f6-e0333fe23940', 'request_id': 'bbf80d94-947a-9314-a4f6-e0333fe23940'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2916674581": {
+            "canonical_paper_id": "W2916674581",
+            "error": "design_evidence_paper_screener:W2916674581: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-88702bf7-5bfb-9303-be5f-caf644e84f27', 'request_id': '88702bf7-5bfb-9303-be5f-caf644e84f27'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2969385702": {
+            "canonical_paper_id": "W2969385702",
+            "error": "design_evidence_paper_screener:W2969385702: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-13cf4870-7d79-99d4-9df5-4b509509130a', 'request_id': '13cf4870-7d79-99d4-9df5-4b509509130a'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2970382734": {
+            "canonical_paper_id": "W2970382734",
+            "error": "design_evidence_paper_screener:W2970382734: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-5b501005-8042-9c42-adf2-e3ac4fbbc226', 'request_id': '5b501005-8042-9c42-adf2-e3ac4fbbc226'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W2973574987": {
+            "canonical_paper_id": "W2973574987",
+            "error": "design_evidence_paper_screener:W2973574987: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-767f07cd-6aa2-97e5-8327-d1ca835c011d', 'request_id': '767f07cd-6aa2-97e5-8327-d1ca835c011d'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W3005821439": {
+            "canonical_paper_id": "W3005821439",
+            "error": "design_evidence_paper_screener:W3005821439: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-cbdfff96-be4f-91cc-a6c4-abe3a0a6990a', 'request_id': 'cbdfff96-be4f-91cc-a6c4-abe3a0a6990a'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W3159502980": {
+            "canonical_paper_id": "W3159502980",
+            "error": "design_evidence_paper_screener:W3159502980: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-a8b3c58e-516d-99d3-b2d3-36ec33a089fc', 'request_id': 'a8b3c58e-516d-99d3-b2d3-36ec33a089fc'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W3208272224": {
+            "canonical_paper_id": "W3208272224",
+            "error": "design_evidence_paper_screener:W3208272224: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-d299f8af-771f-9113-a6fb-16520669a94c', 'request_id': 'd299f8af-771f-9113-a6fb-16520669a94c'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W4206540440": {
+            "canonical_paper_id": "W4206540440",
+            "error": "design_evidence_paper_screener:W4206540440: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-e46903bd-4f20-9d0f-92d2-73e40f4b208c', 'request_id': 'e46903bd-4f20-9d0f-92d2-73e40f4b208c'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W4211175804": {
+            "canonical_paper_id": "W4211175804",
+            "error": "design_evidence_paper_screener:W4211175804: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-2e4c8568-2857-9e6e-b78f-3d46fdf03e1b', 'request_id': '2e4c8568-2857-9e6e-b78f-3d46fdf03e1b'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W4285049165": {
+            "canonical_paper_id": "W4285049165",
+            "error": "design_evidence_paper_screener:W4285049165: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-cb2d144c-78e1-9e1a-8903-2b8e758687c2', 'request_id': 'cb2d144c-78e1-9e1a-8903-2b8e758687c2'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W4293109976": {
+            "canonical_paper_id": "W4293109976",
+            "error": "design_evidence_paper_screener:W4293109976: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-ffdea634-9809-994f-b383-fa4fb4a39fd4', 'request_id': 'ffdea634-9809-994f-b383-fa4fb4a39fd4'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W4312112856": {
+            "canonical_paper_id": "W4312112856",
+            "error": "design_evidence_paper_screener:W4312112856: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-b512ee65-85cc-9ab3-bb66-05a205fc419a', 'request_id': 'b512ee65-85cc-9ab3-bb66-05a205fc419a'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W4317791678": {
+            "canonical_paper_id": "W4317791678",
+            "error": "design_evidence_paper_screener:W4317791678: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-0ff45224-6e7d-9137-ba06-02a03aa90d00', 'request_id': '0ff45224-6e7d-9137-ba06-02a03aa90d00'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W4367059916": {
+            "canonical_paper_id": "W4367059916",
+            "error": "design_evidence_paper_screener:W4367059916: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-21cd039d-33b5-9590-8690-94779d01798a', 'request_id': '21cd039d-33b5-9590-8690-94779d01798a'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W4385118605": {
+            "canonical_paper_id": "W4385118605",
+            "error": "design_evidence_paper_screener:W4385118605: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-f7afe3cf-10e7-98a4-b875-a68b2a9300f6', 'request_id': 'f7afe3cf-10e7-98a4-b875-a68b2a9300f6'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W4406847096": {
+            "canonical_paper_id": "W4406847096",
+            "error": "design_evidence_paper_screener:W4406847096: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-97238c7d-ec48-9547-9d71-103d6255b80c', 'request_id': '97238c7d-ec48-9547-9d71-103d6255b80c'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          },
+          "W4412727754": {
+            "canonical_paper_id": "W4412727754",
+            "error": "design_evidence_paper_screener:W4412727754: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-65efe2d6-ee96-97ce-ba20-4b774e76c6f1', 'request_id': '65efe2d6-ee96-97ce-ba20-4b774e76c6f1'}",
+            "error_type": "RequiredJsonLLMError",
+            "status": "FAILED"
+          }
+        },
+        "fulltext_budget": 15,
+        "fulltext_selection_policy": "one_best_substantive_paper_per_slot_then_descending_grounded_priority_score",
+        "omitted_before_screening_count": 0,
+        "omitted_before_screening_paper_ids": [],
+        "pre_screen_selected_by_slot": {},
+        "requested_slots": [
+          "mechanism",
+          "research_object_measurability",
+          "study_design",
+          "comparison_controls",
+          "measurement_calibration",
+          "statistics_bias",
+          "boundary_conditions",
+          "risk_ethics_reproducibility"
+        ],
+        "schema_version": "experiment_design_paper_screening_audit_v1",
+        "screened_paper_count": 0,
+        "screening_candidate_budget": 32,
+        "screening_policy": "required_json_llm_per_paper_per_design_slot_with_exact_title_abstract_anchors",
+        "screens_by_paper": {},
+        "selected_by_slot": {},
+        "selected_paper_ids": []
+      },
+      "provider_runs": [
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "EMPTY",
+          "task_id": "EDQ1.core"
+        },
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "SUCCESS",
+          "task_id": "EDQ1.design_method"
+        },
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "EMPTY",
+          "task_id": "EDQ2.core"
+        },
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "SUCCESS",
+          "task_id": "EDQ2.design_method"
+        },
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "EMPTY",
+          "task_id": "EDQ3.core"
+        },
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "SUCCESS",
+          "task_id": "EDQ3.design_method"
+        },
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "EMPTY",
+          "task_id": "EDQ4.core"
+        },
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "SUCCESS",
+          "task_id": "EDQ4.design_method"
+        },
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "EMPTY",
+          "task_id": "EDQ5.core"
+        },
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "SUCCESS",
+          "task_id": "EDQ5.design_method"
+        },
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "EMPTY",
+          "task_id": "EDQ6.core"
+        },
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "SUCCESS",
+          "task_id": "EDQ6.design_method"
+        },
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "EMPTY",
+          "task_id": "EDQ7.core"
+        },
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "SUCCESS",
+          "task_id": "EDQ7.design_method"
+        },
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "EMPTY",
+          "task_id": "EDQ8.core"
+        },
+        {
+          "detail": "OpenAlex returned a valid response; a valid empty result does not trigger fallback.",
+          "native_field_filter": [],
+          "native_field_filter_applied": false,
+          "provider": "openalex",
+          "status": "SUCCESS",
+          "task_id": "EDQ8.design_method"
+        }
+      ]
+    },
+    "schema_version": "evidence_bundle_v1"
+  },
+  "evidence_status": "DESIGNED_NOT_EXECUTED",
+  "execution_policy": {
+    "allow_digital_execution": false,
+    "mode": "DESIGN_ONLY",
+    "reason": "ExperimentDesign v1 is design-only and does not delegate work to a digital or physical executor."
+  },
+  "field_statuses": {
+    "analysis_plan": "needs_human_input",
+    "analysis_plan.batch_effects": "needs_human_input",
+    "analysis_plan.blinding": "needs_human_input",
+    "analysis_plan.missing_data": "needs_human_input",
+    "analysis_plan.randomization": "needs_human_input",
+    "analysis_plan.repetitions": "needs_human_input",
+    "analysis_plan.statistical_analysis": "needs_human_input",
+    "comparison_and_robustness": "needs_human_input",
+    "data_governance_and_reproducibility": "needs_human_input",
+    "data_governance_and_reproducibility.data_management": "needs_human_input",
+    "data_governance_and_reproducibility.reproducibility": "needs_human_input",
+    "degraded_stages.template_composer": "needs_human_input",
+    "degraded_stages.variable_claim_extraction": "needs_human_input",
+    "hypothesis_mapping": "user_declared",
+    "measurement_and_calibration": "needs_human_input",
+    "measurement_and_calibration.calibration": "needs_human_input",
+    "measurement_and_calibration.measurement_plan": "needs_human_input",
+    "measurement_and_calibration.quality_control": "needs_human_input",
+    "research_design": "design_assumption",
+    "sampling_and_eligibility": "needs_human_input",
+    "sampling_and_eligibility.eligibility_criteria": "needs_human_input",
+    "sampling_and_eligibility.sample_size_or_power_basis": "needs_human_input",
+    "sampling_and_eligibility.source": "needs_human_input",
+    "template_details.characterization_plan": "needs_human_input",
+    "template_details.comparison_samples": "needs_human_input",
+    "template_details.process_variables": "needs_human_input",
+    "template_details.replicate_strategy": "needs_human_input",
+    "template_details.sample_or_material": "needs_human_input",
+    "variables_and_operationalization": "needs_human_input"
+  },
+  "formal_reasoning_plan": {
+    "applicability": "not_applicable",
+    "assumptions": [],
+    "definitions": [],
+    "forward_derivation": {
+      "final_conclusion_step": "",
+      "status": "not_applicable",
+      "steps": []
+    },
+    "proof_obligations": [],
+    "propositions": [],
+    "schema_version": "formal_reasoning_plan_v1",
+    "status": "not_applicable",
+    "unknown_items": []
+  },
+  "hypothesis_mapping": [
+    {
+      "claim": "Engineered interlayer twist angles designed to suppress cross-plane thermal conductivity in van der Waals heterostructures remain structurally stable under sustained thermal cycling and operational stress gradients, provided the interlayer binding energy exceeds a critical threshold determined by the twist-angle-dependent moiré potential landscape, and in the absence of confounding defect-mediated or chemically-induced interlayer pinning.",
+      "decision_rule": "Define a preregistered or documented decision rule after confirming the outcome definition, comparisons, and analysis plan.",
+      "hypothesis_id": "H1",
+      "observables": [
+        "Compare the retention of cross-plane thermal anisotropy across different van der Waals material families with varying moiré potential depths but similar intrinsic defect densities, or utilize low-temperature cycling regimes to suppress chemical bonding, thereby isolating the moiré potential mechanism via a material-dependent binding energy ablation."
+      ]
+    }
+  ],
+  "measurement_and_calibration": {
+    "calibration": {
+      "reason": "Confirm applicable calibration, reference, or verification requirements."
+    },
+    "instruments": [],
+    "measurement_plan": {
+      "reason": "Specify a measurement or verification plan supported by the appropriate evidence."
+    },
+    "quality_control": {
+      "reason": "Define quality-control or proof-checking requirements before execution."
+    }
+  },
+  "observed_results": [],
+  "open_design_questions": [
+    "Confirm each field currently marked needs_human_input before treating this design as ready for execution.",
+    "Use traceable full-text evidence or user-supplied laboratory, clinical, or governance standards before marking restricted fields evidence_backed.",
+    "Replace the discarded variable_claim_extraction batch with qualified human review before treating this design as complete.",
+    "Replace the discarded template_composer batch with qualified human review before treating this design as complete."
+  ],
+  "outcome_branches": [
+    {
+      "branch_id": "supports_mechanism",
+      "conclusion_scope": "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Replicate under independently confirmed conditions.",
+        "Test the most consequential declared boundary condition."
+      ],
+      "interpretation": "The result would support, but not prove, the declared relation within the design boundary.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified analysis is consistent with the declared relation while planned controls do not favor a stated alternative explanation."
+    },
+    {
+      "branch_id": "partial_or_heterogeneous",
+      "conclusion_scope": "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Predefine and check plausible moderators.",
+        "Improve the coverage of conditions and measurement comparability."
+      ],
+      "interpretation": "The relation may be conditional or heterogeneous; no universal conclusion is warranted.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified analysis indicates variation across declared conditions, units, or measurement contexts."
+    },
+    {
+      "branch_id": "null_or_contradictory",
+      "conclusion_scope": "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Audit construct validity and comparison adequacy.",
+        "Revise the mechanism or boundary claim before another design iteration."
+      ],
+      "interpretation": "The proposed relation is not supported in this design boundary; absence of support is not proof of absence generally.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified comparison does not support the declared relation or instead favors a declared alternative explanation."
+    },
+    {
+      "branch_id": "uninformative_or_invalid",
+      "conclusion_scope": "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Resolve the identified validity or data-quality failure before repeating the design.",
+        "Obtain human confirmation of measurement, sampling, and analysis prerequisites."
+      ],
+      "interpretation": "No scientific conclusion is warranted because the planned design did not yield interpretable evidence.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "Prespecified quality-control, missingness, protocol-deviation, or validity criteria prevent interpretation."
+    }
+  ],
+  "reasoning_validation_report": {
+    "errors": [],
+    "status": "STRUCTURALLY_VALID_UNVERIFIED_REASONING",
+    "warnings": [
+      "Forward derivation and counterexample candidates are proposals unless an independent verifier or qualified human confirms them.",
+      "No experiment, simulation, symbolic execution, or exhaustive counterexample search was run.",
+      "One or more LLM or workflow batches were discarded and require qualified human replacement."
+    ]
+  },
+  "research_brief": {
+    "alternative_explanations": [
+      "Thermal cycling induces interlayer diffusion or chemical bonding that pins the layers independently of the moiré potential.",
+      "Changes in thermal contact resistance during cycling mimic changes in intrinsic cross-plane thermal conductivity.",
+      "Defect-mediated interlayer pinning (e.g., via chalcogen vacancies) or thermally induced chemical bonding could maintain suppressed cross-plane thermal conductivity, mimicking the effect of moiré potential energy barriers.",
+      "Strain relaxation via wrinkle formation or localized delamination could alter thermal transport without actual twist-angle relaxation."
+    ],
+    "boundary_conditions": [
+      "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold."
+    ],
+    "brief_id": "20260831-051401-339967",
+    "discipline_ids": [
+      "25"
+    ],
+    "discriminating_observations": [
+      "Compare the retention of cross-plane thermal anisotropy across different van der Waals material families with varying moiré potential depths but similar intrinsic defect densities, or utilize low-temperature cycling regimes to suppress chemical bonding, thereby isolating the moiré potential mechanism via a material-dependent binding energy ablation."
+    ],
+    "evidence_status": "PROPOSED",
+    "intervention_or_transformation": "Synthesize a library of van der Waals heterostructures with controlled interlayer twist angles and subject them to sustained thermal cycling and operational stress gradients, replacing the assumed shear-strain locking mechanism with the twist-angle-dependent moiré potential landscape while controlling for defect and chemical pinning.",
+    "known_unknowns": [],
+    "reasoning_context": {
+      "alternative_explanations": [
+        "Thermal cycling induces interlayer diffusion or chemical bonding that pins the layers independently of the moiré potential.",
+        "Changes in thermal contact resistance during cycling mimic changes in intrinsic cross-plane thermal conductivity.",
+        "Defect-mediated interlayer pinning (e.g., via chalcogen vacancies) or thermally induced chemical bonding could maintain suppressed cross-plane thermal conductivity, mimicking the effect of moiré potential energy barriers.",
+        "Strain relaxation via wrinkle formation or localized delamination could alter thermal transport without actual twist-angle relaxation."
+      ],
+      "assumptions": [
+        "Interlayer binding energy and moiré potential depths can be accurately calculated or measured for diverse van der Waals material families.",
+        "Thermal cycling conditions can be selected to minimize interlayer diffusion and chemical bonding, ensuring moiré potential pinning is the dominant retention mechanism."
+      ],
+      "boundary_conditions": [
+        "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold."
+      ],
+      "claim_scope": "The structural stability of twist-angle-engineered thermal anisotropy in van der Waals heterostructures under operational thermal cycling, bounded by the moiré potential landscape in regimes free from defect-mediated or chemically-induced interlayer pinning.",
+      "evidence_roles": [],
+      "falsifiers": [
+        "Demonstration that engineered twist angles relax to equilibrium stacking within device-relevant thermal cycling conditions in the absence of defect-mediated or chemical pinning, resulting in recovery of cross-plane conductivity to within 20% of pristine aligned values."
+      ],
+      "formal_symbols": [],
+      "gap_records": [
+        {
+          "gap_id": "gap:global:boundary_condition:material_generality:unknown:unknown:c3105d78c8c5",
+          "gap_kind": "boundary condition",
+          "statement": "The extreme thermal anisotropy mechanism is validated only for MoS2 and WS2, leaving its applicability to other van der Waals materials unverified.",
+          "target_slot": "material generality",
+          "why_it_matters": "The abstract explicitly reports measurements and molecular dynamics simulations exclusively for MoS2 and WS2, without addressing whether random interlayer rotations yield similar anisotropy ratios in materials with different phonon dispersion or interlayer bonding characteristics."
+        },
+        {
+          "gap_id": "gap:global:missing_assumption:structural_stability_under_operation:unknown:unknown:14c1007de5b8",
+          "gap_kind": "missing assumption",
+          "statement": "The persistence of random interlayer rotations under sustained thermal cycling and operational stress gradients is unaddressed.",
+          "target_slot": "structural stability under operation",
+          "why_it_matters": "While the abstract establishes interlayer rotation as a design degree of freedom for directed heat transport, it does not discuss whether these rotational configurations remain stable or relax over time when subjected to the very thermal gradients they are engineered to mitigate."
+        }
+      ],
+      "schema_version": "reasoning_context_v1",
+      "selected_direction_id": "mechanism_replacement",
+      "source_anchors": [
+        {
+          "anchor_id": "anchor:gap_evidence_anchor:global:material_generality:paper_abstract_w3202213959_abstract:the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified:7202c295c03b",
+          "anchor_type": "gap_evidence_anchor",
+          "claim_anchor": "The extreme thermal anisotropy mechanism is validated only for MoS2 and WS2, leaving its applicability to other van der Waals materials unverified.",
+          "label": "GLOBAL: material generality",
+          "paper_ids": [
+            "W3202213959"
+          ],
+          "source_pointer": {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W3202213959",
+            "section": "Abstract"
+          },
+          "subhypothesis_id": "GLOBAL",
+          "supports_gap_ids": [
+            "gap:global:boundary_condition:material_generality:unknown:unknown:c3105d78c8c5"
+          ],
+          "target_slot": "material generality",
+          "text_excerpt": "The extreme thermal anisotropy mechanism is validated only for MoS2 and WS2, leaving its applicability to other van der Waals materials unverified."
+        },
+        {
+          "anchor_id": "anchor:gap_evidence_anchor:global:structural_stability_under_operation:paper_abstract_w3202213959_abstract:the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed:4d627a17dae6",
+          "anchor_type": "gap_evidence_anchor",
+          "claim_anchor": "The persistence of random interlayer rotations under sustained thermal cycling and operational stress gradients is unaddressed.",
+          "label": "GLOBAL: structural stability under operation",
+          "paper_ids": [
+            "W3202213959"
+          ],
+          "source_pointer": {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W3202213959",
+            "section": "Abstract"
+          },
+          "subhypothesis_id": "GLOBAL",
+          "supports_gap_ids": [
+            "gap:global:missing_assumption:structural_stability_under_operation:unknown:unknown:14c1007de5b8"
+          ],
+          "target_slot": "structural stability under operation",
+          "text_excerpt": "The persistence of random interlayer rotations under sustained thermal cycling and operational stress gradients is unaddressed."
+        }
+      ],
+      "source_priority": [
+        "selected_direction",
+        "legacy_best_entry",
+        "selected_primary_idea",
+        "idea_candidate"
+      ],
+      "upstream_source_paths": [
+        "selected_direction.hypothesis.assumptions",
+        "selected_direction.hypothesis.claim_scope",
+        "selected_direction.falsifier",
+        "selected_direction.hypothesis.boundary_or_failure_condition",
+        "selected_direction.experiment_handoff.alternative_explanations",
+        "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+        "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_candidate.json",
+        "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_portfolio.json",
+        "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_directions.json",
+        "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_route_clusters.json",
+        "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/mature_ideas.json"
+      ]
+    },
+    "research_object": {
+      "description": "twist_angle_dependent_moire_potential_landscape"
+    },
+    "schema_version": "research_brief_v1",
+    "selected_direction": {
+      "central_hypothesis": "Engineered interlayer twist angles designed to suppress cross-plane thermal conductivity in van der Waals heterostructures remain structurally stable under sustained thermal cycling and operational stress gradients, provided the interlayer binding energy exceeds a critical threshold determined by the twist-angle-dependent moiré potential landscape, and in the absence of confounding defect-mediated or chemically-induced interlayer pinning.",
+      "id": "mechanism_replacement",
+      "mechanism_or_relation": "The twist-angle-dependent moiré potential landscape creates fundamental energy barriers that pin specific twist angles, dictating the critical threshold for interlayer binding energy and structural stability under thermal stress, distinct from and dominant over defect-mediated or chemical pinning mechanisms.",
+      "title": "Moiré Potential Landscapes Dictate the Thermal Cycling Stability of Twist-Angle-Engineered Thermal Anisotropy in Van Der Waals Heterostructures"
+    },
+    "source": {
+      "direction_id": "mechanism_replacement",
+      "idea_result_schema": "idea_result_v5",
+      "missing_audit_sources": [],
+      "survey_binding": {
+        "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+        "manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+        "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+        "project_id": "sci_20260831_051401_339967_survey_001",
+        "status": "bound",
+        "survey_run_id": "20260831-051401-339967-survey-001"
+      },
+      "upstream_source_paths": {
+        "idea_candidate": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_candidate.json",
+        "idea_directions": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_directions.json",
+        "idea_portfolio": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_portfolio.json",
+        "idea_result": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+        "idea_route_clusters": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_route_clusters.json",
+        "mature_ideas": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/mature_ideas.json"
+      }
+    },
+    "topic": "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes such as power plants. The research focus is to identify fundamental and material-dependent limits on thermal transport, interfacial thermal resistance, phonon and electron heat conduction, and heat dissipation under high power density."
+  },
+  "research_design": {
+    "design_type": "Template-guided Chemistry, materials, and chemical engineering study design pending evidence and human confirmation",
+    "experimental_unit": "The experimental or analytical unit must be operationalized for the declared research object before execution.",
+    "time_structure": "The temporal structure must be preregistered or documented after the applicable design evidence is reviewed."
+  },
+  "risk_and_human_review": {
+    "approval_dependencies": [
+      "Qualified human review must replace every discarded LLM or workflow batch before execution."
+    ],
+    "execution_prohibited": true,
+    "human_review_required": true,
+    "restricted_content": [],
+    "review_triggers": [
+      "LLM_OR_WORKFLOW_DEGRADATION_REVIEW"
+    ],
+    "risk_level": "medium"
+  },
+  "sampling_and_eligibility": {
+    "eligibility_criteria": {
+      "reason": "Define inclusion and exclusion criteria after the unit is operationalized."
+    },
+    "sample_size_or_power_basis": {
+      "reason": "Select a justified sample-size or power-analysis approach; no number is assumed."
+    },
+    "source": {
+      "reason": "Confirm the eligible source, frame, or corpus before execution."
+    }
+  },
+  "schema_version": "experiment_design_v1",
+  "template_composition": {
+    "llm_used": false,
+    "prompt_variant": "materials_chemical",
+    "secondary_template": "",
+    "submode": "",
+    "template_id": "materials_chemical"
+  },
+  "template_details": {
+    "characterization_plan": {
+      "reason": "This template requirement remains unresolved until qualified evidence or a responsible human supplies it."
+    },
+    "comparison_samples": {
+      "reason": "This template requirement remains unresolved until qualified evidence or a responsible human supplies it."
+    },
+    "process_variables": {
+      "reason": "This template requirement remains unresolved until qualified evidence or a responsible human supplies it."
+    },
+    "replicate_strategy": {
+      "reason": "This template requirement remains unresolved until qualified evidence or a responsible human supplies it."
+    },
+    "sample_or_material": {
+      "reason": "This template requirement remains unresolved until qualified evidence or a responsible human supplies it."
+    }
+  },
+  "validation_report": {
+    "errors": [],
+    "status": "BLOCKED_BY_RISK_REVIEW",
+    "warnings": [
+      "This is a design-only draft. It contains no observed experimental result.",
+      "Unresolved fields are intentionally explicit and must not be treated as completed protocol parameters.",
+      "variable_claim_extraction was degraded after its LLM or contract-validation batch was discarded; no discarded output is retained.",
+      "template_composer was degraded after its LLM or contract-validation batch was discarded; no discarded output is retained."
+    ]
+  },
+  "variable_claim_model": {
+    "claims": [],
+    "schema_version": "variable_claim_model_v1",
+    "status": "complete_or_requires_input",
+    "unknown_items": [
+      {
+        "field_path": "variable_claim_model",
+        "reason": "The variable_claim_extraction LLM batch was discarded after an unavailable or invalid response. No generated claim, formalization, counterexample, or protocol detail from that batch is retained; qualified human review is required.",
+        "status": "needs_human_input"
+      }
+    ],
+    "variables": []
+  },
+  "variables_and_operationalization": {
+    "confounders": [],
+    "control_variables": [],
+    "dependent_variables": [],
+    "independent_variables": [],
+    "operational_definitions": []
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": "survey_claim_traceability_v1",
+  "project_id": "sci_project",
+  "project_context_fingerprint": "context-A",
+  "evidence_plan_schema_version": "survey_sh_evidence_plan_v1",
+  "validation_enabled": true,
+  "claims": [
+    {
+      "claim_index": 1,
+      "claim_anchor": "direct observation",
+      "sub_hypothesis_ids": [
+        "SH1"
+      ],
+      "claim_mode": "EVIDENCE_BACKED_SYNTHESIS",
+      "evidence_paths": [
+        {
+          "sub_hypothesis_id": "SH1",
+          "slot_name": "direct_observation",
+          "paper_id": "W1",
+          "support_kind": "DIRECT_LEDGER_EVIDENCE",
+          "evidence_role": "DIRECT_OBSERVATION"
+        }
+      ],
+      "claim_text": "The direct observation supports the stated relation <Paper ID: W1>.",
+      "limitation_slots": [],
+      "claim_id": "S1.SS1.C1",
+      "draft_unit": "subsection",
+      "section_index": 1,
+      "subsection_index": 1
+    },
+    {
+      "claim_index": 1,
+      "claim_anchor": "direct observation",
+      "sub_hypothesis_ids": [
+        "SH1"
+      ],
+      "claim_mode": "EVIDENCE_BACKED_SYNTHESIS",
+      "evidence_paths": [
+        {
+          "sub_hypothesis_id": "SH1",
+          "slot_name": "direct_observation",
+          "paper_id": "W1",
+          "support_kind": "DIRECT_LEDGER_EVIDENCE",
+          "evidence_role": "DIRECT_OBSERVATION"
+        }
+      ],
+      "claim_text": "The direct observation supports the stated relation <Paper ID: W1>.",
+      "limitation_slots": [],
+      "claim_id": "S1.P.C1",
+      "draft_unit": "section_preamble",
+      "section_index": 1
+    }
+  ]
+}

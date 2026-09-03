@@ -1,0 +1,65 @@
+{
+  "schema_version": "equation_ir_v1",
+  "model_id": "model_b0_classical_swing",
+  "model_version": "1.0.0",
+  "system_type": "ODE",
+  "independent_variable": {"symbol": "t", "unit": "s", "coordinate": "simulation_time"},
+  "variables": [
+    {"variable_id": "delta", "symbol": "delta", "role": "state", "unit": "rad", "coordinate": "rotor_electrical_angle", "description": "Rotor electrical angle relative to the synchronous reference", "per_unit": {"enabled": false}},
+    {"variable_id": "omega", "symbol": "Delta_omega", "role": "state", "unit": "pu", "coordinate": "synchronous_speed_deviation", "description": "Per-unit rotor speed deviation", "per_unit": {"enabled": true, "base_quantity": "angular_speed", "base_value": 376.99111843077515, "base_unit": "rad/s"}},
+    {"variable_id": "omega_b", "symbol": "omega_b", "role": "parameter", "unit": "rad/s", "coordinate": "synchronous_base", "per_unit": {"enabled": false}},
+    {"variable_id": "H", "symbol": "H", "role": "parameter", "unit": "s", "coordinate": "machine_inertia", "per_unit": {"enabled": false}},
+    {"variable_id": "D", "symbol": "D", "role": "parameter", "unit": "pu", "coordinate": "machine_damping", "per_unit": {"enabled": true, "base_quantity": "power_over_speed", "base_value": 1.0, "base_unit": "pu"}},
+    {"variable_id": "P_m", "symbol": "P_m", "role": "input", "unit": "pu", "coordinate": "mechanical_power", "per_unit": {"enabled": true, "base_quantity": "active_power", "base_value": 100.0, "base_unit": "MVA"}},
+    {"variable_id": "P_e", "symbol": "P_e", "role": "input", "unit": "pu", "coordinate": "electrical_air_gap_power", "per_unit": {"enabled": true, "base_quantity": "active_power", "base_value": 100.0, "base_unit": "MVA"}}
+  ],
+  "equations": [
+    {
+      "equation_id": "swing_angle",
+      "kind": "differential",
+      "derivative_of": "delta",
+      "unit": "rad/s",
+      "description": "Electrical rotor-angle kinematics",
+      "residual": {
+        "node": "operator", "operator": "subtract", "arguments": [
+          {"node": "derivative", "variable_id": "delta", "with_respect_to": "t"},
+          {"node": "operator", "operator": "multiply", "arguments": [
+            {"node": "symbol", "variable_id": "omega_b"},
+            {"node": "symbol", "variable_id": "omega"}
+          ]}
+        ]
+      }
+    },
+    {
+      "equation_id": "swing_speed",
+      "kind": "differential",
+      "derivative_of": "omega",
+      "unit": "pu",
+      "description": "Classical swing equation in per-unit speed deviation",
+      "residual": {
+        "node": "operator", "operator": "subtract", "arguments": [
+          {"node": "operator", "operator": "multiply", "arguments": [
+            {"node": "number", "value": 2.0},
+            {"node": "symbol", "variable_id": "H"},
+            {"node": "derivative", "variable_id": "omega", "with_respect_to": "t"}
+          ]},
+          {"node": "operator", "operator": "subtract", "arguments": [
+            {"node": "operator", "operator": "subtract", "arguments": [
+              {"node": "symbol", "variable_id": "P_m"},
+              {"node": "symbol", "variable_id": "P_e"}
+            ]},
+            {"node": "operator", "operator": "multiply", "arguments": [
+              {"node": "symbol", "variable_id": "D"},
+              {"node": "symbol", "variable_id": "omega"}
+            ]}
+          ]}
+        ]
+      }
+    }
+  ],
+  "assumptions": [
+    "The synchronous angular-speed base is constant",
+    "Mechanical and electrical power inputs are represented on the same 100 MVA base",
+    "This role-A fixture records an equation contract but does not claim physical validation"
+  ]
+}

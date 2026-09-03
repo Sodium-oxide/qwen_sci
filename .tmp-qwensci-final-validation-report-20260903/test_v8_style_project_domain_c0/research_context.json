@@ -1,0 +1,900 @@
+{
+  "input_fingerprint": "0bc2e13942ebe960ed0cc3c5561d46272b83088e3d060974b844c26455657c6d",
+  "original_topic": "Develop personalized medicine from patient genetics with artificial intelligence and machine learning for pharmacology and biomedical engineering.",
+  "title": "Personalized medicine platform",
+  "schema_version": "project_research_context_v3",
+  "declared_domain": "Biomedical Engineering and Pharmacology",
+  "domain": "Personalized Medicine",
+  "research_domains": [
+    {
+      "key": "genetics_genomics_heredity",
+      "domain": "biochemistry_genetics_molecular_biology",
+      "subfield": "genetics_genomics_heredity",
+      "label": "Genetics Genomics And Heredity",
+      "matched_terms": [
+        "genetics",
+        "genetic"
+      ],
+      "declared_domain_matches": [],
+      "scientific_text_matches": [
+        "genetics",
+        "genetic"
+      ],
+      "declared_domain_score": 0.0,
+      "scientific_text_score": 2.0,
+      "score": 22.0,
+      "source": "declared_domain_and_scientific_text",
+      "evidence_status": "DIRECT"
+    },
+    {
+      "key": "artificial_intelligence",
+      "domain": "computer_science",
+      "subfield": "artificial_intelligence",
+      "label": "Artificial Intelligence",
+      "matched_terms": [
+        "artificial intelligence"
+      ],
+      "declared_domain_matches": [],
+      "scientific_text_matches": [
+        "artificial intelligence"
+      ],
+      "declared_domain_score": 0.0,
+      "scientific_text_score": 1.0,
+      "score": 12.0,
+      "source": "declared_domain_and_scientific_text",
+      "evidence_status": "DIRECT"
+    },
+    {
+      "key": "pharmacology_pharmacodynamics",
+      "domain": "pharmacology_toxicology_pharmaceutics",
+      "subfield": "pharmacology_pharmacodynamics",
+      "label": "Pharmacology And Pharmacodynamics",
+      "matched_terms": [
+        "pharmacology"
+      ],
+      "declared_domain_matches": [
+        "pharmacology"
+      ],
+      "scientific_text_matches": [
+        "pharmacology"
+      ],
+      "declared_domain_score": 1.0,
+      "scientific_text_score": 1.0,
+      "score": 25.0,
+      "source": "declared_domain_and_scientific_text",
+      "evidence_status": "DIRECT"
+    },
+    {
+      "key": "machine_learning",
+      "domain": "computer_science",
+      "subfield": "machine_learning",
+      "label": "Machine Learning",
+      "matched_terms": [
+        "machine learning"
+      ],
+      "declared_domain_matches": [],
+      "scientific_text_matches": [
+        "machine learning"
+      ],
+      "declared_domain_score": 0.0,
+      "scientific_text_score": 1.0,
+      "score": 12.0,
+      "source": "declared_domain_and_scientific_text",
+      "evidence_status": "DIRECT"
+    },
+    {
+      "key": "biomedical_engineering",
+      "domain": "engineering",
+      "subfield": "biomedical_engineering",
+      "label": "Biomedical Engineering",
+      "matched_terms": [
+        "biomedical engineering",
+        "medical engineering"
+      ],
+      "declared_domain_matches": [
+        "biomedical engineering",
+        "medical engineering"
+      ],
+      "scientific_text_matches": [
+        "biomedical engineering",
+        "medical engineering"
+      ],
+      "declared_domain_score": 2.0,
+      "scientific_text_score": 2.0,
+      "score": 52.0,
+      "source": "declared_domain_and_scientific_text",
+      "evidence_status": "DIRECT"
+    }
+  ],
+  "research_identity": {
+    "label": "Personalized Medicine",
+    "source": "llm_primary",
+    "confidence": 0.93,
+    "rationale": "",
+    "evidence_spans": [
+      "personalized medicine",
+      "patient genetics",
+      "artificial intelligence",
+      "machine learning",
+      "pharmacology",
+      "biomedical engineering"
+    ],
+    "secondary_labels": [],
+    "core_entities": [
+      "patient genetics"
+    ],
+    "retrieval_synonyms": [
+      "precision medicine"
+    ],
+    "must_not_be_primary": []
+  },
+  "domain_taxonomy": {
+    "catalog_version": "research_domain_catalog_v1",
+    "coverage": "validated",
+    "mappings": [
+      {
+        "key": "genetics_genomics_heredity",
+        "domain": "biochemistry_genetics_molecular_biology",
+        "subfield": "genetics_genomics_heredity",
+        "label": "Genetics Genomics And Heredity",
+        "matched_terms": [
+          "genetics",
+          "genetic"
+        ],
+        "declared_domain_matches": [],
+        "scientific_text_matches": [
+          "genetics",
+          "genetic"
+        ],
+        "declared_domain_score": 0.0,
+        "scientific_text_score": 2.0,
+        "score": 22.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      },
+      {
+        "key": "artificial_intelligence",
+        "domain": "computer_science",
+        "subfield": "artificial_intelligence",
+        "label": "Artificial Intelligence",
+        "matched_terms": [
+          "artificial intelligence"
+        ],
+        "declared_domain_matches": [],
+        "scientific_text_matches": [
+          "artificial intelligence"
+        ],
+        "declared_domain_score": 0.0,
+        "scientific_text_score": 1.0,
+        "score": 12.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      },
+      {
+        "key": "pharmacology_pharmacodynamics",
+        "domain": "pharmacology_toxicology_pharmaceutics",
+        "subfield": "pharmacology_pharmacodynamics",
+        "label": "Pharmacology And Pharmacodynamics",
+        "matched_terms": [
+          "pharmacology"
+        ],
+        "declared_domain_matches": [
+          "pharmacology"
+        ],
+        "scientific_text_matches": [
+          "pharmacology"
+        ],
+        "declared_domain_score": 1.0,
+        "scientific_text_score": 1.0,
+        "score": 25.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      },
+      {
+        "key": "machine_learning",
+        "domain": "computer_science",
+        "subfield": "machine_learning",
+        "label": "Machine Learning",
+        "matched_terms": [
+          "machine learning"
+        ],
+        "declared_domain_matches": [],
+        "scientific_text_matches": [
+          "machine learning"
+        ],
+        "declared_domain_score": 0.0,
+        "scientific_text_score": 1.0,
+        "score": 12.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      },
+      {
+        "key": "biomedical_engineering",
+        "domain": "engineering",
+        "subfield": "biomedical_engineering",
+        "label": "Biomedical Engineering",
+        "matched_terms": [
+          "biomedical engineering",
+          "medical engineering"
+        ],
+        "declared_domain_matches": [
+          "biomedical engineering",
+          "medical engineering"
+        ],
+        "scientific_text_matches": [
+          "biomedical engineering",
+          "medical engineering"
+        ],
+        "declared_domain_score": 2.0,
+        "scientific_text_score": 2.0,
+        "score": 52.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      }
+    ]
+  },
+  "discovery_taxonomy": {
+    "schema_version": "discipline_taxonomy_v1",
+    "scope": "natural_science_engineering_only",
+    "status": "resolved",
+    "primary_discipline": "medicine",
+    "discipline_ids": [
+      "medicine"
+    ],
+    "adjacent_disciplines": [
+      "pharmacology_toxicology_pharmaceutics",
+      "neuroscience"
+    ],
+    "coverage": "exact",
+    "matched_terms": [
+      "medicine"
+    ],
+    "out_of_scope_terms": [],
+    "mixed": false,
+    "primary": {
+      "key": "medicine",
+      "label": "Medicine",
+      "family": "health_sciences",
+      "aliases": [
+        "medicine",
+        "medical",
+        "clinical",
+        "patient",
+        "hospital",
+        "diagnosis",
+        "therapy",
+        "treatment",
+        "epidemiology",
+        "public health"
+      ],
+      "internal_domains": [
+        "medicine"
+      ],
+      "openalex_field_ids": [
+        "27"
+      ],
+      "arxiv_categories": [],
+      "semantic_scholar_fields": [
+        "Medicine"
+      ],
+      "provider_applicability": [
+        "openalex",
+        "semantic_scholar"
+      ],
+      "coverage": "exact",
+      "adjacent": [
+        "pharmacology_toxicology_pharmaceutics",
+        "neuroscience",
+        "nursing"
+      ],
+      "wos_categories": []
+    },
+    "provider_filters": {
+      "arxiv": {
+        "provider": "arxiv",
+        "primary_discipline": "medicine",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "pharmacology_toxicology_pharmaceutics",
+          "neuroscience"
+        ],
+        "mode": "native_filter_withheld",
+        "policy": "post_filter_only",
+        "applied": false,
+        "reason": "No exact arXiv category mapping is available for this taxonomy entry."
+      },
+      "openalex": {
+        "provider": "openalex",
+        "primary_discipline": "medicine",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "pharmacology_toxicology_pharmaceutics",
+          "neuroscience"
+        ],
+        "mode": "native_filter",
+        "policy": "hard_filter",
+        "applied": true,
+        "resolved_field_ids": [
+          "27"
+        ],
+        "filter": "primary_topic.field.id:27",
+        "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+      },
+      "semantic_scholar": {
+        "provider": "semantic_scholar",
+        "primary_discipline": "medicine",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "pharmacology_toxicology_pharmaceutics",
+          "neuroscience"
+        ],
+        "mode": "field_hint",
+        "policy": "soft_boost",
+        "applied": false,
+        "field_hints": [
+          "Medicine"
+        ],
+        "reason": "Semantic Scholar field values are recorded as soft hints; no hard field filter is claimed."
+      }
+    },
+    "reason": "Resolved conservatively from allowlisted aliases; provider-native filters remain metadata until a provider route consumes them."
+  },
+  "domain_context": {
+    "primary": "Personalized Medicine",
+    "taxonomy_labels": [
+      "Genetics Genomics And Heredity",
+      "Artificial Intelligence",
+      "Pharmacology And Pharmacodynamics",
+      "Machine Learning",
+      "Biomedical Engineering"
+    ],
+    "secondary_labels": [],
+    "retrieval_terms": [
+      "Personalized Medicine",
+      "Genetics Genomics And Heredity",
+      "Artificial Intelligence",
+      "Pharmacology And Pharmacodynamics",
+      "Machine Learning",
+      "Biomedical Engineering",
+      "precision medicine",
+      "patient genetics",
+      "Biomedical Engineering and Pharmacology"
+    ]
+  },
+  "catalog_resolution": {
+    "catalog_version": "research_domain_catalog_v1",
+    "declared_domain": "Biomedical Engineering and Pharmacology",
+    "requested_domain_is_generic": false,
+    "primary_label": "Biomedical Engineering",
+    "primary_domain": "engineering",
+    "primary_subfield": "biomedical_engineering",
+    "research_domains": [
+      {
+        "key": "biomedical_engineering",
+        "domain": "engineering",
+        "subfield": "biomedical_engineering",
+        "label": "Biomedical Engineering",
+        "matched_terms": [
+          "biomedical engineering",
+          "medical engineering"
+        ],
+        "declared_domain_matches": [
+          "biomedical engineering",
+          "medical engineering"
+        ],
+        "scientific_text_matches": [
+          "biomedical engineering",
+          "medical engineering"
+        ],
+        "declared_domain_score": 2.0,
+        "scientific_text_score": 2.0,
+        "score": 52.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      },
+      {
+        "key": "pharmacology_pharmacodynamics",
+        "domain": "pharmacology_toxicology_pharmaceutics",
+        "subfield": "pharmacology_pharmacodynamics",
+        "label": "Pharmacology And Pharmacodynamics",
+        "matched_terms": [
+          "pharmacology"
+        ],
+        "declared_domain_matches": [
+          "pharmacology"
+        ],
+        "scientific_text_matches": [
+          "pharmacology"
+        ],
+        "declared_domain_score": 1.0,
+        "scientific_text_score": 1.0,
+        "score": 25.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      },
+      {
+        "key": "genetics_genomics_heredity",
+        "domain": "biochemistry_genetics_molecular_biology",
+        "subfield": "genetics_genomics_heredity",
+        "label": "Genetics Genomics And Heredity",
+        "matched_terms": [
+          "genetics",
+          "genetic"
+        ],
+        "declared_domain_matches": [],
+        "scientific_text_matches": [
+          "genetics",
+          "genetic"
+        ],
+        "declared_domain_score": 0.0,
+        "scientific_text_score": 2.0,
+        "score": 22.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      },
+      {
+        "key": "artificial_intelligence",
+        "domain": "computer_science",
+        "subfield": "artificial_intelligence",
+        "label": "Artificial Intelligence",
+        "matched_terms": [
+          "artificial intelligence"
+        ],
+        "declared_domain_matches": [],
+        "scientific_text_matches": [
+          "artificial intelligence"
+        ],
+        "declared_domain_score": 0.0,
+        "scientific_text_score": 1.0,
+        "score": 12.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      },
+      {
+        "key": "machine_learning",
+        "domain": "computer_science",
+        "subfield": "machine_learning",
+        "label": "Machine Learning",
+        "matched_terms": [
+          "machine learning"
+        ],
+        "declared_domain_matches": [],
+        "scientific_text_matches": [
+          "machine learning"
+        ],
+        "declared_domain_score": 0.0,
+        "scientific_text_score": 1.0,
+        "score": 12.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      },
+      {
+        "key": "personalized_medicine",
+        "domain": "medicine",
+        "subfield": "personalized_medicine",
+        "label": "Personalized Medicine",
+        "matched_terms": [
+          "personalized medicine"
+        ],
+        "declared_domain_matches": [],
+        "scientific_text_matches": [
+          "personalized medicine"
+        ],
+        "declared_domain_score": 0.0,
+        "scientific_text_score": 1.0,
+        "score": 12.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      }
+    ],
+    "requires_human_confirmation": true
+  },
+  "catalog_conflict": {
+    "detected": false,
+    "adjudicated": false,
+    "catalog_primary_label": "Biomedical Engineering",
+    "reason": ""
+  },
+  "domain_resolution_source": "llm_primary_catalog_validated",
+  "requires_human_confirmation": true,
+  "primary_discipline": "medicine",
+  "secondary_disciplines": [],
+  "domain_confidence": 0.93,
+  "core_entities": [
+    "patient genetics"
+  ],
+  "retrieval_synonyms": [
+    "precision medicine"
+  ],
+  "abbreviations": [],
+  "exclusion_terms": [],
+  "llm_payload": {
+    "domain": "Personalized Medicine",
+    "research_domains": [
+      "Genetics Genomics And Heredity",
+      "Artificial Intelligence",
+      "Pharmacology And Pharmacodynamics",
+      "Machine Learning",
+      "Biomedical Engineering"
+    ],
+    "primary_discipline": "medicine",
+    "domain_confidence": 0.93,
+    "evidence_spans": [
+      "personalized medicine",
+      "patient genetics",
+      "artificial intelligence",
+      "machine learning",
+      "pharmacology",
+      "biomedical engineering"
+    ],
+    "core_entities": [
+      "patient genetics"
+    ],
+    "retrieval_synonyms": [
+      "precision medicine"
+    ]
+  },
+  "llm_attempted": true,
+  "llm_error": "",
+  "taxonomy_resolution": {
+    "schema_version": "discipline_taxonomy_v1",
+    "scope": "natural_science_engineering_only",
+    "status": "resolved",
+    "primary_discipline": "medicine",
+    "discipline_ids": [
+      "medicine"
+    ],
+    "adjacent_disciplines": [
+      "pharmacology_toxicology_pharmaceutics",
+      "neuroscience"
+    ],
+    "coverage": "exact",
+    "matched_terms": [
+      "medicine"
+    ],
+    "out_of_scope_terms": [],
+    "mixed": false,
+    "primary": {
+      "key": "medicine",
+      "label": "Medicine",
+      "family": "health_sciences",
+      "aliases": [
+        "medicine",
+        "medical",
+        "clinical",
+        "patient",
+        "hospital",
+        "diagnosis",
+        "therapy",
+        "treatment",
+        "epidemiology",
+        "public health"
+      ],
+      "internal_domains": [
+        "medicine"
+      ],
+      "openalex_field_ids": [
+        "27"
+      ],
+      "arxiv_categories": [],
+      "semantic_scholar_fields": [
+        "Medicine"
+      ],
+      "provider_applicability": [
+        "openalex",
+        "semantic_scholar"
+      ],
+      "coverage": "exact",
+      "adjacent": [
+        "pharmacology_toxicology_pharmaceutics",
+        "neuroscience",
+        "nursing"
+      ],
+      "wos_categories": []
+    },
+    "provider_filters": {
+      "arxiv": {
+        "provider": "arxiv",
+        "primary_discipline": "medicine",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "pharmacology_toxicology_pharmaceutics",
+          "neuroscience"
+        ],
+        "mode": "native_filter_withheld",
+        "policy": "post_filter_only",
+        "applied": false,
+        "reason": "No exact arXiv category mapping is available for this taxonomy entry."
+      },
+      "openalex": {
+        "provider": "openalex",
+        "primary_discipline": "medicine",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "pharmacology_toxicology_pharmaceutics",
+          "neuroscience"
+        ],
+        "mode": "native_filter",
+        "policy": "hard_filter",
+        "applied": true,
+        "resolved_field_ids": [
+          "27"
+        ],
+        "filter": "primary_topic.field.id:27",
+        "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+      },
+      "semantic_scholar": {
+        "provider": "semantic_scholar",
+        "primary_discipline": "medicine",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "pharmacology_toxicology_pharmaceutics",
+          "neuroscience"
+        ],
+        "mode": "field_hint",
+        "policy": "soft_boost",
+        "applied": false,
+        "field_hints": [
+          "Medicine"
+        ],
+        "reason": "Semantic Scholar field values are recorded as soft hints; no hard field filter is claimed."
+      }
+    },
+    "reason": "Resolved conservatively from allowlisted aliases; provider-native filters remain metadata until a provider route consumes them."
+  },
+  "original_objective": "Assess personalized medicine using patient genetics, artificial intelligence, machine learning, pharmacology, and biomedical engineering.",
+  "research_brief": "",
+  "identity_status": "resolved",
+  "evidence_spans": [
+    "personalized medicine",
+    "patient genetics",
+    "artificial intelligence",
+    "machine learning",
+    "pharmacology",
+    "biomedical engineering"
+  ],
+  "academic_operationalization": {
+    "applied": true,
+    "mode": "survey_scope",
+    "original_objective": "Assess personalized medicine using patient genetics, artificial intelligence, machine learning, pharmacology, and biomedical engineering.",
+    "normalized_objective": "For Assess personalized medicine using patient genetics, artificial intelligence, machine learning, pharmacology, and biomedical engineering., which research objects, tasks, data or deployment conditions, and evaluation criteria in Medicine support reproducible advantages over explicit baselines, and where do limitations or failures occur?",
+    "task_or_question": "Identify task, object, condition, evidence, and limitation boundaries.",
+    "research_object": "",
+    "outcomes_or_readouts": [
+      "reported task performance",
+      "evidence quality",
+      "reproducibility"
+    ],
+    "data_or_deployment_context": [],
+    "baseline_requirements": [
+      "explicit task-appropriate baseline"
+    ],
+    "limitation_and_failure_conditions": [
+      "reported limitation, failure mode, or boundary condition"
+    ],
+    "rewrite_reason": "broad_solution_or_slogan_language",
+    "extractor": "deterministic_domain_contract"
+  },
+  "recommended_sources": [
+    {
+      "provider": "openalex",
+      "priority": 1,
+      "role": "primary_discovery",
+      "native_filter": {
+        "provider": "openalex",
+        "primary_discipline": "medicine",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "pharmacology_toxicology_pharmaceutics",
+          "neuroscience"
+        ],
+        "mode": "native_filter",
+        "policy": "hard_filter",
+        "applied": true,
+        "resolved_field_ids": [
+          "27"
+        ],
+        "filter": "primary_topic.field.id:27",
+        "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+      }
+    },
+    {
+      "provider": "arxiv",
+      "priority": 2,
+      "role": "conditional_preprint_discovery",
+      "enabled_for_exact_mapping": false,
+      "native_filter": {
+        "provider": "arxiv",
+        "primary_discipline": "medicine",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "pharmacology_toxicology_pharmaceutics",
+          "neuroscience"
+        ],
+        "mode": "native_filter_withheld",
+        "policy": "post_filter_only",
+        "applied": false,
+        "reason": "No exact arXiv category mapping is available for this taxonomy entry."
+      }
+    },
+    {
+      "provider": "semantic_scholar",
+      "priority": 3,
+      "role": "fallback_only",
+      "native_filter": {
+        "provider": "semantic_scholar",
+        "primary_discipline": "medicine",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "pharmacology_toxicology_pharmaceutics",
+          "neuroscience"
+        ],
+        "mode": "field_hint",
+        "policy": "soft_boost",
+        "applied": false,
+        "field_hints": [
+          "Medicine"
+        ],
+        "reason": "Semantic Scholar field values are recorded as soft hints; no hard field filter is claimed."
+      }
+    }
+  ],
+  "retrieval_plan": {
+    "schema_version": "retrieval_lanes_v1",
+    "execution_policy": "limited_query_lanes",
+    "baseline_query": "Develop personalized medicine from patient genetics with artificial intelligence and machine learning for pharmacology and biomedical engineering.",
+    "normalized_objective": "For Assess personalized medicine using patient genetics, artificial intelligence, machine learning, pharmacology, and biomedical engineering., which research objects, tasks, data or deployment conditions, and evaluation criteria in Medicine support reproducible advantages over explicit baselines, and where do limitations or failures occur?",
+    "include_anchors": [
+      "Personalized Medicine",
+      "Genetics Genomics And Heredity",
+      "Artificial Intelligence",
+      "Pharmacology And Pharmacodynamics",
+      "Machine Learning",
+      "Biomedical Engineering",
+      "precision medicine",
+      "patient genetics",
+      "Biomedical Engineering and Pharmacology",
+      "Identify task, object, condition, evidence, and limitation boundaries."
+    ],
+    "exclude_anchors": [],
+    "evidence_mode": "overview",
+    "query_lanes": [
+      {
+        "lane_id": "broad_anchor",
+        "lane": "broad_anchor",
+        "provider": "openalex",
+        "query": "Develop personalized medicine from patient genetics with artificial intelligence and machine learning for pharmacology and biomedical engineering.",
+        "evidence_mode": "overview",
+        "taxonomy_coverage": "broad",
+        "hard_filter_allowed": false,
+        "hard_filter_applied": false,
+        "provider_filter": {},
+        "purpose": "recall_baseline",
+        "discipline_filter_policy": "broad",
+        "execution_phase": "initial"
+      },
+      {
+        "lane_id": "exact_discipline",
+        "lane": "exact_discipline",
+        "provider": "openalex",
+        "query": "Develop personalized medicine from patient genetics with artificial intelligence and machine learning for pharmacology and biomedical engineering.",
+        "evidence_mode": "overview",
+        "taxonomy_coverage": "exact",
+        "hard_filter_allowed": true,
+        "hard_filter_applied": true,
+        "provider_filter": {
+          "provider": "openalex",
+          "primary_discipline": "medicine",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "pharmacology_toxicology_pharmaceutics",
+            "neuroscience"
+          ],
+          "mode": "native_filter",
+          "policy": "hard_filter",
+          "applied": true,
+          "resolved_field_ids": [
+            "27"
+          ],
+          "filter": "primary_topic.field.id:27",
+          "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+        },
+        "purpose": "precision_expansion",
+        "discipline_filter_policy": "exact_primary",
+        "execution_phase": "initial"
+      }
+    ]
+  },
+  "identity_source": "llm_primary_catalog_validated",
+  "llm_used": true,
+  "research_design_inventory": {
+    "schema_version": "research_design_inventory_v1",
+    "input_fingerprint": "94dc63be3cd97fb0144715b64b480490a6acf834411c478e7ee7104e75dbaaf6",
+    "project_context_fingerprint": "0bc2e13942ebe960ed0cc3c5561d46272b83088e3d060974b844c26455657c6d",
+    "design_basis": [
+      {
+        "id": "DB1",
+        "kind": "research_object",
+        "statement": "The project studies Personalized Medicine.",
+        "anchors": [
+          "patient genetics",
+          "Personalized Medicine"
+        ],
+        "source": "project_declaration_compiler",
+        "evidence_spans": [
+          "patient genetics",
+          "Personalized Medicine",
+          "Develop personalized medicine from patient genetics with artificial intelligence and machine learning for pharmacology and biomedical engineering."
+        ]
+      },
+      {
+        "id": "DB2",
+        "kind": "target_relation",
+        "statement": "For Assess personalized medicine using patient genetics, artificial intelligence, machine learning, pharmacology, and biomedical engineering., which research objects, tasks, data or deployment conditions, and evaluation criteria in Medicine support reproducible advantages over explicit baselines, and where do limitations or failures occur?",
+        "anchors": [
+          "For Assess personalized medicine using patient genetics, artificial intelligence, machine learning, pharmacology, and biomedical engineering., which research objects, tasks, data or deployment conditions, and evaluation criteria in Medicine",
+          "patient genetics"
+        ],
+        "source": "project_declaration_compiler",
+        "evidence_spans": [
+          "For Assess personalized medicine using patient genetics, artificial intelligence, machine learning, pharmacology, and biomedical engineering., which research objects, tasks, data or deployment conditions, and evaluation criteria in Medicine"
+        ]
+      },
+      {
+        "id": "DB3",
+        "kind": "outcome_or_construct",
+        "statement": "The project requires evidence about declared outcomes or constructs.",
+        "anchors": [
+          "reported task performance",
+          "evidence quality",
+          "reproducibility"
+        ],
+        "source": "project_declaration_compiler",
+        "evidence_spans": [
+          "reported task performance",
+          "evidence quality",
+          "reproducibility"
+        ]
+      },
+      {
+        "id": "DB4",
+        "kind": "condition_or_regime",
+        "statement": "The project scope includes the declared conditions, regimes, or contexts.",
+        "anchors": [
+          "For Assess personalized medicine using patient genetics, artificial intelligence, machine learning, pharmacology, and biomedical engineering., which research objects, tasks, data or deployment conditions, and evaluation criteria in Medicine"
+        ],
+        "source": "project_declaration_compiler",
+        "evidence_spans": [
+          "For Assess personalized medicine using patient genetics, artificial intelligence, machine learning, pharmacology, and biomedical engineering., which research objects, tasks, data or deployment conditions, and evaluation criteria in Medicine"
+        ]
+      },
+      {
+        "id": "DB5",
+        "kind": "comparison",
+        "statement": "The project requires explicit comparison or baseline interpretation where applicable.",
+        "anchors": [
+          "explicit task-appropriate baseline"
+        ],
+        "source": "project_declaration_compiler",
+        "evidence_spans": [
+          "explicit task-appropriate baseline"
+        ]
+      },
+      {
+        "id": "DB6",
+        "kind": "boundary_or_failure",
+        "statement": "The project must retain declared limitations, failure conditions, or boundary cases.",
+        "anchors": [
+          "reported limitation, failure mode, or boundary condition"
+        ],
+        "source": "project_declaration_compiler",
+        "evidence_spans": [
+          "reported limitation, failure mode, or boundary condition"
+        ]
+      }
+    ],
+    "inventory_source": "project_declaration_compiler",
+    "llm_used": false,
+    "llm_error": "llm_design_inventory_failed_source_grounding"
+  }
+}

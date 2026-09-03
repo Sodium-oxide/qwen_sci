@@ -1,0 +1,66 @@
+{
+  "blueprint_identity": "6e74e65beae0fa589b3281d31343f186cddda0e7c46e557393e2dcf9456cfb6c",
+  "candidates": [
+    {
+      "candidate_id": "PEC-Q1-k-001",
+      "conditions": {
+        "temperature_K": 300.0
+      },
+      "evidence_locator": {
+        "document_type": "TXT",
+        "page": null,
+        "quoted_text": "At 300 K, the measured decay coefficient was k = 2.0 s^-1.",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "evidence_status": "USER_PROVIDED",
+      "mathir_symbol": "k",
+      "normalized_unit": "s^-1",
+      "normalized_value": 2.0,
+      "parameter_id": "k",
+      "raw_value": "k = 2.0 s^-1",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": [
+          "user_provided"
+        ],
+        "document_id": "UPD-001",
+        "doi": "",
+        "title": "Controlled measurement note",
+        "year": 2025
+      },
+      "source_kind": "USER_PROVIDED",
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "value_form": "SCALAR"
+    }
+  ],
+  "lineage": {
+    "created_from_artifact": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_evidence_bound_parameter_0\\runs\\qpf\\idea\\attempt-001\\quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "quantitative-parameter-context",
+    "project_id": "quantitative-parameter-project",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "qpf",
+    "selected_direction_id": "direction-1",
+    "survey_run_id": "survey-quantitative-parameter",
+    "version": 0
+  },
+  "schema_version": "quantitative_parameter_evidence_collection_v1",
+  "source_document": {
+    "cross_validated": false,
+    "discovery_sources": [
+      "user_provided"
+    ],
+    "document_id": "UPD-001",
+    "doi": "",
+    "evidence_status": "USER_PROVIDED",
+    "parameter_request_ids": [],
+    "retrieval_source": "USER_PROVIDED",
+    "title": "Controlled measurement note",
+    "year": 2025
+  }
+}

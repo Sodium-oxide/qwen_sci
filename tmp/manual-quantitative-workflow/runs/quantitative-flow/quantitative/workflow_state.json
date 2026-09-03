@@ -1,0 +1,85 @@
+{
+  "created_at": "2026-09-01T20:22:20.617840Z",
+  "experiment_design": {
+    "design_id": "design-001",
+    "manifest": {
+      "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\tmp\\manual-quantitative-workflow\\runs\\quantitative-flow\\experiment_design\\attempt-001\\experiment_design_manifest.json",
+      "sha256": "021e2e5ca904e93ce264396d8d57913c2ade0eec3828e3f5100e08babfb4c570"
+    },
+    "status": "COMPLETED"
+  },
+  "ideas": {
+    "Q1": {
+      "current_version": 0,
+      "quantitative_idea_id": "Q1",
+      "status": "QUALIFIED_WAITING_FOR_REVISION_DECISION",
+      "title": "Bounded decay",
+      "versions": {
+        "v0": {
+          "artifacts": {
+            "ledger": {
+              "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\tmp\\manual-quantitative-workflow\\runs\\quantitative-flow\\quantitative\\Q1\\v0\\result_ledger.json",
+              "sha256": "4471ee426226646cbe4d93b40e5963509b40dc492482b27f3b62050c8f51188d"
+            },
+            "model": {
+              "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\tmp\\manual-quantitative-workflow\\runs\\quantitative-flow\\quantitative\\Q1\\v0\\mathematical_model.md",
+              "sha256": "64c0cca213c8364808a7a9dbff6a0da1e7bd14d08352fead8b7b27dbad3c37c6"
+            },
+            "model_spec": {
+              "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\tmp\\manual-quantitative-workflow\\runs\\quantitative-flow\\quantitative\\Q1\\v0\\quantitative_model_spec.json",
+              "sha256": "f026d3bb94378a431a845afd336260ba9d19959cd81d8b7890213940d20aef3b"
+            },
+            "plan": {
+              "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\tmp\\manual-quantitative-workflow\\runs\\quantitative-flow\\quantitative\\Q1\\v0\\simulation_run_plan.json",
+              "sha256": "9f992c1a2424155e760c1818ec5d99c41b5f55124ba9ea0139b2e713fa4d7247"
+            }
+          },
+          "execution_ids": [
+            "sim-0e4dc175ba3d41fab45bc0dc32439065"
+          ],
+          "model_spec_identity": "",
+          "parameterization_mode": "LEGACY_INLINE_ASSUMPTIONS",
+          "parent_version": null,
+          "plan_identity": "eaa124fc2bbb5131fde2a32adc24c3013d1d4f046c1f55bf93e90689a3463d13",
+          "qualification_status": "QUALIFIED",
+          "status": "QUALIFIED_WAITING_FOR_REVISION_DECISION",
+          "version": 0
+        },
+        "v1": {
+          "artifacts": {},
+          "execution_ids": [],
+          "parent_version": 0,
+          "qualification_status": "PENDING",
+          "status": "WAITING_FOR_BLUEPRINT",
+          "version": 1
+        },
+        "v2": {
+          "artifacts": {},
+          "execution_ids": [],
+          "parent_version": 1,
+          "qualification_status": "PENDING",
+          "status": "WAITING_FOR_BLUEPRINT",
+          "version": 2
+        }
+      }
+    }
+  },
+  "next_actions": [
+    {
+      "action": "finalize",
+      "command": "quantitative finalize --run-dir <RUN> --idea-id Q1 --version 0"
+    },
+    {
+      "action": "propose-refinement",
+      "command": "quantitative propose-refinement --run-dir <RUN> --idea-id Q1 --version 0 --revision-reason '<REASON>' ..."
+    }
+  ],
+  "quantitative_ideas_manifest": {
+    "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\tmp\\manual-quantitative-workflow\\runs\\quantitative-flow\\idea\\attempt-001\\quantitative_ideas_manifest.json",
+    "sha256": "a02d42415ec731135399bd93850312b5c14d188eff944be4b9fa2ba9e442dc04"
+  },
+  "schema_version": "quantitative_workflow_state_v1",
+  "science_run_id": "quantitative-flow",
+  "status": "QUALIFIED_WAITING_FOR_REVISION_DECISION",
+  "updated_at": "2026-09-01T20:22:20.699660Z"
+}

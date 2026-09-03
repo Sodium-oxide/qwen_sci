@@ -1,0 +1,670 @@
+{
+  "lineage": {
+    "created_from_artifact": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+    "project_id": "sci_astr_16_survey_007",
+    "quantitative_idea_id": "Q2",
+    "science_run_id": "astr_16",
+    "selected_direction_id": "mechanism_replacement",
+    "survey_run_id": "astr_16-survey-007",
+    "version": 0
+  },
+  "model_scope": "Applies to isolated neutron stars with magnetic-dipole spin-down and dense-matter phase transitions; excludes binary recycling and companion-ablation evolution. Observables are surface temperature and bolometric X-ray luminosity versus age for baseline cooling, spin-down-induced phase-transition cooling, and phase-transition cooling with superfluid suppression.",
+  "parameter_requests": [
+    {
+      "dimension": "mass",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "M",
+      "meaning": "Gravitational mass of the isolated neutron star used as the fixed scenario mass.",
+      "parameter_id": "stellar_mass",
+      "required_conditions": [
+        "Isolated neutron star",
+        "No binary recycling or companion ablation",
+        "Selected within the massive-star regime considered by the study",
+        "Spherical symmetry assumed"
+      ],
+      "retrieval_queries": [
+        "massive isolated neutron star mass estimates from timing and X-ray observations",
+        "reference database of isolated pulsar masses"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "solar_mass",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "temperature",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "T_c_initial",
+      "meaning": "Initial internal core temperature at the start of the thermal evolution integration.",
+      "parameter_id": "initial_core_temperature",
+      "required_conditions": [
+        "Birth or early cooling epoch",
+        "Spherical core",
+        "No external heating at initial time"
+      ],
+      "retrieval_queries": [
+        "neutron star birth core temperature distribution from thermal evolution models",
+        "measurements or reference databases of young neutron star internal temperatures"
+      ],
+      "role": "BOUNDARY_CONDITION",
+      "unit": "kelvin",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "temperature",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "T_s_initial",
+      "meaning": "Initial surface temperature used as the surface boundary state for the thermal evolution integration.",
+      "parameter_id": "initial_surface_temperature",
+      "required_conditions": [
+        "Surface boundary at initial time",
+        "Atmosphere or surface layer",
+        "No external heating at initial time"
+      ],
+      "retrieval_queries": [
+        "young neutron star surface temperature measurements",
+        "reference database of neutron star surface temperatures"
+      ],
+      "role": "BOUNDARY_CONDITION",
+      "unit": "kelvin",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "time",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "P_initial",
+      "meaning": "Initial rotation period used to set the initial spin state.",
+      "parameter_id": "initial_spin_period",
+      "required_conditions": [
+        "Isolated pulsar",
+        "Magnetic-dipole spin-down regime",
+        "No binary accretion torque"
+      ],
+      "retrieval_queries": [
+        "isolated pulsar initial spin period distribution from birth population studies",
+        "reference database of young neutron star spin periods"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "second",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "angular velocity",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "Omega_initial",
+      "meaning": "Initial angular spin frequency used as the state variable seed for spin evolution.",
+      "parameter_id": "initial_spin_frequency",
+      "required_conditions": [
+        "Initial rotation state",
+        "Magnetic-dipole spin-down",
+        "No binary accretion"
+      ],
+      "retrieval_queries": [
+        "isolated pulsar initial spin frequency distribution",
+        "reference database of neutron star spin frequencies"
+      ],
+      "role": "BOUNDARY_CONDITION",
+      "unit": "radian per second",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "time",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "t_sim",
+      "meaning": "Final integration time used to compare cooling tracks with observations.",
+      "parameter_id": "simulation_age",
+      "required_conditions": [
+        "Age measured from the initial condition",
+        "Isolated evolution",
+        "No binary recycling"
+      ],
+      "retrieval_queries": [
+        "isolated neutron star characteristic ages from timing surveys",
+        "reference database of neutron star ages for cooling comparisons"
+      ],
+      "role": "BOUNDARY_CONDITION",
+      "unit": "second",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "magnetic flux density",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "B_surf",
+      "meaning": "Surface dipole magnetic field strength controlling the spin-down torque.",
+      "parameter_id": "magnetic_field_strength",
+      "required_conditions": [
+        "Isolated magnetic-dipole spin-down",
+        "No wind or accretion torque",
+        "Dipole geometry assumed"
+      ],
+      "retrieval_queries": [
+        "isolated pulsar surface dipole magnetic field estimates from timing",
+        "reference database of pulsar magnetic fields"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "tesla",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "dimensionless",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "n_brake",
+      "meaning": "Exponent in the assumed spin-down law.",
+      "parameter_id": "braking_index",
+      "required_conditions": [
+        "Model assumption for isolated magnetic-dipole braking",
+        "No torque from binary accretion or wind",
+        "Constant geometry"
+      ],
+      "retrieval_queries": [
+        "timing residual constraints on braking index for isolated pulsars",
+        "reference database of measured braking indices"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "angle",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "alpha_B",
+      "meaning": "Angle between the magnetic dipole axis and rotation axis.",
+      "parameter_id": "magnetic_inclination_angle",
+      "required_conditions": [
+        "Model assumption for dipole geometry",
+        "No precession",
+        "Isolated star"
+      ],
+      "retrieval_queries": [
+        "constraints on pulsar magnetic inclination angles from polarization and geometry",
+        "reference database of inclination angle estimates"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "radian",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "length",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "R",
+      "meaning": "Circumferential radius of the neutron star used for surface area and thermal boundary calculations.",
+      "parameter_id": "stellar_radius",
+      "required_conditions": [
+        "Consistent with selected mass and dense-matter EOS",
+        "Spherical geometry",
+        "Cold or slowly rotating regime"
+      ],
+      "retrieval_queries": [
+        "neutron star radius constraints from X-ray pulse profiles and thermal emission",
+        "reference database of neutron star radii for massive stars"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "meter",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "mass density",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "rho_c_initial",
+      "meaning": "Initial central mass density used to determine whether the phase transition is triggered.",
+      "parameter_id": "initial_central_density",
+      "required_conditions": [
+        "Selected mass, EOS, and rotation state",
+        "Spherical core",
+        "No rapid deformation"
+      ],
+      "retrieval_queries": [
+        "central density of massive neutron stars from dense matter equation of state tables",
+        "reference database of neutron star central densities"
+      ],
+      "role": "BOUNDARY_CONDITION",
+      "unit": "kilogram per cubic meter",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "mass density",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "rho_crit",
+      "meaning": "Mass density at which the dense-matter phase transition begins.",
+      "parameter_id": "phase_transition_critical_density",
+      "required_conditions": [
+        "Selected dense-matter EOS",
+        "High-density core",
+        "Cold or thermally averaged EOS"
+      ],
+      "retrieval_queries": [
+        "critical density for hadron-quark or hyperon phase transition in neutron star matter",
+        "dense matter EOS phase transition onset density"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "kilogram per cubic meter",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "pressure",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "P_crit",
+      "meaning": "Pressure at which the dense-matter phase transition begins.",
+      "parameter_id": "phase_transition_critical_pressure",
+      "required_conditions": [
+        "Selected dense-matter EOS",
+        "High-density core",
+        "Thermodynamic consistency"
+      ],
+      "retrieval_queries": [
+        "phase transition pressure in neutron star matter equation of state tables",
+        "reference database of dense matter transition pressures"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "pascal",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "mass density",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "delta_rho",
+      "meaning": "Density interval over which the mixed phase or rapid transition is parameterized.",
+      "parameter_id": "phase_transition_width",
+      "required_conditions": [
+        "Model assumption for transition sharpness",
+        "High-density core",
+        "No spatial resolution of mixed phase"
+      ],
+      "retrieval_queries": [
+        "phase transition density width in neutron star matter models",
+        "reference database of mixed-phase widths"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "kilogram per cubic meter",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "specific energy",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "lambda_phase",
+      "meaning": "Specific energy absorbed or released per unit mass during the phase transition.",
+      "parameter_id": "latent_heat_specific",
+      "required_conditions": [
+        "Selected dense-matter EOS",
+        "High-density core",
+        "Thermodynamic consistency"
+      ],
+      "retrieval_queries": [
+        "latent heat per baryon or per mass for neutron star phase transitions",
+        "dense matter EOS latent heat of phase transition"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "joule per kilogram",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "dimensionless",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "f_phase",
+      "meaning": "Fraction of core volume occupied by the high-density phase during the transition.",
+      "parameter_id": "phase_transition_volume_fraction",
+      "required_conditions": [
+        "Model assumption for mixed-phase geometry",
+        "High-density core",
+        "No spatial resolution of mixed phase"
+      ],
+      "retrieval_queries": [
+        "phase fraction evolution in mixed-phase neutron star matter",
+        "reference database of phase transition fractions"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "specific heat capacity",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "C_v",
+      "meaning": "Specific heat capacity used to convert internal energy changes into core temperature changes.",
+      "parameter_id": "heat_capacity_per_mass",
+      "required_conditions": [
+        "Core matter composition",
+        "High-density core",
+        "Thermal equilibrium"
+      ],
+      "retrieval_queries": [
+        "neutron star core heat capacity per unit mass",
+        "specific heat of dense nuclear matter"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "joule per kilogram per kelvin",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "power density",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "epsilon_direct",
+      "meaning": "Coefficient for direct Urca neutrino energy loss.",
+      "parameter_id": "direct_urca_emissivity_coefficient",
+      "required_conditions": [
+        "Selected dense-matter composition",
+        "High-density core",
+        "Thermal neutrino emission"
+      ],
+      "retrieval_queries": [
+        "direct Urca neutrino emissivity coefficient for neutron star matter",
+        "reference database of neutrino emissivity coefficients"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "watt per cubic meter",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "power density",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "epsilon_modified",
+      "meaning": "Coefficient for modified Urca neutrino energy loss.",
+      "parameter_id": "modified_urca_emissivity_coefficient",
+      "required_conditions": [
+        "Selected dense-matter composition",
+        "High-density core",
+        "Thermal neutrino emission"
+      ],
+      "retrieval_queries": [
+        "modified Urca neutrino emissivity coefficient for neutron star matter",
+        "reference database of modified Urca emissivities"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "watt per cubic meter",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "power density",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "epsilon_pair",
+      "meaning": "Coefficient for pair neutrino energy loss in the crust or dense matter.",
+      "parameter_id": "pair_emissivity_coefficient",
+      "required_conditions": [
+        "Selected composition",
+        "Crust or core thermal emission",
+        "No magnetic-field-dependent pair emission"
+      ],
+      "retrieval_queries": [
+        "pair neutrino emissivity coefficient for neutron star crust",
+        "reference database of pair emission coefficients"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "watt per cubic meter",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "dimensionless",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "eta_threshold",
+      "meaning": "Dimensionless factor representing the onset condition for direct Urca emission.",
+      "parameter_id": "neutrino_threshold_factor",
+      "required_conditions": [
+        "Selected dense-matter composition",
+        "High-density core",
+        "EOS consistency"
+      ],
+      "retrieval_queries": [
+        "direct Urca threshold factor in neutron star matter",
+        "reference database of neutrino emission thresholds"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "dimensionless",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "eta_superfluid",
+      "meaning": "Dimensionless factor modifying neutrino emissivity when superfluidity is included.",
+      "parameter_id": "superfluid_suppression_factor",
+      "required_conditions": [
+        "Scenario C only",
+        "Selected dense-matter composition",
+        "Thermal neutrino emission"
+      ],
+      "retrieval_queries": [
+        "superfluid suppression factors for neutrino emissivity in neutron stars",
+        "reference database of superfluid gap suppression"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "thermal conductivity",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "kappa",
+      "meaning": "Effective thermal conductivity used to couple the core to the surface.",
+      "parameter_id": "thermal_conductivity",
+      "required_conditions": [
+        "Selected crust and core composition",
+        "High-density matter",
+        "Spherical heat transport"
+      ],
+      "retrieval_queries": [
+        "neutron star crust thermal conductivity",
+        "dense matter thermal conductivity reference database"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "watt per meter per kelvin",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "dimensionless",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "f_crust",
+      "meaning": "Fraction of crust composition used to select thermal conductivity and heat capacity behavior.",
+      "parameter_id": "crust_composition_fraction",
+      "required_conditions": [
+        "Model assumption for crust composition",
+        "Spherical crust",
+        "No detailed ion mixture"
+      ],
+      "retrieval_queries": [
+        "crust composition fractions in neutron star thermal models",
+        "reference database of neutron star crust compositions"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "dimensionless",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "epsilon_surface",
+      "meaning": "Emissivity factor applied to surface radiative loss.",
+      "parameter_id": "surface_emissivity",
+      "required_conditions": [
+        "Surface boundary condition",
+        "Atmosphere geometry",
+        "Thermal emission"
+      ],
+      "retrieval_queries": [
+        "neutron star atmosphere emissivity",
+        "surface emissivity constraints from thermal X-ray observations"
+      ],
+      "role": "BOUNDARY_CONDITION",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "heat transfer coefficient",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "h_surface",
+      "meaning": "Coefficient relating internal heat flux to the surface temperature boundary condition.",
+      "parameter_id": "surface_heat_transfer_coefficient",
+      "required_conditions": [
+        "Atmosphere or surface layer",
+        "Radiative transfer boundary",
+        "Spherical surface"
+      ],
+      "retrieval_queries": [
+        "neutron star surface heat transfer coefficient",
+        "atmosphere boundary condition for thermal evolution"
+      ],
+      "role": "BOUNDARY_CONDITION",
+      "unit": "watt per square meter per kelvin",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "moment of inertia",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "I_initial",
+      "meaning": "Initial moment of inertia used in spin evolution and core compression coupling.",
+      "parameter_id": "moment_of_inertia_initial",
+      "required_conditions": [
+        "Selected mass, radius, and EOS",
+        "Spherical star",
+        "Slow rotation"
+      ],
+      "retrieval_queries": [
+        "neutron star moment of inertia from dense matter equation of state",
+        "reference database of moment of inertia"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "kilogram meter squared",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "moment of inertia per angular velocity",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "dI_dOmega",
+      "meaning": "Rate of change of moment of inertia with spin frequency due to spin-down-induced core compression.",
+      "parameter_id": "moment_of_inertia_spin_derivative",
+      "required_conditions": [
+        "Selected EOS",
+        "Magnetic-dipole spin-down",
+        "No mass loss"
+      ],
+      "retrieval_queries": [
+        "moment of inertia derivative with spin frequency in neutron star models",
+        "reference database of spin-induced moment of inertia changes"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "kilogram meter squared second",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "mass density per angular velocity",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "d_rho_c_dOmega",
+      "meaning": "Rate of change of central density with spin frequency due to spin-down-induced core compression.",
+      "parameter_id": "central_density_spin_derivative",
+      "required_conditions": [
+        "Selected EOS",
+        "Magnetic-dipole spin-down",
+        "No mass loss"
+      ],
+      "retrieval_queries": [
+        "central density response to spin frequency in rotating neutron star EOS",
+        "reference database of spin-induced central density compression"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "kilogram second per cubic meter",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "dimensionless",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "eta_deform",
+      "meaning": "Dimensionless factor accounting for rotational deformation in the simplified spin-down coupling.",
+      "parameter_id": "rotational_deformation_factor",
+      "required_conditions": [
+        "Model assumption for slow rotation",
+        "Spherical approximation",
+        "No full relativistic rotation"
+      ],
+      "retrieval_queries": [
+        "rotational deformation factor for neutron star moment of inertia",
+        "reference database of rotating neutron star deformation"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "dimensionless",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "gamma_eos",
+      "meaning": "Dimensionless index parameterizing the dense-matter pressure-density relation used by the symbolic model.",
+      "parameter_id": "eos_polytropic_index",
+      "required_conditions": [
+        "Model assumption for EOS parameterization",
+        "High-density core",
+        "Consistency with phase-transition parameters"
+      ],
+      "retrieval_queries": [
+        "dense matter equation of state polytropic index constraints",
+        "reference database of neutron star EOS indices"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "length",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "D",
+      "meaning": "Distance used to convert inferred surface temperature and radius into observed luminosity or flux.",
+      "parameter_id": "distance",
+      "required_conditions": [
+        "Isolated neutron star",
+        "No binary extinction",
+        "Photometric or parallax context"
+      ],
+      "retrieval_queries": [
+        "isolated neutron star distance estimates from parallax or photometry",
+        "reference database of pulsar distances"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "meter",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "dimensionless",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "f_bol",
+      "meaning": "Dimensionless factor converting model surface emission to the observational X-ray luminosity band.",
+      "parameter_id": "bolometric_correction_factor",
+      "required_conditions": [
+        "Model assumption for band conversion",
+        "Thermal X-ray emission",
+        "No detailed spectral fit"
+      ],
+      "retrieval_queries": [
+        "bolometric correction factors for neutron star thermal emission",
+        "reference database of X-ray bolometric corrections"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "dimensionless",
+      "value_kind": "SCALAR"
+    }
+  ],
+  "permitted_system_types": [
+    "ODE_IVP"
+  ],
+  "revision_context": {},
+  "schema_version": "quantitative_model_blueprint_v1",
+  "scientific_question": "How does the surface temperature evolution differ between massive neutron stars undergoing spin-down induced core compression and those without, and can this distinguish the phase-transition mechanism from baseline cooling?",
+  "symbolic_constraints": [
+    "The ODE_IVP state variables are core temperature, surface temperature, central density, moment of inertia, and spin frequency.",
+    "Initial conditions must be consistent with the selected mass, radius, EOS, initial central density, initial spin period, and initial spin frequency.",
+    "Spin-down-induced core compression may activate the phase transition only when central density reaches the critical density within the assumed transition width.",
+    "Latent heat release is included only in scenarios where the phase-transition volume fraction is active.",
+    "Superfluid suppression of neutrino emissivity is included only in Scenario C.",
+    "Scenario A disables phase-transition latent heat and superfluid suppression while retaining baseline neutrino cooling.",
+    "Scenario B enables spin-down-induced phase-transition latent heat without superfluid suppression.",
+    "Scenario C enables spin-down-induced phase-transition latent heat and superfluid suppression.",
+    "All temperatures and densities are non-negative.",
+    "Moment of inertia is positive.",
+    "Spin frequency decreases monotonically under the assumed isolated magnetic-dipole braking law.",
+    "Moment of inertia changes only through spin-down-induced core compression and phase transition, not through mass loss or binary accretion.",
+    "Surface boundary conditions are coupled to radiative transfer without embedding numerical atmosphere constants in the symbolic model.",
+    "EOS parameters and phase-transition parameters must be drawn from a single self-consistent dense-matter EOS family.",
+    "Initial spin frequency must be consistent with initial spin period.",
+    "Simulation age must be measured from the initial condition."
+  ],
+  "symbolic_model_intent": "Construct an ODE_IVP for core temperature evolution coupled to spin frequency, moment of inertia, central density, phase-transition latent heat, heat capacity, neutrino emissivity, thermal conductivity, and a surface radiative boundary condition. The symbolic model compares baseline cooling, spin-down-induced phase-transition cooling, and phase-transition cooling with superfluid suppression.",
+  "title": "Thermal Signatures of Phase Transitions in Massive Neutron Stars: Distinguishing Spin-Down Induced Core Compression"
+}

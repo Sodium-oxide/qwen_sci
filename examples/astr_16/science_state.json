@@ -1,0 +1,323 @@
+{
+  "created_at": "2026-09-01T22:17:14.496193Z",
+  "last_updated_at": "2026-09-02T12:30:08.489700Z",
+  "restart_history": [
+    {
+      "invalidated_stages": [
+        "exp_design",
+        "author"
+      ],
+      "requested_at": "2026-09-02T04:45:03.975854Z",
+      "restart_from": "exp_design"
+    },
+    {
+      "invalidated_stages": [
+        "author"
+      ],
+      "requested_at": "2026-09-02T12:16:40.834923Z",
+      "restart_from": "author"
+    }
+  ],
+  "revision": 43,
+  "schema_version": "science_state_v1",
+  "science_run_id": "astr_16",
+  "stages": {
+    "author": {
+      "attempt": 2,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": "2026-09-02T12:30:08.472898Z",
+      "input_identity": {
+        "author_input_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\experiment_design\\attempt-003\\experiment_design_author_20260902-134504-546214.json",
+        "design_identity": {
+          "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+          "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+          "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+          "project_id": "sci_astr_16_survey_007",
+          "selected_direction_id": "mechanism_replacement",
+          "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+          "survey_run_id": "astr_16-survey-007"
+        },
+        "experiment_design_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\experiment_design\\attempt-003\\experiment_design_manifest.json",
+        "idea_identity": {
+          "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+          "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+          "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+          "project_id": "sci_astr_16_survey_007",
+          "selected_direction_id": "mechanism_replacement",
+          "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+          "survey_run_id": "astr_16-survey-007"
+        },
+        "idea_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_manifest.json",
+        "idea_result_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_result.json",
+        "quantitative_handoff_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\quantitative\\author\\quantitative_author_handoff_manifest.json",
+        "quantitative_handoff_manifest_sha256": "c2c90a19d436b135dd6022d2379ad328abc380edd346873cb96407df7162a9ec",
+        "survey_identity": {
+          "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+          "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+          "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+          "project_id": "sci_astr_16_survey_007",
+          "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+          "survey_run_id": "astr_16-survey-007"
+        },
+        "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json"
+      },
+      "invalidated_attempts": [
+        {
+          "attempt": 1,
+          "execution_owner": null,
+          "failure": {
+            "error_type": "ScienceWorkflowError",
+            "exit_code": 40,
+            "failed_at": "2026-09-02T12:15:21.092901Z",
+            "message": "Author execution failed: composition: section contract preflight found 2 failing section(s): survey_and_research_gap, definitions_and_propositions"
+          },
+          "finished_at": "2026-09-02T12:15:21.092901Z",
+          "input_identity": {
+            "author_input_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\experiment_design\\attempt-003\\experiment_design_author_20260902-134504-546214.json",
+            "design_identity": {
+              "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+              "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+              "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+              "project_id": "sci_astr_16_survey_007",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+              "survey_run_id": "astr_16-survey-007"
+            },
+            "experiment_design_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\experiment_design\\attempt-003\\experiment_design_manifest.json",
+            "idea_identity": {
+              "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+              "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+              "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+              "project_id": "sci_astr_16_survey_007",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+              "survey_run_id": "astr_16-survey-007"
+            },
+            "idea_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_manifest.json",
+            "idea_result_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_result.json",
+            "quantitative_handoff_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\quantitative\\author\\quantitative_author_handoff_manifest.json",
+            "quantitative_handoff_manifest_sha256": "c2c90a19d436b135dd6022d2379ad328abc380edd346873cb96407df7162a9ec",
+            "survey_identity": {
+              "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+              "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+              "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+              "project_id": "sci_astr_16_survey_007",
+              "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+              "survey_run_id": "astr_16-survey-007"
+            },
+            "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json"
+          },
+          "invalidated_at": "2026-09-02T12:16:40.834923Z",
+          "outputs": {},
+          "reason": "restart-from:author",
+          "result_identity": {},
+          "result_manifest_path": null,
+          "started_at": "2026-09-02T12:00:32.733846Z",
+          "status": "FAILED"
+        }
+      ],
+      "outputs": {
+        "author_context_json": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\research_plan_author_context_20260902-211641-581055.json",
+        "author_manifest": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\author_manifest.json",
+        "document_json": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\research_plan_document_20260902-211641-581055.json",
+        "document_quality_json": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\research_plan_document_quality_20260902-211641-581055.json",
+        "document_quality_report_markdown": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\research_plan_document_quality_20260902-211641-581055.md",
+        "idea_evolution_json": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\idea_evolution_appendix_20260902-211641-581055.json",
+        "preparation_json": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\research_plan_author_preparation_20260902-211641-581055.json",
+        "render_bibliography_needs_completion": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\bibliography_needs_completion_20260902-211641-581055.json",
+        "render_bibtex": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\references_20260902-211641-581055.bib",
+        "render_compile_json": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\compile_20260902-211641-581055.json",
+        "render_compile_log": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\compile_20260902-211641-581055.log",
+        "render_pdf": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\research_plan_20260902-211641-581055.pdf",
+        "render_pdf_validation_json": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\pdf_validation_20260902-211641-581055.json",
+        "render_render_manifest": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\research_plan_render_20260902-211641-581055.json",
+        "render_status": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\author_render_status.json",
+        "render_tex": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\research_plan_20260902-211641-581055.tex",
+        "survey_source_binding": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\survey_source_binding.json"
+      },
+      "result_identity": {
+        "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+        "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+        "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+        "project_id": "sci_astr_16_survey_007",
+        "result_sha256": "768be898dec923d8eeb97980e4f2a34b2c837c21632235a61cc7154b710400da",
+        "selected_direction_id": "mechanism_replacement",
+        "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+        "survey_run_id": "astr_16-survey-007"
+      },
+      "result_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\attempt-002\\author_manifest.json",
+      "started_at": "2026-09-02T12:16:41.205269Z",
+      "status": "COMPLETED"
+    },
+    "exp_design": {
+      "attempt": 3,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": "2026-09-02T05:24:23.159467Z",
+      "input_identity": {
+        "idea_identity": {
+          "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+          "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+          "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+          "project_id": "sci_astr_16_survey_007",
+          "selected_direction_id": "mechanism_replacement",
+          "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+          "survey_run_id": "astr_16-survey-007"
+        },
+        "idea_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_manifest.json",
+        "idea_result_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_result.json",
+        "survey_identity": {
+          "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+          "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+          "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+          "project_id": "sci_astr_16_survey_007",
+          "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+          "survey_run_id": "astr_16-survey-007"
+        },
+        "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json"
+      },
+      "invalidated_attempts": [
+        {
+          "attempt": 2,
+          "execution_owner": null,
+          "failure": null,
+          "finished_at": "2026-09-02T04:41:44.017321Z",
+          "input_identity": {
+            "idea_identity": {
+              "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+              "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+              "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+              "project_id": "sci_astr_16_survey_007",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+              "survey_run_id": "astr_16-survey-007"
+            },
+            "idea_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_manifest.json",
+            "idea_result_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_result.json",
+            "survey_identity": {
+              "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+              "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+              "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+              "project_id": "sci_astr_16_survey_007",
+              "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+              "survey_run_id": "astr_16-survey-007"
+            },
+            "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json"
+          },
+          "invalidated_at": "2026-09-02T04:45:03.975854Z",
+          "outputs": {
+            "author_json": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\experiment_design\\attempt-002\\experiment_design_author_20260902-134015-281397.json",
+            "experiment_design_json": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\experiment_design\\attempt-002\\experiment_design_20260902-134015-281397.json",
+            "experiment_design_manifest": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\experiment_design\\attempt-002\\experiment_design_manifest.json",
+            "experiment_design_markdown": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\experiment_design\\attempt-002\\experiment_design_20260902-134015-281397.md"
+          },
+          "reason": "restart-from:exp_design",
+          "result_identity": {
+            "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+            "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+            "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+            "project_id": "sci_astr_16_survey_007",
+            "result_sha256": "25952616401bc7c84aa84b4a66679bfbf2eceaac9b4752dadea9341566899aee",
+            "selected_direction_id": "mechanism_replacement",
+            "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+            "survey_run_id": "astr_16-survey-007"
+          },
+          "result_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\experiment_design\\attempt-002\\experiment_design_manifest.json",
+          "started_at": "2026-09-02T04:40:15.002804Z",
+          "status": "COMPLETED"
+        }
+      ],
+      "outputs": {
+        "author_json": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\experiment_design\\attempt-003\\experiment_design_author_20260902-134504-546214.json",
+        "experiment_design_json": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\experiment_design\\attempt-003\\experiment_design_20260902-134504-546214.json",
+        "experiment_design_manifest": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\experiment_design\\attempt-003\\experiment_design_manifest.json",
+        "experiment_design_markdown": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\experiment_design\\attempt-003\\experiment_design_20260902-134504-546214.md"
+      },
+      "result_identity": {
+        "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+        "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+        "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+        "project_id": "sci_astr_16_survey_007",
+        "result_sha256": "c7fa43ee92b3f55339980056803593ccf00d036b18fc87847beeaad00a08abf6",
+        "selected_direction_id": "mechanism_replacement",
+        "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+        "survey_run_id": "astr_16-survey-007"
+      },
+      "result_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\experiment_design\\attempt-003\\experiment_design_manifest.json",
+      "started_at": "2026-09-02T04:45:04.221411Z",
+      "status": "COMPLETED"
+    },
+    "idea": {
+      "attempt": 2,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": "2026-09-02T04:38:17.312579Z",
+      "input_identity": {
+        "survey_identity": {
+          "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+          "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+          "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+          "project_id": "sci_astr_16_survey_007",
+          "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+          "survey_run_id": "astr_16-survey-007"
+        },
+        "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+        "topic": "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They form when a massive star runs out of fuel and collapses in on itself. The remnant is a neutron star with a strong magnetic field. The research should distinguish isolated magnetic-dipole spin-down from binary recycling and companion-ablation evolution, and test formation and evolution with mathematical models."
+      },
+      "invalidated_attempts": [],
+      "outputs": {
+        "idea_manifest": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_manifest.json",
+        "idea_result": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_result.json",
+        "idea_run_dir": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002",
+        "quantitative_ideas": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\quantitative_ideas.json",
+        "quantitative_ideas_manifest": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\quantitative_ideas_manifest.json"
+      },
+      "result_identity": {
+        "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+        "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+        "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+        "project_id": "sci_astr_16_survey_007",
+        "result_sha256": "291b0bdde1cc35ee04ea95b478bbfe4cd016f91663ee68d64a687a0337de6075",
+        "selected_direction_id": "mechanism_replacement",
+        "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+        "survey_run_id": "astr_16-survey-007"
+      },
+      "result_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_manifest.json",
+      "started_at": "2026-09-02T00:34:03.091462Z",
+      "status": "COMPLETED"
+    },
+    "survey": {
+      "attempt": 7,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": "2026-09-02T00:26:00.228281Z",
+      "input_identity": {
+        "science_run_id": "astr_16",
+        "topic_fingerprint": "181da603a53f7ee5c750445e3088b09f653ff7e7f6b5df4a1a0f5b7a29524f85"
+      },
+      "invalidated_attempts": [],
+      "outputs": {
+        "survey_gap_ledger": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_gap_ledger.json",
+        "survey_handoff": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_idea_handoff.json",
+        "survey_json": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey.json",
+        "survey_manifest": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+        "survey_markdown": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey.md"
+      },
+      "result_identity": {
+        "handoff_fingerprint": "f080321b50580c687895ab1fa9df005d38ea1fc0e358c169fd1a52d4395098bf",
+        "manifest_fingerprint": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+        "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+        "project_id": "sci_astr_16_survey_007",
+        "result_sha256": "fd1f1937c629821f3344aaffcf6050acd2f10e1c12f162db0833e3ea43766e7a",
+        "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+        "survey_run_id": "astr_16-survey-007",
+        "topic_fingerprint": "181da603a53f7ee5c750445e3088b09f653ff7e7f6b5df4a1a0f5b7a29524f85"
+      },
+      "result_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\survey\\attempt-007\\survey_manifest.json",
+      "started_at": "2026-09-01T23:56:09.536625Z",
+      "status": "COMPLETED"
+    }
+  },
+  "status": "COMPLETED"
+}

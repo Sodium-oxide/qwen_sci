@@ -1,0 +1,72 @@
+{
+  "authoring_constraints": {
+    "all_displayed_checkpoints_require_source_anchors": true,
+    "do_not_describe_checkpoints_as_temporal_iterations": true,
+    "do_not_invent_missing_iterations": true,
+    "do_not_present_idea_history_as_empirical_evidence": true,
+    "language": "en",
+    "temporal_order_is_unknown_without_iteration_id_timestamp_parent_or_auditable_diff": true
+  },
+  "checkpoints": [
+    {
+      "checkpoint_id": "checkpoint-1",
+      "checkpoint_type": "available_audit_snapshot",
+      "snapshot": {
+        "central_hypothesis": "Engineered interlayer twist angles designed to suppress cross-plane thermal conductivity in van der Waals heterostructures remain structurally stable under sustained thermal cycling and operational stress gradients, provided the interlayer binding energy exceeds a critical threshold determined by the twist-angle-dependent moiré potential landscape, and in the absence of confounding defect-mediated or chemically-induced interlayer pinning.",
+        "claim_scope": "The structural stability of twist-angle-engineered thermal anisotropy in van der Waals heterostructures under operational thermal cycling, bounded by the moiré potential landscape in regimes free from defect-mediated or chemically-induced interlayer pinning.",
+        "direction_mode": "mechanism_replacement",
+        "mechanism_or_relation": "The twist-angle-dependent moiré potential landscape creates fundamental energy barriers that pin specific twist angles, dictating the critical threshold for interlayer binding energy and structural stability under thermal stress, distinct from and dominant over defect-mediated or chemical pinning mechanisms.",
+        "target_gap_ids": [
+          "gap:global:boundary_condition:material_generality:unknown:unknown:c3105d78c8c5",
+          "gap:global:missing_assumption:structural_stability_under_operation:unknown:unknown:14c1007de5b8"
+        ],
+        "title": "Moiré Potential Landscapes Dictate the Thermal Cycling Stability of Twist-Angle-Engineered Thermal Anisotropy in Van Der Waals Heterostructures"
+      },
+      "source_file": "idea_candidate.json",
+      "source_json_pointer": "/",
+      "source_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_candidate.json",
+      "temporal_order": "unknown"
+    },
+    {
+      "checkpoint_id": "checkpoint-2",
+      "checkpoint_type": "available_audit_snapshot",
+      "snapshot": {
+        "direction_mode": "mechanism_replacement",
+        "hypothesis": {
+          "assumptions": [
+            "Interlayer binding energy and moiré potential depths can be accurately calculated or measured for diverse van der Waals material families.",
+            "Thermal cycling conditions can be selected to minimize interlayer diffusion and chemical bonding, ensuring moiré potential pinning is the dominant retention mechanism."
+          ],
+          "boundary_or_failure_condition": "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold.",
+          "central_hypothesis": "Engineered interlayer twist angles designed to suppress cross-plane thermal conductivity in van der Waals heterostructures remain structurally stable under sustained thermal cycling and operational stress gradients, provided the interlayer binding energy exceeds a critical threshold determined by the twist-angle-dependent moiré potential landscape, and in the absence of confounding defect-mediated or chemically-induced interlayer pinning.",
+          "claim_scope": "The structural stability of twist-angle-engineered thermal anisotropy in van der Waals heterostructures under operational thermal cycling, bounded by the moiré potential landscape in regimes free from defect-mediated or chemically-induced interlayer pinning.",
+          "discriminating_observation": "Compare the retention of cross-plane thermal anisotropy across different van der Waals material families with varying moiré potential depths but similar intrinsic defect densities, or utilize low-temperature cycling regimes to suppress chemical bonding, thereby isolating the moiré potential mechanism via a material-dependent binding energy ablation.",
+          "evidence_basis": "Measurement of cross-plane thermal conductivity before and after sustained thermal cycling across diverse van der Waals heterostructures, correlated with their calculated moiré potential energy barriers.",
+          "evidence_requirement": "Measurement of cross-plane thermal conductivity before and after sustained thermal cycling across diverse van der Waals heterostructures, correlated with their calculated moiré potential energy barriers and interlayer binding energies, to confirm the critical energy threshold for structural stability in the absence of defect or chemical pinning.",
+          "expected_mechanism": "The twist-angle-dependent moiré potential landscape creates fundamental energy barriers that pin specific twist angles. When the interlayer binding energy exceeds the thermal activation barrier at operational temperatures, and defect-mediated or chemical pinning is negligible, the engineered twist angles persist, maintaining suppressed cross-plane thermal conductivity; otherwise, rotational relaxation degrades the thermal bottleneck.",
+          "intervention_or_transformation": "Synthesize a library of van der Waals heterostructures with controlled interlayer twist angles and subject them to sustained thermal cycling and operational stress gradients, replacing the assumed shear-strain locking mechanism with the twist-angle-dependent moiré potential landscape while controlling for defect and chemical pinning.",
+          "mechanism_or_relation": "The twist-angle-dependent moiré potential landscape creates fundamental energy barriers that pin specific twist angles, dictating the critical threshold for interlayer binding energy and structural stability under thermal stress, distinct from and dominant over defect-mediated or chemical pinning mechanisms.",
+          "scientific_object": {
+            "description": "twist_angle_dependent_moire_potential_landscape"
+          }
+        },
+        "target_gap_ids": [
+          "gap:global:boundary_condition:material_generality:unknown:unknown:c3105d78c8c5",
+          "gap:global:missing_assumption:structural_stability_under_operation:unknown:unknown:14c1007de5b8"
+        ],
+        "title": "Moiré Potential Landscapes Dictate the Thermal Cycling Stability of Twist-Angle-Engineered Thermal Anisotropy in Van Der Waals Heterostructures"
+      },
+      "source_file": "idea_result.json",
+      "source_json_pointer": "/directions/0",
+      "source_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+      "temporal_order": "unknown"
+    }
+  ],
+  "iterations": [],
+  "max_iterations": 3,
+  "missing_audit_sources": [],
+  "schema_version": "idea_evolution_appendix_v1",
+  "selected_direction_id": "mechanism_replacement",
+  "status": "CHECKPOINTS_AVAILABLE",
+  "temporal_order": "unknown"
+}

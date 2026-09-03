@@ -1,0 +1,67 @@
+{
+  "artifacts": {
+    "claim_traceability": {
+      "path": "survey_claim_traceability.json",
+      "required": true,
+      "sha256": "2cb3b1c2445997b0dbc8129af7645bc179139875e5741e047843bbfe0045890d"
+    },
+    "evidence_plan": {
+      "path": "survey_evidence_plan.json",
+      "required": true,
+      "sha256": "b9ff5c7cd65867f3c7fc04930cf63ffd3145f33a324de10828a16f51e6a88bb6"
+    },
+    "gap_ledger": {
+      "path": "survey_gap_ledger.json",
+      "required": true,
+      "sha256": "cb32f6c3adf11bde1e23cf49c733ab5c7383f6d6266a828231595c2fe194f09e"
+    },
+    "gap_triage": {
+      "path": "survey_gap_triage.json",
+      "required": false,
+      "sha256": "4178845fa1a8aa20cb90bd862f2310d3d4b47d7f2d4f92424da2418c2514ca61"
+    },
+    "idea_handoff": {
+      "path": "survey_idea_handoff.json",
+      "required": true,
+      "sha256": "cbd1cdffc0954e54a6a5fba156c2c113332de08c0b1d541fa52380faf9dcc8f9"
+    },
+    "multimodal_evidence": {
+      "path": "multimodal_evidence.json",
+      "required": false,
+      "sha256": "269e367b27e826d8b3a4daa0c8ba92be0d700317d548dc76388c57eec0a1b620"
+    },
+    "project_context": {
+      "path": "project_context.json",
+      "required": true,
+      "sha256": "45dd3518e45b66710ceb6ecf5b6d38cb880fc5c3f7958f0e5a0d3f68ded17e78"
+    },
+    "survey_json": {
+      "path": "survey.json",
+      "required": true,
+      "sha256": "afcd55a96518f8c54527d2a828d0aae0e3a272b373020db786f40e3a1fe74e12"
+    },
+    "survey_markdown": {
+      "path": "survey.md",
+      "required": true,
+      "sha256": "4f4fff972ffb5a2b0bfb40e2a4ca8b54c6a67e1b88e3692c6cf487d71c067120"
+    },
+    "survey_outline": {
+      "path": "survey_outline.json",
+      "required": false,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    }
+  },
+  "base_dir": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_sidecar_publication_hando0",
+  "completed_at": "2026-09-03T14:38:43Z",
+  "created_at": "2026-09-03T14:38:43Z",
+  "gap_ledger_schema_version": "survey_gap_ledger_v1",
+  "handoff_schema_version": "survey_idea_handoff_v1",
+  "manifest_fingerprint": "d1a59d4ac8847d7114e868873f420452b85b2f1ead5c41b6fbf0bb5d70575203",
+  "project_context_fingerprint": "context-1",
+  "project_id": "sci_run_1",
+  "schema_version": "survey_manifest_v1",
+  "status": "completed",
+  "survey_run_id": "20260830-130000-000001",
+  "topic": "A bounded materials question",
+  "topic_fingerprint": "947b95e016d958a958ff18ab2ebea7b661de2d255469584fdc6a69ca6a14a009"
+}

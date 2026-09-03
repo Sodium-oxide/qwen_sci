@@ -1,0 +1,63 @@
+{
+  "allow_shell_escape": false,
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\31390\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\pdflatex.EXE",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "conference_101719.tex"
+      ],
+      "elapsed_ms": 583.181,
+      "return_code": 0,
+      "stage": "latex_initial",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "C:\\Users\\31390\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\bibtex.EXE",
+        "conference_101719"
+      ],
+      "elapsed_ms": 305.2,
+      "return_code": 0,
+      "stage": "bibtex",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "C:\\Users\\31390\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\pdflatex.EXE",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "conference_101719.tex"
+      ],
+      "elapsed_ms": 738.67,
+      "return_code": 0,
+      "stage": "latex_resolve_references_1",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "C:\\Users\\31390\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\pdflatex.EXE",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "conference_101719.tex"
+      ],
+      "elapsed_ms": 705.744,
+      "return_code": 0,
+      "stage": "latex_resolve_references_2",
+      "timed_out": false
+    }
+  ],
+  "failure_stage": "",
+  "generated_at": "2026-09-02T12:40:00.412+00:00",
+  "main_tex": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\publication\\research_plan_20260902-213500-final_project\\conference_101719.tex",
+  "project_dir": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\publication\\research_plan_20260902-213500-final_project",
+  "run_bibtex": true,
+  "schema_version": "research_plan_author_latex_compile_v1",
+  "staged_pdf": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\author\\publication\\.research_plan_20260902-213500-final.pdf.staging",
+  "success": true,
+  "timeout_seconds": 180
+}

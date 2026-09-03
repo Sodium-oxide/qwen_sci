@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qwen-zhikan-power-core-a"
+version = "0.2.0"
+description = "Deterministic contracts, state, routing, artifacts, and approval kernel for the power-system vertical slice"
+readme = "README-power-core-a.md"
+requires-python = ">=3.11"
+license = {file = "LICENSE"}
+dependencies = [
+  "jsonschema>=4.23,<5",
+  "filelock>=3.15,<4",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<9"]
+
+[project.scripts]
+power-core-a = "power_core_a.cli:main"
+
+[tool.setuptools]
+packages = ["power_core_a", "power_core_a.integrations"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+power_core_a = ["schemas/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests_power_core_a"]
+addopts = "-ra"

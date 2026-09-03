@@ -1,0 +1,315 @@
+{
+  "High-Mass Neutron Stars and Dense Matter Constraints": {
+    "comparison_dimensions": [
+      "Pulsar Classification & System Type",
+      "Primary Mass Measurement Methodology",
+      "Derived Neutron Star Mass",
+      "Companion Object Nature",
+      "Equation of State Constraints"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2150460969",
+        "paper_title": "Dynamical Origins and Equation-of-State Constraints from the Eccentric Millisecond Pulsar PSR J1903+0327",
+        "columns": {
+          "Pulsar Classification & System Type": "Eccentric Millisecond Pulsar (MSP) in a 95-day orbit",
+          "Primary Mass Measurement Methodology": "Post-Keplerian parameters: Shapiro delay, apsidal motion, proper motion; Optical spectroscopy for radial velocities",
+          "Derived Neutron Star Mass": "1.667 ± 0.021 M_sun",
+          "Companion Object Nature": "Main Sequence Star (1.029 ± 0.008 M_sun)",
+          "Equation of State Constraints": "Rules out soft equations of state containing hyperons, bosons, or free quarks at nuclear saturation densities"
+        }
+      },
+      {
+        "paper_id": "W4288009935",
+        "paper_title": "Record-Breaking Mass Measurement of the Fastest Spinning Pulsar PSR J0952−0607",
+        "columns": {
+          "Pulsar Classification & System Type": "Black Widow MSP (fastest spinning disk pulsar)",
+          "Primary Mass Measurement Methodology": "Multicolor light curve modeling and companion radial velocities; Direct-heating model fitting",
+          "Derived Neutron Star Mass": "2.35 ± 0.17 M_sun",
+          "Companion Object Nature": "Very faint, low-mass companion within Roche lobe (heated by pulsar irradiation)",
+          "Equation of State Constraints": "Establishes minimum maximum mass M_max > 2.19 M_sun (1 sigma), implying stiff equation of state"
+        }
+      }
+    ]
+  },
+  "Pulsar Spin Evolution, Torque Modeling, and Population Synthesis": {
+    "comparison_dimensions": [
+      "Primary Spin-Down Mechanism",
+      "Treatment of Inclination Angle (Alpha)",
+      "Braking Index Behavior",
+      "Population Synthesis Focus",
+      "Key Physical Constraints/Findings"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2590059791",
+        "paper_title": "Inclination Angle Decay and Its Critical Role in Pulsar Braking Torque and Galactic Population Synthesis",
+        "columns": {
+          "Primary Spin-Down Mechanism": "Vacuum dipole radiation with variable inclination",
+          "Treatment of Inclination Angle (Alpha)": "Negative decay rate ($\\dot{\\alpha} < 0$); critical role in torque",
+          "Braking Index Behavior": "Implicitly variable due to alpha evolution; not fixed n=3",
+          "Population Synthesis Focus": "Reproducing P-Pdot diagram without long birth periods or B-field decay",
+          "Key Physical Constraints/Findings": "Birth rate ~1/century; Total Galactic population ~20,000"
+        }
+      },
+      {
+        "paper_id": "W2039864550",
+        "paper_title": "Particle Wind Dynamics and Pulsar Death Boundaries in Rotational Evolution Models",
+        "columns": {
+          "Primary Spin-Down Mechanism": "Hybrid: Magnetic dipole + Particle wind",
+          "Treatment of Inclination Angle (Alpha)": "Calculated parameter; evolves from dipole-dominated to wind-dominated",
+          "Braking Index Behavior": "Variable; lower between glitches due to higher particle density",
+          "Population Synthesis Focus": "Individual source evolution (Crab) and death valley trajectories",
+          "Key Physical Constraints/Findings": "Particle density ~10^3 x Goldreich-Julian; Evolution towards death valley, not magnetars"
+        }
+      },
+      {
+        "paper_id": "W2168466918",
+        "paper_title": "Geometric Evolution and Alignment of Isolated Radio Pulsars",
+        "columns": {
+          "Primary Spin-Down Mechanism": "Dipole radiation with geometric evolution",
+          "Treatment of Inclination Angle (Alpha)": "Progressive alignment over ~1 Myr timescale",
+          "Braking Index Behavior": "Fitted braking index parameter $n_\\gamma \\approx 2.3$",
+          "Population Synthesis Focus": "Predicting mean inclination and beaming fraction vs characteristic age",
+          "Key Physical Constraints/Findings": "Evidence for alignment inconsistent with magnetic field decay alone; Random birth angles fit best"
+        }
+      },
+      {
+        "paper_id": "W2080065881",
+        "paper_title": "Torque Function Growth Model for Anomalous Braking Indices and Jerk Parameters",
+        "columns": {
+          "Primary Spin-Down Mechanism": "Modified torque function growth model",
+          "Treatment of Inclination Angle (Alpha)": "N/A (Focus on torque magnitude growth)",
+          "Braking Index Behavior": "Observed $n_{obs}$ treated as constant but differing from theoretical predictions",
+          "Population Synthesis Focus": "N/A (Focus on individual young pulsars with measured n and m)",
+          "Key Physical Constraints/Findings": "Explains discrepancies in observed jerk parameter ($m_{obs} \\neq 15$); Derives initial physical quantities"
+        }
+      },
+      {
+        "paper_id": "W2006729056",
+        "paper_title": "Long-Term Timing Analysis of SAX J1808.4-3658 Reveals Quiescent Spin-Down and Black Widow-like Orbital Evolution",
+        "columns": {
+          "Primary Spin-Down Mechanism": "Quiescent electromagnetic spin-down / Propeller effect",
+          "Treatment of Inclination Angle (Alpha)": "N/A (Accretion-powered X-ray pulsar)",
+          "Braking Index Behavior": "Long-term spin-down detected during quiescence; negligible during outbursts",
+          "Population Synthesis Focus": "N/A (Single system analysis linking to black widow demographics)",
+          "Key Physical Constraints/Findings": "Large orbital period derivative; $B < 1.5 \\times 10^8$ G; Pulse shape variability artifacts corrected"
+        }
+      },
+      {
+        "paper_id": "W2952190737",
+        "paper_title": "Population Synthesis of Isolated Pulsars: Comparing Magnetic Dipole and Hybrid Torque Models",
+        "columns": {
+          "Primary Spin-Down Mechanism": "Standard Magnetic Dipole vs. Hybrid (Contopoulos & Spitkovsky)",
+          "Treatment of Inclination Angle (Alpha)": "Random alignment angles; torque should not depend strongly on inclination",
+          "Braking Index Behavior": "Analyzed as a key property affecting population distribution",
+          "Population Synthesis Focus": "Comparing models to reproduce observable P-Pdot diagram characteristics",
+          "Key Physical Constraints/Findings": "Magnetic dipole model fits better than hybrid; Period-dependent luminosity essential"
+        }
+      }
+    ]
+  },
+  "Glitch Phenomenology and Neutron Star Interior Dynamics": {
+    "comparison_dimensions": [
+      "Primary Glitch Phenomenon",
+      "Correlation Evidence",
+      "Theoretical Model Framework",
+      "Braking Index Characteristics",
+      "Moment of Inertia Constraints"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2753142562",
+        "paper_title": "Extreme Glitch Activity and Negative Braking Index in Young X-ray Pulsar J0537−6910",
+        "columns": {
+          "Primary Glitch Phenomenon": "Extreme activity (~3.5/yr); large spin-ups every ~100 d; 45 total glitches over 13 yr",
+          "Correlation Evidence": "Strong correlation between glitch spin-up size and time to next glitch (unique among pulsars)",
+          "Theoretical Model Framework": "Multicomponent model accounting for crust and core neutron superfluid dynamics",
+          "Braking Index Characteristics": "Negative long-term braking index (n_l = -1.22(4)); spin-down rate increased over 13 yr",
+          "Moment of Inertia Constraints": "Limits placed on fractional moment of inertia of spin-up component and sustained velocity difference"
+        }
+      }
+    ]
+  },
+  "Stellar Evolution and Binary Channel Synthesis": {
+    "comparison_dimensions": [
+      "Primary Formation Channel",
+      "Companion Star Type at Detection",
+      "Orbital Eccentricity Status",
+      "Key Evolutionary Mechanism",
+      "Neutron Star Mass Constraint"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2138552549",
+        "paper_title": "Progenitor Evolution and Formation Channels of the Massive Millisecond Pulsar PSR J1614−2230",
+        "columns": {
+          "Primary Formation Channel": "Case A Roche Lobe Overflow or Common Envelope Spiral-In",
+          "Companion Star Type at Detection": "White Dwarf (implied by MSP recycling context)",
+          "Orbital Eccentricity Status": "Circularized (Standard Binary Evolution)",
+          "Key Evolutionary Mechanism": "Non-conservative mass transfer and supernova birth mass",
+          "Neutron Star Mass Constraint": "~1.95 M_sun or 1.7 ± 0.15 M_sun"
+        }
+      },
+      {
+        "paper_id": "W2150460969",
+        "paper_title": "Dynamical Origins and Equation-of-State Constraints from the Eccentric Millisecond Pulsar PSR J1903+0327",
+        "columns": {
+          "Primary Formation Channel": "Hierarchical Triple System with Chaotic Three-Body Interaction",
+          "Companion Star Type at Detection": "Main Sequence Star",
+          "Orbital Eccentricity Status": "Highly Eccentric (e = 0.4367)",
+          "Key Evolutionary Mechanism": "Common envelope spiral-in followed by supernova and dynamical ejection/ablation",
+          "Neutron Star Mass Constraint": "1.667 ± 0.021 M_sun"
+        }
+      },
+      {
+        "paper_id": "W2016762929",
+        "paper_title": "Irradiation Efficiency and Geometric Beaming Dictate Black Widow Versus Redback Binary Outcomes",
+        "columns": {
+          "Primary Formation Channel": "Converging Low-Mass X-ray Binaries",
+          "Companion Star Type at Detection": "Low-Mass Evolved Star (Black Widow/Redback)",
+          "Orbital Eccentricity Status": "Circularized (Short Period < 1.0 days)",
+          "Key Evolutionary Mechanism": "Pulsar irradiation efficiency and geometric beaming driving mass loss",
+          "Neutron Star Mass Constraint": "N/A"
+        }
+      }
+    ]
+  },
+  "Accretion Disks, Intra-Binary Shocks, and Transient State Transitions": {
+    "comparison_dimensions": [
+      "Primary System Type",
+      "State Transition Mechanism",
+      "High-Energy Emission Origin",
+      "Radio Observational Status",
+      "Orbital Evolution Driver"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2110083583",
+        "paper_title": "Non-Conservative Mass Transfer and Orbital Evolution in Transient Accreting Millisecond Pulsar SAX J1808.4−3658",
+        "columns": {
+          "Primary System Type": "Accreting Millisecond X-ray Pulsar (AMXP)",
+          "State Transition Mechanism": "Transient mass-accretion episodes; non-conservative mass transfer during quiescence",
+          "High-Energy Emission Origin": "Accretion onto neutron star surface during outbursts",
+          "Radio Observational Status": "Not detected (implied accretion-powered state)",
+          "Orbital Evolution Driver": "Non-conservative mass loss/ablation from inner Lagrangian point (Black Widow-like)"
+        }
+      },
+      {
+        "paper_id": "W2433433060",
+        "paper_title": "Intra-Binary Shock Heating Model Reproduces Asymmetric Light Curves in Evaporating Binary PSR J2215+5135",
+        "columns": {
+          "Primary System Type": "Evaporating Binary / Black Widow Pulsar",
+          "State Transition Mechanism": "Stable evaporating state driven by pulsar wind-companion interaction",
+          "High-Energy Emission Origin": "Intra-binary shock (IBS) heating companion surface and synchrotron emission",
+          "Radio Observational Status": "Active radio pulsar (implied by 'black widow' classification)",
+          "Orbital Evolution Driver": "Companion evaporation via pulsar wind momentum transfer"
+        }
+      },
+      {
+        "paper_id": "W2006729056",
+        "paper_title": "Long-Term Timing Analysis of SAX J1808.4-3658 Reveals Quiescent Spin-Down and Black Widow-like Orbital Evolution",
+        "columns": {
+          "Primary System Type": "Accreting Millisecond X-ray Pulsar (AMXP)",
+          "State Transition Mechanism": "Quiescent spin-down; potential propeller effect or magnetic ablation",
+          "High-Energy Emission Origin": "Accretion during outbursts; negligible torque during outbursts; spin-down in quiescence",
+          "Radio Observational Status": "Not detected (potential hidden radio MSP)",
+          "Orbital Evolution Driver": "Large positive orbital period derivative suggesting black widow-like mass loss"
+        }
+      },
+      {
+        "paper_id": "W2138226510",
+        "paper_title": "Multi-Wavelength Monitoring of PSR J1023+0038: State Transitions, Accretion Disk Formation, and Gamma-Ray Enhancements",
+        "columns": {
+          "Primary System Type": "Binary Millisecond Pulsar transitioning to qLMXB",
+          "State Transition Mechanism": "Re-formation of accretion disk obscuring pulsar; transition to quiescent LMXB state",
+          "High-Energy Emission Origin": "Enhanced gamma-rays from shocks between pulsar wind and accretion disk/outflow",
+          "Radio Observational Status": "Undetected due to enshrouding/scattering by intra-binary material",
+          "Orbital Evolution Driver": "Accretion disk formation and wind-disk collisions (not explicitly quantified for orbit)"
+        }
+      }
+    ]
+  },
+  "Irradiation Physics, Ablation, and Orbital Evolution in Evaporating Binaries": {
+    "comparison_dimensions": [
+      "Primary Physical Mechanism for Orbital Evolution",
+      "Irradiation Efficiency and Heating Model",
+      "Companion Roche Lobe Status",
+      "Key Observational Evidence"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2016762929",
+        "paper_title": "Irradiation Efficiency and Geometric Beaming Dictate Black Widow Versus Redback Binary Outcomes",
+        "columns": {
+          "Primary Physical Mechanism for Orbital Evolution": "Geometric beaming effects dictating irradiation efficiency and mass loss rates",
+          "Irradiation Efficiency and Heating Model": "Redbacks absorb larger fraction of spin-down energy; distinct bimodality due to beaming",
+          "Companion Roche Lobe Status": "Not explicitly detailed in summary, implied by mass loss context",
+          "Key Observational Evidence": "MESA stellar evolution simulations of converging low-mass X-ray binaries"
+        }
+      },
+      {
+        "paper_id": "W2110083583",
+        "paper_title": "Non-Conservative Mass Transfer and Orbital Evolution in Transient Accreting Millisecond Pulsar SAX J1808.4−3658",
+        "columns": {
+          "Primary Physical Mechanism for Orbital Evolution": "Highly non-conservative mass transfer; ejection of matter from inner Lagrangian point during quiescence",
+          "Irradiation Efficiency and Heating Model": "N/A (Focus on accretion dynamics and ablation)",
+          "Companion Roche Lobe Status": "Implied Roche-lobe overflow during outbursts, but ablation dominates orbital change",
+          "Key Observational Evidence": "Parabolic trend in ascending node passage times yielding positive orbital period derivative"
+        }
+      },
+      {
+        "paper_id": "W2433433060",
+        "paper_title": "Intra-Binary Shock Heating Model Reproduces Asymmetric Light Curves in Evaporating Binary PSR J2215+5135",
+        "columns": {
+          "Primary Physical Mechanism for Orbital Evolution": "Pulsar-wind erosion via intra-binary shock heating",
+          "Irradiation Efficiency and Heating Model": "Intra-binary shock (IBS) intercepts wind before companion heating; parameterized by wind momentum ratio",
+          "Companion Roche Lobe Status": "Roche lobe filling (implied by context of other papers in cluster, though this paper focuses on light curve asymmetry)",
+          "Key Observational Evidence": "Asymmetric optical light curves of PSR J2215+5135 fitted with IBS model"
+        }
+      },
+      {
+        "paper_id": "W1963761446",
+        "paper_title": "Universal Irradiation Efficiencies and Roche Lobe Underfilling in Energetic Fermi Millisecond Pulsar Companions",
+        "columns": {
+          "Primary Physical Mechanism for Orbital Evolution": "Thermal contraction or incomplete ablation; challenges standard Roche-lobe overflow necessity",
+          "Irradiation Efficiency and Heating Model": "Universal efficiency of 10%–30% reprocessed into heat; direct pulsar illumination vs. alternative mechanisms",
+          "Companion Roche Lobe Status": "Significant underfilling observed in J0023+0923 and J2256-1024 despite radio eclipses",
+          "Key Observational Evidence": "Optical light curve synthesis using Gemini/NTT data showing universal irradiation range"
+        }
+      },
+      {
+        "paper_id": "W2006729056",
+        "paper_title": "Long-Term Timing Analysis of SAX J1808.4-3658 Reveals Quiescent Spin-Down and Black Widow-like Orbital Evolution",
+        "columns": {
+          "Primary Physical Mechanism for Orbital Evolution": "Quasi-cyclic tidal variations or pulsar-wind ablation during quiescence",
+          "Irradiation Efficiency and Heating Model": "N/A (Focus on timing and spin/orbital derivatives)",
+          "Companion Roche Lobe Status": "N/A",
+          "Key Observational Evidence": "Large positive orbital period derivative ($\\dot{P}_{orb}$) and long-term spin-down during quiescence"
+        }
+      }
+    ]
+  },
+  "Continuous Gravitational Wave Constraints and Neutron Star Deformations": {
+    "comparison_dimensions": [
+      "Target Source",
+      "Detector Data Used",
+      "Statistical Framework",
+      "Assumption on Stellar Orientation/Polarization",
+      "Key Quantitative Result (Upper Limit)"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2156604090",
+        "paper_title": "Direct Search for Continuous Gravitational Waves from the Vela Pulsar Using Virgo Data",
+        "columns": {
+          "Target Source": "Vela Pulsar",
+          "Detector Data Used": "Virgo Second Science Run",
+          "Statistical Framework": "Frequentist and Bayesian methods",
+          "Assumption on Stellar Orientation/Polarization": "Known spin axis inclination and wave polarization angle; also analyzed with unknown angles",
+          "Key Quantitative Result (Upper Limit)": "1.9-2.2 x 10^-24 (known angles); <3.3 x 10^-24 (spin-down limit)"
+        }
+      }
+    ]
+  }
+}

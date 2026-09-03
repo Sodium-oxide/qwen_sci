@@ -1,0 +1,40 @@
+{
+  "derivatives": {
+    "x": {
+      "args": [
+        {
+          "args": [
+            {
+              "name": "k",
+              "op": "variable"
+            }
+          ],
+          "op": "neg"
+        },
+        {
+          "name": "x",
+          "op": "variable"
+        }
+      ],
+      "op": "mul"
+    }
+  },
+  "parameters": {
+    "k": 1.0
+  },
+  "schema_version": "mathir_v1",
+  "solver_options": {
+    "max_step": 0.1
+  },
+  "states": [
+    {
+      "id": "x",
+      "initial": 1.0
+    }
+  ],
+  "system_type": "ODE_IVP",
+  "time_span": [
+    0.0,
+    1.0
+  ]
+}

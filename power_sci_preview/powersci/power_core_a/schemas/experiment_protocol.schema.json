@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qwen-zhikan.local/schemas/experiment_protocol_v1.json",
+  "title": "ExperimentProtocol",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "protocol_id", "protocol_version", "brief_hash", "case_manifest_hash", "equation_ir_hash", "lens_spec_hash", "split_policy", "budget", "acceptance_criteria", "random_seed", "status", "created_at"],
+  "properties": {
+    "schema_version": {"const": "experiment_protocol_v1"},
+    "protocol_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "protocol_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "brief_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "case_manifest_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "equation_ir_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "lens_spec_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "split_policy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["train", "validation", "ood", "ordered"],
+      "properties": {
+        "train": {"type": "number", "minimum": 0, "maximum": 1}, "validation": {"type": "number", "minimum": 0, "maximum": 1},
+        "ood": {"type": "number", "minimum": 0, "maximum": 1}, "ordered": {"type": "boolean"}
+      }
+    },
+    "budget": {
+      "type": "object", "additionalProperties": false,
+      "required": ["max_candidates", "max_runtime_seconds", "max_cpu_threads", "llm_calls"],
+      "properties": {
+        "max_candidates": {"type": "integer", "minimum": 1}, "max_runtime_seconds": {"type": "integer", "minimum": 1},
+        "max_cpu_threads": {"type": "integer", "minimum": 1}, "llm_calls": {"type": "integer", "minimum": 0}
+      }
+    },
+    "acceptance_criteria": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/criterion"}},
+    "random_seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+    "status": {"enum": ["DRAFT", "FROZEN"]},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "criterion": {
+      "type": "object", "additionalProperties": false,
+      "required": ["metric", "operator", "threshold", "unit"],
+      "properties": {
+        "metric": {"type": "string", "minLength": 1}, "operator": {"enum": ["LT", "LE", "GT", "GE", "EQ"]},
+        "threshold": {"type": "number"}, "unit": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

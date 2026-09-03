@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qwen-zhikan.local/schemas/task_envelope_v2.json",
+  "title": "TaskEnvelopeV2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "task_id", "run_id", "task_type", "requested_by_module", "target_module", "required_state", "input_artifacts", "expected_output_schemas", "idempotency_key", "created_at"],
+  "properties": {
+    "schema_version": {"const": "task_envelope_v2"},
+    "task_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "task_type": {"enum": ["VALIDATE_CANDIDATE", "COMPILE_EQUATION_IR", "RUN_V1_STRUCTURE", "RUN_V2_NUMERICAL", "RUN_V3_PHYSICAL"]},
+    "requested_by_module": {"type": "string", "pattern": "^M[0-9]{2}$"},
+    "target_module": {"enum": ["M02", "M04", "M06", "M12"]},
+    "required_state": {"const": "PROTOCOL_FROZEN"},
+    "input_artifacts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/ref"}},
+    "expected_output_schemas": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["EquationIRV2", "ValidationReportV2", "StructuredErrorV2"]}},
+    "idempotency_key": {"type": "string", "minLength": 1, "maxLength": 240},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "ref": {
+      "type": "object", "additionalProperties": false,
+      "required": ["artifact_id", "artifact_type", "content_hash", "relative_path"],
+      "properties": {
+        "artifact_id": {"type": "string", "minLength": 1}, "artifact_type": {"type": "string", "minLength": 1},
+        "content_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "relative_path": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

@@ -1,0 +1,237 @@
+{
+  "authoring_constraints": {
+    "counterexample_must_satisfy_all_assumptions": true,
+    "formal_and_empirical_claims_must_remain_separate": true,
+    "observed_results_are_absent": true,
+    "proposal_without_observed_results": true,
+    "unsupported_claims_forbidden": true,
+    "unverified_reasoning_must_be_labeled": true
+  },
+  "counterexample_analysis": {
+    "applicability": "",
+    "candidate_counterexamples": [],
+    "limitations": [],
+    "negated_conclusion": "",
+    "schema_version": "",
+    "status": "",
+    "target_claim_id": "",
+    "unknown_items": []
+  },
+  "field_statuses": {
+    "analysis_plan.batch_effects": "needs_human_input",
+    "analysis_plan.blinding": "not_applicable",
+    "analysis_plan.missing_data": "needs_human_input",
+    "analysis_plan.randomization": "needs_human_input",
+    "analysis_plan.repetitions": "needs_human_input",
+    "analysis_plan.statistical_analysis": "not_applicable",
+    "data_governance_and_reproducibility.data_management": "needs_human_input",
+    "data_governance_and_reproducibility.reproducibility": "needs_human_input",
+    "measurement_and_calibration.calibration": "not_applicable",
+    "measurement_and_calibration.measurement_plan": "needs_human_input",
+    "measurement_and_calibration.quality_control": "needs_human_input",
+    "sampling_and_eligibility.eligibility_criteria": "needs_human_input",
+    "sampling_and_eligibility.sample_size_or_power_basis": "not_applicable",
+    "sampling_and_eligibility.source": "needs_human_input"
+  },
+  "formal_reasoning": {
+    "applicability": "",
+    "assumptions": [],
+    "definitions": [],
+    "final_conclusion": "",
+    "forward_derivation": {
+      "status": "",
+      "steps": []
+    },
+    "proof_obligations": [],
+    "propositions": [],
+    "schema_version": "",
+    "status": "",
+    "target_proposition_id": "",
+    "unknown_items": []
+  },
+  "generated_at": "2026-09-03T23:37:15.927801+09:00",
+  "hypothesis_mapping": [
+    {
+      "claim": "The stated relation may hold.",
+      "decision_rule": "Prespecify a decision rule.",
+      "hypothesis_id": "H1",
+      "observables": [
+        "Declared observable"
+      ]
+    }
+  ],
+  "outcome_branches": [
+    {
+      "branch_id": "supports_mechanism",
+      "conclusion_scope": "The declared research boundary.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Revise the next design iteration."
+      ],
+      "interpretation": "Interpret only within the stated proposal boundary.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified condition is met."
+    },
+    {
+      "branch_id": "partial_or_heterogeneous",
+      "conclusion_scope": "The declared research boundary.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Revise the next design iteration."
+      ],
+      "interpretation": "Interpret only within the stated proposal boundary.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified condition is met."
+    },
+    {
+      "branch_id": "null_or_contradictory",
+      "conclusion_scope": "The declared research boundary.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Revise the next design iteration."
+      ],
+      "interpretation": "Interpret only within the stated proposal boundary.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified condition is met."
+    },
+    {
+      "branch_id": "uninformative_or_invalid",
+      "conclusion_scope": "The declared research boundary.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Revise the next design iteration."
+      ],
+      "interpretation": "Interpret only within the stated proposal boundary.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified condition is met."
+    }
+  ],
+  "provenance": {
+    "audit_source_paths": {},
+    "discipline_ids": [
+      "26"
+    ],
+    "idea_result_path": "",
+    "risk_level": "medium",
+    "selected_direction_id": "selected-direction",
+    "survey_binding": {},
+    "template_id": "",
+    "validation_status": "DRAFT_REQUIRES_INPUT"
+  },
+  "reasoning_context": {
+    "alternative_explanations": [
+      "A declared alternative explanation."
+    ],
+    "assumptions": [],
+    "boundary_conditions": [
+      "The stated boundary."
+    ],
+    "claim_scope": "The declared proposal scope.",
+    "evidence_roles": [],
+    "falsifiers": [],
+    "formal_symbols": [],
+    "gap_records": [],
+    "schema_version": "reasoning_context_v1",
+    "selected_direction_id": "selected-direction",
+    "source_anchors": [],
+    "source_priority": [
+      "selected_direction"
+    ],
+    "upstream_source_paths": []
+  },
+  "research_design": {
+    "design_type": "proposal-only study",
+    "experimental_unit": "declared unit",
+    "time_structure": "to be confirmed"
+  },
+  "review_items": [
+    {
+      "field_path": "risk_and_human_review.review_triggers[1]",
+      "reason": "Confirm the unresolved methodology.",
+      "status": "review_required"
+    }
+  ],
+  "schema_version": "research_plan_author_input_v3",
+  "selected_direction": {
+    "central_hypothesis": "The stated relation may hold inside the declared boundary.",
+    "id": "selected-direction",
+    "mechanism_or_relation": "The relation is to be tested without execution.",
+    "title": "Bounded Proposal Direction"
+  },
+  "source_design_id": "design-26",
+  "source_registry": {
+    "allowed_source_ids": [],
+    "allowed_survey_anchor_ids": [],
+    "citation_registry": [],
+    "evidence_cards_by_id": {}
+  },
+  "unknown_items": [
+    {
+      "field_path": "analysis_plan.batch_effects",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.missing_data",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.randomization",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.repetitions",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "data_governance_and_reproducibility.data_management",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "data_governance_and_reproducibility.reproducibility",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration.measurement_plan",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration.quality_control",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[1]",
+      "reason": "Confirm the study-specific design details.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "research_brief.known_unknowns[1]",
+      "reason": "A required decision remains unresolved.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "sampling_and_eligibility.eligibility_criteria",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "sampling_and_eligibility.source",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    }
+  ],
+  "variables_and_operationalization": {
+    "confounders": [],
+    "control_variables": [],
+    "dependent_variables": [],
+    "independent_variables": [],
+    "operational_definitions": []
+  }
+}

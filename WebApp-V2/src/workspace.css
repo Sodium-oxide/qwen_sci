@@ -1,0 +1,22 @@
+.inline-action { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.grouped-sessions { gap: 16px; }
+.session-group { display: grid; gap: 8px; }
+.session-group h3 { display: flex; justify-content: space-between; align-items: center; margin: 0; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.session-group h3 small { display: grid; min-width: 22px; height: 22px; place-items: center; border-radius: 999px; color: var(--blue); background: #edf7f2; }
+.material-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(160px, .8fr) auto auto; gap: 10px; align-items: center; padding: 11px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,253,.72); color: #37524f; font-size: 12px; }
+.material-card > div:first-child { display: grid; gap: 4px; min-width: 0; }
+.material-card strong, .material-card span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.material-card span, .material-card p { color: var(--muted); font-size: 11px; line-height: 1.45; }
+.material-card select { min-height: 34px; padding: 0 8px; font-size: 11px; }
+.material-card.saved { grid-template-columns: 1fr; align-items: start; }
+.material-facts, .material-actions, .artifact-summary { display: flex; flex-wrap: wrap; gap: 8px; }
+.material-facts span, .artifact-summary span { padding: 4px 7px; border-radius: 999px; background: #edf7f2; color: #15534e; }
+.material-actions { align-items: center; }
+.material-replace-input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; pointer-events: none; }
+.danger-text { color: var(--danger); }
+.remote-consent { margin-top: 12px; }
+.artifact-item.active { border-color: rgba(28,119,111,.55); box-shadow: inset 3px 0 0 var(--blue); }
+.artifact-text-preview { max-height: 360px; margin: 0; padding: 13px; overflow: auto; border: 1px solid var(--line); border-radius: 14px; background: #f0f3ee; color: #304745; font: 12px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: pre-wrap; word-break: break-word; }
+.artifact-image-preview { width: 100%; max-height: 360px; object-fit: contain; border: 1px solid var(--line); border-radius: 14px; background: white; }
+.preview-panel iframe { width: 100%; height: 360px; border: 1px solid var(--line); border-radius: 16px; background: #eef4fb; }
+@media (max-width: 860px) { .material-card { grid-template-columns: 1fr; align-items: start; } }

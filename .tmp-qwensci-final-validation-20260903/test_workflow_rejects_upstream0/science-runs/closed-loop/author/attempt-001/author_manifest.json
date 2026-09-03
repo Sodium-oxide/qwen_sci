@@ -1,0 +1,66 @@
+{
+  "artifacts": {
+    "author_context_json": {
+      "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\author\\attempt-001\\author_context.json",
+      "sha256": "a2c8d6de90a53a908e4d1d0a0a2d12a2868a26b38c2e4decdd2e5b9d69050d23"
+    },
+    "document_json": {
+      "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\author\\attempt-001\\research_plan_document.json",
+      "sha256": "06fbca657773d9f9b5ba54afeacc9cfa618cd7fd740667c7561beba538a15d7d"
+    },
+    "idea_evolution_json": {
+      "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\author\\attempt-001\\idea_evolution.json",
+      "sha256": "a2c8d6de90a53a908e4d1d0a0a2d12a2868a26b38c2e4decdd2e5b9d69050d23"
+    },
+    "preparation_json": {
+      "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\author\\attempt-001\\research_plan_preparation.json",
+      "sha256": "a2c8d6de90a53a908e4d1d0a0a2d12a2868a26b38c2e4decdd2e5b9d69050d23"
+    },
+    "render_status": {
+      "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\author\\attempt-001\\author_render_status.json",
+      "sha256": "71671ebc92e21ffd6900debcbb55fda7b9c5d2a7adb60bd3ee9264efdfd90b4d"
+    }
+  },
+  "canonical_artifact": "document_json",
+  "identity": {
+    "handoff_fingerprint": "53d81f0a9282c4f6bbe9e3f2dc3cd4874a3cfb1fb4ca7388c35231ff58eaab1e",
+    "manifest_fingerprint": "a98a660cc33259df768bb5d2e125d442f235240c18192bc975f28681238dbbfd",
+    "project_context_fingerprint": "science-workflow-context",
+    "project_id": "science-workflow",
+    "selected_direction_id": "direction-primary",
+    "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+    "survey_run_id": "closed-loop-survey-001"
+  },
+  "inputs": {
+    "author_input": {
+      "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\experiment_design\\attempt-001\\experiment_design_author.json",
+      "sha256": "4728642b454e461db945b99412ba9dcba795f8304535daa096b19d2e7c5596d4"
+    },
+    "experiment_design_manifest": {
+      "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\experiment_design\\attempt-001\\experiment_design_manifest.json",
+      "sha256": "ae1dd771e4e0a6846e0f76f932ff54d15c8abc32cbe5386af23269cfbe644fd4"
+    },
+    "idea_manifest": {
+      "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\idea\\attempt-001\\idea_manifest.json",
+      "sha256": "cef7b9eed63f658ee8cf0aa9f54e089a6c55e6ad3736cb8eb7d47d086c064aee"
+    },
+    "survey_manifest": {
+      "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+      "sha256": "a98a660cc33259df768bb5d2e125d442f235240c18192bc975f28681238dbbfd"
+    }
+  },
+  "metadata": {
+    "quantitative_handoff_bound": false,
+    "rendering": {
+      "error": "",
+      "required": false,
+      "status": "SKIPPED"
+    },
+    "selected_direction_id": "direction-primary",
+    "source_design_id": "design-001"
+  },
+  "schema_version": "science_author_manifest_v1",
+  "stage": "author",
+  "status": "COMPLETED",
+  "topic": "exact handoff topic"
+}

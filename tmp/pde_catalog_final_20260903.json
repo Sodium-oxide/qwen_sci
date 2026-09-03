@@ -1,0 +1,474 @@
+{
+  "design_only_families": [],
+  "execution_boundary": "Only listed fixed adapters are executable; LLM output remains declarative PDEIR.",
+  "families": [
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO",
+        "NEUMANN",
+        "PERIODIC"
+      ],
+      "dimensions": [
+        1
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "parabolic_1d",
+      "solver_id": "pde_fd_advection_diffusion_reaction_1d",
+      "system_type": "ADVECTION_DIFFUSION_REACTION_1D",
+      "temporal": true,
+      "time_integrators": [
+        "EXPLICIT_EULER",
+        "SSPRK2"
+      ]
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO",
+        "NEUMANN",
+        "PERIODIC"
+      ],
+      "dimensions": [
+        1
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "parabolic_1d_nonlinear_advection",
+      "solver_id": "pde_fd_burgers_1d",
+      "system_type": "BURGERS_1D",
+      "temporal": true,
+      "time_integrators": [
+        "EXPLICIT_EULER",
+        "SSPRK2"
+      ]
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO",
+        "NEUMANN",
+        "PERIODIC"
+      ],
+      "dimensions": [
+        1
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "parabolic_1d",
+      "solver_id": "pde_fd_diffusion_reaction_1d",
+      "system_type": "DIFFUSION_REACTION_1D",
+      "temporal": true,
+      "time_integrators": [
+        "EXPLICIT_EULER"
+      ]
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO",
+        "NEUMANN",
+        "PERIODIC"
+      ],
+      "dimensions": [
+        2
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "parabolic_2d",
+      "solver_id": "pde_fd_diffusion_reaction_2d",
+      "system_type": "DIFFUSION_REACTION_2D",
+      "temporal": true,
+      "time_integrators": [
+        "EXPLICIT_EULER"
+      ]
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO",
+        "NEUMANN",
+        "PERIODIC"
+      ],
+      "dimensions": [
+        3
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "parabolic_3d",
+      "solver_id": "pde_fd_diffusion_reaction_3d",
+      "system_type": "DIFFUSION_REACTION_3D",
+      "temporal": true,
+      "time_integrators": [
+        "EXPLICIT_EULER"
+      ]
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO",
+        "NEUMANN"
+      ],
+      "dimensions": [
+        1
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "elliptic_1d",
+      "solver_id": "pde_fd_elliptic_diffusion_1d",
+      "system_type": "ELLIPTIC_DIFFUSION_1D",
+      "temporal": false,
+      "time_integrators": []
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO",
+        "NEUMANN"
+      ],
+      "dimensions": [
+        2
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "elliptic_2d",
+      "solver_id": "pde_fd_elliptic_diffusion_2d",
+      "system_type": "ELLIPTIC_DIFFUSION_2D",
+      "temporal": false,
+      "time_integrators": []
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO",
+        "NEUMANN",
+        "PERIODIC"
+      ],
+      "dimensions": [
+        1
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "parabolic_1d",
+      "solver_id": "pde_fd_heat_diffusion_1d",
+      "system_type": "HEAT_DIFFUSION_1D",
+      "temporal": true,
+      "time_integrators": [
+        "EXPLICIT_EULER",
+        "SSPRK2"
+      ]
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO",
+        "NEUMANN",
+        "PERIODIC"
+      ],
+      "dimensions": [
+        2
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "parabolic_2d",
+      "solver_id": "pde_fd_heat_diffusion_2d",
+      "system_type": "HEAT_DIFFUSION_2D",
+      "temporal": true,
+      "time_integrators": [
+        "EXPLICIT_EULER"
+      ]
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO",
+        "NEUMANN",
+        "PERIODIC"
+      ],
+      "dimensions": [
+        3
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "parabolic_3d",
+      "solver_id": "pde_fd_heat_diffusion_3d",
+      "system_type": "HEAT_DIFFUSION_3D",
+      "temporal": true,
+      "time_integrators": [
+        "EXPLICIT_EULER"
+      ]
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO",
+        "NEUMANN"
+      ],
+      "dimensions": [
+        1
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "elliptic_1d",
+      "solver_id": "pde_fd_helmholtz_1d",
+      "system_type": "HELMHOLTZ_1D",
+      "temporal": false,
+      "time_integrators": []
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO",
+        "NEUMANN"
+      ],
+      "dimensions": [
+        2
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "elliptic_2d",
+      "solver_id": "pde_fd_helmholtz_2d",
+      "system_type": "HELMHOLTZ_2D",
+      "temporal": false,
+      "time_integrators": []
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO",
+        "PERIODIC"
+      ],
+      "dimensions": [
+        1
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "parabolic_1d",
+      "solver_id": "pde_fd_linear_advection_1d",
+      "system_type": "LINEAR_ADVECTION_1D",
+      "temporal": true,
+      "time_integrators": [
+        "EXPLICIT_EULER",
+        "SSPRK2"
+      ]
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO",
+        "NEUMANN"
+      ],
+      "dimensions": [
+        1
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "elliptic_1d",
+      "solver_id": "pde_fd_poisson_1d",
+      "system_type": "POISSON_1D",
+      "temporal": false,
+      "time_integrators": []
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO",
+        "NEUMANN"
+      ],
+      "dimensions": [
+        2
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "elliptic_2d",
+      "solver_id": "pde_fd_poisson_2d",
+      "system_type": "POISSON_2D",
+      "temporal": false,
+      "time_integrators": []
+    },
+    {
+      "boundary_conditions": [
+        "SPHERICAL_ORIGIN_REGULARITY",
+        "DIRICHLET",
+        "NEUMANN",
+        "NEUMANN_ZERO"
+      ],
+      "dimensions": [
+        1
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE_SPHERICAL_RADIAL"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "spherical_radial_thermal",
+      "solver_id": "pde_fd_spherical_radial_thermal",
+      "system_type": "SPHERICAL_RADIAL_THERMAL",
+      "temporal": true,
+      "time_integrators": [
+        "EXPLICIT_EULER"
+      ]
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO"
+      ],
+      "dimensions": [
+        1
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "wave_1d",
+      "solver_id": "pde_fd_wave_1d",
+      "system_type": "WAVE_1D",
+      "temporal": true,
+      "time_integrators": [
+        "EXPLICIT_CENTRAL"
+      ]
+    },
+    {
+      "boundary_conditions": [
+        "DIRICHLET",
+        "NEUMANN_ZERO"
+      ],
+      "dimensions": [
+        2
+      ],
+      "discretizations": [
+        "FINITE_DIFFERENCE"
+      ],
+      "execution_status": "EXECUTABLE",
+      "field_count": {
+        "max": 1,
+        "min": 1
+      },
+      "implementation_version": "pde-fixed-backends-v1",
+      "solver_family": "wave_2d",
+      "solver_id": "pde_fd_wave_2d",
+      "system_type": "WAVE_2D",
+      "temporal": true,
+      "time_integrators": [
+        "EXPLICIT_CENTRAL"
+      ]
+    }
+  ],
+  "schema_version": "pde_capability_catalog_v1"
+}

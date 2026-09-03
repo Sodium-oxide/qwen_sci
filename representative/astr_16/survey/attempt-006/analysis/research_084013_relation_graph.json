@@ -1,0 +1,90 @@
+{
+  "High-Mass Neutron Stars and Dense Matter Constraints": {
+    "nodes": [
+      "W2150460969",
+      "W4288009935"
+    ],
+    "edges": []
+  },
+  "Pulsar Spin Evolution, Torque Modeling, and Population Synthesis": {
+    "nodes": [
+      "W2590059791",
+      "W2039864550",
+      "W2168466918",
+      "W2080065881",
+      "W2006729056",
+      "W2952190737"
+    ],
+    "edges": [
+      {
+        "source": "W2590059791",
+        "target": "W2952190737",
+        "type": "Extension",
+        "analysis": "Paper A extends the pulsar spin-evolution modeling framework from Paper B by directly addressing a key limitation: the previously overlooked impact of inclination angle decay ($|\\dot{\\alpha}|$) on braking torque. While Paper B suggested that torque should not strongly depend on inclination to reconcile certain alignment evidence, Paper A demonstrates that explicitly incorporating a negative $|\\dot{\\alpha}|$ term into simulations successfully reproduces the observed P–$|\\dot{P}|$ diagram without relying on alternative assumptions like long birth periods or magnetic field decay.",
+        "raw": "{\n  \"type\": \"Extension\",\n  \"analysis\": \"Paper A extends the pulsar spin-evolution modeling framework from Paper B by directly addressing a key limitation: the previously overlooked impact of inclination angle decay ($|\\\\dot{\\\\alpha}|$) on braking torque. While Paper B suggested that torque should not strongly depend on inclination to reconcile certain alignment evidence, Paper A demonstrates that explicitly incorporating a negative $|\\\\dot{\\\\alpha}|$ term into simulations successfully reproduces the observed P–$|\\\\dot{P}|$ diagram without relying on alternative assumptions like long birth periods or magnetic field decay.\"\n}"
+      }
+    ]
+  },
+  "Glitch Phenomenology and Neutron Star Interior Dynamics": {
+    "nodes": [
+      "W2753142562"
+    ],
+    "edges": []
+  },
+  "Stellar Evolution and Binary Channel Synthesis": {
+    "nodes": [
+      "W2138552549",
+      "W2150460969",
+      "W2016762929"
+    ],
+    "edges": []
+  },
+  "Accretion Disks, Intra-Binary Shocks, and Transient State Transitions": {
+    "nodes": [
+      "W2110083583",
+      "W2433433060",
+      "W2006729056",
+      "W2138226510"
+    ],
+    "edges": [
+      {
+        "source": "W2110083583",
+        "target": "W2006729056",
+        "type": "Extension",
+        "analysis": "Paper A extends the comprehensive timing analysis of SAX J1808.4−3658 from Paper B by directly addressing the anomalous positive orbital period derivative that Paper B identified but left unexplained. Utilizing the same RXTE dataset and refined orbital parameters established in Paper B, Paper A proposes a physical mechanism involving quiescent mass ejection from the inner Lagrangian point and derives new constraints on the binary system under a non-conservative mass transfer framework.",
+        "raw": "{\n  \"type\": \"Extension\",\n  \"analysis\": \"Paper A extends the comprehensive timing analysis of SAX J1808.4−3658 from Paper B by directly addressing the anomalous positive orbital period derivative that Paper B identified but left unexplained. Utilizing the same RXTE dataset and refined orbital parameters established in Paper B, Paper A proposes a physical mechanism involving quiescent mass ejection from the inner Lagrangian point and derives new constraints on the binary system under a non-conservative mass transfer framework.\"\n}"
+      }
+    ]
+  },
+  "Irradiation Physics, Ablation, and Orbital Evolution in Evaporating Binaries": {
+    "nodes": [
+      "W2016762929",
+      "W2110083583",
+      "W2433433060",
+      "W1963761446",
+      "W2006729056"
+    ],
+    "edges": [
+      {
+        "source": "W2016762929",
+        "target": "W1963761446",
+        "type": "Background",
+        "analysis": "Paper A cites Paper B to establish the observational context and key physical parameters (e.g., irradiation efficiency, companion filling factors, and mass distributions) of black widow and redback systems. These empirical findings from Paper B serve as the foundational motivation and observational constraints for Paper A's theoretical MESA simulations exploring their formation and evolutionary pathways.",
+        "raw": "{\n  \"type\": \"Background\",\n  \"analysis\": \"Paper A cites Paper B to establish the observational context and key physical parameters (e.g., irradiation efficiency, companion filling factors, and mass distributions) of black widow and redback systems. These empirical findings from Paper B serve as the foundational motivation and observational constraints for Paper A's theoretical MESA simulations exploring their formation and evolutionary pathways.\"\n}"
+      },
+      {
+        "source": "W2110083583",
+        "target": "W2006729056",
+        "type": "Extension",
+        "analysis": "Paper A extends the orbital timing results of Paper B by addressing the anomalously large positive orbital period derivative ($\\dot{P}_{orb}$) that Paper B initially reported. Building on Paper B's identification of this discrepancy with standard secular evolution models, Paper A proposes a concrete physical mechanism involving non-conservative mass transfer and matter ejection from the inner Lagrangian point during quiescence. This extension enables Paper A to derive stringent constraints on the binary's component masses and inclination, firmly classifying the system as a black widow pulsar.",
+        "raw": "```json\n{\n  \"type\": \"Extension\",\n  \"analysis\": \"Paper A extends the orbital timing results of Paper B by addressing the anomalously large positive orbital period derivative ($\\\\dot{P}_{orb}$) that Paper B initially reported. Building on Paper B's identification of this discrepancy with standard secular evolution models, Paper A proposes a concrete physical mechanism involving non-conservative mass transfer and matter ejection from the inner Lagrangian point during quiescence. This extension enables Paper A to derive stringent constraints on the binary's component masses and inclination, firmly classifying the system as a black widow pulsar.\"\n}\n```"
+      }
+    ]
+  },
+  "Continuous Gravitational Wave Constraints and Neutron Star Deformations": {
+    "nodes": [
+      "W2156604090"
+    ],
+    "edges": []
+  }
+}

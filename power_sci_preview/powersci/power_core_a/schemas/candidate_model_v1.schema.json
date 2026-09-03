@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qwen-zhikan.local/schemas/candidate_model_v1.json",
+  "title": "CandidateModelV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "candidate_id", "model_name", "source", "variables", "parameters", "equations", "fit_metadata", "created_at", "producer"],
+  "properties": {
+    "schema_version": {"const": "candidate_model_v1"},
+    "candidate_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "model_name": {"type": "string", "minLength": 1, "maxLength": 240},
+    "source": {"enum": ["KNOWN_STRUCTURE_FIT", "SINDY_PI", "MANUAL_BASELINE", "OTHER"]},
+    "variables": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/variable"}},
+    "parameters": {"type": "array", "items": {"$ref": "#/$defs/parameter"}},
+    "equations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/equation"}},
+    "fit_metadata": {"$ref": "#/$defs/fit_metadata"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "producer": {"type": "string", "pattern": "^M[0-9]{2}$"}
+  },
+  "$defs": {
+    "variable": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "unit", "coordinate", "reference_mode"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+        "alias": {"type": ["string", "null"]},
+        "unit": {"type": "string", "minLength": 1},
+        "coordinate": {"type": "string", "minLength": 1},
+        "reference_mode": {"enum": ["ABSOLUTE", "DEVIATION", "NOT_APPLICABLE"]},
+        "nominal_value": {"type": "number"}
+      }
+    },
+    "parameter": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "value", "unit"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+        "value": {"type": ["number", "string", "null"]},
+        "unit": {"type": "string", "minLength": 1}
+      }
+    },
+    "equation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["equation_id", "kind", "lhs", "rhs", "unit"],
+      "properties": {
+        "equation_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+        "kind": {"enum": ["ode", "algebraic", "residual"]},
+        "lhs": {"type": "string", "minLength": 1, "maxLength": 4000},
+        "rhs": {"type": "string", "minLength": 1, "maxLength": 4000},
+        "unit": {"type": "string", "minLength": 1},
+        "expression": {"type": ["string", "null"], "maxLength": 8000}
+      }
+    },
+    "fit_metadata": {
+      "type": "object", "additionalProperties": false,
+      "required": ["method", "random_seed"],
+      "properties": {
+        "method": {"type": "string", "minLength": 1},
+        "random_seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "training_lens_id": {"type": ["string", "null"]},
+        "fit_loss": {"type": ["number", "null"]},
+        "optimizer": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

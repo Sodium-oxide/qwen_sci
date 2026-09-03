@@ -1,0 +1,199 @@
+{
+  "schema_version": "sh_cluster_coverage_projection_v1",
+  "project_id": "sci_project",
+  "project_context_fingerprint": "context-A",
+  "clusters": [
+    {
+      "schema_version": "sh_cluster_coverage_projection_v1",
+      "cluster_index": 1,
+      "cluster_name": "evidence and context",
+      "paper_ids": [
+        "W1",
+        "W2",
+        "W3"
+      ],
+      "primary_subhypothesis_ids": [
+        "SH1"
+      ],
+      "secondary_subhypothesis_ids": [],
+      "gap_subhypothesis_ids": [
+        "SH2"
+      ],
+      "subhypotheses": [
+        {
+          "sub_hypothesis_id": "SH1",
+          "cluster_evidence_state": "DIRECT_EVIDENCE",
+          "evidence_paper_ids": [
+            "W1"
+          ],
+          "background_paper_ids": [
+            "W2"
+          ],
+          "graph_expanded_candidate_paper_ids": [
+            "W3"
+          ],
+          "seed_candidate_paper_ids": [],
+          "cluster_covered_slots": [
+            "candidate"
+          ],
+          "cluster_background_slots": [
+            "background_framework"
+          ],
+          "cluster_uncovered_required_slots": [
+            "comparator",
+            "background_framework"
+          ],
+          "project_missing_slots": [
+            "comparator"
+          ],
+          "project_background_only_slots": [],
+          "project_conclusion_admissibility": {
+            "admissible": false,
+            "blockers": [
+              "missing_required_slot:comparator"
+            ]
+          },
+          "association_status_counts": {
+            "LEDGER_CONFIRMED_EVIDENCE": 1,
+            "BACKGROUND_CONTEXT": 1,
+            "GRAPH_EXPANDED_CANDIDATE": 1
+          }
+        },
+        {
+          "sub_hypothesis_id": "SH2",
+          "cluster_evidence_state": "NO_CLUSTER_ASSOCIATION",
+          "evidence_paper_ids": [],
+          "background_paper_ids": [],
+          "graph_expanded_candidate_paper_ids": [],
+          "seed_candidate_paper_ids": [],
+          "cluster_covered_slots": [],
+          "cluster_background_slots": [],
+          "cluster_uncovered_required_slots": [
+            "direct_observation"
+          ],
+          "project_missing_slots": [
+            "direct_observation"
+          ],
+          "project_background_only_slots": [],
+          "project_conclusion_admissibility": {
+            "admissible": false,
+            "blockers": [
+              "missing_required_slot:direct_observation"
+            ]
+          },
+          "association_status_counts": {}
+        }
+      ]
+    },
+    {
+      "schema_version": "sh_cluster_coverage_projection_v1",
+      "cluster_index": 2,
+      "cluster_name": "unlinked theme",
+      "paper_ids": [
+        "W4"
+      ],
+      "primary_subhypothesis_ids": [],
+      "secondary_subhypothesis_ids": [],
+      "gap_subhypothesis_ids": [
+        "SH1",
+        "SH2"
+      ],
+      "subhypotheses": [
+        {
+          "sub_hypothesis_id": "SH1",
+          "cluster_evidence_state": "NO_CLUSTER_ASSOCIATION",
+          "evidence_paper_ids": [],
+          "background_paper_ids": [],
+          "graph_expanded_candidate_paper_ids": [],
+          "seed_candidate_paper_ids": [],
+          "cluster_covered_slots": [],
+          "cluster_background_slots": [],
+          "cluster_uncovered_required_slots": [
+            "candidate",
+            "comparator",
+            "background_framework"
+          ],
+          "project_missing_slots": [
+            "comparator"
+          ],
+          "project_background_only_slots": [],
+          "project_conclusion_admissibility": {
+            "admissible": false,
+            "blockers": [
+              "missing_required_slot:comparator"
+            ]
+          },
+          "association_status_counts": {}
+        },
+        {
+          "sub_hypothesis_id": "SH2",
+          "cluster_evidence_state": "NO_CLUSTER_ASSOCIATION",
+          "evidence_paper_ids": [],
+          "background_paper_ids": [],
+          "graph_expanded_candidate_paper_ids": [],
+          "seed_candidate_paper_ids": [],
+          "cluster_covered_slots": [],
+          "cluster_background_slots": [],
+          "cluster_uncovered_required_slots": [
+            "direct_observation"
+          ],
+          "project_missing_slots": [
+            "direct_observation"
+          ],
+          "project_background_only_slots": [],
+          "project_conclusion_admissibility": {
+            "admissible": false,
+            "blockers": [
+              "missing_required_slot:direct_observation"
+            ]
+          },
+          "association_status_counts": {}
+        }
+      ]
+    }
+  ],
+  "project_subhypotheses": [
+    {
+      "sub_hypothesis_id": "SH1",
+      "required_slots": [
+        "candidate",
+        "comparator",
+        "background_framework"
+      ],
+      "covered_slots": [
+        "candidate",
+        "background_framework"
+      ],
+      "background_only_slots": [],
+      "missing_slots": [
+        "comparator"
+      ],
+      "conclusion_admissibility": {
+        "admissible": false,
+        "blockers": [
+          "missing_required_slot:comparator"
+        ]
+      }
+    },
+    {
+      "sub_hypothesis_id": "SH2",
+      "required_slots": [
+        "direct_observation"
+      ],
+      "covered_slots": [],
+      "background_only_slots": [],
+      "missing_slots": [
+        "direct_observation"
+      ],
+      "conclusion_admissibility": {
+        "admissible": false,
+        "blockers": [
+          "missing_required_slot:direct_observation"
+        ]
+      }
+    }
+  ],
+  "unrepresented_subhypothesis_ids": [
+    "SH2"
+  ]
+}

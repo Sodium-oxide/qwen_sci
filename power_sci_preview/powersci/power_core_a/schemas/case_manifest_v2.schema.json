@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qwen-zhikan.local/schemas/case_manifest_v2.json",
+  "title": "CaseManifestV2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "case_id", "case_version", "benchmark_level", "name", "equation_ir_ref", "system_base", "resources", "variables", "initial_conditions", "parameters", "time_domain", "events", "expected_checks", "random_seed", "provenance"],
+  "properties": {
+    "schema_version": {"const": "case_manifest_v2"},
+    "case_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "case_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "benchmark_level": {"enum": ["B0", "B1", "B2"]}, "name": {"type": "string", "minLength": 1, "maxLength": 240},
+    "equation_ir_ref": {"$ref": "#/$defs/ref"}, "system_base": {"$ref": "#/$defs/base"},
+    "resources": {"type": "array", "items": {"$ref": "#/$defs/resource"}},
+    "variables": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/variable"}},
+    "initial_conditions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/value"}},
+    "parameters": {"type": "array", "items": {"$ref": "#/$defs/value"}},
+    "time_domain": {"$ref": "#/$defs/time"}, "events": {"type": "array", "items": {"$ref": "#/$defs/event"}},
+    "expected_checks": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["V1", "V2", "V3"]}},
+    "random_seed": {"type": "integer", "minimum": 0, "maximum": 4294967295}, "provenance": {"$ref": "#/$defs/provenance"}
+  },
+  "$defs": {
+    "ref": {"type": "object", "additionalProperties": false, "required": ["schema_name", "schema_version", "artifact_id", "content_hash"], "properties": {"schema_name": {"const": "EquationIRV2"}, "schema_version": {"const": "equation_ir_v2"}, "artifact_id": {"type": "string", "minLength": 1}, "content_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}},
+    "base": {"type": "object", "additionalProperties": false, "required": ["s_base_mva", "frequency_hz"], "properties": {"s_base_mva": {"type": "number", "exclusiveMinimum": 0}, "frequency_hz": {"type": "number", "exclusiveMinimum": 0}}},
+    "resource": {"type": "object", "additionalProperties": false, "required": ["resource_id", "role", "uri", "media_type", "content_hash"], "properties": {"resource_id": {"type": "string", "minLength": 1}, "role": {"enum": ["input", "truth", "reference", "andes_case", "dataset"]}, "uri": {"type": "string", "minLength": 1}, "media_type": {"type": "string", "minLength": 1}, "content_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}},
+    "variable": {"type": "object", "additionalProperties": false, "required": ["variable_id", "unit", "coordinate", "reference_mode", "normalization"], "properties": {"variable_id": {"type": "string", "minLength": 1}, "unit": {"type": "string", "minLength": 1}, "coordinate": {"type": "string", "minLength": 1}, "reference_mode": {"enum": ["ABSOLUTE", "DEVIATION", "NOT_APPLICABLE"]}, "normalization": {"enum": ["PHYSICAL", "PER_UNIT"]}, "sample_rate_hz": {"type": "number", "exclusiveMinimum": 0}}},
+    "value": {"type": "object", "additionalProperties": false, "required": ["variable_id", "value", "unit"], "properties": {"variable_id": {"type": "string", "minLength": 1}, "value": {"type": "number"}, "unit": {"type": "string", "minLength": 1}}},
+    "time": {"type": "object", "additionalProperties": false, "required": ["start", "stop", "step", "unit"], "properties": {"start": {"type": "number"}, "stop": {"type": "number"}, "step": {"type": "number", "exclusiveMinimum": 0}, "unit": {"type": "string", "minLength": 1}}},
+    "event": {"type": "object", "additionalProperties": false, "required": ["event_id", "type", "time", "target"], "properties": {"event_id": {"type": "string", "minLength": 1}, "type": {"enum": ["STEP", "FAULT", "CLEAR", "PARAMETER_CHANGE"]}, "time": {"type": "number"}, "target": {"type": "string", "minLength": 1}, "value": {"type": "number"}, "unit": {"type": "string", "minLength": 1}}},
+    "provenance": {"type": "object", "additionalProperties": false, "required": ["source", "license", "created_at", "created_by"], "properties": {"source": {"type": "string", "minLength": 1}, "license": {"type": "string", "minLength": 1}, "created_at": {"type": "string", "format": "date-time"}, "created_by": {"type": "string", "minLength": 1}}}
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": "sh_graph_provenance_v1",
+  "project_id": "sci_current_run",
+  "project_context_fingerprint": "context-A",
+  "paper_annotations": {
+    "seed-paper": [
+      {
+        "schema_version": "sh_node_annotation_v1",
+        "project_id": "sci_current_run",
+        "project_context_fingerprint": "context-A",
+        "sub_hypothesis_id": "SH1",
+        "association_stage": "SEED_SELECTION",
+        "association_status": "LEDGER_CONFIRMED_EVIDENCE",
+        "evidence_assessment_source": "evidence_coverage_ledger_v1",
+        "root_seed_paper_ids": [
+          "seed-paper"
+        ],
+        "parent_paper_ids": [],
+        "lineage_depth": 0,
+        "citation_direction": "",
+        "covered_slots": [
+          "candidate"
+        ],
+        "slot_recovery_task_ids": [
+          "SH1.candidate"
+        ],
+        "expected_evidence_roles": [
+          "DIRECT_OBSERVATION"
+        ],
+        "root_evidence_roles": [],
+        "selected_for_slots": [
+          "candidate"
+        ],
+        "seed_kind": "evidence_seed",
+        "graph_expansion_mode": "",
+        "seed_selection_basis": "",
+        "evidence_use_mode": "DIRECT_LEDGER_EVIDENCE",
+        "admission_status": "DIRECT_EVIDENCE",
+        "graph_value_status": "EXPAND",
+        "semantic_relevance_score": null,
+        "semantic_overall_relation": "",
+        "semantic_contribution_types": [],
+        "semantic_slot_contributions": [],
+        "semantic_claim_limits": [],
+        "scope_status": "VERIFIED_BY_LEDGER"
+      }
+    ]
+  },
+  "graph_expansion_records": []
+}

@@ -1,0 +1,171 @@
+{
+  "created_at": "2026-09-03T14:39:09.059331Z",
+  "last_updated_at": "2026-09-03T14:39:09.772052Z",
+  "restart_history": [],
+  "revision": 9,
+  "schema_version": "science_state_v1",
+  "science_run_id": "closed-loop",
+  "stages": {
+    "author": {
+      "attempt": 1,
+      "execution_owner": null,
+      "failure": {
+        "error_type": "ScienceWorkflowError",
+        "exit_code": 40,
+        "failed_at": "2026-09-03T14:39:09.772052Z",
+        "message": "author published manifest validation failed: exp_design artifact author_json SHA-256 does not match its manifest"
+      },
+      "finished_at": "2026-09-03T14:39:09.772052Z",
+      "input_identity": {
+        "author_input_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\experiment_design\\attempt-001\\experiment_design_author.json",
+        "design_identity": {
+          "handoff_fingerprint": "53d81f0a9282c4f6bbe9e3f2dc3cd4874a3cfb1fb4ca7388c35231ff58eaab1e",
+          "manifest_fingerprint": "e43be039f0a45251a57f3246c7b7e26fef3fed43429b8b13fac16970680d5c74",
+          "project_context_fingerprint": "science-workflow-context",
+          "project_id": "science-workflow",
+          "selected_direction_id": "direction-primary",
+          "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+          "survey_run_id": "closed-loop-survey-001"
+        },
+        "experiment_design_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\experiment_design\\attempt-001\\experiment_design_manifest.json",
+        "idea_identity": {
+          "handoff_fingerprint": "53d81f0a9282c4f6bbe9e3f2dc3cd4874a3cfb1fb4ca7388c35231ff58eaab1e",
+          "manifest_fingerprint": "e43be039f0a45251a57f3246c7b7e26fef3fed43429b8b13fac16970680d5c74",
+          "project_context_fingerprint": "science-workflow-context",
+          "project_id": "science-workflow",
+          "selected_direction_id": "direction-primary",
+          "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+          "survey_run_id": "closed-loop-survey-001"
+        },
+        "idea_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\idea\\attempt-001\\idea_manifest.json",
+        "idea_result_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\idea\\attempt-001\\idea_result.json",
+        "survey_identity": {
+          "handoff_fingerprint": "53d81f0a9282c4f6bbe9e3f2dc3cd4874a3cfb1fb4ca7388c35231ff58eaab1e",
+          "manifest_fingerprint": "e43be039f0a45251a57f3246c7b7e26fef3fed43429b8b13fac16970680d5c74",
+          "project_context_fingerprint": "science-workflow-context",
+          "project_id": "science-workflow",
+          "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+          "survey_run_id": "closed-loop-survey-001"
+        },
+        "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json"
+      },
+      "invalidated_attempts": [],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": "2026-09-03T14:39:09.632978Z",
+      "status": "FAILED"
+    },
+    "exp_design": {
+      "attempt": 1,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": "2026-09-03T14:39:09.552533Z",
+      "input_identity": {
+        "idea_identity": {
+          "handoff_fingerprint": "53d81f0a9282c4f6bbe9e3f2dc3cd4874a3cfb1fb4ca7388c35231ff58eaab1e",
+          "manifest_fingerprint": "e43be039f0a45251a57f3246c7b7e26fef3fed43429b8b13fac16970680d5c74",
+          "project_context_fingerprint": "science-workflow-context",
+          "project_id": "science-workflow",
+          "selected_direction_id": "direction-primary",
+          "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+          "survey_run_id": "closed-loop-survey-001"
+        },
+        "idea_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\idea\\attempt-001\\idea_manifest.json",
+        "idea_result_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\idea\\attempt-001\\idea_result.json",
+        "survey_identity": {
+          "handoff_fingerprint": "53d81f0a9282c4f6bbe9e3f2dc3cd4874a3cfb1fb4ca7388c35231ff58eaab1e",
+          "manifest_fingerprint": "e43be039f0a45251a57f3246c7b7e26fef3fed43429b8b13fac16970680d5c74",
+          "project_context_fingerprint": "science-workflow-context",
+          "project_id": "science-workflow",
+          "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+          "survey_run_id": "closed-loop-survey-001"
+        },
+        "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json"
+      },
+      "invalidated_attempts": [],
+      "outputs": {
+        "author_json": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\experiment_design\\attempt-001\\experiment_design_author.json",
+        "experiment_design_json": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\experiment_design\\attempt-001\\experiment_design.json",
+        "experiment_design_manifest": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\experiment_design\\attempt-001\\experiment_design_manifest.json",
+        "experiment_design_markdown": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\experiment_design\\attempt-001\\experiment_design.md"
+      },
+      "result_identity": {
+        "handoff_fingerprint": "53d81f0a9282c4f6bbe9e3f2dc3cd4874a3cfb1fb4ca7388c35231ff58eaab1e",
+        "manifest_fingerprint": "e43be039f0a45251a57f3246c7b7e26fef3fed43429b8b13fac16970680d5c74",
+        "project_context_fingerprint": "science-workflow-context",
+        "project_id": "science-workflow",
+        "result_sha256": "e637c12a98800fbde503c8584d83879f387e897e935e0dcf57df42bea36eea1a",
+        "selected_direction_id": "direction-primary",
+        "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+        "survey_run_id": "closed-loop-survey-001"
+      },
+      "result_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\experiment_design\\attempt-001\\experiment_design_manifest.json",
+      "started_at": "2026-09-03T14:39:09.447059Z",
+      "status": "COMPLETED"
+    },
+    "idea": {
+      "attempt": 1,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": "2026-09-03T14:39:09.400273Z",
+      "input_identity": {
+        "survey_identity": {
+          "handoff_fingerprint": "53d81f0a9282c4f6bbe9e3f2dc3cd4874a3cfb1fb4ca7388c35231ff58eaab1e",
+          "manifest_fingerprint": "e43be039f0a45251a57f3246c7b7e26fef3fed43429b8b13fac16970680d5c74",
+          "project_context_fingerprint": "science-workflow-context",
+          "project_id": "science-workflow",
+          "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+          "survey_run_id": "closed-loop-survey-001"
+        },
+        "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+        "topic": "exact handoff topic"
+      },
+      "invalidated_attempts": [],
+      "outputs": {
+        "idea_manifest": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\idea\\attempt-001\\idea_manifest.json",
+        "idea_result": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\idea\\attempt-001\\idea_result.json"
+      },
+      "result_identity": {
+        "handoff_fingerprint": "53d81f0a9282c4f6bbe9e3f2dc3cd4874a3cfb1fb4ca7388c35231ff58eaab1e",
+        "manifest_fingerprint": "e43be039f0a45251a57f3246c7b7e26fef3fed43429b8b13fac16970680d5c74",
+        "project_context_fingerprint": "science-workflow-context",
+        "project_id": "science-workflow",
+        "result_sha256": "30bbc3426add02700ea713269151e0f9b4331abe81ea859c1de2c25b74bbb25a",
+        "selected_direction_id": "direction-primary",
+        "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+        "survey_run_id": "closed-loop-survey-001"
+      },
+      "result_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\idea\\attempt-001\\idea_manifest.json",
+      "started_at": "2026-09-03T14:39:09.341970Z",
+      "status": "COMPLETED"
+    },
+    "survey": {
+      "attempt": 1,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": "2026-09-03T14:39:09.314560Z",
+      "input_identity": {
+        "science_run_id": "closed-loop",
+        "topic_fingerprint": "46e7369612ae3738e20597df6c451af2fa7732efc16d46359daa54d231b6d47e"
+      },
+      "invalidated_attempts": [],
+      "outputs": {
+        "survey_manifest": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json"
+      },
+      "result_identity": {
+        "handoff_fingerprint": "53d81f0a9282c4f6bbe9e3f2dc3cd4874a3cfb1fb4ca7388c35231ff58eaab1e",
+        "manifest_fingerprint": "e43be039f0a45251a57f3246c7b7e26fef3fed43429b8b13fac16970680d5c74",
+        "project_context_fingerprint": "science-workflow-context",
+        "project_id": "science-workflow",
+        "result_sha256": "e43be039f0a45251a57f3246c7b7e26fef3fed43429b8b13fac16970680d5c74",
+        "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+        "survey_run_id": "closed-loop-survey-001"
+      },
+      "result_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_workflow_rejects_upstream0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+      "started_at": "2026-09-03T14:39:09.200354Z",
+      "status": "COMPLETED"
+    }
+  },
+  "status": "FAILED"
+}

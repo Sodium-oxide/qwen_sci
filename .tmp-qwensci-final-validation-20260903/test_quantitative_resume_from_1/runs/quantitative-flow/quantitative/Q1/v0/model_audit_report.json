@@ -1,0 +1,67 @@
+{
+  "capability": {
+    "capability": "COMPOSABLE",
+    "kind": "MATHIR",
+    "reason": "The model is fully represented by audited MathIR and an approved solver adapter.",
+    "solver_id": "scipy_solve_ivp",
+    "system_type": "ODE_IVP"
+  },
+  "checks": {
+    "execution_text_or_code_absent": true,
+    "mathir_valid": true,
+    "model_spec_valid": true,
+    "pdeir_valid": false,
+    "solver_available": true,
+    "trusted_expression_ast": true
+  },
+  "errors": [],
+  "execution_ir": {
+    "document": {
+      "derivatives": {
+        "x": {
+          "args": [
+            {
+              "args": [
+                {
+                  "name": "k",
+                  "op": "variable"
+                }
+              ],
+              "op": "neg"
+            },
+            {
+              "name": "x",
+              "op": "variable"
+            }
+          ],
+          "op": "mul"
+        }
+      },
+      "parameters": {
+        "k": 1.0
+      },
+      "schema_version": "mathir_v1",
+      "solver_options": {
+        "max_step": 0.1
+      },
+      "states": [
+        {
+          "id": "x",
+          "initial": 1.0
+        }
+      ],
+      "system_type": "ODE_IVP",
+      "time_span": [
+        0.0,
+        1.0
+      ]
+    },
+    "kind": "MATHIR",
+    "schema_version": "execution_ir_v1"
+  },
+  "execution_ir_identity": "8447c6607df5b511620817b99366b9c4ff36c78eee494f8e57ba8be73aa1d30f",
+  "mathir_identity": "a645eeab6f5d7e02dc674920daf9b663f7dbe8026d33937bcec8cbba2eaa83a6",
+  "model_spec_identity": "2c0095d860730d6b164c4e9acccc533a1a2f50c30fd7125719bb3530dc7933b2",
+  "schema_version": "quantitative_model_audit_v1",
+  "status": "MODEL_AUDITED"
+}

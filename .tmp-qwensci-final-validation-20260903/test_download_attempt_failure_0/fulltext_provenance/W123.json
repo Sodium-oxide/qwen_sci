@@ -1,0 +1,96 @@
+{
+  "attempts": [
+    {
+      "bytes_written": 0,
+      "cache_hit": false,
+      "content_type": "text/html",
+      "downloaded": false,
+      "elapsed_seconds": 0.0,
+      "final_host": "repo.example",
+      "final_url": "https://repo.example/missing.pdf",
+      "host": "first.example",
+      "http_status": 404,
+      "kind": "pdf",
+      "priority": 0,
+      "requested_host": "first.example",
+      "singleflight_shared": false,
+      "source": "unpaywall.best_oa_location",
+      "sources": [
+        "unpaywall.best_oa_location"
+      ],
+      "status": "not_found",
+      "url": "https://first.example/paper.pdf"
+    },
+    {
+      "bytes_written": 12,
+      "cache_hit": false,
+      "content_type": "application/pdf",
+      "downloaded": true,
+      "elapsed_seconds": 0.001,
+      "final_host": "repository.example",
+      "final_url": "https://repository.example/accepted.pdf",
+      "host": "repository.example",
+      "http_status": 200,
+      "kind": "pdf",
+      "priority": 10,
+      "requested_host": "repository.example",
+      "singleflight_shared": false,
+      "source": "unpaywall.oa_locations",
+      "sources": [
+        "unpaywall.oa_locations"
+      ],
+      "status": "downloaded_response",
+      "url": "https://repository.example/accepted.pdf"
+    }
+  ],
+  "doi": "10.1000/fulltext-test",
+  "outcome": {
+    "pdf_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_download_attempt_failure_0\\pdf_papers\\W123\\W123.pdf",
+    "selected_source": "unpaywall.oa_locations",
+    "selected_url": "https://repository.example/accepted.pdf",
+    "status": "downloaded"
+  },
+  "paper_id": "W123",
+  "resolution": {
+    "access_context_generation": "anonymous-v1",
+    "candidate_count": 3,
+    "candidates": [
+      {
+        "kind": "pdf",
+        "priority": 0,
+        "source": "unpaywall.best_oa_location",
+        "sources": [
+          "unpaywall.best_oa_location"
+        ],
+        "url": "https://first.example/paper.pdf"
+      },
+      {
+        "kind": "pdf",
+        "priority": 10,
+        "source": "unpaywall.oa_locations",
+        "sources": [
+          "unpaywall.oa_locations"
+        ],
+        "url": "https://repository.example/accepted.pdf"
+      },
+      {
+        "doi": "10.1000/fulltext-test",
+        "kind": "landing_page",
+        "oa_evidence": "unpaywall.oa_location",
+        "priority": 20,
+        "source": "doi.landing_fallback",
+        "sources": [
+          "doi.landing_fallback"
+        ],
+        "url": "https://doi.org/10.1000/fulltext-test"
+      }
+    ],
+    "deferred_candidates": [],
+    "disabled_candidates": [],
+    "unpaywall": {
+      "candidate_count": 2,
+      "status": "resolved"
+    }
+  },
+  "schema_version": "fulltext_acquisition_v1"
+}

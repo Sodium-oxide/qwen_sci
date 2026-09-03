@@ -1,0 +1,143 @@
+{
+  "artifact_fingerprint": "5641ddd39d19761f325f4bb403c7c7be4f97f7a7f98e06cb1dfb826d1d2e8e4a",
+  "contradictions": [],
+  "coverage": {
+    "contradiction_ids": [],
+    "coverage_matrix_version": "survey_gap_coverage_v1",
+    "project_context_fingerprint": "context-1",
+    "project_id": "sci_run_1",
+    "rows": [
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "direct_observation"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:sh1:missing_boundary_condition:validity_domain:the_observed_relation_has_no_established_validity_regime:b7568fb55046"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "SH1",
+        "target_slot": "validity_domain"
+      }
+    ],
+    "schema_version": "survey_gap_coverage_v1",
+    "status_counts": {
+      "candidate_pending": 1,
+      "uncovered": 1
+    },
+    "survey_run_id": "20260826-120000-000001"
+  },
+  "decisions": [
+    {
+      "adjudication_id": "gap_adjudication:gap_group_sh1_validity_domain_missing_boundary_condition_gap_candidate_sh1_missing_boundary_condition_validity_domain_the_observed_relation_has_no_established_validity_regime_b7568fb55046_94760e79c0fe:4a2b28e2a034",
+      "candidate_id": "gap_candidate:sh1:missing_boundary_condition:validity_domain:the_observed_relation_has_no_established_validity_regime:b7568fb55046",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:sh1:validity_domain:missing_boundary_condition:gap_candidate_sh1_missing_boundary_condition_validity_domain_the_observed_relation_has_no_established_validity_regime_b7568fb55046:94760e79c0fe",
+      "reason": "Candidate is source-grounded and meets the confidence threshold."
+    }
+  ],
+  "schema_version": "survey_gap_adjudication_v1",
+  "synthesis": {
+    "candidates": [
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "missing_boundary_condition"
+        ],
+        "candidate_fingerprint": "6409be2fe65c7e862c38cd55cf8fc75f882ebff46b0ddba0205e102c202b00be",
+        "candidate_id": "gap_candidate:sh1:missing_boundary_condition:validity_domain:the_observed_relation_has_no_established_validity_regime:b7568fb55046",
+        "candidate_ids": [
+          "gap_candidate:sh1:missing_boundary_condition:validity_domain:the_observed_relation_has_no_established_validity_regime:b7568fb55046"
+        ],
+        "claim_scope": "",
+        "confidence": 0.9,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "survey_prose_llm",
+        "gap_kind": "missing_boundary_condition",
+        "group_id": "gap_group:sh1:validity_domain:missing_boundary_condition:gap_candidate_sh1_missing_boundary_condition_validity_domain_the_observed_relation_has_no_established_validity_regime_b7568fb55046:94760e79c0fe",
+        "paper_ids": [],
+        "rationale": "",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/0",
+            "section": "Survey"
+          }
+        ],
+        "statement": "The observed relation has no established validity regime.",
+        "status": "candidate",
+        "subhypothesis_id": "SH1",
+        "support_level": "speculative",
+        "target_slot": "validity_domain"
+      }
+    ],
+    "groups": [
+      {
+        "candidate_ids": [
+          "gap_candidate:sh1:missing_boundary_condition:validity_domain:the_observed_relation_has_no_established_validity_regime:b7568fb55046"
+        ],
+        "group_id": "gap_group:sh1:validity_domain:missing_boundary_condition:gap_candidate_sh1_missing_boundary_condition_validity_domain_the_observed_relation_has_no_established_validity_regime_b7568fb55046:94760e79c0fe",
+        "paper_evidence": [],
+        "paper_ids": [],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "missing_boundary_condition"
+          ],
+          "candidate_fingerprint": "6409be2fe65c7e862c38cd55cf8fc75f882ebff46b0ddba0205e102c202b00be",
+          "candidate_id": "gap_candidate:sh1:missing_boundary_condition:validity_domain:the_observed_relation_has_no_established_validity_regime:b7568fb55046",
+          "candidate_ids": [
+            "gap_candidate:sh1:missing_boundary_condition:validity_domain:the_observed_relation_has_no_established_validity_regime:b7568fb55046"
+          ],
+          "claim_scope": "",
+          "confidence": 0.9,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "survey_prose_llm",
+          "gap_kind": "missing_boundary_condition",
+          "group_id": "gap_group:sh1:validity_domain:missing_boundary_condition:gap_candidate_sh1_missing_boundary_condition_validity_domain_the_observed_relation_has_no_established_validity_regime_b7568fb55046:94760e79c0fe",
+          "paper_ids": [],
+          "rationale": "",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "survey.md",
+              "json_pointer": "/sections/0",
+              "section": "Survey"
+            }
+          ],
+          "statement": "The observed relation has no established validity regime.",
+          "status": "candidate",
+          "subhypothesis_id": "SH1",
+          "support_level": "speculative",
+          "target_slot": "validity_domain"
+        },
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/0",
+            "section": "Survey"
+          }
+        ]
+      }
+    ],
+    "schema_version": "survey_gap_coverage_v1"
+  }
+}

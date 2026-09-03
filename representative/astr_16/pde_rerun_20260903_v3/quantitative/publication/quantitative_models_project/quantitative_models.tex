@@ -1,0 +1,434 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+
+\usepackage{amsmath}
+
+\usepackage[T1]{fontenc}
+
+\title{Mathematical Modeling and Numerical Simulation Supplement}
+
+\author{Anonymous Research Plan Author}
+
+\date{}
+
+\begin{document}
+
+\setlength{\emergencystretch}{3em}
+
+\maketitle
+
+\section{Q1 (final: v0)}
+
+\noindent\textbf{Abstract—} A parsimonious ordinary differential equation framework modeling the coupled evolution of neutron star spin period and magnetic inclination angle under vacuum dipole braking, wind enhancement, inclination decay, and accretion-driven spin-up. The model isolates the dynamical signatures of isolated magnetic-dipole evolution versus binary recycling by encoding phase-dependent torque switching directly into the state derivatives, enabling population-level statistical comparison against observed braking indices and characteristic ages.
+
+\subsection{Question and Scope}
+
+\noindent\textbf{Question.} Can the joint distribution of braking index n and characteristic age tau\_c statistically distinguish isolated magnetic-dipole evolution from binary recycling populations, given specific torque model constraints?
+
+
+
+First executable model: parsimonious ODE integration of single pulsar tracks for isolated magnetic-dipole spin-down with optional inclination decay and wind braking, embedded in a Monte Carlo population synthesis framework. Binary recycling is represented as an accretion-phase switch with an effective spin-up law. The model excludes glitches, magnetospheric state changes, variable moment of inertia, detailed companion ablation, and full binary evolution.
+
+\subsection{Model Assumptions and Applicability}
+
+\begin{itemize}\raggedright
+\item ASM-001: Stellar geometry, electromagnetic constants, and moment of inertia are absorbed into effective braking constants K\_\allowbreak{}dipole and K\_\allowbreak{}acc. If violated: Derived constants lose direct physical interpretability and may require explicit microphysical coupling.
+\item ASM-002: Magnetic inclination evolves smoothly via exponential decay without discontinuous glitches or magnetospheric state transitions. If violated: Smooth ODE integration fails to capture abrupt angular momentum transfers, invalidating continuous derivative assumptions.
+\item ASM-003: Accretion torque is active exclusively during t < t\_\allowbreak{}acc with nonzero Mdot; isolated dipole torque applies otherwise. If violated: Simultaneous application of opposing torques produces unphysical period trajectories outside the validated regime.
+\end{itemize}
+
+\subsection{Symbols and Units}
+
+\begin{center}
+\small
+\begin{tabular}{|p{0.12\linewidth}|p{0.15\linewidth}|p{0.46\linewidth}|p{0.17\linewidth}|}
+\hline
+ID & Symbol & Meaning & Unit \\ \hline
+S-P & $P$ & Spin period & $\mathrm{s}$ \\ \hline
+S-alpha & $\alpha$ & Magnetic inclination angle & $\mathrm{rad}$ \\ \hline
+S-t & $t$ & Integration time & $\mathrm{s}$ \\ \hline
+S-P0 & $P_0$ & Initial spin period & $\mathrm{s}$ \\ \hline
+S-alpha0 & $\alpha_0$ & Initial inclination angle & $\mathrm{rad}$ \\ \hline
+S-B0 & $B_0$ & Surface magnetic field strength & $\mathrm{T}$ \\ \hline
+S-Kdip & $K_{\mathrm{dipole}}$ & Vacuum dipole braking constant & $\mathrm{s}\,\mathrm{T}^{-2}$ \\ \hline
+S-eta & $\eta$ & Wind braking efficiency & $\mathrm{dimensionless}$ \\ \hline
+S-tau & $\tau_\alpha$ & Inclination decay timescale & $\mathrm{s}$ \\ \hline
+S-Mdot & $\dot{M}$ & Mass accretion rate & $\mathrm{kg}\,\mathrm{s}^{-1}$ \\ \hline
+S-Kacc & $K_{\mathrm{acc}}$ & Accretion spin-up constant & $\mathrm{s}^{2}\,\mathrm{kg}^{-1}$ \\ \hline
+S-tacc & $t_{\mathrm{acc}}$ & Accretion phase duration & $\mathrm{s}$ \\ \hline
+S-Tmax & $T_{\mathrm{max}}$ & Maximum simulated age & $\mathrm{s}$ \\ \hline
+S-Pdotmin & $P_{\mathrm{dot,min}}$ & Minimum detectable period derivative & $\mathrm{dimensionless}$ \\ \hline
+S-Nmc & $N_{\mathrm{mc}}$ & Monte Carlo sample count & $\mathrm{dimensionless}$ \\ \hline
+\end{tabular}
+\end{center}
+
+\subsection{Mechanistic Equations}
+
+\begin{equation}\label{eq:Q1-EQ-001}
+\frac{dP}{dt} = \begin{cases} -\frac{K_{\mathrm{acc}} \dot{M}}{\max(P, 0.01)} & \mathrm{if} t < t_{\mathrm{acc}} \land \dot{M} > 0 \\ +\frac{K_{\mathrm{dipole}} B_0^2 \sin^2(\alpha)(1+\eta)}{\max(P, 0.01)} & \mathrm{otherwise} \end{cases}
+\end{equation}
+\noindent\textbf{Q1-EQ-001 where} S-P: Spin period; S-t: Integration time; S-Kacc: Accretion spin-up constant; S-Mdot: Mass accretion rate; S-tacc: Accretion phase duration; S-Kdip: Vacuum dipole braking constant; S-B0: Surface magnetic field strength; S-alpha: Magnetic inclination angle; S-eta: Wind braking efficiency.
+
+\begin{equation}\label{eq:Q1-EQ-002}
+\frac{d\alpha}{dt} = -\frac{\alpha}{\tau_\alpha}
+\end{equation}
+\noindent\textbf{Q1-EQ-002 where} S-alpha: Magnetic inclination angle; S-t: Integration time; S-tau: Inclination decay timescale.
+
+\begin{equation}\label{eq:Q1-EQ-003}
+n(t) = \frac{P(t) \cdot \frac{d^2P}{dt^2}}{\left(\frac{dP}{dt}\right)^2}
+\end{equation}
+\noindent\textbf{Q1-EQ-003 where} S-P: Spin period.
+
+\begin{equation}\label{eq:Q1-EQ-004}
+\tau_c(t) = \frac{P(t)}{2 \cdot \frac{dP}{dt}}
+\end{equation}
+\noindent\textbf{Q1-EQ-004 where} S-P: Spin period.
+
+\subsection{Initial Conditions, Boundary Conditions, and Constraints}
+
+\paragraph{Initial Conditions}
+\begin{itemize}\raggedright
+\item \{'state': 'S-P', 'value': 0.5\}
+\item \{'state': 'S-alpha', 'value': 0.7853981633974483\}
+\end{itemize}
+
+\paragraph{Boundary Conditions}
+\begin{itemize}\raggedright
+\item \{'condition': 'Integration terminates when t reaches T\_\allowbreak{}max or |dP/\allowbreak{}dt| falls below Pdot\_\allowbreak{}min', 'type': 'TERMINATION'\}
+\end{itemize}
+
+\paragraph{Objective and Constraints}
+\begin{itemize}\raggedright
+\item \{'objective': 'Generate distinct P-Pdot-n trajectories for isolated and recycled populations to enable statistical discrimination.'\}
+\item \{'constraint': 'Sign convention: positive dP/\allowbreak{}dt denotes isolated spin-down; negative dP/\allowbreak{}dt denotes accretion spin-up. Torque branches must not activate simultaneously.'\}
+\end{itemize}
+
+\subsection{Algorithm}
+
+\noindent\textbf{Algorithm}
+\paragraph{Input}
+\begin{itemize}\raggedright
+\item Initial conditions (P0, alpha0)
+\item Approved parameter set
+\item Scenario configuration
+\end{itemize}
+\paragraph{Output}
+\begin{itemize}\raggedright
+\item Time series arrays for P(t), alpha(t)
+\item Derived diagnostics n(t), tau\_\allowbreak{}c(t)
+\item Population histograms
+\end{itemize}
+\paragraph{Steps}
+\begin{itemize}\raggedright
+\item Initialize state vector with P0 and alpha0
+\item Select scenario parameter overrides
+\item Evaluate derivative AST at current time t
+\item Advance state using fixed-step integrator
+\item Compute n(t) and tau\_\allowbreak{}c(t) from derivatives
+\item Check termination criteria against T\_\allowbreak{}max and Pdot\_\allowbreak{}min
+\item Repeat until termination or N\_\allowbreak{}mc tracks completed
+\end{itemize}
+
+\subsection{Parameters, Scenarios, and Numerical Settings}
+
+\paragraph{Parameters}
+\begin{itemize}\raggedright
+\item \{'symbol\_\allowbreak{}id': 'S-P0', 'value': 0.5\}
+\item \{'symbol\_\allowbreak{}id': 'S-alpha0', 'value': 0.7853981633974483\}
+\item \{'symbol\_\allowbreak{}id': 'S-B0', 'value': 100000000.0\}
+\item \{'symbol\_\allowbreak{}id': 'S-Kdip', 'value': 9.765625e-32\}
+\item \{'symbol\_\allowbreak{}id': 'S-eta', 'value': 0.1\}
+\item \{'symbol\_\allowbreak{}id': 'S-tau', 'value': 315576000000000.0\}
+\item \{'symbol\_\allowbreak{}id': 'S-Mdot', 'value': 630000000000000.0\}
+\item \{'symbol\_\allowbreak{}id': 'S-Kacc', 'value': 6.3e-31\}
+\item \{'symbol\_\allowbreak{}id': 'S-tacc', 'value': 315576000000000.0\}
+\item \{'symbol\_\allowbreak{}id': 'S-Tmax', 'value': 3155760000000000.0\}
+\item \{'symbol\_\allowbreak{}id': 'S-Pdotmin', 'value': 1e-22\}
+\item \{'symbol\_\allowbreak{}id': 'S-Nmc', 'value': 5000.0\}
+\end{itemize}
+
+\paragraph{Scenarios}
+\begin{itemize}\raggedright
+\item \{'scenario\_\allowbreak{}id': 'isolated\_\allowbreak{}dipole', 'parameter\_\allowbreak{}overrides': \{'K\_\allowbreak{}acc': 0.0, 'Mdot': 0.0, 't\_\allowbreak{}acc': 0.0\}\}
+\item \{'scenario\_\allowbreak{}id': 'binary\_\allowbreak{}recycling', 'parameter\_\allowbreak{}overrides': \{'K\_\allowbreak{}acc': 5e-31\}\}
+\end{itemize}
+
+\noindent\textbf{Solver family.} Explicit Runge-Kutta 4th Order.
+
+\subsection{Parameter Provenance and Applicability}
+
+\noindent\textbf{Approved parameter-set identity.} 0f0174315925c8e5\allowbreak{}b143507cd77c961e\allowbreak{}1becdad36afebaa3\allowbreak{}1e7f6df12d27946c.
+\begin{itemize}\raggedright
+\item initial\_\allowbreak{}period (P0) \ensuremath{=} 0.5 s; role BOUNDARY\_\allowbreak{}CONDITION; status APPROVED\_\allowbreak{}USER\_\allowbreak{}INPUT; source: Birth and Evolution of Isolated Radio Pulsars; DOI 10.1086/\allowbreak{}501516; document Q1-FGK2006; locator: preprint; applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}For isolated or recycled neutron stars at the beginning of the simulated spin-down phase, with period measured in seconds and no glitch-induced period jump at the initial epoch.. uncertainty: not reported.
+\item initial\_\allowbreak{}inclination (alpha0) \ensuremath{=} 0.7853981633974483 rad; role BOUNDARY\_\allowbreak{}CONDITION; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}For dipole torque models with approximately aligned magnetic and rotational axes represented by an angle in radians; treated as the starting value before inclination decay.. uncertainty: not reported.
+\item initial\_\allowbreak{}surface\_\allowbreak{}magnetic\_\allowbreak{}field (B0) \ensuremath{=} 100000000.0 T; role BOUNDARY\_\allowbreak{}CONDITION; status APPROVED\_\allowbreak{}USER\_\allowbreak{}INPUT; source: Binary and Millisecond Pulsars; DOI 10.12942/\allowbreak{}lrr-2008-8; document Q1-LORIMER2008; locator: review\_\allowbreak{}article; applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}For isolated neutron stars with approximately dipolar surface fields inferred from timing data, expressed in tesla; not intended for magnetar-like or strongly multipolar fields.. uncertainty: not reported.
+\item vacuum\_\allowbreak{}dipole\_\allowbreak{}braking\_\allowbreak{}constant (K\_\allowbreak{}dipole) \ensuremath{=} 9.765625e-32 s\_\allowbreak{}T\textasciicircum{}-2; role MODEL\_\allowbreak{}ASSUMPTION; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}For the chosen effective spin-down law with magnetic field in tesla and period in seconds, assuming fixed stellar geometry and no unresolved internal braking physics.. uncertainty: not reported.
+\item wind\_\allowbreak{}braking\_\allowbreak{}efficiency (eta) \ensuremath{=} 0.1 dimensionless; role MODEL\_\allowbreak{}ASSUMPTION; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}For pulsars with magnetospheric wind torque included as a multiplicative enhancement of the dipole term; scenario switches may disable the wind contribution.. uncertainty: not reported.
+\item inclination\_\allowbreak{}decay\_\allowbreak{}timescale (tau\_\allowbreak{}alpha) \ensuremath{=} 315576000000000.0 s; role MODEL\_\allowbreak{}ASSUMPTION; status APPROVED\_\allowbreak{}USER\_\allowbreak{}INPUT; source: Binary and Millisecond Pulsars; DOI 10.12942/\allowbreak{}lrr-2008-8; document Q1-LORIMER2008; locator: review\_\allowbreak{}article; applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}For isolated pulsars modeled with smooth inclination decay, expressed in seconds, excluding glitches and abrupt magnetospheric state changes.. uncertainty: not reported.
+\item accretion\_\allowbreak{}rate (Mdot) \ensuremath{=} 630000000000000.0 kg\_\allowbreak{}s\textasciicircum{}-1; role SCENARIO\_\allowbreak{}INPUT; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}For recycled pulsars in a steady disk-accretion phase, expressed in kilograms per second, ignoring transient outbursts and companion ablation.. uncertainty: not reported.
+\item accretion\_\allowbreak{}braking\_\allowbreak{}constant (K\_\allowbreak{}acc) \ensuremath{=} 6.3e-31 s\textasciicircum{}2\_\allowbreak{}kg\textasciicircum{}-1; role SCENARIO\_\allowbreak{}INPUT; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}For the effective accretion law using accretion rate in kilograms per second and dimensionless period derivative; active only during the accretion phase.. uncertainty: not reported.
+\item accretion\_\allowbreak{}duration (t\_\allowbreak{}acc) \ensuremath{=} 315576000000000.0 s; role SCENARIO\_\allowbreak{}INPUT; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}For binary recycling tracks represented by a finite accretion interval followed by isolated spin-down, expressed in seconds.. uncertainty: not reported.
+\item maximum\_\allowbreak{}simulated\_\allowbreak{}age (T\_\allowbreak{}max) \ensuremath{=} 3155760000000000.0 s; role BOUNDARY\_\allowbreak{}CONDITION; status APPROVED\_\allowbreak{}USER\_\allowbreak{}INPUT; source: Birth and Evolution of Isolated Radio Pulsars; DOI 10.1086/\allowbreak{}501516; document Q1-FGK2006; locator: preprint; applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}Numerical endpoint for population synthesis tracks; not a physical observable unless tied to survey selection or evolutionary assumptions.. uncertainty: not reported.
+\item minimum\_\allowbreak{}detectable\_\allowbreak{}period\_\allowbreak{}derivative (Pdot\_\allowbreak{}min) \ensuremath{=} 1e-22 dimensionless; role BOUNDARY\_\allowbreak{}CONDITION; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}Survey-dependent detection boundary for timing observations; used as a stopping condition rather than a physical spin-down parameter.. uncertainty: not reported.
+\item monte\_\allowbreak{}carlo\_\allowbreak{}sample\_\allowbreak{}count (N\_\allowbreak{}mc) \ensuremath{=} 5000.0 dimensionless; role MODEL\_\allowbreak{}ASSUMPTION; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}Numerical control for population synthesis; chosen for computational budget and statistical resolution rather than physical measurement.. uncertainty: not reported.
+\end{itemize}
+
+\subsection{Numerical Validation and Model-Internal Results}
+
+\paragraph{Validation Plan}
+\begin{itemize}\raggedright
+\item \{'method': 'Analytical limit check: verify dalpha/\allowbreak{}dt converges to zero as t approaches infinity', 'metric': 'Relative error < 1e-6'\}
+\item \{'method': 'Scenario isolation test: confirm isolated\_\allowbreak{}dipole yields strictly positive dP/\allowbreak{}dt throughout', 'metric': 'Sign consistency across all t'\}
+\item \{'method': 'Recycling transition test: verify dP/\allowbreak{}dt switches sign at t\_\allowbreak{}acc and returns to positive post-accretion', 'metric': 'Branch activation count matches scenario definition'\}
+\end{itemize}
+
+\begin{itemize}
+\item Execution sim-ef92f26db7c14196aaab75759811335e; NUMERICAL\_SIMULATION; SIMULATED; NOT\_EMPIRICAL; relation CONSTRAINED; summary: Within the audited reduced ODE, the isolated track increases from P\ensuremath{=}0.500 s to 0.662 s, whereas the recycling track reaches P\_min\ensuremath{=}0.226 s during accretion and ends at 0.281 s after resumed dipole spin-down. This establishes model-internal directional separation, but does not by itself validate population-level n-tau\_c discrimination because the executable MathIR contains two deterministic tracks rather than the documented Monte Carlo outer loop.
+\end{itemize}
+
+\subsection{Hypothesis Iteration Lineage}
+
+\begin{itemize}\raggedright
+\item v0: CONSTRAINED (Within the audited reduced ODE, the isolated track increases from P\ensuremath{=}0.500 s to 0.662 s, whereas the recycling track reaches P\_\allowbreak{}min\ensuremath{=}0.226 s during accretion and ends at 0.281 s after resumed dipole spin-down. This establishes model-internal directional separation, but does not by itself validate population-level n-tau\_\allowbreak{}c discrimination because the executable MathIR contains two deterministic tracks rather than the documented Monte Carlo outer loop.)
+\end{itemize}
+
+\subsection{Limitations, Non-Empirical Disclosure, and References}
+
+\noindent All values in this section are model-internal numerical simulations (NUMERICAL\_SIMULATION; SIMULATED; NOT\_EMPIRICAL), not empirical observations.
+
+\paragraph{Limitations}
+\begin{itemize}\raggedright
+\item Excludes glitch events, magnetospheric state transitions, and variable moment of inertia.
+\item Assumes fixed stellar geometry and absorbs unresolved electromagnetic factors into effective constants.
+\item Observational selection effects and survey detection thresholds are not dynamically coupled to the simulation loop.
+\end{itemize}
+
+\paragraph{References}
+\begin{itemize}\raggedright
+\item \{'citation': 'Feng, G., et al. (2006). Birth and Evolution of Isolated Radio Pulsars. ApJ, 646, 381. DOI: 10.1086/\allowbreak{}501516', 'source': 'Q1-FGK2006'\}
+\item \{'citation': 'Lorimer, D. R. (2008). Binary and Millisecond Pulsars. Living Rev. Relativity, 11, 8. DOI: 10.12942/\allowbreak{}lrr-2008-8', 'source': 'Q1-LORIMER2008'\}
+\end{itemize}
+
+\section{Q2 (final: v1)}
+
+\noindent\textbf{Abstract—} A spatially resolved spherical radial thermal model for a massive neutron star core is specified as an executable PDE branch. The model replaces the parent lumped thermal state with a one-dimensional radial heat-transport field in the canonical coordinate x, where x represents the physical radial coordinate r normalized by the stellar radius. Phase-transition latent heat and modified neutrino cooling are represented through parameterized volumetric source terms. Scenario A is standard cooling without latent heat, Scenario B adds localized latent-heat release, and Scenario C modifies the cooling coefficient to emulate superfluid suppression. The declared observable outputs are radial temperature trajectories and a surface flux proxy at x\ensuremath{=}1.
+
+\subsection{Question and Scope}
+
+\noindent\textbf{Question.} How does the radial thermal evolution of a massive neutron star differ when spin-down-associated core compression triggers a localized phase-transition heat source, compared with standard cooling and with a superfluid-modified cooling scenario?
+
+
+
+Executable spherical radial thermal PDE branch for controlled numerical simulation. The model covers radial temperature evolution, a parameterized phase-transition heat source, volumetric cooling, center regularity, and a fixed scaled surface temperature boundary. It does not solve spin dynamics, density evolution, full microphysics, atmosphere radiative transfer, or observational inference.
+
+\subsection{Model Assumptions and Applicability}
+
+\begin{itemize}\raggedright
+\item Q2-ASM-001: The star is spherically symmetric and the executable PDE uses the canonical coordinate x as the physical radial coordinate r normalized by the stellar radius. If violated: Non-spherical structure or multidimensional transport would not be represented, biasing radial temperature and surface-flux estimates.
+\item Q2-ASM-002: Spin-down induced core compression and phase-transition onset are represented by a prescribed localized latent-heat source rather than dynamically solved spin, density, or moment-of-inertia equations. If violated: Feedback between rotation, compression, and transition timing is omitted, so scenario attribution becomes phenomenological.
+\item Q2-ASM-003: Thermal microphysics is reduced to scaled constant transport, heat-capacity, and source coefficients. If violated: Temperature- and density-dependent conductivity, heat capacity, and neutrino emissivity would change cooling rates and scenario separation.
+\item Q2-ASM-004: The surface boundary is approximated by a fixed scaled surface temperature representing atmosphere and radiative-transfer effects. If violated: An inaccurate surface boundary would alter the surface gradient, flux proxy, and inferred luminosity.
+\item Q2-ASM-005: Units are normalized so that the temperature field is scaled by a reference core temperature, x\ensuremath{=}1 corresponds to the stellar radius, and t\ensuremath{=}1 corresponds to a characteristic cooling time. If violated: Direct physical-unit comparison requires rescaling; mismatched scaling would distort comparison with cooling curves.
+\end{itemize}
+
+\subsection{PDE Model Class}
+
+\noindent\textbf{System type.} SPHERICAL\_RADIAL\_THERMAL.
+
+\noindent\textbf{Trusted adapter.} spherical\_radial\_thermal.
+
+\subsection{Spatial Domain and Field Variables}
+
+\paragraph{Domain and mesh}
+\begin{itemize}\raggedright
+\item Domain: x\ensuremath{=}[0.0, 1.0]
+\item Grid: nx\ensuremath{=}33
+\end{itemize}
+
+\paragraph{Fields}
+\begin{itemize}\raggedright
+\item T (T); unit 10\textasciicircum{}9 K
+\end{itemize}
+
+\subsection{PDE Initial and Boundary Conditions}
+
+\paragraph{Initial condition}
+\begin{itemize}\raggedright
+\item Sampled values on the normalized mesh.
+\item Time span: 0.0; 10.0
+\end{itemize}
+
+\paragraph{Boundary condition types}
+\begin{itemize}\raggedright
+\item left: SPHERICAL\_\allowbreak{}ORIGIN\_\allowbreak{}REGULARITY
+\item right: DIRICHLET
+\end{itemize}
+
+\subsection{Discretization and Stability}
+
+\noindent\textbf{Discretization.} FINITE\_DIFFERENCE\_SPHERICAL\_RADIAL.
+
+\noindent\textbf{Time integration.} EXPLICIT\_EULER; time step 0.005.
+
+\subsection{Numerical Verification}
+
+\noindent The fixed PDE adapter reports finite-field checks and the family-specific stability or linear-residual diagnostic. A result is qualified only when the declared checks pass; all outcomes remain model-internal simulations.
+
+\subsection{Symbols and Units}
+
+\begin{center}
+\small
+\begin{tabular}{|p{0.12\linewidth}|p{0.15\linewidth}|p{0.46\linewidth}|p{0.17\linewidth}|}
+\hline
+ID & Symbol & Meaning & Unit \\ \hline
+T & $T$ & Radial temperature field scaled by a reference core temperature & $10^9 K$ \\ \hline
+x & $x$ & Canonical radial coordinate representing physical radius r normalized by stellar radius & $\mathrm{R}\,\mathrm{NS}$ \\ \hline
+t & $t$ & Time scaled by a characteristic cooling time & $\mathrm{t}\,\mathrm{char}$ \\ \hline
+source & $S$ & Volumetric heat source and sink term in scaled temperature per time & $10^9 K/t_char$ \\ \hline
+kappa & $\kappa$ & Effective radial thermal diffusion coefficient in scaled units & $R_NS^2/t_char$ \\ \hline
+c\_v & $c_v$ & Volumetric heat capacity in scaled units & energy/(R\_NS\textasciicircum{}3*10\textasciicircum{}9 K) \\ \hline
+latent\_amp & $L_{\mathrm{amp}}$ & Amplitude of latent-heat release from the phase-transition layer & $10^9 K/t_char$ \\ \hline
+cooling\_amp & $\epsilon_{\mathrm{amp}}$ & Amplitude of volumetric neutrino cooling coefficient & $1/t_char$ \\ \hline
+transition\_center & $x_{\mathrm{tr}}$ & Normalized radial center of the phase-transition layer & $\mathrm{R}\,\mathrm{NS}$ \\ \hline
+transition\_width & $\sigma_{\mathrm{tr}}$ & Normalized radial width of the phase-transition layer & $\mathrm{R}\,\mathrm{NS}$ \\ \hline
+decay\_rate & $\lambda$ & Inverse time scale for transition-source decay & $1/t_char$ \\ \hline
+surface\_temperature & $T_s$ & Scaled surface temperature imposed at x\ensuremath{=}1 & $10^9 K$ \\ \hline
+\end{tabular}
+\end{center}
+
+\subsection{Mechanistic Equations}
+
+\begin{equation}\label{eq:Q2-EQ-001}
+c_v \frac{\partial T}{\partial t} = \frac{1}{x^2}\frac{\partial}{\partial x}\left(x^2 \kappa \frac{\partial T}{\partial x}\right) + S
+\end{equation}
+\noindent\textbf{Q2-EQ-001 where} c\_v: Volumetric heat capacity in scaled units; T: Radial temperature field scaled by a reference core temperature; t: Time scaled by a characteristic cooling time; x: Canonical radial coordinate representing physical radius r normalized by stellar radius; kappa: Effective radial thermal diffusion coefficient in scaled units; source: Volumetric heat source and sink term in scaled temperature per time.
+
+\begin{equation}\label{eq:Q2-EQ-002}
+S = L_{\mathrm{amp}}\exp\left[-\frac{(x-x_{\mathrm{tr}})^2}{2\sigma_{\mathrm{tr}}^2}\right]\exp(-\lambda t) - \epsilon_{\mathrm{amp}} T
+\end{equation}
+\noindent\textbf{Q2-EQ-002 where} source: Volumetric heat source and sink term in scaled temperature per time; latent\_amp: Amplitude of latent-heat release from the phase-transition layer; x: Canonical radial coordinate representing physical radius r normalized by stellar radius; transition\_center: Normalized radial center of the phase-transition layer; transition\_width: Normalized radial width of the phase-transition layer; decay\_rate: Inverse time scale for transition-source decay; t: Time scaled by a characteristic cooling time; cooling\_amp: Amplitude of volumetric neutrino cooling coefficient; T: Radial temperature field scaled by a reference core temperature.
+
+\begin{equation}\label{eq:Q2-EQ-003}
+\left.\frac{\partial T}{\partial x}\right|_{x=0}=0,  T(1,t)=T_s
+\end{equation}
+\noindent\textbf{Q2-EQ-003 where} T: Radial temperature field scaled by a reference core temperature; x: Canonical radial coordinate representing physical radius r normalized by stellar radius; t: Time scaled by a characteristic cooling time; surface\_temperature: Scaled surface temperature imposed at x\ensuremath{=}1.
+
+\subsection{Initial Conditions, Boundary Conditions, and Constraints}
+
+\paragraph{Initial Conditions}
+\begin{itemize}\raggedright
+\item \{'condition\_\allowbreak{}id': 'Q2-IC-001', 'field\_\allowbreak{}id': 'T', 'profile': 'UNIFORM', 'description': 'Uniform scaled initial core temperature across the radial domain.'\}
+\end{itemize}
+
+\paragraph{Boundary Conditions}
+\begin{itemize}\raggedright
+\item \{'boundary\_\allowbreak{}id': 'Q2-BC-001', 'side': 'left', 'type': 'SPHERICAL\_\allowbreak{}ORIGIN\_\allowbreak{}REGULARITY', 'description': 'Regularity at the spherical origin x\ensuremath{=}0.'\}
+\item \{'boundary\_\allowbreak{}id': 'Q2-BC-002', 'side': 'right', 'type': 'DIRICHLET', 'value\_\allowbreak{}parameter': 'surface\_\allowbreak{}temperature', 'description': 'Fixed scaled surface temperature at x\ensuremath{=}1.'\}
+\end{itemize}
+
+\paragraph{Objective and Constraints}
+\begin{itemize}\raggedright
+\item \{'objective\_\allowbreak{}id': 'Q2-OBJ-001', 'statement': 'Compare radial temperature trajectories and the surface flux proxy among standard, phase-transition, and superfluid-modified scenarios.'\}
+\item \{'objective\_\allowbreak{}id': 'Q2-OBJ-002', 'statement': 'Determine whether localized latent-heat release produces a distinguishable delay or deviation in cooling relative to standard cooling.'\}
+\item \{'constraint\_\allowbreak{}id': 'Q2-CON-001', 'statement': 'Use only the registered spherical radial thermal PDE adapter with a uniform grid and explicit time integration.'\}
+\item \{'constraint\_\allowbreak{}id': 'Q2-CON-002', 'statement': 'Maintain non-negative diffusion coefficient, positive heat capacity, and finite field values throughout the declared time span.'\}
+\end{itemize}
+
+\subsection{Algorithm}
+
+\noindent\textbf{Algorithm}
+\paragraph{Input}
+\begin{itemize}\raggedright
+\item scenario parameter values
+\item spatial\_\allowbreak{}domain
+\item grid
+\item initial\_\allowbreak{}condition
+\item boundary\_\allowbreak{}conditions
+\end{itemize}
+\paragraph{Output}
+\begin{itemize}\raggedright
+\item radial temperature field T(x,t)
+\item surface flux proxy at x\ensuremath{=}1
+\item scenario comparison diagnostics
+\end{itemize}
+\paragraph{Steps}
+\begin{itemize}\raggedright
+\item Select scenario parameter values.
+\item Initialize the uniform scaled temperature field.
+\item Apply spherical origin regularity and the surface Dirichlet condition.
+\item Advance the spherical radial heat equation with the registered explicit integrator.
+\item Evaluate stability and finiteness checks.
+\item Extract radial profiles and the surface flux proxy.
+\item Compare scenario tracks against the declared falsification criteria.
+\end{itemize}
+
+\subsection{Parameters, Scenarios, and Numerical Settings}
+
+\paragraph{Parameters}
+\begin{itemize}\raggedright
+\item \{'parameter\_\allowbreak{}id': 'Q2-PRM-001', 'symbol\_\allowbreak{}id': 'kappa', 'base\_\allowbreak{}value': 0.01, 'evidence\_\allowbreak{}status': 'model\_\allowbreak{}assumption', 'source': 'Scaled effective radial thermal diffusion chosen for explicit spherical stability.'\}
+\item \{'parameter\_\allowbreak{}id': 'Q2-PRM-002', 'symbol\_\allowbreak{}id': 'c\_\allowbreak{}v', 'base\_\allowbreak{}value': 1.0, 'evidence\_\allowbreak{}status': 'model\_\allowbreak{}assumption', 'source': 'Scaled volumetric heat capacity reference.'\}
+\item \{'parameter\_\allowbreak{}id': 'Q2-PRM-003', 'symbol\_\allowbreak{}id': 'latent\_\allowbreak{}amp', 'base\_\allowbreak{}value': 0.0, 'evidence\_\allowbreak{}status': 'scenario\_\allowbreak{}input', 'source': 'No latent heat in the standard scenario; positive in phase-transition scenarios.'\}
+\item \{'parameter\_\allowbreak{}id': 'Q2-PRM-004', 'symbol\_\allowbreak{}id': 'cooling\_\allowbreak{}amp', 'base\_\allowbreak{}value': 0.02, 'evidence\_\allowbreak{}status': 'model\_\allowbreak{}assumption', 'source': 'Scaled neutrino cooling coefficient.'\}
+\item \{'parameter\_\allowbreak{}id': 'Q2-PRM-005', 'symbol\_\allowbreak{}id': 'transition\_\allowbreak{}center', 'base\_\allowbreak{}value': 0.35, 'evidence\_\allowbreak{}status': 'model\_\allowbreak{}assumption', 'source': 'Normalized core radius where the phase transition is concentrated.'\}
+\item \{'parameter\_\allowbreak{}id': 'Q2-PRM-006', 'symbol\_\allowbreak{}id': 'transition\_\allowbreak{}width', 'base\_\allowbreak{}value': 0.12, 'evidence\_\allowbreak{}status': 'model\_\allowbreak{}assumption', 'source': 'Normalized radial width of the transition layer.'\}
+\item \{'parameter\_\allowbreak{}id': 'Q2-PRM-007', 'symbol\_\allowbreak{}id': 'decay\_\allowbreak{}rate', 'base\_\allowbreak{}value': 0.6, 'evidence\_\allowbreak{}status': 'model\_\allowbreak{}assumption', 'source': 'Inverse time scale for latent-heat release decay.'\}
+\item \{'parameter\_\allowbreak{}id': 'Q2-PRM-008', 'symbol\_\allowbreak{}id': 'surface\_\allowbreak{}temperature', 'base\_\allowbreak{}value': 0.1, 'evidence\_\allowbreak{}status': 'model\_\allowbreak{}assumption', 'source': 'Scaled surface temperature representing the atmosphere boundary.'\}
+\end{itemize}
+
+\paragraph{Scenarios}
+\begin{itemize}\raggedright
+\item \{'scenario\_\allowbreak{}id': 'Q2-SCN-A', 'name': 'Standard cooling', 'description': 'No phase-transition latent heat and standard scaled neutrino cooling.', 'parameter\_\allowbreak{}overrides': \{'latent\_\allowbreak{}amp': 0.0, 'cooling\_\allowbreak{}amp': 0.02, 'surface\_\allowbreak{}temperature': 0.1\}\}
+\item \{'scenario\_\allowbreak{}id': 'Q2-SCN-B', 'name': 'Phase transition cooling', 'description': 'Localized latent-heat release associated with spin-down induced core compression.', 'parameter\_\allowbreak{}overrides': \{'latent\_\allowbreak{}amp': 0.3, 'cooling\_\allowbreak{}amp': 0.02, 'surface\_\allowbreak{}temperature': 0.1\}\}
+\item \{'scenario\_\allowbreak{}id': 'Q2-SCN-C', 'name': 'Phase transition with superfluidity', 'description': 'Latent-heat release with suppressed neutrino cooling representing superfluid modification.', 'parameter\_\allowbreak{}overrides': \{'latent\_\allowbreak{}amp': 0.3, 'cooling\_\allowbreak{}amp': 0.01, 'surface\_\allowbreak{}temperature': 0.1\}\}
+\end{itemize}
+
+\noindent\textbf{Solver family.} spherical\_radial\_thermal.
+
+\subsection{Parameter Provenance and Applicability}
+
+\noindent\textbf{Parameter status.} This legacy model used inline assumptions; it has no approved external parameter set.
+
+\subsection{Numerical Validation and Model-Internal Results}
+
+\paragraph{Validation Plan}
+\begin{itemize}\raggedright
+\item \{'check\_\allowbreak{}id': 'Q2-VAL-001', 'description': 'Preflight stability: the explicit spherical diffusion number remains below the registered limit.', 'status': 'required\_\allowbreak{}before\_\allowbreak{}execution'\}
+\item \{'check\_\allowbreak{}id': 'Q2-VAL-002', 'description': 'Scenario separation: phase-transition scenarios produce different radial temperature histories and surface flux proxy values from the standard scenario.', 'status': 'required\_\allowbreak{}after\_\allowbreak{}execution'\}
+\item \{'check\_\allowbreak{}id': 'Q2-VAL-003', 'description': 'Boundary consistency: center regularity and surface Dirichlet condition are satisfied without non-finite values.', 'status': 'required\_\allowbreak{}after\_\allowbreak{}execution'\}
+\item \{'check\_\allowbreak{}id': 'Q2-VAL-004', 'description': 'Observational relevance: the surface flux proxy is mapped to luminosity only after external scaling and calibration.', 'status': 'postprocessing'\}
+\end{itemize}
+
+\begin{itemize}
+\item Execution sim-1b3a94f9eebb4426b07d75c423ce2def; NUMERICAL\_SIMULATION; SIMULATED; NOT\_EMPIRICAL; relation INCONCLUSIVE; summary: Q2 v1 baseline spherical-radial thermal PDE completed with finite output, explicit stability, spherical-origin regularity, and boundary checks passing; this baseline-only run does not establish scenario separation or empirical pulsar validation.
+\end{itemize}
+
+\subsection{Hypothesis Iteration Lineage}
+
+\begin{itemize}\raggedright
+\item v0: SUPPORTED\_\allowbreak{}WITHIN\_\allowbreak{}MODEL (The audited reduced ODE crosses rho\_\allowbreak{}crit\ensuremath{=}5.12e17 kg/\allowbreak{}m\textasciicircum{}3 at approximately 9.85e11 s in all spin-down cases. At 3*tau\_\allowbreak{}cool, the standard, phase-transition, and phase-transition-plus-superfluid scenarios yield surface temperatures of about 4.98e4 K, 5.32e4 K, and 2.36e5 K, respectively; phase\_\allowbreak{}fraction reaches 1 only in the two transition scenarios. The mechanism therefore produces distinguishable model-internal thermal tracks, conditional on the effective cooling, latent-heat, and compression proxies.)
+\item v1: INCONCLUSIVE (Q2 v1 baseline spherical-radial thermal PDE completed with finite output, explicit stability, spherical-origin regularity, and boundary checks passing; this baseline-only run does not establish scenario separation or empirical pulsar validation.)
+\end{itemize}
+
+\subsection{Limitations, Non-Empirical Disclosure, and References}
+
+\noindent All values in this section are model-internal numerical simulations (NUMERICAL\_SIMULATION; SIMULATED; NOT\_EMPIRICAL), not empirical observations.
+
+\paragraph{Limitations}
+\begin{itemize}\raggedright
+\item The model does not solve spin evolution, moment of inertia, or central density dynamically; spin-down compression is parameterized by a prescribed source.
+\item Microphysical equation-of-state effects, latent heat, neutrino emissivity, and superfluid suppression are represented by scaled coefficients rather than density-temperature tables.
+\item The surface boundary is simplified; atmosphere radiative transfer and gravitational redshift are not solved.
+\item Spherical symmetry and a uniform radial grid exclude multidimensional effects and sharp phase-boundary dynamics.
+\item No observational data are ingested; comparison to X-ray cooling curves requires external calibration and uncertainty treatment.
+\end{itemize}
+
+\paragraph{References}
+\begin{itemize}\raggedright
+\item Standard neutron-star cooling theory and cooling-curve literature for model comparison.
+\item X-ray observations of isolated neutron stars and massive pulsars from Chandra and XMM-Newton archives as external comparator context.
+\item Equation-of-state and phase-transition literature for neutron-star cores as parameter motivation.
+\end{itemize}
+
+\end{document}

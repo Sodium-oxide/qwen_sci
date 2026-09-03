@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qwen-zhikan.local/schemas/structured_error_v1.json",
+  "title": "StructuredError",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "code", "severity", "message", "field_path", "recoverable", "origin_module"],
+  "properties": {
+    "schema_version": {"const": "structured_error_v1"},
+    "code": {"enum": ["UNIT_MISMATCH", "STRUCTURE_INVALID", "ALGEBRAIC_CLOSURE_MISSING", "POWER_BALANCE_VIOLATION", "NUMERICAL_DIVERGENCE", "CONTRACT_VALIDATION_FAILED", "ARTIFACT_INTEGRITY_FAILED", "APPROVAL_REQUIRED", "INTERNAL_ERROR"]},
+    "severity": {"enum": ["INFO", "WARNING", "ERROR", "FATAL"]},
+    "message": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "field_path": {"type": "string", "maxLength": 1000},
+    "recoverable": {"type": "boolean"},
+    "origin_module": {"type": "string", "pattern": "^M[0-9]{2}$"},
+    "equation_id": {"type": "string", "minLength": 1},
+    "variable_id": {"type": "string", "minLength": 1},
+    "expected": {"type": ["string", "number", "boolean", "null"]},
+    "observed": {"type": ["string", "number", "boolean", "null"]}
+  }
+}
+

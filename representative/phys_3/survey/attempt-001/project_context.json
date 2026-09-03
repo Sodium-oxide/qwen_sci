@@ -1,0 +1,711 @@
+{
+  "declared_domain": "",
+  "domain": "Limits of Heat Transfer in Matter",
+  "domain_resolution_source": "llm_primary_catalog_validated",
+  "event": "project_created",
+  "project_id": "sci_20260831_051401_339967_survey_001",
+  "requires_human_confirmation": true,
+  "research_context": {
+    "abbreviations": [],
+    "academic_operationalization": {
+      "applied": false,
+      "baseline_requirements": [],
+      "data_or_deployment_context": [],
+      "extractor": "deterministic_skip",
+      "limitation_and_failure_conditions": [],
+      "mode": "survey_scope",
+      "normalized_objective": "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes such as power plants. The research focus is to identify fundamental and material-dependent limits on thermal transport, interfacial thermal resistance, phonon and electron heat conduction, and heat dissipation under high power density.",
+      "original_objective": "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes such as power plants. The research focus is to identify fundamental and material-dependent limits on thermal transport, interfacial thermal resistance, phonon and electron heat conduction, and heat dissipation under high power density.",
+      "outcomes_or_readouts": [],
+      "research_object": "",
+      "rewrite_reason": "The original objective already contains sufficient scope anchors.",
+      "task_or_question": ""
+    },
+    "cache_status": "hit",
+    "catalog_conflict": {
+      "adjudicated": false,
+      "catalog_primary_label": "Materials And Biomaterials",
+      "detected": false,
+      "reason": ""
+    },
+    "catalog_resolution": {
+      "catalog_version": "research_domain_catalog_v1",
+      "declared_domain": "",
+      "primary_domain": "materials_science",
+      "primary_label": "Materials And Biomaterials",
+      "primary_subfield": "materials_biomaterials",
+      "requested_domain_is_generic": true,
+      "requires_human_confirmation": true,
+      "research_domains": [
+        {
+          "declared_domain_matches": [],
+          "declared_domain_score": 0.0,
+          "domain": "materials_science",
+          "evidence_status": "DIRECT",
+          "key": "materials_biomaterials",
+          "label": "Materials And Biomaterials",
+          "matched_terms": [
+            "materials science"
+          ],
+          "scientific_text_matches": [
+            "materials science"
+          ],
+          "scientific_text_score": 1.0,
+          "score": 12.0,
+          "source": "declared_domain_and_scientific_text",
+          "subfield": "materials_biomaterials"
+        },
+        {
+          "declared_domain_matches": [],
+          "declared_domain_score": 0.0,
+          "domain": "agricultural_biological_sciences",
+          "evidence_status": "DIRECT",
+          "key": "agricultural_biological_sciences",
+          "label": "Agricultural And Biological Sciences",
+          "matched_terms": [
+            "plant"
+          ],
+          "scientific_text_matches": [
+            "plant"
+          ],
+          "scientific_text_score": 1.0,
+          "score": 11.0,
+          "source": "declared_domain_and_scientific_text",
+          "subfield": "agricultural_biological_sciences"
+        }
+      ]
+    },
+    "core_entities": [
+      "thermal transport",
+      "interfacial thermal resistance",
+      "phonon heat conduction",
+      "electron heat conduction",
+      "heat dissipation",
+      "high power density",
+      "nanometre-scale electronic devices",
+      "industrial-scale processes"
+    ],
+    "declared_domain": "",
+    "discovery_taxonomy": {
+      "adjacent_disciplines": [],
+      "coverage": "unsupported",
+      "discipline_ids": [],
+      "matched_terms": [],
+      "mixed": false,
+      "out_of_scope_terms": [],
+      "primary_discipline": null,
+      "provider_filters": {
+        "arxiv": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "arxiv",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "openalex": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "openalex",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "semantic_scholar": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "semantic_scholar",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      },
+      "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence.",
+      "schema_version": "discipline_taxonomy_v1",
+      "scope": "natural_science_engineering_only",
+      "status": "unresolved"
+    },
+    "domain": "Limits of Heat Transfer in Matter",
+    "domain_confidence": 0.95,
+    "domain_context": {
+      "primary": "Limits of Heat Transfer in Matter",
+      "retrieval_terms": [
+        "Limits of Heat Transfer in Matter",
+        "Materials And Biomaterials",
+        "Agricultural And Biological Sciences",
+        "Thermal Transport",
+        "Interfacial Thermal Resistance",
+        "Phonon and Electron Heat Conduction",
+        "Heat Dissipation",
+        "thermal conductivity limits",
+        "phonon transport mechanisms",
+        "interfacial thermal conductance",
+        "high-power-density thermal management",
+        "micro-to-macro heat transfer",
+        "phonon heat conduction",
+        "electron heat conduction",
+        "high power density",
+        "nanometre-scale electronic devices",
+        "industrial-scale processes"
+      ],
+      "secondary_labels": [
+        "Thermal Transport",
+        "Interfacial Thermal Resistance",
+        "Phonon and Electron Heat Conduction",
+        "Heat Dissipation"
+      ],
+      "taxonomy_labels": [
+        "Materials And Biomaterials",
+        "Agricultural And Biological Sciences"
+      ]
+    },
+    "domain_resolution_source": "llm_primary_catalog_validated",
+    "domain_taxonomy": {
+      "catalog_version": "research_domain_catalog_v1",
+      "coverage": "validated",
+      "mappings": [
+        {
+          "declared_domain_matches": [],
+          "declared_domain_score": 0.0,
+          "domain": "materials_science",
+          "evidence_status": "DIRECT",
+          "key": "materials_biomaterials",
+          "label": "Materials And Biomaterials",
+          "matched_terms": [
+            "materials science"
+          ],
+          "scientific_text_matches": [
+            "materials science"
+          ],
+          "scientific_text_score": 1.0,
+          "score": 12.0,
+          "source": "declared_domain_and_scientific_text",
+          "subfield": "materials_biomaterials"
+        },
+        {
+          "declared_domain_matches": [],
+          "declared_domain_score": 0.0,
+          "domain": "agricultural_biological_sciences",
+          "evidence_status": "DIRECT",
+          "key": "agricultural_biological_sciences",
+          "label": "Agricultural And Biological Sciences",
+          "matched_terms": [
+            "plant"
+          ],
+          "scientific_text_matches": [
+            "plant"
+          ],
+          "scientific_text_score": 1.0,
+          "score": 11.0,
+          "source": "declared_domain_and_scientific_text",
+          "subfield": "agricultural_biological_sciences"
+        }
+      ]
+    },
+    "evidence_spans": [
+      "What are the limits of heat transfer in matter?",
+      "Materials science research may help address high-power-density heat-transfer challenges across length scales",
+      "identify fundamental and material-dependent limits on thermal transport, interfacial thermal resistance, phonon and electron heat conduction, and heat dissipation under high power density."
+    ],
+    "exclusion_terms": [
+      "agricultural applications",
+      "biomaterial synthesis",
+      "chemical reaction kinetics",
+      "fluid flow dynamics"
+    ],
+    "identity_source": "llm_primary_catalog_validated",
+    "identity_status": "unresolved",
+    "input_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+    "llm_attempted": true,
+    "llm_error": "",
+    "llm_payload": {
+      "abbreviations": [],
+      "core_entities": [
+        "thermal transport",
+        "interfacial thermal resistance",
+        "phonon heat conduction",
+        "electron heat conduction",
+        "heat dissipation",
+        "high power density",
+        "nanometre-scale electronic devices",
+        "industrial-scale processes"
+      ],
+      "domain_confidence": 0.95,
+      "evidence_spans": [
+        "What are the limits of heat transfer in matter?",
+        "Materials science research may help address high-power-density heat-transfer challenges across length scales",
+        "identify fundamental and material-dependent limits on thermal transport, interfacial thermal resistance, phonon and electron heat conduction, and heat dissipation under high power density."
+      ],
+      "exclusion_terms": [
+        "agricultural applications",
+        "biomaterial synthesis",
+        "chemical reaction kinetics",
+        "fluid flow dynamics"
+      ],
+      "must_not_be_primary": [
+        "Agricultural And Biological Sciences"
+      ],
+      "operationalization": {
+        "baseline_requirements": [
+          "material-dependent thermal properties",
+          "cross-length scale thermal transport characterization"
+        ],
+        "data_or_deployment_context": [
+          "nanometre-scale electronic devices and circuits",
+          "industrial-scale processes such as power plants",
+          "high power density conditions"
+        ],
+        "limitation_and_failure_conditions": [
+          "high power density thresholds",
+          "interfacial thermal resistance bottlenecks",
+          "scale-dependent phonon and electron mean free path constraints"
+        ],
+        "normalized_objective": "Identify fundamental and material-dependent limits governing thermal transport and heat dissipation mechanisms.",
+        "outcomes_or_readouts": [
+          "fundamental limits on thermal transport",
+          "interfacial thermal resistance values",
+          "phonon and electron heat conduction rates",
+          "heat dissipation capacity under high power density"
+        ],
+        "research_object": "Matter and material interfaces subjected to high power density thermal loads.",
+        "rewrite_reason": "Original text blends survey framing with direct research aims; operationalization extracts concrete physical mechanisms, scales, and measurable limits into a structured survey scope while removing narrative and agent references.",
+        "task_or_question": "What are the limits of heat transfer in matter under high power density across varying length scales?"
+      },
+      "preferred_research_domains": [
+        "materials_biomaterials"
+      ],
+      "primary_discipline": "materials_science",
+      "primary_label": "Limits of Heat Transfer in Matter",
+      "rationale": "The source explicitly anchors the investigation in materials science research, targeting fundamental and material-dependent limits of thermal transport and heat dissipation across micro to macro scales under high power density.",
+      "retrieval_synonyms": [
+        "thermal conductivity limits",
+        "phonon transport mechanisms",
+        "interfacial thermal conductance",
+        "high-power-density thermal management",
+        "micro-to-macro heat transfer"
+      ],
+      "secondary_disciplines": [],
+      "secondary_labels": [
+        "Thermal Transport",
+        "Interfacial Thermal Resistance",
+        "Phonon and Electron Heat Conduction",
+        "Heat Dissipation"
+      ]
+    },
+    "llm_used": true,
+    "original_objective": "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes such as power plants. The research focus is to identify fundamental and material-dependent limits on thermal transport, interfacial thermal resistance, phonon and electron heat conduction, and heat dissipation under high power density.",
+    "original_topic": "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes such as power plants. The research focus is to identify fundamental and material-dependent limits on thermal transport, interfacial thermal resistance, phonon and electron heat conduction, and heat dissipation under high power density.",
+    "primary_discipline": null,
+    "recommended_sources": [
+      {
+        "native_filter": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "openalex",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "priority": 1,
+        "provider": "openalex",
+        "role": "primary_discovery"
+      },
+      {
+        "enabled_for_exact_mapping": false,
+        "native_filter": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "arxiv",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "priority": 2,
+        "provider": "arxiv",
+        "role": "conditional_preprint_discovery"
+      },
+      {
+        "native_filter": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "semantic_scholar",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "priority": 3,
+        "provider": "semantic_scholar",
+        "role": "fallback_only"
+      }
+    ],
+    "requires_human_confirmation": true,
+    "research_brief": "",
+    "research_design_inventory": {
+      "design_basis": [
+        {
+          "anchors": [
+            "length scales",
+            "nanometre-scale electronic devices",
+            "industrial-scale processes"
+          ],
+          "evidence_spans": [
+            "across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes such as power plants"
+          ],
+          "id": "DB1",
+          "kind": "scale",
+          "source": "llm_source_grounded",
+          "statement": "Construct a multi-tiered evaluation framework that links localized observations to system-level performance metrics."
+        },
+        {
+          "anchors": [
+            "high-power-density",
+            "heat-transfer challenges",
+            "high power density"
+          ],
+          "evidence_spans": [
+            "high-power-density heat-transfer challenges",
+            "under high power density"
+          ],
+          "id": "DB2",
+          "kind": "condition_or_regime",
+          "source": "llm_source_grounded",
+          "statement": "Operate experimental conditions within extreme energy-flux parameters to observe threshold behaviors."
+        },
+        {
+          "anchors": [
+            "limits of heat transfer",
+            "fundamental and material-dependent limits",
+            "thermal transport"
+          ],
+          "evidence_spans": [
+            "limits of heat transfer in matter",
+            "fundamental and material-dependent limits on thermal transport"
+          ],
+          "id": "DB3",
+          "kind": "boundary_or_failure",
+          "source": "llm_source_grounded",
+          "statement": "Delineate the upper bounds of transport efficiency before degradation or saturation mechanisms activate."
+        },
+        {
+          "anchors": [
+            "interfacial thermal resistance",
+            "identify"
+          ],
+          "evidence_spans": [
+            "interfacial thermal resistance"
+          ],
+          "id": "DB4",
+          "kind": "measurement",
+          "source": "llm_source_grounded",
+          "statement": "Implement isolation techniques to separate junction-level impedance from bulk material properties."
+        },
+        {
+          "anchors": [
+            "phonon and electron heat conduction",
+            "heat dissipation"
+          ],
+          "evidence_spans": [
+            "phonon and electron heat conduction, and heat dissipation"
+          ],
+          "id": "DB5",
+          "kind": "research_object",
+          "source": "llm_source_grounded",
+          "statement": "Decouple parallel energy-carrier pathways to assess individual contribution weights to overall dissipation."
+        },
+        {
+          "anchors": [
+            "material-dependent limits",
+            "Materials science research"
+          ],
+          "evidence_spans": [
+            "material-dependent limits",
+            "Materials science research"
+          ],
+          "id": "DB6",
+          "kind": "target_relation",
+          "source": "llm_source_grounded",
+          "statement": "Correlate intrinsic material attributes with observed transport capacity variations."
+        },
+        {
+          "anchors": [
+            "thermal transport",
+            "interfacial thermal resistance",
+            "phonon heat conduction",
+            "electron heat conduction",
+            "heat dissipation",
+            "high power density",
+            "nanometre-scale electronic devices",
+            "industrial-scale processes"
+          ],
+          "evidence_spans": [
+            "thermal transport",
+            "interfacial thermal resistance",
+            "phonon heat conduction",
+            "electron heat conduction",
+            "heat dissipation",
+            "high power density"
+          ],
+          "id": "DB7",
+          "kind": "research_object",
+          "source": "project_declaration_compiler",
+          "statement": "The project studies Limits of Heat Transfer in Matter."
+        },
+        {
+          "anchors": [
+            "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes",
+            "thermal transport",
+            "interfacial thermal resistance",
+            "phonon heat conduction",
+            "electron heat conduction",
+            "heat dissipation",
+            "high power density",
+            "nanometre-scale electronic devices"
+          ],
+          "evidence_spans": [
+            "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes"
+          ],
+          "id": "DB8",
+          "kind": "target_relation",
+          "source": "project_declaration_compiler",
+          "statement": "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes such as power plants. The research focus is to identify fundamental and material-dependent limits on thermal transport, interfacial thermal resistance, phonon and electron heat conduction, and heat dissipation under high power density."
+        },
+        {
+          "anchors": [
+            "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes"
+          ],
+          "evidence_spans": [
+            "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes"
+          ],
+          "id": "DB9",
+          "kind": "outcome_or_construct",
+          "source": "project_declaration_compiler",
+          "statement": "The project requires evidence about declared outcomes or constructs."
+        },
+        {
+          "anchors": [
+            "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes"
+          ],
+          "evidence_spans": [
+            "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes"
+          ],
+          "id": "DB10",
+          "kind": "condition_or_regime",
+          "source": "project_declaration_compiler",
+          "statement": "The project scope includes the declared conditions, regimes, or contexts."
+        }
+      ],
+      "input_fingerprint": "45773472b04a4487ec0663a21f5dcd73e14769be20ac77cb64ed0265b7a79c89",
+      "inventory_source": "llm_source_grounded_plus_project_declaration",
+      "llm_error": "",
+      "llm_used": true,
+      "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+      "schema_version": "research_design_inventory_v1"
+    },
+    "research_domains": [
+      {
+        "declared_domain_matches": [],
+        "declared_domain_score": 0.0,
+        "domain": "materials_science",
+        "evidence_status": "DIRECT",
+        "key": "materials_biomaterials",
+        "label": "Materials And Biomaterials",
+        "matched_terms": [
+          "materials science"
+        ],
+        "scientific_text_matches": [
+          "materials science"
+        ],
+        "scientific_text_score": 1.0,
+        "score": 12.0,
+        "source": "declared_domain_and_scientific_text",
+        "subfield": "materials_biomaterials"
+      },
+      {
+        "declared_domain_matches": [],
+        "declared_domain_score": 0.0,
+        "domain": "agricultural_biological_sciences",
+        "evidence_status": "DIRECT",
+        "key": "agricultural_biological_sciences",
+        "label": "Agricultural And Biological Sciences",
+        "matched_terms": [
+          "plant"
+        ],
+        "scientific_text_matches": [
+          "plant"
+        ],
+        "scientific_text_score": 1.0,
+        "score": 11.0,
+        "source": "declared_domain_and_scientific_text",
+        "subfield": "agricultural_biological_sciences"
+      }
+    ],
+    "research_identity": {
+      "confidence": 0.95,
+      "core_entities": [
+        "thermal transport",
+        "interfacial thermal resistance",
+        "phonon heat conduction",
+        "electron heat conduction",
+        "heat dissipation",
+        "high power density",
+        "nanometre-scale electronic devices",
+        "industrial-scale processes"
+      ],
+      "evidence_spans": [
+        "What are the limits of heat transfer in matter?",
+        "Materials science research may help address high-power-density heat-transfer challenges across length scales",
+        "identify fundamental and material-dependent limits on thermal transport, interfacial thermal resistance, phonon and electron heat conduction, and heat dissipation under high power density."
+      ],
+      "label": "Limits of Heat Transfer in Matter",
+      "must_not_be_primary": [
+        "Agricultural And Biological Sciences"
+      ],
+      "rationale": "The source explicitly anchors the investigation in materials science research, targeting fundamental and material-dependent limits of thermal transport and heat dissipation across micro to macro scales under high power density.",
+      "retrieval_synonyms": [
+        "thermal conductivity limits",
+        "phonon transport mechanisms",
+        "interfacial thermal conductance",
+        "high-power-density thermal management",
+        "micro-to-macro heat transfer"
+      ],
+      "secondary_labels": [
+        "Thermal Transport",
+        "Interfacial Thermal Resistance",
+        "Phonon and Electron Heat Conduction",
+        "Heat Dissipation"
+      ],
+      "source": "llm_primary"
+    },
+    "retrieval_plan": {
+      "baseline_query": "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes such as power plants. The research focus is to identify fundamental and material-dependent limits on thermal transport, interfacial thermal resistance, phonon and electron heat conduction, and heat dissipation under high power density.",
+      "evidence_mode": "overview",
+      "exclude_anchors": [
+        "agricultural applications",
+        "biomaterial synthesis",
+        "chemical reaction kinetics",
+        "fluid flow dynamics"
+      ],
+      "execution_policy": "limited_query_lanes",
+      "include_anchors": [
+        "Limits of Heat Transfer in Matter",
+        "Materials And Biomaterials",
+        "Agricultural And Biological Sciences",
+        "Thermal Transport",
+        "Interfacial Thermal Resistance",
+        "Phonon and Electron Heat Conduction",
+        "Heat Dissipation",
+        "thermal conductivity limits",
+        "phonon transport mechanisms",
+        "interfacial thermal conductance",
+        "high-power-density thermal management",
+        "micro-to-macro heat transfer"
+      ],
+      "normalized_objective": "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes such as power plants. The research focus is to identify fundamental and material-dependent limits on thermal transport, interfacial thermal resistance, phonon and electron heat conduction, and heat dissipation under high power density.",
+      "query_lanes": [
+        {
+          "discipline_filter_policy": "broad",
+          "evidence_mode": "overview",
+          "execution_phase": "initial",
+          "hard_filter_allowed": false,
+          "hard_filter_applied": false,
+          "lane": "broad_anchor",
+          "lane_id": "broad_anchor",
+          "provider": "openalex",
+          "provider_filter": {},
+          "purpose": "recall_baseline",
+          "query": "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes such as power plants. The research focus is to identify fundamental and material-dependent limits on thermal transport, interfacial thermal resistance, phonon and electron heat conduction, and heat dissipation under high power density.",
+          "taxonomy_coverage": "broad"
+        }
+      ],
+      "schema_version": "retrieval_lanes_v1"
+    },
+    "retrieval_synonyms": [
+      "thermal conductivity limits",
+      "phonon transport mechanisms",
+      "interfacial thermal conductance",
+      "high-power-density thermal management",
+      "micro-to-macro heat transfer"
+    ],
+    "schema_version": "project_research_context_v3",
+    "secondary_disciplines": [],
+    "taxonomy_resolution": {
+      "adjacent_disciplines": [],
+      "coverage": "unsupported",
+      "discipline_ids": [],
+      "matched_terms": [],
+      "mixed": false,
+      "out_of_scope_terms": [],
+      "primary_discipline": null,
+      "provider_filters": {
+        "arxiv": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "arxiv",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "openalex": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "openalex",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "semantic_scholar": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "semantic_scholar",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      },
+      "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence.",
+      "schema_version": "discipline_taxonomy_v1",
+      "scope": "natural_science_engineering_only",
+      "status": "unresolved"
+    },
+    "title": ""
+  },
+  "research_domains": [
+    {
+      "declared_domain_matches": [],
+      "declared_domain_score": 0.0,
+      "domain": "materials_science",
+      "evidence_status": "DIRECT",
+      "key": "materials_biomaterials",
+      "label": "Materials And Biomaterials",
+      "matched_terms": [
+        "materials science"
+      ],
+      "scientific_text_matches": [
+        "materials science"
+      ],
+      "scientific_text_score": 1.0,
+      "score": 12.0,
+      "source": "declared_domain_and_scientific_text",
+      "subfield": "materials_biomaterials"
+    },
+    {
+      "declared_domain_matches": [],
+      "declared_domain_score": 0.0,
+      "domain": "agricultural_biological_sciences",
+      "evidence_status": "DIRECT",
+      "key": "agricultural_biological_sciences",
+      "label": "Agricultural And Biological Sciences",
+      "matched_terms": [
+        "plant"
+      ],
+      "scientific_text_matches": [
+        "plant"
+      ],
+      "scientific_text_score": 1.0,
+      "score": 11.0,
+      "source": "declared_domain_and_scientific_text",
+      "subfield": "agricultural_biological_sciences"
+    }
+  ],
+  "schema_version": "survey_project_context_artifact_v1"
+}

@@ -1,0 +1,127 @@
+{
+  "derivatives": {
+    "P": {
+      "args": [
+        {
+          "name": "K_dipole",
+          "op": "variable"
+        },
+        {
+          "args": [
+            {
+              "args": [
+                {
+                  "name": "B0",
+                  "op": "variable"
+                },
+                {
+                  "op": "constant",
+                  "value": 2.0
+                }
+              ],
+              "op": "pow"
+            },
+            {
+              "args": [
+                {
+                  "name": "P",
+                  "op": "variable"
+                },
+                {
+                  "args": [
+                    {
+                      "args": [
+                        {
+                          "args": [
+                            {
+                              "name": "alpha",
+                              "op": "variable"
+                            }
+                          ],
+                          "op": "sin"
+                        },
+                        {
+                          "op": "constant",
+                          "value": 2.0
+                        }
+                      ],
+                      "op": "pow"
+                    },
+                    {
+                      "args": [
+                        {
+                          "op": "constant",
+                          "value": 1.0
+                        },
+                        {
+                          "name": "eta",
+                          "op": "variable"
+                        }
+                      ],
+                      "op": "add"
+                    }
+                  ],
+                  "op": "mul"
+                }
+              ],
+              "op": "mul"
+            }
+          ],
+          "op": "mul"
+        }
+      ],
+      "op": "mul"
+    },
+    "alpha": {
+      "args": [
+        {
+          "args": [
+            {
+              "name": "alpha",
+              "op": "variable"
+            }
+          ],
+          "op": "neg"
+        },
+        {
+          "name": "tau_alpha",
+          "op": "variable"
+        }
+      ],
+      "op": "div"
+    }
+  },
+  "parameters": {
+    "B0": 100000000.0,
+    "K_acc": 6.3e-31,
+    "K_dipole": 9.765625e-32,
+    "Mdot": 630000000000000.0,
+    "N_mc": 5000.0,
+    "P0": 0.5,
+    "Pdot_min": 1e-22,
+    "T_max": 3155760000000000.0,
+    "alpha0": 0.7853981633974483,
+    "eta": 0.1,
+    "t_acc": 315576000000000.0,
+    "tau_alpha": 315576000000000.0
+  },
+  "schema_version": "mathir_v1",
+  "solver_options": {
+    "max_step": 0.01
+  },
+  "states": [
+    {
+      "id": "P",
+      "initial": 0.5
+    },
+    {
+      "id": "alpha",
+      "initial": 0.7853981633974483
+    }
+  ],
+  "system_type": "ODE_IVP",
+  "time_span": [
+    0.0,
+    3155760000000000.0
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "blueprint_identity": "366b812aac958f7b35c19fc2d60b64ffcf7cfbe0b463e5c3927f4c39dc3f90f5",
+  "candidates": [
+    {
+      "candidate_id": "PEC-Q1-initial_period-002",
+      "conditions": {},
+      "evidence_locator": {
+        "document_type": "review_article",
+        "page": null,
+        "quoted_text": "pulse periods P ∼ 0.5 s",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "evidence_status": "USER_PROVIDED",
+      "mathir_symbol": "P0",
+      "normalized_unit": "s",
+      "normalized_value": 0.5,
+      "parameter_id": "initial_period",
+      "raw_value": "P ∼ 0.5 s",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": [
+          "user_provided"
+        ],
+        "document_id": "Q1-LORIMER2008",
+        "doi": "10.12942/lrr-2008-8",
+        "title": "Binary and Millisecond Pulsars",
+        "year": 2008
+      },
+      "source_kind": "REVIEW_REPORTED",
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "value_form": "SCALAR"
+    },
+    {
+      "candidate_id": "PEC-Q1-initial_surface_magnetic_field-001",
+      "conditions": {},
+      "evidence_locator": {
+        "document_type": "review_article",
+        "page": null,
+        "quoted_text": "typical values of 10 12 G and 107 yr for the normal pulsars",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "evidence_status": "USER_PROVIDED",
+      "mathir_symbol": "B0",
+      "normalized_unit": "T",
+      "normalized_value": 100000000.0,
+      "parameter_id": "initial_surface_magnetic_field",
+      "raw_value": "10 12 G",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": [
+          "user_provided"
+        ],
+        "document_id": "Q1-LORIMER2008",
+        "doi": "10.12942/lrr-2008-8",
+        "title": "Binary and Millisecond Pulsars",
+        "year": 2008
+      },
+      "source_kind": "REVIEW_REPORTED",
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "value_form": "SCALAR"
+    },
+    {
+      "candidate_id": "PEC-Q1-initial_surface_magnetic_field-002",
+      "conditions": {},
+      "evidence_locator": {
+        "document_type": "review_article",
+        "page": null,
+        "quoted_text": "108 G and 10 9 yr for the millisecond pulsars",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "evidence_status": "USER_PROVIDED",
+      "mathir_symbol": "B0",
+      "normalized_unit": "T",
+      "normalized_value": 10000.0,
+      "parameter_id": "initial_surface_magnetic_field",
+      "raw_value": "108 G",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": [
+          "user_provided"
+        ],
+        "document_id": "Q1-LORIMER2008",
+        "doi": "10.12942/lrr-2008-8",
+        "title": "Binary and Millisecond Pulsars",
+        "year": 2008
+      },
+      "source_kind": "REVIEW_REPORTED",
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "value_form": "SCALAR"
+    },
+    {
+      "candidate_id": "PEC-Q1-inclination_decay_timescale-001",
+      "conditions": {},
+      "evidence_locator": {
+        "document_type": "review_article",
+        "page": null,
+        "quoted_text": "on timescales of order 10 7 yr",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "evidence_status": "USER_PROVIDED",
+      "mathir_symbol": "tau_alpha",
+      "normalized_unit": "s",
+      "normalized_value": 315576000000000.0,
+      "parameter_id": "inclination_decay_timescale",
+      "raw_value": "10 7 yr",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": [
+          "user_provided"
+        ],
+        "document_id": "Q1-LORIMER2008",
+        "doi": "10.12942/lrr-2008-8",
+        "title": "Binary and Millisecond Pulsars",
+        "year": 2008
+      },
+      "source_kind": "REVIEW_REPORTED",
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "value_form": "SCALAR"
+    }
+  ],
+  "lineage": {
+    "created_from_artifact": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\pde_rerun_20260903\\idea\\attempt-002\\quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+    "project_id": "sci_astr_16_survey_007",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "astr_16",
+    "selected_direction_id": "mechanism_replacement",
+    "survey_run_id": "astr_16-survey-007",
+    "version": 0
+  },
+  "schema_version": "quantitative_parameter_evidence_collection_v1",
+  "source_document": {
+    "cross_validated": false,
+    "discovery_sources": [
+      "user_provided"
+    ],
+    "document_id": "Q1-LORIMER2008",
+    "doi": "10.12942/lrr-2008-8",
+    "evidence_status": "USER_PROVIDED",
+    "parameter_request_ids": [],
+    "retrieval_source": "USER_PROVIDED",
+    "title": "Binary and Millisecond Pulsars",
+    "year": 2008
+  }
+}

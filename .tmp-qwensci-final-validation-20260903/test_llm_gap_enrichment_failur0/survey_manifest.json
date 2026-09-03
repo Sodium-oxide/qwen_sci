@@ -1,0 +1,72 @@
+{
+  "artifacts": {
+    "claim_traceability": {
+      "path": "survey_claim_traceability.json",
+      "required": true,
+      "sha256": "2cb3b1c2445997b0dbc8129af7645bc179139875e5741e047843bbfe0045890d"
+    },
+    "evidence_plan": {
+      "path": "survey_evidence_plan.json",
+      "required": true,
+      "sha256": "65c29dc7cebedd01764eb4e64a32a531eca1c6dfde273bad16aee2e950cbe08a"
+    },
+    "gap_candidates": {
+      "path": "survey_gap_candidates.json",
+      "required": false,
+      "sha256": "9fc0c7324fc5a2d85384ebfa076ce60f44c04740bc1f340fad1ad210c2f95156"
+    },
+    "gap_coverage": {
+      "path": "survey_gap_coverage.json",
+      "required": false,
+      "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"
+    },
+    "gap_ledger": {
+      "path": "survey_gap_ledger.json",
+      "required": true,
+      "sha256": "81123e732e0212340be1c75f35bc73f5ed29aae9abdfa727146104ac3bf78c23"
+    },
+    "gap_triage": {
+      "path": "survey_gap_triage.json",
+      "required": false,
+      "sha256": "4178845fa1a8aa20cb90bd862f2310d3d4b47d7f2d4f92424da2418c2514ca61"
+    },
+    "idea_handoff": {
+      "path": "survey_idea_handoff.json",
+      "required": true,
+      "sha256": "254e9955ab2f77ac654beec4e7171a3e1a24e6937cc38a6570c4baa68ffc2e60"
+    },
+    "project_context": {
+      "path": "project_context.json",
+      "required": true,
+      "sha256": "317a03ff68aec58e0fc3c0ffe36c8cae1468bf5aa42f78d8988402c444a2348e"
+    },
+    "survey_json": {
+      "path": "survey.json",
+      "required": true,
+      "sha256": "bdcb4bfc29a4d78f02486524ef5fdc83fcade9006731bae94e6b7bd42c1d6d54"
+    },
+    "survey_markdown": {
+      "path": "survey.md",
+      "required": true,
+      "sha256": "1862a74123446fbfbd7d6d5d4da313fc3bd2b8d5eb202febdd59b28ff5cb5031"
+    },
+    "survey_outline": {
+      "path": "survey_outline.json",
+      "required": false,
+      "sha256": "c7b5f359a08b1155fead34098e9ad2bdebd6baa3643fe5f551c9c82edb72234c"
+    }
+  },
+  "base_dir": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_llm_gap_enrichment_failur0",
+  "completed_at": "2026-09-03T14:37:36Z",
+  "created_at": "2026-08-26T12:00:00Z",
+  "gap_ledger_schema_version": "survey_gap_ledger_v1",
+  "handoff_schema_version": "survey_idea_handoff_v1",
+  "manifest_fingerprint": "1ecaa092beee852fe186ac399611f2b848a1cea44aa8ca651c2ef84ea934858a",
+  "project_context_fingerprint": "context-1",
+  "project_id": "sci_run_1",
+  "schema_version": "survey_manifest_v1",
+  "status": "completed",
+  "survey_run_id": "20260826-120000-000001",
+  "topic": "A bounded materials question",
+  "topic_fingerprint": "947b95e016d958a958ff18ab2ebea7b661de2d255469584fdc6a69ca6a14a009"
+}

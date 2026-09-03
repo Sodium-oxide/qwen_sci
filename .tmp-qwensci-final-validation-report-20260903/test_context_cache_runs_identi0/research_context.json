@@ -1,0 +1,815 @@
+{
+  "input_fingerprint": "0bda19bef3dbe4a097e99fc0252649bfb8abb836a692d217c1e1d2f17591297d",
+  "original_topic": "machine learning for crop disease diagnosis",
+  "title": "",
+  "schema_version": "project_research_context_v3",
+  "declared_domain": "",
+  "domain": "Machine Learning for Crop Disease Diagnosis",
+  "research_domains": [
+    {
+      "key": "machine_learning",
+      "domain": "computer_science",
+      "subfield": "machine_learning",
+      "label": "Machine Learning",
+      "matched_terms": [
+        "machine learning"
+      ],
+      "declared_domain_matches": [],
+      "scientific_text_matches": [
+        "machine learning"
+      ],
+      "declared_domain_score": 0.0,
+      "scientific_text_score": 1.0,
+      "score": 12.0,
+      "source": "declared_domain_and_scientific_text",
+      "evidence_status": "DIRECT"
+    },
+    {
+      "key": "agricultural_biological_sciences",
+      "domain": "agricultural_biological_sciences",
+      "subfield": "agricultural_biological_sciences",
+      "label": "Agricultural And Biological Sciences",
+      "matched_terms": [
+        "crop"
+      ],
+      "declared_domain_matches": [],
+      "scientific_text_matches": [
+        "crop"
+      ],
+      "declared_domain_score": 0.0,
+      "scientific_text_score": 1.0,
+      "score": 11.0,
+      "source": "declared_domain_and_scientific_text",
+      "evidence_status": "DIRECT"
+    },
+    {
+      "key": "artificial_intelligence",
+      "domain": "computer_science",
+      "subfield": "artificial_intelligence",
+      "label": "Artificial Intelligence",
+      "matched_terms": [
+        " ai "
+      ],
+      "declared_domain_matches": [],
+      "scientific_text_matches": [
+        " ai "
+      ],
+      "declared_domain_score": 0.0,
+      "scientific_text_score": 1.0,
+      "score": 11.0,
+      "source": "declared_domain_and_scientific_text",
+      "evidence_status": "DIRECT"
+    }
+  ],
+  "research_identity": {
+    "label": "Machine Learning for Crop Disease Diagnosis",
+    "source": "llm_primary",
+    "confidence": 0.86,
+    "rationale": "",
+    "evidence_spans": [
+      "machine learning",
+      "crop disease"
+    ],
+    "secondary_labels": [],
+    "core_entities": [
+      "crop disease"
+    ],
+    "retrieval_synonyms": [
+      "plant disease classification"
+    ],
+    "must_not_be_primary": []
+  },
+  "domain_taxonomy": {
+    "catalog_version": "research_domain_catalog_v1",
+    "coverage": "validated",
+    "mappings": [
+      {
+        "key": "machine_learning",
+        "domain": "computer_science",
+        "subfield": "machine_learning",
+        "label": "Machine Learning",
+        "matched_terms": [
+          "machine learning"
+        ],
+        "declared_domain_matches": [],
+        "scientific_text_matches": [
+          "machine learning"
+        ],
+        "declared_domain_score": 0.0,
+        "scientific_text_score": 1.0,
+        "score": 12.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      },
+      {
+        "key": "agricultural_biological_sciences",
+        "domain": "agricultural_biological_sciences",
+        "subfield": "agricultural_biological_sciences",
+        "label": "Agricultural And Biological Sciences",
+        "matched_terms": [
+          "crop"
+        ],
+        "declared_domain_matches": [],
+        "scientific_text_matches": [
+          "crop"
+        ],
+        "declared_domain_score": 0.0,
+        "scientific_text_score": 1.0,
+        "score": 11.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      },
+      {
+        "key": "artificial_intelligence",
+        "domain": "computer_science",
+        "subfield": "artificial_intelligence",
+        "label": "Artificial Intelligence",
+        "matched_terms": [
+          " ai "
+        ],
+        "declared_domain_matches": [],
+        "scientific_text_matches": [
+          " ai "
+        ],
+        "declared_domain_score": 0.0,
+        "scientific_text_score": 1.0,
+        "score": 11.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      }
+    ]
+  },
+  "discovery_taxonomy": {
+    "schema_version": "discipline_taxonomy_v1",
+    "scope": "natural_science_engineering_only",
+    "status": "ambiguous",
+    "primary_discipline": "computer_science",
+    "discipline_ids": [
+      "computer_science",
+      "agricultural_biological_sciences"
+    ],
+    "adjacent_disciplines": [
+      "medicine",
+      "mathematics"
+    ],
+    "coverage": "exact",
+    "matched_terms": [
+      "machine learning"
+    ],
+    "out_of_scope_terms": [],
+    "mixed": false,
+    "primary": {
+      "key": "computer_science",
+      "label": "Computer Science",
+      "family": "formal_computational_sciences",
+      "aliases": [
+        "computer science",
+        "computing",
+        "machine learning",
+        "deep learning",
+        "artificial intelligence",
+        "software engineering",
+        "information retrieval",
+        "computer vision",
+        "cybersecurity",
+        "natural language processing",
+        "robotics"
+      ],
+      "internal_domains": [
+        "computer_science"
+      ],
+      "openalex_field_ids": [
+        "17"
+      ],
+      "arxiv_categories": [
+        "cs.AI",
+        "cs.LG",
+        "cs.IR"
+      ],
+      "semantic_scholar_fields": [
+        "Computer Science"
+      ],
+      "provider_applicability": [
+        "openalex",
+        "semantic_scholar",
+        "arxiv"
+      ],
+      "coverage": "exact",
+      "adjacent": [
+        "mathematics",
+        "statistics",
+        "electrical_engineering_systems"
+      ],
+      "wos_categories": []
+    },
+    "provider_filters": {
+      "arxiv": {
+        "provider": "arxiv",
+        "primary_discipline": "computer_science",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "medicine",
+          "mathematics"
+        ],
+        "mode": "native_filter",
+        "policy": "hard_filter",
+        "applied": true,
+        "categories": [
+          "cs.AI",
+          "cs.LG",
+          "cs.IR"
+        ],
+        "category_expression": "(cat:cs.AI OR cat:cs.LG OR cat:cs.IR)",
+        "reason": "An exact bounded arXiv category expression is available for candidate-discovery metadata."
+      },
+      "openalex": {
+        "provider": "openalex",
+        "primary_discipline": "computer_science",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "medicine",
+          "mathematics"
+        ],
+        "mode": "native_filter",
+        "policy": "hard_filter",
+        "applied": true,
+        "resolved_field_ids": [
+          "17"
+        ],
+        "filter": "primary_topic.field.id:17",
+        "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+      },
+      "semantic_scholar": {
+        "provider": "semantic_scholar",
+        "primary_discipline": "computer_science",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "medicine",
+          "mathematics"
+        ],
+        "mode": "field_hint",
+        "policy": "soft_boost",
+        "applied": false,
+        "field_hints": [
+          "Computer Science"
+        ],
+        "reason": "Semantic Scholar field values are recorded as soft hints; no hard field filter is claimed."
+      }
+    },
+    "reason": "Resolved conservatively from allowlisted aliases; provider-native filters remain metadata until a provider route consumes them."
+  },
+  "domain_context": {
+    "primary": "Machine Learning for Crop Disease Diagnosis",
+    "taxonomy_labels": [
+      "Machine Learning",
+      "Agricultural And Biological Sciences",
+      "Artificial Intelligence"
+    ],
+    "secondary_labels": [],
+    "retrieval_terms": [
+      "Machine Learning for Crop Disease Diagnosis",
+      "Machine Learning",
+      "Agricultural And Biological Sciences",
+      "Artificial Intelligence",
+      "plant disease classification",
+      "crop disease"
+    ]
+  },
+  "catalog_resolution": {
+    "catalog_version": "research_domain_catalog_v1",
+    "declared_domain": "",
+    "requested_domain_is_generic": true,
+    "primary_label": "Machine Learning",
+    "primary_domain": "computer_science",
+    "primary_subfield": "machine_learning",
+    "research_domains": [
+      {
+        "key": "machine_learning",
+        "domain": "computer_science",
+        "subfield": "machine_learning",
+        "label": "Machine Learning",
+        "matched_terms": [
+          "machine learning"
+        ],
+        "declared_domain_matches": [],
+        "scientific_text_matches": [
+          "machine learning"
+        ],
+        "declared_domain_score": 0.0,
+        "scientific_text_score": 1.0,
+        "score": 12.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      },
+      {
+        "key": "agricultural_biological_sciences",
+        "domain": "agricultural_biological_sciences",
+        "subfield": "agricultural_biological_sciences",
+        "label": "Agricultural And Biological Sciences",
+        "matched_terms": [
+          "crop"
+        ],
+        "declared_domain_matches": [],
+        "scientific_text_matches": [
+          "crop"
+        ],
+        "declared_domain_score": 0.0,
+        "scientific_text_score": 1.0,
+        "score": 11.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      },
+      {
+        "key": "artificial_intelligence",
+        "domain": "computer_science",
+        "subfield": "artificial_intelligence",
+        "label": "Artificial Intelligence",
+        "matched_terms": [
+          " ai "
+        ],
+        "declared_domain_matches": [],
+        "scientific_text_matches": [
+          " ai "
+        ],
+        "declared_domain_score": 0.0,
+        "scientific_text_score": 1.0,
+        "score": 11.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      }
+    ],
+    "requires_human_confirmation": false
+  },
+  "catalog_conflict": {
+    "detected": false,
+    "adjudicated": false,
+    "catalog_primary_label": "Machine Learning",
+    "reason": ""
+  },
+  "domain_resolution_source": "llm_primary_catalog_validated",
+  "requires_human_confirmation": false,
+  "primary_discipline": "computer_science",
+  "secondary_disciplines": [
+    "agricultural_biological_sciences"
+  ],
+  "domain_confidence": 0.86,
+  "core_entities": [
+    "crop disease"
+  ],
+  "retrieval_synonyms": [
+    "plant disease classification"
+  ],
+  "abbreviations": [],
+  "exclusion_terms": [
+    "humanities-only crop history"
+  ],
+  "llm_payload": {
+    "domain": "Machine Learning for Crop Disease Diagnosis",
+    "research_domains": [
+      "Machine Learning",
+      "Agricultural And Biological Sciences"
+    ],
+    "primary_discipline": "computer_science",
+    "secondary_disciplines": [
+      "agricultural_biological_sciences"
+    ],
+    "domain_confidence": 0.86,
+    "evidence_spans": [
+      "machine learning",
+      "crop disease"
+    ],
+    "core_entities": [
+      "crop disease"
+    ],
+    "retrieval_synonyms": [
+      "plant disease classification"
+    ],
+    "abbreviations": [],
+    "exclusion_terms": [
+      "model",
+      "humanities-only crop history"
+    ],
+    "operationalization": {
+      "normalized_objective": "Which machine-learning methods improve crop disease diagnosis across data and deployment conditions?",
+      "task_or_question": "Compare crop disease diagnosis methods.",
+      "research_object": "crop disease",
+      "outcomes_or_readouts": [
+        "diagnostic performance"
+      ],
+      "data_or_deployment_context": [
+        "field imagery"
+      ],
+      "baseline_requirements": [
+        "classical vision baseline"
+      ],
+      "limitation_and_failure_conditions": [
+        "distribution shift"
+      ],
+      "rewrite_reason": "The objective is broad."
+    }
+  },
+  "llm_attempted": true,
+  "llm_error": "",
+  "taxonomy_resolution": {
+    "schema_version": "discipline_taxonomy_v1",
+    "scope": "natural_science_engineering_only",
+    "status": "ambiguous",
+    "primary_discipline": "computer_science",
+    "discipline_ids": [
+      "computer_science",
+      "agricultural_biological_sciences"
+    ],
+    "adjacent_disciplines": [
+      "medicine",
+      "mathematics"
+    ],
+    "coverage": "exact",
+    "matched_terms": [
+      "machine learning"
+    ],
+    "out_of_scope_terms": [],
+    "mixed": false,
+    "primary": {
+      "key": "computer_science",
+      "label": "Computer Science",
+      "family": "formal_computational_sciences",
+      "aliases": [
+        "computer science",
+        "computing",
+        "machine learning",
+        "deep learning",
+        "artificial intelligence",
+        "software engineering",
+        "information retrieval",
+        "computer vision",
+        "cybersecurity",
+        "natural language processing",
+        "robotics"
+      ],
+      "internal_domains": [
+        "computer_science"
+      ],
+      "openalex_field_ids": [
+        "17"
+      ],
+      "arxiv_categories": [
+        "cs.AI",
+        "cs.LG",
+        "cs.IR"
+      ],
+      "semantic_scholar_fields": [
+        "Computer Science"
+      ],
+      "provider_applicability": [
+        "openalex",
+        "semantic_scholar",
+        "arxiv"
+      ],
+      "coverage": "exact",
+      "adjacent": [
+        "mathematics",
+        "statistics",
+        "electrical_engineering_systems"
+      ],
+      "wos_categories": []
+    },
+    "provider_filters": {
+      "arxiv": {
+        "provider": "arxiv",
+        "primary_discipline": "computer_science",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "medicine",
+          "mathematics"
+        ],
+        "mode": "native_filter",
+        "policy": "hard_filter",
+        "applied": true,
+        "categories": [
+          "cs.AI",
+          "cs.LG",
+          "cs.IR"
+        ],
+        "category_expression": "(cat:cs.AI OR cat:cs.LG OR cat:cs.IR)",
+        "reason": "An exact bounded arXiv category expression is available for candidate-discovery metadata."
+      },
+      "openalex": {
+        "provider": "openalex",
+        "primary_discipline": "computer_science",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "medicine",
+          "mathematics"
+        ],
+        "mode": "native_filter",
+        "policy": "hard_filter",
+        "applied": true,
+        "resolved_field_ids": [
+          "17"
+        ],
+        "filter": "primary_topic.field.id:17",
+        "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+      },
+      "semantic_scholar": {
+        "provider": "semantic_scholar",
+        "primary_discipline": "computer_science",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "medicine",
+          "mathematics"
+        ],
+        "mode": "field_hint",
+        "policy": "soft_boost",
+        "applied": false,
+        "field_hints": [
+          "Computer Science"
+        ],
+        "reason": "Semantic Scholar field values are recorded as soft hints; no hard field filter is claimed."
+      }
+    },
+    "reason": "Resolved conservatively from allowlisted aliases; provider-native filters remain metadata until a provider route consumes them."
+  },
+  "original_objective": "Use AI for crop disease diagnosis",
+  "research_brief": "",
+  "identity_status": "resolved",
+  "evidence_spans": [
+    "machine learning",
+    "crop disease"
+  ],
+  "academic_operationalization": {
+    "applied": true,
+    "mode": "survey_scope",
+    "original_objective": "Use AI for crop disease diagnosis",
+    "normalized_objective": "Which machine-learning methods improve crop disease diagnosis across data and deployment conditions?",
+    "task_or_question": "Compare crop disease diagnosis methods.",
+    "research_object": "crop disease",
+    "outcomes_or_readouts": [
+      "diagnostic performance"
+    ],
+    "data_or_deployment_context": [
+      "field imagery"
+    ],
+    "baseline_requirements": [
+      "classical vision baseline"
+    ],
+    "limitation_and_failure_conditions": [
+      "distribution shift"
+    ],
+    "rewrite_reason": "The objective is broad.",
+    "extractor": "llm"
+  },
+  "recommended_sources": [
+    {
+      "provider": "openalex",
+      "priority": 1,
+      "role": "primary_discovery",
+      "native_filter": {
+        "provider": "openalex",
+        "primary_discipline": "computer_science",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "medicine",
+          "mathematics"
+        ],
+        "mode": "native_filter",
+        "policy": "hard_filter",
+        "applied": true,
+        "resolved_field_ids": [
+          "17"
+        ],
+        "filter": "primary_topic.field.id:17",
+        "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+      }
+    },
+    {
+      "provider": "arxiv",
+      "priority": 2,
+      "role": "conditional_preprint_discovery",
+      "enabled_for_exact_mapping": true,
+      "native_filter": {
+        "provider": "arxiv",
+        "primary_discipline": "computer_science",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "medicine",
+          "mathematics"
+        ],
+        "mode": "native_filter",
+        "policy": "hard_filter",
+        "applied": true,
+        "categories": [
+          "cs.AI",
+          "cs.LG",
+          "cs.IR"
+        ],
+        "category_expression": "(cat:cs.AI OR cat:cs.LG OR cat:cs.IR)",
+        "reason": "An exact bounded arXiv category expression is available for candidate-discovery metadata."
+      }
+    },
+    {
+      "provider": "semantic_scholar",
+      "priority": 3,
+      "role": "fallback_only",
+      "native_filter": {
+        "provider": "semantic_scholar",
+        "primary_discipline": "computer_science",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "medicine",
+          "mathematics"
+        ],
+        "mode": "field_hint",
+        "policy": "soft_boost",
+        "applied": false,
+        "field_hints": [
+          "Computer Science"
+        ],
+        "reason": "Semantic Scholar field values are recorded as soft hints; no hard field filter is claimed."
+      }
+    }
+  ],
+  "retrieval_plan": {
+    "schema_version": "retrieval_lanes_v1",
+    "execution_policy": "limited_query_lanes",
+    "baseline_query": "machine learning for crop disease diagnosis",
+    "normalized_objective": "Which machine-learning methods improve crop disease diagnosis across data and deployment conditions?",
+    "include_anchors": [
+      "Machine Learning for Crop Disease Diagnosis",
+      "Machine Learning",
+      "Agricultural And Biological Sciences",
+      "Artificial Intelligence",
+      "plant disease classification",
+      "crop disease",
+      "Compare crop disease diagnosis methods."
+    ],
+    "exclude_anchors": [
+      "humanities-only crop history"
+    ],
+    "evidence_mode": "overview",
+    "query_lanes": [
+      {
+        "lane_id": "broad_anchor",
+        "lane": "broad_anchor",
+        "provider": "openalex",
+        "query": "machine learning for crop disease diagnosis",
+        "evidence_mode": "overview",
+        "taxonomy_coverage": "broad",
+        "hard_filter_allowed": false,
+        "hard_filter_applied": false,
+        "provider_filter": {},
+        "purpose": "recall_baseline",
+        "discipline_filter_policy": "broad",
+        "execution_phase": "initial"
+      },
+      {
+        "lane_id": "exact_discipline",
+        "lane": "exact_discipline",
+        "provider": "openalex",
+        "query": "machine learning for crop disease diagnosis",
+        "evidence_mode": "overview",
+        "taxonomy_coverage": "exact",
+        "hard_filter_allowed": true,
+        "hard_filter_applied": true,
+        "provider_filter": {
+          "provider": "openalex",
+          "primary_discipline": "computer_science",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "medicine",
+            "mathematics"
+          ],
+          "mode": "native_filter",
+          "policy": "hard_filter",
+          "applied": true,
+          "resolved_field_ids": [
+            "17"
+          ],
+          "filter": "primary_topic.field.id:17",
+          "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+        },
+        "purpose": "precision_expansion",
+        "discipline_filter_policy": "exact_primary",
+        "execution_phase": "initial"
+      },
+      {
+        "lane_id": "arxiv_frontier",
+        "lane": "arxiv_frontier",
+        "provider": "arxiv",
+        "query": "machine learning for crop disease diagnosis",
+        "evidence_mode": "overview",
+        "taxonomy_coverage": "exact",
+        "hard_filter_allowed": true,
+        "hard_filter_applied": true,
+        "provider_filter": {
+          "provider": "arxiv",
+          "primary_discipline": "computer_science",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "medicine",
+            "mathematics"
+          ],
+          "mode": "native_filter",
+          "policy": "hard_filter",
+          "applied": true,
+          "categories": [
+            "cs.AI",
+            "cs.LG",
+            "cs.IR"
+          ],
+          "category_expression": "(cat:cs.AI OR cat:cs.LG OR cat:cs.IR)",
+          "reason": "An exact bounded arXiv category expression is available for candidate-discovery metadata."
+        },
+        "purpose": "conditional_preprint_coverage",
+        "discipline_filter_policy": "exact_primary",
+        "execution_phase": "initial"
+      }
+    ]
+  },
+  "identity_source": "llm_primary_catalog_validated",
+  "llm_used": true,
+  "research_design_inventory": {
+    "schema_version": "research_design_inventory_v1",
+    "input_fingerprint": "f255d17b9036881c8b15278fb7a635bf6d62b9d3d144136ae7b172b0c5d9507b",
+    "project_context_fingerprint": "0bda19bef3dbe4a097e99fc0252649bfb8abb836a692d217c1e1d2f17591297d",
+    "design_basis": [
+      {
+        "id": "DB1",
+        "kind": "research_object",
+        "statement": "crop disease",
+        "anchors": [
+          "crop disease",
+          "Machine Learning for Crop Disease Diagnosis"
+        ],
+        "source": "project_declaration_compiler",
+        "evidence_spans": [
+          "crop disease",
+          "Machine Learning for Crop Disease Diagnosis"
+        ]
+      },
+      {
+        "id": "DB2",
+        "kind": "target_relation",
+        "statement": "Which machine-learning methods improve crop disease diagnosis across data and deployment conditions?",
+        "anchors": [
+          "Which machine-learning methods improve crop disease diagnosis across data and deployment conditions?",
+          "crop disease"
+        ],
+        "source": "project_declaration_compiler",
+        "evidence_spans": [
+          "Which machine-learning methods improve crop disease diagnosis across data and deployment conditions?"
+        ]
+      },
+      {
+        "id": "DB3",
+        "kind": "outcome_or_construct",
+        "statement": "The project requires evidence about declared outcomes or constructs.",
+        "anchors": [
+          "diagnostic performance"
+        ],
+        "source": "project_declaration_compiler",
+        "evidence_spans": [
+          "diagnostic performance"
+        ]
+      },
+      {
+        "id": "DB4",
+        "kind": "condition_or_regime",
+        "statement": "The project scope includes the declared conditions, regimes, or contexts.",
+        "anchors": [
+          "field imagery"
+        ],
+        "source": "project_declaration_compiler",
+        "evidence_spans": [
+          "field imagery"
+        ]
+      },
+      {
+        "id": "DB5",
+        "kind": "comparison",
+        "statement": "The project requires explicit comparison or baseline interpretation where applicable.",
+        "anchors": [
+          "classical vision baseline"
+        ],
+        "source": "project_declaration_compiler",
+        "evidence_spans": [
+          "classical vision baseline"
+        ]
+      },
+      {
+        "id": "DB6",
+        "kind": "boundary_or_failure",
+        "statement": "The project must retain declared limitations, failure conditions, or boundary cases.",
+        "anchors": [
+          "distribution shift"
+        ],
+        "source": "project_declaration_compiler",
+        "evidence_spans": [
+          "distribution shift"
+        ]
+      }
+    ],
+    "inventory_source": "project_declaration_compiler",
+    "llm_used": false,
+    "llm_error": "llm_design_inventory_failed_source_grounding"
+  }
+}

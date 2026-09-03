@@ -1,0 +1,83 @@
+{
+  "evidence": [
+    {
+      "applicability_conditions": [
+        "k remains constant over the modeled interval."
+      ],
+      "empirical_claim_status": "NOT_EMPIRICAL",
+      "execution_mode": "NUMERICAL_SIMULATION",
+      "final_version": 0,
+      "hypothesis_relation": "REFUTED_WITHIN_MODEL",
+      "limitations": [
+        "The result is not empirical."
+      ],
+      "lineage_summary": [
+        {
+          "reason": "The evidence-bound numerical trajectory decays under the approved parameter set.",
+          "relation": "REFUTED_WITHIN_MODEL",
+          "version": 0
+        }
+      ],
+      "model_family": "ODE_IVP",
+      "numerical_quality": {
+        "scenario_statuses": [],
+        "status": "NOT_REPORTED"
+      },
+      "parameter_provenance": {
+        "entries": [
+          {
+            "conditions": {
+              "required_condition_1": "temperature_K",
+              "temperature_K": 300.0
+            },
+            "evidence_locator": {
+              "document_type": "TXT",
+              "page": null,
+              "quoted_text": "At 300 K, the measured decay coefficient was k = 2.0 s^-1.",
+              "section": "",
+              "table_or_figure": ""
+            },
+            "mathir_symbol": "k",
+            "parameter_id": "k",
+            "provenance_status": "APPROVED_USER_INPUT",
+            "role": "MATERIAL_PROPERTY",
+            "selected_value": 2.0,
+            "selection_rationale": "The user-provided measured condition is the modeled baseline.",
+            "source": {
+              "cross_validated": false,
+              "discovery_sources": [
+                "user_provided"
+              ],
+              "document_id": "UPD-001",
+              "doi": "",
+              "title": "Controlled measurement note",
+              "year": 2025
+            },
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "s^-1"
+          }
+        ],
+        "mode": "APPROVED_PARAMETER_SET",
+        "parameter_set_identity": "a81f3c942c690a736b9460bbc661e38ba2f0390a04493867c6164f9d2fd03216"
+      },
+      "quantitative_idea_id": "Q1",
+      "question": "Does x decay under the approved positive k?",
+      "result_kind": "SIMULATED",
+      "result_quality": "QUALIFIED",
+      "result_summary": "The evidence-bound numerical trajectory decays under the approved parameter set.",
+      "supplement_pdf_reference": "quantitative_mathematical_models.pdf#Q1"
+    }
+  ],
+  "schema_version": "quantitative_author_handoff_v1",
+  "source_identity": {
+    "project_context_fingerprint": "quantitative-parameter-context",
+    "project_id": "quantitative-parameter-project",
+    "science_run_id": "qpf",
+    "selected_direction_id": "direction-1",
+    "survey_run_id": "survey-quantitative-parameter"
+  }
+}

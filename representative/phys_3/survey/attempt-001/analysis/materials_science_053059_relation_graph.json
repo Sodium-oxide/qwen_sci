@@ -1,0 +1,129 @@
+{
+  "Atomic-Scale Interfacial Bonding and Precision Thermal Metrology": {
+    "nodes": [
+      "W2200737425",
+      "W7171707973",
+      "W2058274078"
+    ],
+    "edges": [
+      {
+        "source": "W2200737425",
+        "target": "W2058274078",
+        "type": "Background",
+        "analysis": "Paper A cites Paper B as a pivotal experimental case study to empirically validate its core thesis that interfacial chemistry directly governs thermal boundary conductance. Specifically, Paper A leverages Paper B’s quantitative findings on gold-quartz interfaces—where covalent thiol-termination nearly doubles conductance compared to van der Waals methyl-termination—to demonstrate how interface adhesion and bonding strength modulate the transmission coefficient ($\\alpha$) beyond traditional acoustic mismatch models.",
+        "raw": "{\n  \"type\": \"Background\",\n  \"analysis\": \"Paper A cites Paper B as a pivotal experimental case study to empirically validate its core thesis that interfacial chemistry directly governs thermal boundary conductance. Specifically, Paper A leverages Paper B’s quantitative findings on gold-quartz interfaces—where covalent thiol-termination nearly doubles conductance compared to van der Waals methyl-termination—to demonstrate how interface adhesion and bonding strength modulate the transmission coefficient ($\\\\alpha$) beyond traditional acoustic mismatch models.\"\n}"
+      }
+    ]
+  },
+  "Phonon Spectroscopy, Mean Free Path Resolving Techniques, and Kinetic Transport Modeling": {
+    "nodes": [
+      "W2132162076",
+      "W2116768756",
+      "W2913151242",
+      "W2906632669",
+      "W2161591557",
+      "W2042604455",
+      "W2035993021"
+    ],
+    "edges": [
+      {
+        "source": "W2132162076",
+        "target": "W2161591557",
+        "type": "Comparison",
+        "analysis": "Paper A cites Paper B as a key experimental baseline demonstrating nondiffusive thermal transport in silicon at micron distances, using it to contextualize and contrast its own broadband frequency-domain thermoreflectance (BB-FDTR) measurements. By comparing BB-FDTR’s continuous frequency-sweep approach against Paper B’s discrete thermal grating periods, Paper A resolves prior discrepancies in reported mean free path contributions and demonstrates superior capability in mapping the full phonon MFP spectrum.",
+        "raw": "{\n  \"type\": \"Comparison\",\n  \"analysis\": \"Paper A cites Paper B as a key experimental baseline demonstrating nondiffusive thermal transport in silicon at micron distances, using it to contextualize and contrast its own broadband frequency-domain thermoreflectance (BB-FDTR) measurements. By comparing BB-FDTR’s continuous frequency-sweep approach against Paper B’s discrete thermal grating periods, Paper A resolves prior discrepancies in reported mean free path contributions and demonstrates superior capability in mapping the full phonon MFP spectrum.\"\n}"
+      },
+      {
+        "source": "W2042604455",
+        "target": "W2132162076",
+        "type": "Background",
+        "analysis": "Paper A cites Paper B to provide foundational context regarding the significance of broadband phonon mean free path (MFP) spectra, referencing Paper B's experimental demonstration that long-MFP phonons contribute substantially to thermal conductivity in bulk materials. This citation frames Paper A's investigation into frequency-dependent MFPs in carbon nanotubes, allowing the authors to draw parallels between the dominant role of long-MFP modes in silicon and their own findings of ultra-long MFPs (>10 µm) for low-frequency acoustic modes in CNTs, thereby reinforcing the general principle that accurate thermal modeling requires resolving the full spectral distribution of scattering lengths.",
+        "raw": "{\n  \"type\": \"Background\",\n  \"analysis\": \"Paper A cites Paper B to provide foundational context regarding the significance of broadband phonon mean free path (MFP) spectra, referencing Paper B's experimental demonstration that long-MFP phonons contribute substantially to thermal conductivity in bulk materials. This citation frames Paper A's investigation into frequency-dependent MFPs in carbon nanotubes, allowing the authors to draw parallels between the dominant role of long-MFP modes in silicon and their own findings of ultra-long MFPs (>10 µm) for low-frequency acoustic modes in CNTs, thereby reinforcing the general principle that accurate thermal modeling requires resolving the full spectral distribution of scattering lengths.\"\n}"
+      }
+    ]
+  },
+  "Two-Dimensional Transition Metal Dichalcogenides and Dimensionality-Constrained Lattice Dynamics": {
+    "nodes": [
+      "W3202213959",
+      "W1981135908",
+      "W2043184042",
+      "W2035993021"
+    ],
+    "edges": [
+      {
+        "source": "W3202213959",
+        "target": "W1981135908",
+        "type": "Background",
+        "analysis": "Paper A cites Paper B to establish the intrinsic in-plane thermal conductivity baseline for monolayer MoS2 (~34.5 W/mK), which serves as a fundamental reference point for contextualizing the slightly higher in-plane conductivity (~50 W/mK) measured in their engineered polycrystalline, randomly rotated stacked films. Additionally, Paper B's pioneering demonstration of Raman thermometry on suspended MoS2 provides methodological precedent and validation for Paper A's thermal characterization approach.",
+        "raw": "{\n  \"type\": \"Background\",\n  \"analysis\": \"Paper A cites Paper B to establish the intrinsic in-plane thermal conductivity baseline for monolayer MoS2 (~34.5 W/mK), which serves as a fundamental reference point for contextualizing the slightly higher in-plane conductivity (~50 W/mK) measured in their engineered polycrystalline, randomly rotated stacked films. Additionally, Paper B's pioneering demonstration of Raman thermometry on suspended MoS2 provides methodological precedent and validation for Paper A's thermal characterization approach.\"\n}"
+      },
+      {
+        "source": "W3202213959",
+        "target": "W2043184042",
+        "type": "Comparison",
+        "analysis": "Paper A cites Paper B to establish a benchmark for the intrinsic in-plane thermal conductivity of MoS2 (~52 W/mK), which it directly compares against its own measured value of ~50 W/mK for r-MoS2. By referencing Paper B's suspended-sample Raman thermometry methodology and results, Paper A validates that its structurally engineered films retain in-plane thermal transport capabilities comparable to conventional few-layer MoS2.",
+        "raw": "{\n  \"type\": \"Comparison\",\n  \"analysis\": \"Paper A cites Paper B to establish a benchmark for the intrinsic in-plane thermal conductivity of MoS2 (~52 W/mK), which it directly compares against its own measured value of ~50 W/mK for r-MoS2. By referencing Paper B's suspended-sample Raman thermometry methodology and results, Paper A validates that its structurally engineered films retain in-plane thermal transport capabilities comparable to conventional few-layer MoS2.\"\n}"
+      },
+      {
+        "source": "W3202213959",
+        "target": "W2035993021",
+        "type": "Background",
+        "analysis": "Paper B establishes the intrinsic phonon dispersion, relaxation times, and baseline thermal conductivity (~23.2 W m⁻¹ K⁻¹) of monolayer MoS₂, which Paper A cites to provide fundamental context for the material's native thermal transport mechanisms. This reference serves as a benchmark, allowing Paper A to demonstrate how its structural engineering (random interlayer rotations) preserves high in-plane conductivity near these intrinsic limits while drastically suppressing through-plane transport.",
+        "raw": "{\n  \"type\": \"Background\",\n  \"analysis\": \"Paper B establishes the intrinsic phonon dispersion, relaxation times, and baseline thermal conductivity (~23.2 W m⁻¹ K⁻¹) of monolayer MoS₂, which Paper A cites to provide fundamental context for the material's native thermal transport mechanisms. This reference serves as a benchmark, allowing Paper A to demonstrate how its structural engineering (random interlayer rotations) preserves high in-plane conductivity near these intrinsic limits while drastically suppressing through-plane transport.\"\n}"
+      }
+    ]
+  },
+  "Scalable Semiconductor Crystal Growth and Intrinsic Property Benchmarking": {
+    "nodes": [
+      "W4309918419"
+    ],
+    "edges": []
+  },
+  "Complex Dynamic Crystals, Phonon-Glass Electron-Crystal Phenomena, and Superionic Lattice Dynamics": {
+    "nodes": [
+      "W2057239875",
+      "W2763552432",
+      "W2623727589"
+    ],
+    "edges": [
+      {
+        "source": "W2763552432",
+        "target": "W2057239875",
+        "type": "Application",
+        "analysis": "Paper A applies the 'phonon-glass electron-crystal' (PGEC) framework originally established for thermoelectric clathrates in Paper B to the distinct domain of lead halide perovskites. By adapting this theoretical concept, Paper A leverages the PGEC paradigm to explain how dynamic cation disorder in perovskites yields liquid-like phonon scattering alongside coherent electronic transport, using it as a unifying physical model for the materials' defect tolerance, hot-carrier dynamics, and mobility.",
+        "raw": "{\n  \"type\": \"Application\",\n  \"analysis\": \"Paper A applies the 'phonon-glass electron-crystal' (PGEC) framework originally established for thermoelectric clathrates in Paper B to the distinct domain of lead halide perovskites. By adapting this theoretical concept, Paper A leverages the PGEC paradigm to explain how dynamic cation disorder in perovskites yields liquid-like phonon scattering alongside coherent electronic transport, using it as a unifying physical model for the materials' defect tolerance, hot-carrier dynamics, and mobility.\"\n}"
+      },
+      {
+        "source": "W2623727589",
+        "target": "W2057239875",
+        "type": "Background",
+        "analysis": "Paper A cites Paper B to establish the theoretical and experimental context for resonant rattling and glass-like thermal conductivity in clathrate compounds. It specifically draws on Paper B’s findings regarding guest-host phonon hybridization and the breakdown of independent rattling models to frame the ongoing debate on acoustic-optic coupling discussed in its section on complex materials. This citation grounds Paper A’s broader synthesis of unconventional thermal transport strategies within the well-characterized physics of clathrate thermoelectrics.",
+        "raw": "{\n  \"type\": \"Background\",\n  \"analysis\": \"Paper A cites Paper B to establish the theoretical and experimental context for resonant rattling and glass-like thermal conductivity in clathrate compounds. It specifically draws on Paper B’s findings regarding guest-host phonon hybridization and the breakdown of independent rattling models to frame the ongoing debate on acoustic-optic coupling discussed in its section on complex materials. This citation grounds Paper A’s broader synthesis of unconventional thermal transport strategies within the well-characterized physics of clathrate thermoelectrics.\"\n}"
+      }
+    ]
+  },
+  "Phononic Crystals and Wave-Coherent Thermal Band Structure Engineering": {
+    "nodes": [
+      "W2046204617"
+    ],
+    "edges": []
+  },
+  "Macroscopic Composite Architectures and Flexible Electronic Thermal Management": {
+    "nodes": [
+      "W4388763350"
+    ],
+    "edges": []
+  },
+  "Electrical-Lattice Transport Decoupling and Integrated Theory-Experiment Paradigms in Thermoelectrics": {
+    "nodes": [
+      "W2623727589"
+    ],
+    "edges": []
+  },
+  "Conductive Network Topologies and Structural Hierarchy in Multinary Functional Materials": {
+    "nodes": [
+      "W2623727589"
+    ],
+    "edges": []
+  }
+}

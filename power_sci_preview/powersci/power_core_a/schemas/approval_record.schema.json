@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qwen-zhikan.local/schemas/approval_record_v1.json",
+  "title": "ApprovalRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "approval_id", "run_id", "approval_type", "decision", "subject_artifact_hash", "approver_id", "decided_at", "reason"],
+  "properties": {
+    "schema_version": {"const": "approval_record_v1"},
+    "approval_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "approval_type": {"const": "PROTOCOL_FREEZE"},
+    "decision": {"enum": ["APPROVED", "REJECTED"]},
+    "subject_artifact_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "approver_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "decided_at": {"type": "string", "format": "date-time"},
+    "reason": {"type": "string", "minLength": 1, "maxLength": 2000}
+  }
+}
+

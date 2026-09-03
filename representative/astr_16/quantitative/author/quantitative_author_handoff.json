@@ -1,0 +1,690 @@
+{
+  "evidence": [
+    {
+      "applicability_conditions": [
+        "Stellar geometry, electromagnetic constants, and moment of inertia are absorbed into effective braking constants K_dipole and K_acc.",
+        "Magnetic inclination evolves smoothly via exponential decay without discontinuous glitches or magnetospheric state transitions.",
+        "Accretion torque is active exclusively during t < t_acc with nonzero Mdot; isolated dipole torque applies otherwise."
+      ],
+      "empirical_claim_status": "NOT_EMPIRICAL",
+      "execution_mode": "NUMERICAL_SIMULATION",
+      "final_version": 0,
+      "hypothesis_relation": "CONSTRAINED",
+      "limitations": [
+        "Excludes glitch events, magnetospheric state transitions, and variable moment of inertia.",
+        "Assumes fixed stellar geometry and absorbs unresolved electromagnetic factors into effective constants.",
+        "Observational selection effects and survey detection thresholds are not dynamically coupled to the simulation loop."
+      ],
+      "lineage_summary": [
+        {
+          "reason": "Within the audited reduced ODE, the isolated track increases from P=0.500 s to 0.662 s, whereas the recycling track reaches P_min=0.226 s during accretion and ends at 0.281 s after resumed dipole spin-down. This establishes model-internal directional separation, but does not by itself validate population-level n-tau_c discrimination because the executable MathIR contains two deterministic tracks rather than the documented Monte Carlo outer loop.",
+          "relation": "CONSTRAINED",
+          "version": 0
+        }
+      ],
+      "model_family": "Explicit Runge-Kutta 4th Order",
+      "parameter_provenance": {
+        "entries": [
+          {
+            "conditions": {
+              "required_condition_1": "For isolated or recycled neutron stars at the beginning of the simulated spin-down phase, with period measured in seconds and no glitch-induced period jump at the initial epoch."
+            },
+            "evidence_locator": {
+              "document_type": "preprint",
+              "page": null,
+              "quoted_text": "birth spin period ∼0.5 s",
+              "section": "",
+              "table_or_figure": ""
+            },
+            "mathir_symbol": "P0",
+            "parameter_id": "initial_period",
+            "provenance_status": "APPROVED_USER_INPUT",
+            "role": "BOUNDARY_CONDITION",
+            "selected_value": 0.5,
+            "selection_rationale": "Use the literature-reported approximately 0.5 s birth period as the common pre-evolution baseline for isolated and recycled comparison tracks.",
+            "source": {
+              "cross_validated": false,
+              "discovery_sources": [
+                "user_provided"
+              ],
+              "document_id": "Q1-FGK2006",
+              "doi": "10.1086/501516",
+              "title": "Birth and Evolution of Isolated Radio Pulsars",
+              "year": 2006
+            },
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "s"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "For dipole torque models with approximately aligned magnetic and rotational axes represented by an angle in radians; treated as the starting value before inclination decay."
+            },
+            "evidence_locator": {},
+            "mathir_symbol": "alpha0",
+            "parameter_id": "initial_inclination",
+            "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+            "role": "BOUNDARY_CONDITION",
+            "selected_value": 0.7853981633974483,
+            "selection_rationale": "Adopt a 45 degree baseline inclination so the dipole torque is active without assuming either perfect alignment or orthogonality.",
+            "source": {},
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "rad"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "For isolated neutron stars with approximately dipolar surface fields inferred from timing data, expressed in tesla; not intended for magnetar-like or strongly multipolar fields."
+            },
+            "evidence_locator": {
+              "document_type": "review_article",
+              "page": null,
+              "quoted_text": "typical values of 10 12 G and 107 yr for the normal pulsars",
+              "section": "",
+              "table_or_figure": ""
+            },
+            "mathir_symbol": "B0",
+            "parameter_id": "initial_surface_magnetic_field",
+            "provenance_status": "APPROVED_USER_INPUT",
+            "role": "BOUNDARY_CONDITION",
+            "selected_value": 100000000.0,
+            "selection_rationale": "Use the review-reported 10^12 G normal-pulsar field, converted to 10^8 T, to represent the isolated-pulsar baseline.",
+            "source": {
+              "cross_validated": false,
+              "discovery_sources": [
+                "user_provided"
+              ],
+              "document_id": "Q1-LORIMER2008",
+              "doi": "10.12942/lrr-2008-8",
+              "title": "Binary and Millisecond Pulsars",
+              "year": 2008
+            },
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "T"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "For the chosen effective spin-down law with magnetic field in tesla and period in seconds, assuming fixed stellar geometry and no unresolved internal braking physics."
+            },
+            "evidence_locator": {},
+            "mathir_symbol": "K_dipole",
+            "parameter_id": "vacuum_dipole_braking_constant",
+            "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+            "role": "MODEL_ASSUMPTION",
+            "selected_value": 9.765625e-32,
+            "selection_rationale": "Choose the effective coefficient so a 10^8 T, 0.5 s, 45 degree pulsar has an order-10^-15 period derivative; unresolved radius, inertia, and electromagnetic constants remain absorbed in this proxy.",
+            "source": {},
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "s_T^-2"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "For pulsars with magnetospheric wind torque included as a multiplicative enhancement of the dipole term; scenario switches may disable the wind contribution."
+            },
+            "evidence_locator": {},
+            "mathir_symbol": "eta",
+            "parameter_id": "wind_braking_efficiency",
+            "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+            "role": "MODEL_ASSUMPTION",
+            "selected_value": 0.1,
+            "selection_rationale": "Use a modest ten-percent wind-torque contribution as a sensitivity baseline while preserving dipole braking as the dominant isolated mechanism.",
+            "source": {},
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "dimensionless"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "For isolated pulsars modeled with smooth inclination decay, expressed in seconds, excluding glitches and abrupt magnetospheric state changes."
+            },
+            "evidence_locator": {
+              "document_type": "review_article",
+              "page": null,
+              "quoted_text": "on timescales of order 10 7 yr",
+              "section": "",
+              "table_or_figure": ""
+            },
+            "mathir_symbol": "tau_alpha",
+            "parameter_id": "inclination_decay_timescale",
+            "provenance_status": "APPROVED_USER_INPUT",
+            "role": "MODEL_ASSUMPTION",
+            "selected_value": 315576000000000.0,
+            "selection_rationale": "Use the review-reported order-10^7 yr inclination-evolution timescale converted to seconds.",
+            "source": {
+              "cross_validated": false,
+              "discovery_sources": [
+                "user_provided"
+              ],
+              "document_id": "Q1-LORIMER2008",
+              "doi": "10.12942/lrr-2008-8",
+              "title": "Binary and Millisecond Pulsars",
+              "year": 2008
+            },
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "s"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "For recycled pulsars in a steady disk-accretion phase, expressed in kilograms per second, ignoring transient outbursts and companion ablation."
+            },
+            "evidence_locator": {},
+            "mathir_symbol": "Mdot",
+            "parameter_id": "accretion_rate",
+            "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+            "role": "SCENARIO_INPUT",
+            "selected_value": 630000000000000.0,
+            "selection_rationale": "No compatible scalar survived extraction; adopt 6.3e14 kg/s as an explicit sub-Eddington sensitivity baseline for steady recycling rather than as a measured rate.",
+            "source": {},
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "kg_s^-1"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "For the effective accretion law using accretion rate in kilograms per second and dimensionless period derivative; active only during the accretion phase."
+            },
+            "evidence_locator": {},
+            "mathir_symbol": "K_acc",
+            "parameter_id": "accretion_braking_constant",
+            "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+            "role": "SCENARIO_INPUT",
+            "selected_value": 6.3e-31,
+            "selection_rationale": "Set the reduced spin-up coefficient to permit substantial but finite period reduction over a 10 Myr accretion interval; it is an effective torque proxy, not a microphysical constant.",
+            "source": {},
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "s^2_kg^-1"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "For binary recycling tracks represented by a finite accretion interval followed by isolated spin-down, expressed in seconds."
+            },
+            "evidence_locator": {},
+            "mathir_symbol": "t_acc",
+            "parameter_id": "accretion_duration",
+            "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+            "role": "SCENARIO_INPUT",
+            "selected_value": 315576000000000.0,
+            "selection_rationale": "Adopt a 10 Myr active recycling interval so the 100 Myr run retains a distinct post-accretion spin-down phase.",
+            "source": {},
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "s"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "Numerical endpoint for population synthesis tracks; not a physical observable unless tied to survey selection or evolutionary assumptions."
+            },
+            "evidence_locator": {
+              "document_type": "preprint",
+              "page": null,
+              "quoted_text": "over the lifetime of the pulsars as radio sources ( ∼ 100 Myr)",
+              "section": "",
+              "table_or_figure": ""
+            },
+            "mathir_symbol": "T_max",
+            "parameter_id": "maximum_simulated_age",
+            "provenance_status": "APPROVED_USER_INPUT",
+            "role": "BOUNDARY_CONDITION",
+            "selected_value": 3155760000000000.0,
+            "selection_rationale": "Use the reported approximately 100 Myr radio-pulsar lifetime as the integration horizon.",
+            "source": {
+              "cross_validated": false,
+              "discovery_sources": [
+                "user_provided"
+              ],
+              "document_id": "Q1-FGK2006",
+              "doi": "10.1086/501516",
+              "title": "Birth and Evolution of Isolated Radio Pulsars",
+              "year": 2006
+            },
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "s"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "Survey-dependent detection boundary for timing observations; used as a stopping condition rather than a physical spin-down parameter."
+            },
+            "evidence_locator": {},
+            "mathir_symbol": "Pdot_min",
+            "parameter_id": "minimum_detectable_period_derivative",
+            "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+            "role": "BOUNDARY_CONDITION",
+            "selected_value": 1e-22,
+            "selection_rationale": "Use 10^-22 s/s as a permissive numerical detectability floor to stop effectively inactive tracks without truncating ordinary pulsar evolution.",
+            "source": {},
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "dimensionless"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "Numerical control for population synthesis; chosen for computational budget and statistical resolution rather than physical measurement."
+            },
+            "evidence_locator": {},
+            "mathir_symbol": "N_mc",
+            "parameter_id": "monte_carlo_sample_count",
+            "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+            "role": "MODEL_ASSUMPTION",
+            "selected_value": 5000.0,
+            "selection_rationale": "Use 5000 tracks as a computationally bounded first-pass population sample large enough for stable distribution summaries.",
+            "source": {},
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "dimensionless"
+          }
+        ],
+        "mode": "APPROVED_PARAMETER_SET",
+        "parameter_set_identity": "0f0174315925c8e5b143507cd77c961e1becdad36afebaa31e7f6df12d27946c"
+      },
+      "quantitative_idea_id": "Q1",
+      "question": "Can the joint distribution of braking index n and characteristic age tau_c statistically distinguish isolated magnetic-dipole evolution from binary recycling populations, given specific torque model constraints?",
+      "result_kind": "SIMULATED",
+      "result_quality": "QUALIFIED",
+      "result_summary": "Within the audited reduced ODE, the isolated track increases from P=0.500 s to 0.662 s, whereas the recycling track reaches P_min=0.226 s during accretion and ends at 0.281 s after resumed dipole spin-down. This establishes model-internal directional separation, but does not by itself validate population-level n-tau_c discrimination because the executable MathIR contains two deterministic tracks rather than the documented Monte Carlo outer loop.",
+      "supplement_pdf_reference": "quantitative_mathematical_models.pdf#Q1"
+    },
+    {
+      "applicability_conditions": [
+        "Neutron stars are treated as spherically symmetric, isolated systems with no binary accretion torque or magnetic field evolution.",
+        "Detailed neutrino emissivity processes and heat-capacity microphysics are absorbed into a single effective cooling timescale and scenario-dependent coefficients.",
+        "Moment of inertia variations are fully parameterized into the rotational compression coefficient rather than solved dynamically."
+      ],
+      "empirical_claim_status": "NOT_EMPIRICAL",
+      "execution_mode": "NUMERICAL_SIMULATION",
+      "final_version": 0,
+      "hypothesis_relation": "SUPPORTED_WITHIN_MODEL",
+      "limitations": [
+        "Highly sensitive to the choice of EOS and phase transition parameters; observational uncertainties in distance and radius affect temperature inference.",
+        "Assumes spherical symmetry and ignores binary recycling, companion-ablation evolution, and detailed crustal heat blanketing.",
+        "No resolved neutrino microphysics or full equation-of-state integration; relies on effective proxy coefficients for first executable run."
+      ],
+      "lineage_summary": [
+        {
+          "reason": "The audited reduced ODE crosses rho_crit=5.12e17 kg/m^3 at approximately 9.85e11 s in all spin-down cases. At 3*tau_cool, the standard, phase-transition, and phase-transition-plus-superfluid scenarios yield surface temperatures of about 4.98e4 K, 5.32e4 K, and 2.36e5 K, respectively; phase_fraction reaches 1 only in the two transition scenarios. The mechanism therefore produces distinguishable model-internal thermal tracks, conditional on the effective cooling, latent-heat, and compression proxies.",
+          "relation": "SUPPORTED_WITHIN_MODEL",
+          "version": 0
+        }
+      ],
+      "model_family": "Stiff ODE IVP integrator (e.g., LSODA or Radau)",
+      "parameter_provenance": {
+        "entries": [
+          {
+            "conditions": {
+              "required_condition_1": "Isolated massive neutron star; spherical symmetry; non-recycled spin-down history; no binary accretion torque."
+            },
+            "evidence_locator": {
+              "document_type": "local_document",
+              "page": null,
+              "quoted_text": "M = 1 .42 M ⊙",
+              "section": "",
+              "table_or_figure": ""
+            },
+            "mathir_symbol": "M_NS",
+            "parameter_id": "neutron_star_mass",
+            "provenance_status": "APPROVED_USER_INPUT",
+            "role": "SCENARIO_INPUT",
+            "selected_value": 1.42,
+            "selection_rationale": "Use the 1.42 solar-mass configuration reported in the phase-transition cooling study as the reduced-model stellar mass.",
+            "source": {
+              "cross_validated": false,
+              "discovery_sources": [
+                "user_provided"
+              ],
+              "document_id": "Q2-STEJNER2009",
+              "doi": "10.1088/0004-637X/694/2/1019",
+              "title": "Signature of Deconfinement with Spin-down Compression in Cooling Hybrid Stars",
+              "year": 2009
+            },
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "solar_mass"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "Young isolated neutron star at the beginning of the cooling track; model assumes initial thermal state before long-term cooling; no crustal decoupling resolved."
+            },
+            "evidence_locator": {
+              "document_type": "local_document",
+              "page": null,
+              "quoted_text": "1010 K to around 10 9 K",
+              "section": "",
+              "table_or_figure": ""
+            },
+            "mathir_symbol": "T_c0",
+            "parameter_id": "initial_core_temperature",
+            "provenance_status": "APPROVED_USER_INPUT",
+            "role": "BOUNDARY_CONDITION",
+            "selected_value": 1000000000.0,
+            "selection_rationale": "Use the literature-reported 10^9 K initial core temperature for the young-star cooling integration.",
+            "source": {
+              "cross_validated": false,
+              "discovery_sources": [
+                "user_provided"
+              ],
+              "document_id": "Q2-STEJNER2009",
+              "doi": "10.1088/0004-637X/694/2/1019",
+              "title": "Signature of Deconfinement with Spin-down Compression in Cooling Hybrid Stars",
+              "year": 2009
+            },
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "K"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "Birth spin state of an isolated neutron star; magnetic dipole spin-down; no binary recycling or accretion-driven spin-up."
+            },
+            "evidence_locator": {
+              "document_type": "user_provided_local_document",
+              "page": null,
+              "quoted_text": "The timing observational data correspond to P = 206.4 ms, Pdot = 9.7228 x 10^-13 s s^-1, and Pddot = -5.27(13) x 10^-24 s s^-2.",
+              "section": "",
+              "table_or_figure": ""
+            },
+            "mathir_symbol": "Omega0",
+            "parameter_id": "initial_spin_frequency",
+            "provenance_status": "APPROVED_USER_INPUT",
+            "role": "SCENARIO_INPUT",
+            "selected_value": 30.44178928,
+            "selection_rationale": "Use the angular frequency transformed from the same PSR J1640-4631 timing record that supplies the period derivative and braking index, preserving internal timing consistency.",
+            "source": {
+              "cross_validated": false,
+              "discovery_sources": [
+                "user_provided"
+              ],
+              "document_id": "Q2-GAO2017-PDOT-EXCERPT",
+              "doi": "10.3847/1538-4357/aa68e6",
+              "title": "Controlled excerpt from On the magnetic field evolution of PSR J1640-4631",
+              "year": 2017
+            },
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "rad_s^-1"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "Adopted for the first executable parsimonious model; must be internally consistent with the selected mass and EOS proxy; no full EOS integration is resolved."
+            },
+            "evidence_locator": {},
+            "mathir_symbol": "rho_c0",
+            "parameter_id": "initial_central_density",
+            "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+            "role": "BOUNDARY_CONDITION",
+            "selected_value": 4.5e+17,
+            "selection_rationale": "Start below the selected 5.12e17 kg/m^3 transition threshold so spin-down compression can produce an observable threshold crossing in the reduced model.",
+            "source": {},
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "kg_m^-3"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "Isolated pulsar timing measurement; magnetic dipole braking; no accretion torque; no significant magnetic field evolution resolved."
+            },
+            "evidence_locator": {
+              "document_type": "user_provided_local_document",
+              "page": null,
+              "quoted_text": "The timing observational data correspond to P = 206.4 ms, Pdot = 9.7228 x 10^-13 s s^-1, and Pddot = -5.27(13) x 10^-24 s s^-2.",
+              "section": "",
+              "table_or_figure": ""
+            },
+            "mathir_symbol": "Pdot0",
+            "parameter_id": "initial_spin_period_derivative",
+            "provenance_status": "APPROVED_USER_INPUT",
+            "role": "SCENARIO_INPUT",
+            "selected_value": 9.7228e-13,
+            "selection_rationale": "Use the directly reported 9.7228e-13 s/s timing value from PSR J1640-4631.",
+            "source": {
+              "cross_validated": false,
+              "discovery_sources": [
+                "user_provided"
+              ],
+              "document_id": "Q2-GAO2017-PDOT-EXCERPT",
+              "doi": "10.3847/1538-4357/aa68e6",
+              "title": "Controlled excerpt from On the magnetic field evolution of PSR J1640-4631",
+              "year": 2017
+            },
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "s_s^-1"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "Beta-equilibrated dense matter composition; EOS-dependent transition; relevant temperature and pressure regime for neutron star interiors."
+            },
+            "evidence_locator": {
+              "document_type": "local_document",
+              "page": null,
+              "quoted_text": "about 2 times nuclear saturation",
+              "section": "",
+              "table_or_figure": ""
+            },
+            "mathir_symbol": "rho_crit",
+            "parameter_id": "phase_transition_critical_density",
+            "provenance_status": "APPROVED_USER_INPUT",
+            "role": "MATERIAL_PROPERTY",
+            "selected_value": 5.12e+17,
+            "selection_rationale": "Use the review-reported onset near twice nuclear saturation density, with the explicit baryon-density-to-mass-density transformation recorded in the evidence candidate.",
+            "source": {
+              "cross_validated": false,
+              "discovery_sources": [
+                "user_provided"
+              ],
+              "document_id": "Q2-STEJNER2009",
+              "doi": "10.1088/0004-637X/694/2/1019",
+              "title": "Signature of Deconfinement with Spin-down Compression in Cooling Hybrid Stars",
+              "year": 2009
+            },
+            "transformation": {
+              "applied": true,
+              "formula": "2 * 0.153 fm^-3 * 1.674e-27 kg_per_baryon = 5.12e17 kg_m^-3"
+            },
+            "uncertainty": {},
+            "unit": "kg_m^-3"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "EOS-dependent phase transition; beta-equilibrated dense matter; conversion from microscopic latent heat to a temperature proxy is a model assumption; no resolved heat-capacity microphysics."
+            },
+            "evidence_locator": {},
+            "mathir_symbol": "L_latent",
+            "parameter_id": "effective_latent_heat_temperature_release",
+            "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+            "role": "MATERIAL_PROPERTY",
+            "selected_value": 50000000.0,
+            "selection_rationale": "The source gives latent-heat physics but no unique equivalent temperature increment; use 5e7 K as a declared five-percent proxy for sensitivity analysis, not a measured value.",
+            "source": {},
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "K"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "First executable parsimonious model; scenario choice is explicit and not represented as a literature value."
+            },
+            "evidence_locator": {},
+            "mathir_symbol": "scenario",
+            "parameter_id": "scenario_selector",
+            "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+            "role": "SCENARIO_INPUT",
+            "selected_value": 1.0,
+            "selection_rationale": "Use phase-transition cooling as the approved baseline and explicitly override this switch only in the audited comparison scenarios.",
+            "source": {},
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "dimensionless"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "Adopted spin-down law assumption; no resolved magnetic field evolution; no accretion torque."
+            },
+            "evidence_locator": {
+              "document_type": "user_provided_local_document",
+              "page": null,
+              "quoted_text": "The derived braking index is n = 3.15(3).",
+              "section": "",
+              "table_or_figure": ""
+            },
+            "mathir_symbol": "n",
+            "parameter_id": "braking_index",
+            "provenance_status": "APPROVED_USER_INPUT",
+            "role": "MODEL_ASSUMPTION",
+            "selected_value": 3.15,
+            "selection_rationale": "Use the braking index measured in the same controlled PSR J1640-4631 timing excerpt as the initial spin quantities.",
+            "source": {
+              "cross_validated": false,
+              "discovery_sources": [
+                "user_provided"
+              ],
+              "document_id": "Q2-GAO2017-PDOT-EXCERPT",
+              "doi": "10.3847/1538-4357/aa68e6",
+              "title": "Controlled excerpt from On the magnetic field evolution of PSR J1640-4631",
+              "year": 2017
+            },
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "dimensionless"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "Parsimonious first executable model; detailed Urca processes, modified Urca processes, direct Urca thresholds, and superfluid pairing are not resolved separately."
+            },
+            "evidence_locator": {},
+            "mathir_symbol": "tau_cool",
+            "parameter_id": "effective_cooling_timescale",
+            "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+            "role": "MODEL_ASSUMPTION",
+            "selected_value": 3155760000000.0,
+            "selection_rationale": "Use a 10^5 yr effective cooling timescale for the first reduced energy-balance model while leaving detailed neutrino and heat-capacity microphysics unresolved.",
+            "source": {},
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "s"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "Spherical symmetry; simplified atmosphere boundary; no resolved radiative transfer or crustal thermal blanketing."
+            },
+            "evidence_locator": {},
+            "mathir_symbol": "alpha_cs",
+            "parameter_id": "core_surface_conversion_coefficient",
+            "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+            "role": "BOUNDARY_CONDITION",
+            "selected_value": 0.001,
+            "selection_rationale": "Use a linear 10^-3 core-to-surface temperature proxy so the 10^9 K core baseline maps to an order-10^6 K surface temperature.",
+            "source": {},
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "dimensionless"
+          },
+          {
+            "conditions": {
+              "required_condition_1": "Small spin-down induced density changes; no full rotating EOS integration; moment of inertia response is absorbed into the proxy."
+            },
+            "evidence_locator": {},
+            "mathir_symbol": "kappa_rot",
+            "parameter_id": "rotational_compression_coefficient",
+            "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+            "role": "MODEL_ASSUMPTION",
+            "selected_value": 150000000000000.0,
+            "selection_rationale": "Choose the positive coefficient so loss of rotational support from the measured initial spin can raise central density through the selected transition threshold before complete spin-down.",
+            "source": {},
+            "transformation": {
+              "applied": false,
+              "formula": ""
+            },
+            "uncertainty": {},
+            "unit": "kg_s^2_m^-3"
+          }
+        ],
+        "mode": "APPROVED_PARAMETER_SET",
+        "parameter_set_identity": "8960cd825beacfd9059c043b2efe1da4859a4586f8ae0739d68d043e5e953cc1"
+      },
+      "quantitative_idea_id": "Q2",
+      "question": "How does the surface temperature evolution differ between massive neutron stars undergoing spin-down induced core compression and those without, and can this distinguish the phase-transition mechanism from standard cooling?",
+      "result_kind": "SIMULATED",
+      "result_quality": "QUALIFIED",
+      "result_summary": "The audited reduced ODE crosses rho_crit=5.12e17 kg/m^3 at approximately 9.85e11 s in all spin-down cases. At 3*tau_cool, the standard, phase-transition, and phase-transition-plus-superfluid scenarios yield surface temperatures of about 4.98e4 K, 5.32e4 K, and 2.36e5 K, respectively; phase_fraction reaches 1 only in the two transition scenarios. The mechanism therefore produces distinguishable model-internal thermal tracks, conditional on the effective cooling, latent-heat, and compression proxies.",
+      "supplement_pdf_reference": "quantitative_mathematical_models.pdf#Q2"
+    }
+  ],
+  "schema_version": "quantitative_author_handoff_v1",
+  "source_identity": {
+    "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+    "project_id": "sci_astr_16_survey_007",
+    "science_run_id": "astr_16",
+    "selected_direction_id": "mechanism_replacement",
+    "survey_run_id": "astr_16-survey-007"
+  }
+}

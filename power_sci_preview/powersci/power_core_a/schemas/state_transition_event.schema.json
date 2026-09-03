@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qwen-zhikan.local/schemas/state_transition_event_v1.json",
+  "title": "StateTransitionEvent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "event_id", "sequence", "run_id", "from_state", "to_state", "trigger", "actor", "occurred_at", "idempotency_key", "input_hashes", "previous_event_hash"],
+  "properties": {
+    "schema_version": {"const": "state_transition_event_v1"},
+    "event_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "sequence": {"type": "integer", "minimum": 1},
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "from_state": {"type": ["string", "null"], "enum": [null, "BRIEF_DRAFT", "BRIEF_VALIDATED", "CASE_BOUND", "PROTOCOL_DRAFT", "APPROVAL_PENDING", "PROTOCOL_FROZEN"]},
+    "to_state": {"enum": ["BRIEF_DRAFT", "BRIEF_VALIDATED", "CASE_BOUND", "PROTOCOL_DRAFT", "APPROVAL_PENDING", "PROTOCOL_FROZEN"]},
+    "trigger": {"type": "string", "minLength": 1, "maxLength": 128},
+    "actor": {"type": "string", "minLength": 1, "maxLength": 128},
+    "occurred_at": {"type": "string", "format": "date-time"},
+    "idempotency_key": {"type": "string", "minLength": 1, "maxLength": 240},
+    "input_hashes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}},
+    "previous_event_hash": {"type": ["string", "null"], "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}
+

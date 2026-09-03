@@ -1,0 +1,398 @@
+{
+  "schema_version": "survey_visual_manifest_v1",
+  "status": "completed",
+  "reason": "",
+  "source_survey": "survey.md",
+  "visual_survey": "survey_visual.md",
+  "image_directory": ".",
+  "reader_facing_language": "en",
+  "captions_language": "en",
+  "alt_text_language": "en",
+  "outline_used": true,
+  "references_received": true,
+  "reference_ids": [
+    "W2116768756",
+    "W3202213959",
+    "W2042604455",
+    "W1982145551",
+    "W2057239875",
+    "W2763552432",
+    "W2623727589",
+    "W2200737425",
+    "W7171707973",
+    "W7161592803",
+    "W7202298102",
+    "W2913151242"
+  ],
+  "reference_count": 12,
+  "evidence_plan_schema_version": "survey_sh_evidence_plan_v1",
+  "style_profile": {
+    "visual_language_en": "The visual style employs a rigorous, editorial aesthetic characterized by high-contrast structural clarity and restrained color usage. Layouts utilize asymmetric grids with generous whitespace to emphasize hierarchy, avoiding cluttered flowchart aesthetics. Modules are defined by sharp, geometric boundaries (rectilinear for crystalline structures, organic curves for hydrodynamic regimes) using the primary blue (#005EB8) for core mechanisms and secondary blue (#4C7A9B) for supporting context. The accent red (#E63946) is reserved exclusively for critical deviations, disorder points, or suppressed pathways, ensuring immediate visual salience without overwhelming the data. Uncertainty regions are rendered in low-opacity gray (#ADB5BD) with hatched patterns or dashed borders to distinguish statistical variance from deterministic physics. Typography uses a clean sans-serif stack (e.g., Inter o",
+    "palette": {
+      "background": "#F8F9FA",
+      "ink": "#212529",
+      "primary": "#005EB8",
+      "secondary": "#4C7A9B",
+      "accent": "#E63946",
+      "uncertainty": "#ADB5BD"
+    },
+    "source": "llm"
+  },
+  "rejected_figures": [
+    {
+      "figure_id": "fig_02_evidence_to_inference",
+      "section_index": 3,
+      "figure_type": "evidence_to_inference",
+      "reasons": [
+        "no evidence-bounded relation survived validation",
+        "relation validation details: no evidence path for grounded relation in paragraph 2; source_quote is not grounded in paragraph 2 (2); no evidence path for grounded relation in paragraph 3",
+        "repair: no evidence-bounded relation survived validation",
+        "repair: relation validation details: no evidence path for grounded relation in paragraph 2; source_quote is not grounded in paragraph 2 (2)"
+      ],
+      "repair_attempted": true,
+      "stage": "brief_validation"
+    },
+    {
+      "figure_id": "fig_03_method_comparison",
+      "section_index": 4,
+      "figure_type": "method_comparison",
+      "reasons": [
+        "no evidence-bounded relation survived validation",
+        "repair: no evidence-bounded relation survived validation",
+        "repair: relation validation details: no evidence path for grounded relation in paragraph 2 (6)"
+      ],
+      "repair_attempted": true,
+      "stage": "brief_validation"
+    }
+  ],
+  "skipped_figures": [],
+  "figures": [
+    {
+      "figure_id": "fig_01_mechanism",
+      "file": "fig_01_mechanism.png",
+      "figure_type": "mechanism",
+      "source_section_index": 2,
+      "source_section_title": "2. Bulk Thermal Transport Mechanisms and Anisotropy",
+      "source_paragraph_indices": [
+        1,
+        2
+      ],
+      "insert_after_paragraph": 2,
+      "source_paper_ids": [
+        "W3202213959"
+      ],
+      "relations": [
+        {
+          "relation_en": "Interlayer rotational disorder breaks translational symmetry, leading to TA mode softening and suppressed cross-plane transport.",
+          "source_paragraph_index": 1,
+          "source_quote": "the random interlayer rotations break the through-plane translational symmetry required for efficient transverse phonon coupling",
+          "support_kind": "DIRECT_LEDGER_EVIDENCE",
+          "evidence_paper_ids": [
+            "W3202213959"
+          ],
+          "evidence_paths": [
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "target_object",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "direct_observation",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "source_system",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            }
+          ]
+        },
+        {
+          "relation_en": "In-plane crystallinity within domains supports continuous phonon-mediated heat flow despite polycrystalline nature.",
+          "source_paragraph_index": 1,
+          "source_quote": "in-plane crystallinity within domains supports continuous phonon-mediated heat flow",
+          "support_kind": "DIRECT_LEDGER_EVIDENCE",
+          "evidence_paper_ids": [
+            "W3202213959"
+          ],
+          "evidence_paths": [
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "target_object",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "direct_observation",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "source_system",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            }
+          ]
+        }
+      ],
+      "caption_en": "Figure 1 | Mechanism of thermal transport decoupling in random-interlayer TMD films. Structural disorder suppresses cross-plane conductivity via phonon mode softening while maintaining in-plane crystallinity. This schematic is a conceptual synthesis of the cited survey evidence and introduces no new empirical data.",
+      "alt_text_en": "Diagram illustrating how random interlayer rotation in TMD films decouples thermal transport. The left side shows scattered, suppressed cross-plane phonon flow due to TA/LA mode softening, while the right side shows continuous in-plane phonon flow preserved by crystallinity.",
+      "allowed_overlay_labels_en": [
+        "Random Interlayer Rotation",
+        "TA Mode Softening",
+        "LA Mode Overdamping",
+        "Continuous In-Plane Flow",
+        "Scattered Cross-Plane Flow",
+        "Glass-Like Regime"
+      ],
+      "model": "wan2.7-image-pro",
+      "provider": "qwen",
+      "quality_status": "accepted",
+      "generation_attempts": 1,
+      "qc_notes": [],
+      "revised_prompt": "",
+      "prompt": "Create a publication-ready conceptual scientific figure for an academic survey.\n\nFigure type:\nmechanism\n\nCentral message:\nRandom interlayer rotational disorder in transition metal dichalcogenide films decouples thermal transport, suppressing cross-plane conductivity via transverse acoustic mode softening while preserving in-plane crystallinity.\n\nScientific content that must be represented:\n- Interlayer rotational disorder breaks translational symmetry, leading to TA mode softening and suppressed cross-plane transport.\n- In-plane crystallinity within domains supports continuous phonon-mediated heat flow despite polycrystalline nature.\n\nRelationship rendering guidance:\nUse solid prominent paths for directly supported relationships. Use thin, dashed, or muted paths for qualified contributions. Use translucent or restrained elements for background context. Never render evidence classifications, support metadata, paper IDs, or internal audit labels as visible text.\n\nEntities or modules to include:\nMoS2 monolayer, WS2 monolayer, random interlayer rotation, transverse acoustic (TA) modes, longitudinal acoustic (LA) modes, in-plane phonon flow, cross-plane phonon flow\n\nExact visible label inventory:\n[\"Random Interlayer Rotation\", \"TA Mode Softening\", \"LA Mode Overdamping\", \"Continuous In-Plane Flow\", \"Scattered Cross-Plane Flow\", \"Glass-Like Regime\"]\n\nTypography and layout protocol:\nThe inventory above is the only permitted reader-facing text. Copy each supplied label\ncharacter-for-character, including spelling, capitalization, hyphens, apostrophes, slashes,\nunderscores, and scientific symbols. Do not paraphrase, translate, abbreviate, pluralize,\ncorrect, or merge labels. Do not render the surrounding JSON/list punctuation or quotation\nmarks. Do not render the full relation sentences, uncertainty sentences, evidence metadata,\nPaper IDs, SH IDs, or any other prompt text. The entities/modules list is semantic guidance\nonly; render an entity name only when the exact same string appears in the inventory. If a\nlabel cannot be rendered clearly, omit that label rather than inventing a replacement.\n\nUse one short label per module, with a consistent readable sans-serif typeface, generous\nletter spacing, strong contrast, and sufficient size for 100% PDF readability. Keep labels\ninside their module boundaries with ample padding; never overlap labels, connectors, icons,\nor panel borders. Do not create a legend, title, paragraph, axis, table, footnote, or caption\nunless its exact text appears in the inventory.\n\nUncertainties or evidence boundaries to show:\n- The specific quantitative impact of minor deviations from ideal stacking on phonon transmission channels is noted as significant but not explicitly quantified beyond general perturbation.\n\nComposition:\nA central vertical cross-section view of stacked MoS2/WS2 monolayers serves as the focal anchor. The layers are depicted with slight angular offsets to visualize 'random interlayer rotation'. Left Panel (Cross-Plane): Arrows representing phonon propagation perpendicular to layers are shown as dashed, fading lines that terminate abruptly or scatter chaotically, symbolizing 'vanishing group velocity' and 'glass-like regime'. A translucent red overlay indicates 'TA mode softening' and 'LA mode overdamping'. Right Panel (In-Plane): Arrows representing phonon propagation parallel to layers are solid, bright blue lines flowing continuously across domain boundaries, symbolizing 'continuous phonon-m\n\nFigure-type layout requirements:\nBuild a visually rich causal systems map rather than a simple linear flowchart. Place the dominant mechanism or outcome as a central anchor, arrange upstream drivers as an asymmetric evidence cluster, and place intermediate processes as layered or nested modules. Use solid connectors for direct support, dashed or translucent connectors for qualified or unresolved relations, and include one restrained inset, symbolic icon, or uncertainty region when supported by the supplied content. Avoid repeated equal-sized cards.\n\nArticle-wide visual style:\nThe visual style employs a rigorous, editorial aesthetic characterized by high-contrast structural clarity and restrained color usage. Layouts utilize asymmetric grids with generous whitespace to emphasize hierarchy, avoiding cluttered flowchart aesthetics. Modules are defined by sharp, geometric boundaries (rectilinear for crystalline structures, organic curves for hydrodynamic regimes) using the primary blue (#005EB8) for core mechanisms and secondary blue (#4C7A9B) for supporting context. The accent red (#E63946) is reserved exclusively for critical deviations, disorder points, or suppressed pathways, ensuring immediate visual salience without overwhelming the data. Uncertainty regions are rendered in low-opacity gray (#ADB5BD) with hatched patterns or dashed borders to distinguish statistical variance from deterministic physics. Typography uses a clean sans-serif stack (e.g., Inter o\n\nLocked article palette:\n- Background: #F8F9FA\n- Linework: #212529\n- Primary evidence-supported pathway: #005EB8\n- Secondary process or comparison group: #4C7A9B\n- Key focal entity: #E63946\n- Uncertainty or qualified relation: #ADB5BD\n\nVisual language:\nA visually rich editorial scientific infographic suitable for a high-impact\nmultidisciplinary research journal. Make it feel like a polished visual abstract or\nsystems-map poster, not a basic flowchart or presentation slide.\n\nCreate a clear focal hierarchy: one dominant visual anchor, two to four secondary\nmodules with different visual weights, and one restrained uncertainty or limitation\nregion. Build hierarchy through scale, position, layered panels, subtle tonal\nbackgrounds, symbolic icons, selective accent colour, and different connector weights.\n\nPrefer an asymmetric but balanced composition. Combine grouped modules, inset details,\nnested regions, branching or converging pathways, feedback loops, scale transitions, or\na compact semantic strip whenever supported by the supplied content. Use controlled\ndensity: information-rich, visually layered, and detailed, while remaining readable at\n50% scale in a PDF.\n\nDo not repeat identical rounded rectangles and do not use a default three-column layout.\n\nText constraints:\nRender only the exact labels from the inventory, preferably as 1–5 word labels. Never add\ndecorative pseudo-text or plausible-looking terminology. Before finalizing, perform an\ninternal character-by-character check against the inventory; if any character is uncertain,\nleave that label out. Keep all reader-facing text sparse and subordinate to the visual\nstructure. Leave clean visual space for the separate English caption and programmatic labels.\n\nScientific constraints:\nThis is a conceptual synthesis of the supplied survey content, not a new empirical result.\nDo not invent quantitative data, experimental measurements, causal mechanisms, instruments,\nmodel properties, or conclusions. Use solid prominent pathways only for directly supported\nrelationships. Use restrained secondary pathways for qualified contributions. Use muted,\ndashed, or translucent elements for explicit uncertainty, evidence gaps, or background context.\n\nNegative prompt:\nNo photorealistic laboratory scene, no stock-photo appearance, no science-fiction aesthetic,\nno neon palette, no rainbow gradient, no illegible text, no fake chart, no invented numerical\ndata, no fictional equation, no paper citation, no journal logo, no misspelled words, no\ninvented labels, no text outside the exact label inventory, no fake legend, and no tiny or\noverlapping text.\n\nLayout requirements:\n- Do not use a flat sequence of equal-width boxes.\n- Do not use a default left-to-right three-column flowchart.\n- Establish one dominant anchor near the visual center or upper center.\n- Use an asymmetric but balanced arrangement.\n- Combine at least three of the following when scientifically appropriate: grouped\n  modules, nested regions, inset detail, symbolic icons, branching pathways, converging\n  pathways, feedback loops, layered backgrounds, scale transitions, or a compact\n  semantic strip.\n- Use solid primary-colour pathways for direct evidence-supported relations.\n- Use thinner, dashed, or translucent pathways for qualified, indirect, contextual, or\n  uncertain relations.\n- Use the accent colour sparingly for the key focal entity or conclusion.\n- Reserve muted grey-blue tones for context and uncertainty.\n- Keep the figure readable at 50% scale in a PDF.\n\nOutput: landscape 4:3, high resolution, balanced margins, suitable for PDF and Markdown.\n"
+    },
+    {
+      "figure_id": "fig_04_multiscale_synthesis",
+      "file": "fig_04_multiscale_synthesis.png",
+      "figure_type": "multiscale_synthesis",
+      "source_section_index": 5,
+      "source_section_title": "5. Cross-Scale Implications and Device Integration",
+      "source_paragraph_indices": [
+        2,
+        3
+      ],
+      "insert_after_paragraph": 3,
+      "source_paper_ids": [
+        "W2042604455",
+        "W3202213959"
+      ],
+      "relations": [
+        {
+          "relation_en": "Mechanism involves symmetry breaking and mode softening",
+          "source_paragraph_index": 2,
+          "source_quote": "By breaking through-plane translational symmetry while maintaining in-plane crystallinity, the structure induces a glass-like, one-dimensional thermal transport mechanism across the layers.",
+          "support_kind": "DIRECT_LEDGER_EVIDENCE",
+          "evidence_paper_ids": [
+            "W3202213959"
+          ],
+          "evidence_paths": [
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "target_object",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "direct_observation",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "source_system",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            }
+          ]
+        },
+        {
+          "relation_en": "Scaling washes out resonant effects via ensemble averaging",
+          "source_paragraph_index": 2,
+          "source_quote": "in macroscopic stacks, the random distribution of angles leads to an ensemble average that may wash out resonant effects, reducing the predictability of thermal transport compared to the deterministic behavior of aligned crystals.",
+          "support_kind": "DIRECT_LEDGER_EVIDENCE",
+          "evidence_paper_ids": [
+            "W3202213959"
+          ],
+          "evidence_paths": [
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "target_object",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "direct_observation",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "source_system",
+              "paper_id": "W3202213959",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            }
+          ]
+        },
+        {
+          "relation_en": "Normal scattering enables hydrodynamic flow in pristine systems",
+          "source_paragraph_index": 3,
+          "source_quote": "This deviation underscores the significant role of normal scattering processes in redistributing phonon momentum without immediate resistance, potentially enabling hydrodynamic-like flow regimes in pristine structures.",
+          "support_kind": "DIRECT_LEDGER_EVIDENCE",
+          "evidence_paper_ids": [
+            "W2042604455"
+          ],
+          "evidence_paths": [
+            {
+              "sub_hypothesis_id": "SH3",
+              "slot_name": "",
+              "paper_id": "W2042604455",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH3",
+              "slot_name": "candidate_mechanism",
+              "paper_id": "W2042604455",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "",
+              "paper_id": "W2042604455",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "source_system",
+              "paper_id": "W2042604455",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH6",
+              "slot_name": "",
+              "paper_id": "W2042604455",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH6",
+              "slot_name": "validity_domain",
+              "paper_id": "W2042604455",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            }
+          ]
+        },
+        {
+          "relation_en": "Industrial boundaries suppress hydrodynamic benefits",
+          "source_paragraph_index": 3,
+          "source_quote": "In macroscopic systems, however, the sheer abundance of boundaries, grain boundaries, and surface roughness would likely suppress these effects... truncate the effective mean free path, eliminating the superdiffusive benefits.",
+          "support_kind": "DIRECT_LEDGER_EVIDENCE",
+          "evidence_paper_ids": [
+            "W2042604455"
+          ],
+          "evidence_paths": [
+            {
+              "sub_hypothesis_id": "SH3",
+              "slot_name": "",
+              "paper_id": "W2042604455",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH3",
+              "slot_name": "candidate_mechanism",
+              "paper_id": "W2042604455",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "",
+              "paper_id": "W2042604455",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "source_system",
+              "paper_id": "W2042604455",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH6",
+              "slot_name": "",
+              "paper_id": "W2042604455",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH6",
+              "slot_name": "validity_domain",
+              "paper_id": "W2042604455",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            }
+          ]
+        }
+      ],
+      "caption_en": "Figure 4 | Synthesis of cross-scale thermal transport challenges. Nanoscale engineering achieves extreme anisotropy via random interlayer rotations and leverages long-mean-free-path phonons for hydrodynamic flow. However, scaling to macroscopic industrial applications introduces statistical averaging of rotation angles and abundant boundary scattering, which wash out resonant effects and truncate effective mean free paths, thereby reducing the predictability and efficacy of thermal management strategies. This schematic is a conceptual synthesis of the cited survey evidence and introduces no new empirical data.",
+      "alt_text_en": "An infographic illustrating the transition of thermal transport mechanisms from nanoscale to macroscopic scales. On the left, a precise atomic model of van der Waals materials shows extreme thermal anisotropy caused by random interlayer rotations. In the center, a spectral diagram highlights long mean free path phonons enabling hydrodynamic flow in carbon nanotubes. On the right, a blurred industrial-scale representation depicts how boundary abundance and ensemble averaging suppress these coherent effects, leading to reduced predictability in macroscopic devices.",
+      "allowed_overlay_labels_en": [
+        "Extreme Anisotropy",
+        "Random Interlayer Rotations",
+        "Glass-like Transport",
+        "Long-MFP Phonons",
+        "Hydrodynamic Flow",
+        "Ensemble Averaging"
+      ],
+      "model": "wan2.7-image-pro",
+      "provider": "qwen",
+      "quality_status": "accepted",
+      "generation_attempts": 1,
+      "qc_notes": [],
+      "revised_prompt": "",
+      "prompt": "Create a publication-ready conceptual scientific figure for an academic survey.\n\nFigure type:\nmultiscale synthesis\n\nCentral message:\nNanoscale thermal anisotropy and hydrodynamic phonon transport, while deterministic in pristine structures, lose predictability and efficacy upon scaling to macroscopic industrial applications due to statistical averaging of interlayer rotations and boundary-induced scattering.\n\nScientific content that must be represented:\n- Mechanism involves symmetry breaking and mode softening\n- Scaling washes out resonant effects via ensemble averaging\n- Normal scattering enables hydrodynamic flow in pristine systems\n- Industrial boundaries suppress hydrodynamic benefits\n\nRelationship rendering guidance:\nUse solid prominent paths for directly supported relationships. Use thin, dashed, or muted paths for qualified contributions. Use translucent or restrained elements for background context. Never render evidence classifications, support metadata, paper IDs, or internal audit labels as visible text.\n\nEntities or modules to include:\nVan der Waals heterostructure, Polycrystalline TMD film, Carbon nanotube, Phonon mean free path spectrum, Random interlayer rotations, Macroscopic stack, Industrial heat exchanger\n\nExact visible label inventory:\n[\"Extreme Anisotropy\", \"Random Interlayer Rotations\", \"Glass-like Transport\", \"Long-MFP Phonons\", \"Hydrodynamic Flow\", \"Ensemble Averaging\"]\n\nTypography and layout protocol:\nThe inventory above is the only permitted reader-facing text. Copy each supplied label\ncharacter-for-character, including spelling, capitalization, hyphens, apostrophes, slashes,\nunderscores, and scientific symbols. Do not paraphrase, translate, abbreviate, pluralize,\ncorrect, or merge labels. Do not render the surrounding JSON/list punctuation or quotation\nmarks. Do not render the full relation sentences, uncertainty sentences, evidence metadata,\nPaper IDs, SH IDs, or any other prompt text. The entities/modules list is semantic guidance\nonly; render an entity name only when the exact same string appears in the inventory. If a\nlabel cannot be rendered clearly, omit that label rather than inventing a replacement.\n\nUse one short label per module, with a consistent readable sans-serif typeface, generous\nletter spacing, strong contrast, and sufficient size for 100% PDF readability. Keep labels\ninside their module boundaries with ample padding; never overlap labels, connectors, icons,\nor panel borders. Do not create a legend, title, paragraph, axis, table, footnote, or caption\nunless its exact text appears in the inventory.\n\nUncertainties or evidence boundaries to show:\n- Stability of rotated interfaces under thermal cycling and mechanical stresses remains unverified.\n- Variations in interlayer spacing and defect concentrations in industrial volumes could drastically alter the phonon scattering landscape.\n- Ensemble averaging in macroscopic stacks reduces predictability compared to deterministic aligned crystals.\n\nComposition:\nA horizontal scale-transition infographic moving left-to-right from atomic precision to industrial bulk. Left anchor: A detailed, high-contrast inset of a MoS2 bilayer showing 'random interlayer rotations' as misaligned hexagonal lattices, with dashed arrows indicating suppressed through-plane (vertical) phonon flux and solid arrows for preserved in-plane (horizontal) flux. Center bridge: A spectral bar chart representing the Phonon Mean Free Path (MFP) spectrum, highlighting long-MFP low-frequency modes (>10 µm) in carbon nanotubes, connected to the left via a 'hydrodynamic flow' loop symbolizing normal scattering. Right anchor: A blurred, textured representation of a 'macroscopic stack' or\n\nFigure-type layout requirements:\nShow supplied scales, levels, stages, or system layers in a clear nested or progressive arrangement; connect levels only where explicitly supported.\n\nArticle-wide visual style:\nThe visual style employs a rigorous, editorial aesthetic characterized by high-contrast structural clarity and restrained color usage. Layouts utilize asymmetric grids with generous whitespace to emphasize hierarchy, avoiding cluttered flowchart aesthetics. Modules are defined by sharp, geometric boundaries (rectilinear for crystalline structures, organic curves for hydrodynamic regimes) using the primary blue (#005EB8) for core mechanisms and secondary blue (#4C7A9B) for supporting context. The accent red (#E63946) is reserved exclusively for critical deviations, disorder points, or suppressed pathways, ensuring immediate visual salience without overwhelming the data. Uncertainty regions are rendered in low-opacity gray (#ADB5BD) with hatched patterns or dashed borders to distinguish statistical variance from deterministic physics. Typography uses a clean sans-serif stack (e.g., Inter o\n\nLocked article palette:\n- Background: #F8F9FA\n- Linework: #212529\n- Primary evidence-supported pathway: #005EB8\n- Secondary process or comparison group: #4C7A9B\n- Key focal entity: #E63946\n- Uncertainty or qualified relation: #ADB5BD\n\nVisual language:\nA visually rich editorial scientific infographic suitable for a high-impact\nmultidisciplinary research journal. Make it feel like a polished visual abstract or\nsystems-map poster, not a basic flowchart or presentation slide.\n\nCreate a clear focal hierarchy: one dominant visual anchor, two to four secondary\nmodules with different visual weights, and one restrained uncertainty or limitation\nregion. Build hierarchy through scale, position, layered panels, subtle tonal\nbackgrounds, symbolic icons, selective accent colour, and different connector weights.\n\nPrefer an asymmetric but balanced composition. Combine grouped modules, inset details,\nnested regions, branching or converging pathways, feedback loops, scale transitions, or\na compact semantic strip whenever supported by the supplied content. Use controlled\ndensity: information-rich, visually layered, and detailed, while remaining readable at\n50% scale in a PDF.\n\nDo not repeat identical rounded rectangles and do not use a default three-column layout.\n\nText constraints:\nRender only the exact labels from the inventory, preferably as 1–5 word labels. Never add\ndecorative pseudo-text or plausible-looking terminology. Before finalizing, perform an\ninternal character-by-character check against the inventory; if any character is uncertain,\nleave that label out. Keep all reader-facing text sparse and subordinate to the visual\nstructure. Leave clean visual space for the separate English caption and programmatic labels.\n\nScientific constraints:\nThis is a conceptual synthesis of the supplied survey content, not a new empirical result.\nDo not invent quantitative data, experimental measurements, causal mechanisms, instruments,\nmodel properties, or conclusions. Use solid prominent pathways only for directly supported\nrelationships. Use restrained secondary pathways for qualified contributions. Use muted,\ndashed, or translucent elements for explicit uncertainty, evidence gaps, or background context.\n\nNegative prompt:\nNo photorealistic laboratory scene, no stock-photo appearance, no science-fiction aesthetic,\nno neon palette, no rainbow gradient, no illegible text, no fake chart, no invented numerical\ndata, no fictional equation, no paper citation, no journal logo, no misspelled words, no\ninvented labels, no text outside the exact label inventory, no fake legend, and no tiny or\noverlapping text.\n\nLayout requirements:\n- Do not use a flat sequence of equal-width boxes.\n- Do not use a default left-to-right three-column flowchart.\n- Establish one dominant anchor near the visual center or upper center.\n- Use an asymmetric but balanced arrangement.\n- Combine at least three of the following when scientifically appropriate: grouped\n  modules, nested regions, inset detail, symbolic icons, branching pathways, converging\n  pathways, feedback loops, layered backgrounds, scale transitions, or a compact\n  semantic strip.\n- Use solid primary-colour pathways for direct evidence-supported relations.\n- Use thinner, dashed, or translucent pathways for qualified, indirect, contextual, or\n  uncertain relations.\n- Use the accent colour sparingly for the key focal entity or conclusion.\n- Reserve muted grey-blue tones for context and uncertainty.\n- Keep the figure readable at 50% scale in a PDF.\n\nOutput: landscape 4:3, high resolution, balanced margins, suitable for PDF and Markdown.\n"
+    }
+  ]
+}

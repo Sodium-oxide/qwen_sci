@@ -1,0 +1,212 @@
+{
+  "capability": {
+    "capability": "COMPOSABLE",
+    "kind": "PDE",
+    "reason": "The PDEIR is valid and has an approved fixed solver adapter.",
+    "solver_id": "pde_fd_spherical_radial_thermal",
+    "solver_implementation_version": "pde-fixed-backends-v1",
+    "system_type": "SPHERICAL_RADIAL_THERMAL"
+  },
+  "checks": {
+    "execution_text_or_code_absent": true,
+    "mathir_valid": false,
+    "model_spec_valid": true,
+    "pdeir_valid": true,
+    "solver_available": true,
+    "trusted_expression_ast": true
+  },
+  "errors": [],
+  "execution_ir": {
+    "document": {
+      "boundary_conditions": {
+        "left": {
+          "type": "SPHERICAL_ORIGIN_REGULARITY"
+        },
+        "right": {
+          "type": "DIRICHLET",
+          "value": {
+            "name": "surface_temperature",
+            "op": "variable"
+          }
+        }
+      },
+      "diffusion_coefficient": {
+        "name": "kappa",
+        "op": "variable"
+      },
+      "discretization": {
+        "grid_type": "UNIFORM",
+        "method": "FINITE_DIFFERENCE_SPHERICAL_RADIAL",
+        "space_order": 1
+      },
+      "fields": [
+        {
+          "bounds": {},
+          "id": "T",
+          "symbol": "T",
+          "unit": "10^9 K"
+        }
+      ],
+      "grid": {
+        "nx": 33
+      },
+      "heat_capacity": {
+        "name": "c_v",
+        "op": "variable"
+      },
+      "initial_condition": {
+        "profile": "UNIFORM",
+        "type": "ANALYTIC_PROFILE",
+        "value": 1.0
+      },
+      "parameters": {
+        "c_v": 1.0,
+        "cooling_amp": 0.02,
+        "decay_rate": 0.6,
+        "kappa": 0.01,
+        "latent_amp": 0.0,
+        "surface_temperature": 0.1,
+        "transition_center": 0.35,
+        "transition_width": 0.12
+      },
+      "schema_version": "pdeir_v1",
+      "solver_options": {
+        "time_integrator": "EXPLICIT_EULER",
+        "time_step": 0.005
+      },
+      "source": {
+        "args": [
+          {
+            "args": [
+              {
+                "name": "latent_amp",
+                "op": "variable"
+              },
+              {
+                "args": [
+                  {
+                    "args": [
+                      {
+                        "args": [
+                          {
+                            "args": [
+                              {
+                                "args": [
+                                  {
+                                    "args": [
+                                      {
+                                        "name": "x",
+                                        "op": "variable"
+                                      },
+                                      {
+                                        "name": "transition_center",
+                                        "op": "variable"
+                                      }
+                                    ],
+                                    "op": "sub"
+                                  },
+                                  {
+                                    "op": "constant",
+                                    "value": 2.0
+                                  }
+                                ],
+                                "op": "pow"
+                              },
+                              {
+                                "args": [
+                                  {
+                                    "op": "constant",
+                                    "value": 2.0
+                                  },
+                                  {
+                                    "args": [
+                                      {
+                                        "name": "transition_width",
+                                        "op": "variable"
+                                      },
+                                      {
+                                        "op": "constant",
+                                        "value": 2.0
+                                      }
+                                    ],
+                                    "op": "pow"
+                                  }
+                                ],
+                                "op": "mul"
+                              }
+                            ],
+                            "op": "div"
+                          }
+                        ],
+                        "op": "neg"
+                      }
+                    ],
+                    "op": "exp"
+                  },
+                  {
+                    "args": [
+                      {
+                        "args": [
+                          {
+                            "args": [
+                              {
+                                "name": "decay_rate",
+                                "op": "variable"
+                              },
+                              {
+                                "name": "t",
+                                "op": "variable"
+                              }
+                            ],
+                            "op": "mul"
+                          }
+                        ],
+                        "op": "neg"
+                      }
+                    ],
+                    "op": "exp"
+                  }
+                ],
+                "op": "mul"
+              }
+            ],
+            "op": "mul"
+          },
+          {
+            "args": [
+              {
+                "name": "cooling_amp",
+                "op": "variable"
+              },
+              {
+                "name": "T",
+                "op": "field"
+              }
+            ],
+            "op": "mul"
+          }
+        ],
+        "op": "sub"
+      },
+      "spatial_dimension": 1,
+      "spatial_domain": {
+        "x": [
+          0.0,
+          1.0
+        ]
+      },
+      "system_type": "SPHERICAL_RADIAL_THERMAL",
+      "time_span": [
+        0.0,
+        10.0
+      ]
+    },
+    "kind": "PDE",
+    "schema_version": "execution_ir_v1"
+  },
+  "execution_ir_identity": "ae8f3eb4cf05566f7c45f8825f9d2e214dc394423d3e5437a261eadff171de13",
+  "mathir_identity": "35156bdb416fc5df8f80418dfe4c0ae3e1b04a0b34f5b39fb72e4c0ef3d59a9d",
+  "model_spec_identity": "52e74c8ac555dacff9a258d7a7311b2186c13650f65259d5d5c21375739245fc",
+  "schema_version": "quantitative_model_audit_v1",
+  "status": "MODEL_AUDITED"
+}

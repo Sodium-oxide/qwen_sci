@@ -1,0 +1,128 @@
+{
+  "schema_version": "survey_visual_manifest_v1",
+  "status": "completed",
+  "reason": "",
+  "source_survey": "survey.md",
+  "visual_survey": "survey_visual.md",
+  "image_directory": ".",
+  "reader_facing_language": "en",
+  "captions_language": "en",
+  "alt_text_language": "en",
+  "outline_used": true,
+  "references_received": true,
+  "reference_ids": [
+    "W12345"
+  ],
+  "reference_count": 1,
+  "evidence_plan_schema_version": "test",
+  "style_profile": {
+    "visual_language_en": "A restrained editorial scientific figure style with crisp linework.",
+    "palette": {
+      "background": "#F4F1EA",
+      "ink": "#252B33",
+      "primary": "#356C89",
+      "secondary": "#6F7E59",
+      "accent": "#C47A3A",
+      "uncertainty": "#9AA1A5"
+    },
+    "source": "llm"
+  },
+  "rejected_figures": [],
+  "skipped_figures": [],
+  "figures": [
+    {
+      "figure_id": "fig_01_overview_framework",
+      "file": "fig_01_overview_framework.png",
+      "figure_type": "overview_framework",
+      "source_section_index": 1,
+      "source_section_title": "Introduction",
+      "source_paragraph_indices": [
+        1,
+        2
+      ],
+      "insert_after_paragraph": 2,
+      "source_paper_ids": [
+        "W12345"
+      ],
+      "relations": [
+        {
+          "relation_en": "Inputs inform the central process and its outcome.",
+          "source_paragraph_index": 1,
+          "source_quote": "The first supplied paragraph introduces the input and outcome [1].",
+          "support_kind": "DIRECT_LEDGER_EVIDENCE",
+          "evidence_paper_ids": [
+            "W12345"
+          ],
+          "evidence_paths": [
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "core_relation",
+              "paper_id": "W12345",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            }
+          ]
+        }
+      ],
+      "caption_en": "Figure 1 | A conceptual overview of the evidence-supported framework. This schematic is a conceptual synthesis of the cited survey evidence and introduces no new empirical data.",
+      "alt_text_en": "Conceptual overview of inputs, processes, and outcomes.",
+      "allowed_overlay_labels_en": [
+        "Input",
+        "Outcome"
+      ],
+      "model": "wan2.7-image-pro",
+      "provider": "qwen",
+      "quality_status": "not_reviewed",
+      "generation_attempts": 1,
+      "qc_notes": [],
+      "revised_prompt": "provider-normalized prompt",
+      "prompt": "Create a publication-ready conceptual scientific figure for an academic survey.\n\nFigure type:\noverview framework\n\nCentral message:\nConnect the survey's core inputs, processes, and outcomes.\n\nScientific content that must be represented:\n- Inputs inform the central process and its outcome.\n\nRelationship rendering guidance:\nUse solid prominent paths for directly supported relationships. Use thin, dashed, or muted paths for qualified contributions. Use translucent or restrained elements for background context. Never render evidence classifications, support metadata, paper IDs, or internal audit labels as visible text.\n\nEntities or modules to include:\nInput, Outcome\n\nExact visible label inventory:\n[\"Input\", \"Outcome\"]\n\nTypography and layout protocol:\nThe inventory above is the only permitted reader-facing text. Copy each supplied label\ncharacter-for-character, including spelling, capitalization, hyphens, apostrophes, slashes,\nunderscores, and scientific symbols. Do not paraphrase, translate, abbreviate, pluralize,\ncorrect, or merge labels. Do not render the surrounding JSON/list punctuation or quotation\nmarks. Do not render the full relation sentences, uncertainty sentences, evidence metadata,\nPaper IDs, SH IDs, or any other prompt text. The entities/modules list is semantic guidance\nonly; render an entity name only when the exact same string appears in the inventory. If a\nlabel cannot be rendered clearly, omit that label rather than inventing a replacement.\n\nUse one short label per module, with a consistent readable sans-serif typeface, generous\nletter spacing, strong contrast, and sufficient size for 100% PDF readability. Keep labels\ninside their module boundaries with ample padding; never overlap labels, connectors, icons,\nor panel borders. Do not create a legend, title, paragraph, axis, table, footnote, or caption\nunless its exact text appears in the inventory.\n\nUncertainties or evidence boundaries to show:\n- The boundary condition remains uncertain.\n\nComposition:\nUse a left-to-right conceptual layout with clear negative space.\n\nFigure-type layout requirements:\nBuild a polished scientific visual abstract with one central thesis or system anchor, surrounding evidence and process modules, and a visually distinct outcome or interface region. Use nested regions, varied module scales, symbolic icons, structured connectors, and a compact semantic strip. Avoid a flat row of identical boxes.\n\nArticle-wide visual style:\nA restrained editorial scientific figure style with crisp linework.\n\nLocked article palette:\n- Background: #F4F1EA\n- Linework: #252B33\n- Primary evidence-supported pathway: #356C89\n- Secondary process or comparison group: #6F7E59\n- Key focal entity: #C47A3A\n- Uncertainty or qualified relation: #9AA1A5\n\nVisual language:\nA visually rich editorial scientific infographic suitable for a high-impact\nmultidisciplinary research journal. Make it feel like a polished visual abstract or\nsystems-map poster, not a basic flowchart or presentation slide.\n\nCreate a clear focal hierarchy: one dominant visual anchor, two to four secondary\nmodules with different visual weights, and one restrained uncertainty or limitation\nregion. Build hierarchy through scale, position, layered panels, subtle tonal\nbackgrounds, symbolic icons, selective accent colour, and different connector weights.\n\nPrefer an asymmetric but balanced composition. Combine grouped modules, inset details,\nnested regions, branching or converging pathways, feedback loops, scale transitions, or\na compact semantic strip whenever supported by the supplied content. Use controlled\ndensity: information-rich, visually layered, and detailed, while remaining readable at\n50% scale in a PDF.\n\nDo not repeat identical rounded rectangles and do not use a default three-column layout.\n\nText constraints:\nRender only the exact labels from the inventory, preferably as 1–5 word labels. Never add\ndecorative pseudo-text or plausible-looking terminology. Before finalizing, perform an\ninternal character-by-character check against the inventory; if any character is uncertain,\nleave that label out. Keep all reader-facing text sparse and subordinate to the visual\nstructure. Leave clean visual space for the separate English caption and programmatic labels.\n\nScientific constraints:\nThis is a conceptual synthesis of the supplied survey content, not a new empirical result.\nDo not invent quantitative data, experimental measurements, causal mechanisms, instruments,\nmodel properties, or conclusions. Use solid prominent pathways only for directly supported\nrelationships. Use restrained secondary pathways for qualified contributions. Use muted,\ndashed, or translucent elements for explicit uncertainty, evidence gaps, or background context.\n\nNegative prompt:\nNo photorealistic laboratory scene, no stock-photo appearance, no science-fiction aesthetic,\nno neon palette, no rainbow gradient, no illegible text, no fake chart, no invented numerical\ndata, no fictional equation, no paper citation, no journal logo, no misspelled words, no\ninvented labels, no text outside the exact label inventory, no fake legend, and no tiny or\noverlapping text.\n\nLayout requirements:\n- Do not use a flat sequence of equal-width boxes.\n- Do not use a default left-to-right three-column flowchart.\n- Establish one dominant anchor near the visual center or upper center.\n- Use an asymmetric but balanced arrangement.\n- Combine at least three of the following when scientifically appropriate: grouped\n  modules, nested regions, inset detail, symbolic icons, branching pathways, converging\n  pathways, feedback loops, layered backgrounds, scale transitions, or a compact\n  semantic strip.\n- Use solid primary-colour pathways for direct evidence-supported relations.\n- Use thinner, dashed, or translucent pathways for qualified, indirect, contextual, or\n  uncertain relations.\n- Use the accent colour sparingly for the key focal entity or conclusion.\n- Reserve muted grey-blue tones for context and uncertainty.\n- Keep the figure readable at 50% scale in a PDF.\n\nOutput: landscape 4:3, high resolution, balanced margins, suitable for PDF and Markdown.\n"
+    },
+    {
+      "figure_id": "fig_02_mechanism",
+      "file": "fig_02_mechanism.png",
+      "figure_type": "mechanism",
+      "source_section_index": 2,
+      "source_section_title": "Mechanism",
+      "source_paragraph_indices": [
+        1,
+        2
+      ],
+      "insert_after_paragraph": 2,
+      "source_paper_ids": [
+        "W12345"
+      ],
+      "relations": [
+        {
+          "relation_en": "The driver modulates the intermediate process.",
+          "source_paragraph_index": 1,
+          "source_quote": "The driver changes the intermediate process under the stated conditions [1].",
+          "support_kind": "DIRECT_LEDGER_EVIDENCE",
+          "evidence_paper_ids": [
+            "W12345"
+          ],
+          "evidence_paths": [
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "core_relation",
+              "paper_id": "W12345",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            }
+          ]
+        }
+      ],
+      "caption_en": "Figure 2 | Mechanism connecting the stated driver and outcome. This schematic is a conceptual synthesis of the cited survey evidence and introduces no new empirical data.",
+      "alt_text_en": "Conceptual mechanism connecting the stated driver and outcome.",
+      "allowed_overlay_labels_en": [
+        "Driver",
+        "Outcome"
+      ],
+      "model": "wan2.7-image-pro",
+      "provider": "qwen",
+      "quality_status": "not_reviewed",
+      "generation_attempts": 1,
+      "qc_notes": [],
+      "revised_prompt": "provider-normalized prompt",
+      "prompt": "Create a publication-ready conceptual scientific figure for an academic survey.\n\nFigure type:\nmechanism\n\nCentral message:\nExplain the mechanism described by the supplied evidence.\n\nScientific content that must be represented:\n- The driver modulates the intermediate process.\n\nRelationship rendering guidance:\nUse solid prominent paths for directly supported relationships. Use thin, dashed, or muted paths for qualified contributions. Use translucent or restrained elements for background context. Never render evidence classifications, support metadata, paper IDs, or internal audit labels as visible text.\n\nEntities or modules to include:\nDriver, Outcome\n\nExact visible label inventory:\n[\"Driver\", \"Outcome\"]\n\nTypography and layout protocol:\nThe inventory above is the only permitted reader-facing text. Copy each supplied label\ncharacter-for-character, including spelling, capitalization, hyphens, apostrophes, slashes,\nunderscores, and scientific symbols. Do not paraphrase, translate, abbreviate, pluralize,\ncorrect, or merge labels. Do not render the surrounding JSON/list punctuation or quotation\nmarks. Do not render the full relation sentences, uncertainty sentences, evidence metadata,\nPaper IDs, SH IDs, or any other prompt text. The entities/modules list is semantic guidance\nonly; render an entity name only when the exact same string appears in the inventory. If a\nlabel cannot be rendered clearly, omit that label rather than inventing a replacement.\n\nUse one short label per module, with a consistent readable sans-serif typeface, generous\nletter spacing, strong contrast, and sufficient size for 100% PDF readability. Keep labels\ninside their module boundaries with ample padding; never overlap labels, connectors, icons,\nor panel borders. Do not create a legend, title, paragraph, axis, table, footnote, or caption\nunless its exact text appears in the inventory.\n\nUncertainties or evidence boundaries to show:\n- The boundary condition remains uncertain.\n\nComposition:\nUse a left-to-right conceptual layout with clear negative space.\n\nFigure-type layout requirements:\nBuild a visually rich causal systems map rather than a simple linear flowchart. Place the dominant mechanism or outcome as a central anchor, arrange upstream drivers as an asymmetric evidence cluster, and place intermediate processes as layered or nested modules. Use solid connectors for direct support, dashed or translucent connectors for qualified or unresolved relations, and include one restrained inset, symbolic icon, or uncertainty region when supported by the supplied content. Avoid repeated equal-sized cards.\n\nArticle-wide visual style:\nA restrained editorial scientific figure style with crisp linework.\n\nLocked article palette:\n- Background: #F4F1EA\n- Linework: #252B33\n- Primary evidence-supported pathway: #356C89\n- Secondary process or comparison group: #6F7E59\n- Key focal entity: #C47A3A\n- Uncertainty or qualified relation: #9AA1A5\n\nVisual language:\nA visually rich editorial scientific infographic suitable for a high-impact\nmultidisciplinary research journal. Make it feel like a polished visual abstract or\nsystems-map poster, not a basic flowchart or presentation slide.\n\nCreate a clear focal hierarchy: one dominant visual anchor, two to four secondary\nmodules with different visual weights, and one restrained uncertainty or limitation\nregion. Build hierarchy through scale, position, layered panels, subtle tonal\nbackgrounds, symbolic icons, selective accent colour, and different connector weights.\n\nPrefer an asymmetric but balanced composition. Combine grouped modules, inset details,\nnested regions, branching or converging pathways, feedback loops, scale transitions, or\na compact semantic strip whenever supported by the supplied content. Use controlled\ndensity: information-rich, visually layered, and detailed, while remaining readable at\n50% scale in a PDF.\n\nDo not repeat identical rounded rectangles and do not use a default three-column layout.\n\nText constraints:\nRender only the exact labels from the inventory, preferably as 1–5 word labels. Never add\ndecorative pseudo-text or plausible-looking terminology. Before finalizing, perform an\ninternal character-by-character check against the inventory; if any character is uncertain,\nleave that label out. Keep all reader-facing text sparse and subordinate to the visual\nstructure. Leave clean visual space for the separate English caption and programmatic labels.\n\nScientific constraints:\nThis is a conceptual synthesis of the supplied survey content, not a new empirical result.\nDo not invent quantitative data, experimental measurements, causal mechanisms, instruments,\nmodel properties, or conclusions. Use solid prominent pathways only for directly supported\nrelationships. Use restrained secondary pathways for qualified contributions. Use muted,\ndashed, or translucent elements for explicit uncertainty, evidence gaps, or background context.\n\nNegative prompt:\nNo photorealistic laboratory scene, no stock-photo appearance, no science-fiction aesthetic,\nno neon palette, no rainbow gradient, no illegible text, no fake chart, no invented numerical\ndata, no fictional equation, no paper citation, no journal logo, no misspelled words, no\ninvented labels, no text outside the exact label inventory, no fake legend, and no tiny or\noverlapping text.\n\nLayout requirements:\n- Do not use a flat sequence of equal-width boxes.\n- Do not use a default left-to-right three-column flowchart.\n- Establish one dominant anchor near the visual center or upper center.\n- Use an asymmetric but balanced arrangement.\n- Combine at least three of the following when scientifically appropriate: grouped\n  modules, nested regions, inset detail, symbolic icons, branching pathways, converging\n  pathways, feedback loops, layered backgrounds, scale transitions, or a compact\n  semantic strip.\n- Use solid primary-colour pathways for direct evidence-supported relations.\n- Use thinner, dashed, or translucent pathways for qualified, indirect, contextual, or\n  uncertain relations.\n- Use the accent colour sparingly for the key focal entity or conclusion.\n- Reserve muted grey-blue tones for context and uncertainty.\n- Keep the figure readable at 50% scale in a PDF.\n\nOutput: landscape 4:3, high resolution, balanced margins, suitable for PDF and Markdown.\n"
+    }
+  ]
+}

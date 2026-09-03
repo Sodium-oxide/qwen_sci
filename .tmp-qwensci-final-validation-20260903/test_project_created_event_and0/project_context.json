@@ -1,0 +1,805 @@
+{
+  "schema_version": "survey_project_context_artifact_v1",
+  "event": "project_created",
+  "project_id": "sci_20260822_170051_000001",
+  "declared_domain": "Biomedical Engineering and Pharmacology",
+  "domain": "Personalized Medicine",
+  "research_domains": [
+    {
+      "key": "genetics_genomics_heredity",
+      "domain": "biochemistry_genetics_molecular_biology",
+      "subfield": "genetics_genomics_heredity",
+      "label": "Genetics Genomics And Heredity",
+      "matched_terms": [
+        "genomics",
+        "genomic"
+      ],
+      "declared_domain_matches": [],
+      "scientific_text_matches": [
+        "genomics",
+        "genomic"
+      ],
+      "declared_domain_score": 0.0,
+      "scientific_text_score": 2.0,
+      "score": 22.0,
+      "source": "declared_domain_and_scientific_text",
+      "evidence_status": "DIRECT"
+    },
+    {
+      "key": "pharmacology_pharmacodynamics",
+      "domain": "pharmacology_toxicology_pharmaceutics",
+      "subfield": "pharmacology_pharmacodynamics",
+      "label": "Pharmacology And Pharmacodynamics",
+      "matched_terms": [
+        "pharmacology"
+      ],
+      "declared_domain_matches": [
+        "pharmacology"
+      ],
+      "scientific_text_matches": [
+        "pharmacology"
+      ],
+      "declared_domain_score": 1.0,
+      "scientific_text_score": 1.0,
+      "score": 25.0,
+      "source": "declared_domain_and_scientific_text",
+      "evidence_status": "DIRECT"
+    },
+    {
+      "key": "biomedical_engineering",
+      "domain": "engineering",
+      "subfield": "biomedical_engineering",
+      "label": "Biomedical Engineering",
+      "matched_terms": [
+        "biomedical engineering",
+        "medical engineering"
+      ],
+      "declared_domain_matches": [
+        "biomedical engineering",
+        "medical engineering"
+      ],
+      "scientific_text_matches": [],
+      "declared_domain_score": 2.0,
+      "scientific_text_score": 0.0,
+      "score": 32.0,
+      "source": "declared_domain_and_scientific_text",
+      "evidence_status": "DIRECT"
+    }
+  ],
+  "domain_resolution_source": "llm_primary_catalog_validated",
+  "requires_human_confirmation": true,
+  "research_context": {
+    "input_fingerprint": "60ca825db15f498930b1dd00d23d977f66dba8ef6ca31fb55c0016a6791167ea",
+    "original_topic": "Personalized medicine using genomics and pharmacology",
+    "title": "",
+    "schema_version": "project_research_context_v3",
+    "declared_domain": "Biomedical Engineering and Pharmacology",
+    "domain": "Personalized Medicine",
+    "research_domains": [
+      {
+        "key": "genetics_genomics_heredity",
+        "domain": "biochemistry_genetics_molecular_biology",
+        "subfield": "genetics_genomics_heredity",
+        "label": "Genetics Genomics And Heredity",
+        "matched_terms": [
+          "genomics",
+          "genomic"
+        ],
+        "declared_domain_matches": [],
+        "scientific_text_matches": [
+          "genomics",
+          "genomic"
+        ],
+        "declared_domain_score": 0.0,
+        "scientific_text_score": 2.0,
+        "score": 22.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      },
+      {
+        "key": "pharmacology_pharmacodynamics",
+        "domain": "pharmacology_toxicology_pharmaceutics",
+        "subfield": "pharmacology_pharmacodynamics",
+        "label": "Pharmacology And Pharmacodynamics",
+        "matched_terms": [
+          "pharmacology"
+        ],
+        "declared_domain_matches": [
+          "pharmacology"
+        ],
+        "scientific_text_matches": [
+          "pharmacology"
+        ],
+        "declared_domain_score": 1.0,
+        "scientific_text_score": 1.0,
+        "score": 25.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      },
+      {
+        "key": "biomedical_engineering",
+        "domain": "engineering",
+        "subfield": "biomedical_engineering",
+        "label": "Biomedical Engineering",
+        "matched_terms": [
+          "biomedical engineering",
+          "medical engineering"
+        ],
+        "declared_domain_matches": [
+          "biomedical engineering",
+          "medical engineering"
+        ],
+        "scientific_text_matches": [],
+        "declared_domain_score": 2.0,
+        "scientific_text_score": 0.0,
+        "score": 32.0,
+        "source": "declared_domain_and_scientific_text",
+        "evidence_status": "DIRECT"
+      }
+    ],
+    "research_identity": {
+      "label": "Personalized Medicine",
+      "source": "llm_primary",
+      "confidence": 0.0,
+      "rationale": "",
+      "evidence_spans": [
+        "Personalized medicine",
+        "genomics",
+        "pharmacology"
+      ],
+      "secondary_labels": [],
+      "core_entities": [],
+      "retrieval_synonyms": [],
+      "must_not_be_primary": []
+    },
+    "domain_taxonomy": {
+      "catalog_version": "research_domain_catalog_v1",
+      "coverage": "validated",
+      "mappings": [
+        {
+          "key": "genetics_genomics_heredity",
+          "domain": "biochemistry_genetics_molecular_biology",
+          "subfield": "genetics_genomics_heredity",
+          "label": "Genetics Genomics And Heredity",
+          "matched_terms": [
+            "genomics",
+            "genomic"
+          ],
+          "declared_domain_matches": [],
+          "scientific_text_matches": [
+            "genomics",
+            "genomic"
+          ],
+          "declared_domain_score": 0.0,
+          "scientific_text_score": 2.0,
+          "score": 22.0,
+          "source": "declared_domain_and_scientific_text",
+          "evidence_status": "DIRECT"
+        },
+        {
+          "key": "pharmacology_pharmacodynamics",
+          "domain": "pharmacology_toxicology_pharmaceutics",
+          "subfield": "pharmacology_pharmacodynamics",
+          "label": "Pharmacology And Pharmacodynamics",
+          "matched_terms": [
+            "pharmacology"
+          ],
+          "declared_domain_matches": [
+            "pharmacology"
+          ],
+          "scientific_text_matches": [
+            "pharmacology"
+          ],
+          "declared_domain_score": 1.0,
+          "scientific_text_score": 1.0,
+          "score": 25.0,
+          "source": "declared_domain_and_scientific_text",
+          "evidence_status": "DIRECT"
+        },
+        {
+          "key": "biomedical_engineering",
+          "domain": "engineering",
+          "subfield": "biomedical_engineering",
+          "label": "Biomedical Engineering",
+          "matched_terms": [
+            "biomedical engineering",
+            "medical engineering"
+          ],
+          "declared_domain_matches": [
+            "biomedical engineering",
+            "medical engineering"
+          ],
+          "scientific_text_matches": [],
+          "declared_domain_score": 2.0,
+          "scientific_text_score": 0.0,
+          "score": 32.0,
+          "source": "declared_domain_and_scientific_text",
+          "evidence_status": "DIRECT"
+        }
+      ]
+    },
+    "discovery_taxonomy": {
+      "schema_version": "discipline_taxonomy_v1",
+      "scope": "natural_science_engineering_only",
+      "status": "resolved",
+      "primary_discipline": "medicine",
+      "discipline_ids": [
+        "medicine"
+      ],
+      "adjacent_disciplines": [
+        "pharmacology_toxicology_pharmaceutics",
+        "neuroscience"
+      ],
+      "coverage": "exact",
+      "matched_terms": [
+        "medicine"
+      ],
+      "out_of_scope_terms": [],
+      "mixed": false,
+      "primary": {
+        "key": "medicine",
+        "label": "Medicine",
+        "family": "health_sciences",
+        "aliases": [
+          "medicine",
+          "medical",
+          "clinical",
+          "patient",
+          "hospital",
+          "diagnosis",
+          "therapy",
+          "treatment",
+          "epidemiology",
+          "public health"
+        ],
+        "internal_domains": [
+          "medicine"
+        ],
+        "openalex_field_ids": [
+          "27"
+        ],
+        "arxiv_categories": [],
+        "semantic_scholar_fields": [
+          "Medicine"
+        ],
+        "provider_applicability": [
+          "openalex",
+          "semantic_scholar"
+        ],
+        "coverage": "exact",
+        "adjacent": [
+          "pharmacology_toxicology_pharmaceutics",
+          "neuroscience",
+          "nursing"
+        ],
+        "wos_categories": []
+      },
+      "provider_filters": {
+        "arxiv": {
+          "provider": "arxiv",
+          "primary_discipline": "medicine",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "pharmacology_toxicology_pharmaceutics",
+            "neuroscience"
+          ],
+          "mode": "native_filter_withheld",
+          "policy": "post_filter_only",
+          "applied": false,
+          "reason": "No exact arXiv category mapping is available for this taxonomy entry."
+        },
+        "openalex": {
+          "provider": "openalex",
+          "primary_discipline": "medicine",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "pharmacology_toxicology_pharmaceutics",
+            "neuroscience"
+          ],
+          "mode": "native_filter",
+          "policy": "hard_filter",
+          "applied": true,
+          "resolved_field_ids": [
+            "27"
+          ],
+          "filter": "primary_topic.field.id:27",
+          "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+        },
+        "semantic_scholar": {
+          "provider": "semantic_scholar",
+          "primary_discipline": "medicine",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "pharmacology_toxicology_pharmaceutics",
+            "neuroscience"
+          ],
+          "mode": "field_hint",
+          "policy": "soft_boost",
+          "applied": false,
+          "field_hints": [
+            "Medicine"
+          ],
+          "reason": "Semantic Scholar field values are recorded as soft hints; no hard field filter is claimed."
+        }
+      },
+      "reason": "Resolved conservatively from allowlisted aliases; provider-native filters remain metadata until a provider route consumes them."
+    },
+    "domain_context": {
+      "primary": "Personalized Medicine",
+      "taxonomy_labels": [
+        "Genetics Genomics And Heredity",
+        "Pharmacology And Pharmacodynamics",
+        "Biomedical Engineering"
+      ],
+      "secondary_labels": [],
+      "retrieval_terms": [
+        "Personalized Medicine",
+        "Genetics Genomics And Heredity",
+        "Pharmacology And Pharmacodynamics",
+        "Biomedical Engineering",
+        "Biomedical Engineering and Pharmacology"
+      ]
+    },
+    "catalog_resolution": {
+      "catalog_version": "research_domain_catalog_v1",
+      "declared_domain": "Biomedical Engineering and Pharmacology",
+      "requested_domain_is_generic": false,
+      "primary_label": "Biomedical Engineering",
+      "primary_domain": "engineering",
+      "primary_subfield": "biomedical_engineering",
+      "research_domains": [
+        {
+          "key": "biomedical_engineering",
+          "domain": "engineering",
+          "subfield": "biomedical_engineering",
+          "label": "Biomedical Engineering",
+          "matched_terms": [
+            "biomedical engineering",
+            "medical engineering"
+          ],
+          "declared_domain_matches": [
+            "biomedical engineering",
+            "medical engineering"
+          ],
+          "scientific_text_matches": [],
+          "declared_domain_score": 2.0,
+          "scientific_text_score": 0.0,
+          "score": 32.0,
+          "source": "declared_domain_and_scientific_text",
+          "evidence_status": "DIRECT"
+        },
+        {
+          "key": "pharmacology_pharmacodynamics",
+          "domain": "pharmacology_toxicology_pharmaceutics",
+          "subfield": "pharmacology_pharmacodynamics",
+          "label": "Pharmacology And Pharmacodynamics",
+          "matched_terms": [
+            "pharmacology"
+          ],
+          "declared_domain_matches": [
+            "pharmacology"
+          ],
+          "scientific_text_matches": [
+            "pharmacology"
+          ],
+          "declared_domain_score": 1.0,
+          "scientific_text_score": 1.0,
+          "score": 25.0,
+          "source": "declared_domain_and_scientific_text",
+          "evidence_status": "DIRECT"
+        },
+        {
+          "key": "genetics_genomics_heredity",
+          "domain": "biochemistry_genetics_molecular_biology",
+          "subfield": "genetics_genomics_heredity",
+          "label": "Genetics Genomics And Heredity",
+          "matched_terms": [
+            "genomics",
+            "genomic"
+          ],
+          "declared_domain_matches": [],
+          "scientific_text_matches": [
+            "genomics",
+            "genomic"
+          ],
+          "declared_domain_score": 0.0,
+          "scientific_text_score": 2.0,
+          "score": 22.0,
+          "source": "declared_domain_and_scientific_text",
+          "evidence_status": "DIRECT"
+        },
+        {
+          "key": "personalized_medicine",
+          "domain": "medicine",
+          "subfield": "personalized_medicine",
+          "label": "Personalized Medicine",
+          "matched_terms": [
+            "personalized medicine"
+          ],
+          "declared_domain_matches": [],
+          "scientific_text_matches": [
+            "personalized medicine"
+          ],
+          "declared_domain_score": 0.0,
+          "scientific_text_score": 1.0,
+          "score": 12.0,
+          "source": "declared_domain_and_scientific_text",
+          "evidence_status": "DIRECT"
+        }
+      ],
+      "requires_human_confirmation": true
+    },
+    "catalog_conflict": {
+      "detected": false,
+      "adjudicated": false,
+      "catalog_primary_label": "Biomedical Engineering",
+      "reason": ""
+    },
+    "domain_resolution_source": "llm_primary_catalog_validated",
+    "requires_human_confirmation": true,
+    "primary_discipline": "medicine",
+    "secondary_disciplines": [],
+    "domain_confidence": 0.0,
+    "core_entities": [
+      "genomics",
+      "genomic",
+      "pharmacology",
+      "biomedical engineering",
+      "medical engineering"
+    ],
+    "retrieval_synonyms": [
+      "Genetics Genomics And Heredity",
+      "Pharmacology And Pharmacodynamics",
+      "Biomedical Engineering"
+    ],
+    "abbreviations": [],
+    "exclusion_terms": [],
+    "llm_payload": {
+      "domain": "Personalized Medicine",
+      "research_domains": [
+        "Genetics Genomics And Heredity",
+        "Pharmacology And Pharmacodynamics",
+        "Biomedical Engineering"
+      ],
+      "evidence_spans": [
+        "Personalized medicine",
+        "genomics",
+        "pharmacology"
+      ]
+    },
+    "llm_attempted": true,
+    "llm_error": "",
+    "taxonomy_resolution": {
+      "schema_version": "discipline_taxonomy_v1",
+      "scope": "natural_science_engineering_only",
+      "status": "resolved",
+      "primary_discipline": "medicine",
+      "discipline_ids": [
+        "medicine"
+      ],
+      "adjacent_disciplines": [
+        "pharmacology_toxicology_pharmaceutics",
+        "neuroscience"
+      ],
+      "coverage": "exact",
+      "matched_terms": [
+        "medicine"
+      ],
+      "out_of_scope_terms": [],
+      "mixed": false,
+      "primary": {
+        "key": "medicine",
+        "label": "Medicine",
+        "family": "health_sciences",
+        "aliases": [
+          "medicine",
+          "medical",
+          "clinical",
+          "patient",
+          "hospital",
+          "diagnosis",
+          "therapy",
+          "treatment",
+          "epidemiology",
+          "public health"
+        ],
+        "internal_domains": [
+          "medicine"
+        ],
+        "openalex_field_ids": [
+          "27"
+        ],
+        "arxiv_categories": [],
+        "semantic_scholar_fields": [
+          "Medicine"
+        ],
+        "provider_applicability": [
+          "openalex",
+          "semantic_scholar"
+        ],
+        "coverage": "exact",
+        "adjacent": [
+          "pharmacology_toxicology_pharmaceutics",
+          "neuroscience",
+          "nursing"
+        ],
+        "wos_categories": []
+      },
+      "provider_filters": {
+        "arxiv": {
+          "provider": "arxiv",
+          "primary_discipline": "medicine",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "pharmacology_toxicology_pharmaceutics",
+            "neuroscience"
+          ],
+          "mode": "native_filter_withheld",
+          "policy": "post_filter_only",
+          "applied": false,
+          "reason": "No exact arXiv category mapping is available for this taxonomy entry."
+        },
+        "openalex": {
+          "provider": "openalex",
+          "primary_discipline": "medicine",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "pharmacology_toxicology_pharmaceutics",
+            "neuroscience"
+          ],
+          "mode": "native_filter",
+          "policy": "hard_filter",
+          "applied": true,
+          "resolved_field_ids": [
+            "27"
+          ],
+          "filter": "primary_topic.field.id:27",
+          "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+        },
+        "semantic_scholar": {
+          "provider": "semantic_scholar",
+          "primary_discipline": "medicine",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "pharmacology_toxicology_pharmaceutics",
+            "neuroscience"
+          ],
+          "mode": "field_hint",
+          "policy": "soft_boost",
+          "applied": false,
+          "field_hints": [
+            "Medicine"
+          ],
+          "reason": "Semantic Scholar field values are recorded as soft hints; no hard field filter is claimed."
+        }
+      },
+      "reason": "Resolved conservatively from allowlisted aliases; provider-native filters remain metadata until a provider route consumes them."
+    },
+    "original_objective": "Personalized medicine using genomics and pharmacology",
+    "research_brief": "",
+    "identity_status": "resolved",
+    "evidence_spans": [
+      "Personalized medicine",
+      "genomics",
+      "pharmacology"
+    ],
+    "academic_operationalization": {
+      "applied": false,
+      "mode": "survey_scope",
+      "original_objective": "Personalized medicine using genomics and pharmacology",
+      "normalized_objective": "Personalized medicine using genomics and pharmacology",
+      "task_or_question": "",
+      "research_object": "",
+      "outcomes_or_readouts": [],
+      "data_or_deployment_context": [],
+      "baseline_requirements": [],
+      "limitation_and_failure_conditions": [],
+      "rewrite_reason": "The original objective already contains sufficient scope anchors.",
+      "extractor": "deterministic_skip"
+    },
+    "recommended_sources": [
+      {
+        "provider": "openalex",
+        "priority": 1,
+        "role": "primary_discovery",
+        "native_filter": {
+          "provider": "openalex",
+          "primary_discipline": "medicine",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "pharmacology_toxicology_pharmaceutics",
+            "neuroscience"
+          ],
+          "mode": "native_filter",
+          "policy": "hard_filter",
+          "applied": true,
+          "resolved_field_ids": [
+            "27"
+          ],
+          "filter": "primary_topic.field.id:27",
+          "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+        }
+      },
+      {
+        "provider": "arxiv",
+        "priority": 2,
+        "role": "conditional_preprint_discovery",
+        "enabled_for_exact_mapping": false,
+        "native_filter": {
+          "provider": "arxiv",
+          "primary_discipline": "medicine",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "pharmacology_toxicology_pharmaceutics",
+            "neuroscience"
+          ],
+          "mode": "native_filter_withheld",
+          "policy": "post_filter_only",
+          "applied": false,
+          "reason": "No exact arXiv category mapping is available for this taxonomy entry."
+        }
+      },
+      {
+        "provider": "semantic_scholar",
+        "priority": 3,
+        "role": "fallback_only",
+        "native_filter": {
+          "provider": "semantic_scholar",
+          "primary_discipline": "medicine",
+          "coverage": "exact",
+          "soft_expansion_disciplines": [
+            "pharmacology_toxicology_pharmaceutics",
+            "neuroscience"
+          ],
+          "mode": "field_hint",
+          "policy": "soft_boost",
+          "applied": false,
+          "field_hints": [
+            "Medicine"
+          ],
+          "reason": "Semantic Scholar field values are recorded as soft hints; no hard field filter is claimed."
+        }
+      }
+    ],
+    "retrieval_plan": {
+      "schema_version": "retrieval_lanes_v1",
+      "execution_policy": "limited_query_lanes",
+      "baseline_query": "Personalized medicine using genomics and pharmacology",
+      "normalized_objective": "Personalized medicine using genomics and pharmacology",
+      "include_anchors": [
+        "Personalized Medicine",
+        "Genetics Genomics And Heredity",
+        "Pharmacology And Pharmacodynamics",
+        "Biomedical Engineering",
+        "Biomedical Engineering and Pharmacology",
+        "genomics",
+        "genomic",
+        "pharmacology",
+        "medical engineering"
+      ],
+      "exclude_anchors": [],
+      "evidence_mode": "overview",
+      "query_lanes": [
+        {
+          "lane_id": "broad_anchor",
+          "lane": "broad_anchor",
+          "provider": "openalex",
+          "query": "Personalized medicine using genomics and pharmacology",
+          "evidence_mode": "overview",
+          "taxonomy_coverage": "broad",
+          "hard_filter_allowed": false,
+          "hard_filter_applied": false,
+          "provider_filter": {},
+          "purpose": "recall_baseline",
+          "discipline_filter_policy": "broad",
+          "execution_phase": "initial"
+        },
+        {
+          "lane_id": "exact_discipline",
+          "lane": "exact_discipline",
+          "provider": "openalex",
+          "query": "Personalized medicine using genomics and pharmacology",
+          "evidence_mode": "overview",
+          "taxonomy_coverage": "exact",
+          "hard_filter_allowed": true,
+          "hard_filter_applied": true,
+          "provider_filter": {
+            "provider": "openalex",
+            "primary_discipline": "medicine",
+            "coverage": "exact",
+            "soft_expansion_disciplines": [
+              "pharmacology_toxicology_pharmaceutics",
+              "neuroscience"
+            ],
+            "mode": "native_filter",
+            "policy": "hard_filter",
+            "applied": true,
+            "resolved_field_ids": [
+              "27"
+            ],
+            "filter": "primary_topic.field.id:27",
+            "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+          },
+          "purpose": "precision_expansion",
+          "discipline_filter_policy": "exact_primary",
+          "execution_phase": "initial"
+        }
+      ]
+    },
+    "identity_source": "llm_primary_catalog_validated",
+    "llm_used": true,
+    "research_design_inventory": {
+      "schema_version": "research_design_inventory_v1",
+      "input_fingerprint": "2007cc161ec2ed596bbcfab7e7c9fa0b37c9bfca145c5fe2f435c38612fce7c4",
+      "project_context_fingerprint": "60ca825db15f498930b1dd00d23d977f66dba8ef6ca31fb55c0016a6791167ea",
+      "design_basis": [
+        {
+          "id": "DB1",
+          "kind": "research_object",
+          "statement": "The project studies Personalized Medicine.",
+          "anchors": [
+            "genomics",
+            "genomic",
+            "pharmacology",
+            "biomedical engineering",
+            "medical engineering",
+            "Personalized Medicine"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "genomics",
+            "genomic",
+            "pharmacology",
+            "biomedical engineering",
+            "medical engineering",
+            "Personalized Medicine"
+          ]
+        },
+        {
+          "id": "DB2",
+          "kind": "target_relation",
+          "statement": "Personalized medicine using genomics and pharmacology",
+          "anchors": [
+            "Personalized medicine using genomics and pharmacology",
+            "genomics",
+            "genomic",
+            "pharmacology",
+            "biomedical engineering",
+            "medical engineering"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "Personalized medicine using genomics and pharmacology"
+          ]
+        },
+        {
+          "id": "DB3",
+          "kind": "outcome_or_construct",
+          "statement": "The project requires evidence about declared outcomes or constructs.",
+          "anchors": [
+            "Personalized medicine using genomics and pharmacology"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "Personalized medicine using genomics and pharmacology"
+          ]
+        },
+        {
+          "id": "DB4",
+          "kind": "condition_or_regime",
+          "statement": "The project scope includes the declared conditions, regimes, or contexts.",
+          "anchors": [
+            "Personalized medicine using genomics and pharmacology"
+          ],
+          "source": "project_declaration_compiler",
+          "evidence_spans": [
+            "Personalized medicine using genomics and pharmacology"
+          ]
+        }
+      ],
+      "inventory_source": "project_declaration_compiler",
+      "llm_used": false,
+      "llm_error": "llm_design_inventory_failed_source_grounding"
+    }
+  }
+}

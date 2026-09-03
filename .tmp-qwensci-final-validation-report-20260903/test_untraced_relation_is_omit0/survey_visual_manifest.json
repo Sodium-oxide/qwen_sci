@@ -1,0 +1,44 @@
+{
+  "schema_version": "survey_visual_manifest_v1",
+  "status": "skipped_no_briefs",
+  "reason": "no evidence-bounded visual brief",
+  "source_survey": "survey.md",
+  "visual_survey": "survey_visual.md",
+  "image_directory": ".",
+  "reader_facing_language": "en",
+  "captions_language": "en",
+  "alt_text_language": "en",
+  "outline_used": false,
+  "references_received": false,
+  "reference_ids": [],
+  "reference_count": 0,
+  "evidence_plan_schema_version": "",
+  "style_profile": {
+    "visual_language_en": "Refined editorial scientific figures with clean vector-like forms, subtle scientific rendering, ample negative space, and print-ready hierarchy.",
+    "palette": {
+      "background": "#F6F4EF",
+      "ink": "#26313A",
+      "primary": "#326B7C",
+      "secondary": "#5D7188",
+      "accent": "#C77A37",
+      "uncertainty": "#9AA2A8"
+    },
+    "source": "fallback_no_briefs"
+  },
+  "rejected_figures": [
+    {
+      "figure_id": "fig_01_mechanism",
+      "section_index": 1,
+      "figure_type": "mechanism",
+      "reasons": [
+        "no evidence-bounded relation survived validation",
+        "relation validation details: no evidence path for grounded relation in paragraph 1",
+        "repair request/parse failed: IndexError: pop from empty list"
+      ],
+      "repair_attempted": true,
+      "stage": "brief_validation"
+    }
+  ],
+  "skipped_figures": [],
+  "figures": []
+}

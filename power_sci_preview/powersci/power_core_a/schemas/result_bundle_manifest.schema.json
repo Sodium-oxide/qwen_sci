@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qwen-zhikan.local/schemas/result_bundle_manifest_v1.json",
+  "title": "ResultBundleManifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "bundle_id", "run_id", "bundle_version", "created_at", "final_state", "run_manifest", "artifacts", "integrity_algorithm", "recomputable", "reproduction_command"],
+  "properties": {
+    "schema_version": {"const": "result_bundle_manifest_v1"},
+    "bundle_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "bundle_version": {"type": "integer", "minimum": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "final_state": {"const": "PROTOCOL_FROZEN"},
+    "run_manifest": {"$ref": "#/$defs/descriptor"},
+    "artifacts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/descriptor"}},
+    "integrity_algorithm": {"const": "sha256"},
+    "recomputable": {"const": true},
+    "reproduction_command": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+  },
+  "$defs": {
+    "descriptor": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "artifact_id", "artifact_type", "artifact_version", "contract_schema", "content_hash", "byte_size", "relative_path", "created_at", "producer", "lineage_hashes"],
+      "properties": {
+        "schema_version": {"const": "artifact_descriptor_v1"}, "artifact_id": {"type": "string"}, "artifact_type": {"type": "string"},
+        "artifact_version": {"type": "integer", "minimum": 1}, "contract_schema": {"type": "string"},
+        "content_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "byte_size": {"type": "integer", "minimum": 1},
+        "relative_path": {"type": "string"}, "created_at": {"type": "string", "format": "date-time"}, "producer": {"type": "string"},
+        "lineage_hashes": {"type": "array", "items": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+      }
+    }
+  }
+}

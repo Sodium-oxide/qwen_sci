@@ -1,0 +1,53 @@
+{
+  "Massive Neutron Star Masses and Dense Matter Equations of State": {
+    "nodes": [
+      "W2138552549",
+      "W2150460969",
+      "W4288009935"
+    ],
+    "edges": null
+  },
+  "Complex Binary Evolution Pathways and Millisecond Pulsar Formation": {
+    "nodes": [
+      "W2138552549",
+      "W2150460969",
+      "W2016762929",
+      "W2110083583",
+      "W2433433060",
+      "W1963761446",
+      "W2006729056",
+      "W2095725842"
+    ],
+    "edges": [
+      {
+        "source": "W2016762929",
+        "target": "W1963761446",
+        "type": "Background",
+        "analysis": "Paper A leverages Paper B’s observational discoveries and empirical constraints—particularly the universal irradiation efficiency range (10%–30%) and companion filling factors—to establish the physical context and key parameters for its theoretical evolutionary models. By grounding its MESA-based simulations in these observed phenomena, Paper A uses Paper B as foundational background to investigate how irradiation efficiency dictates the divergent formation pathways of black widows and redbacks.",
+        "raw": "{\n  \"type\": \"Background\",\n  \"analysis\": \"Paper A leverages Paper B’s observational discoveries and empirical constraints—particularly the universal irradiation efficiency range (10%–30%) and companion filling factors—to establish the physical context and key parameters for its theoretical evolutionary models. By grounding its MESA-based simulations in these observed phenomena, Paper A uses Paper B as foundational background to investigate how irradiation efficiency dictates the divergent formation pathways of black widows and redbacks.\"\n}"
+      },
+      {
+        "source": "W2110083583",
+        "target": "W2006729056",
+        "type": "Foundation",
+        "analysis": "Paper A directly builds upon the observational baseline and initial findings established in Paper B, specifically leveraging the measured large positive orbital period derivative ($\\dot{P}_{orb}$) and the preliminary connection to black widow binaries. Using these foundational results, Paper A develops a detailed physical model to explain the anomalous orbital evolution through quiescent mass ejection and highly non-conservative mass transfer.",
+        "raw": "{\n  \"type\": \"Foundation\",\n  \"analysis\": \"Paper A directly builds upon the observational baseline and initial findings established in Paper B, specifically leveraging the measured large positive orbital period derivative ($\\\\dot{P}_{orb}$) and the preliminary connection to black widow binaries. Using these foundational results, Paper A develops a detailed physical model to explain the anomalous orbital evolution through quiescent mass ejection and highly non-conservative mass transfer.\"\n}"
+      }
+    ]
+  },
+  "Long-Term Pulsar Spin-Down Mechanics and Magnetic Inclination Evolution": {
+    "nodes": [
+      "W2590059791",
+      "W2039864550",
+      "W2168466918",
+      "W2080065881",
+      "W2137533160",
+      "W2006729056"
+    ],
+    "edges": null
+  },
+  "Neutron Star Interior Dynamics and Extreme Glitch Activity": {
+    "nodes": "W2753142562",
+    "edges": null
+  }
+}

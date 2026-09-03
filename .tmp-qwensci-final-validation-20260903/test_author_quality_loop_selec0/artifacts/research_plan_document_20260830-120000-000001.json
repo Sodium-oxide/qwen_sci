@@ -1,0 +1,1517 @@
+{
+  "abstract": {
+    "claim_ids": [
+      "abstract:claim-abstract"
+    ],
+    "text": "This proposal specifies the bounded role of Abstract."
+  },
+  "appendices": [
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "block-appendix_variables_and_definitions",
+          "claim_ids": [
+            "appendix_variables_and_definitions:claim-appendix_variables_and_definitions"
+          ],
+          "kind": "paragraph",
+          "text": "This proposal specifies the bounded role of Energy-Condition Taxonomy, Symbols, and Boundary Defense."
+        }
+      ],
+      "section_id": "appendix_variables_and_definitions",
+      "title": "Energy-Condition Taxonomy, Symbols, and Boundary Defense"
+    },
+    {
+      "applicability": "optional",
+      "blocks": [
+        {
+          "block_id": "block-appendix_idea_evolution",
+          "claim_ids": [
+            "appendix_idea_evolution:claim-appendix_idea_evolution"
+          ],
+          "kind": "paragraph",
+          "text": "This proposal specifies the bounded role of Idea Source Checkpoints and Direction Selection Audit."
+        }
+      ],
+      "section_id": "appendix_idea_evolution",
+      "title": "Idea Source Checkpoints and Direction Selection Audit"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "block-appendix_evidence_and_review",
+          "claim_ids": [
+            "appendix_evidence_and_review:claim-appendix_evidence_and_review"
+          ],
+          "kind": "paragraph",
+          "text": "This proposal specifies the bounded role of Evidence Coverage, Unknown Items, and Review Checklist."
+        }
+      ],
+      "section_id": "appendix_evidence_and_review",
+      "title": "Evidence Coverage, Unknown Items, and Review Checklist"
+    }
+  ],
+  "authoring_blueprint": {
+    "argument_ledger": {
+      "argument_graph": [
+        {
+          "from_section_id": "formal_problem_and_hypotheses",
+          "relation": "supplies the scoped premises consumed by the next argument stage",
+          "to_section_id": "definitions_and_propositions"
+        },
+        {
+          "from_section_id": "definitions_and_propositions",
+          "relation": "supplies the scoped premises consumed by the next argument stage",
+          "to_section_id": "forward_derivation_and_counterexamples"
+        },
+        {
+          "from_section_id": "forward_derivation_and_counterexamples",
+          "relation": "supplies the scoped premises consumed by the next argument stage",
+          "to_section_id": "expected_outcomes"
+        },
+        {
+          "from_section_id": "expected_outcomes",
+          "relation": "supplies the scoped premises consumed by the next argument stage",
+          "to_section_id": "risk_limitations_and_review"
+        }
+      ],
+      "decision_ledger": {
+        "entries": [
+          {
+            "entry_id": "review:review-1",
+            "source_item_id": "review-1",
+            "status": "review_required"
+          }
+        ],
+        "owner_section_id": "risk_limitations_and_review"
+      },
+      "definition_ledger": {
+        "canonical_owner": "definitions_and_propositions",
+        "consumer_sections": {
+          "expected_outcomes": [],
+          "formal_problem_and_hypotheses": [],
+          "forward_derivation_and_counterexamples": [],
+          "risk_limitations_and_review": []
+        },
+        "entries": []
+      },
+      "schema_version": "research_plan_author_argument_ledger_v2",
+      "section_roles": [
+        {
+          "section_id": "abstract",
+          "theory_unit_references": {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "abstract"
+          },
+          "theory_writing_task": {},
+          "unique_contribution": "Advance the proposal argument with a route-specific contribution instead of restating shared unresolved items."
+        },
+        {
+          "section_id": "introduction",
+          "theory_unit_references": {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "introduction"
+          },
+          "theory_writing_task": {},
+          "unique_contribution": "Advance the proposal argument with a route-specific contribution instead of restating shared unresolved items."
+        },
+        {
+          "section_id": "survey_and_research_gap",
+          "theory_unit_references": {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "survey_and_research_gap"
+          },
+          "theory_writing_task": {},
+          "unique_contribution": "Establish the evidence-bounded gap that motivates, but does not replace, the formal argument."
+        },
+        {
+          "section_id": "research_questions_and_contributions",
+          "theory_unit_references": {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "research_questions_and_contributions"
+          },
+          "theory_writing_task": {},
+          "unique_contribution": "State the research questions and planned contributions that the later argument operationalizes."
+        },
+        {
+          "section_id": "idea_origin_and_selection",
+          "theory_unit_references": {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "idea_origin_and_selection"
+          },
+          "theory_writing_task": {},
+          "unique_contribution": "Advance the proposal argument with a route-specific contribution instead of restating shared unresolved items."
+        },
+        {
+          "section_id": "formal_problem_and_hypotheses",
+          "theory_unit_references": {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "consumer",
+            "proof_obligation_ids": [],
+            "section_id": "formal_problem_and_hypotheses"
+          },
+          "theory_writing_task": {
+            "expected_artifacts": [
+              "formal definition",
+              "assumption subset",
+              "numbered problem relation",
+              "candidate conclusion",
+              "failure condition"
+            ],
+            "formula_role": "State the AANEC or independent-focusing relation that fixes the proposed problem, domain, and failure boundary."
+          },
+          "unique_contribution": "State the formal problem, admissible domain, and assumption boundary that later derivations consume."
+        },
+        {
+          "section_id": "study_design_and_methods",
+          "theory_unit_references": {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "study_design_and_methods"
+          },
+          "theory_writing_task": {},
+          "unique_contribution": "Specify the proposal protocol and boundary checks without re-explaining formal unresolved items."
+        },
+        {
+          "section_id": "expected_outcomes",
+          "theory_unit_references": {
+            "decision_branch_ids": [
+              "TS-BR-OUTCOME-NULL-OR-CONTRADICTORY",
+              "TS-BR-OUTCOME-PARTIAL-OR-HETEROGENEOUS",
+              "TS-BR-OUTCOME-SUPPORTS-MECHANISM",
+              "TS-BR-OUTCOME-UNINFORMATIVE-OR-INVALID"
+            ],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "owner",
+            "proof_obligation_ids": [],
+            "section_id": "expected_outcomes"
+          },
+          "theory_writing_task": {},
+          "unique_contribution": "Map conditional outcomes to interpretations and next actions without restating the review ledger."
+        },
+        {
+          "section_id": "risk_limitations_and_review",
+          "theory_unit_references": {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "consumer",
+            "proof_obligation_ids": [],
+            "section_id": "risk_limitations_and_review"
+          },
+          "theory_writing_task": {},
+          "unique_contribution": "Own the detailed human-review, release-condition, and limitation decision ledger."
+        },
+        {
+          "section_id": "definitions_and_propositions",
+          "theory_unit_references": {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "owner",
+            "proof_obligation_ids": [],
+            "section_id": "definitions_and_propositions"
+          },
+          "theory_writing_task": {
+            "expected_artifacts": [
+              "complete definition ledger",
+              "symbol domain",
+              "numbered compactness or threshold relation",
+              "proposition",
+              "proof obligation"
+            ],
+            "formula_role": "Own the compactness, symbol-domain, and threshold conventions that the rest of the paper cites rather than repeats."
+          },
+          "unique_contribution": "Own the detailed definition ledger, symbol roles, proposition dependencies, and unresolved formal inputs."
+        },
+        {
+          "section_id": "forward_derivation_and_counterexamples",
+          "theory_unit_references": {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "consumer",
+            "proof_obligation_ids": [],
+            "section_id": "forward_derivation_and_counterexamples"
+          },
+          "theory_writing_task": {
+            "expected_artifacts": [
+              "consumed-premise subset",
+              "numbered derivation relation",
+              "lemma chain",
+              "counterexample decision matrix",
+              "failure condition"
+            ],
+            "formula_role": "Develop the Raychaudhuri or integrated-threshold chain and distinguish admissible counterexamples from failures of assumptions."
+          },
+          "unique_contribution": "Advance the argument through a derivation obligation, failure conditions, and counterexample decisions without repeating definitions."
+        },
+        {
+          "section_id": "references",
+          "theory_unit_references": {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "references"
+          },
+          "theory_writing_task": {},
+          "unique_contribution": "Advance the proposal argument with a route-specific contribution instead of restating shared unresolved items."
+        },
+        {
+          "section_id": "appendix_variables_and_definitions",
+          "theory_unit_references": {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "appendix_variables_and_definitions"
+          },
+          "theory_writing_task": {},
+          "unique_contribution": "Advance the proposal argument with a route-specific contribution instead of restating shared unresolved items."
+        },
+        {
+          "section_id": "appendix_idea_evolution",
+          "theory_unit_references": {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "appendix_idea_evolution"
+          },
+          "theory_writing_task": {},
+          "unique_contribution": "Advance the proposal argument with a route-specific contribution instead of restating shared unresolved items."
+        },
+        {
+          "section_id": "appendix_evidence_and_review",
+          "theory_unit_references": {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "appendix_evidence_and_review"
+          },
+          "theory_writing_task": {},
+          "unique_contribution": "Advance the proposal argument with a route-specific contribution instead of restating shared unresolved items."
+        }
+      ],
+      "theory_spine": {
+        "enabled": true,
+        "registry": {
+          "compiler_status": "no_auditable_lemma_input",
+          "decision_branches": [
+            {
+              "branch_id": "TS-BR-OUTCOME-NULL-OR-CONTRADICTORY",
+              "branch_kind": "upstream_outcome_branch",
+              "conclusion_policy": "defer_to_upstream_outcome_branch",
+              "display_label": "Branch null_or_contradictory",
+              "source_counterexample_ids": [],
+              "source_formal_reference_ids": [],
+              "source_outcome_branch_ids": [
+                "null_or_contradictory"
+              ],
+              "source_unknown_item_ids": [],
+              "status": "expected_not_observed"
+            },
+            {
+              "branch_id": "TS-BR-OUTCOME-PARTIAL-OR-HETEROGENEOUS",
+              "branch_kind": "upstream_outcome_branch",
+              "conclusion_policy": "defer_to_upstream_outcome_branch",
+              "display_label": "Branch partial_or_heterogeneous",
+              "source_counterexample_ids": [],
+              "source_formal_reference_ids": [],
+              "source_outcome_branch_ids": [
+                "partial_or_heterogeneous"
+              ],
+              "source_unknown_item_ids": [],
+              "status": "expected_not_observed"
+            },
+            {
+              "branch_id": "TS-BR-OUTCOME-SUPPORTS-MECHANISM",
+              "branch_kind": "upstream_outcome_branch",
+              "conclusion_policy": "defer_to_upstream_outcome_branch",
+              "display_label": "Branch supports_mechanism",
+              "source_counterexample_ids": [],
+              "source_formal_reference_ids": [],
+              "source_outcome_branch_ids": [
+                "supports_mechanism"
+              ],
+              "source_unknown_item_ids": [],
+              "status": "expected_not_observed"
+            },
+            {
+              "branch_id": "TS-BR-OUTCOME-UNINFORMATIVE-OR-INVALID",
+              "branch_kind": "upstream_outcome_branch",
+              "conclusion_policy": "defer_to_upstream_outcome_branch",
+              "display_label": "Branch uninformative_or_invalid",
+              "source_counterexample_ids": [],
+              "source_formal_reference_ids": [],
+              "source_outcome_branch_ids": [
+                "uninformative_or_invalid"
+              ],
+              "source_unknown_item_ids": [],
+              "status": "expected_not_observed"
+            },
+            {
+              "branch_id": "TS-BR-MISSING-DERIVATION-INPUT-NO_INFORMATION",
+              "branch_kind": "compiler_no_information",
+              "conclusion_policy": "withhold_theorem_status_update",
+              "display_label": "No-information: derivation input",
+              "next_action": "supply_upstream_proposition_or_derivation_input",
+              "reason_code": "missing_upstream_derivation_input",
+              "source_counterexample_ids": [],
+              "source_formal_reference_ids": [],
+              "source_outcome_branch_ids": [
+                "uninformative_or_invalid"
+              ],
+              "source_unknown_item_ids": [],
+              "status": "no_information"
+            }
+          ],
+          "enabled": true,
+          "falsifiers": [],
+          "lemma_units": [],
+          "proof_obligations": [],
+          "schema_version": "research_plan_theory_spine_v1",
+          "template_family": "mathematics_theory"
+        },
+        "schema_version": "research_plan_theory_spine_v1",
+        "section_unit_references": [
+          {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "abstract"
+          },
+          {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "appendix_evidence_and_review"
+          },
+          {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "appendix_idea_evolution"
+          },
+          {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "appendix_variables_and_definitions"
+          },
+          {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "owner",
+            "proof_obligation_ids": [],
+            "section_id": "definitions_and_propositions"
+          },
+          {
+            "decision_branch_ids": [
+              "TS-BR-OUTCOME-NULL-OR-CONTRADICTORY",
+              "TS-BR-OUTCOME-PARTIAL-OR-HETEROGENEOUS",
+              "TS-BR-OUTCOME-SUPPORTS-MECHANISM",
+              "TS-BR-OUTCOME-UNINFORMATIVE-OR-INVALID"
+            ],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "owner",
+            "proof_obligation_ids": [],
+            "section_id": "expected_outcomes"
+          },
+          {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "consumer",
+            "proof_obligation_ids": [],
+            "section_id": "formal_problem_and_hypotheses"
+          },
+          {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "consumer",
+            "proof_obligation_ids": [],
+            "section_id": "forward_derivation_and_counterexamples"
+          },
+          {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "idea_origin_and_selection"
+          },
+          {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "introduction"
+          },
+          {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "references"
+          },
+          {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "research_questions_and_contributions"
+          },
+          {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "consumer",
+            "proof_obligation_ids": [],
+            "section_id": "risk_limitations_and_review"
+          },
+          {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "study_design_and_methods"
+          },
+          {
+            "decision_branch_ids": [],
+            "falsifier_ids": [],
+            "lemma_ids": [],
+            "mode": "reference_only",
+            "proof_obligation_ids": [],
+            "section_id": "survey_and_research_gap"
+          }
+        ]
+      }
+    },
+    "document_title": "An English Proposal Title",
+    "global_constraints": {
+      "formal_and_empirical_claims_must_remain_separate": true,
+      "proposal_without_observed_results": true,
+      "unsupported_claims_forbidden": true
+    },
+    "keywords": [
+      "proposal",
+      "design"
+    ],
+    "language": "en",
+    "schema_version": "research_plan_authoring_blueprint_v1",
+    "sections": [
+      {
+        "allowed_claim_kinds": [
+          "planned_contribution",
+          "expected_outcome"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "abstract",
+        "theory_unit_references": {
+          "decision_branch_ids": [],
+          "falsifier_ids": [],
+          "lemma_ids": [],
+          "mode": "reference_only",
+          "proof_obligation_ids": [],
+          "section_id": "abstract"
+        },
+        "title": "Abstract"
+      },
+      {
+        "allowed_claim_kinds": [
+          "background",
+          "research_gap",
+          "planned_contribution",
+          "design_assumption"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "introduction",
+        "theory_unit_references": {
+          "decision_branch_ids": [],
+          "falsifier_ids": [],
+          "lemma_ids": [],
+          "mode": "reference_only",
+          "proof_obligation_ids": [],
+          "section_id": "introduction"
+        },
+        "title": "Introduction"
+      },
+      {
+        "allowed_claim_kinds": [
+          "background",
+          "survey_evidence",
+          "research_gap"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "survey_and_research_gap",
+        "theory_unit_references": {
+          "decision_branch_ids": [],
+          "falsifier_ids": [],
+          "lemma_ids": [],
+          "mode": "reference_only",
+          "proof_obligation_ids": [],
+          "section_id": "survey_and_research_gap"
+        },
+        "title": "Background, Survey, and Research Gap"
+      },
+      {
+        "allowed_claim_kinds": [
+          "research_question",
+          "planned_contribution",
+          "design_assumption"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [
+          "unknown-9",
+          "unknown-10"
+        ],
+        "required_review_item_ids": [],
+        "section_id": "research_questions_and_contributions",
+        "theory_unit_references": {
+          "decision_branch_ids": [],
+          "falsifier_ids": [],
+          "lemma_ids": [],
+          "mode": "reference_only",
+          "proof_obligation_ids": [],
+          "section_id": "research_questions_and_contributions"
+        },
+        "title": "Research Questions and Planned Contributions"
+      },
+      {
+        "allowed_claim_kinds": [
+          "idea_provenance",
+          "design_assumption"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "idea_origin_and_selection",
+        "theory_unit_references": {
+          "decision_branch_ids": [],
+          "falsifier_ids": [],
+          "lemma_ids": [],
+          "mode": "reference_only",
+          "proof_obligation_ids": [],
+          "section_id": "idea_origin_and_selection"
+        },
+        "title": "Idea Source Checkpoints and Direction Selection Audit"
+      },
+      {
+        "allowed_claim_kinds": [
+          "formal_definition",
+          "formal_proposition",
+          "hypothesis",
+          "design_assumption"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "formal_problem_and_hypotheses",
+        "theory_unit_references": {
+          "decision_branch_ids": [],
+          "falsifier_ids": [],
+          "lemma_ids": [],
+          "mode": "consumer",
+          "proof_obligation_ids": [],
+          "section_id": "formal_problem_and_hypotheses"
+        },
+        "title": "Problem Definition, Assumptions, and Hypotheses"
+      },
+      {
+        "allowed_claim_kinds": [
+          "planned_method",
+          "design_assumption",
+          "needs_human_input"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [
+          "unknown-1",
+          "unknown-2",
+          "unknown-3",
+          "unknown-4",
+          "unknown-5",
+          "unknown-6",
+          "unknown-7",
+          "unknown-8",
+          "unknown-11",
+          "unknown-12"
+        ],
+        "required_review_item_ids": [],
+        "section_id": "study_design_and_methods",
+        "theory_unit_references": {
+          "decision_branch_ids": [],
+          "falsifier_ids": [],
+          "lemma_ids": [],
+          "mode": "reference_only",
+          "proof_obligation_ids": [],
+          "section_id": "study_design_and_methods"
+        },
+        "title": "Study Design and Methods"
+      },
+      {
+        "allowed_claim_kinds": [
+          "expected_outcome",
+          "conditional_conclusion"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "expected_outcomes",
+        "theory_unit_references": {
+          "decision_branch_ids": [
+            "TS-BR-OUTCOME-NULL-OR-CONTRADICTORY",
+            "TS-BR-OUTCOME-PARTIAL-OR-HETEROGENEOUS",
+            "TS-BR-OUTCOME-SUPPORTS-MECHANISM",
+            "TS-BR-OUTCOME-UNINFORMATIVE-OR-INVALID"
+          ],
+          "falsifier_ids": [],
+          "lemma_ids": [],
+          "mode": "owner",
+          "proof_obligation_ids": [],
+          "section_id": "expected_outcomes"
+        },
+        "title": "Expected Outcome Branches and Conditional Conclusions"
+      },
+      {
+        "allowed_claim_kinds": [
+          "limitation",
+          "needs_human_input",
+          "review_requirement"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [
+          "review-1"
+        ],
+        "section_id": "risk_limitations_and_review",
+        "theory_unit_references": {
+          "decision_branch_ids": [],
+          "falsifier_ids": [],
+          "lemma_ids": [],
+          "mode": "consumer",
+          "proof_obligation_ids": [],
+          "section_id": "risk_limitations_and_review"
+        },
+        "title": "Risks, Limitations, and Human Review Requirements"
+      },
+      {
+        "allowed_claim_kinds": [
+          "formal_definition",
+          "formal_proposition",
+          "proof_obligation"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "definitions_and_propositions",
+        "theory_unit_references": {
+          "decision_branch_ids": [],
+          "falsifier_ids": [],
+          "lemma_ids": [],
+          "mode": "owner",
+          "proof_obligation_ids": [],
+          "section_id": "definitions_and_propositions"
+        },
+        "title": "Definitions, Propositions, and Proof Obligations"
+      },
+      {
+        "allowed_claim_kinds": [
+          "forward_derivation",
+          "counterexample_plan",
+          "limitation"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "forward_derivation_and_counterexamples",
+        "theory_unit_references": {
+          "decision_branch_ids": [],
+          "falsifier_ids": [],
+          "lemma_ids": [],
+          "mode": "consumer",
+          "proof_obligation_ids": [],
+          "section_id": "forward_derivation_and_counterexamples"
+        },
+        "title": "Forward Derivation and Counterexample Search Plan"
+      },
+      {
+        "allowed_claim_kinds": [
+          "citation_inventory"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "references",
+        "theory_unit_references": {
+          "decision_branch_ids": [],
+          "falsifier_ids": [],
+          "lemma_ids": [],
+          "mode": "reference_only",
+          "proof_obligation_ids": [],
+          "section_id": "references"
+        },
+        "title": "References"
+      },
+      {
+        "allowed_claim_kinds": [
+          "formal_definition",
+          "planned_method",
+          "design_assumption",
+          "needs_human_input"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "appendix_variables_and_definitions",
+        "theory_unit_references": {
+          "decision_branch_ids": [],
+          "falsifier_ids": [],
+          "lemma_ids": [],
+          "mode": "reference_only",
+          "proof_obligation_ids": [],
+          "section_id": "appendix_variables_and_definitions"
+        },
+        "title": "Energy-Condition Taxonomy, Symbols, and Boundary Defense"
+      },
+      {
+        "allowed_claim_kinds": [
+          "idea_provenance"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "optional",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "appendix_idea_evolution",
+        "theory_unit_references": {
+          "decision_branch_ids": [],
+          "falsifier_ids": [],
+          "lemma_ids": [],
+          "mode": "reference_only",
+          "proof_obligation_ids": [],
+          "section_id": "appendix_idea_evolution"
+        },
+        "title": "Idea Source Checkpoints and Direction Selection Audit"
+      },
+      {
+        "allowed_claim_kinds": [
+          "survey_evidence",
+          "limitation",
+          "review_requirement",
+          "needs_human_input"
+        ],
+        "allowed_source_ids": [],
+        "applicability": "required",
+        "required_open_item_ids": [],
+        "required_review_item_ids": [],
+        "section_id": "appendix_evidence_and_review",
+        "theory_unit_references": {
+          "decision_branch_ids": [],
+          "falsifier_ids": [],
+          "lemma_ids": [],
+          "mode": "reference_only",
+          "proof_obligation_ids": [],
+          "section_id": "appendix_evidence_and_review"
+        },
+        "title": "Evidence Coverage, Unknown Items, and Review Checklist"
+      }
+    ],
+    "source_design_id": "design-26",
+    "template_family": "mathematics_theory",
+    "theory_spine": {
+      "compiler_status": "no_auditable_lemma_input",
+      "decision_branches": [
+        {
+          "branch_id": "TS-BR-OUTCOME-NULL-OR-CONTRADICTORY",
+          "branch_kind": "upstream_outcome_branch",
+          "conclusion_policy": "defer_to_upstream_outcome_branch",
+          "display_label": "Branch null_or_contradictory",
+          "source_counterexample_ids": [],
+          "source_formal_reference_ids": [],
+          "source_outcome_branch_ids": [
+            "null_or_contradictory"
+          ],
+          "source_unknown_item_ids": [],
+          "status": "expected_not_observed"
+        },
+        {
+          "branch_id": "TS-BR-OUTCOME-PARTIAL-OR-HETEROGENEOUS",
+          "branch_kind": "upstream_outcome_branch",
+          "conclusion_policy": "defer_to_upstream_outcome_branch",
+          "display_label": "Branch partial_or_heterogeneous",
+          "source_counterexample_ids": [],
+          "source_formal_reference_ids": [],
+          "source_outcome_branch_ids": [
+            "partial_or_heterogeneous"
+          ],
+          "source_unknown_item_ids": [],
+          "status": "expected_not_observed"
+        },
+        {
+          "branch_id": "TS-BR-OUTCOME-SUPPORTS-MECHANISM",
+          "branch_kind": "upstream_outcome_branch",
+          "conclusion_policy": "defer_to_upstream_outcome_branch",
+          "display_label": "Branch supports_mechanism",
+          "source_counterexample_ids": [],
+          "source_formal_reference_ids": [],
+          "source_outcome_branch_ids": [
+            "supports_mechanism"
+          ],
+          "source_unknown_item_ids": [],
+          "status": "expected_not_observed"
+        },
+        {
+          "branch_id": "TS-BR-OUTCOME-UNINFORMATIVE-OR-INVALID",
+          "branch_kind": "upstream_outcome_branch",
+          "conclusion_policy": "defer_to_upstream_outcome_branch",
+          "display_label": "Branch uninformative_or_invalid",
+          "source_counterexample_ids": [],
+          "source_formal_reference_ids": [],
+          "source_outcome_branch_ids": [
+            "uninformative_or_invalid"
+          ],
+          "source_unknown_item_ids": [],
+          "status": "expected_not_observed"
+        },
+        {
+          "branch_id": "TS-BR-MISSING-DERIVATION-INPUT-NO_INFORMATION",
+          "branch_kind": "compiler_no_information",
+          "conclusion_policy": "withhold_theorem_status_update",
+          "display_label": "No-information: derivation input",
+          "next_action": "supply_upstream_proposition_or_derivation_input",
+          "reason_code": "missing_upstream_derivation_input",
+          "source_counterexample_ids": [],
+          "source_formal_reference_ids": [],
+          "source_outcome_branch_ids": [
+            "uninformative_or_invalid"
+          ],
+          "source_unknown_item_ids": [],
+          "status": "no_information"
+        }
+      ],
+      "enabled": true,
+      "falsifiers": [],
+      "lemma_units": [],
+      "proof_obligations": [],
+      "schema_version": "research_plan_theory_spine_v1",
+      "template_family": "mathematics_theory"
+    }
+  },
+  "authoring_constraints": {
+    "counterexample_must_satisfy_all_assumptions": true,
+    "formal_and_empirical_claims_must_remain_separate": true,
+    "observed_results_are_absent": true,
+    "proposal_without_observed_results": true,
+    "unsupported_claims_forbidden": true,
+    "unverified_reasoning_must_be_labeled": true
+  },
+  "citation_registry": [],
+  "claim_provenance": [
+    {
+      "citation_keys": [],
+      "claim_id": "abstract:claim-abstract",
+      "claim_kind": "planned_contribution",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "design_assumption",
+      "source_ids": [],
+      "statement": "This proposal specifies the bounded role of Abstract.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "introduction:claim-introduction",
+      "claim_kind": "background",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "design_assumption",
+      "source_ids": [],
+      "statement": "This proposal specifies the bounded role of Introduction.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "survey_and_research_gap:claim-survey_and_research_gap",
+      "claim_kind": "background",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "design_assumption",
+      "source_ids": [],
+      "statement": "This proposal specifies the bounded role of Background, Survey, and Research Gap.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "research_questions_and_contributions:claim-research_questions_and_contributions",
+      "claim_kind": "research_question",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "design_assumption",
+      "source_ids": [],
+      "statement": "This proposal specifies the bounded role of Research Questions and Planned Contributions.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "idea_origin_and_selection:claim-idea_origin_and_selection",
+      "claim_kind": "idea_provenance",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "design_assumption",
+      "source_ids": [],
+      "statement": "This proposal specifies the bounded role of Idea Source Checkpoints and Direction Selection Audit.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "formal_problem_and_hypotheses:claim-formal_problem_and_hypotheses",
+      "claim_kind": "formal_definition",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "This proposal specifies the bounded role of Problem Definition, Assumptions, and Hypotheses.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "study_design_and_methods:claim-study_design_and_methods",
+      "claim_kind": "planned_method",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "design_assumption",
+      "source_ids": [],
+      "statement": "This proposal specifies the bounded role of Study Design and Methods.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "expected_outcomes:outcome-expected",
+      "claim_kind": "expected_outcome",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [
+        "supports_mechanism"
+      ],
+      "qualification": "expected_not_observed",
+      "source_ids": [],
+      "statement": "The proposal specifies conditional outcomes.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "risk_limitations_and_review:risk-review",
+      "claim_kind": "limitation",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "unverified",
+      "source_ids": [],
+      "statement": "The proposal retains a bounded limitation.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "definitions_and_propositions:claim-definitions_and_propositions",
+      "claim_kind": "formal_definition",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "This proposal specifies the bounded role of Definitions, Propositions, and Proof Obligations.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "forward_derivation_and_counterexamples:claim-forward_derivation_and_counterexamples",
+      "claim_kind": "forward_derivation",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "This proposal specifies the bounded role of Forward Derivation and Counterexample Search Plan.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "references:claim-references",
+      "claim_kind": "citation_inventory",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "design_assumption",
+      "source_ids": [],
+      "statement": "This proposal specifies the bounded role of References.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "appendix_variables_and_definitions:claim-appendix_variables_and_definitions",
+      "claim_kind": "formal_definition",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "proposed",
+      "source_ids": [],
+      "statement": "This proposal specifies the bounded role of Energy-Condition Taxonomy, Symbols, and Boundary Defense.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "appendix_idea_evolution:claim-appendix_idea_evolution",
+      "claim_kind": "idea_provenance",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "design_assumption",
+      "source_ids": [],
+      "statement": "This proposal specifies the bounded role of Idea Source Checkpoints and Direction Selection Audit.",
+      "survey_anchor_ids": []
+    },
+    {
+      "citation_keys": [],
+      "claim_id": "appendix_evidence_and_review:claim-appendix_evidence_and_review",
+      "claim_kind": "survey_evidence",
+      "evidence_card_ids": [],
+      "formal_reference_ids": [],
+      "outcome_branch_ids": [],
+      "qualification": "design_assumption",
+      "source_ids": [],
+      "statement": "This proposal specifies the bounded role of Evidence Coverage, Unknown Items, and Review Checklist.",
+      "survey_anchor_ids": []
+    }
+  ],
+  "contract_repair_audit": [],
+  "document_metadata": {
+    "discipline_ids": [
+      "26"
+    ],
+    "source_title": "Bounded Proposal Direction",
+    "study_type": "proposal-only study",
+    "title": "An English Proposal Title",
+    "title_status": "english_llm_composed"
+  },
+  "document_status": "PROPOSAL_NO_OBSERVED_RESULTS",
+  "keywords": [
+    "proposal",
+    "design"
+  ],
+  "language": "en",
+  "open_items": [
+    {
+      "source_item_id": "unknown-9",
+      "status": "needs_human_input",
+      "text": "Human input is required before this proposal can proceed."
+    },
+    {
+      "source_item_id": "unknown-10",
+      "status": "needs_human_input",
+      "text": "Human input is required before this proposal can proceed."
+    },
+    {
+      "source_item_id": "unknown-1",
+      "status": "needs_human_input",
+      "text": "Human input is required before this proposal can proceed."
+    },
+    {
+      "source_item_id": "unknown-2",
+      "status": "needs_human_input",
+      "text": "Human input is required before this proposal can proceed."
+    },
+    {
+      "source_item_id": "unknown-3",
+      "status": "needs_human_input",
+      "text": "Human input is required before this proposal can proceed."
+    },
+    {
+      "source_item_id": "unknown-4",
+      "status": "needs_human_input",
+      "text": "Human input is required before this proposal can proceed."
+    },
+    {
+      "source_item_id": "unknown-5",
+      "status": "needs_human_input",
+      "text": "Human input is required before this proposal can proceed."
+    },
+    {
+      "source_item_id": "unknown-6",
+      "status": "needs_human_input",
+      "text": "Human input is required before this proposal can proceed."
+    },
+    {
+      "source_item_id": "unknown-7",
+      "status": "needs_human_input",
+      "text": "Human input is required before this proposal can proceed."
+    },
+    {
+      "source_item_id": "unknown-8",
+      "status": "needs_human_input",
+      "text": "Human input is required before this proposal can proceed."
+    },
+    {
+      "source_item_id": "unknown-11",
+      "status": "needs_human_input",
+      "text": "Human input is required before this proposal can proceed."
+    },
+    {
+      "source_item_id": "unknown-12",
+      "status": "needs_human_input",
+      "text": "Human input is required before this proposal can proceed."
+    }
+  ],
+  "review_items": [
+    {
+      "source_item_id": "review-1",
+      "status": "review_required",
+      "text": "Qualified human review is required before this proposal can proceed."
+    }
+  ],
+  "schema_version": "research_plan_document_v1",
+  "sections": [
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "block-introduction",
+          "claim_ids": [
+            "introduction:claim-introduction"
+          ],
+          "kind": "paragraph",
+          "text": "Improved source-bounded scholarly exposition with a clearer conditional transition."
+        }
+      ],
+      "section_id": "introduction",
+      "title": "Introduction"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "block-survey_and_research_gap",
+          "claim_ids": [
+            "survey_and_research_gap:claim-survey_and_research_gap"
+          ],
+          "kind": "paragraph",
+          "text": "This proposal specifies the bounded role of Background, Survey, and Research Gap."
+        }
+      ],
+      "section_id": "survey_and_research_gap",
+      "title": "Background, Survey, and Research Gap"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "block-research_questions_and_contributions",
+          "claim_ids": [
+            "research_questions_and_contributions:claim-research_questions_and_contributions"
+          ],
+          "kind": "paragraph",
+          "text": "This proposal specifies the bounded role of Research Questions and Planned Contributions."
+        }
+      ],
+      "section_id": "research_questions_and_contributions",
+      "title": "Research Questions and Planned Contributions"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "block-idea_origin_and_selection",
+          "claim_ids": [
+            "idea_origin_and_selection:claim-idea_origin_and_selection"
+          ],
+          "kind": "paragraph",
+          "text": "This proposal specifies the bounded role of Idea Source Checkpoints and Direction Selection Audit."
+        }
+      ],
+      "section_id": "idea_origin_and_selection",
+      "title": "Idea Source Checkpoints and Direction Selection Audit"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "block-formal_problem_and_hypotheses",
+          "claim_ids": [
+            "formal_problem_and_hypotheses:claim-formal_problem_and_hypotheses"
+          ],
+          "kind": "paragraph",
+          "text": "This proposal specifies the bounded role of Problem Definition, Assumptions, and Hypotheses."
+        }
+      ],
+      "section_id": "formal_problem_and_hypotheses",
+      "title": "Problem Definition, Assumptions, and Hypotheses"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "block-study_design_and_methods",
+          "claim_ids": [
+            "study_design_and_methods:claim-study_design_and_methods"
+          ],
+          "kind": "paragraph",
+          "text": "This proposal specifies the bounded role of Study Design and Methods."
+        }
+      ],
+      "section_id": "study_design_and_methods",
+      "title": "Study Design and Methods"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "matrix",
+          "claim_ids": [
+            "expected_outcomes:outcome-expected"
+          ],
+          "kind": "table",
+          "text": "Condition | Interpretation | Action\nSupportive branch | Conditional support | Continue plan\nNull branch | No conclusion | Revise design",
+          "theory_unit_ids": [
+            "TS-BR-OUTCOME-NULL-OR-CONTRADICTORY"
+          ]
+        }
+      ],
+      "section_id": "expected_outcomes",
+      "title": "Expected Outcome Branches and Conditional Conclusions"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "matrix",
+          "claim_ids": [
+            "risk_limitations_and_review:risk-review"
+          ],
+          "kind": "table",
+          "text": "Condition | Interpretation | Review action\nMissing premise | Scope remains limited | Request human confirmation\nBoundary failure | Do not escalate claim | Revise ledger"
+        }
+      ],
+      "section_id": "risk_limitations_and_review",
+      "title": "Risks, Limitations, and Human Review Requirements"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "block-definitions_and_propositions",
+          "claim_ids": [
+            "definitions_and_propositions:claim-definitions_and_propositions"
+          ],
+          "kind": "paragraph",
+          "text": "This proposal specifies the bounded role of Definitions, Propositions, and Proof Obligations."
+        }
+      ],
+      "section_id": "definitions_and_propositions",
+      "title": "Definitions, Propositions, and Proof Obligations"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "block-forward_derivation_and_counterexamples",
+          "claim_ids": [
+            "forward_derivation_and_counterexamples:claim-forward_derivation_and_counterexamples"
+          ],
+          "kind": "paragraph",
+          "text": "This proposal specifies the bounded role of Forward Derivation and Counterexample Search Plan."
+        }
+      ],
+      "section_id": "forward_derivation_and_counterexamples",
+      "title": "Forward Derivation and Counterexample Search Plan"
+    },
+    {
+      "applicability": "required",
+      "blocks": [
+        {
+          "block_id": "block-references",
+          "claim_ids": [
+            "references:claim-references"
+          ],
+          "kind": "paragraph",
+          "text": "This proposal specifies the bounded role of References."
+        }
+      ],
+      "section_id": "references",
+      "title": "References"
+    }
+  ],
+  "source_design_id": "design-26",
+  "source_manifest": {
+    "author_context_sha256": "3cc3f8ac019838e387051e405ae2ff53689b7ae52d5efb0170e9f668cec05398",
+    "author_input_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_author_quality_loop_selec0\\experiment_design_author.json",
+    "selected_direction_id": "selected-direction",
+    "source_bundle_schema_version": "research_plan_author_source_bundle_v2",
+    "survey_binding": {
+      "expected": {
+        "project_context_fingerprint": "",
+        "project_id": "",
+        "survey_run_id": ""
+      },
+      "human_confirmation_required": true,
+      "resolved": {
+        "project_context_fingerprint": "fingerprint",
+        "project_id": "project",
+        "survey_run_id": "survey-run"
+      },
+      "status": "UNBOUND_REQUIRES_HUMAN_CONFIRMATION"
+    },
+    "template_family": "mathematics_theory",
+    "theory_sampling_power_status": "not_applicable"
+  },
+  "theory_spine": {
+    "compiler_status": "no_auditable_lemma_input",
+    "decision_branches": [
+      {
+        "branch_id": "TS-BR-OUTCOME-NULL-OR-CONTRADICTORY",
+        "branch_kind": "upstream_outcome_branch",
+        "conclusion_policy": "defer_to_upstream_outcome_branch",
+        "display_label": "Branch null_or_contradictory",
+        "source_counterexample_ids": [],
+        "source_formal_reference_ids": [],
+        "source_outcome_branch_ids": [
+          "null_or_contradictory"
+        ],
+        "source_unknown_item_ids": [],
+        "status": "expected_not_observed"
+      },
+      {
+        "branch_id": "TS-BR-OUTCOME-PARTIAL-OR-HETEROGENEOUS",
+        "branch_kind": "upstream_outcome_branch",
+        "conclusion_policy": "defer_to_upstream_outcome_branch",
+        "display_label": "Branch partial_or_heterogeneous",
+        "source_counterexample_ids": [],
+        "source_formal_reference_ids": [],
+        "source_outcome_branch_ids": [
+          "partial_or_heterogeneous"
+        ],
+        "source_unknown_item_ids": [],
+        "status": "expected_not_observed"
+      },
+      {
+        "branch_id": "TS-BR-OUTCOME-SUPPORTS-MECHANISM",
+        "branch_kind": "upstream_outcome_branch",
+        "conclusion_policy": "defer_to_upstream_outcome_branch",
+        "display_label": "Branch supports_mechanism",
+        "source_counterexample_ids": [],
+        "source_formal_reference_ids": [],
+        "source_outcome_branch_ids": [
+          "supports_mechanism"
+        ],
+        "source_unknown_item_ids": [],
+        "status": "expected_not_observed"
+      },
+      {
+        "branch_id": "TS-BR-OUTCOME-UNINFORMATIVE-OR-INVALID",
+        "branch_kind": "upstream_outcome_branch",
+        "conclusion_policy": "defer_to_upstream_outcome_branch",
+        "display_label": "Branch uninformative_or_invalid",
+        "source_counterexample_ids": [],
+        "source_formal_reference_ids": [],
+        "source_outcome_branch_ids": [
+          "uninformative_or_invalid"
+        ],
+        "source_unknown_item_ids": [],
+        "status": "expected_not_observed"
+      },
+      {
+        "branch_id": "TS-BR-MISSING-DERIVATION-INPUT-NO_INFORMATION",
+        "branch_kind": "compiler_no_information",
+        "conclusion_policy": "withhold_theorem_status_update",
+        "display_label": "No-information: derivation input",
+        "next_action": "supply_upstream_proposition_or_derivation_input",
+        "reason_code": "missing_upstream_derivation_input",
+        "source_counterexample_ids": [],
+        "source_formal_reference_ids": [],
+        "source_outcome_branch_ids": [
+          "uninformative_or_invalid"
+        ],
+        "source_unknown_item_ids": [],
+        "status": "no_information"
+      }
+    ],
+    "enabled": true,
+    "falsifiers": [],
+    "lemma_units": [],
+    "proof_obligations": [],
+    "schema_version": "research_plan_theory_spine_v1",
+    "template_family": "mathematics_theory"
+  }
+}

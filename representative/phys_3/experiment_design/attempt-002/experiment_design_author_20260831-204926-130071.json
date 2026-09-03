@@ -1,0 +1,1666 @@
+{
+  "authoring_constraints": {
+    "counterexample_must_satisfy_all_assumptions": true,
+    "formal_and_empirical_claims_must_remain_separate": true,
+    "observed_results_are_absent": true,
+    "proposal_without_observed_results": true,
+    "unsupported_claims_forbidden": true,
+    "unverified_reasoning_must_be_labeled": true
+  },
+  "counterexample_analysis": {
+    "applicability": "not_applicable",
+    "candidate_counterexamples": [],
+    "limitations": [
+      "Counterexample analysis is not applicable outside a formal claim."
+    ],
+    "negated_conclusion": "",
+    "schema_version": "counterexample_analysis_v1",
+    "status": "not_run",
+    "target_claim_id": "",
+    "unknown_items": []
+  },
+  "field_statuses": {
+    "analysis_plan": "needs_human_input",
+    "analysis_plan.batch_effects": "needs_human_input",
+    "analysis_plan.blinding": "not_applicable",
+    "analysis_plan.missing_data": "needs_human_input",
+    "analysis_plan.randomization": "needs_human_input",
+    "analysis_plan.repetitions": "needs_human_input",
+    "analysis_plan.statistical_analysis": "needs_human_input",
+    "comparison_and_robustness": "evidence_backed",
+    "comparison_and_robustness.ablation_sensitivity_robustness": "design_assumption",
+    "comparison_and_robustness.baselines": "design_assumption",
+    "comparison_and_robustness.comparisons": "design_assumption",
+    "comparison_and_robustness.controls": "design_assumption",
+    "comparison_and_robustness.groups": "design_assumption",
+    "data_governance_and_reproducibility": "evidence_backed",
+    "data_governance_and_reproducibility.data_management": "needs_human_input",
+    "data_governance_and_reproducibility.reproducibility": "needs_human_input",
+    "hypothesis_mapping": "evidence_backed",
+    "measurement_and_calibration": "evidence_backed",
+    "measurement_and_calibration.calibration": "needs_human_input",
+    "measurement_and_calibration.instruments": "design_assumption",
+    "measurement_and_calibration.measurement_plan": "design_assumption",
+    "measurement_and_calibration.quality_control": "needs_human_input",
+    "research_design": "evidence_backed",
+    "research_design.design_type": "design_assumption",
+    "research_design.experimental_unit": "design_assumption",
+    "research_design.time_structure": "design_assumption",
+    "sampling_and_eligibility": "evidence_backed",
+    "sampling_and_eligibility.eligibility_criteria": "needs_human_input",
+    "sampling_and_eligibility.sample_size_or_power_basis": "needs_human_input",
+    "sampling_and_eligibility.source": "needs_human_input",
+    "template_details.batches": "needs_human_input",
+    "template_details.characterization_plan": "design_assumption",
+    "template_details.comparison_samples": "design_assumption",
+    "template_details.design_of_experiments": "needs_human_input",
+    "template_details.material_system": "needs_human_input",
+    "template_details.performance_endpoints": "design_assumption",
+    "template_details.process_variables": "needs_human_input",
+    "template_details.replicate_strategy": "needs_human_input",
+    "template_details.sample_or_material": "needs_human_input",
+    "variables_and_operationalization": "evidence_backed",
+    "variables_and_operationalization.confounders": "design_assumption",
+    "variables_and_operationalization.control_variables": "design_assumption",
+    "variables_and_operationalization.dependent_variables": "design_assumption",
+    "variables_and_operationalization.independent_variables": "design_assumption",
+    "variables_and_operationalization.operational_definitions": "design_assumption"
+  },
+  "formal_reasoning": {
+    "applicability": "not_applicable",
+    "assumptions": [],
+    "definitions": [],
+    "final_conclusion": "",
+    "forward_derivation": {
+      "status": "not_applicable",
+      "steps": []
+    },
+    "proof_obligations": [],
+    "propositions": [],
+    "schema_version": "formal_reasoning_plan_v1",
+    "status": "not_applicable",
+    "target_proposition_id": "",
+    "unknown_items": []
+  },
+  "generated_at": "2026-08-31T21:42:12.540892+09:00",
+  "hypothesis_mapping": [
+    {
+      "claim": "Engineered interlayer twist angles designed to suppress cross-plane thermal conductivity in van der Waals heterostructures remain structurally stable under sustained thermal cycling and operational stress gradients, provided the interlayer binding energy exceeds a critical threshold determined by the twist-angle-dependent moiré potential landscape, and in the absence of confounding defect-mediated or chemically-induced interlayer pinning.",
+      "decision_rule": "Structural stability is accepted if the twist angle, measured after thermal cycling, remains within the pre-cycling uncertainty interval and the cross-plane thermal conductivity retention exceeds the pre-specified threshold.",
+      "hypothesis_id": "H1",
+      "observables": [
+        "Cross-plane thermal conductivity",
+        "In-plane thermal conductivity",
+        "Measured interlayer twist angle",
+        "Structural integrity score"
+      ]
+    }
+  ],
+  "outcome_branches": [
+    {
+      "branch_id": "supports_mechanism",
+      "conclusion_scope": "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Replicate under independently confirmed conditions.",
+        "Test the most consequential declared boundary condition."
+      ],
+      "interpretation": "The result would support, but not prove, the declared relation within the design boundary.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified analysis is consistent with the declared relation while planned controls do not favor a stated alternative explanation."
+    },
+    {
+      "branch_id": "partial_or_heterogeneous",
+      "conclusion_scope": "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Predefine and check plausible moderators.",
+        "Improve the coverage of conditions and measurement comparability."
+      ],
+      "interpretation": "The relation may be conditional or heterogeneous; no universal conclusion is warranted.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified analysis indicates variation across declared conditions, units, or measurement contexts."
+    },
+    {
+      "branch_id": "null_or_contradictory",
+      "conclusion_scope": "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Audit construct validity and comparison adequacy.",
+        "Revise the mechanism or boundary claim before another design iteration."
+      ],
+      "interpretation": "The proposed relation is not supported in this design boundary; absence of support is not proof of absence generally.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified comparison does not support the declared relation or instead favors a declared alternative explanation."
+    },
+    {
+      "branch_id": "uninformative_or_invalid",
+      "conclusion_scope": "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Resolve the identified validity or data-quality failure before repeating the design.",
+        "Obtain human confirmation of measurement, sampling, and analysis prerequisites."
+      ],
+      "interpretation": "No scientific conclusion is warranted because the planned design did not yield interpretable evidence.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "Prespecified quality-control, missingness, protocol-deviation, or validity criteria prevent interpretation."
+    }
+  ],
+  "provenance": {
+    "audit_source_paths": {
+      "idea_candidate": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_candidate.json",
+      "idea_directions": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_directions.json",
+      "idea_portfolio": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_portfolio.json",
+      "idea_result": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+      "idea_route_clusters": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_route_clusters.json",
+      "mature_ideas": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/mature_ideas.json"
+    },
+    "discipline_ids": [
+      "25"
+    ],
+    "idea_result_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+    "risk_level": "medium",
+    "selected_direction_id": "mechanism_replacement",
+    "survey_binding": {
+      "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+      "manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+      "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+      "project_id": "sci_20260831_051401_339967_survey_001",
+      "status": "bound",
+      "survey_run_id": "20260831-051401-339967-survey-001"
+    },
+    "template_id": "materials_chemical",
+    "validation_status": "DRAFT_REQUIRES_INPUT"
+  },
+  "reasoning_context": {
+    "alternative_explanations": [
+      "Thermal cycling induces interlayer diffusion or chemical bonding that pins the layers independently of the moiré potential.",
+      "Changes in thermal contact resistance during cycling mimic changes in intrinsic cross-plane thermal conductivity.",
+      "Defect-mediated interlayer pinning (e.g., via chalcogen vacancies) or thermally induced chemical bonding could maintain suppressed cross-plane thermal conductivity, mimicking the effect of moiré potential energy barriers.",
+      "Strain relaxation via wrinkle formation or localized delamination could alter thermal transport without actual twist-angle relaxation."
+    ],
+    "assumptions": [
+      "Interlayer binding energy and moiré potential depths can be accurately calculated or measured for diverse van der Waals material families.",
+      "Thermal cycling conditions can be selected to minimize interlayer diffusion and chemical bonding, ensuring moiré potential pinning is the dominant retention mechanism."
+    ],
+    "boundary_conditions": [
+      "The structural stability of the engineered twist angles fails when the interlayer binding energy falls below the critical threshold determined by the local moiré potential energy barriers, or when defect-mediated pinning and interlayer chemical bonding become the dominant retention mechanisms, masking the true moiré potential threshold."
+    ],
+    "claim_scope": "The structural stability of twist-angle-engineered thermal anisotropy in van der Waals heterostructures under operational thermal cycling, bounded by the moiré potential landscape in regimes free from defect-mediated or chemically-induced interlayer pinning.",
+    "evidence_roles": [],
+    "falsifiers": [
+      "Demonstration that engineered twist angles relax to equilibrium stacking within device-relevant thermal cycling conditions in the absence of defect-mediated or chemical pinning, resulting in recovery of cross-plane conductivity to within 20% of pristine aligned values."
+    ],
+    "formal_symbols": [],
+    "gap_records": [
+      {
+        "gap_id": "gap:global:boundary_condition:material_generality:unknown:unknown:c3105d78c8c5",
+        "gap_kind": "boundary condition",
+        "statement": "The extreme thermal anisotropy mechanism is validated only for MoS2 and WS2, leaving its applicability to other van der Waals materials unverified.",
+        "target_slot": "material generality",
+        "why_it_matters": "The abstract explicitly reports measurements and molecular dynamics simulations exclusively for MoS2 and WS2, without addressing whether random interlayer rotations yield similar anisotropy ratios in materials with different phonon dispersion or interlayer bonding characteristics."
+      },
+      {
+        "gap_id": "gap:global:missing_assumption:structural_stability_under_operation:unknown:unknown:14c1007de5b8",
+        "gap_kind": "missing assumption",
+        "statement": "The persistence of random interlayer rotations under sustained thermal cycling and operational stress gradients is unaddressed.",
+        "target_slot": "structural stability under operation",
+        "why_it_matters": "While the abstract establishes interlayer rotation as a design degree of freedom for directed heat transport, it does not discuss whether these rotational configurations remain stable or relax over time when subjected to the very thermal gradients they are engineered to mitigate."
+      }
+    ],
+    "schema_version": "reasoning_context_v1",
+    "selected_direction_id": "mechanism_replacement",
+    "source_anchors": [
+      {
+        "anchor_id": "anchor:gap_evidence_anchor:global:material_generality:paper_abstract_w3202213959_abstract:the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified:7202c295c03b",
+        "anchor_type": "gap_evidence_anchor",
+        "claim_anchor": "The extreme thermal anisotropy mechanism is validated only for MoS2 and WS2, leaving its applicability to other van der Waals materials unverified.",
+        "label": "GLOBAL: material generality",
+        "paper_ids": [
+          "W3202213959"
+        ],
+        "source_pointer": {
+          "artifact": "paper",
+          "json_pointer": "/abstract",
+          "paper_id": "W3202213959",
+          "section": "Abstract"
+        },
+        "subhypothesis_id": "GLOBAL",
+        "supports_gap_ids": [
+          "gap:global:boundary_condition:material_generality:unknown:unknown:c3105d78c8c5"
+        ],
+        "target_slot": "material generality",
+        "text_excerpt": "The extreme thermal anisotropy mechanism is validated only for MoS2 and WS2, leaving its applicability to other van der Waals materials unverified."
+      },
+      {
+        "anchor_id": "anchor:gap_evidence_anchor:global:structural_stability_under_operation:paper_abstract_w3202213959_abstract:the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed:4d627a17dae6",
+        "anchor_type": "gap_evidence_anchor",
+        "claim_anchor": "The persistence of random interlayer rotations under sustained thermal cycling and operational stress gradients is unaddressed.",
+        "label": "GLOBAL: structural stability under operation",
+        "paper_ids": [
+          "W3202213959"
+        ],
+        "source_pointer": {
+          "artifact": "paper",
+          "json_pointer": "/abstract",
+          "paper_id": "W3202213959",
+          "section": "Abstract"
+        },
+        "subhypothesis_id": "GLOBAL",
+        "supports_gap_ids": [
+          "gap:global:missing_assumption:structural_stability_under_operation:unknown:unknown:14c1007de5b8"
+        ],
+        "target_slot": "structural stability under operation",
+        "text_excerpt": "The persistence of random interlayer rotations under sustained thermal cycling and operational stress gradients is unaddressed."
+      }
+    ],
+    "source_priority": [
+      "selected_direction",
+      "legacy_best_entry",
+      "selected_primary_idea",
+      "idea_candidate"
+    ],
+    "upstream_source_paths": [
+      "selected_direction.hypothesis.assumptions",
+      "selected_direction.hypothesis.claim_scope",
+      "selected_direction.falsifier",
+      "selected_direction.hypothesis.boundary_or_failure_condition",
+      "selected_direction.experiment_handoff.alternative_explanations",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_candidate.json",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_portfolio.json",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_directions.json",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_route_clusters.json",
+      "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/mature_ideas.json"
+    ]
+  },
+  "research_design": {
+    "design_type": "Factorial design-of-experiments for van der Waals heterostructures",
+    "experimental_unit": "Single heterostructure stack with a defined interlayer twist angle",
+    "time_structure": "Pre-cycling baseline measurement followed by repeated measurement after defined thermal-cycling intervals"
+  },
+  "review_items": [],
+  "schema_version": "research_plan_author_input_v3",
+  "selected_direction": {
+    "central_hypothesis": "Engineered interlayer twist angles designed to suppress cross-plane thermal conductivity in van der Waals heterostructures remain structurally stable under sustained thermal cycling and operational stress gradients, provided the interlayer binding energy exceeds a critical threshold determined by the twist-angle-dependent moiré potential landscape, and in the absence of confounding defect-mediated or chemically-induced interlayer pinning.",
+    "id": "mechanism_replacement",
+    "mechanism_or_relation": "The twist-angle-dependent moiré potential landscape creates fundamental energy barriers that pin specific twist angles, dictating the critical threshold for interlayer binding energy and structural stability under thermal stress, distinct from and dominant over defect-mediated or chemical pinning mechanisms.",
+    "title": "Moiré Potential Landscapes Dictate the Thermal Cycling Stability of Twist-Angle-Engineered Thermal Anisotropy in Van Der Waals Heterostructures"
+  },
+  "source_design_id": "design-20260831-051401-339967",
+  "source_registry": {
+    "allowed_source_ids": [
+      "W2618590689",
+      "W2745772761",
+      "W2024227324",
+      "W4304128546",
+      "W2803426300",
+      "W3080673473",
+      "W2784368966",
+      "W3202213959",
+      "W4292340379",
+      "W2695145865",
+      "W3036067411",
+      "W3152578306",
+      "W4389682712",
+      "W2259748940",
+      "W2920709194",
+      "W3081676008",
+      "W4295929829",
+      "W2891605669",
+      "W2969501065",
+      "W2998699011",
+      "W3042765681",
+      "W4394604649",
+      "W2621029128"
+    ],
+    "allowed_survey_anchor_ids": [],
+    "citation_registry": [
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Matěj Velický",
+            "Péter S. Tóth"
+          ],
+          "doi": "10.1016/j.apmt.2017.05.003",
+          "title": "From two-dimensional materials to their heterostructures: An electrochemist's perspective",
+          "url": "https://doi.org/10.1016/j.apmt.2017.05.003",
+          "venue": "Applied Materials Today",
+          "year": "2017"
+        },
+        "citation_key": "cite_9eceb510f10b9c2a",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2618590689:boundary_conditions:3fece983a08a",
+          "EC:W2618590689:research_object_measurability:15fe035a89b9"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2618590689"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Michael A. Susner",
+            "Marius Chyasnavichyus",
+            "Michael A. McGuire",
+            "Panchapakesan Ganesh",
+            "Petro Maksymovych"
+          ],
+          "doi": "10.1002/adma.201602852",
+          "title": "Metal Thio‐ and Selenophosphates as Multifunctional van der Waals Layered Materials",
+          "url": "https://doi.org/10.1002/adma.201602852",
+          "venue": "Advanced Materials",
+          "year": "2017"
+        },
+        "citation_key": "cite_a411cbbebf7838b9",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2745772761:mechanism:29ac8ce4e964"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2745772761"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Andrea C. Ferrari",
+            "Francesco Bonaccorso",
+            "Vladimir I. Fal’ko",
+            "Konstantin S. Novoselov",
+            "Stephan Roche",
+            "Peter Bøggild",
+            "Stefano Borini",
+            "Frank H. L. Koppens",
+            "Vincenzo Palermo",
+            "Nicola M. Pugno",
+            "José A. Garrido",
+            "Roman Sordan",
+            "Alberto Bianco",
+            "Laura Ballerini",
+            "Maurizio Prato",
+            "Elefterios Lidorikis",
+            "Jani Kivioja",
+            "Claudio Marinelli",
+            "Tapani Ryhänen",
+            "Alberto F. Morpurgo",
+            "Jonathan N. Coleman",
+            "Valeria Nicolosi",
+            "Luigi Colombo",
+            "A. Fert",
+            "M. Garcı́a-Hernández",
+            "Adrian Bachtold",
+            "Grégory F. Schneider",
+            "F. Guinea",
+            "Cees Dekker",
+            "Matteo Barbone",
+            "Zhipei Sun",
+            "Costas Galiotis",
+            "A. N. Grigorenko",
+            "Gerasimos Konstantatos",
+            "András Kis",
+            "M. I. Katsnelson",
+            "Lieven M. K. Vandersypen",
+            "Annick Loiseau",
+            "Vittorio Morandi",
+            "Daniel Neumaier",
+            "Emanuele Treossi",
+            "Vittorio Pellegrini",
+            "Marco Polini",
+            "Alessandro Tredicucci",
+            "Gareth Williams",
+            "Byung Hee Hong",
+            "Jong‐Hyun Ahn",
+            "Jong Min Kim",
+            "Herbert Zirath",
+            "B. J. van Wees",
+            "Herre S. J. van der Zant",
+            "Luigi G. Occhipinti",
+            "Andrea Di Matteo",
+            "Ian A. Kinloch",
+            "Thomas Seyller",
+            "Etienne Quesnel",
+            "Xinliang Feng",
+            "K. B. K. Teo",
+            "N.L. Rupesinghe",
+            "Pertti Hakonen",
+            "Simon R. T. Neil",
+            "Quentin Tannock",
+            "Tomas Löfwander",
+            "Jari M. Kinaret"
+          ],
+          "doi": "10.1039/c4nr01600a",
+          "title": "Science and technology roadmap for graphene, related two-dimensional crystals, and hybrid systems",
+          "url": "https://doi.org/10.1039/c4nr01600a",
+          "venue": "Nanoscale",
+          "year": "2014"
+        },
+        "citation_key": "cite_c8ce7e25ee0b4157",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2024227324:measurement_calibration:bffb22fbb0aa",
+          "EC:W2024227324:mechanism:08bb3fc716d1"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2024227324"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Hui‐Lei Hou",
+            "Cosimo Anichini",
+            "Paolo Samorı́",
+            "Alejandro Criado",
+            "Maurizio Prato"
+          ],
+          "doi": "10.1002/adfm.202207065",
+          "title": "2D Van der Waals Heterostructures for Chemical Sensing",
+          "url": "https://doi.org/10.1002/adfm.202207065",
+          "venue": "Advanced Functional Materials",
+          "year": "2022"
+        },
+        "citation_key": "cite_23b56f630d689241",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W4304128546:mechanism:b8440ee72103",
+          "EC:W4304128546:boundary_conditions:5ccd63068957",
+          "EC:W4304128546:research_object_measurability:0dd9888c1c8d"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W4304128546"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Charalampos Androulidakis",
+            "Kaihao Zhang",
+            "Matthew Robertson",
+            "Sameh Tawfick"
+          ],
+          "doi": "10.1088/2053-1583/aac764",
+          "title": "Tailoring the mechanical properties of 2D materials and heterostructures",
+          "url": "https://doi.org/10.1088/2053-1583/aac764",
+          "venue": "2D Materials",
+          "year": "2018"
+        },
+        "citation_key": "cite_6b49ace365c37cc5",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2803426300:boundary_conditions:f60cf31e2e85",
+          "EC:W2803426300:mechanism:f3098fc4c245"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2803426300"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Andrey Chaves",
+            "Javad G. Azadani",
+            "Hussain Alsalman",
+            "D. R. da Costa",
+            "Riccardo Frisenda",
+            "A. J. Chaves",
+            "Seung Hyun Song",
+            "Young Duck Kim",
+            "Daowei He",
+            "Jiadong Zhou",
+            "Andrés Castellanos-Gómez",
+            "F. M. Peeters",
+            "Zheng Liu",
+            "Christopher L. Hinkle",
+            "Sang‐Hyun Oh",
+            "Peide D. Ye",
+            "Steven J. Koester",
+            "Young Hee Lee",
+            "Phaedon Avouris",
+            "Xinran Wang",
+            "Tony Low"
+          ],
+          "doi": "10.1038/s41699-020-00162-4",
+          "title": "Bandgap engineering of two-dimensional semiconductor materials",
+          "url": "https://doi.org/10.1038/s41699-020-00162-4",
+          "venue": "npj 2D Materials and Applications",
+          "year": "2020"
+        },
+        "citation_key": "cite_d4cf21adf4f454cb",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W3080673473:mechanism:86c6fae647c6",
+          "EC:W3080673473:boundary_conditions:97a5331f89a0"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W3080673473"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Jiangbin Wu",
+            "Miao‐Ling Lin",
+            "Xin Cong",
+            "Henan Liu",
+            "Ping‐Heng Tan"
+          ],
+          "doi": "10.1039/c6cs00915h",
+          "title": "Raman spectroscopy of graphene-based materials and its applications in related devices",
+          "url": "https://doi.org/10.1039/c6cs00915h",
+          "venue": "Chemical Society Reviews",
+          "year": "2018"
+        },
+        "citation_key": "cite_9776eb140ec8227e",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2784368966:research_object_measurability:058f38e2e9df"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2784368966"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Shi En Kim",
+            "Fauzia Mujid",
+            "Akash Rai",
+            "Fredrik Eriksson",
+            "Joonki Suh",
+            "Preeti Poddar",
+            "Ariana Ray",
+            "Chibeom Park",
+            "Erik Fransson",
+            "Yu Zhong",
+            "David A. Muller",
+            "Paul Erhart",
+            "David G. Cahill",
+            "Jiwoong Park"
+          ],
+          "doi": "10.1038/s41586-021-03867-8",
+          "title": "Extremely anisotropic van der Waals thermal conductors",
+          "url": "https://doi.org/10.1038/s41586-021-03867-8",
+          "venue": "Nature",
+          "year": "2021"
+        },
+        "citation_key": "cite_26ecaf73d88dfe33",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W3202213959:mechanism:a141cf1b223f",
+          "EC:W3202213959:measurement_calibration:118af82eda92"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W3202213959"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Zirui Zhang",
+            "Dongliang Yang",
+            "Huihan Li",
+            "Ce Li",
+            "Zhongrui Wang",
+            "Linfeng Sun",
+            "Heejun Yang"
+          ],
+          "doi": "10.1088/2634-4386/ac8a6a",
+          "title": "2D materials and van der Waals heterojunctions for neuromorphic computing",
+          "url": "https://doi.org/10.1088/2634-4386/ac8a6a",
+          "venue": "Neuromorphic Computing and Engineering",
+          "year": "2022"
+        },
+        "citation_key": "cite_384fa42245d61470",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W4292340379:mechanism:6253541292d0"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W4292340379"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Aleksey Falin",
+            "Qiran Cai",
+            "Elton J. G. Santos",
+            "Declan Scullion",
+            "Dong Qian",
+            "Rui Zhang",
+            "Zhi Yang",
+            "Shaoming Huang",
+            "Kenji Watanabe",
+            "Takashi Taniguchi",
+            "Matthew Barnett",
+            "Ying Chen",
+            "Rodney S. Ruoff",
+            "Lu Hua Li"
+          ],
+          "doi": "10.1038/ncomms15815",
+          "title": "Mechanical properties of atomically thin boron nitride and the role of interlayer interactions",
+          "url": "https://doi.org/10.1038/ncomms15815",
+          "venue": "Nature Communications",
+          "year": "2017"
+        },
+        "citation_key": "cite_78dc2ce387cb7c90",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2695145865:mechanism:ba19bc0412ac",
+          "EC:W2695145865:research_object_measurability:3b0670dfc1ca",
+          "EC:W2695145865:measurement_calibration:61b9d61c01a3",
+          "EC:W2695145865:boundary_conditions:14e30e02e73a"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2695145865"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "T. P. Lyons",
+            "D. Gillard",
+            "A. Molina-Sánchez",
+            "A. Misra",
+            "F. Withers",
+            "P. S. Keatley",
+            "A. Kozikov",
+            "T. Taniguchi",
+            "K. Watanabe",
+            "K. S. Novoselov",
+            "J. Fernández-Rossier",
+            "A. I. Tartakovskii"
+          ],
+          "doi": "10.1038/s41467-020-19816-4",
+          "title": "Interplay between spin proximity effect and charge-dependent exciton dynamics in MoSe2/CrBr3 van der Waals heterostructures",
+          "url": "https://doi.org/10.1038/s41467-020-19816-4",
+          "venue": "Nature Communications",
+          "year": "2020"
+        },
+        "citation_key": "cite_df47c783fdaf0461",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W3036067411:mechanism:91d1db402d03"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W3036067411"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Xuezeng Tian",
+            "Xingxu Yan",
+            "Georgios Varnavides",
+            "Yakun Yuan",
+            "Dennis S. Kim",
+            "Christopher J. Ciccarino",
+            "Polina Anikeeva",
+            "Ming-Yang Li",
+            "Lain-Jong Li",
+            "Prineha Narang",
+            "Xiaoqing Pan",
+            "Jianwei Miao"
+          ],
+          "doi": "10.1126/sciadv.abi6699",
+          "title": "Capturing 3D atomic defects and phonon localization at the 2D heterostructure interface",
+          "url": "https://doi.org/10.1126/sciadv.abi6699",
+          "venue": "Science Advances",
+          "year": "2021"
+        },
+        "citation_key": "cite_b9cc1fcb55e94349",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W3152578306:measurement_calibration:dcca044f96d1",
+          "EC:W3152578306:boundary_conditions:8366670906e2",
+          "EC:W3152578306:mechanism:8b030846d5bd"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W3152578306"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Ruishi Qi",
+            "Andrew Y. Joe",
+            "Zuocheng Zhang",
+            "Yongxin Zeng",
+            "Tiancheng Zheng",
+            "Qixin Feng",
+            "Jingxu Xie",
+            "Emma C. Regan",
+            "Zheyu Lu",
+            "Takashi Taniguchi",
+            "Kenji Watanabe",
+            "Sefaattin Tongay",
+            "Michael F. Crommie",
+            "A. H. MacDonald",
+            "Feng Wang"
+          ],
+          "doi": "10.1038/s41467-023-43799-7",
+          "title": "Thermodynamic behavior of correlated electron-hole fluids in van der Waals heterostructures",
+          "url": "https://doi.org/10.1038/s41467-023-43799-7",
+          "venue": "Nature Communications",
+          "year": "2023"
+        },
+        "citation_key": "cite_b386a897820d988f",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W4389682712:risk_ethics_reproducibility:cf75b3e22d0f"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W4389682712"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Sangwook Lee",
+            "Fan Yang",
+            "Joonki Suh",
+            "Sijie Yang",
+            "Yeonbae Lee",
+            "Li Guo",
+            "Hwan Sung Choe",
+            "Aslıhan Süslü",
+            "Yabin Chen",
+            "Changhyun Ko",
+            "Joonsuk Park",
+            "Kai Liu",
+            "Jingbo Li",
+            "Kedar Hippalgaonkar",
+            "Jeffrey J. Urban",
+            "Sefaattin Tongay",
+            "Junqiao Wu"
+          ],
+          "doi": "10.1038/ncomms9573",
+          "title": "Anisotropic in-plane thermal conductivity of black phosphorus nanoribbons at temperatures higher than 100 K",
+          "url": "https://doi.org/10.1038/ncomms9573",
+          "venue": "Nature Communications",
+          "year": "2015"
+        },
+        "citation_key": "cite_54b9175b8bb4c4e0",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2259748940:research_object_measurability:78e54deaf22c",
+          "EC:W2259748940:boundary_conditions:9efc014ccbab",
+          "EC:W2259748940:mechanism:d049241685e6"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2259748940"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Sintu Rongpipi",
+            "Dan Ye",
+            "Enrique D. Gomez",
+            "Esther W. Gomez"
+          ],
+          "doi": "10.3389/fpls.2018.01894",
+          "title": "Progress and Opportunities in the Characterization of Cellulose – An Important Regulator of Cell Wall Growth and Mechanics",
+          "url": "https://doi.org/10.3389/fpls.2018.01894",
+          "venue": "Frontiers in Plant Science",
+          "year": "2019"
+        },
+        "citation_key": "cite_284471299f51347a",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2920709194:mechanism:26527c1e3bb2",
+          "EC:W2920709194:research_object_measurability:79f4343a15a7",
+          "EC:W2920709194:boundary_conditions:172aa9c049aa"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2920709194"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Arne Quellmalz",
+            "Xiaojing Wang",
+            "Simon Sawallich",
+            "Burkay Uzlu",
+            "Martin Otto",
+            "Stefan Wagner",
+            "Zhenxing Wang",
+            "Maximilian Prechtl",
+            "Oliver Hartwig",
+            "Siwei Luo",
+            "Georg S. Duesberg",
+            "Max C. Lemme",
+            "Kristinn B. Gylfason",
+            "Niclas Roxhed",
+            "Göran Stemme",
+            "Frank Niklaus"
+          ],
+          "doi": "10.1038/s41467-021-21136-0",
+          "title": "Large-area integration of two-dimensional materials and their heterostructures by wafer bonding",
+          "url": "https://doi.org/10.1038/s41467-021-21136-0",
+          "venue": "Nature Communications",
+          "year": "2021"
+        },
+        "citation_key": "cite_e6f39581f0cc673d",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W3081676008:boundary_conditions:b5f6e4e5de64",
+          "EC:W3081676008:research_object_measurability:2886bb7e6632"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W3081676008"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Julian Klein",
+            "Thang Pham",
+            "Joachim Dahl Thomsen",
+            "Jonathan B. Curtis",
+            "Thibaud Denneulin",
+            "Michael Lorke",
+            "Matthias Florian",
+            "Alexander Steinhoff",
+            "Ren A. Wiscons",
+            "Jan Luxa",
+            "Zdeněk Sofer",
+            "F. Jahnke",
+            "Prineha Narang",
+            "Frances M. Ross"
+          ],
+          "doi": "10.1038/s41467-022-32737-8",
+          "title": "Control of structure and spin texture in the van der Waals layered magnet CrSBr",
+          "url": "https://doi.org/10.1038/s41467-022-32737-8",
+          "venue": "Nature Communications",
+          "year": "2022"
+        },
+        "citation_key": "cite_715d64bd116edfcb",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W4295929829:boundary_conditions:b81dad781420",
+          "EC:W4295929829:risk_ethics_reproducibility:f73cdfa3038f"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W4295929829"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Xiaofu Xu",
+            "Dong Zhou",
+            "Xianying Qin",
+            "Kui Lin",
+            "Feiyu Kang",
+            "Baohua Li",
+            "Devaraj Shanmukaraj",
+            "Teófilo Rojo",
+            "Michel Armand",
+            "Guoxiu Wang"
+          ],
+          "doi": "10.1038/s41467-018-06443-3",
+          "title": "A room-temperature sodium–sulfur battery with high capacity and stable cycling performance",
+          "url": "https://doi.org/10.1038/s41467-018-06443-3",
+          "venue": "Nature Communications",
+          "year": "2018"
+        },
+        "citation_key": "cite_e9d8f2640e14a9a2",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2891605669:mechanism:44090c2c2626",
+          "EC:W2891605669:mechanism:d53a15f2d3dc"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2891605669"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Christopher A. Pocs",
+            "Ian A. Leahy",
+            "Hao Zheng",
+            "Gang Cao",
+            "Eun-Sang Choi",
+            "S.-H. Do",
+            "Kwang-Yong Choi",
+            "B. Normand",
+            "Minhyea Lee"
+          ],
+          "doi": "10.1103/physrevresearch.2.013059",
+          "title": "Giant thermal magnetoconductivity in CrCl3 and a general model for spin-phonon scattering",
+          "url": "https://doi.org/10.1103/physrevresearch.2.013059",
+          "venue": "Physical Review Research",
+          "year": "2020"
+        },
+        "citation_key": "cite_fc51fc490497054f",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2969501065:mechanism:deaeaad18802",
+          "EC:W2969501065:measurement_calibration:e07d24a2a579",
+          "EC:W2969501065:study_design:8e092b9b5b71"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2969501065"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Tian Tian",
+            "Declan Scullion",
+            "D. Hughes",
+            "Lu Hua Li",
+            "Chih‐Jen Shih",
+            "Jonathan N. Coleman",
+            "Manish Chhowalla",
+            "Elton J. G. Santos"
+          ],
+          "doi": "10.1021/acs.nanolett.9b02982",
+          "title": "Electronic Polarizability as the Fundamental Variable in the Dielectric Properties of Two-Dimensional Materials",
+          "url": "https://doi.org/10.1021/acs.nanolett.9b02982",
+          "venue": "Nano Letters",
+          "year": "2019"
+        },
+        "citation_key": "cite_3b20fcb63fc67711",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2998699011:mechanism:2a74bf223bb5",
+          "EC:W2998699011:research_object_measurability:ca27d976ef6f"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2998699011"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Zhujun Huang",
+            "Abdullah Alharbi",
+            "William Mayer",
+            "Edoardo Cuniberto",
+            "Takashi Taniguchi",
+            "Kenji Watanabe",
+            "Javad Shabani",
+            "Davood Shahrjerdi"
+          ],
+          "doi": "10.1038/s41467-020-16817-1",
+          "title": "Versatile construction of van der Waals heterostructures using a dual-function polymeric film",
+          "url": "https://doi.org/10.1038/s41467-020-16817-1",
+          "venue": "Nature Communications",
+          "year": "2020"
+        },
+        "citation_key": "cite_7a8cfa26940e2a8f",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W3042765681:mechanism:bb228bfb37cb",
+          "EC:W3042765681:study_design:68ac9dcf21a9"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W3042765681"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Sara Bernasconi",
+            "Alessandra Angelucci",
+            "Anastasia De Cesari",
+            "Aurora Masotti",
+            "Maurizio Pandocchi",
+            "Francesca Vacca",
+            "Xin Zhao",
+            "Chiara Paganelli",
+            "Andréa Aliverti"
+          ],
+          "doi": "10.3390/diagnostics14080785",
+          "title": "Recent Technologies for Transcutaneous Oxygen and Carbon Dioxide Monitoring",
+          "url": "https://doi.org/10.3390/diagnostics14080785",
+          "venue": "Diagnostics",
+          "year": "2024"
+        },
+        "citation_key": "cite_96ce37056be926a6",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W4394604649:mechanism:d5a4aaf68269",
+          "EC:W4394604649:research_object_measurability:62808976817c"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W4394604649"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Yifan Nie",
+            "Chaoping Liang",
+            "Pil-Ryung Cha",
+            "Luigi Colombo",
+            "Robert M. Wallace",
+            "Kyeongjae Cho"
+          ],
+          "doi": "10.1038/s41598-017-02919-2",
+          "title": "A kinetic Monte Carlo simulation method of van der Waals epitaxy for atomistic nucleation-growth processes of transition metal dichalcogenides",
+          "url": "https://doi.org/10.1038/s41598-017-02919-2",
+          "venue": "Scientific Reports",
+          "year": "2017"
+        },
+        "citation_key": "cite_ac1088eea4137127",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2621029128:mechanism:49d7431151bd",
+          "EC:W2621029128:boundary_conditions:94ba2deafe6c",
+          "EC:W2621029128:study_design:efee78f28cd2"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2621029128"
+      }
+    ],
+    "evidence_cards_by_id": {
+      "EC:W2024227324:measurement_calibration:bffb22fbb0aa": {
+        "card_id": "EC:W2024227324:measurement_calibration:bffb22fbb0aa",
+        "citation_key": "cite_c8ce7e25ee0b4157",
+        "claim_slot": "measurement_calibration",
+        "evidence_level": "fulltext",
+        "source_id": "W2024227324",
+        "source_location": "fulltext:survey_pdf:W2024227324:markdown",
+        "support_statement": "Raman spectroscopy layer breathing modes can be observed in few-layer graphene via resonant overtones in the 80–300 cm<sup>−1</sup> range, scaling in frequency with layer number."
+      },
+      "EC:W2024227324:mechanism:08bb3fc716d1": {
+        "card_id": "EC:W2024227324:mechanism:08bb3fc716d1",
+        "citation_key": "cite_c8ce7e25ee0b4157",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2024227324",
+        "source_location": "fulltext:survey_pdf:W2024227324:markdown",
+        "support_statement": "The contact resistance between graphene and metals can be minimized to the $10^{-7} \\Omega \\mathrm{cm}^2$ range using Au/Ti metallization combined with plasma cleaning and post-annealing."
+      },
+      "EC:W2259748940:boundary_conditions:9efc014ccbab": {
+        "card_id": "EC:W2259748940:boundary_conditions:9efc014ccbab",
+        "citation_key": "cite_54b9175b8bb4c4e0",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W2259748940",
+        "source_location": "fulltext:survey_pdf:W2259748940:markdown",
+        "support_statement": "Thermal conductivity anisotropy in black phosphorus nanoribbons becomes pronounced at temperatures above 100 K, reaching a factor of two near 300 K."
+      },
+      "EC:W2259748940:mechanism:d049241685e6": {
+        "card_id": "EC:W2259748940:mechanism:d049241685e6",
+        "citation_key": "cite_54b9175b8bb4c4e0",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2259748940",
+        "source_location": "fulltext:survey_pdf:W2259748940:markdown",
+        "support_statement": "The observed high anisotropy in thermal conductivity is attributed mainly to direction-dependent phonon dispersion and partially to phonon–phonon scattering."
+      },
+      "EC:W2259748940:research_object_measurability:78e54deaf22c": {
+        "card_id": "EC:W2259748940:research_object_measurability:78e54deaf22c",
+        "citation_key": "cite_54b9175b8bb4c4e0",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "fulltext",
+        "source_id": "W2259748940",
+        "source_location": "fulltext:survey_pdf:W2259748940:markdown",
+        "support_statement": "Single-crystal black phosphorus nanoribbons are measurable for anisotropic in-plane thermal conductivity using suspended-pad micro-devices under steady-state longitudinal heat flow."
+      },
+      "EC:W2618590689:boundary_conditions:3fece983a08a": {
+        "card_id": "EC:W2618590689:boundary_conditions:3fece983a08a",
+        "citation_key": "cite_9eceb510f10b9c2a",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2618590689",
+        "source_location": "abstract:openalex",
+        "support_statement": "The review is explicitly aimed at readers with backgrounds in electrochemistry or 2D materials who intend to broaden their perspective or initiate interdisciplinary research, rather than serving as an exhaustive fact list."
+      },
+      "EC:W2618590689:research_object_measurability:15fe035a89b9": {
+        "card_id": "EC:W2618590689:research_object_measurability:15fe035a89b9",
+        "citation_key": "cite_9eceb510f10b9c2a",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2618590689",
+        "source_location": "abstract:openalex",
+        "support_statement": "The review discusses structural, electronic, optical, and mechanical properties, as well as preparation and characterisation techniques of 2D materials, with a focus on electrochemical understanding and modification."
+      },
+      "EC:W2621029128:boundary_conditions:94ba2deafe6c": {
+        "card_id": "EC:W2621029128:boundary_conditions:94ba2deafe6c",
+        "citation_key": "cite_ac1088eea4137127",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W2621029128",
+        "source_location": "fulltext:survey_pdf:W2621029128:markdown",
+        "support_statement": "For kinetic Monte Carlo simulations of TMD growth, steady-state conditions are typically reached after tens of thousands of Monte Carlo steps (MCSs), but cases near equilibrium where net reaction is rare may require millions of MCSs."
+      },
+      "EC:W2621029128:mechanism:49d7431151bd": {
+        "card_id": "EC:W2621029128:mechanism:49d7431151bd",
+        "citation_key": "cite_ac1088eea4137127",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2621029128",
+        "source_location": "fulltext:survey_pdf:W2621029128:markdown",
+        "support_statement": "The kinetic Monte Carlo simulation for van der Waals epitaxy of transition metal dichalcogenides (TMDs) incorporates specific atomic-scale kinetic processes including metal/chalcogen adsorption, desorption, and diffusion on both the substrate and grown TMD surfaces, stacking sequences, chalcogen-to-metal ratios, flake edge diffusion, and vacancy diffusion to model growth mechanisms."
+      },
+      "EC:W2621029128:study_design:efee78f28cd2": {
+        "card_id": "EC:W2621029128:study_design:efee78f28cd2",
+        "citation_key": "cite_ac1088eea4137127",
+        "claim_slot": "study_design",
+        "evidence_level": "fulltext",
+        "source_id": "W2621029128",
+        "source_location": "fulltext:survey_pdf:W2621029128:markdown",
+        "support_statement": "The study distinguishes simulation domain sizes based on the objective: smaller lattices (100x100x7 sites) are used for morphology and growth rate analysis, while larger lattices (1,000,000 sites total, i.e., 1,000x1,000) are required for nucleation density studies to avoid boundary artifacts."
+      },
+      "EC:W2695145865:boundary_conditions:14e30e02e73a": {
+        "card_id": "EC:W2695145865:boundary_conditions:14e30e02e73a",
+        "citation_key": "cite_78dc2ce387cb7c90",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W2695145865",
+        "source_location": "fulltext:survey_pdf:W2695145865:markdown",
+        "support_statement": "Experimental data confirms that the mechanical strength of BN nanosheets remains stable and insensitive to increasing layer number up to at least 9 layers."
+      },
+      "EC:W2695145865:measurement_calibration:61b9d61c01a3": {
+        "card_id": "EC:W2695145865:measurement_calibration:61b9d61c01a3",
+        "citation_key": "cite_78dc2ce387cb7c90",
+        "claim_slot": "measurement_calibration",
+        "evidence_level": "fulltext",
+        "source_id": "W2695145865",
+        "source_location": "fulltext:survey_pdf:W2695145865:markdown",
+        "support_statement": "AFM cantilever spring constants were determined using a combination of the thermal noise method and the Sader method."
+      },
+      "EC:W2695145865:mechanism:ba19bc0412ac": {
+        "card_id": "EC:W2695145865:mechanism:ba19bc0412ac",
+        "citation_key": "cite_78dc2ce387cb7c90",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2695145865",
+        "source_location": "fulltext:survey_pdf:W2695145865:markdown",
+        "support_statement": "The mechanical strength of BN nanosheets is attributed to strong interlayer interactions that prevent sliding under indentation, unlike graphene."
+      },
+      "EC:W2695145865:research_object_measurability:3b0670dfc1ca": {
+        "card_id": "EC:W2695145865:research_object_measurability:3b0670dfc1ca",
+        "citation_key": "cite_78dc2ce387cb7c90",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "fulltext",
+        "source_id": "W2695145865",
+        "source_location": "fulltext:survey_pdf:W2695145865:markdown",
+        "support_statement": "Mechanical properties (elastic modulus and breaking strength) of suspended mono- and few-layer BN nanosheets are measurable via AFM indentation using a pre-fitted load-displacement model."
+      },
+      "EC:W2745772761:mechanism:29ac8ce4e964": {
+        "card_id": "EC:W2745772761:mechanism:29ac8ce4e964",
+        "citation_key": "cite_a411cbbebf7838b9",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2745772761",
+        "source_location": "abstract:openalex",
+        "support_statement": "The reviewed class of layered metal thio(seleno)phosphate materials is argued to have the potential to merge properties of complex oxides with electronic functions of 2D materials and create avenues for research in structural and magnetic correlations."
+      },
+      "EC:W2784368966:research_object_measurability:058f38e2e9df": {
+        "card_id": "EC:W2784368966:research_object_measurability:058f38e2e9df",
+        "citation_key": "cite_9776eb140ec8227e",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2784368966",
+        "source_location": "abstract:openalex",
+        "support_statement": "Raman spectroscopy is described as a versatile tool capable of identifying and characterizing the chemical and physical properties of graphene-based materials."
+      },
+      "EC:W2803426300:boundary_conditions:f60cf31e2e85": {
+        "card_id": "EC:W2803426300:boundary_conditions:f60cf31e2e85",
+        "citation_key": "cite_6b49ace365c37cc5",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2803426300",
+        "source_location": "abstract:openalex",
+        "support_statement": "A more thorough understanding of friction, fracture and stress transfer mechanisms between 2D layers and with the substrate or matrix is still lacking."
+      },
+      "EC:W2803426300:mechanism:f3098fc4c245": {
+        "card_id": "EC:W2803426300:mechanism:f3098fc4c245",
+        "citation_key": "cite_6b49ace365c37cc5",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2803426300",
+        "source_location": "abstract:openalex",
+        "support_statement": "Van der Waals forces between vertically stacked crystals give rise to phenomena such as layer-number dependent friction, superlubricity, creasing, and spatial modulation of elastic properties through Moiré structures."
+      },
+      "EC:W2891605669:mechanism:44090c2c2626": {
+        "card_id": "EC:W2891605669:mechanism:44090c2c2626",
+        "citation_key": "cite_e9d8f2640e14a9a2",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2891605669",
+        "source_location": "abstract:openalex",
+        "support_statement": "Fluoroethylene carbonate solvent and high salt concentration reduce sodium polysulfide solubility and construct a robust solid-electrolyte interface on the sodium anode."
+      },
+      "EC:W2891605669:mechanism:d53a15f2d3dc": {
+        "card_id": "EC:W2891605669:mechanism:d53a15f2d3dc",
+        "citation_key": "cite_e9d8f2640e14a9a2",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2891605669",
+        "source_location": "abstract:openalex",
+        "support_statement": "Indium triiodide acts as a redox mediator to increase sodium sulfide transformation kinetics and forms a passivating indium layer on the anode."
+      },
+      "EC:W2920709194:boundary_conditions:172aa9c049aa": {
+        "card_id": "EC:W2920709194:boundary_conditions:172aa9c049aa",
+        "citation_key": "cite_284471299f51347a",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2920709194",
+        "source_location": "abstract:openalex",
+        "support_statement": "The review highlights advantages and limitations of different analytical techniques for characterizing cellulose structure and its interaction with other wall polymers."
+      },
+      "EC:W2920709194:mechanism:26527c1e3bb2": {
+        "card_id": "EC:W2920709194:mechanism:26527c1e3bb2",
+        "citation_key": "cite_284471299f51347a",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2920709194",
+        "source_location": "abstract:openalex",
+        "support_statement": "The shape, size, and crystallinity of cellulose microfibrils are described as important structural parameters that influence cell wall mechanical properties and are likely determinants of digestibility for biofuel conversion."
+      },
+      "EC:W2920709194:research_object_measurability:79f4343a15a7": {
+        "card_id": "EC:W2920709194:research_object_measurability:79f4343a15a7",
+        "citation_key": "cite_284471299f51347a",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2920709194",
+        "source_location": "abstract:openalex",
+        "support_statement": "X-ray scattering is stated to reveal the size and orientation of microfibrils, while diffraction reveals unit lattice parameters and crystallinity."
+      },
+      "EC:W2969501065:measurement_calibration:e07d24a2a579": {
+        "card_id": "EC:W2969501065:measurement_calibration:e07d24a2a579",
+        "citation_key": "cite_fc51fc490497054f",
+        "claim_slot": "measurement_calibration",
+        "evidence_level": "fulltext",
+        "source_id": "W2969501065",
+        "source_location": "fulltext:survey_pdf:W2969501065:markdown",
+        "support_statement": "In-plane longitudinal thermal conductivity measurements were performed using a single-heater, two-thermometer configuration with Cernox resistors pre-calibrated individually and in situ under maximum applied fields."
+      },
+      "EC:W2969501065:mechanism:deaeaad18802": {
+        "card_id": "EC:W2969501065:mechanism:deaeaad18802",
+        "citation_key": "cite_fc51fc490497054f",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2969501065",
+        "source_location": "fulltext:survey_pdf:W2969501065:markdown",
+        "support_statement": "In CrCl3, the giant field-induced enhancement of thermal conductivity is attributed to the suppression of phonon scattering by magnetic fluctuations, rather than a coherent spin contribution to heat transport."
+      },
+      "EC:W2969501065:study_design:8e092b9b5b71": {
+        "card_id": "EC:W2969501065:study_design:8e092b9b5b71",
+        "citation_key": "cite_fc51fc490497054f",
+        "claim_slot": "study_design",
+        "evidence_level": "fulltext",
+        "source_id": "W2969501065",
+        "source_location": "fulltext:survey_pdf:W2969501065:markdown",
+        "support_statement": "The study employed an empirical model for thermal conductivity that assumes an independently determined number of spin-flip processes and a field-independent efficiency of phonon scattering events to describe data across various fields and temperatures."
+      },
+      "EC:W2998699011:mechanism:2a74bf223bb5": {
+        "card_id": "EC:W2998699011:mechanism:2a74bf223bb5",
+        "citation_key": "cite_3b20fcb63fc67711",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2998699011",
+        "source_location": "abstract:openalex",
+        "support_statement": "The electronic polarizability captures the dielectric nature of a two-dimensional material, whereas the dielectric constant does not define these properties unequivocally due to the locality of electrostatic screening."
+      },
+      "EC:W2998699011:research_object_measurability:ca27d976ef6f": {
+        "card_id": "EC:W2998699011:research_object_measurability:ca27d976ef6f",
+        "citation_key": "cite_3b20fcb63fc67711",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2998699011",
+        "source_location": "abstract:openalex",
+        "support_statement": "The proposed formalism based on electronic polarizability allows for the probing of quantities that are not directly measurable, specifically the real covalent thickness of a layer."
+      },
+      "EC:W3036067411:mechanism:91d1db402d03": {
+        "card_id": "EC:W3036067411:mechanism:91d1db402d03",
+        "citation_key": "cite_df47c783fdaf0461",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W3036067411",
+        "source_location": "fulltext:survey_pdf:W3036067411:markdown",
+        "support_statement": "The magnetic proximity effect between MoSe2 and CrBr3 manifests differently for excitons and trions due to spin-dependent interlayer charge transfer occurring on timescales between their radiative lifetimes."
+      },
+      "EC:W3042765681:mechanism:bb228bfb37cb": {
+        "card_id": "EC:W3042765681:mechanism:bb228bfb37cb",
+        "citation_key": "cite_7a8cfa26940e2a8f",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W3042765681",
+        "source_location": "fulltext:survey_pdf:W3042765681:markdown",
+        "support_statement": "The use of a sub-5 nm polymeric film (PVA) on SiO2 allows the adhesion strength for exfoliation and the adhesion strength for layer transfer to be optimized independently."
+      },
+      "EC:W3042765681:study_design:68ac9dcf21a9": {
+        "card_id": "EC:W3042765681:study_design:68ac9dcf21a9",
+        "citation_key": "cite_7a8cfa26940e2a8f",
+        "claim_slot": "study_design",
+        "evidence_level": "fulltext",
+        "source_id": "W3042765681",
+        "source_location": "fulltext:survey_pdf:W3042765681:markdown",
+        "support_statement": "Exfoliation efficiency was evaluated by comparing the dimensions of the 100 largest flakes from PAGE samples against those from conventional exfoliation samples."
+      },
+      "EC:W3080673473:boundary_conditions:97a5331f89a0": {
+        "card_id": "EC:W3080673473:boundary_conditions:97a5331f89a0",
+        "citation_key": "cite_d4cf21adf4f454cb",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W3080673473",
+        "source_location": "abstract:openalex",
+        "support_statement": "Beyond graphene, recently discovered two-dimensional materials possess semiconducting bandgaps ranging from the terahertz and mid-infrared (e.g., bilayer graphene and black phosphorus) through the visible (e.g., transition metal dichalcogenides) to the ultraviolet (e.g., hexagonal boron nitride)."
+      },
+      "EC:W3080673473:mechanism:86c6fae647c6": {
+        "card_id": "EC:W3080673473:mechanism:86c6fae647c6",
+        "citation_key": "cite_d4cf21adf4f454cb",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W3080673473",
+        "source_location": "abstract:openalex",
+        "support_statement": "Bandgap tunability in two-dimensional materials is achieved via techniques including the control of layer number, heterostructuring, strain engineering, chemical doping, alloying, intercalation, substrate engineering, and the application of an external electric field."
+      },
+      "EC:W3081676008:boundary_conditions:b5f6e4e5de64": {
+        "card_id": "EC:W3081676008:boundary_conditions:b5f6e4e5de64",
+        "citation_key": "cite_e6f39581f0cc673d",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W3081676008",
+        "source_location": "abstract:openalex",
+        "support_statement": "The reported methodology for integrating 2D materials involves adhesive wafer bonding using equipment available in large-scale semiconductor lines, demonstrated on 100-mm diameter silicon wafers."
+      },
+      "EC:W3081676008:research_object_measurability:2886bb7e6632": {
+        "card_id": "EC:W3081676008:research_object_measurability:2886bb7e6632",
+        "citation_key": "cite_e6f39581f0cc673d",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W3081676008",
+        "source_location": "abstract:openalex",
+        "support_statement": "Encapsulated field-effect graphene devices fabricated via this method exhibited high carrier mobilities of up to 4520 cm² V⁻¹ s⁻¹."
+      },
+      "EC:W3152578306:boundary_conditions:8366670906e2": {
+        "card_id": "EC:W3152578306:boundary_conditions:8366670906e2",
+        "citation_key": "cite_b9cc1fcb55e94349",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W3152578306",
+        "source_location": "fulltext:survey_pdf:W3152578306:markdown",
+        "support_statement": "The study demonstrates the method on a specific epitaxial MoS2-WSe2 lateral heterojunction interface, where lattice mismatch was accommodated by crystal defects and strain."
+      },
+      "EC:W3152578306:measurement_calibration:dcca044f96d1": {
+        "card_id": "EC:W3152578306:measurement_calibration:dcca044f96d1",
+        "citation_key": "cite_b9cc1fcb55e94349",
+        "claim_slot": "measurement_calibration",
+        "evidence_level": "fulltext",
+        "source_id": "W3152578306",
+        "source_location": "fulltext:survey_pdf:W3152578306:markdown",
+        "support_statement": "The 3D precision of the atomic coordinates for Mo, S, W, and Se atoms was estimated to be 4 pm, 15 pm, 6 pm, and 15 pm, respectively, by combining multislice simulations with scanning atomic electron tomography (sAET)."
+      },
+      "EC:W3152578306:mechanism:8b030846d5bd": {
+        "card_id": "EC:W3152578306:mechanism:8b030846d5bd",
+        "citation_key": "cite_b9cc1fcb55e94349",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W3152578306",
+        "source_location": "fulltext:survey_pdf:W3152578306:markdown",
+        "support_statement": "The authors propose that the difference in phonon density of states (PDOS) between MoS2 and WSe2 prevents certain optical phonon modes in WSe2 from scattering into MoS2 while conserving energy and momentum, which impedes heat transport."
+      },
+      "EC:W3202213959:measurement_calibration:118af82eda92": {
+        "card_id": "EC:W3202213959:measurement_calibration:118af82eda92",
+        "citation_key": "cite_26ecaf73d88dfe33",
+        "claim_slot": "measurement_calibration",
+        "evidence_level": "fulltext",
+        "source_id": "W3202213959",
+        "source_location": "fulltext:survey_pdf:W3202213959:markdown",
+        "support_statement": "Time domain thermoreflectance (TDTR) was used to measure through-plane thermal conductivity, requiring a laser system with a 785 nm wavelength, 74.86 MHz repetition rate, and 18 mW total power, while maintaining a steady-state temperature rise of less than 4 K."
+      },
+      "EC:W3202213959:mechanism:a141cf1b223f": {
+        "card_id": "EC:W3202213959:mechanism:a141cf1b223f",
+        "citation_key": "cite_26ecaf73d88dfe33",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W3202213959",
+        "source_location": "fulltext:survey_pdf:W3202213959:markdown",
+        "support_statement": "In random stacked TMD films, interlayer rotation impedes through-plane thermal transport while maintaining in-plane crystallinity, leading to a room-temperature thermal anisotropy ratio of approximately 900."
+      },
+      "EC:W4292340379:mechanism:6253541292d0": {
+        "card_id": "EC:W4292340379:mechanism:6253541292d0",
+        "citation_key": "cite_384fa42245d61470",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W4292340379",
+        "source_location": "abstract:openalex",
+        "support_statement": "Traditional neuromorphic devices have used 3D bulk materials, and thus, the resulting device size is difficult to be further scaled down for high density integration."
+      },
+      "EC:W4295929829:boundary_conditions:b81dad781420": {
+        "card_id": "EC:W4295929829:boundary_conditions:b81dad781420",
+        "citation_key": "cite_715d64bd116edfcb",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W4295929829",
+        "source_location": "fulltext:survey_pdf:W4295929829:markdown",
+        "support_statement": "The phase transformation is energy-dependent, occurring readily at 200 keV but failing to occur at 60 kV even with extended scan times."
+      },
+      "EC:W4295929829:risk_ethics_reproducibility:f73cdfa3038f": {
+        "card_id": "EC:W4295929829:risk_ethics_reproducibility:f73cdfa3038f",
+        "citation_key": "cite_715d64bd116edfcb",
+        "claim_slot": "risk_ethics_reproducibility",
+        "evidence_level": "fulltext",
+        "source_id": "W4295929829",
+        "source_location": "fulltext:survey_pdf:W4295929829:markdown",
+        "support_statement": "Extended scanning after phase transformation leads to material loss and hole formation, but the rearranged state can be preserved ('frozen') by modulating beam current."
+      },
+      "EC:W4304128546:boundary_conditions:5ccd63068957": {
+        "card_id": "EC:W4304128546:boundary_conditions:5ccd63068957",
+        "citation_key": "cite_23b56f630d689241",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W4304128546",
+        "source_location": "fulltext:survey_pdf:W4304128546:markdown",
+        "support_statement": "Pristine graphene has a zero-bandgap, which is a drawback for optoelectronic applications, and transition metal dichalcogenides can suffer from less environmental stability."
+      },
+      "EC:W4304128546:mechanism:b8440ee72103": {
+        "card_id": "EC:W4304128546:mechanism:b8440ee72103",
+        "citation_key": "cite_23b56f630d689241",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W4304128546",
+        "source_location": "fulltext:survey_pdf:W4304128546:markdown",
+        "support_statement": "In van der Waals heterostructure gas sensors, gas molecules act as electron donors or acceptors upon adsorption, modifying the charge carrier concentration in the 2D material and its conductivity."
+      },
+      "EC:W4304128546:research_object_measurability:0dd9888c1c8d": {
+        "card_id": "EC:W4304128546:research_object_measurability:0dd9888c1c8d",
+        "citation_key": "cite_23b56f630d689241",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "fulltext",
+        "source_id": "W4304128546",
+        "source_location": "fulltext:survey_pdf:W4304128546:markdown",
+        "support_statement": "Limit of detection (LOD) is theoretically defined by the minimum detectable concentration/amount owing to background noise, while sensitivity is the response normalized by the concentration of the analyte."
+      },
+      "EC:W4389682712:risk_ethics_reproducibility:cf75b3e22d0f": {
+        "card_id": "EC:W4389682712:risk_ethics_reproducibility:cf75b3e22d0f",
+        "citation_key": "cite_b386a897820d988f",
+        "claim_slot": "risk_ethics_reproducibility",
+        "evidence_level": "fulltext",
+        "source_id": "W4389682712",
+        "source_location": "fulltext:survey_pdf:W4389682712:markdown",
+        "support_statement": "Equilibrium conditions were verified by maintaining leakage current below 5 pA and performing 'snake' scans with no observed hysteresis down to the mV level at high vertical electric field."
+      },
+      "EC:W4394604649:mechanism:d5a4aaf68269": {
+        "card_id": "EC:W4394604649:mechanism:d5a4aaf68269",
+        "citation_key": "cite_96ce37056be926a6",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W4394604649",
+        "source_location": "abstract:openalex",
+        "support_statement": "Clark and Severinghaus electrodes are cited as enabling breakthroughs for transcutaneous O2 and CO2 monitoring, respectively."
+      },
+      "EC:W4394604649:research_object_measurability:62808976817c": {
+        "card_id": "EC:W4394604649:research_object_measurability:62808976817c",
+        "citation_key": "cite_96ce37056be926a6",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W4394604649",
+        "source_location": "abstract:openalex",
+        "support_statement": "Optical sensors are suggested as suitable for integration into wearable measurement systems for transcutaneous gas monitoring."
+      }
+    }
+  },
+  "unknown_items": [
+    {
+      "field_path": "analysis_plan",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.batch_effects",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.missing_data",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.randomization",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.repetitions",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "analysis_plan.statistical_analysis",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "data_governance_and_reproducibility.data_management",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "data_governance_and_reproducibility.reproducibility",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration.calibration",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration.quality_control",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[1]",
+      "reason": "Which specific van der Waals material families are intended to be compared in this study?",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[2]",
+      "reason": "What are the numerical targets for the interlayer twist-angle grid and the thermal-cycling protocol?",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[3]",
+      "reason": "What sample eligibility criteria and minimum measurable areas are acceptable for the chosen characterization methods?",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[4]",
+      "reason": "What instrument calibration standards and quality-control procedures will be applied to structural and thermal measurements?",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[5]",
+      "reason": "What is the planned replication structure and batch definition for synthesis, transfer, and thermal cycling?",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[6]",
+      "reason": "What statistical model and decision thresholds will determine whether the twist-angle stability hypothesis is supported?",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "sampling_and_eligibility.eligibility_criteria",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "sampling_and_eligibility.sample_size_or_power_basis",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "sampling_and_eligibility.source",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.batches",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.design_of_experiments",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.material_system",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.process_variables",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.replicate_strategy",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.sample_or_material",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V1.operational_definition",
+      "reason": "Specific synthesis and measurement protocol for 'controlled interlayer twist angles' is not defined in input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V2.operational_definition",
+      "reason": "Measurement technique for 'intrinsic cross-plane thermal conductivity' not specified.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V4.operational_definition",
+      "reason": "The exact equation or boundary condition for 'critical threshold' is not provided.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V5.operational_definition",
+      "reason": "Parameters for 'sustained thermal cycling' (frequency, amplitude, duration) are not defined.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V8.status",
+      "reason": "Generalizability to materials beyond MoS2/WS2 is listed as a gap; scope is undefined.",
+      "status": "needs_human_input"
+    }
+  ],
+  "variables_and_operationalization": {
+    "confounders": [
+      "Defect-mediated interlayer pinning",
+      "Interlayer chemical bonding induced by thermal cycling",
+      "Strain relaxation or wrinkle formation",
+      "Changes in interfacial thermal contact resistance during cycling"
+    ],
+    "control_variables": [
+      "Layer count and flake area",
+      "Substrate type and surface treatment",
+      "Measurement temperature and environmental pressure",
+      "Thermal-cycling protocol parameters"
+    ],
+    "dependent_variables": [
+      "Cross-plane thermal conductivity",
+      "Thermal anisotropy ratio",
+      "Twist-angle retention after cycling"
+    ],
+    "independent_variables": [
+      "Interlayer twist angle",
+      "Van der Waals material family",
+      "Number of thermal-cycling intervals"
+    ],
+    "operational_definitions": [
+      "A heterostructure sample is operationally defined as a stack of two or more 2D layers transferred to a designated substrate with a target twist angle set during assembly.",
+      "Thermal cycling is operationally defined as a repeated sequence of controlled temperature excursions and returns within a declared range and number of cycles.",
+      "Twist-angle retention is operationally defined as the difference between the nominal assembly angle and the angle measured on the same region of the sample after a defined cycling interval."
+    ]
+  }
+}

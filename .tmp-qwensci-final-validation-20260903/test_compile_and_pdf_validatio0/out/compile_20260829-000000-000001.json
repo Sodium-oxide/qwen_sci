@@ -1,0 +1,63 @@
+{
+  "allow_shell_escape": false,
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\31390\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\pdflatex.EXE",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "main.tex"
+      ],
+      "elapsed_ms": 427.196,
+      "return_code": 0,
+      "stage": "latex_initial",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "C:\\Users\\31390\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\bibtex.EXE",
+        "main"
+      ],
+      "elapsed_ms": 406.809,
+      "return_code": 0,
+      "stage": "bibtex",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "C:\\Users\\31390\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\pdflatex.EXE",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "main.tex"
+      ],
+      "elapsed_ms": 377.541,
+      "return_code": 0,
+      "stage": "latex_resolve_references_1",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "C:\\Users\\31390\\AppData\\Local\\Programs\\MiKTeX\\miktex\\bin\\x64\\pdflatex.EXE",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "main.tex"
+      ],
+      "elapsed_ms": 361.557,
+      "return_code": 0,
+      "stage": "latex_resolve_references_2",
+      "timed_out": false
+    }
+  ],
+  "failure_stage": "",
+  "generated_at": "2026-09-03T14:37:18.710+00:00",
+  "main_tex": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_compile_and_pdf_validatio0\\out\\research_plan_20260829-000000-000001_project\\main.tex",
+  "project_dir": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_compile_and_pdf_validatio0\\out\\research_plan_20260829-000000-000001_project",
+  "run_bibtex": true,
+  "schema_version": "research_plan_author_latex_compile_v1",
+  "staged_pdf": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_compile_and_pdf_validatio0\\out\\.research_plan_20260829-000000-000001.pdf.staging",
+  "success": true,
+  "timeout_seconds": 60
+}

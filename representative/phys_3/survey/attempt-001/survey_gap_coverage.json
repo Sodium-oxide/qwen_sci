@@ -1,0 +1,907 @@
+{
+  "artifact_fingerprint": "90d20475a93575ff3f04d90994cdde0641fb458dc8ce66df0483370739535a1d",
+  "contradictions": [],
+  "coverage": {
+    "contradiction_ids": [],
+    "coverage_matrix_version": "survey_gap_coverage_v1",
+    "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+    "project_id": "sci_20260831_051401_339967_survey_001",
+    "rows": [
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:limitation:device_architecture_validation:thermal_performance_claims_are_restricted_to_simplified_nanofabricated_gold_electrode_test_structures_rather_than_complex_integrated_circuit_layouts:64645ec6dc50"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W3202213959"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "device architecture validation"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:material_generality:the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified:a0117852fc70"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W3202213959"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "material generality"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:predictive_applicability_of_maximum_transmission_limit_model:the_maximum_transmission_limit_combined_with_an_attenuated_transmission_coefficient_provides_a_reliable_guideline_primarily_for_clean_strongly_bonded_interfaces_leaving_its_validity_and_governing_mechanisms_unresolved_for_contaminated_weakly_bonded_or_chemically_heterogeneous_interfaces:147c12033a83"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W2200737425"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "predictive applicability of maximum transmission limit model"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:missing_assumption:structural_stability_under_operation:the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed:80c2362ca459"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W3202213959"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "structural stability under operation"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "direct_observation"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "phenomenon"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:missing_boundary_condition:target_condition:target_condition:unknown:c04108123553"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "target_condition"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "target_object"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:unmapped_gap_base_relation:base_relation:base_relation:unknown:664f19c9df99"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "base_relation"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:unmapped_gap_boundary_variable:boundary_variable:boundary_variable:unknown:7020bbb2f037"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "boundary_variable"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:unmapped_gap_comparable_endpoint:comparable_endpoint:comparable_endpoint:unknown:d379a85ea157"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "comparable_endpoint"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:missing_comparator:comparator:comparator:unknown:fe7095486142"
+        ],
+        "paper_ids": [],
+        "required": false,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "comparator"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:unmapped_gap_condition_a:condition_a:condition_a:unknown:6ffa49ff1463"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "condition_a"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:unmapped_gap_condition_b:condition_b:condition_b:unknown:05478b66ada1"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "condition_b"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:missing_boundary_condition:validity_domain:validity_domain:unknown:9cf876b946e6"
+        ],
+        "paper_ids": [],
+        "required": false,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "validity_domain"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:41171bf535f4"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "candidate_mechanism"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:unmapped_gap_common_outcome:common_outcome:common_outcome:unknown:44aac391b4e4"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "common_outcome"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:identifiability_gap:discriminating_observation:discriminating_observation:unknown:1ee92b215a69"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "discriminating_observation"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:unmapped_gap_input_or_condition:input_or_condition:input_or_condition:unknown:12831e178f59"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "input_or_condition"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:missing_boundary_condition:validity_domain:validity_domain:unknown:cfe644038949"
+        ],
+        "paper_ids": [],
+        "required": false,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "validity_domain"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:measurement_construct_mismatch:construct:construct:unknown:b38417809abf"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "construct"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:measurement_construct_mismatch:mapping_or_calibration:mapping_or_calibration:unknown:4878e930ce1d"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "mapping_or_calibration"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:unmapped_gap_proxy_or_measure:proxy_or_measure:proxy_or_measure:unknown:565816079ac2"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "proxy_or_measure"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:unmapped_gap_reference_or_target_measure:reference_or_target_measure:reference_or_target_measure:unknown:9d1aa6201764"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "reference_or_target_measure"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:missing_boundary_condition:validity_domain:validity_domain:unknown:ae42dd2f7779"
+        ],
+        "paper_ids": [],
+        "required": false,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "validity_domain"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh5:missing_comparator:comparator:comparator:unknown:84e790f824cf"
+        ],
+        "paper_ids": [],
+        "required": false,
+        "status": "uncovered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "comparator"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh5:unmapped_gap_external_validation:external_validation:external_validation:unknown:d2dce345cc4e"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "external_validation"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh5:unmapped_gap_shift_or_variation:shift_or_variation:shift_or_variation:unknown:c665cf0b296c"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "shift_or_variation"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh5:unmapped_gap_source_system:source_system:source_system:unknown:e0e30337fd59"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "source_system"
+      },
+      {
+        "base_status": "qualified",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh5:unmapped_gap_target_system:target_system:target_system:unknown:f421666c5d42"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "target_system"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh5:missing_boundary_condition:validity_domain:validity_domain:unknown:1e8e9619210c"
+        ],
+        "paper_ids": [],
+        "required": false,
+        "status": "uncovered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "validity_domain"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh6:missing_assumption:assumption:assumption:unknown:f27cebf01bfc"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "assumption"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh6:counterevidence_gap:falsification_or_counterexample:falsification_or_counterexample:unknown:79c5294566bb"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "falsification_or_counterexample"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh6:missing_assumption:formal_claim:formal_claim:unknown:3886afa97b1a"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "formal_claim"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh6:missing_boundary_condition:validity_domain:validity_domain:unknown:931e784702a7"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "validity_domain"
+      }
+    ],
+    "schema_version": "survey_gap_coverage_v1",
+    "status_counts": {
+      "candidate_pending": 4,
+      "uncovered": 31
+    },
+    "survey_run_id": "20260831-051401-339967-survey-001"
+  },
+  "decisions": [
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_device_architecture_validation_limitation_gap_candidate_global_limitation_device_architecture_validation_thermal_performance_claims_are_restricted_to_simplified_nanofabricated_gold_electrode_test_structures_rather_than_complex_integrated_circuit_layouts_64645ec6dc50_fd8caec5d13f:2ded5fb840a4",
+      "candidate_id": "gap_candidate:global:limitation:device_architecture_validation:thermal_performance_claims_are_restricted_to_simplified_nanofabricated_gold_electrode_test_structures_rather_than_complex_integrated_circuit_layouts:64645ec6dc50",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:device_architecture_validation:limitation:gap_candidate_global_limitation_device_architecture_validation_thermal_performance_claims_are_restricted_to_simplified_nanofabricated_gold_electrode_test_structures_rather_than_complex_integrated_circuit_layouts_64645ec6dc50:fd8caec5d13f",
+      "reason": "The abstract explicitly limits experimental validation to 'nanofabricated gold electrodes' and does not evaluate thermal performance in complex IC layouts, vertical interconnects, or multi-layer stacks, grounding this limitation directly in the provided text."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_material_generality_boundary_condition_gap_candidate_global_boundary_condition_material_generality_the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified_a0117852fc70_556020293592:19581c6b39e0",
+      "candidate_id": "gap_candidate:global:boundary_condition:material_generality:the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified:a0117852fc70",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:material_generality:boundary_condition:gap_candidate_global_boundary_condition_material_generality_the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified_a0117852fc70:556020293592",
+      "reason": "The abstract confines all measurements and molecular dynamics simulations exclusively to MoS2 and WS2, establishing a clear boundary condition regarding material generality without validating the mechanism for other van der Waals systems."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_predictive_applicability_of_maximum_transmission_limit_model_boundary_condition_gap_candidate_global_boundary_condition_predictive_applicability_of_maximum_transmission_limit_model_the_maximum_transmission_limit_combined_with_an_attenuated_transmission_coefficient_provides_a_reliable_guideline_primarily_for_clean_strongly_bonded_interfaces_leaving_its_validity_and_governing_mechanisms_unresolved_for_contaminated_weakly_bonded_or_chemically_heterogeneous_interfaces_147c12033a83_579fcd2dc2a4:79cf7c752c00",
+      "candidate_id": "gap_candidate:global:boundary_condition:predictive_applicability_of_maximum_transmission_limit_model:the_maximum_transmission_limit_combined_with_an_attenuated_transmission_coefficient_provides_a_reliable_guideline_primarily_for_clean_strongly_bonded_interfaces_leaving_its_validity_and_governing_mechanisms_unresolved_for_contaminated_weakly_bonded_or_chemically_heterogeneous_interfaces:147c12033a83",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:predictive_applicability_of_maximum_transmission_limit_model:boundary_condition:gap_candidate_global_boundary_condition_predictive_applicability_of_maximum_transmission_limit_model_the_maximum_transmission_limit_combined_with_an_attenuated_transmission_coefficient_provides_a_reliable_guideline_primarily_for_clean_strongly_bonded_interfaces_leaving_its_validity_and_governing_mechanisms_unresolved_for_contaminated_weakly_bonded_or_chemically_heterogeneous_interfaces_147c12033a83:579fcd2dc2a4",
+      "reason": "The abstract directly states that the maximum transmission limit model serves as a good guideline specifically for 'most clean, strongly bonded interfaces,' explicitly defining its boundary condition and leaving non-ideal interfaces unresolved."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_structural_stability_under_operation_missing_assumption_gap_candidate_global_missing_assumption_structural_stability_under_operation_the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed_80c2362ca459_4ec329151379:1cd1c2bee702",
+      "candidate_id": "gap_candidate:global:missing_assumption:structural_stability_under_operation:the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed:80c2362ca459",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:structural_stability_under_operation:missing_assumption:gap_candidate_global_missing_assumption_structural_stability_under_operation_the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed_80c2362ca459:4ec329151379",
+      "reason": "The abstract focuses on room-temperature thermal properties and initial electrode cooling performance, with no mention of long-term structural stability, thermal cycling, or stress gradient effects on interlayer rotations, making this a valid missing assumption grounded in the text."
+    }
+  ],
+  "schema_version": "survey_gap_adjudication_v1",
+  "synthesis": {
+    "candidates": [
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "limitation"
+        ],
+        "candidate_fingerprint": "be9f9091798a12f76bc0f3808a129212544d4248ab1282fe05edcbc0f8a607fe",
+        "candidate_id": "gap_candidate:global:limitation:device_architecture_validation:thermal_performance_claims_are_restricted_to_simplified_nanofabricated_gold_electrode_test_structures_rather_than_complex_integrated_circuit_layouts:64645ec6dc50",
+        "candidate_ids": [
+          "gap_candidate:global:limitation:device_architecture_validation:thermal_performance_claims_are_restricted_to_simplified_nanofabricated_gold_electrode_test_structures_rather_than_complex_integrated_circuit_layouts:64645ec6dc50"
+        ],
+        "claim_scope": "",
+        "confidence": 0.75,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "limitation",
+        "group_id": "gap_group:global:device_architecture_validation:limitation:gap_candidate_global_limitation_device_architecture_validation_thermal_performance_claims_are_restricted_to_simplified_nanofabricated_gold_electrode_test_structures_rather_than_complex_integrated_circuit_layouts_64645ec6dc50:fd8caec5d13f",
+        "paper_ids": [
+          "W3202213959"
+        ],
+        "rationale": "The abstract notes that covering 'nanofabricated gold electrodes' prevents overheating, but does not evaluate how the ultra-low through-plane conductivity interacts with vertical interconnects, multi-layer stacks, or active semiconductor regions typical of real ICs.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W3202213959",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "Thermal performance claims are restricted to simplified nanofabricated gold electrode test structures rather than complex integrated circuit layouts.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "device architecture validation"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "boundary condition"
+        ],
+        "candidate_fingerprint": "05a41b04de97320c14b8df1466a3e972732098b29619bca1d5223e752a989a85",
+        "candidate_id": "gap_candidate:global:boundary_condition:material_generality:the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified:a0117852fc70",
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:material_generality:the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified:a0117852fc70"
+        ],
+        "claim_scope": "",
+        "confidence": 0.8,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "boundary condition",
+        "group_id": "gap_group:global:material_generality:boundary_condition:gap_candidate_global_boundary_condition_material_generality_the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified_a0117852fc70:556020293592",
+        "paper_ids": [
+          "W3202213959"
+        ],
+        "rationale": "The abstract explicitly reports measurements and molecular dynamics simulations exclusively for MoS2 and WS2, without addressing whether random interlayer rotations yield similar anisotropy ratios in materials with different phonon dispersion or interlayer bonding characteristics.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W3202213959",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "The extreme thermal anisotropy mechanism is validated only for MoS2 and WS2, leaving its applicability to other van der Waals materials unverified.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "material generality"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "boundary_condition"
+        ],
+        "candidate_fingerprint": "f71b299ea03ce31d6e271b59052498d354f8936f1e7cac68a437e9e3315aeaf4",
+        "candidate_id": "gap_candidate:global:boundary_condition:predictive_applicability_of_maximum_transmission_limit_model:the_maximum_transmission_limit_combined_with_an_attenuated_transmission_coefficient_provides_a_reliable_guideline_primarily_for_clean_strongly_bonded_interfaces_leaving_its_validity_and_governing_mechanisms_unresolved_for_contaminated_weakly_bonded_or_chemically_heterogeneous_interfaces:147c12033a83",
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:predictive_applicability_of_maximum_transmission_limit_model:the_maximum_transmission_limit_combined_with_an_attenuated_transmission_coefficient_provides_a_reliable_guideline_primarily_for_clean_strongly_bonded_interfaces_leaving_its_validity_and_governing_mechanisms_unresolved_for_contaminated_weakly_bonded_or_chemically_heterogeneous_interfaces:147c12033a83"
+        ],
+        "claim_scope": "",
+        "confidence": 0.85,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "boundary_condition",
+        "group_id": "gap_group:global:predictive_applicability_of_maximum_transmission_limit_model:boundary_condition:gap_candidate_global_boundary_condition_predictive_applicability_of_maximum_transmission_limit_model_the_maximum_transmission_limit_combined_with_an_attenuated_transmission_coefficient_provides_a_reliable_guideline_primarily_for_clean_strongly_bonded_interfaces_leaving_its_validity_and_governing_mechanisms_unresolved_for_contaminated_weakly_bonded_or_chemically_heterogeneous_interfaces_147c12033a83:579fcd2dc2a4",
+        "paper_ids": [
+          "W2200737425"
+        ],
+        "rationale": "The abstract explicitly restricts the model's effectiveness to 'most clean, strongly bonded interfaces,' establishing a clear boundary condition and implying a lack of validated theoretical or experimental frameworks for non-ideal interfacial conditions.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2200737425",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "The maximum transmission limit combined with an attenuated transmission coefficient provides a reliable guideline primarily for clean, strongly bonded interfaces, leaving its validity and governing mechanisms unresolved for contaminated, weakly bonded, or chemically heterogeneous interfaces.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "predictive applicability of maximum transmission limit model"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "missing assumption"
+        ],
+        "candidate_fingerprint": "35008ebebe56f3f5fc10d7587abce692393f9b93bdba9349d48eeeafd8341697",
+        "candidate_id": "gap_candidate:global:missing_assumption:structural_stability_under_operation:the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed:80c2362ca459",
+        "candidate_ids": [
+          "gap_candidate:global:missing_assumption:structural_stability_under_operation:the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed:80c2362ca459"
+        ],
+        "claim_scope": "",
+        "confidence": 0.7,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "missing assumption",
+        "group_id": "gap_group:global:structural_stability_under_operation:missing_assumption:gap_candidate_global_missing_assumption_structural_stability_under_operation_the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed_80c2362ca459:4ec329151379",
+        "paper_ids": [
+          "W3202213959"
+        ],
+        "rationale": "While the abstract establishes interlayer rotation as a design degree of freedom for directed heat transport, it does not discuss whether these rotational configurations remain stable or relax over time when subjected to the very thermal gradients they are engineered to mitigate.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W3202213959",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "The persistence of random interlayer rotations under sustained thermal cycling and operational stress gradients is unaddressed.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "structural stability under operation"
+      }
+    ],
+    "groups": [
+      {
+        "candidate_ids": [
+          "gap_candidate:global:limitation:device_architecture_validation:thermal_performance_claims_are_restricted_to_simplified_nanofabricated_gold_electrode_test_structures_rather_than_complex_integrated_circuit_layouts:64645ec6dc50"
+        ],
+        "group_id": "gap_group:global:device_architecture_validation:limitation:gap_candidate_global_limitation_device_architecture_validation_thermal_performance_claims_are_restricted_to_simplified_nanofabricated_gold_electrode_test_structures_rather_than_complex_integrated_circuit_layouts_64645ec6dc50:fd8caec5d13f",
+        "paper_evidence": [
+          {
+            "abstract": "Abstract The densification of integrated circuits requires thermal management strategies and high thermal conductivity materials 1–3 . Recent innovations include the development of materials with thermal conduction anisotropy, which can remove hotspots along the fast-axis direction and provide thermal insulation along the slow axis 4,5 . However, most artificially engineered thermal conductors have anisotropy ratios much smaller than those seen in naturally anisotropic materials. Here we report extremely anisotropic thermal conductors based on large-area van der Waals thin films with random interlayer rotations, which produce a room-temperature thermal anisotropy ratio close to 900 in MoS 2 , one of the highest ever reported. This is enabled by the interlayer rotations that impede the through-plane thermal transport, while the long-range intralayer crystallinity maintains high in-plane thermal conductivity. We measure ultralow thermal conductivities in the through-plane direction for MoS 2 (57 ± 3 mW m −1 K −1 ) and WS 2 (41 ± 3 mW m −1 K −1 ) films, and we quantitatively explain these values using molecular dynamics simulations that reveal one-dimensional glass-like thermal transport. Conversely, the in-plane thermal conductivity in these MoS 2 films is close to the single-crystal value. Covering nanofabricated gold electrodes with our anisotropic films prevents overheating of the electrodes and blocks heat from reaching the device surface. Our work establishes interlayer rotation in crystalline layered materials as a new degree of freedom for engineering-directed heat transport in solid-state systems.",
+            "paper_id": "W3202213959",
+            "title": "Extremely anisotropic van der Waals thermal conductors"
+          }
+        ],
+        "paper_ids": [
+          "W3202213959"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "limitation"
+          ],
+          "candidate_fingerprint": "be9f9091798a12f76bc0f3808a129212544d4248ab1282fe05edcbc0f8a607fe",
+          "candidate_id": "gap_candidate:global:limitation:device_architecture_validation:thermal_performance_claims_are_restricted_to_simplified_nanofabricated_gold_electrode_test_structures_rather_than_complex_integrated_circuit_layouts:64645ec6dc50",
+          "candidate_ids": [
+            "gap_candidate:global:limitation:device_architecture_validation:thermal_performance_claims_are_restricted_to_simplified_nanofabricated_gold_electrode_test_structures_rather_than_complex_integrated_circuit_layouts:64645ec6dc50"
+          ],
+          "claim_scope": "",
+          "confidence": 0.75,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "limitation",
+          "group_id": "gap_group:global:device_architecture_validation:limitation:gap_candidate_global_limitation_device_architecture_validation_thermal_performance_claims_are_restricted_to_simplified_nanofabricated_gold_electrode_test_structures_rather_than_complex_integrated_circuit_layouts_64645ec6dc50:fd8caec5d13f",
+          "paper_ids": [
+            "W3202213959"
+          ],
+          "rationale": "The abstract notes that covering 'nanofabricated gold electrodes' prevents overheating, but does not evaluate how the ultra-low through-plane conductivity interacts with vertical interconnects, multi-layer stacks, or active semiconductor regions typical of real ICs.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W3202213959",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "Thermal performance claims are restricted to simplified nanofabricated gold electrode test structures rather than complex integrated circuit layouts.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "device architecture validation"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W3202213959",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:material_generality:the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified:a0117852fc70"
+        ],
+        "group_id": "gap_group:global:material_generality:boundary_condition:gap_candidate_global_boundary_condition_material_generality_the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified_a0117852fc70:556020293592",
+        "paper_evidence": [
+          {
+            "abstract": "Abstract The densification of integrated circuits requires thermal management strategies and high thermal conductivity materials 1–3 . Recent innovations include the development of materials with thermal conduction anisotropy, which can remove hotspots along the fast-axis direction and provide thermal insulation along the slow axis 4,5 . However, most artificially engineered thermal conductors have anisotropy ratios much smaller than those seen in naturally anisotropic materials. Here we report extremely anisotropic thermal conductors based on large-area van der Waals thin films with random interlayer rotations, which produce a room-temperature thermal anisotropy ratio close to 900 in MoS 2 , one of the highest ever reported. This is enabled by the interlayer rotations that impede the through-plane thermal transport, while the long-range intralayer crystallinity maintains high in-plane thermal conductivity. We measure ultralow thermal conductivities in the through-plane direction for MoS 2 (57 ± 3 mW m −1 K −1 ) and WS 2 (41 ± 3 mW m −1 K −1 ) films, and we quantitatively explain these values using molecular dynamics simulations that reveal one-dimensional glass-like thermal transport. Conversely, the in-plane thermal conductivity in these MoS 2 films is close to the single-crystal value. Covering nanofabricated gold electrodes with our anisotropic films prevents overheating of the electrodes and blocks heat from reaching the device surface. Our work establishes interlayer rotation in crystalline layered materials as a new degree of freedom for engineering-directed heat transport in solid-state systems.",
+            "paper_id": "W3202213959",
+            "title": "Extremely anisotropic van der Waals thermal conductors"
+          }
+        ],
+        "paper_ids": [
+          "W3202213959"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "boundary condition"
+          ],
+          "candidate_fingerprint": "05a41b04de97320c14b8df1466a3e972732098b29619bca1d5223e752a989a85",
+          "candidate_id": "gap_candidate:global:boundary_condition:material_generality:the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified:a0117852fc70",
+          "candidate_ids": [
+            "gap_candidate:global:boundary_condition:material_generality:the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified:a0117852fc70"
+          ],
+          "claim_scope": "",
+          "confidence": 0.8,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "boundary condition",
+          "group_id": "gap_group:global:material_generality:boundary_condition:gap_candidate_global_boundary_condition_material_generality_the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified_a0117852fc70:556020293592",
+          "paper_ids": [
+            "W3202213959"
+          ],
+          "rationale": "The abstract explicitly reports measurements and molecular dynamics simulations exclusively for MoS2 and WS2, without addressing whether random interlayer rotations yield similar anisotropy ratios in materials with different phonon dispersion or interlayer bonding characteristics.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W3202213959",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "The extreme thermal anisotropy mechanism is validated only for MoS2 and WS2, leaving its applicability to other van der Waals materials unverified.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "material generality"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W3202213959",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:predictive_applicability_of_maximum_transmission_limit_model:the_maximum_transmission_limit_combined_with_an_attenuated_transmission_coefficient_provides_a_reliable_guideline_primarily_for_clean_strongly_bonded_interfaces_leaving_its_validity_and_governing_mechanisms_unresolved_for_contaminated_weakly_bonded_or_chemically_heterogeneous_interfaces:147c12033a83"
+        ],
+        "group_id": "gap_group:global:predictive_applicability_of_maximum_transmission_limit_model:boundary_condition:gap_candidate_global_boundary_condition_predictive_applicability_of_maximum_transmission_limit_model_the_maximum_transmission_limit_combined_with_an_attenuated_transmission_coefficient_provides_a_reliable_guideline_primarily_for_clean_strongly_bonded_interfaces_leaving_its_validity_and_governing_mechanisms_unresolved_for_contaminated_weakly_bonded_or_chemically_heterogeneous_interfaces_147c12033a83:579fcd2dc2a4",
+        "paper_evidence": [
+          {
+            "abstract": "The thermal boundary conductance (TBC) of materials pairs in atomically intimate contact is reviewed as a practical guide for materials scientists. First, analytical and computational models of TBC are reviewed. Five measurement methods are then compared in terms of their sensitivity to TBC: the 3ω method, frequency- and time-domain thermoreflectance, the cut-bar method, and a composite effective thermal conductivity method. The heart of the review surveys 30 years of TBC measurements around room temperature, highlighting the materials science factors experimentally proven to influence TBC. These factors include the bulk dispersion relations, acoustic contrast, and interfacial chemistry and bonding. The measured TBCs are compared across a wide range of materials systems by using the maximum transmission limit, which with an attenuated transmission coefficient proves to be a good guideline for most clean, strongly bonded interfaces. Finally, opportunities for future research are discussed.",
+            "paper_id": "W2200737425",
+            "title": "Thermal Boundary Conductance: A Materials Science Perspective"
+          }
+        ],
+        "paper_ids": [
+          "W2200737425"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "boundary_condition"
+          ],
+          "candidate_fingerprint": "f71b299ea03ce31d6e271b59052498d354f8936f1e7cac68a437e9e3315aeaf4",
+          "candidate_id": "gap_candidate:global:boundary_condition:predictive_applicability_of_maximum_transmission_limit_model:the_maximum_transmission_limit_combined_with_an_attenuated_transmission_coefficient_provides_a_reliable_guideline_primarily_for_clean_strongly_bonded_interfaces_leaving_its_validity_and_governing_mechanisms_unresolved_for_contaminated_weakly_bonded_or_chemically_heterogeneous_interfaces:147c12033a83",
+          "candidate_ids": [
+            "gap_candidate:global:boundary_condition:predictive_applicability_of_maximum_transmission_limit_model:the_maximum_transmission_limit_combined_with_an_attenuated_transmission_coefficient_provides_a_reliable_guideline_primarily_for_clean_strongly_bonded_interfaces_leaving_its_validity_and_governing_mechanisms_unresolved_for_contaminated_weakly_bonded_or_chemically_heterogeneous_interfaces:147c12033a83"
+          ],
+          "claim_scope": "",
+          "confidence": 0.85,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "boundary_condition",
+          "group_id": "gap_group:global:predictive_applicability_of_maximum_transmission_limit_model:boundary_condition:gap_candidate_global_boundary_condition_predictive_applicability_of_maximum_transmission_limit_model_the_maximum_transmission_limit_combined_with_an_attenuated_transmission_coefficient_provides_a_reliable_guideline_primarily_for_clean_strongly_bonded_interfaces_leaving_its_validity_and_governing_mechanisms_unresolved_for_contaminated_weakly_bonded_or_chemically_heterogeneous_interfaces_147c12033a83:579fcd2dc2a4",
+          "paper_ids": [
+            "W2200737425"
+          ],
+          "rationale": "The abstract explicitly restricts the model's effectiveness to 'most clean, strongly bonded interfaces,' establishing a clear boundary condition and implying a lack of validated theoretical or experimental frameworks for non-ideal interfacial conditions.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W2200737425",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "The maximum transmission limit combined with an attenuated transmission coefficient provides a reliable guideline primarily for clean, strongly bonded interfaces, leaving its validity and governing mechanisms unresolved for contaminated, weakly bonded, or chemically heterogeneous interfaces.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "predictive applicability of maximum transmission limit model"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2200737425",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:missing_assumption:structural_stability_under_operation:the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed:80c2362ca459"
+        ],
+        "group_id": "gap_group:global:structural_stability_under_operation:missing_assumption:gap_candidate_global_missing_assumption_structural_stability_under_operation_the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed_80c2362ca459:4ec329151379",
+        "paper_evidence": [
+          {
+            "abstract": "Abstract The densification of integrated circuits requires thermal management strategies and high thermal conductivity materials 1–3 . Recent innovations include the development of materials with thermal conduction anisotropy, which can remove hotspots along the fast-axis direction and provide thermal insulation along the slow axis 4,5 . However, most artificially engineered thermal conductors have anisotropy ratios much smaller than those seen in naturally anisotropic materials. Here we report extremely anisotropic thermal conductors based on large-area van der Waals thin films with random interlayer rotations, which produce a room-temperature thermal anisotropy ratio close to 900 in MoS 2 , one of the highest ever reported. This is enabled by the interlayer rotations that impede the through-plane thermal transport, while the long-range intralayer crystallinity maintains high in-plane thermal conductivity. We measure ultralow thermal conductivities in the through-plane direction for MoS 2 (57 ± 3 mW m −1 K −1 ) and WS 2 (41 ± 3 mW m −1 K −1 ) films, and we quantitatively explain these values using molecular dynamics simulations that reveal one-dimensional glass-like thermal transport. Conversely, the in-plane thermal conductivity in these MoS 2 films is close to the single-crystal value. Covering nanofabricated gold electrodes with our anisotropic films prevents overheating of the electrodes and blocks heat from reaching the device surface. Our work establishes interlayer rotation in crystalline layered materials as a new degree of freedom for engineering-directed heat transport in solid-state systems.",
+            "paper_id": "W3202213959",
+            "title": "Extremely anisotropic van der Waals thermal conductors"
+          }
+        ],
+        "paper_ids": [
+          "W3202213959"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "missing assumption"
+          ],
+          "candidate_fingerprint": "35008ebebe56f3f5fc10d7587abce692393f9b93bdba9349d48eeeafd8341697",
+          "candidate_id": "gap_candidate:global:missing_assumption:structural_stability_under_operation:the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed:80c2362ca459",
+          "candidate_ids": [
+            "gap_candidate:global:missing_assumption:structural_stability_under_operation:the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed:80c2362ca459"
+          ],
+          "claim_scope": "",
+          "confidence": 0.7,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "missing assumption",
+          "group_id": "gap_group:global:structural_stability_under_operation:missing_assumption:gap_candidate_global_missing_assumption_structural_stability_under_operation_the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed_80c2362ca459:4ec329151379",
+          "paper_ids": [
+            "W3202213959"
+          ],
+          "rationale": "While the abstract establishes interlayer rotation as a design degree of freedom for directed heat transport, it does not discuss whether these rotational configurations remain stable or relax over time when subjected to the very thermal gradients they are engineered to mitigate.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W3202213959",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "The persistence of random interlayer rotations under sustained thermal cycling and operational stress gradients is unaddressed.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "structural stability under operation"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W3202213959",
+            "section": "Abstract"
+          }
+        ]
+      }
+    ],
+    "schema_version": "survey_gap_coverage_v1"
+  }
+}

@@ -1,0 +1,142 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+
+\usepackage{amsmath}
+
+\usepackage[T1]{fontenc}
+
+\title{Mathematical Modeling and Numerical Simulation Supplement}
+
+\author{Anonymous Research Plan Author}
+
+\date{}
+
+\begin{document}
+
+\setlength{\emergencystretch}{3em}
+
+\maketitle
+
+\section{Q1 (final: v0)}
+
+\noindent\textbf{Abstract—} A one-state numerical model with an approved measured rate.
+
+\subsection{Question and Scope}
+
+\noindent\textbf{Question.} Does x decay under the approved positive k?
+
+
+
+A local one-state approximation.
+
+\subsection{Model Assumptions and Applicability}
+
+\begin{itemize}\raggedright
+\item A-001: k remains constant over the modeled interval. If violated: The rate law must be revised.
+\end{itemize}
+
+\subsection{Symbols and Units}
+
+\begin{center}
+\small
+\begin{tabular}{|p{0.12\linewidth}|p{0.15\linewidth}|p{0.46\linewidth}|p{0.17\linewidth}|}
+\hline
+ID & Symbol & Meaning & Unit \\ \hline
+S-001 & $x$ & state & 1 \\ \hline
+S-002 & $k$ & rate & $s^{-1}$ \\ \hline
+\end{tabular}
+\end{center}
+
+\subsection{Mechanistic Equations}
+
+\begin{equation}\label{eq:Q1-EQ-001}
+\frac{dx}{dt}=-kx
+\end{equation}
+\noindent\textbf{Q1-EQ-001 where} S-001: state; S-002: rate.
+
+\subsection{Initial Conditions, Boundary Conditions, and Constraints}
+
+\paragraph{Initial Conditions}
+\begin{itemize}\raggedright
+\item x(0)\ensuremath{=}1
+\end{itemize}
+
+\paragraph{Boundary Conditions}
+\begin{itemize}\raggedright
+\item Initial-value condition.
+\end{itemize}
+
+\paragraph{Objective and Constraints}
+\begin{itemize}\raggedright
+\item Compute a bounded finite trajectory.
+\end{itemize}
+
+\subsection{Algorithm}
+
+\noindent\textbf{Algorithm}
+\paragraph{Input}
+\begin{itemize}\raggedright
+\item k
+\item x0
+\end{itemize}
+\paragraph{Output}
+\begin{itemize}\raggedright
+\item x(t)
+\end{itemize}
+\paragraph{Steps}
+\begin{itemize}\raggedright
+\item Use the fixed ODE adapter.
+\end{itemize}
+
+\subsection{Parameters, Scenarios, and Numerical Settings}
+
+\paragraph{Parameters}
+\begin{itemize}\raggedright
+\item k\ensuremath{=}2 s\textasciicircum{}-1 from the approved parameter set.
+\end{itemize}
+
+\paragraph{Scenarios}
+\begin{itemize}\raggedright
+\item baseline
+\end{itemize}
+
+\noindent\textbf{Solver family.} ODE\_IVP.
+
+\subsection{Parameter Provenance and Applicability}
+
+\noindent\textbf{Approved parameter-set identity.} a81f3c942c690a73\allowbreak{}6b9460bbc661e38b\allowbreak{}a2f0390a04493867\allowbreak{}c6164f9d2fd03216.
+\begin{itemize}\raggedright
+\item k (k) \ensuremath{=} 2.0 s\textasciicircum{}-1; role MATERIAL\_\allowbreak{}PROPERTY; status APPROVED\_\allowbreak{}USER\_\allowbreak{}INPUT; source: Controlled measurement note; document UPD-001; locator: TXT; applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}temperature\_\allowbreak{}K; temperature\_\allowbreak{}K\ensuremath{=}300.0. uncertainty: not reported.
+\end{itemize}
+
+\subsection{Numerical Validation and Model-Internal Results}
+
+\paragraph{Validation Plan}
+\begin{itemize}\raggedright
+\item Confirm solver convergence.
+\end{itemize}
+
+\begin{itemize}
+\item Execution sim-1202c9511cb7401496961ae2a7af9187; NUMERICAL\_SIMULATION; SIMULATED; NOT\_EMPIRICAL; relation REFUTED\_WITHIN\_MODEL; summary: The evidence-bound numerical trajectory decays under the approved parameter set.
+\end{itemize}
+
+\subsection{Hypothesis Iteration Lineage}
+
+\begin{itemize}\raggedright
+\item v0: REFUTED\_\allowbreak{}WITHIN\_\allowbreak{}MODEL (The evidence-bound numerical trajectory decays under the approved parameter set.)
+\end{itemize}
+
+\subsection{Limitations, Non-Empirical Disclosure, and References}
+
+\noindent All values in this section are model-internal numerical simulations (NUMERICAL\_SIMULATION; SIMULATED; NOT\_EMPIRICAL), not empirical observations.
+
+\paragraph{Limitations}
+\begin{itemize}\raggedright
+\item The result is not empirical.
+\end{itemize}
+
+\paragraph{References}
+\emph{Not specified.}
+
+\end{document}

@@ -1,0 +1,63 @@
+{
+  "allow_shell_escape": false,
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/pdflatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "conference_101719.tex"
+      ],
+      "elapsed_ms": 236.941,
+      "return_code": 0,
+      "stage": "latex_initial",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/usr/bin/bibtex",
+        "conference_101719"
+      ],
+      "elapsed_ms": 22.982,
+      "return_code": 0,
+      "stage": "bibtex",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/usr/bin/pdflatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "conference_101719.tex"
+      ],
+      "elapsed_ms": 193.4,
+      "return_code": 0,
+      "stage": "latex_resolve_references_1",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/usr/bin/pdflatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "conference_101719.tex"
+      ],
+      "elapsed_ms": 170.581,
+      "return_code": 0,
+      "stage": "latex_resolve_references_2",
+      "timed_out": false
+    }
+  ],
+  "failure_stage": "",
+  "generated_at": "2026-08-31T13:53:29.297+00:00",
+  "main_tex": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-005/research_plan_20260831-225307-602017_project/conference_101719.tex",
+  "project_dir": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-005/research_plan_20260831-225307-602017_project",
+  "run_bibtex": true,
+  "schema_version": "research_plan_author_latex_compile_v1",
+  "staged_pdf": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-005/.research_plan_20260831-225307-602017.pdf.staging",
+  "success": true,
+  "timeout_seconds": 180
+}

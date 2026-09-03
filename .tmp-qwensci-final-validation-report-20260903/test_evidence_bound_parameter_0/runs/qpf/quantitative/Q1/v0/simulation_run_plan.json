@@ -1,0 +1,101 @@
+{
+  "capability": {
+    "capability": "COMPOSABLE",
+    "reason": "The model is fully represented by audited MathIR and an approved solver adapter.",
+    "solver_id": "scipy_solve_ivp",
+    "system_type": "ODE_IVP"
+  },
+  "empirical_claim_status": "NOT_EMPIRICAL",
+  "execution_mode": "NUMERICAL_SIMULATION",
+  "mathir": {
+    "derivatives": {
+      "x": {
+        "args": [
+          {
+            "args": [
+              {
+                "name": "k",
+                "op": "variable"
+              }
+            ],
+            "op": "neg"
+          },
+          {
+            "name": "x",
+            "op": "variable"
+          }
+        ],
+        "op": "mul"
+      }
+    },
+    "parameters": {
+      "k": 2.0
+    },
+    "schema_version": "mathir_v1",
+    "solver_options": {
+      "max_step": 0.1
+    },
+    "states": [
+      {
+        "id": "x",
+        "initial": 1.0
+      }
+    ],
+    "system_type": "ODE_IVP",
+    "time_span": [
+      0.0,
+      1.0
+    ]
+  },
+  "model_identity": {
+    "created_from_artifact": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_evidence_bound_parameter_0\\runs\\qpf\\idea\\attempt-001\\quantitative_ideas_manifest.json",
+    "model_spec_identity": "b3d767400e438f2434d62966c45581f4e8b5179715131cb64039b45b1c4794a4",
+    "parameter_set_identity": "a81f3c942c690a736b9460bbc661e38ba2f0390a04493867c6164f9d2fd03216",
+    "project_context_fingerprint": "quantitative-parameter-context",
+    "project_id": "quantitative-parameter-project",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "qpf",
+    "selected_direction_id": "direction-1",
+    "survey_run_id": "survey-quantitative-parameter",
+    "version": "0"
+  },
+  "parameter_provenance": {
+    "allowed_scenario_parameter_ids": [],
+    "mode": "APPROVED_PARAMETER_SET",
+    "parameter_set_identity": "a81f3c942c690a736b9460bbc661e38ba2f0390a04493867c6164f9d2fd03216",
+    "parameter_set_manifest": {
+      "path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_evidence_bound_parameter_0\\runs\\qpf\\quantitative\\Q1\\parameter_evidence\\v0\\approved_parameter_set_manifest.json",
+      "sha256": "f6f59c703b33a62b0ea0dfcd8d245ae934dbbda86aaa80a4d1e5871692284d45"
+    }
+  },
+  "plan_identity": "102c1f804977ea7521c288ff999976e277b5d51053b53f4ae949ec51456442ea",
+  "qualification_requirements": [
+    "solver_converged"
+  ],
+  "resource_limits": {
+    "atol": 1e-09,
+    "max_cells": 100000,
+    "max_fields": 8,
+    "max_grid_points": 512,
+    "max_matrix_nonzeros": 200000,
+    "max_matrix_size": 20000,
+    "max_memory_mb": 512,
+    "max_nx": 4096,
+    "max_ny": 1024,
+    "max_nz": 128,
+    "max_output_points": 2000,
+    "max_pde_snapshots": 200,
+    "max_samples": 100000,
+    "max_time_steps": 20000,
+    "max_wall_seconds": 120,
+    "rtol": 1e-06
+  },
+  "result_kind": "SIMULATED",
+  "scenarios": [
+    {
+      "parameter_overrides": {},
+      "scenario_id": "baseline"
+    }
+  ],
+  "schema_version": "simulation_run_plan_v1"
+}

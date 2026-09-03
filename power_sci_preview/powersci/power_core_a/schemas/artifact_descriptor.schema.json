@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qwen-zhikan.local/schemas/artifact_descriptor_v1.json",
+  "title": "ArtifactDescriptor",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "artifact_id", "artifact_type", "artifact_version", "contract_schema", "content_hash", "byte_size", "relative_path", "created_at", "producer", "lineage_hashes"],
+  "properties": {
+    "schema_version": {"const": "artifact_descriptor_v1"},
+    "artifact_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "artifact_type": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "artifact_version": {"type": "integer", "minimum": 1},
+    "contract_schema": {"type": "string", "minLength": 1},
+    "content_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "byte_size": {"type": "integer", "minimum": 1},
+    "relative_path": {"type": "string", "pattern": "^[^/\\\\].*"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "producer": {"type": "string", "minLength": 1, "maxLength": 128},
+    "lineage_hashes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+  }
+}
+

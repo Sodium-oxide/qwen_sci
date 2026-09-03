@@ -1,0 +1,33 @@
+{
+  "schema_version": "case_manifest_v1",
+  "case_id": "case_b0_swing_001",
+  "case_version": "1.0.0",
+  "benchmark_level": "B0",
+  "name": "Classical two-state swing-equation fixture",
+  "equation_ir_ref": {
+    "schema_name": "EquationIR",
+    "schema_version": "equation_ir_v1",
+    "artifact_id": "model_b0_classical_swing",
+    "content_hash": "sha256:05f10c349f0156d0561dd46850affd683791f108a938442536ac4e15e42f95a4"
+  },
+  "resources": [],
+  "initial_conditions": [
+    {"variable_id": "delta", "value": 0.5235987755982988, "unit": "rad"},
+    {"variable_id": "omega", "value": 0.0, "unit": "pu"}
+  ],
+  "parameters": [
+    {"variable_id": "omega_b", "value": 376.99111843077515, "unit": "rad/s"},
+    {"variable_id": "H", "value": 3.5, "unit": "s"},
+    {"variable_id": "D", "value": 1.0, "unit": "pu"},
+    {"variable_id": "P_m", "value": 0.8, "unit": "pu"},
+    {"variable_id": "P_e", "value": 0.8, "unit": "pu"}
+  ],
+  "time_domain": {"start": 0.0, "stop": 1.0, "step": 0.01, "unit": "s"},
+  "random_seed": 20260825,
+  "provenance": {
+    "source": "Role-A deterministic contract fixture; replace with role-C B0 truth during integration",
+    "license": "project-internal-test-fixture",
+    "created_at": "2026-08-25T12:00:00Z",
+    "created_by": "role_a_fixture"
+  }
+}

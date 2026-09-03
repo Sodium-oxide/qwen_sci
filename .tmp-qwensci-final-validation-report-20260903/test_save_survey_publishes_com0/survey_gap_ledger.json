@@ -1,0 +1,67 @@
+{
+  "candidate_gaps": [],
+  "coverage_matrix_version": "survey_gap_coverage_v1",
+  "created_at": "",
+  "gaps": [
+    {
+      "anchor_ids": [],
+      "candidate_contribution_modes": [
+        "targeted_evidence_acquisition",
+        "discriminating_observation"
+      ],
+      "candidate_defect_tags": [
+        "evidence_role_deficit"
+      ],
+      "evidence_eligibility": {
+        "allowed_claim_modes": [
+          "EVIDENCE_GAP_REPORT"
+        ],
+        "claim_limits": [],
+        "direct_writing_blocked_paper_ids": [],
+        "forbidden_paper_ids": [],
+        "required_roles": [
+          "DIRECT_OBSERVATION"
+        ]
+      },
+      "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+      "gap_kind": "evidence_role_deficit",
+      "priority": "high",
+      "source_kind": "missing_slot",
+      "source_pointer": {
+        "artifact": "survey_evidence_plan.json",
+        "json_pointer": "/subhypotheses/0/missing_slots/0"
+      },
+      "statement": "Required evidence slot 'direct_observation' is missing from the Survey evidence plan for sub-hypothesis SH1: A bounded scientific question.",
+      "status": "open",
+      "subhypothesis_id": "SH1",
+      "support_level": "authoritative",
+      "target_object": "direct_observation",
+      "target_slot": "direct_observation",
+      "why_it_matters": "The available paper roles do not support the evidence strength required by this slot."
+    }
+  ],
+  "ledger_fingerprint": "10f6b87e4c3a31b2cea4b08a88bc58309ccbb508f42e4bbbd58c01829e6efc14",
+  "ledger_id": "ledger:sci_run_1:20260826_120000_000003:52eb965c4f8d",
+  "profile_resolution": {
+    "discipline_ids": [],
+    "openalex_field_ids": [],
+    "paperseek_field_ids": [],
+    "primary_discipline": "",
+    "profile_id_hint": "",
+    "requires_human_confirmation": true,
+    "source": "",
+    "status": "unresolved",
+    "unresolved_reason": ""
+  },
+  "project_context_fingerprint": "context-1",
+  "project_id": "sci_run_1",
+  "schema_version": "survey_gap_ledger_v1",
+  "source_artifacts": {
+    "claim_traceability": "survey_claim_traceability.json",
+    "evidence_plan": "survey_evidence_plan.json",
+    "project_context": "project_context.json",
+    "publication": "survey_manifest.json",
+    "survey_json": "survey.json"
+  },
+  "survey_run_id": "20260826-120000-000003"
+}

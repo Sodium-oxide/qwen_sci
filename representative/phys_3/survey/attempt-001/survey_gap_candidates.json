@@ -1,0 +1,139 @@
+{
+  "candidate_ledger_id": "candidate_ledger:sci_20260831_051401_339967_survey_001:20260831_051401_339967_survey_001:3b3cf638933f",
+  "candidates": [
+    {
+      "candidate_contribution_modes": [],
+      "candidate_defect_tags": [
+        "boundary condition"
+      ],
+      "candidate_id": "gap_candidate:global:boundary_condition:material_generality:the_extreme_thermal_anisotropy_mechanism_is_validated_only_for_mos2_and_ws2_leaving_its_applicability_to_other_van_der_waals_materials_unverified:a0117852fc70",
+      "claim_scope": "",
+      "confidence": 0.8,
+      "evidence_role": "",
+      "evidence_summary": "",
+      "extraction_method": "paper_limitation_llm",
+      "gap_kind": "boundary condition",
+      "paper_ids": [
+        "W3202213959"
+      ],
+      "rationale": "The abstract explicitly reports measurements and molecular dynamics simulations exclusively for MoS2 and WS2, without addressing whether random interlayer rotations yield similar anisotropy ratios in materials with different phonon dispersion or interlayer bonding characteristics.",
+      "schema_version": "survey_gap_candidate_v1",
+      "source_pointers": [
+        {
+          "artifact": "paper",
+          "json_pointer": "/abstract",
+          "paper_id": "W3202213959",
+          "section": "Abstract"
+        }
+      ],
+      "statement": "The extreme thermal anisotropy mechanism is validated only for MoS2 and WS2, leaving its applicability to other van der Waals materials unverified.",
+      "status": "candidate",
+      "subhypothesis_id": "GLOBAL",
+      "support_level": "explicit",
+      "target_slot": "material generality"
+    },
+    {
+      "candidate_contribution_modes": [],
+      "candidate_defect_tags": [
+        "limitation"
+      ],
+      "candidate_id": "gap_candidate:global:limitation:device_architecture_validation:thermal_performance_claims_are_restricted_to_simplified_nanofabricated_gold_electrode_test_structures_rather_than_complex_integrated_circuit_layouts:64645ec6dc50",
+      "claim_scope": "",
+      "confidence": 0.75,
+      "evidence_role": "",
+      "evidence_summary": "",
+      "extraction_method": "paper_limitation_llm",
+      "gap_kind": "limitation",
+      "paper_ids": [
+        "W3202213959"
+      ],
+      "rationale": "The abstract notes that covering 'nanofabricated gold electrodes' prevents overheating, but does not evaluate how the ultra-low through-plane conductivity interacts with vertical interconnects, multi-layer stacks, or active semiconductor regions typical of real ICs.",
+      "schema_version": "survey_gap_candidate_v1",
+      "source_pointers": [
+        {
+          "artifact": "paper",
+          "json_pointer": "/abstract",
+          "paper_id": "W3202213959",
+          "section": "Abstract"
+        }
+      ],
+      "statement": "Thermal performance claims are restricted to simplified nanofabricated gold electrode test structures rather than complex integrated circuit layouts.",
+      "status": "candidate",
+      "subhypothesis_id": "GLOBAL",
+      "support_level": "explicit",
+      "target_slot": "device architecture validation"
+    },
+    {
+      "candidate_contribution_modes": [],
+      "candidate_defect_tags": [
+        "missing assumption"
+      ],
+      "candidate_id": "gap_candidate:global:missing_assumption:structural_stability_under_operation:the_persistence_of_random_interlayer_rotations_under_sustained_thermal_cycling_and_operational_stress_gradients_is_unaddressed:80c2362ca459",
+      "claim_scope": "",
+      "confidence": 0.7,
+      "evidence_role": "",
+      "evidence_summary": "",
+      "extraction_method": "paper_limitation_llm",
+      "gap_kind": "missing assumption",
+      "paper_ids": [
+        "W3202213959"
+      ],
+      "rationale": "While the abstract establishes interlayer rotation as a design degree of freedom for directed heat transport, it does not discuss whether these rotational configurations remain stable or relax over time when subjected to the very thermal gradients they are engineered to mitigate.",
+      "schema_version": "survey_gap_candidate_v1",
+      "source_pointers": [
+        {
+          "artifact": "paper",
+          "json_pointer": "/abstract",
+          "paper_id": "W3202213959",
+          "section": "Abstract"
+        }
+      ],
+      "statement": "The persistence of random interlayer rotations under sustained thermal cycling and operational stress gradients is unaddressed.",
+      "status": "candidate",
+      "subhypothesis_id": "GLOBAL",
+      "support_level": "explicit",
+      "target_slot": "structural stability under operation"
+    },
+    {
+      "candidate_contribution_modes": [],
+      "candidate_defect_tags": [
+        "boundary_condition"
+      ],
+      "candidate_id": "gap_candidate:global:boundary_condition:predictive_applicability_of_maximum_transmission_limit_model:the_maximum_transmission_limit_combined_with_an_attenuated_transmission_coefficient_provides_a_reliable_guideline_primarily_for_clean_strongly_bonded_interfaces_leaving_its_validity_and_governing_mechanisms_unresolved_for_contaminated_weakly_bonded_or_chemically_heterogeneous_interfaces:147c12033a83",
+      "claim_scope": "",
+      "confidence": 0.85,
+      "evidence_role": "",
+      "evidence_summary": "",
+      "extraction_method": "paper_limitation_llm",
+      "gap_kind": "boundary_condition",
+      "paper_ids": [
+        "W2200737425"
+      ],
+      "rationale": "The abstract explicitly restricts the model's effectiveness to 'most clean, strongly bonded interfaces,' establishing a clear boundary condition and implying a lack of validated theoretical or experimental frameworks for non-ideal interfacial conditions.",
+      "schema_version": "survey_gap_candidate_v1",
+      "source_pointers": [
+        {
+          "artifact": "paper",
+          "json_pointer": "/abstract",
+          "paper_id": "W2200737425",
+          "section": "Abstract"
+        }
+      ],
+      "statement": "The maximum transmission limit combined with an attenuated transmission coefficient provides a reliable guideline primarily for clean, strongly bonded interfaces, leaving its validity and governing mechanisms unresolved for contaminated, weakly bonded, or chemically heterogeneous interfaces.",
+      "status": "candidate",
+      "subhypothesis_id": "GLOBAL",
+      "support_level": "explicit",
+      "target_slot": "predictive applicability of maximum transmission limit model"
+    }
+  ],
+  "created_at": "",
+  "ledger_fingerprint": "071a4c595f66441b29895f61c43db1cd4bd3c0ff4e2128462d3ec0f607809c3f",
+  "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+  "project_id": "sci_20260831_051401_339967_survey_001",
+  "schema_version": "survey_gap_candidates_v1",
+  "source_artifacts": {
+    "survey_json": "survey.json",
+    "survey_markdown": "survey.md"
+  },
+  "survey_run_id": "20260831-051401-339967-survey-001"
+}

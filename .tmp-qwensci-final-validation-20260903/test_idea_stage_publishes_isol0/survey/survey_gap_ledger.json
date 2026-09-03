@@ -1,0 +1,67 @@
+{
+  "candidate_gaps": [],
+  "coverage_matrix_version": "survey_gap_coverage_v1",
+  "created_at": "",
+  "gaps": [
+    {
+      "anchor_ids": [],
+      "candidate_contribution_modes": [
+        "targeted_evidence_acquisition",
+        "discriminating_observation"
+      ],
+      "candidate_defect_tags": [
+        "evidence_role_deficit"
+      ],
+      "evidence_eligibility": {
+        "allowed_claim_modes": [
+          "EVIDENCE_GAP_REPORT"
+        ],
+        "claim_limits": [],
+        "direct_writing_blocked_paper_ids": [],
+        "forbidden_paper_ids": [],
+        "required_roles": [
+          "DIRECT_OBSERVATION"
+        ]
+      },
+      "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+      "gap_kind": "evidence_role_deficit",
+      "priority": "high",
+      "source_kind": "missing_slot",
+      "source_pointer": {
+        "artifact": "survey_evidence_plan.json",
+        "json_pointer": "/subhypotheses/0/missing_slots/0"
+      },
+      "statement": "Required evidence slot 'direct_observation' is missing from the Survey evidence plan for sub-hypothesis SH1: A bounded quantitative question.",
+      "status": "open",
+      "subhypothesis_id": "SH1",
+      "support_level": "authoritative",
+      "target_object": "direct_observation",
+      "target_slot": "direct_observation",
+      "why_it_matters": "The available paper roles do not support the evidence strength required by this slot."
+    }
+  ],
+  "ledger_fingerprint": "be1bcff04fe5a0d5d4b8d711a54d333a444ee9fe2fee687ee14741de54ec639d",
+  "ledger_id": "ledger:quantitative_stage:survey_quantitative:4b51eff6a192",
+  "profile_resolution": {
+    "discipline_ids": [],
+    "openalex_field_ids": [],
+    "paperseek_field_ids": [],
+    "primary_discipline": "",
+    "profile_id_hint": "",
+    "requires_human_confirmation": false,
+    "source": "",
+    "status": "unresolved",
+    "unresolved_reason": ""
+  },
+  "project_context_fingerprint": "context-fingerprint",
+  "project_id": "quantitative-stage",
+  "schema_version": "survey_gap_ledger_v1",
+  "source_artifacts": {
+    "claim_traceability": "survey_claim_traceability.json",
+    "evidence_plan": "survey_evidence_plan.json",
+    "project_context": "project_context.json",
+    "publication": "survey_manifest.json",
+    "survey_json": "survey.json"
+  },
+  "survey_run_id": "survey-quantitative"
+}

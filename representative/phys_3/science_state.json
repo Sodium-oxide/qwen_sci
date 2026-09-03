@@ -1,0 +1,598 @@
+{
+  "created_at": "2026-08-30T20:14:01.513298Z",
+  "last_updated_at": "2026-08-31T16:24:19.797688Z",
+  "restart_history": [
+    {
+      "invalidated_stages": [
+        "exp_design",
+        "author"
+      ],
+      "requested_at": "2026-08-31T11:49:19.703400Z",
+      "restart_from": "exp_design"
+    },
+    {
+      "invalidated_stages": [
+        "author"
+      ],
+      "requested_at": "2026-08-31T13:20:39.694175Z",
+      "restart_from": "author"
+    },
+    {
+      "invalidated_stages": [
+        "author"
+      ],
+      "requested_at": "2026-08-31T13:24:35.231105Z",
+      "restart_from": "author"
+    },
+    {
+      "invalidated_stages": [
+        "author"
+      ],
+      "requested_at": "2026-08-31T13:53:01.750328Z",
+      "restart_from": "author"
+    },
+    {
+      "invalidated_stages": [
+        "author"
+      ],
+      "requested_at": "2026-08-31T15:17:02.531107Z",
+      "restart_from": "author"
+    },
+    {
+      "invalidated_stages": [
+        "author"
+      ],
+      "requested_at": "2026-08-31T16:23:52.608655Z",
+      "restart_from": "author"
+    }
+  ],
+  "revision": 37,
+  "schema_version": "science_state_v1",
+  "science_run_id": "20260831-051401-339967",
+  "stages": {
+    "author": {
+      "attempt": 7,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": "2026-08-31T16:24:19.740015Z",
+      "input_identity": {
+        "author_input_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_author_20260831-204926-130071.json",
+        "design_identity": {
+          "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+          "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+          "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+          "project_id": "sci_20260831_051401_339967_survey_001",
+          "selected_direction_id": "mechanism_replacement",
+          "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+          "survey_run_id": "20260831-051401-339967-survey-001"
+        },
+        "experiment_design_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_manifest.json",
+        "idea_identity": {
+          "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+          "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+          "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+          "project_id": "sci_20260831_051401_339967_survey_001",
+          "selected_direction_id": "mechanism_replacement",
+          "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+          "survey_run_id": "20260831-051401-339967-survey-001"
+        },
+        "idea_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_manifest.json",
+        "idea_result_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+        "survey_identity": {
+          "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+          "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+          "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+          "project_id": "sci_20260831_051401_339967_survey_001",
+          "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+          "survey_run_id": "20260831-051401-339967-survey-001"
+        },
+        "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json"
+      },
+      "invalidated_attempts": [
+        {
+          "attempt": 1,
+          "execution_owner": null,
+          "failure": {
+            "error_type": "ScienceWorkflowError",
+            "exit_code": 40,
+            "failed_at": "2026-08-31T03:01:43.297514Z",
+            "message": "Author execution failed: composition: authoring_blueprint_section_assignment:abstract: LLM invocation failed: BadRequestError: Error code: 400 - {'error': {'message': 'Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment', 'type': 'Arrearage', 'param': None, 'code': 'Arrearage'}, 'id': 'chatcmpl-f7ee2eaa-539e-9e71-94eb-ccd1324cde56', 'request_id': 'f7ee2eaa-539e-9e71-94eb-ccd1324cde56'}"
+          },
+          "finished_at": "2026-08-31T03:01:43.297514Z",
+          "input_identity": {
+            "author_input_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-001/experiment_design_author_20260831-120112-561525.json",
+            "design_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "experiment_design_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-001/experiment_design_manifest.json",
+            "idea_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "idea_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_manifest.json",
+            "idea_result_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+            "survey_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json"
+          },
+          "invalidated_at": "2026-08-31T11:49:19.703400Z",
+          "outputs": {},
+          "reason": "restart-from:exp_design",
+          "result_identity": {},
+          "result_manifest_path": null,
+          "started_at": "2026-08-31T03:01:40.805675Z",
+          "status": "FAILED"
+        },
+        {
+          "attempt": 2,
+          "execution_owner": null,
+          "failure": {
+            "error_type": "ScienceWorkflowError",
+            "exit_code": 41,
+            "failed_at": "2026-08-31T12:51:37.281423Z",
+            "message": "Author rendering failed: latex_compile: LaTeX compilation failed; retained compile log and structured diagnostics"
+          },
+          "finished_at": "2026-08-31T12:51:37.281423Z",
+          "input_identity": {
+            "author_input_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_author_20260831-204926-130071.json",
+            "design_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "experiment_design_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_manifest.json",
+            "idea_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "idea_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_manifest.json",
+            "idea_result_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+            "survey_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json"
+          },
+          "invalidated_at": "2026-08-31T13:20:39.694175Z",
+          "outputs": {},
+          "reason": "restart-from:author",
+          "result_identity": {},
+          "result_manifest_path": null,
+          "started_at": "2026-08-31T12:42:15.392065Z",
+          "status": "FAILED"
+        },
+        {
+          "attempt": 3,
+          "execution_owner": null,
+          "failure": {
+            "error_type": "ScienceWorkflowError",
+            "exit_code": 40,
+            "failed_at": "2026-08-31T13:21:16.410855Z",
+            "message": "Survey binding is incomplete; missing survey_run_id, project_id, project_context_fingerprint"
+          },
+          "finished_at": "2026-08-31T13:21:16.410855Z",
+          "input_identity": {
+            "author_input_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_author_20260831-204926-130071.json",
+            "design_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "experiment_design_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_manifest.json",
+            "idea_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "idea_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_manifest.json",
+            "idea_result_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+            "survey_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json"
+          },
+          "invalidated_at": "2026-08-31T13:24:35.231105Z",
+          "outputs": {},
+          "reason": "restart-from:author",
+          "result_identity": {},
+          "result_manifest_path": null,
+          "started_at": "2026-08-31T13:20:43.660833Z",
+          "status": "FAILED"
+        },
+        {
+          "attempt": 4,
+          "execution_owner": null,
+          "failure": {
+            "error_type": "ScienceWorkflowError",
+            "exit_code": 40,
+            "failed_at": "2026-08-31T13:25:08.049000Z",
+            "message": "Survey binding is incomplete; missing survey_run_id, project_id, project_context_fingerprint"
+          },
+          "finished_at": "2026-08-31T13:25:08.049000Z",
+          "input_identity": {
+            "author_input_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_author_20260831-204926-130071.json",
+            "design_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "experiment_design_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_manifest.json",
+            "idea_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "idea_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_manifest.json",
+            "idea_result_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+            "survey_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json"
+          },
+          "invalidated_at": "2026-08-31T13:53:01.750328Z",
+          "outputs": {},
+          "reason": "restart-from:author",
+          "result_identity": {},
+          "result_manifest_path": null,
+          "started_at": "2026-08-31T13:24:39.475426Z",
+          "status": "FAILED"
+        },
+        {
+          "attempt": 5,
+          "execution_owner": null,
+          "failure": {
+            "error_type": "ScienceWorkflowError",
+            "exit_code": 40,
+            "failed_at": "2026-08-31T13:53:31.764747Z",
+            "message": "author service failed: NameError: name '_SURVEY_BINDING_FIELDS' is not defined"
+          },
+          "finished_at": "2026-08-31T13:53:31.764747Z",
+          "input_identity": {
+            "author_input_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_author_20260831-204926-130071.json",
+            "design_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "experiment_design_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_manifest.json",
+            "idea_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "idea_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_manifest.json",
+            "idea_result_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+            "survey_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json"
+          },
+          "invalidated_at": "2026-08-31T15:17:02.531107Z",
+          "outputs": {},
+          "reason": "restart-from:author",
+          "result_identity": {},
+          "result_manifest_path": null,
+          "started_at": "2026-08-31T13:53:05.663481Z",
+          "status": "FAILED"
+        },
+        {
+          "attempt": 6,
+          "execution_owner": null,
+          "failure": {
+            "error_type": "ScienceWorkflowError",
+            "exit_code": 40,
+            "failed_at": "2026-08-31T15:17:39.919969Z",
+            "message": "author published manifest validation failed: Author document Survey binding is missing survey_run_id"
+          },
+          "finished_at": "2026-08-31T15:17:39.919969Z",
+          "input_identity": {
+            "author_input_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_author_20260831-204926-130071.json",
+            "design_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "experiment_design_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_manifest.json",
+            "idea_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "idea_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_manifest.json",
+            "idea_result_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+            "survey_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json"
+          },
+          "invalidated_at": "2026-08-31T16:23:52.608655Z",
+          "outputs": {},
+          "reason": "restart-from:author",
+          "result_identity": {},
+          "result_manifest_path": null,
+          "started_at": "2026-08-31T15:17:06.375189Z",
+          "status": "FAILED"
+        }
+      ],
+      "outputs": {
+        "author_context_json": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/research_plan_author_context_20260901-012357-901416.json",
+        "author_manifest": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/author_manifest.json",
+        "document_json": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/research_plan_document_20260901-012357-901416.json",
+        "idea_evolution_json": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/idea_evolution_appendix_20260901-012357-901416.json",
+        "preparation_json": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/research_plan_author_preparation_20260901-012357-901416.json",
+        "render_bibliography_needs_completion": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/bibliography_needs_completion_20260901-012357-901416.json",
+        "render_bibtex": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/references_20260901-012357-901416.bib",
+        "render_compile_json": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/compile_20260901-012357-901416.json",
+        "render_compile_log": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/compile_20260901-012357-901416.log",
+        "render_pdf": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/research_plan_20260901-012357-901416.pdf",
+        "render_pdf_validation_json": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/pdf_validation_20260901-012357-901416.json",
+        "render_render_manifest": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/research_plan_render_20260901-012357-901416.json",
+        "render_status": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/author_render_status.json",
+        "render_tex": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/research_plan_20260901-012357-901416.tex",
+        "survey_source_binding": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/survey_source_binding.json"
+      },
+      "result_identity": {
+        "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+        "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+        "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+        "project_id": "sci_20260831_051401_339967_survey_001",
+        "result_sha256": "b08f4f24b765fa617215c1dcca7be4d5921e4f46b142fcd06df52b39c3fadb56",
+        "selected_direction_id": "mechanism_replacement",
+        "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+        "survey_run_id": "20260831-051401-339967-survey-001"
+      },
+      "result_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-007/author_manifest.json",
+      "started_at": "2026-08-31T16:23:56.022234Z",
+      "status": "COMPLETED"
+    },
+    "exp_design": {
+      "attempt": 2,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": "2026-08-31T12:42:13.857070Z",
+      "input_identity": {
+        "idea_identity": {
+          "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+          "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+          "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+          "project_id": "sci_20260831_051401_339967_survey_001",
+          "selected_direction_id": "mechanism_replacement",
+          "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+          "survey_run_id": "20260831-051401-339967-survey-001"
+        },
+        "idea_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_manifest.json",
+        "idea_result_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+        "survey_identity": {
+          "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+          "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+          "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+          "project_id": "sci_20260831_051401_339967_survey_001",
+          "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+          "survey_run_id": "20260831-051401-339967-survey-001"
+        },
+        "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json"
+      },
+      "invalidated_attempts": [
+        {
+          "attempt": 1,
+          "execution_owner": null,
+          "failure": null,
+          "finished_at": "2026-08-31T03:01:39.681521Z",
+          "input_identity": {
+            "idea_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "selected_direction_id": "mechanism_replacement",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "idea_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_manifest.json",
+            "idea_result_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+            "survey_identity": {
+              "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+              "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+              "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+              "project_id": "sci_20260831_051401_339967_survey_001",
+              "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+              "survey_run_id": "20260831-051401-339967-survey-001"
+            },
+            "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json"
+          },
+          "invalidated_at": "2026-08-31T11:49:19.703400Z",
+          "outputs": {
+            "author_json": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-001/experiment_design_author_20260831-120112-561525.json",
+            "experiment_design_json": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-001/experiment_design_20260831-120112-561525.json",
+            "experiment_design_manifest": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-001/experiment_design_manifest.json",
+            "experiment_design_markdown": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-001/experiment_design_20260831-120112-561525.md"
+          },
+          "reason": "restart-from:exp_design",
+          "result_identity": {
+            "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+            "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+            "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+            "project_id": "sci_20260831_051401_339967_survey_001",
+            "result_sha256": "2930095be6d4d7d16442c9ff8b4d4b3cf459feb0ab566ac1a64556f96186efd8",
+            "selected_direction_id": "mechanism_replacement",
+            "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+            "survey_run_id": "20260831-051401-339967-survey-001"
+          },
+          "result_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-001/experiment_design_manifest.json",
+          "started_at": "2026-08-31T03:00:58.980718Z",
+          "status": "COMPLETED"
+        }
+      ],
+      "outputs": {
+        "author_json": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_author_20260831-204926-130071.json",
+        "experiment_design_json": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_20260831-204926-130071.json",
+        "experiment_design_manifest": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_manifest.json",
+        "experiment_design_markdown": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_20260831-204926-130071.md"
+      },
+      "result_identity": {
+        "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+        "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+        "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+        "project_id": "sci_20260831_051401_339967_survey_001",
+        "result_sha256": "ca90a68b387c7f8b2cd93dd65bb35712897a0b0880bd2f9e3de3117eadffe2bf",
+        "selected_direction_id": "mechanism_replacement",
+        "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+        "survey_run_id": "20260831-051401-339967-survey-001"
+      },
+      "result_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/experiment_design/attempt-002/experiment_design_manifest.json",
+      "started_at": "2026-08-31T11:49:24.773091Z",
+      "status": "COMPLETED"
+    },
+    "idea": {
+      "attempt": 4,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": "2026-08-31T03:00:57.969885Z",
+      "input_identity": {
+        "survey_identity": {
+          "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+          "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+          "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+          "project_id": "sci_20260831_051401_339967_survey_001",
+          "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+          "survey_run_id": "20260831-051401-339967-survey-001"
+        },
+        "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+        "topic": "What are the limits of heat transfer in matter? Materials science research may help address high-power-density heat-transfer challenges across length scales, from nanometre-scale electronic devices and circuits to industrial-scale processes such as power plants. The research focus is to identify fundamental and material-dependent limits on thermal transport, interfacial thermal resistance, phonon and electron heat conduction, and heat dissipation under high power density."
+      },
+      "invalidated_attempts": [],
+      "outputs": {
+        "idea_manifest": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_manifest.json",
+        "idea_result": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_result.json",
+        "idea_run_dir": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004"
+      },
+      "result_identity": {
+        "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+        "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+        "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+        "project_id": "sci_20260831_051401_339967_survey_001",
+        "result_sha256": "f488428b2635d238705096290b34cdc9f66573462a9824730b964d1c7d2266aa",
+        "selected_direction_id": "mechanism_replacement",
+        "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+        "survey_run_id": "20260831-051401-339967-survey-001"
+      },
+      "result_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/idea/attempt-004/idea_manifest.json",
+      "started_at": "2026-08-30T22:03:32.756085Z",
+      "status": "COMPLETED"
+    },
+    "survey": {
+      "attempt": 1,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": "2026-08-30T20:59:01.752909Z",
+      "input_identity": {
+        "science_run_id": "20260831-051401-339967",
+        "topic_fingerprint": "18d744185634f38dd870d59f234b1ddd8d2be845d90fc9fda212124ddfa5fa34"
+      },
+      "invalidated_attempts": [],
+      "outputs": {
+        "survey_gap_ledger": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_gap_ledger.json",
+        "survey_handoff": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_idea_handoff.json",
+        "survey_json": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey.json",
+        "survey_manifest": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+        "survey_markdown": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey.md"
+      },
+      "result_identity": {
+        "handoff_fingerprint": "4a754f47c7c7035e64ab3314e30f7ea55b3f8a7c567df96e03f86478604f2ea6",
+        "manifest_fingerprint": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+        "project_context_fingerprint": "d1ec807bb2773769bcc0e96938d1a78bfcdd6257dd4cb37905caaf179cb7d09c",
+        "project_id": "sci_20260831_051401_339967_survey_001",
+        "result_sha256": "967ac2acd8c7d475390ef44febeaa465ab9fb4c5720cca90d3c1d55ae4430c2d",
+        "survey_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+        "survey_run_id": "20260831-051401-339967-survey-001",
+        "topic_fingerprint": "18d744185634f38dd870d59f234b1ddd8d2be845d90fc9fda212124ddfa5fa34"
+      },
+      "result_manifest_path": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/survey/attempt-001/survey_manifest.json",
+      "started_at": "2026-08-30T20:14:01.703312Z",
+      "status": "COMPLETED"
+    }
+  },
+  "status": "COMPLETED"
+}

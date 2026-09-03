@@ -1,0 +1,92 @@
+{
+  "created_at": "2026-09-03T14:37:33.957645Z",
+  "last_updated_at": "2026-09-03T14:37:34.179391Z",
+  "restart_history": [],
+  "revision": 5,
+  "schema_version": "science_state_v1",
+  "science_run_id": "closed-loop",
+  "stages": {
+    "author": {
+      "attempt": 0,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": null,
+      "input_identity": {},
+      "invalidated_attempts": [],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": null,
+      "status": "PENDING"
+    },
+    "exp_design": {
+      "attempt": 0,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": null,
+      "input_identity": {},
+      "invalidated_attempts": [],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": null,
+      "status": "PENDING"
+    },
+    "idea": {
+      "attempt": 1,
+      "execution_owner": null,
+      "failure": {
+        "error_type": "ScienceWorkflowError",
+        "exit_code": 21,
+        "failed_at": "2026-09-03T14:37:34.179391Z",
+        "message": "simulated Idea failure"
+      },
+      "finished_at": "2026-09-03T14:37:34.179391Z",
+      "input_identity": {
+        "survey_identity": {
+          "handoff_fingerprint": "53d81f0a9282c4f6bbe9e3f2dc3cd4874a3cfb1fb4ca7388c35231ff58eaab1e",
+          "manifest_fingerprint": "f91ed13e9f9ec14bcbdffeba1aa504469ada3b37b42244a94cc7442252731ce8",
+          "project_context_fingerprint": "science-workflow-context",
+          "project_id": "science-workflow",
+          "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_workflow_records_a_stage_0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+          "survey_run_id": "closed-loop-survey-001"
+        },
+        "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_workflow_records_a_stage_0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+        "topic": "exact handoff topic"
+      },
+      "invalidated_attempts": [],
+      "outputs": {},
+      "result_identity": {},
+      "result_manifest_path": null,
+      "started_at": "2026-09-03T14:37:34.146837Z",
+      "status": "FAILED"
+    },
+    "survey": {
+      "attempt": 1,
+      "execution_owner": null,
+      "failure": null,
+      "finished_at": "2026-09-03T14:37:34.116747Z",
+      "input_identity": {
+        "science_run_id": "closed-loop",
+        "topic_fingerprint": "46e7369612ae3738e20597df6c451af2fa7732efc16d46359daa54d231b6d47e"
+      },
+      "invalidated_attempts": [],
+      "outputs": {
+        "survey_manifest": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_workflow_records_a_stage_0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json"
+      },
+      "result_identity": {
+        "handoff_fingerprint": "53d81f0a9282c4f6bbe9e3f2dc3cd4874a3cfb1fb4ca7388c35231ff58eaab1e",
+        "manifest_fingerprint": "f91ed13e9f9ec14bcbdffeba1aa504469ada3b37b42244a94cc7442252731ce8",
+        "project_context_fingerprint": "science-workflow-context",
+        "project_id": "science-workflow",
+        "result_sha256": "f91ed13e9f9ec14bcbdffeba1aa504469ada3b37b42244a94cc7442252731ce8",
+        "survey_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_workflow_records_a_stage_0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+        "survey_run_id": "closed-loop-survey-001"
+      },
+      "result_manifest_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_workflow_records_a_stage_0\\science-runs\\closed-loop\\survey\\attempt-001\\survey_manifest.json",
+      "started_at": "2026-09-03T14:37:34.004384Z",
+      "status": "COMPLETED"
+    }
+  },
+  "status": "FAILED"
+}

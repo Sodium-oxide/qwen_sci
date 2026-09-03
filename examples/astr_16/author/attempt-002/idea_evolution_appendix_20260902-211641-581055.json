@@ -1,0 +1,89 @@
+{
+  "authoring_constraints": {
+    "all_displayed_checkpoints_require_source_anchors": true,
+    "do_not_describe_checkpoints_as_temporal_iterations": true,
+    "do_not_invent_missing_iterations": true,
+    "do_not_present_idea_history_as_empirical_evidence": true,
+    "language": "en",
+    "temporal_order_is_unknown_without_iteration_id_timestamp_parent_or_auditable_diff": true
+  },
+  "checkpoints": [
+    {
+      "checkpoint_id": "checkpoint-1",
+      "checkpoint_type": "available_audit_snapshot",
+      "snapshot": {
+        "central_hypothesis": "Under the assumptions of causal equation of state bounds, relaxing the static equilibrium axioms of the dense matter equation of state to incorporate the rotational support from binary mass accretion formally unifies isolated spin-down and binary evolution, predicting a distinct mass-spin relation for massive neutron stars that exceed the static TOV limit.",
+        "claim_scope": "candidate_mechanism",
+        "direction_mode": "mechanism_replacement",
+        "mechanism_or_relation": "candidate_mechanism",
+        "target_gap_ids": [
+          "gap:sh1:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:d7f47926ecfd"
+        ],
+        "title": "Unifying Isolated Spin-Down and Binary Recycling in Massive Neutron Star Formation via Relaxed Equation of State Axioms"
+      },
+      "source_file": "idea_candidate.json",
+      "source_json_pointer": "/",
+      "source_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_candidate.json",
+      "temporal_order": "unknown"
+    },
+    {
+      "checkpoint_id": "checkpoint-2",
+      "checkpoint_type": "available_audit_snapshot",
+      "snapshot": {
+        "central_hypothesis": "Under the assumptions of causal equation of state bounds, relaxing the static equilibrium axioms of the dense matter equation of state to incorporate the rotational support from binary mass accretion formally unifies isolated spin-down and binary evolution, predicting a distinct mass-spin relation for massive neutron stars that exceed the static TOV limit.",
+        "claim_scope": "candidate_mechanism",
+        "direction_mode": "mechanism_replacement",
+        "mechanism_or_relation": "candidate_mechanism",
+        "target_gap_ids": [
+          "gap:sh1:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:d7f47926ecfd"
+        ],
+        "title": "Dynamical Inclination and Wind Braking in Isolated Pulsar Spin-Down: Deriving the Effective Braking Index and Validity Domain"
+      },
+      "source_file": "idea_portfolio.json",
+      "source_json_pointer": "/selected_primary_idea",
+      "source_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_portfolio.json",
+      "temporal_order": "unknown"
+    },
+    {
+      "checkpoint_id": "checkpoint-3",
+      "checkpoint_type": "available_audit_snapshot",
+      "snapshot": {
+        "direction_mode": "mechanism_replacement",
+        "hypothesis": {
+          "assumptions": [
+            "The static equilibrium axioms of the dense matter equation of state can be formally relaxed to permit mass accumulation beyond the static Tolman-Oppenheimer-Volkoff limit via rotational and thermal support without violating the causality bound.",
+            "Binary mass accretion and angular momentum transfer can be modeled as a continuous thermodynamic and mechanical perturbation that modifies the effective equilibrium conditions of the neutron star.",
+            "Companion ablation primarily affects the surface and magnetosphere, allowing the core mass-spin relation to remain governed by the relaxed effective equilibrium axioms."
+          ],
+          "boundary_or_failure_condition": "The claim fails if the relaxed static equilibrium axioms violate the causality bound, or if the predicted mass-spin relation contradicts the observed population of massive millisecond pulsars, or if standard rotational support models fully explain the observations without needing the relaxed axioms.",
+          "central_hypothesis": "Under the assumptions of causal equation of state bounds, relaxing the static equilibrium axioms of the dense matter equation of state to incorporate the rotational support from binary mass accretion formally unifies isolated spin-down and binary evolution, predicting a distinct mass-spin relation for massive neutron stars that exceed the static TOV limit.",
+          "claim_scope": "candidate_mechanism",
+          "discriminating_observation": "The derived mechanism_mass_spin_relation predicts that massive neutron stars (>2.0 M_sun) must exhibit millisecond spin periods indicative of the rotational support required by the relaxed axioms, distinguishing them from isolated magnetic-dipole spin-down pulsars.",
+          "evidence_basis": "Theoretical derivation based on relaxed static equilibrium equation of state axioms and binary accretion thermodynamics.",
+          "evidence_requirement": "A formal proof demonstrating that the relaxed static equilibrium axioms and derived mechanism_mass_spin_relation consistently produce the observed massive neutron star masses within the massive_neutron_star_validity_domain.",
+          "expected_mechanism": "The relaxed static equilibrium axioms mathematically allow for mass accumulation beyond the isolated static Tolman-Oppenheimer-Volkoff limit by formally incorporating the centrifugal support and thermal pressure from binary accretion, explaining the existence of massive pulsars through binary recycling.",
+          "intervention_or_transformation": "Replacing standard static equilibrium equation of state axioms with relaxed axioms that permit higher mass limits via the rotational and thermal support of binary mass accretion.",
+          "mechanism_or_relation": "candidate_mechanism",
+          "scientific_object": {
+            "description": "relaxed_static_equilibrium_equation_of_state_axioms"
+          }
+        },
+        "target_gap_ids": [
+          "gap:sh1:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:d7f47926ecfd"
+        ],
+        "title": "Unifying Isolated Spin-Down and Binary Recycling in Massive Neutron Star Formation via Relaxed Equation of State Axioms"
+      },
+      "source_file": "idea_result.json",
+      "source_json_pointer": "/directions/0",
+      "source_path": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\idea\\attempt-002\\idea_result.json",
+      "temporal_order": "unknown"
+    }
+  ],
+  "iterations": [],
+  "max_iterations": 3,
+  "missing_audit_sources": [],
+  "schema_version": "idea_evolution_appendix_v1",
+  "selected_direction_id": "mechanism_replacement",
+  "status": "CHECKPOINTS_AVAILABLE",
+  "temporal_order": "unknown"
+}

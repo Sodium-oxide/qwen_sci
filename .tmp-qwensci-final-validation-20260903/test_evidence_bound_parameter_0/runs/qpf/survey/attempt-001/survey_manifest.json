@@ -1,0 +1,62 @@
+{
+  "artifacts": {
+    "claim_traceability": {
+      "path": "survey_claim_traceability.json",
+      "required": true,
+      "sha256": "5f60162b71710b94337c5b4a583e80ef87afff8948802fccd03827392e367c0f"
+    },
+    "evidence_plan": {
+      "path": "survey_evidence_plan.json",
+      "required": true,
+      "sha256": "9def6966ca23f85cc451fb60ab5b64bbbfddc623067572332189518afd9b8277"
+    },
+    "gap_ledger": {
+      "path": "survey_gap_ledger.json",
+      "required": true,
+      "sha256": "6c4740fe87e7bf053fe8c39467b0211fefe814206b86a33bed41d112314ee8d8"
+    },
+    "gap_triage": {
+      "path": "survey_gap_triage.json",
+      "required": false,
+      "sha256": "4178845fa1a8aa20cb90bd862f2310d3d4b47d7f2d4f92424da2418c2514ca61"
+    },
+    "idea_handoff": {
+      "path": "survey_idea_handoff.json",
+      "required": true,
+      "sha256": "886759abfb3e80c7c6fea91f6e33465db174bce97c9048697368b34dc29780f4"
+    },
+    "project_context": {
+      "path": "project_context.json",
+      "required": true,
+      "sha256": "529add186cb63d750dfb42fe8bc154649469d56a1aa344c4fdbe3eb097859265"
+    },
+    "survey_json": {
+      "path": "survey.json",
+      "required": true,
+      "sha256": "db19d0af5013086001ace5f06e805e6c16a33540980229d675cc01fff29dd033"
+    },
+    "survey_markdown": {
+      "path": "survey.md",
+      "required": true,
+      "sha256": "4f4fff972ffb5a2b0bfb40e2a4ca8b54c6a67e1b88e3692c6cf487d71c067120"
+    },
+    "survey_outline": {
+      "path": "survey_outline.json",
+      "required": false,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    }
+  },
+  "base_dir": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_evidence_bound_parameter_0\\runs\\qpf\\survey\\attempt-001",
+  "completed_at": "2026-09-03T14:37:01Z",
+  "created_at": "2026-09-03T14:37:01Z",
+  "gap_ledger_schema_version": "survey_gap_ledger_v1",
+  "handoff_schema_version": "survey_idea_handoff_v1",
+  "manifest_fingerprint": "5648bd2dc7e21797e7fd7623c46fec60545963adfdd645cc66d5f12811383db2",
+  "project_context_fingerprint": "quantitative-parameter-context",
+  "project_id": "quantitative-parameter-project",
+  "schema_version": "survey_manifest_v1",
+  "status": "completed",
+  "survey_run_id": "survey-quantitative-parameter",
+  "topic": "evidence-bound decay",
+  "topic_fingerprint": "a1a6d0b78bb8bb761b77826699c874e33d9682f58d7a0aaf067629c2d7b3d425"
+}

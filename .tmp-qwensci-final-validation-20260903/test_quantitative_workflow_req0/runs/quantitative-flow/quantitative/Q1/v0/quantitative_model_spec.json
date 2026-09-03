@@ -1,0 +1,140 @@
+{
+  "abstract": "A one-state model for a bounded numerical simulation.",
+  "algorithm": {
+    "input": [
+      "k",
+      "x0"
+    ],
+    "output": [
+      "x(t)"
+    ],
+    "steps": [
+      "Use the fixed ODE adapter."
+    ]
+  },
+  "assumptions": [
+    {
+      "assumption_id": "A-001",
+      "effect_if_violated": "The rate law must be revised.",
+      "statement": "k remains constant."
+    }
+  ],
+  "boundary_conditions": [
+    "Initial-value condition."
+  ],
+  "equations": [
+    {
+      "equation_id": "Q1-EQ-001",
+      "latex": "\\frac{dx}{dt}=-kx",
+      "role": "GOVERNING_EQUATION",
+      "where_symbol_ids": [
+        "S-001",
+        "S-002"
+      ]
+    }
+  ],
+  "initial_conditions": [
+    "x(0)=1"
+  ],
+  "limitations": [
+    "The result is not empirical."
+  ],
+  "lineage": {
+    "created_from_artifact": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-20260903\\test_quantitative_workflow_req0\\runs\\quantitative-flow\\idea\\attempt-001\\quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "quantitative-workflow-context",
+    "project_id": "quantitative-workflow-project",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "quantitative-flow",
+    "selected_direction_id": "direction-1",
+    "survey_run_id": "survey-quantitative-flow",
+    "version": 0
+  },
+  "mathir": {
+    "derivatives": {
+      "x": {
+        "args": [
+          {
+            "args": [
+              {
+                "name": "k",
+                "op": "variable"
+              }
+            ],
+            "op": "neg"
+          },
+          {
+            "name": "x",
+            "op": "variable"
+          }
+        ],
+        "op": "mul"
+      }
+    },
+    "parameters": {
+      "k": 1.0
+    },
+    "schema_version": "mathir_v1",
+    "solver_options": {
+      "max_step": 0.1
+    },
+    "states": [
+      {
+        "id": "x",
+        "initial": 1.0
+      }
+    ],
+    "system_type": "ODE_IVP",
+    "time_span": [
+      0.0,
+      1.0
+    ]
+  },
+  "model_scope": "A local one-state approximation.",
+  "numerical_plan": {
+    "convergence_checks": [
+      "solver_converged"
+    ],
+    "discretization": "adaptive ODE",
+    "solver_family": "ODE_IVP"
+  },
+  "objective_and_constraints": [
+    "Compute the finite trajectory."
+  ],
+  "parameter_provenance": {
+    "entries": [],
+    "mode": "LEGACY_INLINE_ASSUMPTIONS",
+    "parameter_set_identity": ""
+  },
+  "parameterization": [
+    "k=1 in the baseline."
+  ],
+  "references": [],
+  "scenarios": [
+    "baseline"
+  ],
+  "schema_version": "ieee_math_model_v1",
+  "scientific_question": "Does x decay under positive k?",
+  "symbols": [
+    {
+      "dimension": "1",
+      "latex": "x",
+      "meaning": "state",
+      "role": "STATE_VARIABLE",
+      "symbol_id": "S-001",
+      "unit": "1"
+    },
+    {
+      "dimension": "T^{-1}",
+      "latex": "k",
+      "meaning": "rate",
+      "role": "PARAMETER",
+      "symbol_id": "S-002",
+      "unit": "s^{-1}"
+    }
+  ],
+  "title": "Bounded decay model",
+  "validation_plan": [
+    "Confirm solver convergence."
+  ]
+}

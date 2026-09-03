@@ -1,0 +1,17 @@
+{
+  "schema_version": "validation_report_v1",
+  "report_id": "validation_run_b0_offline_001",
+  "run_id": "run_b0_offline_001",
+  "candidate_model_hash": "sha256:05f10c349f0156d0561dd46850affd683791f108a938442536ac4e15e42f95a4",
+  "case_manifest_hash": "sha256:89ad908eed24a145afd76086ed1d5814166ee9e1c69c1553adb7819e59477ec6",
+  "lens_spec_hash": "sha256:6b60b992913ebe98b7f53919e9efc9b7d735c3cada4f260949e12d151904fae5",
+  "verdict": "PASS",
+  "checks": [
+    {"check_id": "fixture_v1_structure", "stage": "V1", "status": "PASS", "metrics": [{"name": "declared_equation_count", "value": 2, "unit": "count", "tolerance": 0, "status": "PASS"}]},
+    {"check_id": "fixture_v2_residual", "stage": "V2", "status": "PASS", "metrics": [{"name": "max_abs_residual", "value": 0.0, "unit": "pu", "tolerance": 1e-9, "status": "PASS"}]},
+    {"check_id": "fixture_v3_power_balance", "stage": "V3", "status": "PASS", "metrics": [{"name": "initial_power_imbalance", "value": 0.0, "unit": "pu", "tolerance": 1e-9, "status": "PASS"}]}
+  ],
+  "errors": [],
+  "created_at": "2026-08-25T12:00:00Z",
+  "validator_version": "role_a_fixture_stub_v1"
+}

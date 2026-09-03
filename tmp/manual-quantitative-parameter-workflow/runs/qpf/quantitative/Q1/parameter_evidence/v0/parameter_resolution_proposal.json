@@ -1,0 +1,56 @@
+{
+  "approval_status": "READY_FOR_APPROVAL",
+  "blueprint_identity": "961ad3abdc6403f1c652f7cc27033acb07b68417a45adefe00f5508a84871fdc",
+  "entries": [
+    {
+      "candidate_id": "PEC-Q1-k-001",
+      "conditions": {
+        "temperature_K": 300.0
+      },
+      "dimension": "T^-1",
+      "evidence_locator": {
+        "document_type": "TXT",
+        "page": null,
+        "quoted_text": "At 300 K, the measured decay coefficient was k = 2.0 s^-1.",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "mathir_symbol": "k",
+      "parameter_id": "k",
+      "provenance_status": "APPROVED_USER_INPUT",
+      "role": "MATERIAL_PROPERTY",
+      "selected_value": 2.0,
+      "selection_rationale": "The user-provided measured condition is the modeled baseline.",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": [
+          "user_provided"
+        ],
+        "document_id": "UPD-001",
+        "doi": "",
+        "title": "Controlled measurement note",
+        "year": 2025
+      },
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "s^-1"
+    }
+  ],
+  "lineage": {
+    "created_from_artifact": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\tmp\\manual-quantitative-parameter-workflow\\runs\\qpf\\idea\\attempt-001\\quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "quantitative-parameter-context",
+    "project_id": "quantitative-parameter-project",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "qpf",
+    "selected_direction_id": "direction-1",
+    "survey_run_id": "survey-quantitative-parameter",
+    "version": 0
+  },
+  "proposal_identity": "3b3efcf1884591f9905fc7132380bd7d41d19be5391388a626b055316f0c67bd",
+  "schema_version": "quantitative_parameter_resolution_proposal_v1",
+  "unresolved_parameter_ids": []
+}

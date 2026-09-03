@@ -1,0 +1,861 @@
+{
+  "artifact_fingerprint": "2f28fb09ff7d17f15c67fb172be98e30982a44eb4850cd11e5e34220b3c39065",
+  "contradictions": [],
+  "coverage": {
+    "contradiction_ids": [],
+    "coverage_matrix_version": "survey_gap_coverage_v1",
+    "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+    "project_id": "sci_astr_16_survey_007",
+    "rows": [
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:missing_assumption:assumption:systematic_uncertainties_in_inferred_pulsar_population_statistics_arise_from_heavy_dependence_on_assumed_galactic_electron_density_models_within_maximum_likelihood_bias_correction_frameworks_lacking_independent_calibration_against_large_scale_dispersion_measure_surveys:49b1f2c0ef1d"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "assumption"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:d7f47926ecfd"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "candidate_mechanism"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": true,
+        "status": "covered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "common_outcome"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:identifiability_gap:discriminating_observation:discriminating_observation:unknown:c6d8f0079d45"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "discriminating_observation"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:unmapped_gap_input_or_condition:input_or_condition:input_or_condition:unknown:e6c5be473a89"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "input_or_condition"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [
+          "gap_candidate:sh1:missing_boundary_condition:validity_domain:the_precise_quantitative_boundary_in_progenitor_compactness_and_iron_core_mass_that_demarcates_successful_pulsar_forming_core_collapse_supernovae_from_direct_black_hole_formation_remains_empirically_unconstrained_due_to_degeneracies_in_neutrino_transport_and_rotation_assumptions:680be86c4bf9"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:missing_boundary_condition:validity_domain:validity_domain:unknown:76ed96a480ce"
+        ],
+        "paper_ids": [],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "SH1",
+        "target_slot": "validity_domain"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:unmapped_gap_candidate:candidate:candidate:unknown:9e67de93c0d7"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "candidate"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:sh2:mechanism_explanation_gap:candidate_mechanism:the_relative_contributions_of_superfluid_coupling_magnetic_field_evolution_and_emission_geometry_shifts_to_observed_braking_index_deviations_n_3_cannot_be_disentangled_without_multi_messenger_constraints_on_internal_crust_dynamics_and_magnetospheric_topology:f331e1df54fc"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "SH2",
+        "target_slot": "candidate_mechanism"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:unmapped_gap_comparable_endpoint:comparable_endpoint:comparable_endpoint:unknown:d379a85ea157"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "comparable_endpoint"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:missing_comparator:comparator:comparator:unknown:fe7095486142"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "comparator"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:missing_comparator:comparison_condition:comparison_condition:unknown:d80863627d0e"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "comparison_condition"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:unmapped_gap_base_relation:base_relation:base_relation:unknown:9767646502dc"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "base_relation"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:unmapped_gap_boundary_variable:boundary_variable:boundary_variable:unknown:7bf226fbf96a"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "boundary_variable"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": true,
+        "status": "covered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "comparable_endpoint"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:missing_comparator:comparator:comparator:unknown:b9ab0cd7e325"
+        ],
+        "paper_ids": [],
+        "required": false,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "comparator"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:sh3:missing_boundary_condition:comparison_condition:the_critical_combination_of_companion_mass_pulsar_wind_velocity_and_x_ray_irradiation_flux_that_triggers_the_transition_from_stable_mass_transfer_to_intense_ablation_phases_lacks_empirical_validation_due_to_sparse_observational_data_on_outburst_dynamics:85906f11a27c"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "SH3",
+        "target_slot": "comparison_condition"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": true,
+        "status": "covered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "condition_a"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": true,
+        "status": "covered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "condition_b"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:missing_assumption:assumption:assumption:unknown:4d61d236467f"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "assumption"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": true,
+        "status": "covered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "falsification_or_counterexample"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:missing_assumption:formal_claim:formal_claim:unknown:38bb42347c6f"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "formal_claim"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:missing_boundary_condition:validity_domain:validity_domain:unknown:ae42dd2f7779"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "validity_domain"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": true,
+        "status": "covered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "direct_observation"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": true,
+        "status": "covered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "phenomenon"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": true,
+        "status": "covered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "target_condition"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": true,
+        "status": "covered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "target_object"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh6:unmapped_gap_alternative_design:alternative_design:alternative_design:unknown:2420a1249bc6"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "alternative_design"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": true,
+        "status": "covered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "current_method_or_design"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh6:unmapped_gap_evaluation_criterion:evaluation_criterion:evaluation_criterion:unknown:39cd1a146e92"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "evaluation_criterion"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [
+          "gap_candidate:sh6:unmapped_gap_failure_or_bias:failure_or_bias:population_synthesis_frameworks_exhibit_confirmation_bias_by_tuning_simulation_parameters_to_match_existing_small_discovery_samples_rather_than_enforcing_independent_physical_constraints_limiting_predictive_validity_for_new_populations:613b27dc109a"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh6:unmapped_gap_failure_or_bias:failure_or_bias:failure_or_bias:unknown:e09e7a87f2eb"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "candidate_pending",
+        "subhypothesis_id": "SH6",
+        "target_slot": "failure_or_bias"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh6:missing_boundary_condition:validity_domain:validity_domain:unknown:931e784702a7"
+        ],
+        "paper_ids": [],
+        "required": false,
+        "status": "uncovered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "validity_domain"
+      }
+    ],
+    "schema_version": "survey_gap_coverage_v1",
+    "status_counts": {
+      "candidate_pending": 5,
+      "covered": 10,
+      "uncovered": 16
+    },
+    "survey_run_id": "astr_16-survey-007"
+  },
+  "decisions": [
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_assumption_missing_assumption_gap_candidate_global_missing_assumption_assumption_systematic_uncertainties_in_inferred_pulsar_population_statistics_arise_from_heavy_dependence_on_assumed_galactic_electron_density_models_within_maximum_likelihood_bias_correction_frameworks_lacking_independent_calibration_against_large_scale_dispersion_measure_surveys_49b1f2c0ef1d_0b2ef58e24d1:42b23dbba17c",
+      "candidate_id": "gap_candidate:global:missing_assumption:assumption:systematic_uncertainties_in_inferred_pulsar_population_statistics_arise_from_heavy_dependence_on_assumed_galactic_electron_density_models_within_maximum_likelihood_bias_correction_frameworks_lacking_independent_calibration_against_large_scale_dispersion_measure_surveys:49b1f2c0ef1d",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:assumption:missing_assumption:gap_candidate_global_missing_assumption_assumption_systematic_uncertainties_in_inferred_pulsar_population_statistics_arise_from_heavy_dependence_on_assumed_galactic_electron_density_models_within_maximum_likelihood_bias_correction_frameworks_lacking_independent_calibration_against_large_scale_dispersion_measure_surveys_49b1f2c0ef1d:0b2ef58e24d1",
+      "reason": "Candidate is directly grounded in survey.md Section 1. The rationale explicitly ties the missing assumption to stated limitations in maximum-likelihood bias correction frameworks. No contradictions detected; meets source-grounding criteria."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_sh1_validity_domain_missing_boundary_condition_gap_candidate_sh1_missing_boundary_condition_validity_domain_the_precise_quantitative_boundary_in_progenitor_compactness_and_iron_core_mass_that_demarcates_successful_pulsar_forming_core_collapse_supernovae_from_direct_black_hole_formation_remains_empirically_unconstrained_due_to_degeneracies_in_neutrino_transport_and_rotation_assumptions_680be86c4bf9_a259319a2794:9547c1cd9f07",
+      "candidate_id": "gap_candidate:sh1:missing_boundary_condition:validity_domain:the_precise_quantitative_boundary_in_progenitor_compactness_and_iron_core_mass_that_demarcates_successful_pulsar_forming_core_collapse_supernovae_from_direct_black_hole_formation_remains_empirically_unconstrained_due_to_degeneracies_in_neutrino_transport_and_rotation_assumptions:680be86c4bf9",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:sh1:validity_domain:missing_boundary_condition:gap_candidate_sh1_missing_boundary_condition_validity_domain_the_precise_quantitative_boundary_in_progenitor_compactness_and_iron_core_mass_that_demarcates_successful_pulsar_forming_core_collapse_supernovae_from_direct_black_hole_formation_remains_empirically_unconstrained_due_to_degeneracies_in_neutrino_transport_and_rotation_assumptions_680be86c4bf9:a259319a2794",
+      "reason": "Candidate is directly grounded in survey.md Section 2. The rationale accurately reflects the text's acknowledgment of elusive quantitative boundaries and unverified neutrino/rotation assumptions. No contradictions detected; meets source-grounding criteria."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_sh2_candidate_mechanism_mechanism_explanation_gap_gap_candidate_sh2_mechanism_explanation_gap_candidate_mechanism_the_relative_contributions_of_superfluid_coupling_magnetic_field_evolution_and_emission_geometry_shifts_to_observed_braking_index_deviations_n_3_cannot_be_disentangled_without_multi_messenger_constraints_on_internal_crust_dynamics_and_magnetospheric_topology_f331e1df54fc_c27e2a3c1703:1592f08739bd",
+      "candidate_id": "gap_candidate:sh2:mechanism_explanation_gap:candidate_mechanism:the_relative_contributions_of_superfluid_coupling_magnetic_field_evolution_and_emission_geometry_shifts_to_observed_braking_index_deviations_n_3_cannot_be_disentangled_without_multi_messenger_constraints_on_internal_crust_dynamics_and_magnetospheric_topology:f331e1df54fc",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:sh2:candidate_mechanism:mechanism_explanation_gap:gap_candidate_sh2_mechanism_explanation_gap_candidate_mechanism_the_relative_contributions_of_superfluid_coupling_magnetic_field_evolution_and_emission_geometry_shifts_to_observed_braking_index_deviations_n_3_cannot_be_disentangled_without_multi_messenger_constraints_on_internal_crust_dynamics_and_magnetospheric_topology_f331e1df54fc:c27e2a3c1703",
+      "reason": "Candidate is directly grounded in survey.md Section 1. The rationale correctly identifies the unresolved mechanistic ambiguity regarding braking index deviations (n≠3) as described in the source. No contradictions detected; meets source-grounding criteria."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_sh3_comparison_condition_missing_boundary_condition_gap_candidate_sh3_missing_boundary_condition_comparison_condition_the_critical_combination_of_companion_mass_pulsar_wind_velocity_and_x_ray_irradiation_flux_that_triggers_the_transition_from_stable_mass_transfer_to_intense_ablation_phases_lacks_empirical_validation_due_to_sparse_observational_data_on_outburst_dynamics_85906f11a27c_f89ac1b3beef:e33ac2817d66",
+      "candidate_id": "gap_candidate:sh3:missing_boundary_condition:comparison_condition:the_critical_combination_of_companion_mass_pulsar_wind_velocity_and_x_ray_irradiation_flux_that_triggers_the_transition_from_stable_mass_transfer_to_intense_ablation_phases_lacks_empirical_validation_due_to_sparse_observational_data_on_outburst_dynamics:85906f11a27c",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:sh3:comparison_condition:missing_boundary_condition:gap_candidate_sh3_missing_boundary_condition_comparison_condition_the_critical_combination_of_companion_mass_pulsar_wind_velocity_and_x_ray_irradiation_flux_that_triggers_the_transition_from_stable_mass_transfer_to_intense_ablation_phases_lacks_empirical_validation_due_to_sparse_observational_data_on_outburst_dynamics_85906f11a27c:f89ac1b3beef",
+      "reason": "Candidate is directly grounded in survey.md Section 1. The rationale aligns with the text's identification of sparse observational data and unverified theoretical triggers for the recycling-to-ablation transition. No contradictions detected; meets source-grounding criteria."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_sh6_failure_or_bias_unmapped_gap_failure_or_bias_gap_candidate_sh6_unmapped_gap_failure_or_bias_failure_or_bias_population_synthesis_frameworks_exhibit_confirmation_bias_by_tuning_simulation_parameters_to_match_existing_small_discovery_samples_rather_than_enforcing_independent_physical_constraints_limiting_predictive_validity_for_new_populations_613b27dc109a_451de5fbfcc6:c3a85cd28e7e",
+      "candidate_id": "gap_candidate:sh6:unmapped_gap_failure_or_bias:failure_or_bias:population_synthesis_frameworks_exhibit_confirmation_bias_by_tuning_simulation_parameters_to_match_existing_small_discovery_samples_rather_than_enforcing_independent_physical_constraints_limiting_predictive_validity_for_new_populations:613b27dc109a",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:sh6:failure_or_bias:unmapped_gap_failure_or_bias:gap_candidate_sh6_unmapped_gap_failure_or_bias_failure_or_bias_population_synthesis_frameworks_exhibit_confirmation_bias_by_tuning_simulation_parameters_to_match_existing_small_discovery_samples_rather_than_enforcing_independent_physical_constraints_limiting_predictive_validity_for_new_populations_613b27dc109a:451de5fbfcc6",
+      "reason": "Candidate is directly grounded in survey.md Section 1. The rationale explicitly captures the text's critique of confirmation bias and circular parameter tuning in population synthesis. No contradictions detected; meets source-grounding criteria."
+    }
+  ],
+  "schema_version": "survey_gap_adjudication_v1",
+  "synthesis": {
+    "candidates": [
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "missing_assumption"
+        ],
+        "candidate_fingerprint": "dfc8f3a5bbbfe5dda0bd66e0b3061663af10d6c325fb83f2051e1da564a9eea6",
+        "candidate_id": "gap_candidate:global:missing_assumption:assumption:systematic_uncertainties_in_inferred_pulsar_population_statistics_arise_from_heavy_dependence_on_assumed_galactic_electron_density_models_within_maximum_likelihood_bias_correction_frameworks_lacking_independent_calibration_against_large_scale_dispersion_measure_surveys:49b1f2c0ef1d",
+        "candidate_ids": [
+          "gap_candidate:global:missing_assumption:assumption:systematic_uncertainties_in_inferred_pulsar_population_statistics_arise_from_heavy_dependence_on_assumed_galactic_electron_density_models_within_maximum_likelihood_bias_correction_frameworks_lacking_independent_calibration_against_large_scale_dispersion_measure_surveys:49b1f2c0ef1d"
+        ],
+        "claim_scope": "population synthesis and survey completeness",
+        "confidence": 0.9,
+        "evidence_role": "assumption",
+        "evidence_summary": "",
+        "extraction_method": "survey_prose_llm",
+        "gap_kind": "missing_assumption",
+        "group_id": "gap_group:global:assumption:missing_assumption:gap_candidate_global_missing_assumption_assumption_systematic_uncertainties_in_inferred_pulsar_population_statistics_arise_from_heavy_dependence_on_assumed_galactic_electron_density_models_within_maximum_likelihood_bias_correction_frameworks_lacking_independent_calibration_against_large_scale_dispersion_measure_surveys_49b1f2c0ef1d:0b2ef58e24d1",
+        "paper_ids": [],
+        "rationale": "The text points out that survey completeness corrections 'depend heavily on assumed Galactic electron density models, which introduce systematic uncertainties,' highlighting an unvalidated foundational assumption that bounds the validity of population-level claims.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/1",
+            "section": "1. Introduction"
+          }
+        ],
+        "statement": "Systematic uncertainties in inferred pulsar population statistics arise from heavy dependence on assumed Galactic electron density models within maximum-likelihood bias correction frameworks, lacking independent calibration against large-scale dispersion measure surveys.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "speculative",
+        "target_slot": "assumption"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "missing_boundary_condition"
+        ],
+        "candidate_fingerprint": "e23862fe094d324246e44aff3212fe36214a9b650ea81fd6020657297f15f82a",
+        "candidate_id": "gap_candidate:sh1:missing_boundary_condition:validity_domain:the_precise_quantitative_boundary_in_progenitor_compactness_and_iron_core_mass_that_demarcates_successful_pulsar_forming_core_collapse_supernovae_from_direct_black_hole_formation_remains_empirically_unconstrained_due_to_degeneracies_in_neutrino_transport_and_rotation_assumptions:680be86c4bf9",
+        "candidate_ids": [
+          "gap_candidate:sh1:missing_boundary_condition:validity_domain:the_precise_quantitative_boundary_in_progenitor_compactness_and_iron_core_mass_that_demarcates_successful_pulsar_forming_core_collapse_supernovae_from_direct_black_hole_formation_remains_empirically_unconstrained_due_to_degeneracies_in_neutrino_transport_and_rotation_assumptions:680be86c4bf9"
+        ],
+        "claim_scope": "progenitor collapse outcomes",
+        "confidence": 0.85,
+        "evidence_role": "discriminating_observation",
+        "evidence_summary": "",
+        "extraction_method": "survey_prose_llm",
+        "gap_kind": "missing_boundary_condition",
+        "group_id": "gap_group:sh1:validity_domain:missing_boundary_condition:gap_candidate_sh1_missing_boundary_condition_validity_domain_the_precise_quantitative_boundary_in_progenitor_compactness_and_iron_core_mass_that_demarcates_successful_pulsar_forming_core_collapse_supernovae_from_direct_black_hole_formation_remains_empirically_unconstrained_due_to_degeneracies_in_neutrino_transport_and_rotation_assumptions_680be86c4bf9:a259319a2794",
+        "paper_ids": [],
+        "rationale": "The survey text explicitly notes that 'quantitative boundaries remain elusive' and highlights that distinguishing collapse outcomes relies on subtle thresholds dependent on unverified assumptions about neutrino transport and rotation, creating a bounded unresolved validity condition.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/2",
+            "section": "2. Formation and Progenitor Evolution"
+          }
+        ],
+        "statement": "The precise quantitative boundary in progenitor compactness and iron-core mass that demarcates successful pulsar-forming core-collapse supernovae from direct black hole formation remains empirically unconstrained due to degeneracies in neutrino transport and rotation assumptions.",
+        "status": "candidate",
+        "subhypothesis_id": "SH1",
+        "support_level": "speculative",
+        "target_slot": "validity_domain"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "mechanism_explanation_gap"
+        ],
+        "candidate_fingerprint": "9501761a7a16764727c6c86366bdd8ef8c1c0ce30d414890c3bf9d2b9454abe6",
+        "candidate_id": "gap_candidate:sh2:mechanism_explanation_gap:candidate_mechanism:the_relative_contributions_of_superfluid_coupling_magnetic_field_evolution_and_emission_geometry_shifts_to_observed_braking_index_deviations_n_3_cannot_be_disentangled_without_multi_messenger_constraints_on_internal_crust_dynamics_and_magnetospheric_topology:f331e1df54fc",
+        "candidate_ids": [
+          "gap_candidate:sh2:mechanism_explanation_gap:candidate_mechanism:the_relative_contributions_of_superfluid_coupling_magnetic_field_evolution_and_emission_geometry_shifts_to_observed_braking_index_deviations_n_3_cannot_be_disentangled_without_multi_messenger_constraints_on_internal_crust_dynamics_and_magnetospheric_topology:f331e1df54fc"
+        ],
+        "claim_scope": "isolated pulsar spin-down trajectories",
+        "confidence": 0.8,
+        "evidence_role": "candidate_mechanism",
+        "evidence_summary": "",
+        "extraction_method": "survey_prose_llm",
+        "gap_kind": "mechanism_explanation_gap",
+        "group_id": "gap_group:sh2:candidate_mechanism:mechanism_explanation_gap:gap_candidate_sh2_mechanism_explanation_gap_candidate_mechanism_the_relative_contributions_of_superfluid_coupling_magnetic_field_evolution_and_emission_geometry_shifts_to_observed_braking_index_deviations_n_3_cannot_be_disentangled_without_multi_messenger_constraints_on_internal_crust_dynamics_and_magnetospheric_topology_f331e1df54fc:c27e2a3c1703",
+        "paper_ids": [],
+        "rationale": "The text states that deviations from n=3 indicate multiple competing physical causes but provides no framework to isolate which mechanism dominates across different pulsar populations, leaving a bounded unresolved mechanistic relation.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/1",
+            "section": "1. Introduction"
+          }
+        ],
+        "statement": "The relative contributions of superfluid coupling, magnetic field evolution, and emission geometry shifts to observed braking index deviations (n ≠ 3) cannot be disentangled without multi-messenger constraints on internal crust dynamics and magnetospheric topology.",
+        "status": "candidate",
+        "subhypothesis_id": "SH2",
+        "support_level": "speculative",
+        "target_slot": "candidate_mechanism"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "missing_boundary_condition"
+        ],
+        "candidate_fingerprint": "0b31ef0be4b554aff40cac40db29ab0e952d78a92b81eeae76d4e314b0c4e479",
+        "candidate_id": "gap_candidate:sh3:missing_boundary_condition:comparison_condition:the_critical_combination_of_companion_mass_pulsar_wind_velocity_and_x_ray_irradiation_flux_that_triggers_the_transition_from_stable_mass_transfer_to_intense_ablation_phases_lacks_empirical_validation_due_to_sparse_observational_data_on_outburst_dynamics:85906f11a27c",
+        "candidate_ids": [
+          "gap_candidate:sh3:missing_boundary_condition:comparison_condition:the_critical_combination_of_companion_mass_pulsar_wind_velocity_and_x_ray_irradiation_flux_that_triggers_the_transition_from_stable_mass_transfer_to_intense_ablation_phases_lacks_empirical_validation_due_to_sparse_observational_data_on_outburst_dynamics:85906f11a27c"
+        ],
+        "claim_scope": "binary recycling to ablation transition",
+        "confidence": 0.75,
+        "evidence_role": "input_or_condition",
+        "evidence_summary": "",
+        "extraction_method": "survey_prose_llm",
+        "gap_kind": "missing_boundary_condition",
+        "group_id": "gap_group:sh3:comparison_condition:missing_boundary_condition:gap_candidate_sh3_missing_boundary_condition_comparison_condition_the_critical_combination_of_companion_mass_pulsar_wind_velocity_and_x_ray_irradiation_flux_that_triggers_the_transition_from_stable_mass_transfer_to_intense_ablation_phases_lacks_empirical_validation_due_to_sparse_observational_data_on_outburst_dynamics_85906f11a27c:f89ac1b3beef",
+        "paper_ids": [],
+        "rationale": "The survey explicitly identifies that defining quantitative thresholds for the recycling-to-ablation transition is challenging and notes that theoretical triggers lack sufficient observational verification, establishing a clear measurement/comparator gap.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/1",
+            "section": "1. Introduction"
+          }
+        ],
+        "statement": "The critical combination of companion mass, pulsar wind velocity, and X-ray irradiation flux that triggers the transition from stable mass transfer to intense ablation phases lacks empirical validation due to sparse observational data on outburst dynamics.",
+        "status": "candidate",
+        "subhypothesis_id": "SH3",
+        "support_level": "speculative",
+        "target_slot": "comparison_condition"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "unmapped_gap:failure_or_bias"
+        ],
+        "candidate_fingerprint": "dcddaaf778d6c6823662164cef0dea175ec87c8d5f4c20c9f4d59b1fba3094b1",
+        "candidate_id": "gap_candidate:sh6:unmapped_gap_failure_or_bias:failure_or_bias:population_synthesis_frameworks_exhibit_confirmation_bias_by_tuning_simulation_parameters_to_match_existing_small_discovery_samples_rather_than_enforcing_independent_physical_constraints_limiting_predictive_validity_for_new_populations:613b27dc109a",
+        "candidate_ids": [
+          "gap_candidate:sh6:unmapped_gap_failure_or_bias:failure_or_bias:population_synthesis_frameworks_exhibit_confirmation_bias_by_tuning_simulation_parameters_to_match_existing_small_discovery_samples_rather_than_enforcing_independent_physical_constraints_limiting_predictive_validity_for_new_populations:613b27dc109a"
+        ],
+        "claim_scope": "computational model validation",
+        "confidence": 0.85,
+        "evidence_role": "failure_or_bias",
+        "evidence_summary": "",
+        "extraction_method": "survey_prose_llm",
+        "gap_kind": "unmapped_gap:failure_or_bias",
+        "group_id": "gap_group:sh6:failure_or_bias:unmapped_gap_failure_or_bias:gap_candidate_sh6_unmapped_gap_failure_or_bias_failure_or_bias_population_synthesis_frameworks_exhibit_confirmation_bias_by_tuning_simulation_parameters_to_match_existing_small_discovery_samples_rather_than_enforcing_independent_physical_constraints_limiting_predictive_validity_for_new_populations_613b27dc109a:451de5fbfcc6",
+        "paper_ids": [],
+        "rationale": "The survey directly identifies 'confirmation bias' and 'circular reasoning' in current population synthesis designs where parameters are fitted to small samples instead of independent physics, constituting a bounded methodological failure opportunity.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/1",
+            "section": "1. Introduction"
+          }
+        ],
+        "statement": "Population synthesis frameworks exhibit confirmation bias by tuning simulation parameters to match existing small discovery samples rather than enforcing independent physical constraints, limiting predictive validity for new populations.",
+        "status": "candidate",
+        "subhypothesis_id": "SH6",
+        "support_level": "speculative",
+        "target_slot": "failure_or_bias"
+      }
+    ],
+    "groups": [
+      {
+        "candidate_ids": [
+          "gap_candidate:global:missing_assumption:assumption:systematic_uncertainties_in_inferred_pulsar_population_statistics_arise_from_heavy_dependence_on_assumed_galactic_electron_density_models_within_maximum_likelihood_bias_correction_frameworks_lacking_independent_calibration_against_large_scale_dispersion_measure_surveys:49b1f2c0ef1d"
+        ],
+        "group_id": "gap_group:global:assumption:missing_assumption:gap_candidate_global_missing_assumption_assumption_systematic_uncertainties_in_inferred_pulsar_population_statistics_arise_from_heavy_dependence_on_assumed_galactic_electron_density_models_within_maximum_likelihood_bias_correction_frameworks_lacking_independent_calibration_against_large_scale_dispersion_measure_surveys_49b1f2c0ef1d:0b2ef58e24d1",
+        "paper_evidence": [],
+        "paper_ids": [],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "missing_assumption"
+          ],
+          "candidate_fingerprint": "dfc8f3a5bbbfe5dda0bd66e0b3061663af10d6c325fb83f2051e1da564a9eea6",
+          "candidate_id": "gap_candidate:global:missing_assumption:assumption:systematic_uncertainties_in_inferred_pulsar_population_statistics_arise_from_heavy_dependence_on_assumed_galactic_electron_density_models_within_maximum_likelihood_bias_correction_frameworks_lacking_independent_calibration_against_large_scale_dispersion_measure_surveys:49b1f2c0ef1d",
+          "candidate_ids": [
+            "gap_candidate:global:missing_assumption:assumption:systematic_uncertainties_in_inferred_pulsar_population_statistics_arise_from_heavy_dependence_on_assumed_galactic_electron_density_models_within_maximum_likelihood_bias_correction_frameworks_lacking_independent_calibration_against_large_scale_dispersion_measure_surveys:49b1f2c0ef1d"
+          ],
+          "claim_scope": "population synthesis and survey completeness",
+          "confidence": 0.9,
+          "evidence_role": "assumption",
+          "evidence_summary": "",
+          "extraction_method": "survey_prose_llm",
+          "gap_kind": "missing_assumption",
+          "group_id": "gap_group:global:assumption:missing_assumption:gap_candidate_global_missing_assumption_assumption_systematic_uncertainties_in_inferred_pulsar_population_statistics_arise_from_heavy_dependence_on_assumed_galactic_electron_density_models_within_maximum_likelihood_bias_correction_frameworks_lacking_independent_calibration_against_large_scale_dispersion_measure_surveys_49b1f2c0ef1d:0b2ef58e24d1",
+          "paper_ids": [],
+          "rationale": "The text points out that survey completeness corrections 'depend heavily on assumed Galactic electron density models, which introduce systematic uncertainties,' highlighting an unvalidated foundational assumption that bounds the validity of population-level claims.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "survey.md",
+              "json_pointer": "/sections/1",
+              "section": "1. Introduction"
+            }
+          ],
+          "statement": "Systematic uncertainties in inferred pulsar population statistics arise from heavy dependence on assumed Galactic electron density models within maximum-likelihood bias correction frameworks, lacking independent calibration against large-scale dispersion measure surveys.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "speculative",
+          "target_slot": "assumption"
+        },
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/1",
+            "section": "1. Introduction"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:sh1:missing_boundary_condition:validity_domain:the_precise_quantitative_boundary_in_progenitor_compactness_and_iron_core_mass_that_demarcates_successful_pulsar_forming_core_collapse_supernovae_from_direct_black_hole_formation_remains_empirically_unconstrained_due_to_degeneracies_in_neutrino_transport_and_rotation_assumptions:680be86c4bf9"
+        ],
+        "group_id": "gap_group:sh1:validity_domain:missing_boundary_condition:gap_candidate_sh1_missing_boundary_condition_validity_domain_the_precise_quantitative_boundary_in_progenitor_compactness_and_iron_core_mass_that_demarcates_successful_pulsar_forming_core_collapse_supernovae_from_direct_black_hole_formation_remains_empirically_unconstrained_due_to_degeneracies_in_neutrino_transport_and_rotation_assumptions_680be86c4bf9:a259319a2794",
+        "paper_evidence": [],
+        "paper_ids": [],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "missing_boundary_condition"
+          ],
+          "candidate_fingerprint": "e23862fe094d324246e44aff3212fe36214a9b650ea81fd6020657297f15f82a",
+          "candidate_id": "gap_candidate:sh1:missing_boundary_condition:validity_domain:the_precise_quantitative_boundary_in_progenitor_compactness_and_iron_core_mass_that_demarcates_successful_pulsar_forming_core_collapse_supernovae_from_direct_black_hole_formation_remains_empirically_unconstrained_due_to_degeneracies_in_neutrino_transport_and_rotation_assumptions:680be86c4bf9",
+          "candidate_ids": [
+            "gap_candidate:sh1:missing_boundary_condition:validity_domain:the_precise_quantitative_boundary_in_progenitor_compactness_and_iron_core_mass_that_demarcates_successful_pulsar_forming_core_collapse_supernovae_from_direct_black_hole_formation_remains_empirically_unconstrained_due_to_degeneracies_in_neutrino_transport_and_rotation_assumptions:680be86c4bf9"
+          ],
+          "claim_scope": "progenitor collapse outcomes",
+          "confidence": 0.85,
+          "evidence_role": "discriminating_observation",
+          "evidence_summary": "",
+          "extraction_method": "survey_prose_llm",
+          "gap_kind": "missing_boundary_condition",
+          "group_id": "gap_group:sh1:validity_domain:missing_boundary_condition:gap_candidate_sh1_missing_boundary_condition_validity_domain_the_precise_quantitative_boundary_in_progenitor_compactness_and_iron_core_mass_that_demarcates_successful_pulsar_forming_core_collapse_supernovae_from_direct_black_hole_formation_remains_empirically_unconstrained_due_to_degeneracies_in_neutrino_transport_and_rotation_assumptions_680be86c4bf9:a259319a2794",
+          "paper_ids": [],
+          "rationale": "The survey text explicitly notes that 'quantitative boundaries remain elusive' and highlights that distinguishing collapse outcomes relies on subtle thresholds dependent on unverified assumptions about neutrino transport and rotation, creating a bounded unresolved validity condition.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "survey.md",
+              "json_pointer": "/sections/2",
+              "section": "2. Formation and Progenitor Evolution"
+            }
+          ],
+          "statement": "The precise quantitative boundary in progenitor compactness and iron-core mass that demarcates successful pulsar-forming core-collapse supernovae from direct black hole formation remains empirically unconstrained due to degeneracies in neutrino transport and rotation assumptions.",
+          "status": "candidate",
+          "subhypothesis_id": "SH1",
+          "support_level": "speculative",
+          "target_slot": "validity_domain"
+        },
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/2",
+            "section": "2. Formation and Progenitor Evolution"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:sh2:mechanism_explanation_gap:candidate_mechanism:the_relative_contributions_of_superfluid_coupling_magnetic_field_evolution_and_emission_geometry_shifts_to_observed_braking_index_deviations_n_3_cannot_be_disentangled_without_multi_messenger_constraints_on_internal_crust_dynamics_and_magnetospheric_topology:f331e1df54fc"
+        ],
+        "group_id": "gap_group:sh2:candidate_mechanism:mechanism_explanation_gap:gap_candidate_sh2_mechanism_explanation_gap_candidate_mechanism_the_relative_contributions_of_superfluid_coupling_magnetic_field_evolution_and_emission_geometry_shifts_to_observed_braking_index_deviations_n_3_cannot_be_disentangled_without_multi_messenger_constraints_on_internal_crust_dynamics_and_magnetospheric_topology_f331e1df54fc:c27e2a3c1703",
+        "paper_evidence": [],
+        "paper_ids": [],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "mechanism_explanation_gap"
+          ],
+          "candidate_fingerprint": "9501761a7a16764727c6c86366bdd8ef8c1c0ce30d414890c3bf9d2b9454abe6",
+          "candidate_id": "gap_candidate:sh2:mechanism_explanation_gap:candidate_mechanism:the_relative_contributions_of_superfluid_coupling_magnetic_field_evolution_and_emission_geometry_shifts_to_observed_braking_index_deviations_n_3_cannot_be_disentangled_without_multi_messenger_constraints_on_internal_crust_dynamics_and_magnetospheric_topology:f331e1df54fc",
+          "candidate_ids": [
+            "gap_candidate:sh2:mechanism_explanation_gap:candidate_mechanism:the_relative_contributions_of_superfluid_coupling_magnetic_field_evolution_and_emission_geometry_shifts_to_observed_braking_index_deviations_n_3_cannot_be_disentangled_without_multi_messenger_constraints_on_internal_crust_dynamics_and_magnetospheric_topology:f331e1df54fc"
+          ],
+          "claim_scope": "isolated pulsar spin-down trajectories",
+          "confidence": 0.8,
+          "evidence_role": "candidate_mechanism",
+          "evidence_summary": "",
+          "extraction_method": "survey_prose_llm",
+          "gap_kind": "mechanism_explanation_gap",
+          "group_id": "gap_group:sh2:candidate_mechanism:mechanism_explanation_gap:gap_candidate_sh2_mechanism_explanation_gap_candidate_mechanism_the_relative_contributions_of_superfluid_coupling_magnetic_field_evolution_and_emission_geometry_shifts_to_observed_braking_index_deviations_n_3_cannot_be_disentangled_without_multi_messenger_constraints_on_internal_crust_dynamics_and_magnetospheric_topology_f331e1df54fc:c27e2a3c1703",
+          "paper_ids": [],
+          "rationale": "The text states that deviations from n=3 indicate multiple competing physical causes but provides no framework to isolate which mechanism dominates across different pulsar populations, leaving a bounded unresolved mechanistic relation.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "survey.md",
+              "json_pointer": "/sections/1",
+              "section": "1. Introduction"
+            }
+          ],
+          "statement": "The relative contributions of superfluid coupling, magnetic field evolution, and emission geometry shifts to observed braking index deviations (n ≠ 3) cannot be disentangled without multi-messenger constraints on internal crust dynamics and magnetospheric topology.",
+          "status": "candidate",
+          "subhypothesis_id": "SH2",
+          "support_level": "speculative",
+          "target_slot": "candidate_mechanism"
+        },
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/1",
+            "section": "1. Introduction"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:sh3:missing_boundary_condition:comparison_condition:the_critical_combination_of_companion_mass_pulsar_wind_velocity_and_x_ray_irradiation_flux_that_triggers_the_transition_from_stable_mass_transfer_to_intense_ablation_phases_lacks_empirical_validation_due_to_sparse_observational_data_on_outburst_dynamics:85906f11a27c"
+        ],
+        "group_id": "gap_group:sh3:comparison_condition:missing_boundary_condition:gap_candidate_sh3_missing_boundary_condition_comparison_condition_the_critical_combination_of_companion_mass_pulsar_wind_velocity_and_x_ray_irradiation_flux_that_triggers_the_transition_from_stable_mass_transfer_to_intense_ablation_phases_lacks_empirical_validation_due_to_sparse_observational_data_on_outburst_dynamics_85906f11a27c:f89ac1b3beef",
+        "paper_evidence": [],
+        "paper_ids": [],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "missing_boundary_condition"
+          ],
+          "candidate_fingerprint": "0b31ef0be4b554aff40cac40db29ab0e952d78a92b81eeae76d4e314b0c4e479",
+          "candidate_id": "gap_candidate:sh3:missing_boundary_condition:comparison_condition:the_critical_combination_of_companion_mass_pulsar_wind_velocity_and_x_ray_irradiation_flux_that_triggers_the_transition_from_stable_mass_transfer_to_intense_ablation_phases_lacks_empirical_validation_due_to_sparse_observational_data_on_outburst_dynamics:85906f11a27c",
+          "candidate_ids": [
+            "gap_candidate:sh3:missing_boundary_condition:comparison_condition:the_critical_combination_of_companion_mass_pulsar_wind_velocity_and_x_ray_irradiation_flux_that_triggers_the_transition_from_stable_mass_transfer_to_intense_ablation_phases_lacks_empirical_validation_due_to_sparse_observational_data_on_outburst_dynamics:85906f11a27c"
+          ],
+          "claim_scope": "binary recycling to ablation transition",
+          "confidence": 0.75,
+          "evidence_role": "input_or_condition",
+          "evidence_summary": "",
+          "extraction_method": "survey_prose_llm",
+          "gap_kind": "missing_boundary_condition",
+          "group_id": "gap_group:sh3:comparison_condition:missing_boundary_condition:gap_candidate_sh3_missing_boundary_condition_comparison_condition_the_critical_combination_of_companion_mass_pulsar_wind_velocity_and_x_ray_irradiation_flux_that_triggers_the_transition_from_stable_mass_transfer_to_intense_ablation_phases_lacks_empirical_validation_due_to_sparse_observational_data_on_outburst_dynamics_85906f11a27c:f89ac1b3beef",
+          "paper_ids": [],
+          "rationale": "The survey explicitly identifies that defining quantitative thresholds for the recycling-to-ablation transition is challenging and notes that theoretical triggers lack sufficient observational verification, establishing a clear measurement/comparator gap.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "survey.md",
+              "json_pointer": "/sections/1",
+              "section": "1. Introduction"
+            }
+          ],
+          "statement": "The critical combination of companion mass, pulsar wind velocity, and X-ray irradiation flux that triggers the transition from stable mass transfer to intense ablation phases lacks empirical validation due to sparse observational data on outburst dynamics.",
+          "status": "candidate",
+          "subhypothesis_id": "SH3",
+          "support_level": "speculative",
+          "target_slot": "comparison_condition"
+        },
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/1",
+            "section": "1. Introduction"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:sh6:unmapped_gap_failure_or_bias:failure_or_bias:population_synthesis_frameworks_exhibit_confirmation_bias_by_tuning_simulation_parameters_to_match_existing_small_discovery_samples_rather_than_enforcing_independent_physical_constraints_limiting_predictive_validity_for_new_populations:613b27dc109a"
+        ],
+        "group_id": "gap_group:sh6:failure_or_bias:unmapped_gap_failure_or_bias:gap_candidate_sh6_unmapped_gap_failure_or_bias_failure_or_bias_population_synthesis_frameworks_exhibit_confirmation_bias_by_tuning_simulation_parameters_to_match_existing_small_discovery_samples_rather_than_enforcing_independent_physical_constraints_limiting_predictive_validity_for_new_populations_613b27dc109a:451de5fbfcc6",
+        "paper_evidence": [],
+        "paper_ids": [],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "unmapped_gap:failure_or_bias"
+          ],
+          "candidate_fingerprint": "dcddaaf778d6c6823662164cef0dea175ec87c8d5f4c20c9f4d59b1fba3094b1",
+          "candidate_id": "gap_candidate:sh6:unmapped_gap_failure_or_bias:failure_or_bias:population_synthesis_frameworks_exhibit_confirmation_bias_by_tuning_simulation_parameters_to_match_existing_small_discovery_samples_rather_than_enforcing_independent_physical_constraints_limiting_predictive_validity_for_new_populations:613b27dc109a",
+          "candidate_ids": [
+            "gap_candidate:sh6:unmapped_gap_failure_or_bias:failure_or_bias:population_synthesis_frameworks_exhibit_confirmation_bias_by_tuning_simulation_parameters_to_match_existing_small_discovery_samples_rather_than_enforcing_independent_physical_constraints_limiting_predictive_validity_for_new_populations:613b27dc109a"
+          ],
+          "claim_scope": "computational model validation",
+          "confidence": 0.85,
+          "evidence_role": "failure_or_bias",
+          "evidence_summary": "",
+          "extraction_method": "survey_prose_llm",
+          "gap_kind": "unmapped_gap:failure_or_bias",
+          "group_id": "gap_group:sh6:failure_or_bias:unmapped_gap_failure_or_bias:gap_candidate_sh6_unmapped_gap_failure_or_bias_failure_or_bias_population_synthesis_frameworks_exhibit_confirmation_bias_by_tuning_simulation_parameters_to_match_existing_small_discovery_samples_rather_than_enforcing_independent_physical_constraints_limiting_predictive_validity_for_new_populations_613b27dc109a:451de5fbfcc6",
+          "paper_ids": [],
+          "rationale": "The survey directly identifies 'confirmation bias' and 'circular reasoning' in current population synthesis designs where parameters are fitted to small samples instead of independent physics, constituting a bounded methodological failure opportunity.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "survey.md",
+              "json_pointer": "/sections/1",
+              "section": "1. Introduction"
+            }
+          ],
+          "statement": "Population synthesis frameworks exhibit confirmation bias by tuning simulation parameters to match existing small discovery samples rather than enforcing independent physical constraints, limiting predictive validity for new populations.",
+          "status": "candidate",
+          "subhypothesis_id": "SH6",
+          "support_level": "speculative",
+          "target_slot": "failure_or_bias"
+        },
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/1",
+            "section": "1. Introduction"
+          }
+        ]
+      }
+    ],
+    "schema_version": "survey_gap_coverage_v1"
+  }
+}

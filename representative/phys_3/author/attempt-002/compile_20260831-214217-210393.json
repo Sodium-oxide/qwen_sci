@@ -1,0 +1,27 @@
+{
+  "allow_shell_escape": false,
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/pdflatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "conference_101719.tex"
+      ],
+      "elapsed_ms": 280.503,
+      "return_code": 1,
+      "stage": "latex_initial",
+      "timed_out": false
+    }
+  ],
+  "failure_stage": "latex_initial",
+  "generated_at": "2026-08-31T12:51:37.233+00:00",
+  "main_tex": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-002/research_plan_20260831-214217-210393_project/conference_101719.tex",
+  "project_dir": "/mnt/c/Users/31390/Desktop/2026tzb/aiscientist-v0820/Xcientist/workspace/science-runs/20260831-051401-339967/author/attempt-002/research_plan_20260831-214217-210393_project",
+  "run_bibtex": true,
+  "schema_version": "research_plan_author_latex_compile_v1",
+  "staged_pdf": "",
+  "success": false,
+  "timeout_seconds": 180
+}

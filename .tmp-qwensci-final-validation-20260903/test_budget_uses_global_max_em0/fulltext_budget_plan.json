@@ -1,0 +1,63 @@
+{
+  "schema_version": "fulltext_budget_plan_v1",
+  "fulltext_budget": 2,
+  "rank_metric": "max_embedding_relatedness",
+  "eligible_after_llm_filter": 3,
+  "selected_for_fulltext_count": 2,
+  "metadata_only_count": 1,
+  "selected_for_fulltext": [
+    {
+      "paper_id": "W-shared",
+      "max_embedding_relatedness": 0.93,
+      "max_llm_relevance_score": 5.0,
+      "best_seed_id": "S2",
+      "matched_seed_ids": [
+        "S1",
+        "S2"
+      ],
+      "seed_embedding_relatedness": {
+        "S2": 0.93,
+        "S1": 0.51
+      },
+      "seed_llm_relevance_scores": {
+        "S2": 5.0,
+        "S1": 4.0
+      },
+      "rank": 1
+    },
+    {
+      "paper_id": "W-alpha",
+      "max_embedding_relatedness": 0.8,
+      "max_llm_relevance_score": 5.0,
+      "best_seed_id": "S1",
+      "matched_seed_ids": [
+        "S1"
+      ],
+      "seed_embedding_relatedness": {
+        "S1": 0.8
+      },
+      "seed_llm_relevance_scores": {
+        "S1": 5.0
+      },
+      "rank": 2
+    }
+  ],
+  "metadata_only": [
+    {
+      "paper_id": "W-beta",
+      "max_embedding_relatedness": 0.8,
+      "max_llm_relevance_score": 5.0,
+      "best_seed_id": "S1",
+      "matched_seed_ids": [
+        "S1"
+      ],
+      "seed_embedding_relatedness": {
+        "S1": 0.8
+      },
+      "seed_llm_relevance_scores": {
+        "S1": 5.0
+      },
+      "rank": 3
+    }
+  ]
+}

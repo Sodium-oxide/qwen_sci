@@ -1,0 +1,194 @@
+{
+  "sections": [
+    {
+      "description": "Overview of thermal management challenges in nanoscale electronics and energy systems. Introduction to the distinction between bulk and interfacial thermal transport, the role of phonons vs. electrons, and the motivation for understanding fundamental limits under high power density.",
+      "papers_to_use": [
+        "W2116768756"
+      ],
+      "subsections": [
+        {
+          "description": "Contextualize the need for advanced thermal management in modern devices. Define the scope of the survey, focusing on fundamental physical limits, material-specific behaviors, and interface-dominated regimes.",
+          "papers_to_use": [
+            "W2116768756"
+          ],
+          "title": "Motivation and Scope"
+        },
+        {
+          "description": "Brief roadmap of the survey structure, highlighting the progression from bulk mechanisms to interface effects, measurement methodologies, and future directions.",
+          "papers_to_use": [],
+          "title": "Survey Organization"
+        }
+      ],
+      "title": "Introduction"
+    },
+    {
+      "description": "Examination of intrinsic thermal conductivity in various material classes, emphasizing anisotropic behavior, phonon mean free paths, and frequency-dependent scattering. Integrates insights from van der Waals materials, carbon nanotubes, and thermoelectrics.",
+      "papers_to_use": [
+        "W3202213959",
+        "W2042604455",
+        "W2057239875",
+        "W2763552432",
+        "W2623727589",
+        "W2132162076",
+        "W2043184042",
+        "W4309918419"
+      ],
+      "subsections": [
+        {
+          "description": "Analysis of extreme anisotropy in 2D materials (e.g., MoS2, WS2) and CNTs. Discusses the 'phonon-glass' nature of cross-plane transport versus crystalline in-plane conduction. Incorporates findings on layer-count dependence and interlayer spacing effects, noting the glass-like one-dimensional transport mechanism in twisted multilayers.",
+          "papers_to_use": [
+            "W3202213959",
+            "W2132162076",
+            "W2043184042",
+            "W4309918419"
+          ],
+          "title": "Anisotropic and Low-Dimensional Conductors"
+        },
+        {
+          "description": "Detailed look at how thermal conductivity scales with length and frequency. Highlights the dominance of low-frequency phonons in long CNTs and the scaling laws of MFP. Connects to the validity of continuum models at nanoscales and the prediction capability of MFPs for arbitrary lengths.",
+          "papers_to_use": [
+            "W2042604455"
+          ],
+          "title": "Phonon Mean Free Path and Frequency Dependence"
+        },
+        {
+          "description": "Review of materials designed to decouple electrical and thermal transport (e.g., clathrates, perovskites). Discusses large polaron formation and crystal-liquid duality as mechanisms for suppressing lattice thermal conductivity while maintaining electronic properties.",
+          "papers_to_use": [
+            "W2057239875",
+            "W2763552432",
+            "W2623727589"
+          ],
+          "title": "Thermoelectric and Complex Crystal Structures"
+        }
+      ],
+      "title": "Bulk Thermal Transport Mechanisms and Anisotropy"
+    },
+    {
+      "description": "Focus on the dominance of thermal boundary conductance (TBC) in nanoscale systems. Explores the chemical and physical origins of interface resistance, including bonding types, acoustic mismatch, and defect-induced scattering.",
+      "papers_to_use": [
+        "W2200737425",
+        "W2058274078",
+        "W7171707973",
+        "W2046204617",
+        "W4388763350"
+      ],
+      "subsections": [
+        {
+          "description": "Comparison of covalent-like vs. van der Waals interfaces. Quantifies the impact of adhesion strength and acoustic reflectance on TBC. Uses specific data on Au-Si interfaces to illustrate the transition from weak to strong coupling and the correlation between binding energy and conductance.",
+          "papers_to_use": [
+            "W2200737425",
+            "W2058274078"
+          ],
+          "title": "Chemical Bonding and Acoustic Mismatch"
+        },
+        {
+          "description": "Investigation of how structural defects (e.g., wrinkles in GaN films) disrupt heat flow. Highlights asymmetric heat dissipation patterns and local reductions in thermal conductivity and TBC due to transfer-induced defects, emphasizing the spatial heterogeneity of thermal transport.",
+          "papers_to_use": [
+            "W7171707973",
+            "W4388763350"
+          ],
+          "title": "Defect-Mediated Heat Dissipation"
+        },
+        {
+          "description": "Discussion of engineered nanostructures (e.g., 2D phononic crystals) that modify the density of states and group velocity. Explains how bandgaps and flat bands can be used to drastically reduce thermal conductance below intrinsic limits, validating theoretical predictions of reduced group velocities.",
+          "papers_to_use": [
+            "W2046204617"
+          ],
+          "title": "Phononic Crystals and Bandgap Engineering"
+        }
+      ],
+      "title": "Interfacial Thermal Resistance and Boundary Engineering"
+    },
+    {
+      "description": "Critical review of experimental techniques and theoretical models used to characterize thermal transport. Addresses the challenge of isolating interfacial resistance from bulk properties and validating predictions across scales.",
+      "papers_to_use": [
+        "W2116768756",
+        "W2042604455",
+        "W2200737425",
+        "W7171707973"
+      ],
+      "subsections": [
+        {
+          "description": "Overview of methods like ultrafast X-ray diffraction and time-domain thermoreflectance (TDTR) for mapping spatiotemporal thermal dynamics. Emphasizes their ability to resolve local defects and anisotropic transport in thin films, providing direct observation of heat dissipation asymmetries.",
+          "papers_to_use": [
+            "W7171707973"
+          ],
+          "title": "Ultrafast and Spatially Resolved Techniques"
+        },
+        {
+          "description": "Analysis of strategies to disentangle bulk and interfacial contributions. Discusses the limitations of current methods in defining precise conditions where interface resistance dominates and the need for robust calibration protocols to separate these effects accurately.",
+          "papers_to_use": [
+            "W2116768756"
+          ],
+          "title": "Separation of Bulk and Interface Contributions"
+        },
+        {
+          "description": "Evaluation of molecular dynamics and Boltzmann transport equation applications. Highlights successes in predicting length-dependent conductivity in CNTs and identifies gaps in modeling high-power-density regimes and non-Fourier effects, noting the validity domains of current assumptions.",
+          "papers_to_use": [
+            "W2042604455"
+          ],
+          "title": "Computational Modeling and Validity Domains"
+        }
+      ],
+      "title": "Measurement Methodologies and Model Validation"
+    },
+    {
+      "description": "Bridging the gap between nanoscale fundamental physics and macroscopic device performance. Discusses how nanoscale insights inform the design of larger-scale thermal systems and the transferability of findings.",
+      "papers_to_use": [
+        "W2116768756",
+        "W3202213959",
+        "W2042604455",
+        "W2913151242",
+        "W7171707973",
+        "W2623727589",
+        "W2132162076"
+      ],
+      "subsections": [
+        {
+          "description": "Assessment of whether nanoscale thermal limits directly translate to industrial-scale applications. Identifies shifts in boundary conditions and external validation requirements when moving from electron devices to power plants or large arrays, acknowledging the lack of direct evidence for such transfers.",
+          "papers_to_use": [
+            "W3202213959",
+            "W2042604455",
+            "W2132162076"
+          ],
+          "title": "From Nanodevices to Macroscopic Systems"
+        },
+        {
+          "description": "Focus on empirical evidence establishing upper limits of heat dissipation. Synthesizes observations from GaN, CNT networks, and 2D materials to define practical constraints on power density before thermal runaway or failure occurs.",
+          "papers_to_use": [
+            "W2116768756",
+            "W2913151242",
+            "W7171707973"
+          ],
+          "title": "Heat Flux Management in High-Power Density Regimes"
+        },
+        {
+          "description": "Review of integrated approaches that combine theoretical predictions with experimental tuning (e.g., in thermoelectrics). Highlights the role of feedback loops between model refinement and material synthesis in optimizing thermal properties.",
+          "papers_to_use": [
+            "W2623727589"
+          ],
+          "title": "Integrated Theory-Experiment Perspectives"
+        }
+      ],
+      "title": "Cross-Scale Implications and Device Integration"
+    },
+    {
+      "description": "Summary of key findings regarding the fundamental limits of thermal transport. Identification of critical gaps in current understanding and specific, actionable directions for future research.",
+      "papers_to_use": [],
+      "subsections": [
+        {
+          "description": "Recap of the primary mechanisms limiting heat dissipation: anisotropy, interface resistance, and defect scattering. Emphasize the context-dependent nature of these limits based on material class and dimensionality.",
+          "papers_to_use": [],
+          "title": "Synthesis of Fundamental Limits"
+        },
+        {
+          "description": "Specific guidance for future work: (1) Develop standardized protocols for separating bulk and interface resistance under varying temperature gradients; (2) Investigate non-equilibrium phonon dynamics in twisted multilayer vdW materials using ultrafast spectroscopy; (3) Create multi-scale simulation frameworks that accurately capture ballistic-to-diffusive transitions in heterogeneous interfaces without prohibitive computational cost; (4) Explore dynamic tuning of interfacial conductance via external stimuli (electric field, strain) in real-time device operation.",
+          "papers_to_use": [],
+          "title": "Future Directions: Specific Research Avenues"
+        }
+      ],
+      "title": "Conclusion and Future Work"
+    }
+  ],
+  "title": "Fundamental Limits and Mechanisms of Thermal Transport in Nanoscale Materials and Devices"
+}

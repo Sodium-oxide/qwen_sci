@@ -1,0 +1,62 @@
+{
+  "artifacts": {
+    "claim_traceability": {
+      "path": "survey_claim_traceability.json",
+      "required": true,
+      "sha256": "4691208a3186bea61fd7b9c1c1054a511acaee881912b8c94f7a381873cee37a"
+    },
+    "evidence_plan": {
+      "path": "survey_evidence_plan.json",
+      "required": true,
+      "sha256": "815c1ad176bb9708e2f3028e232e408ac8a03c8cab8725123ac60714997b4b99"
+    },
+    "gap_ledger": {
+      "path": "survey_gap_ledger.json",
+      "required": true,
+      "sha256": "be2f364958967a418b5c26a71a36b4704b95428d638a232403c6fdd5a4f07c75"
+    },
+    "gap_triage": {
+      "path": "survey_gap_triage.json",
+      "required": false,
+      "sha256": "4178845fa1a8aa20cb90bd862f2310d3d4b47d7f2d4f92424da2418c2514ca61"
+    },
+    "idea_handoff": {
+      "path": "survey_idea_handoff.json",
+      "required": true,
+      "sha256": "8f6397ec0fc33286b0ca68fddcd5c9598fb71dfae940fd56a49636c71d476bab"
+    },
+    "project_context": {
+      "path": "project_context.json",
+      "required": true,
+      "sha256": "be16afcb5cb02144b8e0ba97b7e8055bfbc531334f63dbb63ce696f99bdc137d"
+    },
+    "survey_json": {
+      "path": "survey.json",
+      "required": true,
+      "sha256": "6cec9e9f562b3d653919041d5491c4cfa5c46ca8e46693fb9373c0c1355d3017"
+    },
+    "survey_markdown": {
+      "path": "survey.md",
+      "required": true,
+      "sha256": "4f4fff972ffb5a2b0bfb40e2a4ca8b54c6a67e1b88e3692c6cf487d71c067120"
+    },
+    "survey_outline": {
+      "path": "survey_outline.json",
+      "required": false,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    }
+  },
+  "base_dir": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\.tmp-qwensci-final-validation-report-20260903\\test_quantitative_resume_from_0\\runs\\quantitative-flow\\survey\\attempt-001",
+  "completed_at": "2026-09-03T14:38:46Z",
+  "created_at": "2026-09-03T14:38:46Z",
+  "gap_ledger_schema_version": "survey_gap_ledger_v1",
+  "handoff_schema_version": "survey_idea_handoff_v1",
+  "manifest_fingerprint": "8fdb75d2612b17b8cbbbd35d8e409ce63d953117309f5fc172ec2fc140126cab",
+  "project_context_fingerprint": "quantitative-workflow-context",
+  "project_id": "quantitative-workflow-project",
+  "schema_version": "survey_manifest_v1",
+  "status": "completed",
+  "survey_run_id": "survey-quantitative-flow",
+  "topic": "bounded decay",
+  "topic_fingerprint": "3949a490119916bcee15e642383b7c2922050f3b99bb6d3ce734dcb40fb6de22"
+}

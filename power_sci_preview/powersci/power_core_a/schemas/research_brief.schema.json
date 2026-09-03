@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qwen-zhikan.local/schemas/research_brief_v1.json",
+  "title": "ResearchBrief",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "brief_id", "title", "domain", "research_question", "objectives", "falsification_criteria", "constraints", "created_at", "created_by"],
+  "properties": {
+    "schema_version": {"const": "research_brief_v1"},
+    "brief_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "title": {"type": "string", "minLength": 1, "maxLength": 240},
+    "domain": {"const": "power_systems"},
+    "research_question": {"type": "string", "minLength": 10, "maxLength": 4000},
+    "objectives": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 3, "maxLength": 1000}},
+    "falsification_criteria": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 3, "maxLength": 1000}},
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["llm_allowed", "deterministic_required", "max_runtime_seconds"],
+      "properties": {
+        "llm_allowed": {"type": "boolean"},
+        "deterministic_required": {"type": "boolean"},
+        "max_runtime_seconds": {"type": "integer", "minimum": 1},
+        "allowed_case_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "notes": {"type": "array", "items": {"type": "string", "maxLength": 1000}}
+      }
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "created_by": {"type": "string", "minLength": 1, "maxLength": 128}
+  }
+}
+

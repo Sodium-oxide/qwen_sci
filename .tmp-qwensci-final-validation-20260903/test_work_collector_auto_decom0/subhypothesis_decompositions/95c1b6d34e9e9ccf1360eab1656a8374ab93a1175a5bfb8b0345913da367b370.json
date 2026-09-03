@@ -1,0 +1,334 @@
+{
+  "schema_version": "subhypothesis_decomposition_v3",
+  "input_fingerprint": "95c1b6d34e9e9ccf1360eab1656a8374ab93a1175a5bfb8b0345913da367b370",
+  "project_context_fingerprint": "88046d51b452ad615cdf08e2d2977bb136ef08f7a8462eb4b2056c1abc8f926f",
+  "provider": "qwen",
+  "model": "qwen3.8-max",
+  "subhypotheses": [
+    {
+      "schema_version": "science_subhypothesis_v2",
+      "sub_hypothesis_id": "clinical_benefit",
+      "title": "Clinical benefit under genomic stratification",
+      "question": "For which genomically stratified patients do personalized treatments improve clinical response compared with standard care?",
+      "question_kind": "COMPARATIVE_EVALUATION",
+      "scientific_scope": {
+        "research_object": [
+          "personalized treatment"
+        ],
+        "comparison_frame": [
+          "standard care"
+        ],
+        "outcome_or_construct": [
+          "clinical response"
+        ],
+        "condition_or_regime": [
+          "prospective clinical use"
+        ]
+      },
+      "required_slots": [
+        "candidate",
+        "comparator",
+        "comparison_condition",
+        "comparable_endpoint"
+      ],
+      "slot_definitions": {
+        "candidate": {
+          "meaning": "Evidence requirement for candidate.",
+          "retrieval_concepts": [
+            "personalized treatment",
+            "clinical response",
+            "candidate"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        },
+        "comparator": {
+          "meaning": "Evidence requirement for comparator.",
+          "retrieval_concepts": [
+            "personalized treatment",
+            "clinical response",
+            "comparator"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        },
+        "comparison_condition": {
+          "meaning": "Evidence requirement for comparison_condition.",
+          "retrieval_concepts": [
+            "personalized treatment",
+            "clinical response",
+            "comparison condition"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        },
+        "comparable_endpoint": {
+          "meaning": "Evidence requirement for comparable_endpoint.",
+          "retrieval_concepts": [
+            "personalized treatment",
+            "clinical response",
+            "comparable endpoint"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        }
+      },
+      "research_role": "PRIMARY_QUESTION",
+      "challenge_target": "the claim that personalized treatments improve clinical response for every genomically stratified population",
+      "design_basis_ids": [
+        "DB1",
+        "DB2",
+        "DB3"
+      ],
+      "exclusion_terms": [
+        "consumer wellness recommendation"
+      ]
+    },
+    {
+      "schema_version": "science_subhypothesis_v2",
+      "sub_hypothesis_id": "target_selection_mechanism",
+      "title": "Molecular target selection mechanisms",
+      "question": "Which genomic and biological mechanisms make molecular target selection actionable for individualized drug design and dose selection?",
+      "question_kind": "MECHANISM_EXPLANATION",
+      "scientific_scope": {
+        "research_object": [
+          "individualized drug design"
+        ],
+        "intervention_or_input": [
+          "multi-omic target identification"
+        ],
+        "outcome_or_construct": [
+          "target actionability"
+        ]
+      },
+      "required_slots": [
+        "input_or_condition",
+        "common_outcome",
+        "candidate_mechanism",
+        "discriminating_observation"
+      ],
+      "slot_definitions": {
+        "input_or_condition": {
+          "meaning": "Evidence requirement for input_or_condition.",
+          "retrieval_concepts": [
+            "individualized drug design",
+            "target actionability",
+            "input or condition"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        },
+        "common_outcome": {
+          "meaning": "Evidence requirement for common_outcome.",
+          "retrieval_concepts": [
+            "individualized drug design",
+            "target actionability",
+            "common outcome"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        },
+        "candidate_mechanism": {
+          "meaning": "Evidence requirement for candidate_mechanism.",
+          "retrieval_concepts": [
+            "individualized drug design",
+            "target actionability",
+            "candidate mechanism"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        },
+        "discriminating_observation": {
+          "meaning": "Evidence requirement for discriminating_observation.",
+          "retrieval_concepts": [
+            "individualized drug design",
+            "target actionability",
+            "discriminating observation"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        }
+      },
+      "research_role": "BASELINE_ENABLER",
+      "challenge_target": "the assumption that molecular target selection is actionable without an identifiable mechanism",
+      "design_basis_ids": [
+        "DB1",
+        "DB2",
+        "DB3"
+      ],
+      "exclusion_terms": [
+        "non-therapeutic ancestry inference"
+      ]
+    },
+    {
+      "schema_version": "science_subhypothesis_v2",
+      "sub_hypothesis_id": "implementation_boundaries",
+      "title": "Safety and implementation boundaries",
+      "question": "What safety, bias, manufacturing, and regulatory limitations prevent personalized medicines from delivering benefits across patient subgroups?",
+      "question_kind": "BOUNDARY_HETEROGENEITY",
+      "scientific_scope": {
+        "research_object": [
+          "personalized medicine implementation"
+        ],
+        "condition_or_regime": [
+          "real-world clinical deployment"
+        ],
+        "outcome_or_construct": [
+          "adverse events and equitable access"
+        ]
+      },
+      "required_slots": [
+        "base_relation",
+        "boundary_variable",
+        "condition_a",
+        "condition_b",
+        "comparable_endpoint"
+      ],
+      "slot_definitions": {
+        "base_relation": {
+          "meaning": "Evidence requirement for base_relation.",
+          "retrieval_concepts": [
+            "personalized medicine implementation",
+            "adverse events and equitable access",
+            "base relation"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        },
+        "boundary_variable": {
+          "meaning": "Evidence requirement for boundary_variable.",
+          "retrieval_concepts": [
+            "personalized medicine implementation",
+            "adverse events and equitable access",
+            "boundary variable"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        },
+        "condition_a": {
+          "meaning": "Evidence requirement for condition_a.",
+          "retrieval_concepts": [
+            "personalized medicine implementation",
+            "adverse events and equitable access",
+            "condition a"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        },
+        "condition_b": {
+          "meaning": "Evidence requirement for condition_b.",
+          "retrieval_concepts": [
+            "personalized medicine implementation",
+            "adverse events and equitable access",
+            "condition b"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        },
+        "comparable_endpoint": {
+          "meaning": "Evidence requirement for comparable_endpoint.",
+          "retrieval_concepts": [
+            "personalized medicine implementation",
+            "adverse events and equitable access",
+            "comparable endpoint"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        }
+      },
+      "research_role": "BOUNDARY_TEST",
+      "challenge_target": "the claim that personalized medicine delivers uniform benefits across patient subgroups",
+      "design_basis_ids": [
+        "DB1",
+        "DB2",
+        "DB3"
+      ],
+      "exclusion_terms": [
+        "unregulated direct-to-consumer marketing"
+      ]
+    },
+    {
+      "schema_version": "science_subhypothesis_v2",
+      "sub_hypothesis_id": "evidence_landscape",
+      "title": "Evidence landscape and translation",
+      "question": "Which validation measures establish whether precision medicine evidence can be translated across therapeutic areas?",
+      "question_kind": "MEASUREMENT_VALIDITY",
+      "scientific_scope": {
+        "research_object": [
+          "precision medicine evidence"
+        ],
+        "outcome_or_construct": [
+          "evidence maturity"
+        ],
+        "measurement_or_endpoint": [
+          "validation standards"
+        ]
+      },
+      "required_slots": [
+        "construct",
+        "proxy_or_measure",
+        "reference_or_target_measure",
+        "mapping_or_calibration"
+      ],
+      "slot_definitions": {
+        "construct": {
+          "meaning": "Evidence requirement for construct.",
+          "retrieval_concepts": [
+            "precision medicine evidence",
+            "evidence maturity",
+            "construct"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        },
+        "proxy_or_measure": {
+          "meaning": "Evidence requirement for proxy_or_measure.",
+          "retrieval_concepts": [
+            "precision medicine evidence",
+            "evidence maturity",
+            "proxy or measure"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        },
+        "reference_or_target_measure": {
+          "meaning": "Evidence requirement for reference_or_target_measure.",
+          "retrieval_concepts": [
+            "precision medicine evidence",
+            "evidence maturity",
+            "reference or target measure"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        },
+        "mapping_or_calibration": {
+          "meaning": "Evidence requirement for mapping_or_calibration.",
+          "retrieval_concepts": [
+            "precision medicine evidence",
+            "evidence maturity",
+            "mapping or calibration"
+          ],
+          "minimum_evidence": "A scholarly work reports directly relevant evidence.",
+          "admission_rule": "The work supports evaluation of this slot in the declared scope."
+        }
+      },
+      "research_role": "FOUNDATIONAL_CONTEXT",
+      "challenge_target": "the assumption that current validation standards establish translational readiness",
+      "design_basis_ids": [
+        "DB1",
+        "DB2",
+        "DB3"
+      ],
+      "exclusion_terms": [
+        "fictional future-health scenarios"
+      ]
+    }
+  ],
+  "validation": {
+    "valid": true,
+    "subhypothesis_count": 4,
+    "subhypothesis_schema_version": "science_subhypothesis_v2",
+    "design_inventory_required": true
+  },
+  "cache_status": "miss"
+}

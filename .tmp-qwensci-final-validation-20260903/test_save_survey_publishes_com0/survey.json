@@ -1,0 +1,75 @@
+{
+  "claim_traceability": {
+    "claims": []
+  },
+  "paper": "Survey body",
+  "project_domain": {
+    "declared_domain": "",
+    "domain": "Materials Science",
+    "domain_resolution_source": "",
+    "requires_human_confirmation": false,
+    "research_domains": []
+  },
+  "references": [],
+  "research_context": {
+    "discovery_taxonomy": {
+      "requires_human_confirmation": true,
+      "status": "unresolved"
+    },
+    "domain": "Materials Science",
+    "input_fingerprint": "context-1"
+  },
+  "research_run_id": "20260826-120000-000003",
+  "subhypothesis_decomposition": {},
+  "subhypothesis_retrieval": {},
+  "survey_evidence_plan": {
+    "evidence_bounded_writing": true,
+    "project_context_fingerprint": "context-1",
+    "project_id": "sci_run_1",
+    "schema_version": "survey_sh_evidence_plan_v1",
+    "subhypotheses": [
+      {
+        "allowed_claim_modes": [
+          "EVIDENCE_GAP_REPORT"
+        ],
+        "background_only_slots": [],
+        "conclusion_admissibility": {
+          "blockers": []
+        },
+        "covered_slots": [],
+        "direct_writing_blocked_paper_ids": [],
+        "forbidden_paper_ids": [],
+        "limitations": {
+          "blockers": []
+        },
+        "missing_slots": [
+          "direct_observation"
+        ],
+        "relevant_clusters": [],
+        "required_slots": [
+          "direct_observation"
+        ],
+        "slot_support": {
+          "direct_observation": {
+            "background_paper_ids": [],
+            "evidence_paper_ids": [],
+            "expected_evidence_role": "DIRECT_OBSERVATION",
+            "qualified_paper_constraints": {},
+            "qualified_paper_ids": []
+          }
+        },
+        "sub_hypothesis_id": "SH1",
+        "summary": "A bounded scientific question."
+      }
+    ]
+  },
+  "survey_outline": {
+    "sections": [
+      {
+        "title": "Survey"
+      }
+    ]
+  },
+  "topic": "Completed handoff survey",
+  "topic_slug": "test_save_survey_publishes_com0"
+}

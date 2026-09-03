@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://qwen-zhikan.local/schemas/equation_ir_v1.json",
+  "title": "EquationIR",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "model_id", "model_version", "system_type", "independent_variable", "variables", "equations", "assumptions"],
+  "properties": {
+    "schema_version": {"const": "equation_ir_v1"},
+    "model_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "model_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "system_type": {"enum": ["ODE", "DAE"]},
+    "independent_variable": {"$ref": "#/$defs/axis"},
+    "variables": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/variable"}},
+    "equations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/equation"}},
+    "assumptions": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 1000}}
+  },
+  "$defs": {
+    "axis": {
+      "type": "object", "additionalProperties": false,
+      "required": ["symbol", "unit", "coordinate"],
+      "properties": {
+        "symbol": {"type": "string", "minLength": 1},
+        "unit": {"type": "string", "minLength": 1},
+        "coordinate": {"type": "string", "minLength": 1}
+      }
+    },
+    "per_unit": {
+      "type": "object", "additionalProperties": false,
+      "required": ["enabled"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "base_quantity": {"type": "string", "minLength": 1},
+        "base_value": {"type": "number", "exclusiveMinimum": 0},
+        "base_unit": {"type": "string", "minLength": 1}
+      }
+    },
+    "variable": {
+      "type": "object", "additionalProperties": false,
+      "required": ["variable_id", "symbol", "role", "unit", "coordinate", "per_unit"],
+      "properties": {
+        "variable_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+        "symbol": {"type": "string", "minLength": 1},
+        "role": {"enum": ["state", "algebraic", "input", "output", "parameter"]},
+        "unit": {"type": "string", "minLength": 1},
+        "coordinate": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "maxLength": 1000},
+        "per_unit": {"$ref": "#/$defs/per_unit"}
+      }
+    },
+    "expression": {
+      "oneOf": [
+        {"type": "object", "additionalProperties": false, "required": ["node", "value"], "properties": {"node": {"const": "number"}, "value": {"type": "number"}}},
+        {"type": "object", "additionalProperties": false, "required": ["node", "variable_id"], "properties": {"node": {"const": "symbol"}, "variable_id": {"type": "string", "minLength": 1}}},
+        {"type": "object", "additionalProperties": false, "required": ["node", "variable_id", "with_respect_to"], "properties": {"node": {"const": "derivative"}, "variable_id": {"type": "string", "minLength": 1}, "with_respect_to": {"type": "string", "minLength": 1}}},
+        {"type": "object", "additionalProperties": false, "required": ["node", "operator", "arguments"], "properties": {"node": {"const": "operator"}, "operator": {"enum": ["add", "subtract", "multiply", "divide", "power", "negate"]}, "arguments": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/expression"}}}},
+        {"type": "object", "additionalProperties": false, "required": ["node", "function", "arguments"], "properties": {"node": {"const": "function"}, "function": {"enum": ["sin", "cos", "tan", "exp", "log", "sqrt", "abs"]}, "arguments": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/expression"}}}}
+      ]
+    },
+    "equation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["equation_id", "kind", "residual", "unit"],
+      "properties": {
+        "equation_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+        "kind": {"enum": ["differential", "algebraic"]},
+        "derivative_of": {"type": "string", "minLength": 1},
+        "residual": {"$ref": "#/$defs/expression"},
+        "unit": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "maxLength": 1000}
+      }
+    }
+  }
+}

@@ -1,0 +1,324 @@
+{
+  "approval_status": "APPROVED",
+  "blueprint_identity": "366b812aac958f7b35c19fc2d60b64ffcf7cfbe0b463e5c3927f4c39dc3f90f5",
+  "entries": [
+    {
+      "candidate_id": "PEC-Q1-initial_period-001",
+      "conditions": {
+        "required_condition_1": "For isolated or recycled neutron stars at the beginning of the simulated spin-down phase, with period measured in seconds and no glitch-induced period jump at the initial epoch."
+      },
+      "dimension": "time",
+      "evidence_locator": {
+        "document_type": "preprint",
+        "page": null,
+        "quoted_text": "birth spin period ∼0.5 s",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "mathir_symbol": "P0",
+      "parameter_id": "initial_period",
+      "provenance_status": "APPROVED_USER_INPUT",
+      "role": "BOUNDARY_CONDITION",
+      "selected_value": 0.5,
+      "selection_rationale": "Use the literature-reported approximately 0.5 s birth period as the common pre-evolution baseline for isolated and recycled comparison tracks.",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": "user_provided",
+        "document_id": "Q1-FGK2006",
+        "doi": "10.1086/501516",
+        "title": "Birth and Evolution of Isolated Radio Pulsars",
+        "year": 2006
+      },
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "s"
+    },
+    {
+      "candidate_id": "",
+      "conditions": {
+        "required_condition_1": "For dipole torque models with approximately aligned magnetic and rotational axes represented by an angle in radians; treated as the starting value before inclination decay."
+      },
+      "dimension": "angle",
+      "evidence_locator": {},
+      "mathir_symbol": "alpha0",
+      "parameter_id": "initial_inclination",
+      "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+      "role": "BOUNDARY_CONDITION",
+      "selected_value": 0.7853981633974483,
+      "selection_rationale": "Adopt a 45 degree baseline inclination so the dipole torque is active without assuming either perfect alignment or orthogonality.",
+      "source": {},
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "rad"
+    },
+    {
+      "candidate_id": "PEC-Q1-initial_surface_magnetic_field-001",
+      "conditions": {
+        "required_condition_1": "For isolated neutron stars with approximately dipolar surface fields inferred from timing data, expressed in tesla; not intended for magnetar-like or strongly multipolar fields."
+      },
+      "dimension": "magnetic_flux_density",
+      "evidence_locator": {
+        "document_type": "review_article",
+        "page": null,
+        "quoted_text": "typical values of 10 12 G and 107 yr for the normal pulsars",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "mathir_symbol": "B0",
+      "parameter_id": "initial_surface_magnetic_field",
+      "provenance_status": "APPROVED_USER_INPUT",
+      "role": "BOUNDARY_CONDITION",
+      "selected_value": 100000000.0,
+      "selection_rationale": "Use the review-reported 10^12 G normal-pulsar field, converted to 10^8 T, to represent the isolated-pulsar baseline.",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": "user_provided",
+        "document_id": "Q1-LORIMER2008",
+        "doi": "10.12942/lrr-2008-8",
+        "title": "Binary and Millisecond Pulsars",
+        "year": 2008
+      },
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "T"
+    },
+    {
+      "candidate_id": "",
+      "conditions": {
+        "required_condition_1": "For the chosen effective spin-down law with magnetic field in tesla and period in seconds, assuming fixed stellar geometry and no unresolved internal braking physics."
+      },
+      "dimension": "time_magnetic_flux_density_inverse_squared",
+      "evidence_locator": {},
+      "mathir_symbol": "K_dipole",
+      "parameter_id": "vacuum_dipole_braking_constant",
+      "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+      "role": "MODEL_ASSUMPTION",
+      "selected_value": 9.765625E-32,
+      "selection_rationale": "Choose the effective coefficient so a 10^8 T, 0.5 s, 45 degree pulsar has an order-10^-15 period derivative; unresolved radius, inertia, and electromagnetic constants remain absorbed in this proxy.",
+      "source": {},
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "s_T^-2"
+    },
+    {
+      "candidate_id": "",
+      "conditions": {
+        "required_condition_1": "For pulsars with magnetospheric wind torque included as a multiplicative enhancement of the dipole term; scenario switches may disable the wind contribution."
+      },
+      "dimension": "dimensionless",
+      "evidence_locator": {},
+      "mathir_symbol": "eta",
+      "parameter_id": "wind_braking_efficiency",
+      "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+      "role": "MODEL_ASSUMPTION",
+      "selected_value": 0.1,
+      "selection_rationale": "Use a modest ten-percent wind-torque contribution as a sensitivity baseline while preserving dipole braking as the dominant isolated mechanism.",
+      "source": {},
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "dimensionless"
+    },
+    {
+      "candidate_id": "PEC-Q1-inclination_decay_timescale-001",
+      "conditions": {
+        "required_condition_1": "For isolated pulsars modeled with smooth inclination decay, expressed in seconds, excluding glitches and abrupt magnetospheric state changes."
+      },
+      "dimension": "time",
+      "evidence_locator": {
+        "document_type": "review_article",
+        "page": null,
+        "quoted_text": "on timescales of order 10 7 yr",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "mathir_symbol": "tau_alpha",
+      "parameter_id": "inclination_decay_timescale",
+      "provenance_status": "APPROVED_USER_INPUT",
+      "role": "MODEL_ASSUMPTION",
+      "selected_value": 315576000000000.0,
+      "selection_rationale": "Use the review-reported order-10^7 yr inclination-evolution timescale converted to seconds.",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": "user_provided",
+        "document_id": "Q1-LORIMER2008",
+        "doi": "10.12942/lrr-2008-8",
+        "title": "Binary and Millisecond Pulsars",
+        "year": 2008
+      },
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "s"
+    },
+    {
+      "candidate_id": "",
+      "conditions": {
+        "required_condition_1": "For recycled pulsars in a steady disk-accretion phase, expressed in kilograms per second, ignoring transient outbursts and companion ablation."
+      },
+      "dimension": "mass_time_inverse",
+      "evidence_locator": {},
+      "mathir_symbol": "Mdot",
+      "parameter_id": "accretion_rate",
+      "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+      "role": "SCENARIO_INPUT",
+      "selected_value": 630000000000000.0,
+      "selection_rationale": "No compatible scalar survived extraction; adopt 6.3e14 kg/s as an explicit sub-Eddington sensitivity baseline for steady recycling rather than as a measured rate.",
+      "source": {},
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "kg_s^-1"
+    },
+    {
+      "candidate_id": "",
+      "conditions": {
+        "required_condition_1": "For the effective accretion law using accretion rate in kilograms per second and dimensionless period derivative; active only during the accretion phase."
+      },
+      "dimension": "time_squared_mass_inverse",
+      "evidence_locator": {},
+      "mathir_symbol": "K_acc",
+      "parameter_id": "accretion_braking_constant",
+      "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+      "role": "SCENARIO_INPUT",
+      "selected_value": 6.3E-31,
+      "selection_rationale": "Set the reduced spin-up coefficient to permit substantial but finite period reduction over a 10 Myr accretion interval; it is an effective torque proxy, not a microphysical constant.",
+      "source": {},
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "s^2_kg^-1"
+    },
+    {
+      "candidate_id": "",
+      "conditions": {
+        "required_condition_1": "For binary recycling tracks represented by a finite accretion interval followed by isolated spin-down, expressed in seconds."
+      },
+      "dimension": "time",
+      "evidence_locator": {},
+      "mathir_symbol": "t_acc",
+      "parameter_id": "accretion_duration",
+      "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+      "role": "SCENARIO_INPUT",
+      "selected_value": 315576000000000.0,
+      "selection_rationale": "Adopt a 10 Myr active recycling interval so the 100 Myr run retains a distinct post-accretion spin-down phase.",
+      "source": {},
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "s"
+    },
+    {
+      "candidate_id": "PEC-Q1-maximum_simulated_age-001",
+      "conditions": {
+        "required_condition_1": "Numerical endpoint for population synthesis tracks; not a physical observable unless tied to survey selection or evolutionary assumptions."
+      },
+      "dimension": "time",
+      "evidence_locator": {
+        "document_type": "preprint",
+        "page": null,
+        "quoted_text": "over the lifetime of the pulsars as radio sources ( ∼ 100 Myr)",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "mathir_symbol": "T_max",
+      "parameter_id": "maximum_simulated_age",
+      "provenance_status": "APPROVED_USER_INPUT",
+      "role": "BOUNDARY_CONDITION",
+      "selected_value": 3155760000000000.0,
+      "selection_rationale": "Use the reported approximately 100 Myr radio-pulsar lifetime as the integration horizon.",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": "user_provided",
+        "document_id": "Q1-FGK2006",
+        "doi": "10.1086/501516",
+        "title": "Birth and Evolution of Isolated Radio Pulsars",
+        "year": 2006
+      },
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "s"
+    },
+    {
+      "candidate_id": "",
+      "conditions": {
+        "required_condition_1": "Survey-dependent detection boundary for timing observations; used as a stopping condition rather than a physical spin-down parameter."
+      },
+      "dimension": "dimensionless",
+      "evidence_locator": {},
+      "mathir_symbol": "Pdot_min",
+      "parameter_id": "minimum_detectable_period_derivative",
+      "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+      "role": "BOUNDARY_CONDITION",
+      "selected_value": 1E-22,
+      "selection_rationale": "Use 10^-22 s/s as a permissive numerical detectability floor to stop effectively inactive tracks without truncating ordinary pulsar evolution.",
+      "source": {},
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "dimensionless"
+    },
+    {
+      "candidate_id": "",
+      "conditions": {
+        "required_condition_1": "Numerical control for population synthesis; chosen for computational budget and statistical resolution rather than physical measurement."
+      },
+      "dimension": "count",
+      "evidence_locator": {},
+      "mathir_symbol": "N_mc",
+      "parameter_id": "monte_carlo_sample_count",
+      "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+      "role": "MODEL_ASSUMPTION",
+      "selected_value": 5000.0,
+      "selection_rationale": "Use 5000 tracks as a computationally bounded first-pass population sample large enough for stable distribution summaries.",
+      "source": {},
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "unit": "dimensionless"
+    }
+  ],
+  "lineage": {
+    "created_from_artifact": "C:\\Users\\31390\\Desktop\\2026tzb\\aiscientist-v0820\\Xcientist\\125_problems_key_result\\astr_16\\pde_rerun_20260903\\pde_rerun_20260903\\idea\\attempt-002\\quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "a71309619b78f1b9c806e0f73838554f62d40141df063a50b98fc81c837cf837",
+    "project_id": "sci_astr_16_survey_007",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "astr_16",
+    "selected_direction_id": "mechanism_replacement",
+    "survey_run_id": "astr_16-survey-007",
+    "version": 0
+  },
+  "parameter_set_identity": "0f0174315925c8e5b143507cd77c961e1becdad36afebaa31e7f6df12d27946c",
+  "proposal_identity": "fa86d466e95156c0ba4430370ebdd7d9bea3a10dbdd1d693d30f428cf888eaea",
+  "schema_version": "quantitative_approved_parameter_set_v1"
+}
