@@ -25,12 +25,56 @@ Survey ──► Idea ──► ExperimentDesign ──► Author
 
 可选的量化建模支线与主四阶段状态机隔离。它只能使用代码库已注册的 ODE、优化、Monte Carlo 和 PDE 模型族；每次参数确认、模拟执行、结果解释和修订均需要明确人工授权，不能把数值模拟描述为实验或观测事实。
 
+## 工作流产物
+
 | 阶段 | 程序执行的工作 | 主要产物 |
 | --- | --- | --- |
 | **Survey** | 检索、分析并整理研究问题相关的文献证据。 | 综述产物和已验证的 Survey manifest。 |
 | **Idea** | 基于证据形成研究问题、假设与方向。 | `idea_result.json`。 |
 | **ExperimentDesign** | 生成、检索支撑并校验 design-only 研究设计。 | JSON、Markdown、Author 交接 JSON、JSONL 运行日志。 |
 | **Author** | 仅根据已经验证的 Survey/Idea/Design 交接组织研究计划。 | 研究计划产物；可选 LaTeX 项目与经校验 PDF。 |
+
+## 快速开始：命令行科研运行
+
+主命令会运行完整的可执行科研工作流。下面的示例使用 Qwen-Sci 提供的研究问题：
+
+```bash
+uv run qwensci science \
+  --topic "Why do black holes exist? Nobel laureate Sir Roger Penrose proved Einstein’s prediction of the existence of black holes, which form when supermassive stars burn out and collapse in on themselves." \
+  --discipline-id "Astrophysics" \
+  --run-id black-hole-existence
+```
+
+新运行默认写入 `workspace/science-runs/black-hole-existence/`，除非提供 `--output-root`。命令按顺序执行各阶段，在每次状态转换后记录状态，并输出运行信息。
+
+如果只想先完成较早阶段：
+
+```bash
+uv run qwensci science \
+  --topic "Why do black holes exist? Nobel laureate Sir Roger Penrose proved Einstein’s prediction of the existence of black holes, which form when supermassive stars burn out and collapse in on themselves." \
+  --discipline-id "Astrophysics" \
+  --run-id black-hole-existence \
+  --until idea
+```
+
+恢复同一运行，而不是新建另一个目录：
+
+```bash
+uv run qwensci science \
+  --resume workspace/science-runs/black-hole-existence \
+  --until author
+```
+
+如果需要重新运行某个阶段，请从该阶段开始并显式确认；此前的尝试仍会保留以供审计：
+
+```bash
+uv run qwensci science \
+  --resume workspace/science-runs/black-hole-existence \
+  --restart-from exp_design \
+  --force
+```
+
+当其他程序需要稳定的 `science_run_result_v1` 标准输出时使用 `--json`。使用 `qwensci science --help` 查看全部选项，包括 Author 模板和 PDF 渲染设置。
 
 ## 环境要求
 
@@ -78,6 +122,13 @@ DASHSCOPE_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
 SEMANTIC_SCHOLAR_API_KEY=replace-with-your-key
 ```
 
+当前统一 Qwen-Sci 运行模式使用仓库内的本地 embedding 模型目录：
+
+```dotenv
+BGE_MODEL_PATH=./models/bge-m3
+MINILM_MODEL_PATH=./models/all-MiniLM-L6-v2
+```
+
 兼容 OpenAI 的服务示例：
 
 ```dotenv
@@ -95,45 +146,62 @@ uv run qwensci doctor
 
 `doctor` 可能因未安装的可选模型或可选凭证返回非零状态；请根据计划运行的功能逐项查看输出，而不是把它当作所有工作流的硬性失败。
 
-## 快速开始：命令行科研运行
+## 可复现性与本地资源
 
-完整运行：
+`src/config/default.yaml` 是模型提供方、角色模型、工作流设置、工作区路径和默认输出位置的规范配置。需要可复现实验项目时，请复制一份私有/项目专用配置并通过 `--config /path/to/config.yaml` 指定。
 
-```bash
-uv run qwensci science \
-  --topic "Why do black holes exist?" \
-  --discipline-id "Astrophysics" \
-  --run-id black-hole-existence
+仓库不会提交 API 密钥、下载的 embedding 模型、图/向量存储、缓存 PDF、生成文档或运行工作区。常见的本地资源目录包括：
+
+```text
+models/all-MiniLM-L6-v2/
+models/bge-m3/
+data/processed/graph.db
+data/processed/core_component_summary_vector_store/
+workspace/science-runs/
 ```
 
-新运行默认写入 `workspace/science-runs/black-hole-existence/`。如果只想先获得前两个阶段的结果，使用明确终点：
+### 使用 ModelScope 安装本地 embedding 模型
+
+先安装包含 `modelscope` 的可选 PDF 依赖组，然后在仓库根目录执行以下命令。请将 `<repo_root>` 替换为当前 checkout 的绝对路径：
 
 ```bash
-uv run qwensci science \
-  --topic "Why do black holes exist?" \
-  --discipline-id "Astrophysics" \
-  --run-id black-hole-existence \
-  --until idea
+uv sync --group pdf
+
+mkdir -p <repo_root>/models/bge-m3
+mkdir -p <repo_root>/models/all-MiniLM-L6-v2
+
+modelscope download --model BAAI/bge-m3 \
+  --local_dir <repo_root>/models/bge-m3
+modelscope download --model sentence-transformers/all-MiniLM-L6-v2 \
+  --local_dir <repo_root>/models/all-MiniLM-L6-v2
 ```
 
-恢复已有运行，而不是新建同名/重复目录：
+如果当前目录就是仓库根目录，可以直接使用 `$PWD`：
 
 ```bash
-uv run qwensci science \
-  --resume workspace/science-runs/black-hole-existence \
-  --until author
+modelscope download --model BAAI/bge-m3 \
+  --local_dir "$PWD/models/bge-m3"
+modelscope download --model sentence-transformers/all-MiniLM-L6-v2 \
+  --local_dir "$PWD/models/all-MiniLM-L6-v2"
 ```
 
-若必须从某个阶段重新开始，需要显式确认；该阶段及后续状态会失效，但历史尝试会保留：
+## CLI 参考
 
-```bash
-uv run qwensci science \
-  --resume workspace/science-runs/black-hole-existence \
-  --restart-from exp_design \
-  --force
-```
+从源码运行时，命令前加 `uv run`；通过发布包安装时可直接使用 `qwensci …`。
 
-需要机器可读的最终结果时加 `--json`。查看所有参数请运行 `uv run qwensci science --help`。
+| 命令 | 作用 |
+| --- | --- |
+| `qwensci survey` | 生成文献综述证据与产物。 |
+| `qwensci idea` | 生成结构化研究想法与方向。 |
+| `qwensci exp_design` | 生成并校验 design-only 实验设计。 |
+| `qwensci author` | 基于已验证交接生成研究计划。 |
+| `qwensci science` | 初始化、恢复或重启完整可审计流程。 |
+| `qwensci quantitative status` | 查看量化侧车状态和下一步操作。 |
+| `qwensci doctor` | 检查模型提供方与本地可选能力。 |
+| `qwensci-web` | 启动 Web 控制台及其受控运行 API。 |
+| `qwensci install-mcp-wrappers` | 在 Linux/WSL 上安装本地 Bash MCP 包装脚本。 |
+
+软件包也提供 `qwensci-survey`、`qwensci-idea`、`qwensci-doctor` 和 `qwensci-install-mcp-wrappers` 这些专用入口；新脚本和文档优先使用统一的 `qwensci` 命令。
 
 ## 显式多模态材料
 
@@ -231,26 +299,7 @@ uv run qwensci-web
 
 使用 `uv run qwensci quantitative status --run-dir <RUN_DIR>` 查看某个运行的当前状态和下一步安全动作。完整的英文命令示例见 [README.md](README.md#optional-supervised-quantitative-modeling)。
 
-## 常用命令
-
-| 命令 | 作用 |
-| --- | --- |
-| `qwensci survey` | 生成文献综述证据与产物。 |
-| `qwensci idea` | 生成结构化研究想法与方向。 |
-| `qwensci exp_design` | 生成并校验 design-only 实验设计。 |
-| `qwensci author` | 基于已验证交接生成研究计划。 |
-| `qwensci science` | 初始化、恢复或重启完整可审计流程。 |
-| `qwensci quantitative status` | 查看量化侧车状态和下一步操作。 |
-| `qwensci doctor` | 检查模型提供方与本地可选能力。 |
-| `qwensci-web` | 启动 Web 控制台及其受控运行 API。 |
-
-从源码运行时，命令前加 `uv run`；通过发布包安装时可直接使用 `qwensci …`。`qwensci-survey`、`qwensci-idea`、`qwensci-doctor` 与 `qwensci-install-mcp-wrappers` 是兼容的专用入口；新脚本优先使用统一的 `qwensci` 命令。
-
-## 可复现性与安全
-
-`src/config/default.yaml` 是模型提供方、角色模型、工作流设置、工作区路径和默认输出位置的规范配置。需要可复现实验项目时，请复制一份私有/项目专用配置并通过 `--config /path/to/config.yaml` 指定。
-
-仓库不会提交 API 密钥、下载的模型、向量库、缓存 PDF、生成文档或运行工作区。分享运行目录、截图或日志前，请自行复核其中的研究内容和来源。
+## 安全
 
 - 任何 API key 都应视为密钥；一旦出现在提交、聊天、日志或截图中，应立即轮换。
 - Web 日志是诊断视图，不是任意文件浏览器；服务只公开允许的阶段日志并进行脱敏。

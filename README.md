@@ -158,6 +158,47 @@ The repository also provides an **optional, supervised quantitative-modeling sid
 
 The recommended entry point is `qwensci science`. Each stage is also available as an individual command when you want to inspect, supply, or reuse a particular handoff.
 
+## Quick start: an auditable science run
+
+The primary command runs the full code-executed workflow. This example uses a topic supplied for Qwen-Sci:
+
+```bash
+uv run qwensci science \
+  --topic "Why do black holes exist? Nobel laureate Sir Roger Penrose proved Einstein’s prediction of the existence of black holes, which form when supermassive stars burn out and collapse in on themselves." \
+  --discipline-id "Astrophysics" \
+  --run-id black-hole-existence
+```
+
+The new run is created below `workspace/science-runs/black-hole-existence/` unless you provide `--output-root`. The command executes stages in order, records state after every transition, and prints the resulting run information.
+
+For a cheaper first pass, stop at an earlier stage:
+
+```bash
+uv run qwensci science \
+  --topic "Why do black holes exist? Nobel laureate Sir Roger Penrose proved Einstein’s prediction of the existence of black holes, which form when supermassive stars burn out and collapse in on themselves." \
+  --discipline-id "Astrophysics" \
+  --run-id black-hole-existence \
+  --until idea
+```
+
+Resume the same run rather than starting another directory:
+
+```bash
+uv run qwensci science \
+  --resume workspace/science-runs/black-hole-existence
+```
+
+If a stage needs to be re-run, restart from that point with an explicit confirmation. Earlier attempts remain available for audit:
+
+```bash
+uv run qwensci science \
+  --resume workspace/science-runs/black-hole-existence \
+  --restart-from exp_design \
+  --force
+```
+
+Use `--json` when another program needs the stable `science_run_result_v1` result on standard output. Use `qwensci science --help` for all supported options, including Author template and PDF-rendering settings.
+
 ## Explicit multimodal research materials
 
 Survey can incorporate declared local research materials rather than treating arbitrary local files as evidence. The input contract accepts `image`, `table`, `signal`, `audio`, `video`, `threeD`, `trajectory`, `text`, `symbolic`, and `molecule` records, validates file size and metadata, and writes a path-free handoff. The default mode is **local-only**: local parsers may derive bounded native findings, but no remote model observation or scientific claim is created from a file unless remote perception is explicitly authorized.
@@ -515,47 +556,6 @@ For a complete development checkout, prefer `uv sync --all-groups`. Focused inst
 | PDF parsing and full-text survey paths | `uv sync --group pdf` |
 | Explicit image, video, signal, table, audio, 3D, or trajectory inputs | `uv sync --group multimodal` |
 | Complete development setup | `uv sync --all-groups` |
-
-## Quick start: an auditable science run
-
-The primary command runs the full code-executed workflow. This example uses a topic supplied for Qwen-Sci:
-
-```bash
-uv run qwensci science \
-  --topic "Why do black holes exist?" \
-  --discipline-id "Astrophysics" \
-  --run-id black-hole-existence
-```
-
-The new run is created below `workspace/science-runs/black-hole-existence/` unless you provide `--output-root`. The command executes stages in order, records state after every transition, and prints the resulting run information.
-
-For a cheaper first pass, stop at an earlier stage:
-
-```bash
-uv run qwensci science \
-  --topic "Why do black holes exist?" \
-  --discipline-id "Astrophysics" \
-  --run-id black-hole-existence \
-  --until idea
-```
-
-Resume the same run rather than starting another directory:
-
-```bash
-uv run qwensci science \
-  --resume workspace/science-runs/black-hole-existence
-```
-
-If a stage needs to be re-run, restart from that point with an explicit confirmation. Earlier attempts remain available for audit:
-
-```bash
-uv run qwensci science \
-  --resume workspace/science-runs/black-hole-existence \
-  --restart-from exp_design \
-  --force
-```
-
-Use `--json` when another program needs the stable `science_run_result_v1` result on standard output. Use `qwensci science --help` for all supported options, including Author template and PDF-rendering settings.
 
 ## Web workspace V2
 
