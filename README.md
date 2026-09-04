@@ -62,6 +62,69 @@ uv run qwensci doctor
 
 `doctor` prints a check-by-check report for Python, `uv`, provider settings, credentials, and optional local retrieval assets. A non-zero result can be expected when optional models or provider keys have not been configured; fix every check required by the workflow you plan to run. In every new WSL shell, export `UV_PROJECT_ENVIRONMENT` and source its `bin/activate` file again. Do not use `uv run --no-sync`.
 
+## Reproducibility and local assets
+
+`src/config/default.yaml` is the canonical configuration for provider capabilities, role models, workflow settings, workspace paths, and default output locations. For a reproducible project, copy it to a private/project-specific file and pass that file with `--config /path/to/config.yaml`.
+
+The repository intentionally does not include credentials, downloaded embedding models, graph/vector stores, cached PDFs, generated documents, or runtime workspaces. Examples of locally provisioned assets include:
+
+```text
+models/all-MiniLM-L6-v2/
+models/bge-m3/
+data/processed/graph.db
+data/processed/core_component_summary_vector_store/
+workspace/science-runs/
+```
+
+### Install local embedding models with ModelScope
+
+The local vector-retrieval and novelty components use `all-MiniLM-L6-v2` and
+`bge-m3` when their configured model paths point to the directories above.
+Install the optional ModelScope dependency first (the `pdf` group includes
+`modelscope`), then run the following commands from the repository root. Replace
+`<repo_root>` with the absolute path to this checkout.
+
+```bash
+uv sync --group pdf
+
+mkdir -p <repo_root>/models/bge-m3
+mkdir -p <repo_root>/models/all-MiniLM-L6-v2
+
+modelscope download --model BAAI/bge-m3 \
+  --local_dir <repo_root>/models/bge-m3
+modelscope download --model sentence-transformers/all-MiniLM-L6-v2 \
+  --local_dir <repo_root>/models/all-MiniLM-L6-v2
+```
+
+For example, when the repository is the current directory, use `$PWD` in place
+of `<repo_root>`:
+
+```bash
+modelscope download --model BAAI/bge-m3 \
+  --local_dir "$PWD/models/bge-m3"
+modelscope download --model sentence-transformers/all-MiniLM-L6-v2 \
+  --local_dir "$PWD/models/all-MiniLM-L6-v2"
+```
+
+Keep these resources, `.env`, and any generated research artifacts outside commits. Review paths and contents before sharing logs because they can reveal local usernames, source documents, or organization information.
+
+## CLI reference
+
+All commands are available through `uv run qwensci …` from source, or `qwensci …` from a published-package environment.
+
+| Command | Purpose |
+| --- | --- |
+| `qwensci survey` | Produce literature-survey evidence and artifacts. |
+| `qwensci idea` | Develop structured research ideas and directions. |
+| `qwensci exp_design` | Produce and validate a design-only experimental plan. |
+| `qwensci author` | Create an English research-plan package from verified handoffs. |
+| `qwensci science` | Run, resume, or restart the complete auditable workflow. |
+| `qwensci doctor` | Report local runtime prerequisites. |
+| `qwensci-web` | Serve the same-origin Web workspace and its controlled research-run API. |
+| `qwensci install-mcp-wrappers` | Install local Bash-based MCP wrapper scripts on Linux/WSL. |
+
+The package also exposes `qwensci-survey`, `qwensci-idea`, `qwensci-doctor`, and `qwensci-install-mcp-wrappers` as focused console-script entry points. Prefer the unified `qwensci` command in new scripts and documentation.
+
 ## Code-executed scientific workflow
 
 ```text
@@ -566,39 +629,6 @@ uv run qwensci author \
 ```
 
 Author verifies the Survey and ExperimentDesign bindings before composing an English research-plan package. Add `--template-dir /path/to/latex-template` to render a copied template; use `--render-required` with `qwensci science` when a rendered document must be produced for the run to succeed. Rendered reports contain only the routed research-plan sections and fixed appendices—no acknowledgment section is emitted by default. Their default validated minimum is seven pages; `--minimum-pages 8` is treated as the legacy spelling of that seven-page minimum, while higher explicit minimums remain available.
-
-## CLI reference
-
-All commands are available through `uv run qwensci …` from source, or `qwensci …` from a published-package environment.
-
-| Command | Purpose |
-| --- | --- |
-| `qwensci survey` | Produce literature-survey evidence and artifacts. |
-| `qwensci idea` | Develop structured research ideas and directions. |
-| `qwensci exp_design` | Produce and validate a design-only experimental plan. |
-| `qwensci author` | Create an English research-plan package from verified handoffs. |
-| `qwensci science` | Run, resume, or restart the complete auditable workflow. |
-| `qwensci doctor` | Report local runtime prerequisites. |
-| `qwensci-web` | Serve the same-origin Web workspace and its controlled research-run API. |
-| `qwensci install-mcp-wrappers` | Install local Bash-based MCP wrapper scripts on Linux/WSL. |
-
-The package also exposes `qwensci-survey`, `qwensci-idea`, `qwensci-doctor`, and `qwensci-install-mcp-wrappers` as focused console-script entry points. Prefer the unified `qwensci` command in new scripts and documentation.
-
-## Reproducibility and local assets
-
-`src/config/default.yaml` is the canonical configuration for provider capabilities, role models, workflow settings, workspace paths, and default output locations. For a reproducible project, copy it to a private/project-specific file and pass that file with `--config /path/to/config.yaml`.
-
-The repository intentionally does not include credentials, downloaded embedding models, graph/vector stores, cached PDFs, generated documents, or runtime workspaces. Examples of locally provisioned assets include:
-
-```text
-models/all-MiniLM-L6-v2/
-models/bge-m3/
-data/processed/graph.db
-data/processed/core_component_summary_vector_store/
-workspace/science-runs/
-```
-
-Keep these resources, `.env`, and any generated research artifacts outside commits. Review paths and contents before sharing logs because they can reveal local usernames, source documents, or organization information.
 
 ## Security
 
