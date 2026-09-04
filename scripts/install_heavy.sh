@@ -4,111 +4,30 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
-VENV_PYTHON="$ROOT_DIR/.venv/bin/python"
-export PIP_CACHE_DIR="${PIP_CACHE_DIR:-$ROOT_DIR/.pip-cache}"
+PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-$ROOT_DIR/.venv}"
+export UV_PROJECT_ENVIRONMENT="$PROJECT_ENVIRONMENT"
+VENV_PYTHON="$PROJECT_ENVIRONMENT/bin/python"
 
-if [[ ! -x "$VENV_PYTHON" ]]; then
-  echo "missing virtualenv at $ROOT_DIR/.venv"
-  echo "run ./scripts/install_base.sh first"
+if ! command -v uv >/dev/null 2>&1; then
+  echo "uv is required to install the dependency groups"
   exit 1
 fi
-
-ensure_pip() {
-  if "$VENV_PYTHON" -m pip --version >/dev/null 2>&1; then
-    return
-  fi
-
-  echo "pip is missing in .venv; bootstrapping with ensurepip"
-  "$VENV_PYTHON" -m ensurepip --upgrade
-}
-
-memory_packages=(
-  "faiss-cpu==1.12.0"
-  "hdbscan==0.8.42"
-  "rank-bm25==0.2.2"
-)
-
-ml_packages=(
-  "accelerate==1.12.0"
-  "contourpy==1.3.2"
-  "cycler==0.12.1"
-  "datasets==4.4.2"
-  "einops==0.8.1"
-  "fonttools==4.61.1"
-  "fsspec==2025.10.0"
-  "hf-xet==1.2.0"
-  "huggingface-hub==0.36.0"
-  "imageio==2.37.2"
-  "joblib==1.5.3"
-  "kiwisolver==1.4.9"
-  "matplotlib==3.10.8"
-  "multiprocess==0.70.18"
-  "pandas==2.3.3"
-  "peft==0.18.0"
-  "pillow==12.0.0"
-  "polars==1.36.1"
-  "pyarrow==22.0.0"
-  "pyparsing==3.3.1"
-  "pytz==2025.2"
-  "safetensors==0.7.0"
-  "scikit-image==0.25.2"
-  "scikit-learn==1.7.2"
-  "scipy==1.15.3"
-  "seaborn==0.13.2"
-  "sentence-transformers==5.2.0"
-  "sentencepiece==0.2.1"
-  "shapely==2.1.2"
-  "sympy==1.14.0"
-  "tensorboard==2.20.0"
-  "tokenizers==0.22.1"
-  "torch==2.11.0"
-  "torchvision==0.26.0"
-  "transformers==4.57.3"
-)
-
-paper_packages=(
-  "albucore==0.0.24"
-  "albumentations==2.0.8"
-  "av==16.0.1"
-  "doclayout-yolo==0.0.4"
-  "fast-langdetect==0.2.5"
-  "magika==1.0.1"
-  "mineru[all]==3.4.5"
-  "mineru-vl-utils==1.2.1"
-  "modelscope==1.33.0"
-  "onnxruntime==1.23.2"
-  "opencv-python-headless==5.0.0.93"
-  "pdfminer.six==20250506"
-  "pdftext==0.6.3"
-  "pypdf==6.5.0"
-  "pypdfium2==4.30.0"
-  "pyclipper==1.4.0"
-  "qwen-vl-utils==0.0.14"
-  "reportlab==4.4.7"
-  "ultralytics==8.3.243"
-)
 
 usage() {
   cat <<'EOF'
 Usage: ./scripts/install_heavy.sh [memory] [ml] [paper] [all]
 
-Installs selected heavy dependency groups into the existing .venv with pip.
+Installs selected heavy dependency groups with uv while preserving the
+project's headless-only OpenCV dependency override.
 Examples:
   ./scripts/install_heavy.sh ml
   ./scripts/install_heavy.sh memory ml
   ./scripts/install_heavy.sh all
 
-Pass pip mirror settings through environment variables if needed:
-  PIP_INDEX_URL=...
-  PIP_EXTRA_INDEX_URL=...
+Pass package-index settings through uv environment variables if needed:
+  UV_INDEX_URL=...
+  UV_EXTRA_INDEX_URL=...
 EOF
-}
-
-install_group() {
-  local group_name="$1"
-  shift
-  echo "installing $group_name dependencies with pip"
-  "$VENV_PYTHON" -m pip install "$@"
 }
 
 if [[ $# -eq 0 ]]; then
@@ -116,16 +35,33 @@ if [[ $# -eq 0 ]]; then
 fi
 
 declare -A selected_groups=()
+declare -a sync_groups=()
 
 for group in "$@"; do
   case "$group" in
     memory|ml|paper)
-      selected_groups["$group"]=1
+      if [[ -z "${selected_groups[$group]:-}" ]]; then
+        selected_groups["$group"]=1
+        if [[ "$group" == "paper" ]]; then
+          sync_groups+=(--group pdf)
+        else
+          sync_groups+=(--group "$group")
+        fi
+      fi
       ;;
     all)
-      selected_groups["memory"]=1
-      selected_groups["ml"]=1
-      selected_groups["paper"]=1
+      if [[ -z "${selected_groups[memory]:-}" ]]; then
+        selected_groups[memory]=1
+        sync_groups+=(--group memory)
+      fi
+      if [[ -z "${selected_groups[ml]:-}" ]]; then
+        selected_groups[ml]=1
+        sync_groups+=(--group ml)
+      fi
+      if [[ -z "${selected_groups[paper]:-}" ]]; then
+        selected_groups[paper]=1
+        sync_groups+=(--group pdf)
+      fi
       ;;
     -h|--help)
       usage
@@ -139,16 +75,15 @@ for group in "$@"; do
   esac
 done
 
-ensure_pip
+echo "syncing selected dependency groups with uv"
+uv sync --locked --inexact "${sync_groups[@]}"
 
-if [[ -n "${selected_groups[memory]:-}" ]]; then
-  install_group memory "${memory_packages[@]}"
-fi
-
-if [[ -n "${selected_groups[ml]:-}" ]]; then
-  install_group ml "${ml_packages[@]}"
-fi
+echo "removing GUI OpenCV distributions from the target environment"
+uv pip uninstall --python "$VENV_PYTHON" opencv-python opencv-contrib-python || true
 
 if [[ -n "${selected_groups[paper]:-}" ]]; then
-  install_group paper "${paper_packages[@]}"
+  echo "repairing the headless OpenCV distribution"
+  uv pip install --python "$VENV_PYTHON" --reinstall --no-deps \
+    "opencv-python-headless==5.0.0.93"
+  "$VENV_PYTHON" -c 'import cv2; assert hasattr(cv2, "INTER_NEAREST"); print(f"cv2={cv2.__version__} ({cv2.__file__})")'
 fi
