@@ -132,6 +132,37 @@ python -m src.cli quantitative parameters extract `
   --run-dir <RUN> --idea-id Q1 --version 0 --document-id UPD-001
 ```
 
+当全文清单中有多篇相互独立的论文时，可以批量并行抽取。每个文档使用独立的
+模型请求；科学运行锁只在读取清单和提交结果时持有，因此不会把远程 LLM 调用
+串行化。候选 ID 在提交阶段重新分配，多个 worker 不会产生重复 ID：
+
+```powershell
+python -m src.cli quantitative parameters extract-batch `
+  --run-dir <RUN> --idea-id Q1 --version 0 `
+  --document-ids PFD-001,PFD-002,PFD-003 --workers 3
+
+# 或处理全文清单及用户导入目录中的全部受控文档
+python -m src.cli quantitative parameters extract-batch `
+  --run-dir <RUN> --idea-id Q1 --version 0 --all --workers 3
+```
+
+抽取器先按参数符号、含义、单位、适用条件和检索词定位页面，只向模型发送命中
+页面及少量前后文，而不是整篇 PDF；没有任何命中时会直接写入空候选集合，不
+调用模型。页面文本按文档 SHA-256 缓存，后续重试会复用解析结果。默认的
+`extraction_workers=3`、`fulltext_workers=4`、`fulltext_per_host_concurrency=2`、
+每参数最多三个页面片段和 6000 字符上下文都可在
+`quantitative_modeling.parameter_evidence` 中调整；`minimum_keyword_hits` 可提高
+局部检索门槛（默认 `minimum_keyword_hits=2`）以减少常见词误命中。并发数应
+全文下载默认每篇最多尝试两个声明的 PDF URL，并对临时 HTTP 失败重试一次。并发数应
+结合模型服务和学术提供方的速率限制设置；并行不会绕过人工候选审阅、参数批准
+或仿真执行授权。
+
+若模型注册表声明支持原生 JSON Schema，抽取请求会优先使用严格的
+`quantitative_parameter_evidence` schema；不支持时自动退回 `json_object`，并仍
+由本地契约、单位检查和原文 quote 校验兜底。章节窗口和结构化 LLM 响应分别按
+窗口内容与 prompt/model identity 缓存，缓存损坏只会触发重新计算，不会改变证据
+边界。
+
 抽取后的候选会保存在：
 
 ```text

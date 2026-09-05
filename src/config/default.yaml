@@ -227,10 +227,23 @@ quantitative_modeling:
     max_papers_per_parameter: 12
     max_fulltext_documents_per_parameter: 5
     max_document_chars_for_extraction: 40000
+    extraction_max_output_tokens: 1200
+    extraction_temperature: 0.0
+    extraction_stream: false
+    extraction_workers: 3
+    fulltext_workers: 4
+    fulltext_per_host_concurrency: 2
+    max_snippets_per_parameter: 3
+    context_pages_before: 1
+    context_pages_after: 1
+    max_snippet_characters: 6000
+    minimum_keyword_hits: 2
+    cache_enabled: true
+    stop_when_required_parameters_covered: true
     fulltext_max_bytes: 20971520
     request_timeout_seconds: 30
-    max_oa_pdf_candidates_per_paper: 3
-    fulltext_http_max_retries: 0
+    max_oa_pdf_candidates_per_paper: 2
+    fulltext_http_max_retries: 1
     fulltext_connect_timeout_seconds: 5
     fulltext_read_timeout_seconds: 30
     openalex_base_url: "https://api.openalex.org"

@@ -26,6 +26,9 @@ from src.agents.quantitative_modeling.parameter_contracts import (
     normalize_model_blueprint,
     parameter_evidence_summary,
 )
+from src.agents.quantitative_modeling.parameter_evidence.extraction import (
+    PARAMETER_EVIDENCE_RESPONSE_SCHEMA,
+)
 from src.agents.quantitative_modeling.publisher.json_markdown_consistency import (
     JsonMarkdownConsistencyError,
     validate_json_markdown_consistency,
@@ -345,6 +348,25 @@ def _report_synthesis_stage(llm_call: Callable[..., object], message: str, *args
         _LOGGER.info(message, *args)
 
 
+def _response_format_unsupported(error: Exception) -> bool:
+    message = str(error or "").casefold()
+    return (
+        ("response_format" in message or "json_schema" in message)
+        and any(
+            marker in message
+            for marker in (
+                "not supported",
+                "unsupported",
+                "unknown parameter",
+                "unrecognized parameter",
+                "invalid parameter",
+                "only support",
+                "must be json_object",
+            )
+        )
+    )
+
+
 def _preflight_synthesis_context(
     *,
     lineage: Mapping[str, object],
@@ -595,7 +617,12 @@ def build_quantitative_model_llm_call(*, config: Any, model: str | None = None) 
         if bool(setting(quantitative_config, "progress_to_stderr", True)):
             print(f"[quantitative-model] {formatted}", file=sys.stderr, flush=True)
 
-    def call(prompt: str, *, phase: str = "draft") -> object:
+    def call(
+        prompt: str,
+        *,
+        phase: str = "draft",
+        parameter_count: int | None = None,
+    ) -> object:
         runtime_config = config
         quantitative_config = setting(runtime_config, "quantitative_modeling", {})
         configured_model = _text(model or setting(quantitative_config, "model"))
@@ -612,6 +639,7 @@ def build_quantitative_model_llm_call(*, config: Any, model: str | None = None) 
 
             agent = AgentBase(config=runtime_config, provider_name=provider_name or None)
             holder.agent = agent
+        call.agent = agent
         if not configured_model:
             configured_model = _text(agent.provider.default_models.get("idea_generation"))
         if not configured_model:
@@ -622,13 +650,24 @@ def build_quantitative_model_llm_call(*, config: Any, model: str | None = None) 
             timeout_seconds = max(1.0, float(timeout_value))
         except (TypeError, ValueError):
             timeout_seconds = 1800.0
-        token_key = "repair_max_output_tokens" if phase == "repair" else "max_output_tokens"
-        default_tokens = 16_000 if phase == "repair" else 24_000
-        token_value = setting(quantitative_config, token_key, default_tokens)
+        if phase == "parameter_extraction":
+            token_key = "parameter_evidence.extraction_max_output_tokens"
+            default_tokens = 1_200
+        else:
+            token_key = "repair_max_output_tokens" if phase == "repair" else "max_output_tokens"
+            default_tokens = 16_000 if phase == "repair" else 24_000
+        if "." in token_key:
+            section_name, nested_key = token_key.split(".", 1)
+            token_value = setting(setting(quantitative_config, section_name, {}), nested_key, default_tokens)
+        else:
+            token_value = setting(quantitative_config, token_key, default_tokens)
         try:
             max_output_tokens = max(256, int(token_value))
         except (TypeError, ValueError):
             max_output_tokens = default_tokens
+        if phase == "parameter_extraction" and parameter_count is not None:
+            dynamic_limit = min(2_048, 512 + 256 * max(1, int(parameter_count)))
+            max_output_tokens = min(max_output_tokens, dynamic_limit)
         max_output_tokens = min(max_output_tokens, int(model_spec.max_output_tokens))
         try:
             max_synthesis_grid_cells = max(
@@ -638,7 +677,10 @@ def build_quantitative_model_llm_call(*, config: Any, model: str | None = None) 
             max_synthesis_grid_cells = 4096
         call.max_synthesis_grid_cells = max_synthesis_grid_cells
         stream_override = os.getenv("QUANTITATIVE_MODELING_STREAM")
-        if stream_override is None:
+        if phase == "parameter_extraction":
+            extraction_config = setting(quantitative_config, "parameter_evidence", {})
+            requested_stream = bool(setting(extraction_config, "extraction_stream", False))
+        elif stream_override is None:
             requested_stream = bool(setting(quantitative_config, "stream", True))
         else:
             requested_stream = stream_override.strip().lower() in {"1", "true", "yes", "on"}
@@ -683,15 +725,46 @@ def build_quantitative_model_llm_call(*, config: Any, model: str | None = None) 
             max_output_tokens,
             use_stream,
         )
-        response = agent.chat(
-            prompt,
-            model=configured_model,
-            temperature=0.2,
-            timeout=timeout_seconds,
-            max_output_tokens=max_output_tokens,
-            stream=use_stream,
-            stream_callback=on_delta if use_stream else None,
-        )
+        if phase == "parameter_extraction":
+            extraction_config = setting(quantitative_config, "parameter_evidence", {})
+            try:
+                temperature = float(setting(extraction_config, "extraction_temperature", 0.0))
+            except (TypeError, ValueError):
+                temperature = 0.0
+        else:
+            temperature = 0.2
+        request_kwargs: dict[str, object] = {
+            "model": configured_model,
+            "temperature": max(0.0, min(2.0, temperature)),
+            "timeout": timeout_seconds,
+            "max_output_tokens": max_output_tokens,
+            "stream": use_stream,
+            "stream_callback": on_delta if use_stream else None,
+        }
+        native_json_schema = False
+        if phase == "parameter_extraction":
+            capabilities = model_spec.capabilities
+            if bool(getattr(capabilities, "json_schema", False)):
+                request_kwargs["response_format"] = {
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "quantitative_parameter_evidence",
+                        "strict": True,
+                        "schema": PARAMETER_EVIDENCE_RESPONSE_SCHEMA,
+                    },
+                }
+                native_json_schema = True
+            elif bool(getattr(capabilities, "json_object", False)):
+                request_kwargs["response_format"] = {"type": "json_object"}
+            call.supports_plain_json_response = "response_format" in request_kwargs
+        try:
+            response = agent.chat(prompt, **request_kwargs)
+        except Exception as error:
+            if not (native_json_schema and _response_format_unsupported(error)):
+                raise
+            request_kwargs["response_format"] = {"type": "json_object"}
+            call.supports_plain_json_response = True
+            response = agent.chat(prompt, **request_kwargs)
         progress(
             "request completed phase=%s model=%s response_chars=%d elapsed=%.1fs",
             phase,
@@ -703,6 +776,8 @@ def build_quantitative_model_llm_call(*, config: Any, model: str | None = None) 
 
     call.supports_phase = True
     call.report_stage = report_stage
+    configured_quantitative = setting(config, "quantitative_modeling", {})
+    call.cache_identity = _text(model or setting(configured_quantitative, "model")) or "configured-default"
     return call
 
 

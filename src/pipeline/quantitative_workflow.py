@@ -674,8 +674,15 @@ def extract_quantitative_parameter_candidates(
     document_id: str,
     llm_call: Callable[[str], object],
     maximum_characters: int = 40_000,
+    extraction_options: Mapping[str, object] | None = None,
 ) -> Path:
-    """Extract one immutable candidate collection from a controlled document."""
+    """Extract one immutable candidate collection from a controlled document.
+
+    The remote extraction request deliberately runs outside the science-run
+    lock.  The lock is held only while reading immutable inputs and committing
+    the resulting collection, so independent documents can be processed in
+    parallel without racing artifact writes.
+    """
 
     root, _metadata, _state = _load_run(run_dir)
     with locked_science_run(science_run_paths(root)):
@@ -690,22 +697,42 @@ def extract_quantitative_parameter_candidates(
         source_path = Path(_text(document.get("path"))).expanduser().resolve()
         if not source_path.is_file() or file_sha256(source_path) != _text(document.get("sha256")):
             raise QuantitativeWorkflowError("parameter evidence document content no longer matches its manifest")
-        counters: dict[str, int] = {}
-        for collection in _load_parameter_evidence_collections(evidence_dir):
-            for candidate in collection["candidates"]:
+    options = dict(extraction_options or {})
+    cache_enabled = bool(options.get("cache_enabled", True))
+    cache_root = evidence_dir / "cache" if cache_enabled else None
+    extraction_cache = cache_root / "document_text" if cache_root else None
+    section_cache = cache_root / "section_windows" if cache_root else None
+    response_cache = cache_root / "llm_responses" if cache_root else None
+    collection = extract_parameter_evidence_candidates(
+        blueprint=blueprint,
+        source_document=document,
+        llm_call=llm_call,
+        maximum_characters=maximum_characters,
+        cache_directory=extraction_cache,
+        max_snippets_per_parameter=int(options.get("max_snippets_per_parameter", 3) or 3),
+        context_pages_before=int(options.get("context_pages_before", 1) or 0),
+        context_pages_after=int(options.get("context_pages_after", 1) or 0),
+        max_snippet_characters=int(options.get("max_snippet_characters", 6000) or 6000),
+        section_cache_directory=section_cache,
+        llm_response_cache_directory=response_cache,
+        minimum_keyword_hits=int(options.get("minimum_keyword_hits", 2) or 2),
+    )
+    with locked_science_run(science_run_paths(root)):
+        _require_unfinalized(root, quantitative_idea_id)
+        evidence_dir = _parameter_evidence_directory(root, quantitative_idea_id, version)
+        counters = {}
+        for existing in _load_parameter_evidence_collections(evidence_dir):
+            for candidate in existing["candidates"]:
                 parameter_id = candidate["parameter_id"]
                 try:
                     counter = int(str(candidate["candidate_id"]).rsplit("-", 1)[1])
-                except (IndexError, ValueError):
-                    raise QuantitativeWorkflowError("existing parameter evidence candidate ID is malformed")
+                except (IndexError, ValueError) as error:
+                    raise QuantitativeWorkflowError("existing parameter evidence candidate ID is malformed") from error
                 counters[parameter_id] = max(counters.get(parameter_id, 0), counter)
-        collection = extract_parameter_evidence_candidates(
-            blueprint=blueprint,
-            source_document=document,
-            llm_call=llm_call,
-            next_candidate_numbers=counters,
-            maximum_characters=maximum_characters,
-        )
+        for candidate in collection.get("candidates", []):
+            parameter_id = _text(candidate.get("parameter_id"))
+            counters[parameter_id] = counters.get(parameter_id, 0) + 1
+            candidate["candidate_id"] = f"PEC-{quantitative_idea_id}-{parameter_id}-{counters[parameter_id]:03d}"
         extraction_dir = evidence_dir / "extractions"
         index = len(list(extraction_dir.glob("extract-*.json"))) + 1 if extraction_dir.is_dir() else 1
         return _write_json_once(extraction_dir / f"extract-{index:03d}.json", collection)

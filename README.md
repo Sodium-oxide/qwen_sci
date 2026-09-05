@@ -369,6 +369,41 @@ uv run qwensci quantitative parameters extract \
   --document-id "$DOCUMENT_ID"
 ```
 
+For several independent controlled documents, use the bounded parallel extractor. It
+keeps PDF parsing and LLM requests outside the science-run lock, then serializes only
+the short artifact commit; candidate IDs are reassigned during that commit so workers
+cannot collide:
+
+```bash
+uv run qwensci quantitative parameters extract-batch \
+  --run-dir "$RUN_DIR" \
+  --idea-id "$Q_ID" \
+  --version "$Q_VERSION" \
+  --document-ids PFD-001,PFD-002,PFD-003 \
+  --workers 3
+
+# Or process every registered full-text or user-provided document:
+uv run qwensci quantitative parameters extract-batch \
+  --run-dir "$RUN_DIR" \
+  --idea-id "$Q_ID" \
+  --version "$Q_VERSION" \
+  --all \
+  --workers 3
+```
+
+Extraction first locates pages containing the requested parameter symbols, meanings,
+units, applicability conditions, or retrieval terms. Only those pages and bounded
+neighbor context are sent to the model. A document with no matching page skips the LLM
+call, and parsed pages, section windows, and structured responses are cached by bounded
+content/model identities. When the model registry supports it, extraction requests use
+strict native JSON Schema with a safe `json_object` fallback. Tune `extraction_workers`,
+`fulltext_workers`, `max_snippets_per_parameter`, `max_snippet_characters`, and
+`minimum_keyword_hits` (default `2`) in `quantitative_modeling.parameter_evidence`; keep worker counts and
+`fulltext_per_host_concurrency` within provider rate limits. Parallel extraction does
+not select candidates or authorize simulation. Full-text acquisition considers at most
+two declared PDF URLs per paper and retries transient HTTP failures once. Increase `minimum_keyword_hits` above
+its default of `2` when common terms produce too many local page matches.
+
 Review the extracted, quote-anchored candidates against the blueprint. A human must provide a complete selection—one entry for every requested parameter—using the actual `parameter_id` and `candidate_id` returned for this run. Do not replace a candidate-backed normalized value with an invented value. The following is a schema example, not a pulsar parameter list; replace every placeholder after review:
 
 ```bash

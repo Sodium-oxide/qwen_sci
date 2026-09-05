@@ -84,6 +84,29 @@ def normalize_responses_kwargs(
     strip_gpt_parameters: bool = False,
 ) -> Dict[str, Any]:
     normalized = dict(kwargs)
+    response_format = normalized.get("response_format")
+    if response_format is not None and "text" not in normalized:
+        normalized.pop("response_format", None)
+        if isinstance(response_format, Mapping):
+            response_type = response_format.get("type")
+            if response_type == "json_object":
+                normalized["text"] = {"format": {"type": "json_object"}}
+            elif response_type == "json_schema":
+                schema_payload = response_format.get("json_schema")
+                if isinstance(schema_payload, Mapping):
+                    schema_format = {
+                        "type": "json_schema",
+                        "name": schema_payload.get("name", "structured_output"),
+                        "schema": schema_payload.get("schema", {}),
+                        "strict": bool(schema_payload.get("strict", True)),
+                    }
+                    normalized["text"] = {"format": schema_format}
+                else:
+                    normalized["response_format"] = response_format
+            else:
+                normalized["response_format"] = response_format
+        else:
+            normalized["response_format"] = response_format
     if "max_output_tokens" not in normalized:
         if "max_completion_tokens" in normalized:
             normalized["max_output_tokens"] = normalized.pop("max_completion_tokens")

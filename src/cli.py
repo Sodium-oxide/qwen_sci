@@ -759,6 +759,24 @@ def _build_root_parser() -> argparse.ArgumentParser:
     quantitative_parameter_extract.add_argument("--max-document-chars", type=int, default=40_000)
     quantitative_parameter_extract.set_defaults(func=_quantitative_parameter_extract_command)
 
+    quantitative_parameter_extract_batch = quantitative_parameters_subparsers.add_parser(
+        "extract-batch", help="Extract parameter candidates from multiple controlled documents in parallel"
+    )
+    quantitative_parameter_extract_batch.add_argument("--run-dir", required=True)
+    quantitative_parameter_extract_batch.add_argument("--idea-id", choices=("Q1", "Q2"), required=True)
+    quantitative_parameter_extract_batch.add_argument("--version", type=int, choices=(0, 1, 2), default=0)
+    quantitative_parameter_extract_batch.add_argument(
+        "--document-ids", help="Comma-separated document IDs; omit when using --all"
+    )
+    quantitative_parameter_extract_batch.add_argument(
+        "--all", action="store_true", help="Extract every registered full-text or user-provided document"
+    )
+    quantitative_parameter_extract_batch.add_argument("--workers", type=int)
+    quantitative_parameter_extract_batch.add_argument("--config", default=str(DEFAULT_CONFIG_PATH))
+    quantitative_parameter_extract_batch.add_argument("--model")
+    quantitative_parameter_extract_batch.add_argument("--max-document-chars", type=int, default=40_000)
+    quantitative_parameter_extract_batch.set_defaults(func=_quantitative_parameter_extract_batch_command)
+
     quantitative_parameter_propose = quantitative_parameters_subparsers.add_parser(
         "propose", help="Create a human-reviewable parameter selection proposal"
     )
@@ -2519,15 +2537,25 @@ def _quantitative_parameter_extract_command(args: argparse.Namespace) -> int:
             raise ValueError("--max-document-chars must be positive")
         config_path = _resolve_config_path(args.config)
         _ensure_config_exists(config_path)
+        config = load_config(str(config_path))
+        evidence_config = getattr(getattr(config, "quantitative_modeling", {}), "parameter_evidence", {})
         collection = extract_quantitative_parameter_candidates(
             run_dir=_resolve_cli_path(args.run_dir),
             quantitative_idea_id=args.idea_id,
             version=args.version,
             document_id=args.document_id,
             llm_call=build_quantitative_model_llm_call(
-                config=load_config(str(config_path)), model=args.model
+                config=config, model=args.model
             ),
             maximum_characters=args.max_document_chars,
+            extraction_options={
+                "cache_enabled": bool(getattr(evidence_config, "cache_enabled", True)),
+                "max_snippets_per_parameter": int(getattr(evidence_config, "max_snippets_per_parameter", 3) or 3),
+                "context_pages_before": int(getattr(evidence_config, "context_pages_before", 1) or 0),
+                "context_pages_after": int(getattr(evidence_config, "context_pages_after", 1) or 0),
+                "max_snippet_characters": int(getattr(evidence_config, "max_snippet_characters", 6000) or 6000),
+                "minimum_keyword_hits": int(getattr(evidence_config, "minimum_keyword_hits", 2) or 2),
+            },
         )
     except (OSError, ValueError) as exc:
         print(f"quantitative parameter extraction input error: {exc}", file=sys.stderr)
@@ -2536,6 +2564,180 @@ def _quantitative_parameter_extract_command(args: argparse.Namespace) -> int:
         print(f"quantitative parameter extraction error: {exc}", file=sys.stderr)
         return QUANTITATIVE_EXIT_MODEL_ERROR
     _print_quantitative_result({"status": "CANDIDATES_EXTRACTED", "collection": str(collection)})
+    return QUANTITATIVE_EXIT_SUCCESS
+
+
+def _quantitative_parameter_extract_batch_command(args: argparse.Namespace) -> int:
+    try:
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+
+        from src.agents.quantitative_modeling.model_synthesis import build_quantitative_model_llm_call
+        from src.config import load_config
+        from src.pipeline.quantitative_workflow import (
+            _load_run,
+            _load_parameter_blueprint,
+            _load_parameter_evidence_collections,
+            _load_fulltext_document,
+            _parameter_evidence_directory,
+            extract_quantitative_parameter_candidates,
+        )
+
+        if bool(args.all) == bool(args.document_ids):
+            raise ValueError("provide exactly one of --all or --document-ids")
+        if args.workers is not None and args.workers < 1:
+            raise ValueError("--workers must be positive")
+        if args.max_document_chars < 1:
+            raise ValueError("--max-document-chars must be positive")
+        config_path = _resolve_config_path(args.config)
+        _ensure_config_exists(config_path)
+        config = load_config(str(config_path))
+        root, _metadata, _state = _load_run(_resolve_cli_path(args.run_dir))
+        evidence_dir = _parameter_evidence_directory(root, args.idea_id, args.version)
+        if args.all:
+            document_ids = []
+            manifest_path = evidence_dir / "fulltext" / "fulltext_manifest.json"
+            if manifest_path.is_file():
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                document_ids.extend(
+                    str(item.get("document_id"))
+                    for item in manifest.get("documents") or []
+                    if item.get("document_id")
+                )
+            user_documents_dir = evidence_dir / "user_documents"
+            if user_documents_dir.is_dir():
+                for path in sorted(user_documents_dir.glob("*.json")):
+                    try:
+                        document = json.loads(path.read_text(encoding="utf-8"))
+                    except json.JSONDecodeError:
+                        continue
+                    if document.get("document_id"):
+                        document_ids.append(str(document["document_id"]))
+        else:
+            document_ids = [item.strip() for item in str(args.document_ids).split(",") if item.strip()]
+        document_ids = list(dict.fromkeys(document_ids))
+        if not document_ids:
+            raise ValueError("no parameter evidence documents were selected")
+        evidence_config = getattr(getattr(config, "quantitative_modeling", {}), "parameter_evidence", {})
+        workers = int(args.workers or getattr(evidence_config, "extraction_workers", 3) or 3)
+        workers = max(1, min(workers, len(document_ids)))
+        stop_when_covered = bool(getattr(evidence_config, "stop_when_required_parameters_covered", True))
+        blueprint, _ = _load_parameter_blueprint(
+            root=root,
+            quantitative_idea_id=args.idea_id,
+            version=args.version,
+        )
+        required_parameter_ids = {
+            str(request["parameter_id"]) for request in blueprint.get("parameter_requests") or []
+        }
+        requests_by_id = {
+            str(request["parameter_id"]): request
+            for request in blueprint.get("parameter_requests") or []
+        }
+
+        def coverage_complete() -> bool:
+            if not required_parameter_ids:
+                return True
+            candidates_by_parameter: dict[str, list[dict[str, object]]] = {}
+            for collection in _load_parameter_evidence_collections(evidence_dir):
+                for candidate in collection.get("candidates", []):
+                    parameter_id = str(candidate["parameter_id"])
+                    candidates_by_parameter.setdefault(parameter_id, []).append(candidate)
+            for parameter_id in required_parameter_ids:
+                request = requests_by_id[parameter_id]
+                required_conditions = {
+                    str(condition)
+                    for condition in request.get("required_conditions") or []
+                    if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", str(condition).strip())
+                }
+                if not any(
+                    required_conditions <= set(str(key) for key in candidate.get("conditions", {}))
+                    for candidate in candidates_by_parameter.get(parameter_id, [])
+                ):
+                    return False
+            return True
+
+        priority_rank = {
+            "LITERATURE_REQUIRED": 0,
+            "USER_OR_LITERATURE": 1,
+            "LITERATURE_PREFERRED": 1,
+            "MODEL_ASSUMPTION_ALLOWED": 2,
+        }
+
+        def document_priority(document_id: str) -> tuple[int, int, str]:
+            document = _load_fulltext_document(evidence_dir, document_id) or {}
+            covered_ids = {
+                str(value) for value in document.get("parameter_request_ids") or []
+            }
+            missing_requests = [
+                request
+                for parameter_id, request in requests_by_id.items()
+                if parameter_id in covered_ids
+            ]
+            if not missing_requests:
+                return (3, 0, document_id)
+            best_rank = min(
+                priority_rank.get(str(request.get("evidence_requirement")), 2)
+                for request in missing_requests
+            )
+            return (best_rank, -len(missing_requests), document_id)
+
+        document_ids.sort(key=document_priority)
+
+        options = {
+            "cache_enabled": bool(getattr(evidence_config, "cache_enabled", True)),
+            "max_snippets_per_parameter": int(getattr(evidence_config, "max_snippets_per_parameter", 3) or 3),
+            "context_pages_before": int(getattr(evidence_config, "context_pages_before", 1) or 0),
+            "context_pages_after": int(getattr(evidence_config, "context_pages_after", 1) or 0),
+            "max_snippet_characters": int(getattr(evidence_config, "max_snippet_characters", 6000) or 6000),
+            "minimum_keyword_hits": int(getattr(evidence_config, "minimum_keyword_hits", 2) or 2),
+        }
+
+        def run_one(document_id: str) -> dict[str, object]:
+            llm_call = build_quantitative_model_llm_call(config=config, model=args.model)
+            path = extract_quantitative_parameter_candidates(
+                run_dir=_resolve_cli_path(args.run_dir),
+                quantitative_idea_id=args.idea_id,
+                version=args.version,
+                document_id=document_id,
+                llm_call=llm_call,
+                maximum_characters=args.max_document_chars,
+                extraction_options=options,
+            )
+            return {"document_id": document_id, "collection": str(path), "status": "CANDIDATES_EXTRACTED"}
+
+        results: list[dict[str, object]] = []
+        if stop_when_covered and coverage_complete():
+            results = [
+                {"document_id": document_id, "status": "SKIPPED_REQUIRED_PARAMETERS_COVERED"}
+                for document_id in document_ids
+            ]
+        else:
+            remaining = list(document_ids)
+            while remaining:
+                batch = remaining[:workers]
+                remaining = remaining[workers:]
+                with ThreadPoolExecutor(max_workers=len(batch)) as executor:
+                    future_map = {executor.submit(run_one, document_id): document_id for document_id in batch}
+                    for future in as_completed(future_map):
+                        document_id = future_map[future]
+                        try:
+                            results.append(dict(future.result()))
+                        except Exception as error:
+                            results.append({"document_id": document_id, "status": "FAILED", "error": str(error)})
+                if stop_when_covered and coverage_complete():
+                    results.extend(
+                        {"document_id": document_id, "status": "SKIPPED_REQUIRED_PARAMETERS_COVERED"}
+                        for document_id in remaining
+                    )
+                    break
+        results.sort(key=lambda item: str(item.get("document_id")))
+    except (OSError, ValueError) as exc:
+        print(f"quantitative parameter batch extraction input error: {exc}", file=sys.stderr)
+        return QUANTITATIVE_EXIT_INPUT_ERROR
+    except Exception as exc:
+        print(f"quantitative parameter batch extraction error: {exc}", file=sys.stderr)
+        return QUANTITATIVE_EXIT_MODEL_ERROR
+    _print_quantitative_result({"status": "BATCH_COMPLETED", "workers": workers, "results": results})
     return QUANTITATIVE_EXIT_SUCCESS
 
 

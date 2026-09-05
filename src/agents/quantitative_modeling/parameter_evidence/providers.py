@@ -44,6 +44,13 @@ def _positive_int(value: object, *, default: int, minimum: int = 1) -> int:
         return default
 
 
+def _bounded_float(value: object, *, default: float, minimum: float, maximum: float) -> float:
+    try:
+        return max(minimum, min(maximum, float(value)))
+    except (TypeError, ValueError):
+        return default
+
+
 def _safe_url(value: object) -> str:
     url = _text(value)
     parsed = urlparse(url)
@@ -97,10 +104,23 @@ class ParameterEvidenceSettings:
     fulltext_max_bytes: int = 20 * 1024 * 1024
     max_document_chars_for_extraction: int = 40_000
     request_timeout_seconds: int = 30
-    max_oa_pdf_candidates_per_paper: int = 3
-    fulltext_http_max_retries: int = 0
+    max_oa_pdf_candidates_per_paper: int = 2
+    fulltext_http_max_retries: int = 1
     fulltext_connect_timeout_seconds: int = 5
     fulltext_read_timeout_seconds: int = 30
+    extraction_max_output_tokens: int = 1200
+    extraction_temperature: float = 0.0
+    extraction_stream: bool = False
+    extraction_workers: int = 3
+    fulltext_workers: int = 4
+    fulltext_per_host_concurrency: int = 2
+    max_snippets_per_parameter: int = 3
+    context_pages_before: int = 1
+    context_pages_after: int = 1
+    max_snippet_characters: int = 6000
+    minimum_keyword_hits: int = 2
+    cache_enabled: bool = True
+    stop_when_required_parameters_covered: bool = True
 
     @classmethod
     def from_runtime_config(cls, config: object) -> "ParameterEvidenceSettings":
@@ -154,16 +174,50 @@ class ParameterEvidenceSettings:
                 _setting(evidence, "request_timeout_seconds", 30), default=30
             ),
             max_oa_pdf_candidates_per_paper=_positive_int(
-                _setting(evidence, "max_oa_pdf_candidates_per_paper", 3), default=3
+                _setting(evidence, "max_oa_pdf_candidates_per_paper", 2), default=2
             ),
             fulltext_http_max_retries=max(
-                0, int(_setting(evidence, "fulltext_http_max_retries", 0) or 0)
+                0, int(_setting(evidence, "fulltext_http_max_retries", 1) or 1)
             ),
             fulltext_connect_timeout_seconds=_positive_int(
                 _setting(evidence, "fulltext_connect_timeout_seconds", 5), default=5
             ),
             fulltext_read_timeout_seconds=_positive_int(
                 _setting(evidence, "fulltext_read_timeout_seconds", 30), default=30
+            ),
+            extraction_max_output_tokens=_positive_int(
+                _setting(evidence, "extraction_max_output_tokens", 1200), default=1200
+            ),
+            extraction_temperature=_bounded_float(
+                _setting(evidence, "extraction_temperature", 0.0),
+                default=0.0,
+                minimum=0.0,
+                maximum=2.0,
+            ),
+            extraction_stream=bool(_setting(evidence, "extraction_stream", False)),
+            extraction_workers=_positive_int(_setting(evidence, "extraction_workers", 3), default=3),
+            fulltext_workers=_positive_int(_setting(evidence, "fulltext_workers", 4), default=4),
+            fulltext_per_host_concurrency=_positive_int(
+                _setting(evidence, "fulltext_per_host_concurrency", 2), default=2
+            ),
+            max_snippets_per_parameter=_positive_int(
+                _setting(evidence, "max_snippets_per_parameter", 3), default=3
+            ),
+            context_pages_before=max(
+                0, int(_setting(evidence, "context_pages_before", 1) or 0)
+            ),
+            context_pages_after=max(
+                0, int(_setting(evidence, "context_pages_after", 1) or 0)
+            ),
+            max_snippet_characters=_positive_int(
+                _setting(evidence, "max_snippet_characters", 6000), default=6000
+            ),
+            minimum_keyword_hits=_positive_int(
+                _setting(evidence, "minimum_keyword_hits", 2), default=2
+            ),
+            cache_enabled=bool(_setting(evidence, "cache_enabled", True)),
+            stop_when_required_parameters_covered=bool(
+                _setting(evidence, "stop_when_required_parameters_covered", True)
             ),
         )
 

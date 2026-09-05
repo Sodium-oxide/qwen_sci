@@ -360,13 +360,17 @@ def normalize_parameter_evidence_collection(value: object) -> dict[str, Any]:
     candidate_ids = [candidate["candidate_id"] for candidate in candidates]
     if len(candidate_ids) != len(set(candidate_ids)):
         raise ParameterContractError("parameter evidence candidate IDs must be unique")
-    return {
+    normalized = {
         "schema_version": PARAMETER_EVIDENCE_COLLECTION_SCHEMA_VERSION,
         "blueprint_identity": _required_text(payload, "blueprint_identity"),
         "lineage": _normalize_lineage(payload.get("lineage")),
         "source_document": _mapping(payload.get("source_document")),
         "candidates": candidates,
     }
+    extraction = payload.get("extraction")
+    if isinstance(extraction, Mapping):
+        normalized["extraction"] = dict(extraction)
+    return normalized
 
 
 def _selection_list(value: object) -> list[dict[str, Any]]:

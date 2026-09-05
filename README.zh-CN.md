@@ -299,6 +299,22 @@ uv run qwensci-web
 
 使用 `uv run qwensci quantitative status --run-dir <RUN_DIR>` 查看某个运行的当前状态和下一步安全动作。完整的英文命令示例见 [README.md](README.md#optional-supervised-quantitative-modeling)。
 
+如果全文清单中有多篇彼此独立的论文，可使用受控并行参数抽取：
+
+```bash
+uv run qwensci quantitative parameters extract-batch \
+  --run-dir "$RUN_DIR" \
+  --idea-id Q1 --version 0 \
+  --document-ids PFD-001,PFD-002,PFD-003 --workers 3
+```
+
+抽取器会先按参数符号、含义、单位、适用条件和检索词筛选页面，只把命中页面及
+有限前后文交给模型；没有命中时直接跳过模型调用。PDF 页面按 SHA-256 缓存，
+运行锁只覆盖输入读取和结果提交，避免远程请求把并行任务串行化。`--workers`
+以及 `extraction_workers`/`fulltext_workers`/`fulltext_per_host_concurrency` 应根
+据模型服务和提供方速率限制调整；并行不会替代人工候选选择、参数批准或仿真授
+权。全文下载默认每篇最多尝试两个声明的 PDF URL，并对临时 HTTP 失败重试一次。
+
 ## 安全
 
 - 任何 API key 都应视为密钥；一旦出现在提交、聊天、日志或截图中，应立即轮换。
