@@ -287,6 +287,8 @@ def test_blueprint_prompt_declares_supported_model_forms() -> None:
     expected_forms = "PDE, ODE, OPTIMIZATION, MONTE_CARLO, or UNSPECIFIED"
     assert expected_forms in prompt
     assert expected_forms in repair_prompt
+    assert "spatial_dimension must be null or omitted" in prompt
+    assert "zero spatial_dimension placeholder to null" in repair_prompt
 
 
 def test_blueprint_parser_rejects_unsupported_model_form() -> None:
@@ -299,6 +301,40 @@ def test_blueprint_parser_rejects_unsupported_model_form() -> None:
     )
 
     with pytest.raises(QuantitativeModelBlueprintError, match="model_form is unsupported"):
+        parse_quantitative_model_blueprint_response(response)
+
+
+def test_blueprint_parser_normalizes_zero_dimension_for_non_pde() -> None:
+    blueprint = _blueprint()
+    blueprint.update({"model_form": "ODE", "spatial_dimension": 0})
+    response = (
+        "<QUANTITATIVE_MODEL_BLUEPRINT_JSON>"
+        + json.dumps(blueprint)
+        + "</QUANTITATIVE_MODEL_BLUEPRINT_JSON>"
+    )
+
+    parsed = parse_quantitative_model_blueprint_response(response)
+
+    assert parsed["model_form"] == "ODE"
+    assert parsed["spatial_dimension"] is None
+
+
+def test_blueprint_parser_rejects_zero_dimension_for_pde() -> None:
+    blueprint = _blueprint()
+    blueprint.update(
+        {
+            "model_form": "PDE",
+            "pde_family": "DIFFUSION_REACTION_1D",
+            "spatial_dimension": 0,
+        }
+    )
+    response = (
+        "<QUANTITATIVE_MODEL_BLUEPRINT_JSON>"
+        + json.dumps(blueprint)
+        + "</QUANTITATIVE_MODEL_BLUEPRINT_JSON>"
+    )
+
+    with pytest.raises(QuantitativeModelBlueprintError, match="spatial_dimension must be at least 1"):
         parse_quantitative_model_blueprint_response(response)
 
 

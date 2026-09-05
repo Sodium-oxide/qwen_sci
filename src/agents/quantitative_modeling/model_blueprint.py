@@ -26,6 +26,7 @@ _BLUEPRINT_RESPONSE = re.compile(
     re.DOTALL,
 )
 _MODEL_FORM_ENUM_TEXT = ", ".join(SUPPORTED_MODEL_FORMS[:-1]) + ", or " + SUPPORTED_MODEL_FORMS[-1]
+_NON_PDE_MODEL_FORMS = frozenset({"ODE", "OPTIMIZATION", "MONTE_CARLO", "UNSPECIFIED"})
 
 
 class QuantitativeModelBlueprintError(RuntimeError):
@@ -68,6 +69,8 @@ def build_quantitative_model_blueprint_prompt(
             "Include title, scientific_question, model_scope, symbolic_model_intent, model_form, pde_family, spatial_dimension,",
             f"model_form must be exactly one of {_MODEL_FORM_ENUM_TEXT}. Use PDE for a registered PDE family,",
             "ODE for ODE_IVP, OPTIMIZATION for LINEAR_OPTIMIZATION, and MONTE_CARLO for MONTE_CARLO; use UNSPECIFIED only when no executable form is determined.",
+            "For ODE, OPTIMIZATION, and MONTE_CARLO, spatial_dimension must be null or omitted; never use 0.",
+            "For PDE, spatial_dimension must be exactly 1, 2, or 3 and must match the selected PDE family.",
             "required_operators, required_boundary_types, required_solver_features, permitted_system_types, parameter_requests,",
             "symbolic_constraints, and revision_context. Permitted system types may only be ODE_IVP, LINEAR_OPTIMIZATION, MONTE_CARLO,",
             "or DIFFUSION_REACTION_1D. PDE system types may additionally be selected from the registered PDE capability catalog: "
@@ -114,6 +117,8 @@ def build_quantitative_model_blueprint_repair_prompt(
             "Preserve every scientific statement, identifier, value, lineage field, and revision context.",
             f"Change structure only, except that an unsupported model_form may be normalized to exactly one of {_MODEL_FORM_ENUM_TEXT}.",
             "Use PDE for a registered PDE family, ODE for ODE_IVP, OPTIMIZATION for LINEAR_OPTIMIZATION, and MONTE_CARLO for MONTE_CARLO.",
+            "For a non-PDE model with no pde_family, normalize a zero spatial_dimension placeholder to null; never use 0 for a PDE.",
+            "For PDE, spatial_dimension must be exactly 1, 2, or 3 and match the selected PDE family.",
             "permitted_system_types and symbolic_constraints must be arrays of text values.",
             "parameter_requests must be an array of objects. Each request's required_conditions and retrieval_queries",
             "must be arrays of text values; if a value is a single string, wrap it in a one-element array.",
@@ -139,6 +144,16 @@ def parse_quantitative_model_blueprint_response(value: object) -> dict[str, Any]
         raise QuantitativeModelBlueprintError("quantitative model blueprint JSON is invalid") from error
     if not isinstance(raw, Mapping):
         raise QuantitativeModelBlueprintError("quantitative model blueprint JSON must be an object")
+    raw = dict(raw)
+    model_form = str(raw.get("model_form") or "UNSPECIFIED").strip()
+    pde_family = str(raw.get("pde_family") or "").strip()
+    spatial_dimension = raw.get("spatial_dimension")
+    zero_dimension_placeholder = (
+        (isinstance(spatial_dimension, (int, float)) and not isinstance(spatial_dimension, bool) and spatial_dimension == 0)
+        or (isinstance(spatial_dimension, str) and spatial_dimension.strip() in {"0", "0.0"})
+    )
+    if model_form in _NON_PDE_MODEL_FORMS and not pde_family and zero_dimension_placeholder:
+        raw["spatial_dimension"] = None
     try:
         return normalize_model_blueprint(raw)
     except ParameterContractError as error:
