@@ -165,18 +165,20 @@ The primary command runs the full code-executed workflow. This example uses a to
 ```bash
 uv run qwensci science \
   --topic "Why do black holes exist? Nobel laureate Sir Roger Penrose proved Einstein’s prediction of the existence of black holes, which form when supermassive stars burn out and collapse in on themselves." \
-  --discipline-id "Astrophysics" \
+  --discipline-id "Physics and Astronomy" \
   --run-id black-hole-existence
 ```
 
 The new run is created below `workspace/science-runs/black-hole-existence/` unless you provide `--output-root`. The command executes stages in order, records state after every transition, and prints the resulting run information.
+
+The canonical OpenAlex field for astrophysics topics is `31` (`Physics and Astronomy`). The `--discipline-id` option also accepts the aliases `Astrophysics`, `Astronomy`, and `physics_astronomy`, as well as the OpenAlex field URL `https://openalex.org/fields/31`.
 
 For a cheaper first pass, stop at an earlier stage:
 
 ```bash
 uv run qwensci science \
   --topic "Why do black holes exist? Nobel laureate Sir Roger Penrose proved Einstein’s prediction of the existence of black holes, which form when supermassive stars burn out and collapse in on themselves." \
-  --discipline-id "Astrophysics" \
+  --discipline-id "Physics and Astronomy" \
   --run-id black-hole-existence \
   --until idea
 ```
@@ -270,7 +272,7 @@ For example, the following default command runs the primary workflow through Aut
 ```bash
 uv run qwensci science \
   --topic "Why do black holes exist?" \
-  --discipline-id "Astrophysics" \
+  --discipline-id "Physics and Astronomy" \
   --run-id black-hole-existence
 ```
 
@@ -298,7 +300,7 @@ Run this from the repository root. It explicitly keeps the quantitative sidecar 
 ```bash
 uv run qwensci science \
   --topic "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They are formed when a massive star runs out of fuel and collapses in on itself. The remnants are neutron stars with magnetic fields that range in strength from 100 million times to 1 quadrillion (a million billion) times that of Earth’s. The correct mix of spin frequency and magnetic field strength is needed for a neutron star to be a pulsar. A pulsar’s radiation bursts typically repeat in a time range anywhere from milliseconds to seconds. It is believed that millisecond pulsars may have formed by consuming fuel from another companion object, thus earning the moniker “black widow pulsars.”" \
-  --discipline-id "Astrophysics" \
+  --discipline-id "Physics and Astronomy" \
   --run-id "pulsar-formation-mainline" \
   --quantitative-mode off
 ```
@@ -318,7 +320,7 @@ This path asks Idea to create up to two independent, quantitative candidates whi
 ```bash
 uv run qwensci science \
   --topic "How are pulsars formed? Pulsars are rotating neutron stars that produce pulses of radio waves, X-rays, and gamma rays. They are formed when a massive star runs out of fuel and collapses in on itself. The remnants are neutron stars with magnetic fields that range in strength from 100 million times to 1 quadrillion (a million billion) times that of Earth’s. The correct mix of spin frequency and magnetic field strength is needed for a neutron star to be a pulsar. A pulsar’s radiation bursts typically repeat in a time range anywhere from milliseconds to seconds. It is believed that millisecond pulsars may have formed by consuming fuel from another companion object, thus earning the moniker “black widow pulsars.”" \
-  --discipline-id "Astrophysics" \
+  --discipline-id "Physics and Astronomy" \
   --run-id "pulsar-formation-quantitative" \
   --quantitative-mode required
 
@@ -615,7 +617,7 @@ uv run qwensci idea \
 ```bash
 uv run qwensci exp_design \
   --idea-json /path/to/idea_result.json \
-  --discipline-id "Astrophysics"
+  --discipline-id "Physics and Astronomy"
 ```
 
 Use `--selected-direction` to choose an Idea direction, `--model` to override the configured model, and `--output-dir` to control where the design artifacts are written. The output includes an `experiment_design_author_<timestamp>.json` handoff for Author.

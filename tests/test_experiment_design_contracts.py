@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from src.agents.experiment_design_agent.contracts import (
     EVIDENCE_BUNDLE_SCHEMA,
     EVIDENCE_BUNDLE_SCHEMA_VERSION,
@@ -196,6 +198,16 @@ def test_scope_blocks_social_science_and_humanities_fields() -> None:
 def test_scope_accepts_shared_taxonomy_keys_from_science_runs() -> None:
     assert normalize_discipline_ids(["physics_astronomy"]) == ("31",)
     scope = resolve_design_scope(["physics_astronomy"])
+
+    assert scope["status"] == "IN_SCOPE"
+    assert scope["discipline_ids"] == ["31"]
+    assert scope["unresolved_disciplines"] == []
+
+
+@pytest.mark.parametrize("alias", ["Astrophysics", "Astronomy"])
+def test_scope_accepts_astrophysics_aliases(alias: str) -> None:
+    assert normalize_discipline_ids([alias]) == ("31",)
+    scope = resolve_design_scope([alias])
 
     assert scope["status"] == "IN_SCOPE"
     assert scope["discipline_ids"] == ["31"]

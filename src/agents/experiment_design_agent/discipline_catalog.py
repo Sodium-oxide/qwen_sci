@@ -89,6 +89,8 @@ _INTERNAL_KEY_TO_FIELD_ID = {
     "quantitative_biology": "13",
     "statistics": "26",
     "astrobiology": "19",
+    "astrophysics": "31",
+    "astronomy": "31",
 }
 
 
