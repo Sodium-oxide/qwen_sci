@@ -24,7 +24,10 @@ from src.agents.quantitative_modeling.parameter_evidence.providers import (
     ParameterEvidenceSettings,
 )
 from src.agents.quantitative_modeling.model_blueprint import (
+    QuantitativeModelBlueprintError,
     build_quantitative_model_blueprint_repair_prompt,
+    build_quantitative_model_blueprint_prompt,
+    parse_quantitative_model_blueprint_response,
     synthesize_quantitative_model_blueprint,
 )
 from src.agents.quantitative_modeling.run_plan import (
@@ -269,6 +272,34 @@ def test_v1_blueprint_receives_and_freezes_accepted_refinement_context() -> None
     assert result["revision_context"] == revision_context
     assert "Re-evidence k at the revised temperature." in captured[0]
     assert "no more than 12 parameter_requests" in captured[0]
+
+
+def test_blueprint_prompt_declares_supported_model_forms() -> None:
+    prompt = build_quantitative_model_blueprint_prompt(
+        quantitative_idea={"quantitative_idea_id": "Q1", "title": "test"},
+        lineage=_lineage(),
+    )
+    repair_prompt = build_quantitative_model_blueprint_repair_prompt(
+        original_response="{}",
+        validation_error="model blueprint model_form is unsupported",
+    )
+
+    expected_forms = "PDE, ODE, OPTIMIZATION, MONTE_CARLO, or UNSPECIFIED"
+    assert expected_forms in prompt
+    assert expected_forms in repair_prompt
+
+
+def test_blueprint_parser_rejects_unsupported_model_form() -> None:
+    blueprint = _blueprint()
+    blueprint["model_form"] = "DYNAMICAL_SYSTEM"
+    response = (
+        "<QUANTITATIVE_MODEL_BLUEPRINT_JSON>"
+        + json.dumps(blueprint)
+        + "</QUANTITATIVE_MODEL_BLUEPRINT_JSON>"
+    )
+
+    with pytest.raises(QuantitativeModelBlueprintError, match="model_form is unsupported"):
+        parse_quantitative_model_blueprint_response(response)
 
 
 def test_blueprint_repairs_scalar_condition_lists_once() -> None:

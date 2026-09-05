@@ -33,6 +33,7 @@ _PERMITTED_SYSTEM_TYPES = frozenset(
         "MONTE_CARLO",
     }
 ) | frozenset(PDE_CAPABILITIES)
+SUPPORTED_MODEL_FORMS = ("PDE", "ODE", "OPTIMIZATION", "MONTE_CARLO", "UNSPECIFIED")
 _EVIDENCE_REQUIREMENTS = frozenset(
     {"LITERATURE_REQUIRED", "LITERATURE_PREFERRED", "USER_OR_LITERATURE", "MODEL_ASSUMPTION_ALLOWED"}
 )
@@ -232,7 +233,7 @@ def normalize_model_blueprint(value: object) -> dict[str, Any]:
     if set(permitted_system_types) - _PERMITTED_SYSTEM_TYPES:
         raise ParameterContractError("model blueprint includes an unsupported system type")
     model_form = _text(payload.get("model_form")) or "UNSPECIFIED"
-    if model_form not in {"PDE", "ODE", "OPTIMIZATION", "MONTE_CARLO", "UNSPECIFIED"}:
+    if model_form not in SUPPORTED_MODEL_FORMS:
         raise ParameterContractError("model blueprint model_form is unsupported")
     pde_family = _text(payload.get("pde_family"))
     if pde_family and pde_family not in PDE_CAPABILITIES:

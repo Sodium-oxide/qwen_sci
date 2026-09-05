@@ -14,6 +14,7 @@ from typing import Any
 
 from src.agents.quantitative_modeling.parameter_contracts import (
     ParameterContractError,
+    SUPPORTED_MODEL_FORMS,
     normalize_model_blueprint,
 )
 from src.agents.quantitative_modeling.pde_capability_registry import PDE_CAPABILITIES, executable_pde_catalog
@@ -24,6 +25,7 @@ _BLUEPRINT_RESPONSE = re.compile(
     r"</QUANTITATIVE_MODEL_BLUEPRINT_JSON>\s*\Z",
     re.DOTALL,
 )
+_MODEL_FORM_ENUM_TEXT = ", ".join(SUPPORTED_MODEL_FORMS[:-1]) + ", or " + SUPPORTED_MODEL_FORMS[-1]
 
 
 class QuantitativeModelBlueprintError(RuntimeError):
@@ -64,6 +66,8 @@ def build_quantitative_model_blueprint_prompt(
             "numerical parameter values, numerical ranges, or inferred literature facts.",
             "Use schema_version quantitative_model_blueprint_v1. Copy the supplied lineage exactly (excluding any topic helper field).",
             "Include title, scientific_question, model_scope, symbolic_model_intent, model_form, pde_family, spatial_dimension,",
+            f"model_form must be exactly one of {_MODEL_FORM_ENUM_TEXT}. Use PDE for a registered PDE family,",
+            "ODE for ODE_IVP, OPTIMIZATION for LINEAR_OPTIMIZATION, and MONTE_CARLO for MONTE_CARLO; use UNSPECIFIED only when no executable form is determined.",
             "required_operators, required_boundary_types, required_solver_features, permitted_system_types, parameter_requests,",
             "symbolic_constraints, and revision_context. Permitted system types may only be ODE_IVP, LINEAR_OPTIMIZATION, MONTE_CARLO,",
             "or DIFFUSION_REACTION_1D. PDE system types may additionally be selected from the registered PDE capability catalog: "
@@ -108,7 +112,9 @@ def build_quantitative_model_blueprint_repair_prompt(
             "Return exactly one tagged JSON block and no prose, equations, code, commands, or new scientific claims:",
             "<QUANTITATIVE_MODEL_BLUEPRINT_JSON>{...}</QUANTITATIVE_MODEL_BLUEPRINT_JSON>",
             "Preserve every scientific statement, identifier, value, lineage field, and revision context.",
-            "Change structure only. permitted_system_types and symbolic_constraints must be arrays of text values.",
+            f"Change structure only, except that an unsupported model_form may be normalized to exactly one of {_MODEL_FORM_ENUM_TEXT}.",
+            "Use PDE for a registered PDE family, ODE for ODE_IVP, OPTIMIZATION for LINEAR_OPTIMIZATION, and MONTE_CARLO for MONTE_CARLO.",
+            "permitted_system_types and symbolic_constraints must be arrays of text values.",
             "parameter_requests must be an array of objects. Each request's required_conditions and retrieval_queries",
             "must be arrays of text values; if a value is a single string, wrap it in a one-element array.",
             "Do not add numerical values, sources, equations, parameters, requests, or system types.",
