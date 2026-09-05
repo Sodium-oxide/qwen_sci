@@ -881,8 +881,8 @@ class SurveyGenerator:
         prompt = json.dumps(compact_plan, ensure_ascii=False, separators=(",", ":"))
         generator_config = self.config.ModuleInfo.SurveyGenerator
         max_tokens = self._positive_int(
-            getattr(generator_config, "outline_evidence_plan_max_input_tokens", 100_000),
-            100_000,
+            getattr(generator_config, "outline_evidence_plan_max_input_tokens", 120_000),
+            120_000,
         )
         token_count = self._estimate_prompt_tokens(prompt)
         if token_count > max_tokens:
