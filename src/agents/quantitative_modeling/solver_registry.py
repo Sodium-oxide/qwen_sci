@@ -173,7 +173,9 @@ def _run_monte_carlo(document: Mapping[str, object], limits: Mapping[str, object
     generator = random.Random(int(document["seed"]))
     observations: list[float] = []
     for _ in range(samples):
-        environment: dict[str, float] = {}
+        environment: dict[str, float] = {
+            str(name): float(value) for name, value in _mapping(document.get("parameters")).items()
+        }
         for raw_variable in document["random_variables"]:
             variable = _mapping(raw_variable)
             parameters = _mapping(variable["parameters"])

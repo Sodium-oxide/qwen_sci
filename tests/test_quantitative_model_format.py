@@ -72,6 +72,83 @@ def _specification() -> dict[str, object]:
     }
 
 
+def _monte_carlo_specification(
+    *,
+    empty_conditions: bool = False,
+    symbolic_samples: bool = False,
+    unsafe_identifier: bool = False,
+) -> dict[str, object]:
+    specification = _specification()
+    specification["title"] = "Monte Carlo posterior sampler"
+    specification["abstract"] = "A bounded zero-dimensional posterior sampler."
+    specification["model_scope"] = "A prior-distribution sampling model for a scalar observable."
+    specification["algorithm"] = {
+        "input": ["prior distributions"],
+        "output": ["sampled observable values"],
+        "steps": ["Draw independent samples and evaluate the observable."],
+    }
+    specification["numerical_plan"] = {
+        "solver_family": "MONTE_CARLO",
+        "discretization": "independent prior sampling",
+        "convergence_checks": ["Increase the sample count and compare summary statistics."],
+    }
+    variable_id = "τ_f" if unsafe_identifier else "tau_f"
+    specification["mathir"] = {
+        "schema_version": "mathir_v1",
+        "system_type": "MONTE_CARLO",
+        "parameters": {"offset": 0.5},
+        "samples": "N_samples" if symbolic_samples else 128,
+        "seed": 7,
+        "random_variables": [
+            {
+                "id": variable_id,
+                "distribution": "normal",
+                "parameters": {"mean": 2.3, "stddev": 0.1},
+            }
+        ],
+        "observable": {
+            "op": "add",
+            "args": [
+                {"op": "variable", "name": variable_id},
+                {"op": "variable", "name": "offset"},
+            ],
+        },
+    }
+    if empty_conditions:
+        specification["initial_conditions"] = []
+        specification["boundary_conditions"] = []
+    else:
+        specification["initial_conditions"] = [
+            "Monte Carlo variables are initialized by sampling from the declared prior distributions."
+        ]
+        specification["boundary_conditions"] = [
+            "No spatial boundary conditions apply to this zero-dimensional posterior sampler."
+        ]
+    return specification
+
+
+def _optimization_specification() -> dict[str, object]:
+    specification = _specification()
+    specification["title"] = "Linear resource allocation"
+    specification["abstract"] = "A bounded linear optimization model."
+    specification["model_scope"] = "A two-variable allocation problem with finite bounds."
+    specification["initial_conditions"] = []
+    specification["boundary_conditions"] = []
+    specification["scenarios"] = []
+    specification["mathir"] = {
+        "schema_version": "mathir_v1",
+        "system_type": "LINEAR_OPTIMIZATION",
+        "parameters": {"budget": 10.0},
+        "variables": [
+            {"id": "x", "lower": 0.0, "upper": 10.0, "objective_coefficient": 1.0},
+            {"id": "y", "lower": 0.0, "upper": 10.0, "objective_coefficient": 2.0},
+        ],
+        "constraints": [],
+        "objective_sense": "maximize",
+    }
+    return specification
+
+
 def _markdown() -> str:
     return """Abstract— A bounded ODE model.
 
@@ -122,6 +199,15 @@ def test_json_only_model_response_is_supported() -> None:
     assert markdown == ""
 
 
+def test_fenced_json_only_model_response_is_supported() -> None:
+    response = "```json\n<QUANTITATIVE_MODEL_JSON>\n" + json.dumps(_specification()) + "\n</QUANTITATIVE_MODEL_JSON>\n```"
+
+    specification, markdown = parse_quantitative_model_response(response)
+
+    assert specification["title"] == "Exponential decay model"
+    assert markdown == ""
+
+
 def test_model_synthesis_renders_markdown_locally_from_json_only_response() -> None:
     response = (
         "<QUANTITATIVE_MODEL_JSON>\n"
@@ -151,6 +237,57 @@ def test_model_prompt_requires_symbol_objects_with_stable_ids() -> None:
     assert '"system_type":"ODE_IVP"' in prompt
     assert "at most 2000" in prompt
     assert "do not leave compared scenarios mathematically identical" in prompt
+
+
+def test_model_prompt_documents_monte_carlo_integer_and_condition_contract() -> None:
+    prompt = build_quantitative_model_prompt(
+        quantitative_idea={"quantitative_idea_id": "Q2"},
+        lineage={**_lineage(), "quantitative_idea_id": "Q2"},
+    )
+
+    assert 'mathir.system_type must be exactly "MONTE_CARLO"' in prompt
+    assert "mathir.samples must be a JSON integer from 1 through 100000" in prompt
+    assert "Every random_variables[].id and every AST variable.name must be an ASCII identifier" in prompt
+    assert 'use names such as "tau_f"' in prompt
+    assert "initial_conditions, boundary_conditions, and objective_and_constraints may be empty lists" in prompt
+    assert "no spatial boundary conditions apply to the zero-dimensional sampler" in prompt
+
+
+@pytest.mark.parametrize(
+    ("model_form", "required_marker", "forbidden_marker"),
+    [
+        ("ODE", "Selected family: ODE", "Selected family: Monte Carlo"),
+        ("OPTIMIZATION", "Selected family: linear optimization", "Selected family: ODE"),
+        ("MONTE_CARLO", "Selected family: Monte Carlo sampling", "Selected family: registered PDE"),
+        ("PDE", "Selected family: registered PDE execution", "Selected family: ODE"),
+    ],
+)
+def test_model_prompt_selects_only_the_requested_model_family(
+    model_form: str,
+    required_marker: str,
+    forbidden_marker: str,
+) -> None:
+    prompt = build_quantitative_model_prompt(
+        quantitative_idea={"quantitative_idea_id": "Q1", "model_form": model_form},
+        lineage=_lineage(),
+    )
+
+    assert required_marker in prompt
+    assert forbidden_marker not in prompt
+
+
+def test_model_prompt_uses_provisional_solver_family_for_family_routing() -> None:
+    prompt = build_quantitative_model_prompt(
+        quantitative_idea={
+            "quantitative_idea_id": "Q1",
+            "provisional_solver_family": "finite_difference_1d",
+        },
+        lineage=_lineage(),
+    )
+
+    assert "Selected family: registered PDE execution" in prompt
+    assert "Selected family: ODE" not in prompt
+    assert "Selected family: Monte Carlo sampling" not in prompt
 
 
 def test_model_prompt_binds_external_execution_scenarios() -> None:
@@ -194,6 +331,97 @@ def test_model_synthesis_repairs_one_invalid_contract_response() -> None:
     )
 
     assert result["model_spec"]["symbols"][0]["symbol_id"] == "S-001"
+
+
+def test_model_synthesis_repairs_monte_carlo_samples_and_empty_conditions() -> None:
+    invalid_specification = _monte_carlo_specification(
+        empty_conditions=True,
+        symbolic_samples=True,
+        unsafe_identifier=True,
+    )
+    invalid_response = (
+        "<QUANTITATIVE_MODEL_JSON>\n"
+        + json.dumps(invalid_specification)
+        + "\n</QUANTITATIVE_MODEL_JSON>"
+    )
+    valid_response = (
+        "<QUANTITATIVE_MODEL_JSON>\n"
+        + json.dumps(_monte_carlo_specification())
+        + "\n</QUANTITATIVE_MODEL_JSON>"
+    )
+    responses = iter((invalid_response, valid_response))
+    prompts: list[str] = []
+
+    def llm_call(prompt: str) -> str:
+        prompts.append(prompt)
+        return next(responses)
+
+    result = synthesize_quantitative_model(
+        quantitative_idea={"quantitative_idea_id": "Q1"},
+        lineage=_lineage(),
+        llm_call=llm_call,
+    )
+
+    assert result["model_spec"]["mathir"]["system_type"] == "MONTE_CARLO"
+    assert result["model_spec"]["mathir"]["parameters"] == {"offset": 0.5}
+    assert result["model_spec"]["mathir"]["samples"] == 128
+    assert result["model_spec"]["initial_conditions"]
+    assert result["model_spec"]["boundary_conditions"]
+    assert len(prompts) == 2
+    assert "preserve the selected executable model family" in prompts[1]
+
+
+def test_monte_carlo_model_rejects_unsafe_random_variable_identifier() -> None:
+    invalid_specification = _monte_carlo_specification(unsafe_identifier=True)
+    response = "<QUANTITATIVE_MODEL_JSON>\n" + json.dumps(invalid_specification, ensure_ascii=False) + "\n</QUANTITATIVE_MODEL_JSON>"
+
+    with pytest.raises(QuantitativeModelSynthesisError, match=r"random_variables\[0\]\.id must be a safe identifier"):
+        parse_quantitative_model_response(response)
+
+
+def test_monte_carlo_model_rejects_non_integer_sample_count() -> None:
+    invalid_specification = _monte_carlo_specification()
+    invalid_specification["mathir"]["samples"] = 128.5
+    response = "<QUANTITATIVE_MODEL_JSON>\n" + json.dumps(invalid_specification) + "\n</QUANTITATIVE_MODEL_JSON>"
+
+    with pytest.raises(QuantitativeModelSynthesisError, match="samples must be an integer"):
+        parse_quantitative_model_response(response)
+
+
+def test_monte_carlo_model_allows_empty_nonphysical_condition_sections() -> None:
+    invalid_specification = _monte_carlo_specification(empty_conditions=True)
+    response = "<QUANTITATIVE_MODEL_JSON>\n" + json.dumps(invalid_specification) + "\n</QUANTITATIVE_MODEL_JSON>"
+
+    specification, _ = parse_quantitative_model_response(response)
+
+    assert specification["initial_conditions"] == []
+    assert specification["boundary_conditions"] == []
+
+
+def test_model_format_applies_family_specific_outer_section_requirements() -> None:
+    monte_carlo = _monte_carlo_specification(empty_conditions=True)
+    monte_carlo["objective_and_constraints"] = []
+    monte_carlo_response = "<QUANTITATIVE_MODEL_JSON>\n" + json.dumps(monte_carlo) + "\n</QUANTITATIVE_MODEL_JSON>"
+    monte_carlo_specification, _ = parse_quantitative_model_response(monte_carlo_response)
+    assert monte_carlo_specification["objective_and_constraints"] == []
+
+    ode = _specification()
+    ode["boundary_conditions"] = []
+    ode_response = "<QUANTITATIVE_MODEL_JSON>\n" + json.dumps(ode) + "\n</QUANTITATIVE_MODEL_JSON>"
+    ode_specification, _ = parse_quantitative_model_response(ode_response)
+    assert ode_specification["boundary_conditions"] == []
+
+    ode["initial_conditions"] = []
+    invalid_ode_response = "<QUANTITATIVE_MODEL_JSON>\n" + json.dumps(ode) + "\n</QUANTITATIVE_MODEL_JSON>"
+    with pytest.raises(QuantitativeModelSynthesisError, match="initial_conditions must not be empty"):
+        parse_quantitative_model_response(invalid_ode_response)
+
+    optimization = _optimization_specification()
+    optimization_response = "<QUANTITATIVE_MODEL_JSON>\n" + json.dumps(optimization) + "\n</QUANTITATIVE_MODEL_JSON>"
+    optimization_specification, _ = parse_quantitative_model_response(optimization_response)
+    assert optimization_specification["initial_conditions"] == []
+    assert optimization_specification["boundary_conditions"] == []
+    assert optimization_specification["scenarios"] == []
 
 
 def test_model_synthesis_normalizes_equivalent_abstract_heading() -> None:

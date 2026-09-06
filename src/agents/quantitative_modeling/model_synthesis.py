@@ -46,36 +46,126 @@ _JSON_BLOCK_RESPONSE = re.compile(
     r"\A\s*<QUANTITATIVE_MODEL_JSON>\s*(?P<json>\{.*?\})\s*</QUANTITATIVE_MODEL_JSON>\s*\Z",
     re.DOTALL,
 )
+_FENCED_JSON_BLOCK_RESPONSE = re.compile(
+    r"\A\s*```(?:json)?\s*<QUANTITATIVE_MODEL_JSON>\s*(?P<json>\{.*?\})\s*"
+    r"</QUANTITATIVE_MODEL_JSON>\s*```\s*\Z",
+    re.DOTALL | re.IGNORECASE,
+)
 _LOGGER = logging.getLogger(__name__)
 
-_MODEL_JSON_SHAPE_GUIDE = """Required JSON container shapes and one-pass validation rules:
-- assumptions is an array of objects with assumption_id, statement, and effect_if_violated.
-- symbols is an array, never an object. Every symbol item has symbol_id, latex, meaning, unit, dimension, and role.
-- equations is an array of objects with equation_id, role, latex, and where_symbol_ids (a non-empty array of declared symbol_id values).
-- initial_conditions, boundary_conditions, parameterization, scenarios, objective_and_constraints, validation_plan, limitations, and references are arrays.
-- algorithm is an object with input, output, and steps arrays. numerical_plan is an object with solver_family, discretization, and convergence_checks.
-- All scalar numeric values must be finite JSON numbers: do not use strings such as \"0.01 s\", unit-bearing text, arrays, or {\"value\": ...} wrappers for scalar fields. Lists are allowed only where the contract explicitly requires a coordinate interval, time span, grid-sample array, or AST args array.
-- Treat these validator paths as exact canonical paths during the preflight: solver_options.time_step, solver_options.time_integrator, spatial_domain.x, spatial_domain.y, spatial_domain.z, grid.nx, grid.ny, grid.nz, initial_condition.type, initial_condition.profile/value/center/sigma/expression, initial_velocity.profile/value/center/sigma/expression, and boundary_conditions.<side>.type/value. Never change a numeric path into a string, object, or nested array.
-- v1 models use a valid MathIR object with the exact nested key-value \"schema_version\": \"mathir_v1\". v2 PDE models use an execution_ir object with kind PDE and schema_version execution_ir_v1 containing pdeir_v1. Do not put ieee_math_model_v1 inside an execution document.
-- A PDE execution_ir must have exactly this outer shape: {\"kind\":\"PDE\",\"schema_version\":\"execution_ir_v1\",\"document\":{\"schema_version\":\"pdeir_v1\",...}}. The document must use the canonical keys below; do not rely on aliases such as pde_family, axes, shape, sizes, grid_points, equation_terms, or putting time_step inside discretization.
-- The PDE document system_type must be one exact registered EXECUTABLE key from the catalog below, with one spatial_dimension matching that family. Never emit a design-only family, an array of family names, a hybrid ODE/PDE, or an unregistered solver name.
-- Every PDE document must contain exactly one field in fields. The field object must contain a safe identifier id matching every field AST leaf name, and may contain string symbol/unit plus numeric bounds. Every parameter name must match [A-Za-z_][A-Za-z0-9_]{0,63}; parameters is an object whose values are finite JSON numbers.
-- PDE spatial_domain is a direct object of coordinate-to-two-number-interval mappings. For 1D use exactly {\"x\":[lower,upper]}; for 2D use x and y; for 3D use x, y, and z. Every lower value is strictly less than its upper value. Even SPHERICAL_RADIAL_THERMAL uses canonical JSON coordinate x; in equations and Markdown state that x is the physical radial coordinate r. Never emit {\"r\":...}, an axes list, or nested {\"lower\":...,\"upper\":...} objects.
-- PDE grid is a direct object of integer sizes: 1D {\"nx\":N} with 3<=N<=4096, 2D {\"nx\":Nx,\"ny\":Ny} with each size 3..1024, and 3D {\"nx\":Nx,\"ny\":Ny,\"nz\":Nz} with each size 3..128. The initial sample count is exactly nx*ny*nz, treating omitted dimensions as 1. Prefer small first-run grids such as 33, 17x17, or 9x9x9 unless the idea explicitly requires refinement.
-- PDE discretization must be {\"method\": registered_method, \"grid_type\":\"UNIFORM\", \"space_order\":1_or_2}. The method and time integrator must be selected from the exact family entry in the catalog; uniform grids are the only executable option.
-- A temporal PDE must contain time_span:[start,end] with two finite numbers and end>start, solver_options:{\"time_step\":positive_finite_number,\"time_integrator\":registered_integrator}, and a compact initial_condition. Use {\"type\":\"ANALYTIC_PROFILE\",\"profile\":\"UNIFORM\",\"value\":number}, {\"type\":\"ANALYTIC_PROFILE\",\"profile\":\"GAUSSIAN\",\"amplitude\":number,\"offset\":number,\"center\":coordinate_map,\"sigma\":positive_coordinate_map}, or {\"type\":\"ANALYTIC_PROFILE\",\"profile\":\"ANALYTIC_EXPRESSION\",\"expression\":safe_AST}. For 1D, center and sigma may be numbers or {\"x\":number}; for 2D/3D they must map exactly to x/y[/z]. The trusted solver expands this definition on the uniform grid. Do not output initial sample arrays, nested arrays, ellipses, repetition instructions, formula strings, Python, or code.
-- A wave PDE also requires initial_velocity using the same compact ANALYTIC_PROFILE forms. Existing SAMPLED_VALUES documents are accepted only for backward compatibility and must not be generated for a new model. A steady elliptic/Poisson/Helmholtz PDE must not contain time_span, solver_options, initial_condition, or initial_velocity.
-- mathir.system_type is exactly one string, never an array and never a hybrid.
-- Boundary conditions are required on every side: 1D left/right; 2D left/right/bottom/top; 3D left/right/bottom/top/front/back. Each is an object with a family-approved type. DIRICHLET and NEUMANN require value as an AST; NEUMANN_ZERO, PERIODIC, and SPHERICAL_ORIGIN_REGULARITY do not require value. PERIODIC must be used on complete opposing pairs left/right, bottom/top, or front/back. Spherical radial models require SPHERICAL_ORIGIN_REGULARITY on left and DIRICHLET, NEUMANN, or NEUMANN_ZERO on right.
-- PDE expression values are AST objects, never equation strings, Python, code, derivatives, Laplacian names, or function calls. Leaves are {\"op\":\"constant\",\"value\":number}, {\"op\":\"variable\",\"name\":\"t|x|y|z|declared_parameter\"}, or {\"op\":\"field\",\"name\":\"the_one_field_id\"}. Binary add, sub, mul, div, pow, min, max, lt, le, gt, ge, eq, ne require exactly two args; unary neg, abs, exp, log, sin, cos require exactly one; conditional and if_else require exactly three. Boundary ASTs cannot reference the field. Do not reference an undeclared symbol or emit an unsupported PDE operator.
-- Family-required PDE AST fields are: diffusion/reaction families require diffusion_coefficient and reaction; ADVECTION_DIFFUSION_REACTION_1D, BURGERS_1D, and LINEAR_ADVECTION_1D additionally require advection_velocity; SPHERICAL_RADIAL_THERMAL requires diffusion_coefficient, heat_capacity, and source; ELLIPTIC_DIFFUSION, POISSON, and HELMHOLTZ families require diffusion_coefficient, reaction_coefficient, and source; WAVE_1D/WAVE_2D require wave_speed and source. Include every required field explicitly even when its value is zero.
-- Runtime preflight is part of model validity: parabolic diffusion coefficients must remain non-negative; spherical heat_capacity must remain positive and conductivity non-negative; elliptic diffusion must remain positive; wave_speed must remain positive; every expression and resulting field must remain finite. For explicit parabolic solvers choose time_step with margin: in 1D diffusion use D*dt/dx^2 <= 0.5, in 1D advection-diffusion use D*dt/dx^2 + abs(v)*dt/dx <= 1.0, in 2D/3D diffusion use D*dt*sum(1/dx_i^2) <= 0.5, and in spherical radial thermal use (D/heat_capacity)*dt/dr^2 <= 1/6. For waves use c*dt/dx <= 1 in 1D and c*dt*sqrt(1/dx^2+1/dy^2) <= 1 in 2D. Use a smaller margin rather than a borderline value.
-- Keep temporal step count ceil((end-start)/time_step) <= 20000 (the solver's max_time_steps budget) and grid cells <= 100000; keep elliptic matrix nonzeros within the trusted solver budget. Do not describe Monte Carlo, adaptive mesh, event stopping, external code, or solver capabilities not present in the selected family.
-- Registered executable PDE families and their exact numerical contract are: """ + json.dumps(executable_pde_catalog(), sort_keys=True) + """. Design-only families must not be emitted as executable execution_ir.
-- SPHERICAL_RADIAL_THERMAL is a radial thermal adapter, not Cartesian diffusion: use x:[0,radius], left SPHERICAL_ORIGIN_REGULARITY, explicit heat_capacity and source ASTs, and the dedicated FINITE_DIFFERENCE_SPHERICAL_RADIAL method.
-- An ODE_IVP mathir has exactly this container pattern: {\"schema_version\":\"mathir_v1\",\"system_type\":\"ODE_IVP\",\"states\":[{\"id\":\"state_name\",\"initial\":1.0}],\"parameters\":{\"parameter_name\":1.0},\"derivatives\":{\"state_name\":{\"op\":\"constant\",\"value\":0.0}},\"time_span\":[0.0,1.0],\"solver_options\":{\"max_step\":0.01}}. Choose max_step so ceil((time_span[1]-time_span[0])/max_step)+1 is at most 2000; never copy a unit-time example step into a years-long horizon.
-- MathIR expressions are AST objects rather than formula strings and may use only the registered operators and declared state or parameter names. ODE_IVP exposes read-only t but no event engine; encode a finite phase with conditional or if_else over t. Represent every modeled scenario difference through approved SCENARIO_INPUT values used by dynamics or state initialization; do not leave compared scenarios mathematically identical.
-- Before emitting the JSON block, perform one complete local audit of every PDE path above, including analytic-profile fields, boundary pairs, family-required keys, AST arities and names, positivity, stability, and resource limits. Do not wait for a validator to reveal the next missing field."""
+_MODEL_JSON_COMMON_GUIDE = """Common JSON contract for every executable model:
+- assumptions is a non-empty array of objects with assumption_id, statement, and effect_if_violated.
+- symbols is an array, never an object, and it must be non-empty. Every symbol item has symbol_id, latex, meaning, unit, dimension, and role.
+- equations is a non-empty array of objects with equation_id, role, latex, and where_symbol_ids (a non-empty array of declared symbol_id values).
+- parameterization, validation_plan, and limitations are non-empty arrays of strings; references is an array and may be empty when no external source is declared. The family section below controls whether initial_conditions, boundary_conditions, scenarios, and objective_and_constraints may be empty.
+- algorithm is an object with non-empty input, output, and steps arrays. numerical_plan is an object with solver_family, discretization, and non-empty convergence_checks.
+- All scalar numeric values must be finite JSON numbers. Do not use unit-bearing strings, symbolic placeholders, arrays, or {\"value\": ...} wrappers for scalar fields.
+- IDs and AST variable names must be safe ASCII identifiers matching [A-Za-z_][A-Za-z0-9_]{0,63}. mathir.system_type is exactly one string, never an array or hybrid.
+- v1 models use a valid MathIR object with the exact nested key-value \"schema_version\": \"mathir_v1\". v2 models use an execution_ir object with schema_version \"execution_ir_v1\". Keep the selected model family in its own section below; do not emit fields from another family.
+- Before emitting JSON, audit required fields, AST arities and names, finite values, resource limits, and the family-specific rules below."""
+
+_MODEL_FAMILY_GUIDES = {
+    "ODE": """Selected family: ODE (legacy MathIR v1).
+- mathir.system_type must be exactly \"ODE_IVP\" (for example, {\"system_type\":\"ODE_IVP\"}). states must be a non-empty list of unique safe IDs with finite initial values; derivatives must define exactly one AST per state; parameters is a finite numeric object; time_span must increase.
+- solver_options.max_step must be positive and ceil((time_span[1]-time_span[0])/max_step)+1 must be at most 2000. MathIR expressions may reference only t, declared states, and declared parameters.
+- initial_conditions must describe the state initialization. boundary_conditions may be an empty list because ODE_IVP has no spatial boundary. scenarios must be non-empty when external scenario comparison is requested; scenario overrides must affect a derivative or state initialization, and narrative-only scenario differences are forbidden. do not leave compared scenarios mathematically identical.
+- Do not emit PDE grids, fields, spatial domains, PDE boundary maps, Monte Carlo samples, or optimization variables.""",
+    "OPTIMIZATION": """Selected family: linear optimization (legacy MathIR v1).
+- mathir.system_type must be exactly \"LINEAR_OPTIMIZATION\". variables must be a non-empty list of unique safe IDs with finite objective_coefficient, lower, and upper values and upper >= lower; constraints is a list that may be empty, with declared-variable coefficients and sense <=, >=, or ==; objective_sense is minimize or maximize. An optional finite parameters object may carry evidence-bound values, but executable objective/bound/constraint values must still be numeric literals.
+- initial_conditions and boundary_conditions may be empty lists because a linear program has no time or spatial state. scenarios may be empty for a single baseline optimization; do not invent derivative, trajectory, or spatial-boundary requirements.
+- Do not emit ODE states/time_span, PDE fields/grids, or Monte Carlo random_variables/samples. Scenario differences must be represented through objective coefficients, bounds, or constraints; the current runner does not apply parameter overrides to optimization variables.""",
+    "MONTE_CARLO": """Selected family: Monte Carlo sampling (legacy MathIR v1).
+- mathir.system_type must be exactly \"MONTE_CARLO\"; mathir.samples must be a JSON integer from 1 through 100000, mathir.seed must be an integer, mathir.random_variables must be a non-empty list, and mathir.observable must be a valid AST over those variables.
+- Every random_variables[].id and every AST variable.name must be an ASCII identifier matching [A-Za-z_][A-Za-z0-9_]{0,63}; use names such as \"tau_f\" rather than Greek letters, spaces, hyphens, subscripts, or unit-bearing labels. Uniform variables require finite low < high; normal variables require finite mean and positive stddev.
+- initial_conditions, boundary_conditions, and objective_and_constraints may be empty lists because this is a zero-dimensional sampler. scenarios may be empty for a single baseline sample; do not require ODE derivatives, state initialization, PDE boundaries, or spatial grids. If explanatory text is supplied, state that no spatial boundary conditions apply to the zero-dimensional sampler. The execution document may carry a finite parameters object for evidence binding; scenario overrides may target those parameters only when the observable uses them, never a derivative or state.
+- Do not emit ODE states/time_span, PDE execution_ir, or optimization variables/constraints.""",
+    "PDE": """Selected family: registered PDE execution (execution_ir v1).
+- execution_ir must have exactly {\"kind\":\"PDE\",\"schema_version\":\"execution_ir_v1\",\"document\":{\"schema_version\":\"pdeir_v1\",...}}. document.system_type must be one exact registered EXECUTABLE key from the catalog below with matching spatial_dimension; never emit a design-only family, a hybrid, or an unregistered solver.
+- fields must contain exactly one field with a safe id matching every field AST leaf. parameters is a finite numeric object with safe names. spatial_domain is direct coordinate-to-two-number intervals: x for 1D, x/y for 2D, x/y/z for 3D, with increasing bounds. grid is direct integer sizes: 1D nx 3..4096, 2D nx/ny 3..1024, and 3D nx/ny/nz 3..128; total cells must remain within the authorized resource limit.
+- discretization must use a registered method, grid_type UNIFORM, and space_order 1 or 2. Temporal PDEs require increasing time_span, positive time_step, a registered integrator, and initial_condition. Initial conditions may use SAMPLED_VALUES with exactly one finite value per grid cell or a compact ANALYTIC_PROFILE (UNIFORM, GAUSSIAN, or ANALYTIC_EXPRESSION); do not use nested arrays, ellipses, repetition instructions, formula strings, Python, or code.
+- Wave PDEs also require initial_velocity. Steady elliptic/Poisson/Helmholtz PDEs must not contain temporal fields or initial conditions. Boundary conditions are required on every registered side and must use family-approved types; periodic conditions must form complete opposing pairs. PDE AST values use only registered operators and may not contain equation strings, derivatives, Laplacian calls, Python, or dynamic functions.
+- Respect family-required PDE fields, positivity, finite-field checks, explicit stability margins, time steps <= 20000, and total cells <= 100000. The executable PDE catalog is: """ + json.dumps(executable_pde_catalog(), sort_keys=True) + """.
+- initial_conditions must describe the temporal PDE setup and may be empty for a steady elliptic/Poisson/Helmholtz solve. boundary_conditions must describe the PDE setup; scenarios may be empty for a single baseline solve. Scenario overrides must affect PDE parameters, initial-condition expressions, or boundary values; do not require ODE derivative/state wording.""",
+}
+
+
+def _model_family_from_context(
+    quantitative_idea: Mapping[str, object],
+    model_blueprint: Mapping[str, object] | None,
+) -> str | None:
+    candidates: list[object] = []
+    if model_blueprint is not None:
+        candidates.extend(
+            [
+                model_blueprint.get("model_form"),
+                model_blueprint.get("pde_family"),
+                model_blueprint.get("system_type"),
+                model_blueprint.get("model_family"),
+            ]
+        )
+        permitted = model_blueprint.get("permitted_system_types")
+        if isinstance(permitted, (list, tuple, set)) and len(permitted) == 1:
+            candidates.append(next(iter(permitted)))
+    candidates.extend(
+        [
+            quantitative_idea.get("model_form"),
+            quantitative_idea.get("model_family"),
+            quantitative_idea.get("system_type"),
+            quantitative_idea.get("pde_family"),
+            quantitative_idea.get("provisional_solver_family"),
+        ]
+    )
+    pde_system_types = {item["system_type"] for item in executable_pde_catalog()}
+    for candidate in candidates:
+        value = _text(candidate).upper()
+        if value in {"ODE", "ODE_IVP"}:
+            return "ODE"
+        if value in {"OPTIMIZATION", "LINEAR_OPTIMIZATION"}:
+            return "OPTIMIZATION"
+        if value in {"MONTE_CARLO", "MONTE CARLO"}:
+            return "MONTE_CARLO"
+        if value == "PDE" or value in pde_system_types:
+            return "PDE"
+        if "MONTE_CARLO" in value or "MONTE CARLO" in value:
+            return "MONTE_CARLO"
+        if "OPTIM" in value or "LINPROG" in value:
+            return "OPTIMIZATION"
+        if "ODE" in value or "SOLVE_IVP" in value:
+            return "ODE"
+        if value.startswith(("FINITE_DIFFERENCE", "FDM")) or "DIFFUSION" in value:
+            return "PDE"
+    return None
+
+
+def _model_family_guidance(
+    quantitative_idea: Mapping[str, object],
+    model_blueprint: Mapping[str, object] | None,
+) -> str:
+    family = _model_family_from_context(quantitative_idea, model_blueprint)
+    if family is not None:
+        return _MODEL_FAMILY_GUIDES[family]
+    return "\n\n".join(
+        [
+            "Model-family routing: select exactly one executable family from ODE, OPTIMIZATION, MONTE_CARLO, or PDE, then follow only its corresponding section below.",
+            *_MODEL_FAMILY_GUIDES.values(),
+        ]
+    )
+
+
+def _scenario_guidance(
+    quantitative_idea: Mapping[str, object],
+    model_blueprint: Mapping[str, object] | None,
+) -> str:
+    family = _model_family_from_context(quantitative_idea, model_blueprint)
+    if family == "ODE":
+        return "Every scenario override must affect an ODE derivative or state initialization; narrative-only scenario differences are forbidden."
+    if family == "PDE":
+        return "Every scenario override must affect a PDE parameter, initial-condition expression, or boundary value; narrative-only scenario differences are forbidden."
+    if family == "OPTIMIZATION":
+        return "Use a single baseline scenario with no parameter_overrides unless the optimization variables are materialized separately; do not claim trajectory effects."
+    if family == "MONTE_CARLO":
+        return "Monte Carlo scenario overrides may target declared parameters when the observable uses them; do not claim derivative or state effects, and do not use narrative-only overrides."
+    return "Every scenario override must affect the selected execution document; narrative-only scenario differences are forbidden."
 
 
 class QuantitativeModelSynthesisError(RuntimeError):
@@ -208,8 +298,9 @@ def build_quantitative_model_prompt(
             "the supplied lineage. Include title, abstract, scientific_question, model_scope, assumptions, symbols,",
             "equations with stable IDs Q1-EQ-001 style, initial_conditions, boundary_conditions, parameterization,",
             "scenarios, objective_and_constraints, algorithm, numerical_plan, validation_plan, limitations, references,",
-            "and either a safe MathIR object or a safe execution_ir object. MathIR supports the legacy registered system types; PDE execution_ir supports only registered PDE families and uses expression AST nodes, never formula strings.",
-            _MODEL_JSON_SHAPE_GUIDE,
+            "and either a safe MathIR object or a safe execution_ir object. Select exactly one executable family and follow only that family's rules below.",
+            _MODEL_JSON_COMMON_GUIDE,
+            _model_family_guidance(quantitative_idea, model_blueprint),
             "Do not claim numerical results because no simulation has been authorized yet.",
         "Quantitative idea:",
         _bounded_json(quantitative_idea),
@@ -236,6 +327,7 @@ def build_quantitative_model_prompt(
             )
         )
         parameter_ids = {entry["parameter_id"] for entry in normalized_parameter_set["entries"]}
+        model_family = _model_family_from_context(quantitative_idea, normalized_blueprint)
         pulsar_recycling_parameters = {
             "initial_period",
             "initial_inclination",
@@ -248,7 +340,7 @@ def build_quantitative_model_prompt(
             "accretion_duration",
             "maximum_simulated_age",
         }
-        if pulsar_recycling_parameters <= parameter_ids:
+        if pulsar_recycling_parameters <= parameter_ids and model_family in {None, "ODE"}:
             sections.extend(
                 (
                     "Pulsar recycling executable constraints for this parameter contract:",
@@ -273,7 +365,7 @@ def build_quantitative_model_prompt(
             "core_surface_conversion_coefficient",
             "rotational_compression_coefficient",
         }
-        if pulsar_thermal_parameters <= parameter_ids:
+        if pulsar_thermal_parameters <= parameter_ids and model_family in {None, "ODE"}:
             sections.extend(
                 (
                     "Pulsar thermal-transition executable constraints for this parameter contract:",
@@ -299,9 +391,8 @@ def build_quantitative_model_prompt(
             (
                 "The external audited run plan will execute these exact scenarios:",
                 json.dumps(execution_scenarios, ensure_ascii=False, sort_keys=True, indent=2, allow_nan=False),
-                "Every parameter overridden by these scenarios must operationally affect a MathIR derivative or state initialization.",
-                "Verify that changing each override changes at least one computed trajectory; narrative-only scenario differences are forbidden.",
-                "Preserve the blueprint's physical sign conventions and mechanism directions in the executable AST.",
+                _scenario_guidance(quantitative_idea, model_blueprint),
+                "Preserve the blueprint's physical sign conventions and mechanism directions in the executable representation.",
             )
         )
     return "\n".join(sections)
@@ -315,6 +406,8 @@ def parse_quantitative_model_response(value: object) -> tuple[dict[str, Any], st
     match = _DUAL_BLOCK_RESPONSE.fullmatch(value)
     if match is None:
         match = _JSON_BLOCK_RESPONSE.fullmatch(value)
+        if match is None:
+            match = _FENCED_JSON_BLOCK_RESPONSE.fullmatch(value)
         if match is None:
             raise QuantitativeModelSynthesisError(
                 "response must contain exactly one quantitative model JSON block"
@@ -412,12 +505,6 @@ def _preflight_generated_specification(
         raise QuantitativeModelSynthesisError(
             f"PDE synthesis grid has {cell_count} cells; the first-run limit is {configured_limit}"
         )
-    for field_name in ("initial_condition", "initial_velocity"):
-        definition = _mapping(document.get(field_name))
-        if definition and _text(definition.get("type")) == "SAMPLED_VALUES":
-            raise QuantitativeModelSynthesisError(
-                f"new PDE models must use a compact {field_name} analytic profile"
-            )
 
 
 def synthesize_quantitative_model(
@@ -466,7 +553,7 @@ def synthesize_quantitative_model(
         "quantitative model request completed phase=draft response_chars=%d",
         len(str(response or "")),
     )
-    for repair_index in range(3):
+    for repair_index in range(4):
         try:
             _report_synthesis_stage(llm_call, "quantitative model parse started attempt=%d", repair_index + 1)
             specification, markdown = parse_quantitative_model_response(response)
@@ -499,9 +586,9 @@ def synthesize_quantitative_model(
                     )
             break
         except QuantitativeModelSynthesisError as contract_error:
-            if repair_index >= 2:
+            if repair_index >= 3:
                 raise QuantitativeModelSynthesisError(
-                    f"quantitative model contract repair exhausted after two attempts: {contract_error}"
+                    f"quantitative model contract repair exhausted after three attempts: {contract_error}"
                 ) from contract_error
             current_error = contract_error
             _report_synthesis_stage(
@@ -511,9 +598,9 @@ def synthesize_quantitative_model(
                 current_error,
             )
         except JsonMarkdownConsistencyError as contract_error:
-            if repair_index >= 2:
+            if repair_index >= 3:
                 raise QuantitativeModelSynthesisError(
-                    f"quantitative model contract repair exhausted after two attempts: {contract_error}"
+                    f"quantitative model contract repair exhausted after three attempts: {contract_error}"
                 ) from contract_error
             current_error = contract_error
             _report_synthesis_stage(
@@ -526,10 +613,11 @@ def synthesize_quantitative_model(
             (
                 "Repair a quantitative-model response that failed deterministic contract validation.",
                 f"The validator reported this first error: {current_error}",
-                "Do not repair only this path. Treat it as a complete contract failure and audit every nested field in the entire execution_ir in one pass.",
-                "Rebuild the PDE document against the canonical schema and the full preflight checklist below. Preserve valid scientific content, lineage, approved parameters, and accepted revision intent, but correct every likely structural, semantic, stability, and resource-budget error you find.",
+                "Do not repair only this path. Treat it as a complete contract failure and audit every nested field in the model specification and its execution document in one pass.",
+                "Rebuild the execution document and the complete quantitative model specification against the canonical schema and the full preflight checklist below. Preserve valid scientific content, lineage, approved parameters, and accepted revision intent, and preserve the selected executable model family whether it is PDE, ODE, OPTIMIZATION, or MONTE_CARLO. Correct every likely structural, semantic, stability, and resource-budget error you find.",
                 "Return exactly one <QUANTITATIVE_MODEL_JSON> block and no commentary. Do not return Markdown, a patch, partial JSON, explanation, or code.",
-                _MODEL_JSON_SHAPE_GUIDE,
+                _MODEL_JSON_COMMON_GUIDE,
+                _model_family_guidance(quantitative_idea, model_blueprint),
                 "Immutable lineage:",
                 json.dumps(dict(lineage), ensure_ascii=False, sort_keys=True, allow_nan=False),
                 "Exact approved execution parameters:",
@@ -543,6 +631,7 @@ def synthesize_quantitative_model(
                 ),
                 "Exact external execution scenarios:",
                 json.dumps(execution_scenarios, ensure_ascii=False, sort_keys=True, allow_nan=False),
+                _scenario_guidance(quantitative_idea, model_blueprint),
                 "Invalid response to repair:",
                 str(response)[:64_000],
             )
@@ -671,7 +760,7 @@ def build_quantitative_model_llm_call(*, config: Any, model: str | None = None) 
         max_output_tokens = min(max_output_tokens, int(model_spec.max_output_tokens))
         try:
             max_synthesis_grid_cells = max(
-                1, int(setting(quantitative_config, "synthesis_max_grid_cells", 4096))
+                1, int(setting(quantitative_config, "synthesis_max_grid_cells", 100_000))
             )
         except (TypeError, ValueError):
             max_synthesis_grid_cells = 4096

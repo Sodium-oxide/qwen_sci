@@ -215,7 +215,7 @@ quantitative_modeling:
   llm_timeout_seconds: 1800
   max_output_tokens: 24000
   repair_max_output_tokens: 16000
-  synthesis_max_grid_cells: 4096
+  synthesis_max_grid_cells: 100000
   stream: true
   progress_to_stderr: true
   progress_interval_tokens: 256

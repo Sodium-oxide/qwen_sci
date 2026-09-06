@@ -186,7 +186,7 @@ def _normalize_scenarios(
         scenario_ids.add(identifier)
         overrides = _mapping(scenario.get("parameter_overrides"))
         capability = pde_capability(str(mathir["system_type"]))
-        supports_overrides = str(mathir["system_type"]) == "ODE_IVP" or capability is not None
+        supports_overrides = str(mathir["system_type"]) in {"ODE_IVP", "MONTE_CARLO"} or capability is not None
         if not supports_overrides and overrides:
             raise SimulationRunPlanError(
                 "parameter overrides are not supported for this execution system"

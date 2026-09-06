@@ -10,6 +10,7 @@ from collections.abc import Mapping, Sequence
 from typing import Any
 
 from src.agents.quantitative_modeling.mathir import MathIRValidationError, validate_mathir_document
+from src.agents.quantitative_modeling.pde_capability_registry import pde_capability
 
 
 QUANTITATIVE_MODEL_SPEC_SCHEMA_VERSION = "ieee_math_model_v1"
@@ -218,6 +219,25 @@ def _normalize_numerical_plan(value: object) -> dict[str, Any]:
     }
 
 
+def _execution_model_family(
+    *,
+    schema_version: str,
+    mathir: Mapping[str, object] | None,
+    execution_ir: Mapping[str, object] | None,
+) -> str:
+    document = mathir if schema_version == QUANTITATIVE_MODEL_SPEC_SCHEMA_VERSION else _mapping(execution_ir).get("document")
+    system_type = _text(_mapping(document).get("system_type"))
+    if system_type == "ODE_IVP":
+        return "ODE"
+    if system_type == "LINEAR_OPTIMIZATION":
+        return "OPTIMIZATION"
+    if system_type == "MONTE_CARLO":
+        return "MONTE_CARLO"
+    if _mapping(execution_ir).get("kind") == "PDE" or pde_capability(system_type) is not None:
+        return "PDE"
+    return "UNKNOWN"
+
+
 def _normalize_parameter_provenance(value: object) -> dict[str, Any]:
     """Keep legacy models readable while identifying evidence-bound models."""
 
@@ -308,6 +328,24 @@ def normalize_quantitative_model_spec(value: object) -> dict[str, Any]:
         except ExecutionIRValidationError as exc:
             raise QuantitativeModelFormatError(f"execution_ir is invalid: {exc}") from exc
         mathir = None
+    model_family = _execution_model_family(
+        schema_version=schema_version,
+        mathir=mathir,
+        execution_ir=normalized_execution_ir,
+    )
+    execution_document = mathir if mathir is not None else _mapping(normalized_execution_ir).get("document")
+    temporal_pde = model_family == "PDE" and "time_span" in _mapping(execution_document)
+    initial_conditions_allow_empty = model_family in {"MONTE_CARLO", "OPTIMIZATION"} or (
+        model_family == "PDE" and not temporal_pde
+    )
+    boundary_conditions_allow_empty = model_family in {"ODE", "MONTE_CARLO", "OPTIMIZATION"}
+    objective_allow_empty = model_family == "MONTE_CARLO"
+    def family_text_list(field: str, *, allow_empty: bool = False) -> list[str]:
+        raw_value = payload.get(field)
+        if raw_value is None and allow_empty:
+            raw_value = []
+        return _text_list(raw_value, field=field, allow_empty=allow_empty)
+
     result = {
         "schema_version": schema_version,
         "lineage": lineage,
@@ -318,13 +356,16 @@ def normalize_quantitative_model_spec(value: object) -> dict[str, Any]:
         "assumptions": _normalize_assumptions(payload.get("assumptions")),
         "symbols": symbols,
         "equations": equations,
-        "initial_conditions": _text_list(payload.get("initial_conditions"), field="initial_conditions"),
-        "boundary_conditions": _text_list(payload.get("boundary_conditions"), field="boundary_conditions"),
+        "initial_conditions": family_text_list(
+            "initial_conditions", allow_empty=initial_conditions_allow_empty
+        ),
+        "boundary_conditions": family_text_list(
+            "boundary_conditions", allow_empty=boundary_conditions_allow_empty
+        ),
         "parameterization": _text_list(payload.get("parameterization"), field="parameterization"),
-        "scenarios": _text_list(payload.get("scenarios"), field="scenarios"),
-        "objective_and_constraints": _text_list(
-            payload.get("objective_and_constraints"),
-            field="objective_and_constraints",
+        "scenarios": family_text_list("scenarios", allow_empty=True),
+        "objective_and_constraints": family_text_list(
+            "objective_and_constraints", allow_empty=objective_allow_empty
         ),
         "algorithm": _normalize_algorithm(payload.get("algorithm")),
         "numerical_plan": _normalize_numerical_plan(payload.get("numerical_plan")),

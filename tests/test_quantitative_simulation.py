@@ -68,6 +68,42 @@ def _diffusion_reaction_mathir() -> dict[str, object]:
     }
 
 
+def _monte_carlo_mathir() -> dict[str, object]:
+    return {
+        "schema_version": "mathir_v1",
+        "system_type": "MONTE_CARLO",
+        "parameters": {"offset": 1.0},
+        "samples": 64,
+        "seed": 7,
+        "random_variables": [
+            {"id": "x", "distribution": "uniform", "parameters": {"low": 0.0, "high": 1.0}}
+        ],
+        "observable": {
+            "op": "add",
+            "args": [
+                {"op": "variable", "name": "x"},
+                {"op": "variable", "name": "offset"},
+            ],
+        },
+    }
+
+
+def _optimization_mathir() -> dict[str, object]:
+    return {
+        "schema_version": "mathir_v1",
+        "system_type": "LINEAR_OPTIMIZATION",
+        "parameters": {"budget": 10.0},
+        "variables": [
+            {"id": "x", "lower": 0.0, "upper": 10.0, "objective_coefficient": 1.0},
+            {"id": "y", "lower": 0.0, "upper": 10.0, "objective_coefficient": 2.0},
+        ],
+        "constraints": [
+            {"coefficients": {"x": 1.0, "y": 1.0}, "sense": "<=", "rhs": 6.0},
+        ],
+        "objective_sense": "maximize",
+    }
+
+
 def test_mathir_rejects_undeclared_dynamic_variable() -> None:
     payload = _ode_mathir()
     payload["derivatives"] = {"x": _variable("__import__")}
@@ -109,6 +145,44 @@ def test_ode_plan_requires_explicit_authorization_and_runs_fixed_solver() -> Non
 
     final_value = result["scenario_results"][0]["result"]["summary"]["final_state"]["x"]
     assert final_value == pytest.approx(0.367879, rel=1e-4)
+
+
+def test_monte_carlo_plan_applies_declared_parameter_scenario_overrides() -> None:
+    plan = build_simulation_run_plan(
+        model_identity=_identity(),
+        mathir=_monte_carlo_mathir(),
+        scenarios=[
+            {"scenario_id": "baseline", "parameter_overrides": {}},
+            {"scenario_id": "shifted", "parameter_overrides": {"offset": 4.0}},
+        ],
+    )
+
+    result = execute_simulation_run_plan(
+        plan,
+        execute=True,
+        confirmed_plan_identity=plan["plan_identity"],
+    )
+    baseline_mean = result["scenario_results"][0]["result"]["summary"]["mean"]
+    shifted_mean = result["scenario_results"][1]["result"]["summary"]["mean"]
+
+    assert shifted_mean - baseline_mean == pytest.approx(3.0)
+
+
+def test_optimization_plan_allows_empty_physical_sections_and_runs_with_parameters() -> None:
+    plan = build_simulation_run_plan(
+        model_identity={**_identity(), "quantitative_idea_id": "Q2"},
+        mathir=_optimization_mathir(),
+    )
+
+    result = execute_simulation_run_plan(
+        plan,
+        execute=True,
+        confirmed_plan_identity=plan["plan_identity"],
+    )
+
+    solution = result["scenario_results"][0]["result"]["solution"]
+    assert solution["y"] == pytest.approx(6.0)
+    assert result["scenario_results"][0]["result"]["summary"]["objective_value"] == pytest.approx(12.0)
 
 
 def test_plan_rejects_mutation_after_identity_confirmation() -> None:

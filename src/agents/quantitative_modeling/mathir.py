@@ -47,6 +47,12 @@ def _number(value: object, *, field: str) -> float:
     return result
 
 
+def _integer(value: object, *, field: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise MathIRValidationError(f"{field} must be an integer")
+    return value
+
+
 def _identifier(value: object, *, field: str) -> str:
     text = _text(value)
     if not _IDENTIFIER.fullmatch(text):
@@ -242,6 +248,7 @@ def _validate_linear_optimization(payload: Mapping[str, object]) -> dict[str, An
     variable_ids = [str(item["id"]) for item in variables]
     if not variables or len(variable_ids) != len(set(variable_ids)):
         raise MathIRValidationError("optimization variables must be non-empty and unique")
+    parameters = _validate_parameters(payload.get("parameters", {}))
     raw_constraints = payload.get("constraints", [])
     if not isinstance(raw_constraints, Sequence) or isinstance(raw_constraints, (str, bytes, bytearray)):
         raise MathIRValidationError("constraints must be a list")
@@ -270,6 +277,7 @@ def _validate_linear_optimization(payload: Mapping[str, object]) -> dict[str, An
     return {
         "schema_version": MATHIR_SCHEMA_VERSION,
         "system_type": "LINEAR_OPTIMIZATION",
+        "parameters": parameters,
         "variables": variables,
         "constraints": constraints,
         "objective_sense": objective_sense,
@@ -278,12 +286,7 @@ def _validate_linear_optimization(payload: Mapping[str, object]) -> dict[str, An
 
 def _validate_monte_carlo(payload: Mapping[str, object]) -> dict[str, Any]:
     samples_raw = payload.get("samples")
-    if isinstance(samples_raw, bool):
-        raise MathIRValidationError("samples must be an integer")
-    try:
-        samples = int(samples_raw)
-    except (TypeError, ValueError) as exc:
-        raise MathIRValidationError("samples must be an integer") from exc
+    samples = _integer(samples_raw, field="samples")
     if samples < 1 or samples > 100_000:
         raise MathIRValidationError("samples must be between 1 and 100000")
     raw_variables = payload.get("random_variables")
@@ -314,20 +317,20 @@ def _validate_monte_carlo(payload: Mapping[str, object]) -> dict[str, Any]:
         random_variables.append({"id": name, "distribution": distribution, "parameters": normalized_parameters})
     if not random_variables or len(names) != len(set(names)):
         raise MathIRValidationError("random_variables must be non-empty and unique")
+    parameters = _validate_parameters(payload.get("parameters", {}))
     seed_raw = payload.get("seed", 0)
-    if isinstance(seed_raw, bool):
-        raise MathIRValidationError("seed must be an integer")
-    try:
-        seed = int(seed_raw)
-    except (TypeError, ValueError) as exc:
-        raise MathIRValidationError("seed must be an integer") from exc
+    seed = _integer(seed_raw, field="seed")
     return {
         "schema_version": MATHIR_SCHEMA_VERSION,
         "system_type": "MONTE_CARLO",
+        "parameters": parameters,
         "samples": samples,
         "seed": seed,
         "random_variables": random_variables,
-        "observable": validate_expression(payload.get("observable"), allowed_symbols=set(names)),
+        "observable": validate_expression(
+            payload.get("observable"),
+            allowed_symbols={*names, *parameters},
+        ),
     }
 
 
