@@ -24,6 +24,7 @@ from src.agents.quantitative_modeling.parameter_contracts import (
     model_blueprint_identity,
     normalize_approved_parameter_set,
     normalize_model_blueprint,
+    parameter_mapping_diff,
     parameter_evidence_summary,
 )
 from src.agents.quantitative_modeling.parameter_evidence.extraction import (
@@ -317,13 +318,17 @@ def build_quantitative_model_prompt(
         sections.extend(
             (
                 "This is evidence-bound model materialization, not free-form parameterization.",
-                "The execution document parameters object must contain exactly the approved MathIR symbols with exactly the approved values.",
-                "Do not add a parameter value, omit an approved parameter, or override a selected value. The system, not you, will attach",
-                "the parameter provenance field after validating the execution values.",
+                "The host program will inject the immutable approved execution parameter object after parsing your response.",
+                "Do not invent, serialize, rename, omit, or alter parameter values. Reference only the approved MathIR symbols in equations, ASTs,",
+                "random-variable definitions, and solver structure; the host-bound parameters are the sole executable values.",
+                "The system, not you, will attach the parameter provenance field after validating the execution values.",
                 "Validated non-numeric model blueprint:",
                 _bounded_json(normalized_blueprint),
-                "Approved parameter set (copy its values exactly):",
-                _bounded_json(normalized_parameter_set),
+                "Approved parameter symbols (values are injected by the host):",
+                json.dumps(
+                    sorted(entry["mathir_symbol"] for entry in normalized_parameter_set["entries"]),
+                    ensure_ascii=False,
+                ),
             )
         )
         parameter_ids = {entry["parameter_id"] for entry in normalized_parameter_set["entries"]}
@@ -398,7 +403,48 @@ def build_quantitative_model_prompt(
     return "\n".join(sections)
 
 
-def parse_quantitative_model_response(value: object) -> tuple[dict[str, Any], str]:
+def _bind_execution_parameters(
+    specification: Mapping[str, object],
+    approved_parameters: Mapping[str, object],
+) -> dict[str, Any]:
+    """Bind the immutable approved values before validating the execution IR.
+
+    The model LLM is useful for choosing equations and solver structure, but it
+    is not a reliable serializer for an immutable parameter set.  Binding before
+    normalization also handles omitted values and unit-bearing/string values in
+    an LLM response without ever allowing them into the executable document.
+    """
+
+    bound = dict(specification)
+    schema_version = _text(bound.get("schema_version"))
+    if schema_version == "ieee_math_model_v1":
+        document = bound.get("mathir")
+    elif schema_version == "ieee_math_model_v2":
+        execution_ir = bound.get("execution_ir")
+        document = _mapping(execution_ir).get("document")
+    else:
+        return bound
+    if isinstance(document, Mapping):
+        document = dict(document)
+        document["parameters"] = dict(approved_parameters)
+        if document.get("system_type") == "MONTE_CARLO":
+            sample_value = approved_parameters.get("N_samples", approved_parameters.get("samples"))
+            if sample_value is not None:
+                document["samples"] = sample_value
+        if schema_version == "ieee_math_model_v1":
+            bound["mathir"] = document
+        else:
+            execution_ir = dict(_mapping(bound.get("execution_ir")))
+            execution_ir["document"] = document
+            bound["execution_ir"] = execution_ir
+    return bound
+
+
+def parse_quantitative_model_response(
+    value: object,
+    *,
+    approved_parameters: Mapping[str, object] | None = None,
+) -> tuple[dict[str, Any], str]:
     """Parse the compact JSON protocol, with legacy dual-block compatibility."""
 
     if not isinstance(value, str):
@@ -421,6 +467,8 @@ def parse_quantitative_model_response(value: object) -> tuple[dict[str, Any], st
         raise QuantitativeModelSynthesisError("quantitative model JSON block is invalid") from exc
     if not isinstance(raw_specification, Mapping):
         raise QuantitativeModelSynthesisError("quantitative model JSON block must be an object")
+    if approved_parameters is not None:
+        raw_specification = _bind_execution_parameters(raw_specification, approved_parameters)
     try:
         return normalize_quantitative_model_spec(raw_specification), markdown
     except QuantitativeModelFormatError as exc:
@@ -536,6 +584,14 @@ def synthesize_quantitative_model(
         revision_context=revision_context,
         execution_scenarios=execution_scenarios,
     )
+    approved_execution_parameters: dict[str, float] | None = None
+    if approved_parameter_set is not None:
+        try:
+            approved_execution_parameters = approved_mathir_parameters(
+                normalize_approved_parameter_set(approved_parameter_set)
+            )
+        except ParameterContractError as error:
+            raise QuantitativeModelSynthesisError(f"approved parameter set is invalid: {error}") from error
     _report_synthesis_stage(
         llm_call,
         "quantitative model request started phase=draft prompt_chars=%d idea_id=%s",
@@ -556,7 +612,10 @@ def synthesize_quantitative_model(
     for repair_index in range(4):
         try:
             _report_synthesis_stage(llm_call, "quantitative model parse started attempt=%d", repair_index + 1)
-            specification, markdown = parse_quantitative_model_response(response)
+            specification, markdown = parse_quantitative_model_response(
+                response,
+                approved_parameters=approved_execution_parameters,
+            )
             _report_synthesis_stage(
                 llm_call,
                 "quantitative model contract validation started attempt=%d",
@@ -581,8 +640,13 @@ def synthesize_quantitative_model(
                     not isinstance(actual_parameters_for_check, Mapping)
                     or dict(actual_parameters_for_check) != expected_parameters_for_check
                 ):
+                    difference = parameter_mapping_diff(
+                        expected_parameters_for_check,
+                        actual_parameters_for_check if isinstance(actual_parameters_for_check, Mapping) else None,
+                    )
                     raise QuantitativeModelSynthesisError(
-                        "evidence-bound execution parameters must exactly equal the approved parameter set"
+                        "evidence-bound execution parameters must exactly equal the approved parameter set: "
+                        + json.dumps(difference, ensure_ascii=False, sort_keys=True)
                     )
             break
         except QuantitativeModelSynthesisError as contract_error:
@@ -620,14 +684,10 @@ def synthesize_quantitative_model(
                 _model_family_guidance(quantitative_idea, model_blueprint),
                 "Immutable lineage:",
                 json.dumps(dict(lineage), ensure_ascii=False, sort_keys=True, allow_nan=False),
-                "Exact approved execution parameters:",
+                "Approved execution parameter symbols (the host injects their immutable values before validation):",
                 json.dumps(
-                    approved_mathir_parameters(normalize_approved_parameter_set(approved_parameter_set))
-                    if approved_parameter_set is not None
-                    else {},
+                    sorted(approved_execution_parameters or {}),
                     ensure_ascii=False,
-                    sort_keys=True,
-                    allow_nan=False,
                 ),
                 "Exact external execution scenarios:",
                 json.dumps(execution_scenarios, ensure_ascii=False, sort_keys=True, allow_nan=False),
@@ -669,8 +729,13 @@ def synthesize_quantitative_model(
         expected_parameters = approved_mathir_parameters(parameter_set)
         actual_parameters = _execution_document(specification).get("parameters")
         if not isinstance(actual_parameters, Mapping) or dict(actual_parameters) != expected_parameters:
+            difference = parameter_mapping_diff(
+                expected_parameters,
+                actual_parameters if isinstance(actual_parameters, Mapping) else None,
+            )
             raise QuantitativeModelSynthesisError(
-                "evidence-bound execution parameters must exactly equal the approved parameter set"
+                "evidence-bound execution parameters must exactly equal the approved parameter set: "
+                + json.dumps(difference, ensure_ascii=False, sort_keys=True)
             )
         specification = normalize_quantitative_model_spec(
             {

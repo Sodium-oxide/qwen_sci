@@ -215,9 +215,15 @@ python -m src.cli quantitative materialize `
   --idea-id Q1 --version 0
 ```
 
+物化时，LLM 只负责生成方程、AST 和求解器结构。主机程序会在解析前将
+`approved_parameter_set.json` 中的 canonical execution 参数注入执行文档；因此
+LLM 漏写、改写或把参数值写成字符串不会改变实际执行参数。Monte Carlo 的
+`N_samples`（若获批）也由主机绑定到顶层 `mathir.samples`。随后仍保留精确相等
+检查，确保编译器和执行计划没有改写批准参数。
+
 物化会拒绝以下情况：
 
-- `MathIR.parameters` 漏少、增加或改写任何获批参数；
+- 主机绑定后的 `MathIR.parameters` 漏少、增加或改写任何获批参数；
 - 参数集、模型蓝图、谱系或版本不匹配；
 - 非 `SCENARIO_INPUT` 参数出现在情景 override 中；
 - 参数集 manifest 与内容 hash 不匹配。

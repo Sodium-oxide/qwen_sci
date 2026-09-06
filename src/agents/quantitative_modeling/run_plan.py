@@ -20,6 +20,7 @@ from src.agents.quantitative_modeling.parameter_contracts import (
     ParameterContractError,
     approved_mathir_parameters,
     normalize_approved_parameter_set,
+    parameter_mapping_diff,
 )
 from src.agents.quantitative_modeling.pde_capability_registry import pde_capability
 
@@ -238,7 +239,11 @@ def _normalize_parameter_provenance(
         expected_parameters = approved_mathir_parameters(approved)
         actual_parameters = _mapping(mathir.get("parameters"))
         if actual_parameters != expected_parameters:
-            raise SimulationRunPlanError("MathIR parameters must exactly match the approved parameter set")
+            difference = parameter_mapping_diff(expected_parameters, actual_parameters)
+            raise SimulationRunPlanError(
+                "execution parameters must exactly match the approved parameter set: "
+                + json.dumps(difference, ensure_ascii=False, sort_keys=True)
+            )
         manifest = _normalize_parameter_set_manifest(parameter_set_manifest)
         return {
             "mode": "APPROVED_PARAMETER_SET",

@@ -199,6 +199,43 @@ def test_json_only_model_response_is_supported() -> None:
     assert markdown == ""
 
 
+def test_parser_binds_approved_parameters_before_validation() -> None:
+    specification = _specification()
+    specification["mathir"] = {
+        **specification["mathir"],
+        "parameters": {"wrong_name": "not-a-number", "extra": 999.0},
+    }
+    response = (
+        "<QUANTITATIVE_MODEL_JSON>\n"
+        + json.dumps(specification)
+        + "\n</QUANTITATIVE_MODEL_JSON>"
+    )
+
+    normalized, _ = parse_quantitative_model_response(
+        response,
+        approved_parameters={"k": 2.0},
+    )
+
+    assert normalized["mathir"]["parameters"] == {"k": 2.0}
+
+
+def test_parser_binds_monte_carlo_sample_control_from_approved_parameters() -> None:
+    specification = _monte_carlo_specification(symbolic_samples=True, empty_conditions=True)
+    response = (
+        "<QUANTITATIVE_MODEL_JSON>\n"
+        + json.dumps(specification, ensure_ascii=False)
+        + "\n</QUANTITATIVE_MODEL_JSON>"
+    )
+
+    normalized, _ = parse_quantitative_model_response(
+        response,
+        approved_parameters={"offset": 0.5, "N_samples": 10000},
+    )
+
+    assert normalized["mathir"]["parameters"] == {"offset": 0.5, "N_samples": 10000.0}
+    assert normalized["mathir"]["samples"] == 10000
+
+
 def test_fenced_json_only_model_response_is_supported() -> None:
     response = "```json\n<QUANTITATIVE_MODEL_JSON>\n" + json.dumps(_specification()) + "\n</QUANTITATIVE_MODEL_JSON>\n```"
 

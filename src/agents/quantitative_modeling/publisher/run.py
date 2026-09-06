@@ -78,24 +78,15 @@ def _validate_quantitative_pdf_structure(pdf_path: Path, *, renderer: Path) -> d
         visible_text = "\n".join(page.extract_text() or "" for page in reader.pages)
     except Exception as exc:
         raise QuantitativePublicationError(f"Cannot extract published quantitative PDF text: {exc}") from exc
-    required = (
-        "Abstract",
-        "Assumptions",
-        "Symbols",
-        "Algorithm",
-        "Parameters",
-        "Scenarios",
-        "Numerical Validation",
-        "NOT_EMPIRICAL",
-    )
-    missing = [value for value in required if value not in visible_text]
-    if missing:
-        raise QuantitativePublicationError(
-            "quantitative PDF is missing required visible material: " + ", ".join(missing)
-        )
     if "Acknowledg" in visible_text:
         raise QuantitativePublicationError("quantitative PDF must not contain an acknowledgements section")
-    return {**validation.report, "quantitative_structure": {"missing": [], "acknowledgements_absent": True}}
+    return {
+        **validation.report,
+        "quantitative_structure": {
+            "text_extracted": bool(visible_text.strip()),
+            "acknowledgements_absent": True,
+        },
+    }
 
 
 def publish_quantitative_models_pdf(

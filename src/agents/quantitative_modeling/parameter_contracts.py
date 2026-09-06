@@ -704,6 +704,20 @@ def approved_mathir_parameters(parameter_set: Mapping[str, object]) -> dict[str,
     return {entry["mathir_symbol"]: entry["selected_value"] for entry in normalized["entries"]}
 
 
+def parameter_mapping_diff(
+    expected: Mapping[str, object], actual: Mapping[str, object] | None
+) -> dict[str, list[str]]:
+    """Describe parameter-key/value differences without exposing values."""
+
+    observed = dict(actual) if isinstance(actual, Mapping) else {}
+    missing = sorted(set(expected) - set(observed))
+    extra = sorted(set(observed) - set(expected))
+    changed = sorted(
+        name for name in set(expected).intersection(observed) if observed[name] != expected[name]
+    )
+    return {"missing": missing, "extra": extra, "changed": changed}
+
+
 def parameter_evidence_summary(parameter_set: Mapping[str, object]) -> list[dict[str, Any]]:
     normalized = normalize_approved_parameter_set(parameter_set)
     return [
@@ -743,5 +757,6 @@ __all__ = [
     "normalize_parameter_evidence_candidate",
     "normalize_parameter_evidence_collection",
     "normalize_parameter_resolution_proposal",
+    "parameter_mapping_diff",
     "parameter_evidence_summary",
 ]
