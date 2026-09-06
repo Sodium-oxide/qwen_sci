@@ -601,6 +601,71 @@ def fetch_quantitative_parameter_fulltext(
     evidence_dir = _parameter_evidence_directory(root, quantitative_idea_id, version)
     discovery_path = evidence_dir / "discovery" / "parameter_discovery.json"
     discovery = _read_json(discovery_path, label="parameter discovery")
+    # Interactive source selections are an in-memory overlay.  The immutable
+    # discovery artifact remains unchanged, while selected AnySearch/OpenAlex
+    # papers become eligible for the normal OA-only full-text path.
+    selected_dir = evidence_dir / "interactive_search"
+    selected_papers: list[dict[str, Any]] = []
+    if selected_dir.is_dir():
+        for selection_path in sorted(selected_dir.glob("selected-*.json")):
+            selection = _read_json(selection_path, label="parameter search selection")
+            parameter_id = _text(selection.get("parameter_id"))
+            for raw_paper in selection.get("papers", []):
+                paper = _mapping(raw_paper)
+                if not parameter_id or not _text(paper.get("title")):
+                    continue
+                locations = [
+                    _mapping(location)
+                    for location in paper.get("oa_locations", [])
+                    if _mapping(location).get("pdf_url")
+                ]
+                if not locations:
+                    continue
+                selected_papers.append(
+                    {
+                        **paper,
+                        "parameter_request_ids": [parameter_id],
+                        "oa_candidates": locations,
+                    }
+                )
+    if selected_papers:
+        existing_keys = {
+            (_text(_mapping(paper).get("doi")).casefold(), _text(_mapping(paper).get("title")).casefold())
+            for paper in discovery.get("papers", [])
+            if isinstance(paper, Mapping)
+        }
+        merged_papers = list(discovery.get("papers", []))
+        for paper in selected_papers:
+            key = (_text(paper.get("doi")).casefold(), _text(paper.get("title")).casefold())
+            existing = next(
+                (
+                    candidate
+                    for candidate in merged_papers
+                    if isinstance(candidate, Mapping)
+                    and (
+                        (_text(candidate.get("doi")).casefold(), _text(candidate.get("title")).casefold()) == key
+                    )
+                ),
+                None,
+            )
+            if existing is not None:
+                existing_locations = list(existing.get("oa_candidates") or [])
+                for location in paper.get("oa_candidates", []):
+                    if location not in existing_locations:
+                        existing_locations.append(location)
+                existing["oa_candidates"] = existing_locations
+                existing["parameter_request_ids"] = list(
+                    dict.fromkeys(
+                        [
+                            *(_text(item) for item in existing.get("parameter_request_ids", []) if _text(item)),
+                            parameter_id,
+                        ]
+                    )
+                )
+            else:
+                merged_papers.append(paper)
+                existing_keys.add(key)
+        discovery = {**discovery, "papers": merged_papers}
     manifest_path = evidence_dir / "fulltext" / "fulltext_manifest.json"
     if manifest_path.exists():
         raise QuantitativeWorkflowError("parameter full-text manifest is immutable and already exists")

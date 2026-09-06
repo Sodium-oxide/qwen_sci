@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 import threading
+from datetime import datetime, timezone
 from collections.abc import Mapping
 from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
@@ -26,6 +27,7 @@ from src.pipeline.quantitative_orchestrator import (
     resume_quantitative_from_existing_idea,
 )
 from src.pipeline.quantitative_state import QuantitativeStateError, load_quantitative_state
+from src.agents.quantitative_modeling.parameter_contracts import model_blueprint_identity
 from src.pipeline.quantitative_workflow import (
     accept_quantitative_refinement,
     approve_quantitative_parameter_resolution,
@@ -59,6 +61,7 @@ from src.pipeline.science_run import (
 from src.pipeline.science_workflow import run_science_workflow
 
 from .artifact_service import list_artifacts
+from .parameter_search_service import ParameterSearchService
 from .schemas import CreateRunRequest, RunActionRequest, RunActionType, RunView
 
 
@@ -166,6 +169,146 @@ class RunService:
         self.run_root = Path(run_root).expanduser().resolve()
         self.config_path = Path(config_path).expanduser().resolve()
         self.supervisor = supervisor or WorkflowSupervisor()
+        self.parameter_search = ParameterSearchService(
+            config_path=self.config_path,
+            submit_task=self.supervisor.submit_task,
+        )
+
+    def start_parameter_search(
+        self,
+        *,
+        run_id: str,
+        idea_id: str,
+        version: int,
+        parameter_id: str,
+        query: str,
+        providers: tuple[str, ...],
+        limit: int,
+    ) -> dict[str, Any]:
+        paths = self.paths_for(run_id)
+        metadata, _state = load_science_run(paths)
+        if self.supervisor.is_active(_text(metadata.get("science_run_id"))):
+            raise RunActionConflictError("This research run is already executing.")
+        self._validate_quantitative_target(
+            paths,
+            idea_id=idea_id,
+            version=version,
+            expected_statuses={"WAITING_FOR_PARAMETER_EVIDENCE", "WAITING_FOR_PARAMETER_REVIEW"},
+        )
+        evidence_dir = self._parameter_evidence_dir(paths, idea_id, version)
+        blueprint = self._read_json(evidence_dir / "model_blueprint.json")
+        requests = {
+            _text(item.get("parameter_id")): item
+            for raw in blueprint.get("parameter_requests", [])
+            if (item := _mapping(raw)) and _text(item.get("parameter_id"))
+        }
+        parameter_request = requests.get(parameter_id)
+        if parameter_request is None:
+            raise RunActionError("The requested parameter is not part of the current model blueprint.")
+        try:
+            blueprint_identity = model_blueprint_identity(blueprint)
+        except Exception:
+            blueprint_identity = _text(blueprint.get("blueprint_identity"))
+        job = self.parameter_search.start(
+            run_id=run_id,
+            run_dir=paths.run_dir,
+            idea_id=idea_id,
+            version=version,
+            parameter_id=parameter_id,
+            query=" ".join(query.split()),
+            providers=providers,
+            limit=limit,
+            parameter_request=parameter_request,
+            blueprint_identity=blueprint_identity,
+        )
+        return {
+            "job_id": job["job_id"],
+            "run_id": run_id,
+            "idea_id": idea_id,
+            "version": version,
+            "parameter_id": parameter_id,
+            "status": job["status"],
+        }
+
+    def get_parameter_search(
+        self,
+        *,
+        run_id: str,
+        idea_id: str,
+        version: int,
+        job_id: str,
+    ) -> dict[str, Any]:
+        paths = self.paths_for(run_id)
+        if idea_id not in {"Q1", "Q2"} or version not in {0, 1, 2}:
+            raise RunActionError("Unknown parameter search job.")
+        if not re.fullmatch(r"psearch-[A-Za-z0-9]{8,32}", job_id):
+            raise RunActionError("Unknown parameter search job.")
+        path = self.parameter_search.job_directory(paths.run_dir, idea_id, version) / f"{job_id}.json"
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise RunActionError("Unknown parameter search job.") from exc
+        if (
+            not isinstance(value, dict)
+            or value.get("run_id") != run_id
+            or value.get("idea_id") != idea_id
+            or value.get("version") != version
+            or value.get("job_id") != job_id
+        ):
+            raise RunActionError("Unknown parameter search job.")
+        return value
+
+    def select_parameter_search_sources(
+        self,
+        *,
+        run_id: str,
+        idea_id: str,
+        version: int,
+        job_id: str,
+        paper_ids: list[str],
+    ) -> dict[str, object]:
+        paths = self.paths_for(run_id)
+        metadata, _state = load_science_run(paths)
+        if self.supervisor.is_active(_text(metadata.get("science_run_id"))):
+            raise RunActionConflictError("This research run is already executing.")
+        self._validate_quantitative_target(
+            paths,
+            idea_id=idea_id,
+            version=version,
+            expected_statuses={"WAITING_FOR_PARAMETER_EVIDENCE", "WAITING_FOR_PARAMETER_REVIEW"},
+        )
+        job = self.get_parameter_search(run_id=run_id, idea_id=idea_id, version=version, job_id=job_id)
+        if job.get("status") != "COMPLETED":
+            raise RunActionError("Only a completed parameter search can provide sources.")
+        papers = {str(item.get("paper_id")): item for item in job.get("papers", []) if isinstance(item, Mapping)}
+        if not paper_ids or any(paper_id not in papers for paper_id in paper_ids):
+            raise RunActionError("A selected paper is not part of the completed search job.")
+        target = self._parameter_evidence_dir(paths, idea_id, version)
+        selection_path = target / "interactive_search" / f"selected-{job_id}.json"
+        payload = {
+            "schema_version": "parameter_search_selection_v1",
+            "run_id": run_id,
+            "idea_id": idea_id,
+            "version": version,
+            "job_id": job_id,
+            "parameter_id": job.get("parameter_id"),
+            "blueprint_identity": job.get("blueprint_identity"),
+            "selected_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            "paper_ids": paper_ids,
+            "papers": [papers[paper_id] for paper_id in paper_ids],
+        }
+        with locked_science_run(paths):
+            atomic_write_json(selection_path, payload)
+            append_science_event(
+                paths,
+                event_type="PARAMETER_SOURCE_SELECTED",
+                job_id=job_id,
+                idea_id=idea_id,
+                version=version,
+                parameter_id=job.get("parameter_id"),
+                paper_count=len(paper_ids),
+            )
+        return payload
 
     def create_run(self, request: CreateRunRequest) -> RunView:
         scope = resolve_design_scope(request.discipline_ids)
@@ -585,14 +728,43 @@ class RunService:
                         "normalized_value": candidate.get("normalized_value"),
                         "normalized_unit": _text(candidate.get("normalized_unit")),
                         "evidence_status": _text(candidate.get("evidence_status")),
+                        "source_kind": _text(candidate.get("source_kind")),
+                        "evidence_locator": {
+                            key: source_locator[key]
+                            for key in ("document_type", "section", "table_or_figure", "page", "quoted_text")
+                            if key in source_locator
+                        }
+                        if (source_locator := _mapping(candidate.get("evidence_locator")))
+                        else {},
+                        "conditions": _mapping(candidate.get("conditions")),
+                        "uncertainty": _mapping(candidate.get("uncertainty")),
                         "source": {
                             "document_id": _text(source.get("document_id")),
                             "title": _text(source.get("title")),
                             "year": source.get("year") if isinstance(source.get("year"), int) else None,
+                            "doi": _text(source.get("doi")),
+                            "discovery_sources": source.get("discovery_sources") if isinstance(source.get("discovery_sources"), list) else [],
+                            "cross_validated": bool(source.get("cross_validated", False)),
                         },
                     }
                 )
         return candidates[:256]
+
+    def _parameter_search_jobs(self, paths: ScienceRunPaths, idea_id: str, version: int) -> list[dict[str, Any]]:
+        directory = self.parameter_search.job_directory(paths.run_dir, idea_id, version)
+        if not directory.is_dir():
+            return []
+        jobs: list[dict[str, Any]] = []
+        for path in sorted(directory.glob("psearch-*.json"), key=lambda item: item.stat().st_mtime, reverse=True)[:32]:
+            job = self._read_json(path)
+            if not job:
+                continue
+            jobs.append({
+                key: job[key]
+                for key in ("job_id", "parameter_id", "status", "query", "created_at", "updated_at")
+                if key in job
+            })
+        return jobs
 
     def _quantitative_manifest_path(self, paths: ScienceRunPaths, state: Mapping[str, Any]) -> Path:
         record = _mapping(state.get("quantitative_ideas_manifest"))
@@ -1061,6 +1233,7 @@ class RunService:
             "parameter_requests": [],
             "candidates": [],
             "proposal": None,
+            "search_jobs": [],
         }
         if active is not None:
             idea_id, version, _status = active
@@ -1087,6 +1260,7 @@ class RunService:
                     if (request := _mapping(raw_request))
                 ],
                 "candidates": self._parameter_candidates(paths, idea_id, version),
+                "search_jobs": self._parameter_search_jobs(paths, idea_id, version),
                 "proposal": self._safe_parameter_proposal(
                     self._read_json(evidence_dir / "parameter_resolution_proposal.json")
                 ),

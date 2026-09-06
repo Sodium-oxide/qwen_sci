@@ -404,6 +404,14 @@ not select candidates or authorize simulation. Full-text acquisition considers a
 two declared PDF URLs per paper and retries transient HTTP failures once. Increase `minimum_keyword_hits` above
 its default of `2` when common terms produce too many local page matches.
 
+The WebApp-V2 quantitative workspace also provides a run-scoped parameter search panel. It submits an explicitly
+authorized search to the configured OpenAlex and AnySearch adapters, stores each result under the current Q/version
+`quantitative/<Q>/parameter_evidence/v<version>/interactive_search/` directory, and reports progress through the
+existing run SSE stream. Search metadata is discovery-only: selecting a paper records a source selection, but a value
+still requires the normal open-access/user-document full-text extraction, quote validation, parameter proposal, and
+human approval chain. Configure `ANYSEARCH_BASE_URL` and `ANYSEARCH_API_KEY` when an AnySearch HTTP bridge is
+available; credentials remain server-side and are never sent to the browser.
+
 Review the extracted, quote-anchored candidates against the blueprint. A human must provide a complete selection—one entry for every requested parameter—using the actual `parameter_id` and `candidate_id` returned for this run. Do not replace a candidate-backed normalized value with an invented value. The following is a schema example, not a pulsar parameter list; replace every placeholder after review:
 
 ```bash
@@ -568,6 +576,8 @@ The following values cover the normal Qwen/DashScope workflow. Keep them in the 
 | `DASHSCOPE_IMAGE_BASE_URL` | Optional | DashScope image API URL; defaults to `https://dashscope.aliyuncs.com/api/v1`. |
 | `SEMANTIC_SCHOLAR_API_KEY` | **Required by `doctor`** | Literature metadata and evidence retrieval. |
 | `OPENALEX_API_KEY` | Optional | Higher-rate OpenAlex literature discovery. |
+| `ANYSEARCH_BASE_URL` | Optional | Base URL for the server-side AnySearch academic adapter. |
+| `ANYSEARCH_API_KEY` | Optional | Credential for the server-side AnySearch adapter. |
 | `OPENALEX_EMAIL` | Optional | Contact address for provider requests. |
 | `UNPAYWALL_EMAIL` | Optional | Enables DOI-to-PDF resolution for available open-access papers. |
 | `SERPER_API_KEY` | Optional | Serper search lane. |

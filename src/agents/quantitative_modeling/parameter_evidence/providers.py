@@ -95,6 +95,8 @@ class ParameterEvidenceSettings:
     semantic_scholar_base_url: str = "https://api.semanticscholar.org/graph/v1"
     unpaywall_base_url: str = "https://api.unpaywall.org/v2"
     openalex_api_key: str = ""
+    anysearch_base_url: str = ""
+    anysearch_api_key: str = ""
     semantic_scholar_api_key: str = ""
     unpaywall_email: str = ""
     enabled: bool = True
@@ -133,13 +135,18 @@ class ParameterEvidenceSettings:
             "discovery_providers",
             ["openalex", "unpaywall"],
         )
-        if not isinstance(configured_providers, (list, tuple)):
-            configured_providers = ["openalex", "unpaywall"]
+        if isinstance(configured_providers, str):
+            configured_providers = [configured_providers]
+        elif not isinstance(configured_providers, (list, tuple)):
+            try:
+                configured_providers = list(configured_providers)
+            except TypeError:
+                configured_providers = ["openalex", "unpaywall"]
         discovery_providers = tuple(
             dict.fromkeys(
                 provider
                 for provider in (_text(value).casefold() for value in configured_providers)
-                if provider in {"openalex", "semantic_scholar", "unpaywall"}
+                if provider in {"openalex", "anysearch", "semantic_scholar", "unpaywall"}
             )
         )
         return cls(
@@ -152,6 +159,8 @@ class ParameterEvidenceSettings:
             unpaywall_base_url=_text(_setting(evidence, "unpaywall_base_url", "https://api.unpaywall.org/v2"))
             or "https://api.unpaywall.org/v2",
             openalex_api_key=_text(os.environ.get("OPENALEX_API_KEY")),
+            anysearch_base_url=_text(_setting(evidence, "anysearch_base_url", "")),
+            anysearch_api_key=_text(os.environ.get("ANYSEARCH_API_KEY")),
             semantic_scholar_api_key=_text(
                 os.environ.get("SEMANTIC_SCHOLAR_API_KEY") or _setting(semantic, "api_key", "")
             ),
@@ -291,6 +300,62 @@ class AcademicMetadataProviders:
                     "doi": _normalize_doi(work.get("doi")),
                     "year": work.get("publication_year"),
                     "oa_locations": self._openalex_locations(work),
+                }
+            )
+        return records
+
+    def search_anysearch(self, query: str) -> list[dict[str, Any]]:
+        """Search the configured AnySearch academic endpoint.
+
+        AnySearch deployments expose slightly different response envelopes, so
+        this adapter accepts ``results``, ``papers`` or ``data`` while keeping
+        the normalized provider contract identical to OpenAlex.  Returned
+        snippets remain discovery metadata and are never parameter evidence.
+        """
+
+        base = self.settings.anysearch_base_url.rstrip("/")
+        if not base:
+            return []
+        response = self._get_json(
+            f"{base}/search",
+            params={"q": query, "query": query, "limit": self.settings.max_papers_per_parameter},
+            headers=(
+                {"Authorization": f"Bearer {self.settings.anysearch_api_key}"}
+                if self.settings.anysearch_api_key
+                else {}
+            ),
+        )
+        raw_results = response.get("results")
+        if not isinstance(raw_results, list):
+            raw_results = response.get("papers")
+        if not isinstance(raw_results, list):
+            raw_results = response.get("data")
+        records: list[dict[str, Any]] = []
+        for raw in raw_results or []:
+            work = _mapping(raw)
+            title = _text(work.get("title") or work.get("name"))
+            if not title:
+                continue
+            doi = work.get("doi") or _mapping(work.get("identifiers")).get("doi")
+            url = work.get("url") or work.get("landing_url") or work.get("link")
+            pdf_url = work.get("pdf_url") or work.get("fulltext_url")
+            records.append(
+                {
+                    "provider": "anysearch",
+                    "provider_paper_id": _text(work.get("id") or work.get("paper_id") or work.get("paperId")),
+                    "title": title,
+                    "doi": _normalize_doi(doi),
+                    "year": work.get("year") or work.get("publication_year"),
+                    "abstract": _text(work.get("abstract") or work.get("snippet")),
+                    "oa_locations": [
+                        {
+                            "source": "anysearch.oa_location",
+                            "pdf_url": _safe_url(pdf_url),
+                            "landing_url": _safe_url(url),
+                        }
+                    ]
+                    if _safe_url(pdf_url) or _safe_url(url)
+                    else [],
                 }
             )
         return records

@@ -268,6 +268,54 @@ class ResolveDisciplineRequest(StrictModel):
         return normalized
 
 
+class ParameterSearchRequest(StrictModel):
+    idea_id: Literal["Q1", "Q2"]
+    version: int = Field(ge=0, le=2)
+    parameter_id: str = Field(min_length=1, max_length=128, pattern=r"^[A-Za-z0-9_.-]+$")
+    query: str = Field(min_length=3, max_length=512)
+    providers: list[Literal["openalex", "anysearch"]] = Field(default_factory=lambda: ["openalex", "anysearch"], min_length=1, max_length=2)
+    limit: int = Field(default=8, ge=1, le=20)
+    network_authorized: Literal[True]
+
+    @field_validator("query")
+    @classmethod
+    def normalize_query(cls, value: str) -> str:
+        normalized = " ".join(value.split())
+        if len(normalized) < 3:
+            raise ValueError("query cannot be blank")
+        return normalized
+
+    @field_validator("providers")
+    @classmethod
+    def unique_providers(cls, values: list[str]) -> list[str]:
+        return list(dict.fromkeys(values))
+
+
+class ParameterSearchView(BaseModel):
+    job_id: str
+    run_id: str
+    idea_id: Literal["Q1", "Q2"]
+    version: int
+    parameter_id: str
+    status: str
+
+
+class ParameterSearchSelectionRequest(StrictModel):
+    idea_id: Literal["Q1", "Q2"]
+    version: int = Field(ge=0, le=2)
+    paper_ids: list[str] = Field(min_length=1, max_length=20)
+
+    @field_validator("paper_ids")
+    @classmethod
+    def valid_paper_ids(cls, values: list[str]) -> list[str]:
+        normalized = [value.strip() for value in values if value.strip()]
+        if not normalized or any(len(value) > 64 for value in normalized):
+            raise ValueError("paper_ids must contain bounded non-empty IDs")
+        if len(normalized) != len(set(normalized)):
+            raise ValueError("paper_ids must not contain duplicates")
+        return normalized
+
+
 class RunEventView(BaseModel):
     event_id: str
     event_type: str

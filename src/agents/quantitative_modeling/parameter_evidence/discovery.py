@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from difflib import SequenceMatcher
 from typing import Any
 
 from src.agents.quantitative_modeling.parameter_contracts import (
@@ -46,6 +47,27 @@ def _paper_key(record: Mapping[str, object]) -> str:
     return f"title:{_text(record.get('title')).casefold()}"
 
 
+def _normalized_title(value: object) -> str:
+    return " ".join("".join(character.casefold() if character.isalnum() else " " for character in _text(value)).split())
+
+
+def _find_title_match(papers: Mapping[str, dict[str, Any]], record: Mapping[str, object]) -> str | None:
+    """Match DOI-less records only when title and year are compatible."""
+
+    title = _normalized_title(record.get("title"))
+    year = _year(record.get("year"))
+    if not title:
+        return None
+    for key, existing in papers.items():
+        existing_title = _normalized_title(existing.get("title"))
+        existing_year = _year(existing.get("year"))
+        if year and existing_year and year != existing_year:
+            continue
+        if SequenceMatcher(None, title, existing_title).ratio() >= 0.92:
+            return key
+    return None
+
+
 def _merge_paper(
     papers: dict[str, dict[str, Any]],
     *,
@@ -54,6 +76,8 @@ def _merge_paper(
     query: str,
 ) -> None:
     key = _paper_key(record)
+    if not _text(record.get("doi")):
+        key = _find_title_match(papers, record) or key
     title = _text(record.get("title"))
     if not title:
         return
@@ -69,6 +93,7 @@ def _merge_paper(
             "parameter_request_ids": [],
             "queries": [],
             "oa_candidates": [],
+            "abstract": "",
         }
         papers[key] = existing
     provider_record = {
@@ -81,6 +106,8 @@ def _merge_paper(
         existing["parameter_request_ids"].append(parameter_id)
     if query not in existing["queries"]:
         existing["queries"].append(query)
+    if not existing.get("abstract") and _text(record.get("abstract")):
+        existing["abstract"] = _text(record.get("abstract"))[:4_000]
     for raw_candidate in record.get("oa_locations") or []:
         candidate = _mapping(raw_candidate)
         normalized = {
@@ -115,6 +142,7 @@ def discover_parameter_literature(
         for query in request["queries"]:
             available_searches = (
                 ("openalex", providers.search_openalex),
+                ("anysearch", providers.search_anysearch),
                 ("semantic_scholar", providers.search_semantic_scholar),
             )
             for provider_name, search in available_searches:
@@ -171,6 +199,7 @@ def discover_parameter_literature(
             {
                 **paper,
                 "discovery_sources": providers_seen,
+                "sources": providers_seen,
                 "cross_validated": len(providers_seen) >= 2,
             }
         )

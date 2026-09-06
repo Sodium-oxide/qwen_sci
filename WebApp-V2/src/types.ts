@@ -113,6 +113,7 @@ export interface QuantitativeState {
   candidates?: Array<ParameterCandidate>;
   parameter_requests?: Array<ParameterRequest>;
   proposal?: { proposal_identity?: string };
+  search_jobs?: Array<{ job_id: string; parameter_id: string; status: string; query?: string; updated_at?: string }>;
   allowed_actions?: RunActionType[];
 }
 
@@ -134,7 +135,57 @@ export interface ParameterCandidate {
   candidate_id: string;
   normalized_value?: number;
   normalized_unit?: string;
-  source?: { title?: string; document_id?: string };
+  source?: { title?: string; document_id?: string; doi?: string; year?: number | null; discovery_sources?: string[]; cross_validated?: boolean };
+  source_kind?: string;
+  evidence_locator?: { document_type?: string; section?: string; page?: number | null; quoted_text?: string };
+  conditions?: Record<string, unknown>;
+  uncertainty?: Record<string, unknown>;
+}
+
+export interface ParameterSearchJob {
+  job_id: string;
+  run_id: string;
+  idea_id: "Q1" | "Q2";
+  version: number;
+  parameter_id: string;
+  status: string;
+}
+
+export interface ParameterSearchRequest {
+  idea_id: "Q1" | "Q2";
+  version: number;
+  parameter_id: string;
+  query: string;
+  providers: Array<"openalex" | "anysearch">;
+  limit: number;
+  network_authorized: true;
+}
+
+export interface ParameterSearchPaper {
+  paper_id: string;
+  title: string;
+  doi?: string;
+  year?: number | null;
+  sources: string[];
+  cross_validated: boolean;
+  match_method?: string;
+  abstract?: string;
+  oa_locations?: Array<{ source?: string; pdf_url?: string; landing_url?: string }>;
+}
+
+export interface ParameterSearchResult extends ParameterSearchJob {
+  query: string;
+  providers: string[];
+  provider_runs: Array<{ provider: string; status: string; record_count: number; error?: string }>;
+  papers: ParameterSearchPaper[];
+  evidence_boundary: string;
+  error?: string;
+}
+
+export interface ParameterSearchSelection {
+  idea_id: "Q1" | "Q2";
+  version: number;
+  paper_ids: string[];
 }
 
 export interface ParameterRequest {

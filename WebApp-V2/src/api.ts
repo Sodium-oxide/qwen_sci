@@ -1,4 +1,4 @@
-import type { ActionPayload, CreateRunPayload, Discipline, MaterialDraft, ResearchRun, RunEvent, RunLogChunk, RunLogSource, RepresentativeProject } from "./types";
+import type { ActionPayload, CreateRunPayload, Discipline, MaterialDraft, ParameterSearchJob, ParameterSearchRequest, ParameterSearchResult, ParameterSearchSelection, ResearchRun, RunEvent, RunLogChunk, RunLogSource, RepresentativeProject } from "./types";
 
 const API_BASE = "/api";
 
@@ -33,6 +33,18 @@ export const api = {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   }),
+  parameterSearch: (runId: string, payload: ParameterSearchRequest) => requestJson<ParameterSearchJob>(`/runs/${encodeURIComponent(runId)}/quantitative/parameter-search`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  }),
+  parameterSearchJob: (runId: string, ideaId: string, version: number, jobId: string) => requestJson<ParameterSearchResult>(
+    `/runs/${encodeURIComponent(runId)}/quantitative/parameter-search/${encodeURIComponent(ideaId)}/${version}/${encodeURIComponent(jobId)}`,
+  ),
+  selectParameterSearchSources: (runId: string, jobId: string, payload: ParameterSearchSelection) => requestJson<Record<string, unknown>>(
+    `/runs/${encodeURIComponent(runId)}/quantitative/parameter-search/${encodeURIComponent(jobId)}/select`,
+    { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) },
+  ),
   logs: (runId: string) => requestJson<RunLogSource[]>(`/runs/${encodeURIComponent(runId)}/logs`),
   logChunk: (runId: string, logId: string, offset = 0) => requestJson<RunLogChunk>(
     `/runs/${encodeURIComponent(runId)}/logs/${encodeURIComponent(logId)}?offset=${offset}`,

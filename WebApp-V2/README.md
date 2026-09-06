@@ -56,5 +56,9 @@ uv run python -m uvicorn src.webapp.api:app --host 0.0.0.0 --port 8010
 - `POST /api/runs/{run_id}/materials`、`GET|DELETE /api/runs/{run_id}/materials/{material_id}`、`POST /api/runs/{run_id}/actions`
 - `GET /api/runs/{run_id}/events`（SSE）
 - `GET /api/runs/{run_id}/artifacts/{artifact_id}`
+- `POST /api/runs/{run_id}/quantitative/parameter-search`、`GET /api/runs/{run_id}/quantitative/parameter-search/{idea_id}/{version}/{job_id}`
+- `POST /api/runs/{run_id}/quantitative/parameter-search/{job_id}/select`
 
 量化动作全部复用既有服务层的不可变工件和契约：浏览器只提交受限的 Q1/Q2、版本、已登记材料/文档 ID、有限数值、枚举关系和明确确认；服务端在执行前再次检查当前状态、批准参数集与计划身份。网络发现和开放全文分别要求 `network_authorized: true`，不会因前端勾选之外的字段被隐式开启。
+
+参数搜索面板只在 `WAITING_FOR_PARAMETER_EVIDENCE` 或 `WAITING_FOR_PARAMETER_REVIEW` 阶段展开。它并行查询服务端配置的 OpenAlex/AnySearch，搜索结果写入当前 run 的 `interactive_search` artifact；勾选论文只登记证据来源，仍需经过 OA/用户全文、原文引用校验、候选选择和人工批准，不能直接变成可执行参数。

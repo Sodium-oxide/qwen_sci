@@ -1,0 +1,47 @@
+[
+  {
+    "parameter_id": "tau_f",
+    "candidate_id": "PEC-Q2-tau_f-001",
+    "selected_value": 2.3,
+    "selection_rationale": "Use the literature timescale at which beta-delayed fission becomes the primary fission channel; treat it as an abundance-weighted kinetic proxy rather than an isotope-specific half-life."
+  },
+  {
+    "parameter_id": "M_ej",
+    "candidate_id": "PEC-Q2-M_ej-002",
+    "selected_value": 0.04,
+    "selection_rationale": "Use the GW170817 ejecta-mass estimate reported in the primary observational study."
+  },
+  {
+    "parameter_id": "Y_e",
+    "candidate_id": "PEC-Q2-Y_e-001",
+    "selected_value": 0.16,
+    "selection_rationale": "Use the representative lower-average electron fraction reported by the merger-disc GRMHD model as the literature prior center; retain the broad-distribution caveat."
+  },
+  {
+    "parameter_id": "i",
+    "candidate_id": "PEC-Q2-i-001",
+    "selected_value": 0.5585053606381855,
+    "selection_rationale": "Use the joint GW-EM viewing-angle median of 32 degrees after conversion to the requested radian execution unit."
+  },
+  {
+    "parameter_id": "n_mcmc_samples",
+    "candidate_id": "",
+    "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+    "selected_value": 10000,
+    "selection_rationale": "Human-reviewed Monte Carlo sample-count baseline for the Q2 posterior run."
+  },
+  {
+    "parameter_id": "n_chains",
+    "candidate_id": "",
+    "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+    "selected_value": 4,
+    "selection_rationale": "Human-reviewed number of independent chains for convergence diagnostics."
+  },
+  {
+    "parameter_id": "n_tempering_levels",
+    "candidate_id": "",
+    "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+    "selected_value": 8,
+    "selection_rationale": "Human-reviewed parallel-tempering level baseline."
+  }
+]

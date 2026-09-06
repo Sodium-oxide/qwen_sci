@@ -32,7 +32,7 @@ from .run_service import (
     RunNotFoundError,
     RunService,
 )
-from .schemas import CreateRunRequest, MaterialUploadResponse, RepresentativeProjectView, ResolveDisciplineRequest, RunActionRequest, RunLogChunkView, RunLogView, RunView
+from .schemas import CreateRunRequest, MaterialUploadResponse, ParameterSearchRequest, ParameterSearchSelectionRequest, ParameterSearchView, RepresentativeProjectView, ResolveDisciplineRequest, RunActionRequest, RunLogChunkView, RunLogView, RunView
 
 
 def _http_error(status_code: int, detail: str) -> HTTPException:
@@ -154,6 +154,53 @@ def create_app(
     def run_action(run_id: str, request_body: RunActionRequest) -> RunView:
         try:
             return service.run_action(run_id=run_id, action=request_body)
+        except RunNotFoundError as exc:
+            raise _http_error(404, str(exc)) from exc
+        except (RunActionConflictError, ScienceRunLockError) as exc:
+            raise _http_error(409, str(exc)) from exc
+        except RunActionError as exc:
+            raise _http_error(422, str(exc)) from exc
+
+    @app.post("/api/runs/{run_id}/quantitative/parameter-search", response_model=ParameterSearchView, status_code=202)
+    def start_parameter_search(run_id: str, request_body: ParameterSearchRequest) -> ParameterSearchView:
+        try:
+            return ParameterSearchView.model_validate(
+                service.start_parameter_search(
+                    run_id=run_id,
+                    idea_id=request_body.idea_id,
+                    version=request_body.version,
+                    parameter_id=request_body.parameter_id,
+                    query=request_body.query,
+                    providers=tuple(request_body.providers),
+                    limit=request_body.limit,
+                )
+            )
+        except RunNotFoundError as exc:
+            raise _http_error(404, str(exc)) from exc
+        except (RunActionConflictError, ScienceRunLockError) as exc:
+            raise _http_error(409, str(exc)) from exc
+        except RunActionError as exc:
+            raise _http_error(422, str(exc)) from exc
+
+    @app.get("/api/runs/{run_id}/quantitative/parameter-search/{idea_id}/{version}/{job_id}")
+    def get_parameter_search(run_id: str, idea_id: str, version: int, job_id: str) -> dict[str, object]:
+        try:
+            return service.get_parameter_search(run_id=run_id, idea_id=idea_id, version=version, job_id=job_id)
+        except RunNotFoundError as exc:
+            raise _http_error(404, str(exc)) from exc
+        except RunActionError as exc:
+            raise _http_error(404, str(exc)) from exc
+
+    @app.post("/api/runs/{run_id}/quantitative/parameter-search/{job_id}/select")
+    def select_parameter_search_sources(run_id: str, job_id: str, request_body: ParameterSearchSelectionRequest) -> dict[str, object]:
+        try:
+            return service.select_parameter_search_sources(
+                run_id=run_id,
+                idea_id=request_body.idea_id,
+                version=request_body.version,
+                job_id=job_id,
+                paper_ids=request_body.paper_ids,
+            )
         except RunNotFoundError as exc:
             raise _http_error(404, str(exc)) from exc
         except (RunActionConflictError, ScienceRunLockError) as exc:

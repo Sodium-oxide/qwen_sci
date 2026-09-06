@@ -223,7 +223,7 @@ quantitative_modeling:
     enabled: true
     # Academic metadata only discovers candidate works. Numerical values must
     # later be quote-anchored in legal OA full text or a user-provided source.
-    discovery_providers: ["openalex", "unpaywall"]
+    discovery_providers: ["openalex", "anysearch", "unpaywall"]
     max_papers_per_parameter: 12
     max_fulltext_documents_per_parameter: 5
     max_document_chars_for_extraction: 40000
@@ -247,6 +247,7 @@ quantitative_modeling:
     fulltext_connect_timeout_seconds: 5
     fulltext_read_timeout_seconds: 30
     openalex_base_url: "https://api.openalex.org"
+    anysearch_base_url: "${oc.env:ANYSEARCH_BASE_URL,''}"
     semantic_scholar_base_url: "https://api.semanticscholar.org/graph/v1"
     unpaywall_base_url: "https://api.unpaywall.org/v2"
     allow_single_literature_source: true

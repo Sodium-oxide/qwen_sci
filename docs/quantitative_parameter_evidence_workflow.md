@@ -14,11 +14,16 @@ OPENALEX_API_KEY=
 OPENALEX_EMAIL=
 UNPAYWALL_EMAIL=
 SEMANTIC_SCHOLAR_API_KEY=
+ANYSEARCH_BASE_URL=
+ANYSEARCH_API_KEY=
 ```
 
 `OPENALEX` 和 `Semantic Scholar` 只用于发现与元数据交叉核验；它们的搜索
 结果、摘要和网页片段不能直接成为数值参数。`Unpaywall` 仅定位 DOI 对应的
 合法开放获取位置。API key 不写入工作流 JSON、日志、PDF 或 Author handoff。
+WebApp-V2 的实时参数搜索器会将 OpenAlex 与 AnySearch 并行结果写入当前 run 的
+`quantitative/<Q>/parameter_evidence/v<version>/interactive_search/`，但搜索元数据
+仍不能替代全文中的原文引用和单位核验。
 
 ## 标准命令序列
 
