@@ -34,10 +34,16 @@ def _ode_mathir() -> dict[str, object]:
     return {
         "schema_version": "mathir_v1",
         "system_type": "ODE_IVP",
-        "states": [{"id": "x", "initial": 1.0}],
-        "parameters": {"k": 1.0},
+        "states": [{"id": "x state", "initial": 1.0}],
+        "parameters": {"κ rate": 1.0},
         "derivatives": {
-            "x": {"op": "mul", "args": [{"op": "neg", "args": [_variable("k")]}, _variable("x")]}
+            "x state": {
+                "op": "mul",
+                "args": [
+                    {"op": "neg", "args": [_variable("κ rate")]},
+                    _variable("x state"),
+                ],
+            }
         },
         "time_span": [0.0, 1.0],
         "solver_options": {"max_step": 0.1},
@@ -52,15 +58,15 @@ def _diffusion_reaction_mathir() -> dict[str, object]:
     return {
         "schema_version": "mathir_v1",
         "system_type": "DIFFUSION_REACTION_1D",
-        "state": {"id": "c"},
+        "state": {"id": "c field"},
         "spatial_domain": [0.0, 1.0],
         "grid_points": 11,
         "initial_values": [0.0] * 11,
-        "parameters": {"D": 0.1},
+        "parameters": {"D coefficient": 0.1},
         "time_span": [0.0, 0.1],
         "solver_options": {"time_step": 0.001},
-        "diffusion_coefficient": _variable("D"),
-        "reaction": _constant(0.0),
+        "diffusion_coefficient": _variable("D coefficient"),
+        "reaction": {"op": "mul", "args": [_constant(0.0), _variable("c field")]},
         "boundary_conditions": {
             "left": {"type": "DIRICHLET", "value": _constant(1.0)},
             "right": {"type": "DIRICHLET", "value": _constant(0.0)},
@@ -72,17 +78,17 @@ def _monte_carlo_mathir() -> dict[str, object]:
     return {
         "schema_version": "mathir_v1",
         "system_type": "MONTE_CARLO",
-        "parameters": {"offset": 1.0},
+        "parameters": {"offset Δ": 1.0},
         "samples": 64,
         "seed": 7,
         "random_variables": [
-            {"id": "x", "distribution": "uniform", "parameters": {"low": 0.0, "high": 1.0}}
+            {"id": "τ_f", "distribution": "uniform", "parameters": {"low": 0.0, "high": 1.0}}
         ],
         "observable": {
             "op": "add",
             "args": [
-                {"op": "variable", "name": "x"},
-                {"op": "variable", "name": "offset"},
+                {"op": "variable", "name": "τ_f"},
+                {"op": "variable", "name": "offset Δ"},
             ],
         },
     }
@@ -92,13 +98,13 @@ def _optimization_mathir() -> dict[str, object]:
     return {
         "schema_version": "mathir_v1",
         "system_type": "LINEAR_OPTIMIZATION",
-        "parameters": {"budget": 10.0},
+        "parameters": {"budget Σ": 10.0},
         "variables": [
-            {"id": "x", "lower": 0.0, "upper": 10.0, "objective_coefficient": 1.0},
-            {"id": "y", "lower": 0.0, "upper": 10.0, "objective_coefficient": 2.0},
+            {"id": "yield α", "lower": 0.0, "upper": 10.0, "objective_coefficient": 1.0},
+            {"id": "yield β", "lower": 0.0, "upper": 10.0, "objective_coefficient": 2.0},
         ],
         "constraints": [
-            {"coefficients": {"x": 1.0, "y": 1.0}, "sense": "<=", "rhs": 6.0},
+            {"coefficients": {"yield α": 1.0, "yield β": 1.0}, "sense": "<=", "rhs": 6.0},
         ],
         "objective_sense": "maximize",
     }
@@ -106,7 +112,7 @@ def _optimization_mathir() -> dict[str, object]:
 
 def test_mathir_rejects_undeclared_dynamic_variable() -> None:
     payload = _ode_mathir()
-    payload["derivatives"] = {"x": _variable("__import__")}
+    payload["derivatives"] = {"x state": _variable("__import__")}
 
     with pytest.raises(MathIRValidationError, match="not declared"):
         validate_mathir_document(payload)
@@ -143,7 +149,7 @@ def test_ode_plan_requires_explicit_authorization_and_runs_fixed_solver() -> Non
         confirmed_plan_identity=plan["plan_identity"],
     )
 
-    final_value = result["scenario_results"][0]["result"]["summary"]["final_state"]["x"]
+    final_value = result["scenario_results"][0]["result"]["summary"]["final_state"]["x state"]
     assert final_value == pytest.approx(0.367879, rel=1e-4)
 
 
@@ -153,7 +159,7 @@ def test_monte_carlo_plan_applies_declared_parameter_scenario_overrides() -> Non
         mathir=_monte_carlo_mathir(),
         scenarios=[
             {"scenario_id": "baseline", "parameter_overrides": {}},
-            {"scenario_id": "shifted", "parameter_overrides": {"offset": 4.0}},
+            {"scenario_id": "shifted", "parameter_overrides": {"offset Δ": 4.0}},
         ],
     )
 
@@ -181,7 +187,7 @@ def test_optimization_plan_allows_empty_physical_sections_and_runs_with_paramete
     )
 
     solution = result["scenario_results"][0]["result"]["solution"]
-    assert solution["y"] == pytest.approx(6.0)
+    assert solution["yield β"] == pytest.approx(6.0)
     assert result["scenario_results"][0]["result"]["summary"]["objective_value"] == pytest.approx(12.0)
 
 

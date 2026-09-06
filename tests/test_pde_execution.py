@@ -36,13 +36,13 @@ def _one_d(system_type: str = "ADVECTION_DIFFUSION_REACTION_1D") -> dict[str, ob
         "grid": {"nx": 21},
         "time_span": [0.0, 0.01],
         "solver_options": {"time_step": 0.0001, "time_integrator": "EXPLICIT_EULER"},
-        "fields": [{"id": "u", "symbol": "u", "unit": "1", "bounds": {"lower": 0.0}}],
-        "parameters": {"D": 0.01, "v": 0.0, "k": 0.0},
+        "fields": [{"id": "u field", "symbol": "u", "unit": "1", "bounds": {"lower": 0.0}}],
+        "parameters": {"D coefficient": 0.01, "v flow": 0.0, "k reaction": 0.0},
         "initial_condition": {"type": "SAMPLED_VALUES", "values": [1.0] * 21},
-        "diffusion_coefficient": _variable("D"),
+        "diffusion_coefficient": _variable("D coefficient"),
         "reaction": {
             "op": "mul",
-            "args": [{"op": "neg", "args": [_variable("k")]}, _field("u")],
+            "args": [{"op": "neg", "args": [_variable("k reaction")]}, _field("u field")],
         },
         "boundary_conditions": {
             "left": {"type": "DIRICHLET", "value": _constant(1.0)},
@@ -50,7 +50,7 @@ def _one_d(system_type: str = "ADVECTION_DIFFUSION_REACTION_1D") -> dict[str, ob
         },
     }
     if system_type == "ADVECTION_DIFFUSION_REACTION_1D":
-        document["advection_velocity"] = _variable("v")
+        document["advection_velocity"] = _variable("v flow")
     return document
 
 
@@ -252,8 +252,8 @@ def test_unsupported_expression_and_unstable_grid_are_rejected() -> None:
 
 def test_burgers_family_uses_the_registered_nonlinear_advection_adapter() -> None:
     document = _one_d("BURGERS_1D")
-    document["advection_velocity"] = _field("u")
-    document["parameters"]["D"] = 0.001
+    document["advection_velocity"] = _field("u field")
+    document["parameters"]["D coefficient"] = 0.001
     result = execute_pdeir(document)
     assert result["solver_id"] == "pde_fd_burgers_1d"
     assert result["numerical_checks"]["finite_field"] is True

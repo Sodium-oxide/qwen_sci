@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import math
-import re
 from collections.abc import Mapping, Sequence
 from typing import Any
 
@@ -12,7 +11,6 @@ MATHIR_SCHEMA_VERSION = "mathir_v1"
 SUPPORTED_MATHIR_SYSTEMS = frozenset(
     {"ODE_IVP", "LINEAR_OPTIMIZATION", "MONTE_CARLO", "DIFFUSION_REACTION_1D"}
 )
-_IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]{0,63}")
 _BINARY_OPERATORS = frozenset({"add", "sub", "mul", "div", "pow", "min", "max"})
 _COMPARISON_OPERATORS = frozenset({"lt", "le", "gt", "ge", "eq", "ne"})
 _UNARY_OPERATORS = frozenset({"neg", "abs", "exp", "log", "sin", "cos"})
@@ -53,10 +51,14 @@ def _integer(value: object, *, field: str) -> int:
     return value
 
 
-def _identifier(value: object, *, field: str) -> str:
+def _symbol_label(value: object, *, field: str) -> str:
     text = _text(value)
-    if not _IDENTIFIER.fullmatch(text):
-        raise MathIRValidationError(f"{field} must be a safe identifier")
+    if (
+        not text
+        or len(text) > 256
+        or any(ord(character) < 32 or ord(character) == 127 for character in text)
+    ):
+        raise MathIRValidationError(f"{field} must be non-empty bounded text")
     return text
 
 
@@ -68,7 +70,11 @@ def _number_list(value: object, *, field: str, count: int | None = None) -> list
     return [_number(item, field=f"{field}[{index}]") for index, item in enumerate(value)]
 
 
-def validate_expression(value: object, *, allowed_symbols: set[str]) -> dict[str, Any]:
+def validate_expression(
+    value: object,
+    *,
+    allowed_symbols: set[str],
+) -> dict[str, Any]:
     """Validate a closed expression tree with no dynamic calls or source text."""
 
     payload = _mapping(value)
@@ -78,7 +84,7 @@ def validate_expression(value: object, *, allowed_symbols: set[str]) -> dict[str
     if operator == "constant":
         return {"op": operator, "value": _number(payload.get("value"), field="constant.value")}
     if operator == "variable":
-        name = _identifier(payload.get("name"), field="variable.name")
+        name = _symbol_label(payload.get("name"), field="variable.name")
         if name not in allowed_symbols:
             raise MathIRValidationError(f"variable {name} is not declared")
         return {"op": operator, "name": name}
@@ -95,7 +101,13 @@ def validate_expression(value: object, *, allowed_symbols: set[str]) -> dict[str
         raise MathIRValidationError(f"unsupported MathIR operator: {operator or '<missing>'}")
     return {
         "op": operator,
-        "args": [validate_expression(item, allowed_symbols=allowed_symbols) for item in raw_args],
+        "args": [
+            validate_expression(
+                item,
+                allowed_symbols=allowed_symbols,
+            )
+            for item in raw_args
+        ],
     }
 
 
@@ -173,8 +185,8 @@ def _validate_parameters(value: object) -> dict[str, float]:
     payload = _mapping(value)
     parameters: dict[str, float] = {}
     for name, raw_value in payload.items():
-        identifier = _identifier(name, field="parameters key")
-        parameters[identifier] = _number(raw_value, field=f"parameters.{identifier}")
+        label = _symbol_label(name, field="parameters key")
+        parameters[label] = _number(raw_value, field=f"parameters.{label}")
     return parameters
 
 
@@ -187,7 +199,7 @@ def _validate_ode(payload: Mapping[str, object]) -> dict[str, Any]:
         state = _mapping(raw_state)
         states.append(
             {
-                "id": _identifier(state.get("id"), field=f"states[{index}].id"),
+                "id": _symbol_label(state.get("id"), field=f"states[{index}].id"),
                 "initial": _number(state.get("initial"), field=f"states[{index}].initial"),
             }
         )
@@ -236,7 +248,7 @@ def _validate_linear_optimization(payload: Mapping[str, object]) -> dict[str, An
             raise MathIRValidationError(f"variables[{index}] upper must be at least lower")
         variables.append(
             {
-                "id": _identifier(variable.get("id"), field=f"variables[{index}].id"),
+                "id": _symbol_label(variable.get("id"), field=f"variables[{index}].id"),
                 "lower": lower,
                 "upper": upper,
                 "objective_coefficient": _number(
@@ -296,7 +308,7 @@ def _validate_monte_carlo(payload: Mapping[str, object]) -> dict[str, Any]:
     names: list[str] = []
     for index, raw_variable in enumerate(raw_variables):
         variable = _mapping(raw_variable)
-        name = _identifier(variable.get("id"), field=f"random_variables[{index}].id")
+        name = _symbol_label(variable.get("id"), field=f"random_variables[{index}].id")
         distribution = _text(variable.get("distribution"))
         parameters = _mapping(variable.get("parameters"))
         if distribution == "uniform":
@@ -344,7 +356,7 @@ def _validate_diffusion_reaction_1d(payload: Mapping[str, object]) -> dict[str, 
     """
 
     state = _mapping(payload.get("state"))
-    state_id = _identifier(state.get("id"), field="state.id")
+    state_id = _symbol_label(state.get("id"), field="state.id")
     spatial_domain = _number_list(payload.get("spatial_domain"), field="spatial_domain", count=2)
     if spatial_domain[1] <= spatial_domain[0]:
         raise MathIRValidationError("spatial_domain must have increasing bounds")

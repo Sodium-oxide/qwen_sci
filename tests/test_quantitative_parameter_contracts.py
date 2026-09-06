@@ -8,6 +8,7 @@ import pytest
 from src.agents.quantitative_modeling.parameter_contracts import (
     PARAMETER_EVIDENCE_COLLECTION_SCHEMA_VERSION,
     ParameterContractError,
+    approved_mathir_parameters,
     approve_parameter_resolution_proposal,
     build_parameter_resolution_proposal,
     model_blueprint_identity,
@@ -180,6 +181,33 @@ def test_candidate_backed_selection_cannot_silently_change_documented_value() ->
                 }
             ],
         )
+
+
+def test_parameter_contract_allows_extended_parameter_and_mathir_labels() -> None:
+    blueprint = _blueprint()
+    request = blueprint["parameter_requests"][0]
+    request["parameter_id"] = "decay rate Δ"
+    request["mathir_symbol"] = "κ rate"
+    candidate = _candidate()
+    candidate["candidate_id"] = "PEC-Q1-decay rate Δ-001"
+    candidate["parameter_id"] = "decay rate Δ"
+    candidate["mathir_symbol"] = "κ rate"
+
+    proposal = build_parameter_resolution_proposal(
+        blueprint=blueprint,
+        evidence_collections=[_collection(blueprint, candidate)],
+        selections=[
+            {
+                "parameter_id": "decay rate Δ",
+                "candidate_id": "PEC-Q1-decay rate Δ-001",
+                "provenance_status": "APPROVED_LITERATURE_SINGLE_SOURCE",
+                "selection_rationale": "The documented coefficient matches the modeled baseline.",
+            }
+        ],
+    )
+    approved = approve_parameter_resolution_proposal(proposal, approve=True)
+
+    assert approved_mathir_parameters(approved) == {"κ rate": 2.0}
 
 
 def test_candidate_must_supply_every_blueprint_applicability_condition() -> None:

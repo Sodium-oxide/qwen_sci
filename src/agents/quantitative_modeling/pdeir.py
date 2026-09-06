@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import math
-import re
 import copy
 from collections.abc import Mapping, Sequence
 from typing import Any
@@ -13,7 +12,6 @@ from src.agents.quantitative_modeling.pde_capability_registry import PDE_CAPABIL
 
 PDEIR_SCHEMA_VERSION = "pdeir_v1"
 SUPPORTED_PDE_SYSTEMS = frozenset(PDE_CAPABILITIES)
-_IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]{0,63}")
 _BINARY = frozenset({"add", "sub", "mul", "div", "pow", "min", "max"})
 _UNARY = frozenset({"neg", "abs", "exp", "log", "sin", "cos"})
 _COMPARISONS = frozenset({"lt", "le", "gt", "ge", "eq", "ne"})
@@ -45,11 +43,15 @@ def _number(value: object, *, field: str) -> float:
     return result
 
 
-def _identifier(value: object, *, field: str) -> str:
-    identifier = _text(value)
-    if not _IDENTIFIER.fullmatch(identifier):
-        raise PDEIRValidationError(f"{field} must be a safe identifier")
-    return identifier
+def _symbol_label(value: object, *, field: str) -> str:
+    label = _text(value)
+    if (
+        not label
+        or len(label) > 256
+        or any(ord(character) < 32 or ord(character) == 127 for character in label)
+    ):
+        raise PDEIRValidationError(f"{field} must be non-empty bounded text")
+    return label
 
 
 def _number_list(value: object, *, field: str, count: int | None = None) -> list[float]:
@@ -207,12 +209,12 @@ def validate_pde_expression(
     if operator == "constant":
         return {"op": operator, "value": _number(payload.get("value"), field="constant.value")}
     if operator == "variable":
-        name = _identifier(payload.get("name"), field="variable.name")
+        name = _symbol_label(payload.get("name"), field="variable.name")
         if name not in allowed_symbols:
             raise PDEIRValidationError(f"PDE variable {name} is not declared")
         return {"op": operator, "name": name}
     if operator == "field":
-        name = _identifier(payload.get("name"), field="field.name")
+        name = _symbol_label(payload.get("name"), field="field.name")
         if name not in allowed_fields:
             raise PDEIRValidationError(f"PDE field {name} is not declared")
         return {"op": operator, "name": name}
@@ -463,8 +465,8 @@ def evaluate_pde_expression(value: Mapping[str, object], environment: Mapping[st
 
 def _validate_field(payload: object, *, field: str) -> dict[str, Any]:
     value = _mapping(payload)
-    identifier = _identifier(value.get("id"), field=f"{field}.id")
-    result = {"id": identifier, "symbol": _text(value.get("symbol")) or identifier}
+    label = _symbol_label(value.get("id"), field=f"{field}.id")
+    result = {"id": label, "symbol": _text(value.get("symbol")) or label}
     result["unit"] = _text(value.get("unit"))
     bounds = _mapping(value.get("bounds"))
     normalized_bounds: dict[str, float] = {}
@@ -515,9 +517,10 @@ def _validate_common(payload: Mapping[str, object], *, system_type: str) -> dict
     fields = [_validate_field(fields_raw[0], field="fields[0]")]
     field_ids = {item["id"] for item in fields}
     parameters_raw = _mapping(payload.get("parameters"))
-    parameters = {str(name): _number(value, field=f"parameters.{name}") for name, value in parameters_raw.items()}
-    if any(not _IDENTIFIER.fullmatch(name) for name in parameters):
-        raise PDEIRValidationError("PDE parameter names must be safe identifiers")
+    parameters = {
+        _symbol_label(name, field="PDE parameter name"): _number(value, field=f"parameters.{name}")
+        for name, value in parameters_raw.items()
+    }
     spatial_domain = _mapping(payload.get("spatial_domain"))
     dimension = int(capability["dimensions"][0])
     declared_dimension = payload.get("spatial_dimension")

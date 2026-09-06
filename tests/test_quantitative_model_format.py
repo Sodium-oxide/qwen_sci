@@ -247,8 +247,8 @@ def test_model_prompt_documents_monte_carlo_integer_and_condition_contract() -> 
 
     assert 'mathir.system_type must be exactly "MONTE_CARLO"' in prompt
     assert "mathir.samples must be a JSON integer from 1 through 100000" in prompt
-    assert "Every random_variables[].id and every AST variable.name must be an ASCII identifier" in prompt
-    assert 'use names such as "tau_f"' in prompt
+    assert "may use any non-empty bounded label, including Unicode, spaces, hyphens, or subscripts" in prompt
+    assert "must exactly match a declared random-variable or parameter label" in prompt
     assert "initial_conditions, boundary_conditions, and objective_and_constraints may be empty lists" in prompt
     assert "no spatial boundary conditions apply to the zero-dimensional sampler" in prompt
 
@@ -371,12 +371,14 @@ def test_model_synthesis_repairs_monte_carlo_samples_and_empty_conditions() -> N
     assert "preserve the selected executable model family" in prompts[1]
 
 
-def test_monte_carlo_model_rejects_unsafe_random_variable_identifier() -> None:
+def test_monte_carlo_model_accepts_extended_random_variable_identifier() -> None:
     invalid_specification = _monte_carlo_specification(unsafe_identifier=True)
     response = "<QUANTITATIVE_MODEL_JSON>\n" + json.dumps(invalid_specification, ensure_ascii=False) + "\n</QUANTITATIVE_MODEL_JSON>"
 
-    with pytest.raises(QuantitativeModelSynthesisError, match=r"random_variables\[0\]\.id must be a safe identifier"):
-        parse_quantitative_model_response(response)
+    specification, _ = parse_quantitative_model_response(response)
+
+    assert specification["mathir"]["random_variables"][0]["id"] == "τ_f"
+    assert specification["mathir"]["observable"]["args"][0]["name"] == "τ_f"
 
 
 def test_monte_carlo_model_rejects_non_integer_sample_count() -> None:

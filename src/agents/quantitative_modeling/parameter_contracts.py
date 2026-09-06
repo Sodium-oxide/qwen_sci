@@ -21,7 +21,7 @@ APPROVED_PARAMETER_SET_SCHEMA_VERSION = "quantitative_approved_parameter_set_v1"
 
 _IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]{0,63}")
 _QUANTITATIVE_ID = re.compile(r"Q[1-2]")
-_CANDIDATE_ID = re.compile(r"PEC-Q[1-2]-[A-Za-z_][A-Za-z0-9_]{0,63}-\d{3}")
+_CANDIDATE_ID = re.compile(r"PEC-Q[1-2]-[^\x00-\x1f]+-\d{3}")
 _REQUEST_ROLES = frozenset(
     {"MATERIAL_PROPERTY", "SCENARIO_INPUT", "BOUNDARY_CONDITION", "MODEL_ASSUMPTION"}
 )
@@ -107,10 +107,14 @@ def _text_list(value: object, *, field: str, allow_empty: bool = False) -> list[
     return list(dict.fromkeys(result))
 
 
-def _identifier(value: object, *, field: str) -> str:
+def _symbol_label(value: object, *, field: str) -> str:
     result = _text(value)
-    if not _IDENTIFIER.fullmatch(result):
-        raise ParameterContractError(f"{field} must be a safe identifier")
+    if (
+        not result
+        or len(result) > 256
+        or any(ord(character) < 32 or ord(character) == 127 for character in result)
+    ):
+        raise ParameterContractError(f"{field} must be non-empty bounded text")
     return result
 
 
@@ -163,7 +167,7 @@ def _normalize_conditions(value: object, *, field: str) -> dict[str, str | float
     payload = _mapping(value)
     conditions: dict[str, str | float | bool | None] = {}
     for raw_key, raw_value in payload.items():
-        key = _identifier(raw_key, field=f"{field} key")
+        key = _symbol_label(raw_key, field=f"{field} key")
         if isinstance(raw_value, bool) or raw_value is None:
             conditions[key] = raw_value
         elif isinstance(raw_value, (int, float)):
@@ -178,8 +182,8 @@ def _normalize_conditions(value: object, *, field: str) -> dict[str, str | float
 
 def _normalize_parameter_request(value: object, *, index: int) -> dict[str, Any]:
     payload = _mapping(value)
-    parameter_id = _identifier(payload.get("parameter_id"), field=f"parameter_requests[{index}].parameter_id")
-    mathir_symbol = _identifier(payload.get("mathir_symbol"), field=f"parameter_requests[{index}].mathir_symbol")
+    parameter_id = _symbol_label(payload.get("parameter_id"), field=f"parameter_requests[{index}].parameter_id")
+    mathir_symbol = _symbol_label(payload.get("mathir_symbol"), field=f"parameter_requests[{index}].mathir_symbol")
     role = _required_text(payload, "role")
     if role not in _REQUEST_ROLES:
         raise ParameterContractError("parameter request role is unsupported")
@@ -317,8 +321,8 @@ def normalize_parameter_evidence_candidate(value: object) -> dict[str, Any]:
     quoted_text = _required_text(locator, "quoted_text")
     return {
         "candidate_id": candidate_id,
-        "parameter_id": _identifier(payload.get("parameter_id"), field="candidate.parameter_id"),
-        "mathir_symbol": _identifier(payload.get("mathir_symbol"), field="candidate.mathir_symbol"),
+        "parameter_id": _symbol_label(payload.get("parameter_id"), field="candidate.parameter_id"),
+        "mathir_symbol": _symbol_label(payload.get("mathir_symbol"), field="candidate.mathir_symbol"),
         "raw_value": _required_text(payload, "raw_value"),
         "normalized_value": _number(payload.get("normalized_value"), field="candidate.normalized_value"),
         "normalized_unit": _required_text(payload, "normalized_unit"),
@@ -380,7 +384,7 @@ def _selection_list(value: object) -> list[dict[str, Any]]:
     seen: set[str] = set()
     for index, raw_selection in enumerate(value):
         selection = _mapping(raw_selection)
-        parameter_id = _identifier(selection.get("parameter_id"), field=f"selections[{index}].parameter_id")
+        parameter_id = _symbol_label(selection.get("parameter_id"), field=f"selections[{index}].parameter_id")
         if parameter_id in seen:
             raise ParameterContractError("each parameter may be selected only once")
         seen.add(parameter_id)
@@ -415,8 +419,8 @@ def _normalize_resolution_entry(value: object, *, index: int) -> dict[str, Any]:
     """Normalize a frozen selection without trusting a hand-authored proposal."""
 
     entry = _mapping(value)
-    parameter_id = _identifier(entry.get("parameter_id"), field=f"entries[{index}].parameter_id")
-    mathir_symbol = _identifier(entry.get("mathir_symbol"), field=f"entries[{index}].mathir_symbol")
+    parameter_id = _symbol_label(entry.get("parameter_id"), field=f"entries[{index}].parameter_id")
+    mathir_symbol = _symbol_label(entry.get("mathir_symbol"), field=f"entries[{index}].mathir_symbol")
     role = _required_text(entry, "role")
     if role not in _REQUEST_ROLES:
         raise ParameterContractError("resolution entry role is unsupported")
@@ -671,8 +675,8 @@ def normalize_approved_parameter_set(value: object) -> dict[str, Any]:
     mathir_symbols: set[str] = set()
     for index, raw_entry in enumerate(raw_entries):
         entry = _mapping(raw_entry)
-        parameter_id = _identifier(entry.get("parameter_id"), field=f"approved entries[{index}].parameter_id")
-        mathir_symbol = _identifier(entry.get("mathir_symbol"), field=f"approved entries[{index}].mathir_symbol")
+        parameter_id = _symbol_label(entry.get("parameter_id"), field=f"approved entries[{index}].parameter_id")
+        mathir_symbol = _symbol_label(entry.get("mathir_symbol"), field=f"approved entries[{index}].mathir_symbol")
         if parameter_id in parameter_ids or mathir_symbol in mathir_symbols:
             raise ParameterContractError("approved parameter IDs and MathIR symbols must be unique")
         parameter_ids.add(parameter_id)
