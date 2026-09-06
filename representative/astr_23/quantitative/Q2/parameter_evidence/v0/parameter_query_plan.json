@@ -1,0 +1,88 @@
+{
+  "blueprint_identity": "89518de457b2bc6ba77b1baf621588149139504cc9404b5e39c8c70f2816ae71",
+  "lineage": {
+    "created_from_artifact": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "project_id": "sci_260905_008_survey_001",
+    "quantitative_idea_id": "Q2",
+    "science_run_id": "260905-008",
+    "selected_direction_id": "premise_inversion",
+    "survey_run_id": "260905-008-survey-001",
+    "version": 0
+  },
+  "requests": [
+    {
+      "mathir_symbol": "tau_f",
+      "parameter_id": "tau_f",
+      "queries": [
+        "delayed fission neutron release timescale for r-process nuclei in neutron-star merger ejecta",
+        "nuclear theory constraints on fission timescales relevant to kilonova nucleosynthesis"
+      ],
+      "required_conditions": [
+        "posterior_parameter",
+        "positive_timescale"
+      ]
+    },
+    {
+      "mathir_symbol": "M_ej",
+      "parameter_id": "M_ej",
+      "queries": [
+        "kilonova ejecta mass constraints from gravitational-wave and electromagnetic observations",
+        "dynamical ejecta mass estimates for neutron-star mergers"
+      ],
+      "required_conditions": [
+        "posterior_parameter",
+        "positive_mass"
+      ]
+    },
+    {
+      "mathir_symbol": "Y_e",
+      "parameter_id": "Y_e",
+      "queries": [
+        "initial electron fraction distributions for neutron-star merger ejecta",
+        "electron fraction constraints in r-process kilonova models"
+      ],
+      "required_conditions": [
+        "posterior_parameter",
+        "physically_admissible_electron_fraction"
+      ]
+    },
+    {
+      "mathir_symbol": "i",
+      "parameter_id": "i",
+      "queries": [
+        "inclination angle constraints for binary neutron star mergers from gravitational-wave and kilonova observations"
+      ],
+      "required_conditions": [
+        "posterior_parameter",
+        "geometric_admissible_inclination"
+      ]
+    },
+    {
+      "mathir_symbol": "N_samples",
+      "parameter_id": "n_mcmc_samples",
+      "queries": [],
+      "required_conditions": [
+        "solver_control"
+      ]
+    },
+    {
+      "mathir_symbol": "N_chains",
+      "parameter_id": "n_chains",
+      "queries": [],
+      "required_conditions": [
+        "solver_control"
+      ]
+    },
+    {
+      "mathir_symbol": "N_temperatures",
+      "parameter_id": "n_tempering_levels",
+      "queries": [],
+      "required_conditions": [
+        "solver_control"
+      ]
+    }
+  ],
+  "schema_version": "quantitative_parameter_query_plan_v1"
+}

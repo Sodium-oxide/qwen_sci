@@ -1,0 +1,503 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{balance}
+
+\newcommand{\risk}{\mathcal{R}}
+\newcommand{\safe}{\mathcal{S}}
+\newcommand{\unsafe}{\mathcal{U}}
+
+\begin{document}
+
+\title{From Fast Prediction to Defensible Action: A Multi-Subhypothesis Research Report on Trustworthy Transient Stability Assessment for Renewable-Rich Power Systems}
+
+\author{\IEEEauthorblockN{Research Report Generated from the Supplied Literature Corpus}
+\IEEEauthorblockA{Literature synthesis and hypothesis-design report\\
+Power-system transient stability, trustworthy machine learning, and safe control}}
+
+\maketitle
+
+\begin{abstract}
+This report synthesizes 45 supplied papers on transient stability assessment (TSA) for renewable-energy-rich power systems. The corpus contains strong but largely parallel advances in fast data-driven assessment, uncertainty and credibility estimation, Lyapunov/barrier certificates, converter-dominated dynamics, and transfer or active learning. We formulate six complementary subhypotheses (SHs), review their evidence roles, and identify both within-SH and cross-SH gaps. The central synthesis is that present pipelines rarely close the loop from a prediction's epistemic credibility, through a mode-dependent physical stability boundary, to an operationally feasible safety action. Two falsifiable hypotheses are proposed: (H1) map credibility into mode-conditioned physical safety margins before action; and (H2) direct the EMT simulation budget toward certificate-fragile states while a safety guard controls adaptation under drift. A staged simulation, hardware-in-the-loop, and ablation plan is provided. The proposed work deliberately distinguishes corpus coverage, compatible direct evidence, and scientific conclusion; the hypotheses are research propositions to be tested, not claims already established by the literature.
+\end{abstract}
+
+\begin{IEEEkeywords}
+transient stability assessment, renewable energy, inverter-based resources, trustworthy machine learning, control barrier function, Lyapunov certificate, transfer learning, safe reinforcement learning
+\end{IEEEkeywords}
+
+\section{Research Question and Scope}
+
+Power systems with large shares of inverter-based resources (IBRs) require decisions faster than repeated high-fidelity time-domain or EMT simulation can usually provide. The supplied corpus addresses this need from several directions: supervised TSA and stability-margin prediction, probabilistic risk estimation, interpretable or credible learning, direct-method certificates, converter synchronization analysis, and adaptive learning. The broad research question is therefore:
+
+\begin{quote}
+\emph{How can a real-time TSA system turn uncertain, distribution-shifted trajectory information into a mode-aware and operationally safe decision without treating a prediction score as a physical certificate?}
+\end{quote}
+
+This report is a structured literature-derived research design rather than a systematic review claiming exhaustive external coverage. The 45 PDFs in the supplied corpus were screened by title, abstract, and selected method/limitation sections. Evidence is organized into six SHs whose functions are intentionally different; they are not six repetitions of a single ``baseline--adverse--boundary'' template.
+
+\section{Iterative Synthesis Process}
+
+The synthesis followed five iterations. First, the corpus was grouped by the scientific function of each paper rather than by a single causal chain: prediction, uncertainty/credibility, stability geometry, physical mode, control, and adaptation. Second, candidate directions that merely restated a published method were removed. Third, each remaining direction was expressed as a claim that can be evaluated by compatible evidence: simulation and calibration metrics for predictors, Lyapunov/barrier conditions for certificates, and EMT or hardware-in-the-loop (HIL) tests for converter dynamics. Fourth, interdependencies were mapped. Fifth, only gaps that have an identifiable test, comparator, and falsification condition were retained.
+
+The resulting logic is
+\begin{equation}
+\begin{aligned}
+  &\text{trajectory and operating state}
+    \rightarrow \text{prediction and credibility}\\
+  &\rightarrow \text{mode-aware certificate}
+    \rightarrow \text{safe action and feedback}.
+\end{aligned}
+\label{eq:logic}
+\end{equation}
+where every arrow has a separately testable failure mode. This avoids the common mistake of asking one article to establish prediction accuracy, physical validity, generalization, and closed-loop safety all at once.
+
+\section{Multi-Subhypothesis Literature Review and Local Gaps}
+
+Table~\ref{tab:sh} summarizes the six SHs. ``Direct evidence'' below means evidence directly compatible with the stated SH, not necessarily a controlled intervention experiment. For example, a formal Lyapunov condition is direct theoretical evidence for an invariant-set claim, whereas EMT trajectories are direct empirical evidence for a converter-transient claim.
+
+\begin{table*}[t]
+\caption{Six complementary subhypotheses, current evidence, and usable gaps}
+\label{tab:sh}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{p{0.09\textwidth} p{0.27\textwidth} p{0.27\textwidth} p{0.29\textwidth}}
+\hline
+\textbf{SH} & \textbf{Research function and literature signal} & \textbf{Current limitation} & \textbf{Usable gap and direct test}\\
+\hline
+SH1 & Fast TSA, margins, and probabilistic risk. Graphical learning predicts probabilistic rotor-angle trajectories \cite{lu2025}; debiased uncertainty targets imbalanced instability data \cite{tan2023}; DSPP supports chance-constrained preventive control \cite{su2024}. & A confidence interval or probability is usually consumed as a score, not converted into a state-dependent operational safety margin. Calibration under rare, shifted events is not equivalent to safe action. & Learn a calibrated risk envelope that explicitly penalizes false-safe decisions. Test coverage, Brier/ECE, false-safe rate, and curtailment cost under unseen faults, topologies, and renewable scenarios.\\
+\hline
+SH2 & Credibility, OOD detection, and error anticipation. Hybrid credibility learning combines ensemble consistency and data-disparity indicators \cite{li2025}; per-sample misclassification prediction supplies a complementary error signal \cite{bogodorova2024}. & Existing credibility methods can abstain or warn, but generally do not identify which physical boundary or controller constraint should become tighter. & Map credibility to a measurable uncertainty inflation and a safe-set contraction. Test whether credibility-conditioned actions dominate fixed thresholds at the same reliability target.\\
+\hline
+SH3 & Physical stability certificates and safe control. Neural Lyapunov control learns a controller with a falsification module \cite{zhao2022}; barrier-certified RL filters learned actions to meet predefined safety regions \cite{zhao2023}. & A nominal certificate can be invalidated by model mismatch, distribution shift, switching, and unmodeled converter current dynamics. & Build certificates conditioned on identified instability mode and uncertainty radius. Verify barrier/Lyapunov residuals and worst-case post-fault trajectories, not classification accuracy alone.\\
+\hline
+SH4 & Hybrid and converter-dominated stability geometry. Multiple constrained stability regions model renewable trips \cite{mishra2019}; current transients materially affect PLL synchronization assessment \cite{chen2020}; multi-VSC interaction changes dominant synchronization risk \cite{wang2024}; unstable limit cycles can form the relevant boundary \cite{xu2025}. & A binary rotor-angle TSA label masks distinct rotor, voltage, PLL, protection/trip, and limit-cycle mechanisms. A single boundary may be physically misleading. & Infer a dominant instability mode and invoke a mode-specific certificate. Test mode accuracy and boundary-violation detection on switching, LVRT/FRT, PLL, and multi-VSC scenarios.\\
+\hline
+SH5 & Transfer, active learning, and data efficiency. Bidirectional active transfer lowers the demand for labels across conditions \cite{shi2023}; temporal transfer addresses temporal feature mismatch \cite{liu2025}; physics-augmented auxiliary learning improves representation and margin calibration \cite{shen2025}. & Label selection optimizes representativeness or classifier adaptation, not the decision-critical risk of violating a safety certificate after deployment. & Use OOD, predicted error, and a low-cost proxy certificate residual to choose EMT labels; EMT then calibrates the proxy-to-truth map. Test labels-to-safety efficiency against random, entropy, and OOD-only sampling.\\
+\hline
+SH6 & Operational integration. Chance-constrained preventive control provides a link between uncertainty and set-points \cite{su2024}; safe RL offers a control filter \cite{zhao2023}. & Assessment, certification, control, and post-event model update remain modular; no clear contract determines when an uncertain forecast must trigger conservative control, further simulation, or abstention. & Define a three-action policy: act, constrain, or request high-fidelity evaluation. Test closed-loop security, recovery, and operational cost.\\
+\hline
+\end{tabular}
+\end{table*}
+
+\subsection{SH1: Fast Assessment Is Not Yet a Decision Guarantee}
+
+The literature shows mature progress in making TSA fast and uncertainty-aware. Lu and Bu predict probabilistic post-fault rotor-angle trajectories and make their temporal distribution visible to operators \cite{lu2025}. Tan and Zhao address the imbalance and multimodality that make uncertainty estimates unreliable exactly where rare instability matters \cite{tan2023}. Su \emph{et al.} place a Bayesian surrogate inside chance-constrained preventive control \cite{su2024}. These are essential ingredients, but they leave a decision gap: the threshold converting a statistical output into an action is often fixed, although prediction error and operating consequences are state-dependent.
+
+The SH1 gap is therefore not ``improve accuracy'' in the abstract. It is to estimate a conservative decision risk $\risk(x)$ whose calibration is evaluated especially on the false-safe tail. A negative result is informative: if a calibrated risk envelope cannot outperform a single threshold at matched curtailment cost, the additional machinery does not justify operational use.
+
+\subsection{SH2: Credibility Must Be Actionable}
+
+Credibility research correctly recognizes that high in-distribution accuracy does not establish reliability under changing conditions. Hybrid credibility learning uses ensemble behavior, outlier degree, and one-sample MMD, including misclassified OOD examples in training \cite{li2025}. Misclassification prediction supplies a per-sample probability that an otherwise fast TSA classifier is wrong \cite{bogodorova2024}. However, a warning has no intrinsic operational meaning. The system must decide whether to keep the nominal set-point, impose a conservative constraint, or obtain more authoritative evidence.
+
+The SH2 gap is an explicit calibration-to-action contract. Let $c(x)\in[0,1]$ be credibility and $u(x)$ a calibrated uncertainty radius. The report proposes that $u(x)$ changes the admissible safety set rather than merely coloring a dashboard:
+\begin{equation}
+  \safe_{\mathrm{rob}}(x)=\{a: \max_{\delta\in\Delta(u(x))} B_{m(x)}(f(x,a,\delta))\geq0\},
+  \label{eq:robustsafe}
+\end{equation}
+where $B_{m(x)}$ is a mode-specific barrier function and $\Delta$ expands as credibility decreases. This equation is a testable design proposal, not a claim that the available credibility models already ensure safety.
+
+\subsection{SH3: Certificates Are Strong but Need Deployment Validity}
+
+Lyapunov and barrier methods contribute a qualitatively different kind of evidence from a predictor: under their stated assumptions, they establish invariance or decrease conditions. Neural Lyapunov control jointly searches for a control law and a candidate Lyapunov function, with falsification used to enforce conditions \cite{zhao2022}. Barrier-certified RL similarly filters learned actions against a neural barrier certificate \cite{zhao2023}. Their limitation in the combined setting is external validity: a certificate for a nominal model does not necessarily remain valid when input trajectories are shifted or when the relevant physical mode has changed.
+
+The local gap is a certificate that declares its domain of validity. It should report the physical mode, uncertainty radius, residual violation statistics, and whether it was verified by RMS simulation, EMT simulation, or HIL. This separates theoretical validity from empirical support rather than combining them into one opaque score.
+
+\subsection{SH4: The Stability Boundary Is Hybrid and Mode-Dependent}
+
+The physical-literature branch warns against treating all insecurity as the same rotor-angle classification problem. Mishra \emph{et al.} model prone-to-trip renewable-rich systems as switched systems with multiple LVRT-constrained stability regions \cite{mishra2019}. Chen \emph{et al.} show that neglecting converter current transients can cause inaccurate synchronization assessment \cite{chen2020}. Wang \emph{et al.} further show that nonlinear damping and transient interaction among VSCs determine dominant-converter risk \cite{wang2024}. Xu \emph{et al.} explain that an unstable limit cycle, not only an unstable equilibrium point, may shape the relevant VSC boundary \cite{xu2025}.
+
+The usable SH4 gap is a \emph{hybrid boundary atlas}: a mode classifier maps a trajectory to rotor-angle, voltage, PLL-synchronization, protection/trip, or limit-cycle-dominated regimes, and each regime uses an appropriate stability function. A rigorous failure case would be mode confusion that increases the false-safe rate relative to a single robust classifier; this must be measured, not assumed away.
+
+\subsection{SH5: Adaptation Should Spend Labels Where Safety Is Most Fragile}
+
+Transfer and active learning reduce the cost of adapting to operating changes. Bidirectional active transfer uses both useful target instances and selective removal of source instances \cite{shi2023}; temporal transfer specifically aligns evolving time-series features, including zero-target-sample use cases \cite{liu2025}. Physics-augmented auxiliary learning offers a mechanism-guided route to margin prediction and generalization \cite{shen2025}. Yet a label selected because it is uncertain or representative may be operationally unimportant, while a rare trajectory close to a certificate violation can be decisive.
+
+The SH5 gap is a safety-value acquisition function. Instead of selecting only by entropy, choose the event whose high-fidelity label is expected to most reduce robust-boundary violation. The key result is not average accuracy at a fixed label budget, but the area under a labels-versus-false-safe curve.
+
+\subsection{SH6: An Operational Contract Is Still Missing}
+
+The existing pieces suggest, but do not complete, an online operating loop. A credible predictor may flag OOD; a physical certificate may filter an action; a preventive optimizer may adjust set-points. The missing contract is what happens when these disagree. In particular, a low-confidence but nominally stable prediction should not automatically be labeled safe, and a conservative certificate need not force unnecessary curtailment if a rapid EMT/HIL check is available.
+
+The SH6 gap is a policy with three outcomes: \emph{act} when risk is low and certification holds; \emph{constrain} when risk is elevated but a robust action exists; and \emph{escalate} when credibility or certificate residual is inadequate. This turns model uncertainty into an auditable engineering workflow.
+
+\section{Detailed Gaps for Converter-Dominated, Renewable-Rich Grids}
+
+The following refinement makes the gap statements operational for high-renewable-penetration grids with power-electronic equipment. The quantitative values in this section are \emph{reported evidence anchors} from the supplied papers, not numbers that are assumed to transfer unchanged across networks, fault-clearing practices, or controller settings. Cross-paper accuracy is not treated as a leaderboard because the fault sets, class balance, PMU windows, and security labels differ.
+
+\subsection{SH1: Risk and Margin Must Retain Physical Units}
+
+\textbf{What is established.} Fast predictors are now sufficiently capable that their output can be used inside an online loop. A hierarchical PMU-based model reported an average response time of 16 ms over 3000 test cases, a stability-margin-prediction error below 0.036, and accuracy above 98.5\% on its reported unknown scenarios \cite{zhu2020}. An improved deep Lyapunov learner reported 98.95\% overall accuracy and 99.28\% precision on its test case \cite{liu2024dll}. For probabilistic assessment at scale, PPGP was evaluated on a Texas 2000-bus system with 471 PV and 470 wind generations \cite{ye2024ppgp}; a separate large-scale EMT framework reported approximately 400-fold acceleration for a synthetic IEEE 118-bus AC/DC system containing two million RES entities \cite{cheng2025}. These results establish computational feasibility, not a universal safety guarantee.
+
+\textbf{Precise gap.} The common output is a class probability, a transient stability index, a critical clearing time (CCT), or a scalar margin. Such values are often not tied to the \emph{physical limiting event}: first-swing angle separation, voltage recovery failure, PLL loss of synchronism, current saturation, LVRT/FRT tripping, or a controller state reaching its hard limit. Consequently, a well-calibrated probability can still be false-safe if the latent model does not represent the active boundary.
+
+\textbf{Researchable SH1 claim.} For each contingency $e$, estimate a vector
+\begin{equation}
+\mathbf{y}_e=[\widehat{\mathrm{CCT}},\widehat{\Delta\delta}_{\max},
+\widehat{\Delta V}_{\min},\widehat{\omega}_{\mathrm{PLL}},
+\widehat{I}_{\max},\widehat{p}_{\mathrm{trip}}],
+\label{eq:physicalmargin}
+\end{equation}
+along with prediction intervals. The margin used for action is the minimum normalized distance to the applicable protection, synchronization, voltage, and thermal/current constraints, rather than an unqualified TSA label. CCT estimation work already treats the CCT as a stability-boundary quantity \cite{su2024margin}; trajectory-sensitivity work shows that sensitivity norms can rank control and reference parameters that move the DFIG-WTG synchronization boundary \cite{buragohain2024}.
+
+\textbf{Quantitative test and falsifier.} Stratify test events by CCT distance, IBR penetration, short-circuit ratio, fault duration/location, and control mode. Report root-mean-square error for every physical component in \eqref{eq:physicalmargin}, 90\% interval coverage, expected calibration error (ECE), and false-safe rate within the most critical 10\% of the CCT/margin distribution. A planned success criterion is a 95\% bootstrap upper confidence bound on false-safe rate below 1\% in the critical stratum; failure of coverage or a false-safe concentration near a limiter invalidates the proposed margin mapping even if global accuracy remains high.
+
+\subsection{SH2: Credibility Requires a Decomposition, Not One Threshold}
+
+\textbf{What is established.} Credibility can be learned from model consistency and distributional disparity \cite{li2025}; scene-dependent credibility has also been formulated using a localized generalization-error bound and a stability-density construction. In its reported cases, a critical scene-credibility index of 0.93 separated results with 100\% stated accuracy \cite{liu2026sce}. These methods are valuable alarms, but their scalar score does not distinguish sensor corruption, operating-point extrapolation, topology change, label ambiguity near a boundary, or absent converter physics.
+
+\textbf{Precise gap.} A single credibility score can conceal materially different operational responses. PMU noise or a missing feature should request data-quality checking; a novel grid strength or PLL parameter should enlarge model uncertainty; an imminent hard-limit encounter should immediately shrink the feasible control set. In addition, a credibility classifier trained on rotor-angle labels may look confident while the actual event is short-term voltage instability or converter synchronization loss.
+
+\textbf{Researchable SH2 claim.} Replace $c(x)$ by
+\begin{equation}
+c(x)=[c_{\mathrm{data}},c_{\mathrm{shift}},c_{\mathrm{mode}},
+c_{\mathrm{model}},c_{\mathrm{certificate}}],
+\label{eq:credvector}
+\end{equation}
+where the entries respectively measure data integrity, OOD distance, uncertainty in dominant-instability-mode (DIM) assignment, predictive disagreement, and a low-cost proxy certificate residual. The policy must state which component triggered escalation. This is supported by evidence that a networked shapelet TSA retained over 98\% reported accuracy under studied cases and lost less than 0.7 percentage points under network-parameter errors, while its PMU-noise tests explicitly ranged from 0.5\% to 3\% \cite{zhu2022shapelet}; that robustness observation should not be extrapolated to unmodelled IBR control changes.
+
+\textbf{Quantitative test and falsifier.} Construct separated stress suites: PMU noise/dropout, line/topology change, grid-strength change, renewable forecast error, and PLL/current-control mismatch. Compare one scalar threshold with the vector policy in \eqref{eq:credvector} at equal intervention cost. Report per-source AUROC for error detection, ECE, mode-conditional coverage, and the percentage of escalations that are later verified necessary by EMT. The decomposition fails if it raises the total escalation rate without improving calibration, false-safe rate, or attribution correctness.
+
+\subsection{SH3: Certificate Validity Must Include Saturation and Converter Timescales}
+
+\textbf{What is established.} Neural Lyapunov and barrier methods provide a formal safety mechanism under their stated state-space and model assumptions \cite{zhao2022,zhao2023}. Deep Lyapunov learning further links the learned decision function to a region-of-attraction construction \cite{liu2024dll}. Yet a power-electronic grid is a differential-algebraic, switched and constrained system: current controllers, PLLs, DC-link/AC voltage dynamics, virtual inertia, ride-through logic, protection, and anti-windup limiters introduce mode switches and time-scale separation.
+
+\textbf{Precise gap.} A certificate $V(x)$ or $B(x)$ learned from nominal RMS trajectories may remain positive while the real control action enters current limitation or a PLL transient invalidates the reduced model. The hard-limit formulation of Romay \emph{et al.} shows that control bounds must be enforced inside the dynamic equations through complementarity conditions, rather than checked after a trajectory is generated \cite{romay2021}. This exposes a missing contract between learned certificates and constraint-active dynamics.
+
+\textbf{Researchable SH3 claim.} Use a hybrid certificate bank $\{B_m,V_m\}$ indexed by instability mechanism and limiter/controller state. The identified plant must retain the actual hard-limit logic: current saturation, PLL and voltage clamps, LVRT/FRT timers, and anti-windup reset maps. A smooth saturation may be used only as a training surrogate; the certificate is accepted only after checking the original nonsmooth or complementarity model in EMT. For each certified mode,
+\begin{equation}
+\begin{aligned}
+\dot V_m(x,a)&\leq-\lambda_m V_m(x)+\rho_m u(x),\qquad B_m(x)\geq0,\\
+V_{m'}\!\left(R_{m\rightarrow m'}x\right)&\leq\mu_{m,m'}V_m(x),\qquad
+\tau_m\geq\tau^{\mathrm{guard}}_{m,m'},
+\end{aligned}
+\label{eq:hybridcertificate}
+\end{equation}
+where $R_{m\rightarrow m'}$ is the declared reset map, $\tau_m$ the residence time, and $u(x)$ the credibility-derived physical buffer. The guard time is not a free abstract slack: $\tau^{\mathrm{guard}}_{m,m'}$ is fixed before evaluation as the 95th-percentile EMT settling time of the slower affected controller (PLL, current loop, GFM droop/virtual-inertia loop, or LVRT/FRT timer), plus the declared PMU/actuator delay. The reset inequality and this physical guard-time test jointly replace an undefined $\sigma$.
+
+A static DIM label is not sufficient. To keep the robust filter small, the sliding window $[t-W,t]$ retains only the leading mode if its probability margin exceeds a preregistered hysteresis; otherwise it retains the top two modes. If the omitted probability mass exceeds $\epsilon_{\mathrm{mode}}$, the event is escalated rather than treated as a large all-mode intersection. The proposed action mixes those one or two proposals, $\bar a_t=\sum_{m\in\mathcal M_t}\bar p_m a_m$, then solves $a_t\in\arg\min_{a\in\cap_{m\in\mathcal M_t}\safe_m}\|a-\bar a_t\|_{W_t}^{2}$. If the intersection is empty, if the reset/guard-time test fails, or if a software-defined controller transition has no executable reset model, the controller retains the pre-verified P0 action or uses the IP action; it may not trust the originally selected certificate. The report must give the empty-intersection rate $\rho_{\emptyset}$ and P1 execution rate. If $\rho_{\emptyset}>20\%$ of P1-eligible events, the mode-sensitive P1 certificate claim is rejected; if P1 falls back on more than 80\% of eligible events, only the P0 guard claim may be retained.
+
+\textbf{Quantitative test and falsifier.} Record the maximum violation of \eqref{eq:hybridcertificate}, residence-time/reset failures, joint-safe-set infeasibility, time spent in current/voltage saturation, PLL frequency/angle excursion, and violation rate after each transition. Compare a nominal smooth certificate, a hard-limit-aware certificate, a single-label bank, and the sliding-window robust bank. The SH is not supported if robust filtering avoids violations only by excessive load shedding/curtailment, if the certificate residuals cease to predict EMT violations under current transients, or if GFM/GFL controller switching without a supplied reset model is silently classified as certified.
+
+\subsection{SH4: Dominant Instability Modes Need a Boundary Atlas}
+
+\textbf{What is established.} High-renewable systems can exhibit coupled but nonidentical rotor-angle, short-term voltage, and converter-synchronization phenomena. DIM work explicitly targets the distinction between rotor-angle and short-term voltage instability. A local-global GNN/Transformer formulation found its peak reported accuracy with a 2 s window and training time below 3 s per epoch, and illustrated that DIM-guided control selects generator shedding versus load shedding differently \cite{yao2025dim}. The multi-VSC study includes nonlinear damping, angular-frequency jumps, and transient interactions, with PSCAD/EMTDC and RT-LAB validation \cite{wang2024}. PLL current transients cannot be neglected without distorting synchronization assessment \cite{chen2020}. Finally, an unstable limit cycle can be the relevant VSC stability boundary rather than an unstable equilibrium point \cite{xu2025}.
+
+\textbf{Precise gap.} Current DIM methods mostly assign a label, while direct methods mostly analyze one specified mechanism. The missing object is a \emph{boundary atlas} that maps a trajectory to (i) a dominant mechanism, (ii) the correct reduced state and observable, (iii) a validity domain, and (iv) an appropriate remedial action. Without it, a rotor-angle surrogate may be asked to judge an LVRT trip cascade, and a voltage-oriented action may be applied to a PLL-dominated event.
+
+\textbf{Researchable SH4 claim.} Let $m\in\{\mathrm{RA},\mathrm{STV},\mathrm{GFL\text{-}PLL},\mathrm{GFM\text{-}droop},\mathrm{trip},\mathrm{ULC}\}$ denote rotor-angle, short-term voltage, grid-following PLL/current-control, grid-forming virtual-inertia/droop, protection/trip, and unstable-limit-cycle mechanisms. Learn $p(m\mid z)$ from PMU and converter features, but use mode-specific observables and action sets: rotor-angle separation/CCT; voltage nadir and recovery time; GFL PLL angle-frequency/current excursion; GFM frequency/voltage/droop-power and virtual-inertia limits; LVRT/FRT dwell/trip count; and center-manifold/limit-cycle distance, respectively. The confidence of this assignment becomes the $c_{\mathrm{mode}}$ term in \eqref{eq:credvector}.
+
+\textbf{Quantitative test and falsifier.} Evaluate macro-F1 and a cost-weighted confusion matrix, not only overall DIM accuracy. Every misclassification must be labeled as benign, conservative, or false-safe after EMT replay. Required scenario axes include IBR share, short-circuit ratio (including SCR$<1.5$), number of interacting VSCs, fault impedance/duration, GFL PLL bandwidth/current limit, GFM virtual inertia/droop limits, LVRT/FRT setting, protection delay, and deliberate GFM$\leftrightarrow$GFL software transitions. A conservative planning target is to reduce false-safe cross-mode errors by at least 30\% relative to a binary TSA baseline at matched remedial-action energy; the atlas is rejected if extra modes merely redistribute errors without lowering the false-safe cross-mode subset.
+
+\subsection{SH5: Data Adaptation Should Target Certificate Failure, Not Only Classifier Uncertainty}
+
+\textbf{What is established.} Multiple techniques reduce simulator and labeling cost. Transfer ELM reported more than 24\% improvement in stability-assessment accuracy in its large-scale cross-scale transfer setting \cite{ren2024telm}. Instability-pattern-guided updating began from 98.37\% test accuracy with 181 errors and used a 556-sample representative set, about 5\% of its original dataset, to constrain update cost \cite{wang2025update}. A topology-clustering/DCGAN study reported, for one scenario, accuracy/security/recall of 97.40/97.81/88.10\%, compared with 91.64/92.14/80.13\% for random oversampling, but explicitly notes that its target is global transient power-angle stability rather than other instability modes \cite{li2025samples}. These results show that sample efficiency is possible, while also revealing the class and mode scope of current targets.
+
+\textbf{Precise gap.} Entropy, margin, or OOD sampling may spend an EMT label on a novel but operationally harmless trajectory, while undersampling a familiar-looking event near a hard current limit or mode transition. Updating a classifier on a pattern can also cause certificate drift or catastrophic forgetting in regions that were previously safe.
+
+\textbf{Researchable SH5 claim.} Schedule high-fidelity labels with a low-cost proxy certificate residual, not an EMT residual already obtained for the same candidate:
+\begin{equation}
+\begin{aligned}
+ A(z)={}&\alpha d_{\mathrm{OOD}}(z)+\beta\widehat p_{\mathrm{err}}(z)\\
+&+\gamma \widetilde r_{\mathrm{proxy}}(z)+\eta H[p(m\mid z)]\\
+&+\kappa L_{\mathrm{impact}}(z),
+\end{aligned}
+\label{eq:acquisition}
+\end{equation}
+where $\widetilde r_{\mathrm{proxy}}$ is computed from the RMS or reduced-order model and the current certificate at negligible online cost, while the authoritative EMT residual $r_{\mathrm{EMT}}$ is unavailable until \emph{after} selection. H2 therefore learns the calibration/ranking map $(\widetilde r_{\mathrm{proxy}},u,z)\mapsto r_{\mathrm{EMT}}$; it does not spend EMT merely to rediscover an EMT residual. $L_{\mathrm{impact}}$ estimates load loss, curtailment, reserve use, or protection consequence. The update has a replay/constraint term that preserves previously verified certificate margins.
+
+\textbf{Quantitative test and falsifier.} First evaluate whether $\widetilde r_{\mathrm{proxy}}$ ranks and calibrates $r_{\mathrm{EMT}}$ near the boundary, using rank correlation, proxy-to-EMT coverage, and false-negative proxy rate. Then build learning curves of EMT labels versus false-safe rate, mode-macro-F1, ECE, certificate violations, and retained performance on prior scenarios. Compare random, entropy, margin, OOD-only, and \eqref{eq:acquisition} under identical EMT budgets. A pre-registered target is at least 25\% fewer new EMT labels to reach the baseline's false-safe rate, with no greater than one percentage-point loss on the source-regime safety score. Failure of the proxy-ranking test, safety, or forgetting condition rejects the active-transfer claim.
+
+\subsection{SH6: Control Must Optimize Security, Recovery, and Feasibility Together}
+
+\textbf{What is established.} Control-oriented TSA is no longer only conceptual. A master-slave TSC-OPF framework reports millisecond real-time dispatch on New England and Australian systems while incorporating contingency-specific surrogate feedback \cite{zhang2025tscopf}. An integrated TSA-monitoring approach uses spatial-temporal features and critical-generator identification to select generator tripping for impending instability \cite{zhu2024tsmae}. For converter control, a multi-VSG plus resistive superconducting fault-current-limiter study reported 62.12\% current limiting during fault, 41.24\% after clearing, a maximum 3.3\% power vacancy, and 44.59\% less power vacancy than its DDPG comparator in the reported cases \cite{chen2024vsg}. These are valuable proof points, but they optimize different operational objectives under different mechanisms.
+
+\textbf{Precise gap.} Existing control integrations generally assume a correct TSA/DIM result and do not expose what the controller should do when credibility is low, the mode is ambiguous, or a certificate is invalid. They also rarely compare generator tripping, load shedding, reactive support, VSG virtual-inertia/damping set-points, current-limit management, and topology actions on a common false-safe/cost scale.
+
+\textbf{Researchable SH6 claim.} Solve a receding-horizon, three-action decision:
+\begin{equation}
+\begin{aligned}
+\min_{a\in\mathcal A_m}J(a)={}&
+w_s\widehat p_{\mathrm{FS}}(a)+w_eE_{\mathrm{shed}}(a)\\
+&+w_rT_{\mathrm{recovery}}(a)+w_cC_{\mathrm{wear}}(a)\\
+&+w_b\Lambda_{\mathrm{reserve}}(a),
+\end{aligned}
+\label{eq:controlobjective}
+\end{equation}
+subject to the appropriate hybrid certificate, equipment limits, a latency budget, and $\Lambda_{\mathrm{reserve}}(a)\leq1$. Here $\Lambda_{\mathrm{reserve}}=\max_{0\leq\tau\leq T_{\mathrm{UC}}}\Delta P_{\mathrm{reserve}}(\tau;a)/R_{\mathrm{available}}(\tau)$ measures the transient draw on ramping and energy-limited reserve over the declared unit-commitment horizon $T_{\mathrm{UC}}$. If no feasible robust action exists, escalate to EMT/HIL or a predefined protection policy. The objectives make a false-safe declaration more costly than a conservative action, while preventing a nominally safe controller from achieving its score through indiscriminate curtailment or by exhausting the reserve needed for minute-scale restoration.
+
+\textbf{Quantitative test and falsifier.} Report delivered load/energy, renewable curtailment, generator/VSC trips, peak fault current, voltage recovery time, PLL resynchronization time, CCT improvement, and end-to-end decision latency. Compare with fixed rules, TSA-only remedial action, chance-constrained OPF, and nominal barrier RL. The control integration is unsuccessful if it cannot satisfy the selected protection/ride-through constraints within the latency budget, or if equal-security comparisons show no benefit beyond additional shedding.
+
+\section{Deployment and Stress-Test Contracts}
+
+\subsection{Latency Contract: A Cascaded Decision, Not a Simultaneous Stack}
+
+The reported 16 ms response of a particular TSA model \cite{zhu2020} is not evidence that an encoder, probabilistic predictor, five-part credibility vector, DIM classifier, certificate bank, robust filter, and active-learning score can all run serially within 16 ms. This report therefore does \emph{not} claim a universal 16 ms end-to-end deadline. Instead, each target installation declares a protection or dispatch deadline $T_{\mathrm{deadline}}$, and the proposed controller uses an early-exit cascade:
+\begin{enumerate}
+  \item a shared, fixed-cost feature and data-integrity stage produces a low-cost risk bound;
+  \item low-risk, in-distribution events use a pre-verified nominal safe action;
+  \item only boundary-near, OOD, or high-consequence events invoke DIM selection and the mode-specific certificate;
+  \item certificate repair, EMT label acquisition, and meta-parameter updating are asynchronous and never sit on the protection-critical path.
+\end{enumerate}
+The hard real-time contract is
+\begin{equation}
+T_{\mathrm{feature}}+T_{\mathrm{base}}+
+\mathbb{I}_{\mathrm{escalate}}(T_{\mathrm{DIM}}+T_{\mathrm{cert}}+T_{\mathrm{filter}})
+\leq T_{\mathrm{deadline}},
+\label{eq:latencycontract}
+\end{equation}
+where the indicator is determined before the expensive branch. The measured evidence must include p50, p95, p99, and maximum latency, memory/compute utilization, and decision-quality metrics for every branch. A claimed 16 ms configuration is falsified if its p99 or its worst observed safety-critical response exceeds 16 ms; reducing simulation fidelity, sampling rate, or certificate residual checks to pass timing is not an acceptable remedy unless the resulting physical coverage is separately re-established.
+
+The proposal therefore pre-registers three distinct timing tiers rather than attributing the 16 ms TSA result to the whole architecture. P0 is the protective guard: data integrity, base risk, and a pre-verified fallback action must complete within one electrical cycle, 20 ms at 50 Hz or 16.7 ms at 60 Hz. P1 is the certificate-filtered remedial path: feature/base-risk budget 8 ms, credibility and sliding-window mode-set construction 8 ms, critical-interface certificate plus robust projection 40 ms, and I/O/jitter reserve 24 ms, for a measured p99 budget of 80 ms. Thus P1 may refine or replace the P0 fallback, but it is never allowed to postpone it. P2 is asynchronous RMS-proxy scoring and capped safe linear-bandit batch selection, with a 1 s service-level target; EMT/HIL and parameter updates have no protection-path deadline. A deployment claim must report p99/max separately for P0 and P1 and identify the command actually issued at each tier. Failure of P0 is a protection failure; failure of P1 invalidates only the claimed certificate-filtered remedial capability, not the availability of the pre-verified P0 action.
+
+P1 is not a second controller that steps over P0. A single action governor receives the realized P0 command $a_0$ and the propagated P0 state, then permits only a rate-limited increment $\Delta a_1$:
+\begin{equation}
+a_{\mathrm{cmd}}(t)=a_0(t)+s(t)\Delta a_1,
+\quad 0\leq s(t)\leq1,
+\quad |\dot a_{\mathrm{cmd}}|\leq r_{\mathrm{act}}.
+\label{eq:handoff}
+\end{equation}
+The governor enforces per-channel priority and actuator limits, so P1 cannot issue a conflicting PSS/AVR/VSC command; it either ramps an admissible correction from the actual P0 trajectory or leaves P0 unchanged. Each allowed P0-to-P1 transition tube is pre-verified offline in EMT for the finite action library. Online P1 only indexes that tube and checks the current state/envelope membership. If no tube matches, no smooth handoff is feasible, or the 80 ms computation expires, P0 remains active and the event is recorded as a P1 non-execution rather than a silent P1 success.
+
+\subsection{Physical Calibration of the Credibility-to-Robustness Map}
+
+The uncertainty radius must not be an uncalibrated rule such as $u=1/c$. For mechanism $m$ and physical constraint $j$, define the signed physical residual $r_{m,j}(x)$ in its native engineering unit: e.g., CCT reserve in ms, voltage reserve in p.u., PLL angle/frequency reserve, current-limit reserve in p.u., or ride-through dwell-time reserve. A mode-conditional calibrated lower bound is
+\begin{equation}
+\begin{aligned}
+\underline r_{m,j}(x)={}&\widehat r_{m,j}(x)-
+q_{m,j}\!\left(\phi(x)\right),\\
+\Pr\{r_{m,j}(x)\geq{}&\underline r_{m,j}(x)\mid m,\phi\}
+\geq1-\epsilon_{m,j},
+\end{aligned}
+\label{eq:physicalu}
+\end{equation}
+where $q_{m,j}$ is a split-conformal or other finite-sample calibrated quantile and $\phi$ contains operating state, IBR penetration, grid strength, observed communication quality, and OOD score. The robust controller enforces $\underline r_{m,j}(x,a)\geq0$ for all active constraints. Thus the role previously denoted by $u(x)$ is a vector of empirically validated, constraint-specific physical buffers, rather than a Bayesian neural-network variance or an arbitrary scalar inflation.
+
+``Separate'' calibration must not mean a sparsely populated quantile for every raw combination of DIM, constraint, topology, and bus. In a multi-VSC system, that Cartesian product rapidly becomes untestable. The design therefore declares a finite calibration cell $g=(m,h(j),c)$ before evaluation: $h(j)$ is a physically justified constraint family (for example, PLL/current/LVRT rather than an arbitrary bus identifier), and $c$ is a declared critical-interface, operating-regime, and data-quality cluster.
+
+Within a cell, calibration is transported continuously over a predeclared physical metric $d_\omega$ on short-circuit ratio, IBR penetration, fault-clearing time, controller family, and observed data quality. A target point borrows residuals only from neighboring microcells with kernel weights $w_i=K[d_\omega(\phi_i,\phi)/r_g]$, and may use a local quantile only when
+\begin{equation}
+n_{\mathrm{eff}}=\frac{(\sum_iw_i)^2}{\sum_iw_i^2}
+\geq n_{\min}(\epsilon,h,\delta)=
+\left\lceil\frac{z_{1-\delta/2}^2(1-\epsilon)\epsilon}{h^2}\right\rceil.
+\label{eq:neff}
+\end{equation}
+Here $\epsilon$ is the target miscoverage, $h$ the \emph{coverage-probability} half-width, and $\delta$ the confidence level; $h$ is not a CCT, voltage, or current tolerance in p.u. The often useful $\epsilon=0.05$, $h=0.02$, $\delta=0.05$ setting gives the illustrative $n_{\min}=457$, but it is not a universal fixed threshold. Before deployment, an independent pilot set for each constraint family must estimate residual scale and select the neighborhood radius $r_g$, a native-unit sharpness ceiling $q^{\max}_g$ (ms, p.u., or degrees), and the coverage precision $h_g$. These choices are frozen before the comparison set is opened. Every reported neighborhood must give $r_g$, $n_{\mathrm{eff}}$, held-out coverage, residual sharpness relative to $q^{\max}_g$, and the pilot-derived $h_g$. If either the effective-count, coverage, or sharpness condition fails, it must use a conservative family-level envelope or escalate. This preserves a falsifiable marginal-coverage claim without forcing nearly every operating point into permanent escalation.
+
+If $\phi(x)$ lies outside the calibration support, the method is not permitted to extrapolate an optimistic buffer: it must issue a conservative pre-verified fallback or escalate. The validation report must give coverage and sharpness for each declared cell, coverage near the CCT/current/voltage boundary, and the rate at which an OOD event is incorrectly accepted as calibrated. The full lifecycle label ledger remains transparent:
+\begin{equation}
+\begin{aligned}
+N_{\mathrm{EMT}}^{\mathrm{total}}&=N_{\mathrm{base}}^{0}+\Delta N_{\mathrm{adapt}},\\
+N_{\mathrm{base}}^{0}&=N_{\mathrm{cal}}^{0}+N_{\mathrm{safety}}^{0},\\
+\Delta N_{\mathrm{adapt}}&=\Delta N_{\mathrm{acq}}+\Delta N_{\mathrm{cal}}+\Delta N_{\mathrm{safety}},
+\end{aligned}
+\label{eq:emtbudget}
+\end{equation}
+where $N_{\mathrm{cal}}^{0}$ and $N_{\mathrm{safety}}^{0}$ are the one-time, pre-deployment calibration and independent-safety reserve, shared by every arm; $\Delta N_{\mathrm{acq}}$ is the post-deployment label investment chosen by H2; and $\Delta N_{\mathrm{cal}}$, $\Delta N_{\mathrm{safety}}$ expose any additional recalibration or safety-monitoring burden caused by drift. The preregistered \emph{primary} H2 endpoint is marginal label efficiency: the false-safe learning curve against $\Delta N_{\mathrm{acq}}$, with a common $N_{\mathrm{base}}^{0}$ and equal declared coverage target. The fixed baseline and the complete ledger in \eqref{eq:emtbudget} are reported separately as lifecycle economics. Thus an extra 5000 EMT trajectories needed merely to stabilize calibration is neither silently free nor incorrectly charged to an H2 selector that acts only on rare post-deployment boundaries.
+
+\subsection{Drift-Resilient H2: Constrained Online Meta-Adaptation}
+
+The H2 weights cannot remain fixed after offline tuning because topology, renewable dispatch, grid strength, and IBR-control settings drift. Let $\theta_t=(\alpha_t,\beta_t,\gamma_t,\eta_t,\kappa_t)$ be the acquisition parameters for OOD novelty, predicted error, \emph{proxy} certificate residual, mode uncertainty, and consequence. An online meta-learner proposes $\theta_{t+1}$ only after a delayed batch of authoritative EMT labels; its context includes recent calibration residuals, mechanism mix, shift statistics, and action outcomes. The fast path uses frozen $\theta_t$, whereas the update path is asynchronous.
+
+The implementation is a safe regularized linear contextual bandit (Bayesian ridge/LinUCB), not an unspecified reinforcement learner or a cubic-cost Gaussian process. Its compact context is $z=[d_{\mathrm{OOD}},p_{\mathrm{err}},\widetilde r_{\mathrm{proxy}},H(p_m),L_{\mathrm{impact}},d_{\mathrm{drift}},n_{\mathrm{eff}}]$; its action is at most $B_{\max}=16$ RMS trajectories for EMT replay per update, with no more than one candidate from the same operating cluster. The delayed reward is the reduction in independent false-safe upper bound per selected label, penalized for lost coverage or source-regime retention. With $A=\lambda I+Z^{\mathsf T}Z$, the fixed utility is $z^{\mathsf T}\hat\theta+\beta\sqrt{z^{\mathsf T}A^{-1}z}-\lambda_cC_{\mathrm{EMT}}(z)$. Its update cost is $O(d^2B_{\max}+d^3)$ for $d=7$, so the P2 1 s service target is directly testable. The context, batch cap, utility, reward, and safety acceptance rule in \eqref{eq:metasafety} are fixed before the test; the bandit never changes a protection command directly.
+
+The update is accepted only if an independent rolling safety set satisfies a high-confidence constraint, for example
+\begin{equation}
+\operatorname{UCB}_{1-\delta}\!\left(\mathrm{FSR}_{t+1}\right)
+\leq\operatorname{UCB}_{1-\delta}\!\left(\mathrm{FSR}_{t}\right)+\xi,
+\label{eq:metasafety}
+\end{equation}
+and if calibrated coverage and source-regime retention stay above their declared floors. To prevent noisy rare-event estimates from creating a rollback/update oscillation, the experiment predeclares a minimum update interval $\Delta_{\min}$ and a nonzero statistical deadband $d_{\mathrm{DB}}$. Let $t_\ell$ be the last accepted update, let ``ref'' denote the frozen reference window, and define $F_t^{L}=\operatorname{LCB}_{1-\delta}(\mathrm{FSR}_t)$ and $F_{\mathrm{ref}}^{U}=\operatorname{UCB}_{1-\delta}(\mathrm{FSR}_{\mathrm{ref}})$. A proposal is even evaluated only when
+\begin{equation}
+\begin{aligned}
+\mathrm{UpdateEligible}_{t}=1\quad\Longleftrightarrow\quad
+& t-t_\ell\geq\Delta_{\min},\\
+& F_t^{L}>F_{\mathrm{ref}}^{U}+d_{\mathrm{DB}}.
+\end{aligned}
+\label{eq:updategate}
+\end{equation}
+Otherwise the approved $\theta_t$ is retained and the system accumulates evidence; no EMT-driven weight churn is credited as adaptation. Every evaluation must report $\Delta_{\min}$, $d_{\mathrm{DB}}$, proposal, acceptance, and rollback counts, and the sensitivity of safety to both values. The evaluation compares fixed offline coefficients, unconstrained online meta-adaptation, and the gated constrained update in \eqref{eq:metasafety}--\eqref{eq:updategate} under controlled nonstationary shifts. This converts online meta-learning from a performance slogan into a falsifiable safety-preserving adaptation mechanism.
+
+\subsection{Cost Comparison as a Pareto Frontier}
+
+Fixed weights in \eqref{eq:controlobjective} can obscure an unsafe or excessively conservative policy. Rather than declaring success at one selected $(w_s,w_e,w_r,w_c)$, estimate the attainable frontier over the vector
+\begin{equation}
+\mathbf{g}(a)=
+\left[\begin{gathered}
+\mathrm{FSR}^{\mathrm{UCB}},\ E_{\mathrm{unserved}},\ E_{\mathrm{curtail}},\\
+T_{\mathrm{recovery}},\ N_{\mathrm{trip}},\ C_{\mathrm{wear}},\ \Lambda_{\mathrm{reserve}}
+\end{gathered}\right]^{\mathsf T}.
+\label{eq:pareto}
+\end{equation}
+Use epsilon-constraint sweeps: minimize operational disruption subject to a predeclared false-safe upper bound, protection/ride-through constraints, a latency limit, and $\Lambda_{\mathrm{reserve}}\leq1$; then repeat across safety bounds. Compare the resulting Pareto front to each baseline through non-dominance rate, hypervolume, and paired scenario differences. H1 is supported only if it expands the feasible safe region or Pareto-dominates a baseline for a material scenario subset. Eliminating false-safe events solely through disproportionate shedding or by exhausting minute-scale reserve appears as a different point on the frontier, not as an automatic win.
+
+\subsection{Training, Independent Falsification, and Hidden Communication Stress}
+
+The evidence hierarchy is explicit. Broad RMS simulation explores operating space and proposal ablations. EMT simulation produces scalable, high-fidelity pseudo-labels for training and calibration, especially near boundaries and under converter current/PLL dynamics. RT-LAB/HIL is \emph{not} the source of millions of training labels: it is a frozen, independent set of sparse but deliberately difficult falsification points for checking model, timing, interface, and control-implementation mismatch.
+
+The held-out stress protocol includes ordinary noise and topology changes, plus communication and actuation faults that are realistic in PMU/control networks: time-varying latency and jitter, correlated measurement dropout, burst packet loss, time-stamp skew, delayed or missing topology updates, replay-like stale measurements, and loss of one or two control-command cycles. The latter must be parameterized at the actual system frequency, so one and two cycles correspond to 20/40 ms at 50 Hz or 16.7/33.3 ms at 60 Hz. A lost command is not treated as a nonexistent action: the actuator must execute a specified hold-last policy $a_{\mathrm{hold}}$, with the last valid command applied over the loss interval. The certificate is valid only if
+\begin{equation}
+\min_{0\leq\tau\leq\tau_{\mathrm{hold}}}
+r_{m,j}\!\left(x_{\tau};a_{\mathrm{hold}}\right)\geq0
+\quad\text{for all active }(m,j),
+\label{eq:holdlast}
+\end{equation}
+where $\tau_{\mathrm{hold}}$ is the declared worst case (40 ms for the two-cycle 50 Hz case, and no smaller than the actual tested delay). Tests must include correlated failures rather than independent missing samples only. Each hidden case is scored for detection delay, erroneous acceptance, fallback correctness, peak current/voltage/PLL excursion, and whether the command reaches an active limiter after it is too late. This prevents a model from appearing reliable merely because its train/test split lacks the failure modes operators face.
+
+Equation \eqref{eq:holdlast} is an offline EMT/HIL verification condition, not a continuous online minimization at PMU rate. For each finite P0 action, critical interface, and mode family, offline EMT computes a hold-last safe envelope $\mathcal H_{m,j,a_0}^{\tau_{\mathrm{hold}}}$ and a P0-to-P1 transition tube. Online P0/P1 performs only a bounded state/envelope membership check and table lookup. If the observed state is outside the stored envelope, the controller retains the conservative P0 action or invokes IP; it does not launch an EMT trajectory inside the 16.7/20-ms guard loop. The reported coverage of these envelopes and their mismatch rate against frozen HIL cases provide the required conservatism check.
+
+\subsection{Scalability Contract: Critical Interfaces, Not a Global Certificate}
+
+The Texas 2000-bus PPGP result \cite{ye2024ppgp} establishes that a large-scale probabilistic TSA calculation can be evaluated; it does not establish that a global DIM classifier and a mode--constraint certificate bank scale linearly over every bus and interface. The proposed deployment contract therefore does \emph{not} construct a 2000-bus tangent-plane or residual model at every location. Offline fault and sensitivity screening identifies a predeclared set of critical interfaces: weak-grid VSC point-of-common-coupling neighborhoods, major transfer corridors, voltage pockets, and protection boundaries. The escalated branch evaluates only the interface templates activated by the shared low-cost screen, using local dynamic states plus a declared external-network equivalent.
+
+For each network size, the report must disclose the number of monitored interfaces, DIM classes, active constraint families, calibration cells, and maximum concurrently escalated templates. It must then report the nominal and escalated p99/max latency and coverage by interface. A large-system scalability claim is falsified if the critical-interface branch cannot meet its declared deadline, if a topology change activates an unmodeled interface without conservative escalation, or if coverage is reported only after dropping difficult interfaces. This makes the dimensionality reduction an auditable modeling assumption rather than an unreported source of speed.
+
+\subsection{Irreducible-Pessimism Audit}
+
+An extreme protective action is sometimes unavoidable, but it must not disappear into an aggregate false-safe statistic. Define an irreducible-pessimism (IP) event when every available mode score is low-confidence, $\max_m c_{\mathrm{mode},m}(x)<c_{\min}$, and the calibration context lies outside every declared support, $\phi(x)\notin\bigcup_g\Phi_g$. The policy must then take a predeclared all-system safe action $a_{\mathrm{IP}}$ (for example, emergency curtailment or a protective trip), rather than label the event as confidently safe. Its held-out incidence is
+\begin{equation}
+\rho_{\mathrm{IP}}=\frac{1}{N_{\mathrm{test}}}
+\sum_{i=1}^{N_{\mathrm{test}}}\mathbb{I}_{\mathrm{IP}}(x_i).
+\label{eq:irreduciblepessimism}
+\end{equation}
+The report must separately give IP count, $\rho_{\mathrm{IP}}$, unserved energy/curtailment, trips, and recovered physical margins; these events cannot be counted as ordinary successful abstentions. Before testing, set $\rho_{\mathrm{IP},\max}=5\%$ for the held-out suite. If $\rho_{\mathrm{IP}}>5\%$, the critical-interface screen is deemed to have omitted too much unknown behavior: its scope and OOD/escalation thresholds must be reopened before any deployability claim is made.
+
+\subsection{Explanation Contract}
+
+Trustworthiness requires an operator-facing reason for an action, but an explanation is not evidence that the certificate is true. For every P1 action, the controller must log the active-mode probability vector, active critical interface, physical residuals and uncertainty buffers, rejected constraints, hold-last state, and the reason for escalation or fallback. For the base predictor, report grouped conditional SHAP values over predeclared physical feature groups (PMU quality, grid strength, fault descriptors, GFL PLL/current state, GFM droop/virtual-inertia state, and protection state), not isolated SHAP values for strongly correlated raw channels. Explanation faithfulness is tested by group deletion/insertion and bootstrap stability: if the feature group stated as decisive does not materially change the score or selected action when perturbed within its admissible range, the explanation is rejected as a dashboard artifact. This makes interpretability an auditable complement to, not a replacement for, the physical certificate.
+
+\section{Existing Research Limitations at the Collection Level}
+
+The six SHs expose four collection-level limitations.
+\begin{enumerate}
+  \item \textbf{False-safe asymmetry is underrepresented.} Average accuracy, even with standard uncertainty intervals, does not reflect the much higher cost of incorrectly declaring a post-fault state safe.
+  \item \textbf{Epistemic and physical uncertainty are decoupled.} OOD or misclassification indicators identify when a predictor may be unreliable, but are not generally propagated into a physical safe set.
+  \item \textbf{Mechanism heterogeneity is flattened.} Converter synchronization, rotor-angle separation, ride-through trip, and limit-cycle boundaries are often evaluated with distinct tools but merged into one TSA output.
+  \item \textbf{Adaptation is not certificate-aware.} Data-efficient transfer selects informative data, but normally does not prioritize the trajectories that make the deployed controller or certificate least defensible.
+\end{enumerate}
+
+These are not criticisms of individual papers. They arise because the papers solve different necessary subproblems. The research opportunity lies in integrating them while preserving each method's evidentiary limits.
+
+\section{Combination Gap and Generated Hypotheses}
+
+\subsection{Combination Gap}
+
+No direct synthesis in the supplied corpus simultaneously links (i) per-event credibility and false-safe risk, (ii) a mode-dependent hybrid stability boundary, (iii) a certificate-filtered operational action, and (iv) label acquisition driven by future certificate risk. Pairwise combinations exist: uncertainty with preventive control \cite{su2024}, credibility with OOD assessment \cite{li2025}, and certificate-based control \cite{zhao2023}. The four-way linkage is the combination gap. It is scientifically useful because a downstream action can be safe only if the uncertainty, physical boundary, and deployment update refer to the same operating state and uncertainty assumptions.
+
+\subsection{Hypothesis H1: Credibility-Calibrated Hybrid Stability Certificate}
+
+\textbf{H1.} \emph{A cascaded TSA policy that maps credibility into mode-conditioned physical safety margins before certificate-filtered action will improve the empirical safety-disruption Pareto frontier over nominal certificates, pure TSA thresholds, and credibility-only abstention under topology, fault, IBR-control, and communication shifts.}
+
+The causal proposal is: PMU/trajectory features and operating context $\rightarrow$ calibrated physical residual bounds plus credibility decomposition $\rightarrow$ a one/two-mode active set and constraint-specific robust buffers $\rightarrow$ certificate-filtered control set $\safe_{\mathrm{rob}}$ $\rightarrow$ realized post-fault security. Under command loss, that control set must also satisfy the hold-last tolerance in \eqref{eq:holdlast}; under a mode transition, it must satisfy the joint-safe-set and reset/physical-guard-time conditions in \eqref{eq:hybridcertificate}; and a P1 correction may be issued only through the pre-verified action governor in \eqref{eq:handoff}. A certificate that assumes an undelivered command or a permanent first DIM label is not an H1 success. Cost comparison uses the frontier in \eqref{eq:pareto}, not one matched scalar cost: a method should not appear safer merely by curtailing all controllable resources or consuming unavailable reserve.
+
+H1 has clear counterevidence. It is rejected or narrowed if it fails the latency contract in \eqref{eq:latencycontract}, if calibrated residual coverage collapses under unseen mode/communication shifts, if the hold-last condition in \eqref{eq:holdlast} violates a physical limit, if $\rho_{\emptyset}>20\%$ or P1 falls back on more than 80\% of eligible events, if $\rho_{\mathrm{IP}}$ exceeds the preregistered 5\% limit in \eqref{eq:irreduciblepessimism}, if its Pareto front is dominated by a baseline, or if the mode selector causes more false-safe boundary errors than the nominal safe policy.
+
+\subsection{Hypothesis H2: Certificate-Violation-Risk-Driven Active Transfer}
+
+\textbf{H2.} \emph{Under operating drift, a safety-guarded online meta-learner that directs marginal EMT label investment to certificate-fragile states will reach a target false-safe rate with fewer post-deployment selected labels than fixed-weight random, entropy, margin, or OOD-only active transfer, without degrading a rolling safety hold-out set.}
+
+For candidate event $z$, the fast path uses the currently approved coefficient vector $\theta_t$ in the acquisition score
+\begin{equation}
+\begin{aligned}
+A_{\theta_t}(z)={}&\alpha_t d_{\mathrm{OOD}}(z)+\beta_t p_{\mathrm{err}}(z)\\
+&+\gamma_t\widetilde r_{\mathrm{proxy}}(z)+\eta_t q_{\mathrm{mode}}(z)\\
+&+\kappa_tL_{\mathrm{impact}}(z),
+\end{aligned}
+  \label{eq:acq}
+\end{equation}
+where $d_{\mathrm{OOD}}$ denotes distributional novelty, $p_{\mathrm{err}}$ predicted classification error, $\widetilde r_{\mathrm{proxy}}$ the RMS/reduced-order barrier or Lyapunov near-violation score, $q_{\mathrm{mode}}$ rewards underrepresented mechanism modes, and $L_{\mathrm{impact}}$ captures consequence. The authoritative $r_{\mathrm{EMT}}$ exists only after the selected trajectory has been replayed; it is used to correct the proxy map, not to rank the same candidate retrospectively. Coefficients are updated asynchronously only after EMT labels arrive, only after the update gate in \eqref{eq:updategate} opens, and only if the acceptance constraint in \eqref{eq:metasafety} passes; the online decision path never waits for meta-learning.
+
+Proxy use has an explicit degradation rule. On a frozen proxy-validation stream, require the lower 95\% confidence bound of the proxy-to-EMT rank correlation to exceed 0.30 and the proxy false-negative rate among EMT-near-violations to remain at most 5\%. If either test fails in a regime, set $\gamma_t=0$, raise the OOD weight by a preregistered $\Delta\alpha$, and select only from OOD/error/mode/impact signals until new EMT data re-establishes proxy health. The report must give the degraded-regime fraction and its label cost; H2 may claim a proxy-residual advantage only on the proxy-healthy portion, never by averaging an unreported degraded pool into its headline result.
+
+H2 is falsified if its lower $\Delta N_{\mathrm{acq}}$ is achieved only through more conservative operation, if its constrained update rejects most drifted regimes, if it forgets previously reliable regimes, if it requires materially larger $\Delta N_{\mathrm{cal}}$ or $\Delta N_{\mathrm{safety}}$ than a matched baseline, or if its safety rate is no better than simpler fixed-weight acquisition baselines at equivalent marginal selected-label budget.
+
+\section{Feasible Experimental Programme and Expected Results}
+
+\subsection{Testbed and Data Protocol}
+
+Use three escalating testbeds: IEEE 39-bus and IEEE 118-bus systems for comparability with current PTSA studies \cite{lu2025}; a renewable-rich switched-system case with LVRT/FRT trip logic \cite{mishra2019}; and a multi-VSC network with GFL PLL/current-transient, GFM droop/virtual-inertia, nonlinear-damping, and interaction effects \cite{chen2020,wang2024}. RMS simulation explores broad operating space and produces the low-cost proxy residual. EMT generates high-fidelity labels for proxy-to-EMT calibration, certificate falsification, and active-learning updates, especially near CCT, current-limit, voltage-recovery, PLL, and GFM droop boundaries. A frozen set of RT-LAB/HIL cases is reserved for sparse but independent falsification of timing, interfaces, model mismatch, and control implementation; it is not used as a bulk label generator.
+
+Partition data by \emph{scenario}, not random trajectory: hold out fault locations, clearing times, renewable penetration ranges, line outages, short-circuit ratio, GFL PLL parameters/current limits, GFM virtual inertia/droop limits, control modes, and topologies. This prevents the misleading result in which nearly identical trajectories appear in both training and testing. Record a mechanism label from simulation diagnostics: rotor separation, voltage violation, GFL PLL loss of synchronization, GFM frequency/voltage support failure, protection/trip cascade, or limit-cycle proximity. The hidden stress suite includes SCR$<1.5$ weak-grid cases, GFM$\leftrightarrow$GFL software-mode transitions, controller reset-map failures, and topology changes that activate a previously unmodeled critical interface, in addition to PMU jitter, correlated channel loss, burst packet drops, clock skew, stale topology information, and delayed or missing control commands. Command-loss tests explicitly cover one and two cycles at the operating frequency, namely 20/40 ms at 50 Hz and 16.7/33.3 ms at 60 Hz, and propagate the actual hold-last actuator trajectory through the physical constraints in \eqref{eq:holdlast}; they do not assume that a lost command was executed.
+
+\subsection{Models, Baselines, and Ablations}
+
+The full method is a shared-feature, early-exit cascade rather than a monolithic serial stack: a fixed-cost data-quality and base-risk branch serves all events; DIM/certificate/filter branches run only after escalation; and active-transfer/meta-learning operates asynchronously. In the Texas 2000-bus case, the escalated branch is restricted to predeclared critical-interface templates rather than a global certificate evaluation. Compare against: (B1) deterministic TSA threshold; (B2) uncertainty-aware TSA without physical-residual calibration; (B3) credibility abstention without a certificate; (B4) nominal neural Lyapunov/barrier control; (B5) fixed-weight active transfer using random, entropy, margin, and OOD-only acquisition; (B6) a monolithic all-modules serial pipeline, which tests whether apparent safety gains are achievable within the declared latency budget; and (B7) an unpartitioned global certificate/DIM implementation, which tests whether the critical-interface reduction is necessary for scale.
+
+Remove one component at a time: physical residual calibration, continuous microcell transport, credibility decomposition, grouped explanations, mode-specificity, GFM/GFL distinction, hard-limit/reset-map awareness, the top-two-mode robust projection, the P0-to-P1 action governor and transition tube, proxy-residual acquisition and its degradation rule, the $\Delta_{\min}$/$d_{\mathrm{DB}}$ update gate, capped safe linear-bandit updating, critical-interface reduction, reserve-shock constraint, and physics auxiliary loss. The decisive ablations are H1 without the calibrated residual-to-safe-set link, H1 without hold-last tolerance, H1 with a static single DIM rather than the top-two active set, H1 without the action governor, H2 with EMT residual leakage rather than proxy-to-EMT selection, H2 without proxy degradation, H2 with fixed rather than gated safe-bandit weights, and the cascade replaced by the serial stack in (B6). These show respectively whether credibility is cosmetic, whether actuation loss invalidates a nominal certificate, whether mode switching or P0/P1 handoff invalidates a static certificate, whether active learning is circular, whether proxy failure is handled honestly, whether online adaptation is safe under drift, and whether the method meets its claimed deadline without suppressing required physics checks.
+
+\begin{table}[t]
+\caption{Primary outcomes and success criteria}
+\label{tab:metrics}
+\centering
+\footnotesize
+\begin{tabular}{p{0.31\columnwidth} p{0.58\columnwidth}}
+\hline
+\textbf{Outcome} & \textbf{Interpretation}\\
+\hline
+False-safe rate & Fraction of declared-safe events that violate the authoritative EMT/HIL security criterion; primary safety outcome.\\
+Risk calibration & ECE, Brier score, and risk-coverage curves, reported overall and near the stability boundary.\\
+Certificate validity & Residual violation, reset/guard-time failure, top-two joint-safe-set infeasibility $\rho_{\emptyset}$, P1 execution rate, and proxy-to-EMT ranking.\\
+Pareto operational impact & False-safe upper bound, unserved energy, curtailment, recovery, trips, wear, and reserve-shock ratio $\Lambda_{\mathrm{reserve}}$; compare whole fronts.\\
+Latency and handoff & P0 p99/max within 20/16.7 ms; P1 p99/max within 80 ms with its 8/8/40/24-ms budget; report P0-to-P1 tube match, ramp-limit violation, and issued command.\\
+Communication resilience & Detection delay, false acceptance, fallback correctness, and physical excursions under jitter, correlated loss, stale data, and hold-last one/two-cycle command loss; verify \eqref{eq:holdlast}.\\
+Irreducible pessimism & Count/rate/cost of all-system safe actions when all modes are low-confidence and calibration is out-of-support; require $\rho_{\mathrm{IP}}\leq5\%$.\\
+Adaptation efficiency & Primary: false-safe curve against $\Delta N_{\mathrm{acq}}$ with common $N_{\mathrm{base}}^{0}$. Secondary: full ledger, proxy-health/degraded fraction, $B_{\max}=16$ update latency, coverage, retention, and rollback counts.\\
+Interpretability & Per-action mode/interface/residual/constraint log plus grouped conditional-SHAP faithfulness under deletion/insertion and bootstrap stability.\\
+Large-system scalability & Number of critical interfaces, DIM classes, calibration cells, concurrent escalations, and per-interface nominal/escalated p99/max latency and coverage.\\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Expected Outcomes and Interpretation}
+
+The expected outcome is not perfect prediction. A successful H1 system should issue a pre-verified P0 action inside one electrical cycle, then move ambiguous cases to a P1 certificate-filtered remedial action within 80 ms only when a pre-verified transition tube and a nonempty one/two-mode safe set exist; otherwise the retained P0 action is counted as an explicit fallback. It must satisfy hold-last tolerance in \eqref{eq:holdlast}, switching conditions in \eqref{eq:hybridcertificate}, the reserve constraint, the IP limit in \eqref{eq:irreduciblepessimism}, and the Pareto frontier in \eqref{eq:pareto}. A successful H2 system should use a cheap proxy to concentrate EMT labels near the intersection of novelty, proxy certificate fragility, and operational consequence; a deadband-gated safe linear bandit then maintains the rolling safety set and disables the proxy term in degraded regimes. Its primary efficiency curve uses $\Delta N_{\mathrm{acq}}$ against a common deployment baseline; its full lifecycle ledger remains visible through \eqref{eq:emtbudget}. If a method misses either P0/P1 budget, cannot rank EMT residuals from the proxy, loses physical-residual coverage under OOD, invokes all-system safing too often, fails GFM/GFL or hidden communication stress, exhausts reserve, or cannot scale the critical-interface branch, the central hypotheses are not supported. These negative results identify which bridge in \eqref{eq:logic} failed.
+
+\section{Readiness, Risk, and Reproducibility}
+
+Research readiness should not be confused with a claim that the hypotheses are true. We distinguish: (i) \emph{corpus readiness}, supplied by the 45-paper corpus and its coverage of all six SH functions; (ii) \emph{evidence readiness}, supplied by direct theoretical, simulation, EMT pseudo-label, and HIL-falsification tests; (iii) \emph{deployment readiness}, requiring separately met P0/P1 timing tiers, branchwise latency measurements, physical residual coverage, reset/guard-time and hold-last behavior, a proxy-to-EMT calibration report, an irreducible-pessimism audit, interpretability logs, reserve-shock feasibility, and a declared critical-interface scope; and (iv) \emph{scientific assessment}, which remains ``inconclusive'' until the planned comparisons are completed. Reproducibility requires versioned network and GFM/GFL controller models, fault/control/communication parameter grids, simulator versions, train/validation/test scenario splits, random seeds, calibration-neighborhood definitions and effective counts, common $N_{\mathrm{base}}^{0}$ and all incremental-label ledger entries, proxy and EMT residual definitions, reset maps, transition-tube/envelope tables, frozen HIL cases, linear-bandit regularization/exploration/batch settings, meta-update gate/acceptance/rollback logs, grouped-explanation code, Pareto-front generation code, critical-interface selection code, and all failed cases. Results should report both successful and failed certificate checks rather than silently excluding unstable, OOD, or delayed-data events.
+
+\section{Conclusion}
+
+The literature corpus supports a focused research programme beyond another high-accuracy TSA classifier. Its strongest unexploited opportunity is a deployable loop from calibrated physical residuals and credibility to a hybrid certificate, from that certificate to a tiered latency-bounded action, and from proxy failure risk back to high-value EMT labels. H1 maps credibility to physical margins and must improve a safety-disruption frontier without hiding behind excessive curtailment, an undelivered command, an unmodeled controller reset, an unsafe P0/P1 handoff, a missed P0/P1 deadline, frequent all-system safing, or depleted reserve. H2 directs marginal post-deployment EMT investment using a cheap proxy certificate residual, and must adapt through a capped safe linear bandit that disables an invalid proxy signal without weakening an independent safety hold-out or oscillating through noisy updates; its common calibration reserve remains visible as lifecycle cost rather than a selector penalty. Their value is conditional and falsifiable through physical coverage, proxy-to-EMT ranking, false-safe rate, tiered latency, switched-certificate validity, hold-last tolerance, irreducible-pessimism rate, interpretable action logs, Pareto comparison, calibration-label accounting, critical-interface scalability, and hidden communication-stress testing across genuinely unseen operating regimes.
+
+\balance
+\begin{thebibliography}{99}
+\bibitem{lu2025} G. Lu and S. Bu, ``Advanced probabilistic transient stability assessment for operational planning: A physics-informed graphical learning approach,'' \emph{IEEE Trans. Power Syst.}, vol. 40, no. 1, pp. 740--752, Jan. 2025.
+\bibitem{tan2023} B. Tan and J. Zhao, ``Debiased uncertainty quantification approach for probabilistic transient stability assessment,'' \emph{IEEE Trans. Power Syst.}, vol. 38, no. 5, pp. 4954--4957, Sep. 2023.
+\bibitem{su2024} T. Su, J. Zhao, and X. Chen, ``Deep sigma point processes-assisted chance-constrained power system transient stability preventive control,'' \emph{IEEE Trans. Power Syst.}, vol. 39, no. 1, pp. 1965--1977, Jan. 2024.
+\bibitem{li2025} Q. Li, Y. Xu, C. Ren, and R. Zhang, ``Enhancing trustworthiness of data-driven power system dynamic security assessment via hybrid credibility learning,'' \emph{IEEE Trans. Power Syst.}, vol. 40, no. 3, pp. 2791--2794, May 2025.
+\bibitem{bogodorova2024} T. Bogodorova, D. Osipov, and J. H. Chow, ``Misclassification prediction for transient stability assessment,'' \emph{IEEE Trans. Power Syst.}, vol. 39, no. 6, pp. 7429--7441, Nov. 2024.
+\bibitem{zhao2022} T. Zhao, J. Wang, X. Lu, and Y. Du, ``Neural Lyapunov control for power system transient stability: A deep learning-based approach,'' \emph{IEEE Trans. Power Syst.}, vol. 37, no. 2, pp. 955--965, Mar. 2022.
+\bibitem{zhao2023} T. Zhao, J. Wang, and M. Yue, ``A barrier-certificated reinforcement learning approach for enhancing power system transient stability,'' \emph{IEEE Trans. Power Syst.}, vol. 38, no. 6, pp. 5356--5368, Nov. 2023.
+\bibitem{mishra2019} C. Mishra, A. Pal, J. S. Thorp, and V. A. Centeno, ``Transient stability assessment of prone-to-trip renewable generation rich power systems using Lyapunov's direct method,'' \emph{IEEE Trans. Sustain. Energy}, vol. 10, no. 3, pp. 1523--1531, Jul. 2019.
+\bibitem{chen2020} J. Chen, M. Liu, T. O'Donnell, and F. Milano, ``Impact of current transients on the synchronization stability assessment of grid-feeding converters,'' \emph{IEEE Trans. Power Syst.}, vol. 35, no. 5, pp. 4131--4134, Sep. 2020.
+\bibitem{wang2024} Z. Wang, L. Guo, X. Li, \emph{et al.}, ``Transient synchronization stability of grid-tied multi-VSCs system considering nonlinear damping and transient interactions,'' \emph{IEEE Trans. Power Electron.}, vol. 39, no. 12, pp. 16775--16790, Dec. 2024.
+\bibitem{xu2025} D. Xu, M. Han, and M. Zhan, ``Unstable limit cycle and transient stability assessment of VSC grid-tied systems by center manifold,'' \emph{IEEE Trans. Power Del.}, vol. 40, no. 5, pp. 2894--2906, Oct. 2025.
+\bibitem{shi2023} Z. Shi, W. Yao, Y. Tang, X. Ai, J. Wen, and S. Cheng, ``Bidirectional active transfer learning for adaptive power system stability assessment and dominant instability mode identification,'' \emph{IEEE Trans. Power Syst.}, vol. 38, no. 6, pp. 5128--5141, Nov. 2023.
+\bibitem{liu2025} X. Liu, Y. Yang, Q. Zheng, H. Yu, Z. Yang, J. Yu, and T. Chen, ``Temporal transfer learning framework for power system transient stability assessment in Internet of Energy,'' \emph{IEEE Internet Things J.}, vol. 12, no. 14, pp. 26923--26937, Jul. 2025.
+\bibitem{shen2025} C. Shen, K. Zuo, and M. Sun, ``Physics-augmented auxiliary learning for power system transient stability assessment,'' \emph{IEEE Trans. Ind. Informat.}, vol. 21, no. 9, pp. 6811--6823, Sep. 2025.
+\bibitem{liu2024dll} J. Liu, J. Liu, R. Yan, and T. Ding, "Deep Lyapunov learning: Embedding the Lyapunov stability theory in interpretable neural networks for transient stability assessment," \emph{IEEE Trans. Power Syst.}, vol. 39, no. 6, pp. 7437--7440, Nov. 2024.
+\bibitem{ye2024ppgp} K. Ye, J. Zhao, H. Li, and M. Gu, "A high computationally efficient parallel partial Gaussian process for large-scale power system probabilistic transient stability assessment," \emph{IEEE Trans. Power Syst.}, vol. 39, no. 2, pp. 4650--4660, Mar. 2024.
+\bibitem{cheng2025} T. Cheng, R. Chen, N. Lin, T. Liang, and V. Dinavahi, "Machine-learning-reinforced massively parallel transient simulation for large-scale renewable-energy-integrated power systems," \emph{IEEE Trans. Power Syst.}, vol. 40, no. 1, pp. 983--994, Jan. 2025.
+\bibitem{su2024margin} H.-Y. Su and C.-C. Lai, "Online transient stability margin estimation using improved deep learning ensemble model," \emph{IEEE Trans. Power Syst.}, vol. 39, no. 6, pp. 7421--7424, Nov. 2024.
+\bibitem{buragohain2024} U. Buragohain, A. S. Mir, and N. Senroy, "Transient stability assessment of a DFIG-WTG system using trajectory sensitivity analysis," \emph{IEEE Trans. Power Syst.}, vol. 39, no. 4, pp. 5818--5831, Jul. 2024.
+\bibitem{zhu2020} L. Zhu, D. J. Hill, and C. Lu, "Hierarchical deep learning machine for power system online transient stability prediction," \emph{IEEE Trans. Power Syst.}, vol. 35, no. 3, pp. 2399--2411, May 2020.
+\bibitem{liu2026sce} J. Liu, J. Liu, T. Ding, C. Ren, and R. Yan, "A generic scene-dependent credibility evaluation framework for machine learning-based transient stability assessment of power systems," \emph{IEEE Trans. Power Syst.}, vol. 41, no. 1, pp. 773--776, Jan. 2026.
+\bibitem{zhu2022shapelet} L. Zhu and D. J. Hill, "Networked time series shapelet learning for power system transient stability assessment," \emph{IEEE Trans. Power Syst.}, vol. 37, no. 1, pp. 416--428, Jan. 2022.
+\bibitem{romay2021} O. Romay, R. Mart\'{\i}nez-Parrales, and C. R. Fuerte-Esquivel, "Transient stability assessment considering hard limits on dynamic states," \emph{IEEE Trans. Power Syst.}, vol. 36, no. 1, pp. 533--536, Jan. 2021.
+\bibitem{yao2025dim} W. Yao, R. Zhang, Y. Zhang, S. Wei, Y. Lan, Z. Shi, and J. Wen, "A hybrid deep learning framework with local-global feature extraction for intelligent power system stability assessment," \emph{IEEE Trans. Power Syst.}, vol. 40, no. 6, pp. 4718--4726, Nov. 2025.
+\bibitem{wang2025update} H. Wang, F. Gao, Q. Chen, S. Bu, and C. Lei, "Instability pattern-guided model updating method for data-driven transient stability assessment," \emph{IEEE Trans. Power Syst.}, vol. 40, no. 2, pp. 1214--1227, Mar. 2025.
+\bibitem{li2025samples} B. Li, P. Fan, Q. Chen, R. Li, and K. Lin, "High-quality sample generation for power system transient stability assessment based on data-driven methods," \emph{CSEE J. Power Energy Syst.}, vol. 11, no. 4, pp. 1681--1692, Jul. 2025.
+\bibitem{ren2024telm} C. Ren, T. Wang, Z. Y. Dong, and R. Zhang, "Transfer extreme learning machine for power system cross-fault and cross-scale stability assessment with limited guide instances," \emph{IEEE Trans. Power Syst.}, vol. 39, no. 3, pp. 5431--5434, May 2024.
+\bibitem{zhang2025tscopf} Y. Zhang, Y. Xu, Y. Mishra, and Z. Y. Dong, "A master-slave deep learning framework for real-time transient stability-constrained optimal power flow," \emph{IEEE Trans. Power Syst.}, vol. 40, no. 3, pp. 2674--2687, May 2025.
+\bibitem{zhu2024tsmae} L. Zhu, W. Wen, J. Li, and Y. Hu, "Integrated data-driven power system transient stability monitoring and enhancement," \emph{IEEE Trans. Power Syst.}, vol. 39, no. 1, pp. 1797--1809, Jan. 2024.
+\bibitem{chen2024vsg} L. Chen, J. Tang, X. Qiao, H. Chen, J. Zhu, Y. Jiang, Z. Zhao, R. Hu, and X. Deng, "Investigation on transient stability enhancement of multi-VSG system incorporating resistive SFCLs based on deep reinforcement learning," \emph{IEEE Trans. Ind. Appl.}, vol. 60, no. 1, pp. 1780--1793, Jan./Feb. 2024.
+\end{thebibliography}
+
+\end{document}

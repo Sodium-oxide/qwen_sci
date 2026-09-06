@@ -1,0 +1,63 @@
+{
+  "allow_shell_escape": false,
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/pdflatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "conference_101719.tex"
+      ],
+      "elapsed_ms": 265.074,
+      "return_code": 0,
+      "stage": "latex_initial",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/usr/bin/bibtex",
+        "conference_101719"
+      ],
+      "elapsed_ms": 28.109,
+      "return_code": 0,
+      "stage": "bibtex",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/usr/bin/pdflatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "conference_101719.tex"
+      ],
+      "elapsed_ms": 204.459,
+      "return_code": 0,
+      "stage": "latex_resolve_references_1",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/usr/bin/pdflatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "conference_101719.tex"
+      ],
+      "elapsed_ms": 186.864,
+      "return_code": 0,
+      "stage": "latex_resolve_references_2",
+      "timed_out": false
+    }
+  ],
+  "failure_stage": "",
+  "generated_at": "2026-09-06T08:10:01.538+00:00",
+  "main_tex": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/author/attempt-001/research_plan_20260906-164759-822895_project/conference_101719.tex",
+  "project_dir": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/author/attempt-001/research_plan_20260906-164759-822895_project",
+  "run_bibtex": true,
+  "schema_version": "research_plan_author_latex_compile_v1",
+  "staged_pdf": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/author/attempt-001/.research_plan_20260906-164759-822895.pdf.staging",
+  "success": true,
+  "timeout_seconds": 180
+}

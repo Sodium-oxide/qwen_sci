@@ -1,0 +1,84 @@
+{
+  "blueprint_identity": "37b2f0cb4369f0e595ddfc11411b2344fdbb1bafdd2d815d5861d18984a66b4a",
+  "candidates": [
+    {
+      "candidate_id": "PEC-Q1-ejecta_velocity-008",
+      "conditions": {},
+      "evidence_locator": {
+        "document_type": "journal_article",
+        "page": null,
+        "quoted_text": "At a phase of 1.5 days after the GW/GRB trigger, this implies an expansion velocity of the ejected material of ∼ 0.2c.",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "evidence_status": "EXTRACTED_FULLTEXT",
+      "mathir_symbol": "v_ejecta",
+      "normalized_unit": "m_s^-1",
+      "normalized_value": 59958491.6,
+      "parameter_id": "ejecta_velocity",
+      "raw_value": "~ 0.2c",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": [
+          "openalex"
+        ],
+        "document_id": "PFD-009",
+        "doi": "10.1038/nature24298",
+        "title": "Spectroscopic identification of r-process nucleosynthesis in a double neutron-star merger",
+        "year": 2017
+      },
+      "source_kind": "PRIMARY_MEASUREMENT",
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "value_form": "SCALAR"
+    }
+  ],
+  "extraction": {
+    "matched_parameter_ids": [
+      "ejecta_velocity"
+    ],
+    "mode": "TARGETED_SECTIONS",
+    "selected_pages": [
+      7,
+      8,
+      9,
+      18,
+      19,
+      20,
+      21,
+      22
+    ],
+    "skipped": false,
+    "status": "EXTRACTED_TARGETED_SECTIONS"
+  },
+  "lineage": {
+    "created_from_artifact": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "project_id": "sci_260905_008_survey_001",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "260905-008",
+    "selected_direction_id": "premise_inversion",
+    "survey_run_id": "260905-008-survey-001",
+    "version": 0
+  },
+  "schema_version": "quantitative_parameter_evidence_collection_v1",
+  "source_document": {
+    "cross_validated": false,
+    "discovery_sources": [
+      "openalex"
+    ],
+    "document_id": "PFD-009",
+    "doi": "10.1038/nature24298",
+    "evidence_status": "EXTRACTED_FULLTEXT",
+    "parameter_request_ids": [
+      "ejecta_velocity"
+    ],
+    "retrieval_source": "openalex.oa_location",
+    "title": "Spectroscopic identification of r-process nucleosynthesis in a double neutron-star merger",
+    "year": 2017
+  }
+}

@@ -1,0 +1,607 @@
+{
+  "idea_id": "survey-gap-combination-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+  "seed_id": "survey-gap-combination-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+  "route_id": "premise_inversion",
+  "route_signature": {
+    "mature_idea": {
+      "scientific_object": "['direct_observation', 'phenomenon']",
+      "mechanism_or_relation": "Joint mechanism linking the selected gap constraints.",
+      "mechanism": "Joint mechanism linking the selected gap constraints.",
+      "falsifier": "Evidence that the selected gaps require mutually incompatible mechanisms.",
+      "target_gap_ids": [
+        "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+        "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+      ]
+    },
+    "route_id": "premise_inversion",
+    "required_structural_change": "Invert or relax one defining premise"
+  },
+  "route_policy": {
+    "route_id": "premise_inversion",
+    "label": "Premise inversion",
+    "required_structural_change": "Invert or relax one defining premise",
+    "forbidden_reuse": "Do not merely restate the seed conclusion",
+    "allowed_object_transformations": "Keep the object unless inversion requires a boundary change",
+    "mechanism_constraints": "State the inverted premise and its causal consequence",
+    "retrieval_mode": "counterfactual_and_constraint",
+    "risk_budget": "high",
+    "falsifier_requirement": "Name a result that would falsify the inverted premise",
+    "minimum_divergence": "premise_or_assumption",
+    "legacy_mode": "moonshot_inventor"
+  },
+  "legacy_direction_mode": "moonshot_inventor",
+  "mature_idea": {
+    "idea_id": "survey-gap-combination-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+    "title": "Combined gap route: gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5 + gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+    "abstract": "Required slot 'direct_observation' remains uncovered in relevant evidence cluster 'Viewing-Angle Dependencies, Lanthanide Curtaining, and Three-Dimensional Geometry Effects'. | Required slot 'phenomenon' remains uncovered in relevant evidence cluster 'Relativistic Outflows, Central Engine Evolution, and Multi-Messenger Progenitor Decoupling'.",
+    "hypothesis": "The joint constraints represented by gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5, gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199 admit a shared mechanism.",
+    "central_hypothesis": "The joint constraints represented by gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5, gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199 admit a shared mechanism.",
+    "scientific_object": "['direct_observation', 'phenomenon']",
+    "mechanism": "Joint mechanism linking the selected gap constraints.",
+    "mechanism_or_relation": "Joint mechanism linking the selected gap constraints.",
+    "intervention_or_transformation": "",
+    "assumptions": [],
+    "evidence_basis": [
+      "[]",
+      "[]"
+    ],
+    "target_gap_ids": [
+      "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+      "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+    ],
+    "gap_alignment": [
+      {
+        "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+        "alignment": "combined_survey_gaps"
+      },
+      {
+        "gap_id": "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+        "alignment": "combined_survey_gaps"
+      }
+    ],
+    "refinement_scope": "",
+    "falsifier": "Evidence that the selected gaps require mutually incompatible mechanisms.",
+    "maturity_status": "provisional",
+    "maturity": {
+      "dimensions": {
+        "specificity": 1.0,
+        "mechanism_completeness": 0.5,
+        "evidence_support": 1.0,
+        "falsifiability": 1.0,
+        "scope_clarity": 0.0,
+        "executability": 1.0,
+        "independence": 1.0
+      },
+      "aggregate": 0.786,
+      "maturity_status": "provisional",
+      "maturity_is_not_rank": true
+    },
+    "maturity_is_not_rank": true,
+    "idea_source": "survey_gap",
+    "lineage": {
+      "source": "survey",
+      "gap_ids": [
+        "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+        "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+      ],
+      "combination": true
+    },
+    "source_lineage": [
+      {
+        "idea_source": "survey_gap",
+        "lineage": {
+          "source": "survey",
+          "gap_ids": [
+            "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+            "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+          ],
+          "combination": true
+        }
+      },
+      {
+        "idea_source": "survey_gap",
+        "idea_id": "survey-gap-combination-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199-2",
+        "lineage": {
+          "source": "survey",
+          "gap_ids": [
+            "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+            "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+          ],
+          "combination": true
+        }
+      },
+      {
+        "idea_source": "survey_gap",
+        "idea_id": "survey-gap-combination-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199-2",
+        "lineage": {
+          "source": "survey",
+          "gap_ids": [
+            "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+            "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+          ],
+          "combination": true
+        }
+      }
+    ],
+    "route_signature": {
+      "scientific_object": "['direct_observation', 'phenomenon']",
+      "mechanism_or_relation": "Joint mechanism linking the selected gap constraints.",
+      "mechanism": "Joint mechanism linking the selected gap constraints.",
+      "falsifier": "Evidence that the selected gaps require mutually incompatible mechanisms.",
+      "target_gap_ids": [
+        "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+        "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+      ]
+    },
+    "independence_rationale": "Retained as structurally distinct in: representation, mechanism, mechanism_or_relation, scientific_object, intervention_or_transformation",
+    "independence_status": "independent",
+    "counterexamples": [],
+    "negative_evidence": [],
+    "retrieval_queries": [],
+    "mechanism_chain": [],
+    "validation_targets": [],
+    "anchor_policy": "",
+    "anti_anchor": false,
+    "anti_anchor_reason": "",
+    "reframed_problem_id": "",
+    "rejected_gap_ids": []
+  },
+  "maturity": {
+    "dimensions": {
+      "specificity": 1.0,
+      "mechanism_completeness": 0.5,
+      "evidence_support": 1.0,
+      "falsifiability": 1.0,
+      "scope_clarity": 0.0,
+      "executability": 1.0,
+      "independence": 1.0
+    },
+    "aggregate": 0.786,
+    "maturity_status": "provisional",
+    "maturity_is_not_rank": true
+  },
+  "maturity_is_not_rank": true,
+  "maturity_status": "provisional",
+  "invariant_status": "valid",
+  "portfolio_score": {
+    "scientific_validity": 0.5,
+    "maturity": 0.72,
+    "route_uniqueness": 0.333333,
+    "validation_feasibility": 0.4,
+    "portfolio_value": 0.426333,
+    "risk": 0.3,
+    "composite": 2.379667
+  },
+  "lineage": {
+    "source": "survey",
+    "gap_ids": [
+      "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+      "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+    ],
+    "combination": true
+  },
+  "source_lineage": [
+    {
+      "idea_source": "survey_gap",
+      "lineage": {
+        "source": "survey",
+        "gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+          "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+        ],
+        "combination": true
+      }
+    },
+    {
+      "idea_source": "survey_gap",
+      "idea_id": "survey-gap-combination-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199-2",
+      "lineage": {
+        "source": "survey",
+        "gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+          "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+        ],
+        "combination": true
+      }
+    },
+    {
+      "idea_source": "survey_gap",
+      "idea_id": "survey-gap-combination-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199-2",
+      "lineage": {
+        "source": "survey",
+        "gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+          "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+        ],
+        "combination": true
+      }
+    }
+  ],
+  "anti_anchor": false,
+  "title": "Kinematic Decoupling of Fission Recycling in Kilonovae: A Delayed Neutron Release Mechanism for Third r-Process Peak Shifts and Anisotropic Curtaining",
+  "abstract": "We propose that the rapid neutron-capture process (r-process) in neutron star mergers is fundamentally limited not by thermodynamics, but by the kinematic timescale of beta-delayed and isomer-delayed fission neutron release. By inverting the standard assumption of instantaneous fission equilibrium, we derive a formal relation where the delayed fission timescale competes with relativistic ejecta expansion. This mechanism modifies the freeze-out abundance distribution of the third r-process peak and actinides, and induces viewing-angle-dependent lanthanide curtaining. Crucially, we construct the specific temporal evolution of actinide spectral absorption signatures that discriminate this fission-driven decoupling from alternative geometric or magnetic asymmetry confounders, providing a unified framework for multi-messenger progenitor decoupling.",
+  "core_contribution": "The formal unification of the beta-delayed and isomer-delayed fission neutron release timescale with the freeze-out abundance distribution of the third r-process peak, demonstrating that delayed fission recycling kinematically decouples heavy-element nucleosynthesis from prompt relativistic outflows and produces a distinct actinide spectral signature unreplicable by pure geometric asymmetries.",
+  "method": "We realize the conceptual move of premise inversion by relaxing the instantaneous_fission_equilibrium_assumption and replacing it with the delayed_fission_neutron_release_axiom. First, we assume the fission neutron release timescale as a formal variable competing with the ejecta expansion timescale. Second, we derive the unified_fission_recycling_relation linking the fission timescale to the third r-process peak shift and the spatial segregation of actinides. Third, within the kilonova ejecta validity domain, we construct the observable spectral absorption features as a function of viewing angle to address the direct observation deficit. Finally, we verify the mechanism by applying the fission_timescale_ablation_protocol to isolate the delayed fission contribution and identify the discriminating spectral signatures that falsify alternative, instantaneous nucleosynthesis scenarios.",
+  "risks": "The primary risk is that standard beta-delayed fission timescales are strictly shorter than the expansion timescale, or that complex 3D geometric effects (e.g., clumping, extreme magnetic fields) can mimic the actinide line evolution. Mitigation involves bounding the validity domain to high-entropy trajectories with specific nuclear isomers and rigorously verifying the geometric counterexample boundary.",
+  "tags": [
+    "seed",
+    "mature_idea",
+    "contract_root",
+    "survey-gap-combination-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+    "mechanism-commit-innovation",
+    "evidence_role_deficit",
+    "unmapped_gap:phenomenon",
+    "stagnant_novelty",
+    "unclear_mechanism",
+    "proof_gap",
+    "missing_assumption",
+    "nonidentifiable_mechanism",
+    "missing_boundary_condition",
+    "unsupported_causal_link"
+  ],
+  "operator": "mechanism-commit-innovation",
+  "target_defects": [
+    "evidence_role_deficit",
+    "unmapped_gap:phenomenon",
+    "stagnant_novelty",
+    "unclear_mechanism",
+    "proof_gap",
+    "missing_assumption",
+    "nonidentifiable_mechanism",
+    "missing_boundary_condition",
+    "unsupported_causal_link"
+  ],
+  "rationale": "This premise inversion resolves the evidence role deficit by providing a mechanistic origin for viewing-angle-dependent lanthanide curtaining, and fills the unmapped phenomenon gap by formally linking relativistic outflow dynamics to multi-messenger decoupling via delayed fission recycling. It shifts the core novelty to the task-solving path of nucleosynthesis kinematics rather than observational scaffolding.",
+  "components": [
+    "shared_r_process_mechanism",
+    "direct_observation_deficit",
+    "unmapped_gap_phenomenon",
+    "spectral_absorption_derivation",
+    "neutron_star_merger_domain",
+    "delayed_fission_neutron_release_axiom"
+  ],
+  "component_explanations": {
+    "shared_r_process_mechanism": "Target relation unifying the joint constraints under the rapid neutron-capture process (r-process) in astrophysics.",
+    "direct_observation_deficit": "Formal constraint representing the lack of direct observational evidence for the origins of heavy elements.",
+    "unmapped_gap_phenomenon": "Formal constraint representing the unmapped astrophysical phenomena contributing to the heavy element nucleosynthesis gap.",
+    "spectral_absorption_derivation": "Derivation constructing the observable spectral absorption features, such as strontium, from the shared mechanism.",
+    "neutron_star_merger_domain": "Validity domain specifying the kilonova and neutron star merger conditions where the unified mechanism holds.",
+    "delayed_fission_neutron_release_axiom": "Introduces the formal premise that fission neutron release is kinetically delayed relative to ejecta expansion, enabling spatial segregation of heavy elements and resolving the viewing-angle curtaining deficit."
+  },
+  "root_domains": [
+    "physics_astronomy"
+  ],
+  "discipline_resolution": {
+    "schema_version": "discipline_taxonomy_v1",
+    "scope": "natural_science_engineering_only",
+    "status": "resolved",
+    "primary_discipline": "physics_astronomy",
+    "discipline_ids": [
+      "physics_astronomy"
+    ],
+    "adjacent_disciplines": [
+      "mathematics",
+      "earth_planetary_science"
+    ],
+    "coverage": "exact",
+    "matched_terms": [
+      "physics_astronomy",
+      "physics",
+      "astronomy"
+    ],
+    "out_of_scope_terms": [],
+    "mixed": false,
+    "primary": {
+      "key": "physics_astronomy",
+      "label": "Physics and Astronomy",
+      "family": "physical_sciences",
+      "aliases": [
+        "physics",
+        "astronomy",
+        "astrophysics",
+        "quantum physics",
+        "quantum mechanics",
+        "particle physics",
+        "condensed matter",
+        "plasma physics",
+        "optics"
+      ],
+      "internal_domains": [
+        "physics",
+        "astrobiology"
+      ],
+      "openalex_field_ids": [
+        "31"
+      ],
+      "arxiv_categories": [
+        "physics.gen-ph",
+        "astro-ph.GA",
+        "cond-mat.mtrl-sci"
+      ],
+      "semantic_scholar_fields": [
+        "Physics"
+      ],
+      "provider_applicability": [
+        "openalex",
+        "semantic_scholar",
+        "arxiv"
+      ],
+      "coverage": "exact",
+      "adjacent": [
+        "mathematics",
+        "earth_planetary_science",
+        "materials_science"
+      ],
+      "wos_categories": []
+    },
+    "provider_filters": {
+      "arxiv": {
+        "provider": "arxiv",
+        "primary_discipline": "physics_astronomy",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "mathematics",
+          "earth_planetary_science"
+        ],
+        "mode": "native_filter",
+        "policy": "hard_filter",
+        "applied": true,
+        "categories": [
+          "physics.gen-ph",
+          "astro-ph.GA",
+          "cond-mat.mtrl-sci"
+        ],
+        "category_expression": "(cat:physics.gen-ph OR cat:astro-ph.GA OR cat:cond-mat.mtrl-sci)",
+        "reason": "An exact bounded arXiv category expression is available for candidate-discovery metadata."
+      },
+      "openalex": {
+        "provider": "openalex",
+        "primary_discipline": "physics_astronomy",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "mathematics",
+          "earth_planetary_science"
+        ],
+        "mode": "native_filter",
+        "policy": "hard_filter",
+        "applied": true,
+        "resolved_field_ids": [
+          "31"
+        ],
+        "filter": "primary_topic.field.id:31",
+        "reason": "An exact OpenAlex field mapping is available for candidate-discovery metadata."
+      },
+      "semantic_scholar": {
+        "provider": "semantic_scholar",
+        "primary_discipline": "physics_astronomy",
+        "coverage": "exact",
+        "soft_expansion_disciplines": [
+          "mathematics",
+          "earth_planetary_science"
+        ],
+        "mode": "field_hint",
+        "policy": "soft_boost",
+        "applied": false,
+        "field_hints": [
+          "Physics"
+        ],
+        "reason": "Semantic Scholar field values are recorded as soft hints; no hard field filter is claimed."
+      }
+    },
+    "reason": "Resolved conservatively from allowlisted aliases; provider-native filters remain metadata until a provider route consumes them.",
+    "source": "survey_project_context_domain",
+    "source_domain_value": "physics_astronomy"
+  },
+  "scientific_intervention": {
+    "schema_version": "scientific_intervention_v1",
+    "profile_id": "formal_theoretical",
+    "contribution_mode": "theorem_or_condition_relaxation",
+    "seed_id": "survey-gap-combination-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+    "route_id": "premise_inversion",
+    "route_policy": {
+      "route_id": "premise_inversion",
+      "label": "Premise inversion",
+      "required_structural_change": "Invert or relax one defining premise",
+      "forbidden_reuse": "Do not merely restate the seed conclusion",
+      "allowed_object_transformations": "Keep the object unless inversion requires a boundary change",
+      "mechanism_constraints": "State the inverted premise and its causal consequence",
+      "retrieval_mode": "counterfactual_and_constraint",
+      "risk_budget": "high",
+      "falsifier_requirement": "Name a result that would falsify the inverted premise",
+      "minimum_divergence": "premise_or_assumption",
+      "legacy_mode": "moonshot_inventor"
+    },
+    "direction_mode": "moonshot_inventor",
+    "direction_summary": "Prioritize 0-to-1 mechanisms and outsized upside, while tolerating higher implementation risk and structural complexity.",
+    "scientific_object_schema": {
+      "schema_version": "scientific_object_schema_v1",
+      "profile_id": "formal_theoretical",
+      "object_types": [
+        "formal_object",
+        "assumptions_or_axioms",
+        "target_relation",
+        "derivation_or_construction",
+        "validity_domain",
+        "counterexample_boundary",
+        "proof_or_verification"
+      ],
+      "allowed_operations": [
+        "assume",
+        "relax",
+        "derive",
+        "construct",
+        "unify",
+        "falsify",
+        "bound",
+        "verify"
+      ],
+      "target_object_roles": [
+        "formal_object",
+        "target_relation"
+      ],
+      "claim_delta_roles": [
+        "target_relation",
+        "validity_domain"
+      ],
+      "mechanism_delta_roles": [
+        "assumptions_or_axioms",
+        "derivation_or_construction"
+      ],
+      "evidence_obligation_roles": [
+        "proof_or_verification"
+      ],
+      "boundary_condition_roles": [
+        "validity_domain",
+        "counterexample_boundary"
+      ],
+      "measurement_or_observation_roles": [
+        "proof_or_verification"
+      ]
+    },
+    "hypothesis_contract": {
+      "target_gap_ids": [
+        "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+        "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+      ],
+      "central_hypothesis": "The kinematic delay in fission neutron release relative to ejecta expansion formally unifies the third r-process peak shift with viewing-angle-dependent lanthanide curtaining in kilonovae.",
+      "scientific_object": {
+        "object_type": "assumptions_or_axioms",
+        "target_object": "delayed_fission_neutron_release_axiom"
+      },
+      "mechanism_or_relation": "unified_fission_recycling_relation",
+      "evidence_basis": "Spectroscopic identification of viewing-angle-dependent lanthanide curtaining and third r-process peak shifts in multi-messenger kilonova observations.",
+      "intervention_or_transformation": "Relax the instantaneous_fission_equilibrium_assumption and substitute it with the delayed_fission_neutron_release_axiom, treating the fission timescale as a dynamic variable competing with relativistic expansion.",
+      "expected_mechanism": "Delayed neutron release from fissioning superheavy nuclei decouples the late-stage r-process from the prompt relativistic outflow, spatially segregating actinides and altering the opacity evolution to produce anisotropic spectral absorption features.",
+      "discriminating_observation": "Viewing-angle-dependent spectral absorption signatures, specifically the temporal evolution and anisotropy of lanthanide and strontium lines, which diverge from predictions of instantaneous recycling models.",
+      "boundary_or_failure_condition": "The mechanism fails if the fission timescale for superheavy nuclei in high-entropy ejecta is strictly shorter than the expansion timescale, or if alternative geometric or magnetic asymmetries perfectly mimic the predicted spectral shifts.",
+      "evidence_requirement": "Spectroscopic identification of viewing-angle-dependent lanthanide curtaining and third r-process peak shifts in multi-messenger kilonova observations that are strictly inconsistent with instantaneous fission equilibrium models.",
+      "direction_mode": "moonshot_inventor",
+      "direction_summary": "Prioritize 0-to-1 mechanisms and outsized upside, while tolerating higher implementation risk and structural complexity.",
+      "claim_scope": "Astrophysical Nucleosynthesis in Neutron Star Mergers",
+      "assumptions": "Fission timescale of superheavy nuclei is comparable to ejecta expansion timescale in high-entropy trajectories.",
+      "gap_alignment": "The delayed fission mechanism provides the missing direct observational link for viewing-angle dependencies and maps the unmapped relativistic outflow phenomenon to multi-messenger decoupling."
+    },
+    "hypothesis_seed_refs": [
+      {
+        "seed_id": "gap_seed:gap_sh1_evidence_role_deficit_direct_observation_direct_observation_unknown_76530c3295a5:core_hypothesis:formal_theoretical:a8bf530cb0ce",
+        "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+        "gap_route": "core_hypothesis",
+        "seed_status": "verified",
+        "target_slot": "direct_observation"
+      },
+      {
+        "seed_id": "gap_seed:gap_sh1_unmapped_gap_phenomenon_phenomenon_phenomenon_unknown_7d9f592b9199:provisional_hypothesis:formal_theoretical:e31bed6b5528",
+        "gap_id": "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+        "gap_route": "provisional_hypothesis",
+        "seed_status": "provisional",
+        "target_slot": "phenomenon"
+      }
+    ],
+    "gap_seed_status": {
+      "schema_version": "gap_hypothesis_bridge_v1",
+      "seed_count": 2,
+      "seed_ids": [
+        "gap_seed:gap_sh1_evidence_role_deficit_direct_observation_direct_observation_unknown_76530c3295a5:core_hypothesis:formal_theoretical:a8bf530cb0ce",
+        "gap_seed:gap_sh1_unmapped_gap_phenomenon_phenomenon_phenomenon_unknown_7d9f592b9199:provisional_hypothesis:formal_theoretical:e31bed6b5528"
+      ],
+      "gap_ids": [
+        "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+        "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+      ],
+      "route_counts": {
+        "core_hypothesis": 1,
+        "provisional_hypothesis": 1
+      },
+      "status_counts": {
+        "verified": 1,
+        "provisional": 1
+      },
+      "fallback_used": false,
+      "admission_mode": "fail_open_except_explicit_exclusion"
+    },
+    "gap_routing": {
+      "active_gaps": [
+        {
+          "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5"
+        },
+        {
+          "gap_id": "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+        }
+      ],
+      "provisional_gaps": [
+        {
+          "gap_id": "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+        }
+      ]
+    }
+  },
+  "direction_mode": "premise_inversion",
+  "direction_summary": "Prioritize 0-to-1 mechanisms and outsized upside, while tolerating higher implementation risk and structural complexity.",
+  "central_hypothesis": "The kinematic delay in beta-delayed and isomer-delayed fission neutron release relative to ejecta expansion formally unifies the modification of the third r-process peak freeze-out abundance with viewing-angle-dependent lanthanide curtaining, producing a distinct temporal evolution of actinide spectral lines that cannot be replicated by purely geometric or magnetic ejecta asymmetries.",
+  "scientific_object": {
+    "description": "delayed_beta_and_isomer_fission_release_axiom"
+  },
+  "mechanism_or_relation": "unified_fission_recycling_relation",
+  "intervention_or_transformation": "Relax the instantaneous_fission_equilibrium_assumption and substitute it with the delayed_beta_and_isomer_fission_release_axiom, treating the fission timescale as a dynamic variable competing with relativistic expansion, while bounding the validity domain against geometric confounders.",
+  "expected_mechanism": "Delayed neutron release from beta-decaying and isomer-trapped superheavy nuclei decouples the late-stage r-process from the prompt relativistic outflow, spatially segregating actinides and altering the opacity evolution to produce anisotropic spectral absorption features, specifically in actinide lines, which are insensitive to pure geometric ejecta asymmetries.",
+  "discriminating_observation": "Viewing-angle-dependent temporal evolution of specific actinide spectral absorption features, which diverge from both instantaneous recycling models and purely geometric/magnetic asymmetry confounders.",
+  "boundary_or_failure_condition": "The mechanism fails if the effective fission timescale for superheavy nuclei is strictly shorter than the expansion timescale, or if geometric/magnetic asymmetries alone can perfectly replicate the predicted actinide spectral shifts without invoking delayed fission timescales.",
+  "claim_scope": "Astrophysical Nucleosynthesis in Neutron Star Mergers: Kinematic Decoupling of Fission Recycling and Actinide Spectral Evolution",
+  "falsifier": "Evidence that the temporal evolution of actinide lines is fully consistent with instantaneous fission equilibrium, or that geometric/magnetic asymmetries alone can perfectly replicate the predicted actinide spectral shifts without invoking delayed fission timescales.",
+  "assumptions": [
+    "The effective fission timescale, governed by beta-decay half-lives and nuclear isomeric states, is comparable to or longer than the ejecta expansion timescale in high-entropy, low-density trajectories.",
+    "Actinide spectral line evolution is uniquely sensitive to the fission timescale and cannot be mimicked by variations in ejecta geometry or magnetic field topology alone."
+  ],
+  "target_gap_ids": [
+    "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+    "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+  ],
+  "gap_alignment": "The delayed fission mechanism provides the missing direct observational link for viewing-angle dependencies by isolating the actinide signature, mapping the unmapped relativistic outflow phenomenon to multi-messenger decoupling while controlling for geometric confounders.",
+  "evidence_requirement": "Spectroscopic identification of the temporal evolution of viewing-angle-dependent actinide lines in multi-messenger kilonova observations, strictly inconsistent with both instantaneous fission equilibrium and pure geometric asymmetry models.",
+  "evidence_basis": "Spectroscopic identification of viewing-angle-dependent lanthanide and actinide curtaining in multi-messenger kilonova observations, requiring isolation of the actinide temporal signature to rule out geometric confounders.",
+  "evaluation": {
+    "novelty": 4,
+    "surprise": 4,
+    "feasibility": 4,
+    "clarity": 5,
+    "impact": 5,
+    "risk": 3,
+    "conciseness": 5,
+    "alignment_score": 5,
+    "complexity_penalty": 1,
+    "protocol_score": 4,
+    "explanatory_power": 5,
+    "identifiability": 4,
+    "boundary_calibration": 4,
+    "claim_overreach_penalty": 1,
+    "novelty_axes": {
+      "proposition_or_assumption": 5.0,
+      "proof_or_construction": 4.0,
+      "counterexample_or_validity_domain": 4.0,
+      "formal_evidence_obligation": 4.0,
+      "scientific_novelty": 4.0
+    },
+    "profile_id": "formal_theoretical",
+    "confidence": 0.85,
+    "failure_modes": [
+      "The fission timescale for superheavy nuclei in the relevant thermodynamic trajectories may be strictly shorter than the expansion timescale, rendering the delayed mechanism physically negligible and the derived spectral signatures unobservable.",
+      "Intrinsic hydrodynamic asymmetries in the kilonova ejecta (e.g., dynamical vs. wind ejecta components) may dominate the viewing-angle-dependent lanthanide curtaining, making the delayed fission signal degenerate with or subdominant to geometric effects."
+    ],
+    "fairness_protocol": "The proposal defines a fair comparator by contrasting the delayed fission mechanism against alternative instantaneous nucleosynthesis scenarios via the fission_timescale_ablation_protocol. However, it lacks a formal comparator against alternative geometric or hydrodynamic explanations for anisotropic curtaining, such as intrinsic ejecta asymmetry.",
+    "feedback": "The proposal introduces a compelling mechanism-level edit by relaxing the instantaneous fission equilibrium assumption. To strengthen the formal theoretical contribution, explicitly construct a counterexample or limiting case (e.g., the regime where fission and expansion timescales are perfectly matched) to rigorously bound the validity domain. Additionally, address the unresolved alternative explanation that initial ejecta asymmetries (e.g., polar vs. equatorial mass ejection) could independently produce the observed viewing-angle-dependent lanthanide curtaining, ensuring the delayed fission mechanism is shown to be distinguishable from or complementary to these geometric effects.",
+    "detected_defects": [
+      "unresolved_alternative_explanation",
+      "missing_counterexample"
+    ],
+    "defect_fix_summary": "The mechanism-commit-innovation skill successfully addressed the evidence_role_deficit and unmapped_gap:phenomenon by replacing the instantaneous_fission_equilibrium_assumption with the delayed_fission_neutron_release_axiom. This provides a formal mechanism for viewing-angle-dependent lanthanide curtaining and links delayed fission to multi-messenger progenitor decoupling, directly targeting the core gaps."
+  },
+  "search_score": 4.353654544574113,
+  "search_path": "Combined gap route: gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5 + gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199 [seed] -> defects ['evidence_role_deficit', 'unmapped_gap:phenomenon', 'stagnant_novelty', 'unclear_mechanism', 'proof_gap', 'missing_assumption', 'nonidentifiable_mechanism', 'missing_boundary_condition', 'unsupported_causal_link'] | Kinematic Decoupling of Fission Recycling in Kilonovae: A Delayed Neutron Release Mechanism for Third r-Process Peak Shifts and Anisotropic Curtaining [mechanism-commit-innovation] -> defects ['evidence_role_deficit', 'unmapped_gap:phenomenon', 'stagnant_novelty', 'unclear_mechanism', 'proof_gap', 'missing_assumption', 'nonidentifiable_mechanism', 'missing_boundary_condition', 'unsupported_causal_link'] | Kinematic Decoupling of Fission Recycling in Kilonovae: A Delayed Neutron Release Mechanism for Third r-Process Peak Shifts and Anisotropic Curtaining [mechanism-commit-innovation] -> defects ['evidence_role_deficit', 'unmapped_gap:phenomenon', 'stagnant_novelty', 'unclear_mechanism', 'proof_gap', 'missing_assumption', 'nonidentifiable_mechanism', 'missing_boundary_condition', 'unsupported_causal_link']",
+  "idea_taste_mode": "moonshot_inventor",
+  "idea_source": "survey_gap",
+  "source_modes": [
+    "premise_inversion"
+  ],
+  "scientificity_status": "SCIENTIFICALLY_QUALIFIED",
+  "debate_status": "SCIENTIFICALLY_QUALIFIED"
+}

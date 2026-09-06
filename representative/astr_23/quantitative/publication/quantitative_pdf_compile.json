@@ -1,0 +1,53 @@
+{
+  "allow_shell_escape": false,
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/pdflatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "quantitative_models.tex"
+      ],
+      "elapsed_ms": 200.449,
+      "return_code": 0,
+      "stage": "latex_initial",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/usr/bin/pdflatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "quantitative_models.tex"
+      ],
+      "elapsed_ms": 153.848,
+      "return_code": 0,
+      "stage": "latex_resolve_references_1",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/usr/bin/pdflatex",
+        "-interaction=nonstopmode",
+        "-halt-on-error",
+        "-no-shell-escape",
+        "quantitative_models.tex"
+      ],
+      "elapsed_ms": 157.287,
+      "return_code": 0,
+      "stage": "latex_resolve_references_2",
+      "timed_out": false
+    }
+  ],
+  "failure_stage": "",
+  "generated_at": "2026-09-06T07:38:23.468+00:00",
+  "main_tex": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/publication/quantitative_models_project/quantitative_models.tex",
+  "project_dir": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/publication/quantitative_models_project",
+  "run_bibtex": false,
+  "schema_version": "research_plan_author_latex_compile_v1",
+  "staged_pdf": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/publication/.quantitative_mathematical_models.pdf.staging",
+  "success": true,
+  "timeout_seconds": 180
+}

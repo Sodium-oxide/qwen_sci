@@ -1,0 +1,267 @@
+{
+  "query": "beta delayed fission neutron release timescale 2.3 seconds r-process",
+  "cross_validated": [
+    {
+      "title": "Time-dependent Monte Carlo in fissile systems with beta-delayed neutron precursors",
+      "authors": [
+        "J. Romero-Barrientos"
+      ],
+      "year": 2021,
+      "citations": 3,
+      "doi": "10.48550/arxiv.2101.09338",
+      "abstract": "In the field of nuclear reactor physics, transient phenomena are usually studied using deterministic or hybrids methods. These methods require many approximations, such as: geometry, time and energy discretizations, material homogenization and assumption of diffusion conditions, among others. In this context, Monte Carlo simulations are specially adequate to study these problems. Challenges presented when using Monte Carlo simulations in space-time kinetics in fissile systems are the different time-scales involved in prompt and delayed neutron emission, which implies that results obtained have a large variance associated if an analog Monte Carlo simulation is utilized. Furthermore, in both deterministic and Monte Carlo simulations delayed neutron precursors are grouped in a $6$- or $8$- group structure, but nowadays there is not a solid reason to keep this aggregation. In this work, and for the first time, individual precursor data is implemented in a Monte Carlo simulation, explicitly including the time dependence related to the $β$-delayed neutron emission. This was accomplished by modifying the open source Monte Carlo code OpenMC. In the modified code -- Time Dependent OpenMC or OpenMC(TD) -- time dependency related to delayed neutron emission originated from $β$-decay was addressed. Continuous energy neutron cross-sections data used comes from JEFF-$3$.$1$.$1$ library. Individual precursor data was taken from JEFF-$3$.$1$.$1$ (cumulative yields) and ENDF-B/VIII.$0$ (delayed neutron emission probabilities and delayed neutron energy spectra). OpenMC(TD) was tested in: i) a monoenergetic system; ii) an energy dependent unmoderated system where the precursors were taken individually or in a group structure; and finally iii) a light-water moderated energy dependent system, using $6$-groups, $50$ and $40$ individual precursors.",
+      "sources": [
+        "openalex",
+        "anysearch"
+      ],
+      "cross_validated": true,
+      "venue": "arXiv (Cornell University)",
+      "volume": null,
+      "issue": null,
+      "pages": null,
+      "url": "http://arxiv.org/abs/2101.09338"
+    },
+    {
+      "title": "Time-dependent Monte Carlo in fissile systems with beta-delayed neutron\\n precursors",
+      "authors": [
+        "J. Romero-Barrientos"
+      ],
+      "year": 2021,
+      "citations": 3,
+      "doi": "10.48550/arxiv.2101.09338",
+      "abstract": "In the field of nuclear reactor physics, transient phenomena are usually\\nstudied using deterministic or hybrids methods. These methods require many\\napproximations, such as: geometry, time and energy discretizations, material\\nhomogenization and assumption of diffusion conditions, among others. In this\\ncontext, Monte Carlo simulations are specially adequate to study these\\nproblems. Challenges presented when using Monte Carlo simulations in space-time\\nkinetics in fissile systems are the different time-scales involved in prompt\\nand delayed neutron emission, which implies that results obtained have a large\\nvariance associated if an analog Monte Carlo simulation is utilized.\\nFurthermore, in both deterministic and Monte Carlo simulations delayed neutron\\nprecursors are grouped in a $6$- or $8$- group structure, but nowadays there is\\nnot a solid reason to keep this aggregation. In this work, and for the first\\ntime, individual precursor data is implemented in a Monte Carlo simulation,\\nexplicitly including the time dependence related to the $\\\\beta$-delayed neutron\\nemission. This was accomplished by modifying the open source Monte Carlo code\\nOpenMC. In the modified code -- Time Dependent OpenMC or OpenMC(TD) -- time\\ndependency related to delayed neutron emission originated from $\\\\beta$-decay\\nwas addressed. Continuous energy neutron cross-sections data used comes from\\nJEFF-$3$.$1$.$1$ library. Individual precursor data was taken from\\nJEFF-$3$.$1$.$1$ (cumulative yields) and ENDF-B/VIII.$0$ (delayed neutron\\nemission probabilities and delayed neutron energy spectra). OpenMC(TD) was\\ntested in: i) a monoenergetic system; ii) an energy dependent unmoderated\\nsystem where the precursors were taken individually or in a group structure;\\nand finally iii) a light-water moderated energy dependent system, using\\n$6$-groups, $50$ and $40$ individual precursors.\\n",
+      "sources": [
+        "openalex",
+        "anysearch"
+      ],
+      "cross_validated": true,
+      "venue": "arXiv (Cornell University)",
+      "volume": null,
+      "issue": null,
+      "pages": null,
+      "url": "http://arxiv.org/abs/2101.09338"
+    },
+    {
+      "title": "Fission fragment mass and energy distributions for neutron induced fission of 235U, 238U AND 239Pu measured with the NIFFTE time projection chamber",
+      "authors": [
+        "J. Latta"
+      ],
+      "year": 2020,
+      "citations": 2,
+      "doi": null,
+      "abstract": "Nuclear fission is a process vital to energy and defense applications. These applications rely heavily on predictive models which are informed by nuclear data. In order to improve the capabilities of fission models, new fission data is required with priorities including total kinetic energy (TKE) measurements and fission product yields (FPY). The Neutron Induced Fission Fragment Tracking Experiment (NIFFTE) collaboration developed a fission time projection chamber (fissionTPC) to measure fission cross section data with unprecedented precision. In this work the NIFFTE setup was used to determine fission fragment energies from neutron induced fission of 235U, 238U and 239Pu from in-beam data collected at the Los Alamos Neutron Science Center, which represents the first analysis of this kind with a TPC. Using the double energy (2E) analysis method on this data, fission fragment mass distributions were calculated for 235U and 238U and the average TKE (TKE) was determined for 235U, 238U and 239Pu at incident neutron energies from 0.1 to 100 MeV.Combining the fissionTPC data with available predictive fission codes, the 2E analysis procedure is used to calculate pre- and post-prompt neutron emission fission fragment masses and energies. This analysis expands upon previous 2E studies by accounting for fragment energy loss through the target and backing material as a function of the fragment’s mass as well as by taking into account the recently measured partial linear momentum transfer from neutrons to the target at high neutron energies. This is the first determination of pre-neutron emission TKE for 239Pu above an incident neutron energy of 5.5 MeV. For all three isotopes studied, the TKE shows an overall decrease with increasing incident neutron energy with some structure in TKE and σTKE at multi-chance fission energy thresholds, confirming the observations of previous experiments. Fission fragment mass distributions were determined with a mass resolution of ≈ 7 amu, limited by the energy resolution of the fissionTPC.",
+      "sources": [
+        "openalex",
+        "anysearch"
+      ],
+      "cross_validated": true,
+      "venue": "Digital Collections of Colorado (Colorado State University)",
+      "volume": null,
+      "issue": null,
+      "pages": null,
+      "url": "https://hdl.handle.net/11124/176449"
+    },
+    {
+      "title": "The beta decay of neutron-deficient rhodium and ruthenium isotopes",
+      "authors": [
+        "S. Dean",
+        "M. Górska",
+        "F. Aksouh",
+        "H. De Witte",
+        "M. Facina",
+        "M. Huyse",
+        "O. Ivanov",
+        "K. Krouglov",
+        "Yu. Kudryavtsev",
+        "I. Mukha",
+        "D. Smirnov",
+        "J. C. Thomas",
+        "K. Van de Vel",
+        "J. Van de Walle",
+        "P. Van Duppen",
+        "J. Van Roosbroeck"
+      ],
+      "year": 2004,
+      "citations": 30,
+      "doi": "10.1140/epja/i2003-10204-2",
+      "abstract": null,
+      "sources": [
+        "openalex",
+        "anysearch"
+      ],
+      "cross_validated": true,
+      "venue": "The European Physical Journal A",
+      "volume": "21",
+      "issue": "2",
+      "pages": "243-255",
+      "url": "https://doi.org/10.1140/epja/i2003-10204-2"
+    },
+    {
+      "title": "r -process nucleosynthesis: connecting rare-isotope beam facilities with the cosmos",
+      "authors": [
+        "C J Horowitz",
+        "A Arcones",
+        "B Côté",
+        "I Dillmann",
+        "W Nazarewicz",
+        "I U Roederer",
+        "H Schatz",
+        "A Aprahamian",
+        "D Atanasov",
+        "A Bauswein",
+        "T C Beers",
+        "J Bliss",
+        "M Brodeur",
+        "J A Clark",
+        "A Frebel",
+        "F Foucart",
+        "C J Hansen",
+        "O Just",
+        "A Kankainen",
+        "G C McLaughlin",
+        "J M Kelly",
+        "S N Liddick",
+        "D M Lee",
+        "J Lippuner",
+        "D Martin",
+        "J Mendoza-Temis",
+        "B D Metzger",
+        "M R Mumpower",
+        "G Perdikakis",
+        "J Pereira",
+        "B W O’Shea",
+        "R Reifarth",
+        "A M Rogers",
+        "D M Siegel",
+        "A Spyrou",
+        "R Surman",
+        "X Tang",
+        "T Uesaka",
+        "M Wang"
+      ],
+      "year": 2019,
+      "citations": 166,
+      "doi": "10.1088/1361-6471/ab0849",
+      "abstract": "Abstract This is an exciting time for the study of r -process nucleosynthesis. Recently, a neutron star merger GW170817 was observed in extraordinary detail with gravitational waves and electromagnetic radiation from radio to γ rays. The very red color of the associated kilonova suggests that neutron star mergers are an important r -process site. Astrophysical simulations of neutron star mergers and core collapse supernovae are making rapid progress. Detection of both electron neutrinos and antineutrinos from the next galactic supernova will constrain the composition of neutrino-driven winds and provide unique nucleosynthesis information. Finally, FRIB and other rare-isotope beam facilities will soon have dramatic new capabilities to synthesize many neutron-rich nuclei that are involved in the r -process. The new capabilities can significantly improve our understanding of the r -process and likely resolve one of the main outstanding problems in classical nuclear astrophysics. However, to make best use of the new experimental capabilities and to fully interpret the results, a great deal of infrastructure is needed in many related areas of astronomy, astrophysics, and nuclear theory. We place these experiments in context by discussing astrophysical simulations and observations of r -process sites, observations of stellar abundances, galactic chemical evolution, and nuclear theory for the structure and reactions of very neutron-rich nuclei. This review paper was initiated at a three-week International Collaborations in Nuclear Theory program in June 2016, where we explored promising r -process experiments and discussed their likely impact, and their astronomical, astrophysical, and nuclear theory context.",
+      "sources": [
+        "openalex",
+        "anysearch"
+      ],
+      "cross_validated": true,
+      "venue": "Journal of Physics G Nuclear and Particle Physics",
+      "volume": "46",
+      "issue": "8",
+      "pages": "083001-083001",
+      "url": "https://doi.org/10.1088/1361-6471/ab0849"
+    },
+    {
+      "title": "A Rietveld-Approach for the Analysis of Neutron Time-of-Flight Transmission Data",
+      "authors": [
+        "Sven C. Vogel"
+      ],
+      "year": 2006,
+      "citations": 52,
+      "doi": null,
+      "abstract": "A novel technique to obtain crystallographic information on a sample with a temporal resolution in the order of ten seconds is presented.The crystallographic information is derived from neutron time-of-flight (TOF) transmission patterns utilising neutrons traveling through a sample without interaction.Neutron source, sample and detector are aligned on a single axis.The interaction of neutrons when penetrating a sample depends on the nuclear properties of the sample atoms and the spatial distribution of the atoms.For crystalline samples, neutron intensity is diffracted away from the direction of the incident beam, leaving a characteristic pattern in the transmitted signal from which structural information can be derived.Transmission geometry provides under certain circumstances several advantages over the conventional diffraction setup: The application of a pulsed neutron source provides Bragg-edge transmission patterns over a large wavelength range with sufficient statistics within seconds as the transmitted intensity is high compared to the neutron intensity diffracted into a certain solid angle and the neutron time-of-flight readily allows to determine the neutron wavelength.This allows to study kinetics of structural phase transitions in solids lasting for much less than one hour.As the 'reflections', the so-called Bragg-edges, result from backscattering (i.e. the Bragg angle ϑ is equal to 90 • ), there is no contribution of the scattering angle to the error of the d-spacing, making this technique an interesting alternative for neutron applications needing a high d-spacing resolution like strain measurements.Since no beam-path for diffracted intensity is necessary, equipment for special environments, e.g.temperature, atmosphere or pressure, can be designed much easier than for a diffraction experiment.Precise sample positioning, as is mandatory for a diffraction setup, is not required for transmission setup and further simplyfies experimentation.The acquired patterns are naturally based on different laws than conventional powder diffraction data, thus, the available Rietveld software for the analysis of powder diffraction data cannot be used or even easily adapted for the analysis of transmission data.The large number of spectra acquired during the course of a phase transition, typically in the order of 1000, requires automated analysis.Consequently, a software package 'BETMAn', (Bragg-Edge Transmission Measurements Analysis) was developed.BETMAn allows for the first time to apply the Rietveld method to neutron transmission patterns.BETMAn and its application for studying the mechanisms and kinetics of structural phase transitions and strain measurements is presented in this work.Application examples include tracking of the carbon content in the austenitic and ferritic phase during the temperature-induced isothermal decomposition of austenite to bainite in a Si-rich steel as well as a study of kinetics of nickeloxide reduction at temperatures above 1000 • C. Calibration and benchmarking experiments are described also.",
+      "sources": [
+        "openalex",
+        "anysearch"
+      ],
+      "cross_validated": true,
+      "venue": "Multimedialen Archiv und Publikationsserver der Christian-Albrechts-Universität zu Kiel (Christian-Albrechts-Universität zu Kiel)",
+      "volume": null,
+      "issue": null,
+      "pages": "1-76",
+      "url": "https://macau.uni-kiel.de/receive/diss_mods_00000330"
+    },
+    {
+      "title": "Nuclear fission studies with the IGISOL method and JYFLTRAP",
+      "authors": [
+        "D. Gorelov"
+      ],
+      "year": 2015,
+      "citations": 7,
+      "doi": null,
+      "abstract": "there is no unique model or theory which describes all aspects of this phenomenon. Experimental measurements of nuclear fission product distributions still remains quite a challenging task for modern technologies. In the present work nuclear fission is studied from the radioactive ion beam production point of view. Some models suggest that the neutron-induced fission can be more favorable for production of neutron-rich nuclides than the proton-induced fission. The general idea of this thesis is to compare all aspects of both approaches in connection with the IGISOL method. A new technique to determine independent fission product yields was suggested for the comparison. This technique has been tested with the proton-induced fission of actinide targets at different energies. The independent yields of the fission of 232Th induced by 25 MeV protons have been measured in this work. Although only relative independent yields can be obtained by this technique. An extraction of absolute values requires additional information such as the mass distribution. Despite this fact the technique is suitable to compare independent fission product distributions for isotopes of a specific chemical element. To perform measurements with neutron-induced fission a neutron source and a gas cell have been made and experimentally tested. The neutron source has been designed for a proton beam with energy of 30 MeV and intensity of 100 μA. A thick Be target has been chosen to produce an intensive neutron beam. The neutron intensity has been measured by the activation method and at the 0 angle is equal to 3·1010 neutrons/(s·sr·μA), which coincides with the simulated value and is in good agreement with other similar measurements. The design of the gas cell has been chosen to be very similar to that for the proton-induced fission. It has quite a simple construction without any electric and radio-frequency electrodes. The gas volume of approximately 150 cm3 provides an evacuation time of about tens of milliseconds. Due to the low fission rate and high radiation background several collecting foils have been installed to estimate main parameters of the gas cell. Radioactive ions produced in the neutron-induced fission were implanted into these foils. Later foils have been placed at a low background station and -spectra have been measured by the HPGe detector. Finally the independent fission yields for the neutron-induced fission could not be measured due to the very low radioactivity extracted from the gas cell. Main results of the work and probable further developments are discussed in the Summary.",
+      "sources": [
+        "openalex",
+        "anysearch"
+      ],
+      "cross_validated": true,
+      "venue": "Jyväskylä University Digital Archive (University of Jyväskylä)",
+      "volume": null,
+      "issue": null,
+      "pages": null,
+      "url": "http://urn.fi/URN:ISBN:978-951-39-6450-4"
+    }
+  ],
+  "openalex_only": [
+    {
+      "title": "β-delayed neutron emission from r-process nuclei along the N=82 shell closure",
+      "authors": [
+        "O. Hall"
+      ],
+      "year": 2020,
+      "citations": 1,
+      "doi": "10.7488/era/582",
+      "abstract": "The rapid-neutron capture process (r -process) is thought to be responsible for the production of around half the elements heavier than iron. Despite first being proposed almost six decades ago, the astrophysical site of the r-process remains an open question. The multi-messenger observation of gravitational waves originating from a binary neutron star merger (GW170817) and its electromagnetic counterpart provided evidence indicating that a possible r-process had occurred, providing a possible answer to this question. The accurate modelling of the nucleosynthesis processes taking place in such mergers requires precise nuclear input data, including nuclear masses, β-decay half-lives, and β-delayed neutron emission probabilities. A challenge here is that for the exotic neutron-rich nuclei that are of importance to the r-process, relatively few values are known experimentally. There is, therefore, high demand for experimental measurements along the r-process path which can be used as inputs in r-process calculations. In addition to being used as inputs in nucleosynthesis calculations, experimentally measured values act as reference points for the development of theoretical models in regions far from stability. This thesis presents the first measurement of the β-delayed neutron emission probabilities of 21 neutron-rich isotopes and improves upon the precision of a further four. In addition to this, measurements of the half-lives of 31 neutron-rich isotopes are presented. These neutron-rich isotopes are located along the N = 82 shell closure, a region that has been highlighted as being important in the production of the r-process A = 130 peak. These values, therefore, represent a significant contribution to the experimental data available for use in r-process calculations. The measurements were carried out at the Radioactive Ion Beam Factory in Japan, where the β-decays of neutron-rich ions were measured using the Advanced Implantation Detector Array in coincidence with their β-delayed neutrons that were measured using the BRIKEN neutron counter array.",
+      "sources": [
+        "openalex"
+      ],
+      "cross_validated": false,
+      "venue": "Edinburgh Research Archive (University of Edinburgh)",
+      "volume": null,
+      "issue": null,
+      "pages": null,
+      "url": "https://hdl.handle.net/1842/37296"
+    },
+    {
+      "title": "Atomic Number and Gamma-ray Measurements from Neutron-induced Fission at the ILL and n_ToF",
+      "authors": [
+        "N.A. Sosnin"
+      ],
+      "year": 2020,
+      "citations": 1,
+      "doi": null,
+      "abstract": "The STEFF spectrometer was used at the Neutron Time-of-Flight facility (n_ToF) at CERN in 2016 to perform a 30-day long experimental campaign of measurements of fission fragments and gamma rays produced in $^{235}$U fission for a wide range of incident neutron energies. A pipeline for reading, correlating and database deposition of the experimental data from this experimental campaign as well as for future STEFF campaigns at n_ToF has been constructed. The pipeline resulted in 70-fold data size reduction to an experimental database that can be fully processed in ~7 hours. The collected gamma-ray data acquired using NaI and LaBr3 detectors have been analyzed in the <1 eV neutron energy range and compared to prior STEFF 235U fission gamma-ray measurements. A method for correcting NaI signal amplitudes for n_ToF-specific effects, such as rates and pulse types, based on fission gamma-ray spectrum shape has been developed. The correcting factors were the greatest for the dedicated proton pulses at neutron energies of ~0.06 eV, increasing signal amplitude by approximately a factor of 2. Corrections to LaBr$_{3}$ signals have also been considered and performed based on count rates, with the the largest correcting factors reducing signal amplitude by ~15%. The corrected and calibrated energy spectra and calculated fold distributions have been prepared for extraction of gamma-ray multiplicity, average energy and total energy in thermal and epithermal fission of $^{235}$U. An experiment was conducted at the Lohengrin mass spectrometer at Institut Laue-Langevin, France, using a FiFI spectrometer for measurement of masses and atomic numbers of selected $^{235}$U fission fragments. The details of the experiment and the data analysis are presented, and a method for calibrating Bragg detectors for atomic number extraction is proposed. The method is based on amplitudes, derivatives and risetimes of signals produced by fission fragments in isobutane fill gas. The extracted signal properties were used in conjunction with known fragment masses and energies to produce functional forms based on powers of fragment velocities and average atomic numbers. Furthermore, a comparison with simulations produced in SRIM-2013 was performed, assessing the accuracy of the simulations.",
+      "sources": [
+        "openalex"
+      ],
+      "cross_validated": false,
+      "venue": "CERN Document Server (European Organization for Nuclear Research)",
+      "volume": null,
+      "issue": null,
+      "pages": null,
+      "url": "http://cds.cern.ch/record/2730110"
+    },
+    {
+      "title": "Advanced microstructured semiconductor neutron detectors: design, fabrication, and performance",
+      "authors": [
+        "Steven L. Bellinger"
+      ],
+      "year": 2011,
+      "citations": 6,
+      "doi": null,
+      "abstract": "The microstructured semiconductor neutron detector (MSND) was investigated and previous designs were improved and optimized.In the present work, fabrication techniques have been refined and improved to produce three-dimensional microstructured semiconductor neutron detectors with reduced leakage current, reduced capacitance, highly anisotropic deep etched trenches, and increased signal-to-noise ratios.As a result of these improvements, new MSND detection systems function with better gamma-ray discrimination and are easier to fabricate than previous designs.In addition to the microstructured diode fabrication improvement, a superior batch processing backfill-method for 6 LiF neutron reactive material, resulting in a nearly-solid backfill, was developed.This method incorporates a LiF nano-sizing process and a centrifugal batch process for backfilling the nanoparticle LiF material.To better transition the MSND detector to commercialization, the fabrication process was studied and enhanced to better facilitate low cost and batch process MSND production.The research and development of the MSND technology described in this work includes fabrication of variant microstructured diode designs, which have been simulated through MSND physics models to predict performance and neutron detection efficiency, and testing the operational performance of these designs in regards to neutron detection efficiency, gamma-ray rejection, and silicon fabrication methodology.The highest thermal-neutron detection efficiency reported to date for a solid-state semiconductor detector is presented in this work.MSNDs show excellent neutron to gamma-ray (n/γ) rejection ratios, which are on the order of 10 6 , without significant loss in thermal-neutron detection efficiency.Individually, the MSND is intrinsically highly sensitive to thermal neutrons, but not extrinsically sensitive because of their small size.To improve upon this, individual MSNDs were tiled together into a 6x6-element array on a single silicon chip.Individual elements of the array were tested for thermal-neutron detection efficiency and for the n/γ reject ratio.Overall, because of the inadequacies and costs of other neutron detection systems, the MSND is the premier technology for many neutron detection applications.",
+      "sources": [
+        "openalex"
+      ],
+      "cross_validated": false,
+      "venue": "K-State Research Exchange (Kansas State University)",
+      "volume": null,
+      "issue": null,
+      "pages": null,
+      "url": "http://hdl.handle.net/2097/14868"
+    }
+  ],
+  "anysearch_only": [],
+  "stats": {
+    "openalex_total": 20,
+    "anysearch_total": 9,
+    "cross_validated": 7,
+    "openalex_unique": 6,
+    "anysearch_unique": 0,
+    "filtered_irrelevant": 7,
+    "collapsed_duplicates": 0
+  }
+}

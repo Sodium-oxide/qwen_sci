@@ -1,0 +1,161 @@
+{
+  "created_at": "2026-09-06T07:05:28.713673Z",
+  "experiment_design": {
+    "design_id": "design-260905-008",
+    "manifest": {
+      "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/experiment_design/attempt-003/experiment_design_manifest.json",
+      "sha256": "bd1bd685fa25edb2331f215b3fc22df40a146919877175ed3f3a6a389779174a"
+    },
+    "status": "COMPLETED"
+  },
+  "ideas": {
+    "Q1": {
+      "current_version": 0,
+      "quantitative_idea_id": "Q1",
+      "status": "FINALIZED",
+      "title": "Kinetic Discrimination of Fission Recycling via Actinide Line Evolution in Kilonova Spectra",
+      "versions": {
+        "v0": {
+          "artifacts": {
+            "approved_parameters": {
+              "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q1/parameter_evidence/v0/approved_parameter_set.json",
+              "sha256": "0a194f6fe67558495fd1f467e3027b5d8fea5925aa8a5d9d13cf263b34587efb"
+            },
+            "blueprint": {
+              "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q1/parameter_evidence/v0/model_blueprint.json",
+              "sha256": "605b43d209ad7824f529212be81c478e2834f94b3c1b4fbc5611c5c01930bea1"
+            },
+            "ledger": {
+              "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q1/v0/result_ledger.json",
+              "sha256": "f8f244ed89b86a3da308352812c0444944eb409eac1dd8a96da630a4573dccb5"
+            },
+            "model": {
+              "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q1/v0/mathematical_model.md",
+              "sha256": "44e3c6cda9302b8167cbfe33da6f617f201adc32b25717dea265a758400e5739"
+            },
+            "model_spec": {
+              "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q1/v0/quantitative_model_spec.json",
+              "sha256": "7ca74a2a4cb3fd4b16230c90508b35f942e18e6937ca4187e46eb72da7abedf6"
+            },
+            "parameter_proposal": {
+              "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q1/parameter_evidence/v0/parameter_resolution_proposal.json",
+              "sha256": "f1c90f4768e475e7b11e53ace3a20169d2593e4fa5ce5cc9283dcde474adc3f7"
+            },
+            "plan": {
+              "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q1/v0/simulation_run_plan.json",
+              "sha256": "edecf57b5a21bb5817cbd57d68a4bdc3b59ba60a6d1bd6c3d847cbc62c29155b"
+            },
+            "query_plan": {
+              "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q1/parameter_evidence/v0/parameter_query_plan.json",
+              "sha256": "0da2041e9cb194a5c49c0f9c52ce048a7f156621f76e99437a348a47130445d9"
+            }
+          },
+          "execution_ids": [
+            "sim-48b8db888a0947a4a806d38e69529075"
+          ],
+          "model_spec_identity": "",
+          "parameter_set_identity": "8dd7a4bea03faa204d37b8fd38bf995e22672f0964d57af785767954ed827f3e",
+          "parent_version": null,
+          "plan_identity": "6362bdbb40e68251393b918ec0aa13822e66c18e317a7b7b51ee46cb2a383eb2",
+          "qualification_status": "QUALIFIED",
+          "status": "QUALIFIED_WAITING_FOR_REVISION_DECISION",
+          "version": 0
+        },
+        "v1": {
+          "artifacts": {},
+          "execution_ids": [],
+          "parent_version": 0,
+          "qualification_status": "PENDING",
+          "status": "WAITING_FOR_BLUEPRINT",
+          "version": 1
+        },
+        "v2": {
+          "artifacts": {},
+          "execution_ids": [],
+          "parent_version": 1,
+          "qualification_status": "PENDING",
+          "status": "WAITING_FOR_BLUEPRINT",
+          "version": 2
+        }
+      }
+    },
+    "Q2": {
+      "current_version": 0,
+      "quantitative_idea_id": "Q2",
+      "status": "WAITING_FOR_EXECUTION_AUTHORIZATION",
+      "title": "Hierarchical Bayesian Inference of Fission Timescales from Multi-Messenger Kilonova Constraints",
+      "versions": {
+        "v0": {
+          "artifacts": {
+            "approved_parameters": {
+              "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q2/parameter_evidence/v0/approved_parameter_set.json",
+              "sha256": "24297207bf7ca9a416ba6b1cd5d0b5d2c072ff2642d09d7c42484df157dc63e9"
+            },
+            "blueprint": {
+              "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q2/parameter_evidence/v0/model_blueprint.json",
+              "sha256": "d0f7abc7a29e1c97e0eabe493e8bed142ac9fc347f81f07027a9f6ea416a814a"
+            },
+            "model": {
+              "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q2/v0/mathematical_model.md",
+              "sha256": "3e762bde21fefc775888274c4101805a36bdbb5f207ccea95b729cff65f5442b"
+            },
+            "model_spec": {
+              "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q2/v0/quantitative_model_spec.json",
+              "sha256": "12df4866a894be85c7e5bc4cbffb227b2f4868b772972940a9f4f8de3a54a7d2"
+            },
+            "parameter_proposal": {
+              "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q2/parameter_evidence/v0/parameter_resolution_proposal.json",
+              "sha256": "40748da029fa956c30209844907f2ec199f5bfd1b41ef92640a5f631c7fc28a0"
+            },
+            "plan": {
+              "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q2/v0/simulation_run_plan.json",
+              "sha256": "92377abad4c9b58175d48d25026f16ef7d2a6679a066b85d1e14b8dc3af9293b"
+            },
+            "query_plan": {
+              "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q2/parameter_evidence/v0/parameter_query_plan.json",
+              "sha256": "1a13845a31b92b521888dd39e5ea3b8a1a4a9616cffe80e6037e657f3d4c2f6a"
+            }
+          },
+          "execution_ids": [],
+          "model_spec_identity": "",
+          "parameter_set_identity": "a5e0912a88039b2cfdeebd2803aee0f02f55493c372243dfd3a461294867eb1e",
+          "parent_version": null,
+          "plan_identity": "a93d6190313c01019c68cde9fe1e9227fdcca07d508d7e395d40dd79fd940e01",
+          "qualification_status": "PENDING",
+          "status": "WAITING_FOR_EXECUTION_AUTHORIZATION",
+          "version": 0
+        },
+        "v1": {
+          "artifacts": {},
+          "execution_ids": [],
+          "parent_version": 0,
+          "qualification_status": "PENDING",
+          "status": "WAITING_FOR_BLUEPRINT",
+          "version": 1
+        },
+        "v2": {
+          "artifacts": {},
+          "execution_ids": [],
+          "parent_version": 1,
+          "qualification_status": "PENDING",
+          "status": "WAITING_FOR_BLUEPRINT",
+          "version": 2
+        }
+      }
+    }
+  },
+  "next_actions": [
+    {
+      "action": "simulate",
+      "command": "quantitative simulate --run-dir <RUN> --idea-id Q2 --version 0 --execute --plan-identity "
+    }
+  ],
+  "quantitative_ideas_manifest": {
+    "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/quantitative_ideas_manifest.json",
+    "sha256": "0c7e8e5e43adc1b1daa64846907904d1106e3aaa81f566f3fff6cf4d897b89fa"
+  },
+  "schema_version": "quantitative_workflow_state_v1",
+  "science_run_id": "260905-008",
+  "status": "WAITING_FOR_EXECUTION_AUTHORIZATION",
+  "updated_at": "2026-09-06T07:05:29.529145Z"
+}

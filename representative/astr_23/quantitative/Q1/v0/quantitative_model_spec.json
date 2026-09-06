@@ -1,0 +1,732 @@
+{
+  "abstract": "This model materializes a reduced one-dimensional diffusion-reaction surrogate for the time-dependent actinide-line source-density proxy in expanding kilonova ejecta. It isolates delayed fission timing, expansion dilution, and free-escape boundary loss while deliberately omitting the full isotopic network, detailed atomic opacities, and multidimensional radiative transfer.",
+  "algorithm": {
+    "input": [
+      "Approved execution_ir document",
+      "Uniform one-dimensional grid specification",
+      "Analytic uniform initial condition",
+      "Left and right boundary condition specification"
+    ],
+    "output": [
+      "Finite time-dependent scalar field u(x,t)",
+      "Radial integral of u for postprocessing",
+      "Diagnostics for stability and finiteness checks"
+    ],
+    "steps": [
+      "Construct the uniform one-dimensional spatial grid on the approved domain.",
+      "Initialize the field with the approved uniform analytic profile.",
+      "Evaluate the diffusion coefficient and reaction source ASTs at approved parameters.",
+      "Advance the diffusion-reaction system with the registered explicit parabolic integrator.",
+      "Enforce zero-flux symmetry at the left boundary and free-escape Dirichlet condition at the right boundary.",
+      "Store the evolved field and compute radial summary quantities for later comparison."
+    ]
+  },
+  "assumptions": [
+    {
+      "assumption_id": "Q1-AS-001",
+      "effect_if_violated": "Inferences about specific nuclear pathways or isotopic line ratios would not be supported by the surrogate.",
+      "statement": "The evolved scalar u is a surrogate for actinide spectral-line source density rather than a full isotopic abundance network."
+    },
+    {
+      "assumption_id": "Q1-AS-002",
+      "effect_if_violated": "Temporal spreading and escape timing of the proxy may be biased if the true transport is strongly non-diffusive.",
+      "statement": "Unresolved radiative transport is closed by a constant effective diffusion coefficient."
+    },
+    {
+      "assumption_id": "Q1-AS-003",
+      "effect_if_violated": "The surrogate may misrepresent geometric dilution and peak-time shifts in an expanding spherical flow.",
+      "statement": "Expansion is represented by a linear dilution loss with timescale formed from R_domain and v_ejecta rather than a moving mesh."
+    },
+    {
+      "assumption_id": "Q1-AS-004",
+      "effect_if_violated": "Initial spatial asymmetries or seed concentration gradients would not be represented.",
+      "statement": "The initial actinide-line proxy is spatially uniform at the approved u_initial value."
+    },
+    {
+      "assumption_id": "Q1-AS-005",
+      "effect_if_violated": "The executable surrogate cannot resolve sub-step delayed-release structure and should be interpreted as a reduced kinetic proxy.",
+      "statement": "The approved explicit time step is coarse relative to the approved fission-release timescale, so the delayed source is numerically smeared."
+    }
+  ],
+  "boundary_conditions": [
+    "{'boundary_id': 'Q1-BC-001', 'side': 'left', 'type': 'NEUMANN_ZERO', 'description': 'Zero radial flux at the symmetry center, representing the inner spherical-symmetry surrogate.'}",
+    "{'boundary_id': 'Q1-BC-002', 'side': 'right', 'type': 'DIRICHLET', 'boundary_value': 0.0, 'description': 'Free-escape surrogate at the outer radial surface using the approved u_outer value.'}"
+  ],
+  "equations": [
+    {
+      "equation_id": "Q1-EQ-001",
+      "latex": "\\frac{\\partial u}{\\partial t} = \\frac{\\partial}{\\partial x}\\left[ \\left(D_{\\mathrm{eff}}\\frac{\\Delta r}{\\Delta r}\\right) \\frac{\\partial u}{\\partial x}\\right] + \\left(\\frac{u_{\\mathrm{initial}}}{\\Delta t} e^{-t/\\tau_f} \\frac{t_{\\mathrm{end}}}{t_{\\mathrm{end}}}\\right) - \\frac{v_{\\mathrm{ejecta}}}{R_{\\mathrm{domain}}} u",
+      "role": "GOVERNING_PDE",
+      "where_symbol_ids": [
+        "u",
+        "t",
+        "x",
+        "D_effective",
+        "delta_r",
+        "u_initial",
+        "delta_t",
+        "tau_f",
+        "t_end",
+        "v_ejecta",
+        "R_domain"
+      ]
+    },
+    {
+      "equation_id": "Q1-EQ-002",
+      "latex": "u(x,0) = u_{\\mathrm{initial}}",
+      "role": "INITIAL_CONDITION",
+      "where_symbol_ids": [
+        "u",
+        "x",
+        "u_initial"
+      ]
+    },
+    {
+      "equation_id": "Q1-EQ-003",
+      "latex": "\\left.\\frac{\\partial u}{\\partial x}\\right|_{x=0} = 0",
+      "role": "BOUNDARY_CONDITION",
+      "where_symbol_ids": [
+        "u",
+        "x"
+      ]
+    },
+    {
+      "equation_id": "Q1-EQ-004",
+      "latex": "u(R_{\\mathrm{domain}},t) = u_{\\mathrm{outer}}",
+      "role": "BOUNDARY_CONDITION",
+      "where_symbol_ids": [
+        "u",
+        "R_domain",
+        "t",
+        "u_outer"
+      ]
+    },
+    {
+      "equation_id": "Q1-EQ-005",
+      "latex": "S_f(t) = \\frac{u_{\\mathrm{initial}}}{\\Delta t} e^{-t/\\tau_f} \\frac{t_{\\mathrm{end}}}{t_{\\mathrm{end}}}",
+      "role": "SOURCE_TERM",
+      "where_symbol_ids": [
+        "u_initial",
+        "delta_t",
+        "t",
+        "tau_f",
+        "t_end"
+      ]
+    }
+  ],
+  "execution_ir": {
+    "document": {
+      "boundary_conditions": {
+        "left": {
+          "type": "NEUMANN_ZERO"
+        },
+        "right": {
+          "type": "DIRICHLET",
+          "value": {
+            "name": "u_outer",
+            "op": "variable"
+          }
+        }
+      },
+      "diffusion_coefficient": {
+        "args": [
+          {
+            "name": "D_effective",
+            "op": "variable"
+          },
+          {
+            "args": [
+              {
+                "name": "delta_r",
+                "op": "variable"
+              },
+              {
+                "name": "delta_r",
+                "op": "variable"
+              }
+            ],
+            "op": "div"
+          }
+        ],
+        "op": "mul"
+      },
+      "discretization": {
+        "grid_type": "UNIFORM",
+        "method": "FINITE_DIFFERENCE",
+        "space_order": 2
+      },
+      "fields": [
+        {
+          "bounds": {},
+          "id": "u",
+          "symbol": "u",
+          "unit": "kg m^-3"
+        }
+      ],
+      "grid": {
+        "nx": 105
+      },
+      "initial_condition": {
+        "profile": "UNIFORM",
+        "type": "ANALYTIC_PROFILE",
+        "value": 5.12186785866739e-14
+      },
+      "parameters": {
+        "D_effective": 1e+18,
+        "R_domain": 5180413674240.0,
+        "delta_r": 50000000000.0,
+        "delta_t": 100.0,
+        "t_end": 864000.0,
+        "tau_f": 2.3,
+        "u_initial": 5.12186785866739e-14,
+        "u_outer": 0.0,
+        "v_ejecta": 59958491.6
+      },
+      "reaction": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "args": [
+                      {
+                        "name": "u_initial",
+                        "op": "variable"
+                      },
+                      {
+                        "name": "delta_t",
+                        "op": "variable"
+                      }
+                    ],
+                    "op": "div"
+                  },
+                  {
+                    "args": [
+                      {
+                        "args": [
+                          {
+                            "args": [
+                              {
+                                "name": "t",
+                                "op": "variable"
+                              }
+                            ],
+                            "op": "neg"
+                          },
+                          {
+                            "name": "tau_f",
+                            "op": "variable"
+                          }
+                        ],
+                        "op": "div"
+                      }
+                    ],
+                    "op": "exp"
+                  }
+                ],
+                "op": "mul"
+              },
+              {
+                "args": [
+                  {
+                    "name": "t_end",
+                    "op": "variable"
+                  },
+                  {
+                    "name": "t_end",
+                    "op": "variable"
+                  }
+                ],
+                "op": "div"
+              }
+            ],
+            "op": "mul"
+          },
+          {
+            "args": [
+              {
+                "name": "u",
+                "op": "field"
+              },
+              {
+                "args": [
+                  {
+                    "name": "v_ejecta",
+                    "op": "variable"
+                  },
+                  {
+                    "name": "R_domain",
+                    "op": "variable"
+                  }
+                ],
+                "op": "div"
+              }
+            ],
+            "op": "mul"
+          }
+        ],
+        "op": "sub"
+      },
+      "schema_version": "pdeir_v1",
+      "solver_options": {
+        "time_integrator": "EXPLICIT_EULER",
+        "time_step": 100.0
+      },
+      "spatial_dimension": 1,
+      "spatial_domain": {
+        "x": [
+          0.0,
+          5180413674240.0
+        ]
+      },
+      "system_type": "DIFFUSION_REACTION_1D",
+      "time_span": [
+        0.0,
+        864000.0
+      ]
+    },
+    "kind": "PDE",
+    "schema_version": "execution_ir_v1"
+  },
+  "initial_conditions": [
+    "{'initial_condition_id': 'Q1-IC-001', 'description': 'Uniform actinide-line source-density proxy initialized to the approved u_initial amplitude.', 'profile': 'UNIFORM', 'applied_symbol': 'u_initial'}"
+  ],
+  "limitations": [
+    "The surrogate does not resolve a full r-process isotopic network or actinide-specific line formation.",
+    "The effective diffusion coefficient is a declared closure assumption, not a literature measurement.",
+    "The coarse approved time step cannot resolve all structure on the approved fission-release timescale.",
+    "Spherical symmetry is assumed in the reduced radial surrogate and cannot represent multidimensional lanthanide curtaining.",
+    "Actinide opacity and atomic-data uncertainties are not explicitly represented."
+  ],
+  "lineage": {
+    "created_from_artifact": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "project_id": "sci_260905_008_survey_001",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "260905-008",
+    "selected_direction_id": "premise_inversion",
+    "survey_run_id": "260905-008-survey-001",
+    "version": 0
+  },
+  "mathir": null,
+  "model_scope": "Reduced first executable surrogate: a one-dimensional diffusion-reaction proxy for actinide line source density in spherical ejecta. It isolates delayed fission timing and expansion dilution while not resolving the full nuclear network, detailed atomic opacities, or multidimensional radiative transfer.",
+  "numerical_plan": {
+    "convergence_checks": [
+      "Diffusion Courant number remains below the explicit parabolic stability limit.",
+      "Total explicit step count remains below the authorized temporal budget.",
+      "Grid cell count remains below the authorized spatial budget.",
+      "Reaction loss factor remains positive and finite for the approved step size."
+    ],
+    "discretization": "FINITE_DIFFERENCE",
+    "solver_family": "parabolic_1d"
+  },
+  "objective_and_constraints": [
+    "{'objective_id': 'Q1-OBJ-001', 'description': 'Quantify whether temporal moments of the radial proxy separate fission-release timing from geometric or abundance perturbations.', 'target_symbol': 'u'}",
+    "{'constraint_id': 'Q1-CON-001', 'description': 'Explicit diffusion stability margin is maintained with the diffusion Courant number below the parabolic limit.', 'threshold': 0.5}",
+    "{'constraint_id': 'Q1-CON-002', 'description': 'The proxy density is interpreted as non-negative; negative excursions are treated as numerical artifacts.', 'threshold': 0.0}"
+  ],
+  "parameter_provenance": {
+    "entries": [
+      {
+        "conditions": {
+          "composition": "neutron-rich r-process ejecta",
+          "epoch_days": 1.0,
+          "geometry": "spherical homologous ejecta",
+          "required_condition_1": "geometry: spherical radial surrogate",
+          "required_condition_2": "composition: actinide-bearing kilonova ejecta",
+          "required_condition_3": "epoch: early post-merger kinetic phase"
+        },
+        "evidence_locator": {
+          "document_type": "preprint",
+          "page": 3,
+          "quoted_text": "the ejecta radius R_ej = v_ej t",
+          "section": "II.1 Ejecta Model",
+          "table_or_figure": ""
+        },
+        "mathir_symbol": "R_domain",
+        "parameter_id": "domain_radius",
+        "provenance_status": "APPROVED_LITERATURE_SINGLE_SOURCE",
+        "role": "SCENARIO_INPUT",
+        "selected_value": 5180413674240.0,
+        "selection_rationale": "Use the Barnes et al. homologous-expansion relation R_ej=v_ej t with the fiducial v_ej=0.2c at the 1-day reference epoch; this gives 5.18041367424e12 m. The value is a derived spherical-domain proxy, not a directly resolved radius measurement.",
+        "source": {
+          "cross_validated": false,
+          "discovery_sources": [
+            "openalex",
+            "unpaywall"
+          ],
+          "document_id": "PFD-002",
+          "doi": "10.3847/0004-637x/829/2/110",
+          "title": "Radioactivity and Thermalization in the Ejecta of Compact Object Mergers and Their Impact on Kilonova Light Curves",
+          "year": 2016
+        },
+        "transformation": {
+          "applied": true,
+          "formula": "R_domain = v_ej t = (0.2 × 299792458 m s^-1) × (86400 s)"
+        },
+        "uncertainty": {
+          "reference_epoch": "1 day",
+          "velocity_range": "0.1-0.3 c"
+        },
+        "unit": "m"
+      },
+      {
+        "conditions": {
+          "composition": "neutron-rich r-process ejecta",
+          "expansion": "homologous",
+          "required_condition_1": "expansion: homologous ejecta surrogate",
+          "required_condition_2": "composition: actinide-bearing kilonova ejecta",
+          "velocity_range": "0.1-0.3 c"
+        },
+        "evidence_locator": {
+          "document_type": "preprint",
+          "page": 1,
+          "quoted_text": "the characteristic velocities are v_ej ≈ 0.1-0.3 c, of order the escape velocity from a NS",
+          "section": "I. Introduction",
+          "table_or_figure": ""
+        },
+        "mathir_symbol": "v_ejecta",
+        "parameter_id": "ejecta_velocity",
+        "provenance_status": "APPROVED_LITERATURE_SINGLE_SOURCE",
+        "role": "SCENARIO_INPUT",
+        "selected_value": 59958491.6,
+        "selection_rationale": "Select the 0.2c fiducial within the reported 0.1-0.3c characteristic range for neutron-star-merger r-process ejecta; convert with c=299792458 m s^-1.",
+        "source": {
+          "cross_validated": false,
+          "discovery_sources": [
+            "openalex",
+            "unpaywall"
+          ],
+          "document_id": "PFD-014",
+          "doi": "10.1088/0004-637x/774/1/25",
+          "title": "Opacities and Spectra of the r-Process Ejecta from Neutron Star Mergers",
+          "year": 2013
+        },
+        "transformation": {
+          "applied": true,
+          "formula": "v_ejecta = 0.2 × c = 0.2 × 299792458 m s^-1"
+        },
+        "uncertainty": {
+          "reported_range": "0.1-0.3 c"
+        },
+        "unit": "m_s^-1"
+      },
+      {
+        "conditions": {
+          "kinetic_regime": "late fission-recycling phase",
+          "nuclear_regime": "beta-delayed fission in neutron-rich r-process nuclei",
+          "required_condition_1": "nuclear regime: actinide fission recycling",
+          "required_condition_2": "kinetic regime: delayed neutron release relative to expansion"
+        },
+        "evidence_locator": {
+          "document_type": "preprint",
+          "page": 5,
+          "quoted_text": "At about t ∼ 2.3 s, ... βdf becomes the primary fission channel while nuclei are decaying.",
+          "section": "III. Results",
+          "table_or_figure": "Figure 4"
+        },
+        "mathir_symbol": "tau_f",
+        "parameter_id": "fission_neutron_release_timescale",
+        "provenance_status": "APPROVED_LITERATURE_SINGLE_SOURCE",
+        "role": "MATERIAL_PROPERTY",
+        "selected_value": 2.3,
+        "selection_rationale": "Use the abundance-weighted epoch t approximately 2.3 s at which beta-delayed fission becomes the primary fission channel in the neutron-star-merger r-process calculation. This is an explicit literature kinetic proxy, not an isotope-specific half-life.",
+        "source": {
+          "cross_validated": false,
+          "discovery_sources": [
+            "openalex",
+            "unpaywall"
+          ],
+          "document_id": "PFD-018",
+          "doi": "10.3847/1538-4357/aaeaca",
+          "title": "β-delayed Fission in r-process Nucleosynthesis",
+          "year": 2018
+        },
+        "transformation": {
+          "applied": false,
+          "formula": ""
+        },
+        "uncertainty": {
+          "interpretation": "abundance-weighted transition epoch used as a characteristic proxy, not an isotope-specific half-life"
+        },
+        "unit": "s"
+      },
+      {
+        "conditions": {
+          "composition": "Th and U actinides in a homogeneous kilonova model",
+          "electron_fraction": "Ye approximately 0.15",
+          "normalization_epoch_days": 1.0,
+          "required_condition_1": "initial state: seed nuclei distribution at the start of the kinetic phase",
+          "required_condition_2": "composition: actinide-bearing ejecta component"
+        },
+        "evidence_locator": {
+          "document_type": "article",
+          "page": 19,
+          "quoted_text": "The two actinides we consider, Th and U, make up only 0.003 of the composition by mass fraction even at Ye ∼ 0.15",
+          "section": "5. Discussion",
+          "table_or_figure": "Table A1"
+        },
+        "mathir_symbol": "u_initial",
+        "parameter_id": "initial_actinide_density_proxy",
+        "provenance_status": "APPROVED_LITERATURE_SINGLE_SOURCE",
+        "role": "SCENARIO_INPUT",
+        "selected_value": 5.12186785866739e-14,
+        "selection_rationale": "Use the reported combined Th+U actinide fraction 0.003 for the Ye approximately 0.15 model and normalize it by the 5e-3 solar-mass, 0.2c spherical ejecta fiducial at one day. The resulting 5.12186785866739e-14 kg m^-3 is explicitly a uniform-density source proxy.",
+        "source": {
+          "cross_validated": false,
+          "discovery_sources": [
+            "openalex",
+            "unpaywall"
+          ],
+          "document_id": "PFD-026",
+          "doi": "10.1093/mnras/stad3106",
+          "title": "NLTE Spectra of Kilonovae",
+          "year": 2023
+        },
+        "transformation": {
+          "applied": true,
+          "formula": "rho_act = (0.003 × 5×10^-3 M_sun) / [(4π/3) R_domain^3], with M_sun=1.98847×10^30 kg and R_domain=5.18041367424×10^12 m"
+        },
+        "uncertainty": {
+          "actinide_fraction": "0.003 combined Th+U fraction at Ye approximately 0.15",
+          "density_model": "uniform spherical proxy"
+        },
+        "unit": "kg_m^-3"
+      },
+      {
+        "conditions": {
+          "required_condition_1": "transport approximation: diffusion surrogate for line-energy propagation",
+          "required_condition_2": "closure assumption: temperature and opacity dependence collapsed into an effective constant"
+        },
+        "evidence_locator": {},
+        "mathir_symbol": "D_effective",
+        "parameter_id": "effective_diffusion_coefficient",
+        "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+        "role": "MATERIAL_PROPERTY",
+        "selected_value": 1e+18,
+        "selection_rationale": "Declared surrogate closure for unresolved line-energy transport; units are m^2 s^-1 and the value is not presented as a literature measurement. With delta_r=5e10 m and delta_t=100 s, D delta_t/delta_r^2=0.04, below the explicit 1-D diffusion stability limit.",
+        "source": {},
+        "transformation": {
+          "applied": false,
+          "formula": ""
+        },
+        "uncertainty": {},
+        "unit": "m^2_s^-1"
+      },
+      {
+        "conditions": {
+          "required_condition_1": "boundary geometry: outer radial surface",
+          "required_condition_2": "boundary physics: free-streaming or escape surrogate"
+        },
+        "evidence_locator": {},
+        "mathir_symbol": "u_outer",
+        "parameter_id": "outer_boundary_proxy_value",
+        "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+        "role": "BOUNDARY_CONDITION",
+        "selected_value": 0.0,
+        "selection_rationale": "Dirichlet free-escape surrogate: set the actinide-line source-density proxy to zero at the outer boundary. This is a boundary closure assumption, not a measured density.",
+        "source": {},
+        "transformation": {
+          "applied": false,
+          "formula": ""
+        },
+        "uncertainty": {},
+        "unit": "kg_m^-3"
+      },
+      {
+        "conditions": {
+          "required_condition_1": "numerical control: finite simulation window",
+          "required_condition_2": "scientific window: covers delayed fission kinetic signature"
+        },
+        "evidence_locator": {},
+        "mathir_symbol": "t_end",
+        "parameter_id": "simulation_end_time",
+        "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+        "role": "MODEL_ASSUMPTION",
+        "selected_value": 864000.0,
+        "selection_rationale": "Integrate to 10 days (864000 s), covering the 0.1-10 day kilonova evolution window reported in the thermalization literature while retaining the early 2.3 s fission transition.",
+        "source": {},
+        "transformation": {
+          "applied": false,
+          "formula": ""
+        },
+        "uncertainty": {},
+        "unit": "s"
+      },
+      {
+        "conditions": {
+          "required_condition_1": "numerical control: explicit time integration",
+          "required_condition_2": "stability requirement: parabolic diffusion surrogate"
+        },
+        "evidence_locator": {},
+        "mathir_symbol": "delta_t",
+        "parameter_id": "time_step_size",
+        "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+        "role": "MODEL_ASSUMPTION",
+        "selected_value": 100.0,
+        "selection_rationale": "Explicit-Euler numerical control chosen with the diffusion stability margin D delta_t/delta_r^2=0.04 and 8640 total steps, below the authorized 20000-step budget.",
+        "source": {},
+        "transformation": {
+          "applied": false,
+          "formula": ""
+        },
+        "uncertainty": {},
+        "unit": "s"
+      },
+      {
+        "conditions": {
+          "required_condition_1": "numerical control: finite-difference radial grid",
+          "required_condition_2": "geometry: one-dimensional spherical radial surrogate"
+        },
+        "evidence_locator": {},
+        "mathir_symbol": "delta_r",
+        "parameter_id": "radial_grid_spacing",
+        "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+        "role": "MODEL_ASSUMPTION",
+        "selected_value": 50000000000.0,
+        "selection_rationale": "Finite-difference radial spacing of 5e10 m gives about 104 cells across the 1-day domain radius and supports the stated explicit diffusion stability margin. It is a numerical-resolution assumption.",
+        "source": {},
+        "transformation": {
+          "applied": false,
+          "formula": ""
+        },
+        "uncertainty": {},
+        "unit": "m"
+      }
+    ],
+    "mode": "APPROVED_PARAMETER_SET",
+    "parameter_set_identity": "8dd7a4bea03faa204d37b8fd38bf995e22672f0964d57af785767954ed827f3e"
+  },
+  "parameterization": [
+    "{'parameter_id': 'domain_radius', 'mathir_symbol': 'R_domain', 'approved_value': 5180413674240.0, 'unit': 'm', 'role': 'SCENARIO_INPUT', 'provenance': 'APPROVED_LITERATURE_SINGLE_SOURCE'}",
+    "{'parameter_id': 'ejecta_velocity', 'mathir_symbol': 'v_ejecta', 'approved_value': 59958491.6, 'unit': 'm s^-1', 'role': 'SCENARIO_INPUT', 'provenance': 'APPROVED_LITERATURE_SINGLE_SOURCE'}",
+    "{'parameter_id': 'fission_neutron_release_timescale', 'mathir_symbol': 'tau_f', 'approved_value': 2.3, 'unit': 's', 'role': 'MATERIAL_PROPERTY', 'provenance': 'APPROVED_LITERATURE_SINGLE_SOURCE'}",
+    "{'parameter_id': 'initial_actinide_density_proxy', 'mathir_symbol': 'u_initial', 'approved_value': 5.12186785866739e-14, 'unit': 'kg m^-3', 'role': 'SCENARIO_INPUT', 'provenance': 'APPROVED_LITERATURE_SINGLE_SOURCE'}",
+    "{'parameter_id': 'effective_diffusion_coefficient', 'mathir_symbol': 'D_effective', 'approved_value': 1e+18, 'unit': 'm^2 s^-1', 'role': 'MATERIAL_PROPERTY', 'provenance': 'APPROVED_MODEL_ASSUMPTION'}",
+    "{'parameter_id': 'outer_boundary_proxy_value', 'mathir_symbol': 'u_outer', 'approved_value': 0.0, 'unit': 'kg m^-3', 'role': 'BOUNDARY_CONDITION', 'provenance': 'APPROVED_MODEL_ASSUMPTION'}",
+    "{'parameter_id': 'simulation_end_time', 'mathir_symbol': 't_end', 'approved_value': 864000.0, 'unit': 's', 'role': 'MODEL_ASSUMPTION', 'provenance': 'APPROVED_MODEL_ASSUMPTION'}",
+    "{'parameter_id': 'time_step_size', 'mathir_symbol': 'delta_t', 'approved_value': 100.0, 'unit': 's', 'role': 'MODEL_ASSUMPTION', 'provenance': 'APPROVED_MODEL_ASSUMPTION'}",
+    "{'parameter_id': 'radial_grid_spacing', 'mathir_symbol': 'delta_r', 'approved_value': 50000000000.0, 'unit': 'm', 'role': 'MODEL_ASSUMPTION', 'provenance': 'APPROVED_MODEL_ASSUMPTION'}"
+  ],
+  "references": [
+    "{'reference_id': 'Q1-REF-001', 'citation': 'Barnes et al., Radioactivity and Thermalization in the Ejecta of Compact Object Mergers and Their Impact on Kilonova Light Curves, 2016', 'relevance': 'Supports the homologous-expansion radius proxy used for the domain radius.'}",
+    "{'reference_id': 'Q1-REF-002', 'citation': 'Kasen et al., Opacities and Spectra of the r-Process Ejecta from Neutron Star Mergers, 2013', 'relevance': 'Supports the characteristic ejecta velocity range used for expansion dilution.'}",
+    "{'reference_id': 'Q1-REF-003', 'citation': 'Mumpower et al., beta-delayed Fission in r-process Nucleosynthesis, 2018', 'relevance': 'Provides the abundance-weighted kinetic proxy for delayed fission recycling.'}",
+    "{'reference_id': 'Q1-REF-004', 'citation': 'Domato et al., NLTE Spectra of Kilonovae, 2023', 'relevance': 'Supports the actinide mass-fraction normalization used for the initial density proxy.'}"
+  ],
+  "scenarios": [
+    "{'scenario_id': 'Q1-SC-001', 'name': 'Instantaneous fission recycling', 'description': 'Conceptual limit in which the fission source is deposited essentially within the first numerical step.', 'mathematical_difference': 'Early-time radial integral over the first step is compared against later-time integrals.', 'execution_status': 'CONCEPTUAL_LIMIT'}",
+    "{'scenario_id': 'Q1-SC-002', 'name': 'Delayed fission recycling', 'description': 'Baseline executable surrogate uses the approved tau_f in the exponential source factor.', 'mathematical_difference': 'First temporal moment of the radial integral is used to quantify delay.', 'execution_status': 'BASELINE'}",
+    "{'scenario_id': 'Q1-SC-003', 'name': 'Geometric asymmetry only', 'description': 'Conceptual geometric comparison represented by radial variance of the proxy in postprocessing.', 'mathematical_difference': 'Radial variance replaces temporal moment as the discriminator.', 'execution_status': 'CONCEPTUAL_POSTPROCESSING'}",
+    "{'scenario_id': 'Q1-SC-004', 'name': 'Variable Ye only', 'description': 'Conceptual abundance comparison represented by the domain-integrated proxy mass.', 'mathematical_difference': 'Domain integral of u is used as the abundance discriminator.', 'execution_status': 'CONCEPTUAL_POSTPROCESSING'}"
+  ],
+  "schema_version": "ieee_math_model_v2",
+  "scientific_question": "Can the time-dependent evolution of actinide spectral line fluxes constrain the fission neutron release timescale and distinguish kinetic decoupling from static geometric or electron-fraction abundance variations?",
+  "symbols": [
+    {
+      "dimension": "M L^-3",
+      "latex": "u(x,t)",
+      "meaning": "Actinide-line source-density proxy evolved by the PDE.",
+      "role": "FIELD",
+      "symbol_id": "u",
+      "unit": "kg m^-3"
+    },
+    {
+      "dimension": "L",
+      "latex": "x",
+      "meaning": "One-dimensional radial surrogate coordinate.",
+      "role": "INDEPENDENT_VARIABLE",
+      "symbol_id": "x",
+      "unit": "m"
+    },
+    {
+      "dimension": "T",
+      "latex": "t",
+      "meaning": "Time since the start of the kinetic phase.",
+      "role": "INDEPENDENT_VARIABLE",
+      "symbol_id": "t",
+      "unit": "s"
+    },
+    {
+      "dimension": "L^2 T^-1",
+      "latex": "D_{\\mathrm{eff}}",
+      "meaning": "Effective diffusion coefficient representing unresolved line-energy transport.",
+      "role": "PARAMETER",
+      "symbol_id": "D_effective",
+      "unit": "m^2 s^-1"
+    },
+    {
+      "dimension": "L",
+      "latex": "R_{\\mathrm{domain}}",
+      "meaning": "Outer radial extent of the one-dimensional surrogate domain.",
+      "role": "SCENARIO_INPUT",
+      "symbol_id": "R_domain",
+      "unit": "m"
+    },
+    {
+      "dimension": "L T^-1",
+      "latex": "v_{\\mathrm{ejecta}}",
+      "meaning": "Characteristic ejecta expansion velocity used to form the expansion dilution timescale.",
+      "role": "SCENARIO_INPUT",
+      "symbol_id": "v_ejecta",
+      "unit": "m s^-1"
+    },
+    {
+      "dimension": "T",
+      "latex": "\\tau_f",
+      "meaning": "Characteristic delayed fission neutron release timescale.",
+      "role": "MATERIAL_PROPERTY",
+      "symbol_id": "tau_f",
+      "unit": "s"
+    },
+    {
+      "dimension": "M L^-3",
+      "latex": "u_{\\mathrm{initial}}",
+      "meaning": "Uniform initial amplitude of the actinide-line source-density proxy.",
+      "role": "SCENARIO_INPUT",
+      "symbol_id": "u_initial",
+      "unit": "kg m^-3"
+    },
+    {
+      "dimension": "M L^-3",
+      "latex": "u_{\\mathrm{outer}}",
+      "meaning": "Dirichlet proxy value at the free-escape outer boundary.",
+      "role": "BOUNDARY_CONDITION",
+      "symbol_id": "u_outer",
+      "unit": "kg m^-3"
+    },
+    {
+      "dimension": "T",
+      "latex": "t_{\\mathrm{end}}",
+      "meaning": "Final integration time for the executable surrogate.",
+      "role": "MODEL_ASSUMPTION",
+      "symbol_id": "t_end",
+      "unit": "s"
+    },
+    {
+      "dimension": "T",
+      "latex": "\\Delta t",
+      "meaning": "Temporal step size for explicit parabolic integration.",
+      "role": "MODEL_ASSUMPTION",
+      "symbol_id": "delta_t",
+      "unit": "s"
+    },
+    {
+      "dimension": "L",
+      "latex": "\\Delta r",
+      "meaning": "Target radial grid spacing for the one-dimensional finite-difference discretization.",
+      "role": "MODEL_ASSUMPTION",
+      "symbol_id": "delta_r",
+      "unit": "m"
+    }
+  ],
+  "title": "Kinetic Discrimination of Fission Recycling via Actinide Line Evolution in Kilonova Spectra",
+  "validation_plan": [
+    "{'validation_id': 'Q1-VAL-001', 'description': 'Check that the evolved field remains finite over the full approved time span.', 'expected_behavior': 'No non-finite values appear in the field or expressions.'}",
+    "{'validation_id': 'Q1-VAL-002', 'description': 'Check that the zero-flux inner boundary preserves symmetry in the radial surrogate.', 'expected_behavior': 'No artificial flux enters through the left boundary.'}",
+    "{'validation_id': 'Q1-VAL-003', 'description': 'Check that the outer Dirichlet boundary permits proxy escape toward the approved free-escape value.', 'expected_behavior': 'The field near the outer boundary relaxes toward the approved outer value.'}",
+    "{'validation_id': 'Q1-VAL-004', 'description': 'Check that the explicit diffusion step size satisfies the approved stability margin.', 'expected_behavior': 'The diffusion Courant number remains safely below the parabolic limit.'}"
+  ]
+}

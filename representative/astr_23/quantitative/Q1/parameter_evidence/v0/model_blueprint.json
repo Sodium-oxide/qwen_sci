@@ -1,0 +1,212 @@
+{
+  "lineage": {
+    "created_from_artifact": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "project_id": "sci_260905_008_survey_001",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "260905-008",
+    "selected_direction_id": "premise_inversion",
+    "survey_run_id": "260905-008-survey-001",
+    "version": 0
+  },
+  "model_form": "PDE",
+  "model_scope": "Reduced first executable surrogate: a one-dimensional diffusion-reaction proxy for actinide line source density in spherical ejecta. It isolates delayed fission timing and expansion dilution while not resolving the full nuclear network, detailed atomic opacities, or multidimensional radiative transfer.",
+  "parameter_requests": [
+    {
+      "dimension": "length",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "R_domain",
+      "meaning": "Outer radial extent of the one-dimensional spherical ejecta surrogate.",
+      "parameter_id": "domain_radius",
+      "required_conditions": [
+        "geometry: spherical radial surrogate",
+        "composition: actinide-bearing kilonova ejecta",
+        "epoch: early post-merger kinetic phase"
+      ],
+      "retrieval_queries": [
+        "observational constraints on kilonova ejecta size or radius",
+        "neutron star merger ejecta radius inference from expansion and time"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "m",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "length_time_inverse",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "v_ejecta",
+      "meaning": "Characteristic expansion velocity scale used to form the expansion dilution timescale.",
+      "parameter_id": "ejecta_velocity",
+      "required_conditions": [
+        "expansion: homologous ejecta surrogate",
+        "composition: actinide-bearing kilonova ejecta"
+      ],
+      "retrieval_queries": [
+        "spectroscopic ejecta velocity constraints for kilonova",
+        "neutron star merger ejecta velocity estimates"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "m_s^-1",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "time",
+      "evidence_requirement": "LITERATURE_REQUIRED",
+      "mathir_symbol": "tau_f",
+      "meaning": "Characteristic timescale for delayed fission neutron release that modifies the actinide-line source proxy.",
+      "parameter_id": "fission_neutron_release_timescale",
+      "required_conditions": [
+        "nuclear regime: actinide fission recycling",
+        "kinetic regime: delayed neutron release relative to expansion"
+      ],
+      "retrieval_queries": [
+        "delayed fission neutron emission timescale nuclear theory",
+        "r-process actinide fission neutron release timescale"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "s",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "mass_length_inverse_cubed",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "u_initial",
+      "meaning": "Uniform initial amplitude of the actinide-line source-density proxy.",
+      "parameter_id": "initial_actinide_density_proxy",
+      "required_conditions": [
+        "initial state: seed nuclei distribution at the start of the kinetic phase",
+        "composition: actinide-bearing ejecta component"
+      ],
+      "retrieval_queries": [
+        "r-process network initial actinide abundances in kilonova simulations",
+        "seed distribution actinide mass fraction in neutron star merger ejecta"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "kg_m^-3",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "length_squared_time_inverse",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "D_effective",
+      "meaning": "Effective diffusion coefficient representing unresolved radiative transport of the actinide-line proxy.",
+      "parameter_id": "effective_diffusion_coefficient",
+      "required_conditions": [
+        "transport approximation: diffusion surrogate for line-energy propagation",
+        "closure assumption: temperature and opacity dependence collapsed into an effective constant"
+      ],
+      "retrieval_queries": [
+        "effective radiative diffusion coefficient for kilonova ejecta surrogate",
+        "photon diffusion approximation in expanding ejecta"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "m^2_s^-1",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "mass_length_inverse_cubed",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "u_outer",
+      "meaning": "Dirichlet value of the actinide-line source-density proxy at the free-escape outer boundary.",
+      "parameter_id": "outer_boundary_proxy_value",
+      "required_conditions": [
+        "boundary geometry: outer radial surface",
+        "boundary physics: free-streaming or escape surrogate"
+      ],
+      "retrieval_queries": [
+        "free streaming outer boundary for kilonova radiative transfer",
+        "escape boundary condition for actinide line proxy"
+      ],
+      "role": "BOUNDARY_CONDITION",
+      "unit": "kg_m^-3",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "time",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "t_end",
+      "meaning": "Final integration time for the executable surrogate.",
+      "parameter_id": "simulation_end_time",
+      "required_conditions": [
+        "numerical control: finite simulation window",
+        "scientific window: covers delayed fission kinetic signature"
+      ],
+      "retrieval_queries": [
+        "time window for kilonova actinide spectral feature evolution"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "s",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "time",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "delta_t",
+      "meaning": "Temporal step size for explicit parabolic integration.",
+      "parameter_id": "time_step_size",
+      "required_conditions": [
+        "numerical control: explicit time integration",
+        "stability requirement: parabolic diffusion surrogate"
+      ],
+      "retrieval_queries": [
+        "time step selection for explicit parabolic diffusion integration"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "s",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "length",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "delta_r",
+      "meaning": "Radial grid spacing for the one-dimensional finite-difference discretization.",
+      "parameter_id": "radial_grid_spacing",
+      "required_conditions": [
+        "numerical control: finite-difference radial grid",
+        "geometry: one-dimensional spherical radial surrogate"
+      ],
+      "retrieval_queries": [
+        "radial grid spacing selection for one-dimensional finite difference parabolic solver"
+      ],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "m",
+      "value_kind": "SCALAR"
+    }
+  ],
+  "pde_family": "DIFFUSION_REACTION_1D",
+  "permitted_system_types": [
+    "DIFFUSION_REACTION_1D"
+  ],
+  "required_boundary_types": [
+    "NEUMANN_ZERO",
+    "DIRICHLET"
+  ],
+  "required_operators": [
+    "TIME_DERIVATIVE",
+    "DIFFUSION",
+    "REACTION"
+  ],
+  "required_solver_features": [
+    "FINITE_DIFFERENCE",
+    "EXPLICIT_EULER",
+    "TEMPORAL_EVOLUTION"
+  ],
+  "revision_context": {},
+  "schema_version": "quantitative_model_blueprint_v1",
+  "scientific_question": "Can the time-dependent evolution of actinide spectral line fluxes constrain the fission neutron release timescale and distinguish kinetic decoupling from static geometric or electron-fraction abundance variations?",
+  "spatial_dimension": 1,
+  "symbolic_constraints": [
+    "The evolved scalar is a surrogate for actinide spectral-line source density, not a full isotopic abundance network.",
+    "The inner radial boundary is treated as symmetric with zero flux.",
+    "The outer radial boundary is treated as a free-escape Dirichlet surface.",
+    "The initial proxy profile is spatially uniform and scaled by the requested initial actinide density proxy.",
+    "Expansion is represented through an effective dilution term rather than a moving mesh.",
+    "The effective reaction rate is constructed from the fission neutron release timescale and the expansion dilution timescale.",
+    "The expansion dilution timescale is formed from the domain radius and the ejecta velocity.",
+    "The effective diffusion coefficient is an explicit surrogate assumption and is not taken as a literature measurement.",
+    "The proxy density, effective diffusion coefficient, timescales, and step sizes are non-negative where physically meaningful."
+  ],
+  "symbolic_model_intent": "Evolve a scalar actinide-line source-density proxy in radial coordinate and time using diffusion, an effective reaction term associated with delayed fission recycling, and an expansion-dilution effect. The inner boundary represents spherical symmetry, and the outer boundary represents free escape of the line proxy.",
+  "title": "Kinetic Discrimination of Fission Recycling via Actinide Line Evolution in Kilonova Spectra"
+}

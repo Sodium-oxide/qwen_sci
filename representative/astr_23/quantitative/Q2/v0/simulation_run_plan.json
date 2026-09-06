@@ -1,0 +1,118 @@
+{
+  "capability": {
+    "capability": "COMPOSABLE",
+    "reason": "The model is fully represented by audited MathIR and an approved solver adapter.",
+    "solver_id": "stdlib_monte_carlo",
+    "system_type": "MONTE_CARLO"
+  },
+  "empirical_claim_status": "NOT_EMPIRICAL",
+  "execution_mode": "NUMERICAL_SIMULATION",
+  "mathir": {
+    "observable": {
+      "name": "tau_f",
+      "op": "variable"
+    },
+    "parameters": {
+      "M_ej": 0.04,
+      "N_chains": 4.0,
+      "N_samples": 10000.0,
+      "N_temperatures": 8.0,
+      "Y_e": 0.16,
+      "i": 0.5585053606381855,
+      "tau_f": 2.3
+    },
+    "random_variables": [
+      {
+        "distribution": "uniform",
+        "id": "tau_f",
+        "parameters": {
+          "high": 3.45,
+          "low": 1.15
+        }
+      },
+      {
+        "distribution": "uniform",
+        "id": "M_ej",
+        "parameters": {
+          "high": 0.05,
+          "low": 0.03
+        }
+      },
+      {
+        "distribution": "uniform",
+        "id": "Y_e",
+        "parameters": {
+          "high": 0.24,
+          "low": 0.08
+        }
+      },
+      {
+        "distribution": "uniform",
+        "id": "i",
+        "parameters": {
+          "high": 0.7330382858376184,
+          "low": 0.33161255787892263
+        }
+      }
+    ],
+    "samples": 10000,
+    "schema_version": "mathir_v1",
+    "seed": 260905008,
+    "system_type": "MONTE_CARLO"
+  },
+  "model_identity": {
+    "created_from_artifact": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/quantitative_ideas_manifest.json",
+    "model_spec_identity": "2e547230438cee640258af65d5383f1898089212fe8e890f178f082222bcb2f6",
+    "parameter_set_identity": "a5e0912a88039b2cfdeebd2803aee0f02f55493c372243dfd3a461294867eb1e",
+    "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "project_id": "sci_260905_008_survey_001",
+    "quantitative_idea_id": "Q2",
+    "science_run_id": "260905-008",
+    "selected_direction_id": "premise_inversion",
+    "survey_run_id": "260905-008-survey-001",
+    "version": "0"
+  },
+  "parameter_provenance": {
+    "allowed_scenario_parameter_ids": [
+      "M_ej",
+      "Y_e",
+      "i"
+    ],
+    "mode": "APPROVED_PARAMETER_SET",
+    "parameter_set_identity": "a5e0912a88039b2cfdeebd2803aee0f02f55493c372243dfd3a461294867eb1e",
+    "parameter_set_manifest": {
+      "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q2/parameter_evidence/v0/approved_parameter_set_manifest.json",
+      "sha256": "14423b7b873dfbc9aac3744bf7328901c75c6c991be0a9d8d266bba905857e1d"
+    }
+  },
+  "plan_identity": "a93d6190313c01019c68cde9fe1e9227fdcca07d508d7e395d40dd79fd940e01",
+  "qualification_requirements": [
+    "sample_count_bound"
+  ],
+  "resource_limits": {
+    "atol": 1e-09,
+    "max_cells": 100000,
+    "max_fields": 8,
+    "max_grid_points": 512,
+    "max_matrix_nonzeros": 200000,
+    "max_matrix_size": 20000,
+    "max_memory_mb": 512,
+    "max_nx": 4096,
+    "max_ny": 1024,
+    "max_nz": 128,
+    "max_output_points": 2000,
+    "max_pde_snapshots": 200,
+    "max_samples": 100000,
+    "max_time_steps": 20000,
+    "max_wall_seconds": 120,
+    "rtol": 1e-06
+  },
+  "result_kind": "SIMULATED",
+  "scenarios": [
+    {
+      "parameter_overrides": {},
+      "scenario_id": "baseline"
+    }
+  ],
+  "schema_version": "simulation_run_plan_v1"
+}

@@ -1,0 +1,91 @@
+{
+  "authoring_constraints": {
+    "all_displayed_checkpoints_require_source_anchors": true,
+    "do_not_describe_checkpoints_as_temporal_iterations": true,
+    "do_not_invent_missing_iterations": true,
+    "do_not_present_idea_history_as_empirical_evidence": true,
+    "language": "en",
+    "temporal_order_is_unknown_without_iteration_id_timestamp_parent_or_auditable_diff": true
+  },
+  "checkpoints": [
+    {
+      "checkpoint_id": "checkpoint-1",
+      "checkpoint_type": "available_audit_snapshot",
+      "snapshot": {
+        "central_hypothesis": "The kinematic delay in beta-delayed and isomer-delayed fission neutron release relative to ejecta expansion formally unifies the modification of the third r-process peak freeze-out abundance with viewing-angle-dependent lanthanide curtaining, producing a distinct temporal evolution of actinide spectral lines that cannot be replicated by purely geometric or magnetic ejecta asymmetries.",
+        "claim_scope": "Astrophysical Nucleosynthesis in Neutron Star Mergers: Kinematic Decoupling of Fission Recycling and Actinide Spectral Evolution",
+        "direction_mode": "premise_inversion",
+        "mechanism_or_relation": "unified_fission_recycling_relation",
+        "target_gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+          "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+        ],
+        "title": "Kinematic Decoupling of Fission Recycling in Kilonovae: A Delayed Neutron Release Mechanism for Third r-Process Peak Shifts and Anisotropic Curtaining"
+      },
+      "source_file": "idea_candidate.json",
+      "source_json_pointer": "/",
+      "source_path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/idea_candidate.json",
+      "temporal_order": "unknown"
+    },
+    {
+      "checkpoint_id": "checkpoint-2",
+      "checkpoint_type": "available_audit_snapshot",
+      "snapshot": {
+        "central_hypothesis": "The kinematic delay in beta-delayed and isomer-delayed fission neutron release relative to ejecta expansion formally unifies the modification of the third r-process peak freeze-out abundance with viewing-angle-dependent lanthanide curtaining, producing a distinct temporal evolution of actinide spectral lines that cannot be replicated by purely geometric or magnetic ejecta asymmetries.",
+        "claim_scope": "Astrophysical Nucleosynthesis in Neutron Star Mergers: Kinematic Decoupling of Fission Recycling and Actinide Spectral Evolution",
+        "direction_mode": "premise_inversion",
+        "mechanism_or_relation": "unified_fission_recycling_relation",
+        "target_gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+          "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+        ],
+        "title": "Kinematic Decoupling of Fission Recycling in Kilonovae: A Delayed Neutron Release Mechanism for Third r-Process Peak Shifts and Spectral Signatures"
+      },
+      "source_file": "idea_portfolio.json",
+      "source_json_pointer": "/selected_primary_idea",
+      "source_path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/idea_portfolio.json",
+      "temporal_order": "unknown"
+    },
+    {
+      "checkpoint_id": "checkpoint-3",
+      "checkpoint_type": "available_audit_snapshot",
+      "snapshot": {
+        "direction_mode": "premise_inversion",
+        "hypothesis": {
+          "assumptions": [
+            "The effective fission timescale, governed by beta-decay half-lives and nuclear isomeric states, is comparable to or longer than the ejecta expansion timescale in high-entropy, low-density trajectories.",
+            "Actinide spectral line evolution is uniquely sensitive to the fission timescale and cannot be mimicked by variations in ejecta geometry or magnetic field topology alone."
+          ],
+          "boundary_or_failure_condition": "The mechanism fails if the effective fission timescale for superheavy nuclei is strictly shorter than the expansion timescale, or if geometric/magnetic asymmetries alone can perfectly replicate the predicted actinide spectral shifts without invoking delayed fission timescales.",
+          "central_hypothesis": "The kinematic delay in beta-delayed and isomer-delayed fission neutron release relative to ejecta expansion formally unifies the modification of the third r-process peak freeze-out abundance with viewing-angle-dependent lanthanide curtaining, producing a distinct temporal evolution of actinide spectral lines that cannot be replicated by purely geometric or magnetic ejecta asymmetries.",
+          "claim_scope": "Astrophysical Nucleosynthesis in Neutron Star Mergers: Kinematic Decoupling of Fission Recycling and Actinide Spectral Evolution",
+          "discriminating_observation": "Viewing-angle-dependent temporal evolution of specific actinide spectral absorption features, which diverge from both instantaneous recycling models and purely geometric/magnetic asymmetry confounders.",
+          "evidence_basis": "Spectroscopic identification of viewing-angle-dependent lanthanide and actinide curtaining in multi-messenger kilonova observations, requiring isolation of the actinide temporal signature to rule out geometric confounders.",
+          "evidence_requirement": "Spectroscopic identification of the temporal evolution of viewing-angle-dependent actinide lines in multi-messenger kilonova observations, strictly inconsistent with both instantaneous fission equilibrium and pure geometric asymmetry models.",
+          "expected_mechanism": "Delayed neutron release from beta-decaying and isomer-trapped superheavy nuclei decouples the late-stage r-process from the prompt relativistic outflow, spatially segregating actinides and altering the opacity evolution to produce anisotropic spectral absorption features, specifically in actinide lines, which are insensitive to pure geometric ejecta asymmetries.",
+          "intervention_or_transformation": "Relax the instantaneous_fission_equilibrium_assumption and substitute it with the delayed_beta_and_isomer_fission_release_axiom, treating the fission timescale as a dynamic variable competing with relativistic expansion, while bounding the validity domain against geometric confounders.",
+          "mechanism_or_relation": "unified_fission_recycling_relation",
+          "scientific_object": {
+            "description": "delayed_beta_and_isomer_fission_release_axiom"
+          }
+        },
+        "target_gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+          "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+        ],
+        "title": "Kinematic Decoupling of Fission Recycling in Kilonovae: A Delayed Neutron Release Mechanism for Third r-Process Peak Shifts and Anisotropic Curtaining"
+      },
+      "source_file": "idea_result.json",
+      "source_json_pointer": "/directions/0",
+      "source_path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/idea_result.json",
+      "temporal_order": "unknown"
+    }
+  ],
+  "iterations": [],
+  "max_iterations": 3,
+  "missing_audit_sources": [],
+  "schema_version": "idea_evolution_appendix_v1",
+  "selected_direction_id": "premise_inversion",
+  "status": "CHECKPOINTS_AVAILABLE",
+  "temporal_order": "unknown"
+}

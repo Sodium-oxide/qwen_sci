@@ -1,0 +1,65 @@
+[
+  {
+    "parameter_id": "domain_radius",
+    "candidate_id": "PEC-Q1-domain_radius-001",
+    "provenance_status": "APPROVED_LITERATURE_SINGLE_SOURCE",
+    "selected_value": 5180413674240.0,
+    "selection_rationale": "Use the Barnes et al. homologous-expansion relation R_ej=v_ej t with the fiducial v_ej=0.2c at the 1-day reference epoch; this gives 5.18041367424e12 m. The value is a derived spherical-domain proxy, not a directly resolved radius measurement."
+  },
+  {
+    "parameter_id": "ejecta_velocity",
+    "candidate_id": "PEC-Q1-ejecta_velocity-010",
+    "provenance_status": "APPROVED_LITERATURE_SINGLE_SOURCE",
+    "selected_value": 59958491.6,
+    "selection_rationale": "Select the 0.2c fiducial within the reported 0.1-0.3c characteristic range for neutron-star-merger r-process ejecta; convert with c=299792458 m s^-1."
+  },
+  {
+    "parameter_id": "fission_neutron_release_timescale",
+    "candidate_id": "PEC-Q1-fission_neutron_release_timescale-001",
+    "provenance_status": "APPROVED_LITERATURE_SINGLE_SOURCE",
+    "selected_value": 2.3,
+    "selection_rationale": "Use the abundance-weighted epoch t approximately 2.3 s at which beta-delayed fission becomes the primary fission channel in the neutron-star-merger r-process calculation. This is an explicit literature kinetic proxy, not an isotope-specific half-life."
+  },
+  {
+    "parameter_id": "initial_actinide_density_proxy",
+    "candidate_id": "PEC-Q1-initial_actinide_density_proxy-001",
+    "provenance_status": "APPROVED_LITERATURE_SINGLE_SOURCE",
+    "selected_value": 5.12186785866739e-14,
+    "selection_rationale": "Use the reported combined Th+U actinide fraction 0.003 for the Ye approximately 0.15 model and normalize it by the 5e-3 solar-mass, 0.2c spherical ejecta fiducial at one day. The resulting 5.12186785866739e-14 kg m^-3 is explicitly a uniform-density source proxy."
+  },
+  {
+    "parameter_id": "effective_diffusion_coefficient",
+    "candidate_id": "",
+    "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+    "selected_value": 1.0e18,
+    "selection_rationale": "Declared surrogate closure for unresolved line-energy transport; units are m^2 s^-1 and the value is not presented as a literature measurement. With delta_r=5e10 m and delta_t=100 s, D delta_t/delta_r^2=0.04, below the explicit 1-D diffusion stability limit."
+  },
+  {
+    "parameter_id": "outer_boundary_proxy_value",
+    "candidate_id": "",
+    "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+    "selected_value": 0.0,
+    "selection_rationale": "Dirichlet free-escape surrogate: set the actinide-line source-density proxy to zero at the outer boundary. This is a boundary closure assumption, not a measured density."
+  },
+  {
+    "parameter_id": "simulation_end_time",
+    "candidate_id": "",
+    "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+    "selected_value": 864000.0,
+    "selection_rationale": "Integrate to 10 days (864000 s), covering the 0.1-10 day kilonova evolution window reported in the thermalization literature while retaining the early 2.3 s fission transition."
+  },
+  {
+    "parameter_id": "time_step_size",
+    "candidate_id": "",
+    "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+    "selected_value": 100.0,
+    "selection_rationale": "Explicit-Euler numerical control chosen with the diffusion stability margin D delta_t/delta_r^2=0.04 and 8640 total steps, below the authorized 20000-step budget."
+  },
+  {
+    "parameter_id": "radial_grid_spacing",
+    "candidate_id": "",
+    "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+    "selected_value": 50000000000.0,
+    "selection_rationale": "Finite-difference radial spacing of 5e10 m gives about 104 cells across the 1-day domain radius and supports the stated explicit diffusion stability margin. It is a numerical-resolution assumption."
+  }
+]

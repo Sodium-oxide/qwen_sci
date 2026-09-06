@@ -1,0 +1,162 @@
+{
+  "lineage": {
+    "created_from_artifact": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "project_id": "sci_260905_008_survey_001",
+    "quantitative_idea_id": "Q2",
+    "science_run_id": "260905-008",
+    "selected_direction_id": "premise_inversion",
+    "survey_run_id": "260905-008-survey-001",
+    "version": 0
+  },
+  "model_form": "MONTE_CARLO",
+  "model_scope": "Executable Monte Carlo posterior inference for a single kilonova event with nuisance ejecta mass, electron fraction, and inclination; hierarchical extension across events is design-only.",
+  "parameter_requests": [
+    {
+      "dimension": "time",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "tau_f",
+      "meaning": "Fission neutron release timescale inferred as the primary nuclear physics parameter.",
+      "parameter_id": "tau_f",
+      "required_conditions": [
+        "posterior_parameter",
+        "positive_timescale"
+      ],
+      "retrieval_queries": [
+        "delayed fission neutron release timescale for r-process nuclei in neutron-star merger ejecta",
+        "nuclear theory constraints on fission timescales relevant to kilonova nucleosynthesis"
+      ],
+      "role": "MATERIAL_PROPERTY",
+      "unit": "s",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "mass",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "M_ej",
+      "meaning": "Ejecta mass nuisance parameter controlling kilonova luminosity and opacity.",
+      "parameter_id": "M_ej",
+      "required_conditions": [
+        "posterior_parameter",
+        "positive_mass"
+      ],
+      "retrieval_queries": [
+        "kilonova ejecta mass constraints from gravitational-wave and electromagnetic observations",
+        "dynamical ejecta mass estimates for neutron-star mergers"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "solar_mass",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "dimensionless",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "Y_e",
+      "meaning": "Initial electron fraction of the ejecta controlling neutron richness.",
+      "parameter_id": "Y_e",
+      "required_conditions": [
+        "posterior_parameter",
+        "physically_admissible_electron_fraction"
+      ],
+      "retrieval_queries": [
+        "initial electron fraction distributions for neutron-star merger ejecta",
+        "electron fraction constraints in r-process kilonova models"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "1",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "angle",
+      "evidence_requirement": "USER_OR_LITERATURE",
+      "mathir_symbol": "i",
+      "meaning": "Binary inclination angle relative to the observer line of sight.",
+      "parameter_id": "i",
+      "required_conditions": [
+        "posterior_parameter",
+        "geometric_admissible_inclination"
+      ],
+      "retrieval_queries": [
+        "inclination angle constraints for binary neutron star mergers from gravitational-wave and kilonova observations"
+      ],
+      "role": "SCENARIO_INPUT",
+      "unit": "rad",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "count",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "N_samples",
+      "meaning": "Number of posterior samples requested from the Monte Carlo solver.",
+      "parameter_id": "n_mcmc_samples",
+      "required_conditions": [
+        "solver_control"
+      ],
+      "retrieval_queries": [],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "1",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "count",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "N_chains",
+      "meaning": "Number of independent Markov chains used for convergence assessment.",
+      "parameter_id": "n_chains",
+      "required_conditions": [
+        "solver_control"
+      ],
+      "retrieval_queries": [],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "1",
+      "value_kind": "SCALAR"
+    },
+    {
+      "dimension": "count",
+      "evidence_requirement": "MODEL_ASSUMPTION_ALLOWED",
+      "mathir_symbol": "N_temperatures",
+      "meaning": "Number of temperature levels used by the parallel tempering sampler.",
+      "parameter_id": "n_tempering_levels",
+      "required_conditions": [
+        "solver_control"
+      ],
+      "retrieval_queries": [],
+      "role": "MODEL_ASSUMPTION",
+      "unit": "1",
+      "value_kind": "SCALAR"
+    }
+  ],
+  "pde_family": "",
+  "permitted_system_types": [
+    "MONTE_CARLO"
+  ],
+  "required_boundary_types": [],
+  "required_operators": [
+    "RANDOM_SAMPLING",
+    "PRIOR_EVALUATION",
+    "LIKELIHOOD_EVALUATION",
+    "MARGINALIZATION",
+    "POSTERIOR_SUMMARY"
+  ],
+  "required_solver_features": [
+    "MARKOV_CHAIN_MONTE_CARLO",
+    "PARALLEL_TEMPERING",
+    "HIERARCHICAL_POSTERIOR",
+    "BAYES_FACTOR_ESTIMATION",
+    "CONVERGENCE_DIAGNOSTICS"
+  ],
+  "revision_context": {},
+  "schema_version": "quantitative_model_blueprint_v1",
+  "scientific_question": "What is the posterior probability distribution of the fission neutron release timescale when gravitational-wave, kilonova photometric, and spectroscopic abundance constraints are combined?",
+  "spatial_dimension": null,
+  "symbolic_constraints": [
+    "tau_f_positive",
+    "M_ej_positive",
+    "Y_e_physically_bounded",
+    "i_geometrically_bounded",
+    "posterior_normalizable"
+  ],
+  "symbolic_model_intent": "Bayesian hierarchical posterior for a common fission timescale with event-specific astrophysical nuisance parameters marginalized using gravitational-wave, photometric, and spectroscopic likelihood contributions.",
+  "title": "Hierarchical Bayesian Inference of Fission Timescales from Multi-Messenger Kilonova Constraints"
+}

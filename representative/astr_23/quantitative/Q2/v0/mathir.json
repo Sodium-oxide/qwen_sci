@@ -1,0 +1,53 @@
+{
+  "observable": {
+    "name": "tau_f",
+    "op": "variable"
+  },
+  "parameters": {
+    "M_ej": 0.04,
+    "N_chains": 4.0,
+    "N_samples": 10000.0,
+    "N_temperatures": 8.0,
+    "Y_e": 0.16,
+    "i": 0.5585053606381855,
+    "tau_f": 2.3
+  },
+  "random_variables": [
+    {
+      "distribution": "uniform",
+      "id": "tau_f",
+      "parameters": {
+        "high": 3.45,
+        "low": 1.15
+      }
+    },
+    {
+      "distribution": "uniform",
+      "id": "M_ej",
+      "parameters": {
+        "high": 0.05,
+        "low": 0.03
+      }
+    },
+    {
+      "distribution": "uniform",
+      "id": "Y_e",
+      "parameters": {
+        "high": 0.24,
+        "low": 0.08
+      }
+    },
+    {
+      "distribution": "uniform",
+      "id": "i",
+      "parameters": {
+        "high": 0.7330382858376184,
+        "low": 0.33161255787892263
+      }
+    }
+  ],
+  "samples": 10000,
+  "schema_version": "mathir_v1",
+  "seed": 260905008,
+  "system_type": "MONTE_CARLO"
+}

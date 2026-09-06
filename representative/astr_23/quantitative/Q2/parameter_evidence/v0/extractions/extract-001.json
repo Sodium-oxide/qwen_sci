@@ -1,0 +1,67 @@
+{
+  "blueprint_identity": "89518de457b2bc6ba77b1baf621588149139504cc9404b5e39c8c70f2816ae71",
+  "candidates": [
+    {
+      "candidate_id": "PEC-Q2-M_ej-001",
+      "conditions": {},
+      "evidence_locator": {
+        "document_type": "local_document_text",
+        "page": null,
+        "quoted_text": "an ejected mass of 0.04 ±0.01 M⊙",
+        "section": "",
+        "table_or_figure": ""
+      },
+      "evidence_status": "EXTRACTED_FULLTEXT",
+      "mathir_symbol": "M_ej",
+      "normalized_unit": "solar_mass",
+      "normalized_value": 0.04,
+      "parameter_id": "M_ej",
+      "raw_value": "0.04 ±0.01 M⊙",
+      "source": {
+        "cross_validated": false,
+        "discovery_sources": [
+          "openalex"
+        ],
+        "document_id": "PFD-007",
+        "doi": "10.1038/nature24303",
+        "title": "A kilonova as the electromagnetic counterpart to a gravitational-wave source",
+        "year": 2017
+      },
+      "source_kind": "PRIMARY_MEASUREMENT",
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      },
+      "uncertainty": {},
+      "value_form": "SCALAR"
+    }
+  ],
+  "lineage": {
+    "created_from_artifact": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "project_id": "sci_260905_008_survey_001",
+    "quantitative_idea_id": "Q2",
+    "science_run_id": "260905-008",
+    "selected_direction_id": "premise_inversion",
+    "survey_run_id": "260905-008-survey-001",
+    "version": 0
+  },
+  "schema_version": "quantitative_parameter_evidence_collection_v1",
+  "source_document": {
+    "cross_validated": false,
+    "discovery_sources": [
+      "openalex"
+    ],
+    "document_id": "PFD-007",
+    "doi": "10.1038/nature24303",
+    "evidence_status": "EXTRACTED_FULLTEXT",
+    "parameter_request_ids": [
+      "M_ej",
+      "Y_e"
+    ],
+    "retrieval_source": "openalex.oa_location",
+    "title": "A kilonova as the electromagnetic counterpart to a gravitational-wave source",
+    "year": 2017
+  }
+}

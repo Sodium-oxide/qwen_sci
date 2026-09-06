@@ -1,0 +1,131 @@
+{
+  "catalog": {
+    "entry_count": "37",
+    "path": "/home/dlutee2026/src1/qwen_sci/five_domain_top_journal_model_catalog_en.md",
+    "schema_version": "model_catalog_v1",
+    "sha256": "6b5bebfbd54c050aa482bf533dbfaf872c557cba16bb9e10de84526abbef753e",
+    "status": "AVAILABLE",
+    "truncated": "false"
+  },
+  "generation_message": "",
+  "generation_status": "READY",
+  "ideas": [
+    {
+      "base_hypothesis_reference": "Canonical Idea abstract and components regarding temporal profile of fission neutron release and third r-process peak positioning.",
+      "candidate_model_strategy": {
+        "catalog_model_ids": [
+          "math_phys_astronomy-ode-dae-dynamics",
+          "math_phys_astronomy-1d-advection-diffusion-reaction"
+        ],
+        "mode": "CATALOG_COMPOSITION",
+        "rationale": "The nucleosynthesis network is modeled as a stiff ODE system (ODE/DAE) tracking isotopic abundances under expansion. The spectral evolution is approximated using a 1D advection-diffusion-reaction framework for photon transport in expanding ejecta, allowing for the isolation of temporal kinetic effects from spatial geometry."
+      },
+      "comparator": "Standard instantaneous fission recycling models and geometric-only models.",
+      "domain": "MATH_PHYS_ASTRONOMY",
+      "execution_readiness": "EXECUTABLE_CANDIDATE",
+      "falsification_condition": "If the predicted time-dependent actinide line evolution for delayed fission scenarios is statistically indistinguishable from variations in initial electron fraction (Ye) or geometric asymmetries within observational error bars, the specific kinetic signature is falsified.",
+      "initial_boundary_requirements": [
+        "Initial abundances set by seed nuclei distribution at t=0.",
+        "Boundary conditions for radiative transfer: free-streaming at outer edge, diffusion approximation at inner edge.",
+        "Zero flux at center."
+      ],
+      "known_limitations": [
+        "Assumes spherical symmetry for the radiative transfer component; may underestimate 3D lanthanide curtaining effects.",
+        "Relies on accurate atomic data for actinide opacities which are currently uncertain."
+      ],
+      "model_intent": "To formulate a semi-analytical kinetic model coupling r-process nucleosynthesis with time-dependent radiative transfer to derive the observable spectral signature of fission recycling.",
+      "observables": [
+        "Time-dependent flux ratio of actinide lines (e.g., U, Th) to lanthanide lines",
+        "Spectral slope in the near-infrared",
+        "Peak time of bolometric light curve"
+      ],
+      "parameters_and_sources": [
+        "Fission neutron release timescale tau_f (nuclear theory calculations)",
+        "Effective neutron multiplication factor k_eff (nuclear data libraries)",
+        "Initial electron fraction Ye (hydrodynamic simulations)",
+        "Ejecta mass and velocity (GW170817 constraints)",
+        "Actinide opacity coefficients (atomic physics databases)"
+      ],
+      "provisional_solver_family": "Stiff ODE integrators (e.g., VODE) coupled with Monte Carlo radiative transfer or approximate diffusion solvers.",
+      "quantitative_idea_id": "Q1",
+      "quantitative_question": "Can the time-dependent evolution of actinide spectral line fluxes uniquely constrain the fission neutron release timescale (\\tau_f) and distinguish kinematic decoupling from static geometric or Ye-driven abundance variations?",
+      "scenarios": [
+        "Instantaneous fission recycling (tau_f -> 0)",
+        "Delayed fission recycling (tau_f > expansion timescale)",
+        "Geometric asymmetry only (constant Ye, varying density profiles)",
+        "Variable Ye only (homogeneous density, varying Ye)"
+      ],
+      "state_variables": [
+        "Isotopic number densities n_i(t)",
+        "Ejecta radius R(t)",
+        "Temperature T(t)",
+        "Optical depth tau_lambda(t)",
+        "Observed flux F_lambda(t)"
+      ],
+      "title": "Kinetic Discrimination of Fission Recycling via Actinide Line Evolution in Kilonova Spectra"
+    },
+    {
+      "base_hypothesis_reference": "Canonical Idea components regarding the need to discriminate fission-driven nucleosynthesis from alternative branching scenarios.",
+      "candidate_model_strategy": {
+        "catalog_model_ids": [
+          "math_phys_astronomy-constrained-monte-carlo-mcmc",
+          "math_phys_astronomy-stochastic-background-hierarchical-model"
+        ],
+        "mode": "CATALOG_MATCH",
+        "rationale": "Uses constrained MCMC to sample the posterior distribution of physical parameters. The hierarchical model structure allows for the combination of data from multiple kilonova events (or different observational epochs) to tighten constraints on the universal nuclear physics parameter tau_f."
+      },
+      "comparator": "Point estimates from deterministic forward models without uncertainty quantification.",
+      "domain": "MATH_PHYS_ASTRONOMY",
+      "execution_readiness": "EXECUTABLE_CANDIDATE",
+      "falsification_condition": "If the posterior distribution of tau_f is broad and uniform across physically plausible values, or if the Bayes factor strongly favors a model where tau_f is degenerate with Ye, the ability to uniquely identify the fission timescale is falsified.",
+      "initial_boundary_requirements": [
+        "Priors must be physically bounded (e.g., M_ej > 0, 0 < Ye < 0.5).",
+        "Likelihood surfaces must be defined over the observable parameter space."
+      ],
+      "known_limitations": [
+        "Computationally expensive due to the need for surrogate models for the forward physics.",
+        "Assumes that the nuclear physics parameter tau_f is constant across different neutron star merger events."
+      ],
+      "model_intent": "To construct a hierarchical statistical model that infers the physical parameter tau_f by marginalizing over astrophysical nuisance parameters (mass, Ye, inclination).",
+      "observables": [
+        "Posterior mean and credible intervals for tau_f",
+        "Bayes factor comparing delayed fission vs. instantaneous fission models",
+        "Residuals of spectral fit"
+      ],
+      "parameters_and_sources": [
+        "Prior distributions for nuclear parameters (from theory)",
+        "Likelihood functions for GW strain data (from LIGO/Virgo/KAGRA)",
+        "Likelihood functions for photometric light curves (from telescopes)",
+        "Likelihood functions for spectral line equivalent widths"
+      ],
+      "provisional_solver_family": "Parallel Tempering MCMC or Nested Sampling algorithms.",
+      "quantitative_idea_id": "Q2",
+      "quantitative_question": "What is the posterior probability distribution of the fission neutron release timescale given joint constraints from gravitational wave parameters, kilonova photometry, and spectroscopic abundances?",
+      "scenarios": [
+        "Single-event inference (GW170817)",
+        "Multi-event hierarchical inference",
+        "Inference with spectroscopic data vs. photometry only"
+      ],
+      "state_variables": [
+        "Posterior samples of tau_f",
+        "Posterior samples of ejecta mass M_ej",
+        "Posterior samples of initial electron fraction Ye",
+        "Posterior samples of inclination angle i"
+      ],
+      "title": "Hierarchical Bayesian Inference of Fission Timescales from Multi-Messenger Kilonova Constraints"
+    }
+  ],
+  "schema_version": "quantitative_ideas_v1",
+  "source_identity": {
+    "handoff_fingerprint": "90366f83dd2b7387cd3dbd0ab419e202e5e505957b5e848430c616ed40d0fe0e",
+    "idea_result_path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/idea_result.json",
+    "manifest_fingerprint": "a2deac450e3f144e880ff446562aa6f01a72a943a5383e9660b89f19a35e604d",
+    "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "project_id": "sci_260905_008_survey_001",
+    "science_run_id": "260905-008",
+    "selected_direction_id": "premise_inversion",
+    "survey_manifest_path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/survey/attempt-001/survey_manifest.json",
+    "survey_run_id": "260905-008-survey-001"
+  },
+  "topic": "Where do the heavy elements in the universe come from? The origins of heavy elements (which have an atomic  number of 92 or higher) and superheavy elements (with  an atomic number of at least 112) are still somewhat of  a mystery to scientists. We have been able to produce  some heavy elements in experiments that take place  in reactors, and artificially produce heavy elements in  cyclotrons. But beyond those produced on terra firma,  what is the origin story of heavy elements? We turn to astrophysics for our answer. We know  that the light elements, such as hydrogen, helium, and  lithium, were formed at the dawn of the universe by the  Big Bang. Elements as heavy as iron (atomic number  26) are the product of fusion in the cores of stars. The  higher the atomic number, the more force is needed  to create the element, and indeed, gallium (31) and  bromine (35) need a huge celestial event, such as a  supernova. Another astrophysical process, the rapid  neutron-capture process (r-process), entails neutrons  being quickly added to an atom’s nucleus; this process  is responsible for many of the elements heavier than  iron, such as gold and uranium.    One potential source for heavy elements was recently  confirmed: In 2019, an international team of researchers  reported that neutron stars may be a significant  source. The scientists examined a kilonova (neutron  star merger) 140 million light-years from Earth, which  they were able to observe through the detection of the  merger’s gravitational waves. What they saw was incredibly exciting. As Science  reporter Daniel Clery notes, “Computer modeling  revealed that strontium [atomic number 38] in  the expanding ball of gas would absorb light at  wavelengths of 350 and 850 nanometers. When they  looked again at the X-shooter spectra, they found dips  in the spectra at those wavelengths. The end result: five  Earth masses worth of strontium.” The presence of strontium confirms that heavy  elements are created by neutron star mergers and  other cataclysmic astrophysical events. The work was  additionally important because it marked the first time  that scientists were able to see an individual element in  a kilonova’s aftermath."
+}

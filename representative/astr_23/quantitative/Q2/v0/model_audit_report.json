@@ -1,0 +1,80 @@
+{
+  "capability": {
+    "capability": "COMPOSABLE",
+    "kind": "MATHIR",
+    "reason": "The model is fully represented by audited MathIR and an approved solver adapter.",
+    "solver_id": "stdlib_monte_carlo",
+    "system_type": "MONTE_CARLO"
+  },
+  "checks": {
+    "execution_text_or_code_absent": true,
+    "mathir_valid": true,
+    "model_spec_valid": true,
+    "pdeir_valid": false,
+    "solver_available": true,
+    "trusted_expression_ast": true
+  },
+  "errors": [],
+  "execution_ir": {
+    "document": {
+      "observable": {
+        "name": "tau_f",
+        "op": "variable"
+      },
+      "parameters": {
+        "M_ej": 0.04,
+        "N_chains": 4.0,
+        "N_samples": 10000.0,
+        "N_temperatures": 8.0,
+        "Y_e": 0.16,
+        "i": 0.5585053606381855,
+        "tau_f": 2.3
+      },
+      "random_variables": [
+        {
+          "distribution": "uniform",
+          "id": "tau_f",
+          "parameters": {
+            "high": 3.45,
+            "low": 1.15
+          }
+        },
+        {
+          "distribution": "uniform",
+          "id": "M_ej",
+          "parameters": {
+            "high": 0.05,
+            "low": 0.03
+          }
+        },
+        {
+          "distribution": "uniform",
+          "id": "Y_e",
+          "parameters": {
+            "high": 0.24,
+            "low": 0.08
+          }
+        },
+        {
+          "distribution": "uniform",
+          "id": "i",
+          "parameters": {
+            "high": 0.7330382858376184,
+            "low": 0.33161255787892263
+          }
+        }
+      ],
+      "samples": 10000,
+      "schema_version": "mathir_v1",
+      "seed": 260905008,
+      "system_type": "MONTE_CARLO"
+    },
+    "kind": "MATHIR",
+    "schema_version": "execution_ir_v1"
+  },
+  "execution_ir_identity": "a137d9e0e1e06c9f520f1d84a017d3daa74c539c067bb6930096c0b2fd953b95",
+  "mathir_identity": "43f920a69aa48b6d3e6c3c12ca42aadbbaf0939a5f31cd337f68b097f44ec4da",
+  "model_spec_identity": "2e547230438cee640258af65d5383f1898089212fe8e890f178f082222bcb2f6",
+  "schema_version": "quantitative_model_audit_v1",
+  "status": "MODEL_AUDITED"
+}

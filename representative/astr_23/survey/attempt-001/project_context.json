@@ -1,0 +1,750 @@
+{
+  "declared_domain": "",
+  "domain": "Astrophysical Nucleosynthesis",
+  "domain_resolution_source": "llm_primary_catalog_validated",
+  "event": "project_created",
+  "project_id": "sci_260905_008_survey_001",
+  "requires_human_confirmation": true,
+  "research_context": {
+    "abbreviations": [
+      "r-process"
+    ],
+    "academic_operationalization": {
+      "applied": false,
+      "baseline_requirements": [],
+      "data_or_deployment_context": [],
+      "extractor": "deterministic_skip",
+      "limitation_and_failure_conditions": [],
+      "mode": "survey_scope",
+      "normalized_objective": "Where do the heavy elements in the universe come from? The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to scientists. We have been able to produce some heavy elements in experiments that take place in reactors, and artificially produce heavy elements in cyclotrons. But beyond those produced on terra firma, what is the origin story of heavy elements? We turn to astrophysics for our answer. We know that the light elements, such as hydrogen, helium, and lithium, were formed at the dawn of the universe by the Big Bang. Elements as heavy as iron (atomic number 26) are the product of fusion in the cores of stars. The higher the atomic number, the more force is needed to create the element, and indeed, gallium (31) and bromine (35) need a huge celestial event, such as a supernova. Another astrophysical process, the rapid neutron-capture process (r-process), entails neutrons being quickly added to an atom’s nucleus; this process is responsible for many of the elements heavier than iron, such as gold and uranium. One potential source for heavy elements was recently confirmed: In 2019, an international team of researchers reported that neutron stars may be a significant source. The scientists examined a kilonova (neutron star merger) 140 million light-years from Earth, which they were able to observe through the detection of the merger’s gravitational waves. What they saw was incredibly exciting. As Science reporter Daniel Clery notes, “Computer modeling revealed that strontium [atomic number 38] in the expanding ball of gas would absorb light at wavelengths of 350 and 850 nanometers. When they looked again at the X-shooter spectra, they found dips in the spectra at those wavelengths. The end result: five Earth masses worth of strontium.” The presence of strontium confirms that heavy elements are created by neutron star mergers and other cataclysmic astrophysical events. The work was additionally important because it marked the first time that scientists were able to see an individual element in a kilonova’s aftermath.",
+      "original_objective": "Where do the heavy elements in the universe come from? The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to scientists. We have been able to produce some heavy elements in experiments that take place in reactors, and artificially produce heavy elements in cyclotrons. But beyond those produced on terra firma, what is the origin story of heavy elements? We turn to astrophysics for our answer. We know that the light elements, such as hydrogen, helium, and lithium, were formed at the dawn of the universe by the Big Bang. Elements as heavy as iron (atomic number 26) are the product of fusion in the cores of stars. The higher the atomic number, the more force is needed to create the element, and indeed, gallium (31) and bromine (35) need a huge celestial event, such as a supernova. Another astrophysical process, the rapid neutron-capture process (r-process), entails neutrons being quickly added to an atom’s nucleus; this process is responsible for many of the elements heavier than iron, such as gold and uranium. One potential source for heavy elements was recently confirmed: In 2019, an international team of researchers reported that neutron stars may be a significant source. The scientists examined a kilonova (neutron star merger) 140 million light-years from Earth, which they were able to observe through the detection of the merger’s gravitational waves. What they saw was incredibly exciting. As Science reporter Daniel Clery notes, “Computer modeling revealed that strontium [atomic number 38] in the expanding ball of gas would absorb light at wavelengths of 350 and 850 nanometers. When they looked again at the X-shooter spectra, they found dips in the spectra at those wavelengths. The end result: five Earth masses worth of strontium.” The presence of strontium confirms that heavy elements are created by neutron star mergers and other cataclysmic astrophysical events. The work was additionally important because it marked the first time that scientists were able to see an individual element in a kilonova’s aftermath.",
+      "outcomes_or_readouts": [],
+      "research_object": "",
+      "rewrite_reason": "The original objective already contains sufficient scope anchors.",
+      "task_or_question": ""
+    },
+    "cache_status": "hit",
+    "catalog_conflict": {
+      "adjudicated": false,
+      "catalog_primary_label": "Physics And Astronomy",
+      "detected": false,
+      "reason": ""
+    },
+    "catalog_resolution": {
+      "catalog_version": "research_domain_catalog_v1",
+      "declared_domain": "",
+      "primary_domain": "physics_astronomy",
+      "primary_label": "Physics And Astronomy",
+      "primary_subfield": "physics_astronomy",
+      "requested_domain_is_generic": true,
+      "requires_human_confirmation": true,
+      "research_domains": [
+        {
+          "declared_domain_matches": [],
+          "declared_domain_score": 0.0,
+          "domain": "physics_astronomy",
+          "evidence_status": "DIRECT",
+          "key": "physics_astronomy",
+          "label": "Physics And Astronomy",
+          "matched_terms": [
+            "physics",
+            "astrophysics"
+          ],
+          "scientific_text_matches": [
+            "physics",
+            "astrophysics"
+          ],
+          "scientific_text_score": 2.0,
+          "score": 22.0,
+          "source": "declared_domain_and_scientific_text",
+          "subfield": "physics_astronomy"
+        },
+        {
+          "declared_domain_matches": [],
+          "declared_domain_score": 0.0,
+          "domain": "chemical_engineering",
+          "evidence_status": "DIRECT",
+          "key": "chemical_process_engineering",
+          "label": "Chemical And Process Engineering",
+          "matched_terms": [
+            "reactor"
+          ],
+          "scientific_text_matches": [
+            "reactor"
+          ],
+          "scientific_text_score": 1.0,
+          "score": 11.0,
+          "source": "declared_domain_and_scientific_text",
+          "subfield": "chemical_process_engineering"
+        }
+      ]
+    },
+    "core_entities": [
+      "heavy elements",
+      "superheavy elements",
+      "rapid neutron-capture process",
+      "r-process",
+      "neutron stars",
+      "kilonova",
+      "gravitational waves",
+      "strontium",
+      "spectral absorption"
+    ],
+    "declared_domain": "",
+    "discovery_taxonomy": {
+      "adjacent_disciplines": [],
+      "coverage": "unsupported",
+      "discipline_ids": [],
+      "matched_terms": [],
+      "mixed": false,
+      "out_of_scope_terms": [],
+      "primary_discipline": null,
+      "provider_filters": {
+        "arxiv": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "arxiv",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "openalex": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "openalex",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "semantic_scholar": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "semantic_scholar",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      },
+      "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence.",
+      "schema_version": "discipline_taxonomy_v1",
+      "scope": "natural_science_engineering_only",
+      "status": "unresolved"
+    },
+    "domain": "Astrophysical Nucleosynthesis",
+    "domain_confidence": 0.95,
+    "domain_context": {
+      "primary": "Astrophysical Nucleosynthesis",
+      "retrieval_terms": [
+        "Astrophysical Nucleosynthesis",
+        "Physics And Astronomy",
+        "Chemical And Process Engineering",
+        "Nucleosynthesis",
+        "Kilonova Spectroscopy",
+        "Elemental Abundance",
+        "Neutron Star Mergers",
+        "r-process",
+        "heavy element synthesis",
+        "kilonova",
+        "neutron star merger",
+        "spectral line absorption",
+        "heavy elements",
+        "superheavy elements",
+        "rapid neutron-capture process",
+        "neutron stars",
+        "gravitational waves",
+        "strontium",
+        "spectral absorption"
+      ],
+      "secondary_labels": [
+        "Nucleosynthesis",
+        "Kilonova Spectroscopy",
+        "Elemental Abundance",
+        "Neutron Star Mergers"
+      ],
+      "taxonomy_labels": [
+        "Physics And Astronomy",
+        "Chemical And Process Engineering"
+      ]
+    },
+    "domain_resolution_source": "llm_primary_catalog_validated",
+    "domain_taxonomy": {
+      "catalog_version": "research_domain_catalog_v1",
+      "coverage": "validated",
+      "mappings": [
+        {
+          "declared_domain_matches": [],
+          "declared_domain_score": 0.0,
+          "domain": "physics_astronomy",
+          "evidence_status": "DIRECT",
+          "key": "physics_astronomy",
+          "label": "Physics And Astronomy",
+          "matched_terms": [
+            "physics",
+            "astrophysics"
+          ],
+          "scientific_text_matches": [
+            "physics",
+            "astrophysics"
+          ],
+          "scientific_text_score": 2.0,
+          "score": 22.0,
+          "source": "declared_domain_and_scientific_text",
+          "subfield": "physics_astronomy"
+        },
+        {
+          "declared_domain_matches": [],
+          "declared_domain_score": 0.0,
+          "domain": "chemical_engineering",
+          "evidence_status": "DIRECT",
+          "key": "chemical_process_engineering",
+          "label": "Chemical And Process Engineering",
+          "matched_terms": [
+            "reactor"
+          ],
+          "scientific_text_matches": [
+            "reactor"
+          ],
+          "scientific_text_score": 1.0,
+          "score": 11.0,
+          "source": "declared_domain_and_scientific_text",
+          "subfield": "chemical_process_engineering"
+        }
+      ]
+    },
+    "evidence_spans": [
+      "Where do the heavy elements in the universe come from?",
+      "The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to scientists.",
+      "Another astrophysical process, the rapid neutron-capture process (r-process), entails neutrons being quickly added to an atom’s nucleus; this process is responsible for many of the elements heavier than iron, such as gold and uranium.",
+      "The scientists examined a kilonova (neutron star merger) 140 million light-years from Earth, which they were able to observe through the detection of the merger’s gravitational waves.",
+      "Computer modeling revealed that strontium [atomic number 38] in the expanding ball of gas would absorb light at wavelengths of 350 and 850 nanometers.",
+      "When they looked again at the X-shooter spectra, they found dips in the spectra at those wavelengths."
+    ],
+    "exclusion_terms": [
+      "terra firma",
+      "cyclotrons",
+      "reactors",
+      "Big Bang",
+      "stellar fusion cores"
+    ],
+    "identity_source": "llm_primary_catalog_validated",
+    "identity_status": "unresolved",
+    "input_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "llm_attempted": true,
+    "llm_error": "",
+    "llm_payload": {
+      "abbreviations": [
+        "r-process"
+      ],
+      "core_entities": [
+        "heavy elements",
+        "superheavy elements",
+        "rapid neutron-capture process",
+        "r-process",
+        "neutron stars",
+        "kilonova",
+        "gravitational waves",
+        "strontium",
+        "spectral absorption"
+      ],
+      "domain_confidence": 0.95,
+      "evidence_spans": [
+        "Where do the heavy elements in the universe come from?",
+        "The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to scientists.",
+        "Another astrophysical process, the rapid neutron-capture process (r-process), entails neutrons being quickly added to an atom’s nucleus; this process is responsible for many of the elements heavier than iron, such as gold and uranium.",
+        "The scientists examined a kilonova (neutron star merger) 140 million light-years from Earth, which they were able to observe through the detection of the merger’s gravitational waves.",
+        "Computer modeling revealed that strontium [atomic number 38] in the expanding ball of gas would absorb light at wavelengths of 350 and 850 nanometers.",
+        "When they looked again at the X-shooter spectra, they found dips in the spectra at those wavelengths.",
+        "The presence of strontium confirms that heavy elements are created by neutron star mergers and other cataclysmic astrophysical events."
+      ],
+      "exclusion_terms": [
+        "terra firma",
+        "cyclotrons",
+        "reactors",
+        "Big Bang",
+        "stellar fusion cores"
+      ],
+      "must_not_be_primary": [
+        "chemical_process_engineering",
+        "materials_science",
+        "terrestrial_chemistry",
+        "industrial_synthesis"
+      ],
+      "operationalization": {
+        "baseline_requirements": [
+          "Atomic number thresholds (≥92 for heavy, ≥112 for superheavy)",
+          "Fusion limits up to iron (atomic number 26)"
+        ],
+        "data_or_deployment_context": [
+          "Kilonova 140 million light-years from Earth",
+          "Merger gravitational wave detection",
+          "Expanding ball of gas"
+        ],
+        "limitation_and_failure_conditions": [
+          "Light elements formed by Big Bang",
+          "Elements up to gallium and bromine require supernovae",
+          "Terrestrial reactor and cyclotron production excluded"
+        ],
+        "normalized_objective": "Identify astrophysical mechanisms responsible for synthesizing heavy and superheavy elements beyond terrestrial production limits.",
+        "outcomes_or_readouts": [
+          "Spectral absorption dips at 350 and 850 nanometers",
+          "Five Earth masses worth of strontium",
+          "Confirmation of neutron star mergers as heavy element sources"
+        ],
+        "research_object": "Astrophysically synthesized heavy and superheavy elements",
+        "rewrite_reason": "Source text outlines a broad cosmological inquiry rather than a structured experimental pipeline; operationalization was constrained to isolate the nucleosynthetic mechanisms, physical objects, and direct observational readouts.",
+        "task_or_question": "What celestial events and nuclear capture processes generate elements heavier than iron, and what observational signatures confirm their existence?"
+      },
+      "preferred_research_domains": [
+        "physics_astronomy"
+      ],
+      "primary_discipline": "physics_astronomy",
+      "primary_label": "Astrophysical Nucleosynthesis",
+      "rationale": "The text centers on astrophysical nucleosynthesis mechanisms and observational confirmation of heavy element creation via kilonovae, directly aligning with physics and astronomy while excluding terrestrial chemical engineering or laboratory synthesis contexts.",
+      "retrieval_synonyms": [
+        "r-process",
+        "heavy element synthesis",
+        "kilonova",
+        "neutron star merger",
+        "astrophysical nucleosynthesis",
+        "spectral line absorption"
+      ],
+      "secondary_disciplines": [
+        "nuclear_astrophysics",
+        "observational_cosmology"
+      ],
+      "secondary_labels": [
+        "Nucleosynthesis",
+        "Kilonova Spectroscopy",
+        "Elemental Abundance",
+        "Neutron Star Mergers"
+      ]
+    },
+    "llm_used": true,
+    "original_objective": "Where do the heavy elements in the universe come from? The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to scientists. We have been able to produce some heavy elements in experiments that take place in reactors, and artificially produce heavy elements in cyclotrons. But beyond those produced on terra firma, what is the origin story of heavy elements? We turn to astrophysics for our answer. We know that the light elements, such as hydrogen, helium, and lithium, were formed at the dawn of the universe by the Big Bang. Elements as heavy as iron (atomic number 26) are the product of fusion in the cores of stars. The higher the atomic number, the more force is needed to create the element, and indeed, gallium (31) and bromine (35) need a huge celestial event, such as a supernova. Another astrophysical process, the rapid neutron-capture process (r-process), entails neutrons being quickly added to an atom’s nucleus; this process is responsible for many of the elements heavier than iron, such as gold and uranium. One potential source for heavy elements was recently confirmed: In 2019, an international team of researchers reported that neutron stars may be a significant source. The scientists examined a kilonova (neutron star merger) 140 million light-years from Earth, which they were able to observe through the detection of the merger’s gravitational waves. What they saw was incredibly exciting. As Science reporter Daniel Clery notes, “Computer modeling revealed that strontium [atomic number 38] in the expanding ball of gas would absorb light at wavelengths of 350 and 850 nanometers. When they looked again at the X-shooter spectra, they found dips in the spectra at those wavelengths. The end result: five Earth masses worth of strontium.” The presence of strontium confirms that heavy elements are created by neutron star mergers and other cataclysmic astrophysical events. The work was additionally important because it marked the first time that scientists were able to see an individual element in a kilonova’s aftermath.",
+    "original_topic": "Where do the heavy elements in the universe come from? The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to scientists. We have been able to produce some heavy elements in experiments that take place in reactors, and artificially produce heavy elements in cyclotrons. But beyond those produced on terra firma, what is the origin story of heavy elements? We turn to astrophysics for our answer. We know that the light elements, such as hydrogen, helium, and lithium, were formed at the dawn of the universe by the Big Bang. Elements as heavy as iron (atomic number 26) are the product of fusion in the cores of stars. The higher the atomic number, the more force is needed to create the element, and indeed, gallium (31) and bromine (35) need a huge celestial event, such as a supernova. Another astrophysical process, the rapid neutron-capture process (r-process), entails neutrons being quickly added to an atom’s nucleus; this process is responsible for many of the elements heavier than iron, such as gold and uranium. One potential source for heavy elements was recently confirmed: In 2019, an international team of researchers reported that neutron stars may be a significant source. The scientists examined a kilonova (neutron star merger) 140 million light-years from Earth, which they were able to observe through the detection of the merger’s gravitational waves. What they saw was incredibly exciting. As Science reporter Daniel Clery notes, “Computer modeling revealed that strontium [atomic number 38] in the expanding ball of gas would absorb light at wavelengths of 350 and 850 nanometers. When they looked again at the X-shooter spectra, they found dips in the spectra at those wavelengths. The end result: five Earth masses worth of strontium.” The presence of strontium confirms that heavy elements are created by neutron star mergers and other cataclysmic astrophysical events. The work was additionally important because it marked the first time that scientists were able to see an individual element in a kilonova’s aftermath.",
+    "primary_discipline": null,
+    "recommended_sources": [
+      {
+        "native_filter": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "openalex",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "priority": 1,
+        "provider": "openalex",
+        "role": "primary_discovery"
+      },
+      {
+        "enabled_for_exact_mapping": false,
+        "native_filter": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "arxiv",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "priority": 2,
+        "provider": "arxiv",
+        "role": "conditional_preprint_discovery"
+      },
+      {
+        "native_filter": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "semantic_scholar",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "priority": 3,
+        "provider": "semantic_scholar",
+        "role": "fallback_only"
+      }
+    ],
+    "requires_human_confirmation": true,
+    "research_brief": "",
+    "research_design_inventory": {
+      "design_basis": [
+        {
+          "anchors": [
+            "heavy elements (which have an atomic number of 92 or higher)",
+            "superheavy elements (with an atomic number of at least 112)"
+          ],
+          "evidence_spans": [
+            "The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to scientists."
+          ],
+          "id": "DB1",
+          "kind": "boundary_or_failure",
+          "source": "llm_source_grounded",
+          "statement": "Identify the operational limits where terrestrial synthesis yields become insufficient relative to observed cosmic abundances."
+        },
+        {
+          "anchors": [
+            "experiments that take place in reactors",
+            "cyclotrons",
+            "terra firma"
+          ],
+          "evidence_spans": [
+            "We have been able to produce some heavy elements in experiments that take place in reactors, and artificially produce heavy elements in cyclotrons. But beyond those produced on terra firma, what is the origin story of heavy elements?"
+          ],
+          "id": "DB2",
+          "kind": "comparison",
+          "source": "llm_source_grounded",
+          "statement": "Systematically contrast controlled laboratory production pathways with naturally occurring high-energy astrophysical events to isolate environmental variables."
+        },
+        {
+          "anchors": [
+            "more force is needed to create the element",
+            "huge celestial event",
+            "supernova"
+          ],
+          "evidence_spans": [
+            "The higher the atomic number, the more force is needed to create the element, and indeed, gallium (31) and bromine (35) need a huge celestial event, such as a supernova."
+          ],
+          "id": "DB3",
+          "kind": "condition_or_regime",
+          "source": "llm_source_grounded",
+          "statement": "Determine the threshold energy requirements and external triggers necessary to transition between standard fusion regimes and rapid particle-accretion models."
+        },
+        {
+          "anchors": [
+            "elements heavier than iron",
+            "gold and uranium"
+          ],
+          "evidence_spans": [
+            "this process is responsible for many of the elements heavier than iron, such as gold and uranium."
+          ],
+          "id": "DB4",
+          "kind": "data_or_corpus",
+          "source": "llm_source_grounded",
+          "statement": "Assemble observational datasets linking specific high-yield nucleosynthetic events to the resulting isotopic distribution patterns."
+        },
+        {
+          "anchors": [
+            "rapid neutron-capture process",
+            "r-process"
+          ],
+          "evidence_spans": [
+            "Another astrophysical process, the rapid neutron-capture process (r-process), entails neutrons being quickly added to an atom’s nucleus;"
+          ],
+          "id": "DB5",
+          "kind": "method_or_design",
+          "source": "llm_source_grounded",
+          "statement": "Construct detection protocols capable of isolating rapid particle-addition signatures from background stellar fusion outputs."
+        },
+        {
+          "anchors": [
+            "neutrons being quickly added",
+            "atom’s nucleus"
+          ],
+          "evidence_spans": [
+            "entails neutrons being quickly added to an atom’s nucleus;"
+          ],
+          "id": "DB6",
+          "kind": "theoretical_assumption",
+          "source": "llm_source_grounded",
+          "statement": "Test the premise that sequential particle accretion rates dictate final elemental mass accumulation in extreme environments."
+        },
+        {
+          "anchors": [
+            "atom’s nucleus",
+            "dawn of the universe"
+          ],
+          "evidence_spans": [
+            "neutrons being quickly added to an atom’s nucleus",
+            "formed at the dawn of the universe by the Big Bang"
+          ],
+          "id": "DB7",
+          "kind": "scale",
+          "source": "llm_source_grounded",
+          "statement": "Bridge micro-scale nuclear interaction parameters with macro-scale cosmological timeline markers to calibrate long-term formation models."
+        },
+        {
+          "anchors": [
+            "heavy elements",
+            "superheavy elements",
+            "rapid neutron-capture process",
+            "r-process",
+            "neutron stars",
+            "kilonova",
+            "gravitational waves",
+            "strontium"
+          ],
+          "evidence_spans": [
+            "heavy elements",
+            "superheavy elements",
+            "rapid neutron-capture process",
+            "r-process",
+            "neutron stars",
+            "kilonova"
+          ],
+          "id": "DB8",
+          "kind": "research_object",
+          "source": "project_declaration_compiler",
+          "statement": "The project studies Astrophysical Nucleosynthesis."
+        },
+        {
+          "anchors": [
+            "Where do the heavy elements in the universe come from? The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to scientists",
+            "heavy elements",
+            "superheavy elements",
+            "rapid neutron-capture process",
+            "r-process",
+            "neutron stars",
+            "kilonova",
+            "gravitational waves"
+          ],
+          "evidence_spans": [
+            "Where do the heavy elements in the universe come from? The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to scientists"
+          ],
+          "id": "DB9",
+          "kind": "target_relation",
+          "source": "project_declaration_compiler",
+          "statement": "Where do the heavy elements in the universe come from? The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to scientists. We have been able to produce some heavy elements in experiments that take place in reactors, and artificially produce heavy elements in cyclotrons. But beyond those produced on terra firma, what is the origin story of heavy elements? We turn to astrophysics for our answer. We know that the light elements, such as hydrogen, helium, and lithium, were formed "
+        },
+        {
+          "anchors": [
+            "Where do the heavy elements in the universe come from? The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to scientists"
+          ],
+          "evidence_spans": [
+            "Where do the heavy elements in the universe come from? The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to scientists"
+          ],
+          "id": "DB10",
+          "kind": "outcome_or_construct",
+          "source": "project_declaration_compiler",
+          "statement": "The project requires evidence about declared outcomes or constructs."
+        }
+      ],
+      "input_fingerprint": "1a6ef04b26c8749a179180ad48ce35a83eb175d2f54d82056c672d354a84c159",
+      "inventory_source": "llm_source_grounded_plus_project_declaration",
+      "llm_error": "",
+      "llm_used": true,
+      "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+      "schema_version": "research_design_inventory_v1"
+    },
+    "research_domains": [
+      {
+        "declared_domain_matches": [],
+        "declared_domain_score": 0.0,
+        "domain": "physics_astronomy",
+        "evidence_status": "DIRECT",
+        "key": "physics_astronomy",
+        "label": "Physics And Astronomy",
+        "matched_terms": [
+          "physics",
+          "astrophysics"
+        ],
+        "scientific_text_matches": [
+          "physics",
+          "astrophysics"
+        ],
+        "scientific_text_score": 2.0,
+        "score": 22.0,
+        "source": "declared_domain_and_scientific_text",
+        "subfield": "physics_astronomy"
+      },
+      {
+        "declared_domain_matches": [],
+        "declared_domain_score": 0.0,
+        "domain": "chemical_engineering",
+        "evidence_status": "DIRECT",
+        "key": "chemical_process_engineering",
+        "label": "Chemical And Process Engineering",
+        "matched_terms": [
+          "reactor"
+        ],
+        "scientific_text_matches": [
+          "reactor"
+        ],
+        "scientific_text_score": 1.0,
+        "score": 11.0,
+        "source": "declared_domain_and_scientific_text",
+        "subfield": "chemical_process_engineering"
+      }
+    ],
+    "research_identity": {
+      "confidence": 0.95,
+      "core_entities": [
+        "heavy elements",
+        "superheavy elements",
+        "rapid neutron-capture process",
+        "r-process",
+        "neutron stars",
+        "kilonova",
+        "gravitational waves",
+        "strontium",
+        "spectral absorption"
+      ],
+      "evidence_spans": [
+        "Where do the heavy elements in the universe come from?",
+        "The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to scientists.",
+        "Another astrophysical process, the rapid neutron-capture process (r-process), entails neutrons being quickly added to an atom’s nucleus; this process is responsible for many of the elements heavier than iron, such as gold and uranium.",
+        "The scientists examined a kilonova (neutron star merger) 140 million light-years from Earth, which they were able to observe through the detection of the merger’s gravitational waves.",
+        "Computer modeling revealed that strontium [atomic number 38] in the expanding ball of gas would absorb light at wavelengths of 350 and 850 nanometers.",
+        "When they looked again at the X-shooter spectra, they found dips in the spectra at those wavelengths."
+      ],
+      "label": "Astrophysical Nucleosynthesis",
+      "must_not_be_primary": [
+        "chemical_process_engineering",
+        "materials_science",
+        "terrestrial_chemistry",
+        "industrial_synthesis"
+      ],
+      "rationale": "The text centers on astrophysical nucleosynthesis mechanisms and observational confirmation of heavy element creation via kilonovae, directly aligning with physics and astronomy while excluding terrestrial chemical engineering or laboratory synthesis contexts.",
+      "retrieval_synonyms": [
+        "r-process",
+        "heavy element synthesis",
+        "kilonova",
+        "neutron star merger",
+        "astrophysical nucleosynthesis",
+        "spectral line absorption"
+      ],
+      "secondary_labels": [
+        "Nucleosynthesis",
+        "Kilonova Spectroscopy",
+        "Elemental Abundance",
+        "Neutron Star Mergers"
+      ],
+      "source": "llm_primary"
+    },
+    "retrieval_plan": {
+      "baseline_query": "Where do the heavy elements in the universe come from? The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to",
+      "evidence_mode": "overview",
+      "exclude_anchors": [
+        "terra firma",
+        "cyclotrons",
+        "reactors",
+        "Big Bang",
+        "stellar fusion cores"
+      ],
+      "execution_policy": "limited_query_lanes",
+      "include_anchors": [
+        "Astrophysical Nucleosynthesis",
+        "Physics And Astronomy",
+        "Chemical And Process Engineering",
+        "Nucleosynthesis",
+        "Kilonova Spectroscopy",
+        "Elemental Abundance",
+        "Neutron Star Mergers",
+        "r-process",
+        "heavy element synthesis",
+        "kilonova",
+        "neutron star merger",
+        "spectral line absorption"
+      ],
+      "normalized_objective": "Where do the heavy elements in the universe come from? The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to scientists. We have been able to produce some heavy elements in experiments that take place in reactors, and artificially produce heavy elements in cyclotrons. But beyond those produced on terra firma, what is the origin story of heavy elements? We turn to astrophysics for our answer. We know that the light elements, such as hydrogen, helium, and lithium, were formed at the dawn of the universe by the Big Bang. Elements as heavy as iron (atomic number 26) are the product of fusion in the cores of stars. The higher the atomic number, the more force is needed to cre",
+      "query_lanes": [
+        {
+          "discipline_filter_policy": "broad",
+          "evidence_mode": "overview",
+          "execution_phase": "initial",
+          "hard_filter_allowed": false,
+          "hard_filter_applied": false,
+          "lane": "broad_anchor",
+          "lane_id": "broad_anchor",
+          "provider": "openalex",
+          "provider_filter": {},
+          "purpose": "recall_baseline",
+          "query": "Where do the heavy elements in the universe come from? The origins of heavy elements (which have an atomic number of 92 or higher) and superheavy elements (with an atomic number of at least 112) are still somewhat of a mystery to",
+          "taxonomy_coverage": "broad"
+        }
+      ],
+      "schema_version": "retrieval_lanes_v1"
+    },
+    "retrieval_synonyms": [
+      "r-process",
+      "heavy element synthesis",
+      "kilonova",
+      "neutron star merger",
+      "astrophysical nucleosynthesis",
+      "spectral line absorption"
+    ],
+    "schema_version": "project_research_context_v3",
+    "secondary_disciplines": [],
+    "taxonomy_resolution": {
+      "adjacent_disciplines": [],
+      "coverage": "unsupported",
+      "discipline_ids": [],
+      "matched_terms": [],
+      "mixed": false,
+      "out_of_scope_terms": [],
+      "primary_discipline": null,
+      "provider_filters": {
+        "arxiv": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "arxiv",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "openalex": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "openalex",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        },
+        "semantic_scholar": {
+          "applied": false,
+          "coverage": "unsupported",
+          "mode": "not_applied",
+          "policy": "post_filter_only",
+          "provider": "semantic_scholar",
+          "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence."
+        }
+      },
+      "reason": "No allowlisted natural-science or engineering discipline was resolved with sufficient evidence.",
+      "schema_version": "discipline_taxonomy_v1",
+      "scope": "natural_science_engineering_only",
+      "status": "unresolved"
+    },
+    "title": ""
+  },
+  "research_domains": [
+    {
+      "declared_domain_matches": [],
+      "declared_domain_score": 0.0,
+      "domain": "physics_astronomy",
+      "evidence_status": "DIRECT",
+      "key": "physics_astronomy",
+      "label": "Physics And Astronomy",
+      "matched_terms": [
+        "physics",
+        "astrophysics"
+      ],
+      "scientific_text_matches": [
+        "physics",
+        "astrophysics"
+      ],
+      "scientific_text_score": 2.0,
+      "score": 22.0,
+      "source": "declared_domain_and_scientific_text",
+      "subfield": "physics_astronomy"
+    },
+    {
+      "declared_domain_matches": [],
+      "declared_domain_score": 0.0,
+      "domain": "chemical_engineering",
+      "evidence_status": "DIRECT",
+      "key": "chemical_process_engineering",
+      "label": "Chemical And Process Engineering",
+      "matched_terms": [
+        "reactor"
+      ],
+      "scientific_text_matches": [
+        "reactor"
+      ],
+      "scientific_text_score": 1.0,
+      "score": 11.0,
+      "source": "declared_domain_and_scientific_text",
+      "subfield": "chemical_process_engineering"
+    }
+  ],
+  "schema_version": "survey_project_context_artifact_v1"
+}

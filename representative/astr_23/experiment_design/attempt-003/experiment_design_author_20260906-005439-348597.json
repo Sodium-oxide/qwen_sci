@@ -1,0 +1,2569 @@
+{
+  "authoring_constraints": {
+    "counterexample_must_satisfy_all_assumptions": true,
+    "formal_and_empirical_claims_must_remain_separate": true,
+    "observed_results_are_absent": true,
+    "proposal_without_observed_results": true,
+    "unsupported_claims_forbidden": true,
+    "unverified_reasoning_must_be_labeled": true
+  },
+  "counterexample_analysis": {
+    "applicability": "formal_theory",
+    "candidate_counterexamples": [
+      {
+        "assumption_checks": [
+          {
+            "assumption_id": "A1",
+            "check": "Evaluate whether tau_fission >= tau_expansion holds for this witness.",
+            "evidence": "The witness explicitly defines tau_fission < tau_expansion, which directly contradicts assumption A1 (The effective fission timescale is comparable to or longer than the ejecta expansion timescale...).",
+            "result": "false"
+          },
+          {
+            "assumption_id": "A2",
+            "check": "Evaluate whether spectral uniqueness holds.",
+            "evidence": "Since the premise condition of the formal theorem is already violated by CE1, the satisfaction of A2 is irrelevant for validity as a counterexample to the theorem itself, though it remains undefined in this witness.",
+            "result": "unknown"
+          }
+        ],
+        "conclusion_check": {
+          "evidence": "While the premise (tau_fission > tau_expansion) is false, the logical implication 'False => X' is vacuously true. A counterexample to an implication must have a True Premise and False Conclusion. Since the premise is false here, this is a boundary case violating assumptions, not a valid counterexample to the formal structure.",
+          "negated_conclusion": "NOT Delta(Y_third_peak) correlated with Kappa_Lanthanide",
+          "result": "unknown"
+        },
+        "counterexample_id": "CE1",
+        "search_method": "llm_proposal_only",
+        "validity": "assumptions_not_satisfied",
+        "witness": "A simulation of neutron star merger ejecta where high neutron flux results in instantaneous fission recycling, yielding a calculated fission timescale (tau_fission) strictly less than the dynamical expansion timescale (tau_expansion)."
+      },
+      {
+        "assumption_checks": [
+          {
+            "assumption_id": "A1",
+            "check": "Compare tau_fission and tau_expansion.",
+            "evidence": "The witness explicitly constructs a scenario where fission timescales exceed expansion timescales, satisfying A1.",
+            "result": "true"
+          },
+          {
+            "assumption_id": "A2",
+            "check": "Check uniqueness of spectral sensitivity.",
+            "evidence": "The definitions for Lambda_Spectral and confounders (A2) require specific mathematical formalizations (as noted in input unknown_items) that are not provided, preventing verification of whether this specific witness preserves the uniqueness assumption.",
+            "result": "unknown"
+          }
+        ],
+        "conclusion_check": {
+          "evidence": "The witness posits a state where the causal link in the conclusion fails (uncorrelated) despite the premise holding, making the target conclusion of P1 false.",
+          "negated_conclusion": "NOT Delta(Y_third_peak) correlated with Kappa_Lanthanide",
+          "result": "true"
+        },
+        "counterexample_id": "CE2",
+        "search_method": "llm_proposal_only",
+        "validity": "unverified",
+        "witness": "A hypothetical parameter space where tau_fission > tau_expansion is maintained (satisfying A1), but the modification of the third r-process peak (Delta Y_third_peak) is driven entirely by seed-nuclei distribution variance, resulting in zero correlation with lanthanide opacity (Kappa_Lanthanide)."
+      }
+    ],
+    "limitations": [
+      "No counterexample is marked as 'verified valid' due to execution mode DESIGN_ONLY.",
+      "CE1 was rejected because it violates Assumption A1 rather than refuting the conclusion under that assumption.",
+      "CE2 is plausible as a formal witness but cannot be verified without quantitative definitions of Y_third_peak and Kappa_Lanthanide."
+    ],
+    "negated_conclusion": "tau_fission <= tau_expansion OR NOT Delta(Y_third_peak) correlated with Kappa_Lanthanide",
+    "schema_version": "counterexample_analysis_v1",
+    "status": "candidate_found_unverified",
+    "target_claim_id": "P1",
+    "unknown_items": [
+      {
+        "field_path": "candidate_counterexamples.CE2.assumption_checks.A2",
+        "reason": "Assumption A2 requires demonstrating non-degeneracy in parameter space, but quantitative metrics for 'Unique_Sensitivity' are missing from the definitions.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "definitions.D3",
+        "reason": "Specific spectral lines and instruments for Lambda_Spectral are not defined, hindering witness validation.",
+        "status": "needs_human_input"
+      }
+    ]
+  },
+  "field_statuses": {
+    "analysis_plan": "not_applicable",
+    "analysis_plan.batch_effects": "not_applicable",
+    "analysis_plan.blinding": "not_applicable",
+    "analysis_plan.missing_data": "not_applicable",
+    "analysis_plan.randomization": "not_applicable",
+    "analysis_plan.repetitions": "not_applicable",
+    "analysis_plan.statistical_analysis": "not_applicable",
+    "comparison_and_robustness": "evidence_backed",
+    "comparison_and_robustness.baselines[0]": "needs_human_input",
+    "comparison_and_robustness.comparisons[0]": "needs_human_input",
+    "data_governance_and_reproducibility": "evidence_backed",
+    "data_governance_and_reproducibility.data_management": "needs_human_input",
+    "data_governance_and_reproducibility.reproducibility": "needs_human_input",
+    "hypothesis_mapping": "evidence_backed",
+    "measurement_and_calibration": "evidence_backed",
+    "measurement_and_calibration.calibration": "not_applicable",
+    "measurement_and_calibration.measurement_plan": "needs_human_input",
+    "measurement_and_calibration.quality_control": "needs_human_input",
+    "research_design": "evidence_backed",
+    "research_design.design_type": "user_declared",
+    "research_design.experimental_unit": "user_declared",
+    "research_design.time_structure": "design_assumption",
+    "sampling_and_eligibility": "evidence_backed",
+    "sampling_and_eligibility.eligibility_criteria": "not_applicable",
+    "sampling_and_eligibility.sample_size_or_power_basis": "not_applicable",
+    "sampling_and_eligibility.source": "not_applicable",
+    "template_details.assumptions": "needs_human_input",
+    "template_details.counterexample_or_boundary_analysis": "needs_human_input",
+    "template_details.formal_claim": "needs_human_input",
+    "template_details.verification_plan": "needs_human_input",
+    "variables_and_operationalization": "evidence_backed",
+    "variables_and_operationalization.operational_definitions[0]": "needs_human_input",
+    "variables_and_operationalization.operational_definitions[1]": "needs_human_input",
+    "variables_and_operationalization.operational_definitions[2]": "needs_human_input",
+    "variables_and_operationalization.operational_definitions[3]": "needs_human_input",
+    "variables_and_operationalization.operational_definitions[4]": "needs_human_input",
+    "variables_and_operationalization.operational_definitions[5]": "needs_human_input",
+    "variables_and_operationalization.operational_definitions[6]": "needs_human_input",
+    "variables_and_operationalization.operational_definitions[7]": "needs_human_input"
+  },
+  "formal_reasoning": {
+    "applicability": "formal_theory",
+    "assumptions": [
+      {
+        "assumption_id": "A1",
+        "statement": "The effective fission timescale is comparable to or longer than the ejecta expansion timescale in high-entropy, low-density trajectories.",
+        "status": "candidate_formalization",
+        "symbol_references": [],
+        "variable_references": [
+          "V1",
+          "V2"
+        ]
+      },
+      {
+        "assumption_id": "A2",
+        "statement": "Actinide spectral line evolution is uniquely sensitive to the fission timescale and cannot be mimicked by variations in ejecta geometry or magnetic field topology alone.",
+        "status": "candidate_formalization",
+        "symbol_references": [],
+        "variable_references": [
+          "V1",
+          "V3",
+          "V7",
+          "V8"
+        ]
+      }
+    ],
+    "definitions": [
+      {
+        "definition_id": "D1",
+        "statement": "Effective fission timescale governed by beta-decay half-lives and nuclear isomeric states leading to fission neutron release.",
+        "status": "needs_human_input",
+        "symbol": "tau_fission",
+        "variable_references": [
+          "V1"
+        ]
+      },
+      {
+        "definition_id": "D2",
+        "statement": "Dynamical timescale of relativistic expansion in high-entropy, low-density trajectories.",
+        "status": "needs_human_input",
+        "symbol": "tau_expansion",
+        "variable_references": [
+          "V2"
+        ]
+      },
+      {
+        "definition_id": "D3",
+        "statement": "Time-dependent changes in absorption features of superheavy elements (actinide spectral line evolution).",
+        "status": "needs_human_input",
+        "symbol": "Lambda_Spectral",
+        "variable_references": [
+          "V3",
+          "V5"
+        ]
+      },
+      {
+        "definition_id": "D4",
+        "statement": "Final abundance distribution of elements at the third r-process peak freeze-out.",
+        "status": "needs_human_input",
+        "symbol": "Y_third_peak",
+        "variable_references": [
+          "V4"
+        ]
+      },
+      {
+        "definition_id": "D5",
+        "statement": "Orientation of the observer relative to the merger axis.",
+        "status": "needs_human_input",
+        "symbol": "Theta_View",
+        "variable_references": [
+          "V5"
+        ]
+      },
+      {
+        "definition_id": "D6",
+        "statement": "Opacity effects caused by lanthanides that suppress blue/UV light (lanthanide curtaining).",
+        "status": "needs_human_input",
+        "symbol": "Kappa_Lanthanide",
+        "variable_references": [
+          "V6"
+        ]
+      },
+      {
+        "definition_id": "D7",
+        "statement": "Non-spherical structure of dynamical ejecta (e.g., ellipticity, shock-heated polar winds).",
+        "status": "needs_human_input",
+        "symbol": "Psi_Geometry",
+        "variable_references": [
+          "V7"
+        ]
+      },
+      {
+        "definition_id": "D8",
+        "statement": "Topology and strength of magnetic fields in the merger environment.",
+        "status": "needs_human_input",
+        "symbol": "B_Magnetic",
+        "variable_references": [
+          "V8"
+        ]
+      }
+    ],
+    "final_conclusion": "Kinematic delay unifies third r-process peak modifications with lanthanide curtaining.",
+    "forward_derivation": {
+      "status": "unverified",
+      "steps": [
+        {
+          "derived_statement": "In high-entropy, low-density trajectories, neutron release is kinematically delayed relative to expansion.",
+          "premises": [
+            "A1"
+          ],
+          "rule_or_lemma": "Timescale Comparison Hypothesis",
+          "status": "proposed",
+          "step_id": "S1",
+          "symbol_references": [
+            "tau_fission",
+            "tau_expansion"
+          ],
+          "variable_references": [
+            "V1",
+            "V2"
+          ]
+        },
+        {
+          "derived_statement": "The delayed neutron release modifies the third r-process peak abundance and lanthanide opacity.",
+          "premises": [
+            "S1"
+          ],
+          "rule_or_lemma": "Fission Recycling Impact on Abundance",
+          "status": "unverified",
+          "step_id": "S2",
+          "symbol_references": [
+            "Y_third_peak",
+            "Kappa_Lanthanide"
+          ],
+          "variable_references": [
+            "V4",
+            "V6"
+          ]
+        },
+        {
+          "derived_statement": "The resulting actinide spectral evolution is distinct from geometric or magnetic asymmetry signatures.",
+          "premises": [
+            "S2",
+            "A2"
+          ],
+          "rule_or_lemma": "Spectral Signature Uniqueness",
+          "status": "unverified",
+          "step_id": "S3",
+          "symbol_references": [
+            "Lambda_Spectral",
+            "Psi_Geometry",
+            "B_Magnetic"
+          ],
+          "variable_references": [
+            "V3",
+            "V7",
+            "V8"
+          ]
+        }
+      ]
+    },
+    "proof_obligations": [
+      {
+        "obligation_id": "PO1",
+        "status": "needs_human_input",
+        "symbol_references": [
+          "tau_fission",
+          "Y_third_peak",
+          "Kappa_Lanthanide"
+        ],
+        "variable_references": [
+          "V1",
+          "V4",
+          "V6"
+        ]
+      },
+      {
+        "obligation_id": "PO2",
+        "status": "needs_human_input",
+        "symbol_references": [
+          "Lambda_Spectral",
+          "Psi_Geometry",
+          "B_Magnetic"
+        ],
+        "variable_references": [
+          "V3",
+          "V7",
+          "V8"
+        ]
+      }
+    ],
+    "propositions": [
+      {
+        "proposition_id": "P1",
+        "statement": "The kinematic delay in fission neutron release relative to ejecta expansion unifies the modification of the third r-process peak freeze-out abundance with viewing-angle-dependent lanthanide curtaining.",
+        "status": "candidate_formalization",
+        "symbol_references": [
+          "tau_fission",
+          "tau_expansion",
+          "Y_third_peak",
+          "Kappa_Lanthanide"
+        ],
+        "variable_references": [
+          "V1",
+          "V2",
+          "V4",
+          "V6"
+        ]
+      },
+      {
+        "proposition_id": "P2",
+        "statement": "Delayed fission recycling produces a distinct temporal evolution of actinide spectral lines that cannot be replicated by purely geometric or magnetic ejecta asymmetries.",
+        "status": "candidate_formalization",
+        "symbol_references": [
+          "Lambda_Spectral",
+          "Psi_Geometry",
+          "B_Magnetic",
+          "tau_fission"
+        ],
+        "variable_references": [
+          "V1",
+          "V3",
+          "V7",
+          "V8"
+        ]
+      }
+    ],
+    "schema_version": "formal_reasoning_plan_v1",
+    "status": "requires_human_review",
+    "target_proposition_id": "P1",
+    "unknown_items": [
+      {
+        "field_path": "definitions.D1",
+        "reason": "No specific protocol or equation for calculating effective fission timescale provided in brief.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "definitions.D2",
+        "reason": "No specific definition or unit for ejecta expansion timescale provided.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "definitions.D3",
+        "reason": "Specific spectral lines, instruments, or time-sampling intervals not defined.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "definitions.D4",
+        "reason": "Method for measuring or inferring third r-process peak abundance is not specified.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "definitions.D5",
+        "reason": "Range of viewing angles or method for determining observation angle is not specified.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "definitions.D6",
+        "reason": "Quantitative metric for lanthanide curtaining (e.g., opacity value) is missing.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "definitions.D7",
+        "reason": "Metrics for geometric asymmetries (e.g., ellipticity) are not defined.",
+        "status": "needs_human_input"
+      },
+      {
+        "field_path": "definitions.D8",
+        "reason": "Parameters defining magnetic field configurations (e.g., strength, geometry) are not specified.",
+        "status": "needs_human_input"
+      }
+    ]
+  },
+  "generated_at": "2026-09-06T01:53:11.767442+09:00",
+  "hypothesis_mapping": [
+    {
+      "claim": "C1",
+      "decision_rule": "requires_human_input",
+      "hypothesis_id": "H1",
+      "observables": [
+        "third_r_process_peak_freeze_out_abundance",
+        "lanthanide_curtaining",
+        "actinide_spectral_line_evolution",
+        "viewing_angle"
+      ]
+    }
+  ],
+  "outcome_branches": [
+    {
+      "branch_id": "supports_mechanism",
+      "conclusion_scope": "The mechanism fails if the effective fission timescale for superheavy nuclei is strictly shorter than the expansion timescale, or if geometric/magnetic asymmetries alone can perfectly replicate the predicted actinide spectral shifts without invoking delayed fission timescales.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Replicate under independently confirmed conditions.",
+        "Test the most consequential declared boundary condition."
+      ],
+      "interpretation": "The result would support, but not prove, the declared relation within the design boundary.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified analysis is consistent with the declared relation while planned controls do not favor a stated alternative explanation."
+    },
+    {
+      "branch_id": "partial_or_heterogeneous",
+      "conclusion_scope": "The mechanism fails if the effective fission timescale for superheavy nuclei is strictly shorter than the expansion timescale, or if geometric/magnetic asymmetries alone can perfectly replicate the predicted actinide spectral shifts without invoking delayed fission timescales.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Predefine and check plausible moderators.",
+        "Improve the coverage of conditions and measurement comparability."
+      ],
+      "interpretation": "The relation may be conditional or heterogeneous; no universal conclusion is warranted.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified analysis indicates variation across declared conditions, units, or measurement contexts."
+    },
+    {
+      "branch_id": "null_or_contradictory",
+      "conclusion_scope": "The mechanism fails if the effective fission timescale for superheavy nuclei is strictly shorter than the expansion timescale, or if geometric/magnetic asymmetries alone can perfectly replicate the predicted actinide spectral shifts without invoking delayed fission timescales.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Audit construct validity and comparison adequacy.",
+        "Revise the mechanism or boundary claim before another design iteration."
+      ],
+      "interpretation": "The proposed relation is not supported in this design boundary; absence of support is not proof of absence generally.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "The prespecified comparison does not support the declared relation or instead favors a declared alternative explanation."
+    },
+    {
+      "branch_id": "uninformative_or_invalid",
+      "conclusion_scope": "The mechanism fails if the effective fission timescale for superheavy nuclei is strictly shorter than the expansion timescale, or if geometric/magnetic asymmetries alone can perfectly replicate the predicted actinide spectral shifts without invoking delayed fission timescales.",
+      "evidence_status": "EXPECTED_NOT_OBSERVED",
+      "improvement_actions": [
+        "Resolve the identified validity or data-quality failure before repeating the design.",
+        "Obtain human confirmation of measurement, sampling, and analysis prerequisites."
+      ],
+      "interpretation": "No scientific conclusion is warranted because the planned design did not yield interpretable evidence.",
+      "schema_version": "outcome_branch_v1",
+      "trigger": "Prespecified quality-control, missingness, protocol-deviation, or validity criteria prevent interpretation."
+    }
+  ],
+  "provenance": {
+    "audit_source_paths": {
+      "idea_candidate": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/idea_candidate.json",
+      "idea_directions": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/idea_directions.json",
+      "idea_portfolio": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/idea_portfolio.json",
+      "idea_result": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/idea_result.json",
+      "idea_route_clusters": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/idea_route_clusters.json",
+      "mature_ideas": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/mature_ideas.json"
+    },
+    "discipline_ids": [
+      "31"
+    ],
+    "idea_result_path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/idea_result.json",
+    "risk_level": "medium",
+    "selected_direction_id": "premise_inversion",
+    "survey_binding": {
+      "handoff_fingerprint": "90366f83dd2b7387cd3dbd0ab419e202e5e505957b5e848430c616ed40d0fe0e",
+      "manifest_path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/survey/attempt-001/survey_manifest.json",
+      "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+      "project_id": "sci_260905_008_survey_001",
+      "status": "bound",
+      "survey_run_id": "260905-008-survey-001"
+    },
+    "template_id": "mathematics_theory",
+    "validation_status": "DRAFT_REQUIRES_INPUT"
+  },
+  "reasoning_context": {
+    "alternative_explanations": [
+      "Viewing-angle-dependent lanthanide curtaining may be driven primarily by geometric asymmetries in the dynamical ejecta or magnetic field configurations rather than kinematic fission delays.",
+      "Geometric asymmetries in the ejecta (e.g., shock-heated polar winds, tidal tails) or magnetic field configurations can produce viewing-angle-dependent lanthanide curtaining and abundance variations without requiring delayed fission recycling."
+    ],
+    "assumptions": [
+      "The effective fission timescale, governed by beta-decay half-lives and nuclear isomeric states, is comparable to or longer than the ejecta expansion timescale in high-entropy, low-density trajectories.",
+      "Actinide spectral line evolution is uniquely sensitive to the fission timescale and cannot be mimicked by variations in ejecta geometry or magnetic field topology alone."
+    ],
+    "boundary_conditions": [
+      "The mechanism fails if the effective fission timescale for superheavy nuclei is strictly shorter than the expansion timescale, or if geometric/magnetic asymmetries alone can perfectly replicate the predicted actinide spectral shifts without invoking delayed fission timescales."
+    ],
+    "claim_scope": "Astrophysical Nucleosynthesis in Neutron Star Mergers: Kinematic Decoupling of Fission Recycling and Actinide Spectral Evolution",
+    "evidence_roles": [
+      {
+        "allowed_support_kinds": [
+          "At least one peer-reviewed study identifying an astrophysical site or event class capable of producing elements heavier than iron.",
+          "Admissible if it connects heavy-element production to an astrophysical environment rather than only laboratory synthesis."
+        ],
+        "anchor_ids": [
+          "anchor:gap_evidence_anchor:sh1:phenomenon:survey_evidence_plan_json_subhypotheses_0_relevant_clusters_4_uncovered_required_slots_0:required_slot_phenomenon_remains_uncovered_in_relevant_evidence_cluster_relativistic_outflows_central_engine_evolution_and_multi_messenger_progenitor_decoupling:e25d331548f3"
+        ],
+        "expected_role": "DIRECT_OBSERVATION",
+        "paper_ids": [
+          "W1913098325",
+          "W1993407371",
+          "W2039045484",
+          "W2161801818",
+          "W2586770524",
+          "W2766346145",
+          "W2802275066",
+          "W2884099537",
+          "W2893936582",
+          "W2981754620",
+          "W4210965419",
+          "W4383472826",
+          "W4389429223",
+          "W2102639755",
+          "W2760756222",
+          "W2766140821",
+          "W3145193814",
+          "W4290982395"
+        ],
+        "role_id": "evidence:sh1:phenomenon:direct_observation:94e7e52f2775",
+        "subhypothesis_id": "SH1",
+        "target_slot": "phenomenon"
+      },
+      {
+        "allowed_support_kinds": [
+          "At least one observational dataset, event detection, or abundance pattern used to infer heavy-element production.",
+          "Admissible if it provides empirical or observationally calibrated evidence, not solely unconstrained speculation."
+        ],
+        "anchor_ids": [
+          "anchor:gap_evidence_anchor:sh1:direct_observation:survey_evidence_plan_json_subhypotheses_0_relevant_clusters_1_uncovered_required_slots_0:required_slot_direct_observation_remains_uncovered_in_relevant_evidence_cluster_viewing_angle_dependencies_lanthanide_curtaining_and_three_dimensional_geometry_effects:fa23a3e7393e"
+        ],
+        "expected_role": "DIRECT_OBSERVATION",
+        "paper_ids": [
+          "W2766346145",
+          "W2802275066",
+          "W2884099537",
+          "W2981754620",
+          "W4210965419",
+          "W4383472826",
+          "W4389429223",
+          "W2766140821",
+          "W4290982395"
+        ],
+        "role_id": "evidence:sh1:direct_observation:direct_observation:a41eb979a4ba",
+        "subhypothesis_id": "SH1",
+        "target_slot": "direct_observation"
+      }
+    ],
+    "falsifiers": [
+      "Evidence that the temporal evolution of actinide lines is fully consistent with instantaneous fission equilibrium, or that geometric/magnetic asymmetries alone can perfectly replicate the predicted actinide spectral shifts without invoking delayed fission timescales."
+    ],
+    "formal_symbols": [],
+    "gap_records": [
+      {
+        "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+        "gap_kind": "evidence_role_deficit",
+        "statement": "Required slot 'direct_observation' remains uncovered in relevant evidence cluster 'Viewing-Angle Dependencies, Lanthanide Curtaining, and Three-Dimensional Geometry Effects'.",
+        "target_object": "direct_observation",
+        "target_slot": "direct_observation",
+        "why_it_matters": "The available paper roles do not support the evidence strength required by this slot."
+      },
+      {
+        "gap_id": "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+        "gap_kind": "unmapped_gap:phenomenon",
+        "statement": "Required slot 'phenomenon' remains uncovered in relevant evidence cluster 'Relativistic Outflows, Central Engine Evolution, and Multi-Messenger Progenitor Decoupling'.",
+        "target_object": "phenomenon",
+        "target_slot": "phenomenon",
+        "why_it_matters": "The structured Survey artifacts identify an unresolved research constraint."
+      }
+    ],
+    "schema_version": "reasoning_context_v1",
+    "selected_direction_id": "premise_inversion",
+    "source_anchors": [
+      {
+        "anchor_id": "anchor:gap_evidence_anchor:sh1:direct_observation:survey_evidence_plan_json_subhypotheses_0_relevant_clusters_1_uncovered_required_slots_0:required_slot_direct_observation_remains_uncovered_in_relevant_evidence_cluster_viewing_angle_dependencies_lanthanide_curtaining_and_three_dimensional_geometry_effects:fa23a3e7393e",
+        "anchor_type": "gap_evidence_anchor",
+        "claim_anchor": "Required slot 'direct_observation' remains uncovered in relevant evidence cluster 'Viewing-Angle Dependencies, Lanthanide Curtaining, and Three-Dimensional Geometry Effects'.",
+        "label": "SH1: direct_observation",
+        "source_pointer": {
+          "artifact": "survey_evidence_plan.json",
+          "json_pointer": "/subhypotheses/0/relevant_clusters/1/uncovered_required_slots/0"
+        },
+        "subhypothesis_id": "SH1",
+        "supports_gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5"
+        ],
+        "target_slot": "direct_observation",
+        "text_excerpt": "Required slot 'direct_observation' remains uncovered in relevant evidence cluster 'Viewing-Angle Dependencies, Lanthanide Curtaining, and Three-Dimensional Geometry Effects'."
+      },
+      {
+        "anchor_id": "anchor:gap_evidence_anchor:sh1:phenomenon:survey_evidence_plan_json_subhypotheses_0_relevant_clusters_4_uncovered_required_slots_0:required_slot_phenomenon_remains_uncovered_in_relevant_evidence_cluster_relativistic_outflows_central_engine_evolution_and_multi_messenger_progenitor_decoupling:e25d331548f3",
+        "anchor_type": "gap_evidence_anchor",
+        "claim_anchor": "Required slot 'phenomenon' remains uncovered in relevant evidence cluster 'Relativistic Outflows, Central Engine Evolution, and Multi-Messenger Progenitor Decoupling'.",
+        "label": "SH1: phenomenon",
+        "source_pointer": {
+          "artifact": "survey_evidence_plan.json",
+          "json_pointer": "/subhypotheses/0/relevant_clusters/4/uncovered_required_slots/0"
+        },
+        "subhypothesis_id": "SH1",
+        "supports_gap_ids": [
+          "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+        ],
+        "target_slot": "phenomenon",
+        "text_excerpt": "Required slot 'phenomenon' remains uncovered in relevant evidence cluster 'Relativistic Outflows, Central Engine Evolution, and Multi-Messenger Progenitor Decoupling'."
+      }
+    ],
+    "source_priority": [
+      "selected_direction",
+      "legacy_best_entry",
+      "selected_primary_idea",
+      "idea_candidate"
+    ],
+    "upstream_source_paths": [
+      "selected_direction.hypothesis.assumptions",
+      "selected_direction.hypothesis.claim_scope",
+      "selected_direction.falsifier",
+      "selected_direction.hypothesis.boundary_or_failure_condition",
+      "selected_direction.experiment_handoff.alternative_explanations",
+      "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/idea_result.json",
+      "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/idea_candidate.json",
+      "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/idea_portfolio.json",
+      "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/idea_directions.json",
+      "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/idea_route_clusters.json",
+      "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/mature_ideas.json"
+    ]
+  },
+  "research_design": {
+    "design_type": "mathematics_theory",
+    "experimental_unit": "formal_theory_proposition",
+    "time_structure": "static_formal_relation"
+  },
+  "review_items": [
+    {
+      "field_path": "formal_reasoning_plan",
+      "reason": "The final canonical formal_reasoning_plan status requires qualified human review.",
+      "status": "review_required"
+    }
+  ],
+  "schema_version": "research_plan_author_input_v3",
+  "selected_direction": {
+    "central_hypothesis": "The kinematic delay in beta-delayed and isomer-delayed fission neutron release relative to ejecta expansion formally unifies the modification of the third r-process peak freeze-out abundance with viewing-angle-dependent lanthanide curtaining, producing a distinct temporal evolution of actinide spectral lines that cannot be replicated by purely geometric or magnetic ejecta asymmetries.",
+    "id": "premise_inversion",
+    "mechanism_or_relation": "unified_fission_recycling_relation",
+    "title": "Kinematic Decoupling of Fission Recycling in Kilonovae: A Delayed Neutron Release Mechanism for Third r-Process Peak Shifts and Anisotropic Curtaining"
+  },
+  "source_design_id": "design-260905-008",
+  "source_registry": {
+    "allowed_source_ids": [
+      "W2802275066",
+      "W2088686510",
+      "W2013598075",
+      "W1996162015",
+      "W2586770524",
+      "W2754075545",
+      "W2084800078",
+      "W2157732302",
+      "W2913624347",
+      "W4292875581",
+      "W2765595587",
+      "W4288079944",
+      "W2765302758",
+      "W2970953561",
+      "W2120145199",
+      "W2798377219",
+      "W3005340384",
+      "W2073832139",
+      "W4211256362",
+      "W2132262459",
+      "W2142805504",
+      "W2529651270",
+      "W2888638323",
+      "W2893936582",
+      "W2943010605",
+      "W2986804745"
+    ],
+    "allowed_survey_anchor_ids": [],
+    "citation_registry": [
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "C J Horowitz",
+            "A Arcones",
+            "B Côté",
+            "I Dillmann",
+            "W Nazarewicz",
+            "I U Roederer",
+            "H Schatz",
+            "A Aprahamian",
+            "D Atanasov",
+            "A Bauswein",
+            "T C Beers",
+            "J Bliss",
+            "M Brodeur",
+            "J A Clark",
+            "A Frebel",
+            "F Foucart",
+            "C J Hansen",
+            "O Just",
+            "A Kankainen",
+            "G C McLaughlin",
+            "J M Kelly",
+            "S N Liddick",
+            "D M Lee",
+            "J Lippuner",
+            "D Martin",
+            "J Mendoza-Temis",
+            "B D Metzger",
+            "M R Mumpower",
+            "G Perdikakis",
+            "J Pereira",
+            "B W O’Shea",
+            "R Reifarth",
+            "A M Rogers",
+            "D M Siegel",
+            "A Spyrou",
+            "R Surman",
+            "X Tang",
+            "T Uesaka",
+            "M Wang"
+          ],
+          "doi": "10.1088/1361-6471/ab0849",
+          "title": "r -process nucleosynthesis: connecting rare-isotope beam facilities with the cosmos",
+          "url": "https://doi.org/10.1088/1361-6471/ab0849",
+          "venue": "Journal of Physics G Nuclear and Particle Physics",
+          "year": "2019"
+        },
+        "citation_key": "cite_30c88fe46f23448d",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2802275066:research_object_measurability:37cdd59b29f3"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2802275066"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Albino Perego",
+            "S. Rosswog",
+            "Rubén M. Cabezón",
+            "Oleg Korobkin",
+            "Roger Käppeli",
+            "Almudena Arcones",
+            "M. Liebendörfer"
+          ],
+          "doi": "10.1093/mnras/stu1352",
+          "title": "Neutrino-driven winds from neutron star merger remnants",
+          "url": "https://doi.org/10.1093/mnras/stu1352",
+          "venue": "Monthly Notices of the Royal Astronomical Society",
+          "year": "2014"
+        },
+        "citation_key": "cite_8beeacaea00bd823",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2088686510:boundary_conditions:38190175c2c3"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2088686510"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Daniel Kasen",
+            "Rodrigo Fernández",
+            "Brian D. Metzger"
+          ],
+          "doi": "10.1093/mnras/stv721",
+          "title": "Kilonova light curves from the disc wind outflows of compact object mergers",
+          "url": "https://doi.org/10.1093/mnras/stv721",
+          "venue": "Monthly Notices of the Royal Astronomical Society",
+          "year": "2015"
+        },
+        "citation_key": "cite_2bf3a687e25803e4",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2013598075:mechanism:4af63583c1d3",
+          "EC:W2013598075:boundary_conditions:a1cb0d4c2a5e",
+          "EC:W2013598075:research_object_measurability:2817d1b0f91d"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2013598075"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Y.‐Z. Qian",
+            "S. E. Woosley"
+          ],
+          "doi": "10.1086/177973",
+          "title": "Nucleosynthesis in Neutrino‐driven Winds. I. The Physical Conditions",
+          "url": "https://doi.org/10.1086/177973",
+          "venue": "The Astrophysical Journal",
+          "year": "1996"
+        },
+        "citation_key": "cite_c5afe6a1f3d54206",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W1996162015:boundary_conditions:5c5267022f9c",
+          "EC:W1996162015:mechanism:8fe0370313db"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W1996162015"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Rodrigo Fernández",
+            "Francois Foucart",
+            "Daniel Kasen",
+            "Jonas Lippuner",
+            "Dhruv Desai",
+            "Luke F Roberts"
+          ],
+          "doi": "10.1088/1361-6382/aa7a77",
+          "title": "Dynamics, nucleosynthesis, and kilonova signature of black hole—neutron star merger ejecta",
+          "url": "https://doi.org/10.1088/1361-6382/aa7a77",
+          "venue": "Classical and Quantum Gravity",
+          "year": "2017"
+        },
+        "citation_key": "cite_3a00f5f9e5201ba0",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2586770524:study_design:316c5110f683",
+          "EC:W2586770524:boundary_conditions:dadfbeb5ea6a",
+          "EC:W2586770524:risk_ethics_reproducibility:aa9f6c7eeabd"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2586770524"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "B. P. Abbott",
+            "R. Abbott",
+            "T. D. Abbott",
+            "M. R. Abernathy",
+            "F. Acernese",
+            "K. Ackley",
+            "C. Adams",
+            "T. Adams",
+            "P. Addesso",
+            "R. X. Adhikari",
+            "V. B. Adya",
+            "C. Affeldt",
+            "M. Agathos",
+            "K. Agatsuma",
+            "N. Aggarwal",
+            "O. D. Aguiar",
+            "L. Aiello",
+            "A. Ain",
+            "P. Ajith",
+            "T. Akutsu",
+            "B. Allen",
+            "A. Allocca",
+            "P. A. Altin",
+            "A. Ananyeva",
+            "S. B. Anderson",
+            "W. G. Anderson",
+            "Masaki Ando",
+            "S. Appert",
+            "K. Arai",
+            "A. Araya",
+            "M. C. Araya",
+            "J. S. Areeda",
+            "N. Arnaud",
+            "K. G. Arun",
+            "Hideki Asada",
+            "S. Ascenzi",
+            "G. Ashton",
+            "Y. Aso",
+            "M. Ast",
+            "S. M. Aston",
+            "P. Astone",
+            "S. Atsuta",
+            "P. Aufmuth",
+            "C. Aulbert",
+            "A. Avila-Alvarez",
+            "K. Awai",
+            "S. Babak",
+            "P. Bacon",
+            "M. K. M. Bader",
+            "Luca Baiotti",
+            "P. T. Baker",
+            "F. Baldaccini",
+            "G. Ballardin",
+            "S. W. Ballmer",
+            "J. C. Barayoga",
+            "S. E. Barclay",
+            "B. C. Barish",
+            "D. Barker",
+            "F. Barone",
+            "B. Barr",
+            "L. Barsotti",
+            "M. Barsuglia",
+            "D. Barta",
+            "J. Bartlett",
+            "M. A. Barton",
+            "I. Bartos",
+            "R. Bassiri",
+            "A. Basti",
+            "J. C. Batch",
+            "C. Baune",
+            "V. Bavigadda",
+            "M. Bazzan",
+            "B. Bécsy",
+            "C. Beer",
+            "M. Bejger",
+            "I. Belahcene",
+            "Mehmet Belgin",
+            "A. S. Bell",
+            "B. K. Berger",
+            "G. Bergmann",
+            "C. P. L. Berry",
+            "D. Bersanetti",
+            "A. Bertolini",
+            "J. Betzwieser",
+            "S. Bhagwat",
+            "R. Bhandare",
+            "I. A. Bilenko",
+            "G. Billingsley",
+            "C. R. Billman",
+            "J. Birch",
+            "R. Birney",
+            "O. Birnholtz",
+            "S. Biscans",
+            "A. Bisht",
+            "M. Bitossi",
+            "C. Biwer",
+            "M. A. Bizouard",
+            "J. K. Blackburn",
+            "Jonathan Blackman",
+            "C. D. Blair"
+          ],
+          "doi": "10.1007/s41114-018-0012-9",
+          "title": "Prospects for observing and localizing gravitational-wave transients with Advanced LIGO, Advanced Virgo and KAGRA",
+          "url": "https://doi.org/10.1007/s41114-018-0012-9",
+          "venue": "Living Reviews in Relativity",
+          "year": "2018"
+        },
+        "citation_key": "cite_7f5abb972bd2cf6b",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2754075545:boundary_conditions:a485efd2efbf"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2754075545"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Jennifer Barnes",
+            "Daniel Kasen"
+          ],
+          "doi": "10.1088/0004-637x/775/1/18",
+          "title": "EFFECT OF A HIGH OPACITY ON THE LIGHT CURVES OF RADIOACTIVELY POWERED TRANSIENTS FROM COMPACT OBJECT MERGERS",
+          "url": "https://doi.org/10.1088/0004-637x/775/1/18",
+          "venue": "The Astrophysical Journal",
+          "year": "2013"
+        },
+        "citation_key": "cite_bbb76a303fab42b5",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2084800078:mechanism:b63dc39fbe21",
+          "EC:W2084800078:measurement_calibration:abb3d0cd6aa4",
+          "EC:W2084800078:boundary_conditions:29f66f2af7af",
+          "EC:W2084800078:mechanism:0534a2d13c24"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2084800078"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Oliver Just",
+            "Andreas Bauswein",
+            "R. Ardevol Pulpillo",
+            "S. Goriely",
+            "Hans‐Thomas Janka"
+          ],
+          "doi": "10.1093/mnras/stv009",
+          "title": "Comprehensive nucleosynthesis analysis for ejecta of compact binary mergers",
+          "url": "https://doi.org/10.1093/mnras/stv009",
+          "venue": "Monthly Notices of the Royal Astronomical Society",
+          "year": "2015"
+        },
+        "citation_key": "cite_403b23aaa35e6b92",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2157732302:mechanism:cbc3f76a5547"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2157732302"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Samuel A. Giuliani",
+            "Zachary Matheson",
+            "W. Nazarewicz",
+            "E. Olsen",
+            "P.‐G. Reinhard",
+            "Jhilam Sadhukhan",
+            "B. Schuetrumpf",
+            "N. Schunck",
+            "Peter Schwerdtfeger"
+          ],
+          "doi": "10.1103/revmodphys.91.011001",
+          "title": "Colloquium : Superheavy elements: Oganesson and beyond",
+          "url": "https://doi.org/10.1103/revmodphys.91.011001",
+          "venue": "Reviews of Modern Physics",
+          "year": "2019"
+        },
+        "citation_key": "cite_19250ec024f92381",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2913624347:mechanism:67229733f470"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2913624347"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "P. A. R. Ade",
+            "N. Aghanim",
+            "M. Arnaud",
+            "M. Ashdown",
+            "J. Aumont",
+            "C. Baccigalupi",
+            "A. J. Banday",
+            "R. B. Barreiro",
+            "J. G. Bartlett",
+            "N. Bartolo",
+            "E. Battaner",
+            "Richard A. Battye",
+            "K. Benabed",
+            "A. Benoît",
+            "A. Benoit-Lévy",
+            "J.-P. Bernard",
+            "M. Bersanelli",
+            "P. Bielewicz",
+            "J. J. Bock",
+            "A. Bonaldi",
+            "L. Bonavera",
+            "J. R. Bond",
+            "J. Borrill",
+            "F. R. Bouchet",
+            "F. Boulanger",
+            "M. Bucher",
+            "C. Burigana",
+            "R. C. Butler",
+            "Erminia Calabrese",
+            "J.-F. Cardoso",
+            "A. Catalano",
+            "A. Challinor",
+            "A. Chamballu",
+            "Ranga‐Ram Chary",
+            "H. C. Chiang",
+            "Jens Chluba",
+            "P. R. Christensen",
+            "S. Church",
+            "D. L. Clements",
+            "S. Colombi",
+            "L. P. L. Colombo",
+            "C. Combet",
+            "A. Coulais",
+            "B. P. Crill",
+            "A. Curto",
+            "F. Cuttaia",
+            "L. Danese",
+            "R. D. Davies",
+            "R. J. Davis",
+            "P. de Bernardis",
+            "A. de Rosa",
+            "G. de Zotti",
+            "J. Delabrouille",
+            "F.–X. Désert",
+            "Eleonora Di Valentino",
+            "C. Dickinson",
+            "J. M. Diego",
+            "K. Dolag",
+            "H. Dole",
+            "S. Donzelli",
+            "O. Doré",
+            "M. Douspis",
+            "A. Ducout",
+            "Jo Dunkley",
+            "X. Dupac",
+            "G. Efstathiou",
+            "F. Elsner",
+            "T. A. Enßlin",
+            "H. K. Eriksen",
+            "M. Farhang",
+            "J. Fergusson",
+            "F. Finelli⋆",
+            "O. Forni",
+            "M. Frailis",
+            "A. A. Fraisse",
+            "E. Franceschi",
+            "A. Frejsel",
+            "S. Galeotta",
+            "S. Galli",
+            "K. Ganga",
+            "C. Gauthier",
+            "M. Gerbino",
+            "T. Ghosh",
+            "M. Giard",
+            "Y. Giraud–Héraud",
+            "Elena Giusarma",
+            "E. Gjerløw",
+            "J. González-Nuevo",
+            "K. M. Górski",
+            "S. Gratton",
+            "A. Gregorio",
+            "A. Gruppuso",
+            "J. E. Gudmundsson",
+            "J. Hamann",
+            "F. K. Hansen",
+            "D. Hanson",
+            "D. L. Harrison",
+            "G. Hélou",
+            "S. Henrot–Versillé",
+            "C. Hernández-Monteagudo"
+          ],
+          "doi": "10.1051/0004-6361/201525830",
+          "title": "Planck 2015 results",
+          "url": "https://doi.org/10.1051/0004-6361/201525830",
+          "venue": "Astronomy and Astrophysics",
+          "year": "2016"
+        },
+        "citation_key": "cite_357dd780a9e3a378",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W4292875581:boundary_conditions:1b0175b79474"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W4292875581"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "N. R. Tanvir",
+            "A. J. Levan",
+            "C. Gónzalez-Fernández",
+            "Oleg Korobkin",
+            "Ilya Mandel",
+            "Stephan Rosswog",
+            "J. Hjorth",
+            "P. D’Avanzo",
+            "A. S. Fruchter",
+            "Chris L. Fryer",
+            "T. Kangas",
+            "B. Milvang‐Jensen",
+            "S. Rosetti",
+            "D. Steeghs",
+            "Ryan Wollaeger",
+            "Z. Cano",
+            "C. M. Copperwheat",
+            "S. Covino",
+            "V. D’Elia",
+            "A. de Ugarte Postigo",
+            "P. A. Evans",
+            "Wesley Even",
+            "S. Fairhurst",
+            "R. Figuera Jaimes",
+            "Christopher J. Fontes",
+            "Yuri I. Fujii",
+            "J. P. U. Fynbo",
+            "B. P. Gompertz",
+            "J. Greiner",
+            "Gabriella Hodosán",
+            "M. J. Irwin",
+            "P. Jakobsson",
+            "U. G. Jørgensen",
+            "Д. А. Канн",
+            "J. Lyman",
+            "D. Malesani",
+            "R. G. McMahon",
+            "A. Melandri",
+            "P. T. O’Brien",
+            "J. P. Osborne",
+            "E. Palazzi",
+            "D. A. Perley",
+            "E. Pian",
+            "S. Piranomonte",
+            "M. Rabus",
+            "E. Rol",
+            "A. Rowlinson",
+            "S. Schulze",
+            "P. J. Sutton",
+            "C. C. Thöne",
+            "K. Ulaczyk",
+            "D. Watson",
+            "K. Wiersema",
+            "R. A. M. J. Wijers"
+          ],
+          "doi": "10.3847/2041-8213/aa90b6",
+          "title": "The Emergence of a Lanthanide-rich Kilonova Following the Merger of Two Neutron Stars",
+          "url": "https://doi.org/10.3847/2041-8213/aa90b6",
+          "venue": "The Astrophysical Journal Letters",
+          "year": "2017"
+        },
+        "citation_key": "cite_612290131318c0d4",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2765595587:mechanism:0d833cb6ac83"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2765595587"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "N. Aghanim",
+            "Y. Akrami",
+            "M. Ashdown",
+            "J. Aumont",
+            "C. Baccigalupi",
+            "M. Ballardini",
+            "A. J. Banday",
+            "R. B. Barreiro",
+            "N. Bartolo",
+            "S. Basak",
+            "Richard A. Battye",
+            "K. Benabed",
+            "J.-P. Bernard",
+            "M. Bersanelli",
+            "P. Bielewicz",
+            "J. J. Bock",
+            "J. R. Bond",
+            "J. Borrill",
+            "F. R. Bouchet",
+            "F. Boulanger",
+            "M. Bucher",
+            "C. Burigana",
+            "R. C. Butler",
+            "E. Calabrese",
+            "J.-F. Cardoso",
+            "Julien Carron",
+            "A. Challinor",
+            "H. C. Chiang",
+            "Jens Chluba",
+            "L. P. L. Colombo",
+            "C. Combet",
+            "D. Contreras",
+            "B. P. Crill",
+            "F. Cuttaia",
+            "P. de Bernardis",
+            "G. de Zotti",
+            "J. Delabrouille",
+            "J.‐M. Delouis",
+            "Eleonora Di Valentino",
+            "J. M. Diego",
+            "O. Doré",
+            "M. Douspis",
+            "A. Ducout",
+            "X. Dupac",
+            "S. Dusini",
+            "G. Efstathiou",
+            "F. Elsner",
+            "T. A. Enßlin",
+            "H. K. Eriksen",
+            "Y. Fantaye",
+            "M. Farhang",
+            "J. Fergusson",
+            "R. Fernández-Cobos",
+            "F. Finelli⋆",
+            "F. Forastieri",
+            "M. Frailis",
+            "A. A. Fraisse",
+            "E. Franceschi",
+            "A. Frolov",
+            "S. Galeotta",
+            "S. Galli",
+            "K. Ganga",
+            "R. T. Génova-Santos",
+            "M. Gerbino",
+            "T. Ghosh",
+            "J. González-Nuevo",
+            "K. M. Górski",
+            "S. Gratton",
+            "A. Gruppuso",
+            "J. E. Gudmundsson",
+            "J. Hamann",
+            "Will Handley",
+            "F. K. Hansen",
+            "D. Herranz",
+            "S. R. Hildebrandt",
+            "E. Hivon",
+            "Zhiqi Huang",
+            "A. H. Jaffe",
+            "W. C. Jones",
+            "A. Karakci",
+            "E. Keihänen",
+            "R. Keskitalo",
+            "K. Kiiveri",
+            "J. Kim",
+            "T. S. Kisner",
+            "L. Knox",
+            "N. Krachmalnicoff",
+            "M. Kunz",
+            "H. Kurki‐Suonio",
+            "G. Lagache",
+            "J.-M. Lamarre",
+            "A. Lasenby",
+            "M. Lattanzi",
+            "C. R. Lawrence",
+            "M. Le Jeune",
+            "Pablo Lemos",
+            "J. Lesgourgues",
+            "F. Levrier",
+            "Antony Lewis",
+            "M. Liguori"
+          ],
+          "doi": "10.1051/0004-6361/201833910",
+          "title": "Planck 2018 results",
+          "url": "https://doi.org/10.1051/0004-6361/201833910",
+          "venue": "Astronomy and Astrophysics",
+          "year": "2020"
+        },
+        "citation_key": "cite_364386a3569b6e66",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W4288079944:measurement_calibration:2c8c80e11ecc",
+          "EC:W4288079944:comparison_controls:c7d3804f3aa8"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W4288079944"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "M. R. Drout",
+            "Anthony L. Piro",
+            "B. J. Shappee",
+            "C. D. Kilpatrick",
+            "Joshua D. Simon",
+            "C. Contreras",
+            "D. A. Coulter",
+            "R. J. Foley",
+            "M. R. Siebert",
+            "N. Morrell",
+            "K. Boutsia",
+            "F. Di Mille",
+            "T. W. S. Holoien",
+            "Daniel Kasen",
+            "Juna A. Kollmeier",
+            "Barry F. Madore",
+            "Andrew Monson",
+            "Ariadna Murguia-Berthier",
+            "Y. C. Pan",
+            "J. X. Prochaska",
+            "E. Ramírez-Ruiz",
+            "A. Rest",
+            "C. Adams",
+            "Katherine Alatalo",
+            "Eduardo Bañados",
+            "J. Baughman",
+            "Timothy C. Beers",
+            "Rebecca A. Bernstein",
+            "T. Bitsakis",
+            "A. Campillay",
+            "Terese T. Hansen",
+            "Clare Higgs",
+            "Alexander P. Ji",
+            "G. Maravelias",
+            "J. L. Marshall",
+            "C. Moni Bidin",
+            "J. L. Prieto",
+            "Kaitlin C. Rasmussen",
+            "C. Rojas-Bravo",
+            "Allison L. Strom",
+            "Natalie Ulloa",
+            "Jaime Vargas-González",
+            "Zhen Wan",
+            "Devin D. Whitten"
+          ],
+          "doi": "10.1126/science.aaq0049",
+          "title": "Light curves of the neutron star merger GW170817/SSS17a: Implications for r-process nucleosynthesis",
+          "url": "https://doi.org/10.1126/science.aaq0049",
+          "venue": "Science",
+          "year": "2017"
+        },
+        "citation_key": "cite_492ec5910d5efd57",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2765302758:mechanism:c2610231bb37",
+          "EC:W2765302758:study_design:8d273fd19d2d"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2765302758"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "W. J. Pearson",
+            "L. Wang",
+            "M. Alpaslan",
+            "I. Baldry",
+            "M. Bilicki",
+            "M. J. I. Brown",
+            "M. W. Grootes",
+            "B. W. Holwerda",
+            "T. D. Kitching",
+            "S. Kruk",
+            "F. F. S. van der Tak"
+          ],
+          "doi": "10.1051/0004-6361/201936337",
+          "title": "Effect of galaxy mergers on star-formation rates",
+          "url": "https://doi.org/10.1051/0004-6361/201936337",
+          "venue": "Astronomy and Astrophysics",
+          "year": "2019"
+        },
+        "citation_key": "cite_b9eb1a62348944b1",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2970953561:mechanism:7e45627aa3ce",
+          "EC:W2970953561:boundary_conditions:a6dbabf2a9f7"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2970953561"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Paolo Giannozzi",
+            "Stefano Baroni",
+            "Nicola Bonini",
+            "Matteo Calandra",
+            "Roberto Car",
+            "Carlo Cavazzoni",
+            "Davide Ceresoli",
+            "G. Chiarotti",
+            "Matteo Cococcioni",
+            "Ismaïla Dabo",
+            "Andrea Dal Corso",
+            "Stefano de Gironcoli",
+            "Stefano Fabris",
+            "Guido Fratesi",
+            "Ralph Gebauer",
+            "U. Gerstmann",
+            "Christos Gougoussis",
+            "Anton Kokalj",
+            "Michele Lazzeri",
+            "Layla Martin‐Samos",
+            "Nicola Marzari",
+            "Francesco Mauri",
+            "Riccardo Mazzarello",
+            "Stefano Paolini",
+            "Alfredo Pasquarello",
+            "Lorenzo Paulatto",
+            "Carlo Sbraccia",
+            "Sandro Scandolo",
+            "Gabriele Sclauzero",
+            "Ari P. Seitsonen",
+            "Alexander Smogunov",
+            "Paolo Umari",
+            "Renata M. Wentzcovitch"
+          ],
+          "doi": "10.1088/0953-8984/21/39/395502",
+          "title": "QUANTUM ESPRESSO: a modular and open-source software project for quantum simulations of materials",
+          "url": "https://doi.org/10.1088/0953-8984/21/39/395502",
+          "venue": "Journal of Physics Condensed Matter",
+          "year": "2009"
+        },
+        "citation_key": "cite_23391c6e806b23a8",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2120145199:mechanism:3f428ff2bdd8",
+          "EC:W2120145199:boundary_conditions:c389ed0c452a"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2120145199"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Karl‐Heinz Schmidt",
+            "B. Jurado"
+          ],
+          "doi": "10.1088/1361-6633/aacfa7",
+          "title": "Review on the progress in nuclear fission—experimental methods and theoretical descriptions",
+          "url": "https://doi.org/10.1088/1361-6633/aacfa7",
+          "venue": "Reports on Progress in Physics",
+          "year": "2018"
+        },
+        "citation_key": "cite_b668987a568d271f",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2798377219:mechanism:00dd23ce9bd9",
+          "EC:W2798377219:mechanism:b43a08c910b2"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2798377219"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "N. Colonna",
+            "A. Tsinganis",
+            "R. Vlastou",
+            "N. Patronis",
+            "Μ. Diakaki",
+            "S. Amaducci",
+            "M. Barbagallo",
+            "S. Bennett",
+            "E. Berthoumieux",
+            "M. Bacak",
+            "L. Coséntino",
+            "S. Cristallo",
+            "P. Finocchiaro",
+            "J. Heyse",
+            "D. G. Lewis",
+            "A. Manna",
+            "C. Massimi",
+            "E. Mendoza",
+            "M. Mirea",
+            "A. Moens",
+            "R. Nolte",
+            "E. Pirovano",
+            "M. Sabaté-Gilarte",
+            "G. Sibbens",
+            "A. G. Smith",
+            "N. V. Sosnin",
+            "A. Stamatopoulos",
+            "D. Tarrío",
+            "L. Tassan-Got",
+            "D. Vanleeuw",
+            "A. Ventura",
+            "D. Vescovi",
+            "T. J. Wright",
+            "P. Žugec"
+          ],
+          "doi": "10.1140/epja/s10050-020-00037-8",
+          "title": "The fission experimental programme at the CERN n_TOF facility: status and perspectives",
+          "url": "https://doi.org/10.1140/epja/s10050-020-00037-8",
+          "venue": "The European Physical Journal A",
+          "year": "2020"
+        },
+        "citation_key": "cite_59237db420df3c57",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W3005340384:mechanism:2d078791d11a",
+          "EC:W3005340384:boundary_conditions:0ba98c1c3538",
+          "EC:W3005340384:boundary_conditions:4c43b12eb734"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W3005340384"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Adam G. Riess",
+            "A. V. Filippenko",
+            "P. Challis",
+            "A. Clocchiatti",
+            "Alan H. Diercks",
+            "P. Garnavich",
+            "Ron Gilliland",
+            "Craig J. Hogan",
+            "Saurabh W. Jha",
+            "R. Kirshner",
+            "B. Leibundgut",
+            "M. M. Phillips",
+            "David J. Reiss",
+            "B. Schmidt",
+            "R. A. Schommer",
+            "R. Chris Smith",
+            "J. Spyromilio",
+            "C. W. Stubbs",
+            "N. B. Suntzeff",
+            "J. Tonry"
+          ],
+          "doi": "10.1086/300499",
+          "title": "Observational Evidence from Supernovae for an Accelerating Universe and a Cosmological Constant",
+          "url": "https://doi.org/10.1086/300499",
+          "venue": "The Astronomical Journal",
+          "year": "1998"
+        },
+        "citation_key": "cite_572fec0a1e5d74d9",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2073832139:study_design:94f061b1b51f"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2073832139"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Brian D. Metzger"
+          ],
+          "doi": "10.1007/s41114-017-0006-z",
+          "title": "Kilonovae",
+          "url": "https://doi.org/10.1007/s41114-017-0006-z",
+          "venue": "Living Reviews in Relativity",
+          "year": "2017"
+        },
+        "citation_key": "cite_52593a6c02ca6436",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W4211256362:mechanism:ef7adae0606e"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W4211256362"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Bernard R. Brooks",
+            "Charles L. Brooks",
+            "Alexander D. MacKerell",
+            "Lennart Nilsson",
+            "Robert J. Petrella",
+            "Benoı̂t Roux",
+            "Youngdo Won",
+            "Georgios Archontis",
+            "Christian Bartels",
+            "Stefan Boresch",
+            "Amedeo Caflisch",
+            "Leo S. D. Caves",
+            "Qiang Cui",
+            "Aaron R. Dinner",
+            "Michael Feig",
+            "Stefan Fischer",
+            "Jun Gao",
+            "Milan Hodošček",
+            "Wonpil Im",
+            "Krzysztof Kuczera",
+            "Themis Lazaridis",
+            "Jianpeng Ma",
+            "Victor Ovchinnikov",
+            "Emanuele Paci",
+            "Richard W. Pastor",
+            "Carol Beth Post",
+            "Jingzhi Pu",
+            "Michael Schaefer",
+            "Bruce Tidor",
+            "Richard M. Venable",
+            "H. Lee Woodcock",
+            "Xiaojing Wu",
+            "Wei Yang",
+            "Darrin M. York",
+            "Martin Karplus"
+          ],
+          "doi": "10.1002/jcc.21287",
+          "title": "CHARMM: The biomolecular simulation program",
+          "url": "https://doi.org/10.1002/jcc.21287",
+          "venue": "Journal of Computational Chemistry",
+          "year": "2009"
+        },
+        "citation_key": "cite_63ad9f666f512e23",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2132262459:mechanism:1053d8a0dc55",
+          "EC:W2132262459:boundary_conditions:5b3ac4532336",
+          "EC:W2132262459:risk_ethics_reproducibility:e3114f62d77c"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2132262459"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Arne Vansteenkiste",
+            "Jonathan Leliaert",
+            "Mykola Dvornik",
+            "M. Helsen",
+            "Felipe García‐Sánchez",
+            "Bartel Van Waeyenberge"
+          ],
+          "doi": "10.1063/1.4899186",
+          "title": "The design and verification of MuMax3",
+          "url": "https://doi.org/10.1063/1.4899186",
+          "venue": "AIP Advances",
+          "year": "2014"
+        },
+        "citation_key": "cite_a1ceb4c5ce38d95f",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2142805504:boundary_conditions:02f2f32fcbc5",
+          "EC:W2142805504:mechanism:98a9d81aeae5",
+          "EC:W2142805504:risk_ethics_reproducibility:28118693ac43"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2142805504"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "M R Mumpower",
+            "G C McLaughlin",
+            "R Surman",
+            "A W Steiner"
+          ],
+          "doi": "10.1088/1361-6471/44/3/034003",
+          "title": "Reverse engineering nuclear properties from rare earth abundances in the r process",
+          "url": "https://doi.org/10.1088/1361-6471/44/3/034003",
+          "venue": "Journal of Physics G Nuclear and Particle Physics",
+          "year": "2017"
+        },
+        "citation_key": "cite_b89745a07eed477d",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2529651270:mechanism:d2d00e69b689"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2529651270"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "N. P. M. Kuin",
+            "Kinwah Wu",
+            "S. R. Oates",
+            "A. Y. Lien",
+            "S. W. K. Emery",
+            "J. A. Kennea",
+            "M. de Pasquale",
+            "Qin Han",
+            "P. J. Brown",
+            "A. Tohuvavohu",
+            "A. A. Breeveld",
+            "D. N. Burrows",
+            "S. B. Cenko",
+            "S. Campana",
+            "A. J. Levan",
+            "C. B. Markwardt",
+            "J. P. Osborne",
+            "M. J. Page",
+            "K. L. Page",
+            "B. Sbarufatti",
+            "M. H. Siegel",
+            "E. Troja"
+          ],
+          "doi": "10.1093/mnras/stz053",
+          "title": "Swift spectra of AT2018cow: a white dwarf tidal disruption event?",
+          "url": "https://doi.org/10.1093/mnras/stz053",
+          "venue": "Monthly Notices of the Royal Astronomical Society",
+          "year": "2019"
+        },
+        "citation_key": "cite_ca1a0cb6340fb16b",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2888638323:mechanism:d9b33a00ca13",
+          "EC:W2888638323:boundary_conditions:2dc457079f7c",
+          "EC:W2888638323:research_object_measurability:f46553864314"
+        ],
+        "evidence_level": "fulltext",
+        "source_id": "W2888638323"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "David Radice",
+            "Albino Perego",
+            "Kenta Hotokezaka",
+            "Steven A. Fromm",
+            "Sebastiano Bernuzzi",
+            "Luke F. Roberts"
+          ],
+          "doi": "10.3847/1538-4357/aaf054",
+          "title": "Binary Neutron Star Mergers: Mass Ejection, Electromagnetic Counterparts, and Nucleosynthesis",
+          "url": "https://doi.org/10.3847/1538-4357/aaf054",
+          "venue": "The Astrophysical Journal",
+          "year": "2018"
+        },
+        "citation_key": "cite_f16e65d18232c78c",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2893936582:mechanism:cac70391b0bf",
+          "EC:W2893936582:boundary_conditions:b6a1dd5e5c9c",
+          "EC:W2893936582:research_object_measurability:060c7321b4d4"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2893936582"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Wesley Even",
+            "Oleg Korobkin",
+            "Chris L. Fryer",
+            "Christopher J. Fontes",
+            "Ryan Wollaeger",
+            "Aimee Hungerford",
+            "Jonas Lippuner",
+            "Jonah Miller",
+            "Matthew R. Mumpower",
+            "G. Wendell Misch"
+          ],
+          "doi": "10.3847/1538-4357/ab70b9",
+          "title": "Composition Effects on Kilonova Spectra and Light Curves. I",
+          "url": "https://doi.org/10.3847/1538-4357/ab70b9",
+          "venue": "The Astrophysical Journal",
+          "year": "2020"
+        },
+        "citation_key": "cite_2e146bff5b4a005e",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2943010605:mechanism:5eb8a9c67fc9",
+          "EC:W2943010605:mechanism:3b311ad3daeb",
+          "EC:W2943010605:research_object_measurability:2f546c3ddfc4",
+          "EC:W2943010605:research_object_measurability:4ef966e9ef7b",
+          "EC:W2943010605:boundary_conditions:6a05dfda382d"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2943010605"
+      },
+      {
+        "bibliographic_metadata": {
+          "authors": [
+            "Matthew R. Mumpower",
+            "P. Jaffke",
+            "Marc Verrière",
+            "J. Randrup"
+          ],
+          "doi": "10.1103/physrevc.101.054607",
+          "title": "Primary fission fragment mass yields across the chart of nuclides",
+          "url": "https://doi.org/10.1103/physrevc.101.054607",
+          "venue": "Physical Review C",
+          "year": "2020"
+        },
+        "citation_key": "cite_f521f70b773ee578",
+        "citation_rendering_status": "RENDERABLE",
+        "evidence_card_ids": [
+          "EC:W2986804745:boundary_conditions:80e1b66de167",
+          "EC:W2986804745:study_design:de459bc86453"
+        ],
+        "evidence_level": "abstract",
+        "source_id": "W2986804745"
+      }
+    ],
+    "evidence_cards_by_id": {
+      "EC:W1996162015:boundary_conditions:5c5267022f9c": {
+        "card_id": "EC:W1996162015:boundary_conditions:5c5267022f9c",
+        "citation_key": "cite_c5afe6a1f3d54206",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W1996162015",
+        "source_location": "fulltext:survey_pdf:W1996162015:markdown",
+        "support_statement": "The analysis of the neutrino-driven wind assumes that the outflow is in a steady state and that the neutron star mass is the predominant source of gravity, allowing for general relativistic effects to be treated as perturbations or approximations."
+      },
+      "EC:W1996162015:mechanism:8fe0370313db": {
+        "card_id": "EC:W1996162015:mechanism:8fe0370313db",
+        "citation_key": "cite_c5afe6a1f3d54206",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W1996162015",
+        "source_location": "fulltext:survey_pdf:W1996162015:markdown",
+        "support_statement": "The final electron fraction in the ejecta is primarily determined by the competition between neutrino absorption reactions on neutrons and protons, reaching a quasi-equilibrium value dependent on the relative luminosities and energy distributions of electron neutrinos and antineutrinos."
+      },
+      "EC:W2013598075:boundary_conditions:a1cb0d4c2a5e": {
+        "card_id": "EC:W2013598075:boundary_conditions:a1cb0d4c2a5e",
+        "citation_key": "cite_2bf3a687e25803e4",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W2013598075",
+        "source_location": "fulltext:survey_pdf:W2013598075:markdown",
+        "support_statement": "The presence of a small amount of overlying neutron-rich dynamical ejecta acts as a lanthanide curtain, obscuring optical emission from disk winds at certain viewing angles."
+      },
+      "EC:W2013598075:mechanism:4af63583c1d3": {
+        "card_id": "EC:W2013598075:mechanism:4af63583c1d3",
+        "citation_key": "cite_2bf3a687e25803e4",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2013598075",
+        "source_location": "fulltext:survey_pdf:W2013598075:markdown",
+        "support_statement": "The color of kilonova transients is determined by the electron fraction, where values greater than or approximately equal to 0.25 result in lanthanide-free ejecta that produce blue optical light curves."
+      },
+      "EC:W2013598075:research_object_measurability:2817d1b0f91d": {
+        "card_id": "EC:W2013598075:research_object_measurability:2817d1b0f91d",
+        "citation_key": "cite_2bf3a687e25803e4",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "fulltext",
+        "source_id": "W2013598075",
+        "source_location": "fulltext:survey_pdf:W2013598075:markdown",
+        "support_statement": "Resolved line features in the spectra can distinguish disk winds from dynamical ejecta due to the moderate velocities of wind outflows."
+      },
+      "EC:W2073832139:study_design:94f061b1b51f": {
+        "card_id": "EC:W2073832139:study_design:94f061b1b51f",
+        "citation_key": "cite_572fec0a1e5d74d9",
+        "claim_slot": "study_design",
+        "evidence_level": "abstract",
+        "source_id": "W2073832139",
+        "source_location": "abstract:openalex",
+        "support_statement": "The study employs a design involving spectral and photometric observations of Type Ia supernovae within the redshift range 0.16 ≤ z ≤ 0.62."
+      },
+      "EC:W2084800078:boundary_conditions:29f66f2af7af": {
+        "card_id": "EC:W2084800078:boundary_conditions:29f66f2af7af",
+        "citation_key": "cite_bbb76a303fab42b5",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W2084800078",
+        "source_location": "fulltext:survey_pdf:W2084800078:markdown",
+        "support_statement": "Current calculations represent all lanthanides using the radiative data of Neodymium (Nd), which likely underestimates the true opacity because other lanthanides like gadolinium have more complex electronic structures."
+      },
+      "EC:W2084800078:measurement_calibration:abb3d0cd6aa4": {
+        "card_id": "EC:W2084800078:measurement_calibration:abb3d0cd6aa4",
+        "citation_key": "cite_bbb76a303fab42b5",
+        "claim_slot": "measurement_calibration",
+        "evidence_level": "fulltext",
+        "source_id": "W2084800078",
+        "source_location": "fulltext:survey_pdf:W2084800078:markdown",
+        "support_statement": "The Autostructure atomic structure modeling code was used to derive lanthanide line data, with reliability tested by comparing predicted expansion opacities of Fe and Ce against VALD database line data, showing good agreement."
+      },
+      "EC:W2084800078:mechanism:0534a2d13c24": {
+        "card_id": "EC:W2084800078:mechanism:0534a2d13c24",
+        "citation_key": "cite_bbb76a303fab42b5",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2084800078",
+        "source_location": "fulltext:survey_pdf:W2084800078:markdown",
+        "support_statement": "The photospheric temperature stabilizes near the recombination temperature of lanthanides (~2500 K) around 2 days post-merger, causing the spectral energy distribution to remain relatively constant in the infrared."
+      },
+      "EC:W2084800078:mechanism:b63dc39fbe21": {
+        "card_id": "EC:W2084800078:mechanism:b63dc39fbe21",
+        "citation_key": "cite_bbb76a303fab42b5",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2084800078",
+        "source_location": "fulltext:survey_pdf:W2084800078:markdown",
+        "support_statement": "The presence of heavier r-process elements, particularly lanthanides, increases ejecta opacity by several orders of magnitude compared to iron-group elements, leading to longer, dimmer, and redder light curves."
+      },
+      "EC:W2088686510:boundary_conditions:38190175c2c3": {
+        "card_id": "EC:W2088686510:boundary_conditions:38190175c2c3",
+        "citation_key": "cite_8beeacaea00bd823",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W2088686510",
+        "source_location": "fulltext:survey_pdf:W2088686510:markdown",
+        "support_statement": "The central hypermassive neutron star (HMNS) is treated as a stationary object to compensate for resolution limitations, with its interior state evolved only during an initial relaxation phase."
+      },
+      "EC:W2120145199:boundary_conditions:c389ed0c452a": {
+        "card_id": "EC:W2120145199:boundary_conditions:c389ed0c452a",
+        "citation_key": "cite_23391c6e806b23a8",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W2120145199",
+        "source_location": "fulltext:survey_pdf:W2120145199:markdown",
+        "support_statement": "The codes are constructed around the use of periodic boundary conditions, allowing for the treatment of infinite crystalline systems and efficient convergence to the thermodynamic limit for aperiodic but extended systems."
+      },
+      "EC:W2120145199:mechanism:3f428ff2bdd8": {
+        "card_id": "EC:W2120145199:mechanism:3f428ff2bdd8",
+        "citation_key": "cite_23391c6e806b23a8",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2120145199",
+        "source_location": "fulltext:survey_pdf:W2120145199:markdown",
+        "support_statement": "The software implements electronic-structure calculations using density-functional theory, plane waves, and pseudopotentials (norm-conserving, ultrasoft, and projector-augmented wave)."
+      },
+      "EC:W2132262459:boundary_conditions:5b3ac4532336": {
+        "card_id": "EC:W2132262459:boundary_conditions:5b3ac4532336",
+        "citation_key": "cite_63ad9f666f512e23",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2132262459",
+        "source_location": "abstract:openalex",
+        "support_statement": "CHARMM calculations can be performed with various boundary conditions, including explicit solvent and implicit solvent/membrane models."
+      },
+      "EC:W2132262459:mechanism:1053d8a0dc55": {
+        "card_id": "EC:W2132262459:mechanism:1053d8a0dc55",
+        "citation_key": "cite_63ad9f666f512e23",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2132262459",
+        "source_location": "abstract:openalex",
+        "support_statement": "CHARMM provides computational tools including conformational and path sampling methods, free energy estimators, molecular minimization, dynamics, and analysis techniques."
+      },
+      "EC:W2132262459:risk_ethics_reproducibility:e3114f62d77c": {
+        "card_id": "EC:W2132262459:risk_ethics_reproducibility:e3114f62d77c",
+        "citation_key": "cite_63ad9f666f512e23",
+        "claim_slot": "risk_ethics_reproducibility",
+        "evidence_level": "abstract",
+        "source_id": "W2132262459",
+        "source_location": "abstract:openalex",
+        "support_statement": "CHARMM has been ported to numerous platforms in both serial and parallel architectures."
+      },
+      "EC:W2142805504:boundary_conditions:02f2f32fcbc5": {
+        "card_id": "EC:W2142805504:boundary_conditions:02f2f32fcbc5",
+        "citation_key": "cite_a1ceb4c5ce38d95f",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W2142805504",
+        "source_location": "fulltext:survey_pdf:W2142805504:markdown",
+        "support_statement": "The software's finite-difference exchange energy implementation is accurate when the angle between neighboring spins is kept below approximately 20-30 degrees."
+      },
+      "EC:W2142805504:mechanism:98a9d81aeae5": {
+        "card_id": "EC:W2142805504:mechanism:98a9d81aeae5",
+        "citation_key": "cite_a1ceb4c5ce38d95f",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2142805504",
+        "source_location": "fulltext:survey_pdf:W2142805504:markdown",
+        "support_statement": "MuMax3 calculates magnetostatic fields using a finite-difference convolution accelerated by FFTs, where the kernel is initialized in double precision on the CPU before being truncated to single precision for GPU transfer."
+      },
+      "EC:W2142805504:risk_ethics_reproducibility:28118693ac43": {
+        "card_id": "EC:W2142805504:risk_ethics_reproducibility:28118693ac43",
+        "citation_key": "cite_a1ceb4c5ce38d95f",
+        "claim_slot": "risk_ethics_reproducibility",
+        "evidence_level": "fulltext",
+        "source_id": "W2142805504",
+        "source_location": "fulltext:survey_pdf:W2142805504:markdown",
+        "support_statement": "The developers assert that the complete input files used to generate graphs in the paper are available in an appendix to allow for independent reproduction of results."
+      },
+      "EC:W2157732302:mechanism:cbc3f76a5547": {
+        "card_id": "EC:W2157732302:mechanism:cbc3f76a5547",
+        "citation_key": "cite_403b23aaa35e6b92",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2157732302",
+        "source_location": "fulltext:survey_pdf:W2157732302:markdown",
+        "support_statement": "In simulated BH-torus systems, viscously driven outflows typically account for approximately 20–25% of the initial accretion-torus mass, while neutrino-powered winds contribute at most another approximately 1%, although neutrino heating enhances the viscous ejecta."
+      },
+      "EC:W2529651270:mechanism:d2d00e69b689": {
+        "card_id": "EC:W2529651270:mechanism:d2d00e69b689",
+        "citation_key": "cite_b89745a07eed477d",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2529651270",
+        "source_location": "fulltext:survey_pdf:W2529651270:markdown",
+        "support_statement": "The proposed mechanism for the rare earth peak involves a pileup of material formed dynamically during the end phase of the r process, where a feature in the nuclear mass surface causes a hangup during the decay back to stability."
+      },
+      "EC:W2586770524:boundary_conditions:dadfbeb5ea6a": {
+        "card_id": "EC:W2586770524:boundary_conditions:dadfbeb5ea6a",
+        "citation_key": "cite_3a00f5f9e5201ba0",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W2586770524",
+        "source_location": "fulltext:survey_pdf:W2586770524:markdown",
+        "support_statement": "The study identifies the ratio of dynamical ejecta mass to disk mass as the relevant parameter for mixing behavior, rather than the initial spatial gap between these components."
+      },
+      "EC:W2586770524:risk_ethics_reproducibility:aa9f6c7eeabd": {
+        "card_id": "EC:W2586770524:risk_ethics_reproducibility:aa9f6c7eeabd",
+        "citation_key": "cite_3a00f5f9e5201ba0",
+        "claim_slot": "risk_ethics_reproducibility",
+        "evidence_level": "fulltext",
+        "source_id": "W2586770524",
+        "source_location": "fulltext:survey_pdf:W2586770524:markdown",
+        "support_statement": "The authors state that improvements in calculation reliability would require general-relativistic merger simulations with larger computational domains, higher resolution for low-density regions, and long-term general-relativistic MHD simulations in 3D."
+      },
+      "EC:W2586770524:study_design:316c5110f683": {
+        "card_id": "EC:W2586770524:study_design:316c5110f683",
+        "citation_key": "cite_3a00f5f9e5201ba0",
+        "claim_slot": "study_design",
+        "evidence_level": "fulltext",
+        "source_id": "W2586770524",
+        "source_location": "fulltext:survey_pdf:W2586770524:markdown",
+        "support_statement": "The study employs an end-to-end computational workflow that integrates fully-relativistic merger simulation outputs, post-merger hydrodynamical evolution, neutrino physics, nuclear reaction network calculations, and radiative transfer codes."
+      },
+      "EC:W2754075545:boundary_conditions:a485efd2efbf": {
+        "card_id": "EC:W2754075545:boundary_conditions:a485efd2efbf",
+        "citation_key": "cite_7f5abb972bd2cf6b",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2754075545",
+        "source_location": "abstract:openalex",
+        "support_statement": "Determining the sky position of a significant fraction of detected signals to areas of 5-[Formula: see text] requires at least three detectors of sensitivity within a factor of [Formula: see text] of each other and with a broad frequency bandwidth."
+      },
+      "EC:W2765302758:mechanism:c2610231bb37": {
+        "card_id": "EC:W2765302758:mechanism:c2610231bb37",
+        "citation_key": "cite_492ec5910d5efd57",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2765302758",
+        "source_location": "fulltext:survey_pdf:W2765302758:markdown",
+        "support_statement": "The observed rapid rise, subsequent decay, and color evolution of SSS17a are consistent with a radioactively-powered transient resulting from the ejection of neutron-rich material, specifically involving multiple ejecta components of differing lanthanide abundance."
+      },
+      "EC:W2765302758:study_design:8d273fd19d2d": {
+        "card_id": "EC:W2765302758:study_design:8d273fd19d2d",
+        "citation_key": "cite_492ec5910d5efd57",
+        "claim_slot": "study_design",
+        "evidence_level": "fulltext",
+        "source_id": "W2765302758",
+        "source_location": "fulltext:survey_pdf:W2765302758:markdown",
+        "support_statement": "The study employed a multi-instrument, multi-wavelength observation strategy spanning from ultraviolet to near-infrared, starting within hours of discovery and continuing for over 18 days post-merger."
+      },
+      "EC:W2765595587:mechanism:0d833cb6ac83": {
+        "card_id": "EC:W2765595587:mechanism:0d833cb6ac83",
+        "citation_key": "cite_612290131318c0d4",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2765595587",
+        "source_location": "abstract:openalex",
+        "support_statement": "The light curve evolution and spectral features of AT2017gfo are consistent with a kilonova/macronova powered by radioactive decay of r-process nuclides, indicating neutron-star mergers produce such events."
+      },
+      "EC:W2798377219:mechanism:00dd23ce9bd9": {
+        "card_id": "EC:W2798377219:mechanism:00dd23ce9bd9",
+        "citation_key": "cite_b668987a568d271f",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2798377219",
+        "source_location": "abstract:openalex",
+        "support_statement": "New experimental approaches have provided a full identification of all fission products in A and Z."
+      },
+      "EC:W2798377219:mechanism:b43a08c910b2": {
+        "card_id": "EC:W2798377219:mechanism:b43a08c910b2",
+        "citation_key": "cite_b668987a568d271f",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2798377219",
+        "source_location": "abstract:openalex",
+        "support_statement": "A semi-empirical approach exploits the topological properties of a continuous function, separability of fragment shells and compound nucleus properties, quantum oscillator coupling, early freeze-out, and statistical mechanics for thermalization."
+      },
+      "EC:W2802275066:research_object_measurability:37cdd59b29f3": {
+        "card_id": "EC:W2802275066:research_object_measurability:37cdd59b29f3",
+        "citation_key": "cite_30c88fe46f23448d",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2802275066",
+        "source_location": "abstract:openalex",
+        "support_statement": "The abstract suggests that the very red color of the kilonova associated with GW170817 indicates that neutron star mergers may be an important r-process site."
+      },
+      "EC:W2888638323:boundary_conditions:2dc457079f7c": {
+        "card_id": "EC:W2888638323:boundary_conditions:2dc457079f7c",
+        "citation_key": "cite_ca1a0cb6340fb16b",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "fulltext",
+        "source_id": "W2888638323",
+        "source_location": "fulltext:survey_pdf:W2888638323:markdown",
+        "support_statement": "A tidal disruption event involving a low-mass helium white dwarf constrains the black hole mass based on the condition that the tidal disruption radius must exceed the Schwarzschild radius."
+      },
+      "EC:W2888638323:mechanism:d9b33a00ca13": {
+        "card_id": "EC:W2888638323:mechanism:d9b33a00ca13",
+        "citation_key": "cite_ca1a0cb6340fb16b",
+        "claim_slot": "mechanism",
+        "evidence_level": "fulltext",
+        "source_id": "W2888638323",
+        "source_location": "fulltext:survey_pdf:W2888638323:markdown",
+        "support_statement": "The observed high-energy emission characteristics are consistent with a model involving the tidal disruption of a low-mass Helium White Dwarf by an intermediate-mass black hole, forming an opaque photosphere."
+      },
+      "EC:W2888638323:research_object_measurability:f46553864314": {
+        "card_id": "EC:W2888638323:research_object_measurability:f46553864314",
+        "citation_key": "cite_ca1a0cb6340fb16b",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "fulltext",
+        "source_id": "W2888638323",
+        "source_location": "fulltext:survey_pdf:W2888638323:markdown",
+        "support_statement": "X-ray variability in the source exhibits a burst-like character rather than periodicity, as indicated by skewness coefficients and wavelet analysis."
+      },
+      "EC:W2893936582:boundary_conditions:b6a1dd5e5c9c": {
+        "card_id": "EC:W2893936582:boundary_conditions:b6a1dd5e5c9c",
+        "citation_key": "cite_f16e65d18232c78c",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2893936582",
+        "source_location": "abstract:openalex",
+        "support_statement": "The mass ejection and associated transients are dependent on binary parameters and the neutron star equation of state (EOS)."
+      },
+      "EC:W2893936582:mechanism:cac70391b0bf": {
+        "card_id": "EC:W2893936582:mechanism:cac70391b0bf",
+        "citation_key": "cite_f16e65d18232c78c",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2893936582",
+        "source_location": "abstract:openalex",
+        "support_statement": "Shock-formed acceleration of a small fraction of ejecta to velocities greater than 0.6 c produces bright radio flares on timescales of weeks to years after merger."
+      },
+      "EC:W2893936582:research_object_measurability:060c7321b4d4": {
+        "card_id": "EC:W2893936582:research_object_measurability:060c7321b4d4",
+        "citation_key": "cite_f16e65d18232c78c",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2893936582",
+        "source_location": "abstract:openalex",
+        "support_statement": "Observation of radio flares from shock-accelerated ejecta could constrain the strength of the NS bounce after merger and consequently the EOS of matter at extreme densities."
+      },
+      "EC:W2913624347:mechanism:67229733f470": {
+        "card_id": "EC:W2913624347:mechanism:67229733f470",
+        "citation_key": "cite_19250ec024f92381",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2913624347",
+        "source_location": "abstract:openalex",
+        "support_statement": "Traditional nuclear and atomic concepts require revision in superheavy systems due to their large atomic numbers."
+      },
+      "EC:W2943010605:boundary_conditions:6a05dfda382d": {
+        "card_id": "EC:W2943010605:boundary_conditions:6a05dfda382d",
+        "citation_key": "cite_2e146bff5b4a005e",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2943010605",
+        "source_location": "abstract:openalex",
+        "support_statement": "The broad forest of lanthanide lines makes it difficult to determine the exact fraction of individual lanthanides in the ejecta."
+      },
+      "EC:W2943010605:mechanism:3b311ad3daeb": {
+        "card_id": "EC:W2943010605:mechanism:3b311ad3daeb",
+        "citation_key": "cite_2e146bff5b4a005e",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2943010605",
+        "source_location": "abstract:openalex",
+        "support_statement": "Strong lines in lanthanide opacities significantly alter kilonova light curves and spectra in optical and infrared wavelength bands."
+      },
+      "EC:W2943010605:mechanism:5eb8a9c67fc9": {
+        "card_id": "EC:W2943010605:mechanism:5eb8a9c67fc9",
+        "citation_key": "cite_2e146bff5b4a005e",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2943010605",
+        "source_location": "abstract:openalex",
+        "support_statement": "The emission from neutron star merger ejecta, known as a kilonova, is powered by the radioactive decay of heavy isotopes and reprocessed by atomic opacities to optical and infrared wavelengths."
+      },
+      "EC:W2943010605:research_object_measurability:2f546c3ddfc4": {
+        "card_id": "EC:W2943010605:research_object_measurability:2f546c3ddfc4",
+        "citation_key": "cite_2e146bff5b4a005e",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2943010605",
+        "source_location": "abstract:openalex",
+        "support_statement": "Neodymium (Nd) opacities above 1 μm are higher than other lanthanides, making Nd an exception where increased abundances might be probed via kilonova observations."
+      },
+      "EC:W2943010605:research_object_measurability:4ef966e9ef7b": {
+        "card_id": "EC:W2943010605:research_object_measurability:4ef966e9ef7b",
+        "citation_key": "cite_2e146bff5b4a005e",
+        "claim_slot": "research_object_measurability",
+        "evidence_level": "abstract",
+        "source_id": "W2943010605",
+        "source_location": "abstract:openalex",
+        "support_statement": "Uranium (U) opacity is strong in the 0.2–1 μm wavelength range at early times (first day) when the ejecta is hot, potentially allowing constraints on U abundances."
+      },
+      "EC:W2970953561:boundary_conditions:a6dbabf2a9f7": {
+        "card_id": "EC:W2970953561:boundary_conditions:a6dbabf2a9f7",
+        "citation_key": "cite_b9eb1a62348944b1",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2970953561",
+        "source_location": "abstract:openalex",
+        "support_statement": "The study's conclusions regarding the limited effect of mergers on star formation rates apply to merging galaxies that are not significantly deviating from the galaxy main sequence."
+      },
+      "EC:W2970953561:mechanism:7e45627aa3ce": {
+        "card_id": "EC:W2970953561:mechanism:7e45627aa3ce",
+        "citation_key": "cite_b9eb1a62348944b1",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W2970953561",
+        "source_location": "abstract:openalex",
+        "support_statement": "The source suggests that galaxy mergers can induce starbursts, indicated by a correlation where the merger fraction increases as the star formation rate exceeds the galaxy main sequence."
+      },
+      "EC:W2986804745:boundary_conditions:80e1b66de167": {
+        "card_id": "EC:W2986804745:boundary_conditions:80e1b66de167",
+        "citation_key": "cite_f521f70b773ee578",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W2986804745",
+        "source_location": "abstract:openalex",
+        "support_statement": "The fission fragment yields were calculated for nuclides bounded by atomic number 80 to 130 and mass number less than or equal to 330."
+      },
+      "EC:W2986804745:study_design:de459bc86453": {
+        "card_id": "EC:W2986804745:study_design:de459bc86453",
+        "citation_key": "cite_f521f70b773ee578",
+        "claim_slot": "study_design",
+        "evidence_level": "abstract",
+        "source_id": "W2986804745",
+        "source_location": "abstract:openalex",
+        "support_statement": "The fission process was described using a model of Brownian shape motion across nuclear potential-energy surfaces, assuming strongly damped nuclear shape dynamics."
+      },
+      "EC:W3005340384:boundary_conditions:0ba98c1c3538": {
+        "card_id": "EC:W3005340384:boundary_conditions:0ba98c1c3538",
+        "citation_key": "cite_59237db420df3c57",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W3005340384",
+        "source_location": "abstract:openalex",
+        "support_statement": "The n_TOF facility at CERN utilizes a 185 m long flight path for the study of long-lived isotopes."
+      },
+      "EC:W3005340384:boundary_conditions:4c43b12eb734": {
+        "card_id": "EC:W3005340384:boundary_conditions:4c43b12eb734",
+        "citation_key": "cite_59237db420df3c57",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W3005340384",
+        "source_location": "abstract:openalex",
+        "support_statement": "A second experimental area at n_TOF is located at a distance of about 19 m, enabling measurements of short-lived actinides."
+      },
+      "EC:W3005340384:mechanism:2d078791d11a": {
+        "card_id": "EC:W3005340384:mechanism:2d078791d11a",
+        "citation_key": "cite_59237db420df3c57",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W3005340384",
+        "source_location": "abstract:openalex",
+        "support_statement": "Neutron-induced fission reactions provide information on properties of nuclear matter and are used to address fundamental questions in nuclear science and applications such as reactor design and astrophysics."
+      },
+      "EC:W4211256362:mechanism:ef7adae0606e": {
+        "card_id": "EC:W4211256362:mechanism:ef7adae0606e",
+        "citation_key": "cite_52593a6c02ca6436",
+        "claim_slot": "mechanism",
+        "evidence_level": "abstract",
+        "source_id": "W4211256362",
+        "source_location": "abstract:openalex",
+        "support_statement": "Radioactive decay of neutron-rich ejecta from NS-NS and BH-NS mergers powers kilonova emission, which is described as a supernova-like transient."
+      },
+      "EC:W4288079944:comparison_controls:c7d3804f3aa8": {
+        "card_id": "EC:W4288079944:comparison_controls:c7d3804f3aa8",
+        "citation_key": "cite_364386a3569b6e66",
+        "claim_slot": "comparison_controls",
+        "evidence_level": "fulltext",
+        "source_id": "W4288079944",
+        "source_location": "fulltext:survey_pdf:W4288079944:markdown",
+        "support_statement": "Cosmological parameter constraints were tested for robustness by comparing results from two independent high-multipole likelihood constructions: the Plik likelihood and the CamSpec likelihood."
+      },
+      "EC:W4288079944:measurement_calibration:2c8c80e11ecc": {
+        "card_id": "EC:W4288079944:measurement_calibration:2c8c80e11ecc",
+        "citation_key": "cite_364386a3569b6e66",
+        "claim_slot": "measurement_calibration",
+        "evidence_level": "fulltext",
+        "source_id": "W4288079944",
+        "source_location": "fulltext:survey_pdf:W4288079944:markdown",
+        "support_statement": "The SRoll mapmaking solution for the HFI channels minimizes map residuals using absolute calibrations based on the orbital dipole, alongside a bandpass-mismatch model and a parametric model for systematics."
+      },
+      "EC:W4292875581:boundary_conditions:1b0175b79474": {
+        "card_id": "EC:W4292875581:boundary_conditions:1b0175b79474",
+        "citation_key": "cite_357dd780a9e3a378",
+        "claim_slot": "boundary_conditions",
+        "evidence_level": "abstract",
+        "source_id": "W4292875581",
+        "source_location": "abstract:openalex",
+        "support_statement": "The results apply to the standard spatially-flat 6-parameter ΛCDM cosmology with a power-law spectrum of adiabatic scalar perturbations."
+      }
+    }
+  },
+  "unknown_items": [
+    {
+      "field_path": "candidate_counterexamples.CE2.assumption_checks.A2",
+      "reason": "Assumption A2 requires demonstrating non-degeneracy in parameter space, but quantitative metrics for 'Unique_Sensitivity' are missing from the definitions.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "comparison_and_robustness.baselines[0]",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "comparison_and_robustness.comparisons[0]",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "data_governance_and_reproducibility.data_management",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "data_governance_and_reproducibility.reproducibility",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "definitions.D1",
+      "reason": "No specific protocol or equation for calculating effective fission timescale provided in brief.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "definitions.D2",
+      "reason": "No specific definition or unit for ejecta expansion timescale provided.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "definitions.D3",
+      "reason": "Specific spectral lines and instruments for Lambda_Spectral are not defined, hindering witness validation.; Specific spectral lines, instruments, or time-sampling intervals not defined.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "definitions.D4",
+      "reason": "Method for measuring or inferring third r-process peak abundance is not specified.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "definitions.D5",
+      "reason": "Range of viewing angles or method for determining observation angle is not specified.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "definitions.D6",
+      "reason": "Quantitative metric for lanthanide curtaining (e.g., opacity value) is missing.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "definitions.D7",
+      "reason": "Metrics for geometric asymmetries (e.g., ellipticity) are not defined.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "definitions.D8",
+      "reason": "Parameters defining magnetic field configurations (e.g., strength, geometry) are not specified.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration.measurement_plan",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "measurement_and_calibration.quality_control",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "open_design_questions[1]",
+      "reason": "The operational definitions for variables V1 through V8 need to be formally specified for the mathematics theory template.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.assumptions",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.counterexample_or_boundary_analysis",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.formal_claim",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "template_details.verification_plan",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V1.operational_definition",
+      "reason": "No specific protocol or equation for calculating effective fission timescale provided in brief.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V2.operational_definition",
+      "reason": "No specific definition or unit for ejecta expansion timescale provided.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V3.operational_definition",
+      "reason": "Specific spectral lines, instruments, or time-sampling intervals not defined.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V4.operational_definition",
+      "reason": "Method for measuring or inferring third r-process peak abundance is not specified.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V5.operational_definition",
+      "reason": "Range of viewing angles or method for determining observation angle is not specified.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V6.operational_definition",
+      "reason": "Quantitative metric for lanthanide curtaining (e.g., opacity value) is missing.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V7.operational_definition",
+      "reason": "Metrics for geometric asymmetries (e.g., ellipticity) are not defined.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables.V8.operational_definition",
+      "reason": "Parameters defining magnetic field configurations (e.g., strength, geometry) are not specified.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables_and_operationalization.operational_definitions[0]",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables_and_operationalization.operational_definitions[1]",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables_and_operationalization.operational_definitions[2]",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables_and_operationalization.operational_definitions[3]",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables_and_operationalization.operational_definitions[4]",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables_and_operationalization.operational_definitions[5]",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables_and_operationalization.operational_definitions[6]",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    },
+    {
+      "field_path": "variables_and_operationalization.operational_definitions[7]",
+      "reason": "The final canonical field status requires human input.",
+      "status": "needs_human_input"
+    }
+  ],
+  "variables_and_operationalization": {
+    "confounders": [
+      "magnetic_field_configuration"
+    ],
+    "control_variables": [
+      "ejecta_expansion_timescale"
+    ],
+    "dependent_variables": [
+      "third_r_process_peak_freeze_out_abundance",
+      "lanthanide_curtaining",
+      "actinide_spectral_line_evolution"
+    ],
+    "independent_variables": [
+      "effective_fission_timescale",
+      "viewing_angle"
+    ],
+    "operational_definitions": [
+      {
+        "reason": "Needs formal definition for effective_fission_timescale",
+        "variable_id": "V1"
+      },
+      {
+        "reason": "Needs formal definition for ejecta_expansion_timescale",
+        "variable_id": "V2"
+      },
+      {
+        "reason": "Needs formal definition for actinide_spectral_line_evolution",
+        "variable_id": "V3"
+      },
+      {
+        "reason": "Needs formal definition for third_r_process_peak_freeze_out_abundance",
+        "variable_id": "V4"
+      },
+      {
+        "reason": "Needs formal definition for viewing_angle",
+        "variable_id": "V5"
+      },
+      {
+        "reason": "Needs formal definition for lanthanide_curtaining",
+        "variable_id": "V6"
+      },
+      {
+        "reason": "Needs formal definition for geometric_asymmetries",
+        "variable_id": "V7"
+      },
+      {
+        "reason": "Needs formal definition for magnetic_field_configuration",
+        "variable_id": "V8"
+      }
+    ]
+  }
+}

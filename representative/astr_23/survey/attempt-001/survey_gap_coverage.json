@@ -1,0 +1,2368 @@
+{
+  "artifact_fingerprint": "b4fbb70726ecfcfb0184a6dcf9ce9f99d670532fef4af14c2b95c8706f1507ed",
+  "contradictions": [],
+  "coverage": {
+    "contradiction_ids": [],
+    "coverage_matrix_version": "survey_gap_coverage_v1",
+    "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "project_id": "sci_260905_008_survey_001",
+    "rows": [
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:unresolved_mechanism:abundance_pattern_interpretation:the_causal_link_between_observed_abundance_correlations_and_transuranic_fission_remains_unverified_against_competing_nucleosynthetic_pathways_or_nuclear_data_uncertainties:941177030d26"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W4389429223"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "abundance pattern interpretation"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:missing_assumption:astrophysical_trigger_mechanism:the_model_assumes_a_violent_phase_transition_to_strange_quark_matter_as_the_exclusive_trigger_for_neutron_star_decompression_without_evaluating_the_thermodynamic_plausibility_or_alternative_triggers:d4d20399ae43"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W2102639755"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "astrophysical_trigger_mechanism"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:missing_assumption:ejecta_mass_estimation:ejecta_mass_estimates_show_only_weak_dependence_on_the_nuclear_equation_of_state_stiffness_potentially_underestimating_sensitivity_to_extreme_eos_parameters:ec3c4e8b4073"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W2161801818"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "ejecta mass estimation"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:equation_of_state_and_mass_parameter_space:claims_of_robustness_in_ejecta_properties_and_nucleosynthesis_yields_are_constrained_to_a_limited_sample_of_three_nuclear_physics_equations_of_state_and_specific_mass_ratios_leaving_broader_eos_stiffness_and_extreme_mass_ratio_regimes_untested:895d46386266"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W2760756222"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "equation of state and mass parameter space"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:limitation:kilonova_spectral_prediction:use_of_a_simplified_gray_opacity_model_restricts_the_accuracy_of_wavelength_dependent_radiative_transfer_predictions_potentially_obscuring_spectral_features_critical_for_observational_identification:48fe39726914"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W2760756222"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "kilonova spectral prediction"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:limitation:neutrino_transport_modeling:the_reliance_on_a_neutrino_leakage_scheme_introduces_approximations_that_may_inaccurately_capture_complex_angle_and_energy_dependent_neutrino_matter_interactions_during_merger_dynamics:ac1025f5f2bd"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W2760756222"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "neutrino transport modeling"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:nuclear_physics_input_uncertainty:the_study_s_conclusions_are_bounded_by_the_selection_of_only_three_nuclear_mass_models_and_four_fission_fragment_distribution_models_leaving_broader_theoretical_uncertainties_in_fission_barriers_and_fragment_yields_unquantified:4cc3b7cd8914"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W2615363806"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "nuclear physics input uncertainty"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:nucleosynthesis_network_coupling:the_switch_from_equilibrium_to_dynamical_r_process_calculations_occurs_at_a_fixed_density_threshold_4_10_11_g_cm_3_introducing_an_artificial_discontinuity_that_may_propagate_errors_into_final_abundance_predictions:81d590ea63c6"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W2102639755"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "nucleosynthesis_network_coupling"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:nucleosynthetic_yield_abundance_pattern:nucleosynthesis_results_and_solar_abundance_comparisons_are_restricted_to_heavy_nuclei_with_mass_numbers_a_140:42cc7c6ac67b"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W2161801818"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "nucleosynthetic yield / abundance pattern"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:limitation:observational_prediction_light_curve_modeling:light_curve_predictions_rely_on_an_approximative_model_rather_than_comprehensive_radiative_transfer_calculations:4b344a68f891"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W2161801818"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "observational prediction / light curve modeling"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:comparator_deficit:observational_validation:the_partial_mitigation_of_the_third_peak_shift_by_updated_decay_half_lives_suggests_an_incomplete_reconciliation_between_theoretical_predictions_and_observed_abundance_features_as_the_remaining_discrepancy_is_not_addressed:d58bcd6652ba"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W2615363806"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "observational validation"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:comparator_deficit:observational_validation:the_comparison_to_solar_abundance_patterns_and_extremely_metal_deficient_stars_lacks_quantitative_uncertainty_bounds_or_direct_observational_cross_validation_for_quark_nova_specific_nucleosynthetic_signatures:549fd610b401"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W2102639755"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "observational_validation"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:unresolved_mechanism:r_process_freeze_out_dynamics:the_precise_quantitative_impact_of_the_breakdown_of_n_n_equilibrium_during_freeze_out_on_the_third_r_process_peak_shift_remains_partially_unresolved_as_the_mechanism_relies_on_competing_processes_whose_relative_rates_vary_across_nuclear_models:27770e4b2d22"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W2615363806"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "r-process freeze-out dynamics"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:stellar_sample_representativeness:lack_of_specified_sample_size_selection_criteria_and_stellar_atmospheric_parameters_leaves_the_statistical_robustness_and_environmental_boundary_conditions_of_the_abundance_correlations_undefined:a0172d0607b4"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W4389429223"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "stellar sample representativeness"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:global:limitation:transuranic_nucleosynthesis_modeling:reliance_on_theoretical_model_extrapolation_introduces_unquantified_uncertainty_into_the_inferred_contribution_of_fission_fragments_to_elemental_abundances:5f16a048715b"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [
+          "W4389429223"
+        ],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "GLOBAL",
+        "target_slot": "transuranic nucleosynthesis modeling"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "direct_observation"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "phenomenon"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:missing_boundary_condition:target_condition:target_condition:unknown:c04108123553"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "target_condition"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH1",
+        "target_slot": "target_object"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:5811a61e793a"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "candidate_mechanism"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:unmapped_gap_common_outcome:common_outcome:common_outcome:unknown:e7f30670bc8c"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "common_outcome"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:identifiability_gap:discriminating_observation:discriminating_observation:unknown:2d2676ce36ce"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "discriminating_observation"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:sh2:mechanism_explanation_gap:fission_neutron_release_timing:the_precise_temporal_relationship_between_fission_neutron_release_and_the_freeze_out_of_neutron_capture_equilibrium_determines_third_peak_positioning_yet_current_network_calculations_lack_constrained_beta_decay_rates_far_from_stability_to_quantify_this_shift:4856612a78c6"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "SH2",
+        "target_slot": "fission_neutron_release_timing"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh2:unmapped_gap_input_or_condition:input_or_condition:input_or_condition:unknown:54cea9e092bb"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH2",
+        "target_slot": "input_or_condition"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:unmapped_gap_candidate:candidate:candidate:unknown:79dd48dd2aae"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "candidate"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:unmapped_gap_comparable_endpoint:comparable_endpoint:comparable_endpoint:unknown:2834fca38418"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "comparable_endpoint"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:missing_comparator:comparator:comparator:unknown:b9ab0cd7e325"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "comparator"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh3:missing_comparator:comparison_condition:comparison_condition:unknown:8e34fd31d600"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH3",
+        "target_slot": "comparison_condition"
+      },
+      {
+        "base_status": "unverified",
+        "candidate_ids": [
+          "gap_candidate:sh3:missing_boundary_condition:eos_compactness_threshold:the_threshold_equation_of_state_stiffness_below_which_dynamical_ejecta_masses_become_sufficient_to_dominate_galactic_r_process_enrichment_lacks_empirical_calibration_from_gravitational_wave_strain_measurements:f8ce4f895dea"
+        ],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [],
+        "paper_ids": [],
+        "required": false,
+        "status": "candidate_pending",
+        "subhypothesis_id": "SH3",
+        "target_slot": "eos_compactness_threshold"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:unmapped_gap_base_relation:base_relation:base_relation:unknown:6aab151141ed"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "base_relation"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:unmapped_gap_boundary_variable:boundary_variable:boundary_variable:unknown:71a0013bb7fd"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "boundary_variable"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:unmapped_gap_comparable_endpoint:comparable_endpoint:comparable_endpoint:unknown:2151ad4ec9f6"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "comparable_endpoint"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:missing_comparator:comparator:comparator:unknown:04d033b87186"
+        ],
+        "paper_ids": [],
+        "required": false,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "comparator"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:unmapped_gap_condition_a:condition_a:condition_a:unknown:8aed9aa710ce"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "condition_a"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:unmapped_gap_condition_b:condition_b:condition_b:unknown:2b21efbacd1a"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "condition_b"
+      },
+      {
+        "base_status": "uncovered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh4:missing_boundary_condition:validity_domain:validity_domain:unknown:ae42dd2f7779"
+        ],
+        "paper_ids": [],
+        "required": false,
+        "status": "uncovered",
+        "subhypothesis_id": "SH4",
+        "target_slot": "validity_domain"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh5:measurement_construct_mismatch:construct:construct:unknown:934166120a51"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "construct"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh5:measurement_construct_mismatch:mapping_or_calibration:mapping_or_calibration:unknown:d5785bac4e97"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "mapping_or_calibration"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh5:unmapped_gap_proxy_or_measure:proxy_or_measure:proxy_or_measure:unknown:0c4ca54871f3"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "proxy_or_measure"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh5:unmapped_gap_reference_or_target_measure:reference_or_target_measure:reference_or_target_measure:unknown:b8159afc4550"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH5",
+        "target_slot": "reference_or_target_measure"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh6:unmapped_gap_coverage_range:coverage_range:coverage_range:unknown:982161d42033"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "coverage_range"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh6:unmapped_gap_impact_on_claim:impact_on_claim:impact_on_claim:unknown:b97d088d9149"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "impact_on_claim"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh6:unmapped_gap_missing_range:missing_range:missing_range:unknown:b5a58d46a6bb"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "missing_range"
+      },
+      {
+        "base_status": "covered",
+        "candidate_ids": [],
+        "contradiction_ids": [],
+        "deterministic_gap_ids": [
+          "gap:sh6:unmapped_gap_required_variable:required_variable:required_variable:unknown:5f9320abce06"
+        ],
+        "paper_ids": [],
+        "required": true,
+        "status": "uncovered",
+        "subhypothesis_id": "SH6",
+        "target_slot": "required_variable"
+      }
+    ],
+    "schema_version": "survey_gap_coverage_v1",
+    "status_counts": {
+      "candidate_pending": 17,
+      "uncovered": 27
+    },
+    "survey_run_id": "260905-008-survey-001"
+  },
+  "decisions": [
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_abundance_pattern_interpretation_unresolved_mechanism_gap_candidate_global_unresolved_mechanism_abundance_pattern_interpretation_the_causal_link_between_observed_abundance_correlations_and_transuranic_fission_remains_unverified_against_competing_nucleosynthetic_pathways_or_nuclear_data_uncertainties_941177030d26_46ee1698d57a:6a1eb130d673",
+      "candidate_id": "gap_candidate:global:unresolved_mechanism:abundance_pattern_interpretation:the_causal_link_between_observed_abundance_correlations_and_transuranic_fission_remains_unverified_against_competing_nucleosynthetic_pathways_or_nuclear_data_uncertainties:941177030d26",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:abundance_pattern_interpretation:unresolved_mechanism:gap_candidate_global_unresolved_mechanism_abundance_pattern_interpretation_the_causal_link_between_observed_abundance_correlations_and_transuranic_fission_remains_unverified_against_competing_nucleosynthetic_pathways_or_nuclear_data_uncertainties_941177030d26:46ee1698d57a",
+      "reason": "Directly supported by the abstract of W4389429223, which interprets abundance correlations as fission evidence but does not address competing nucleosynthetic pathways or nuclear data uncertainties."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_astrophysical_trigger_mechanism_missing_assumption_gap_candidate_global_missing_assumption_astrophysical_trigger_mechanism_the_model_assumes_a_violent_phase_transition_to_strange_quark_matter_as_the_exclusive_trigger_for_neutron_star_decompression_without_evaluating_the_thermodynamic_plausibility_or_alternative_triggers_d4d20399ae43_7f23a6df1cf6:ebd439ea0e37",
+      "candidate_id": "gap_candidate:global:missing_assumption:astrophysical_trigger_mechanism:the_model_assumes_a_violent_phase_transition_to_strange_quark_matter_as_the_exclusive_trigger_for_neutron_star_decompression_without_evaluating_the_thermodynamic_plausibility_or_alternative_triggers:d4d20399ae43",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:astrophysical_trigger_mechanism:missing_assumption:gap_candidate_global_missing_assumption_astrophysical_trigger_mechanism_the_model_assumes_a_violent_phase_transition_to_strange_quark_matter_as_the_exclusive_trigger_for_neutron_star_decompression_without_evaluating_the_thermodynamic_plausibility_or_alternative_triggers_d4d20399ae43:7f23a6df1cf6",
+      "reason": "Grounded in the abstract of W2102639755, which posits a violent phase transition to strange quark matter as the trigger without discussing its thermodynamic plausibility or alternative mechanisms."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_ejecta_mass_estimation_missing_assumption_gap_candidate_global_missing_assumption_ejecta_mass_estimation_ejecta_mass_estimates_show_only_weak_dependence_on_the_nuclear_equation_of_state_stiffness_potentially_underestimating_sensitivity_to_extreme_eos_parameters_ec3c4e8b4073_5c04267fc90a:d0e1edb287bf",
+      "candidate_id": "gap_candidate:global:missing_assumption:ejecta_mass_estimation:ejecta_mass_estimates_show_only_weak_dependence_on_the_nuclear_equation_of_state_stiffness_potentially_underestimating_sensitivity_to_extreme_eos_parameters:ec3c4e8b4073",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:ejecta_mass_estimation:missing_assumption:gap_candidate_global_missing_assumption_ejecta_mass_estimation_ejecta_mass_estimates_show_only_weak_dependence_on_the_nuclear_equation_of_state_stiffness_potentially_underestimating_sensitivity_to_extreme_eos_parameters_ec3c4e8b4073:5c04267fc90a",
+      "reason": "Explicitly stated in the abstract of W2161801818 that ejected mass depends weakly on stiff vs. soft EOS, indicating a narrow parameter space that may underestimate sensitivity to extreme EOS variations."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_equation_of_state_and_mass_parameter_space_boundary_condition_gap_candidate_global_boundary_condition_equation_of_state_and_mass_parameter_space_claims_of_robustness_in_ejecta_properties_and_nucleosynthesis_yields_are_constrained_to_a_limited_sample_of_three_nuclear_physics_equations_of_state_and_specific_mass_ratios_leaving_broader_eos_stiffness_and_extreme_mass_ratio_regimes_untested_895d46386266_269554cf09c7:1bba4ffd606c",
+      "candidate_id": "gap_candidate:global:boundary_condition:equation_of_state_and_mass_parameter_space:claims_of_robustness_in_ejecta_properties_and_nucleosynthesis_yields_are_constrained_to_a_limited_sample_of_three_nuclear_physics_equations_of_state_and_specific_mass_ratios_leaving_broader_eos_stiffness_and_extreme_mass_ratio_regimes_untested:895d46386266",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:equation_of_state_and_mass_parameter_space:boundary_condition:gap_candidate_global_boundary_condition_equation_of_state_and_mass_parameter_space_claims_of_robustness_in_ejecta_properties_and_nucleosynthesis_yields_are_constrained_to_a_limited_sample_of_three_nuclear_physics_equations_of_state_and_specific_mass_ratios_leaving_broader_eos_stiffness_and_extreme_mass_ratio_regimes_untested_895d46386266:269554cf09c7",
+      "reason": "The abstract of W2760756222 explicitly confines robustness claims to the tested sample of three EOSs and specific mass configurations, leaving broader regimes unvalidated."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_kilonova_spectral_prediction_limitation_gap_candidate_global_limitation_kilonova_spectral_prediction_use_of_a_simplified_gray_opacity_model_restricts_the_accuracy_of_wavelength_dependent_radiative_transfer_predictions_potentially_obscuring_spectral_features_critical_for_observational_identification_48fe39726914_071d30cbc31c:da59abe10a91",
+      "candidate_id": "gap_candidate:global:limitation:kilonova_spectral_prediction:use_of_a_simplified_gray_opacity_model_restricts_the_accuracy_of_wavelength_dependent_radiative_transfer_predictions_potentially_obscuring_spectral_features_critical_for_observational_identification:48fe39726914",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:kilonova_spectral_prediction:limitation:gap_candidate_global_limitation_kilonova_spectral_prediction_use_of_a_simplified_gray_opacity_model_restricts_the_accuracy_of_wavelength_dependent_radiative_transfer_predictions_potentially_obscuring_spectral_features_critical_for_observational_identification_48fe39726914:071d30cbc31c",
+      "reason": "The abstract of W2760756222 explicitly acknowledges the use of a 'simplified and gray-opacity model,' confirming the limitation in wavelength-dependent radiative transfer accuracy."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_neutrino_transport_modeling_limitation_gap_candidate_global_limitation_neutrino_transport_modeling_the_reliance_on_a_neutrino_leakage_scheme_introduces_approximations_that_may_inaccurately_capture_complex_angle_and_energy_dependent_neutrino_matter_interactions_during_merger_dynamics_ac1025f5f2bd_7ceaf42e60ab:84ecd902916a",
+      "candidate_id": "gap_candidate:global:limitation:neutrino_transport_modeling:the_reliance_on_a_neutrino_leakage_scheme_introduces_approximations_that_may_inaccurately_capture_complex_angle_and_energy_dependent_neutrino_matter_interactions_during_merger_dynamics:ac1025f5f2bd",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:neutrino_transport_modeling:limitation:gap_candidate_global_limitation_neutrino_transport_modeling_the_reliance_on_a_neutrino_leakage_scheme_introduces_approximations_that_may_inaccurately_capture_complex_angle_and_energy_dependent_neutrino_matter_interactions_during_merger_dynamics_ac1025f5f2bd:7ceaf42e60ab",
+      "reason": "Grounded in the abstract of W2760756222, which adopts a 'leakage scheme' for neutrino losses, a known approximation that simplifies complex angle- and energy-dependent interactions."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_nuclear_physics_input_uncertainty_boundary_condition_gap_candidate_global_boundary_condition_nuclear_physics_input_uncertainty_the_study_s_conclusions_are_bounded_by_the_selection_of_only_three_nuclear_mass_models_and_four_fission_fragment_distribution_models_leaving_broader_theoretical_uncertainties_in_fission_barriers_and_fragment_yields_unquantified_4cc3b7cd8914_8bb58e2dcbb6:aefae9cdea64",
+      "candidate_id": "gap_candidate:global:boundary_condition:nuclear_physics_input_uncertainty:the_study_s_conclusions_are_bounded_by_the_selection_of_only_three_nuclear_mass_models_and_four_fission_fragment_distribution_models_leaving_broader_theoretical_uncertainties_in_fission_barriers_and_fragment_yields_unquantified:4cc3b7cd8914",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:nuclear_physics_input_uncertainty:boundary_condition:gap_candidate_global_boundary_condition_nuclear_physics_input_uncertainty_the_study_s_conclusions_are_bounded_by_the_selection_of_only_three_nuclear_mass_models_and_four_fission_fragment_distribution_models_leaving_broader_theoretical_uncertainties_in_fission_barriers_and_fragment_yields_unquantified_4cc3b7cd8914:8bb58e2dcbb6",
+      "reason": "The abstract of W2615363806 explicitly limits testing to three nuclear mass models and four fission fragment distributions, bounding conclusions within those specific frameworks."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_nucleosynthesis_network_coupling_boundary_condition_gap_candidate_global_boundary_condition_nucleosynthesis_network_coupling_the_switch_from_equilibrium_to_dynamical_r_process_calculations_occurs_at_a_fixed_density_threshold_4_10_11_g_cm_3_introducing_an_artificial_discontinuity_that_may_propagate_errors_into_final_abundance_predictions_81d590ea63c6_77c5afbb8420:d4a3644eb130",
+      "candidate_id": "gap_candidate:global:boundary_condition:nucleosynthesis_network_coupling:the_switch_from_equilibrium_to_dynamical_r_process_calculations_occurs_at_a_fixed_density_threshold_4_10_11_g_cm_3_introducing_an_artificial_discontinuity_that_may_propagate_errors_into_final_abundance_predictions:81d590ea63c6",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:nucleosynthesis_network_coupling:boundary_condition:gap_candidate_global_boundary_condition_nucleosynthesis_network_coupling_the_switch_from_equilibrium_to_dynamical_r_process_calculations_occurs_at_a_fixed_density_threshold_4_10_11_g_cm_3_introducing_an_artificial_discontinuity_that_may_propagate_errors_into_final_abundance_predictions_81d590ea63c6:77c5afbb8420",
+      "reason": "The abstract of W2102639755 specifies a hard numerical switch at ~4×10¹¹ g cm⁻³, establishing a fixed density threshold that introduces a computational boundary condition."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_nucleosynthetic_yield_abundance_pattern_boundary_condition_gap_candidate_global_boundary_condition_nucleosynthetic_yield_abundance_pattern_nucleosynthesis_results_and_solar_abundance_comparisons_are_restricted_to_heavy_nuclei_with_mass_numbers_a_140_42cc7c6ac67b_f04f4ffe729a:36986ef13004",
+      "candidate_id": "gap_candidate:global:boundary_condition:nucleosynthetic_yield_abundance_pattern:nucleosynthesis_results_and_solar_abundance_comparisons_are_restricted_to_heavy_nuclei_with_mass_numbers_a_140:42cc7c6ac67b",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:nucleosynthetic_yield_abundance_pattern:boundary_condition:gap_candidate_global_boundary_condition_nucleosynthetic_yield_abundance_pattern_nucleosynthesis_results_and_solar_abundance_comparisons_are_restricted_to_heavy_nuclei_with_mass_numbers_a_140_42cc7c6ac67b:f04f4ffe729a",
+      "reason": "The abstract of W2161801818 explicitly restricts solar abundance comparisons to nuclei with A > 140, defining a clear mass-number boundary condition for the results."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_observational_prediction_light_curve_modeling_limitation_gap_candidate_global_limitation_observational_prediction_light_curve_modeling_light_curve_predictions_rely_on_an_approximative_model_rather_than_comprehensive_radiative_transfer_calculations_4b344a68f891_e1253775288f:f7e11f97577e",
+      "candidate_id": "gap_candidate:global:limitation:observational_prediction_light_curve_modeling:light_curve_predictions_rely_on_an_approximative_model_rather_than_comprehensive_radiative_transfer_calculations:4b344a68f891",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:observational_prediction_light_curve_modeling:limitation:gap_candidate_global_limitation_observational_prediction_light_curve_modeling_light_curve_predictions_rely_on_an_approximative_model_rather_than_comprehensive_radiative_transfer_calculations_4b344a68f891:e1253775288f",
+      "reason": "The abstract of W2161801818 explicitly states light curve estimation uses an 'approximative model,' confirming the limitation regarding comprehensive radiative transfer."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_observational_validation_comparator_deficit_gap_candidate_global_comparator_deficit_observational_validation_the_comparison_to_solar_abundance_patterns_and_extremely_metal_deficient_stars_lacks_quantitative_uncertainty_bounds_or_direct_observational_cross_validation_for_quark_nova_specific_nucleosynthetic_signatures_549fd610b401_fbd511565c5e:e6eb374d388f",
+      "candidate_id": "gap_candidate:global:comparator_deficit:observational_validation:the_comparison_to_solar_abundance_patterns_and_extremely_metal_deficient_stars_lacks_quantitative_uncertainty_bounds_or_direct_observational_cross_validation_for_quark_nova_specific_nucleosynthetic_signatures:549fd610b401",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:observational_validation:comparator_deficit:gap_candidate_global_comparator_deficit_observational_validation_the_comparison_to_solar_abundance_patterns_and_extremely_metal_deficient_stars_lacks_quantitative_uncertainty_bounds_or_direct_observational_cross_validation_for_quark_nova_specific_nucleosynthetic_signatures_549fd610b401:fbd511565c5e",
+      "reason": "The abstract of W2102639755 contrasts the scenario with conventional sites and metal-deficient stars but provides no statistical fitting metrics or error bounds, confirming a comparator deficit."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_observational_validation_comparator_deficit_gap_candidate_global_comparator_deficit_observational_validation_the_partial_mitigation_of_the_third_peak_shift_by_updated_decay_half_lives_suggests_an_incomplete_reconciliation_between_theoretical_predictions_and_observed_abundance_features_as_the_remaining_discrepancy_is_not_addressed_d58bcd6652ba_befd6f32f6fe:aa58df378e92",
+      "candidate_id": "gap_candidate:global:comparator_deficit:observational_validation:the_partial_mitigation_of_the_third_peak_shift_by_updated_decay_half_lives_suggests_an_incomplete_reconciliation_between_theoretical_predictions_and_observed_abundance_features_as_the_remaining_discrepancy_is_not_addressed:d58bcd6652ba",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:observational_validation:comparator_deficit:gap_candidate_global_comparator_deficit_observational_validation_the_partial_mitigation_of_the_third_peak_shift_by_updated_decay_half_lives_suggests_an_incomplete_reconciliation_between_theoretical_predictions_and_observed_abundance_features_as_the_remaining_discrepancy_is_not_addressed_d58bcd6652ba:befd6f32f6fe",
+      "reason": "The abstract of W2615363806 explicitly notes that updated β-decay half-lives can only '(partially) prevent' the third peak shift, acknowledging an unresolved discrepancy."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_r_process_freeze_out_dynamics_unresolved_mechanism_gap_candidate_global_unresolved_mechanism_r_process_freeze_out_dynamics_the_precise_quantitative_impact_of_the_breakdown_of_n_n_equilibrium_during_freeze_out_on_the_third_r_process_peak_shift_remains_partially_unresolved_as_the_mechanism_relies_on_competing_processes_whose_relative_rates_vary_across_nuclear_models_27770e4b2d22_001a78b712de:11cc9ef111b5",
+      "candidate_id": "gap_candidate:global:unresolved_mechanism:r_process_freeze_out_dynamics:the_precise_quantitative_impact_of_the_breakdown_of_n_n_equilibrium_during_freeze_out_on_the_third_r_process_peak_shift_remains_partially_unresolved_as_the_mechanism_relies_on_competing_processes_whose_relative_rates_vary_across_nuclear_models:27770e4b2d22",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:r_process_freeze_out_dynamics:unresolved_mechanism:gap_candidate_global_unresolved_mechanism_r_process_freeze_out_dynamics_the_precise_quantitative_impact_of_the_breakdown_of_n_n_equilibrium_during_freeze_out_on_the_third_r_process_peak_shift_remains_partially_unresolved_as_the_mechanism_relies_on_competing_processes_whose_relative_rates_vary_across_nuclear_models_27770e4b2d22:001a78b712de",
+      "reason": "The abstract of W2615363806 identifies the freeze-out breakdown of (n,γ)–(γ,n) equilibrium as the cause of peak shifts but does not fully quantify the competing process rates across models."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_stellar_sample_representativeness_boundary_condition_gap_candidate_global_boundary_condition_stellar_sample_representativeness_lack_of_specified_sample_size_selection_criteria_and_stellar_atmospheric_parameters_leaves_the_statistical_robustness_and_environmental_boundary_conditions_of_the_abundance_correlations_undefined_a0172d0607b4_de9bbb22eedb:4f7d8447c941",
+      "candidate_id": "gap_candidate:global:boundary_condition:stellar_sample_representativeness:lack_of_specified_sample_size_selection_criteria_and_stellar_atmospheric_parameters_leaves_the_statistical_robustness_and_environmental_boundary_conditions_of_the_abundance_correlations_undefined:a0172d0607b4",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:stellar_sample_representativeness:boundary_condition:gap_candidate_global_boundary_condition_stellar_sample_representativeness_lack_of_specified_sample_size_selection_criteria_and_stellar_atmospheric_parameters_leaves_the_statistical_robustness_and_environmental_boundary_conditions_of_the_abundance_correlations_undefined_a0172d0607b4:de9bbb22eedb",
+      "reason": "The abstract of W4389429223 references only 'a sample of stars' without providing sample size, selection criteria, or atmospheric parameters, leaving statistical boundaries undefined."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_global_transuranic_nucleosynthesis_modeling_limitation_gap_candidate_global_limitation_transuranic_nucleosynthesis_modeling_reliance_on_theoretical_model_extrapolation_introduces_unquantified_uncertainty_into_the_inferred_contribution_of_fission_fragments_to_elemental_abundances_5f16a048715b_7ea40bb1cc1f:f90b21b595d9",
+      "candidate_id": "gap_candidate:global:limitation:transuranic_nucleosynthesis_modeling:reliance_on_theoretical_model_extrapolation_introduces_unquantified_uncertainty_into_the_inferred_contribution_of_fission_fragments_to_elemental_abundances:5f16a048715b",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:global:transuranic_nucleosynthesis_modeling:limitation:gap_candidate_global_limitation_transuranic_nucleosynthesis_modeling_reliance_on_theoretical_model_extrapolation_introduces_unquantified_uncertainty_into_the_inferred_contribution_of_fission_fragments_to_elemental_abundances_5f16a048715b:7ea40bb1cc1f",
+      "reason": "The abstract of W4389429223 explicitly states transuranic production is 'inaccessible to experiments so must be extrapolated by using nucleosynthesis models,' grounding the uncertainty claim."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_sh2_fission_neutron_release_timing_mechanism_explanation_gap_gap_candidate_sh2_mechanism_explanation_gap_fission_neutron_release_timing_the_precise_temporal_relationship_between_fission_neutron_release_and_the_freeze_out_of_neutron_capture_equilibrium_determines_third_peak_positioning_yet_current_network_calculations_lack_constrained_beta_decay_rates_far_from_stability_to_quantify_this_shift_4856612a78c6_3fe52923c276:91f44155d158",
+      "candidate_id": "gap_candidate:sh2:mechanism_explanation_gap:fission_neutron_release_timing:the_precise_temporal_relationship_between_fission_neutron_release_and_the_freeze_out_of_neutron_capture_equilibrium_determines_third_peak_positioning_yet_current_network_calculations_lack_constrained_beta_decay_rates_far_from_stability_to_quantify_this_shift:4856612a78c6",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:sh2:fission_neutron_release_timing:mechanism_explanation_gap:gap_candidate_sh2_mechanism_explanation_gap_fission_neutron_release_timing_the_precise_temporal_relationship_between_fission_neutron_release_and_the_freeze_out_of_neutron_capture_equilibrium_determines_third_peak_positioning_yet_current_network_calculations_lack_constrained_beta_decay_rates_far_from_stability_to_quantify_this_shift_4856612a78c6:3fe52923c276",
+      "reason": "Grounded in the survey text (Section 2), which identifies the timing dependency of peak positioning on fission neutron release and explicitly notes the lack of constrained beta-decay rates far from stability."
+    },
+    {
+      "adjudication_id": "gap_adjudication:gap_group_sh3_eos_compactness_threshold_missing_boundary_condition_gap_candidate_sh3_missing_boundary_condition_eos_compactness_threshold_the_threshold_equation_of_state_stiffness_below_which_dynamical_ejecta_masses_become_sufficient_to_dominate_galactic_r_process_enrichment_lacks_empirical_calibration_from_gravitational_wave_strain_measurements_f8ce4f895dea_9cdb0a78829d:99aec486332b",
+      "candidate_id": "gap_candidate:sh3:missing_boundary_condition:eos_compactness_threshold:the_threshold_equation_of_state_stiffness_below_which_dynamical_ejecta_masses_become_sufficient_to_dominate_galactic_r_process_enrichment_lacks_empirical_calibration_from_gravitational_wave_strain_measurements:f8ce4f895dea",
+      "contradiction": false,
+      "decision": "accept",
+      "group_id": "gap_group:sh3:eos_compactness_threshold:missing_boundary_condition:gap_candidate_sh3_missing_boundary_condition_eos_compactness_threshold_the_threshold_equation_of_state_stiffness_below_which_dynamical_ejecta_masses_become_sufficient_to_dominate_galactic_r_process_enrichment_lacks_empirical_calibration_from_gravitational_wave_strain_measurements_f8ce4f895dea:9cdb0a78829d",
+      "reason": "Grounded in the survey text (Section 2), which establishes the EOS radius-ejecta mass relationship but explicitly notes the absence of empirical GW calibration to define the critical stiffness threshold."
+    }
+  ],
+  "schema_version": "survey_gap_adjudication_v1",
+  "synthesis": {
+    "candidates": [
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "unresolved mechanism"
+        ],
+        "candidate_fingerprint": "779c2642c2d1a4acec55078d4cacc47817e1368d44134c5c350fae6822c5fcbd",
+        "candidate_id": "gap_candidate:global:unresolved_mechanism:abundance_pattern_interpretation:the_causal_link_between_observed_abundance_correlations_and_transuranic_fission_remains_unverified_against_competing_nucleosynthetic_pathways_or_nuclear_data_uncertainties:941177030d26",
+        "candidate_ids": [
+          "gap_candidate:global:unresolved_mechanism:abundance_pattern_interpretation:the_causal_link_between_observed_abundance_correlations_and_transuranic_fission_remains_unverified_against_competing_nucleosynthetic_pathways_or_nuclear_data_uncertainties:941177030d26"
+        ],
+        "claim_scope": "",
+        "confidence": 0.8,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "unresolved mechanism",
+        "group_id": "gap_group:global:abundance_pattern_interpretation:unresolved_mechanism:gap_candidate_global_unresolved_mechanism_abundance_pattern_interpretation_the_causal_link_between_observed_abundance_correlations_and_transuranic_fission_remains_unverified_against_competing_nucleosynthetic_pathways_or_nuclear_data_uncertainties_941177030d26:46ee1698d57a",
+        "paper_ids": [
+          "W4389429223"
+        ],
+        "rationale": "The authors 'interpret this as evidence that fission fragments... contribute to the abundances' and conclude that nuclei with A>260 are produced, but do not address how alternative r-process branching ratios, decay chains, or stellar mixing could reproduce the same correlation patterns.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W4389429223",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "The causal link between observed abundance correlations and transuranic fission remains unverified against competing nucleosynthetic pathways or nuclear data uncertainties.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "abundance pattern interpretation"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "missing_assumption"
+        ],
+        "candidate_fingerprint": "50363d122e59517b44a20e5ff3742d8c193e02eecdb1db51b05923b4bf8384ba",
+        "candidate_id": "gap_candidate:global:missing_assumption:astrophysical_trigger_mechanism:the_model_assumes_a_violent_phase_transition_to_strange_quark_matter_as_the_exclusive_trigger_for_neutron_star_decompression_without_evaluating_the_thermodynamic_plausibility_or_alternative_triggers:d4d20399ae43",
+        "candidate_ids": [
+          "gap_candidate:global:missing_assumption:astrophysical_trigger_mechanism:the_model_assumes_a_violent_phase_transition_to_strange_quark_matter_as_the_exclusive_trigger_for_neutron_star_decompression_without_evaluating_the_thermodynamic_plausibility_or_alternative_triggers:d4d20399ae43"
+        ],
+        "claim_scope": "",
+        "confidence": 0.8,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "missing_assumption",
+        "group_id": "gap_group:global:astrophysical_trigger_mechanism:missing_assumption:gap_candidate_global_missing_assumption_astrophysical_trigger_mechanism_the_model_assumes_a_violent_phase_transition_to_strange_quark_matter_as_the_exclusive_trigger_for_neutron_star_decompression_without_evaluating_the_thermodynamic_plausibility_or_alternative_triggers_d4d20399ae43:7f23a6df1cf6",
+        "paper_ids": [
+          "W2102639755"
+        ],
+        "rationale": "The abstract states decompression is 'triggered by a violent phase transition to strange quark matter (quark-nova scenario)' but provides no discussion of the physical likelihood of this transition or competing mechanisms.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2102639755",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "The model assumes a violent phase transition to strange quark matter as the exclusive trigger for neutron star decompression, without evaluating the thermodynamic plausibility or alternative triggers.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "astrophysical_trigger_mechanism"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "missing assumption"
+        ],
+        "candidate_fingerprint": "d3e890e02dcf26cd097753f1a91bc1e8382dc3007f8b442f9f36ea75a6065765",
+        "candidate_id": "gap_candidate:global:missing_assumption:ejecta_mass_estimation:ejecta_mass_estimates_show_only_weak_dependence_on_the_nuclear_equation_of_state_stiffness_potentially_underestimating_sensitivity_to_extreme_eos_parameters:ec3c4e8b4073",
+        "candidate_ids": [
+          "gap_candidate:global:missing_assumption:ejecta_mass_estimation:ejecta_mass_estimates_show_only_weak_dependence_on_the_nuclear_equation_of_state_stiffness_potentially_underestimating_sensitivity_to_extreme_eos_parameters:ec3c4e8b4073"
+        ],
+        "claim_scope": "",
+        "confidence": 0.8,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "missing assumption",
+        "group_id": "gap_group:global:ejecta_mass_estimation:missing_assumption:gap_candidate_global_missing_assumption_ejecta_mass_estimation_ejecta_mass_estimates_show_only_weak_dependence_on_the_nuclear_equation_of_state_stiffness_potentially_underestimating_sensitivity_to_extreme_eos_parameters_ec3c4e8b4073:5c04267fc90a",
+        "paper_ids": [
+          "W2161801818"
+        ],
+        "rationale": "The abstract claims the exact ejected mass \"depends weakly on whether the NSs have radii of ∼15 km for a \\\"stiff\\\" nuclear equation of state (EOS) or ∼12 km for a \\\"soft\\\" EOS\", suggesting a narrow parameter space tested without exploring broader EOS uncertainties or their impact on tidal/pressure ejection thresholds.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2161801818",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "Ejecta mass estimates show only weak dependence on the nuclear equation of state stiffness, potentially underestimating sensitivity to extreme EOS parameters.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "ejecta mass estimation"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "boundary condition"
+        ],
+        "candidate_fingerprint": "002bdd280d3c914c7c44a665c122434c34930b996a277a6c2178655dbb2071df",
+        "candidate_id": "gap_candidate:global:boundary_condition:equation_of_state_and_mass_parameter_space:claims_of_robustness_in_ejecta_properties_and_nucleosynthesis_yields_are_constrained_to_a_limited_sample_of_three_nuclear_physics_equations_of_state_and_specific_mass_ratios_leaving_broader_eos_stiffness_and_extreme_mass_ratio_regimes_untested:895d46386266",
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:equation_of_state_and_mass_parameter_space:claims_of_robustness_in_ejecta_properties_and_nucleosynthesis_yields_are_constrained_to_a_limited_sample_of_three_nuclear_physics_equations_of_state_and_specific_mass_ratios_leaving_broader_eos_stiffness_and_extreme_mass_ratio_regimes_untested:895d46386266"
+        ],
+        "claim_scope": "",
+        "confidence": 0.75,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "boundary condition",
+        "group_id": "gap_group:global:equation_of_state_and_mass_parameter_space:boundary_condition:gap_candidate_global_boundary_condition_equation_of_state_and_mass_parameter_space_claims_of_robustness_in_ejecta_properties_and_nucleosynthesis_yields_are_constrained_to_a_limited_sample_of_three_nuclear_physics_equations_of_state_and_specific_mass_ratios_leaving_broader_eos_stiffness_and_extreme_mass_ratio_regimes_untested_895d46386266:269554cf09c7",
+        "paper_ids": [
+          "W2760756222"
+        ],
+        "rationale": "The abstract specifies that findings hold 'within the sample considered here,' indicating that generalization beyond the tested EOSs and mass configurations requires further validation.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2760756222",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "Claims of robustness in ejecta properties and nucleosynthesis yields are constrained to a limited sample of three nuclear-physics equations of state and specific mass ratios, leaving broader EOS stiffness and extreme mass-ratio regimes untested.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "equation of state and mass parameter space"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "limitation"
+        ],
+        "candidate_fingerprint": "53a7831cc31a93431a70389f960a301e8fcdca39aee7438bac2c61d1a43245e9",
+        "candidate_id": "gap_candidate:global:limitation:kilonova_spectral_prediction:use_of_a_simplified_gray_opacity_model_restricts_the_accuracy_of_wavelength_dependent_radiative_transfer_predictions_potentially_obscuring_spectral_features_critical_for_observational_identification:48fe39726914",
+        "candidate_ids": [
+          "gap_candidate:global:limitation:kilonova_spectral_prediction:use_of_a_simplified_gray_opacity_model_restricts_the_accuracy_of_wavelength_dependent_radiative_transfer_predictions_potentially_obscuring_spectral_features_critical_for_observational_identification:48fe39726914"
+        ],
+        "claim_scope": "",
+        "confidence": 0.8,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "limitation",
+        "group_id": "gap_group:global:kilonova_spectral_prediction:limitation:gap_candidate_global_limitation_kilonova_spectral_prediction_use_of_a_simplified_gray_opacity_model_restricts_the_accuracy_of_wavelength_dependent_radiative_transfer_predictions_potentially_obscuring_spectral_features_critical_for_observational_identification_48fe39726914:071d30cbc31c",
+        "paper_ids": [
+          "W2760756222"
+        ],
+        "rationale": "The authors note they employ a 'simplified and gray-opacity model' to assess observability, acknowledging that frequency-dependent opacity variations across the infrared spectrum are not fully resolved.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2760756222",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "Use of a simplified gray-opacity model restricts the accuracy of wavelength-dependent radiative transfer predictions, potentially obscuring spectral features critical for observational identification.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "kilonova spectral prediction"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "limitation"
+        ],
+        "candidate_fingerprint": "c58f61415d92f6ddc74d42f68626acdee67cf38a1140cefddc00ea9d63b7667b",
+        "candidate_id": "gap_candidate:global:limitation:neutrino_transport_modeling:the_reliance_on_a_neutrino_leakage_scheme_introduces_approximations_that_may_inaccurately_capture_complex_angle_and_energy_dependent_neutrino_matter_interactions_during_merger_dynamics:ac1025f5f2bd",
+        "candidate_ids": [
+          "gap_candidate:global:limitation:neutrino_transport_modeling:the_reliance_on_a_neutrino_leakage_scheme_introduces_approximations_that_may_inaccurately_capture_complex_angle_and_energy_dependent_neutrino_matter_interactions_during_merger_dynamics:ac1025f5f2bd"
+        ],
+        "claim_scope": "",
+        "confidence": 0.85,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "limitation",
+        "group_id": "gap_group:global:neutrino_transport_modeling:limitation:gap_candidate_global_limitation_neutrino_transport_modeling_the_reliance_on_a_neutrino_leakage_scheme_introduces_approximations_that_may_inaccurately_capture_complex_angle_and_energy_dependent_neutrino_matter_interactions_during_merger_dynamics_ac1025f5f2bd:7ceaf42e60ab",
+        "paper_ids": [
+          "W2760756222"
+        ],
+        "rationale": "The abstract explicitly states the adoption of a 'leakage scheme to account for neutrino radiative losses,' which is a known computational approximation compared to full multi-group neutrino transport methods.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2760756222",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "The reliance on a neutrino leakage scheme introduces approximations that may inaccurately capture complex, angle- and energy-dependent neutrino-matter interactions during merger dynamics.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "neutrino transport modeling"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "boundary condition"
+        ],
+        "candidate_fingerprint": "237678f4f60e139f8c5f8c8aea7d42bf2acc5b29b749b4ca1ad00820b6a3e754",
+        "candidate_id": "gap_candidate:global:boundary_condition:nuclear_physics_input_uncertainty:the_study_s_conclusions_are_bounded_by_the_selection_of_only_three_nuclear_mass_models_and_four_fission_fragment_distribution_models_leaving_broader_theoretical_uncertainties_in_fission_barriers_and_fragment_yields_unquantified:4cc3b7cd8914",
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:nuclear_physics_input_uncertainty:the_study_s_conclusions_are_bounded_by_the_selection_of_only_three_nuclear_mass_models_and_four_fission_fragment_distribution_models_leaving_broader_theoretical_uncertainties_in_fission_barriers_and_fragment_yields_unquantified:4cc3b7cd8914"
+        ],
+        "claim_scope": "",
+        "confidence": 0.75,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "boundary condition",
+        "group_id": "gap_group:global:nuclear_physics_input_uncertainty:boundary_condition:gap_candidate_global_boundary_condition_nuclear_physics_input_uncertainty_the_study_s_conclusions_are_bounded_by_the_selection_of_only_three_nuclear_mass_models_and_four_fission_fragment_distribution_models_leaving_broader_theoretical_uncertainties_in_fission_barriers_and_fragment_yields_unquantified_4cc3b7cd8914:8bb58e2dcbb6",
+        "paper_ids": [
+          "W2615363806"
+        ],
+        "rationale": "The abstract explicitly limits the scope to testing 'three different nuclear mass models' and comparing 'four different fission fragment distribution models,' implying that results may not generalize to other valid theoretical frameworks without further bounds.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2615363806",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "The study's conclusions are bounded by the selection of only three nuclear mass models and four fission fragment distribution models, leaving broader theoretical uncertainties in fission barriers and fragment yields unquantified.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "nuclear physics input uncertainty"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "boundary_condition"
+        ],
+        "candidate_fingerprint": "4a2ac7a5c1a3848bdef5acef4b5a0a8e0a4512ff54811a3bc57e01418bbc22a6",
+        "candidate_id": "gap_candidate:global:boundary_condition:nucleosynthesis_network_coupling:the_switch_from_equilibrium_to_dynamical_r_process_calculations_occurs_at_a_fixed_density_threshold_4_10_11_g_cm_3_introducing_an_artificial_discontinuity_that_may_propagate_errors_into_final_abundance_predictions:81d590ea63c6",
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:nucleosynthesis_network_coupling:the_switch_from_equilibrium_to_dynamical_r_process_calculations_occurs_at_a_fixed_density_threshold_4_10_11_g_cm_3_introducing_an_artificial_discontinuity_that_may_propagate_errors_into_final_abundance_predictions:81d590ea63c6"
+        ],
+        "claim_scope": "",
+        "confidence": 0.75,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "boundary_condition",
+        "group_id": "gap_group:global:nucleosynthesis_network_coupling:boundary_condition:gap_candidate_global_boundary_condition_nucleosynthesis_network_coupling_the_switch_from_equilibrium_to_dynamical_r_process_calculations_occurs_at_a_fixed_density_threshold_4_10_11_g_cm_3_introducing_an_artificial_discontinuity_that_may_propagate_errors_into_final_abundance_predictions_81d590ea63c6:77c5afbb8420",
+        "paper_ids": [
+          "W2102639755"
+        ],
+        "rationale": "The abstract specifies that network calculations 'match to dynamical r-process calculations at densities below neutron drip (4 1011 g cm-3)', indicating a hard numerical boundary rather than a physically continuous evolution.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2102639755",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "The switch from equilibrium to dynamical r-process calculations occurs at a fixed density threshold (~4 × 10^11 g cm^-3), introducing an artificial discontinuity that may propagate errors into final abundance predictions.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "nucleosynthesis_network_coupling"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "boundary condition"
+        ],
+        "candidate_fingerprint": "3a33ed4d532f0a2d82af5c07722ddd5fc4cad9067c60eb792c7f3204d996b299",
+        "candidate_id": "gap_candidate:global:boundary_condition:nucleosynthetic_yield_abundance_pattern:nucleosynthesis_results_and_solar_abundance_comparisons_are_restricted_to_heavy_nuclei_with_mass_numbers_a_140:42cc7c6ac67b",
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:nucleosynthetic_yield_abundance_pattern:nucleosynthesis_results_and_solar_abundance_comparisons_are_restricted_to_heavy_nuclei_with_mass_numbers_a_140:42cc7c6ac67b"
+        ],
+        "claim_scope": "",
+        "confidence": 0.85,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "boundary condition",
+        "group_id": "gap_group:global:nucleosynthetic_yield_abundance_pattern:boundary_condition:gap_candidate_global_boundary_condition_nucleosynthetic_yield_abundance_pattern_nucleosynthesis_results_and_solar_abundance_comparisons_are_restricted_to_heavy_nuclei_with_mass_numbers_a_140_42cc7c6ac67b:f04f4ffe729a",
+        "paper_ids": [
+          "W2161801818"
+        ],
+        "rationale": "The text notes that decompression nucleosynthesis produces a composition following solar r-abundance \"for nuclei with mass numbers A > 140\", leaving the origin, dynamics, and abundance patterns of lighter r-process nuclei unaddressed within this simulation framework.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2161801818",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "Nucleosynthesis results and solar-abundance comparisons are restricted to heavy nuclei with mass numbers A > 140.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "nucleosynthetic yield / abundance pattern"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "limitation"
+        ],
+        "candidate_fingerprint": "698f69b390ad98ed373045210dfc7876501e65b36f8957fcdd3747990598acce",
+        "candidate_id": "gap_candidate:global:limitation:observational_prediction_light_curve_modeling:light_curve_predictions_rely_on_an_approximative_model_rather_than_comprehensive_radiative_transfer_calculations:4b344a68f891",
+        "candidate_ids": [
+          "gap_candidate:global:limitation:observational_prediction_light_curve_modeling:light_curve_predictions_rely_on_an_approximative_model_rather_than_comprehensive_radiative_transfer_calculations:4b344a68f891"
+        ],
+        "claim_scope": "",
+        "confidence": 0.9,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "limitation",
+        "group_id": "gap_group:global:observational_prediction_light_curve_modeling:limitation:gap_candidate_global_limitation_observational_prediction_light_curve_modeling_light_curve_predictions_rely_on_an_approximative_model_rather_than_comprehensive_radiative_transfer_calculations_4b344a68f891:e1253775288f",
+        "paper_ids": [
+          "W2161801818"
+        ],
+        "rationale": "The abstract explicitly states estimating the light curve is done \"with an approximative model\", indicating a simplification that may not capture complex opacity, thermalization, or multi-band radiative transfer effects accurately.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2161801818",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "Light curve predictions rely on an approximative model rather than comprehensive radiative transfer calculations.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "observational prediction / light curve modeling"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "comparator_deficit"
+        ],
+        "candidate_fingerprint": "9aad52ec928794f1a34eb508d23c647b6bb7b8f5004e469cbf2b2083c7efa4d0",
+        "candidate_id": "gap_candidate:global:comparator_deficit:observational_validation:the_comparison_to_solar_abundance_patterns_and_extremely_metal_deficient_stars_lacks_quantitative_uncertainty_bounds_or_direct_observational_cross_validation_for_quark_nova_specific_nucleosynthetic_signatures:549fd610b401",
+        "candidate_ids": [
+          "gap_candidate:global:comparator_deficit:observational_validation:the_comparison_to_solar_abundance_patterns_and_extremely_metal_deficient_stars_lacks_quantitative_uncertainty_bounds_or_direct_observational_cross_validation_for_quark_nova_specific_nucleosynthetic_signatures:549fd610b401"
+        ],
+        "claim_scope": "",
+        "confidence": 0.7,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "comparator_deficit",
+        "group_id": "gap_group:global:observational_validation:comparator_deficit:gap_candidate_global_comparator_deficit_observational_validation_the_comparison_to_solar_abundance_patterns_and_extremely_metal_deficient_stars_lacks_quantitative_uncertainty_bounds_or_direct_observational_cross_validation_for_quark_nova_specific_nucleosynthetic_signatures_549fd610b401:fbd511565c5e",
+        "paper_ids": [
+          "W2102639755"
+        ],
+        "rationale": "The abstract highlights contrasting the scenario with conventional sites 'especially in the context of heavy-element compositions of extremely metal-deficient stars' but does not present statistical fitting metrics, error bars, or direct observational data constraints.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2102639755",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "The comparison to solar abundance patterns and extremely metal-deficient stars lacks quantitative uncertainty bounds or direct observational cross-validation for quark-nova specific nucleosynthetic signatures.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "observational_validation"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "comparator deficit"
+        ],
+        "candidate_fingerprint": "8f8a3f5ca206d31eb71702e0cac3b40675d4e737393c1ef7d6a0b9f4e0cf6547",
+        "candidate_id": "gap_candidate:global:comparator_deficit:observational_validation:the_partial_mitigation_of_the_third_peak_shift_by_updated_decay_half_lives_suggests_an_incomplete_reconciliation_between_theoretical_predictions_and_observed_abundance_features_as_the_remaining_discrepancy_is_not_addressed:d58bcd6652ba",
+        "candidate_ids": [
+          "gap_candidate:global:comparator_deficit:observational_validation:the_partial_mitigation_of_the_third_peak_shift_by_updated_decay_half_lives_suggests_an_incomplete_reconciliation_between_theoretical_predictions_and_observed_abundance_features_as_the_remaining_discrepancy_is_not_addressed:d58bcd6652ba"
+        ],
+        "claim_scope": "",
+        "confidence": 0.85,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "comparator deficit",
+        "group_id": "gap_group:global:observational_validation:comparator_deficit:gap_candidate_global_comparator_deficit_observational_validation_the_partial_mitigation_of_the_third_peak_shift_by_updated_decay_half_lives_suggests_an_incomplete_reconciliation_between_theoretical_predictions_and_observed_abundance_features_as_the_remaining_discrepancy_is_not_addressed_d58bcd6652ba:befd6f32f6fe",
+        "paper_ids": [
+          "W2615363806"
+        ],
+        "rationale": "The abstract notes that recent β-decay advances can '(partially) prevent this shift,' explicitly acknowledging that the correction is incomplete and leaves residual gaps in matching observational data.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2615363806",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "The partial mitigation of the third peak shift by updated β-decay half-lives suggests an incomplete reconciliation between theoretical predictions and observed abundance features, as the remaining discrepancy is not addressed.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "observational validation"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "unresolved mechanism"
+        ],
+        "candidate_fingerprint": "92b0a903a27f498880ee0ebfd854d7e582ed223b28bddd8563e2f87d16361f5b",
+        "candidate_id": "gap_candidate:global:unresolved_mechanism:r_process_freeze_out_dynamics:the_precise_quantitative_impact_of_the_breakdown_of_n_n_equilibrium_during_freeze_out_on_the_third_r_process_peak_shift_remains_partially_unresolved_as_the_mechanism_relies_on_competing_processes_whose_relative_rates_vary_across_nuclear_models:27770e4b2d22",
+        "candidate_ids": [
+          "gap_candidate:global:unresolved_mechanism:r_process_freeze_out_dynamics:the_precise_quantitative_impact_of_the_breakdown_of_n_n_equilibrium_during_freeze_out_on_the_third_r_process_peak_shift_remains_partially_unresolved_as_the_mechanism_relies_on_competing_processes_whose_relative_rates_vary_across_nuclear_models:27770e4b2d22"
+        ],
+        "claim_scope": "",
+        "confidence": 0.8,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "unresolved mechanism",
+        "group_id": "gap_group:global:r_process_freeze_out_dynamics:unresolved_mechanism:gap_candidate_global_unresolved_mechanism_r_process_freeze_out_dynamics_the_precise_quantitative_impact_of_the_breakdown_of_n_n_equilibrium_during_freeze_out_on_the_third_r_process_peak_shift_remains_partially_unresolved_as_the_mechanism_relies_on_competing_processes_whose_relative_rates_vary_across_nuclear_models_27770e4b2d22:001a78b712de",
+        "paper_ids": [
+          "W2615363806"
+        ],
+        "rationale": "The abstract states the shift occurs 'when neutron captures and β-decays compete and an (n,γ)–(γ,n) equilibrium is no longer maintained,' indicating a complex, model-dependent transition that is identified but not fully quantified.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2615363806",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "The precise quantitative impact of the breakdown of (n,γ)–(γ,n) equilibrium during freeze-out on the third r-process peak shift remains partially unresolved, as the mechanism relies on competing processes whose relative rates vary across nuclear models.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "r-process freeze-out dynamics"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "boundary condition"
+        ],
+        "candidate_fingerprint": "7ca94dd03f58faf333062948b53cfa1acca281ba3e2ba68bd5c7ed5772cb028c",
+        "candidate_id": "gap_candidate:global:boundary_condition:stellar_sample_representativeness:lack_of_specified_sample_size_selection_criteria_and_stellar_atmospheric_parameters_leaves_the_statistical_robustness_and_environmental_boundary_conditions_of_the_abundance_correlations_undefined:a0172d0607b4",
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:stellar_sample_representativeness:lack_of_specified_sample_size_selection_criteria_and_stellar_atmospheric_parameters_leaves_the_statistical_robustness_and_environmental_boundary_conditions_of_the_abundance_correlations_undefined:a0172d0607b4"
+        ],
+        "claim_scope": "",
+        "confidence": 0.85,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "boundary condition",
+        "group_id": "gap_group:global:stellar_sample_representativeness:boundary_condition:gap_candidate_global_boundary_condition_stellar_sample_representativeness_lack_of_specified_sample_size_selection_criteria_and_stellar_atmospheric_parameters_leaves_the_statistical_robustness_and_environmental_boundary_conditions_of_the_abundance_correlations_undefined_a0172d0607b4:de9bbb22eedb",
+        "paper_ids": [
+          "W4389429223"
+        ],
+        "rationale": "The abstract references only 'a sample of stars that are enhanced in r-process elements' without detailing observational constraints, metallicity ranges, or potential non-r-process contamination that could affect the reported Z=44–47 and Z=63–78 correlations.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W4389429223",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "Lack of specified sample size, selection criteria, and stellar atmospheric parameters leaves the statistical robustness and environmental boundary conditions of the abundance correlations undefined.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "stellar sample representativeness"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "limitation"
+        ],
+        "candidate_fingerprint": "7b401808a3d672cade442245a06f3e0ea862cd25723f245b21d91bbf99ac5964",
+        "candidate_id": "gap_candidate:global:limitation:transuranic_nucleosynthesis_modeling:reliance_on_theoretical_model_extrapolation_introduces_unquantified_uncertainty_into_the_inferred_contribution_of_fission_fragments_to_elemental_abundances:5f16a048715b",
+        "candidate_ids": [
+          "gap_candidate:global:limitation:transuranic_nucleosynthesis_modeling:reliance_on_theoretical_model_extrapolation_introduces_unquantified_uncertainty_into_the_inferred_contribution_of_fission_fragments_to_elemental_abundances:5f16a048715b"
+        ],
+        "claim_scope": "",
+        "confidence": 0.9,
+        "evidence_role": "",
+        "evidence_summary": "",
+        "extraction_method": "paper_limitation_llm",
+        "gap_kind": "limitation",
+        "group_id": "gap_group:global:transuranic_nucleosynthesis_modeling:limitation:gap_candidate_global_limitation_transuranic_nucleosynthesis_modeling_reliance_on_theoretical_model_extrapolation_introduces_unquantified_uncertainty_into_the_inferred_contribution_of_fission_fragments_to_elemental_abundances_5f16a048715b:7ea40bb1cc1f",
+        "paper_ids": [
+          "W4389429223"
+        ],
+        "rationale": "The abstract explicitly states that transuranic production 'is poorly understood and inaccessible to experiments so must be extrapolated by using nucleosynthesis models,' making the abundance-fission link contingent on model validity rather than direct empirical constraints.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W4389429223",
+            "section": "Abstract"
+          }
+        ],
+        "statement": "Reliance on theoretical model extrapolation introduces unquantified uncertainty into the inferred contribution of fission fragments to elemental abundances.",
+        "status": "candidate",
+        "subhypothesis_id": "GLOBAL",
+        "support_level": "explicit",
+        "target_slot": "transuranic nucleosynthesis modeling"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "mechanism_explanation_gap"
+        ],
+        "candidate_fingerprint": "e936ce8bd0b952e319e660d783e4bc9af9b544a3cee5ba808d247b1ac845cd87",
+        "candidate_id": "gap_candidate:sh2:mechanism_explanation_gap:fission_neutron_release_timing:the_precise_temporal_relationship_between_fission_neutron_release_and_the_freeze_out_of_neutron_capture_equilibrium_determines_third_peak_positioning_yet_current_network_calculations_lack_constrained_beta_decay_rates_far_from_stability_to_quantify_this_shift:4856612a78c6",
+        "candidate_ids": [
+          "gap_candidate:sh2:mechanism_explanation_gap:fission_neutron_release_timing:the_precise_temporal_relationship_between_fission_neutron_release_and_the_freeze_out_of_neutron_capture_equilibrium_determines_third_peak_positioning_yet_current_network_calculations_lack_constrained_beta_decay_rates_far_from_stability_to_quantify_this_shift:4856612a78c6"
+        ],
+        "claim_scope": "third_r_process_peak",
+        "confidence": 0.8,
+        "evidence_role": "nucleosynthetic_network_constraint",
+        "evidence_summary": "",
+        "extraction_method": "survey_prose_llm",
+        "gap_kind": "mechanism_explanation_gap",
+        "group_id": "gap_group:sh2:fission_neutron_release_timing:mechanism_explanation_gap:gap_candidate_sh2_mechanism_explanation_gap_fission_neutron_release_timing_the_precise_temporal_relationship_between_fission_neutron_release_and_the_freeze_out_of_neutron_capture_equilibrium_determines_third_peak_positioning_yet_current_network_calculations_lack_constrained_beta_decay_rates_far_from_stability_to_quantify_this_shift_4856612a78c6:3fe52923c276",
+        "paper_ids": [],
+        "rationale": "Survey highlights that peak position shifts depend on when fission neutrons are released relative to freeze-out, and accelerated beta-decay rates alter recycling efficiency, but notes uncertainties in beta-decay properties limit predictive power.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/2",
+            "section": "1.1. Survey Structure and Methodology"
+          }
+        ],
+        "statement": "The precise temporal relationship between fission neutron release and the freeze-out of neutron-capture equilibrium determines third-peak positioning, yet current network calculations lack constrained beta-decay rates far from stability to quantify this shift.",
+        "status": "candidate",
+        "subhypothesis_id": "SH2",
+        "support_level": "speculative",
+        "target_slot": "fission_neutron_release_timing"
+      },
+      {
+        "candidate_contribution_modes": [],
+        "candidate_defect_tags": [
+          "missing_boundary_condition"
+        ],
+        "candidate_fingerprint": "0ded3686f9ede03ce77643353f6e3585702684ef15f491542bf64a1700915029",
+        "candidate_id": "gap_candidate:sh3:missing_boundary_condition:eos_compactness_threshold:the_threshold_equation_of_state_stiffness_below_which_dynamical_ejecta_masses_become_sufficient_to_dominate_galactic_r_process_enrichment_lacks_empirical_calibration_from_gravitational_wave_strain_measurements:f8ce4f895dea",
+        "candidate_ids": [
+          "gap_candidate:sh3:missing_boundary_condition:eos_compactness_threshold:the_threshold_equation_of_state_stiffness_below_which_dynamical_ejecta_masses_become_sufficient_to_dominate_galactic_r_process_enrichment_lacks_empirical_calibration_from_gravitational_wave_strain_measurements:f8ce4f895dea"
+        ],
+        "claim_scope": "neutron_star_equation_of_state",
+        "confidence": 0.82,
+        "evidence_role": "gravitational_wave_inference",
+        "evidence_summary": "",
+        "extraction_method": "survey_prose_llm",
+        "gap_kind": "missing_boundary_condition",
+        "group_id": "gap_group:sh3:eos_compactness_threshold:missing_boundary_condition:gap_candidate_sh3_missing_boundary_condition_eos_compactness_threshold_the_threshold_equation_of_state_stiffness_below_which_dynamical_ejecta_masses_become_sufficient_to_dominate_galactic_r_process_enrichment_lacks_empirical_calibration_from_gravitational_wave_strain_measurements_f8ce4f895dea:9cdb0a78829d",
+        "paper_ids": [],
+        "rationale": "Survey establishes inverse correlation between neutron star radius and ejecta mass, noting softer EOS permits greater compactness and more massive ejecta, but numerical uncertainties and lack of direct EOS constraints leave the critical threshold undefined.",
+        "schema_version": "survey_gap_candidate_v1",
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/2",
+            "section": "1.1. Survey Structure and Methodology"
+          }
+        ],
+        "statement": "The threshold equation-of-state stiffness below which dynamical ejecta masses become sufficient to dominate galactic r-process enrichment lacks empirical calibration from gravitational-wave strain measurements.",
+        "status": "candidate",
+        "subhypothesis_id": "SH3",
+        "support_level": "speculative",
+        "target_slot": "eos_compactness_threshold"
+      }
+    ],
+    "groups": [
+      {
+        "candidate_ids": [
+          "gap_candidate:global:unresolved_mechanism:abundance_pattern_interpretation:the_causal_link_between_observed_abundance_correlations_and_transuranic_fission_remains_unverified_against_competing_nucleosynthetic_pathways_or_nuclear_data_uncertainties:941177030d26"
+        ],
+        "group_id": "gap_group:global:abundance_pattern_interpretation:unresolved_mechanism:gap_candidate_global_unresolved_mechanism_abundance_pattern_interpretation_the_causal_link_between_observed_abundance_correlations_and_transuranic_fission_remains_unverified_against_competing_nucleosynthetic_pathways_or_nuclear_data_uncertainties_941177030d26:46ee1698d57a",
+        "paper_evidence": [
+          {
+            "abstract": "The heaviest chemical elements are naturally produced by the rapid neutron-capture process ( r -process) during neutron star mergers or supernovae. The r -process production of elements heavier than uranium (transuranic nuclei) is poorly understood and inaccessible to experiments so must be extrapolated by using nucleosynthesis models. We examined element abundances in a sample of stars that are enhanced in r -process elements. The abundances of elements ruthenium, rhodium, palladium, and silver (atomic numbers Z = 44 to 47; mass numbers A = 99 to 110) correlate with those of heavier elements (63 ≤ Z ≤ 78, A > 150). There is no correlation for neighboring elements (34 ≤ Z ≤ 42 and 48 ≤ Z ≤ 62). We interpret this as evidence that fission fragments of transuranic nuclei contribute to the abundances. Our results indicate that neutron-rich nuclei with mass numbers >260 are produced in r -process events.",
+            "paper_id": "W4389429223",
+            "title": "Element abundance patterns in stars indicate fission of nuclei heavier than uranium"
+          }
+        ],
+        "paper_ids": [
+          "W4389429223"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "unresolved mechanism"
+          ],
+          "candidate_fingerprint": "779c2642c2d1a4acec55078d4cacc47817e1368d44134c5c350fae6822c5fcbd",
+          "candidate_id": "gap_candidate:global:unresolved_mechanism:abundance_pattern_interpretation:the_causal_link_between_observed_abundance_correlations_and_transuranic_fission_remains_unverified_against_competing_nucleosynthetic_pathways_or_nuclear_data_uncertainties:941177030d26",
+          "candidate_ids": [
+            "gap_candidate:global:unresolved_mechanism:abundance_pattern_interpretation:the_causal_link_between_observed_abundance_correlations_and_transuranic_fission_remains_unverified_against_competing_nucleosynthetic_pathways_or_nuclear_data_uncertainties:941177030d26"
+          ],
+          "claim_scope": "",
+          "confidence": 0.8,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "unresolved mechanism",
+          "group_id": "gap_group:global:abundance_pattern_interpretation:unresolved_mechanism:gap_candidate_global_unresolved_mechanism_abundance_pattern_interpretation_the_causal_link_between_observed_abundance_correlations_and_transuranic_fission_remains_unverified_against_competing_nucleosynthetic_pathways_or_nuclear_data_uncertainties_941177030d26:46ee1698d57a",
+          "paper_ids": [
+            "W4389429223"
+          ],
+          "rationale": "The authors 'interpret this as evidence that fission fragments... contribute to the abundances' and conclude that nuclei with A>260 are produced, but do not address how alternative r-process branching ratios, decay chains, or stellar mixing could reproduce the same correlation patterns.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W4389429223",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "The causal link between observed abundance correlations and transuranic fission remains unverified against competing nucleosynthetic pathways or nuclear data uncertainties.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "abundance pattern interpretation"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W4389429223",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:missing_assumption:astrophysical_trigger_mechanism:the_model_assumes_a_violent_phase_transition_to_strange_quark_matter_as_the_exclusive_trigger_for_neutron_star_decompression_without_evaluating_the_thermodynamic_plausibility_or_alternative_triggers:d4d20399ae43"
+        ],
+        "group_id": "gap_group:global:astrophysical_trigger_mechanism:missing_assumption:gap_candidate_global_missing_assumption_astrophysical_trigger_mechanism_the_model_assumes_a_violent_phase_transition_to_strange_quark_matter_as_the_exclusive_trigger_for_neutron_star_decompression_without_evaluating_the_thermodynamic_plausibility_or_alternative_triggers_d4d20399ae43:7f23a6df1cf6",
+        "paper_evidence": [
+          {
+            "abstract": "We explore heavy-element nucleosynthesis by rapid neutron capture (r-process) in the decompressing ejecta from the surface of a neutron star. The decompression is triggered by a violent phase transition to strange quark matter (quark-nova scenario). The presence of neutron-rich large Z nuclei (40,95) < < (70,177), the large neutron-to-seed ratio, and the low electron fraction Ye ~ 0.03 in the decompressing ejecta present favorable conditions for the r-process. We perform network calculations that are adapted to the quark-nova conditions, and which mimic usual equilibrium r-process calculations during the initially cold decompression phase. They match to dynamical r-process calculations at densities below neutron drip (4 1011 g cm-3). We present results for the final element abundance distribution with and without heating from nuclear reactions, and compare to the solar abundance pattern of r-process elements. We highlight the distinguishing features of quark-novae by contrasting it with conventional nucleosynthetic sites such as type II supernovae and neutron star mergers, especially in the context of heavy-element compositions of extremely metal-deficient stars.",
+            "paper_id": "W2102639755",
+            "title": "Nucleosynthesis in neutron-rich ejecta from quark-novae"
+          }
+        ],
+        "paper_ids": [
+          "W2102639755"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "missing_assumption"
+          ],
+          "candidate_fingerprint": "50363d122e59517b44a20e5ff3742d8c193e02eecdb1db51b05923b4bf8384ba",
+          "candidate_id": "gap_candidate:global:missing_assumption:astrophysical_trigger_mechanism:the_model_assumes_a_violent_phase_transition_to_strange_quark_matter_as_the_exclusive_trigger_for_neutron_star_decompression_without_evaluating_the_thermodynamic_plausibility_or_alternative_triggers:d4d20399ae43",
+          "candidate_ids": [
+            "gap_candidate:global:missing_assumption:astrophysical_trigger_mechanism:the_model_assumes_a_violent_phase_transition_to_strange_quark_matter_as_the_exclusive_trigger_for_neutron_star_decompression_without_evaluating_the_thermodynamic_plausibility_or_alternative_triggers:d4d20399ae43"
+          ],
+          "claim_scope": "",
+          "confidence": 0.8,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "missing_assumption",
+          "group_id": "gap_group:global:astrophysical_trigger_mechanism:missing_assumption:gap_candidate_global_missing_assumption_astrophysical_trigger_mechanism_the_model_assumes_a_violent_phase_transition_to_strange_quark_matter_as_the_exclusive_trigger_for_neutron_star_decompression_without_evaluating_the_thermodynamic_plausibility_or_alternative_triggers_d4d20399ae43:7f23a6df1cf6",
+          "paper_ids": [
+            "W2102639755"
+          ],
+          "rationale": "The abstract states decompression is 'triggered by a violent phase transition to strange quark matter (quark-nova scenario)' but provides no discussion of the physical likelihood of this transition or competing mechanisms.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W2102639755",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "The model assumes a violent phase transition to strange quark matter as the exclusive trigger for neutron star decompression, without evaluating the thermodynamic plausibility or alternative triggers.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "astrophysical_trigger_mechanism"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2102639755",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:missing_assumption:ejecta_mass_estimation:ejecta_mass_estimates_show_only_weak_dependence_on_the_nuclear_equation_of_state_stiffness_potentially_underestimating_sensitivity_to_extreme_eos_parameters:ec3c4e8b4073"
+        ],
+        "group_id": "gap_group:global:ejecta_mass_estimation:missing_assumption:gap_candidate_global_missing_assumption_ejecta_mass_estimation_ejecta_mass_estimates_show_only_weak_dependence_on_the_nuclear_equation_of_state_stiffness_potentially_underestimating_sensitivity_to_extreme_eos_parameters_ec3c4e8b4073:5c04267fc90a",
+        "paper_evidence": [
+          {
+            "abstract": "Although the rapid neutron-capture process, or r -process, is fundamentally important for explaining the origin of approximately half of the stable nuclei with A > 60, the astrophysical site of this process has not been identified yet. Here we study r -process nucleosynthesis in material that is dynamically ejected by tidal and pressure forces during the merging of binary neutron stars (NSs) and within milliseconds afterward. For the first time we make use of relativistic hydrodynamical simulations of such events, defining consistently the conditions that determine the nucleosynthesis, i.e., neutron enrichment, entropy, early density evolution and thus expansion timescale, and ejecta mass. We find that 10 −3 –10 −2 M ☉ are ejected, which is enough for mergers to be the main source of heavy ( A ≳ 140) galactic r -nuclei for merger rates of some 10 −5 yr −1 . While asymmetric mergers eject 2–3 times more mass than symmetric ones, the exact amount depends weakly on whether the NSs have radii of ∼15 km for a \"stiff\" nuclear equation of state (EOS) or ∼12 km for a \"soft\" EOS. r -process nucleosynthesis during the decompression becomes largely insensitive to the detailed conditions because of efficient fission recycling, producing a composition that closely follows the solar r -abundance distribution for nuclei with mass numbers A > 140. Estimating the light curve powered by the radioactive decay heating of r -process nuclei with an approximative model, we expect high emission in the B - V - R bands for 1–2 days with potentially observable longer duration in the case of asymmetric mergers because of the larger ejecta mass.",
+            "paper_id": "W2161801818",
+            "title": "r -PROCESS NUCLEOSYNTHESIS IN DYNAMICALLY EJECTED MATTER OF NEUTRON STAR MERGERS"
+          }
+        ],
+        "paper_ids": [
+          "W2161801818"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "missing assumption"
+          ],
+          "candidate_fingerprint": "d3e890e02dcf26cd097753f1a91bc1e8382dc3007f8b442f9f36ea75a6065765",
+          "candidate_id": "gap_candidate:global:missing_assumption:ejecta_mass_estimation:ejecta_mass_estimates_show_only_weak_dependence_on_the_nuclear_equation_of_state_stiffness_potentially_underestimating_sensitivity_to_extreme_eos_parameters:ec3c4e8b4073",
+          "candidate_ids": [
+            "gap_candidate:global:missing_assumption:ejecta_mass_estimation:ejecta_mass_estimates_show_only_weak_dependence_on_the_nuclear_equation_of_state_stiffness_potentially_underestimating_sensitivity_to_extreme_eos_parameters:ec3c4e8b4073"
+          ],
+          "claim_scope": "",
+          "confidence": 0.8,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "missing assumption",
+          "group_id": "gap_group:global:ejecta_mass_estimation:missing_assumption:gap_candidate_global_missing_assumption_ejecta_mass_estimation_ejecta_mass_estimates_show_only_weak_dependence_on_the_nuclear_equation_of_state_stiffness_potentially_underestimating_sensitivity_to_extreme_eos_parameters_ec3c4e8b4073:5c04267fc90a",
+          "paper_ids": [
+            "W2161801818"
+          ],
+          "rationale": "The abstract claims the exact ejected mass \"depends weakly on whether the NSs have radii of ∼15 km for a \\\"stiff\\\" nuclear equation of state (EOS) or ∼12 km for a \\\"soft\\\" EOS\", suggesting a narrow parameter space tested without exploring broader EOS uncertainties or their impact on tidal/pressure ejection thresholds.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W2161801818",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "Ejecta mass estimates show only weak dependence on the nuclear equation of state stiffness, potentially underestimating sensitivity to extreme EOS parameters.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "ejecta mass estimation"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2161801818",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:equation_of_state_and_mass_parameter_space:claims_of_robustness_in_ejecta_properties_and_nucleosynthesis_yields_are_constrained_to_a_limited_sample_of_three_nuclear_physics_equations_of_state_and_specific_mass_ratios_leaving_broader_eos_stiffness_and_extreme_mass_ratio_regimes_untested:895d46386266"
+        ],
+        "group_id": "gap_group:global:equation_of_state_and_mass_parameter_space:boundary_condition:gap_candidate_global_boundary_condition_equation_of_state_and_mass_parameter_space_claims_of_robustness_in_ejecta_properties_and_nucleosynthesis_yields_are_constrained_to_a_limited_sample_of_three_nuclear_physics_equations_of_state_and_specific_mass_ratios_leaving_broader_eos_stiffness_and_extreme_mass_ratio_regimes_untested_895d46386266:269554cf09c7",
+        "paper_evidence": [
+          {
+            "abstract": "When binary systems of neutron stars merge, a very small fraction of their rest mass is ejected, either dynamically or secularly. This material is neutron-rich and its nucleosynthesis provides the astrophysical site for the production of heavy elements in the Universe, together with a kilonova signal confirming neutron-star mergers as the origin of short gamma-ray bursts. We perform full general-relativistic simulations of binary neutron-star mergers employing three different nuclear-physics equations of state (EOSs), considering both equal- and unequal-mass configurations, and adopting a leakage scheme to account for neutrino radiative losses. Using a combination of techniques, we carry out an extensive and systematic study of the hydrodynamical, thermodynamical, and geometrical properties of the matter ejected dynamically, employing the WinNet nuclear-reaction network to recover the relative abundances of heavy elements produced by each configurations. Among the results obtained, three are particularly important. First, we find that, within the sample considered here, both the properties of the dynamical ejecta and the nucleosynthesis yields are robust against variations of the EOS and masses. Second, using a conservative but robust criterion for unbound matter, we find that the amount of ejected mass is $\\ensuremath{\\lesssim}{10}^{\\ensuremath{-}3}\\text{ }\\text{ }{M}_{\\ensuremath{\\bigodot}}$, hence at least one order of magnitude smaller than what normally assumed in modelling kilonova signals. Finally, using a simplified and gray-opacity model we assess the observability of the infrared kilonova emission finding, that for all binaries the luminosity peaks around $\\ensuremath{\\sim}1/2$ day in the $H$-band, reaching a maximum magnitude of $\\ensuremath{-}13$, and decreasing rapidly after one day.",
+            "paper_id": "W2760756222",
+            "title": "r -process nucleosynthesis from matter ejected in binary neutron star mergers"
+          }
+        ],
+        "paper_ids": [
+          "W2760756222"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "boundary condition"
+          ],
+          "candidate_fingerprint": "002bdd280d3c914c7c44a665c122434c34930b996a277a6c2178655dbb2071df",
+          "candidate_id": "gap_candidate:global:boundary_condition:equation_of_state_and_mass_parameter_space:claims_of_robustness_in_ejecta_properties_and_nucleosynthesis_yields_are_constrained_to_a_limited_sample_of_three_nuclear_physics_equations_of_state_and_specific_mass_ratios_leaving_broader_eos_stiffness_and_extreme_mass_ratio_regimes_untested:895d46386266",
+          "candidate_ids": [
+            "gap_candidate:global:boundary_condition:equation_of_state_and_mass_parameter_space:claims_of_robustness_in_ejecta_properties_and_nucleosynthesis_yields_are_constrained_to_a_limited_sample_of_three_nuclear_physics_equations_of_state_and_specific_mass_ratios_leaving_broader_eos_stiffness_and_extreme_mass_ratio_regimes_untested:895d46386266"
+          ],
+          "claim_scope": "",
+          "confidence": 0.75,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "boundary condition",
+          "group_id": "gap_group:global:equation_of_state_and_mass_parameter_space:boundary_condition:gap_candidate_global_boundary_condition_equation_of_state_and_mass_parameter_space_claims_of_robustness_in_ejecta_properties_and_nucleosynthesis_yields_are_constrained_to_a_limited_sample_of_three_nuclear_physics_equations_of_state_and_specific_mass_ratios_leaving_broader_eos_stiffness_and_extreme_mass_ratio_regimes_untested_895d46386266:269554cf09c7",
+          "paper_ids": [
+            "W2760756222"
+          ],
+          "rationale": "The abstract specifies that findings hold 'within the sample considered here,' indicating that generalization beyond the tested EOSs and mass configurations requires further validation.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W2760756222",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "Claims of robustness in ejecta properties and nucleosynthesis yields are constrained to a limited sample of three nuclear-physics equations of state and specific mass ratios, leaving broader EOS stiffness and extreme mass-ratio regimes untested.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "equation of state and mass parameter space"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2760756222",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:limitation:kilonova_spectral_prediction:use_of_a_simplified_gray_opacity_model_restricts_the_accuracy_of_wavelength_dependent_radiative_transfer_predictions_potentially_obscuring_spectral_features_critical_for_observational_identification:48fe39726914"
+        ],
+        "group_id": "gap_group:global:kilonova_spectral_prediction:limitation:gap_candidate_global_limitation_kilonova_spectral_prediction_use_of_a_simplified_gray_opacity_model_restricts_the_accuracy_of_wavelength_dependent_radiative_transfer_predictions_potentially_obscuring_spectral_features_critical_for_observational_identification_48fe39726914:071d30cbc31c",
+        "paper_evidence": [
+          {
+            "abstract": "When binary systems of neutron stars merge, a very small fraction of their rest mass is ejected, either dynamically or secularly. This material is neutron-rich and its nucleosynthesis provides the astrophysical site for the production of heavy elements in the Universe, together with a kilonova signal confirming neutron-star mergers as the origin of short gamma-ray bursts. We perform full general-relativistic simulations of binary neutron-star mergers employing three different nuclear-physics equations of state (EOSs), considering both equal- and unequal-mass configurations, and adopting a leakage scheme to account for neutrino radiative losses. Using a combination of techniques, we carry out an extensive and systematic study of the hydrodynamical, thermodynamical, and geometrical properties of the matter ejected dynamically, employing the WinNet nuclear-reaction network to recover the relative abundances of heavy elements produced by each configurations. Among the results obtained, three are particularly important. First, we find that, within the sample considered here, both the properties of the dynamical ejecta and the nucleosynthesis yields are robust against variations of the EOS and masses. Second, using a conservative but robust criterion for unbound matter, we find that the amount of ejected mass is $\\ensuremath{\\lesssim}{10}^{\\ensuremath{-}3}\\text{ }\\text{ }{M}_{\\ensuremath{\\bigodot}}$, hence at least one order of magnitude smaller than what normally assumed in modelling kilonova signals. Finally, using a simplified and gray-opacity model we assess the observability of the infrared kilonova emission finding, that for all binaries the luminosity peaks around $\\ensuremath{\\sim}1/2$ day in the $H$-band, reaching a maximum magnitude of $\\ensuremath{-}13$, and decreasing rapidly after one day.",
+            "paper_id": "W2760756222",
+            "title": "r -process nucleosynthesis from matter ejected in binary neutron star mergers"
+          }
+        ],
+        "paper_ids": [
+          "W2760756222"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "limitation"
+          ],
+          "candidate_fingerprint": "53a7831cc31a93431a70389f960a301e8fcdca39aee7438bac2c61d1a43245e9",
+          "candidate_id": "gap_candidate:global:limitation:kilonova_spectral_prediction:use_of_a_simplified_gray_opacity_model_restricts_the_accuracy_of_wavelength_dependent_radiative_transfer_predictions_potentially_obscuring_spectral_features_critical_for_observational_identification:48fe39726914",
+          "candidate_ids": [
+            "gap_candidate:global:limitation:kilonova_spectral_prediction:use_of_a_simplified_gray_opacity_model_restricts_the_accuracy_of_wavelength_dependent_radiative_transfer_predictions_potentially_obscuring_spectral_features_critical_for_observational_identification:48fe39726914"
+          ],
+          "claim_scope": "",
+          "confidence": 0.8,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "limitation",
+          "group_id": "gap_group:global:kilonova_spectral_prediction:limitation:gap_candidate_global_limitation_kilonova_spectral_prediction_use_of_a_simplified_gray_opacity_model_restricts_the_accuracy_of_wavelength_dependent_radiative_transfer_predictions_potentially_obscuring_spectral_features_critical_for_observational_identification_48fe39726914:071d30cbc31c",
+          "paper_ids": [
+            "W2760756222"
+          ],
+          "rationale": "The authors note they employ a 'simplified and gray-opacity model' to assess observability, acknowledging that frequency-dependent opacity variations across the infrared spectrum are not fully resolved.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W2760756222",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "Use of a simplified gray-opacity model restricts the accuracy of wavelength-dependent radiative transfer predictions, potentially obscuring spectral features critical for observational identification.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "kilonova spectral prediction"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2760756222",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:limitation:neutrino_transport_modeling:the_reliance_on_a_neutrino_leakage_scheme_introduces_approximations_that_may_inaccurately_capture_complex_angle_and_energy_dependent_neutrino_matter_interactions_during_merger_dynamics:ac1025f5f2bd"
+        ],
+        "group_id": "gap_group:global:neutrino_transport_modeling:limitation:gap_candidate_global_limitation_neutrino_transport_modeling_the_reliance_on_a_neutrino_leakage_scheme_introduces_approximations_that_may_inaccurately_capture_complex_angle_and_energy_dependent_neutrino_matter_interactions_during_merger_dynamics_ac1025f5f2bd:7ceaf42e60ab",
+        "paper_evidence": [
+          {
+            "abstract": "When binary systems of neutron stars merge, a very small fraction of their rest mass is ejected, either dynamically or secularly. This material is neutron-rich and its nucleosynthesis provides the astrophysical site for the production of heavy elements in the Universe, together with a kilonova signal confirming neutron-star mergers as the origin of short gamma-ray bursts. We perform full general-relativistic simulations of binary neutron-star mergers employing three different nuclear-physics equations of state (EOSs), considering both equal- and unequal-mass configurations, and adopting a leakage scheme to account for neutrino radiative losses. Using a combination of techniques, we carry out an extensive and systematic study of the hydrodynamical, thermodynamical, and geometrical properties of the matter ejected dynamically, employing the WinNet nuclear-reaction network to recover the relative abundances of heavy elements produced by each configurations. Among the results obtained, three are particularly important. First, we find that, within the sample considered here, both the properties of the dynamical ejecta and the nucleosynthesis yields are robust against variations of the EOS and masses. Second, using a conservative but robust criterion for unbound matter, we find that the amount of ejected mass is $\\ensuremath{\\lesssim}{10}^{\\ensuremath{-}3}\\text{ }\\text{ }{M}_{\\ensuremath{\\bigodot}}$, hence at least one order of magnitude smaller than what normally assumed in modelling kilonova signals. Finally, using a simplified and gray-opacity model we assess the observability of the infrared kilonova emission finding, that for all binaries the luminosity peaks around $\\ensuremath{\\sim}1/2$ day in the $H$-band, reaching a maximum magnitude of $\\ensuremath{-}13$, and decreasing rapidly after one day.",
+            "paper_id": "W2760756222",
+            "title": "r -process nucleosynthesis from matter ejected in binary neutron star mergers"
+          }
+        ],
+        "paper_ids": [
+          "W2760756222"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "limitation"
+          ],
+          "candidate_fingerprint": "c58f61415d92f6ddc74d42f68626acdee67cf38a1140cefddc00ea9d63b7667b",
+          "candidate_id": "gap_candidate:global:limitation:neutrino_transport_modeling:the_reliance_on_a_neutrino_leakage_scheme_introduces_approximations_that_may_inaccurately_capture_complex_angle_and_energy_dependent_neutrino_matter_interactions_during_merger_dynamics:ac1025f5f2bd",
+          "candidate_ids": [
+            "gap_candidate:global:limitation:neutrino_transport_modeling:the_reliance_on_a_neutrino_leakage_scheme_introduces_approximations_that_may_inaccurately_capture_complex_angle_and_energy_dependent_neutrino_matter_interactions_during_merger_dynamics:ac1025f5f2bd"
+          ],
+          "claim_scope": "",
+          "confidence": 0.85,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "limitation",
+          "group_id": "gap_group:global:neutrino_transport_modeling:limitation:gap_candidate_global_limitation_neutrino_transport_modeling_the_reliance_on_a_neutrino_leakage_scheme_introduces_approximations_that_may_inaccurately_capture_complex_angle_and_energy_dependent_neutrino_matter_interactions_during_merger_dynamics_ac1025f5f2bd:7ceaf42e60ab",
+          "paper_ids": [
+            "W2760756222"
+          ],
+          "rationale": "The abstract explicitly states the adoption of a 'leakage scheme to account for neutrino radiative losses,' which is a known computational approximation compared to full multi-group neutrino transport methods.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W2760756222",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "The reliance on a neutrino leakage scheme introduces approximations that may inaccurately capture complex, angle- and energy-dependent neutrino-matter interactions during merger dynamics.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "neutrino transport modeling"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2760756222",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:nuclear_physics_input_uncertainty:the_study_s_conclusions_are_bounded_by_the_selection_of_only_three_nuclear_mass_models_and_four_fission_fragment_distribution_models_leaving_broader_theoretical_uncertainties_in_fission_barriers_and_fragment_yields_unquantified:4cc3b7cd8914"
+        ],
+        "group_id": "gap_group:global:nuclear_physics_input_uncertainty:boundary_condition:gap_candidate_global_boundary_condition_nuclear_physics_input_uncertainty_the_study_s_conclusions_are_bounded_by_the_selection_of_only_three_nuclear_mass_models_and_four_fission_fragment_distribution_models_leaving_broader_theoretical_uncertainties_in_fission_barriers_and_fragment_yields_unquantified_4cc3b7cd8914:8bb58e2dcbb6",
+        "paper_evidence": [
+          {
+            "abstract": "Comparing observational abundance features with nucleosynthesis predictions of stellar evolution or explosion simulations, we can scrutinize two aspects: (a) the conditions in the astrophysical production site and (b) the quality of the nuclear physics input utilized. We test the abundance features of r -process nucleosynthesis calculations for the dynamical ejecta of neutron star merger simulations based on three different nuclear mass models: The Finite Range Droplet Model, the (quenched version of the) Extended Thomas Fermi Model with Strutinsky Integral, and the Hartree–Fock–Bogoliubov mass model. We make use of corresponding fission barrier heights and compare the impact of four different fission fragment distribution models on the final r -process abundance distribution. In particular, we explore the abundance distribution in the second r -process peak and the rare-earth sub-peak as a function of mass models and fission fragment distributions, as well as the origin of a shift in the third r -process peak position. The latter has been noticed in a number of merger nucleosynthesis predictions. We show that the shift occurs during the r -process freeze-out when neutron captures and β -decays compete and an ( n , γ )–( γ , n ) equilibrium is no longer maintained. During this phase neutrons originate mainly from fission of material above A = 240. We also investigate the role of β -decay half-lives from recent theoretical advances, which lead either to a smaller amount of fissioning nuclei during freeze-out or a faster (and thus earlier) release of fission neutrons, which can (partially) prevent this shift and has an impact on the second and rare-earth peak as well.",
+            "paper_id": "W2615363806",
+            "title": "THE ROLE OF FISSION IN NEUTRON STAR MERGERS AND ITS IMPACT ON THEr-PROCESS PEAKS"
+          }
+        ],
+        "paper_ids": [
+          "W2615363806"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "boundary condition"
+          ],
+          "candidate_fingerprint": "237678f4f60e139f8c5f8c8aea7d42bf2acc5b29b749b4ca1ad00820b6a3e754",
+          "candidate_id": "gap_candidate:global:boundary_condition:nuclear_physics_input_uncertainty:the_study_s_conclusions_are_bounded_by_the_selection_of_only_three_nuclear_mass_models_and_four_fission_fragment_distribution_models_leaving_broader_theoretical_uncertainties_in_fission_barriers_and_fragment_yields_unquantified:4cc3b7cd8914",
+          "candidate_ids": [
+            "gap_candidate:global:boundary_condition:nuclear_physics_input_uncertainty:the_study_s_conclusions_are_bounded_by_the_selection_of_only_three_nuclear_mass_models_and_four_fission_fragment_distribution_models_leaving_broader_theoretical_uncertainties_in_fission_barriers_and_fragment_yields_unquantified:4cc3b7cd8914"
+          ],
+          "claim_scope": "",
+          "confidence": 0.75,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "boundary condition",
+          "group_id": "gap_group:global:nuclear_physics_input_uncertainty:boundary_condition:gap_candidate_global_boundary_condition_nuclear_physics_input_uncertainty_the_study_s_conclusions_are_bounded_by_the_selection_of_only_three_nuclear_mass_models_and_four_fission_fragment_distribution_models_leaving_broader_theoretical_uncertainties_in_fission_barriers_and_fragment_yields_unquantified_4cc3b7cd8914:8bb58e2dcbb6",
+          "paper_ids": [
+            "W2615363806"
+          ],
+          "rationale": "The abstract explicitly limits the scope to testing 'three different nuclear mass models' and comparing 'four different fission fragment distribution models,' implying that results may not generalize to other valid theoretical frameworks without further bounds.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W2615363806",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "The study's conclusions are bounded by the selection of only three nuclear mass models and four fission fragment distribution models, leaving broader theoretical uncertainties in fission barriers and fragment yields unquantified.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "nuclear physics input uncertainty"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2615363806",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:nucleosynthesis_network_coupling:the_switch_from_equilibrium_to_dynamical_r_process_calculations_occurs_at_a_fixed_density_threshold_4_10_11_g_cm_3_introducing_an_artificial_discontinuity_that_may_propagate_errors_into_final_abundance_predictions:81d590ea63c6"
+        ],
+        "group_id": "gap_group:global:nucleosynthesis_network_coupling:boundary_condition:gap_candidate_global_boundary_condition_nucleosynthesis_network_coupling_the_switch_from_equilibrium_to_dynamical_r_process_calculations_occurs_at_a_fixed_density_threshold_4_10_11_g_cm_3_introducing_an_artificial_discontinuity_that_may_propagate_errors_into_final_abundance_predictions_81d590ea63c6:77c5afbb8420",
+        "paper_evidence": [
+          {
+            "abstract": "We explore heavy-element nucleosynthesis by rapid neutron capture (r-process) in the decompressing ejecta from the surface of a neutron star. The decompression is triggered by a violent phase transition to strange quark matter (quark-nova scenario). The presence of neutron-rich large Z nuclei (40,95) < < (70,177), the large neutron-to-seed ratio, and the low electron fraction Ye ~ 0.03 in the decompressing ejecta present favorable conditions for the r-process. We perform network calculations that are adapted to the quark-nova conditions, and which mimic usual equilibrium r-process calculations during the initially cold decompression phase. They match to dynamical r-process calculations at densities below neutron drip (4 1011 g cm-3). We present results for the final element abundance distribution with and without heating from nuclear reactions, and compare to the solar abundance pattern of r-process elements. We highlight the distinguishing features of quark-novae by contrasting it with conventional nucleosynthetic sites such as type II supernovae and neutron star mergers, especially in the context of heavy-element compositions of extremely metal-deficient stars.",
+            "paper_id": "W2102639755",
+            "title": "Nucleosynthesis in neutron-rich ejecta from quark-novae"
+          }
+        ],
+        "paper_ids": [
+          "W2102639755"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "boundary_condition"
+          ],
+          "candidate_fingerprint": "4a2ac7a5c1a3848bdef5acef4b5a0a8e0a4512ff54811a3bc57e01418bbc22a6",
+          "candidate_id": "gap_candidate:global:boundary_condition:nucleosynthesis_network_coupling:the_switch_from_equilibrium_to_dynamical_r_process_calculations_occurs_at_a_fixed_density_threshold_4_10_11_g_cm_3_introducing_an_artificial_discontinuity_that_may_propagate_errors_into_final_abundance_predictions:81d590ea63c6",
+          "candidate_ids": [
+            "gap_candidate:global:boundary_condition:nucleosynthesis_network_coupling:the_switch_from_equilibrium_to_dynamical_r_process_calculations_occurs_at_a_fixed_density_threshold_4_10_11_g_cm_3_introducing_an_artificial_discontinuity_that_may_propagate_errors_into_final_abundance_predictions:81d590ea63c6"
+          ],
+          "claim_scope": "",
+          "confidence": 0.75,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "boundary_condition",
+          "group_id": "gap_group:global:nucleosynthesis_network_coupling:boundary_condition:gap_candidate_global_boundary_condition_nucleosynthesis_network_coupling_the_switch_from_equilibrium_to_dynamical_r_process_calculations_occurs_at_a_fixed_density_threshold_4_10_11_g_cm_3_introducing_an_artificial_discontinuity_that_may_propagate_errors_into_final_abundance_predictions_81d590ea63c6:77c5afbb8420",
+          "paper_ids": [
+            "W2102639755"
+          ],
+          "rationale": "The abstract specifies that network calculations 'match to dynamical r-process calculations at densities below neutron drip (4 1011 g cm-3)', indicating a hard numerical boundary rather than a physically continuous evolution.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W2102639755",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "The switch from equilibrium to dynamical r-process calculations occurs at a fixed density threshold (~4 × 10^11 g cm^-3), introducing an artificial discontinuity that may propagate errors into final abundance predictions.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "nucleosynthesis_network_coupling"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2102639755",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:nucleosynthetic_yield_abundance_pattern:nucleosynthesis_results_and_solar_abundance_comparisons_are_restricted_to_heavy_nuclei_with_mass_numbers_a_140:42cc7c6ac67b"
+        ],
+        "group_id": "gap_group:global:nucleosynthetic_yield_abundance_pattern:boundary_condition:gap_candidate_global_boundary_condition_nucleosynthetic_yield_abundance_pattern_nucleosynthesis_results_and_solar_abundance_comparisons_are_restricted_to_heavy_nuclei_with_mass_numbers_a_140_42cc7c6ac67b:f04f4ffe729a",
+        "paper_evidence": [
+          {
+            "abstract": "Although the rapid neutron-capture process, or r -process, is fundamentally important for explaining the origin of approximately half of the stable nuclei with A > 60, the astrophysical site of this process has not been identified yet. Here we study r -process nucleosynthesis in material that is dynamically ejected by tidal and pressure forces during the merging of binary neutron stars (NSs) and within milliseconds afterward. For the first time we make use of relativistic hydrodynamical simulations of such events, defining consistently the conditions that determine the nucleosynthesis, i.e., neutron enrichment, entropy, early density evolution and thus expansion timescale, and ejecta mass. We find that 10 −3 –10 −2 M ☉ are ejected, which is enough for mergers to be the main source of heavy ( A ≳ 140) galactic r -nuclei for merger rates of some 10 −5 yr −1 . While asymmetric mergers eject 2–3 times more mass than symmetric ones, the exact amount depends weakly on whether the NSs have radii of ∼15 km for a \"stiff\" nuclear equation of state (EOS) or ∼12 km for a \"soft\" EOS. r -process nucleosynthesis during the decompression becomes largely insensitive to the detailed conditions because of efficient fission recycling, producing a composition that closely follows the solar r -abundance distribution for nuclei with mass numbers A > 140. Estimating the light curve powered by the radioactive decay heating of r -process nuclei with an approximative model, we expect high emission in the B - V - R bands for 1–2 days with potentially observable longer duration in the case of asymmetric mergers because of the larger ejecta mass.",
+            "paper_id": "W2161801818",
+            "title": "r -PROCESS NUCLEOSYNTHESIS IN DYNAMICALLY EJECTED MATTER OF NEUTRON STAR MERGERS"
+          }
+        ],
+        "paper_ids": [
+          "W2161801818"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "boundary condition"
+          ],
+          "candidate_fingerprint": "3a33ed4d532f0a2d82af5c07722ddd5fc4cad9067c60eb792c7f3204d996b299",
+          "candidate_id": "gap_candidate:global:boundary_condition:nucleosynthetic_yield_abundance_pattern:nucleosynthesis_results_and_solar_abundance_comparisons_are_restricted_to_heavy_nuclei_with_mass_numbers_a_140:42cc7c6ac67b",
+          "candidate_ids": [
+            "gap_candidate:global:boundary_condition:nucleosynthetic_yield_abundance_pattern:nucleosynthesis_results_and_solar_abundance_comparisons_are_restricted_to_heavy_nuclei_with_mass_numbers_a_140:42cc7c6ac67b"
+          ],
+          "claim_scope": "",
+          "confidence": 0.85,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "boundary condition",
+          "group_id": "gap_group:global:nucleosynthetic_yield_abundance_pattern:boundary_condition:gap_candidate_global_boundary_condition_nucleosynthetic_yield_abundance_pattern_nucleosynthesis_results_and_solar_abundance_comparisons_are_restricted_to_heavy_nuclei_with_mass_numbers_a_140_42cc7c6ac67b:f04f4ffe729a",
+          "paper_ids": [
+            "W2161801818"
+          ],
+          "rationale": "The text notes that decompression nucleosynthesis produces a composition following solar r-abundance \"for nuclei with mass numbers A > 140\", leaving the origin, dynamics, and abundance patterns of lighter r-process nuclei unaddressed within this simulation framework.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W2161801818",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "Nucleosynthesis results and solar-abundance comparisons are restricted to heavy nuclei with mass numbers A > 140.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "nucleosynthetic yield / abundance pattern"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2161801818",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:limitation:observational_prediction_light_curve_modeling:light_curve_predictions_rely_on_an_approximative_model_rather_than_comprehensive_radiative_transfer_calculations:4b344a68f891"
+        ],
+        "group_id": "gap_group:global:observational_prediction_light_curve_modeling:limitation:gap_candidate_global_limitation_observational_prediction_light_curve_modeling_light_curve_predictions_rely_on_an_approximative_model_rather_than_comprehensive_radiative_transfer_calculations_4b344a68f891:e1253775288f",
+        "paper_evidence": [
+          {
+            "abstract": "Although the rapid neutron-capture process, or r -process, is fundamentally important for explaining the origin of approximately half of the stable nuclei with A > 60, the astrophysical site of this process has not been identified yet. Here we study r -process nucleosynthesis in material that is dynamically ejected by tidal and pressure forces during the merging of binary neutron stars (NSs) and within milliseconds afterward. For the first time we make use of relativistic hydrodynamical simulations of such events, defining consistently the conditions that determine the nucleosynthesis, i.e., neutron enrichment, entropy, early density evolution and thus expansion timescale, and ejecta mass. We find that 10 −3 –10 −2 M ☉ are ejected, which is enough for mergers to be the main source of heavy ( A ≳ 140) galactic r -nuclei for merger rates of some 10 −5 yr −1 . While asymmetric mergers eject 2–3 times more mass than symmetric ones, the exact amount depends weakly on whether the NSs have radii of ∼15 km for a \"stiff\" nuclear equation of state (EOS) or ∼12 km for a \"soft\" EOS. r -process nucleosynthesis during the decompression becomes largely insensitive to the detailed conditions because of efficient fission recycling, producing a composition that closely follows the solar r -abundance distribution for nuclei with mass numbers A > 140. Estimating the light curve powered by the radioactive decay heating of r -process nuclei with an approximative model, we expect high emission in the B - V - R bands for 1–2 days with potentially observable longer duration in the case of asymmetric mergers because of the larger ejecta mass.",
+            "paper_id": "W2161801818",
+            "title": "r -PROCESS NUCLEOSYNTHESIS IN DYNAMICALLY EJECTED MATTER OF NEUTRON STAR MERGERS"
+          }
+        ],
+        "paper_ids": [
+          "W2161801818"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "limitation"
+          ],
+          "candidate_fingerprint": "698f69b390ad98ed373045210dfc7876501e65b36f8957fcdd3747990598acce",
+          "candidate_id": "gap_candidate:global:limitation:observational_prediction_light_curve_modeling:light_curve_predictions_rely_on_an_approximative_model_rather_than_comprehensive_radiative_transfer_calculations:4b344a68f891",
+          "candidate_ids": [
+            "gap_candidate:global:limitation:observational_prediction_light_curve_modeling:light_curve_predictions_rely_on_an_approximative_model_rather_than_comprehensive_radiative_transfer_calculations:4b344a68f891"
+          ],
+          "claim_scope": "",
+          "confidence": 0.9,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "limitation",
+          "group_id": "gap_group:global:observational_prediction_light_curve_modeling:limitation:gap_candidate_global_limitation_observational_prediction_light_curve_modeling_light_curve_predictions_rely_on_an_approximative_model_rather_than_comprehensive_radiative_transfer_calculations_4b344a68f891:e1253775288f",
+          "paper_ids": [
+            "W2161801818"
+          ],
+          "rationale": "The abstract explicitly states estimating the light curve is done \"with an approximative model\", indicating a simplification that may not capture complex opacity, thermalization, or multi-band radiative transfer effects accurately.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W2161801818",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "Light curve predictions rely on an approximative model rather than comprehensive radiative transfer calculations.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "observational prediction / light curve modeling"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2161801818",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:comparator_deficit:observational_validation:the_comparison_to_solar_abundance_patterns_and_extremely_metal_deficient_stars_lacks_quantitative_uncertainty_bounds_or_direct_observational_cross_validation_for_quark_nova_specific_nucleosynthetic_signatures:549fd610b401"
+        ],
+        "group_id": "gap_group:global:observational_validation:comparator_deficit:gap_candidate_global_comparator_deficit_observational_validation_the_comparison_to_solar_abundance_patterns_and_extremely_metal_deficient_stars_lacks_quantitative_uncertainty_bounds_or_direct_observational_cross_validation_for_quark_nova_specific_nucleosynthetic_signatures_549fd610b401:fbd511565c5e",
+        "paper_evidence": [
+          {
+            "abstract": "We explore heavy-element nucleosynthesis by rapid neutron capture (r-process) in the decompressing ejecta from the surface of a neutron star. The decompression is triggered by a violent phase transition to strange quark matter (quark-nova scenario). The presence of neutron-rich large Z nuclei (40,95) < < (70,177), the large neutron-to-seed ratio, and the low electron fraction Ye ~ 0.03 in the decompressing ejecta present favorable conditions for the r-process. We perform network calculations that are adapted to the quark-nova conditions, and which mimic usual equilibrium r-process calculations during the initially cold decompression phase. They match to dynamical r-process calculations at densities below neutron drip (4 1011 g cm-3). We present results for the final element abundance distribution with and without heating from nuclear reactions, and compare to the solar abundance pattern of r-process elements. We highlight the distinguishing features of quark-novae by contrasting it with conventional nucleosynthetic sites such as type II supernovae and neutron star mergers, especially in the context of heavy-element compositions of extremely metal-deficient stars.",
+            "paper_id": "W2102639755",
+            "title": "Nucleosynthesis in neutron-rich ejecta from quark-novae"
+          }
+        ],
+        "paper_ids": [
+          "W2102639755"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "comparator_deficit"
+          ],
+          "candidate_fingerprint": "9aad52ec928794f1a34eb508d23c647b6bb7b8f5004e469cbf2b2083c7efa4d0",
+          "candidate_id": "gap_candidate:global:comparator_deficit:observational_validation:the_comparison_to_solar_abundance_patterns_and_extremely_metal_deficient_stars_lacks_quantitative_uncertainty_bounds_or_direct_observational_cross_validation_for_quark_nova_specific_nucleosynthetic_signatures:549fd610b401",
+          "candidate_ids": [
+            "gap_candidate:global:comparator_deficit:observational_validation:the_comparison_to_solar_abundance_patterns_and_extremely_metal_deficient_stars_lacks_quantitative_uncertainty_bounds_or_direct_observational_cross_validation_for_quark_nova_specific_nucleosynthetic_signatures:549fd610b401"
+          ],
+          "claim_scope": "",
+          "confidence": 0.7,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "comparator_deficit",
+          "group_id": "gap_group:global:observational_validation:comparator_deficit:gap_candidate_global_comparator_deficit_observational_validation_the_comparison_to_solar_abundance_patterns_and_extremely_metal_deficient_stars_lacks_quantitative_uncertainty_bounds_or_direct_observational_cross_validation_for_quark_nova_specific_nucleosynthetic_signatures_549fd610b401:fbd511565c5e",
+          "paper_ids": [
+            "W2102639755"
+          ],
+          "rationale": "The abstract highlights contrasting the scenario with conventional sites 'especially in the context of heavy-element compositions of extremely metal-deficient stars' but does not present statistical fitting metrics, error bars, or direct observational data constraints.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W2102639755",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "The comparison to solar abundance patterns and extremely metal-deficient stars lacks quantitative uncertainty bounds or direct observational cross-validation for quark-nova specific nucleosynthetic signatures.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "observational_validation"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2102639755",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:comparator_deficit:observational_validation:the_partial_mitigation_of_the_third_peak_shift_by_updated_decay_half_lives_suggests_an_incomplete_reconciliation_between_theoretical_predictions_and_observed_abundance_features_as_the_remaining_discrepancy_is_not_addressed:d58bcd6652ba"
+        ],
+        "group_id": "gap_group:global:observational_validation:comparator_deficit:gap_candidate_global_comparator_deficit_observational_validation_the_partial_mitigation_of_the_third_peak_shift_by_updated_decay_half_lives_suggests_an_incomplete_reconciliation_between_theoretical_predictions_and_observed_abundance_features_as_the_remaining_discrepancy_is_not_addressed_d58bcd6652ba:befd6f32f6fe",
+        "paper_evidence": [
+          {
+            "abstract": "Comparing observational abundance features with nucleosynthesis predictions of stellar evolution or explosion simulations, we can scrutinize two aspects: (a) the conditions in the astrophysical production site and (b) the quality of the nuclear physics input utilized. We test the abundance features of r -process nucleosynthesis calculations for the dynamical ejecta of neutron star merger simulations based on three different nuclear mass models: The Finite Range Droplet Model, the (quenched version of the) Extended Thomas Fermi Model with Strutinsky Integral, and the Hartree–Fock–Bogoliubov mass model. We make use of corresponding fission barrier heights and compare the impact of four different fission fragment distribution models on the final r -process abundance distribution. In particular, we explore the abundance distribution in the second r -process peak and the rare-earth sub-peak as a function of mass models and fission fragment distributions, as well as the origin of a shift in the third r -process peak position. The latter has been noticed in a number of merger nucleosynthesis predictions. We show that the shift occurs during the r -process freeze-out when neutron captures and β -decays compete and an ( n , γ )–( γ , n ) equilibrium is no longer maintained. During this phase neutrons originate mainly from fission of material above A = 240. We also investigate the role of β -decay half-lives from recent theoretical advances, which lead either to a smaller amount of fissioning nuclei during freeze-out or a faster (and thus earlier) release of fission neutrons, which can (partially) prevent this shift and has an impact on the second and rare-earth peak as well.",
+            "paper_id": "W2615363806",
+            "title": "THE ROLE OF FISSION IN NEUTRON STAR MERGERS AND ITS IMPACT ON THEr-PROCESS PEAKS"
+          }
+        ],
+        "paper_ids": [
+          "W2615363806"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "comparator deficit"
+          ],
+          "candidate_fingerprint": "8f8a3f5ca206d31eb71702e0cac3b40675d4e737393c1ef7d6a0b9f4e0cf6547",
+          "candidate_id": "gap_candidate:global:comparator_deficit:observational_validation:the_partial_mitigation_of_the_third_peak_shift_by_updated_decay_half_lives_suggests_an_incomplete_reconciliation_between_theoretical_predictions_and_observed_abundance_features_as_the_remaining_discrepancy_is_not_addressed:d58bcd6652ba",
+          "candidate_ids": [
+            "gap_candidate:global:comparator_deficit:observational_validation:the_partial_mitigation_of_the_third_peak_shift_by_updated_decay_half_lives_suggests_an_incomplete_reconciliation_between_theoretical_predictions_and_observed_abundance_features_as_the_remaining_discrepancy_is_not_addressed:d58bcd6652ba"
+          ],
+          "claim_scope": "",
+          "confidence": 0.85,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "comparator deficit",
+          "group_id": "gap_group:global:observational_validation:comparator_deficit:gap_candidate_global_comparator_deficit_observational_validation_the_partial_mitigation_of_the_third_peak_shift_by_updated_decay_half_lives_suggests_an_incomplete_reconciliation_between_theoretical_predictions_and_observed_abundance_features_as_the_remaining_discrepancy_is_not_addressed_d58bcd6652ba:befd6f32f6fe",
+          "paper_ids": [
+            "W2615363806"
+          ],
+          "rationale": "The abstract notes that recent β-decay advances can '(partially) prevent this shift,' explicitly acknowledging that the correction is incomplete and leaves residual gaps in matching observational data.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W2615363806",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "The partial mitigation of the third peak shift by updated β-decay half-lives suggests an incomplete reconciliation between theoretical predictions and observed abundance features, as the remaining discrepancy is not addressed.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "observational validation"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2615363806",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:unresolved_mechanism:r_process_freeze_out_dynamics:the_precise_quantitative_impact_of_the_breakdown_of_n_n_equilibrium_during_freeze_out_on_the_third_r_process_peak_shift_remains_partially_unresolved_as_the_mechanism_relies_on_competing_processes_whose_relative_rates_vary_across_nuclear_models:27770e4b2d22"
+        ],
+        "group_id": "gap_group:global:r_process_freeze_out_dynamics:unresolved_mechanism:gap_candidate_global_unresolved_mechanism_r_process_freeze_out_dynamics_the_precise_quantitative_impact_of_the_breakdown_of_n_n_equilibrium_during_freeze_out_on_the_third_r_process_peak_shift_remains_partially_unresolved_as_the_mechanism_relies_on_competing_processes_whose_relative_rates_vary_across_nuclear_models_27770e4b2d22:001a78b712de",
+        "paper_evidence": [
+          {
+            "abstract": "Comparing observational abundance features with nucleosynthesis predictions of stellar evolution or explosion simulations, we can scrutinize two aspects: (a) the conditions in the astrophysical production site and (b) the quality of the nuclear physics input utilized. We test the abundance features of r -process nucleosynthesis calculations for the dynamical ejecta of neutron star merger simulations based on three different nuclear mass models: The Finite Range Droplet Model, the (quenched version of the) Extended Thomas Fermi Model with Strutinsky Integral, and the Hartree–Fock–Bogoliubov mass model. We make use of corresponding fission barrier heights and compare the impact of four different fission fragment distribution models on the final r -process abundance distribution. In particular, we explore the abundance distribution in the second r -process peak and the rare-earth sub-peak as a function of mass models and fission fragment distributions, as well as the origin of a shift in the third r -process peak position. The latter has been noticed in a number of merger nucleosynthesis predictions. We show that the shift occurs during the r -process freeze-out when neutron captures and β -decays compete and an ( n , γ )–( γ , n ) equilibrium is no longer maintained. During this phase neutrons originate mainly from fission of material above A = 240. We also investigate the role of β -decay half-lives from recent theoretical advances, which lead either to a smaller amount of fissioning nuclei during freeze-out or a faster (and thus earlier) release of fission neutrons, which can (partially) prevent this shift and has an impact on the second and rare-earth peak as well.",
+            "paper_id": "W2615363806",
+            "title": "THE ROLE OF FISSION IN NEUTRON STAR MERGERS AND ITS IMPACT ON THEr-PROCESS PEAKS"
+          }
+        ],
+        "paper_ids": [
+          "W2615363806"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "unresolved mechanism"
+          ],
+          "candidate_fingerprint": "92b0a903a27f498880ee0ebfd854d7e582ed223b28bddd8563e2f87d16361f5b",
+          "candidate_id": "gap_candidate:global:unresolved_mechanism:r_process_freeze_out_dynamics:the_precise_quantitative_impact_of_the_breakdown_of_n_n_equilibrium_during_freeze_out_on_the_third_r_process_peak_shift_remains_partially_unresolved_as_the_mechanism_relies_on_competing_processes_whose_relative_rates_vary_across_nuclear_models:27770e4b2d22",
+          "candidate_ids": [
+            "gap_candidate:global:unresolved_mechanism:r_process_freeze_out_dynamics:the_precise_quantitative_impact_of_the_breakdown_of_n_n_equilibrium_during_freeze_out_on_the_third_r_process_peak_shift_remains_partially_unresolved_as_the_mechanism_relies_on_competing_processes_whose_relative_rates_vary_across_nuclear_models:27770e4b2d22"
+          ],
+          "claim_scope": "",
+          "confidence": 0.8,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "unresolved mechanism",
+          "group_id": "gap_group:global:r_process_freeze_out_dynamics:unresolved_mechanism:gap_candidate_global_unresolved_mechanism_r_process_freeze_out_dynamics_the_precise_quantitative_impact_of_the_breakdown_of_n_n_equilibrium_during_freeze_out_on_the_third_r_process_peak_shift_remains_partially_unresolved_as_the_mechanism_relies_on_competing_processes_whose_relative_rates_vary_across_nuclear_models_27770e4b2d22:001a78b712de",
+          "paper_ids": [
+            "W2615363806"
+          ],
+          "rationale": "The abstract states the shift occurs 'when neutron captures and β-decays compete and an (n,γ)–(γ,n) equilibrium is no longer maintained,' indicating a complex, model-dependent transition that is identified but not fully quantified.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W2615363806",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "The precise quantitative impact of the breakdown of (n,γ)–(γ,n) equilibrium during freeze-out on the third r-process peak shift remains partially unresolved, as the mechanism relies on competing processes whose relative rates vary across nuclear models.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "r-process freeze-out dynamics"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W2615363806",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:boundary_condition:stellar_sample_representativeness:lack_of_specified_sample_size_selection_criteria_and_stellar_atmospheric_parameters_leaves_the_statistical_robustness_and_environmental_boundary_conditions_of_the_abundance_correlations_undefined:a0172d0607b4"
+        ],
+        "group_id": "gap_group:global:stellar_sample_representativeness:boundary_condition:gap_candidate_global_boundary_condition_stellar_sample_representativeness_lack_of_specified_sample_size_selection_criteria_and_stellar_atmospheric_parameters_leaves_the_statistical_robustness_and_environmental_boundary_conditions_of_the_abundance_correlations_undefined_a0172d0607b4:de9bbb22eedb",
+        "paper_evidence": [
+          {
+            "abstract": "The heaviest chemical elements are naturally produced by the rapid neutron-capture process ( r -process) during neutron star mergers or supernovae. The r -process production of elements heavier than uranium (transuranic nuclei) is poorly understood and inaccessible to experiments so must be extrapolated by using nucleosynthesis models. We examined element abundances in a sample of stars that are enhanced in r -process elements. The abundances of elements ruthenium, rhodium, palladium, and silver (atomic numbers Z = 44 to 47; mass numbers A = 99 to 110) correlate with those of heavier elements (63 ≤ Z ≤ 78, A > 150). There is no correlation for neighboring elements (34 ≤ Z ≤ 42 and 48 ≤ Z ≤ 62). We interpret this as evidence that fission fragments of transuranic nuclei contribute to the abundances. Our results indicate that neutron-rich nuclei with mass numbers >260 are produced in r -process events.",
+            "paper_id": "W4389429223",
+            "title": "Element abundance patterns in stars indicate fission of nuclei heavier than uranium"
+          }
+        ],
+        "paper_ids": [
+          "W4389429223"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "boundary condition"
+          ],
+          "candidate_fingerprint": "7ca94dd03f58faf333062948b53cfa1acca281ba3e2ba68bd5c7ed5772cb028c",
+          "candidate_id": "gap_candidate:global:boundary_condition:stellar_sample_representativeness:lack_of_specified_sample_size_selection_criteria_and_stellar_atmospheric_parameters_leaves_the_statistical_robustness_and_environmental_boundary_conditions_of_the_abundance_correlations_undefined:a0172d0607b4",
+          "candidate_ids": [
+            "gap_candidate:global:boundary_condition:stellar_sample_representativeness:lack_of_specified_sample_size_selection_criteria_and_stellar_atmospheric_parameters_leaves_the_statistical_robustness_and_environmental_boundary_conditions_of_the_abundance_correlations_undefined:a0172d0607b4"
+          ],
+          "claim_scope": "",
+          "confidence": 0.85,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "boundary condition",
+          "group_id": "gap_group:global:stellar_sample_representativeness:boundary_condition:gap_candidate_global_boundary_condition_stellar_sample_representativeness_lack_of_specified_sample_size_selection_criteria_and_stellar_atmospheric_parameters_leaves_the_statistical_robustness_and_environmental_boundary_conditions_of_the_abundance_correlations_undefined_a0172d0607b4:de9bbb22eedb",
+          "paper_ids": [
+            "W4389429223"
+          ],
+          "rationale": "The abstract references only 'a sample of stars that are enhanced in r-process elements' without detailing observational constraints, metallicity ranges, or potential non-r-process contamination that could affect the reported Z=44–47 and Z=63–78 correlations.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W4389429223",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "Lack of specified sample size, selection criteria, and stellar atmospheric parameters leaves the statistical robustness and environmental boundary conditions of the abundance correlations undefined.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "stellar sample representativeness"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W4389429223",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:global:limitation:transuranic_nucleosynthesis_modeling:reliance_on_theoretical_model_extrapolation_introduces_unquantified_uncertainty_into_the_inferred_contribution_of_fission_fragments_to_elemental_abundances:5f16a048715b"
+        ],
+        "group_id": "gap_group:global:transuranic_nucleosynthesis_modeling:limitation:gap_candidate_global_limitation_transuranic_nucleosynthesis_modeling_reliance_on_theoretical_model_extrapolation_introduces_unquantified_uncertainty_into_the_inferred_contribution_of_fission_fragments_to_elemental_abundances_5f16a048715b:7ea40bb1cc1f",
+        "paper_evidence": [
+          {
+            "abstract": "The heaviest chemical elements are naturally produced by the rapid neutron-capture process ( r -process) during neutron star mergers or supernovae. The r -process production of elements heavier than uranium (transuranic nuclei) is poorly understood and inaccessible to experiments so must be extrapolated by using nucleosynthesis models. We examined element abundances in a sample of stars that are enhanced in r -process elements. The abundances of elements ruthenium, rhodium, palladium, and silver (atomic numbers Z = 44 to 47; mass numbers A = 99 to 110) correlate with those of heavier elements (63 ≤ Z ≤ 78, A > 150). There is no correlation for neighboring elements (34 ≤ Z ≤ 42 and 48 ≤ Z ≤ 62). We interpret this as evidence that fission fragments of transuranic nuclei contribute to the abundances. Our results indicate that neutron-rich nuclei with mass numbers >260 are produced in r -process events.",
+            "paper_id": "W4389429223",
+            "title": "Element abundance patterns in stars indicate fission of nuclei heavier than uranium"
+          }
+        ],
+        "paper_ids": [
+          "W4389429223"
+        ],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "limitation"
+          ],
+          "candidate_fingerprint": "7b401808a3d672cade442245a06f3e0ea862cd25723f245b21d91bbf99ac5964",
+          "candidate_id": "gap_candidate:global:limitation:transuranic_nucleosynthesis_modeling:reliance_on_theoretical_model_extrapolation_introduces_unquantified_uncertainty_into_the_inferred_contribution_of_fission_fragments_to_elemental_abundances:5f16a048715b",
+          "candidate_ids": [
+            "gap_candidate:global:limitation:transuranic_nucleosynthesis_modeling:reliance_on_theoretical_model_extrapolation_introduces_unquantified_uncertainty_into_the_inferred_contribution_of_fission_fragments_to_elemental_abundances:5f16a048715b"
+          ],
+          "claim_scope": "",
+          "confidence": 0.9,
+          "evidence_role": "",
+          "evidence_summary": "",
+          "extraction_method": "paper_limitation_llm",
+          "gap_kind": "limitation",
+          "group_id": "gap_group:global:transuranic_nucleosynthesis_modeling:limitation:gap_candidate_global_limitation_transuranic_nucleosynthesis_modeling_reliance_on_theoretical_model_extrapolation_introduces_unquantified_uncertainty_into_the_inferred_contribution_of_fission_fragments_to_elemental_abundances_5f16a048715b:7ea40bb1cc1f",
+          "paper_ids": [
+            "W4389429223"
+          ],
+          "rationale": "The abstract explicitly states that transuranic production 'is poorly understood and inaccessible to experiments so must be extrapolated by using nucleosynthesis models,' making the abundance-fission link contingent on model validity rather than direct empirical constraints.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "paper",
+              "json_pointer": "/abstract",
+              "paper_id": "W4389429223",
+              "section": "Abstract"
+            }
+          ],
+          "statement": "Reliance on theoretical model extrapolation introduces unquantified uncertainty into the inferred contribution of fission fragments to elemental abundances.",
+          "status": "candidate",
+          "subhypothesis_id": "GLOBAL",
+          "support_level": "explicit",
+          "target_slot": "transuranic nucleosynthesis modeling"
+        },
+        "source_pointers": [
+          {
+            "artifact": "paper",
+            "json_pointer": "/abstract",
+            "paper_id": "W4389429223",
+            "section": "Abstract"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:sh2:mechanism_explanation_gap:fission_neutron_release_timing:the_precise_temporal_relationship_between_fission_neutron_release_and_the_freeze_out_of_neutron_capture_equilibrium_determines_third_peak_positioning_yet_current_network_calculations_lack_constrained_beta_decay_rates_far_from_stability_to_quantify_this_shift:4856612a78c6"
+        ],
+        "group_id": "gap_group:sh2:fission_neutron_release_timing:mechanism_explanation_gap:gap_candidate_sh2_mechanism_explanation_gap_fission_neutron_release_timing_the_precise_temporal_relationship_between_fission_neutron_release_and_the_freeze_out_of_neutron_capture_equilibrium_determines_third_peak_positioning_yet_current_network_calculations_lack_constrained_beta_decay_rates_far_from_stability_to_quantify_this_shift_4856612a78c6:3fe52923c276",
+        "paper_evidence": [],
+        "paper_ids": [],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "mechanism_explanation_gap"
+          ],
+          "candidate_fingerprint": "e936ce8bd0b952e319e660d783e4bc9af9b544a3cee5ba808d247b1ac845cd87",
+          "candidate_id": "gap_candidate:sh2:mechanism_explanation_gap:fission_neutron_release_timing:the_precise_temporal_relationship_between_fission_neutron_release_and_the_freeze_out_of_neutron_capture_equilibrium_determines_third_peak_positioning_yet_current_network_calculations_lack_constrained_beta_decay_rates_far_from_stability_to_quantify_this_shift:4856612a78c6",
+          "candidate_ids": [
+            "gap_candidate:sh2:mechanism_explanation_gap:fission_neutron_release_timing:the_precise_temporal_relationship_between_fission_neutron_release_and_the_freeze_out_of_neutron_capture_equilibrium_determines_third_peak_positioning_yet_current_network_calculations_lack_constrained_beta_decay_rates_far_from_stability_to_quantify_this_shift:4856612a78c6"
+          ],
+          "claim_scope": "third_r_process_peak",
+          "confidence": 0.8,
+          "evidence_role": "nucleosynthetic_network_constraint",
+          "evidence_summary": "",
+          "extraction_method": "survey_prose_llm",
+          "gap_kind": "mechanism_explanation_gap",
+          "group_id": "gap_group:sh2:fission_neutron_release_timing:mechanism_explanation_gap:gap_candidate_sh2_mechanism_explanation_gap_fission_neutron_release_timing_the_precise_temporal_relationship_between_fission_neutron_release_and_the_freeze_out_of_neutron_capture_equilibrium_determines_third_peak_positioning_yet_current_network_calculations_lack_constrained_beta_decay_rates_far_from_stability_to_quantify_this_shift_4856612a78c6:3fe52923c276",
+          "paper_ids": [],
+          "rationale": "Survey highlights that peak position shifts depend on when fission neutrons are released relative to freeze-out, and accelerated beta-decay rates alter recycling efficiency, but notes uncertainties in beta-decay properties limit predictive power.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "survey.md",
+              "json_pointer": "/sections/2",
+              "section": "1.1. Survey Structure and Methodology"
+            }
+          ],
+          "statement": "The precise temporal relationship between fission neutron release and the freeze-out of neutron-capture equilibrium determines third-peak positioning, yet current network calculations lack constrained beta-decay rates far from stability to quantify this shift.",
+          "status": "candidate",
+          "subhypothesis_id": "SH2",
+          "support_level": "speculative",
+          "target_slot": "fission_neutron_release_timing"
+        },
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/2",
+            "section": "1.1. Survey Structure and Methodology"
+          }
+        ]
+      },
+      {
+        "candidate_ids": [
+          "gap_candidate:sh3:missing_boundary_condition:eos_compactness_threshold:the_threshold_equation_of_state_stiffness_below_which_dynamical_ejecta_masses_become_sufficient_to_dominate_galactic_r_process_enrichment_lacks_empirical_calibration_from_gravitational_wave_strain_measurements:f8ce4f895dea"
+        ],
+        "group_id": "gap_group:sh3:eos_compactness_threshold:missing_boundary_condition:gap_candidate_sh3_missing_boundary_condition_eos_compactness_threshold_the_threshold_equation_of_state_stiffness_below_which_dynamical_ejecta_masses_become_sufficient_to_dominate_galactic_r_process_enrichment_lacks_empirical_calibration_from_gravitational_wave_strain_measurements_f8ce4f895dea:9cdb0a78829d",
+        "paper_evidence": [],
+        "paper_ids": [],
+        "representative": {
+          "candidate_contribution_modes": [],
+          "candidate_defect_tags": [
+            "missing_boundary_condition"
+          ],
+          "candidate_fingerprint": "0ded3686f9ede03ce77643353f6e3585702684ef15f491542bf64a1700915029",
+          "candidate_id": "gap_candidate:sh3:missing_boundary_condition:eos_compactness_threshold:the_threshold_equation_of_state_stiffness_below_which_dynamical_ejecta_masses_become_sufficient_to_dominate_galactic_r_process_enrichment_lacks_empirical_calibration_from_gravitational_wave_strain_measurements:f8ce4f895dea",
+          "candidate_ids": [
+            "gap_candidate:sh3:missing_boundary_condition:eos_compactness_threshold:the_threshold_equation_of_state_stiffness_below_which_dynamical_ejecta_masses_become_sufficient_to_dominate_galactic_r_process_enrichment_lacks_empirical_calibration_from_gravitational_wave_strain_measurements:f8ce4f895dea"
+          ],
+          "claim_scope": "neutron_star_equation_of_state",
+          "confidence": 0.82,
+          "evidence_role": "gravitational_wave_inference",
+          "evidence_summary": "",
+          "extraction_method": "survey_prose_llm",
+          "gap_kind": "missing_boundary_condition",
+          "group_id": "gap_group:sh3:eos_compactness_threshold:missing_boundary_condition:gap_candidate_sh3_missing_boundary_condition_eos_compactness_threshold_the_threshold_equation_of_state_stiffness_below_which_dynamical_ejecta_masses_become_sufficient_to_dominate_galactic_r_process_enrichment_lacks_empirical_calibration_from_gravitational_wave_strain_measurements_f8ce4f895dea:9cdb0a78829d",
+          "paper_ids": [],
+          "rationale": "Survey establishes inverse correlation between neutron star radius and ejecta mass, noting softer EOS permits greater compactness and more massive ejecta, but numerical uncertainties and lack of direct EOS constraints leave the critical threshold undefined.",
+          "schema_version": "survey_gap_candidate_v1",
+          "source_pointers": [
+            {
+              "artifact": "survey.md",
+              "json_pointer": "/sections/2",
+              "section": "1.1. Survey Structure and Methodology"
+            }
+          ],
+          "statement": "The threshold equation-of-state stiffness below which dynamical ejecta masses become sufficient to dominate galactic r-process enrichment lacks empirical calibration from gravitational-wave strain measurements.",
+          "status": "candidate",
+          "subhypothesis_id": "SH3",
+          "support_level": "speculative",
+          "target_slot": "eos_compactness_threshold"
+        },
+        "source_pointers": [
+          {
+            "artifact": "survey.md",
+            "json_pointer": "/sections/2",
+            "section": "1.1. Survey Structure and Methodology"
+          }
+        ]
+      }
+    ],
+    "schema_version": "survey_gap_coverage_v1"
+  }
+}

@@ -1,0 +1,283 @@
+{
+  "schema_version": "survey_visual_manifest_v1",
+  "status": "completed",
+  "reason": "",
+  "source_survey": "survey.md",
+  "visual_survey": "survey_visual.md",
+  "image_directory": ".",
+  "reader_facing_language": "en",
+  "captions_language": "en",
+  "alt_text_language": "en",
+  "outline_used": true,
+  "references_received": true,
+  "reference_ids": [
+    "W2802275066",
+    "W1993407371",
+    "W2161801818",
+    "W1913098325",
+    "W2102639755",
+    "W2586770524",
+    "W2884099537",
+    "W2106295983",
+    "W2615363806",
+    "W2299136898",
+    "W4389429223",
+    "W2766346145",
+    "W3145193814",
+    "W2075885914",
+    "W2981754620",
+    "W2766140821",
+    "W2789930919",
+    "W2760756222",
+    "W2891551364",
+    "W2765302758",
+    "W4229062845",
+    "W2893936582",
+    "W2766078098"
+  ],
+  "reference_count": 23,
+  "evidence_plan_schema_version": "survey_sh_evidence_plan_v1",
+  "style_profile": {
+    "visual_language_en": "The visual style employs a modular, grid-based architecture reminiscent of high-end editorial scientific illustration. Layouts utilize asymmetric balance with generous negative space to prevent cognitive overload, allowing complex systems maps to breathe. Shapes are geometric and precise: rounded rectangles for data modules, sharp lines for causal connectors, and distinct dashed outlines for uncertainty regions or theoretical boundaries. Typography is strictly sans-serif (e.g., Inter or Roboto) with clear hierarchy: bold headers for mechanisms, regular weight for descriptions, and monospace for numerical values. The color palette supports this structure: deep blue (primary) anchors major structural elements like neutron star mergers; indigo (secondary) denotes intermediate processes such as ejecta expansion; amber (accent) highlights critical observational signatures or peak luminosity e",
+    "palette": {
+      "background": "#F8F9FA",
+      "ink": "#212529",
+      "primary": "#0D47A1",
+      "secondary": "#5C6BC0",
+      "accent": "#FF6F00",
+      "uncertainty": "#BDBDBD"
+    },
+    "source": "llm"
+  },
+  "rejected_figures": [
+    {
+      "figure_id": "fig_01_overview_framework",
+      "section_index": 1,
+      "figure_type": "overview_framework",
+      "reasons": [
+        "no evidence-bounded relation survived validation",
+        "repair: no evidence-bounded relation survived validation"
+      ],
+      "repair_attempted": true,
+      "stage": "brief_validation"
+    },
+    {
+      "figure_id": "fig_02_evidence_to_inference",
+      "section_index": 4,
+      "figure_type": "evidence_to_inference",
+      "reasons": [
+        "no evidence-bounded relation survived validation",
+        "repair: no evidence-bounded relation survived validation"
+      ],
+      "repair_attempted": true,
+      "stage": "brief_validation"
+    }
+  ],
+  "skipped_figures": [],
+  "figures": [
+    {
+      "figure_id": "fig_03_mechanism",
+      "file": "fig_03_mechanism.png",
+      "figure_type": "mechanism",
+      "source_section_index": 2,
+      "source_section_title": "2. Astrophysical Sites of the r-Process",
+      "source_paragraph_indices": [
+        1,
+        2,
+        3
+      ],
+      "insert_after_paragraph": 3,
+      "source_paper_ids": [
+        "W1993407371",
+        "W2161801818",
+        "W2766140821"
+      ],
+      "relations": [
+        {
+          "relation_en": "Dynamical ejecta originate from tidal tails and contact interfaces during inspiral/collision, characterized by low electron fractions ($Y_e \\lesssim 0.2$).",
+          "source_paragraph_index": 1,
+          "source_quote": "These material streams originate primarily from the contact interface between the merging stars and the outer tidal tails",
+          "support_kind": "BACKGROUND_CONTEXT",
+          "evidence_paper_ids": [
+            "W1993407371",
+            "W2766140821"
+          ],
+          "evidence_paths": [
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "",
+              "paper_id": "W2766140821",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "phenomenon",
+              "paper_id": "W2766140821",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "target_object",
+              "paper_id": "W2766140821",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "direct_observation",
+              "paper_id": "W2766140821",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH3",
+              "slot_name": "",
+              "paper_id": "W2766140821",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH3",
+              "slot_name": "candidate",
+              "paper_id": "W2766140821",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH4",
+              "slot_name": "",
+              "paper_id": "W2766140821",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH4",
+              "slot_name": "boundary_variable",
+              "paper_id": "W2766140821",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH4",
+              "slot_name": "condition_b",
+              "paper_id": "W2766140821",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH4",
+              "slot_name": "comparable_endpoint",
+              "paper_id": "W2766140821",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "",
+              "paper_id": "W2766140821",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "",
+              "paper_id": "W2766140821",
+              "support_kind": "BACKGROUND_CONTEXT"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "construct",
+              "paper_id": "W2766140821",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "proxy_or_measure",
+              "paper_id": "W2766140821",
+              "support_kind": "BACKGROUND_CONTEXT"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "reference_or_target_measure",
+              "paper_id": "W2766140821",
+              "support_kind": "BACKGROUND_CONTEXT"
+            },
+            {
+              "sub_hypothesis_id": "SH5",
+              "slot_name": "mapping_or_calibration",
+              "paper_id": "W2766140821",
+              "support_kind": "BACKGROUND_CONTEXT"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "",
+              "paper_id": "W1993407371",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "phenomenon",
+              "paper_id": "W1993407371",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "target_object",
+              "paper_id": "W1993407371",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH2",
+              "slot_name": "",
+              "paper_id": "W1993407371",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH2",
+              "slot_name": "common_outcome",
+              "paper_id": "W1993407371",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            }
+          ]
+        },
+        {
+          "relation_en": "Dynamical ejecta drive nuclear flow deep into the r-process path, enabling fission recycling that reproduces solar abundance patterns for heavy elements.",
+          "source_paragraph_index": 2,
+          "source_quote": "This process robustly reproduces the solar system abundance patterns for heavy elements ($A > 140$)",
+          "support_kind": "DIRECT_LEDGER_EVIDENCE",
+          "evidence_paper_ids": [
+            "W2161801818"
+          ],
+          "evidence_paths": [
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "",
+              "paper_id": "W2161801818",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "phenomenon",
+              "paper_id": "W2161801818",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            },
+            {
+              "sub_hypothesis_id": "SH1",
+              "slot_name": "target_condition",
+              "paper_id": "W2161801818",
+              "support_kind": "DIRECT_LEDGER_EVIDENCE"
+            }
+          ]
+        }
+      ],
+      "caption_en": "Figure 3 | Schematic of r-process nucleosynthesis sites in neutron star mergers. Dynamical ejecta (inner zone) feature low electron fractions driving heavy element synthesis via fission recycling, while post-merger disk winds (outer zone) provide delayed outflows with moderate entropies contributing to lighter r-process peaks. This schematic is a conceptual synthesis of the cited survey evidence and introduces no new empirical data.",
+      "alt_text_en": "A radial diagram illustrating neutron star merger ejecta components. The center shows the merger remnant. An inner solid blue ring represents dynamical ejecta with low electron fractions, linked to fission recycling loops. An outer translucent cyan ring represents delayed accretion disk winds with moderate electron fractions. Arrows indicate the flow of matter and nucleosynthetic outcomes toward heavy and light r-process elements.",
+      "allowed_overlay_labels_en": [
+        "Dynamical Ejecta",
+        "Disk Winds",
+        "Low $Y_e$",
+        "Moderate $Y_e$",
+        "Fission Recycling",
+        "Actinides"
+      ],
+      "model": "wan2.7-image-pro",
+      "provider": "qwen",
+      "quality_status": "accepted",
+      "generation_attempts": 1,
+      "qc_notes": [],
+      "revised_prompt": "",
+      "prompt": "Create a publication-ready conceptual scientific figure for an academic survey.\n\nFigure type:\nmechanism\n\nCentral message:\nNeutron star merger ejecta comprise distinct dynamical and secular components with varying neutron richness, collectively synthesizing the full range of r-process elements through mechanisms like fission recycling.\n\nScientific content that must be represented:\n- Dynamical ejecta originate from tidal tails and contact interfaces during inspiral/collision, characterized by low electron fractions ($Y_e \\lesssim 0.2$).\n- Dynamical ejecta drive nuclear flow deep into the r-process path, enabling fission recycling that reproduces solar abundance patterns for heavy elements.\n\nRelationship rendering guidance:\nUse solid prominent paths for directly supported relationships. Use thin, dashed, or muted paths for qualified contributions. Use translucent or restrained elements for background context. Never render evidence classifications, support metadata, paper IDs, or internal audit labels as visible text.\n\nEntities or modules to include:\nDynamical Ejecta, Post-Merger Accretion Disk Winds, Hypermassive Neutron Star / Black Hole Remnant, r-Process Nucleosynthesis, Fission Recycling, Electron Fraction ($Y_e$)\n\nExact visible label inventory:\n[\"Dynamical Ejecta\", \"Disk Winds\", \"Low $Y_e$\", \"Moderate $Y_e$\", \"Fission Recycling\", \"Actinides\"]\n\nTypography and layout protocol:\nThe inventory above is the only permitted reader-facing text. Copy each supplied label\ncharacter-for-character, including spelling, capitalization, hyphens, apostrophes, slashes,\nunderscores, and scientific symbols. Do not paraphrase, translate, abbreviate, pluralize,\ncorrect, or merge labels. Do not render the surrounding JSON/list punctuation or quotation\nmarks. Do not render the full relation sentences, uncertainty sentences, evidence metadata,\nPaper IDs, SH IDs, or any other prompt text. The entities/modules list is semantic guidance\nonly; render an entity name only when the exact same string appears in the inventory. If a\nlabel cannot be rendered clearly, omit that label rather than inventing a replacement.\n\nUse one short label per module, with a consistent readable sans-serif typeface, generous\nletter spacing, strong contrast, and sufficient size for 100% PDF readability. Keep labels\ninside their module boundaries with ample padding; never overlap labels, connectors, icons,\nor panel borders. Do not create a legend, title, paragraph, axis, table, footnote, or caption\nunless its exact text appears in the inventory.\n\nUncertainties or evidence boundaries to show:\n- Numerical uncertainties in resolving inner crust layers and neutrino interactions pose challenges for precise quantitative predictions of ejecta mass.\n- Detailed structure of abundance peaks remains contingent on nuclear physics inputs, particularly fission fragment distributions and beta-decay rates far from stability.\n\nComposition:\nA radial systems map centered on a 'Merger Event' core. Two primary concentric zones radiate outward: an inner 'Dynamical Ejecta' zone (solid boundary, deep blue) representing prompt expulsion from tidal tails, and an outer 'Secular Wind' zone (translucent gradient, cyan) representing viscous/viscous-driven winds from the remnant disk. A central inset zooms into the 'Nucleosynthesis Engine', showing a looped arrow labeled 'Fission Recycling' connecting superheavy nuclei back to lanthanides. Solid arrows connect the ejecta zones to their respective $Y_e$ ranges. Dashed lines indicate the uncertainty boundaries regarding nuclear physics inputs affecting peak positions. Color depth distinguishe\n\nFigure-type layout requirements:\nBuild a visually rich causal systems map rather than a simple linear flowchart. Place the dominant mechanism or outcome as a central anchor, arrange upstream drivers as an asymmetric evidence cluster, and place intermediate processes as layered or nested modules. Use solid connectors for direct support, dashed or translucent connectors for qualified or unresolved relations, and include one restrained inset, symbolic icon, or uncertainty region when supported by the supplied content. Avoid repeated equal-sized cards.\n\nArticle-wide visual style:\nThe visual style employs a modular, grid-based architecture reminiscent of high-end editorial scientific illustration. Layouts utilize asymmetric balance with generous negative space to prevent cognitive overload, allowing complex systems maps to breathe. Shapes are geometric and precise: rounded rectangles for data modules, sharp lines for causal connectors, and distinct dashed outlines for uncertainty regions or theoretical boundaries. Typography is strictly sans-serif (e.g., Inter or Roboto) with clear hierarchy: bold headers for mechanisms, regular weight for descriptions, and monospace for numerical values. The color palette supports this structure: deep blue (primary) anchors major structural elements like neutron star mergers; indigo (secondary) denotes intermediate processes such as ejecta expansion; amber (accent) highlights critical observational signatures or peak luminosity e\n\nLocked article palette:\n- Background: #F8F9FA\n- Linework: #212529\n- Primary evidence-supported pathway: #0D47A1\n- Secondary process or comparison group: #5C6BC0\n- Key focal entity: #FF6F00\n- Uncertainty or qualified relation: #BDBDBD\n\nVisual language:\nA visually rich editorial scientific infographic suitable for a high-impact\nmultidisciplinary research journal. Make it feel like a polished visual abstract or\nsystems-map poster, not a basic flowchart or presentation slide.\n\nCreate a clear focal hierarchy: one dominant visual anchor, two to four secondary\nmodules with different visual weights, and one restrained uncertainty or limitation\nregion. Build hierarchy through scale, position, layered panels, subtle tonal\nbackgrounds, symbolic icons, selective accent colour, and different connector weights.\n\nPrefer an asymmetric but balanced composition. Combine grouped modules, inset details,\nnested regions, branching or converging pathways, feedback loops, scale transitions, or\na compact semantic strip whenever supported by the supplied content. Use controlled\ndensity: information-rich, visually layered, and detailed, while remaining readable at\n50% scale in a PDF.\n\nDo not repeat identical rounded rectangles and do not use a default three-column layout.\n\nText constraints:\nRender only the exact labels from the inventory, preferably as 1–5 word labels. Never add\ndecorative pseudo-text or plausible-looking terminology. Before finalizing, perform an\ninternal character-by-character check against the inventory; if any character is uncertain,\nleave that label out. Keep all reader-facing text sparse and subordinate to the visual\nstructure. Leave clean visual space for the separate English caption and programmatic labels.\n\nScientific constraints:\nThis is a conceptual synthesis of the supplied survey content, not a new empirical result.\nDo not invent quantitative data, experimental measurements, causal mechanisms, instruments,\nmodel properties, or conclusions. Use solid prominent pathways only for directly supported\nrelationships. Use restrained secondary pathways for qualified contributions. Use muted,\ndashed, or translucent elements for explicit uncertainty, evidence gaps, or background context.\n\nNegative prompt:\nNo photorealistic laboratory scene, no stock-photo appearance, no science-fiction aesthetic,\nno neon palette, no rainbow gradient, no illegible text, no fake chart, no invented numerical\ndata, no fictional equation, no paper citation, no journal logo, no misspelled words, no\ninvented labels, no text outside the exact label inventory, no fake legend, and no tiny or\noverlapping text.\n\nLayout requirements:\n- Do not use a flat sequence of equal-width boxes.\n- Do not use a default left-to-right three-column flowchart.\n- Establish one dominant anchor near the visual center or upper center.\n- Use an asymmetric but balanced arrangement.\n- Combine at least three of the following when scientifically appropriate: grouped\n  modules, nested regions, inset detail, symbolic icons, branching pathways, converging\n  pathways, feedback loops, layered backgrounds, scale transitions, or a compact\n  semantic strip.\n- Use solid primary-colour pathways for direct evidence-supported relations.\n- Use thinner, dashed, or translucent pathways for qualified, indirect, contextual, or\n  uncertain relations.\n- Use the accent colour sparingly for the key focal entity or conclusion.\n- Reserve muted grey-blue tones for context and uncertainty.\n- Keep the figure readable at 50% scale in a PDF.\n\nOutput: landscape 4:3, high resolution, balanced margins, suitable for PDF and Markdown.\n"
+    }
+  ]
+}

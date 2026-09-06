@@ -1,0 +1,40 @@
+{
+  "file_size_bytes": 217227,
+  "generated_at": "2026-09-06T07:38:23.890+00:00",
+  "parser": {
+    "backend": "pypdf",
+    "extractable_text": true,
+    "first_page_height": 792.0,
+    "first_page_width": 612.0,
+    "minimum_page_count": 1,
+    "page_count": 14,
+    "page_count_requirement_met": true,
+    "status": "parsed",
+    "warning": ""
+  },
+  "pdf_path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/publication/.quantitative_mathematical_models.pdf.staging",
+  "quantitative_structure": {
+    "acknowledgements_absent": true,
+    "text_extracted": true
+  },
+  "renderer": {
+    "backend": "pdftoppm",
+    "command": [
+      "/usr/bin/pdftoppm",
+      "-f",
+      "1",
+      "-l",
+      "1",
+      "-png",
+      "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/publication/.quantitative_mathematical_models.pdf.staging",
+      "/tmp/research-plan-author-pdf-yuvskk1o/page"
+    ],
+    "elapsed_ms": 221.319,
+    "rendered_first_page_bytes": 119410,
+    "return_code": 0,
+    "status": "rendered",
+    "stderr_tail": ""
+  },
+  "schema_version": "research_plan_author_pdf_validation_v1",
+  "valid": true
+}

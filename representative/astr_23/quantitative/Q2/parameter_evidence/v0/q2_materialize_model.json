@@ -1,0 +1,241 @@
+{
+  "schema_version": "ieee_math_model_v1",
+  "lineage": {
+    "created_from_artifact": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "project_id": "sci_260905_008_survey_001",
+    "quantitative_idea_id": "Q2",
+    "science_run_id": "260905-008",
+    "selected_direction_id": "premise_inversion",
+    "survey_run_id": "260905-008-survey-001",
+    "version": 0
+  },
+  "title": "Hierarchical Bayesian Inference of Fission Timescales from Multi-Messenger Kilonova Constraints",
+  "abstract": "An executable scalar Monte Carlo posterior-proxy model for the fission neutron release timescale tau_f. The run samples tau_f together with ejecta mass, electron fraction, and inclination nuisance priors using the approved Q2 parameter values. The current trusted adapter reports the sampled tau_f observable and does not claim a full hierarchical likelihood, Markov-chain diagnostic, or empirical posterior.",
+  "scientific_question": "What is the posterior probability distribution of the fission neutron release timescale when gravitational-wave, kilonova photometric, and spectroscopic abundance constraints are combined?",
+  "model_scope": "A bounded zero-dimensional Monte Carlo posterior-proxy calculation for one kilonova event. The full multi-event hierarchical likelihood, parallel tempering, Bayes-factor estimation, and catalogue-level population aggregation remain outside the current trusted solver.",
+  "assumptions": [
+    {
+      "assumption_id": "Q2-A-001",
+      "statement": "The approved tau_f value of 2.3 s is used as the center of a positive bounded sensitivity prior from 1.15 s to 3.45 s.",
+      "effect_if_violated": "The sampled fission-timescale sensitivity range changes."
+    },
+    {
+      "assumption_id": "Q2-A-002",
+      "statement": "The approved ejecta-mass value of 0.04 solar_mass is represented by a positive bounded interval from 0.03 to 0.05 solar_mass.",
+      "effect_if_violated": "The nuisance ejecta-mass prior changes."
+    },
+    {
+      "assumption_id": "Q2-A-003",
+      "statement": "The approved electron-fraction value of 0.16 is represented by a broad physically admissible interval from 0.08 to 0.24.",
+      "effect_if_violated": "The neutron-richness nuisance prior changes."
+    },
+    {
+      "assumption_id": "Q2-A-004",
+      "statement": "The approved inclination value is represented by the converted 19 to 42 degree interval in radians.",
+      "effect_if_violated": "The viewing-angle nuisance prior changes."
+    },
+    {
+      "assumption_id": "Q2-A-005",
+      "statement": "The current executable observable is the sampled tau_f value; nuisance variables are retained as declared prior variables for later likelihood extension.",
+      "effect_if_violated": "The result would no longer be the scalar tau_f posterior proxy defined by this model."
+    }
+  ],
+  "symbols": [
+    {
+      "symbol_id": "Q2-S-001",
+      "latex": "\\tau_f",
+      "meaning": "Fission neutron release timescale",
+      "unit": "s",
+      "dimension": "time",
+      "role": "MATERIAL_PROPERTY"
+    },
+    {
+      "symbol_id": "Q2-S-002",
+      "latex": "M_{ej}",
+      "meaning": "Kilonova ejecta mass nuisance parameter",
+      "unit": "solar_mass",
+      "dimension": "mass",
+      "role": "SCENARIO_INPUT"
+    },
+    {
+      "symbol_id": "Q2-S-003",
+      "latex": "Y_e",
+      "meaning": "Electron fraction nuisance parameter",
+      "unit": "1",
+      "dimension": "dimensionless",
+      "role": "SCENARIO_INPUT"
+    },
+    {
+      "symbol_id": "Q2-S-004",
+      "latex": "i",
+      "meaning": "Binary inclination angle",
+      "unit": "rad",
+      "dimension": "angle",
+      "role": "SCENARIO_INPUT"
+    },
+    {
+      "symbol_id": "Q2-S-005",
+      "latex": "N_{samples}",
+      "meaning": "Monte Carlo sample count",
+      "unit": "1",
+      "dimension": "count",
+      "role": "MODEL_ASSUMPTION"
+    },
+    {
+      "symbol_id": "Q2-S-006",
+      "latex": "N_{chains}",
+      "meaning": "Declared independent-chain control",
+      "unit": "1",
+      "dimension": "count",
+      "role": "MODEL_ASSUMPTION"
+    },
+    {
+      "symbol_id": "Q2-S-007",
+      "latex": "N_{temperatures}",
+      "meaning": "Declared tempering-level control",
+      "unit": "1",
+      "dimension": "count",
+      "role": "MODEL_ASSUMPTION"
+    }
+  ],
+  "equations": [
+    {
+      "equation_id": "Q2-EQ-001",
+      "role": "OBSERVABLE_DEFINITION",
+      "latex": "z=\\tau_f",
+      "where_symbol_ids": [
+        "Q2-S-001"
+      ]
+    },
+    {
+      "equation_id": "Q2-EQ-002",
+      "role": "PRIOR_FACTORISATION",
+      "latex": "p(\\tau_f,M_{ej},Y_e,i)=p(\\tau_f)p(M_{ej})p(Y_e)p(i)",
+      "where_symbol_ids": [
+        "Q2-S-001",
+        "Q2-S-002",
+        "Q2-S-003",
+        "Q2-S-004"
+      ]
+    }
+  ],
+  "initial_conditions": [
+    "The zero-dimensional sampler is initialized by drawing each declared random variable from its validated prior distribution."
+  ],
+  "boundary_conditions": [
+    "No spatial boundary conditions apply to this zero-dimensional Monte Carlo sampler."
+  ],
+  "parameterization": [
+    "The execution parameter object must contain exactly tau_f=2.3, M_ej=0.04, Y_e=0.16, i=0.5585053606381855, N_samples=10000, N_chains=4, and N_temperatures=8.",
+    "The random-variable sensitivity bounds are explicit model assumptions and are numeric literals required by the trusted sampler."
+  ],
+  "scenarios": [
+    "baseline"
+  ],
+  "objective_and_constraints": [
+    "Estimate the scalar sampled distribution of tau_f under the declared bounded nuisance-prior setup."
+  ],
+  "algorithm": {
+    "input": [
+      "tau_f prior",
+      "M_ej prior",
+      "Y_e prior",
+      "i prior",
+      "approved parameter set"
+    ],
+    "output": [
+      "sample count",
+      "mean tau_f",
+      "standard deviation of tau_f",
+      "minimum tau_f",
+      "maximum tau_f"
+    ],
+    "steps": [
+      "Initialize the deterministic random generator from the integer seed.",
+      "Draw 10000 independent samples from the four declared bounded prior distributions.",
+      "Evaluate the scalar observable z=tau_f for every draw.",
+      "Report bounded summary statistics for the sampled tau_f values."
+    ]
+  },
+  "numerical_plan": {
+    "solver_family": "MONTE_CARLO",
+    "discretization": "independent bounded prior sampling",
+    "convergence_checks": [
+      "sample_count_bound",
+      "repeat the run with a larger sample count outside the current fixed approved baseline"
+    ]
+  },
+  "validation_plan": [
+    "Verify that the sample count is an integer between 1 and 100000.",
+    "Verify that every distribution bound is finite and ordered.",
+    "Verify that all observable values are finite.",
+    "Verify that the execution parameter object exactly matches the approved parameter set."
+  ],
+  "limitations": [
+    "The current trusted adapter evaluates a scalar observable and does not implement a full likelihood.",
+    "The declared N_chains and N_temperatures controls are retained for provenance but are not independently executed by the standard adapter.",
+    "The output is a numerical simulation result and not empirical evidence.",
+    "The nuisance priors are sampled but are not combined through a multi-messenger likelihood in this adapter."
+  ],
+  "references": [
+    "doi:10.3847/1538-4357/aaeaca",
+    "doi:10.1038/nature24303",
+    "doi:10.1093/mnras/sty2932",
+    "doi:10.3847/2041-8213/aac6c1"
+  ],
+  "mathir": {
+    "schema_version": "mathir_v1",
+    "system_type": "MONTE_CARLO",
+    "parameters": {
+      "tau_f": 2.3,
+      "M_ej": 0.04,
+      "Y_e": 0.16,
+      "i": 0.5585053606381855,
+      "N_samples": 10000,
+      "N_chains": 4,
+      "N_temperatures": 8
+    },
+    "samples": 10000,
+    "seed": 260905008,
+    "random_variables": [
+      {
+        "id": "tau_f",
+        "distribution": "uniform",
+        "parameters": {
+          "low": 1.15,
+          "high": 3.45
+        }
+      },
+      {
+        "id": "M_ej",
+        "distribution": "uniform",
+        "parameters": {
+          "low": 0.03,
+          "high": 0.05
+        }
+      },
+      {
+        "id": "Y_e",
+        "distribution": "uniform",
+        "parameters": {
+          "low": 0.08,
+          "high": 0.24
+        }
+      },
+      {
+        "id": "i",
+        "distribution": "uniform",
+        "parameters": {
+          "low": 0.33161255787892263,
+          "high": 0.7330382858376184
+        }
+      }
+    ],
+    "observable": {
+      "op": "variable",
+      "name": "tau_f"
+    }
+  }
+}

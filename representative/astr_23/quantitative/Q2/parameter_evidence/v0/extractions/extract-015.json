@@ -1,0 +1,183 @@
+{
+  "schema_version": "quantitative_parameter_evidence_collection_v1",
+  "blueprint_identity": "89518de457b2bc6ba77b1baf621588149139504cc9404b5e39c8c70f2816ae71",
+  "lineage": {
+    "created_from_artifact": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "project_id": "sci_260905_008_survey_001",
+    "quantitative_idea_id": "Q2",
+    "science_run_id": "260905-008",
+    "selected_direction_id": "premise_inversion",
+    "survey_run_id": "260905-008-survey-001",
+    "version": 0
+  },
+  "source_document": {
+    "document_type": "hybrid_openalex_anysearch_fulltext_verification",
+    "document_id": "HYBRID-SEARCH-Q2-20260906",
+    "title": "Q2 literature parameter verification bundle",
+    "year": 2026,
+    "discovery_sources": ["openalex", "anysearch"],
+    "cross_validated": true
+  },
+  "extraction": {
+    "method": "Manual quote verification from open full text after dual-engine discovery",
+    "engine_sources": ["openalex", "anysearch"],
+    "verified_at": "2026-09-06",
+    "scope": "Q2 tau_f, M_ej, Y_e, and i literature parameters"
+  },
+  "candidates": [
+    {
+      "candidate_id": "PEC-Q2-tau_f-001",
+      "parameter_id": "tau_f",
+      "mathir_symbol": "tau_f",
+      "raw_value": "t approximately 2.3 s",
+      "normalized_value": 2.3,
+      "normalized_unit": "s",
+      "value_form": "SCALAR",
+      "source_kind": "PRIMARY_MEASUREMENT",
+      "evidence_status": "EXTRACTED_FULLTEXT",
+      "source": {
+        "doi": "10.3847/1538-4357/aaeaca",
+        "document_id": "SEARCH-Q2-TAU-F-2018",
+        "title": "beta-delayed Fission in r-process Nucleosynthesis",
+        "year": 2018,
+        "discovery_sources": ["openalex", "anysearch"],
+        "cross_validated": true
+      },
+      "evidence_locator": {
+        "document_type": "ar5iv_fulltext",
+        "section": "Results and discussion",
+        "table_or_figure": "Figure 4 discussion",
+        "page": null,
+        "quoted_text": "At about t approximately 2.3 s, beta-delayed fission becomes the primary fission channel while nuclei are decaying."
+      },
+      "conditions": {
+        "posterior_parameter": "abundance-weighted kinetic proxy",
+        "positive_timescale": true
+      },
+      "uncertainty": {
+        "reported": "approximately 2.3 s; no formal interval in the quoted passage"
+      },
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      }
+    },
+    {
+      "candidate_id": "PEC-Q2-M_ej-002",
+      "parameter_id": "M_ej",
+      "mathir_symbol": "M_ej",
+      "raw_value": "0.04 plus-or-minus 0.01 solar masses",
+      "normalized_value": 0.04,
+      "normalized_unit": "solar_mass",
+      "value_form": "SCALAR",
+      "source_kind": "PRIMARY_MEASUREMENT",
+      "evidence_status": "EXTRACTED_FULLTEXT",
+      "source": {
+        "doi": "10.1038/nature24303",
+        "document_id": "SEARCH-Q2-M-EJ-2017",
+        "title": "A kilonova as the electromagnetic counterpart to a gravitational-wave source",
+        "year": 2017,
+        "discovery_sources": ["openalex"],
+        "cross_validated": false
+      },
+      "evidence_locator": {
+        "document_type": "controlled_fulltext_document",
+        "section": "Ejecta mass estimate",
+        "table_or_figure": "",
+        "page": null,
+        "quoted_text": "an ejected mass of 0.04 plus-or-minus 0.01 M_sun"
+      },
+      "conditions": {
+        "posterior_parameter": "event ejecta-mass estimate used as a nuisance-parameter center",
+        "positive_mass": true
+      },
+      "uncertainty": {
+        "lower": 0.01,
+        "unit": "solar_mass"
+      },
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      }
+    },
+    {
+      "candidate_id": "PEC-Q2-Y_e-001",
+      "parameter_id": "Y_e",
+      "mathir_symbol": "Y_e",
+      "raw_value": "lower average electron fraction 0.16",
+      "normalized_value": 0.16,
+      "normalized_unit": "1",
+      "value_form": "SCALAR",
+      "source_kind": "PRIMARY_MEASUREMENT",
+      "evidence_status": "EXTRACTED_FULLTEXT",
+      "source": {
+        "doi": "10.1093/mnras/sty2932",
+        "document_id": "SEARCH-Q2-YE-2018",
+        "title": "Long-term GRMHD simulations of neutron star merger accretion discs: implications for electromagnetic counterparts",
+        "year": 2018,
+        "discovery_sources": ["openalex", "anysearch"],
+        "cross_validated": true
+      },
+      "evidence_locator": {
+        "document_type": "openalex_anysearch_abstract",
+        "section": "Abstract",
+        "table_or_figure": "",
+        "page": null,
+        "quoted_text": "a broad electron fraction distribution with a lower average value (0.16)"
+      },
+      "conditions": {
+        "posterior_parameter": "representative literature prior center",
+        "physically_admissible_electron_fraction": true
+      },
+      "uncertainty": {
+        "reported": "broad distribution; quoted value is the lower average, not a narrow posterior interval"
+      },
+      "transformation": {
+        "applied": false,
+        "formula": ""
+      }
+    },
+    {
+      "candidate_id": "PEC-Q2-i-001",
+      "parameter_id": "i",
+      "mathir_symbol": "i",
+      "raw_value": "32 plus 10 minus 13 degrees",
+      "normalized_value": 0.5585053606381855,
+      "normalized_unit": "rad",
+      "value_form": "SCALAR",
+      "source_kind": "PRIMARY_MEASUREMENT",
+      "evidence_status": "EXTRACTED_FULLTEXT",
+      "source": {
+        "doi": "10.3847/2041-8213/aac6c1",
+        "document_id": "SEARCH-Q2-INCLINATION-2018",
+        "title": "Measuring the Viewing Angle of GW170817 with Electromagnetic and Gravitational Waves",
+        "year": 2018,
+        "discovery_sources": ["openalex"],
+        "cross_validated": false
+      },
+      "evidence_locator": {
+        "document_type": "ar5iv_fulltext",
+        "section": "III Results",
+        "table_or_figure": "",
+        "page": null,
+        "quoted_text": "we find that the viewing angle is 32^{+10}_{-13} plus-or-minus 1.7 degrees (90% confidence, statistical, and systematic errors)."
+      },
+      "conditions": {
+        "posterior_parameter": "joint GW-EM Bayesian viewing-angle posterior",
+        "geometric_admissible_inclination": true
+      },
+      "uncertainty": {
+        "median_degrees": 32,
+        "lower_degrees": 13,
+        "upper_degrees": 10,
+        "systematic_degrees": 1.7
+      },
+      "transformation": {
+        "applied": true,
+        "formula": "32 deg * pi / 180 = 0.5585053606381855 rad"
+      }
+    }
+  ]
+}

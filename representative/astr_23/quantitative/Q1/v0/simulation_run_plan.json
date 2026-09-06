@@ -1,0 +1,242 @@
+{
+  "capability": {
+    "capability": "COMPOSABLE",
+    "kind": "PDE",
+    "reason": "The PDEIR is valid and has an approved fixed solver adapter.",
+    "solver_id": "pde_fd_diffusion_reaction_1d",
+    "solver_implementation_version": "pde-fixed-backends-v1",
+    "system_type": "DIFFUSION_REACTION_1D"
+  },
+  "empirical_claim_status": "NOT_EMPIRICAL",
+  "execution_ir": {
+    "document": {
+      "boundary_conditions": {
+        "left": {
+          "type": "NEUMANN_ZERO"
+        },
+        "right": {
+          "type": "DIRICHLET",
+          "value": {
+            "name": "u_outer",
+            "op": "variable"
+          }
+        }
+      },
+      "diffusion_coefficient": {
+        "args": [
+          {
+            "name": "D_effective",
+            "op": "variable"
+          },
+          {
+            "args": [
+              {
+                "name": "delta_r",
+                "op": "variable"
+              },
+              {
+                "name": "delta_r",
+                "op": "variable"
+              }
+            ],
+            "op": "div"
+          }
+        ],
+        "op": "mul"
+      },
+      "discretization": {
+        "grid_type": "UNIFORM",
+        "method": "FINITE_DIFFERENCE",
+        "space_order": 2
+      },
+      "fields": [
+        {
+          "bounds": {},
+          "id": "u",
+          "symbol": "u",
+          "unit": "kg m^-3"
+        }
+      ],
+      "grid": {
+        "nx": 105
+      },
+      "initial_condition": {
+        "profile": "UNIFORM",
+        "type": "ANALYTIC_PROFILE",
+        "value": 5.12186785866739e-14
+      },
+      "parameters": {
+        "D_effective": 1e+18,
+        "R_domain": 5180413674240.0,
+        "delta_r": 50000000000.0,
+        "delta_t": 100.0,
+        "t_end": 864000.0,
+        "tau_f": 2.3,
+        "u_initial": 5.12186785866739e-14,
+        "u_outer": 0.0,
+        "v_ejecta": 59958491.6
+      },
+      "reaction": {
+        "args": [
+          {
+            "args": [
+              {
+                "args": [
+                  {
+                    "args": [
+                      {
+                        "name": "u_initial",
+                        "op": "variable"
+                      },
+                      {
+                        "name": "delta_t",
+                        "op": "variable"
+                      }
+                    ],
+                    "op": "div"
+                  },
+                  {
+                    "args": [
+                      {
+                        "args": [
+                          {
+                            "args": [
+                              {
+                                "name": "t",
+                                "op": "variable"
+                              }
+                            ],
+                            "op": "neg"
+                          },
+                          {
+                            "name": "tau_f",
+                            "op": "variable"
+                          }
+                        ],
+                        "op": "div"
+                      }
+                    ],
+                    "op": "exp"
+                  }
+                ],
+                "op": "mul"
+              },
+              {
+                "args": [
+                  {
+                    "name": "t_end",
+                    "op": "variable"
+                  },
+                  {
+                    "name": "t_end",
+                    "op": "variable"
+                  }
+                ],
+                "op": "div"
+              }
+            ],
+            "op": "mul"
+          },
+          {
+            "args": [
+              {
+                "name": "u",
+                "op": "field"
+              },
+              {
+                "args": [
+                  {
+                    "name": "v_ejecta",
+                    "op": "variable"
+                  },
+                  {
+                    "name": "R_domain",
+                    "op": "variable"
+                  }
+                ],
+                "op": "div"
+              }
+            ],
+            "op": "mul"
+          }
+        ],
+        "op": "sub"
+      },
+      "schema_version": "pdeir_v1",
+      "solver_options": {
+        "time_integrator": "EXPLICIT_EULER",
+        "time_step": 100.0
+      },
+      "spatial_dimension": 1,
+      "spatial_domain": {
+        "x": [
+          0.0,
+          5180413674240.0
+        ]
+      },
+      "system_type": "DIFFUSION_REACTION_1D",
+      "time_span": [
+        0.0,
+        864000.0
+      ]
+    },
+    "kind": "PDE",
+    "schema_version": "execution_ir_v1"
+  },
+  "execution_mode": "NUMERICAL_SIMULATION",
+  "model_identity": {
+    "created_from_artifact": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/quantitative_ideas_manifest.json",
+    "model_spec_identity": "9c50fb799c4fb31cdd57905dc4fb14fc3a06173ea6363f60243660422b829916",
+    "parameter_set_identity": "8dd7a4bea03faa204d37b8fd38bf995e22672f0964d57af785767954ed827f3e",
+    "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "project_id": "sci_260905_008_survey_001",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "260905-008",
+    "selected_direction_id": "premise_inversion",
+    "survey_run_id": "260905-008-survey-001",
+    "version": "0"
+  },
+  "parameter_provenance": {
+    "allowed_scenario_parameter_ids": [
+      "R_domain",
+      "u_initial",
+      "v_ejecta"
+    ],
+    "mode": "APPROVED_PARAMETER_SET",
+    "parameter_set_identity": "8dd7a4bea03faa204d37b8fd38bf995e22672f0964d57af785767954ed827f3e",
+    "parameter_set_manifest": {
+      "path": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/quantitative/Q1/parameter_evidence/v0/approved_parameter_set_manifest.json",
+      "sha256": "07ccab9734e1f2223f9638e19fdba4aecb43e4cc91adebf0c3b5b56e9cc1920e"
+    }
+  },
+  "plan_identity": "6362bdbb40e68251393b918ec0aa13822e66c18e317a7b7b51ee46cb2a383eb2",
+  "qualification_requirements": [
+    "explicit_stability"
+  ],
+  "resource_limits": {
+    "atol": 1e-09,
+    "max_cells": 100000,
+    "max_fields": 8,
+    "max_grid_points": 512,
+    "max_matrix_nonzeros": 200000,
+    "max_matrix_size": 20000,
+    "max_memory_mb": 512,
+    "max_nx": 4096,
+    "max_ny": 1024,
+    "max_nz": 128,
+    "max_output_points": 2000,
+    "max_pde_snapshots": 200,
+    "max_samples": 100000,
+    "max_time_steps": 20000,
+    "max_wall_seconds": 120,
+    "rtol": 1e-06
+  },
+  "result_kind": "SIMULATED",
+  "scenarios": [
+    {
+      "parameter_overrides": {},
+      "scenario_id": "baseline"
+    }
+  ],
+  "schema_version": "simulation_run_plan_v1"
+}

@@ -1,0 +1,466 @@
+{
+  "abstract": "An executable scalar Monte Carlo posterior-proxy model for the fission neutron release timescale tau_f. The run samples tau_f together with ejecta mass, electron fraction, and inclination nuisance priors using the approved Q2 parameter values. The current trusted adapter reports the sampled tau_f observable and does not claim a full hierarchical likelihood, Markov-chain diagnostic, or empirical posterior.",
+  "algorithm": {
+    "input": [
+      "tau_f prior",
+      "M_ej prior",
+      "Y_e prior",
+      "i prior",
+      "approved parameter set"
+    ],
+    "output": [
+      "sample count",
+      "mean tau_f",
+      "standard deviation of tau_f",
+      "minimum tau_f",
+      "maximum tau_f"
+    ],
+    "steps": [
+      "Initialize the deterministic random generator from the integer seed.",
+      "Draw 10000 independent samples from the four declared bounded prior distributions.",
+      "Evaluate the scalar observable z=tau_f for every draw.",
+      "Report bounded summary statistics for the sampled tau_f values."
+    ]
+  },
+  "assumptions": [
+    {
+      "assumption_id": "Q2-A-001",
+      "effect_if_violated": "The sampled fission-timescale sensitivity range changes.",
+      "statement": "The approved tau_f value of 2.3 s is used as the center of a positive bounded sensitivity prior from 1.15 s to 3.45 s."
+    },
+    {
+      "assumption_id": "Q2-A-002",
+      "effect_if_violated": "The nuisance ejecta-mass prior changes.",
+      "statement": "The approved ejecta-mass value of 0.04 solar_mass is represented by a positive bounded interval from 0.03 to 0.05 solar_mass."
+    },
+    {
+      "assumption_id": "Q2-A-003",
+      "effect_if_violated": "The neutron-richness nuisance prior changes.",
+      "statement": "The approved electron-fraction value of 0.16 is represented by a broad physically admissible interval from 0.08 to 0.24."
+    },
+    {
+      "assumption_id": "Q2-A-004",
+      "effect_if_violated": "The viewing-angle nuisance prior changes.",
+      "statement": "The approved inclination value is represented by the converted 19 to 42 degree interval in radians."
+    },
+    {
+      "assumption_id": "Q2-A-005",
+      "effect_if_violated": "The result would no longer be the scalar tau_f posterior proxy defined by this model.",
+      "statement": "The current executable observable is the sampled tau_f value; nuisance variables are retained as declared prior variables for later likelihood extension."
+    }
+  ],
+  "boundary_conditions": [
+    "No spatial boundary conditions apply to this zero-dimensional Monte Carlo sampler."
+  ],
+  "equations": [
+    {
+      "equation_id": "Q2-EQ-001",
+      "latex": "z=\\tau_f",
+      "role": "OBSERVABLE_DEFINITION",
+      "where_symbol_ids": [
+        "Q2-S-001"
+      ]
+    },
+    {
+      "equation_id": "Q2-EQ-002",
+      "latex": "p(\\tau_f,M_{ej},Y_e,i)=p(\\tau_f)p(M_{ej})p(Y_e)p(i)",
+      "role": "PRIOR_FACTORISATION",
+      "where_symbol_ids": [
+        "Q2-S-001",
+        "Q2-S-002",
+        "Q2-S-003",
+        "Q2-S-004"
+      ]
+    }
+  ],
+  "initial_conditions": [
+    "The zero-dimensional sampler is initialized by drawing each declared random variable from its validated prior distribution."
+  ],
+  "limitations": [
+    "The current trusted adapter evaluates a scalar observable and does not implement a full likelihood.",
+    "The declared N_chains and N_temperatures controls are retained for provenance but are not independently executed by the standard adapter.",
+    "The output is a numerical simulation result and not empirical evidence.",
+    "The nuisance priors are sampled but are not combined through a multi-messenger likelihood in this adapter."
+  ],
+  "lineage": {
+    "created_from_artifact": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "project_id": "sci_260905_008_survey_001",
+    "quantitative_idea_id": "Q2",
+    "science_run_id": "260905-008",
+    "selected_direction_id": "premise_inversion",
+    "survey_run_id": "260905-008-survey-001",
+    "version": 0
+  },
+  "mathir": {
+    "observable": {
+      "name": "tau_f",
+      "op": "variable"
+    },
+    "parameters": {
+      "M_ej": 0.04,
+      "N_chains": 4.0,
+      "N_samples": 10000.0,
+      "N_temperatures": 8.0,
+      "Y_e": 0.16,
+      "i": 0.5585053606381855,
+      "tau_f": 2.3
+    },
+    "random_variables": [
+      {
+        "distribution": "uniform",
+        "id": "tau_f",
+        "parameters": {
+          "high": 3.45,
+          "low": 1.15
+        }
+      },
+      {
+        "distribution": "uniform",
+        "id": "M_ej",
+        "parameters": {
+          "high": 0.05,
+          "low": 0.03
+        }
+      },
+      {
+        "distribution": "uniform",
+        "id": "Y_e",
+        "parameters": {
+          "high": 0.24,
+          "low": 0.08
+        }
+      },
+      {
+        "distribution": "uniform",
+        "id": "i",
+        "parameters": {
+          "high": 0.7330382858376184,
+          "low": 0.33161255787892263
+        }
+      }
+    ],
+    "samples": 10000,
+    "schema_version": "mathir_v1",
+    "seed": 260905008,
+    "system_type": "MONTE_CARLO"
+  },
+  "model_scope": "A bounded zero-dimensional Monte Carlo posterior-proxy calculation for one kilonova event. The full multi-event hierarchical likelihood, parallel tempering, Bayes-factor estimation, and catalogue-level population aggregation remain outside the current trusted solver.",
+  "numerical_plan": {
+    "convergence_checks": [
+      "sample_count_bound",
+      "repeat the run with a larger sample count outside the current fixed approved baseline"
+    ],
+    "discretization": "independent bounded prior sampling",
+    "solver_family": "MONTE_CARLO"
+  },
+  "objective_and_constraints": [
+    "Estimate the scalar sampled distribution of tau_f under the declared bounded nuisance-prior setup."
+  ],
+  "parameter_provenance": {
+    "entries": [
+      {
+        "conditions": {
+          "positive_timescale": true,
+          "posterior_parameter": "abundance-weighted kinetic proxy",
+          "required_condition_1": "posterior_parameter",
+          "required_condition_2": "positive_timescale"
+        },
+        "evidence_locator": {
+          "document_type": "ar5iv_fulltext",
+          "page": null,
+          "quoted_text": "At about t approximately 2.3 s, beta-delayed fission becomes the primary fission channel while nuclei are decaying.",
+          "section": "Results and discussion",
+          "table_or_figure": "Figure 4 discussion"
+        },
+        "mathir_symbol": "tau_f",
+        "parameter_id": "tau_f",
+        "provenance_status": "APPROVED_LITERATURE_SINGLE_SOURCE",
+        "role": "MATERIAL_PROPERTY",
+        "selected_value": 2.3,
+        "selection_rationale": "Use the literature timescale at which beta-delayed fission becomes the primary fission channel; treat it as an abundance-weighted kinetic proxy rather than an isotope-specific half-life.",
+        "source": {
+          "cross_validated": true,
+          "discovery_sources": [
+            "openalex",
+            "anysearch"
+          ],
+          "document_id": "SEARCH-Q2-TAU-F-2018",
+          "doi": "10.3847/1538-4357/aaeaca",
+          "title": "beta-delayed Fission in r-process Nucleosynthesis",
+          "year": 2018
+        },
+        "transformation": {
+          "applied": false,
+          "formula": ""
+        },
+        "uncertainty": {
+          "reported": "approximately 2.3 s; no formal interval in the quoted passage"
+        },
+        "unit": "s"
+      },
+      {
+        "conditions": {
+          "positive_mass": true,
+          "posterior_parameter": "event ejecta-mass estimate used as a nuisance-parameter center",
+          "required_condition_1": "posterior_parameter",
+          "required_condition_2": "positive_mass"
+        },
+        "evidence_locator": {
+          "document_type": "controlled_fulltext_document",
+          "page": null,
+          "quoted_text": "an ejected mass of 0.04 plus-or-minus 0.01 M_sun",
+          "section": "Ejecta mass estimate",
+          "table_or_figure": ""
+        },
+        "mathir_symbol": "M_ej",
+        "parameter_id": "M_ej",
+        "provenance_status": "APPROVED_LITERATURE_SINGLE_SOURCE",
+        "role": "SCENARIO_INPUT",
+        "selected_value": 0.04,
+        "selection_rationale": "Use the GW170817 ejecta-mass estimate reported in the primary observational study.",
+        "source": {
+          "cross_validated": false,
+          "discovery_sources": [
+            "openalex"
+          ],
+          "document_id": "SEARCH-Q2-M-EJ-2017",
+          "doi": "10.1038/nature24303",
+          "title": "A kilonova as the electromagnetic counterpart to a gravitational-wave source",
+          "year": 2017
+        },
+        "transformation": {
+          "applied": false,
+          "formula": ""
+        },
+        "uncertainty": {
+          "lower": 0.01,
+          "unit": "solar_mass"
+        },
+        "unit": "solar_mass"
+      },
+      {
+        "conditions": {
+          "physically_admissible_electron_fraction": true,
+          "posterior_parameter": "representative literature prior center",
+          "required_condition_1": "posterior_parameter",
+          "required_condition_2": "physically_admissible_electron_fraction"
+        },
+        "evidence_locator": {
+          "document_type": "openalex_anysearch_abstract",
+          "page": null,
+          "quoted_text": "a broad electron fraction distribution with a lower average value (0.16)",
+          "section": "Abstract",
+          "table_or_figure": ""
+        },
+        "mathir_symbol": "Y_e",
+        "parameter_id": "Y_e",
+        "provenance_status": "APPROVED_LITERATURE_SINGLE_SOURCE",
+        "role": "SCENARIO_INPUT",
+        "selected_value": 0.16,
+        "selection_rationale": "Use the representative lower-average electron fraction reported by the merger-disc GRMHD model as the literature prior center; retain the broad-distribution caveat.",
+        "source": {
+          "cross_validated": true,
+          "discovery_sources": [
+            "openalex",
+            "anysearch"
+          ],
+          "document_id": "SEARCH-Q2-YE-2018",
+          "doi": "10.1093/mnras/sty2932",
+          "title": "Long-term GRMHD simulations of neutron star merger accretion discs: implications for electromagnetic counterparts",
+          "year": 2018
+        },
+        "transformation": {
+          "applied": false,
+          "formula": ""
+        },
+        "uncertainty": {
+          "reported": "broad distribution; quoted value is the lower average, not a narrow posterior interval"
+        },
+        "unit": "1"
+      },
+      {
+        "conditions": {
+          "geometric_admissible_inclination": true,
+          "posterior_parameter": "joint GW-EM Bayesian viewing-angle posterior",
+          "required_condition_1": "posterior_parameter",
+          "required_condition_2": "geometric_admissible_inclination"
+        },
+        "evidence_locator": {
+          "document_type": "ar5iv_fulltext",
+          "page": null,
+          "quoted_text": "we find that the viewing angle is 32^{+10}_{-13} plus-or-minus 1.7 degrees (90% confidence, statistical, and systematic errors).",
+          "section": "III Results",
+          "table_or_figure": ""
+        },
+        "mathir_symbol": "i",
+        "parameter_id": "i",
+        "provenance_status": "APPROVED_LITERATURE_SINGLE_SOURCE",
+        "role": "SCENARIO_INPUT",
+        "selected_value": 0.5585053606381855,
+        "selection_rationale": "Use the joint GW-EM viewing-angle median of 32 degrees after conversion to the requested radian execution unit.",
+        "source": {
+          "cross_validated": false,
+          "discovery_sources": [
+            "openalex"
+          ],
+          "document_id": "SEARCH-Q2-INCLINATION-2018",
+          "doi": "10.3847/2041-8213/aac6c1",
+          "title": "Measuring the Viewing Angle of GW170817 with Electromagnetic and Gravitational Waves",
+          "year": 2018
+        },
+        "transformation": {
+          "applied": true,
+          "formula": "32 deg * pi / 180 = 0.5585053606381855 rad"
+        },
+        "uncertainty": {
+          "lower_degrees": 13.0,
+          "median_degrees": 32.0,
+          "systematic_degrees": 1.7,
+          "upper_degrees": 10.0
+        },
+        "unit": "rad"
+      },
+      {
+        "conditions": {
+          "required_condition_1": "solver_control"
+        },
+        "evidence_locator": {},
+        "mathir_symbol": "N_samples",
+        "parameter_id": "n_mcmc_samples",
+        "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+        "role": "MODEL_ASSUMPTION",
+        "selected_value": 10000.0,
+        "selection_rationale": "Human-reviewed Monte Carlo sample-count baseline for the Q2 posterior run.",
+        "source": {},
+        "transformation": {
+          "applied": false,
+          "formula": ""
+        },
+        "uncertainty": {},
+        "unit": "1"
+      },
+      {
+        "conditions": {
+          "required_condition_1": "solver_control"
+        },
+        "evidence_locator": {},
+        "mathir_symbol": "N_chains",
+        "parameter_id": "n_chains",
+        "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+        "role": "MODEL_ASSUMPTION",
+        "selected_value": 4.0,
+        "selection_rationale": "Human-reviewed number of independent chains for convergence diagnostics.",
+        "source": {},
+        "transformation": {
+          "applied": false,
+          "formula": ""
+        },
+        "uncertainty": {},
+        "unit": "1"
+      },
+      {
+        "conditions": {
+          "required_condition_1": "solver_control"
+        },
+        "evidence_locator": {},
+        "mathir_symbol": "N_temperatures",
+        "parameter_id": "n_tempering_levels",
+        "provenance_status": "APPROVED_MODEL_ASSUMPTION",
+        "role": "MODEL_ASSUMPTION",
+        "selected_value": 8.0,
+        "selection_rationale": "Human-reviewed parallel-tempering level baseline.",
+        "source": {},
+        "transformation": {
+          "applied": false,
+          "formula": ""
+        },
+        "uncertainty": {},
+        "unit": "1"
+      }
+    ],
+    "mode": "APPROVED_PARAMETER_SET",
+    "parameter_set_identity": "a5e0912a88039b2cfdeebd2803aee0f02f55493c372243dfd3a461294867eb1e"
+  },
+  "parameterization": [
+    "The execution parameter object must contain exactly tau_f=2.3, M_ej=0.04, Y_e=0.16, i=0.5585053606381855, N_samples=10000, N_chains=4, and N_temperatures=8.",
+    "The random-variable sensitivity bounds are explicit model assumptions and are numeric literals required by the trusted sampler."
+  ],
+  "references": [
+    "doi:10.3847/1538-4357/aaeaca",
+    "doi:10.1038/nature24303",
+    "doi:10.1093/mnras/sty2932",
+    "doi:10.3847/2041-8213/aac6c1"
+  ],
+  "scenarios": [
+    "baseline"
+  ],
+  "schema_version": "ieee_math_model_v1",
+  "scientific_question": "What is the posterior probability distribution of the fission neutron release timescale when gravitational-wave, kilonova photometric, and spectroscopic abundance constraints are combined?",
+  "symbols": [
+    {
+      "dimension": "time",
+      "latex": "\\tau_f",
+      "meaning": "Fission neutron release timescale",
+      "role": "MATERIAL_PROPERTY",
+      "symbol_id": "Q2-S-001",
+      "unit": "s"
+    },
+    {
+      "dimension": "mass",
+      "latex": "M_{ej}",
+      "meaning": "Kilonova ejecta mass nuisance parameter",
+      "role": "SCENARIO_INPUT",
+      "symbol_id": "Q2-S-002",
+      "unit": "solar_mass"
+    },
+    {
+      "dimension": "dimensionless",
+      "latex": "Y_e",
+      "meaning": "Electron fraction nuisance parameter",
+      "role": "SCENARIO_INPUT",
+      "symbol_id": "Q2-S-003",
+      "unit": "1"
+    },
+    {
+      "dimension": "angle",
+      "latex": "i",
+      "meaning": "Binary inclination angle",
+      "role": "SCENARIO_INPUT",
+      "symbol_id": "Q2-S-004",
+      "unit": "rad"
+    },
+    {
+      "dimension": "count",
+      "latex": "N_{samples}",
+      "meaning": "Monte Carlo sample count",
+      "role": "MODEL_ASSUMPTION",
+      "symbol_id": "Q2-S-005",
+      "unit": "1"
+    },
+    {
+      "dimension": "count",
+      "latex": "N_{chains}",
+      "meaning": "Declared independent-chain control",
+      "role": "MODEL_ASSUMPTION",
+      "symbol_id": "Q2-S-006",
+      "unit": "1"
+    },
+    {
+      "dimension": "count",
+      "latex": "N_{temperatures}",
+      "meaning": "Declared tempering-level control",
+      "role": "MODEL_ASSUMPTION",
+      "symbol_id": "Q2-S-007",
+      "unit": "1"
+    }
+  ],
+  "title": "Hierarchical Bayesian Inference of Fission Timescales from Multi-Messenger Kilonova Constraints",
+  "validation_plan": [
+    "Verify that the sample count is an integer between 1 and 100000.",
+    "Verify that every distribution bound is finite and ordered.",
+    "Verify that all observable values are finite.",
+    "Verify that the execution parameter object exactly matches the approved parameter set."
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "artifacts": {
+    "claim_traceability": {
+      "path": "survey_claim_traceability.json",
+      "required": true,
+      "sha256": "8f45a6740f4e221002e0a9de6f6869ebe78b68873bc7ff95f4ff8abd56f9f8e8"
+    },
+    "evidence_plan": {
+      "path": "survey_evidence_plan.json",
+      "required": true,
+      "sha256": "40e09dab6b394632826909f4c8f103bef7ddef98ccf53e289ebb86a78f6410e3"
+    },
+    "gap_candidates": {
+      "path": "survey_gap_candidates.json",
+      "required": false,
+      "sha256": "e2b8bf57cfa4a737578b42da446fa426ac0e1c1ed4f07297905b3b6c1b0bac7a"
+    },
+    "gap_coverage": {
+      "path": "survey_gap_coverage.json",
+      "required": false,
+      "sha256": "ab10b4b320f6c8c59fde95348c92e0c13b92aabd66e8e5da954e187ab6970f85"
+    },
+    "gap_ledger": {
+      "path": "survey_gap_ledger.json",
+      "required": true,
+      "sha256": "6b90fa6619bbef62e426ae2cf142755aaad9233b09f3771f62971a58b24ec1eb"
+    },
+    "gap_triage": {
+      "path": "survey_gap_triage.json",
+      "required": false,
+      "sha256": "944cbb1201669b4c141b1a36ecd872e2af038a5f0be4baf061b43061696651b2"
+    },
+    "idea_handoff": {
+      "path": "survey_idea_handoff.json",
+      "required": true,
+      "sha256": "1c802c6ac2be99b44d71484b8bb9a229b15c25d7d5136461b3689da3f96e3cfb"
+    },
+    "project_context": {
+      "path": "project_context.json",
+      "required": true,
+      "sha256": "661d91cd3458220e64741d3c49c698ef9a133c702c740d1eff4b0eff0bb77133"
+    },
+    "survey_json": {
+      "path": "survey.json",
+      "required": true,
+      "sha256": "f2a4f7b303fee40f240a5d05825b28c253275aa7ed11367922510014f961891b"
+    },
+    "survey_markdown": {
+      "path": "survey.md",
+      "required": true,
+      "sha256": "c2fd4a5f4276ffd03c4f2c68cc0c5a27143e989feffdb6603033627f3a3a7531"
+    },
+    "survey_outline": {
+      "path": "survey_outline.json",
+      "required": false,
+      "sha256": "f874ab55fc54d766276153a26e674319613b1c9e3c63aadee2fb990df2aaa79b"
+    }
+  },
+  "base_dir": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/survey/attempt-001",
+  "completed_at": "2026-09-05T12:03:53Z",
+  "created_at": "2026-09-05T12:03:53Z",
+  "gap_ledger_schema_version": "survey_gap_ledger_v1",
+  "handoff_schema_version": "survey_idea_handoff_v1",
+  "manifest_fingerprint": "b751c973d4406879133291698602d3bda9f2a40d94098ad22e554314eee16cef",
+  "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+  "project_id": "sci_260905_008_survey_001",
+  "schema_version": "survey_manifest_v1",
+  "status": "completed",
+  "survey_run_id": "260905-008-survey-001",
+  "topic": "Where do the heavy elements in the universe come from? The origins of heavy elements (which have an atomic  number of 92 or higher) and superheavy elements (with  an atomic number of at least 112) are still somewhat of  a mystery to scientists. We have been able to produce  some heavy elements in experiments that take place  in reactors, and artificially produce heavy elements in  cyclotrons. But beyond those produced on terra firma,  what is the origin story of heavy elements? We turn to astrophysics for our answer. We know  that the light elements, such as hydrogen, helium, and  lithium, were formed at the dawn of the universe by the  Big Bang. Elements as heavy as iron (atomic number  26) are the product of fusion in the cores of stars. The  higher the atomic number, the more force is needed  to create the element, and indeed, gallium (31) and  bromine (35) need a huge celestial event, such as a  supernova. Another astrophysical process, the rapid  neutron-capture process (r-process), entails neutrons  being quickly added to an atom’s nucleus; this process  is responsible for many of the elements heavier than  iron, such as gold and uranium.    One potential source for heavy elements was recently  confirmed: In 2019, an international team of researchers  reported that neutron stars may be a significant  source. The scientists examined a kilonova (neutron  star merger) 140 million light-years from Earth, which  they were able to observe through the detection of the  merger’s gravitational waves. What they saw was incredibly exciting. As Science  reporter Daniel Clery notes, “Computer modeling  revealed that strontium [atomic number 38] in  the expanding ball of gas would absorb light at  wavelengths of 350 and 850 nanometers. When they  looked again at the X-shooter spectra, they found dips  in the spectra at those wavelengths. The end result: five  Earth masses worth of strontium.” The presence of strontium confirms that heavy  elements are created by neutron star mergers and  other cataclysmic astrophysical events. The work was  additionally important because it marked the first time  that scientists were able to see an individual element in  a kilonova’s aftermath.",
+  "topic_fingerprint": "d9ebcaf576abd46b1589e84d12a02786d961905f19ec4de4b1a9050006c03e43"
+}

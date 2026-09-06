@@ -1,0 +1,1917 @@
+{
+  "candidates": [
+    {
+      "candidate_index": 0,
+      "dimension_reports": [
+        {
+          "dimension": "Synthesis Quality",
+          "evidence": [
+            {
+              "assessment": "This clearly articulates the synthesis gap the proposal aims to fill, moving beyond listing papers to identifying a structural absence in the field.",
+              "block_id": "intro-gap-1",
+              "excerpt": "Existing literature lacks a formal framework to discriminate between kinematic fission delays and purely geometric confounders",
+              "section_id": "introduction"
+            },
+            {
+              "assessment": "Demonstrates conceptual synthesis by reframing the problem from empirical deficit to theoretical architecture need.",
+              "block_id": "gap_definition",
+              "excerpt": "The gap is not merely a deficit in observational data, but a structural absence of a theoretical control panel",
+              "section_id": "survey_and_research_gap"
+            },
+            {
+              "assessment": "Shows integration of multiple physical concepts (fission timescale, expansion timescale) into a unified formal construct, though definitions remain unresolved.",
+              "block_id": "block-2",
+              "excerpt": "Let the kinematic decoupling ratio be the dimensionless quantity R = V1/V2",
+              "section_id": "formal_problem_and_hypotheses"
+            }
+          ],
+          "grounding_warnings": [
+            "evidence[4].excerpt is not found in its referenced block and was discarded"
+          ],
+          "major_weaknesses": [
+            {
+              "description": "The synthesis is structurally incomplete because all core operational definitions (V1-V9) remain unresolved and marked as 'needs_human_input', preventing the theoretical framework from achieving closure. While the conceptual architecture is sound, the inability to specify the mathematical content of the central variables means the synthesis exists at the level of formal placeholders rather than integrated theory.",
+              "evidence_refs": [
+                {
+                  "block_id": "def_ledger",
+                  "section_id": "definitions_and_propositions"
+                },
+                {
+                  "block_id": "block-2",
+                  "section_id": "formal_problem_and_hypotheses"
+                }
+              ],
+              "impact": "The proposal reads as a well-structured skeleton awaiting flesh, which undermines the claim of having achieved full conceptual synthesis. Readers cannot assess whether the proposed unification is internally consistent or physically realizable without the missing definitions.",
+              "location_status": "located",
+              "repair_direction": "Prioritize resolving the definition ledger entries by either supplying candidate closed-form expressions for V1-V9 or explicitly demonstrating why these must remain open. If the latter, reframe the contribution as a 'formal design specification' rather than a 'mathematical theory' to set appropriate expectations. Consider adding a subsection that sketches plausible functional forms for the timescales based on existing nuclear physics literature, even if approximate.",
+              "severity": "major"
+            },
+            {
+              "description": "The literature survey, while comprehensive in establishing the physical context, does not explicitly map specific prior findings onto the proposed formal variables. The connection between existing empirical observations (e.g., GW170817 light curves, AT2017gfo spectral features) and the candidate theorem's predictions remains implicit rather than demonstrated through direct synthesis of prior results with the proposed framework.",
+              "evidence_refs": [
+                {
+                  "block_id": "bg_rprocess_site",
+                  "section_id": "survey_and_research_gap"
+                },
+                {
+                  "block_id": "b1",
+                  "section_id": "appendix_evidence_and_review"
+                }
+              ],
+              "impact": "This weakens the claim that the proposal builds on and extends existing knowledge, making it appear somewhat disconnected from the empirical foundation it claims to address. The synthesis would be stronger if specific observational constraints were shown to map onto the V1-V7 variable space.",
+              "location_status": "located",
+              "repair_direction": "Add explicit mapping statements in the survey section that connect specific observational findings to the proposed formal variables. For example, show how AT2017gfo's viewing-angle-dependent spectral evolution constrains V7, or how inferred ejecta expansion rates inform V2. This would ground the abstract formalism in concrete empirical anchors.",
+              "severity": "moderate"
+            }
+          ],
+          "maximum_strength": {
+            "description": "The manuscript achieves genuine conceptual integration by proposing a unified kinematic decoupling framework that connects microphysical nuclear timescales (beta-decay, isomeric states) to macroscopic electromagnetic signatures (spectral evolution, lanthanide curtaining). The identification of a 'theoretical control panel' gap—distinguishing kinematic delays from geometric confounders—demonstrates synthesis beyond literature enumeration. The formalization of the timescale competition (R = V1/V2) as the central organizing principle shows how multiple disparate phenomena can be grouped under a single mechanistic hypothesis.",
+            "evidence_refs": [
+              {
+                "block_id": "gap_definition",
+                "section_id": "survey_and_research_gap"
+              },
+              {
+                "block_id": "block-2",
+                "section_id": "formal_problem_and_hypotheses"
+              },
+              {
+                "block_id": "intro-contrib-1",
+                "section_id": "introduction"
+              }
+            ],
+            "location_status": "located",
+            "present": true
+          },
+          "polish_directions": [
+            {
+              "direction": "Resolve or explicitly justify the 'needs_human_input' status of core variables by providing candidate functional forms or demonstrating why closure is impossible at this stage",
+              "expected_gain": "Transforms the synthesis from a placeholder framework into a testable theoretical structure, enabling readers to assess internal consistency and physical plausibility",
+              "priority": 1
+            },
+            {
+              "direction": "Add explicit mapping between observational constraints (GW170817, AT2017gfo) and the proposed formal variables V1-V7 in the survey section",
+              "expected_gain": "Grounds the abstract formalism in empirical reality, strengthening the claim that the proposal synthesizes and extends existing knowledge rather than operating in isolation",
+              "priority": 2
+            },
+            {
+              "direction": "Reduce repetition of 'no-information' and 'unverified' disclaimers by consolidating them into a single methodological transparency section, allowing the main narrative to flow more coherently",
+              "expected_gain": "Improves narrative coherence and readability while maintaining honesty about the proposal's provisional status",
+              "priority": 3
+            }
+          ],
+          "rationale": "The manuscript demonstrates strong conceptual synthesis by unifying fission recycling kinetics, third r-process peak shifts, and lanthanide curtaining under a single kinematic decoupling framework. It moves beyond mere enumeration by identifying a specific theoretical gap—the lack of formal discrimination between kinematic delays and geometric confounders—and proposing a structured axiomatic approach to address it. The integration of timescale competition (V1 vs V2) with spectral evolution metrics shows genuine conceptual grouping. However, the synthesis is weakened by the unresolved status of core definitions (V1-V9 all marked 'needs_human_input'), which prevents the framework from achieving full theoretical closure. The repeated acknowledgment of 'no-information' branches and procedural dependencies, while honest, fragments the narrative coherence. The literature survey effectively establishes the physical context but could more explicitly connect specific prior findings to the proposed formal variables.",
+          "score": 7
+        },
+        {
+          "dimension": "Organization",
+          "evidence": [
+            {
+              "assessment": "Core contribution statement is introduced here but repeated nearly verbatim in multiple subsequent sections, diluting impact and disrupting flow.",
+              "block_id": "intro-contrib-1",
+              "excerpt": "This research plan proposes a mathematical theory of kinematic decoupling in fission recycling.",
+              "section_id": "introduction"
+            },
+            {
+              "assessment": "Background material is restated almost identically from the Introduction and Survey sections, creating redundancy rather than building on prior context.",
+              "block_id": "rq_background",
+              "excerpt": "Binary neutron star mergers synthesize heavy elements through the rapid neutron-capture process",
+              "section_id": "research_questions_and_contributions"
+            },
+            {
+              "assessment": "Domain and premise set are re-established here despite being defined in the Introduction and Study Design, suggesting poor section boundaries.",
+              "block_id": "block-1",
+              "excerpt": "The formal problem is posed for high-entropy, low-density ejecta trajectories in binary neutron-star mergers",
+              "section_id": "formal_problem_and_hypotheses"
+            }
+          ],
+          "grounding_warnings": [
+            "evidence[5].excerpt is not found in its referenced block and was discarded"
+          ],
+          "major_weaknesses": [
+            {
+              "description": "Extreme redundancy across sections: the same hypothesis, assumptions, and failure boundaries are restated verbatim in at least six different sections.",
+              "evidence_refs": [
+                {
+                  "block_id": "intro-contrib-1",
+                  "section_id": "introduction"
+                },
+                {
+                  "block_id": "rq_background",
+                  "section_id": "research_questions_and_contributions"
+                },
+                {
+                  "block_id": "block-1",
+                  "section_id": "formal_problem_and_hypotheses"
+                }
+              ],
+              "impact": "Readers cannot follow a progressive argument; the manuscript reads as a collection of parallel summaries rather than a coherent narrative, making it difficult to identify what is new in each section.",
+              "location_status": "located",
+              "repair_direction": "Consolidate repeated material into single authoritative locations. Use forward references (e.g., 'as defined in Section X') instead of restating content. Each section should build on prior sections rather than re-introduce them.",
+              "severity": "major"
+            },
+            {
+              "description": "The energy conditions appendix introduces material that is not motivated or referenced in the main text.",
+              "evidence_refs": [
+                {
+                  "block_id": "B1",
+                  "section_id": "appendix_variables_and_definitions"
+                }
+              ],
+              "impact": "Readers are left wondering why this defense is necessary, creating a disconnect between the main argument and the appendices.",
+              "location_status": "located",
+              "repair_direction": "Either integrate the energy conditions discussion into the main text where the boundary defense is first needed, or remove it entirely if it is not essential to the core argument.",
+              "severity": "moderate"
+            },
+            {
+              "description": "Section boundaries are poorly defined, with overlapping content between Introduction, Background/Survey, Research Questions, and Problem Definition.",
+              "evidence_refs": [
+                {
+                  "block_id": "intro-bg-1",
+                  "section_id": "introduction"
+                },
+                {
+                  "block_id": "bg_rprocess_site",
+                  "section_id": "survey_and_research_gap"
+                }
+              ],
+              "impact": "The logical flow is disrupted as readers encounter the same material in different contexts without clear progression.",
+              "location_status": "located",
+              "repair_direction": "Establish clear section purposes: Introduction (motivation and gap), Background (established knowledge), Problem Definition (formal framework), Methods (how the framework will be operationalized). Remove overlapping content and use cross-references.",
+              "severity": "moderate"
+            }
+          ],
+          "maximum_strength": {
+            "description": "The use of structured decision matrices and explicit proof obligation registries provides clear conditional reasoning and traceability of dependencies.",
+            "evidence_refs": [
+              {
+                "block_id": "decision_matrix",
+                "section_id": "expected_outcomes"
+              },
+              {
+                "block_id": "po_registry",
+                "section_id": "definitions_and_propositions"
+              }
+            ],
+            "location_status": "located",
+            "present": true
+          },
+          "polish_directions": [
+            {
+              "direction": "Create a single authoritative statement of the core hypothesis, assumptions, and failure boundaries in the Problem Definition section, and replace all other restatements with forward references.",
+              "expected_gain": "Eliminates redundancy and allows each section to build progressively on prior material, significantly improving logical flow.",
+              "priority": 1
+            },
+            {
+              "direction": "Restructure the Introduction to focus solely on motivation and gap identification, moving detailed background material to the Background/Survey section and formal definitions to the Problem Definition section.",
+              "expected_gain": "Creates clearer section boundaries and a more natural narrative progression from motivation to formal framework.",
+              "priority": 2
+            },
+            {
+              "direction": "Integrate or remove the energy conditions appendix, ensuring all appendix material is explicitly motivated in the main text.",
+              "expected_gain": "Improves coherence between main text and appendices, preventing reader confusion about tangential material.",
+              "priority": 3
+            }
+          ],
+          "rationale": "The manuscript is highly structured with clear sectioning, decision matrices, and explicit proof obligations, which supports traceability. However, the organization suffers from significant redundancy and circularity: the same core hypothesis, assumptions, and failure boundaries are restated verbatim across the Introduction, Background/Survey, Research Questions, Problem Definition, Study Design, Expected Outcomes, Risks, Definitions, and Derivation sections. This repetition obscures the logical flow and makes it difficult to follow a single argumentative thread. The appendices introduce tangential material (energy conditions) that feels disconnected from the main narrative. While the use of tables and matrices is commendable for clarity, the overall structure reads more like a collection of parallel summaries than a progressive argument.",
+          "score": 6
+        },
+        {
+          "dimension": "Readability",
+          "evidence": [
+            {
+              "assessment": "The double qualification ('Candidate, unverified') before presenting a definition creates hesitation and undermines confidence in the formalism",
+              "block_id": "block-2",
+              "excerpt": "Candidate, unverified definition. Let the kinematic decoupling ratio be the dimensionless quantity R = V1/V2",
+              "section_id": "formal_problem_and_hypotheses"
+            },
+            {
+              "assessment": "This is the third time the same background material appears verbatim, creating redundancy that dilutes impact",
+              "block_id": "rq_background",
+              "excerpt": "Binary neutron star mergers synthesize heavy elements through the rapid neutron-capture process",
+              "section_id": "research_questions_and_contributions"
+            }
+          ],
+          "grounding_warnings": [
+            "evidence[1].excerpt is not found in its referenced block and was discarded",
+            "evidence[3].excerpt is not found in its referenced block and was discarded",
+            "evidence[4].excerpt is not found in its referenced block and was discarded"
+          ],
+          "major_weaknesses": [
+            {
+              "description": "Excessive repetition of core concepts across sections creates circular reading patterns. The kinematic decoupling mechanism, timescale competition (V1 >= V2), and geometric confounders are restated nearly verbatim in the Introduction, Background, Research Questions, Problem Definition, Study Design, Expected Outcomes, and Appendices.",
+              "evidence_refs": [
+                {
+                  "block_id": "intro-contrib-1",
+                  "section_id": "introduction"
+                },
+                {
+                  "block_id": "rq_background",
+                  "section_id": "research_questions_and_contributions"
+                },
+                {
+                  "block_id": "sdm-01",
+                  "section_id": "study_design_and_methods"
+                }
+              ],
+              "impact": "Readers must process the same information 6-7 times before reaching substantive derivations, leading to cognitive fatigue and difficulty distinguishing between background, proposal, and results. The document feels like a loop rather than a progression.",
+              "location_status": "located",
+              "repair_direction": "Consolidate repetitive content into a single comprehensive 'Core Framework' section early in the document. Use subsequent sections to build upon rather than restate this foundation. Replace verbatim repetition with forward references (e.g., 'As established in Section 3...') and focus each section on its unique contribution to the argument.",
+              "severity": "major"
+            },
+            {
+              "description": "Pervasive meta-commentary about document status ('unverified', 'candidate', 'requires human review', 'Decision Status: No-information') interrupts scientific narrative flow and creates uncertainty about what is established versus proposed.",
+              "evidence_refs": [
+                {
+                  "block_id": "block-2",
+                  "section_id": "formal_problem_and_hypotheses"
+                },
+                {
+                  "block_id": "risk_limitations_and_review-3",
+                  "section_id": "risk_limitations_and_review"
+                },
+                {
+                  "block_id": "decision_matrix",
+                  "section_id": "expected_outcomes"
+                }
+              ],
+              "impact": "Readers cannot easily distinguish between established physics, proposed mechanisms, and procedural dependencies. The constant qualification undermines confidence in the formalism and makes it difficult to follow the actual scientific argument. The document reads more like a status report than a research proposal.",
+              "location_status": "located",
+              "repair_direction": "Move procedural status markers to a dedicated 'Document Status' appendix or sidebar. In the main text, use clear linguistic markers to separate established physics ('It is established that...'), proposed mechanisms ('We propose that...'), and open questions ('This remains to be determined...'). Reserve 'unverified' labels for the formal proof obligations section where they are most relevant.",
+              "severity": "major"
+            },
+            {
+              "description": "Inconsistent pacing between highly technical formal sections and narrative prose creates jarring transitions. The document alternates between dense mathematical formalism (definition ledgers, proof obligation registries) and discursive explanation without smooth connective tissue.",
+              "evidence_refs": [
+                {
+                  "block_id": "def_ledger",
+                  "section_id": "definitions_and_propositions"
+                },
+                {
+                  "block_id": "b3",
+                  "section_id": "forward_derivation_and_counterexamples"
+                }
+              ],
+              "impact": "Readers experience whiplash between abstract formalism and concrete physics, making it difficult to maintain conceptual continuity. The formal notation (V1-V10) is introduced abruptly without sufficient motivation for why this particular formalization was chosen over alternatives.",
+              "location_status": "located",
+              "repair_direction": "Add transitional paragraphs that explain the purpose and motivation for each formal section. Before introducing the definition ledger, explain why formal notation is necessary and what problems it solves. After formal sections, provide interpretive summaries that translate the formalism back into physical intuition. Consider using a running example or concrete numerical scenario to ground the abstract formalism.",
+              "severity": "moderate"
+            }
+          ],
+          "maximum_strength": {
+            "description": "The manuscript excels in structural organization with clear section hierarchies, consistent use of formal notation (V1-V10), and well-designed decision matrices that map outcomes to actions. The explicit separation of established physics from proposed mechanisms and procedural dependencies demonstrates sophisticated document architecture.",
+            "evidence_refs": [
+              {
+                "block_id": "decision_matrix",
+                "section_id": "expected_outcomes"
+              },
+              {
+                "block_id": "def_ledger",
+                "section_id": "definitions_and_propositions"
+              }
+            ],
+            "location_status": "located",
+            "present": true
+          },
+          "polish_directions": [
+            {
+              "direction": "Create a single 'Core Framework' section that consolidates all repetitive statements of the kinematic decoupling mechanism, timescale competition, and geometric confounders. Use this as the foundation that all subsequent sections build upon rather than restate.",
+              "expected_gain": "Eliminates 60-70% of redundant content, creates clear narrative progression, and allows readers to grasp the core proposal quickly before engaging with technical details",
+              "priority": 1
+            },
+            {
+              "direction": "Relocate all procedural status markers ('Decision Status: No-information', 'unverified', 'requires human review') to a dedicated appendix or use a consistent visual formatting system (e.g., colored sidebars, status icons) that doesn't interrupt the main text flow.",
+              "expected_gain": "Restores narrative flow and allows readers to focus on scientific content rather than document management metadata",
+              "priority": 2
+            },
+            {
+              "direction": "Add interpretive bridges between formal sections and narrative prose. Before each formal ledger or registry, include a 2-3 sentence explanation of its purpose and how it connects to the physical problem. After each formal section, provide a plain-language summary of what the formalism accomplishes.",
+              "expected_gain": "Creates smoother transitions, helps readers maintain conceptual continuity, and makes the formal notation more accessible to the intended academic audience",
+              "priority": 3
+            }
+          ],
+          "rationale": "The manuscript demonstrates strong structural clarity with well-organized sections, consistent use of formal notation, and explicit decision matrices that guide the reader through conditional reasoning. However, readability is significantly impaired by excessive repetition of the same core concepts (kinematic decoupling, timescale competition, geometric confounders) across nearly every section, creating a circular reading experience. The prose frequently shifts between highly technical formal language and meta-commentary about the document's own status (e.g., 'Decision Status: No-information', 'unverified', 'requires human review'), which disrupts narrative flow and makes it difficult to distinguish between established physics, proposed mechanisms, and procedural dependencies. While the formal framework is internally consistent, the constant qualification of every claim as 'candidate', 'unverified', or 'pending' creates cognitive overhead that obscures the actual scientific content.",
+          "score": 6
+        },
+        {
+          "dimension": "Academic Rigor",
+          "evidence": [
+            {
+              "assessment": "This explicit acknowledgment of missing definitions demonstrates methodological transparency but reveals a fundamental gap in mathematical rigor that prevents the theory from being testable",
+              "block_id": "block-2",
+              "excerpt": "The formal mathematical definitions of V1 and V2 remain unresolved upstream and are carried as human-input dependencies rather than assumed closed forms",
+              "section_id": "formal_problem_and_hypotheses"
+            },
+            {
+              "assessment": "The honest acknowledgment of dependencies demonstrates intellectual honesty but reveals that the methodological framework is incomplete",
+              "block_id": "sdm-03",
+              "excerpt": "These operational definitions are currently unresolved and depend on upstream human input to finalize the mathematical formulations",
+              "section_id": "study_design_and_methods"
+            },
+            {
+              "assessment": "Appropriate citation of established observational evidence grounds the proposal in empirical reality and demonstrates fair representation of prior work",
+              "block_id": "intro-bg-1",
+              "excerpt": "Multi-messenger observations of GW170817 and its kilonova counterpart AT2017gfo confirmed the presence of lanthanide-rich ejecta",
+              "section_id": "introduction"
+            }
+          ],
+          "grounding_warnings": [
+            "evidence[2].excerpt is not found in its referenced block and was discarded",
+            "evidence[3].excerpt is not found in its referenced block and was discarded"
+          ],
+          "major_weaknesses": [
+            {
+              "description": "Complete absence of formal mathematical definitions for all core variables (V1-V9), including the effective fission timescale, ejecta expansion timescale, beta-decay half-lives, and isomeric state lifetimes. The proposal relies entirely on placeholder variables rather than concrete mathematical formulations.",
+              "evidence_refs": [
+                {
+                  "block_id": "def_ledger",
+                  "section_id": "definitions_and_propositions"
+                },
+                {
+                  "block_id": "block-2",
+                  "section_id": "formal_problem_and_hypotheses"
+                }
+              ],
+              "impact": "Without mathematical definitions, the theory cannot be formally evaluated, tested, or reproduced. The proof obligations remain entirely abstract and cannot be discharged, rendering the proposal a framework rather than a rigorous mathematical theory.",
+              "location_status": "located",
+              "repair_direction": "Provide explicit mathematical definitions for V1 and V2 using established nuclear physics formulas (e.g., beta-decay rates from nuclear structure calculations, expansion timescales from hydrodynamic models). Even candidate definitions with stated assumptions would significantly strengthen the rigor.",
+              "severity": "major"
+            },
+            {
+              "description": "The discarded counterexample analysis batch leaves the critical discrimination proof obligation (PO2) completely unaddressed. The non-isomorphism between delayed fission spectral evolution and geometric/magnetic asymmetries is the central claim but has no formal defense.",
+              "evidence_refs": [
+                {
+                  "block_id": "risk_limitations_and_review-1",
+                  "section_id": "risk_limitations_and_review"
+                },
+                {
+                  "block_id": "b2",
+                  "section_id": "appendix_evidence_and_review"
+                }
+              ],
+              "impact": "The proposal's central contribution—distinguishing kinematic delays from geometric confounders—cannot be validated without counterexample analysis. This gap undermines the entire theoretical framework and prevents any conclusion about the mechanism's validity.",
+              "location_status": "located",
+              "repair_direction": "Either re-execute the counterexample analysis with qualified human review or provide a formal argument for why the non-isomorphism condition holds, even if conditional on specific assumptions about actinide line physics and ejecta geometry.",
+              "severity": "major"
+            },
+            {
+              "description": "The proposal treats the kinematic threshold relation V1 >= V2 as a candidate formalization without providing any physical justification or order-of-magnitude estimates from nuclear physics or astrophysical models.",
+              "evidence_refs": [
+                {
+                  "block_id": "eq_threshold",
+                  "section_id": "definitions_and_propositions"
+                },
+                {
+                  "block_id": "block-5",
+                  "section_id": "formal_problem_and_hypotheses"
+                }
+              ],
+              "impact": "Without physical grounding, the central premise appears arbitrary rather than motivated by established physics. The proposal lacks the empirical or theoretical foundation needed to justify why this regime should be physically realized.",
+              "location_status": "located",
+              "repair_direction": "Provide order-of-magnitude estimates for fission timescales and expansion timescales from existing nuclear network calculations and hydrodynamic simulations to demonstrate that V1 >= V2 is physically plausible in some trajectory regimes.",
+              "severity": "moderate"
+            }
+          ],
+          "maximum_strength": {
+            "description": "Exceptional methodological transparency through systematic documentation of unresolved dependencies, explicit failure boundaries, and clear distinction between candidate formalizations and established results. The proposal consistently treats proof obligations as conditional and requires human review before advancing claims, demonstrating intellectual honesty about the current state of the theory.",
+            "evidence_refs": [
+              {
+                "block_id": "risk_limitations_and_review-4",
+                "section_id": "risk_limitations_and_review"
+              },
+              {
+                "block_id": "decision_matrix",
+                "section_id": "expected_outcomes"
+              }
+            ],
+            "location_status": "located",
+            "present": true
+          },
+          "polish_directions": [
+            {
+              "direction": "Provide concrete mathematical definitions for V1 (effective fission timescale) and V2 (ejecta expansion timescale) using established formulas from nuclear physics and hydrodynamics, even if simplified or candidate formulations with explicit assumptions",
+              "expected_gain": "Transforms the proposal from an abstract framework into a testable mathematical theory, enabling formal evaluation of the proof obligations and establishing the foundation for academic rigor",
+              "priority": 1
+            },
+            {
+              "direction": "Re-execute or formally waive the counterexample analysis with qualified human review, providing explicit documentation of the non-isomorphism condition between delayed fission signatures and geometric/magnetic asymmetries",
+              "expected_gain": "Addresses the central methodological gap and provides the necessary defense for the proposal's primary contribution, strengthening the discrimination proof obligation",
+              "priority": 2
+            },
+            {
+              "direction": "Add physical justification for the V1 >= V2 regime using order-of-magnitude estimates from existing r-process network calculations and merger simulations to demonstrate physical plausibility",
+              "expected_gain": "Grounds the central premise in established physics rather than abstract formalism, strengthening the theoretical foundation and making the proposal more compelling to the astrophysics community",
+              "priority": 3
+            }
+          ],
+          "rationale": "The manuscript demonstrates strong academic rigor in its transparent acknowledgment of unresolved definitions, explicit scoping of failure boundaries, and systematic treatment of proof obligations as conditional rather than established. The proposal excels at methodological transparency by clearly delineating what remains unverified and what requires human review before the theory can advance. However, the rigor is undermined by the complete absence of formal mathematical definitions for core variables (V1-V9), the discarded counterexample analysis that leaves a critical gap in the discrimination proof, and the reliance on placeholder variables rather than concrete mathematical formulations. The citation practices are appropriate and the representation of prior work is fair, but the methodological transparency, while honest, reveals substantial gaps that prevent the proposal from achieving higher rigor.",
+          "score": 7
+        },
+        {
+          "dimension": "Clarity",
+          "evidence": [
+            {
+              "assessment": "Core variables are explicitly undefined, preventing unambiguous understanding of the central inequality and all downstream derivations.",
+              "block_id": "block-2",
+              "excerpt": "The formal mathematical definitions of V1 and V2 remain unresolved upstream",
+              "section_id": "formal_problem_and_hypotheses"
+            },
+            {
+              "assessment": "Nearly every symbol in the definition ledger is marked as requiring human input, making the formal framework unreadable as a self-contained technical description.",
+              "block_id": "def_ledger",
+              "excerpt": "needs_human_input",
+              "section_id": "definitions_and_propositions"
+            },
+            {
+              "assessment": "Procedural meta-commentary about discarded workflow stages distracts from the scientific content and reduces clarity about what the proposal actually asserts.",
+              "block_id": "defects_paragraph",
+              "excerpt": "The counterexample analyzer batch was discarded due to an invalid response",
+              "section_id": "idea_origin_and_selection"
+            }
+          ],
+          "grounding_warnings": [
+            "evidence[3].excerpt is not found in its referenced block and was discarded"
+          ],
+          "major_weaknesses": [
+            {
+              "description": "Core mathematical variables (V1 through V10) are explicitly undefined and marked as requiring human input, making the central inequality V1 >= V2 and all downstream lemmas and proof obligations impossible to evaluate or understand unambiguously.",
+              "evidence_refs": [
+                {
+                  "block_id": "def_ledger",
+                  "section_id": "definitions_and_propositions"
+                },
+                {
+                  "block_id": "block-2",
+                  "section_id": "formal_problem_and_hypotheses"
+                }
+              ],
+              "impact": "Readers cannot understand the methods or results because the fundamental objects of the theory are placeholders rather than defined quantities. The entire formal derivation chain is suspended on undefined terms.",
+              "location_status": "located",
+              "repair_direction": "Provide closed-form or at minimum operational definitions for V1 (effective fission timescale) and V2 (ejecta expansion timescale), including the nuclear physics inputs (beta-decay half-lives, isomeric state lifetimes) and hydrodynamic parameters that determine them. If full definitions are not yet available, supply concrete candidate formulas with explicit assumptions and uncertainty ranges so readers can evaluate the inequality.",
+              "severity": "major"
+            },
+            {
+              "description": "Excessive structural redundancy: the same premises (A1, A2), lemmas (L1–L6), proof obligations (PO1, PO2), and failure conditions are restated verbatim or near-verbatim across the Introduction, Research Questions, Problem Definition, Study Design, Expected Outcomes, Risks, Definitions, and Forward Derivation sections.",
+              "evidence_refs": [
+                {
+                  "block_id": "intro-assump-1",
+                  "section_id": "introduction"
+                },
+                {
+                  "block_id": "rq_assumptions",
+                  "section_id": "research_questions_and_contributions"
+                },
+                {
+                  "block_id": "block-5",
+                  "section_id": "formal_problem_and_hypotheses"
+                }
+              ],
+              "impact": "Readers must wade through repeated content to find any new information, making it difficult to distinguish what is established from what is proposed, and obscuring the logical progression of the argument.",
+              "location_status": "located",
+              "repair_direction": "Consolidate the premise set, lemma registry, and proof obligations into a single canonical location (e.g., the Definitions and Propositions section) and use forward references elsewhere. Each section should contribute distinct content: Introduction for motivation, Study Design for methodology, Expected Outcomes for decision rules, and Risks for limitations.",
+              "severity": "major"
+            },
+            {
+              "description": "Procedural and workflow meta-commentary (discarded counterexample analyzer batches, human-review gates, workflow degradation) is interspersed with scientific content, creating confusion about what the proposal actually asserts versus what internal process issues remain unresolved.",
+              "evidence_refs": [
+                {
+                  "block_id": "defects_paragraph",
+                  "section_id": "idea_origin_and_selection"
+                },
+                {
+                  "block_id": "rq_questions",
+                  "section_id": "research_questions_and_contributions"
+                }
+              ],
+              "impact": "Readers cannot easily separate the scientific claims from the procedural dependencies, reducing confidence in the coherence of the proposal and making it unclear which statements are part of the theory versus part of the project management.",
+              "location_status": "located",
+              "repair_direction": "Move all procedural and workflow-related commentary to a dedicated appendix or project-management section. In the main body, state only the scientific content and explicitly note where dependencies block conclusions, without detailing the internal workflow failures.",
+              "severity": "moderate"
+            }
+          ],
+          "maximum_strength": {
+            "description": "The pre-registered outcome-to-lemma-to-action decision matrix provides exceptionally clear conditional reasoning, explicitly mapping each possible outcome branch to its trigger, relevant lemma or proof obligation, allowed conclusion, and next action. This gives readers an unambiguous understanding of what would count as support, what would be null or contradictory, and what procedural dependencies block interpretation.",
+            "evidence_refs": [
+              {
+                "block_id": "decision_matrix",
+                "section_id": "expected_outcomes"
+              }
+            ],
+            "location_status": "located",
+            "present": true
+          },
+          "polish_directions": [
+            {
+              "direction": "Define V1 and V2 with concrete candidate formulas, including all nuclear physics and hydrodynamic inputs, even if provisional, so the central inequality V1 >= V2 becomes evaluable.",
+              "expected_gain": "Transforms the core mechanism from an undefined placeholder into a testable mathematical statement, enabling readers to understand and critique the central claim.",
+              "priority": 1
+            },
+            {
+              "direction": "Eliminate structural redundancy by consolidating premises, lemmas, and proof obligations into a single canonical section and using forward references elsewhere.",
+              "expected_gain": "Sharpen the logical progression and reduce reader fatigue, making it easier to distinguish established content from proposed content.",
+              "priority": 2
+            },
+            {
+              "direction": "Separate procedural and workflow commentary from scientific content by moving internal process details to an appendix.",
+              "expected_gain": "Clarify the scientific assertions and reduce confusion about what the proposal claims versus what project-management issues remain unresolved.",
+              "priority": 3
+            }
+          ],
+          "rationale": "The manuscript is unusually disciplined about scope, failure boundaries, and conditional reasoning, which helps readers understand what is and is not claimed. However, clarity is materially undermined by pervasive placeholder variables (V1–V10) that are explicitly left undefined, repeated meta-procedural language about discarded analyzer batches and human-review gates, and a structural redundancy that restates the same premises, lemmas, and proof obligations across multiple sections. A reader can follow the high-level logic (delayed fission vs. expansion timescale, non-isomorphism from geometric/magnetic confounders), but cannot unambiguously understand the methods or results because the core mathematical objects are not defined. The strongest clarity contribution is the explicit decision matrix mapping outcome branches to lemmas and actions; the weakest is the reliance on undefined symbols and procedural commentary that obscures the scientific content.",
+          "score": 6
+        },
+        {
+          "dimension": "Coherence",
+          "evidence": [
+            {
+              "assessment": "Establishes the central kinematic predicate consistently used across sections; explicitly marked as candidate, preventing overclaim.",
+              "block_id": "block-2",
+              "excerpt": "Candidate, unverified definition. Let the kinematic decoupling ratio be the dimensionless quantity R = V1/V2",
+              "section_id": "formal_problem_and_hypotheses"
+            },
+            {
+              "assessment": "The outcome-to-lemma mapping is coherent with the declared failure boundaries and proof obligations.",
+              "block_id": "decision_matrix",
+              "excerpt": "supports_mechanism | Analysis consistent with declared relation; controls do not favor geometric or magnetic alternatives",
+              "section_id": "expected_outcomes"
+            },
+            {
+              "assessment": "Explicitly prevents drift between kinetic variables and unrelated GR energy conditions, strengthening coherence.",
+              "block_id": "B3",
+              "excerpt": "no geometric condition substitutes for the explicit assumption of delayed beta-and-isomer fission release",
+              "section_id": "appendix_variables_and_definitions"
+            }
+          ],
+          "grounding_warnings": [
+            "evidence[2].excerpt is not found in its referenced block and was discarded"
+          ],
+          "major_weaknesses": [
+            {
+              "description": "Notational drift between the ratio R = V1/V2 and the direct inequality V1 >= V2. The problem section defines R and uses R >= 1, while the definitions and derivation sections switch to V1 >= V2 without explicitly re-linking the two forms.",
+              "evidence_refs": [
+                {
+                  "block_id": "block-2",
+                  "section_id": "formal_problem_and_hypotheses"
+                },
+                {
+                  "block_id": "eq_threshold",
+                  "section_id": "definitions_and_propositions"
+                },
+                {
+                  "block_id": "b2",
+                  "section_id": "forward_derivation_and_counterexamples"
+                }
+              ],
+              "impact": "A careful reader must mentally reconcile two equivalent but differently presented conditions, which slightly weakens the impression of a single unified formal spine.",
+              "location_status": "located",
+              "repair_direction": "Pick one canonical form (e.g., V1 >= V2) and either remove R or explicitly state R >= 1 iff V1 >= V2 at every point of use, including the derivation chain and counterexample matrix.",
+              "severity": "moderate"
+            },
+            {
+              "description": "Lemma numbering is inconsistent: the problem section introduces candidate lemmas L1 and L2, while the derivation section introduces L3, L4, L5, and L6 without explaining the relationship or renumbering.",
+              "evidence_refs": [
+                {
+                  "block_id": "block-6",
+                  "section_id": "formal_problem_and_hypotheses"
+                },
+                {
+                  "block_id": "b3",
+                  "section_id": "forward_derivation_and_counterexamples"
+                }
+              ],
+              "impact": "The reader cannot immediately tell whether L1/L2 are subsumed by, equivalent to, or distinct from L3–L6, creating a small but real gap in the formal spine.",
+              "location_status": "located",
+              "repair_direction": "Renumber lemmas sequentially (L1–L6) or explicitly map L1/L2 to their counterparts in the derivation chain (e.g., 'L1 corresponds to L3+L4; L2 corresponds to L5').",
+              "severity": "moderate"
+            },
+            {
+              "description": "One research question is a procedural instruction rather than a scientific question, disrupting the section's internal coherence.",
+              "evidence_refs": [
+                {
+                  "block_id": "rq_questions",
+                  "section_id": "research_questions_and_contributions"
+                }
+              ],
+              "impact": "Minor, but it signals that the research-question section was not fully edited for internal consistency.",
+              "location_status": "located",
+              "repair_direction": "Move the instruction about the discarded counterexample batch to the Risks or Review Checklist section, and replace it with a genuine research question (e.g., 'What is the minimal set of counterexamples that would falsify A2?').",
+              "severity": "moderate"
+            }
+          ],
+          "maximum_strength": {
+            "description": "The manuscript maintains a single, clearly scoped kinematic premise (V1 >= V2) and a fixed set of failure boundaries across all major sections, with explicit 'no-information' and 'unverified' tags that prevent silent drift or overclaim. The assumption ledger, definition ledger, proof obligation registry, and outcome decision matrix are mutually aligned.",
+            "evidence_refs": [
+              {
+                "block_id": "block-5",
+                "section_id": "formal_problem_and_hypotheses"
+              },
+              {
+                "block_id": "decision_matrix",
+                "section_id": "expected_outcomes"
+              },
+              {
+                "block_id": "def_ledger",
+                "section_id": "definitions_and_propositions"
+              }
+            ],
+            "location_status": "located",
+            "present": true
+          },
+          "polish_directions": [
+            {
+              "direction": "Unify the kinematic condition notation: adopt V1 >= V2 as the single canonical form and either eliminate R or add a one-line equivalence statement at every use site.",
+              "expected_gain": "Eliminates the most visible notational drift and makes the formal spine read as a single, continuous argument.",
+              "priority": 1
+            },
+            {
+              "direction": "Reconcile lemma numbering by either renumbering L1–L6 sequentially or adding an explicit mapping table between the problem-section lemmas and the derivation-section lemmas.",
+              "expected_gain": "Closes the small but real gap in the formal spine and makes cross-referencing trivial.",
+              "priority": 2
+            },
+            {
+              "direction": "Move the procedural instruction in the research-questions list to the Risks/Review section and replace it with a substantive research question.",
+              "expected_gain": "Restores internal coherence to the research-questions section and strengthens the overall editorial polish.",
+              "priority": 3
+            }
+          ],
+          "rationale": "The manuscript is unusually disciplined about internal consistency: it repeatedly fixes the same kinematic premise (V1 >= V2), the same failure boundaries (R < 1 or geometric/magnetic mimicry), and the same proof obligations (PO1, PO2) across Introduction, Problem Definition, Study Design, Expected Outcomes, Risks, and Definitions. Terms such as 'effective fission timescale', 'ejecta expansion timescale', 'instantaneous equilibrium predicate', and 'actinide spectral evolution' are used consistently and are explicitly flagged as candidate/unresolved rather than silently redefined. The decision matrix, assumption ledger, and definition ledger align with the lemmas and proof obligations, and the appendix explicitly decouples the kinetic variables from unrelated GR energy conditions, preventing a common source of drift. The main coherence weakness is a mild notational drift between the dimensionless ratio R = V1/V2 and the direct inequality V1 >= V2, plus a small inconsistency in lemma numbering (L1/L2 in the problem section vs. L3–L6 in the derivation section) and an out-of-place research question about a discarded counterexample batch. These do not contradict the core claims but they introduce minor friction that a careful reader must reconcile.",
+          "score": 8
+        },
+        {
+          "dimension": "Comprehensiveness",
+          "evidence": [
+            {
+              "assessment": "Explicit acknowledgment of dependencies, but no concrete plan for resolving them or alternative validation strategies",
+              "block_id": "sdm-03",
+              "excerpt": "These operational definitions are currently unresolved and depend on upstream human input",
+              "section_id": "study_design_and_methods"
+            }
+          ],
+          "grounding_warnings": [
+            "evidence[1].excerpt is not found in its referenced block and was discarded",
+            "evidence[2].excerpt is not found in its referenced block and was discarded",
+            "evidence[3].excerpt is not found in its referenced block and was discarded"
+          ],
+          "major_weaknesses": [
+            {
+              "description": "Critical operational definitions (V1-V9) remain unresolved and marked as needs_human_input, preventing the proposal from specifying concrete validation pathways or empirical testing strategies",
+              "evidence_refs": [
+                {
+                  "block_id": "def_ledger",
+                  "section_id": "definitions_and_propositions"
+                },
+                {
+                  "block_id": "sdm-03",
+                  "section_id": "study_design_and_methods"
+                }
+              ],
+              "impact": "The theoretical framework cannot be fully evaluated or tested without closed-form definitions of the effective fission timescale, expansion timescale, and spectral evolution metrics",
+              "location_status": "located",
+              "repair_direction": "Provide candidate mathematical formulations for V1 and V2 based on established nuclear physics (beta-decay half-lives, isomeric state lifetimes, hydrodynamic expansion models), even if approximate, to enable concrete proof obligations and validation design",
+              "severity": "major"
+            },
+            {
+              "description": "No coverage of alternative theoretical frameworks or competing nucleosynthesis models beyond geometric/magnetic asymmetries, limiting the proposal's ability to position itself within the broader literature",
+              "evidence_refs": [
+                {
+                  "block_id": "bg_spectral_degeneracy",
+                  "section_id": "survey_and_research_gap"
+                }
+              ],
+              "impact": "The proposal risks appearing isolated from established r-process modeling approaches and may miss opportunities to integrate with or contrast against existing computational frameworks",
+              "location_status": "located",
+              "repair_direction": "Add a subsection surveying competing theoretical approaches (e.g., different fission rate prescriptions, alternative r-process network codes, competing kilonova radiative transfer models) and explicitly position the kinematic decoupling mechanism relative to these frameworks",
+              "severity": "major"
+            },
+            {
+              "description": "Missing concrete observational strategies or data sources for validating the proposed spectral signatures, despite extensive discussion of multi-messenger observations",
+              "evidence_refs": [
+                {
+                  "block_id": "b1",
+                  "section_id": "appendix_evidence_and_review"
+                }
+              ],
+              "impact": "The proposal remains purely theoretical without clear pathways to empirical validation, reducing its practical utility for the astrophysics community",
+              "location_status": "located",
+              "repair_direction": "Specify which observational facilities (e.g., JWST, ELT, future X-ray missions) and spectral bands could detect the predicted actinide line evolution, and outline a concrete observational campaign design",
+              "severity": "moderate"
+            }
+          ],
+          "maximum_strength": {
+            "description": "Exceptional breadth in conditional reasoning and scope declaration, with systematic coverage of theoretical premises, failure boundaries, proof obligations, and decision matrices across multiple sections",
+            "evidence_refs": [
+              {
+                "block_id": "decision_matrix",
+                "section_id": "expected_outcomes"
+              },
+              {
+                "block_id": "risk_limitations_and_review-1",
+                "section_id": "risk_limitations_and_review"
+              },
+              {
+                "block_id": "b3",
+                "section_id": "forward_derivation_and_counterexamples"
+              }
+            ],
+            "location_status": "located",
+            "present": true
+          },
+          "polish_directions": [
+            {
+              "direction": "Resolve the definition ledger by providing candidate closed-form expressions for V1 (effective fission timescale) and V2 (ejecta expansion timescale) using established nuclear physics formulas and hydrodynamic models, even if approximate",
+              "expected_gain": "Enables concrete proof obligations, validation design, and transitions the proposal from placeholder-dependent to actionable theoretical framework",
+              "priority": 1
+            },
+            {
+              "direction": "Add a comprehensive literature positioning section that surveys alternative r-process nucleosynthesis frameworks, competing fission rate prescriptions, and existing kilonova radiative transfer models",
+              "expected_gain": "Strengthens the proposal's scholarly context and demonstrates awareness of the broader theoretical landscape",
+              "priority": 2
+            },
+            {
+              "direction": "Specify concrete observational validation strategies, including target spectral lines (e.g., specific actinide transitions), required spectral resolution, and candidate observational facilities",
+              "expected_gain": "Bridges the gap between theoretical proposal and empirical testability, increasing practical utility for the astrophysics community",
+              "priority": 3
+            }
+          ],
+          "rationale": "The manuscript demonstrates strong breadth across theoretical framing, formal problem definition, study design, expected outcome branches, risk/limitations, and proof obligations. It systematically covers subtopics from r-process nucleosynthesis background to kinematic decoupling mechanisms, spectral discrimination against geometric confounders, and formal derivation chains. However, comprehensiveness is limited by unresolved operational definitions (V1-V9 marked as needs_human_input), missing empirical validation pathways, and incomplete counterexample analysis. The proposal excels in conditional reasoning and scope declaration but lacks coverage of alternative theoretical frameworks, sensitivity analyses for boundary conditions, and concrete data sources or observational strategies for validation.",
+          "score": 7
+        },
+        {
+          "dimension": "Critical Analysis",
+          "evidence": [
+            {
+              "assessment": "Demonstrates honest acknowledgment of alternative mechanisms, but the analysis remains at the level of assertion rather than critical examination of how these alternatives might actually produce similar spectral signatures",
+              "block_id": "risk_limitations_and_review-2",
+              "excerpt": "Two competing explanations remain live: geometric asymmetries in dynamical ejecta, such as shock-heated polar winds and tidal tails, and magnetic field configurations",
+              "section_id": "risk_limitations_and_review"
+            },
+            {
+              "assessment": "The uniqueness claim is stated but not critically examined—no analysis of what spectral features would distinguish kinematic from geometric origins",
+              "block_id": "proposition_P2",
+              "excerpt": "Candidate Proposition: The specific temporal evolution of actinide spectral lines (V7) caused by delayed fission cannot be replicated by geometric (V5) or magnetic (V6) asymmetries alone",
+              "section_id": "definitions_and_propositions"
+            }
+          ],
+          "grounding_warnings": [
+            "evidence[2].excerpt is not found in its referenced block and was discarded",
+            "evidence[3].excerpt is not found in its referenced block and was discarded"
+          ],
+          "major_weaknesses": [
+            {
+              "description": "The critical analysis of competing explanations (geometric asymmetries, magnetic configurations) remains superficial. The manuscript asserts non-isomorphism between kinematic and geometric spectral signatures but does not critically examine what specific observational discriminators would exist, nor does it engage with existing kilonova modeling literature that might challenge or refine the uniqueness claim.",
+              "evidence_refs": [
+                {
+                  "block_id": "proposition_P2",
+                  "section_id": "definitions_and_propositions"
+                },
+                {
+                  "block_id": "bg_spectral_degeneracy",
+                  "section_id": "survey_and_research_gap"
+                }
+              ],
+              "impact": "Without substantive analysis of how geometric and magnetic alternatives might produce similar spectral features, the central discrimination claim (P2) lacks critical grounding. This weakens the proposal's ability to guide future observational tests.",
+              "location_status": "located",
+              "repair_direction": "Add a dedicated subsection critically surveying existing kilonova spectral models that incorporate geometric asymmetries, identifying specific spectral features (line widths, temporal evolution patterns, polarization signatures) that would distinguish kinematic from geometric origins. Engage with specific papers on AT2017gfo spectral modeling.",
+              "severity": "major"
+            },
+            {
+              "description": "The treatment of the discarded counterexample analysis is procedurally documented but analytically empty. The manuscript notes the batch was discarded due to 'invalid response' but does not critically examine what counterexamples might be expected, what the failure mode was, or what this implies for the mechanism's plausibility.",
+              "evidence_refs": [
+                {
+                  "block_id": "b6",
+                  "section_id": "forward_derivation_and_counterexamples"
+                },
+                {
+                  "block_id": "b2",
+                  "section_id": "appendix_evidence_and_review"
+                }
+              ],
+              "impact": "This represents a missed opportunity for critical analysis. Understanding why counterexample analysis failed could reveal important constraints on the mechanism or highlight definitional gaps that need resolution.",
+              "location_status": "located",
+              "repair_direction": "Add analytical discussion of what counterexamples would be expected (e.g., specific nuclear physics scenarios where V1 < V2, or spectral degeneracies with known geometric models). Discuss what the failure of automated counterexample generation implies about the complexity of the problem space.",
+              "severity": "moderate"
+            }
+          ],
+          "maximum_strength": {
+            "description": "The manuscript's explicit treatment of failure boundaries and no-information branches demonstrates exceptional critical self-awareness. The decision matrix framework rigorously maps conditional conclusions to specific proof obligations, preventing overclaim and clearly delineating what would constitute support versus proof. The repeated emphasis that 'no conclusion about the mechanism's validity is drawn' from procedural gaps shows sophisticated understanding of the distinction between absence of evidence and evidence of absence.",
+            "evidence_refs": [
+              {
+                "block_id": "invalid_branch",
+                "section_id": "expected_outcomes"
+              },
+              {
+                "block_id": "risk_limitations_and_review-3",
+                "section_id": "risk_limitations_and_review"
+              }
+            ],
+            "location_status": "located",
+            "present": true
+          },
+          "polish_directions": [
+            {
+              "direction": "Develop substantive critical analysis of spectral discrimination: identify specific actinide lines (U, Th, Cm), their expected temporal evolution under delayed fission versus geometric asymmetry, and what observational signatures would constitute evidence for or against the mechanism",
+              "expected_gain": "Transforms the uniqueness claim from assertion to analytically grounded hypothesis, enabling concrete observational tests",
+              "priority": 1
+            },
+            {
+              "direction": "Engage critically with existing kilonova spectral modeling literature (e.g., Bulla 2019, Kasen et al. 2017, Tanaka et al. 2020) to identify whether geometric asymmetry models already predict spectral features that could mimic or rule out the proposed kinematic delay",
+              "expected_gain": "Grounds the proposal in existing empirical and theoretical work, strengthening the case for why a new mechanism is needed",
+              "priority": 2
+            },
+            {
+              "direction": "Add critical analysis of the nuclear physics assumptions: examine the range of beta-decay half-lives and isomeric state lifetimes for superheavy nuclei, and assess whether the condition V1 >= V2 is physically plausible given current nuclear data",
+              "expected_gain": "Provides physical grounding for the central assumption, moving it from candidate formalization to physically motivated hypothesis",
+              "priority": 3
+            }
+          ],
+          "rationale": "The manuscript demonstrates exceptional critical analysis in its self-aware treatment of its own theoretical limitations, explicitly distinguishing between candidate formalizations and verified results, and rigorously mapping failure boundaries. The decision matrix framework and explicit treatment of no-information branches show sophisticated understanding of conditional reasoning. However, the analysis of competing explanations (geometric asymmetries, magnetic configurations) remains largely declarative rather than analytically developed—the manuscript asserts non-isomorphism but does not critically examine what specific spectral features would constitute discriminators, nor does it engage with existing literature that might challenge the uniqueness claim. The treatment of counterexample analysis as 'discarded' without substantive engagement with what counterexamples might exist represents a missed opportunity for deeper critical evaluation.",
+          "score": 8
+        },
+        {
+          "dimension": "Novelty and Insights",
+          "evidence": [
+            {
+              "assessment": "This is the core novelty claim: unifying two previously separate phenomena (peak shifts and curtaining) through a single kinematic mechanism. The reframing is conceptually clean and addresses a real gap in the literature.",
+              "block_id": "intro-contrib-1",
+              "excerpt": "formal unification of third r-process peak shifts and anisotropic lanthanide curtaining through a delayed neutron release mechanism",
+              "section_id": "introduction"
+            },
+            {
+              "assessment": "The introduction of a dimensionless kinematic ratio as the central organizing object is a useful conceptual tool that makes the hypothesis operational and falsifiable, even though the component definitions remain unresolved.",
+              "block_id": "block-2",
+              "excerpt": "Candidate, unverified definition. Let the kinematic decoupling ratio be the dimensionless quantity R = V1/V2",
+              "section_id": "formal_problem_and_hypotheses"
+            },
+            {
+              "assessment": "The fact that nearly all variables in the definition ledger are marked needs_human_input reveals that the novelty is currently at the level of a well-structured proposal rather than a completed theoretical contribution. This substantially limits the score.",
+              "block_id": "def_ledger",
+              "excerpt": "V1 | Effective fission timescale | needs_human_input",
+              "section_id": "definitions_and_propositions"
+            }
+          ],
+          "grounding_warnings": [
+            "evidence[3].excerpt is not found in its referenced block and was discarded"
+          ],
+          "major_weaknesses": [
+            {
+              "description": "Nearly all operational definitions required to evaluate the novelty claim are unresolved placeholders. The definition ledger marks V1 through V9 as needs_human_input, meaning the kinematic ratio R = V1/V2, the abundance shift metric V3, the spectral evolution metric V7, and the nuclear physics inputs V8 and V9 have no closed-form definitions. Without these, the core hypothesis cannot be evaluated, the proof obligations cannot be discharged, and the novelty remains at the level of a well-structured proposal rather than a completed theoretical contribution.",
+              "evidence_refs": [
+                {
+                  "block_id": "def_ledger",
+                  "section_id": "definitions_and_propositions"
+                },
+                {
+                  "block_id": "b5",
+                  "section_id": "forward_derivation_and_counterexamples"
+                }
+              ],
+              "impact": "This is the most significant limitation on the novelty score. The conceptual reframing is strong, but without operational definitions, the insight cannot be tested, compared to alternatives, or built upon. The manuscript is essentially a detailed specification of what needs to be done rather than a demonstration that the proposed mechanism works.",
+              "location_status": "located",
+              "repair_direction": "Prioritize the definition of V1 (effective fission timescale) and V2 (ejecta expansion timescale) as the minimum viable set of closed-form expressions. Even approximate analytical forms or order-of-magnitude estimates based on existing nuclear physics literature would allow the kinematic ratio R to be evaluated and the hypothesis to be tested against observational data. If full closed-form definitions are not feasible, provide explicit numerical ranges or functional forms that bound the admissible parameter space.",
+              "severity": "major"
+            },
+            {
+              "description": "The counterexample analysis batch was discarded, leaving the non-isomorphism claim (that delayed-fission spectral evolution cannot be replicated by geometric or magnetic asymmetries) entirely unverified. This is the central discriminative claim of the proposal, and without even a preliminary counterexample search, the novelty claim rests on an untested assumption rather than a defended boundary.",
+              "evidence_refs": [
+                {
+                  "block_id": "b2",
+                  "section_id": "appendix_evidence_and_review"
+                },
+                {
+                  "block_id": "b6",
+                  "section_id": "forward_derivation_and_counterexamples"
+                }
+              ],
+              "impact": "The non-isomorphism claim is what makes the proposed mechanism scientifically useful: it provides a way to distinguish delayed fission from alternative explanations. Without this claim being tested, the novelty is incomplete because the mechanism cannot be falsified against its most important competitors.",
+              "location_status": "located",
+              "repair_direction": "Re-execute the counterexample analysis or provide a qualified human review that explicitly addresses the most plausible geometric and magnetic asymmetry configurations. Even a qualitative argument showing why specific actinide line temporal patterns cannot be produced by static geometry would substantially strengthen the novelty claim. If the counterexample space is too large to enumerate, define a minimal set of representative cases and show that the delayed-fission signature is distinct in each.",
+              "severity": "major"
+            },
+            {
+              "description": "The manuscript is heavily repetitive, with the same core claims, assumptions, and failure boundaries restated across multiple sections (Introduction, Research Questions, Problem Definition, Study Design, Expected Outcomes, Risks, Definitions, Forward Derivation, and Appendices). While this repetition may be intentional for clarity, it dilutes the impact of the novelty by making the manuscript feel like a specification document rather than a research proposal with a clear intellectual contribution.",
+              "evidence_refs": [
+                {
+                  "block_id": "intro-contrib-1",
+                  "section_id": "introduction"
+                },
+                {
+                  "block_id": "rq_contributions",
+                  "section_id": "research_questions_and_contributions"
+                },
+                {
+                  "block_id": "block-1",
+                  "section_id": "formal_problem_and_hypotheses"
+                }
+              ],
+              "impact": "The repetition makes it harder for readers to identify the single most important insight and to see how the proposal advances beyond existing work. It also suggests that the authors may be using repetition to compensate for the lack of completed derivations or proofs.",
+              "location_status": "located",
+              "repair_direction": "Consolidate the core claims into a single, clearly labeled section (e.g., 'Core Hypothesis and Novelty') and use the other sections to build on that foundation rather than restating it. Remove redundant restatements of the failure boundaries and assumptions, and instead focus on showing how each section contributes to evaluating or testing the hypothesis. This will make the novelty claim more prominent and easier to evaluate.",
+              "severity": "moderate"
+            }
+          ],
+          "maximum_strength": {
+            "description": "The premise inversion—treating the effective fission timescale as a dynamic variable competing with ejecta expansion rather than assuming instantaneous equilibrium—is a genuinely original conceptual reframing that produces a clear, falsifiable hypothesis. The explicit linking of microphysical nuclear kinetics (beta-decay half-lives and isomeric state lifetimes) to macroscopic electromagnetic signatures (actinide spectral line temporal evolution) is a fresh synthesis that addresses a real gap in kilonova modeling. The honest declaration of failure boundaries and no-information branches strengthens the novelty by making it scientifically accountable rather than overreaching.",
+            "evidence_refs": [
+              {
+                "block_id": "intro-contrib-1",
+                "section_id": "introduction"
+              },
+              {
+                "block_id": "block-2",
+                "section_id": "formal_problem_and_hypotheses"
+              },
+              {
+                "block_id": "intro-assump-1",
+                "section_id": "introduction"
+              }
+            ],
+            "location_status": "located",
+            "present": true
+          },
+          "polish_directions": [
+            {
+              "direction": "Provide at least approximate closed-form definitions for V1 (effective fission timescale) and V2 (ejecta expansion timescale), even if they are order-of-magnitude estimates or functional forms with bounded parameters. This is the minimum requirement for the kinematic ratio R to be evaluable and for the hypothesis to be testable.",
+              "expected_gain": "This would transform the proposal from a well-structured specification into a testable hypothesis, substantially increasing the novelty score by demonstrating that the conceptual reframing can be operationalized.",
+              "priority": 1
+            },
+            {
+              "direction": "Re-execute the counterexample analysis or provide a qualified human review that explicitly addresses the non-isomorphism claim. Define a minimal set of representative geometric and magnetic asymmetry configurations and show that the delayed-fission spectral signature is distinct in each case.",
+              "expected_gain": "This would defend the central discriminative claim of the proposal and make the novelty scientifically accountable. Without this, the mechanism cannot be falsified against its most important competitors.",
+              "priority": 2
+            },
+            {
+              "direction": "Consolidate the core claims into a single, clearly labeled section and remove redundant restatements across the manuscript. Use the other sections to build on the core hypothesis rather than repeating it.",
+              "expected_gain": "This would make the novelty claim more prominent and easier to evaluate, and it would give the manuscript the structure of a research proposal with a clear intellectual contribution rather than a specification document.",
+              "priority": 3
+            }
+          ],
+          "rationale": "The proposal offers a genuinely fresh conceptual reframing: it inverts the standard instantaneous-fission-equilibrium assumption and treats the effective fission timescale as a dynamic variable competing with ejecta expansion, explicitly linking microphysical nuclear kinetics to macroscopic kilonova spectral evolution. This premise inversion is clearly articulated and produces a useful conceptual control panel (the kinematic ratio R = V1/V2) that cleanly separates delayed-fission signatures from geometric and magnetic confounders. The manuscript is unusually honest about scope, explicitly declaring failure boundaries, no-information branches, and unresolved definitions, which strengthens the novelty claim by making it falsifiable rather than overreaching. However, the novelty is substantially constrained by the fact that nearly all operational definitions (V1 through V9) remain unresolved placeholders, the counterexample analysis was discarded, and the core discrimination proof obligation (PO2) is entirely unverified. The conceptual reframing is strong, but the actual synthesis remains at the level of a well-structured proposal rather than a completed theoretical contribution. The idea of using actinide spectral line temporal evolution as a discriminator against geometric asymmetries is genuinely original and well-motivated, but without closed-form definitions or even a sketch of the non-isomorphism argument, the insight cannot yet be evaluated for its full scientific yield.",
+          "score": 7
+        },
+        {
+          "dimension": "Future Directions",
+          "evidence": [
+            {
+              "assessment": "Shows conditional next steps tied to specific outcomes, demonstrating structured forward planning",
+              "block_id": "decision_matrix",
+              "excerpt": "Replicate under independently confirmed conditions; test the most consequential declared boundary condition",
+              "section_id": "expected_outcomes"
+            },
+            {
+              "assessment": "Identifies concrete procedural dependencies that must be resolved before advancing the theory",
+              "block_id": "risk_limitations_and_review-4",
+              "excerpt": "Authorize the next stage only after the definition ledger and proof-obligation registry are closed",
+              "section_id": "risk_limitations_and_review"
+            },
+            {
+              "assessment": "Explicitly marks unresolved items as blocking future progress, showing honest scope limitations",
+              "block_id": "b5",
+              "excerpt": "Resolve definition ledger entries",
+              "section_id": "forward_derivation_and_counterexamples"
+            }
+          ],
+          "grounding_warnings": [],
+          "major_weaknesses": [
+            {
+              "description": "Future directions are narrowly focused on closing internal definitional gaps rather than outlining broader scientific trajectories or observational programs that could test the mechanism",
+              "evidence_refs": [
+                {
+                  "block_id": "risk_limitations_and_review-4",
+                  "section_id": "risk_limitations_and_review"
+                },
+                {
+                  "block_id": "b1",
+                  "section_id": "appendix_evidence_and_review"
+                }
+              ],
+              "impact": "The proposal reads more as a procedural checklist than a research roadmap for the field; it does not articulate how resolving these gaps would enable new observational tests or connect to ongoing multi-messenger campaigns",
+              "location_status": "located",
+              "repair_direction": "Add a dedicated section outlining how the resolved proof obligations would enable specific observational predictions (e.g., time-resolved spectroscopy of actinide lines in future kilonovae) and how these predictions could be tested with current or planned facilities",
+              "severity": "moderate"
+            },
+            {
+              "description": "The counterexample analysis is marked as a procedural dependency but not developed into a concrete research program with specific methodologies or success criteria",
+              "evidence_refs": [
+                {
+                  "block_id": "b6",
+                  "section_id": "forward_derivation_and_counterexamples"
+                },
+                {
+                  "block_id": "b2",
+                  "section_id": "appendix_evidence_and_review"
+                }
+              ],
+              "impact": "The most critical validation step—demonstrating non-isomorphism between delayed fission and geometric asymmetries—lacks a detailed plan for how this would be accomplished beyond 'qualified human review'",
+              "location_status": "located",
+              "repair_direction": "Specify what constitutes a valid counterexample search methodology, what computational or analytical tools would be employed, and what success criteria would demonstrate that the non-isomorphism condition has been adequately tested",
+              "severity": "moderate"
+            }
+          ],
+          "maximum_strength": {
+            "description": "The manuscript excels at identifying specific, actionable proof obligations and procedural dependencies that must be resolved before the theory can advance. The decision matrix explicitly maps outcome branches to next actions, and the review checklist provides concrete release criteria for future claims. This demonstrates rigorous conditional reasoning about what must be accomplished before the mechanism can be validated.",
+            "evidence_refs": [
+              {
+                "block_id": "decision_matrix",
+                "section_id": "expected_outcomes"
+              },
+              {
+                "block_id": "b3",
+                "section_id": "appendix_evidence_and_review"
+              }
+            ],
+            "location_status": "located",
+            "present": true
+          },
+          "polish_directions": [
+            {
+              "direction": "Expand future directions to include observational testability: specify how resolved proof obligations would generate concrete, time-resolved spectroscopic predictions for actinide line evolution that could be tested with current or planned multi-messenger facilities",
+              "expected_gain": "Transforms the proposal from a procedural dependency checklist into a scientifically actionable research program that connects theoretical formalization to empirical validation pathways",
+              "priority": 1
+            },
+            {
+              "direction": "Develop the counterexample analysis into a concrete research methodology: specify computational approaches, parameter spaces to explore, and success criteria for demonstrating non-isomorphism between delayed fission signatures and geometric/magnetic asymmetries",
+              "expected_gain": "Provides a clear roadmap for the most critical validation step, moving beyond 'human review required' to a defensible research plan with measurable outcomes",
+              "priority": 2
+            },
+            {
+              "direction": "Add a section on broader implications: articulate how validating or falsifying the kinematic decoupling mechanism would reshape our understanding of r-process nucleosynthesis and kilonova interpretation beyond the immediate scope",
+              "expected_gain": "Elevates the proposal from a narrow technical formalization to a contribution with field-wide significance, motivating the investment required to resolve the identified dependencies",
+              "priority": 3
+            }
+          ],
+          "rationale": "The manuscript articulates a clear conditional research trajectory with well-defined proof obligations, explicit failure boundaries, and a structured decision matrix for future validation. The identification of open problems (missing formal definitions for timescales and spectral metrics) and the requirement for human review before theorem-status updates demonstrate honest scoping. However, the future directions remain largely procedural rather than scientifically expansive—they focus on closing definitional gaps rather than outlining broader research trajectories or actionable next steps for the field beyond the immediate proof obligations. The counterexample analysis dependency is acknowledged but not developed into a concrete research program.",
+          "score": 7
+        },
+        {
+          "dimension": "Theory Auditability",
+          "evidence": [
+            {
+              "assessment": "Establishes the central auditable object (the kinematic ratio) and explicitly flags it as candidate/unverified, making the dependency on upstream definitions transparent.",
+              "block_id": "block-2",
+              "excerpt": "Candidate, unverified definition. Let the kinematic decoupling ratio be the dimensionless quantity R = V1/V2",
+              "section_id": "formal_problem_and_hypotheses"
+            }
+          ],
+          "grounding_warnings": [
+            "evidence[2].excerpt is not found in its referenced block and was discarded",
+            "evidence[3].excerpt is not found in its referenced block and was discarded",
+            "evidence[4].excerpt is not found in its referenced block and was discarded",
+            "evidence[5].excerpt is not found in its referenced block and was discarded",
+            "evidence[6].excerpt is not found in its referenced block and was discarded"
+          ],
+          "major_weaknesses": [
+            {
+              "description": "The core timescales (V1, V2) and spectral metrics (V7, V8, V9) lack closed-form mathematical definitions, leaving the central inequality V1 >= V2 and the non-isomorphism claim as placeholders rather than auditable objects.",
+              "evidence_refs": [
+                {
+                  "block_id": "def_ledger",
+                  "section_id": "definitions_and_propositions"
+                },
+                {
+                  "block_id": "block-2",
+                  "section_id": "formal_problem_and_hypotheses"
+                }
+              ],
+              "impact": "The audit chain is structurally complete but operationally incomplete: the proof obligations PO1 and PO2 cannot be discharged without human-supplied definitions, which blocks the theory from being fully testable.",
+              "location_status": "located",
+              "repair_direction": "Supply explicit closed-form definitions for V1 (effective fission timescale as a function of beta-decay half-lives and isomeric state lifetimes), V2 (ejecta expansion timescale as a function of initial velocity and density profile), and V7 (actinide spectral evolution metric specifying which lines and wavelengths). If closed forms are unavailable, provide bounded parametric ranges with explicit justification.",
+              "severity": "major"
+            },
+            {
+              "description": "The counterexample analyzer batch was discarded, leaving the non-isomorphism proof obligation (PO2) without a bounded counterexample space.",
+              "evidence_refs": [
+                {
+                  "block_id": "b6",
+                  "section_id": "forward_derivation_and_counterexamples"
+                },
+                {
+                  "block_id": "b2",
+                  "section_id": "appendix_evidence_and_review"
+                }
+              ],
+              "impact": "The spectral discrimination claim (P2) cannot be rigorously defended against geometric and magnetic confounders without a completed counterexample analysis, weakening the auditability of the falsification path.",
+              "location_status": "located",
+              "repair_direction": "Re-execute the counterexample analysis with qualified human review, or formally waive it with explicit justification. Document the counterexample space (e.g., specific geometric asymmetry configurations and magnetic field topologies that were tested) and the criteria for rejection.",
+              "severity": "moderate"
+            }
+          ],
+          "maximum_strength": {
+            "description": "The manuscript constructs a fully labeled, dependency-linked audit chain from definitions through assumptions, propositions, lemmas, proof obligations, and outcome branches, with explicit failure boundaries and a preregistered decision matrix that tells the reader exactly what must be checked next.",
+            "evidence_refs": [
+              {
+                "block_id": "block-6",
+                "section_id": "formal_problem_and_hypotheses"
+              },
+              {
+                "block_id": "decision_matrix",
+                "section_id": "expected_outcomes"
+              },
+              {
+                "block_id": "def_ledger",
+                "section_id": "definitions_and_propositions"
+              }
+            ],
+            "location_status": "located",
+            "present": true
+          },
+          "polish_directions": [
+            {
+              "direction": "Supply closed-form definitions or bounded parametric ranges for V1, V2, V7, V8, and V9, with explicit justification for the chosen forms.",
+              "expected_gain": "Transforms the audit chain from structurally complete to operationally executable, allowing PO1 and PO2 to be discharged without blocking on human input.",
+              "priority": 1
+            },
+            {
+              "direction": "Re-execute or formally waive the counterexample analysis for PO2, documenting the tested counterexample space and rejection criteria.",
+              "expected_gain": "Strengthens the auditability of the spectral discrimination claim by providing a bounded counterexample space that can be independently verified.",
+              "priority": 2
+            },
+            {
+              "direction": "Add a dependency graph (e.g., a directed acyclic graph) visualizing the links from definitions through assumptions, propositions, lemmas, and proof obligations to outcome branches.",
+              "expected_gain": "Enhances reader comprehension of the audit chain and makes the conditional reasoning more transparent, especially for non-specialist reviewers.",
+              "priority": 3
+            }
+          ],
+          "rationale": "The manuscript excels at turning its central proposal into an auditable chain: it labels definitions (V1–V10), assumptions (A1, A2), propositions (P1, P2), candidate lemmas (L1–L6), proof obligations (PO1, PO2), and explicit failure boundaries, and it threads dependency links through a decision matrix and a definition ledger. A reader can clearly identify what must be checked next (closed-form definitions of V1, V2, V7, V8, V9; discharge of PO1 and PO2; counterexample review). The strongest contribution is the explicit, preregistered mapping from outcome branches to lemmas and proof obligations, which makes the audit path transparent. Major weaknesses are (1) the absence of closed-form definitions for the core timescales and spectral metrics, which leaves the central inequality V1 >= V2 and the non-isomorphism claim as placeholders rather than auditable objects, and (2) the discarded counterexample analyzer batch, which leaves the non-isomorphism proof obligation (PO2) without a bounded counterexample space. These gaps do not undermine the audit structure but do prevent the chain from being fully executable without human intervention.",
+          "score": 8
+        },
+        {
+          "dimension": "Boundary and Status Discipline",
+          "evidence": [
+            {
+              "assessment": "Explicitly marks the kinematic ratio definition as candidate and unverified, preventing premature theorem-status attribution.",
+              "block_id": "block-2",
+              "excerpt": "Candidate, unverified definition",
+              "section_id": "formal_problem_and_hypotheses"
+            },
+            {
+              "assessment": "Clearly labels the entry lemmas and proof obligations as scoped proposals, not established results, maintaining honest scope.",
+              "block_id": "block-6",
+              "excerpt": "Candidate theorem entry (proposed, unverified)",
+              "section_id": "formal_problem_and_hypotheses"
+            },
+            {
+              "assessment": "Attaches review-required status to every core variable definition, ensuring no derivation proceeds on placeholder premises.",
+              "block_id": "def_ledger",
+              "excerpt": "needs_human_input",
+              "section_id": "definitions_and_propositions"
+            }
+          ],
+          "grounding_warnings": [
+            "evidence[3].excerpt is not found in its referenced block and was discarded",
+            "evidence[4].excerpt is not found in its referenced block and was discarded"
+          ],
+          "major_weaknesses": [
+            {
+              "description": "Occasional redundancy in restating the same status qualifiers (e.g., 'candidate, unverified' and 'no-information') across multiple sections without adding new conditional reasoning or scope refinement.",
+              "evidence_refs": [
+                {
+                  "block_id": "block-5",
+                  "section_id": "formal_problem_and_hypotheses"
+                },
+                {
+                  "block_id": "risk_limitations_and_review-3",
+                  "section_id": "risk_limitations_and_review"
+                },
+                {
+                  "block_id": "b1",
+                  "section_id": "forward_derivation_and_counterexamples"
+                }
+              ],
+              "impact": "Slightly dilutes argumentative flow and may cause reader fatigue, though it does not introduce logical errors or scope violations.",
+              "location_status": "located",
+              "repair_direction": "Consolidate repeated status declarations into a single authoritative ledger or summary table at the end of each major section, using cross-references rather than full restatements. This preserves discipline while improving readability.",
+              "severity": "moderate"
+            }
+          ],
+          "maximum_strength": {
+            "description": "The manuscript excels at disciplined scope management: it consistently attaches candidate, unverified, expected-not-observed, no-information, and review-required statuses to every mathematical claim, definition, and proof obligation, while explicitly separating procedural dependencies from scientific conclusions. The failure boundary (V1 < V2 or geometric/magnetic replication of V7) is declared upfront and revisited without restating uncertainty in a way that undermines the argument.",
+            "evidence_refs": [
+              {
+                "block_id": "block-2",
+                "section_id": "formal_problem_and_hypotheses"
+              },
+              {
+                "block_id": "block-6",
+                "section_id": "formal_problem_and_hypotheses"
+              },
+              {
+                "block_id": "decision_matrix",
+                "section_id": "expected_outcomes"
+              }
+            ],
+            "location_status": "located",
+            "present": true
+          },
+          "polish_directions": [
+            {
+              "direction": "Introduce a compact 'Status Summary Table' at the end of each major section (e.g., Problem Definition, Study Design, Forward Derivation) that consolidates all candidate, unverified, no-information, and review-required items with cross-references to their detailed locations.",
+              "expected_gain": "Reduces redundancy while preserving full status discipline, improving navigability and argumentative clarity for reviewers.",
+              "priority": 1
+            },
+            {
+              "direction": "In the Expected Outcome Branches section, add a brief conditional reasoning chain showing how each branch's trigger logically connects to the corresponding lemma and proof obligation, making the decision matrix more self-contained.",
+              "expected_gain": "Strengthens the link between prespecified outcomes and formal obligations, making the proposal's falsifiability structure more transparent.",
+              "priority": 2
+            },
+            {
+              "direction": "In the Risk and Review section, explicitly state which no-information branches, if resolved unfavorably, would invalidate the entire proposal versus those that would merely constrain its scope.",
+              "expected_gain": "Clarifies the stakes of each procedural dependency, helping reviewers prioritize which human-review items are most critical for the proposal's viability.",
+              "priority": 3
+            }
+          ],
+          "rationale": "The manuscript demonstrates exceptional discipline in attaching precise, consistent status markers to every mathematical claim, definition, and proof obligation. It systematically distinguishes candidate, unverified, expected-not-observed, no-information, and review-required statuses, and it refuses to conflate procedural dependencies with scientific conclusions. The scope is honestly bounded (high-entropy, low-density trajectories; V1 >= V2 regime), failure conditions are explicitly declared, and the decision matrix rigorously maps outcome branches to allowed conclusions without overclaiming. The strongest contribution is the repeated, disciplined separation of the kinematic mechanism from geometric/magnetic confounders via explicit non-isomorphism proof obligations, coupled with transparent acknowledgment that key definitions remain unresolved. A minor weakness is occasional redundancy in restating the same status qualifiers across sections, which slightly dilutes the argumentative flow without adding new information.",
+          "score": 9
+        },
+        {
+          "dimension": "Falsifiability and Decision Completeness",
+          "evidence": [
+            {
+              "assessment": "Explicitly states falsification conditions: V1 < V2 throughout domain, or geometric/magnetic asymmetries perfectly replicating spectral shifts—providing concrete counterexample criteria.",
+              "block_id": "block-7",
+              "excerpt": "The mechanism fails on either of two declared boundaries",
+              "section_id": "formal_problem_and_hypotheses"
+            },
+            {
+              "assessment": "Demonstrates epistemic humility by distinguishing support from proof, preventing overclaiming even in the favorable branch.",
+              "block_id": "supportive_branch",
+              "excerpt": "the permitted conclusion is support, not proof",
+              "section_id": "expected_outcomes"
+            },
+            {
+              "assessment": "Explicitly handles the no-information branch, preventing misinterpretation of procedural gaps as scientific findings.",
+              "block_id": "invalid_branch",
+              "excerpt": "This branch is a no-information condition for the dependency",
+              "section_id": "expected_outcomes"
+            }
+          ],
+          "grounding_warnings": [
+            "evidence[1].excerpt is not found in its referenced block and was discarded",
+            "evidence[5].excerpt is not found in its referenced block and was discarded",
+            "evidence[6].excerpt is not found in its referenced block and was discarded"
+          ],
+          "major_weaknesses": [
+            {
+              "description": "The falsifiability framework remains abstract because the mathematical definitions required for concrete testing are absent. While the proposal correctly identifies V1 (effective fission timescale) and V2 (ejecta expansion timescale) as needing human input, it does not provide even candidate formulations or estimation strategies that would enable preliminary falsification attempts.",
+              "evidence_refs": [
+                {
+                  "block_id": "def_ledger",
+                  "section_id": "definitions_and_propositions"
+                },
+                {
+                  "block_id": "block-2",
+                  "section_id": "formal_problem_and_hypotheses"
+                }
+              ],
+              "impact": "Without operational definitions, the falsification conditions (V1 < V2, spectral non-isomorphism) cannot be concretely evaluated, leaving the framework theoretically sound but operationally incomplete. The proposal risks becoming unfalsifiable in practice if definitions remain perpetually unresolved.",
+              "location_status": "located",
+              "repair_direction": "Provide candidate mathematical formulations for V1 and V2, even if approximate or based on simplified nuclear physics models. Include estimation strategies using existing nuclear data (beta-decay half-lives, isomeric state lifetimes) and hydrodynamic simulations to establish preliminary bounds. This would transform the framework from purely abstract to operationally testable.",
+              "severity": "major"
+            },
+            {
+              "description": "The counterexample analysis was discarded rather than completed, leaving a critical gap in the falsification framework. The proposal acknowledges this as a procedural dependency but does not provide a concrete plan for re-execution or alternative validation strategies.",
+              "evidence_refs": [
+                {
+                  "block_id": "b2",
+                  "section_id": "appendix_evidence_and_review"
+                },
+                {
+                  "block_id": "risk_limitations_and_review-1",
+                  "section_id": "risk_limitations_and_review"
+                }
+              ],
+              "impact": "The non-isomorphism claim (that delayed fission spectral evolution cannot be replicated by geometric/magnetic asymmetries) remains untested, weakening the discriminative power of the framework. Without bounded counterexample space, the proof obligations cannot be discharged.",
+              "location_status": "located",
+              "repair_direction": "Specify a concrete re-execution plan for the counterexample analysis, including the specific geometric and magnetic configurations to be tested, the metrics for assessing isomorphism, and the criteria for determining whether counterexamples are valid. Alternatively, propose a simplified analytical or numerical approach to bound the counterexample space.",
+              "severity": "moderate"
+            }
+          ],
+          "maximum_strength": {
+            "description": "The proposal achieves exceptional decision completeness through its systematic pre-registration of outcome branches, explicit falsification boundaries, and honest treatment of procedural dependencies as no-information conditions rather than scientific conclusions. The outcome-to-lemma-to-action matrix and counterexample decision matrix demonstrate rigorous conditional reasoning that maps every meaningful branch to concrete next actions.",
+            "evidence_refs": [
+              {
+                "block_id": "decision_matrix",
+                "section_id": "expected_outcomes"
+              },
+              {
+                "block_id": "block-7",
+                "section_id": "formal_problem_and_hypotheses"
+              },
+              {
+                "block_id": "b5",
+                "section_id": "forward_derivation_and_counterexamples"
+              }
+            ],
+            "location_status": "located",
+            "present": true
+          },
+          "polish_directions": [
+            {
+              "direction": "Provide candidate mathematical formulations for V1 and V2, even if approximate, using existing nuclear data and hydrodynamic estimates to establish preliminary bounds on the kinematic decoupling ratio R = V1/V2.",
+              "expected_gain": "Transforms the falsifiability framework from abstract to operationally testable, enabling concrete evaluation of the V1 >= V2 condition and providing a pathway to discharge proof obligation PO1.",
+              "priority": 1
+            },
+            {
+              "direction": "Specify a concrete re-execution plan for the counterexample analysis, detailing the geometric and magnetic configurations to be tested, the metrics for assessing spectral isomorphism, and the criteria for valid counterexamples.",
+              "expected_gain": "Closes the critical gap in the discriminative framework, enabling evaluation of proof obligation PO2 and strengthening the claim that delayed fission produces uniquely identifiable spectral signatures.",
+              "priority": 2
+            },
+            {
+              "direction": "Add a preliminary sensitivity analysis showing how the mechanism's predictions vary across plausible ranges of V1 and V2, even with approximate definitions, to demonstrate the framework's empirical content and identify the most consequential parameter regimes.",
+              "expected_gain": "Provides concrete guidance for future observational tests and theoretical refinements, demonstrating that the framework has empirical content even before full formalization is complete.",
+              "priority": 3
+            }
+          ],
+          "rationale": "The proposal demonstrates exceptional commitment to falsifiability and decision completeness through its systematic pre-registration of outcome branches, explicit failure boundaries, and honest acknowledgment of unresolved dependencies. The manuscript excels at mapping conditional logic: it defines clear falsifiers (V1 < V2 throughout admissible domain, or geometric/magnetic asymmetries perfectly replicating spectral signatures), establishes a comprehensive outcome-to-lemma-to-action matrix covering supportive, heterogeneous, null/contradictory, and uninformative branches, and explicitly states that no branch is treated as observed. The decision logic is closed in the sense that every meaningful branch has a prescribed next action, and the proposal refuses to conflate procedural dependencies (missing definitions, discarded counterexample batch) with scientific conclusions. However, the score is capped at 8 rather than higher because the falsifiability framework, while structurally complete, remains abstract—the actual mathematical definitions that would enable concrete testing are absent, and the counterexample analysis was discarded rather than completed. The proposal is honest about these gaps but does not provide a concrete pathway for resolving them beyond 'qualified human review,' leaving the falsifiability framework theoretically sound but operationally incomplete.",
+          "score": 8
+        },
+        {
+          "dimension": "Energy-Condition Defense",
+          "evidence": [
+            {
+              "assessment": "Shows the author understands where AANEC is physically relevant (trapped surfaces) while correctly denying it any role in the spectral-discrimination claim, demonstrating honest scope rather than decorative terminology.",
+              "block_id": "B3",
+              "excerpt": "AANEC, while relevant for trapped surface formation in extreme gravity, provides no information regarding the temporal evolution of actinide spectral lines",
+              "section_id": "appendix_variables_and_definitions"
+            },
+            {
+              "assessment": "Explicitly disclaims any reliance on focusing theorems, which is the strongest possible statement of boundary defense for this dimension.",
+              "block_id": "B1",
+              "excerpt": "distinct from the geometric energy conditions (NEC, SEC, AANEC) governing spacetime curvature. Consequently, no implication from general relativistic focusing theorems is assumed or required",
+              "section_id": "appendix_variables_and_definitions"
+            }
+          ],
+          "grounding_warnings": [
+            "evidence[1].excerpt is not found in its referenced block and was discarded",
+            "evidence[2].excerpt is not found in its referenced block and was discarded",
+            "evidence[3].excerpt is not found in its referenced block and was discarded",
+            "evidence[4].excerpt is not found in its referenced block and was discarded"
+          ],
+          "major_weaknesses": [
+            {
+              "description": "Null convergence condition and Ricci contraction are not named explicitly; the manuscript refers only to 'focusing in GR' under AANEC. A reader looking for the precise differential-geometric terms will not find them.",
+              "evidence_refs": [
+                {
+                  "block_id": "B2",
+                  "section_id": "appendix_variables_and_definitions"
+                },
+                {
+                  "block_id": "B3",
+                  "section_id": "appendix_variables_and_definitions"
+                }
+              ],
+              "impact": "Minor gap in terminological completeness. The logical defense is intact, but the absence of explicit naming leaves a small opening for a reviewer to question whether the author has fully engaged with the focusing-theorem literature.",
+              "location_status": "located",
+              "repair_direction": "Add a row to the taxonomy table for the null convergence condition (R_ab k^a k^b >= 0) and Ricci contraction, explicitly stating that these are equivalent to NEC for classical matter and are irrelevant to the V1/V2 kinetic competition. One sentence suffices.",
+              "severity": "moderate"
+            }
+          ],
+          "maximum_strength": {
+            "description": "The appendix provides a clean taxonomy table mapping each energy condition to its domain and its logical relation (or non-relation) to the mechanism, followed by a bidirectional defense statement that neither NEC satisfaction implies the mechanism nor SEC failure precludes it. This is accurate boundary defense at a high level of rigor.",
+            "evidence_refs": [
+              {
+                "block_id": "B2",
+                "section_id": "appendix_variables_and_definitions"
+              },
+              {
+                "block_id": "B3",
+                "section_id": "appendix_variables_and_definitions"
+              }
+            ],
+            "location_status": "located",
+            "present": true
+          },
+          "polish_directions": [
+            {
+              "direction": "Add explicit rows for null convergence condition and Ricci contraction to the taxonomy table, with a one-sentence statement that they are equivalent to NEC for classical matter and carry no implication for the kinetic timescale competition.",
+              "expected_gain": "Completes the terminological coverage the criterion asks for, closing the only identifiable gap and raising the defense from excellent to exhaustive.",
+              "priority": 1
+            },
+            {
+              "direction": "In block B3, add a single sentence noting where SEC/NEC would become relevant (e.g., singularity theorems, trapped-surface formation) to demonstrate positive knowledge of the boundary rather than only negative disclaimers.",
+              "expected_gain": "Strengthens the impression of honest scope and expert-level boundary awareness, which the criterion explicitly rewards.",
+              "priority": 2
+            }
+          ],
+          "rationale": "The manuscript delivers an unusually careful and explicit boundary defense separating geometric energy conditions (NEC, AANEC, SEC, null convergence/Ricci contraction) from the kinetic premises of the proposed mechanism. It correctly treats the kinematic ratio V1/V2 as an operational nuclear-timescale construct that is logically independent of spacetime focusing theorems, and it explicitly refuses to let satisfaction or violation of NEC/SEC imply anything about the delayed-fission regime. The taxonomy table cleanly partitions domains, and the defense against automatic interchangeability is stated in strong, falsifiable terms. The only meaningful gap is that null convergence and Ricci contraction are not named explicitly (only implicitly via 'focusing in GR'), and the defense could be strengthened by briefly noting where SEC/NEC would become relevant (e.g., trapped-surface or singularity arguments) to show the author knows the boundary rather than merely asserting it.",
+          "score": 9
+        }
+      ],
+      "failed_dimensions": [],
+      "judge_attempts": [
+        {
+          "attempt": 1,
+          "dimension": "Synthesis Quality",
+          "grounding_warnings": [
+            "evidence[4].excerpt is not found in its referenced block and was discarded"
+          ],
+          "response_summary": {
+            "dimension": "Synthesis Quality",
+            "evidence_count": 4,
+            "major_weakness_count": 2,
+            "maximum_strength_present": true,
+            "polish_direction_count": 3,
+            "rationale_present": true,
+            "response_type": "object",
+            "score": 7,
+            "top_level_keys": [
+              "dimension",
+              "evidence",
+              "major_weaknesses",
+              "maximum_strength",
+              "polish_directions",
+              "rationale",
+              "score"
+            ]
+          },
+          "status": "VALID",
+          "warning_category": "grounding_warning"
+        },
+        {
+          "attempt": 1,
+          "dimension": "Organization",
+          "grounding_warnings": [
+            "evidence[5].excerpt is not found in its referenced block and was discarded"
+          ],
+          "response_summary": {
+            "dimension": "Organization",
+            "evidence_count": 5,
+            "major_weakness_count": 3,
+            "maximum_strength_present": true,
+            "polish_direction_count": 3,
+            "rationale_present": true,
+            "response_type": "object",
+            "score": 6,
+            "top_level_keys": [
+              "dimension",
+              "evidence",
+              "major_weaknesses",
+              "maximum_strength",
+              "polish_directions",
+              "rationale",
+              "score"
+            ]
+          },
+          "status": "VALID",
+          "warning_category": "grounding_warning"
+        },
+        {
+          "attempt": 1,
+          "dimension": "Readability",
+          "grounding_warnings": [
+            "evidence[1].excerpt is not found in its referenced block and was discarded",
+            "evidence[3].excerpt is not found in its referenced block and was discarded",
+            "evidence[4].excerpt is not found in its referenced block and was discarded"
+          ],
+          "response_summary": {
+            "dimension": "Readability",
+            "evidence_count": 5,
+            "major_weakness_count": 3,
+            "maximum_strength_present": true,
+            "polish_direction_count": 4,
+            "rationale_present": true,
+            "response_type": "object",
+            "score": 6,
+            "top_level_keys": [
+              "dimension",
+              "evidence",
+              "major_weaknesses",
+              "maximum_strength",
+              "polish_directions",
+              "rationale",
+              "score"
+            ]
+          },
+          "status": "VALID",
+          "warning_category": "grounding_warning"
+        },
+        {
+          "attempt": 1,
+          "dimension": "Academic Rigor",
+          "grounding_warnings": [
+            "evidence[2].excerpt is not found in its referenced block and was discarded",
+            "evidence[3].excerpt is not found in its referenced block and was discarded"
+          ],
+          "response_summary": {
+            "dimension": "Academic Rigor",
+            "evidence_count": 5,
+            "major_weakness_count": 3,
+            "maximum_strength_present": true,
+            "polish_direction_count": 4,
+            "rationale_present": true,
+            "response_type": "object",
+            "score": 7,
+            "top_level_keys": [
+              "dimension",
+              "evidence",
+              "major_weaknesses",
+              "maximum_strength",
+              "polish_directions",
+              "rationale",
+              "score"
+            ]
+          },
+          "status": "VALID",
+          "warning_category": "grounding_warning"
+        },
+        {
+          "attempt": 1,
+          "dimension": "Clarity",
+          "grounding_warnings": [
+            "evidence[3].excerpt is not found in its referenced block and was discarded"
+          ],
+          "response_summary": {
+            "dimension": "Clarity",
+            "evidence_count": 5,
+            "major_weakness_count": 3,
+            "maximum_strength_present": true,
+            "polish_direction_count": 4,
+            "rationale_present": true,
+            "response_type": "object",
+            "score": 6,
+            "top_level_keys": [
+              "dimension",
+              "evidence",
+              "major_weaknesses",
+              "maximum_strength",
+              "polish_directions",
+              "rationale",
+              "score"
+            ]
+          },
+          "status": "VALID",
+          "warning_category": "grounding_warning"
+        },
+        {
+          "attempt": 1,
+          "dimension": "Coherence",
+          "grounding_warnings": [
+            "evidence[2].excerpt is not found in its referenced block and was discarded"
+          ],
+          "response_summary": {
+            "dimension": "Coherence",
+            "evidence_count": 6,
+            "major_weakness_count": 3,
+            "maximum_strength_present": true,
+            "polish_direction_count": 3,
+            "rationale_present": true,
+            "response_type": "object",
+            "score": 8,
+            "top_level_keys": [
+              "dimension",
+              "evidence",
+              "major_weaknesses",
+              "maximum_strength",
+              "polish_directions",
+              "rationale",
+              "score"
+            ]
+          },
+          "status": "VALID",
+          "warning_category": "grounding_warning"
+        },
+        {
+          "attempt": 1,
+          "dimension": "Comprehensiveness",
+          "grounding_warnings": [
+            "evidence[1].excerpt is not found in its referenced block and was discarded",
+            "evidence[2].excerpt is not found in its referenced block and was discarded",
+            "evidence[3].excerpt is not found in its referenced block and was discarded"
+          ],
+          "response_summary": {
+            "dimension": "Comprehensiveness",
+            "evidence_count": 4,
+            "major_weakness_count": 3,
+            "maximum_strength_present": true,
+            "polish_direction_count": 3,
+            "rationale_present": true,
+            "response_type": "object",
+            "score": 7,
+            "top_level_keys": [
+              "dimension",
+              "evidence",
+              "major_weaknesses",
+              "maximum_strength",
+              "polish_directions",
+              "rationale",
+              "score"
+            ]
+          },
+          "status": "VALID",
+          "warning_category": "grounding_warning"
+        },
+        {
+          "attempt": 1,
+          "dimension": "Critical Analysis",
+          "grounding_warnings": [
+            "evidence[2].excerpt is not found in its referenced block and was discarded",
+            "evidence[3].excerpt is not found in its referenced block and was discarded"
+          ],
+          "response_summary": {
+            "dimension": "Critical Analysis",
+            "evidence_count": 4,
+            "major_weakness_count": 2,
+            "maximum_strength_present": true,
+            "polish_direction_count": 3,
+            "rationale_present": true,
+            "response_type": "object",
+            "score": 8,
+            "top_level_keys": [
+              "dimension",
+              "evidence",
+              "major_weaknesses",
+              "maximum_strength",
+              "polish_directions",
+              "rationale",
+              "score"
+            ]
+          },
+          "status": "VALID",
+          "warning_category": "grounding_warning"
+        },
+        {
+          "attempt": 1,
+          "dimension": "Novelty and Insights",
+          "grounding_warnings": [
+            "evidence[3].excerpt is not found in its referenced block and was discarded"
+          ],
+          "response_summary": {
+            "dimension": "Novelty and Insights",
+            "evidence_count": 5,
+            "major_weakness_count": 3,
+            "maximum_strength_present": true,
+            "polish_direction_count": 4,
+            "rationale_present": true,
+            "response_type": "object",
+            "score": 7,
+            "top_level_keys": [
+              "dimension",
+              "evidence",
+              "major_weaknesses",
+              "maximum_strength",
+              "polish_directions",
+              "rationale",
+              "score"
+            ]
+          },
+          "status": "VALID",
+          "warning_category": "grounding_warning"
+        },
+        {
+          "attempt": 1,
+          "dimension": "Future Directions",
+          "response_summary": {
+            "dimension": "Future Directions",
+            "evidence_count": 4,
+            "major_weakness_count": 2,
+            "maximum_strength_present": true,
+            "polish_direction_count": 3,
+            "rationale_present": true,
+            "response_type": "object",
+            "score": 7,
+            "top_level_keys": [
+              "dimension",
+              "evidence",
+              "major_weaknesses",
+              "maximum_strength",
+              "polish_directions",
+              "rationale",
+              "score"
+            ]
+          },
+          "status": "VALID"
+        },
+        {
+          "attempt": 1,
+          "dimension": "Theory Auditability",
+          "grounding_warnings": [
+            "evidence[2].excerpt is not found in its referenced block and was discarded",
+            "evidence[3].excerpt is not found in its referenced block and was discarded",
+            "evidence[4].excerpt is not found in its referenced block and was discarded",
+            "evidence[5].excerpt is not found in its referenced block and was discarded",
+            "evidence[6].excerpt is not found in its referenced block and was discarded"
+          ],
+          "response_summary": {
+            "dimension": "Theory Auditability",
+            "evidence_count": 6,
+            "major_weakness_count": 2,
+            "maximum_strength_present": true,
+            "polish_direction_count": 3,
+            "rationale_present": true,
+            "response_type": "object",
+            "score": 8,
+            "top_level_keys": [
+              "dimension",
+              "evidence",
+              "major_weaknesses",
+              "maximum_strength",
+              "polish_directions",
+              "rationale",
+              "score"
+            ]
+          },
+          "status": "VALID",
+          "warning_category": "grounding_warning"
+        },
+        {
+          "attempt": 1,
+          "dimension": "Boundary and Status Discipline",
+          "grounding_warnings": [
+            "evidence[3].excerpt is not found in its referenced block and was discarded",
+            "evidence[4].excerpt is not found in its referenced block and was discarded"
+          ],
+          "response_summary": {
+            "dimension": "Boundary and Status Discipline",
+            "evidence_count": 7,
+            "major_weakness_count": 1,
+            "maximum_strength_present": true,
+            "polish_direction_count": 3,
+            "rationale_present": true,
+            "response_type": "object",
+            "score": 9,
+            "top_level_keys": [
+              "dimension",
+              "evidence",
+              "major_weaknesses",
+              "maximum_strength",
+              "polish_directions",
+              "rationale",
+              "score"
+            ]
+          },
+          "status": "VALID",
+          "warning_category": "grounding_warning"
+        },
+        {
+          "attempt": 1,
+          "dimension": "Falsifiability and Decision Completeness",
+          "grounding_warnings": [
+            "evidence[1].excerpt is not found in its referenced block and was discarded",
+            "evidence[5].excerpt is not found in its referenced block and was discarded",
+            "evidence[6].excerpt is not found in its referenced block and was discarded"
+          ],
+          "response_summary": {
+            "dimension": "Falsifiability and Decision Completeness",
+            "evidence_count": 6,
+            "major_weakness_count": 2,
+            "maximum_strength_present": true,
+            "polish_direction_count": 3,
+            "rationale_present": true,
+            "response_type": "object",
+            "score": 8,
+            "top_level_keys": [
+              "dimension",
+              "evidence",
+              "major_weaknesses",
+              "maximum_strength",
+              "polish_directions",
+              "rationale",
+              "score"
+            ]
+          },
+          "status": "VALID",
+          "warning_category": "grounding_warning"
+        },
+        {
+          "attempt": 1,
+          "dimension": "Energy-Condition Defense",
+          "grounding_warnings": [
+            "evidence[1].excerpt is not found in its referenced block and was discarded",
+            "evidence[2].excerpt is not found in its referenced block and was discarded",
+            "evidence[3].excerpt is not found in its referenced block and was discarded",
+            "evidence[4].excerpt is not found in its referenced block and was discarded"
+          ],
+          "response_summary": {
+            "dimension": "Energy-Condition Defense",
+            "evidence_count": 6,
+            "major_weakness_count": 1,
+            "maximum_strength_present": true,
+            "polish_direction_count": 2,
+            "rationale_present": true,
+            "response_type": "object",
+            "score": 9,
+            "top_level_keys": [
+              "dimension",
+              "evidence",
+              "major_weaknesses",
+              "maximum_strength",
+              "polish_directions",
+              "rationale",
+              "score"
+            ]
+          },
+          "status": "VALID",
+          "warning_category": "grounding_warning"
+        }
+      ],
+      "markdown": "# Kinematic Decoupling of Fission Recycling in Kilonovae: A Delayed Neutron Release Mechanism for Third r-Process Peak Shifts and Anisotropic Curtaining\n\n**Keywords:** kilonovae, r-process, fission recycling, delayed neutron release, third r-process peak, lanthanide curtaining, actinide spectral lines, kinematic delay\n\n## Abstract\n\nMulti-messenger observations and nucleosynthetic networks confirm that binary neutron star mergers produce lanthanide-rich ejecta and synthesize heavy r-process elements through fission recycling. This proposal advances a mathematical theory formalizing the kinematic decoupling of fission recycling, positing that delayed neutron release from beta-decaying and isomer-trapped superheavy nuclei modifies the third r-process peak abundance. The central mechanism asserts that when the effective fission timescale exceeds the ejecta expansion timescale, the violation of instantaneous equilibrium induces a distinct temporal evolution of actinide spectral lines. This temporal signature is proposed to be uniquely sensitive to fission kinetics, establishing a formal boundary against alternative explanations driven purely by geometric or magnetic ejecta asymmetries.\n\nThe theoretical framework requires a rigorous discrimination proof to demonstrate the non-isomorphism between delayed fission spectral evolution and static geometric or magnetic asymmetries. The planned contribution relies on deriving an analytical relationship between the effective fission timescale, the expansion timescale, and abundance yields. Because the mathematical definitions for these timescales and the operational metrics for spectral evolution remain unresolved, the design proceeds as an unverified proposal. The expected outcome is a formal proof obligation that either supports the proposed mechanism within declared boundaries or invalidates it if the fission timescale is strictly shorter than the expansion timescale.\n\n## Introduction\n\n### Background\n\nBinary neutron star mergers are established as the dominant astrophysical site for rapid neutron-capture (r-process) nucleosynthesis, synthesizing elements heavier than iron under extreme neutron-rich conditions. Multi-messenger observations of GW170817 and its kilonova counterpart AT2017gfo confirmed the presence of lanthanide-rich ejecta, characterized by high opacity and redshifted near-infrared emission. The observed light curves and spectral features align with models of radioactive decay powering the transient, where the electron fraction ($Y_e$) dictates the nucleosynthetic pathway. Low $Y_e$ trajectories ($Y_e \\lesssim 0.2$) drive the flow toward the third r-process peak and actinides, while higher $Y_e$ components produce lighter r-process elements. This compositional stratification is critical for interpreting the electromagnetic signatures of merger ejecta. [@cite_07d6df5d6978a1fc] [@cite_30c88fe46f23448d] [@cite_612290131318c0d4]\n\n### Research Gap\n\nDespite this consensus, a significant theoretical gap remains in linking the timing of fission recycling to observable spectral evolution. Current models often assume instantaneous fission equilibrium, treating fission neutron release as prompt relative to ejecta expansion. However, beta-delayed and isomer-delayed fission introduce a kinematic delay, potentially decoupling the late-stage r-process from the prompt outflow. This delay modifies the third r-process peak freeze-out abundance and induces viewing-angle-dependent lanthanide curtaining. Crucially, the resulting temporal evolution of actinide spectral lines is hypothesized to be distinct from patterns generated by static geometric or magnetic asymmetries. Existing literature lacks a formal framework to discriminate between kinematic fission delays and purely geometric confounders in kilonova spectra, leaving the specific spectral signatures of delayed fission unverified. [@cite_43194f3b6113c2ab] [@cite_b668987a568d271f]\n\n### Proposed Contribution\n\nThis research plan proposes a mathematical theory of kinematic decoupling in fission recycling. The central contribution is a formal unification of third r-process peak shifts and anisotropic lanthanide curtaining through a delayed neutron release mechanism. We introduce a static axiomatic framework where the effective fission timescale ($t_{fission}$) competes with the ejecta expansion timescale ($t_{expansion}$). The proposal asserts that when $t_{fission} \\ge t_{expansion}$, the violation of instantaneous equilibrium produces a unique temporal evolution of actinide spectral lines. This mechanism is posited to be non-isomorphic to spectral signatures arising from geometric asymmetries or magnetic field configurations alone. The work establishes the theoretical basis for distinguishing kinematic fission delays from static ejecta morphologies.\n\n### Design Assumptions\n\nThe theory rests on two core design assumptions. First, the effective fission timescale, governed by beta-decay half-lives and nuclear isomeric states, is comparable to or longer than the ejecta expansion timescale in high-entropy, low-density trajectories. Second, actinide spectral line evolution is uniquely sensitive to this fission timescale and cannot be mimicked by variations in ejecta geometry or magnetic field topology. These assumptions define the boundary conditions for the proposed mechanism. The failure of the mechanism is explicitly scoped to regimes where $t_{fission} < t_{expansion}$ or where geometric/magnetic asymmetries perfectly replicate the predicted spectral shifts without invoking delayed fission. Formal definitions for the timescales and spectral metrics are required to advance the proof obligations.\n\n## Background, Survey, and Research Gap\n\n### Established Site and Nucleosynthetic Benchmark\n\nThe rapid neutron-capture process (r-process) synthesizes elements heavier than iron in transient, high-energy environments where neutron capture outpaces beta decay. Binary neutron star mergers are the dominant astrophysical site for the main r-process, confirmed by the multi-messenger detection of GW170817 and its kilonova counterpart AT2017gfo. The electromagnetic emission of these transients is powered by the radioactive decay of neutron-rich ejecta, producing a characteristic two-component structure: a fast, lanthanide-poor blue component and a slower, lanthanide-rich red component. This observational anchor establishes the physical regime—extreme neutron densities and rapid expansion—within which fission recycling and actinide production must be modeled. [@cite_07d6df5d6978a1fc] [@cite_30c88fe46f23448d] [@cite_612290131318c0d4]\n\n### Fission Recycling and Abundance Structure\n\nFission recycling is the fundamental mechanism governing the nucleosynthetic flow toward the heaviest nuclei. As the r-process path advances along the neutron-drip line, superheavy nuclei undergo spontaneous, beta-delayed, or neutron-induced fission, fragmenting into lighter species that re-enter the process. This recycling stabilizes the abundance distribution, rendering the final pattern largely insensitive to initial seed conditions. However, the precise location of the third r-process peak is contingent upon the timing of neutron release relative to the freeze-out of neutron-capture equilibrium. Late neutron release shifts the peak toward higher mass numbers, while accelerated beta-decay rates can mitigate this shift by promoting earlier fission events. This sensitivity establishes the kinetic delay of fission as a critical, yet under-constrained, variable in abundance predictions. [@cite_b668987a568d271f] [@cite_fc6f024383b8a4d2]\n\n### Spectral Diagnostics and Geometric Confounders\n\nKilonova spectra provide the primary diagnostic for r-process enrichment, yet they suffer from severe degeneracies between composition and geometry. Lanthanide opacities, driven by dense line forests of f-shell transitions, redshift the emission and prolong cooling times. Viewing-angle-dependent lanthanide curtaining has been observed, but its origin is contested. Geometric asymmetries in the ejecta, such as shock-heated polar winds or tidal tails, and magnetic field configurations can produce anisotropic opacity distributions without invoking time-dependent nuclear kinetics. Consequently, current observational frameworks cannot uniquely attribute spectral evolution to delayed fission recycling; they must first rule out static geometric and magnetic confounders that mimic similar abundance variations. [@cite_43194f3b6113c2ab]\n\n### The Kinematic Decoupling Gap\n\nThe proposed research addresses a specific unresolved bridge: the lack of a formal criterion distinguishing kinematic fission delays from geometric asymmetries. Existing surveys establish that fission timescales compete with expansion timescales, but they do not provide a unified relation that links the effective fission timescale to both the third r-process peak shift and the temporal evolution of actinide spectral lines. The gap is not merely a deficit in observational data, but a structural absence of a theoretical control panel that can isolate the delayed neutron release mechanism from purely geometric confounders. Without this formal separation, the interpretation of viewing-angle-dependent lanthanide curtaining remains ambiguous.\n\n### Missing Formal Premises\n\nThe argument for kinematic decoupling requires two specific formal premises that are currently missing from the established literature. First, a precise mathematical definition of the effective fission timescale, incorporating both beta-decay half-lives and isomeric state contributions, is required to compete against the ejecta expansion timescale. Second, a discrimination proof is needed to demonstrate that the temporal evolution of actinide spectral lines under delayed fission is non-isomorphic to patterns generated by static geometric or magnetic asymmetries. These are not empirical observations but necessary theoretical constructs; their absence prevents the formulation of a falsifiable mechanism that can be tested against multi-messenger data.\n\n### Consequence for the Research Plan\n\nThis gap motivates the shift from empirical surveying to mathematical theory construction. The research plan must therefore establish a static axiomatic framework that defines the kinematic condition where the effective fission timescale exceeds the expansion timescale. This framework will serve as the foundation for deriving the abundance shift and spectral evolution signatures. The transition to the next section will detail the candidate theorem entry, specifying the domain of admissible premises and the scoped entry lemma required to formalize the delayed neutron release mechanism. [@cite_0247e311d8727a8e]\n\n## Research Questions and Planned Contributions\n\n### Background and Research Gap\n\nBinary neutron star mergers synthesize heavy elements through the rapid neutron-capture process, where extreme neutron densities drive flow toward the neutron drip line. Fission recycling stabilizes the third r-process peak, but the precise timing of delayed neutron release relative to ejecta expansion remains a critical unresolved variable. The kinematic delay in beta-delayed and isomer-delayed fission neutron release modifies the third r-process peak freeze-out abundance and induces specific temporal evolution of actinide spectral lines. Current models struggle to distinguish whether viewing-angle-dependent lanthanide curtaining arises from kinematic fission delays or purely geometric and magnetic asymmetries in the dynamical ejecta. This ambiguity requires a formal theoretical framework to isolate the temporal signature of delayed fission. [@cite_07d6df5d6978a1fc] [@cite_30c88fe46f23448d] [@cite_612290131318c0d4]\n\n### Operational Research Questions\n\n1. What is the precise mathematical definition for the 'effective fission timescale' including beta-decay and isomeric state contributions?\n2. What is the mathematical formulation of the 'ejecta expansion timescale' in the context of relativistic outflows?\n3. What are the operational definitions for the metrics 'third r-process peak abundance shift' and 'spectral evolution'?\n4. Can a proof obligation be formulated to demonstrate the non-isomorphism between delayed fission spectral evolution and purely geometric/magnetic asymmetries?\n5. What boundary analysis is required to establish the limits of validity for the t_fission >= t_expansion assumption?\n6. Replace the discarded counterexample_analyzer batch with qualified human review before treating this design as complete.\n\n### Planned Contributions\n\nThis research plan proposes a unified fission recycling relation that treats the fission timescale as a dynamic variable competing with relativistic expansion. The primary contribution is a formal mechanism linking third r-process peak shifts to unique actinide spectral evolutions and viewing-angle dependencies. By relaxing the instantaneous fission equilibrium assumption, the framework derives an analytical relationship between the effective fission timescale, expansion timescale, and abundance yields. A secondary contribution establishes a discrimination proof obligation to demonstrate the non-isomorphism between spectral evolution under delayed fission versus static geometric or magnetic asymmetry. These formal derivations provide the theoretical basis for interpreting multi-messenger kilonova observations.\n\n### Design Assumptions and Scope\n\nThe proposed mechanism operates under the design assumption that the effective fission timescale, governed by beta-decay half-lives and nuclear isomeric states, is comparable to or longer than the ejecta expansion timescale in high-entropy, low-density trajectories. Actinide spectral line evolution is assumed to be uniquely sensitive to the fission timescale and not mimicked by variations in ejecta geometry or magnetic field topology alone. The validity domain is bounded by the condition t_fission >= t_expansion; the mechanism fails if the effective fission timescale is strictly shorter than the expansion timescale, or if geometric and magnetic asymmetries alone can perfectly replicate the predicted actinide spectral shifts. These assumptions delimit the scope of the formal derivations and the subsequent proof obligations.\n\n## Idea Source Checkpoints and Direction Selection Audit\n\nThe selected direction, premise_inversion, posits that kinematic delay in beta-delayed and isomer-delayed fission neutron release relative to ejecta expansion unifies third r-process peak shifts with viewing-angle-dependent lanthanide curtaining. This mechanism produces a distinct temporal evolution of actinide spectral lines that cannot be replicated by purely geometric or magnetic ejecta asymmetries. The proposal is anchored in the observation that fission recycling dominates the third r-process peak, with fission fragments recycling material into the lanthanide region and influencing the production of lighter heavy elements. The scientific attraction lies in replacing the instantaneous fission equilibrium assumption with a dynamic variable competing with relativistic expansion, thereby linking microphysical nuclear timescales to macroscopic electromagnetic signatures. [@cite_30c88fe46f23448d]\n\n| Audit Snapshot | Source File | Direction Mode | Central Hypothesis Focus |\n| :--- | :--- | :--- | :--- |\n| Checkpoint 1 | idea_candidate.json | premise_inversion | Kinematic delay unifying third peak shifts and anisotropic curtaining |\n| Checkpoint 2 | idea_portfolio.json | premise_inversion | Kinematic delay unifying third peak shifts and spectral signatures |\n| Checkpoint 3 | idea_result.json | premise_inversion | Kinematic delay unifying third peak shifts and anisotropic curtaining |\n\nThe supplied checkpoints expose critical formal defects that constrain the current theoretical status. The mathematical definitions for the effective fission timescale and the ejecta expansion timescale are absent, preventing the formulation of a rigorous inequality between the two. Furthermore, the specific beta-decay half-life formulas and nuclear isomeric state lifetime models required to compute the fission timescale are not provided. The counterexample analyzer batch was discarded due to an invalid response, leaving the boundary analysis for the t_fission >= t_expansion assumption incomplete. Consequently, the proof obligations to demonstrate the analytical relationship between timescales and abundance yields, and the non-isomorphism between delayed fission spectral evolution and geometric asymmetries, remain unverified and require qualified human review.\n\nThe retained direction is qualified as a candidate formalization pending the resolution of upstream definitional gaps. The scope is explicitly bounded to high-entropy, low-density trajectories where the effective fission timescale is assumed to be comparable to or longer than the ejecta expansion timescale. The proposal excludes any claim that geometric or magnetic asymmetries cannot produce viewing-angle-dependent lanthanide curtaining; rather, it asserts that they cannot replicate the specific temporal evolution of actinide spectral lines induced by delayed fission. This distinction is central to the premise inversion, which treats the fission timescale as a dynamic variable competing with expansion, while bounding the validity domain against geometric confounders.\n\n## Problem Definition, Assumptions, and Hypotheses\n\n### Formal Domain and Kinematic Premise\n\nThe formal problem is posed for high-entropy, low-density ejecta trajectories in binary neutron-star mergers, where r-process flow reaches the superheavy region and fission recycling dominates the third abundance peak. Multi-messenger observations establish that kilonova emission is powered by radioactive decay of neutron-rich r-process ejecta, and lanthanide-rich opacity controls the observed redward spectral evolution. The proposed contribution inverts the conventional instantaneous-fission-equilibrium premise: it treats the effective fission timescale as a dynamic variable competing with the ejecta expansion timescale, and asks whether that kinematic delay leaves a unique actinide spectral signature that geometric and magnetic asymmetries cannot reproduce. This section fixes the admissible domain, the premise set, and the failure boundary that the downstream derivation consumes; it does not claim any new observation. [@cite_07d6df5d6978a1fc] [@cite_612290131318c0d4]\n\n### Candidate Definition of the Kinematic Ratio\n\n**Definition.** Candidate, unverified definition. Let the kinematic decoupling ratio be the dimensionless quantity R = V1/V2, where V1 denotes the effective fission timescale governed by beta-decay half-lives and nuclear isomeric state lifetimes, and V2 denotes the ejecta expansion timescale of the outflow. The domain of admissible trajectories is the set of high-entropy, low-density ejecta for which fission recycling is active. The instantaneous-fission-equilibrium predicate V10 holds exactly when R is strictly less than one; the delayed-fission regime is entered precisely when R reaches or exceeds one. The formal mathematical definitions of V1 and V2 remain unresolved upstream and are carried as human-input dependencies rather than assumed closed forms.\n\n### Governing Relation\n\nR = V1/V2,  V10 = (R < 1),  delayed-fission regime = (R >= 1)\n\n### Reading the Governing Relation\n\nThe relation above is the single object the rest of the theory route consumes: the delayed-fission hypothesis is the claim that R >= 1 is physically realized in some admissible trajectories, and that this violation of V10 propagates into a third-peak abundance shift and a distinctive actinide spectral evolution. The equation is a proposed formalization, not a derived identity; its content is fixed only once V1 and V2 receive closed-form definitions. The renderer supplies numbering and labels.\n\n### Assumption Ledger (Consumer Subset)\n\nThis section consumes two premises from the definition ledger and states their scope; the item-by-item ledger is owned elsewhere.\n- A1 (candidate formalization): the effective fission timescale V1, governed by beta-decay half-lives and isomeric state lifetimes, is comparable to or longer than the ejecta expansion timescale V2 in high-entropy, low-density trajectories. This is the delayed-fission premise; it is asserted, not proved, and its validity domain is bounded by the failure condition below.\n- A2 (user-declared): actinide spectral-line evolution V7 is uniquely sensitive to the fission timescale and cannot be mimicked by geometric asymmetries V5 or magnetic-field topology V6 alone. This is a discriminating premise, not an established uniqueness result, and it is exactly what the downstream discrimination obligation must defend.\n\n### Candidate Theorem Entry and Scoped Entry Lemma\n\n**Proof Obligation Registry L1, L2, PO1, PO2 (Candidate).** Candidate theorem entry (proposed, unverified). Candidate L1: under premises A1 and A2, the violation of the instantaneous-equilibrium predicate (R >= 1) yields a third r-process peak abundance shift that drives a temporal evolution of actinide spectral lines statistically distinct from patterns generated by V5 or V6 alone. Candidate L2: under A2, no mapping from geometric or magnetic asymmetry configurations reproduces the delayed-fission spectral evolution. These are scoped entry lemmas, not proved results; they package the two hypotheses P1 and P2 as the domain-and-boundary statement the derivation stage inherits. The associated proof obligations PO1 (an analytical relation among R, V1, V2, and the abundance shift) and PO2 (a non-isomorphism proof for the spectral signature) are open and require human confirmation of the unresolved definitions before either lemma can be discharged.\n\n### Failure Boundary and Transition\n\nThe mechanism fails on either of two declared boundaries: if the effective fission timescale for superheavy nuclei is strictly shorter than the expansion timescale (R < 1 throughout the admissible domain), or if geometric and magnetic asymmetries alone can perfectly replicate the predicted actinide spectral shifts without invoking a delayed fission timescale. These boundaries are scope delimiters, not evidence of failure; no observation is reported, and the frozen counterexample analysis was discarded pending human review. The next stage, the definition and proposition ledger, supplies the closed-form definitions of V1, V2, V3, V7 and the derivation lemmas that this entry consumes.\n\n## Study Design and Methods\n\n### Static Axiomatic Framework and Kinematic Regimes\n\nThis study adopts a static axiomatic framework to formalize the kinematic decoupling of fission recycling in kilonovae. The design centers on the competition between the effective fission timescale and the ejecta expansion timescale. Within this theoretical structure, the mechanism operates under a specific regime where the effective fission timescale is comparable to or longer than the ejecta expansion timescale. This condition violates the instantaneous equilibrium predicate, which assumes that the fission timescale is strictly shorter than the expansion timescale. By relaxing the instantaneous fission equilibrium assumption and substituting it with a delayed beta and isomer fission release axiom, the framework treats the fission timescale as a dynamic variable competing with relativistic expansion. This approach directly links the modification of the third r-process peak freeze-out abundance to viewing-angle-dependent lanthanide curtaining, providing a formal mechanism that connects microphysical nuclear delays to macroscopic electromagnetic signatures.\n\n### Comparators and Boundary Conditions\n\nThe proposed theoretical contribution is evaluated against specific comparators and strict boundary conditions. The primary control variable is the instantaneous fission equilibrium limit, which serves as the baseline against which delayed fission effects are measured. The design explicitly accounts for confounders, namely geometric asymmetries and magnetic field configurations in the ejecta. The mechanism is bounded by the assumption that actinide spectral line evolution is uniquely sensitive to the fission timescale. Consequently, the theory fails if geometric or magnetic asymmetries alone can perfectly replicate the predicted actinide spectral shifts without invoking delayed fission timescales. This boundary condition ensures that the proposed relation is not conflated with alternative explanations that attribute viewing-angle-dependent lanthanide curtaining to purely structural or magnetic effects in the dynamical ejecta.\n\n### Protocol and Dependency Management\n\nThe protocol for this mathematical theory route relies on the derivation of analytical relationships and the demonstration of non-isomorphism between distinct spectral evolution patterns. The derivation requires formal definitions for the effective fission timescale, the ejecta expansion timescale, and the specific metrics used to quantify abundance shifts and spectral evolution. These operational definitions are currently unresolved and depend on upstream human input to finalize the mathematical formulations. Furthermore, the quality control and measurement plans required to translate these theoretical constructs into observational diagnostics are pending human confirmation. The study design integrates these dependencies by specifying that the formal reasoning plan and counterexample analysis require qualified human review before the design can be considered complete. This ensures that the theoretical framework remains rigorous and that all mathematical premises are explicitly defined before further derivation steps are executed.\n\n### Expected Outcomes and Decision Rules\n\nThe expected outcomes of this theoretical design are mapped to specific decision rules that govern the status of the proposed mechanisms. If the prespecified analysis is consistent with the declared relation and the planned controls do not favor the alternative explanation of pure geometric or magnetic asymmetry, the result supports the mechanism within the defined boundary. Conversely, if the comparison does not support the declared relation or favors the alternative explanation, the result is null or contradictory, indicating that the proposed relation is not supported in this design boundary. A partial or heterogeneous outcome occurs if the analysis indicates variation across declared conditions, units, or measurement contexts, suggesting that the relation may be conditional. Finally, an uninformative or invalid outcome arises if prespecified quality-control, missingness, or validity criteria prevent interpretation, necessitating the resolution of identified validity or data-quality failures before repeating the design.\n\n### Data Governance and Reproducibility\n\nThe data governance and reproducibility protocols for this theoretical framework require human input to finalize the management and reproducibility standards. Because the study design is a mathematical theory route, the primary artifacts are formal proofs, derivations, and analytical relationships rather than empirical datasets. However, the reproducibility of these formal proofs depends on the precise operational definitions of the variables involved, which are currently pending resolution. The data management plan must ensure that all upstream formal records, outcome branches, and idea checkpoints are globally available and consistently referenced. This governance structure supports the auditability of the theoretical spine, ensuring that every lemma, proof obligation, and decision branch can be traced back to its foundational premises and source materials.\n\n## Expected Outcome Branches and Conditional Conclusions\n\n### Decision Frame for the Kinematic Decoupling Proposal\n\nThis section converts the proposed delayed-fission mechanism into a preregistered decision protocol. The upstream derivation supplies the controlling premises: the effective fission timescale is assumed to compete with the ejecta expansion timescale, and the actinide spectral signature is declared non-isomorphic to purely geometric or magnetic asymmetries. The protocol maps each prespecified outcome branch to the relevant lemma and proof obligation, the conclusion permitted within the declared boundary, and the next action. No branch is treated as observed; all consequences are conditional on the formal comparison specified by the design.\n\n### Outcome-to-Lemma-to-Action Matrix\n\n**Pre-registered Branch (Expected---Not Observed).**\n\n| Outcome branch | Trigger | Relevant Lemma / PO | Allowed conclusion | Next action |\n|---|---|---|---|---|\n| supports_mechanism | Analysis consistent with declared relation; controls do not favor geometric or magnetic alternatives | L1, PO1, PO2 | Relation supported within design boundary; no proof of the theorem | Replicate under independently confirmed conditions; test the most consequential declared boundary condition |\n| partial_or_heterogeneous | Variation across declared conditions, units, or measurement contexts | L2, PO2 | Conditional or heterogeneous relation; no universal conclusion | Predefine and check plausible moderators; improve coverage and measurement comparability |\n| null_or_contradictory | Comparison does not support the relation or favors a declared alternative | L3, PO1 | Relation not supported in this boundary; absence of support is not general proof of absence | Audit construct validity and comparison adequacy; revise mechanism or boundary claim |\n| uninformative_or_invalid | Quality-control, missingness, protocol-deviation, or validity criteria prevent interpretation | L4, L5, L6, PO1, PO2 | No scientific conclusion warranted; theorem status does not update | Resolve validity or data-quality failure; obtain human confirmation of prerequisites |\n\n### Supportive Branch and Its Scope\n\n**Pre-registered Branch (Expected---Not Observed).** The supportive branch is reached only when the prespecified analysis is consistent with the declared relation while the planned controls fail to favor a geometric or magnetic alternative. Under that trigger, the permitted conclusion is support, not proof: the delayed-fission mechanism remains a candidate relation confined to the design boundary. The next actions are replication under independently confirmed conditions and a direct test of the most consequential declared boundary condition, namely the comparison of the effective fission timescale with the expansion timescale.\n\n### Heterogeneous and Competing-Explanation Branches\n\n**Pre-registered Branch (Expected---Not Observed).** The heterogeneous branch records variation across declared conditions, units, or measurement contexts; it licenses only a conditional reading and directs the work toward predefined moderators and improved comparability. The null or contradictory branch records a comparison that fails to support the relation or instead favors the declared alternative explanations, in which lanthanide curtaining and abundance variation are attributed to geometric asymmetries or magnetic field configurations rather than kinematic fission delays. That outcome does not refute the mechanism generally; it confines the proposal to the tested boundary and triggers an audit of construct validity and comparison adequacy before any revision.\n\n### Uninformable Branch and Dependency Consequence\n\n**Pre-registered Branch (Expected---Not Observed).** The uninformative or invalid branch is entered when prespecified quality-control, missingness, protocol-deviation, or validity criteria prevent interpretation. This branch is a no-information condition for the dependency: it neither confirms nor denies the proposed relation, and it does not update theorem status. The required response is to resolve the identified validity or data-quality failure and to obtain human confirmation of the measurement, sampling, and analysis prerequisites before repeating the design. Treating this branch as a proof of failure would misread the protocol; it is a procedural dependency, not a scientific result.\n\n### Transition to Risk and Review\n\nThe matrix above fixes the conditional conclusions and next actions for each branch. The detailed item-by-item human-confirmation and release criteria are owned by the review ledger and are not restated here. The plan now carries the scoped dependency on that ledger forward: the decision protocol is executable only once the review gate confirms the prerequisites that the uninformative branch protects against.\n\n## Risks, Limitations, and Human Review Requirements\n\n### Release and Review Decision Matrix\n\n**Decision Status: No-information.**\n\n| Review Item | Scope | Required Human Decision | Release Condition | Consequence for Theory Status |\n| --- | --- | --- | --- | --- |\n| Counterexample analysis | Formal-theory boundary testing | Qualified expert review of the discarded counterexample batch | Re-run or human adjudication of candidate counterexamples against all declared assumptions | No conclusion about counterexamples; the mechanism remains unverified |\n| Formal reasoning plan | Lemma, definition, and proof-obligation ledger | Review of the unverified formal derivation chain | Approval of definitions and proof obligations before any theorem-status update | The candidate theorem remains a proposal, not a verified result |\n| Risk gate | Overall release authorization | Confirmation that no empirical claim is embedded in the formal plan | Sign-off that the proposal is scoped to mathematical theory only | The plan may proceed as a design artifact, not as an observed finding |\n| Workflow degradation | LLM or workflow integrity | Inspection of the discarded analyzer batch and its downstream effects | Documentation that the discarded batch introduced no retained claim or protocol detail | The degraded stage is treated as a procedural dependency, not a scientific result |\n\n### Scope Limits and Alternative Mechanisms\n\nThe proposal's central limitation is the absence of a completed formal derivation and the corresponding lack of observed empirical validation. The frozen evidence establishes that the kinematic decoupling of fission recycling is a candidate mechanism, not a demonstrated one. Two competing explanations remain live: geometric asymmetries in dynamical ejecta, such as shock-heated polar winds and tidal tails, and magnetic field configurations. Both can produce viewing-angle-dependent lanthanide curtaining without invoking delayed fission timescales. The design distinguishes the proposed mechanism from these alternatives only through the temporal evolution of actinide spectral lines, a signature that the current plan has not yet formalized or observed. The control condition, instantaneous fission equilibrium, is declared but not analytically bounded. Consequently, the comparison between delayed fission and static geometric or magnetic asymmetries is a design requirement, not an established result. The proposal's scope is confined to the high-entropy, low-density trajectories where the effective fission timescale is assumed to be comparable to or longer than the ejecta expansion timescale; outside that domain, the mechanism is not addressed.\n\n### Procedural Dependencies and No-Information Branches\n\n**Decision Status: No-information.** The theory spine records no-information branches for the unverified proof obligations and for the undefined operational metrics. These branches do not indicate a failed derivation; they indicate that the dependency does not update theorem status. The effective fission timescale, the ejecta expansion timescale, the abundance-shift metric, and the spectral-evolution metric each require a formal definition before the candidate lemmas can be evaluated. Until those definitions are supplied, the proof obligations remain open and the lemmas remain candidate. The discarded counterexample batch is a procedural gap, not a scientific finding: no counterexample is retained, and no conclusion about the mechanism's validity is drawn from its absence. The review decision matrix above maps each of these gaps to a concrete human action. The transition to the next stage is therefore conditional: the mathematical-theory route proceeds only after the definition ledger and the proof-obligation registry are closed by qualified review, at which point the derivation and falsification sections can consume a settled premise set rather than a placeholder set.\n\n### Concrete Release Conditions\n\n**Human-review checklist (Review-required).** 1. Confirm that the counterexample analysis is either re-executed or formally waived by a qualified reviewer, and that no conclusion about the mechanism's validity is drawn from the discarded batch.\n2. Approve the formal reasoning plan's definitions for the effective fission timescale, the ejecta expansion timescale, the abundance-shift metric, and the spectral-evolution metric; without these, the candidate lemmas cannot be evaluated.\n3. Verify that the risk gate is scoped to mathematical theory only, with no empirical claim embedded in the formal derivation chain.\n4. Document that the workflow degradation introduced no retained claim, formalization, counterexample, or protocol detail, and that the degraded stage is treated as a procedural dependency.\n5. Authorize the next stage only after the definition ledger and proof-obligation registry are closed, so that the derivation and falsification sections consume settled premises rather than placeholders.\n\n## Definitions, Propositions, and Proof Obligations\n\n### Definition Ledger and Symbol Domain\n\n**Decision Status: No-information.**\n\n| Symbol | Role | Status |\n|---|---|---|\n| V1 | Effective fission timescale | needs_human_input |\n| V2 | Ejecta expansion timescale | needs_human_input |\n| V3 | Third r-process peak abundance | needs_human_input |\n| V4 | Lanthanide curtaining metric | needs_human_input |\n| V5 | Geometric asymmetries | needs_human_input |\n| V6 | Magnetic field configurations | needs_human_input |\n| V7 | Actinide spectral evolution | needs_human_input |\n| V8 | Beta-decay half-lives | needs_human_input |\n| V9 | Isomeric state lifetimes | needs_human_input |\n| V10 | Instantaneous equilibrium | candidate_formalization |\n\n### Assumption Ledger\n\nA1: The effective fission timescale is comparable to or longer than the ejecta expansion timescale in high-entropy, low-density trajectories (candidate_formalization).\nA2: Actinide spectral line evolution is uniquely sensitive to the fission timescale and cannot be mimicked by variations in ejecta geometry or magnetic field topology alone (user_declared).\n\n### Kinematic Threshold Relation\n\n**Equation [eq:definitions-and-propositions-eq-threshold].**\n\n$$\nV1 \\geq V2\n$$\n\n### Proposition P1: Delayed Neutron Release Mechanism\n\n**Proposition (Candidate).** Candidate Proposition: Delayed neutron release due to finite fission timescale (V1 >= V2) modifies the third r-process peak abundance (V3) and induces specific temporal evolution of actinide spectral lines (V7). See Eq. (eq:definitions-and-propositions-eq-threshold).\n\n### Proposition P2: Spectral Discrimination\n\n**Proposition (Candidate).** Candidate Proposition: The specific temporal evolution of actinide spectral lines (V7) caused by delayed fission cannot be replicated by geometric (V5) or magnetic (V6) asymmetries alone. See Eq. (eq:definitions-and-propositions-eq-threshold).\n\n### Proof Obligation Registry and Dependency Matrix\n\n**Proof Obligation Registry PO1, PO2 (Unverified).**\n\n| Obligation | Scope | Required Inputs | Status |\n|---|---|---|---|\n| PO1 | Kinematic decoupling to abundance shift | A1, D1, D2, D3, P1, S1, S2, S3 | unverified |\n| PO2 | Spectral non-isomorphism to asymmetries | A2, D5, D8, D9, P1, P2, S3, S4 | unverified |\n\n### Failure Conditions and Unresolved Inputs\n\n**Decision Status: No-information.** The mechanism fails if the effective fission timescale for superheavy nuclei is strictly shorter than the expansion timescale, or if geometric/magnetic asymmetries alone can perfectly replicate the predicted actinide spectral shifts without invoking delayed fission timescales. The formalization currently requires human input to define the precise mathematical formulations for the effective fission timescale (V1), ejecta expansion timescale (V2), beta-decay half-lives (V8), and isomeric state lifetimes (V9). These missing definitions constitute no-information branches that withhold theorem status updates.\n\n## Forward Derivation and Counterexample Search Plan\n\n### Derivation Domain and Admissible Premises\n\n**Proof Obligation Registry PO1, PO2 (Unverified).** This section advances the argument by specifying the derivation obligations and counterexample search plan for the kinematic decoupling mechanism. The formal domain is restricted to high-entropy, low-density ejecta trajectories where the effective fission timescale V1 and the ejecta expansion timescale V2 are the primary independent variables. The admissible premises are the candidate formalization A1 and the user-declared A2. The derivation does not assume the truth of the definitions for V1, V2, V3, V7, V8, or V9; rather, it treats them as placeholders that must be resolved by the definitions ledger to close the proof obligations. The argument proceeds by establishing the logical consequences of the timescale inequality V1 >= V2 on the third r-process peak abundance V3 and the actinide spectral evolution V7, subject to the constraint that geometric V5 and magnetic V6 asymmetries are controlled confounders.\n\n### Kinematic Decoupling Condition\n\n**Equation [eq:forward-derivation-and-counterexamples-b2].**\n\n$$\nV1 >= V2\n$$\n\n### Derivation Chain and Lemma Registry\n\nThe derivation chain proceeds through four candidate lemmas. Lemma L3 applies the kinematic condition to violate the instantaneous equilibrium predicate, establishing the regime where delayed neutron release is dynamically active. Lemma L4 propagates this violation to the nucleosynthesis yield, asserting that the shift in the third r-process peak abundance V3 is a direct consequence of the finite beta-decay half-lives V8 and isomeric state lifetimes V9. Lemma L5 connects the abundance shift to the spectral domain, proposing that the temporal evolution of actinide lines V7 is statistically distinct from patterns generated by geometric V5 or magnetic V6 asymmetries. Finally, Lemma L6 unifies the viewing-angle-dependent lanthanide curtaining V4 with the spectral evolution V7, closing the argument that delayed fission recycling provides a coherent mechanism for the observed phenomena. Each lemma is unverified and depends on the resolution of the upstream definitions.\n\n### Candidate Derivation Obligations\n\n**Proof Obligation Registry PO1, PO2 (Unverified).** Two proof obligations must be discharged to validate the derivation. Proof Obligation PO1 requires the derivation of an analytical relationship between the effective fission timescale V1, the expansion timescale V2, and the abundance yields V3, conditional on the definitions of beta-decay half-lives V8 and isomeric lifetimes V9. Proof Obligation PO2 requires a discrimination proof demonstrating the non-isomorphism between the spectral evolution V7 under delayed fission and the static patterns produced by geometric V5 or magnetic V6 asymmetries alone. These obligations are currently unverified and require human input to formalize the mathematical definitions of the variables.\n\n### Counterexample Decision Matrix\n\n| Decision | Condition | Interpretation | Action |\n|---|---|---|---|\n| Valid Counterexample | V1 < V2 in all high-entropy trajectories | Mechanism fails at the kinematic level | Revise assumption A1 |\n| Valid Counterexample | V7 is isomorphic to V5 or V6 patterns | Mechanism fails at the spectral discrimination level | Reject proposition P2 |\n| Boundary Case | V1 approx V2 with high variance | Mechanism is conditional on specific trajectory details | Define variance bounds for V1 |\n| Out-of-Domain | Low-entropy or high-density ejecta | Premises A1 and A2 do not apply | Exclude from derivation scope |\n| No Information | Definitions for V1, V2, or V7 are missing | Logical status of lemmas cannot be evaluated | Resolve definition ledger entries |\n\n### Failure Conditions and Limitations\n\nThe derivation is subject to strict failure conditions. First, if the effective fission timescale V1 is strictly shorter than the ejecta expansion timescale V2, the mechanism fails to produce the predicted abundance shifts. Second, if geometric asymmetries V5 or magnetic field configurations V6 alone can perfectly replicate the predicted actinide spectral shifts V7 without invoking delayed fission timescales, the uniqueness claim of the mechanism fails. These conditions define the boundary of the proposal's validity. The counterexample analysis batch was discarded, and no specific counterexamples have been generated; therefore, the search plan remains a procedural dependency requiring qualified human review to complete the verification cycle.\n\n# Appendices\n\n## Energy-Condition Taxonomy, Symbols, and Boundary Defense\n\n### Context and Scope of the Boundary Defense\n\nThis appendix establishes the logical boundaries for the proposed kinematic decoupling mechanism in neutron star merger nucleosynthesis. The central hypothesis posits that the effective fission timescale ($V_1$) is comparable to or longer than the ejecta expansion timescale ($V_2$), violating instantaneous equilibrium and driving third r-process peak shifts and unique actinide spectral evolutions. This defense clarifies that the formal variables $V_1$ through $V_{10}$ are operational constructs for nucleosynthetic kinetics and radiative transfer, distinct from the geometric energy conditions (NEC, SEC, AANEC) governing spacetime curvature. Consequently, no implication from general relativistic focusing theorems is assumed or required for the validity of the proposed mechanism.\n\n### Taxonomy of Energy Conditions and Kinematic Boundaries\n\n| Condition | Domain | Logical Relation to Proposed Mechanism |\n| :--- | :--- | :--- |\n| **NEC** | Spacetime Geometry | Independent. Governs null energy flux; does not constrain nuclear decay rates or ejecta opacity. |\n| **AANEC** | Spacetime Geometry | Independent. Averaged null energy condition; establishes focusing in GR but does not imply kinematic decoupling of fission. |\n| **SEC** | Spacetime Geometry | Independent. Strong energy condition; irrelevant to the timescale competition between $V_1$ and $V_2$. |\n| **$V_1 \\ge V_2$** | Nuclear Kinetics | Proposed Mechanism. Effective fission timescale exceeds expansion timescale, violating instantaneous equilibrium predicate $V_{10}$. |\n| **$V_7$ Sensitivity** | Spectral Physics | Proposed Discriminator. Actinide line evolution is uniquely sensitive to $V_1$ and cannot be mimicked by geometry ($V_5$) or magnetic fields ($V_6$). |\n\n### Defense Against Automatic Interchangeability\n\nThe stress-energy tensor of the ejecta does not automatically satisfy or violate geometric energy conditions in a way that dictates nucleosynthetic outcomes. Specifically, the satisfaction of the Null Energy Condition (NEC) by the matter content does not establish the kinematic delay $V_1 \\ge V_2$; conversely, the failure of the Strong Energy Condition (SEC) does not preclude fission recycling. The proposed mechanism relies entirely on the competition between nuclear weak-interaction rates and hydrodynamic expansion, as formalized in the candidate lemma $L_3$. AANEC, while relevant for trapped surface formation in extreme gravity, provides no information regarding the temporal evolution of actinide spectral lines ($V_7$). Therefore, the boundary between geometric constraints and kinetic modeling is strictly maintained: no geometric condition substitutes for the explicit assumption of delayed beta-and-isomer fission release.\n\n### Operational Definitions and Human Review Dependencies\n\nThe formalization of the mechanism is contingent upon the precise mathematical definition of the effective fission timescale ($V_1$) and the ejecta expansion timescale ($V_2$), which currently require human review to specify thresholds for 'comparable' versus 'longer'. Additionally, the quantitative metrics for third r-process peak freeze-out abundance ($V_3$) and viewing-angle-dependent lanthanide curtaining ($V_4$) are undefined in the source material. The spectral evolution metric ($V_7$) lacks specification of the exact actinide lines (e.g., Uranium or Thorium) and their corresponding wavelengths. These unresolved operational definitions constitute the primary procedural dependencies for advancing the proof obligations $PO_1$ and $PO_2$.\n\n## Idea Source Checkpoints and Direction Selection Audit\n\n### Premise Inversion and Mechanistic Unification\n\nThe selected direction, premise inversion, replaces the instantaneous fission equilibrium assumption with a delayed beta and isomer fission release axiom. This shift treats the effective fission timescale as a dynamic variable competing with the ejecta expansion timescale. The mechanism unifies third r-process peak shifts with viewing-angle-dependent lanthanide curtaining, producing a distinct temporal evolution of actinide spectral lines. This theoretical pivot is grounded in established nuclear fission dynamics and r-process network calculations, which demonstrate that fission recycling governs the nucleosynthetic flow toward the heaviest nuclei. The kinetic delay in neutron release relative to expansion modifies the freeze-out abundance, a relation supported by the fundamental competition between neutron capture and beta decay in extreme astrophysical environments. [@cite_30c88fe46f23448d] [@cite_b668987a568d271f] [@cite_fc6f024383b8a4d2]\n\n### Spectral Discrimination Against Geometric Confounders\n\nThe central hypothesis asserts that the temporal evolution of actinide spectral lines is uniquely sensitive to the fission timescale and cannot be mimicked by variations in ejecta geometry or magnetic field topology alone. This discriminative claim is critical for isolating the kinematic delay mechanism from alternative explanations. Multi-messenger observations of neutron star mergers reveal distinct high-opacity lanthanide-rich ejecta and lower-opacity components, where viewing-angle dependencies and asymmetries in ejecta morphology significantly alter the observed spectral energy distribution. By bounding the validity domain against these geometric confounders, the proposed framework requires a spectroscopic identification of actinide line evolution that is strictly inconsistent with both instantaneous fission equilibrium and pure geometric asymmetry models. [@cite_07d6df5d6978a1fc] [@cite_43194f3b6113c2ab] [@cite_612290131318c0d4]\n\n### Audit Snapshots and Retained Decisions\n\n| Checkpoint | Source File | Retained Decision |\n|---|---|---|\n| Audit Snapshot 1 | idea_candidate.json | Establishes the core premise inversion and unified fission recycling relation. |\n| Audit Snapshot 2 | idea_portfolio.json | Refines the title to emphasize spectral signatures alongside third r-process peak shifts. |\n| Audit Snapshot 3 | idea_result.json | Details the boundary conditions, falsifiers, and the requirement to isolate the actinide temporal signature from geometric confounders. |\n\n## Evidence Coverage, Unknown Items, and Review Checklist\n\n### Evidence Coverage and Boundary Use\n\nThe proposal's physical premise is anchored in established multi-messenger evidence: binary neutron star mergers synthesize heavy r-process elements whose lanthanide and actinide content governs kilonova opacity and spectral evolution (W2766840380; W27655595587). Dynamical ejecta with low electron fraction drive fission recycling, which shapes the third abundance peak and produces viewing-angle-dependent lanthanide curtaining (W2760756222; W3092825069). These sources establish the astrophysical environment in which delayed fission neutron release operates, but they do not demonstrate the proposed kinematic decoupling mechanism. The evidence supports the phenomenon and the relevant physical scales; it does not validate the candidate theorem linking fission timescale to spectral discrimination. The contribution of this route is therefore a formal design that isolates the delayed-fission signature from geometric and magnetic confounders, not an empirical confirmation of that signature. [@cite_07d6df5d6978a1fc] [@cite_612290131318c0d4] [@cite_0247e311d8727a8e]\n\n### Unknown-Item Consequences for the Theory Spine\n\nThe degraded counterexample-analyzer stage (unknown-8) leaves the proposal without a machine-generated counterexample ledger, so no conclusion about the existence or non-existence of counterexamples may be drawn. This gap is consequential because the central claim depends on a non-isomorphism condition: that delayed-fission spectral evolution cannot be replicated by geometric or magnetic asymmetries alone. Without a completed counterexample analysis, that condition remains an unverified assumption rather than a defended boundary. The theory spine inherits this dependency: the proof obligations for the abundance-shift lemma and the spectral-discrimination lemma cannot be discharged until the counterexample space is bounded by qualified human review. The absence of results is not evidence of failure, but it is a precise procedural dependency that blocks theorem-status updates.\n\n### Release Criteria for Future Claims\n\n| Claim Type | Release Criterion | Blocking Dependency |\n| --- | --- | --- |\n| Candidate abundance-shift lemma | Formal definitions of effective fission timescale and expansion timescale supplied and internally consistent | Human review of definition ledger entries D1, D2 |\n| Candidate spectral-discrimination lemma | Counterexample space bounded; non-isomorphism condition tested against declared confounders | Qualified human review of degraded counterexample-analyzer stage |\n| Outcome-branch assignment | Prespecified analysis executed with controls for geometric and magnetic asymmetries | Human confirmation of measurement and analysis prerequisites |\n\n## References\n- [@cite_0247e311d8727a8e] Luke Bovard et al.. *r -process nucleosynthesis from matter ejected in binary neutron star mergers*. Physical review. D/Physical review. D., 2017.\n- [@cite_041df5a252d7605b] M. P. van Haarlem et al.. *LOFAR: The LOw-Frequency ARray*. Astronomy and Astrophysics, 2013.\n- [@cite_07d6df5d6978a1fc] B. P. Abbott et al.. *Multi-messenger Observations of a Binary Neutron Star Merger **. The Astrophysical Journal Letters, 2017.\n- [@cite_30c88fe46f23448d] C J Horowitz et al.. *r -process nucleosynthesis: connecting rare-isotope beam facilities with the cosmos*. Journal of Physics G Nuclear and Particle Physics, 2019.\n- [@cite_4107586a53a38688] Iouli E. Gordon et al.. *The HITRAN2016 molecular spectroscopic database*. Journal of Quantitative Spectroscopy and Radiative Transfer, 2017.\n- [@cite_43194f3b6113c2ab] Lorenzo Nativi et al.. *Can jets make the radioactively powered emission from neutron star mergers bluer?*. Monthly Notices of the Royal Astronomical Society, 2020.\n- [@cite_532dd68ff53d51be] E. Epelbaum et al.. *Modern theory of nuclear forces*. Reviews of Modern Physics, 2009.\n- [@cite_59237db420df3c57] N. Colonna et al.. *The fission experimental programme at the CERN n_TOF facility: status and perspectives*. The European Physical Journal A, 2020.\n- [@cite_5d8ac7b3835c1d28] B. I. Abelev et al.. *Systematic measurements of identified particle spectra in pp , d + Au , and Au + Au collisions at the STAR detector*. Physical Review C, 2009.\n- [@cite_612290131318c0d4] N. R. Tanvir et al.. *The Emergence of a Lanthanide-rich Kilonova Following the Merger of Two Neutron Stars*. The Astrophysical Journal Letters, 2017.\n- [@cite_616a3f613bfe90e6] F. F. S. van der Tak et al.. *A computer program for fast non-LTE analysis of interstellar line spectra*. Astronomy and Astrophysics, 2007.\n- [@cite_647fec317a64d88f] M. K. McClure et al.. *An Ice Age JWST inventory of dense molecular cloud ices*. Nature Astronomy, 2023.\n- [@cite_6d6bb38998d6891a] Katja Berger et al.. *Multi-sensor spectral synergies for crop stress detection and monitoring in the optical domain: A review*. Remote Sensing of Environment, 2022.\n- [@cite_6e017e367d28f6e8] Martin Barisits et al.. *Rucio: Scientific Data Management*. Computing and Software for Big Science, 2019.\n- [@cite_7331e6f9fa66a767] Kazunori Akiyama et al.. *First M87 Event Horizon Telescope Results. II. Array and Instrumentation*. The Astrophysical Journal Letters, 2019.\n- [@cite_7a0523813f825d32] R. Abbott et al.. *Open Data from the Third Observing Run of LIGO, Virgo, KAGRA, and GEO*. The Astrophysical Journal Supplement Series, 2023.\n- [@cite_8261f00cdf5a8f62] Charles R. Harris et al.. *Array programming with NumPy*. Nature, 2020.\n- [@cite_b668987a568d271f] Karl‐Heinz Schmidt et al.. *Review on the progress in nuclear fission—experimental methods and theoretical descriptions*. Reports on Progress in Physics, 2018.\n- [@cite_c369df652181e8f7] Bill Paxton et al.. *MODULES FOR EXPERIMENTS IN STELLAR ASTROPHYSICS (MESA): BINARIES, PULSATIONS, AND EXPLOSIONS*. The Astrophysical Journal Supplement Series, 2015.\n- [@cite_c9c891cfeba0f6be] William Y. C. Huang et al.. *Phosphotyrosine-mediated LAT assembly on membranes drives kinetic bifurcation in recruitment dynamics of the Ras activator SOS*. Proceedings of the National Academy of Sciences, 2016.\n- [@cite_cbd8c12a14c50c23] Thomas J. Matthews et al.. *Neutral theory and the species abundance distribution: recent developments and prospects for unifying niche and neutral perspectives*. Ecology and Evolution, 2014.\n- [@cite_cc5bc07a219047b4] Bill Paxton et al.. *Modules for Experiments in Stellar Astrophysics ( ): Convective Boundaries, Element Diffusion, and Massive Star Explosions*. The Astrophysical Journal Supplement Series, 2018.\n- [@cite_db6c77243be71fb6] W. B. Atwood et al.. *THE LARGE AREA TELESCOPE ON THE FERMI GAMMA-RAY SPACE TELESCOPE MISSION*. The Astrophysical Journal, 2009.\n- [@cite_eeaa6b89efdfed95] Judith Langer et al.. *Present and Future of Surface-Enhanced Raman Scattering*. ACS Nano, 2019.\n- [@cite_f48a9b09821a36ad] Peter Athron et al.. *Global analyses of Higgs portal singlet dark matter models using GAMBIT*. The European Physical Journal C, 2019.\n- [@cite_fc6f024383b8a4d2] N. Schunck et al.. *Microscopic theory of nuclear fission: a review*. Reports on Progress in Physics, 2016.\n- [@cite_fece91583149f86d] B. P. Abbott et al.. *Low-latency Gravitational-wave Alerts for Multimessenger Astronomy during the Second Advanced LIGO and Virgo Observing Run*. The Astrophysical Journal, 2019.\n",
+      "parent_index": null,
+      "revision_summary": "Initial composed manuscript",
+      "scorecard": {
+        "content_depth": 7.25,
+        "core_quality": 6.5,
+        "dimension_scores": {
+          "Academic Rigor": 7,
+          "Clarity": 6,
+          "Coherence": 8,
+          "Comprehensiveness": 7,
+          "Critical Analysis": 8,
+          "Future Directions": 7,
+          "Novelty and Insights": 7,
+          "Organization": 6,
+          "Readability": 6,
+          "Synthesis Quality": 7
+        },
+        "final_100": 68.38,
+        "selection_score": 7.2281,
+        "special_dimension_scores": {
+          "Boundary and Status Discipline": 9,
+          "Energy-Condition Defense": 9,
+          "Falsifiability and Decision Completeness": 8,
+          "Theory Auditability": 8
+        },
+        "special_dimension_weights": {
+          "Boundary and Status Discipline": 0.25,
+          "Energy-Condition Defense": 0.15,
+          "Falsifiability and Decision Completeness": 0.25,
+          "Theory Auditability": 0.35
+        },
+        "special_score": 8.4,
+        "special_score_weight": 0.25,
+        "total_score": 6.8375,
+        "writing_quality": 6.75
+      },
+      "status": "SCORED"
+    }
+  ],
+  "enabled": true,
+  "general_score_weight": 0.75,
+  "model": "qwen3.7-plus",
+  "partial_score_min_valid_dimensions": 8,
+  "schema_version": "research_plan_author_document_quality_v1",
+  "selected_candidate_index": 0,
+  "selection_status": "COMPLETE_SCORECARD_SELECTED",
+  "special_dimensions": [
+    {
+      "dimension": "Theory Auditability",
+      "weight": 0.35
+    },
+    {
+      "dimension": "Boundary and Status Discipline",
+      "weight": 0.25
+    },
+    {
+      "dimension": "Falsifiability and Decision Completeness",
+      "weight": 0.25
+    },
+    {
+      "dimension": "Energy-Condition Defense",
+      "weight": 0.15
+    }
+  ],
+  "special_score_weight": 0.25,
+  "template_family": "mathematics_theory",
+  "warnings": [
+    "quality iteration 1 discarded: revision response does not match the document revision contract"
+  ],
+  "winning_candidate_index": 0
+}

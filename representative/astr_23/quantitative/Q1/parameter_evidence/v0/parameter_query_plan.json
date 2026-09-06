@@ -1,0 +1,123 @@
+{
+  "blueprint_identity": "37b2f0cb4369f0e595ddfc11411b2344fdbb1bafdd2d815d5861d18984a66b4a",
+  "lineage": {
+    "created_from_artifact": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/quantitative_ideas_manifest.json",
+    "parent_version": null,
+    "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "project_id": "sci_260905_008_survey_001",
+    "quantitative_idea_id": "Q1",
+    "science_run_id": "260905-008",
+    "selected_direction_id": "premise_inversion",
+    "survey_run_id": "260905-008-survey-001",
+    "version": 0
+  },
+  "requests": [
+    {
+      "mathir_symbol": "R_domain",
+      "parameter_id": "domain_radius",
+      "queries": [
+        "observational constraints on kilonova ejecta size or radius",
+        "neutron star merger ejecta radius inference from expansion and time"
+      ],
+      "required_conditions": [
+        "geometry: spherical radial surrogate",
+        "composition: actinide-bearing kilonova ejecta",
+        "epoch: early post-merger kinetic phase"
+      ]
+    },
+    {
+      "mathir_symbol": "v_ejecta",
+      "parameter_id": "ejecta_velocity",
+      "queries": [
+        "spectroscopic ejecta velocity constraints for kilonova",
+        "neutron star merger ejecta velocity estimates"
+      ],
+      "required_conditions": [
+        "expansion: homologous ejecta surrogate",
+        "composition: actinide-bearing kilonova ejecta"
+      ]
+    },
+    {
+      "mathir_symbol": "tau_f",
+      "parameter_id": "fission_neutron_release_timescale",
+      "queries": [
+        "delayed fission neutron emission timescale nuclear theory",
+        "r-process actinide fission neutron release timescale"
+      ],
+      "required_conditions": [
+        "nuclear regime: actinide fission recycling",
+        "kinetic regime: delayed neutron release relative to expansion"
+      ]
+    },
+    {
+      "mathir_symbol": "u_initial",
+      "parameter_id": "initial_actinide_density_proxy",
+      "queries": [
+        "r-process network initial actinide abundances in kilonova simulations",
+        "seed distribution actinide mass fraction in neutron star merger ejecta"
+      ],
+      "required_conditions": [
+        "initial state: seed nuclei distribution at the start of the kinetic phase",
+        "composition: actinide-bearing ejecta component"
+      ]
+    },
+    {
+      "mathir_symbol": "D_effective",
+      "parameter_id": "effective_diffusion_coefficient",
+      "queries": [
+        "effective radiative diffusion coefficient for kilonova ejecta surrogate",
+        "photon diffusion approximation in expanding ejecta"
+      ],
+      "required_conditions": [
+        "transport approximation: diffusion surrogate for line-energy propagation",
+        "closure assumption: temperature and opacity dependence collapsed into an effective constant"
+      ]
+    },
+    {
+      "mathir_symbol": "u_outer",
+      "parameter_id": "outer_boundary_proxy_value",
+      "queries": [
+        "free streaming outer boundary for kilonova radiative transfer",
+        "escape boundary condition for actinide line proxy"
+      ],
+      "required_conditions": [
+        "boundary geometry: outer radial surface",
+        "boundary physics: free-streaming or escape surrogate"
+      ]
+    },
+    {
+      "mathir_symbol": "t_end",
+      "parameter_id": "simulation_end_time",
+      "queries": [
+        "time window for kilonova actinide spectral feature evolution"
+      ],
+      "required_conditions": [
+        "numerical control: finite simulation window",
+        "scientific window: covers delayed fission kinetic signature"
+      ]
+    },
+    {
+      "mathir_symbol": "delta_t",
+      "parameter_id": "time_step_size",
+      "queries": [
+        "time step selection for explicit parabolic diffusion integration"
+      ],
+      "required_conditions": [
+        "numerical control: explicit time integration",
+        "stability requirement: parabolic diffusion surrogate"
+      ]
+    },
+    {
+      "mathir_symbol": "delta_r",
+      "parameter_id": "radial_grid_spacing",
+      "queries": [
+        "radial grid spacing selection for one-dimensional finite difference parabolic solver"
+      ],
+      "required_conditions": [
+        "numerical control: finite-difference radial grid",
+        "geometry: one-dimensional spherical radial surrogate"
+      ]
+    }
+  ],
+  "schema_version": "quantitative_parameter_query_plan_v1"
+}

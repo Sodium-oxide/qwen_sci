@@ -1,0 +1,1709 @@
+{
+  "Advanced Radiative Transfer Formalisms and High-Opacity Spectral Synthesis": {
+    "comparison_dimensions": [
+      "Radiative Transfer Formalism",
+      "Atomic Data Strategy",
+      "Ejecta Composition Model",
+      "Dimensionality & Geometry",
+      "LTE vs NLTE Assumption"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2766140821",
+        "paper_title": "Electromagnetic Counterparts to GW170817 and Kilonova Modeling",
+        "columns": {
+          "Radiative Transfer Formalism": "Numerical Boltzmann equation solution; Saha-Boltzmann LTE",
+          "Atomic Data Strategy": "Ab initio Autostructure for lanthanides (Z=58-70); tens of millions of lines",
+          "Ejecta Composition Model": "Two-component: Blue (lanthanide-poor) + Red (lanthanide-rich)",
+          "Dimensionality & Geometry": "Spherically symmetric parameterized models; tests for asymmetry",
+          "LTE vs NLTE Assumption": "Local Thermodynamic Equilibrium (LTE)"
+        }
+      },
+      {
+        "paper_id": "W2981754620",
+        "paper_title": "Spectroscopic Identification of Strontium in Kilonova AT2017gfo",
+        "columns": {
+          "Radiative Transfer Formalism": "Monte Carlo TARDIS; Custom LTE synthesis codes (MOOG)",
+          "Atomic Data Strategy": "Kurucz, NIST, literature sources for As-U; exclusion of Cs/Te based on ionization potentials",
+          "Ejecta Composition Model": "Stratified ejecta with light r-process dominance (Sr) at early epochs",
+          "Dimensionality & Geometry": "Spherically symmetric expanding ejecta",
+          "LTE vs NLTE Assumption": "Local Thermodynamic Equilibrium (LTE)"
+        }
+      },
+      {
+        "paper_id": "W2075885914",
+        "paper_title": "Lanthanide-Ion Dominated Opacity in NS Merger Ejecta",
+        "columns": {
+          "Radiative Transfer Formalism": "Time-dependent multi-wavelength Sedona code; Sobolev expansion opacity",
+          "Atomic Data Strategy": "Autostructure ab initio calculations; statistical distribution validation against Kurucz/VALD",
+          "Ejecta Composition Model": "Approximate mixture using Neodymium (Nd) as representative lanthanide",
+          "Dimensionality & Geometry": "Spherically symmetric homologous expansion",
+          "LTE vs NLTE Assumption": "Local Thermodynamic Equilibrium (LTE)"
+        }
+      },
+      {
+        "paper_id": "W2760756222",
+        "paper_title": "General-Relativistic Simulations of BNS Mergers: EOS Dependence and Kilonova Observability",
+        "columns": {
+          "Radiative Transfer Formalism": "Gray-opacity model; simplified leakage neutrino transport",
+          "Atomic Data Strategy": "N/A (Focus on hydrodynamics/nucleosynthesis; gray opacity used)",
+          "Ejecta Composition Model": "Dynamical ejecta only; robust solar-like r-process yields across EOSs",
+          "Dimensionality & Geometry": "Full general-relativistic 3D simulations; angular dependence analysis",
+          "LTE vs NLTE Assumption": "N/A (Hydrodynamic focus)"
+        }
+      },
+      {
+        "paper_id": "W3145193814",
+        "paper_title": "Spectral Signatures of r-Process Elements in Kilonova Ejecta",
+        "columns": {
+          "Radiative Transfer Formalism": "Wavelength-dependent Monte Carlo radiative transfer",
+          "Atomic Data Strategy": "Vienna Atomic Line Database (VALD); calibrated transition wavelengths",
+          "Ejecta Composition Model": "Three abundance models: Light (L), Solar (S), Heavy (H)",
+          "Dimensionality & Geometry": "1D free-expansion models",
+          "LTE vs NLTE Assumption": "Local Thermodynamic Equilibrium (LTE)"
+        }
+      },
+      {
+        "paper_id": "W4229062845",
+        "paper_title": "Comprehensive radiative transfer modeling of early AT2017gfo spectra",
+        "columns": {
+          "Radiative Transfer Formalism": "TARDIS (1D Monte Carlo); macroatom treatment",
+          "Atomic Data Strategy": "Extended Kurucz, DREAM database, QUB data for Pt/Au",
+          "Ejecta Composition Model": "Composition derived from SPH simulations binned by electron fraction ($Y_e$)",
+          "Dimensionality & Geometry": "Single-zone spherically symmetric model",
+          "LTE vs NLTE Assumption": "LTE ionization; dilute-LTE excitation"
+        }
+      },
+      {
+        "paper_id": "W2765333366",
+        "paper_title": "First definitive spectroscopic identification of kilonova AT 2017gfo",
+        "columns": {
+          "Radiative Transfer Formalism": "Comparison with Tanaka et al. models; blackbody fitting",
+          "Atomic Data Strategy": "N/A (Semi-empirical rescaling of models rather than first-principles synthesis)",
+          "Ejecta Composition Model": "Multi-component: Lanthanide-rich dynamical + Slow wind regions",
+          "Dimensionality & Geometry": "Spherical approximation in comparison models",
+          "LTE vs NLTE Assumption": "Implicit LTE in comparison models"
+        }
+      },
+      {
+        "paper_id": "W2947039387",
+        "paper_title": "Numerical relativity simulations of mass ejection and electromagnetic counterparts in neutron star mergers",
+        "columns": {
+          "Radiative Transfer Formalism": "Review synthesizing NR simulations and radiative transfer predictions",
+          "Atomic Data Strategy": "Review of bound-bound absorption treatments",
+          "Ejecta Composition Model": "Dynamic vs Viscosity-driven ejecta; $Y_e$ dependence on mechanism",
+          "Dimensionality & Geometry": "Full GR hydrodynamics/MHD simulations",
+          "LTE vs NLTE Assumption": "N/A (Review context)"
+        }
+      },
+      {
+        "paper_id": "W2077007583",
+        "paper_title": "One-zone analytical model for optical transients from compact binary mergers",
+        "columns": {
+          "Radiative Transfer Formalism": "Analytical one-zone diffusion approximation",
+          "Atomic Data Strategy": "Constant gray opacity ($κ_e ≈ 0.2$ cm²/g)",
+          "Ejecta Composition Model": "Uniform neutron-rich radioactive nuclei envelope",
+          "Dimensionality & Geometry": "Spherical symmetry assumed",
+          "LTE vs NLTE Assumption": "Radiation-dominated energy density assumption"
+        }
+      },
+      {
+        "paper_id": "W2165466632",
+        "paper_title": "ELECTROMAGNETIC TRANSIENTS POWERED BY NUCLEAR DECAY IN THE TIDAL TAILS OF COALESCING COMPACT BINARIES",
+        "columns": {
+          "Radiative Transfer Formalism": "3-D LTE Monte Carlo (SEDONA)",
+          "Atomic Data Strategy": "Constant gray opacity ($κ = 0.1$ cm²/g) characteristic of iron group",
+          "Ejecta Composition Model": "Full r-process network (6312 isotopes) mapped from SPH",
+          "Dimensionality & Geometry": "3D Smoothed Particle Hydrodynamics (SPH) tidal tails",
+          "LTE vs NLTE Assumption": "Local Thermodynamic Equilibrium (LTE)"
+        }
+      },
+      {
+        "paper_id": "W1851157365",
+        "paper_title": "Electromagnetic counterparts of compact object mergers powered by the radioactive decay of r-process nuclei",
+        "columns": {
+          "Radiative Transfer Formalism": "Monte Carlo SE-DONA code",
+          "Atomic Data Strategy": "Proxy: Fe bound-bound lines modified with Pb ionization energies",
+          "Ejecta Composition Model": "r-process trajectories from Rosswog simulations",
+          "Dimensionality & Geometry": "1D spherical symmetry",
+          "LTE vs NLTE Assumption": "Implicit LTE in opacity proxy"
+        }
+      },
+      {
+        "paper_id": "W7167208175",
+        "paper_title": "Three-Dimensional Radiative Transfer Simulations of Kilonovae from Dynamical Ejecta",
+        "columns": {
+          "Radiative Transfer Formalism": "ARTIS time-dependent Monte Carlo",
+          "Atomic Data Strategy": "Calibrated experimental data (Flörs et al. 2026) for lanthanides; Japan-Lithuania database",
+          "Ejecta Composition Model": "Dynamical ejecta from GRSPH simulations",
+          "Dimensionality & Geometry": "3D polar viewing angle focus",
+          "LTE vs NLTE Assumption": "Local Thermodynamic Equilibrium (LTE)"
+        }
+      },
+      {
+        "paper_id": "W4210965419",
+        "paper_title": "Kilonovae",
+        "columns": {
+          "Radiative Transfer Formalism": "Unified Toy Model (1D ODEs); review of numerical results",
+          "Atomic Data Strategy": "Review of opacity uncertainties; grey opacities dependent on composition",
+          "Ejecta Composition Model": "Blue (lanthanide-free) vs Red (lanthanide-rich) components",
+          "Dimensionality & Geometry": "1D toy model; discussion of 3D geometry effects",
+          "LTE vs NLTE Assumption": "Assumes LTE for toy model baseline"
+        }
+      },
+      {
+        "paper_id": "W7154998257",
+        "paper_title": "Re-analysis of AT 2017gfo Spectrum with Updated Lanthanide Atomic Data",
+        "columns": {
+          "Radiative Transfer Formalism": "TARDIS 1D Monte Carlo",
+          "Atomic Data Strategy": "GSI data (Flörs et al. 2026) replacing DREAM/GFALL; ~370x more transitions",
+          "Ejecta Composition Model": "Modified $Y_e - 0.29a$ profile with rescaled lanthanide mass fractions",
+          "Dimensionality & Geometry": "1D spherically symmetric",
+          "LTE vs NLTE Assumption": "Local Thermodynamic Equilibrium (LTE)"
+        }
+      },
+      {
+        "paper_id": "W4211256362",
+        "paper_title": "Physics of Kilonovae and Electromagnetic Counterparts to Neutron Star Mergers",
+        "columns": {
+          "Radiative Transfer Formalism": "Unified Toy Model (coupled ODEs); review",
+          "Atomic Data Strategy": "Review of high-opacity lanthanide/actinide treatments",
+          "Ejecta Composition Model": "Dynamic vs Wind ejecta; Free Neutron Precursors",
+          "Dimensionality & Geometry": "1D pedagogical framework",
+          "LTE vs NLTE Assumption": "N/A (Review context)"
+        }
+      },
+      {
+        "paper_id": "W4380590547",
+        "paper_title": "Discovery of a 760 nm P Cygni line in AT2017gfo: Identification of yttrium in the kilonova photosphere",
+        "columns": {
+          "Radiative Transfer Formalism": "Elementary Supernova Model P Cygni fitting; TARDIS Monte Carlo",
+          "Atomic Data Strategy": "LTE-weighted transition data for Y+ (Biémont et al. 2011)",
+          "Ejecta Composition Model": "Light r-process dominance (Sr, Y)",
+          "Dimensionality & Geometry": "1D stratified envelope model",
+          "LTE vs NLTE Assumption": "Local Thermodynamic Equilibrium (LTE)"
+        }
+      },
+      {
+        "paper_id": "W2765302758",
+        "paper_title": "First detailed ultraviolet, optical, and infrared light curves of SSS17a (GW170817 counterpart)",
+        "columns": {
+          "Radiative Transfer Formalism": "Blackbody fitting; SED modeling; comparison to r-process heating rates",
+          "Atomic Data Strategy": "N/A (Photometric focus)",
+          "Ejecta Composition Model": "Two-component: Lanthanide-free (blue) + Lanthanide-rich (red)",
+          "Dimensionality & Geometry": "Spherical approximation for bolometric corrections",
+          "LTE vs NLTE Assumption": "N/A (Photometric focus)"
+        }
+      },
+      {
+        "paper_id": "W2765595587",
+        "paper_title": "Discovery and detailed multi-wavelength monitoring of AT2017gfo",
+        "columns": {
+          "Radiative Transfer Formalism": "Comparison with SuperNu multidimensional Monte Carlo models",
+          "Atomic Data Strategy": "N/A (Observational focus)",
+          "Ejecta Composition Model": "Wind component (high $Y_e$) + Dynamical ejecta (low $Y_e$)",
+          "Dimensionality & Geometry": "Spherical approximation in baseline model fit",
+          "LTE vs NLTE Assumption": "Implicit in SuperNu comparison"
+        }
+      },
+      {
+        "paper_id": "W4386604643",
+        "paper_title": "Self-consistent 3D Radiative Transfer for Kilonovae: Directional Spectra from Merger Simulations",
+        "columns": {
+          "Radiative Transfer Formalism": "ARTIS 3D Monte Carlo; line-by-line Sobolev treatment",
+          "Atomic Data Strategy": "Comparison of Calibrated (AD2) vs Uncalibrated (AD1) Sr/Y/Zr data",
+          "Ejecta Composition Model": "Dynamical ejecta from 3D GRSPH simulation",
+          "Dimensionality & Geometry": "Full 3D Cartesian grid; directional dependence analysis",
+          "LTE vs NLTE Assumption": "Local Thermodynamic Equilibrium (LTE)"
+        }
+      },
+      {
+        "paper_id": "W2766078098",
+        "paper_title": "First Optical and Ultraviolet Spectra of the Electromagnetic Counterpart to GW170817",
+        "columns": {
+          "Radiative Transfer Formalism": "Blackbody fitting; Comparison with Kasen Sedona models",
+          "Atomic Data Strategy": "N/A (Qualitative model comparison)",
+          "Ejecta Composition Model": "Fast polar ejecta; low lanthanide fraction ($X_{lan} ≈ 10^{-4}$)",
+          "Dimensionality & Geometry": "Spherical approximation in comparison models",
+          "LTE vs NLTE Assumption": "Implicit LTE in comparison models"
+        }
+      },
+      {
+        "paper_id": "W4321764920",
+        "paper_title": "3D radiative transfer kilonova modelling for binary neutron star merger simulations",
+        "columns": {
+          "Radiative Transfer Formalism": "ARTIS 3D Monte Carlo; grey opacities dependent on $Y_e$",
+          "Atomic Data Strategy": "Tanaka et al. (2020) Planck mean opacities based on $Y_e$ ranges",
+          "Ejecta Composition Model": "Dynamical ejecta + Approximate secular ejecta component",
+          "Dimensionality & Geometry": "Full 3D mapping from SPH particles to velocity grid",
+          "LTE vs NLTE Assumption": "N/A (Grey opacity assumption bypasses detailed level populations)"
+        }
+      },
+      {
+        "paper_id": "W2619320676",
+        "paper_title": "Modeling Electromagnetic Transients from Neutron Star Mergers with SuperNu: Morphology, Composition, and Heating Rates",
+        "columns": {
+          "Radiative Transfer Formalism": "SuperNu 3D semi-implicit multigroup Monte Carlo",
+          "Atomic Data Strategy": "Line-smeared multigroup LTE opacities from Los Alamos suite",
+          "Ejecta Composition Model": "Axisymmetric dynamical ejecta + Spherically-symmetric wind",
+          "Dimensionality & Geometry": "Axisymmetric morphologies from SPH; spherical averaging comparison",
+          "LTE vs NLTE Assumption": "Local Thermodynamic Equilibrium (LTE)"
+        }
+      },
+      {
+        "paper_id": "W7133931079",
+        "paper_title": "NLTE Radiative Transfer Simulations of Nebular Phase Kilonova Infrared Spectra",
+        "columns": {
+          "Radiative Transfer Formalism": "sumo modified KN version (Monte Carlo photon propagation)",
+          "Atomic Data Strategy": "FAC calibrated against NIST; recombination rates fixed",
+          "Ejecta Composition Model": "Dynamical and post-merger components; varying lanthanide fractions",
+          "Dimensionality & Geometry": "Spherically symmetric radial zones",
+          "LTE vs NLTE Assumption": "Non-Local Thermodynamic Equilibrium (NLTE)"
+        }
+      },
+      {
+        "paper_id": "W4309554670",
+        "paper_title": "Heavy Elements and Electromagnetic Transients from Neutron Star Mergers",
+        "columns": {
+          "Radiative Transfer Formalism": "Review synthesizing various formalisms; highlights need for 3D/NLTE",
+          "Atomic Data Strategy": "Review of atomic data gaps; WinNet heating library provision",
+          "Ejecta Composition Model": "Dynamic, Winds, Torus ejecta with varying $Y_e$",
+          "Dimensionality & Geometry": "Review emphasizes 3D geometry and 'lanthanide curtaining'",
+          "LTE vs NLTE Assumption": "Highlights necessity of NLTE for late-time spectra"
+        }
+      },
+      {
+        "paper_id": "W3101888945",
+        "paper_title": "The Electromagnetic Counterpart of the Binary Neutron Star Merger LIGO/Virgo GW170817. III. Optical and UV Spectra of a Blue Kilonova from Fast Polar Ejecta",
+        "columns": {
+          "Radiative Transfer Formalism": "Comparison with Kasen Sedona models; Blackbody fitting",
+          "Atomic Data Strategy": "N/A (Qualitative feature search)",
+          "Ejecta Composition Model": "Fast polar ejecta; low lanthanide abundance ($X_{lan} ≈ 10^{-4}$)",
+          "Dimensionality & Geometry": "Spherical approximation in comparison models",
+          "LTE vs NLTE Assumption": "Implicit LTE in comparison models"
+        }
+      },
+      {
+        "paper_id": "W2162216280",
+        "paper_title": "High-opacity spectral synthesis of neutron star merger ejecta including full r-process elements",
+        "columns": {
+          "Radiative Transfer Formalism": "New 3D time-dependent multifrequency Monte Carlo code",
+          "Atomic Data Strategy": "VALD database compilation for Z≥31 (Ga-U); ~100,000 new lines",
+          "Ejecta Composition Model": "Full r-process mix (Ga to U); distinction between dynamical and wind zones",
+          "Dimensionality & Geometry": "3D Cartesian grid with velocity coordinates",
+          "LTE vs NLTE Assumption": "Local Thermodynamic Equilibrium (LTE)"
+        }
+      }
+    ]
+  },
+  "Viewing-Angle Dependencies, Lanthanide Curtaining, and Three-Dimensional Geometry Effects": {
+    "comparison_dimensions": [
+      "Simulation Dimensionality & Geometry",
+      "Primary Ejecta Source Modeled",
+      "Radiative Transfer Methodology",
+      "Viewing Angle Effects on Observables",
+      "Treatment of Atomic Opacity Data"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2586770524",
+        "paper_title": "End-to-End Simulations of Black Hole-Neutron Star Mergers: Fallback Mixing and Kilonova Emission",
+        "columns": {
+          "Simulation Dimensionality & Geometry": "Axisymmetric (2D Spherical Polar)",
+          "Primary Ejecta Source Modeled": "BH-NS Dynamical Ejecta + Disk Winds (Fallback Mixing)",
+          "Radiative Transfer Methodology": "Monte Carlo (SEDONA); Statistical Opacity Approximation",
+          "Viewing Angle Effects on Observables": "Brightness varies by factor ~2; Optical brightest equator-on (Doppler blueshift)",
+          "Treatment of Atomic Opacity Data": "Statistical approximation based on atomic data and Ye"
+        }
+      },
+      {
+        "paper_id": "W2092217182",
+        "paper_title": "HMNS Lifetime Imprints on Kilonova Emission and Ejecta Composition",
+        "columns": {
+          "Simulation Dimensionality & Geometry": "Axisymmetric (2D Spherical)",
+          "Primary Ejecta Source Modeled": "HMNS Neutrino-Driven Winds vs. Prompt BH Equatorial Outflow",
+          "Radiative Transfer Methodology": "Not explicitly detailed in summary (focuses on hydro/nucleosynthesis)",
+          "Viewing Angle Effects on Observables": "Polar view yields bright blue bump; Equatorial view yields faint red emission",
+          "Treatment of Atomic Opacity Data": "Simplified prescriptions (Kasen et al. 2013)"
+        }
+      },
+      {
+        "paper_id": "W7167208175",
+        "paper_title": "Three-Dimensional Radiative Transfer Simulations of Kilonovae from Dynamical Ejecta",
+        "columns": {
+          "Simulation Dimensionality & Geometry": "3D (Input from GRSPH; RT is 3D)",
+          "Primary Ejecta Source Modeled": "BNS Dynamical Ejecta Only",
+          "Radiative Transfer Methodology": "Time-dependent Monte Carlo (ARTIS); Line-by-line Sobolev",
+          "Viewing Angle Effects on Observables": "Focus on polar direction (<37°); Predicts robust spectral features for polar views",
+          "Treatment of Atomic Opacity Data": "Calibrated experimental data for lanthanides (Flörs et al. 2026) + Kurucz/CMFGEN"
+        }
+      },
+      {
+        "paper_id": "W2088686510",
+        "paper_title": "First three-dimensional hydrodynamic simulations of neutrino-driven winds from hypermassive neutron star (HMNS) remnants",
+        "columns": {
+          "Simulation Dimensionality & Geometry": "3D Newtonian Hydrodynamics (Cartesian)",
+          "Primary Ejecta Source Modeled": "HMNS Neutrino-Driven Winds",
+          "Radiative Transfer Methodology": "N/A (Hydrodynamics focus; Nucleosynthesis post-processing)",
+          "Viewing Angle Effects on Observables": "High-latitude (polar): Bright/Blue; Low-latitude (equatorial): Dim/Red due to opacity",
+          "Treatment of Atomic Opacity Data": "N/A"
+        }
+      },
+      {
+        "paper_id": "W4386604643",
+        "paper_title": "Self-consistent 3D Radiative Transfer for Kilonovae: Directional Spectra from Merger Simulations",
+        "columns": {
+          "Simulation Dimensionality & Geometry": "3D (Input from GRSPH; RT is 3D Cartesian)",
+          "Primary Ejecta Source Modeled": "BNS Dynamical Ejecta Only",
+          "Radiative Transfer Methodology": "Monte Carlo (ARTIS); Line-by-line Sobolev with Time-dependent Thermalization",
+          "Viewing Angle Effects on Observables": "Significant azimuthal/polar variation; Polar resembles AT2017gfo; Equatorial featureless/fainter",
+          "Treatment of Atomic Opacity Data": "Comparison of Uncalibrated (AD1) vs Calibrated (AD2) Sr/Y/Zr data"
+        }
+      },
+      {
+        "paper_id": "W2766078098",
+        "paper_title": "First Optical and Ultraviolet Spectra of the Electromagnetic Counterpart to GW170817",
+        "columns": {
+          "Simulation Dimensionality & Geometry": "Observational Analysis (Model Comparison)",
+          "Primary Ejecta Source Modeled": "Observed Blue Kilonova Component",
+          "Radiative Transfer Methodology": "Model Comparison against Kasen (2017) Sedona models",
+          "Viewing Angle Effects on Observables": "Constrains viewing angle to 20-45 degrees based on blue ejecta visibility",
+          "Treatment of Atomic Opacity Data": "Qualitative comparison; Identifies line blanketing effects"
+        }
+      },
+      {
+        "paper_id": "W4321764920",
+        "paper_title": "3D radiative transfer kilonova modelling for binary neutron star merger simulations",
+        "columns": {
+          "Simulation Dimensionality & Geometry": "3D (Input from GRSPH; RT is 3D Cartesian)",
+          "Primary Ejecta Source Modeled": "BNS Dynamical Ejecta + Approximate Secular Ejecta",
+          "Radiative Transfer Methodology": "Monte Carlo (ARTIS); Temperature-independent Grey Opacities dependent on Ye",
+          "Viewing Angle Effects on Observables": "Polar lines of sight up to 2x brighter than equatorial; Azimuthal variation ~30%",
+          "Treatment of Atomic Opacity Data": "Grey opacities from Tanaka et al. (2020) based on Ye ranges"
+        }
+      },
+      {
+        "paper_id": "W2619320676",
+        "paper_title": "Modeling Electromagnetic Transients from Neutron Star Mergers with SuperNu: Morphology, Composition, and Heating Rates",
+        "columns": {
+          "Simulation Dimensionality & Geometry": "Semi-analytic / Axisymmetric Morphologies",
+          "Primary Ejecta Source Modeled": "Dynamic Ejecta + Wind Outflows (Combined Models)",
+          "Radiative Transfer Methodology": "3D Semi-implicit Multigroup Monte Carlo (SuperNu); Line-smeared LTE Opacities",
+          "Viewing Angle Effects on Observables": "Toroidal morphology allows brighter/bluer transients pole-on; Spherical averaging underestimates brightness",
+          "Treatment of Atomic Opacity Data": "Detailed LTE opacities for representative elements (Cr, Pd, Se, Te, Br, Zr, Sm, Ce, Nd, U)"
+        }
+      },
+      {
+        "paper_id": "W4309554670",
+        "paper_title": "Heavy Elements and Electromagnetic Transients from Neutron Star Mergers",
+        "columns": {
+          "Simulation Dimensionality & Geometry": "Review/Synthesis (References Multi-dimensional needs)",
+          "Primary Ejecta Source Modeled": "Dynamic, Winds, Torus (Comprehensive Review)",
+          "Radiative Transfer Methodology": "Review of Methods (Highlights need for Multidimensional RT)",
+          "Viewing Angle Effects on Observables": "Discusses 'Lanthanide Curtaining' hiding blue emission unless viewed from specific angles",
+          "Treatment of Atomic Opacity Data": "Synthesizes literature; Highlights NLTE importance for late-time spectra"
+        }
+      },
+      {
+        "paper_id": "W4385749748",
+        "paper_title": "Nucleosynthesis in Outflows of Compact Objects and Detection Prospects of Associated Kilonovae",
+        "columns": {
+          "Simulation Dimensionality & Geometry": "One-Zone Analytic Model",
+          "Primary Ejecta Source Modeled": "BNS, BHNS, MR CCSNe, Thermal CCSNe (Comparative)",
+          "Radiative Transfer Methodology": "One-zone emission model solving energy balance equation",
+          "Viewing Angle Effects on Observables": "Includes opening angle parameter; Notes EOS/viewing angle affect observability",
+          "Treatment of Atomic Opacity Data": "Exponential fit to Tanaka et al. (2020) data based on Ye"
+        }
+      },
+      {
+        "paper_id": "W3101888945",
+        "paper_title": "The Electromagnetic Counterpart of the Binary Neutron Star Merger LIGO/Virgo GW170817. III. Optical and UV Spectra of a Blue Kilonova from Fast Polar Ejecta",
+        "columns": {
+          "Simulation Dimensionality & Geometry": "Observational Analysis (Model Comparison)",
+          "Primary Ejecta Source Modeled": "Observed Blue Kilonova Component",
+          "Radiative Transfer Methodology": "Model Comparison against Sedona code (Kasen et al. 2017)",
+          "Viewing Angle Effects on Observables": "Constrains viewing angle to 20-45 degrees based on blue ejecta visibility",
+          "Treatment of Atomic Opacity Data": "Qualitative comparison; Identifies line blanketing effects"
+        }
+      },
+      {
+        "paper_id": "W2946294461",
+        "paper_title": "Three-dimensional general relativistic radiation magnetohydrodynamics simulations of post-merger accretion disks",
+        "columns": {
+          "Simulation Dimensionality & Geometry": "3D GRRMHD",
+          "Primary Ejecta Source Modeled": "Post-Merger Accretion Disk Winds",
+          "Radiative Transfer Methodology": "SuperNu Monte Carlo using LANL atomic physics opacities",
+          "Viewing Angle Effects on Observables": "Polar outflow ~12x more luminous at 5000 Angstroms than equatorial outflow",
+          "Treatment of Atomic Opacity Data": "Complete lanthanide suites from LANL atomic physics"
+        }
+      }
+    ]
+  },
+  "Integrated Simulation Frameworks and Standardized Microphysical Pipeline Integration": {
+    "comparison_dimensions": [
+      "Hydrodynamic Simulation Framework",
+      "Nucleosynthesis Network Approach",
+      "Radiative Transfer Methodology & Opacity Treatment",
+      "Ejecta Composition & Mixing Focus"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2586770524",
+        "paper_title": "End-to-End Simulations of Black Hole-Neutron Star Mergers: Fallback Mixing and Kilonova Emission",
+        "columns": {
+          "Hydrodynamic Simulation Framework": "FLASH3 (Axisymmetric, Pseudo-Newtonian, Alpha-viscosity)",
+          "Nucleosynthesis Network Approach": "SkyNet (Post-processing tracer particles)",
+          "Radiative Transfer Methodology & Opacity Treatment": "SEDONA Monte Carlo (Statistical opacity approximations based on Ye)",
+          "Ejecta Composition & Mixing Focus": "Fallback mixing into accretion disk; heavy r-process dominance from unbound tail"
+        }
+      },
+      {
+        "paper_id": "W7137206038",
+        "paper_title": "Exploring Composition Mixing in Kilonova Ejecta with Ray-by-ray Simulations",
+        "columns": {
+          "Hydrodynamic Simulation Framework": "Ray-by-ray radiation-hydrodynamics (Extracted from THC NR)",
+          "Nucleosynthesis Network Approach": "SkyNet (Online coupling during hydrodynamics)",
+          "Radiative Transfer Methodology & Opacity Treatment": "Not explicitly detailed (Focus on composition/light curve impact)",
+          "Ejecta Composition & Mixing Focus": "Gradient-based mixing scheme; negligible impact on global yields due to equatorial homogeneity"
+        }
+      },
+      {
+        "paper_id": "W2165466632",
+        "paper_title": "ELECTROMAGNETIC TRANSIENTS POWERED BY NUCLEAR DECAY IN THE TIDAL TAILS OF COALESCING COMPACT BINARIES",
+        "columns": {
+          "Hydrodynamic Simulation Framework": "3D SPH (Smoothed Particle Hydrodynamics)",
+          "Nucleosynthesis Network Approach": "Full nuclear network (6312 isotopes)",
+          "Radiative Transfer Methodology & Opacity Treatment": "SEDONA 3-D Monte Carlo (Constant gray opacity)",
+          "Ejecta Composition & Mixing Focus": "Tidal tail geometry; early optical transients from r-process decay"
+        }
+      },
+      {
+        "paper_id": "W1851157365",
+        "paper_title": "Electromagnetic counterparts of compact object mergers powered by the radioactive decay of r-process nuclei",
+        "columns": {
+          "Hydrodynamic Simulation Framework": "1D Spherical (Lagrangian trajectories from Rosswog et al.)",
+          "Nucleosynthesis Network Approach": "Dynamical r-process network (FRDM/ETFSI-Q mass models)",
+          "Radiative Transfer Methodology & Opacity Treatment": "SE-DONA Monte Carlo (Fe bound-bound lines modified with Pb ionization energies)",
+          "Ejecta Composition & Mixing Focus": "First self-consistent kilonova modeling; effective heating parameter f ~ 3x10^-6"
+        }
+      },
+      {
+        "paper_id": "W2157732302",
+        "paper_title": "Combined Nucleosynthesis Analysis of Dynamical Ejecta and BH-Torus Outflows",
+        "columns": {
+          "Hydrodynamic Simulation Framework": "Relativistic SPH (Merger) + Newtonian Godunov (Remnant)",
+          "Nucleosynthesis Network Approach": "Full r-process network (5000 species) post-processing",
+          "Radiative Transfer Methodology & Opacity Treatment": "N/A (Focus on nucleosynthesis yields and solar abundance matching)",
+          "Ejecta Composition & Mixing Focus": "Combined dynamical ejecta (heavy) and viscous torus outflows (light); solar abundance reproduction"
+        }
+      },
+      {
+        "paper_id": "W4386604643",
+        "paper_title": "Self-consistent 3D Radiative Transfer for Kilonovae: Directional Spectra from Merger Simulations",
+        "columns": {
+          "Hydrodynamic Simulation Framework": "3D GR SPH (SFHo EoS)",
+          "Nucleosynthesis Network Approach": "Separate r-process network per particle trajectory",
+          "Radiative Transfer Methodology & Opacity Treatment": "ARTIS 3D Monte Carlo (Line-by-line Sobolev opacities; calibrated vs uncalibrated atomic data)",
+          "Ejecta Composition & Mixing Focus": "Directional spectra; impact of Sr/Y/Zr calibration; 1D vs 3D spectral differences"
+        }
+      },
+      {
+        "paper_id": "W4321764920",
+        "paper_title": "3D radiative transfer kilonova modelling for binary neutron star merger simulations",
+        "columns": {
+          "Hydrodynamic Simulation Framework": "3D GR SPH (SFHo EoS, Neutrino leakage)",
+          "Nucleosynthesis Network Approach": "Time-dependent nucleosynthesis per SPH trajectory",
+          "Radiative Transfer Methodology & Opacity Treatment": "ARTIS 3D Monte Carlo (Ye-dependent grey opacities)",
+          "Ejecta Composition & Mixing Focus": "Dynamical vs secular ejecta contributions; polar vs equatorial luminosity variations"
+        }
+      },
+      {
+        "paper_id": "W4309554670",
+        "paper_title": "Heavy Elements and Electromagnetic Transients from Neutron Star Mergers",
+        "columns": {
+          "Hydrodynamic Simulation Framework": "Review/Synthesis (Cites various NR and hydro codes)",
+          "Nucleosynthesis Network Approach": "WinNet network (Publicly available heating library)",
+          "Radiative Transfer Methodology & Opacity Treatment": "Review of LTE/NLTE challenges; multidimensional RT necessity",
+          "Ejecta Composition & Mixing Focus": "Ejecta channels (Dynamic/Winds/Torus); lanthanide curtaining; NLTE effects"
+        }
+      },
+      {
+        "paper_id": "W7161257304",
+        "paper_title": "Inference of Binary Progenitor Properties for Merger-Driven Gamma-Ray Bursts Without Gravitational Waves",
+        "columns": {
+          "Hydrodynamic Simulation Framework": "Phenomenological relations mapped to EM data",
+          "Nucleosynthesis Network Approach": "POSSIS code (Internal network usage not detailed)",
+          "Radiative Transfer Methodology & Opacity Treatment": "POSSIS Radiative Transfer (Dynamical and wind components)",
+          "Ejecta Composition & Mixing Focus": "Wind vs dynamical mass correlation; progenitor inference without GWs"
+        }
+      },
+      {
+        "paper_id": "W3214631967",
+        "paper_title": "Production of very light elements and strontium in binary neutron star merger ejecta",
+        "columns": {
+          "Hydrodynamic Simulation Framework": "Numerical Relativity (WhiskyTHC, GR Hydro)",
+          "Nucleosynthesis Network Approach": "SkyNet (7843 isotopes)",
+          "Radiative Transfer Methodology & Opacity Treatment": "TARDIS Monte Carlo (LTE and approximate NLTE treatments)",
+          "Ejecta Composition & Mixing Focus": "Light element (H/He) production; Strontium detection limits; remnant lifetime constraints"
+        }
+      },
+      {
+        "paper_id": "W1977998389",
+        "paper_title": "Numerical relativity simulations of binary neutron star merger ejecta properties",
+        "columns": {
+          "Hydrodynamic Simulation Framework": "Full GR Numerical Relativity (SACRA, AMR)",
+          "Nucleosynthesis Network Approach": "N/A (Focus on ejecta mass/energy/velocity diagnostics)",
+          "Radiative Transfer Methodology & Opacity Treatment": "N/A (Focus on GW signatures and blast wave potential)",
+          "Ejecta Composition & Mixing Focus": "EOS dependence; shock heating vs HMNS torque ejection mechanisms"
+        }
+      },
+      {
+        "paper_id": "W2946294461",
+        "paper_title": "Three-dimensional general relativistic radiation magnetohydrodynamics simulations of post-merger accretion disks",
+        "columns": {
+          "Hydrodynamic Simulation Framework": "3D GRRMHD (v_bhlight, Full MC Neutrino Transport)",
+          "Nucleosynthesis Network Approach": "SkyNet (8000 nuclides, online/offline hybrid)",
+          "Radiative Transfer Methodology & Opacity Treatment": "SuperNu Monte Carlo (LANL atomic physics, complete lanthanide suites)",
+          "Ejecta Composition & Mixing Focus": "Neutrino-driven Ye structuring (Polar blue vs Equatorial red winds)"
+        }
+      }
+    ]
+  },
+  "Stratified Ejecta Morphologies, Electron Fraction Thresholds, and Accretion-Disk Wind Dynamics": {
+    "comparison_dimensions": [
+      "Primary Ejecta Mechanism",
+      "Electron Fraction ($Y_e$) Range & Distribution",
+      "Nucleosynthesis Outcome (r-process Peaks)",
+      "Kilonova Morphology / Color Signature",
+      "Key Physical Driver for $Y_e$ Variation"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2161801818",
+        "paper_title": "Relativistic Hydrodynamical Simulations of NS Mergers and r-Process Nucleosynthesis",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical Tidal/Shock Ejection",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Low $Y_e$ (neutron-rich), peak < 0.2",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Heavy r-process (A > 140), solar-like pattern via fission recycling",
+          "Kilonova Morphology / Color Signature": "Bright B-V-R emission, longer duration for asymmetric mergers",
+          "Key Physical Driver for $Y_e$ Variation": "Initial crust composition and shock heating; limited neutrino processing"
+        }
+      },
+      {
+        "paper_id": "W2766140821",
+        "paper_title": "Electromagnetic Counterparts to GW170817 and Kilonova Modeling",
+        "columns": {
+          "Primary Ejecta Mechanism": "Two-component: Dynamical + Disk Winds",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Bimodal: Blue ($Y_e > 0.25$, lanthanide-poor); Red ($Y_e < 0.25$, lanthanide-rich)",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Light r-process (Blue) and Heavy r-process (Red)",
+          "Kilonova Morphology / Color Signature": "Blue component (fast, optical) + Red component (slow, NIR)",
+          "Key Physical Driver for $Y_e$ Variation": "Formation channel (polar dynamical vs. equatorial disk wind)"
+        }
+      },
+      {
+        "paper_id": "W2766346145",
+        "paper_title": "GW170817 Analysis: Neutron Star Merger Sites of Cosmic r-Process Nucleosynthesis",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical Ejection (dominant mass source inferred)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Low $Y_e \\lesssim 0.3$ required to fit bolometric slope",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Heavy r-process elements",
+          "Kilonova Morphology / Color Signature": "Red/NIR dominated due to high opacity",
+          "Key Physical Driver for $Y_e$ Variation": "Neutrino absorption/irradiation during expansion"
+        }
+      },
+      {
+        "paper_id": "W2981754620",
+        "paper_title": "Spectroscopic Identification of Strontium in Kilonova AT2017gfo",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical Ejection (outer layers)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "High $Y_e$ region producing light r-process",
+          "Nucleosynthesis Outcome (r-process Peaks)": "First peak (Sr, A~80)",
+          "Kilonova Morphology / Color Signature": "Blue/Optical early spectra",
+          "Key Physical Driver for $Y_e$ Variation": "Latitudinal stratification and neutrino processing"
+        }
+      },
+      {
+        "paper_id": "W2760756222",
+        "paper_title": "General-Relativistic Simulations of BNS Mergers: EOS Dependence and Kilonova Observability",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical Ejection (EOS dependent)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Broad range 0.04-0.4; lower in plane, higher at poles",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Robust heavy r-process (A > 120) across EOSs",
+          "Kilonova Morphology / Color Signature": "Fainter, shorter-lived IR transients (peak ~-13 mag)",
+          "Key Physical Driver for $Y_e$ Variation": "Neutrino leakage scheme; angular dependence of irradiation"
+        }
+      },
+      {
+        "paper_id": "W1913098325",
+        "paper_title": "r-Process Nucleosynthesis in Magnetorotational Core-Collapse Supernovae",
+        "columns": {
+          "Primary Ejecta Mechanism": "Magnetorotational Jets (Prompt vs Delayed)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Prompt: Low $Y_e < 0.2$; Delayed: Moderate $Y_e \\sim 0.3$",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Prompt: Full r-process (actinides); Delayed: Weak r-process (A < 130)",
+          "Kilonova Morphology / Color Signature": "Subluminous transients; distinct signatures for prompt/delayed",
+          "Key Physical Driver for $Y_e$ Variation": "Jet launch timing and neutrino absorption outside neutrinosphere"
+        }
+      },
+      {
+        "paper_id": "W1993407371",
+        "paper_title": "Equation of State Impacts on Dynamical Mass Ejection and r-Process Nucleosynthesis in NS Mergers",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical Tidal Ejection",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Insensitive to EOS; robust heavy r-process production",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Solar-like pattern for A > 130",
+          "Kilonova Morphology / Color Signature": "Optical transients (-15 to -16.7 mag); brighter for soft EOS",
+          "Key Physical Driver for $Y_e$ Variation": "Binary compactness and mass ratio (indirectly affects ejecta mass)"
+        }
+      },
+      {
+        "paper_id": "W2884099537",
+        "paper_title": "Actinide Production and Dilution in Neutron Star Merger Ejecta",
+        "columns": {
+          "Primary Ejecta Mechanism": "Multi-component Mixing (Dynamical + Disk Wind)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Low $Y_e$ (actinide-rich) mixed with High $Y_e$ (actinide-poor)",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Heavy r-process with actinide boost potential",
+          "Kilonova Morphology / Color Signature": "Depends on mixing ratio; resolves age discrepancies",
+          "Key Physical Driver for $Y_e$ Variation": "Mixing of neutron-rich dynamical ejecta with protonized disk winds"
+        }
+      },
+      {
+        "paper_id": "W2039045484",
+        "paper_title": "Delayed outflows from black hole accretion tori following neutron star binary coalescence",
+        "columns": {
+          "Primary Ejecta Mechanism": "Viscous Disk Winds",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Low $Y_e \\sim 0.2$ (neutron-rich)",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Second and third peaks (A ~ 130-200)",
+          "Kilonova Morphology / Color Signature": "Red/NIR transient (lanthanide-rich)",
+          "Key Physical Driver for $Y_e$ Variation": "Viscous heating and nuclear recombination energy"
+        }
+      },
+      {
+        "paper_id": "W2586770524",
+        "paper_title": "End-to-End Simulations of Black Hole-Neutron Star Mergers: Fallback Mixing and Kilonova Emission",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical + Fallback Mixing into Disk",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Lower mean $Y_e$ due to mixing; broad distribution",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Heavy r-process dominated by unbound tail",
+          "Kilonova Morphology / Color Signature": "Red-dominated, ~1 week duration; optical early due to hot lanthanides",
+          "Key Physical Driver for $Y_e$ Variation": "Efficient mixing of bound fallback with disk material"
+        }
+      },
+      {
+        "paper_id": "W2893936582",
+        "paper_title": "Numerical Relativity Survey of Binary Neutron Star Mergers: EOS, Ejecta, and Multi-Messenger Counterparts",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical + Secular (Viscous/Neutrino) Winds",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Dynamical: Low $Y_e$; Secular: Higher $Y_e$ (up to 0.4)",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Robust heavy peaks; light elements sensitive to neutrinos",
+          "Kilonova Morphology / Color Signature": "Prompt BH: Faint/Red; Long-lived HMNS: Brighter/Bluer",
+          "Key Physical Driver for $Y_e$ Variation": "Remnant lifetime (HMNS vs Prompt BH) and neutrino transport"
+        }
+      },
+      {
+        "paper_id": "W2106295983",
+        "paper_title": "Production of All the r-Process Nuclides in the Dynamical Ejecta of Neutron Star Mergers",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical Ejection (with Neutrino Transport)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Wide range 0.09 - 0.45",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Full solar r-process pattern (A ~ 90-240)",
+          "Kilonova Morphology / Color Signature": "Blue-to-red evolution driven by $Y_e$ diversity",
+          "Key Physical Driver for $Y_e$ Variation": "Shock heating and neutrino processing in full GR simulations"
+        }
+      },
+      {
+        "paper_id": "W4229062845",
+        "paper_title": "Comprehensive radiative transfer modeling of early AT2017gfo spectra",
+        "columns": {
+          "Primary Ejecta Mechanism": "Stratified Ejecta (Photospheric recession)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Early: High $Y_e$ (lanthanide-free); Late: Lower $Y_e$ (lanthanide-rich)",
+          "Nucleosynthesis Outcome (r-process Peaks)": "First peak (Sr/Zr) early; Lanthanides late",
+          "Kilonova Morphology / Color Signature": "Blue early -> Red late transition",
+          "Key Physical Driver for $Y_e$ Variation": "Viewing angle and photospheric depth revealing different $Y_e$ zones"
+        }
+      },
+      {
+        "paper_id": "W2765333366",
+        "paper_title": "First definitive spectroscopic identification of kilonova AT 2017gfo",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical + Disk Wind Components",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Broad range covering lanthanide-free to lanthanide-rich",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Heavy r-process elements confirmed",
+          "Kilonova Morphology / Color Signature": "Rapid cooling blue continuum -> Broad absorption lines",
+          "Key Physical Driver for $Y_e$ Variation": "Distinct formation channels (tidal vs wind)"
+        }
+      },
+      {
+        "paper_id": "W2885157045",
+        "paper_title": "Long-term three-dimensional general-relativistic magnetohydrodynamic simulations of post-merger accretion disks",
+        "columns": {
+          "Primary Ejecta Mechanism": "MHD-driven Winds (MRI turbulence)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Broad 0.03-0.4; Majority lanthanide-rich ($Y_e < 0.25$)",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Heavy r-process; small fast neutron-rich precursor",
+          "Kilonova Morphology / Color Signature": "Red kilonova dominant; potential UV precursor from neutrons",
+          "Key Physical Driver for $Y_e$ Variation": "MHD turbulence and neutrino cooling (absorption ignored)"
+        }
+      },
+      {
+        "paper_id": "W2947039387",
+        "paper_title": "Numerical relativity simulations of mass ejection and electromagnetic counterparts in neutron star mergers",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical (Tidal/Shock) + Viscosity-driven",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Dynamical: Low $Y_e$; Viscous: Variable based on remnant",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Heavy r-process elements",
+          "Kilonova Morphology / Color Signature": "Red (high opacity) vs Blue (low opacity) components",
+          "Key Physical Driver for $Y_e$ Variation": "Weak interactions (neutrino irradiation) in viscous winds"
+        }
+      },
+      {
+        "paper_id": "W2092217182",
+        "paper_title": "HMNS Lifetime Imprints on Kilonova Emission and Ejecta Composition",
+        "columns": {
+          "Primary Ejecta Mechanism": "Neutrino-driven Polar Winds (from HMNS)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Polar: High $Y_e \\sim 0.4-0.5$ (Lanthanide-free); Equatorial: Low $Y_e$",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Light r-process (Polar) vs Heavy r-process (Equatorial)",
+          "Kilonova Morphology / Color Signature": "Blue bump (early) + Red peak (late) if HMNS long-lived",
+          "Key Physical Driver for $Y_e$ Variation": "Duration of HMNS phase and polar neutrino irradiation"
+        }
+      },
+      {
+        "paper_id": "W2600438259",
+        "paper_title": "Influence of Hyper-Massive Neutron Star Lifetime on R-Process Nucleosynthesis in Accretion Disk Winds",
+        "columns": {
+          "Primary Ejecta Mechanism": "Viscous/Neutrino-driven Disk Winds",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Short HMNS: Low $Y_e$ (Solar match); Long HMNS: High $Y_e$ (Underproduce heavy)",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Solar-like for short HMNS; Light r-process for long HMNS",
+          "Kilonova Morphology / Color Signature": "Red dominant for short HMNS; Bluer for long HMNS",
+          "Key Physical Driver for $Y_e$ Variation": "HMNS lifetime controlling neutrino leptonization time"
+        }
+      },
+      {
+        "paper_id": "W4210965419",
+        "paper_title": "Kilonovae",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical + Disk Winds",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Blue: $Y_e \\gtrsim 0.25$; Red: $Y_e \\lesssim 0.2$",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Light (Blue) and Heavy (Red) r-process",
+          "Kilonova Morphology / Color Signature": "Canonical Blue then Red evolution",
+          "Key Physical Driver for $Y_e$ Variation": "Opacity differences due to lanthanide presence"
+        }
+      },
+      {
+        "paper_id": "W4211256362",
+        "paper_title": "Physics of Kilonovae and Electromagnetic Counterparts to Neutron Star Mergers",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical + Winds + Central Engine",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Variable; Blue ($Y_e > 0.25$), Red ($Y_e < 0.3$)",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Light and Heavy r-process",
+          "Kilonova Morphology / Color Signature": "Vanilla Red; Blue variants; Precursors",
+          "Key Physical Driver for $Y_e$ Variation": "Ejecta origin (polar vs equatorial) and central engine activity"
+        }
+      },
+      {
+        "paper_id": "W2157732302",
+        "paper_title": "Combined Nucleosynthesis Analysis of Dynamical Ejecta and BH-Torus Outflows",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical + Viscous Torus Outflows",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Dynamical: Very low $Y_e$; Torus: Low-Moderate $Y_e$ (0.1-0.5)",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Combined yields match solar pattern (A > 90)",
+          "Kilonova Morphology / Color Signature": "Multi-component depending on ratio",
+          "Key Physical Driver for $Y_e$ Variation": "Viscous heating vs Neutrino-driven wind dominance"
+        }
+      },
+      {
+        "paper_id": "W4380590547",
+        "paper_title": "Discovery of a 760 nm P Cygni line in AT2017gfo: Identification of yttrium in the kilonova photosphere",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical Ejection (photospheric layers)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "High $Y_e$ region producing light r-process",
+          "Nucleosynthesis Outcome (r-process Peaks)": "First peak (Yttrium, Sr)",
+          "Kilonova Morphology / Color Signature": "Blue/Optical features",
+          "Key Physical Driver for $Y_e$ Variation": "Velocity stratification revealing specific $Y_e$ zones"
+        }
+      },
+      {
+        "paper_id": "W2088686510",
+        "paper_title": "First three-dimensional hydrodynamic simulations of neutrino-driven winds from hypermassive neutron star (HMNS) remnants",
+        "columns": {
+          "Primary Ejecta Mechanism": "Neutrino-driven Winds (3D HMNS)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Latitudinal gradient: High $Y_e$ (Poles) vs Low $Y_e$ (Equator)",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Weak r-process (Poles) vs Full r-process (Equator)",
+          "Kilonova Morphology / Color Signature": "Blue (Pole view) vs Red (Equator view)",
+          "Key Physical Driver for $Y_e$ Variation": "Latitudinal dependence of neutrino flux and optical depth"
+        }
+      },
+      {
+        "paper_id": "W2765302758",
+        "paper_title": "First detailed ultraviolet, optical, and infrared light curves of SSS17a (GW170817 counterpart)",
+        "columns": {
+          "Primary Ejecta Mechanism": "Two-component (Dynamical + Wind)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Early: High $Y_e$ (<0.08 cm^2/g opacity); Late: Low $Y_e$ (>5 cm^2/g)",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Light r-process early; Heavy r-process late",
+          "Kilonova Morphology / Color Signature": "Blue-to-Rapid Red transition",
+          "Key Physical Driver for $Y_e$ Variation": "Recombination of lanthanides lowering opacity at late times"
+        }
+      },
+      {
+        "paper_id": "W3019832623",
+        "paper_title": "Review of r-process nucleosynthesis: Sites, nuclear physics, and Galactic chemical evolution",
+        "columns": {
+          "Primary Ejecta Mechanism": "Multiple Sites (Mergers, CCSNe, Collapsars)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Site-dependent; Mergers: Broad; CCSNe: Often too high",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Merger: Robust heavy; CCSNe: Weak/Limited",
+          "Kilonova Morphology / Color Signature": "Varies by site and viewing angle",
+          "Key Physical Driver for $Y_e$ Variation": "Neutrino interactions and entropy in different environments"
+        }
+      },
+      {
+        "paper_id": "W2765595587",
+        "paper_title": "Discovery and detailed multi-wavelength monitoring of AT2017gfo",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical + Disk Wind",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Wind: $Y_e > 0.25$; Dynamical: $Y_e < 0.25$",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Light (Wind) and Heavy (Dynamical)",
+          "Kilonova Morphology / Color Signature": "Blue (Wind) + Red (Dynamical)",
+          "Key Physical Driver for $Y_e$ Variation": "Distinct formation channels"
+        }
+      },
+      {
+        "paper_id": "W2763995406",
+        "paper_title": "Detection and Characterization of Kilonova AT 2017gfo Associated with GW170817",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical Ejection (blue component)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "High $Y_e$ (Lanthanide fraction $10^{-4.5}$)",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Light r-process (A < 140)",
+          "Kilonova Morphology / Color Signature": "Fast-fading Blue transient",
+          "Key Physical Driver for $Y_e$ Variation": "Weak interactions raising proton-to-neutron ratio"
+        }
+      },
+      {
+        "paper_id": "W2766078098",
+        "paper_title": "First Optical and Ultraviolet Spectra of the Electromagnetic Counterpart to GW170817",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical Polar Ejection",
+          "Electron Fraction ($Y_e$) Range & Distribution": "High $Y_e$ (Lanthanide fraction $\\sim 10^{-4}$)",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Light r-process ($A \\sim 140$)",
+          "Kilonova Morphology / Color Signature": "Blue kilonova",
+          "Key Physical Driver for $Y_e$ Variation": "Polar location minimizing lanthanide production"
+        }
+      },
+      {
+        "paper_id": "W4321764920",
+        "paper_title": "3D radiative transfer kilonova modelling for binary neutron star merger simulations",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical + Approximate Secular Ejecta",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Dynamical: Broad; Secular: Added mass",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Heavy r-process",
+          "Kilonova Morphology / Color Signature": "Blue-to-Red evolution; Shoulder feature",
+          "Key Physical Driver for $Y_e$ Variation": "Angular dependence of $Y_e$ and opacity"
+        }
+      },
+      {
+        "paper_id": "W2767057808",
+        "paper_title": "Physical Association of the Electromagnetic Counterpart EM170817 to the Gravitational Wave Event GW170817",
+        "columns": {
+          "Primary Ejecta Mechanism": "Cocoon Breakout + Radioactive Decay",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Broad range supporting r-process",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Heavy r-process (Nd-like features)",
+          "Kilonova Morphology / Color Signature": "UV/Optical/IR evolution consistent with r-process",
+          "Key Physical Driver for $Y_e$ Variation": "Radioactive decay heating of neutron-rich ejecta"
+        }
+      },
+      {
+        "paper_id": "W2619320676",
+        "paper_title": "Modeling Electromagnetic Transients from Neutron Star Mergers with SuperNu: Morphology, Composition, and Heating Rates",
+        "columns": {
+          "Primary Ejecta Mechanism": "Axisymmetric Dynamical + Spherical Wind",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Wind: Lower opacity; Dynamical: Higher opacity",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Light (Wind) and Heavy (Dynamical)",
+          "Kilonova Morphology / Color Signature": "Double-peak (Blue wind + Red ejecta)",
+          "Key Physical Driver for $Y_e$ Variation": "Composition-dependent opacity ('Lanthanide Curtain')"
+        }
+      },
+      {
+        "paper_id": "W4309554670",
+        "paper_title": "Heavy Elements and Electromagnetic Transients from Neutron Star Mergers",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamic, Winds, Torus",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Threshold $Y_e \\approx 0.25$ separates Blue/Red",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Light ($Y_e > 0.25$) and Heavy ($Y_e < 0.25$)",
+          "Kilonova Morphology / Color Signature": "Blue (early) and Red (late)",
+          "Key Physical Driver for $Y_e$ Variation": "Ejection channel and neutrino processing"
+        }
+      },
+      {
+        "paper_id": "W7161257304",
+        "paper_title": "Inference of Binary Progenitor Properties for Merger-Driven Gamma-Ray Bursts Without Gravitational Waves",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical + Wind Ejecta",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Wind mass dominates; variable $Y_e$",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Heavy r-process",
+          "Kilonova Morphology / Color Signature": "Red-dominated with blue components",
+          "Key Physical Driver for $Y_e$ Variation": "Binary parameters (mass ratio, EOS) affecting wind yield"
+        }
+      },
+      {
+        "paper_id": "W4385749748",
+        "paper_title": "Nucleosynthesis in Outflows of Compact Objects and Detection Prospects of Associated Kilonovae",
+        "columns": {
+          "Primary Ejecta Mechanism": "BNS/BHNS Dynamical + Winds; MR CCSNe Jets",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Mergers: Low $Y_e$ (Robust); CCSNe: Moderate $Y_e$ (Weak)",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Mergers: Actinides; CCSNe: A < 140",
+          "Kilonova Morphology / Color Signature": "Mergers: Red/Blue; CCSNe: Subluminous",
+          "Key Physical Driver for $Y_e$ Variation": "Event type and thermodynamic conditions"
+        }
+      },
+      {
+        "paper_id": "W3214631967",
+        "paper_title": "Production of very light elements and strontium in binary neutron star merger ejecta",
+        "columns": {
+          "Primary Ejecta Mechanism": "Dynamical + Spiral-Wave Winds",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Dynamical: High $Y_e$ regions for Sr; Low $Y_e$ for He",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Light r-process (Sr) and H/He",
+          "Kilonova Morphology / Color Signature": "Blue/Optical (Sr features)",
+          "Key Physical Driver for $Y_e$ Variation": "Remnant collapse time limiting Sr overproduction"
+        }
+      },
+      {
+        "paper_id": "W2946294461",
+        "paper_title": "Three-dimensional general relativistic radiation magnetohydrodynamics simulations of post-merger accretion disks",
+        "columns": {
+          "Primary Ejecta Mechanism": "Disk Winds (GRRMHD)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Structured: Polar $Y_e \\sim 0.4$; Equatorial $Y_e \\sim 0.2$",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Light (Polar) and Heavy (Equatorial)",
+          "Kilonova Morphology / Color Signature": "Blue (Polar view) and Red (Equatorial view)",
+          "Key Physical Driver for $Y_e$ Variation": "Neutrino absorption in optically thin corona"
+        }
+      },
+      {
+        "paper_id": "W2001883968",
+        "paper_title": "Explosions of O-Ne-Mg cores, the Crab supernova, and subluminous type II-P supernovae",
+        "columns": {
+          "Primary Ejecta Mechanism": "Neutrino-driven Core-Collapse",
+          "Electron Fraction ($Y_e$) Range & Distribution": "High $Y_e \\ge 0.46$",
+          "Nucleosynthesis Outcome (r-process Peaks)": "No significant r-process (suppress heavy element production)",
+          "Kilonova Morphology / Color Signature": "Subluminous Type II-P",
+          "Key Physical Driver for $Y_e$ Variation": "Neutrino interactions protonifying ejecta"
+        }
+      },
+      {
+        "paper_id": "W7162537987",
+        "paper_title": "The r-process: history, required conditions, astrophysical sites, and observations",
+        "columns": {
+          "Primary Ejecta Mechanism": "Multiple Sites (Mergers, MRSNe, Collapsars)",
+          "Electron Fraction ($Y_e$) Range & Distribution": "Site-specific; Mergers: Broad; CCSNe: High",
+          "Nucleosynthesis Outcome (r-process Peaks)": "Mergers: Robust heavy; Others: Weak/Limited",
+          "Kilonova Morphology / Color Signature": "Varies by site",
+          "Key Physical Driver for $Y_e$ Variation": "Astrophysical environment and neutrino physics"
+        }
+      }
+    ]
+  },
+  "Relativistic Outflows, Central Engine Evolution, and Multi-Messenger Progenitor Decoupling": {
+    "comparison_dimensions": [
+      "Primary Methodological Approach",
+      "Ejecta Mass Estimation (Solar Masses)",
+      "Dominant Ejection Mechanism Identified",
+      "Key Electromagnetic Signature Focus",
+      "Treatment of Microphysics (EOS/Neutrinos/MHD)"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2893936582",
+        "paper_title": "Numerical Relativity Survey of Binary Neutron Star Mergers: EOS, Ejecta, and Multi-Messenger Counterparts",
+        "columns": {
+          "Primary Methodological Approach": "Systematic Numerical Relativity Survey (59 simulations)",
+          "Ejecta Mass Estimation (Solar Masses)": "~10^-3 to 0.2 (Secular winds dominate)",
+          "Dominant Ejection Mechanism Identified": "Dynamical (tidal/shock) and Secular (viscous/neutrino-driven winds)",
+          "Key Electromagnetic Signature Focus": "Kilonova light curves and radio remnants linked to EOS stiffness",
+          "Treatment of Microphysics (EOS/Neutrinos/MHD)": "Microphysical EOSs (DD2, BHBΛφ, LS220, SFHo); Leakage/M0 neutrino transport; GRLES viscosity"
+        }
+      },
+      {
+        "paper_id": "W2765333366",
+        "paper_title": "First definitive spectroscopic identification of kilonova AT 2017gfo",
+        "columns": {
+          "Primary Methodological Approach": "Multi-wavelength Spectroscopic Analysis & Radiative Transfer Modeling",
+          "Ejecta Mass Estimation (Solar Masses)": "0.03–0.05",
+          "Dominant Ejection Mechanism Identified": "Dynamical ejecta with lanthanide-rich composition",
+          "Key Electromagnetic Signature Focus": "Spectral identification of r-process elements (lanthanides) in UV-NIR",
+          "Treatment of Microphysics (EOS/Neutrinos/MHD)": "Semi-empirical rescaling of Tanaka models; high-opacity lanthanide assumptions"
+        }
+      },
+      {
+        "paper_id": "W2885157045",
+        "paper_title": "Long-term three-dimensional general-relativistic magnetohydrodynamic simulations of post-merger accretion disks",
+        "columns": {
+          "Primary Methodological Approach": "Long-term 3D GRMHD Simulations (~9 seconds evolution)",
+          "Ejecta Mass Estimation (Solar Masses)": "~0.013 (39% of initial disk mass)",
+          "Dominant Ejection Mechanism Identified": "MHD turbulence (MRI) driving outflows",
+          "Key Electromagnetic Signature Focus": "Red kilonova power source and relativistic jet energetics",
+          "Treatment of Microphysics (EOS/Neutrinos/MHD)": "Ideal gas EOS ($\\gamma=4/3$); Neutrino cooling only (no absorption); Strong poloidal magnetic fields"
+        }
+      },
+      {
+        "paper_id": "W2947039387",
+        "paper_title": "Numerical relativity simulations of mass ejection and electromagnetic counterparts in neutron star mergers",
+        "columns": {
+          "Primary Methodological Approach": "Review Synthesis of NR Simulations and EM Models",
+          "Ejecta Mass Estimation (Solar Masses)": "$10^{-3}$ to $\\approx 0.1$ (Variable by scenario)",
+          "Dominant Ejection Mechanism Identified": "Tidal/Shock (Dynamical) vs. Viscosity (Viscosity-driven)",
+          "Key Electromagnetic Signature Focus": "Kilonova color diversity (Blue/Red) and synchrotron afterglow",
+          "Treatment of Microphysics (EOS/Neutrinos/MHD)": "Finite-temperature EOS; Neutrino radiation transfer; MHD instabilities (MRI/KH)"
+        }
+      },
+      {
+        "paper_id": "W4210965419",
+        "paper_title": "Kilonovae",
+        "columns": {
+          "Primary Methodological Approach": "Theoretical Review & Unified Toy Model (ODEs)",
+          "Ejecta Mass Estimation (Solar Masses)": "~0.04–0.07 (Inferred from GW170817)",
+          "Dominant Ejection Mechanism Identified": "Disk wind outflows dominate over dynamical ejecta",
+          "Key Electromagnetic Signature Focus": "Canonical Blue-to-Red transition and opacity dependence on $Y_e$",
+          "Treatment of Microphysics (EOS/Neutrinos/MHD)": "Grey opacities dependent on composition; Statistical approximations for lanthanide opacity"
+        }
+      },
+      {
+        "paper_id": "W4211256362",
+        "paper_title": "Physics of Kilonovae and Electromagnetic Counterparts to Neutron Star Mergers",
+        "columns": {
+          "Primary Methodological Approach": "Theoretical Review & Unified Toy Model",
+          "Ejecta Mass Estimation (Solar Masses)": "N/A (Focus on luminosity scale correction)",
+          "Dominant Ejection Mechanism Identified": "Dynamical (equatorial) vs. Disk Wind (polar/neutrino-heated)",
+          "Key Electromagnetic Signature Focus": "Red Kilonova paradigm, Blue precursors, and Central Engine impacts",
+          "Treatment of Microphysics (EOS/Neutrinos/MHD)": "High opacity for lanthanides ($\\sim 200 \\text{ cm}^2 \\text{ g}^{-1}$); Pair creation trapping"
+        }
+      },
+      {
+        "paper_id": "W7171383956",
+        "paper_title": "Implications of low neutron star merger rates for gamma-ray bursts, r-process production and Galactic double neutron stars",
+        "columns": {
+          "Primary Methodological Approach": "Population Statistics & Rate Tension Analysis",
+          "Ejecta Mass Estimation (Solar Masses)": "N/A (Rate inference focus)",
+          "Dominant Ejection Mechanism Identified": "N/A (Population level analysis)",
+          "Key Electromagnetic Signature Focus": "SGRB rates, Galactic r-process mass budget, DNS populations",
+          "Treatment of Microphysics (EOS/Neutrinos/MHD)": "N/A (Astrophysical population constraints)"
+        }
+      },
+      {
+        "paper_id": "W2763995406",
+        "paper_title": "Detection and Characterization of Kilonova AT 2017gfo Associated with GW170817",
+        "columns": {
+          "Primary Methodological Approach": "Rapid Optical Follow-up & Photometric Modeling",
+          "Ejecta Mass Estimation (Solar Masses)": "0.02–0.025",
+          "Dominant Ejection Mechanism Identified": "Low-opacity, lanthanide-poor ejecta (Light r-process)",
+          "Key Electromagnetic Signature Focus": "Fast blue-to-red color evolution and rapid decline rates",
+          "Treatment of Microphysics (EOS/Neutrinos/MHD)": "Numerical radiative transfer with atomic line opacities; Composition gradients"
+        }
+      },
+      {
+        "paper_id": "W2767057808",
+        "paper_title": "Physical Association of the Electromagnetic Counterpart EM170817 to the Gravitational Wave Event GW170817",
+        "columns": {
+          "Primary Methodological Approach": "Panchromatic Data Synthesis & Hydrodynamical Simulation",
+          "Ejecta Mass Estimation (Solar Masses)": "~0.05",
+          "Dominant Ejection Mechanism Identified": "Cocoon breakout model (Wide-angle mildly relativistic cocoon)",
+          "Key Electromagnetic Signature Focus": "Cocoon breakout gamma-rays and r-process macronova emission",
+          "Treatment of Microphysics (EOS/Neutrinos/MHD)": "Relativistic hydrodynamics (PLUTO); Opacity assumptions for slow/fast material"
+        }
+      },
+      {
+        "paper_id": "W7161257304",
+        "paper_title": "Inference of Binary Progenitor Properties for Merger-Driven Gamma-Ray Bursts Without Gravitational Waves",
+        "columns": {
+          "Primary Methodological Approach": "Bayesian Inference (NMMA Framework) on EM-only Sample",
+          "Ejecta Mass Estimation (Solar Masses)": "Wind: ~0.027; Dynamical: ~0.012",
+          "Dominant Ejection Mechanism Identified": "Wind ejecta dominates total mass budget",
+          "Key Electromagnetic Signature Focus": "Simultaneous Afterglow and Kilonova modeling for progenitor classification",
+          "Treatment of Microphysics (EOS/Neutrinos/MHD)": "Phenomenological relations mapping EM posteriors to binary parameters"
+        }
+      },
+      {
+        "paper_id": "W1977998389",
+        "paper_title": "Numerical relativity simulations of binary neutron star merger ejecta properties",
+        "columns": {
+          "Primary Methodological Approach": "Numerical Relativity Simulations (SACRA Code)",
+          "Ejecta Mass Estimation (Solar Masses)": "$10^{-4}$ to $10^{-2}$",
+          "Dominant Ejection Mechanism Identified": "Shock heating (soft EOS/equal mass) vs. HMNS torque (stiff EOS/asymmetric)",
+          "Key Electromagnetic Signature Focus": "Kilonova detectability and Radio blast waves linked to EOS compactness",
+          "Treatment of Microphysics (EOS/Neutrinos/MHD)": "Piecewise polytropic EOSs (APR4, ALF2, H4, MS1); Thermal $\\Gamma$-law components"
+        }
+      },
+      {
+        "paper_id": "W2765081049",
+        "paper_title": "Gravitational Waves from a Binary Neutron Star Inspiral (GW170817)",
+        "columns": {
+          "Primary Methodological Approach": "Gravitational Wave Detection & Parameter Estimation",
+          "Ejecta Mass Estimation (Solar Masses)": "N/A (GW-only detection)",
+          "Dominant Ejection Mechanism Identified": "N/A (Inspiral phase analysis)",
+          "Key Electromagnetic Signature Focus": "Confirmation of sGRB progenitor link via multi-messenger association",
+          "Treatment of Microphysics (EOS/Neutrinos/MHD)": "Tidal deformability constraints on EOS stiffness; Post-Newtonian waveform models"
+        }
+      }
+    ]
+  },
+  "Neutrino-Regulated Nucleosynthesis Pathways and Weak-Interaction Network Constraints": {
+    "comparison_dimensions": [
+      "Primary Astrophysical Site",
+      "Ejecta Composition & Ye Range",
+      "Nuclear Physics Sensitivity",
+      "Key Nucleosynthesis Mechanism"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2161801818",
+        "paper_title": "Relativistic Hydrodynamical Simulations of NS Mergers and r-Process Nucleosynthesis",
+        "columns": {
+          "Primary Astrophysical Site": "Neutron Star Mergers (NS-NS)",
+          "Ejecta Composition & Ye Range": "Neutron-rich; Ye ~0.04-0.25",
+          "Nuclear Physics Sensitivity": "Low for heavy elements due to fission recycling; sensitive to fission barriers",
+          "Key Nucleosynthesis Mechanism": "r-process with fission recycling"
+        }
+      },
+      {
+        "paper_id": "W2766346145",
+        "paper_title": "GW170817 Analysis: Neutron Star Merger Sites of Cosmic r-Process Nucleosynthesis",
+        "columns": {
+          "Primary Astrophysical Site": "Neutron Star Mergers (NS-NS)",
+          "Ejecta Composition & Ye Range": "Neutron-rich; Ye < 0.3",
+          "Nuclear Physics Sensitivity": "High sensitivity to nuclear mass models (FRDM vs DZ) affecting heating rates",
+          "Key Nucleosynthesis Mechanism": "r-process radioactive decay heating"
+        }
+      },
+      {
+        "paper_id": "W2760756222",
+        "paper_title": "General-Relativistic Simulations of BNS Mergers: EOS Dependence and Kilonova Observability",
+        "columns": {
+          "Primary Astrophysical Site": "Neutron Star Mergers (BNS)",
+          "Ejecta Composition & Ye Range": "Neutron-rich; Ye ~0.04-0.4, peak <0.2",
+          "Nuclear Physics Sensitivity": "Moderate; abundance patterns robust across EOS variations",
+          "Key Nucleosynthesis Mechanism": "Dynamical ejecta r-process"
+        }
+      },
+      {
+        "paper_id": "W1913098325",
+        "paper_title": "r-Process Nucleosynthesis in Magnetorotational Core-Collapse Supernovae",
+        "columns": {
+          "Primary Astrophysical Site": "Magnetorotational Core-Collapse SNe",
+          "Ejecta Composition & Ye Range": "Variable; Prompt jets Ye < 0.2, Delayed jets Ye ~ 0.3",
+          "Nuclear Physics Sensitivity": "Sensitive to weak interactions and neutrino absorption effects on Ye",
+          "Key Nucleosynthesis Mechanism": "Prompt jets: Main r-process; Delayed jets: Weak r-process"
+        }
+      },
+      {
+        "paper_id": "W2802275066",
+        "paper_title": "Interplay of Nuclear Physics, Astrophysics, and Astronomy in r-Process Nucleosynthesis",
+        "columns": {
+          "Primary Astrophysical Site": "Review: NS Mergers & CCSNe",
+          "Ejecta Composition & Ye Range": "Broad range depending on site",
+          "Nuclear Physics Sensitivity": "Critical bottleneck; masses, beta-decay, fission uncertainties dominate errors",
+          "Key Nucleosynthesis Mechanism": "Main r-process (NSMs), Weak r-process (CCSNe)"
+        }
+      },
+      {
+        "paper_id": "W1993407371",
+        "paper_title": "Equation of State Impacts on Dynamical Mass Ejection and r-Process Nucleosynthesis in NS Mergers",
+        "columns": {
+          "Primary Astrophysical Site": "Neutron Star Mergers (NS-NS/NS-BH)",
+          "Ejecta Composition & Ye Range": "Neutron-rich; Ye ~0.04-0.2",
+          "Nuclear Physics Sensitivity": "Low for abundance pattern; high sensitivity to EoS for ejecta mass",
+          "Key Nucleosynthesis Mechanism": "r-process with fission recycling"
+        }
+      },
+      {
+        "paper_id": "W2102639755",
+        "paper_title": "Nucleosynthesis in Neutron-Rich Ejecta from Quark-Novae",
+        "columns": {
+          "Primary Astrophysical Site": "Quark-Novae",
+          "Ejecta Composition & Ye Range": "Very neutron-rich; Ye ~ 0.03",
+          "Nuclear Physics Sensitivity": "High sensitivity to expansion timescale and beta-decay heating",
+          "Key Nucleosynthesis Mechanism": "r-process dependent on freeze-out timing"
+        }
+      },
+      {
+        "paper_id": "W2884099537",
+        "paper_title": "Actinide Production and Dilution in Neutron Star Merger Ejecta",
+        "columns": {
+          "Primary Astrophysical Site": "Neutron Star Mergers (NS-NS)",
+          "Ejecta Composition & Ye Range": "Multi-component; Low Ye (<0.2) dynamical + High Ye (>0.3) winds",
+          "Nuclear Physics Sensitivity": "High sensitivity to fission fragment distributions and beta-decay rates",
+          "Key Nucleosynthesis Mechanism": "Actinide dilution via mixing components"
+        }
+      },
+      {
+        "paper_id": "W2299136898",
+        "paper_title": "Neutrino-Driven Winds in Core-Collapse Supernovae and Heavy r-Process Actinide Production",
+        "columns": {
+          "Primary Astrophysical Site": "Core-Collapse Supernovae (Neutrino Winds)",
+          "Ejecta Composition & Ye Range": "Marginal; Ye ~ 0.4-0.5 (optimistic upper limits)",
+          "Nuclear Physics Sensitivity": "Extremely high sensitivity to actinide production yields",
+          "Key Nucleosynthesis Mechanism": "Weak r-process / Actinide production in winds"
+        }
+      },
+      {
+        "paper_id": "W4389429223",
+        "paper_title": "Observational Evidence for Fission of Transuranic Nuclei in r-Process Events",
+        "columns": {
+          "Primary Astrophysical Site": "Neutron Star Mergers (Inferred)",
+          "Ejecta Composition & Ye Range": "Neutron-rich (implied by transuranic synthesis)",
+          "Nuclear Physics Sensitivity": "Constraints on fission of nuclei A > 260",
+          "Key Nucleosynthesis Mechanism": "Fission fragment deposition"
+        }
+      },
+      {
+        "paper_id": "W2789930919",
+        "paper_title": "Fission Properties of Superheavy Nuclei and r-Process Termination",
+        "columns": {
+          "Primary Astrophysical Site": "Neutron Star Mergers (Theoretical)",
+          "Ejecta Composition & Ye Range": "Neutron-rich (superheavy region)",
+          "Nuclear Physics Sensitivity": "Critical dependence on superheavy fission barriers and lifetimes",
+          "Key Nucleosynthesis Mechanism": "Neutron-induced fission termination"
+        }
+      },
+      {
+        "paper_id": "W2615363806",
+        "paper_title": "Interplay of Nuclear Physics Inputs and Astrophysical Conditions in NSM Dynamical Ejecta Nucleosynthesis",
+        "columns": {
+          "Primary Astrophysical Site": "Neutron Star Mergers (Dynamical Ejecta)",
+          "Ejecta Composition & Ye Range": "Neutron-rich; Ye ~ 0.04-0.2",
+          "Nuclear Physics Sensitivity": "High sensitivity to mass models and fission fragment distributions",
+          "Key Nucleosynthesis Mechanism": "Late neutron capture from fission"
+        }
+      },
+      {
+        "paper_id": "W2106295983",
+        "paper_title": "Production of All the r-Process Nuclides in the Dynamical Ejecta of Neutron Star Mergers",
+        "columns": {
+          "Primary Astrophysical Site": "Neutron Star Mergers (NS-NS)",
+          "Ejecta Composition & Ye Range": "Wide range; Ye ~ 0.09-0.45",
+          "Nuclear Physics Sensitivity": "Low for bulk pattern; sensitive to superheavy fission for low Ye",
+          "Key Nucleosynthesis Mechanism": "Full r-process without fission recycling"
+        }
+      },
+      {
+        "paper_id": "W2953069299",
+        "paper_title": "Robust r-process nucleosynthesis across the neutron star mass parameter space",
+        "columns": {
+          "Primary Astrophysical Site": "Compact Binary Mergers (NS-NS/NS-BH)",
+          "Ejecta Composition & Ye Range": "Extreme neutron richness; Ye ~ 0.03-0.04",
+          "Nuclear Physics Sensitivity": "Insensitive to astrophysics; sensitive to drip-line nuclear physics",
+          "Key Nucleosynthesis Mechanism": "r-process pinned to neutron drip line"
+        }
+      },
+      {
+        "paper_id": "W7137206038",
+        "paper_title": "Exploring Composition Mixing in Kilonova Ejecta with Ray-by-ray Simulations",
+        "columns": {
+          "Primary Astrophysical Site": "Neutron Star Mergers (BNSM)",
+          "Ejecta Composition & Ye Range": "Mixed gradients; Ye varies by angle",
+          "Nuclear Physics Sensitivity": "Low impact of mixing on global yields",
+          "Key Nucleosynthesis Mechanism": "Composition mixing effects"
+        }
+      },
+      {
+        "paper_id": "W1851157365",
+        "paper_title": "Electromagnetic counterparts of compact object mergers powered by the radioactive decay of r-process nuclei",
+        "columns": {
+          "Primary Astrophysical Site": "Neutron Star Mergers (NS-NS)",
+          "Ejecta Composition & Ye Range": "Neutron-rich; Ye ~ 0.05-0.35",
+          "Nuclear Physics Sensitivity": "Robust heating rate against mass model variations",
+          "Key Nucleosynthesis Mechanism": "Radioactive decay heating (Kilonova)"
+        }
+      },
+      {
+        "paper_id": "W2024743329",
+        "paper_title": "MAGNETOROTATIONALLY DRIVEN SUPERNOVAE AS THE ORIGIN OF EARLY GALAXY R-PROCESS ELEMENTS?",
+        "columns": {
+          "Primary Astrophysical Site": "Magneto-rotational Supernovae",
+          "Ejecta Composition & Ye Range": "Neutron-rich (jet cores)",
+          "Nuclear Physics Sensitivity": "N/A",
+          "Key Nucleosynthesis Mechanism": "Jet-driven r-process"
+        }
+      },
+      {
+        "paper_id": "W2092217182",
+        "paper_title": "HMNS Lifetime Imprints on Kilonova Emission and Ejecta Composition",
+        "columns": {
+          "Primary Astrophysical Site": "Neutron Star Mergers (Disk Winds)",
+          "Ejecta Composition & Ye Range": "Polar outflows Ye ~ 0.4-0.5 (Lanthanide-free); Equatorial Ye < 0.3",
+          "Nuclear Physics Sensitivity": "Low; dominated by neutrino processing",
+          "Key Nucleosynthesis Mechanism": "Neutrino-driven wind composition modulation"
+        }
+      },
+      {
+        "paper_id": "W2600438259",
+        "paper_title": "Influence of Hyper-Massive Neutron Star Lifetime on R-Process Nucleosynthesis in Accretion Disk Winds",
+        "columns": {
+          "Primary Astrophysical Site": "Neutron Star Mergers (Disk Winds)",
+          "Ejecta Composition & Ye Range": "Ye increases with HMNS lifetime (0.1 to 0.5)",
+          "Nuclear Physics Sensitivity": "Sensitive to HMNS lifetime effects on Ye",
+          "Key Nucleosynthesis Mechanism": "Viscous and neutrino-driven disk outflows"
+        }
+      },
+      {
+        "paper_id": "W4281550555",
+        "paper_title": "Actinide Production in Neutron Star Mergers: Nuclear Physics Uncertainties and Observational Probes",
+        "columns": {
+          "Primary Astrophysical Site": "Neutron Star Mergers (BNSMs)",
+          "Ejecta Composition & Ye Range": "Requires Ye <= 0.2 for actinides",
+          "Nuclear Physics Sensitivity": "Very high; depends on masses, beta-decays, fission barriers",
+          "Key Nucleosynthesis Mechanism": "Actinide synthesis and alpha-decay heating"
+        }
+      },
+      {
+        "paper_id": "W2157732302",
+        "paper_title": "Combined Nucleosynthesis Analysis of Dynamical Ejecta and BH-Torus Outflows",
+        "columns": {
+          "Primary Astrophysical Site": "Compact Binary Mergers (NS-NS/NS-BH)",
+          "Ejecta Composition & Ye Range": "Dynamical (Ye < 0.1) + Torus (Ye 0.1-0.5)",
+          "Nuclear Physics Sensitivity": "Moderate; combined yields match solar well",
+          "Key Nucleosynthesis Mechanism": "Combined dynamical and viscous torus outflows"
+        }
+      },
+      {
+        "paper_id": "W2766309526",
+        "paper_title": "The Origin of R-Process Elements in the Milky Way: Implications from GW170817",
+        "columns": {
+          "Primary Astrophysical Site": "Neutron Star Mergers (Galactic Context)",
+          "Ejecta Composition & Ye Range": "Varies; constrained by GW170817 data",
+          "Nuclear Physics Sensitivity": "High; mass models widen yield ranges significantly",
+          "Key Nucleosynthesis Mechanism": "Galactic Chemical Evolution integration"
+        }
+      },
+      {
+        "paper_id": "W3103764524",
+        "paper_title": "r-process Nucleosynthesis Research Review",
+        "columns": {
+          "Primary Astrophysical Site": "Review: NS Mergers & CCSNe",
+          "Ejecta Composition & Ye Range": "Broad range depending on site",
+          "Nuclear Physics Sensitivity": "Identified as primary bottleneck for model discrimination",
+          "Key Nucleosynthesis Mechanism": "Main r-process (NSMs), Weak r-process (CCSNe)"
+        }
+      },
+      {
+        "paper_id": "W3019832623",
+        "paper_title": "Review of r-process nucleosynthesis: Sites, nuclear physics, and Galactic chemical evolution",
+        "columns": {
+          "Primary Astrophysical Site": "Review: NS Mergers & CCSNe",
+          "Ejecta Composition & Ye Range": "Broad range depending on site",
+          "Nuclear Physics Sensitivity": "High uncertainty in fission barriers and masses",
+          "Key Nucleosynthesis Mechanism": "Multi-site scenario (NSMs dominant)"
+        }
+      },
+      {
+        "paper_id": "W7134285189",
+        "paper_title": "Nuclear Astrophysics",
+        "columns": {
+          "Primary Astrophysical Site": "Review: Various",
+          "Ejecta Composition & Ye Range": "N/A",
+          "Nuclear Physics Sensitivity": "General overview of experimental constraints",
+          "Key Nucleosynthesis Mechanism": "s-process, r-process, rp-process"
+        }
+      },
+      {
+        "paper_id": "W1972276701",
+        "paper_title": "The nu p process in supernovae and gamma-ray bursts",
+        "columns": {
+          "Primary Astrophysical Site": "Supernovae / Gamma-Ray Bursts",
+          "Ejecta Composition & Ye Range": "Proton-rich",
+          "Nuclear Physics Sensitivity": "Sensitive to antineutrino absorption rates",
+          "Key Nucleosynthesis Mechanism": "Nu p-process (antineutrino capture)"
+        }
+      },
+      {
+        "paper_id": "W2001883968",
+        "paper_title": "Explosions of O-Ne-Mg cores, the Crab supernova, and subluminous type II-P supernovae",
+        "columns": {
+          "Primary Astrophysical Site": "Core-Collapse Supernovae (O-Ne-Mg)",
+          "Ejecta Composition & Ye Range": "Proton-rich; Ye >= 0.46",
+          "Nuclear Physics Sensitivity": "Excludes r-process capability due to high Ye",
+          "Key Nucleosynthesis Mechanism": "Neutrino-driven wind (non-r-process)"
+        }
+      },
+      {
+        "paper_id": "W7162537987",
+        "paper_title": "The r-process: history, required conditions, astrophysical sites, and observations",
+        "columns": {
+          "Primary Astrophysical Site": "Review: Multi-site",
+          "Ejecta Composition & Ye Range": "Dependent on site (MRSNe, Collapsars, NSMs)",
+          "Nuclear Physics Sensitivity": "Acknowledges uncertainties but focuses on site classification",
+          "Key Nucleosynthesis Mechanism": "Multi-site framework (Limited-r, Main-r)"
+        }
+      }
+    ]
+  },
+  "Multi-Site Galactic Chemical Evolution, Actinide Chronology, and Stochastic Enrichment Histories": {
+    "comparison_dimensions": [
+      "Primary Astrophysical Site Investigated",
+      "Nucleosynthesis Mechanism & Key Conditions",
+      "Methodological Approach",
+      "Key Observational/Multi-Messenger Constraints",
+      "Role in Galactic Chemical Evolution (GCE)"
+    ],
+    "table_data": [
+      {
+        "paper_id": "W2161801818",
+        "paper_title": "Relativistic Hydrodynamical Simulations of NS Mergers and r-Process Nucleosynthesis",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Neutron Star Mergers (NSMs)",
+          "Nucleosynthesis Mechanism & Key Conditions": "Dynamical ejecta; fission recycling robustly produces A > 140 solar-like patterns; insensitive to initial conditions.",
+          "Methodological Approach": "General relativistic SPH hydrodynamics coupled with post-processing nucleosynthesis networks.",
+          "Key Observational/Multi-Messenger Constraints": "Predicts kilonova light curves (B-V-R bands) and merger rates compatible with galactic Europium inventory.",
+          "Role in Galactic Chemical Evolution (GCE)": "Establishes NSMs as a primary source for heavy r-process elements, requiring rates ~10^-5 yr^-1."
+        }
+      },
+      {
+        "paper_id": "W2766140821",
+        "paper_title": "Electromagnetic Counterparts to GW170817 and Kilonova Modeling",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Neutron Star Mergers (GW170817/AT 2017gfo)",
+          "Nucleosynthesis Mechanism & Key Conditions": "Two-component ejecta: Blue (lanthanide-poor, fast) and Red (lanthanide-rich, slow); high opacity from lanthanides.",
+          "Methodological Approach": "Radiative transfer models with complex atomic data for lanthanides; Boltzmann equation solution.",
+          "Key Observational/Multi-Messenger Constraints": "Direct link between GW170817 and kilonova emission; spectral peaks attributed to neodymium blends.",
+          "Role in Galactic Chemical Evolution (GCE)": "Confirms NSMs are sufficient to account for bulk heavy elements (Au, Pt) based on inferred ejecta masses and LIGO rates."
+        }
+      },
+      {
+        "paper_id": "W2766346145",
+        "paper_title": "GW170817 Analysis: Neutron Star Merger Sites of Cosmic r-Process Nucleosynthesis",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Neutron Star Mergers (GW170817)",
+          "Nucleosynthesis Mechanism & Key Conditions": "Radioactive decay of neutron-rich ejecta ($Y_e \\lesssim 0.3$); rules out nickel winds.",
+          "Methodological Approach": "Comparison of bolometric/NIR lightcurves with nuclear reaction network models (WinNet).",
+          "Key Observational/Multi-Messenger Constraints": "Bolometric lightcurve slope matches nuclear heating rates for low $Y_e$; derives lower limit on ejecta mass.",
+          "Role in Galactic Chemical Evolution (GCE)": "Demonstrates NSM rates and yields can produce the entire Galactic inventory of r-process material."
+        }
+      },
+      {
+        "paper_id": "W1913098325",
+        "paper_title": "r-Process Nucleosynthesis in Magnetorotational Core-Collapse Supernovae",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Magnetorotational Core-Collapse Supernovae (MR-SNe)",
+          "Nucleosynthesis Mechanism & Key Conditions": "Prompt jets (strong B-fields) produce full r-process/actinides; delayed jets produce weak r-process (A < 130).",
+          "Methodological Approach": "SR-MHD simulations with Tracer Particle Method (TPM) for long-term nucleosynthesis integration.",
+          "Key Observational/Multi-Messenger Constraints": "Explains 'weak r-process' signatures in metal-poor stars (e.g., HD122563) and actinide boosts.",
+          "Role in Galactic Chemical Evolution (GCE)": "Viable early-universe source for r-process where NSMs are delayed; requires low event rate (~0.1% of CC-SNe)."
+        }
+      },
+      {
+        "paper_id": "W2802275066",
+        "paper_title": "Interplay of Nuclear Physics, Astrophysics, and Astronomy in r-Process Nucleosynthesis",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Review of NSMs, CCSNe, and other sites",
+          "Nucleosynthesis Mechanism & Key Conditions": "Highlights sensitivity to nuclear masses, beta-decay rates, and fission properties; identifies gaps in theoretical models.",
+          "Methodological Approach": "Synthesis review connecting experimental facilities (FRIB) with astrophysical observations and GCE models.",
+          "Key Observational/Multi-Messenger Constraints": "Stellar abundances, GW170817 kilonova, meteoritic isotopic anomalies (Pu-244/U-238).",
+          "Role in Galactic Chemical Evolution (GCE)": "Argues for multi-site scenario; NSMs dominate main r-process, while CCSNe may contribute to weak r-process/lighter elements."
+        }
+      },
+      {
+        "paper_id": "W1993407371",
+        "paper_title": "Equation of State Impacts on Dynamical Mass Ejection and r-Process Nucleosynthesis in NS Mergers",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Neutron Star Mergers",
+          "Nucleosynthesis Mechanism & Key Conditions": "Ejecta mass strongly correlated with NS radius ($R_{1.35}$); softer EoS yields more ejecta; robust solar-like A > 130 pattern.",
+          "Methodological Approach": "Systematic survey of 40 microphysical EoSs in relativistic hydrodynamical simulations.",
+          "Key Observational/Multi-Messenger Constraints": "Optical transient peak luminosities/timescales constrain high-density EoS; radio remnants sensitive to kinetic energy.",
+          "Role in Galactic Chemical Evolution (GCE)": "Provides upper limits on Galactic NS merger rates based on r-process overproduction constraints."
+        }
+      },
+      {
+        "paper_id": "W2102639755",
+        "paper_title": "Nucleosynthesis in Neutron-Rich Ejecta from Quark-Novas",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Quark-Novae (QN)",
+          "Nucleosynthesis Mechanism & Key Conditions": "Violent phase transition triggers decompression; rapid vs. slow expansion timescales determine peak production (2nd vs 3rd).",
+          "Methodological Approach": "Network calculations mimicking cold decompression; simplified spherical expansion model.",
+          "Key Observational/Multi-Messenger Constraints": "Gamma-ray fluxes from long-lived nuclei (e.g., 126Sn, 226Ra); potential quark star identification signatures.",
+          "Role in Galactic Chemical Evolution (GCE)": "Alternative site addressing early enrichment issues in metal-poor stars; consistent rate/yield with Galactic inventory."
+        }
+      },
+      {
+        "paper_id": "W2884099537",
+        "paper_title": "Actinide Production and Dilution in Neutron Star Merger Ejecta",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Neutron Star Mergers (Multi-component)",
+          "Nucleosynthesis Mechanism & Key Conditions": "Low-$Y_e$ dynamical ejecta overproduces actinides; Actinide-Dilution (AD) model mixes with high-$Y_e$ disk winds.",
+          "Methodological Approach": "PRISM nucleosynthesis code; sensitivity analysis of fission fragments, beta-decays, and mass models.",
+          "Key Observational/Multi-Messenger Constraints": "Cosmochronometric ages (Th/Eu, U/Eu) of actinide-boost star J0954+5246.",
+          "Role in Galactic Chemical Evolution (GCE)": "Resolves actinide boost problem by showing single-component models fail; supports multi-component NSM ejecta structure."
+        }
+      },
+      {
+        "paper_id": "W2299136898",
+        "paper_title": "Neutrino-Driven Winds in Core-Collapse Supernovae and Heavy r-Process Actinide Production",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Core-Collapse Supernovae (Neutrino-driven winds)",
+          "Nucleosynthesis Mechanism & Key Conditions": "Analytical NASS wind model; actinide production highly sensitive to nuclear inputs and wind expansion conditions.",
+          "Methodological Approach": "Parametric NASS wind model fitted to solar system r-abundances; iterative inversion procedure.",
+          "Key Observational/Multi-Messenger Constraints": "Terrestrial detections of 244Pu; cosmochronometry of CS 31082-001.",
+          "Role in Galactic Chemical Evolution (GCE)": "Provides optimistic upper/lower yield limits; suggests SNe must operate under non-standard conditions or be rare if dominant."
+        }
+      },
+      {
+        "paper_id": "W4389429223",
+        "paper_title": "Observational Evidence for Fission of Transuranic Nuclei in r-Process Events",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "r-Process Events (Likely NSMs)",
+          "Nucleosynthesis Mechanism & Key Conditions": "Fission of transuranic nuclei (A > 260) deposits fragments into Z=44-47 and Z=63-78 regions.",
+          "Methodological Approach": "Statistical analysis of abundance correlations in 42 r-process-enhanced metal-poor stars.",
+          "Key Observational/Multi-Messenger Constraints": "Positive correlation between Ru-Ag and Gd-Pt abundances relative to Europium in high-[Eu/Fe] stars.",
+          "Role in Galactic Chemical Evolution (GCE)": "Fission acts as a stabilizing mechanism homogenizing abundance ratios across different events/sites."
+        }
+      },
+      {
+        "paper_id": "W2024743329",
+        "paper_title": "MAGNETOROTATIONALLY DRIVEN SUPERNOVAE AS THE ORIGIN OF EARLY GALAXY R-PROCESS ELEMENTS?",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Magnetorotationally Driven Supernovae",
+          "Nucleosynthesis Mechanism & Key Conditions": "Strong magnetic fields and rapid rotation enable r-process in early Galaxy.",
+          "Methodological Approach": "Theoretical proposal linking MHD-SNe to early enrichment scenarios.",
+          "Key Observational/Multi-Messenger Constraints": "Early appearance of r-process elements in ultra-metal-poor stars.",
+          "Role in Galactic Chemical Evolution (GCE)": "Proposed origin for early Galaxy r-process elements before NSMs become frequent."
+        }
+      },
+      {
+        "paper_id": "W2093943495",
+        "paper_title": "Neutron star mergers versus core-collapse supernovae as dominant r-process sites in the early Galaxy",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Comparison: NSMs vs. CCSNe",
+          "Nucleosynthesis Mechanism & Key Conditions": "Inhomogeneous chemical evolution modeling of r-process injection timing and scatter.",
+          "Methodological Approach": "Stochastic inhomogeneous chemical evolution model with volume resolution down to 50 pc.",
+          "Key Observational/Multi-Messenger Constraints": "Abundance trends in ultra metal-poor halo stars ([Fe/H] ≤ -3); scatter in [r/Fe].",
+          "Role in Galactic Chemical Evolution (GCE)": "Rules out NSMs as *dominant* early source due to late injection/excessive scatter; favors CCSNe (though yields uncertain)."
+        }
+      },
+      {
+        "paper_id": "W2891551364",
+        "paper_title": "Neutron Star Mergers Might Not Be the Only Source of r-Process Elements in the Milky Way",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "NSMs + Extra Site (e.g., MR-SNe)",
+          "Nucleosynthesis Mechanism & Key Conditions": "Standard NSM DTD fails to reproduce decreasing [Eu/Fe] trend; requires extra early-active site.",
+          "Methodological Approach": "Galactic chemical evolution models (OMEGA, StarTrack) comparing NSM DTDs with stellar abundance trends.",
+          "Key Observational/Multi-Messenger Constraints": "[Eu/Fe] trend in Galactic disk; short GRB host galaxies; GW170817 detection probability.",
+          "Role in Galactic Chemical Evolution (GCE)": "Proposes multi-site scenario where NSMs contribute significantly but an extra site handles ~50% of early Eu."
+        }
+      },
+      {
+        "paper_id": "W4281550555",
+        "paper_title": "Actinide Production in Neutron Star Mergers: Nuclear Physics Uncertainties and Observational Probes",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Neutron Star Mergers",
+          "Nucleosynthesis Mechanism & Key Conditions": "Requires $Y_e \\lesssim 0.2$; heavily dependent on nuclear masses, beta-decays, and fission properties.",
+          "Methodological Approach": "Review synthesizing theoretical thresholds, kilonova lightcurve modeling, and SLRI constraints.",
+          "Key Observational/Multi-Messenger Constraints": "Late-time kilonova lightcurves; Th/Eu scatter in VMP stars; 244Pu/247Cm in deep-sea crusts/meteorites.",
+          "Role in Galactic Chemical Evolution (GCE)": "Disfavors scenarios where low-$Y_e$ ejecta dominate Galactic inventory; emphasizes rare, prolific NSM nature."
+        }
+      },
+      {
+        "paper_id": "W7171383956",
+        "paper_title": "Implications of low neutron star merger rates for gamma-ray bursts, r-process production and Galactic double neutron stars",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Neutron Star Mergers",
+          "Nucleosynthesis Mechanism & Key Conditions": "Analyzes tension between GW-inferred BNS rates and independent astrophysical constraints.",
+          "Methodological Approach": "Re-evaluation of BNS rates using GWTC-4 catalog; comparison with SGRB, r-process mass, and DNS populations.",
+          "Key Observational/Multi-Messenger Constraints": "GWTC-4 rates; SGRB rates; Galactic r-process mass; Galactic double neutron star population.",
+          "Role in Galactic Chemical Evolution (GCE)": "Highlights discrepancy suggesting BNSs may not be the sole/dominant source or require extreme parameter adjustments."
+        }
+      },
+      {
+        "paper_id": "W3035626783",
+        "paper_title": "The R-process Alliance: First Magellan/MIKE Release from the Southern Search for R-Process-enhanced Stars (RPA-3)",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Observational Survey (Supporting NSBMs)",
+          "Nucleosynthesis Mechanism & Key Conditions": "Identifies r-II, r-I, and limited-r stars; supports NSBMs as dominant site with potential MR-SNe contributions.",
+          "Methodological Approach": "Spectroscopic analysis of 141 metal-poor stars using MIKE spectrograph; 1D NLTE atmospheric modeling.",
+          "Key Observational/Multi-Messenger Constraints": "Abundance patterns of 89 new r-process-enhanced stars; ultra-metal-poor star at [Fe/H] = -4.02.",
+          "Role in Galactic Chemical Evolution (GCE)": "Expands sample to constrain r-process sites; suggests multiple formation sites due to diversity in [Eu/Fe]."
+        }
+      },
+      {
+        "paper_id": "W2766309526",
+        "paper_title": "The Origin of R-Process Elements in the Milky Way: Implications from GW170817",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Neutron Star Mergers",
+          "Nucleosynthesis Mechanism & Key Conditions": "Combines GW170817 ejecta properties with GCE models; accounts for nuclear physics uncertainties.",
+          "Methodological Approach": "Integration of PRISM nucleosynthesis with OMEGA GCE code and StarTrack population synthesis.",
+          "Key Observational/Multi-Messenger Constraints": "GW170817 observational data; LIGO/Virgo merger rates; Galactic [Eu/Fe] abundances.",
+          "Role in Galactic Chemical Evolution (GCE)": "Consistent with NSMs being dominant site if they produce $\ngtrsim 10^{-5} M_\text{sun}$ Eu per event."
+        }
+      },
+      {
+        "paper_id": "W3103764524",
+        "paper_title": "r-process Nucleosynthesis Research Review",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Review of NSMs, CCSNe, and Facilities",
+          "Nucleosynthesis Mechanism & Key Conditions": "Emphasizes nuclear physics bottlenecks (masses, beta-decays, fission) limiting site discrimination.",
+          "Methodological Approach": "Synthesis of astrophysical observations, GCE models, and nuclear experimental status (FRIB/FAIR).",
+          "Key Observational/Multi-Messenger Constraints": "GW170817, kilonova colors, metal-poor stars, ultra-faint dwarfs (Reticulum II).",
+          "Role in Galactic Chemical Evolution (GCE)": "Advocates for multi-site solution; highlights need for reduced nuclear uncertainties to resolve GCE tensions."
+        }
+      },
+      {
+        "paper_id": "W3019832623",
+        "paper_title": "Review of r-process nucleosynthesis: Sites, nuclear physics, and Galactic chemical evolution",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Review of NSMs, CCSNe, Collapsars",
+          "Nucleosynthesis Mechanism & Key Conditions": "Regular CCSNe ruled out for strong r-process; NSMs confirmed; collapsars/MRSNe possible early sources.",
+          "Methodological Approach": "Comprehensive review of stellar spectroscopy, multi-messenger astronomy, nuclear experiments, and hydrodynamic simulations.",
+          "Key Observational/Multi-Messenger Constraints": "GW170817/AT 2017gfo; scatter in [Eu/Fe]; actinide boost stars; deep-sea 244Pu.",
+          "Role in Galactic Chemical Evolution (GCE)": "Notes delay problem for NSMs; suggests additional early sources (collapsars/MRSNe) may be necessary."
+        }
+      },
+      {
+        "paper_id": "W3161613616",
+        "paper_title": "Astrophysical Origins of r-Process Radioisotopes: Live 244Pu in Deep-Ocean Deposits",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Kilonovae (KN) vs. Supernovae (SN)",
+          "Nucleosynthesis Mechanism & Key Conditions": "Two-step KN enrichment hypothesis; predicts specific isotope ratios (129I, 93Zr) for AMS detection.",
+          "Methodological Approach": "Nucleosynthesis simulations (PRISM) combined with delivery models for deep-ocean Fe-Mn crusts.",
+          "Key Observational/Multi-Messenger Constraints": "Live 244Pu and 60Fe fluxes in deep-ocean deposits; AMS detection limits.",
+          "Role in Galactic Chemical Evolution (GCE)": "Suggests distant KN enriched Local Bubble ~10-50 Myr ago; distinguishes SN vs KN origins via isotope ratios."
+        }
+      },
+      {
+        "paper_id": "W4385749748",
+        "paper_title": "Nucleosynthesis in Outflows of Compact Objects and Detection Prospects of Associated Kilonovae",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "BNS, BHNS, MR CCSNe, Thermal CCSNe",
+          "Nucleosynthesis Mechanism & Key Conditions": "BNS/BHNS produce robust r-process; MR CCSNe produce weak r-process/LEPP; BHNS comparable to BNS.",
+          "Methodological Approach": "Comparative nucleosynthesis analysis using SkyNet network; one-zone kilonova light curve modeling.",
+          "Key Observational/Multi-Messenger Constraints": "LSST detection prospects for kilonovae; stellar abundance comparisons (solar/metal-poor).",
+          "Role in Galactic Chemical Evolution (GCE)": "BHNS mergers identified as significant contributors; constrains MR CCSNe rates to avoid overproduction."
+        }
+      },
+      {
+        "paper_id": "W7134285189",
+        "paper_title": "Nuclear Astrophysics",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Review of Nuclear Astrophysics Sites",
+          "Nucleosynthesis Mechanism & Key Conditions": "Categorizes environments (quiescent vs explosive); details s/r/i/rp processes and key reactions.",
+          "Methodological Approach": "Overview of experimental techniques (underground labs, recoil separators) and theoretical frameworks.",
+          "Key Observational/Multi-Messenger Constraints": "Neutrinos, gamma-rays, gravitational waves, stardust/meteorites, stellar spectroscopy.",
+          "Role in Galactic Chemical Evolution (GCE)": "Emphasizes synergy between improved nuclear rates and chemical evolution models to constrain sites."
+        }
+      },
+      {
+        "paper_id": "W7164823462",
+        "paper_title": "The timing of the last r-process event near Earth from interstellar 60Fe, 244Pu and 247Cm deposition on Earth",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Recent Nearby r-Process Event (Source Ambiguous)",
+          "Nucleosynthesis Mechanism & Key Conditions": "Continuous 244Pu influx uncorrelated with 60Fe peaks; absence of 247Cm sets time limit.",
+          "Methodological Approach": "Single-atom counting of 60Fe, 244Pu, 247Cm in deep-ocean ferromanganese crust using AMS.",
+          "Key Observational/Multi-Messenger Constraints": "Deep-ocean crust VA13/2-237KD; 60Fe peaks at 2.4 and 7.2 Myr ago.",
+          "Role in Galactic Chemical Evolution (GCE)": "Pushes last nearby actinide-producing event back >90-100 Myr; disfavors regular SNe as major 244Pu source."
+        }
+      },
+      {
+        "paper_id": "W7162537987",
+        "paper_title": "The r-process: history, required conditions, astrophysical sites, and observations",
+        "columns": {
+          "Primary Astrophysical Site Investigated": "Review of Multiple Sites (NSMs, MRSNe, Collapsars)",
+          "Nucleosynthesis Mechanism & Key Conditions": "No single site produces full solar pattern; requires superposition of conditions/sites.",
+          "Methodological Approach": "Decomposition of solar abundances; nucleosynthesis simulations varying nn, S, Ye; GCE modeling.",
+          "Key Observational/Multi-Messenger Constraints": "Limited-r, r-I, r-II stellar classifications; GW170817; cosmochronology.",
+          "Role in Galactic Chemical Evolution (GCE)": "Advocates for multi-site scenario: NSMs dominate bulk, MRSNe/Collapsars explain early/limited-r/actinide-boost phenomena."
+        }
+      }
+    ]
+  }
+}

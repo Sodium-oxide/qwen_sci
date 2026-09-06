@@ -1,0 +1,41 @@
+{
+  "checks": {
+    "completed": true,
+    "execution_mode": true,
+    "finite_outputs": true,
+    "not_empirical": true,
+    "result_kind": true,
+    "validation:sample_count_bound": true
+  },
+  "empirical_claim_status": "NOT_EMPIRICAL",
+  "execution_id": "sim-1242bc317d5543009aa59d9c4632170f",
+  "execution_mode": "NUMERICAL_SIMULATION",
+  "hypothesis_relation": "INCONCLUSIVE",
+  "model_identity": {
+    "created_from_artifact": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/260905-008/idea/attempt-001/quantitative_ideas_manifest.json",
+    "model_spec_identity": "2e547230438cee640258af65d5383f1898089212fe8e890f178f082222bcb2f6",
+    "parameter_set_identity": "a5e0912a88039b2cfdeebd2803aee0f02f55493c372243dfd3a461294867eb1e",
+    "project_context_fingerprint": "8dd73a63f856d7c73163147ab65a3d0412334bc633ab057b1f84637ac5664b2a",
+    "project_id": "sci_260905_008_survey_001",
+    "quantitative_idea_id": "Q2",
+    "science_run_id": "260905-008",
+    "selected_direction_id": "premise_inversion",
+    "survey_run_id": "260905-008-survey-001",
+    "version": "0"
+  },
+  "numerical_checks": {
+    "sample_count_bound": true
+  },
+  "numerical_quality": {
+    "scenario_statuses": [],
+    "status": "NOT_REPORTED"
+  },
+  "plan_identity": "a93d6190313c01019c68cde9fe1e9227fdcca07d508d7e395d40dd79fd940e01",
+  "reason": "",
+  "required_validation_checks": [
+    "sample_count_bound"
+  ],
+  "result_kind": "SIMULATED",
+  "result_quality": "QUALIFIED",
+  "schema_version": "simulation_result_qualification_v1"
+}

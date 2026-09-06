@@ -1,0 +1,425 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+
+\usepackage{amsmath}
+
+\usepackage[T1]{fontenc}
+
+\title{Mathematical Modeling and Numerical Simulation Supplement}
+
+\author{Anonymous Research Plan Author}
+
+\date{}
+
+\begin{document}
+
+\setlength{\emergencystretch}{3em}
+
+\maketitle
+
+\section{Q1 (final: v0)}
+
+\noindent\textbf{Abstract—} This model materializes a reduced one-dimensional diffusion-reaction surrogate for the time-dependent actinide-line source-density proxy in expanding kilonova ejecta. It isolates delayed fission timing, expansion dilution, and free-escape boundary loss while deliberately omitting the full isotopic network, detailed atomic opacities, and multidimensional radiative transfer.
+
+\subsection{Question and Scope}
+
+\noindent\textbf{Question.} Can the time-dependent evolution of actinide spectral line fluxes constrain the fission neutron release timescale and distinguish kinetic decoupling from static geometric or electron-fraction abundance variations?
+
+
+
+Reduced first executable surrogate: a one-dimensional diffusion-reaction proxy for actinide line source density in spherical ejecta. It isolates delayed fission timing and expansion dilution while not resolving the full nuclear network, detailed atomic opacities, or multidimensional radiative transfer.
+
+\subsection{Model Assumptions and Applicability}
+
+\begin{itemize}\raggedright
+\item Q1-AS-001: The evolved scalar u is a surrogate for actinide spectral-line source density rather than a full isotopic abundance network. If violated: Inferences about specific nuclear pathways or isotopic line ratios would not be supported by the surrogate.
+\item Q1-AS-002: Unresolved radiative transport is closed by a constant effective diffusion coefficient. If violated: Temporal spreading and escape timing of the proxy may be biased if the true transport is strongly non-diffusive.
+\item Q1-AS-003: Expansion is represented by a linear dilution loss with timescale formed from R\_\allowbreak{}domain and v\_\allowbreak{}ejecta rather than a moving mesh. If violated: The surrogate may misrepresent geometric dilution and peak-time shifts in an expanding spherical flow.
+\item Q1-AS-004: The initial actinide-line proxy is spatially uniform at the approved u\_\allowbreak{}initial value. If violated: Initial spatial asymmetries or seed concentration gradients would not be represented.
+\item Q1-AS-005: The approved explicit time step is coarse relative to the approved fission-release timescale, so the delayed source is numerically smeared. If violated: The executable surrogate cannot resolve sub-step delayed-release structure and should be interpreted as a reduced kinetic proxy.
+\end{itemize}
+
+\subsection{PDE Model Class}
+
+\noindent\textbf{System type.} DIFFUSION\_REACTION\_1D.
+
+\noindent\textbf{Trusted adapter.} parabolic\_1d.
+
+\subsection{Spatial Domain and Field Variables}
+
+\paragraph{Domain and mesh}
+\begin{itemize}\raggedright
+\item Domain: x\ensuremath{=}[0.0, 5180413674240.0]
+\item Grid: nx\ensuremath{=}105
+\end{itemize}
+
+\paragraph{Fields}
+\begin{itemize}\raggedright
+\item u (u); unit kg m\textasciicircum{}-3
+\end{itemize}
+
+\subsection{PDE Initial and Boundary Conditions}
+
+\paragraph{Initial condition}
+\begin{itemize}\raggedright
+\item Sampled values on the normalized mesh.
+\item Time span: 0.0; 864000.0
+\end{itemize}
+
+\paragraph{Boundary condition types}
+\begin{itemize}\raggedright
+\item left: NEUMANN\_\allowbreak{}ZERO
+\item right: DIRICHLET
+\end{itemize}
+
+\subsection{Discretization and Stability}
+
+\noindent\textbf{Discretization.} FINITE\_DIFFERENCE.
+
+\noindent\textbf{Time integration.} EXPLICIT\_EULER; time step 100.0.
+
+\subsection{Numerical Verification}
+
+\noindent The fixed PDE adapter reports finite-field checks and the family-specific stability or linear-residual diagnostic. A result is qualified only when the declared checks pass; all outcomes remain model-internal simulations.
+
+\subsection{Symbols and Units}
+
+\begin{center}
+\small
+\begin{tabular}{|p{0.12\linewidth}|p{0.15\linewidth}|p{0.46\linewidth}|p{0.17\linewidth}|}
+\hline
+ID & Symbol & Meaning & Unit \\ \hline
+u & $u(x,t)$ & Actinide-line source-density proxy evolved by the PDE. & $kg m^-3$ \\ \hline
+x & $x$ & One-dimensional radial surrogate coordinate. & $\mathrm{m}$ \\ \hline
+t & $t$ & Time since the start of the kinetic phase. & $\mathrm{s}$ \\ \hline
+D\_effective & $D_{\mathrm{eff}}$ & Effective diffusion coefficient representing unresolved line-energy transport. & $m^2 s^-1$ \\ \hline
+R\_domain & $R_{\mathrm{domain}}$ & Outer radial extent of the one-dimensional surrogate domain. & $\mathrm{m}$ \\ \hline
+v\_ejecta & $v_{\mathrm{ejecta}}$ & Characteristic ejecta expansion velocity used to form the expansion dilution timescale. & $m s^-1$ \\ \hline
+tau\_f & $\tau_f$ & Characteristic delayed fission neutron release timescale. & $\mathrm{s}$ \\ \hline
+u\_initial & $u_{\mathrm{initial}}$ & Uniform initial amplitude of the actinide-line source-density proxy. & $kg m^-3$ \\ \hline
+u\_outer & $u_{\mathrm{outer}}$ & Dirichlet proxy value at the free-escape outer boundary. & $kg m^-3$ \\ \hline
+t\_end & $t_{\mathrm{end}}$ & Final integration time for the executable surrogate. & $\mathrm{s}$ \\ \hline
+delta\_t & $\Delta t$ & Temporal step size for explicit parabolic integration. & $\mathrm{s}$ \\ \hline
+delta\_r & $\Delta r$ & Target radial grid spacing for the one-dimensional finite-difference discretization. & $\mathrm{m}$ \\ \hline
+\end{tabular}
+\end{center}
+
+\subsection{Mechanistic Equations}
+
+\begin{equation}\label{eq:Q1-EQ-001}
+\frac{\partial u}{\partial t} = \frac{\partial}{\partial x}\left[ \left(D_{\mathrm{eff}}\frac{\Delta r}{\Delta r}\right) \frac{\partial u}{\partial x}\right] + \left(\frac{u_{\mathrm{initial}}}{\Delta t} e^{-t/\tau_f} \frac{t_{\mathrm{end}}}{t_{\mathrm{end}}}\right) - \frac{v_{\mathrm{ejecta}}}{R_{\mathrm{domain}}} u
+\end{equation}
+\noindent\textbf{Q1-EQ-001 where} u: Actinide-line source-density proxy evolved by the PDE.; t: Time since the start of the kinetic phase.; x: One-dimensional radial surrogate coordinate.; D\_effective: Effective diffusion coefficient representing unresolved line-energy transport.; delta\_r: Target radial grid spacing for the one-dimensional finite-difference discretization.; u\_initial: Uniform initial amplitude of the actinide-line source-density proxy.; delta\_t: Temporal step size for explicit parabolic integration.; tau\_f: Characteristic delayed fission neutron release timescale.; t\_end: Final integration time for the executable surrogate.; v\_ejecta: Characteristic ejecta expansion velocity used to form the expansion dilution timescale.; R\_domain: Outer radial extent of the one-dimensional surrogate domain..
+
+\begin{equation}\label{eq:Q1-EQ-002}
+u(x,0) = u_{\mathrm{initial}}
+\end{equation}
+\noindent\textbf{Q1-EQ-002 where} u: Actinide-line source-density proxy evolved by the PDE.; x: One-dimensional radial surrogate coordinate.; u\_initial: Uniform initial amplitude of the actinide-line source-density proxy..
+
+\begin{equation}\label{eq:Q1-EQ-003}
+\left.\frac{\partial u}{\partial x}\right|_{x=0} = 0
+\end{equation}
+\noindent\textbf{Q1-EQ-003 where} u: Actinide-line source-density proxy evolved by the PDE.; x: One-dimensional radial surrogate coordinate..
+
+\begin{equation}\label{eq:Q1-EQ-004}
+u(R_{\mathrm{domain}},t) = u_{\mathrm{outer}}
+\end{equation}
+\noindent\textbf{Q1-EQ-004 where} u: Actinide-line source-density proxy evolved by the PDE.; R\_domain: Outer radial extent of the one-dimensional surrogate domain.; t: Time since the start of the kinetic phase.; u\_outer: Dirichlet proxy value at the free-escape outer boundary..
+
+\begin{equation}\label{eq:Q1-EQ-005}
+S_f(t) = \frac{u_{\mathrm{initial}}}{\Delta t} e^{-t/\tau_f} \frac{t_{\mathrm{end}}}{t_{\mathrm{end}}}
+\end{equation}
+\noindent\textbf{Q1-EQ-005 where} u\_initial: Uniform initial amplitude of the actinide-line source-density proxy.; delta\_t: Temporal step size for explicit parabolic integration.; t: Time since the start of the kinetic phase.; tau\_f: Characteristic delayed fission neutron release timescale.; t\_end: Final integration time for the executable surrogate..
+
+\subsection{Initial Conditions, Boundary Conditions, and Constraints}
+
+\paragraph{Initial Conditions}
+\begin{itemize}\raggedright
+\item \{'initial\_\allowbreak{}condition\_\allowbreak{}id': 'Q1-IC-001', 'description': 'Uniform actinide-line source-density proxy initialized to the approved u\_\allowbreak{}initial amplitude.', 'profile': 'UNIFORM', 'applied\_\allowbreak{}symbol': 'u\_\allowbreak{}initial'\}
+\end{itemize}
+
+\paragraph{Boundary Conditions}
+\begin{itemize}\raggedright
+\item \{'boundary\_\allowbreak{}id': 'Q1-BC-001', 'side': 'left', 'type': 'NEUMANN\_\allowbreak{}ZERO', 'description': 'Zero radial flux at the symmetry center, representing the inner spherical-symmetry surrogate.'\}
+\item \{'boundary\_\allowbreak{}id': 'Q1-BC-002', 'side': 'right', 'type': 'DIRICHLET', 'boundary\_\allowbreak{}value': 0.0, 'description': 'Free-escape surrogate at the outer radial surface using the approved u\_\allowbreak{}outer value.'\}
+\end{itemize}
+
+\paragraph{Objective and Constraints}
+\begin{itemize}\raggedright
+\item \{'objective\_\allowbreak{}id': 'Q1-OBJ-001', 'description': 'Quantify whether temporal moments of the radial proxy separate fission-release timing from geometric or abundance perturbations.', 'target\_\allowbreak{}symbol': 'u'\}
+\item \{'constraint\_\allowbreak{}id': 'Q1-CON-001', 'description': 'Explicit diffusion stability margin is maintained with the diffusion Courant number below the parabolic limit.', 'threshold': 0.5\}
+\item \{'constraint\_\allowbreak{}id': 'Q1-CON-002', 'description': 'The proxy density is interpreted as non-negative; negative excursions are treated as numerical artifacts.', 'threshold': 0.0\}
+\end{itemize}
+
+\subsection{Algorithm}
+
+\noindent\textbf{Algorithm}
+\paragraph{Input}
+\begin{itemize}\raggedright
+\item Approved execution\_\allowbreak{}ir document
+\item Uniform one-dimensional grid specification
+\item Analytic uniform initial condition
+\item Left and right boundary condition specification
+\end{itemize}
+\paragraph{Output}
+\begin{itemize}\raggedright
+\item Finite time-dependent scalar field u(x,t)
+\item Radial integral of u for postprocessing
+\item Diagnostics for stability and finiteness checks
+\end{itemize}
+\paragraph{Steps}
+\begin{itemize}\raggedright
+\item Construct the uniform one-dimensional spatial grid on the approved domain.
+\item Initialize the field with the approved uniform analytic profile.
+\item Evaluate the diffusion coefficient and reaction source ASTs at approved parameters.
+\item Advance the diffusion-reaction system with the registered explicit parabolic integrator.
+\item Enforce zero-flux symmetry at the left boundary and free-escape Dirichlet condition at the right boundary.
+\item Store the evolved field and compute radial summary quantities for later comparison.
+\end{itemize}
+
+\subsection{Parameters, Scenarios, and Numerical Settings}
+
+\paragraph{Parameters}
+\begin{itemize}\raggedright
+\item \{'parameter\_\allowbreak{}id': 'domain\_\allowbreak{}radius', 'mathir\_\allowbreak{}symbol': 'R\_\allowbreak{}domain', 'approved\_\allowbreak{}value': 5180413674240.0, 'unit': 'm', 'role': 'SCENARIO\_\allowbreak{}INPUT', 'provenance': 'APPROVED\_\allowbreak{}LITERATURE\_\allowbreak{}SINGLE\_\allowbreak{}SOURCE'\}
+\item \{'parameter\_\allowbreak{}id': 'ejecta\_\allowbreak{}velocity', 'mathir\_\allowbreak{}symbol': 'v\_\allowbreak{}ejecta', 'approved\_\allowbreak{}value': 59958491.6, 'unit': 'm s\textasciicircum{}-1', 'role': 'SCENARIO\_\allowbreak{}INPUT', 'provenance': 'APPROVED\_\allowbreak{}LITERATURE\_\allowbreak{}SINGLE\_\allowbreak{}SOURCE'\}
+\item \{'parameter\_\allowbreak{}id': 'fission\_\allowbreak{}neutron\_\allowbreak{}release\_\allowbreak{}timescale', 'mathir\_\allowbreak{}symbol': 'tau\_\allowbreak{}f', 'approved\_\allowbreak{}value': 2.3, 'unit': 's', 'role': 'MATERIAL\_\allowbreak{}PROPERTY', 'provenance': 'APPROVED\_\allowbreak{}LITERATURE\_\allowbreak{}SINGLE\_\allowbreak{}SOURCE'\}
+\item \{'parameter\_\allowbreak{}id': 'initial\_\allowbreak{}actinide\_\allowbreak{}density\_\allowbreak{}proxy', 'mathir\_\allowbreak{}symbol': 'u\_\allowbreak{}initial', 'approved\_\allowbreak{}value': 5.12186785866739e-14, 'unit': 'kg m\textasciicircum{}-3', 'role': 'SCENARIO\_\allowbreak{}INPUT', 'provenance': 'APPROVED\_\allowbreak{}LITERATURE\_\allowbreak{}SINGLE\_\allowbreak{}SOURCE'\}
+\item \{'parameter\_\allowbreak{}id': 'effective\_\allowbreak{}diffusion\_\allowbreak{}coefficient', 'mathir\_\allowbreak{}symbol': 'D\_\allowbreak{}effective', 'approved\_\allowbreak{}value': 1e+18, 'unit': 'm\textasciicircum{}2 s\textasciicircum{}-1', 'role': 'MATERIAL\_\allowbreak{}PROPERTY', 'provenance': 'APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION'\}
+\item \{'parameter\_\allowbreak{}id': 'outer\_\allowbreak{}boundary\_\allowbreak{}proxy\_\allowbreak{}value', 'mathir\_\allowbreak{}symbol': 'u\_\allowbreak{}outer', 'approved\_\allowbreak{}value': 0.0, 'unit': 'kg m\textasciicircum{}-3', 'role': 'BOUNDARY\_\allowbreak{}CONDITION', 'provenance': 'APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION'\}
+\item \{'parameter\_\allowbreak{}id': 'simulation\_\allowbreak{}end\_\allowbreak{}time', 'mathir\_\allowbreak{}symbol': 't\_\allowbreak{}end', 'approved\_\allowbreak{}value': 864000.0, 'unit': 's', 'role': 'MODEL\_\allowbreak{}ASSUMPTION', 'provenance': 'APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION'\}
+\item \{'parameter\_\allowbreak{}id': 'time\_\allowbreak{}step\_\allowbreak{}size', 'mathir\_\allowbreak{}symbol': 'delta\_\allowbreak{}t', 'approved\_\allowbreak{}value': 100.0, 'unit': 's', 'role': 'MODEL\_\allowbreak{}ASSUMPTION', 'provenance': 'APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION'\}
+\item \{'parameter\_\allowbreak{}id': 'radial\_\allowbreak{}grid\_\allowbreak{}spacing', 'mathir\_\allowbreak{}symbol': 'delta\_\allowbreak{}r', 'approved\_\allowbreak{}value': 50000000000.0, 'unit': 'm', 'role': 'MODEL\_\allowbreak{}ASSUMPTION', 'provenance': 'APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION'\}
+\end{itemize}
+
+\paragraph{Scenarios}
+\begin{itemize}\raggedright
+\item \{'scenario\_\allowbreak{}id': 'Q1-SC-001', 'name': 'Instantaneous fission recycling', 'description': 'Conceptual limit in which the fission source is deposited essentially within the first numerical step.', 'mathematical\_\allowbreak{}difference': 'Early-time radial integral over the first step is compared against later-time integrals.', 'execution\_\allowbreak{}status': 'CONCEPTUAL\_\allowbreak{}LIMIT'\}
+\item \{'scenario\_\allowbreak{}id': 'Q1-SC-002', 'name': 'Delayed fission recycling', 'description': 'Baseline executable surrogate uses the approved tau\_\allowbreak{}f in the exponential source factor.', 'mathematical\_\allowbreak{}difference': 'First temporal moment of the radial integral is used to quantify delay.', 'execution\_\allowbreak{}status': 'BASELINE'\}
+\item \{'scenario\_\allowbreak{}id': 'Q1-SC-003', 'name': 'Geometric asymmetry only', 'description': 'Conceptual geometric comparison represented by radial variance of the proxy in postprocessing.', 'mathematical\_\allowbreak{}difference': 'Radial variance replaces temporal moment as the discriminator.', 'execution\_\allowbreak{}status': 'CONCEPTUAL\_\allowbreak{}POSTPROCESSING'\}
+\item \{'scenario\_\allowbreak{}id': 'Q1-SC-004', 'name': 'Variable Ye only', 'description': 'Conceptual abundance comparison represented by the domain-integrated proxy mass.', 'mathematical\_\allowbreak{}difference': 'Domain integral of u is used as the abundance discriminator.', 'execution\_\allowbreak{}status': 'CONCEPTUAL\_\allowbreak{}POSTPROCESSING'\}
+\end{itemize}
+
+\noindent\textbf{Solver family.} parabolic\_1d.
+
+\subsection{Parameter Provenance and Applicability}
+
+\noindent\textbf{Approved parameter-set identity.} 8dd7a4bea03faa20\allowbreak{}4d37b8fd38bf995e\allowbreak{}22672f0964d57af7\allowbreak{}85767954ed827f3e.
+\begin{itemize}\raggedright
+\item domain\_\allowbreak{}radius (R\_\allowbreak{}domain) \ensuremath{=} 5180413674240.0 m; role SCENARIO\_\allowbreak{}INPUT; status APPROVED\_\allowbreak{}LITERATURE\_\allowbreak{}SINGLE\_\allowbreak{}SOURCE; source: Radioactivity and Thermalization in the Ejecta of Compact Object Mergers and Their Impact on Kilonova Light Curves; DOI 10.3847/\allowbreak{}0004-637x/\allowbreak{}829/\allowbreak{}2/\allowbreak{}110; document PFD-002; locator: preprint; II.1 Ejecta Model; page 3; applicability: composition\ensuremath{=}neutron-rich r-process ejecta; epoch\_\allowbreak{}days\ensuremath{=}1.0; geometry\ensuremath{=}spherical homologous ejecta; required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}geometry: spherical radial surrogate; required\_\allowbreak{}condition\_\allowbreak{}2\ensuremath{=}composition: actinide-bearing kilonova ejecta; required\_\allowbreak{}condition\_\allowbreak{}3\ensuremath{=}epoch: early post-merger kinetic phase. uncertainty: reference\_\allowbreak{}epoch\ensuremath{=}1 day; velocity\_\allowbreak{}range\ensuremath{=}0.1-0.3 c.
+\item ejecta\_\allowbreak{}velocity (v\_\allowbreak{}ejecta) \ensuremath{=} 59958491.6 m\_\allowbreak{}s\textasciicircum{}-1; role SCENARIO\_\allowbreak{}INPUT; status APPROVED\_\allowbreak{}LITERATURE\_\allowbreak{}SINGLE\_\allowbreak{}SOURCE; source: Opacities and Spectra of the r-Process Ejecta from Neutron Star Mergers; DOI 10.1088/\allowbreak{}0004-637x/\allowbreak{}774/\allowbreak{}1/\allowbreak{}25; document PFD-014; locator: preprint; I. Introduction; page 1; applicability: composition\ensuremath{=}neutron-rich r-process ejecta; expansion\ensuremath{=}homologous; required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}expansion: homologous ejecta surrogate; required\_\allowbreak{}condition\_\allowbreak{}2\ensuremath{=}composition: actinide-bearing kilonova ejecta; velocity\_\allowbreak{}range\ensuremath{=}0.1-0.3 c. uncertainty: reported\_\allowbreak{}range\ensuremath{=}0.1-0.3 c.
+\item fission\_\allowbreak{}neutron\_\allowbreak{}release\_\allowbreak{}timescale (tau\_\allowbreak{}f) \ensuremath{=} 2.3 s; role MATERIAL\_\allowbreak{}PROPERTY; status APPROVED\_\allowbreak{}LITERATURE\_\allowbreak{}SINGLE\_\allowbreak{}SOURCE; source: $\beta$-delayed Fission in r-process Nucleosynthesis; DOI 10.3847/\allowbreak{}1538-4357/\allowbreak{}aaeaca; document PFD-018; locator: preprint; III. Results; Figure 4; page 5; applicability: kinetic\_\allowbreak{}regime\ensuremath{=}late fission-recycling phase; nuclear\_\allowbreak{}regime\ensuremath{=}beta-delayed fission in neutron-rich r-process nuclei; required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}nuclear regime: actinide fission recycling; required\_\allowbreak{}condition\_\allowbreak{}2\ensuremath{=}kinetic regime: delayed neutron release relative to expansion. uncertainty: interpretation\ensuremath{=}abundance-weighted transition epoch used as a characteristic proxy, not an isotope-specific half-life.
+\item initial\_\allowbreak{}actinide\_\allowbreak{}density\_\allowbreak{}proxy (u\_\allowbreak{}initial) \ensuremath{=} 5.12186785866739e-14 kg\_\allowbreak{}m\textasciicircum{}-3; role SCENARIO\_\allowbreak{}INPUT; status APPROVED\_\allowbreak{}LITERATURE\_\allowbreak{}SINGLE\_\allowbreak{}SOURCE; source: NLTE Spectra of Kilonovae; DOI 10.1093/\allowbreak{}mnras/\allowbreak{}stad3106; document PFD-026; locator: article; 5. Discussion; Table A1; page 19; applicability: composition\ensuremath{=}Th and U actinides in a homogeneous kilonova model; electron\_\allowbreak{}fraction\ensuremath{=}Ye approximately 0.15; normalization\_\allowbreak{}epoch\_\allowbreak{}days\ensuremath{=}1.0; required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}initial state: seed nuclei distribution at the start of the kinetic phase; required\_\allowbreak{}condition\_\allowbreak{}2\ensuremath{=}composition: actinide-bearing ejecta component. uncertainty: actinide\_\allowbreak{}fraction\ensuremath{=}0.003 combined Th+U fraction at Ye approximately 0.15; density\_\allowbreak{}model\ensuremath{=}uniform spherical proxy.
+\item effective\_\allowbreak{}diffusion\_\allowbreak{}coefficient (D\_\allowbreak{}effective) \ensuremath{=} 1e+18 m\textasciicircum{}2\_\allowbreak{}s\textasciicircum{}-1; role MATERIAL\_\allowbreak{}PROPERTY; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}transport approximation: diffusion surrogate for line-energy propagation; required\_\allowbreak{}condition\_\allowbreak{}2\ensuremath{=}closure assumption: temperature and opacity dependence collapsed into an effective constant. uncertainty: not reported.
+\item outer\_\allowbreak{}boundary\_\allowbreak{}proxy\_\allowbreak{}value (u\_\allowbreak{}outer) \ensuremath{=} 0.0 kg\_\allowbreak{}m\textasciicircum{}-3; role BOUNDARY\_\allowbreak{}CONDITION; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}boundary geometry: outer radial surface; required\_\allowbreak{}condition\_\allowbreak{}2\ensuremath{=}boundary physics: free-streaming or escape surrogate. uncertainty: not reported.
+\item simulation\_\allowbreak{}end\_\allowbreak{}time (t\_\allowbreak{}end) \ensuremath{=} 864000.0 s; role MODEL\_\allowbreak{}ASSUMPTION; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}numerical control: finite simulation window; required\_\allowbreak{}condition\_\allowbreak{}2\ensuremath{=}scientific window: covers delayed fission kinetic signature. uncertainty: not reported.
+\item time\_\allowbreak{}step\_\allowbreak{}size (delta\_\allowbreak{}t) \ensuremath{=} 100.0 s; role MODEL\_\allowbreak{}ASSUMPTION; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}numerical control: explicit time integration; required\_\allowbreak{}condition\_\allowbreak{}2\ensuremath{=}stability requirement: parabolic diffusion surrogate. uncertainty: not reported.
+\item radial\_\allowbreak{}grid\_\allowbreak{}spacing (delta\_\allowbreak{}r) \ensuremath{=} 50000000000.0 m; role MODEL\_\allowbreak{}ASSUMPTION; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}numerical control: finite-difference radial grid; required\_\allowbreak{}condition\_\allowbreak{}2\ensuremath{=}geometry: one-dimensional spherical radial surrogate. uncertainty: not reported.
+\end{itemize}
+
+\subsection{Numerical Validation and Model-Internal Results}
+
+\paragraph{Validation Plan}
+\begin{itemize}\raggedright
+\item \{'validation\_\allowbreak{}id': 'Q1-VAL-001', 'description': 'Check that the evolved field remains finite over the full approved time span.', 'expected\_\allowbreak{}behavior': 'No non-finite values appear in the field or expressions.'\}
+\item \{'validation\_\allowbreak{}id': 'Q1-VAL-002', 'description': 'Check that the zero-flux inner boundary preserves symmetry in the radial surrogate.', 'expected\_\allowbreak{}behavior': 'No artificial flux enters through the left boundary.'\}
+\item \{'validation\_\allowbreak{}id': 'Q1-VAL-003', 'description': 'Check that the outer Dirichlet boundary permits proxy escape toward the approved free-escape value.', 'expected\_\allowbreak{}behavior': 'The field near the outer boundary relaxes toward the approved outer value.'\}
+\item \{'validation\_\allowbreak{}id': 'Q1-VAL-004', 'description': 'Check that the explicit diffusion step size satisfies the approved stability margin.', 'expected\_\allowbreak{}behavior': 'The diffusion Courant number remains safely below the parabolic limit.'\}
+\end{itemize}
+
+\begin{itemize}
+\item Execution sim-48b8db888a0947a4a806d38e69529075; NUMERICAL\_SIMULATION; SIMULATED; NOT\_EMPIRICAL; relation INCONCLUSIVE; summary: The baseline one-dimensional diffusion-reaction simulation completed and was numerically verified. The final field remained near 10\textasciicircum{}-18, with finite-field, explicit-stability, and zero-boundary-residual checks passing. This is a model-internal numerical result and does not establish observational confirmation.
+\end{itemize}
+
+\subsection{Hypothesis Iteration Lineage}
+
+\begin{itemize}\raggedright
+\item v0: INCONCLUSIVE (The baseline one-dimensional diffusion-reaction simulation completed and was numerically verified. The final field remained near 10\textasciicircum{}-18, with finite-field, explicit-stability, and zero-boundary-residual checks passing. This is a model-internal numerical result and does not establish observational confirmation.)
+\end{itemize}
+
+\subsection{Limitations, Non-Empirical Disclosure, and References}
+
+\noindent All values in this section are model-internal numerical simulations (NUMERICAL\_SIMULATION; SIMULATED; NOT\_EMPIRICAL), not empirical observations.
+
+\paragraph{Limitations}
+\begin{itemize}\raggedright
+\item The surrogate does not resolve a full r-process isotopic network or actinide-specific line formation.
+\item The effective diffusion coefficient is a declared closure assumption, not a literature measurement.
+\item The coarse approved time step cannot resolve all structure on the approved fission-release timescale.
+\item Spherical symmetry is assumed in the reduced radial surrogate and cannot represent multidimensional lanthanide curtaining.
+\item Actinide opacity and atomic-data uncertainties are not explicitly represented.
+\end{itemize}
+
+\paragraph{References}
+\begin{itemize}\raggedright
+\item \{'reference\_\allowbreak{}id': 'Q1-REF-001', 'citation': 'Barnes et al., Radioactivity and Thermalization in the Ejecta of Compact Object Mergers and Their Impact on Kilonova Light Curves, 2016', 'relevance': 'Supports the homologous-expansion radius proxy used for the domain radius.'\}
+\item \{'reference\_\allowbreak{}id': 'Q1-REF-002', 'citation': 'Kasen et al., Opacities and Spectra of the r-Process Ejecta from Neutron Star Mergers, 2013', 'relevance': 'Supports the characteristic ejecta velocity range used for expansion dilution.'\}
+\item \{'reference\_\allowbreak{}id': 'Q1-REF-003', 'citation': 'Mumpower et al., beta-delayed Fission in r-process Nucleosynthesis, 2018', 'relevance': 'Provides the abundance-weighted kinetic proxy for delayed fission recycling.'\}
+\item \{'reference\_\allowbreak{}id': 'Q1-REF-004', 'citation': 'Domato et al., NLTE Spectra of Kilonovae, 2023', 'relevance': 'Supports the actinide mass-fraction normalization used for the initial density proxy.'\}
+\end{itemize}
+
+\section{Q2 (final: v0)}
+
+\noindent\textbf{Abstract—} An executable scalar Monte Carlo posterior-proxy model for the fission neutron release timescale tau\_f. The run samples tau\_f together with ejecta mass, electron fraction, and inclination nuisance priors using the approved Q2 parameter values. The current trusted adapter reports the sampled tau\_f observable and does not claim a full hierarchical likelihood, Markov-chain diagnostic, or empirical posterior.
+
+\subsection{Question and Scope}
+
+\noindent\textbf{Question.} What is the posterior probability distribution of the fission neutron release timescale when gravitational-wave, kilonova photometric, and spectroscopic abundance constraints are combined?
+
+
+
+A bounded zero-dimensional Monte Carlo posterior-proxy calculation for one kilonova event. The full multi-event hierarchical likelihood, parallel tempering, Bayes-factor estimation, and catalogue-level population aggregation remain outside the current trusted solver.
+
+\subsection{Model Assumptions and Applicability}
+
+\begin{itemize}\raggedright
+\item Q2-A-001: The approved tau\_\allowbreak{}f value of 2.3 s is used as the center of a positive bounded sensitivity prior from 1.15 s to 3.45 s. If violated: The sampled fission-timescale sensitivity range changes.
+\item Q2-A-002: The approved ejecta-mass value of 0.04 solar\_\allowbreak{}mass is represented by a positive bounded interval from 0.03 to 0.05 solar\_\allowbreak{}mass. If violated: The nuisance ejecta-mass prior changes.
+\item Q2-A-003: The approved electron-fraction value of 0.16 is represented by a broad physically admissible interval from 0.08 to 0.24. If violated: The neutron-richness nuisance prior changes.
+\item Q2-A-004: The approved inclination value is represented by the converted 19 to 42 degree interval in radians. If violated: The viewing-angle nuisance prior changes.
+\item Q2-A-005: The current executable observable is the sampled tau\_\allowbreak{}f value; nuisance variables are retained as declared prior variables for later likelihood extension. If violated: The result would no longer be the scalar tau\_\allowbreak{}f posterior proxy defined by this model.
+\end{itemize}
+
+\subsection{Symbols and Units}
+
+\begin{center}
+\small
+\begin{tabular}{|p{0.12\linewidth}|p{0.15\linewidth}|p{0.46\linewidth}|p{0.17\linewidth}|}
+\hline
+ID & Symbol & Meaning & Unit \\ \hline
+Q2-S-001 & $\tau_f$ & Fission neutron release timescale & $\mathrm{s}$ \\ \hline
+Q2-S-002 & $M_{\mathrm{ej}}$ & Kilonova ejecta mass nuisance parameter & solar mass \\ \hline
+Q2-S-003 & $Y_e$ & Electron fraction nuisance parameter & 1 \\ \hline
+Q2-S-004 & $i$ & Binary inclination angle & $\mathrm{rad}$ \\ \hline
+Q2-S-005 & $N_{\mathrm{samples}}$ & Monte Carlo sample count & 1 \\ \hline
+Q2-S-006 & $N_{\mathrm{chains}}$ & Declared independent-chain control & 1 \\ \hline
+Q2-S-007 & $N_{\mathrm{temperatures}}$ & Declared tempering-level control & 1 \\ \hline
+\end{tabular}
+\end{center}
+
+\subsection{Mechanistic Equations}
+
+\begin{equation}\label{eq:Q2-EQ-001}
+z=\tau_f
+\end{equation}
+\noindent\textbf{Q2-EQ-001 where} Q2-S-001: Fission neutron release timescale.
+
+\begin{equation}\label{eq:Q2-EQ-002}
+p(\tau_f,M_{\mathrm{ej}},Y_e,i)=p(\tau_f)p(M_{\mathrm{ej}})p(Y_e)p(i)
+\end{equation}
+\noindent\textbf{Q2-EQ-002 where} Q2-S-001: Fission neutron release timescale; Q2-S-002: Kilonova ejecta mass nuisance parameter; Q2-S-003: Electron fraction nuisance parameter; Q2-S-004: Binary inclination angle.
+
+\subsection{Initial Conditions, Boundary Conditions, and Constraints}
+
+\paragraph{Initial Conditions}
+\begin{itemize}\raggedright
+\item The zero-dimensional sampler is initialized by drawing each declared random variable from its validated prior distribution.
+\end{itemize}
+
+\paragraph{Boundary Conditions}
+\begin{itemize}\raggedright
+\item No spatial boundary conditions apply to this zero-dimensional Monte Carlo sampler.
+\end{itemize}
+
+\paragraph{Objective and Constraints}
+\begin{itemize}\raggedright
+\item Estimate the scalar sampled distribution of tau\_\allowbreak{}f under the declared bounded nuisance-prior setup.
+\end{itemize}
+
+\subsection{Algorithm}
+
+\noindent\textbf{Algorithm}
+\paragraph{Input}
+\begin{itemize}\raggedright
+\item tau\_\allowbreak{}f prior
+\item M\_\allowbreak{}ej prior
+\item Y\_\allowbreak{}e prior
+\item i prior
+\item approved parameter set
+\end{itemize}
+\paragraph{Output}
+\begin{itemize}\raggedright
+\item sample count
+\item mean tau\_\allowbreak{}f
+\item standard deviation of tau\_\allowbreak{}f
+\item minimum tau\_\allowbreak{}f
+\item maximum tau\_\allowbreak{}f
+\end{itemize}
+\paragraph{Steps}
+\begin{itemize}\raggedright
+\item Initialize the deterministic random generator from the integer seed.
+\item Draw 10000 independent samples from the four declared bounded prior distributions.
+\item Evaluate the scalar observable z\ensuremath{=}tau\_\allowbreak{}f for every draw.
+\item Report bounded summary statistics for the sampled tau\_\allowbreak{}f values.
+\end{itemize}
+
+\subsection{Parameters, Scenarios, and Numerical Settings}
+
+\paragraph{Parameters}
+\begin{itemize}\raggedright
+\item The execution parameter object must contain exactly tau\_\allowbreak{}f\ensuremath{=}2.3, M\_\allowbreak{}ej\ensuremath{=}0.04, Y\_\allowbreak{}e\ensuremath{=}0.16, i\ensuremath{=}0.5585053606381855, N\_\allowbreak{}samples\ensuremath{=}10000, N\_\allowbreak{}chains\ensuremath{=}4, and N\_\allowbreak{}temperatures\ensuremath{=}8.
+\item The random-variable sensitivity bounds are explicit model assumptions and are numeric literals required by the trusted sampler.
+\end{itemize}
+
+\paragraph{Scenarios}
+\begin{itemize}\raggedright
+\item baseline
+\end{itemize}
+
+\noindent\textbf{Solver family.} MONTE\_CARLO.
+
+\subsection{Parameter Provenance and Applicability}
+
+\noindent\textbf{Approved parameter-set identity.} a5e0912a88039b2c\allowbreak{}fdeebd2803aee0f0\allowbreak{}2f55493c372243df\allowbreak{}d3a461294867eb1e.
+\begin{itemize}\raggedright
+\item tau\_\allowbreak{}f (tau\_\allowbreak{}f) \ensuremath{=} 2.3 s; role MATERIAL\_\allowbreak{}PROPERTY; status APPROVED\_\allowbreak{}LITERATURE\_\allowbreak{}SINGLE\_\allowbreak{}SOURCE; source: beta-delayed Fission in r-process Nucleosynthesis; DOI 10.3847/\allowbreak{}1538-4357/\allowbreak{}aaeaca; document SEARCH-Q2-TAU-F-2018; locator: ar5iv\_\allowbreak{}fulltext; Results and discussion; Figure 4 discussion; applicability: positive\_\allowbreak{}timescale\ensuremath{=}True; posterior\_\allowbreak{}parameter\ensuremath{=}abundance-weighted kinetic proxy; required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}posterior\_\allowbreak{}parameter; required\_\allowbreak{}condition\_\allowbreak{}2\ensuremath{=}positive\_\allowbreak{}timescale. uncertainty: reported\ensuremath{=}approximately 2.3 s; no formal interval in the quoted passage.
+\item M\_\allowbreak{}ej (M\_\allowbreak{}ej) \ensuremath{=} 0.04 solar\_\allowbreak{}mass; role SCENARIO\_\allowbreak{}INPUT; status APPROVED\_\allowbreak{}LITERATURE\_\allowbreak{}SINGLE\_\allowbreak{}SOURCE; source: A kilonova as the electromagnetic counterpart to a gravitational-wave source; DOI 10.1038/\allowbreak{}nature24303; document SEARCH-Q2-M-EJ-2017; locator: controlled\_\allowbreak{}fulltext\_\allowbreak{}document; Ejecta mass estimate; applicability: positive\_\allowbreak{}mass\ensuremath{=}True; posterior\_\allowbreak{}parameter\ensuremath{=}event ejecta-mass estimate used as a nuisance-parameter center; required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}posterior\_\allowbreak{}parameter; required\_\allowbreak{}condition\_\allowbreak{}2\ensuremath{=}positive\_\allowbreak{}mass. uncertainty: lower\ensuremath{=}0.01; unit\ensuremath{=}solar\_\allowbreak{}mass.
+\item Y\_\allowbreak{}e (Y\_\allowbreak{}e) \ensuremath{=} 0.16 1; role SCENARIO\_\allowbreak{}INPUT; status APPROVED\_\allowbreak{}LITERATURE\_\allowbreak{}SINGLE\_\allowbreak{}SOURCE; source: Long-term GRMHD simulations of neutron star merger accretion discs: implications for electromagnetic counterparts; DOI 10.1093/\allowbreak{}mnras/\allowbreak{}sty2932; document SEARCH-Q2-YE-2018; locator: openalex\_\allowbreak{}anysearch\_\allowbreak{}abstract; Abstract; applicability: physically\_\allowbreak{}admissible\_\allowbreak{}electron\_\allowbreak{}fraction\ensuremath{=}True; posterior\_\allowbreak{}parameter\ensuremath{=}representative literature prior center; required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}posterior\_\allowbreak{}parameter; required\_\allowbreak{}condition\_\allowbreak{}2\ensuremath{=}physically\_\allowbreak{}admissible\_\allowbreak{}electron\_\allowbreak{}fraction. uncertainty: reported\ensuremath{=}broad distribution; quoted value is the lower average, not a narrow posterior interval.
+\item i (i) \ensuremath{=} 0.5585053606381855 rad; role SCENARIO\_\allowbreak{}INPUT; status APPROVED\_\allowbreak{}LITERATURE\_\allowbreak{}SINGLE\_\allowbreak{}SOURCE; source: Measuring the Viewing Angle of GW170817 with Electromagnetic and Gravitational Waves; DOI 10.3847/\allowbreak{}2041-8213/\allowbreak{}aac6c1; document SEARCH-Q2-INCLINATION-2018; locator: ar5iv\_\allowbreak{}fulltext; III Results; applicability: geometric\_\allowbreak{}admissible\_\allowbreak{}inclination\ensuremath{=}True; posterior\_\allowbreak{}parameter\ensuremath{=}joint GW-EM Bayesian viewing-angle posterior; required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}posterior\_\allowbreak{}parameter; required\_\allowbreak{}condition\_\allowbreak{}2\ensuremath{=}geometric\_\allowbreak{}admissible\_\allowbreak{}inclination. uncertainty: lower\_\allowbreak{}degrees\ensuremath{=}13.0; median\_\allowbreak{}degrees\ensuremath{=}32.0; systematic\_\allowbreak{}degrees\ensuremath{=}1.7; upper\_\allowbreak{}degrees\ensuremath{=}10.0.
+\item n\_\allowbreak{}mcmc\_\allowbreak{}samples (N\_\allowbreak{}samples) \ensuremath{=} 10000.0 1; role MODEL\_\allowbreak{}ASSUMPTION; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}solver\_\allowbreak{}control. uncertainty: not reported.
+\item n\_\allowbreak{}chains (N\_\allowbreak{}chains) \ensuremath{=} 4.0 1; role MODEL\_\allowbreak{}ASSUMPTION; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}solver\_\allowbreak{}control. uncertainty: not reported.
+\item n\_\allowbreak{}tempering\_\allowbreak{}levels (N\_\allowbreak{}temperatures) \ensuremath{=} 8.0 1; role MODEL\_\allowbreak{}ASSUMPTION; status APPROVED\_\allowbreak{}MODEL\_\allowbreak{}ASSUMPTION; source: MODEL ASSUMPTION (not a measured or literature value); applicability: required\_\allowbreak{}condition\_\allowbreak{}1\ensuremath{=}solver\_\allowbreak{}control. uncertainty: not reported.
+\end{itemize}
+
+\subsection{Numerical Validation and Model-Internal Results}
+
+\paragraph{Validation Plan}
+\begin{itemize}\raggedright
+\item Verify that the sample count is an integer between 1 and 100000.
+\item Verify that every distribution bound is finite and ordered.
+\item Verify that all observable values are finite.
+\item Verify that the execution parameter object exactly matches the approved parameter set.
+\end{itemize}
+
+\begin{itemize}
+\item Execution sim-1242bc317d5543009aa59d9c4632170f; NUMERICAL\_SIMULATION; SIMULATED; NOT\_EMPIRICAL; relation INCONCLUSIVE; summary: Q2
+\end{itemize}
+
+\subsection{Hypothesis Iteration Lineage}
+
+\begin{itemize}\raggedright
+\item v0: INCONCLUSIVE (Q2)
+\end{itemize}
+
+\subsection{Limitations, Non-Empirical Disclosure, and References}
+
+\noindent All values in this section are model-internal numerical simulations (NUMERICAL\_SIMULATION; SIMULATED; NOT\_EMPIRICAL), not empirical observations.
+
+\paragraph{Limitations}
+\begin{itemize}\raggedright
+\item The current trusted adapter evaluates a scalar observable and does not implement a full likelihood.
+\item The declared N\_\allowbreak{}chains and N\_\allowbreak{}temperatures controls are retained for provenance but are not independently executed by the standard adapter.
+\item The output is a numerical simulation result and not empirical evidence.
+\item The nuisance priors are sampled but are not combined through a multi-messenger likelihood in this adapter.
+\end{itemize}
+
+\paragraph{References}
+\begin{itemize}\raggedright
+\item doi:10.3847/\allowbreak{}1538-4357/\allowbreak{}aaeaca
+\item doi:10.1038/\allowbreak{}nature24303
+\item doi:10.1093/\allowbreak{}mnras/\allowbreak{}sty2932
+\item doi:10.3847/\allowbreak{}2041-8213/\allowbreak{}aac6c1
+\end{itemize}
+
+\end{document}

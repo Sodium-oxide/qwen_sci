@@ -1,0 +1,911 @@
+{
+  "schema_version": "mature_ideas_v1",
+  "mature_ideas": [
+    {
+      "idea_id": "idea:fission_neutron_timing_discriminant",
+      "title": "Fission Neutron Release Timing as Discriminant for Transuranic r-Process Contributions",
+      "hypothesis": "The temporal profile of fission neutron release relative to (n,gamma)-(gamma,n) freeze-out produces a distinct signature in third r-process peak positioning that can discriminate fission-driven nucleosynthesis from alternative branching scenarios",
+      "central_hypothesis": "The temporal profile of fission neutron release relative to (n,gamma)-(gamma,n) freeze-out produces a distinct signature in third r-process peak positioning that can discriminate fission-driven nucleosynthesis from alternative branching scenarios",
+      "scientific_object": "r-process abundance patterns with A > 250 fission fragments",
+      "mechanism": "Fission of transuranic nuclei (A > 260) releases neutrons at timescales determined by beta-decay chains; if release occurs before freeze-out, recycled neutrons shift the third peak position predictably; if after, peak remains unshifted",
+      "mechanism_or_relation": "Fission of transuranic nuclei (A > 260) releases neutrons at timescales determined by beta-decay chains; if release occurs before freeze-out, recycled neutrons shift the third peak position predictably; if after, peak remains unshifted",
+      "assumptions": [
+        "Beta-decay rates for A > 250 nuclei follow systematic trends within theoretical uncertainty bounds",
+        "Fission fragment distributions are approximately model-independent for dominant cycling nuclei",
+        "Kilonova ejecta conditions permit multiple fission cycling episodes"
+      ],
+      "evidence_basis": [
+        "SURVEY_ANCHOR: The precise temporal relationship between fission neutron release and the freeze-out of neutron-capture equilibrium determines third-peak positioning, yet current network calculations lack constrained beta-decay rates far from stability to quantify this shift"
+      ],
+      "target_gap_ids": [
+        "gap:sh2:mechanism_explanation_gap:fission_neutron_release_timing:third_r_process_peak:unknown:e0664150722e",
+        "gap:global:unresolved_mechanism:abundance_pattern_interpretation:unknown:unknown:d0e14e42e68c"
+      ],
+      "refinement_scope": "Establish formal relation between fission neutron release timescale and third-peak shift magnitude; identify observable discriminants",
+      "falsifier": "Third-peak position shows no correlation with fission cycling conditions across nuclear model variations",
+      "maturity_status": "mature",
+      "maturity": {
+        "dimensions": {
+          "specificity": 1.0,
+          "mechanism_completeness": 0.75,
+          "evidence_support": 1.0,
+          "falsifiability": 1.0,
+          "scope_clarity": 1.0,
+          "executability": 1.0,
+          "independence": 1.0
+        },
+        "aggregate": 0.964,
+        "maturity_status": "mature",
+        "maturity_is_not_rank": true
+      },
+      "maturity_is_not_rank": true,
+      "idea_source": "survey_gap",
+      "lineage": "Derived from gap:sh2:mechanism_explanation_gap:fission_neutron_release_timing identifying missing temporal constraint on fission neutron release",
+      "source_lineage": [
+        {
+          "idea_source": "survey_gap",
+          "lineage": "Derived from gap:sh2:mechanism_explanation_gap:fission_neutron_release_timing identifying missing temporal constraint on fission neutron release"
+        }
+      ],
+      "route_signature": {
+        "scientific_object": "r-process abundance patterns with A > 250 fission fragments",
+        "assumptions": [
+          "Beta-decay rates for A > 250 nuclei follow systematic trends within theoretical uncertainty bounds",
+          "Fission fragment distributions are approximately model-independent for dominant cycling nuclei",
+          "Kilonova ejecta conditions permit multiple fission cycling episodes"
+        ],
+        "mechanism_or_relation": "Fission of transuranic nuclei (A > 260) releases neutrons at timescales determined by beta-decay chains; if release occurs before freeze-out, recycled neutrons shift the third peak position predictably; if after, peak remains unshifted",
+        "mechanism": "Fission of transuranic nuclei (A > 260) releases neutrons at timescales determined by beta-decay chains; if release occurs before freeze-out, recycled neutrons shift the third peak position predictably; if after, peak remains unshifted",
+        "falsifier": "Third-peak position shows no correlation with fission cycling conditions across nuclear model variations",
+        "target_gap_ids": [
+          "gap:sh2:mechanism_explanation_gap:fission_neutron_release_timing:third_r_process_peak:unknown:e0664150722e",
+          "gap:global:unresolved_mechanism:abundance_pattern_interpretation:unknown:unknown:d0e14e42e68c"
+        ]
+      },
+      "independence_status": "independent",
+      "independence_rationale": "First mature idea in the collection.",
+      "anti_anchor": false
+    },
+    {
+      "idea_id": "adversarial_generation-01",
+      "title": "Fission Fragment Spectral Fingerprinting",
+      "hypothesis": "Specific fission fragment distributions produce unique opacity signatures in kilonova spectra distinguishable from lanthanide-only opacity models",
+      "central_hypothesis": "Specific fission fragment distributions produce unique opacity signatures in kilonova spectra distinguishable from lanthanide-only opacity models",
+      "mechanism": "Compute wavelength-dependent opacities for transuranic fission fragment mixtures; identify spectral features in near-IR/visible bands that correlate with fission cycling efficiency",
+      "mechanism_or_relation": "Compute wavelength-dependent opacities for transuranic fission fragment mixtures; identify spectral features in near-IR/visible bands that correlate with fission cycling efficiency",
+      "falsifier": "Compare predicted spectral features against time-resolved kilonova observations (e.g., AT2017gfo) to test fission fragment opacity contribution",
+      "maturity_status": "provisional",
+      "maturity": {
+        "dimensions": {
+          "specificity": 0.5,
+          "mechanism_completeness": 0.5,
+          "evidence_support": 0.0,
+          "falsifiability": 1.0,
+          "scope_clarity": 0.0,
+          "executability": 0.0,
+          "independence": 1.0
+        },
+        "aggregate": 0.429,
+        "maturity_status": "provisional",
+        "maturity_is_not_rank": true
+      },
+      "maturity_is_not_rank": true,
+      "idea_source": "adversarial_generation",
+      "lineage": {
+        "source": "advanced_analysis",
+        "field": "divergent_idea_seeds"
+      },
+      "source_lineage": [
+        {
+          "idea_source": "adversarial_generation",
+          "lineage": {
+            "source": "advanced_analysis",
+            "field": "divergent_idea_seeds"
+          }
+        }
+      ],
+      "route_signature": {
+        "mechanism_or_relation": "Compute wavelength-dependent opacities for transuranic fission fragment mixtures; identify spectral features in near-IR/visible bands that correlate with fission cycling efficiency",
+        "mechanism": "Compute wavelength-dependent opacities for transuranic fission fragment mixtures; identify spectral features in near-IR/visible bands that correlate with fission cycling efficiency",
+        "falsifier": "Compare predicted spectral features against time-resolved kilonova observations (e.g., AT2017gfo) to test fission fragment opacity contribution"
+      },
+      "independence_status": "independent",
+      "independence_rationale": "Retained as structurally distinct in: representation, mechanism, mechanism_or_relation, scientific_object, intervention_or_transformation",
+      "anti_anchor": false
+    },
+    {
+      "idea_id": "cross_domain_transfer-01",
+      "title": "nuclear reactor kinetics",
+      "hypothesis": "Apply delayed neutron precursor formalism to r-process fission cycling: treat fission fragments as 'precursors' whose beta-decay neutron release timing determines recycling efficiency, analogous to how delayed neutrons control reactor dynamics",
+      "central_hypothesis": "Apply delayed neutron precursor formalism to r-process fission cycling: treat fission fragments as 'precursors' whose beta-decay neutron release timing determines recycling efficiency, analogous to how delayed neutrons control reactor dynamics",
+      "scientific_object": "nuclear reactor kinetics",
+      "mechanism": "Delayed neutron precursor decay chains and their impact on reactor period",
+      "mechanism_or_relation": "Delayed neutron precursor decay chains and their impact on reactor period",
+      "maturity_status": "needs_grounding",
+      "maturity": {
+        "dimensions": {
+          "specificity": 0.75,
+          "mechanism_completeness": 0.5,
+          "evidence_support": 0.0,
+          "falsifiability": 0.0,
+          "scope_clarity": 0.0,
+          "executability": 0.0,
+          "independence": 1.0
+        },
+        "aggregate": 0.321,
+        "maturity_status": "needs_grounding",
+        "maturity_is_not_rank": true
+      },
+      "maturity_is_not_rank": true,
+      "idea_source": "cross_domain_transfer",
+      "lineage": {
+        "source": "advanced_analysis",
+        "field": "cross_domain_inspiration"
+      },
+      "source_lineage": [
+        {
+          "idea_source": "cross_domain_transfer",
+          "lineage": {
+            "source": "advanced_analysis",
+            "field": "cross_domain_inspiration"
+          }
+        },
+        {
+          "idea_source": "cross_domain_transfer",
+          "idea_id": "cross_domain_transfer-01-2",
+          "lineage": {
+            "source": "advanced_analysis",
+            "field": "cross_domain_inspiration"
+          }
+        },
+        {
+          "idea_source": "cross_domain_transfer",
+          "idea_id": "cross_domain_transfer-01-2",
+          "lineage": {
+            "source": "advanced_analysis",
+            "field": "cross_domain_inspiration"
+          }
+        }
+      ],
+      "route_signature": {
+        "scientific_object": "nuclear reactor kinetics",
+        "mechanism_or_relation": "Delayed neutron precursor decay chains and their impact on reactor period",
+        "mechanism": "Delayed neutron precursor decay chains and their impact on reactor period"
+      },
+      "independence_status": "independent",
+      "independence_rationale": "Retained as structurally distinct in: representation, mechanism, mechanism_or_relation, scientific_object, intervention_or_transformation",
+      "anti_anchor": false
+    },
+    {
+      "idea_id": "idea:continuous_network_coupling",
+      "title": "Continuous Density-Dependent Network Coupling for r-Process Calculations",
+      "hypothesis": "Replacing the artificial fixed-density threshold for switching from equilibrium to dynamical r-process with a continuous opacity-weighted coupling eliminates discontinuity errors in abundance predictions",
+      "central_hypothesis": "Replacing the artificial fixed-density threshold for switching from equilibrium to dynamical r-process with a continuous opacity-weighted coupling eliminates discontinuity errors in abundance predictions",
+      "scientific_object": "r-process network calculation framework",
+      "mechanism": "Network equations transition smoothly from NSE/statistical equilibrium to full dynamical tracking via density- and temperature-dependent weighting functions that preserve mass and energy conservation across the transition region",
+      "mechanism_or_relation": "Network equations transition smoothly from NSE/statistical equilibrium to full dynamical tracking via density- and temperature-dependent weighting functions that preserve mass and energy conservation across the transition region",
+      "assumptions": [
+        "Equilibrium and dynamical network solutions converge in overlapping validity regime",
+        "Conservation laws hold across transition region",
+        "Computational cost increase is manageable"
+      ],
+      "evidence_basis": [
+        "SURVEY_ANCHOR: The switch from equilibrium to dynamical r-process calculations occurs at a fixed density threshold (~4 x 10^11 g cm^-3), introducing an artificial discontinuity that may propagate errors into final abundance predictions"
+      ],
+      "target_gap_ids": [
+        "gap:global:boundary_condition:nucleosynthesis_network_coupling:unknown:unknown:02988ec39a24"
+      ],
+      "refinement_scope": "Formulate continuous coupling scheme; quantify error reduction vs. fixed-threshold approach",
+      "falsifier": "Continuous coupling introduces larger errors than fixed threshold due to numerical stiffness",
+      "maturity_status": "mature",
+      "maturity": {
+        "dimensions": {
+          "specificity": 1.0,
+          "mechanism_completeness": 0.75,
+          "evidence_support": 1.0,
+          "falsifiability": 1.0,
+          "scope_clarity": 1.0,
+          "executability": 1.0,
+          "independence": 1.0
+        },
+        "aggregate": 0.964,
+        "maturity_status": "mature",
+        "maturity_is_not_rank": true
+      },
+      "maturity_is_not_rank": true,
+      "idea_source": "survey_gap",
+      "lineage": "Derived from gap:global:boundary_condition:nucleosynthesis_network_coupling identifying artificial threshold artifact",
+      "source_lineage": [
+        {
+          "idea_source": "survey_gap",
+          "lineage": "Derived from gap:global:boundary_condition:nucleosynthesis_network_coupling identifying artificial threshold artifact"
+        }
+      ],
+      "route_signature": {
+        "scientific_object": "r-process network calculation framework",
+        "assumptions": [
+          "Equilibrium and dynamical network solutions converge in overlapping validity regime",
+          "Conservation laws hold across transition region",
+          "Computational cost increase is manageable"
+        ],
+        "mechanism_or_relation": "Network equations transition smoothly from NSE/statistical equilibrium to full dynamical tracking via density- and temperature-dependent weighting functions that preserve mass and energy conservation across the transition region",
+        "mechanism": "Network equations transition smoothly from NSE/statistical equilibrium to full dynamical tracking via density- and temperature-dependent weighting functions that preserve mass and energy conservation across the transition region",
+        "falsifier": "Continuous coupling introduces larger errors than fixed threshold due to numerical stiffness",
+        "target_gap_ids": [
+          "gap:global:boundary_condition:nucleosynthesis_network_coupling:unknown:unknown:02988ec39a24"
+        ]
+      },
+      "independence_status": "independent",
+      "independence_rationale": "Retained as structurally distinct in: representation, mechanism, mechanism_or_relation, scientific_object, intervention_or_transformation",
+      "anti_anchor": false
+    },
+    {
+      "idea_id": "survey-gap-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+      "title": "Gap route: gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+      "hypothesis": "Required slot 'direct_observation' remains uncovered in relevant evidence cluster 'Viewing-Angle Dependencies, Lanthanide Curtaining, and Three-Dimensional Geometry Effects'.",
+      "central_hypothesis": "Required slot 'direct_observation' remains uncovered in relevant evidence cluster 'Viewing-Angle Dependencies, Lanthanide Curtaining, and Three-Dimensional Geometry Effects'.",
+      "scientific_object": "direct_observation",
+      "mechanism": "direct_observation",
+      "mechanism_or_relation": "direct_observation",
+      "target_gap_ids": [
+        "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5"
+      ],
+      "gap_alignment": [
+        {
+          "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+          "alignment": "survey_gap"
+        }
+      ],
+      "refinement_scope": "direct_observation",
+      "falsifier": "A result showing the stated gap is resolved without this hypothesis.",
+      "maturity_status": "provisional",
+      "maturity": {
+        "dimensions": {
+          "specificity": 1.0,
+          "mechanism_completeness": 0.5,
+          "evidence_support": 0.0,
+          "falsifiability": 1.0,
+          "scope_clarity": 1.0,
+          "executability": 0.0,
+          "independence": 1.0
+        },
+        "aggregate": 0.643,
+        "maturity_status": "provisional",
+        "maturity_is_not_rank": true
+      },
+      "maturity_is_not_rank": true,
+      "idea_source": "survey_gap",
+      "lineage": {
+        "source": "survey",
+        "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5"
+      },
+      "source_lineage": [
+        {
+          "idea_source": "survey_gap",
+          "lineage": {
+            "source": "survey",
+            "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5"
+          }
+        },
+        {
+          "idea_source": "survey_gap",
+          "idea_id": "survey-gap-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-2",
+          "lineage": {
+            "source": "survey",
+            "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5"
+          }
+        },
+        {
+          "idea_source": "survey_gap",
+          "idea_id": "survey-gap-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-2",
+          "lineage": {
+            "source": "survey",
+            "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5"
+          }
+        }
+      ],
+      "route_signature": {
+        "scientific_object": "direct_observation",
+        "mechanism_or_relation": "direct_observation",
+        "mechanism": "direct_observation",
+        "falsifier": "A result showing the stated gap is resolved without this hypothesis.",
+        "target_gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5"
+        ]
+      },
+      "independence_status": "independent",
+      "independence_rationale": "Retained as structurally distinct in: representation, mechanism, mechanism_or_relation, scientific_object, intervention_or_transformation",
+      "anti_anchor": false
+    },
+    {
+      "idea_id": "survey-gap-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+      "title": "Gap route: gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+      "hypothesis": "Required slot 'phenomenon' remains uncovered in relevant evidence cluster 'Relativistic Outflows, Central Engine Evolution, and Multi-Messenger Progenitor Decoupling'.",
+      "central_hypothesis": "Required slot 'phenomenon' remains uncovered in relevant evidence cluster 'Relativistic Outflows, Central Engine Evolution, and Multi-Messenger Progenitor Decoupling'.",
+      "scientific_object": "phenomenon",
+      "mechanism": "phenomenon",
+      "mechanism_or_relation": "phenomenon",
+      "target_gap_ids": [
+        "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+      ],
+      "gap_alignment": [
+        {
+          "gap_id": "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+          "alignment": "survey_gap"
+        }
+      ],
+      "refinement_scope": "phenomenon",
+      "falsifier": "A result showing the stated gap is resolved without this hypothesis.",
+      "maturity_status": "provisional",
+      "maturity": {
+        "dimensions": {
+          "specificity": 1.0,
+          "mechanism_completeness": 0.5,
+          "evidence_support": 0.0,
+          "falsifiability": 1.0,
+          "scope_clarity": 1.0,
+          "executability": 0.0,
+          "independence": 1.0
+        },
+        "aggregate": 0.643,
+        "maturity_status": "provisional",
+        "maturity_is_not_rank": true
+      },
+      "maturity_is_not_rank": true,
+      "idea_source": "survey_gap",
+      "lineage": {
+        "source": "survey",
+        "gap_id": "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+      },
+      "source_lineage": [
+        {
+          "idea_source": "survey_gap",
+          "lineage": {
+            "source": "survey",
+            "gap_id": "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+          }
+        },
+        {
+          "idea_source": "survey_gap",
+          "idea_id": "survey-gap-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199-2",
+          "lineage": {
+            "source": "survey",
+            "gap_id": "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+          }
+        },
+        {
+          "idea_source": "survey_gap",
+          "idea_id": "survey-gap-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199-2",
+          "lineage": {
+            "source": "survey",
+            "gap_id": "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+          }
+        }
+      ],
+      "route_signature": {
+        "scientific_object": "phenomenon",
+        "mechanism_or_relation": "phenomenon",
+        "mechanism": "phenomenon",
+        "falsifier": "A result showing the stated gap is resolved without this hypothesis.",
+        "target_gap_ids": [
+          "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+        ]
+      },
+      "independence_status": "independent",
+      "independence_rationale": "Retained as structurally distinct in: representation, mechanism, mechanism_or_relation, scientific_object, intervention_or_transformation",
+      "anti_anchor": false
+    },
+    {
+      "idea_id": "survey-gap-gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de",
+      "title": "Gap route: gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de",
+      "hypothesis": "Required slot 'target_object' remains uncovered in relevant evidence cluster 'Relativistic Outflows, Central Engine Evolution, and Multi-Messenger Progenitor Decoupling'.",
+      "central_hypothesis": "Required slot 'target_object' remains uncovered in relevant evidence cluster 'Relativistic Outflows, Central Engine Evolution, and Multi-Messenger Progenitor Decoupling'.",
+      "scientific_object": "target_object",
+      "mechanism": "target_object",
+      "mechanism_or_relation": "target_object",
+      "target_gap_ids": [
+        "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+      ],
+      "gap_alignment": [
+        {
+          "gap_id": "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de",
+          "alignment": "survey_gap"
+        }
+      ],
+      "refinement_scope": "target_object",
+      "falsifier": "A result showing the stated gap is resolved without this hypothesis.",
+      "maturity_status": "provisional",
+      "maturity": {
+        "dimensions": {
+          "specificity": 1.0,
+          "mechanism_completeness": 0.5,
+          "evidence_support": 0.0,
+          "falsifiability": 1.0,
+          "scope_clarity": 1.0,
+          "executability": 0.0,
+          "independence": 1.0
+        },
+        "aggregate": 0.643,
+        "maturity_status": "provisional",
+        "maturity_is_not_rank": true
+      },
+      "maturity_is_not_rank": true,
+      "idea_source": "survey_gap",
+      "lineage": {
+        "source": "survey",
+        "gap_id": "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+      },
+      "source_lineage": [
+        {
+          "idea_source": "survey_gap",
+          "lineage": {
+            "source": "survey",
+            "gap_id": "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+          }
+        },
+        {
+          "idea_source": "survey_gap",
+          "idea_id": "survey-gap-gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de-2",
+          "lineage": {
+            "source": "survey",
+            "gap_id": "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+          }
+        },
+        {
+          "idea_source": "survey_gap",
+          "idea_id": "survey-gap-gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de-2",
+          "lineage": {
+            "source": "survey",
+            "gap_id": "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+          }
+        }
+      ],
+      "route_signature": {
+        "scientific_object": "target_object",
+        "mechanism_or_relation": "target_object",
+        "mechanism": "target_object",
+        "falsifier": "A result showing the stated gap is resolved without this hypothesis.",
+        "target_gap_ids": [
+          "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+        ]
+      },
+      "independence_status": "independent",
+      "independence_rationale": "Retained as structurally distinct in: representation, mechanism, mechanism_or_relation, scientific_object, intervention_or_transformation",
+      "anti_anchor": false
+    },
+    {
+      "idea_id": "survey-gap-gap:sh2:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:5811a61e793a",
+      "title": "Gap route: gap:sh2:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:5811a61e793a",
+      "hypothesis": "Required slot 'candidate_mechanism' remains uncovered in relevant evidence cluster 'Advanced Radiative Transfer Formalisms and High-Opacity Spectral Synthesis'.",
+      "central_hypothesis": "Required slot 'candidate_mechanism' remains uncovered in relevant evidence cluster 'Advanced Radiative Transfer Formalisms and High-Opacity Spectral Synthesis'.",
+      "scientific_object": "candidate_mechanism",
+      "mechanism": "candidate_mechanism",
+      "mechanism_or_relation": "candidate_mechanism",
+      "target_gap_ids": [
+        "gap:sh2:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:5811a61e793a"
+      ],
+      "gap_alignment": [
+        {
+          "gap_id": "gap:sh2:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:5811a61e793a",
+          "alignment": "survey_gap"
+        }
+      ],
+      "refinement_scope": "candidate_mechanism",
+      "falsifier": "A result showing the stated gap is resolved without this hypothesis.",
+      "maturity_status": "provisional",
+      "maturity": {
+        "dimensions": {
+          "specificity": 1.0,
+          "mechanism_completeness": 0.5,
+          "evidence_support": 0.0,
+          "falsifiability": 1.0,
+          "scope_clarity": 1.0,
+          "executability": 0.0,
+          "independence": 1.0
+        },
+        "aggregate": 0.643,
+        "maturity_status": "provisional",
+        "maturity_is_not_rank": true
+      },
+      "maturity_is_not_rank": true,
+      "idea_source": "survey_gap",
+      "lineage": {
+        "source": "survey",
+        "gap_id": "gap:sh2:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:5811a61e793a"
+      },
+      "source_lineage": [
+        {
+          "idea_source": "survey_gap",
+          "lineage": {
+            "source": "survey",
+            "gap_id": "gap:sh2:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:5811a61e793a"
+          }
+        },
+        {
+          "idea_source": "survey_gap",
+          "idea_id": "survey-gap-gap:sh2:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:5811a61e793a-2",
+          "lineage": {
+            "source": "survey",
+            "gap_id": "gap:sh2:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:5811a61e793a"
+          }
+        },
+        {
+          "idea_source": "survey_gap",
+          "idea_id": "survey-gap-gap:sh2:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:5811a61e793a-2",
+          "lineage": {
+            "source": "survey",
+            "gap_id": "gap:sh2:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:5811a61e793a"
+          }
+        }
+      ],
+      "route_signature": {
+        "scientific_object": "candidate_mechanism",
+        "mechanism_or_relation": "candidate_mechanism",
+        "mechanism": "candidate_mechanism",
+        "falsifier": "A result showing the stated gap is resolved without this hypothesis.",
+        "target_gap_ids": [
+          "gap:sh2:mechanism_explanation_gap:candidate_mechanism:candidate_mechanism:unknown:5811a61e793a"
+        ]
+      },
+      "independence_status": "independent",
+      "independence_rationale": "Retained as structurally distinct in: representation, mechanism, mechanism_or_relation, scientific_object, intervention_or_transformation",
+      "anti_anchor": false
+    },
+    {
+      "idea_id": "survey-gap-combination-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+      "title": "Combined gap route: gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5 + gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+      "hypothesis": "The joint constraints represented by gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5, gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199 admit a shared mechanism.",
+      "central_hypothesis": "The joint constraints represented by gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5, gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199 admit a shared mechanism.",
+      "scientific_object": "['direct_observation', 'phenomenon']",
+      "mechanism": "Joint mechanism linking the selected gap constraints.",
+      "mechanism_or_relation": "Joint mechanism linking the selected gap constraints.",
+      "evidence_basis": [
+        "[]",
+        "[]"
+      ],
+      "target_gap_ids": [
+        "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+        "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+      ],
+      "gap_alignment": [
+        {
+          "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+          "alignment": "combined_survey_gaps"
+        },
+        {
+          "gap_id": "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+          "alignment": "combined_survey_gaps"
+        }
+      ],
+      "falsifier": "Evidence that the selected gaps require mutually incompatible mechanisms.",
+      "maturity_status": "provisional",
+      "maturity": {
+        "dimensions": {
+          "specificity": 1.0,
+          "mechanism_completeness": 0.5,
+          "evidence_support": 1.0,
+          "falsifiability": 1.0,
+          "scope_clarity": 0.0,
+          "executability": 1.0,
+          "independence": 1.0
+        },
+        "aggregate": 0.786,
+        "maturity_status": "provisional",
+        "maturity_is_not_rank": true
+      },
+      "maturity_is_not_rank": true,
+      "idea_source": "survey_gap",
+      "lineage": {
+        "source": "survey",
+        "gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+          "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+        ],
+        "combination": true
+      },
+      "source_lineage": [
+        {
+          "idea_source": "survey_gap",
+          "lineage": {
+            "source": "survey",
+            "gap_ids": [
+              "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+              "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+            ],
+            "combination": true
+          }
+        },
+        {
+          "idea_source": "survey_gap",
+          "idea_id": "survey-gap-combination-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199-2",
+          "lineage": {
+            "source": "survey",
+            "gap_ids": [
+              "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+              "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+            ],
+            "combination": true
+          }
+        },
+        {
+          "idea_source": "survey_gap",
+          "idea_id": "survey-gap-combination-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199-2",
+          "lineage": {
+            "source": "survey",
+            "gap_ids": [
+              "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+              "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+            ],
+            "combination": true
+          }
+        }
+      ],
+      "route_signature": {
+        "scientific_object": "['direct_observation', 'phenomenon']",
+        "mechanism_or_relation": "Joint mechanism linking the selected gap constraints.",
+        "mechanism": "Joint mechanism linking the selected gap constraints.",
+        "falsifier": "Evidence that the selected gaps require mutually incompatible mechanisms.",
+        "target_gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+          "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199"
+        ]
+      },
+      "independence_status": "independent",
+      "independence_rationale": "Retained as structurally distinct in: representation, mechanism, mechanism_or_relation, scientific_object, intervention_or_transformation",
+      "anti_anchor": false
+    },
+    {
+      "idea_id": "survey-gap-combination-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de",
+      "title": "Combined gap route: gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5 + gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de",
+      "hypothesis": "The joint constraints represented by gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5, gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de admit a shared mechanism.",
+      "central_hypothesis": "The joint constraints represented by gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5, gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de admit a shared mechanism.",
+      "scientific_object": "['direct_observation', 'target_object']",
+      "mechanism": "Joint mechanism linking the selected gap constraints.",
+      "mechanism_or_relation": "Joint mechanism linking the selected gap constraints.",
+      "evidence_basis": [
+        "[]",
+        "[]"
+      ],
+      "target_gap_ids": [
+        "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+        "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+      ],
+      "gap_alignment": [
+        {
+          "gap_id": "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+          "alignment": "combined_survey_gaps"
+        },
+        {
+          "gap_id": "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de",
+          "alignment": "combined_survey_gaps"
+        }
+      ],
+      "falsifier": "Evidence that the selected gaps require mutually incompatible mechanisms.",
+      "maturity_status": "provisional",
+      "maturity": {
+        "dimensions": {
+          "specificity": 1.0,
+          "mechanism_completeness": 0.5,
+          "evidence_support": 1.0,
+          "falsifiability": 1.0,
+          "scope_clarity": 0.0,
+          "executability": 1.0,
+          "independence": 1.0
+        },
+        "aggregate": 0.786,
+        "maturity_status": "provisional",
+        "maturity_is_not_rank": true
+      },
+      "maturity_is_not_rank": true,
+      "idea_source": "survey_gap",
+      "lineage": {
+        "source": "survey",
+        "gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+          "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+        ],
+        "combination": true
+      },
+      "source_lineage": [
+        {
+          "idea_source": "survey_gap",
+          "lineage": {
+            "source": "survey",
+            "gap_ids": [
+              "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+              "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+            ],
+            "combination": true
+          }
+        },
+        {
+          "idea_source": "survey_gap",
+          "idea_id": "survey-gap-combination-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de-2",
+          "lineage": {
+            "source": "survey",
+            "gap_ids": [
+              "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+              "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+            ],
+            "combination": true
+          }
+        },
+        {
+          "idea_source": "survey_gap",
+          "idea_id": "survey-gap-combination-gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5-gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de-2",
+          "lineage": {
+            "source": "survey",
+            "gap_ids": [
+              "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+              "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+            ],
+            "combination": true
+          }
+        }
+      ],
+      "route_signature": {
+        "scientific_object": "['direct_observation', 'target_object']",
+        "mechanism_or_relation": "Joint mechanism linking the selected gap constraints.",
+        "mechanism": "Joint mechanism linking the selected gap constraints.",
+        "falsifier": "Evidence that the selected gaps require mutually incompatible mechanisms.",
+        "target_gap_ids": [
+          "gap:sh1:evidence_role_deficit:direct_observation:direct_observation:unknown:76530c3295a5",
+          "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+        ]
+      },
+      "independence_status": "independent",
+      "independence_rationale": "Retained as structurally distinct in: representation, mechanism, mechanism_or_relation, scientific_object, intervention_or_transformation",
+      "anti_anchor": false
+    },
+    {
+      "idea_id": "survey-gap-combination-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199-gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de",
+      "title": "Combined gap route: gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199 + gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de",
+      "hypothesis": "The joint constraints represented by gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199, gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de admit a shared mechanism.",
+      "central_hypothesis": "The joint constraints represented by gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199, gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de admit a shared mechanism.",
+      "scientific_object": "['phenomenon', 'target_object']",
+      "mechanism": "Joint mechanism linking the selected gap constraints.",
+      "mechanism_or_relation": "Joint mechanism linking the selected gap constraints.",
+      "evidence_basis": [
+        "[]",
+        "[]"
+      ],
+      "target_gap_ids": [
+        "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+        "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+      ],
+      "gap_alignment": [
+        {
+          "gap_id": "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+          "alignment": "combined_survey_gaps"
+        },
+        {
+          "gap_id": "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de",
+          "alignment": "combined_survey_gaps"
+        }
+      ],
+      "falsifier": "Evidence that the selected gaps require mutually incompatible mechanisms.",
+      "maturity_status": "provisional",
+      "maturity": {
+        "dimensions": {
+          "specificity": 1.0,
+          "mechanism_completeness": 0.5,
+          "evidence_support": 1.0,
+          "falsifiability": 1.0,
+          "scope_clarity": 0.0,
+          "executability": 1.0,
+          "independence": 1.0
+        },
+        "aggregate": 0.786,
+        "maturity_status": "provisional",
+        "maturity_is_not_rank": true
+      },
+      "maturity_is_not_rank": true,
+      "idea_source": "survey_gap",
+      "lineage": {
+        "source": "survey",
+        "gap_ids": [
+          "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+          "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+        ],
+        "combination": true
+      },
+      "source_lineage": [
+        {
+          "idea_source": "survey_gap",
+          "lineage": {
+            "source": "survey",
+            "gap_ids": [
+              "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+              "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+            ],
+            "combination": true
+          }
+        },
+        {
+          "idea_source": "survey_gap",
+          "idea_id": "survey-gap-combination-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199-gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de-2",
+          "lineage": {
+            "source": "survey",
+            "gap_ids": [
+              "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+              "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+            ],
+            "combination": true
+          }
+        },
+        {
+          "idea_source": "survey_gap",
+          "idea_id": "survey-gap-combination-gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199-gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de-2",
+          "lineage": {
+            "source": "survey",
+            "gap_ids": [
+              "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+              "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+            ],
+            "combination": true
+          }
+        }
+      ],
+      "route_signature": {
+        "scientific_object": "['phenomenon', 'target_object']",
+        "mechanism_or_relation": "Joint mechanism linking the selected gap constraints.",
+        "mechanism": "Joint mechanism linking the selected gap constraints.",
+        "falsifier": "Evidence that the selected gaps require mutually incompatible mechanisms.",
+        "target_gap_ids": [
+          "gap:sh1:unmapped_gap_phenomenon:phenomenon:phenomenon:unknown:7d9f592b9199",
+          "gap:sh1:unmapped_gap_target_object:target_object:target_object:unknown:3bf1a1e393de"
+        ]
+      },
+      "independence_status": "independent",
+      "independence_rationale": "Retained as structurally distinct in: representation, mechanism, mechanism_or_relation, scientific_object, intervention_or_transformation",
+      "anti_anchor": false
+    },
+    {
+      "idea_id": "adversarial_generation-01-2",
+      "title": "Fission Fragment Spectral Fingerprinting",
+      "hypothesis": "Specific fission fragment distributions produce unique opacity signatures in kilonova spectra distinguishable from lanthanide-only opacity models",
+      "central_hypothesis": "Specific fission fragment distributions produce unique opacity signatures in kilonova spectra distinguishable from lanthanide-only opacity models",
+      "mechanism": "Compute wavelength-dependent opacities for transuranic fission fragment mixtures; identify spectral features in near-IR/visible bands that correlate with fission cycling efficiency",
+      "mechanism_or_relation": "Compute wavelength-dependent opacities for transuranic fission fragment mixtures; identify spectral features in near-IR/visible bands that correlate with fission cycling efficiency",
+      "falsifier": "Compare predicted spectral features against time-resolved kilonova observations (e.g., AT2017gfo) to test fission fragment opacity contribution",
+      "maturity_status": "provisional",
+      "maturity": {
+        "dimensions": {
+          "specificity": 0.5,
+          "mechanism_completeness": 0.5,
+          "evidence_support": 0.0,
+          "falsifiability": 1.0,
+          "scope_clarity": 0.0,
+          "executability": 0.0,
+          "independence": 1.0
+        },
+        "aggregate": 0.429,
+        "maturity_status": "provisional",
+        "maturity_is_not_rank": true
+      },
+      "maturity_is_not_rank": true,
+      "idea_source": "adversarial_generation",
+      "lineage": {
+        "source": "advanced_analysis",
+        "field": "divergent_idea_seeds"
+      },
+      "source_lineage": [
+        {
+          "idea_source": "adversarial_generation",
+          "lineage": {
+            "source": "advanced_analysis",
+            "field": "divergent_idea_seeds"
+          }
+        }
+      ],
+      "route_signature": {
+        "mechanism_or_relation": "Compute wavelength-dependent opacities for transuranic fission fragment mixtures; identify spectral features in near-IR/visible bands that correlate with fission cycling efficiency",
+        "mechanism": "Compute wavelength-dependent opacities for transuranic fission fragment mixtures; identify spectral features in near-IR/visible bands that correlate with fission cycling efficiency",
+        "falsifier": "Compare predicted spectral features against time-resolved kilonova observations (e.g., AT2017gfo) to test fission fragment opacity contribution"
+      },
+      "independence_status": "independent",
+      "independence_rationale": "Retained as structurally distinct in: representation, mechanism, mechanism_or_relation, scientific_object, intervention_or_transformation",
+      "anti_anchor": false
+    }
+  ]
+}
