@@ -342,6 +342,27 @@ def test_representative_research_gallery_exposes_curated_assets_only(tmp_path: P
     assert client.get("/api/representative/demo_project/files/../private.txt").status_code == 404
 
 
+def test_representative_gallery_prioritizes_quantitative_publication_pdf(tmp_path: Path) -> None:
+    representative_root = tmp_path / "representative"
+    project_root = representative_root / "astr_23"
+    publication_root = project_root / "quantitative" / "publication"
+    publication_root.mkdir(parents=True)
+    (publication_root / "quantitative_mathematical_models.pdf").write_bytes(b"%PDF-quantitative")
+    for index in range(20):
+        (project_root / "quantitative" / f"extra-{index:02d}.pdf").write_bytes(b"%PDF-extra")
+
+    app = create_app(run_root=tmp_path / "science-runs", representative_root=representative_root, serve_frontend=False)
+    client = TestClient(app)
+
+    project = next(item for item in client.get("/api/representative").json() if item["project_id"] == "astr_23")
+    files = project["files"]
+    quantitative = next(file for file in files if file["file_id"] == "quantitative/publication/quantitative_mathematical_models.pdf")
+
+    assert project["pdf_count"] == 12
+    assert files[0]["file_id"] == quantitative["file_id"]
+    assert client.get(quantitative["url"]).content == b"%PDF-quantitative"
+
+
 def test_materials_are_immutable_once_a_science_stage_starts(tmp_path: Path) -> None:
     client, _supervisor = _client(tmp_path)
     created = _create_run(client, run_id="immutable-material-run")
@@ -398,6 +419,40 @@ def test_completed_runs_index_nested_stage_images_for_safe_preview(tmp_path: Pat
 
     assert preview.status_code == 200, preview.text
     assert preview.content == _ONE_PIXEL_PNG
+
+
+def test_completed_runs_index_author_pdf_when_persisted_path_uses_another_host(tmp_path: Path) -> None:
+    client, _supervisor = _client(tmp_path)
+    created = _create_run(client, run_id="completed-author-pdf-run")
+    run_id = str(created["run_id"])
+    paths = client.app.state.run_service.paths_for(run_id)
+    author_pdf = paths.run_dir / "author" / "attempt-001" / "research_plan.pdf"
+    author_pdf.parent.mkdir(parents=True, exist_ok=True)
+    author_pdf.write_bytes(b"%PDF-demo")
+
+    with locked_science_run(paths):
+        _metadata, state = load_science_run(paths)
+        state["status"] = "COMPLETED"
+        for stage in state["stages"].values():
+            stage["status"] = "COMPLETED"
+        state["stages"]["author"]["outputs"] = {
+            "render_pdf": "/home/dlutee2026/src1/qwen_sci/workspace/science-runs/other-host/author/attempt-001/research_plan.pdf",
+        }
+        save_science_state(paths, state)
+
+    response = client.get(f"/api/runs/{run_id}")
+
+    assert response.status_code == 200, response.text
+    artifacts = {artifact["artifact_id"]: artifact for artifact in response.json()["artifacts"]}
+    author_view = artifacts["author:pdf:attempt-001/research_plan.pdf"]
+    assert author_view["stage"] == "author"
+    assert author_view["media_type"] == "application/pdf"
+    assert author_view["previewable"] is True
+
+    preview = client.get(f"/api/runs/{run_id}/artifacts/{quote(author_view['artifact_id'], safe='')}")
+
+    assert preview.status_code == 200, preview.text
+    assert preview.content == b"%PDF-demo"
 
 
 def test_web_launcher_sequence_creates_uploads_and_starts_a_supervised_run(tmp_path: Path) -> None:

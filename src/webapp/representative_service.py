@@ -21,6 +21,11 @@ _PROJECT_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$")
 _FILE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:/-]{0,255}$")
 
 _PROJECT_COPY: dict[str, tuple[str, str, str]] = {
+    "astr_23": (
+        "重元素起源与千新星核合成",
+        "天体物理 · 数值模型",
+        "从中子星并合、快速中子俘获过程和千新星光谱出发，整理重元素起源的可审计数值研究。",
+    ),
     "astr_16": (
         "脉冲星形成与演化",
         "天体物理 · 数值模型",
@@ -124,12 +129,17 @@ def _project_files(project: _Project) -> list[tuple[Path, str]]:
         if safe_path is None:
             continue
         filtered.append((safe_path, relative))
-    def sort_key(item: tuple[Path, str]) -> tuple[int, int, str]:
+    def sort_key(item: tuple[Path, str]) -> tuple[int, int, int, str]:
         path, relative = item
         kind = _file_kind(path)
         priority = {"pdf": 0, "image": 1, "log": 2}[kind]
+        quantitative_publication = 0 if (
+            kind == "pdf"
+            and relative.casefold().startswith("quantitative/publication/")
+            and path.name.casefold() == "quantitative_mathematical_models.pdf"
+        ) else 1
         useful = 0 if any(token in relative.casefold() for token in ("final", "research_plan", "black-hole", "mechanism", "overview", "evidence", "survey", "events")) else 1
-        return priority, useful, relative
+        return priority, quantitative_publication, useful, relative
     ordered = sorted(filtered, key=sort_key)
     selected: list[tuple[Path, str]] = []
     limits = {"pdf": 12, "image": 32, "log": 32}

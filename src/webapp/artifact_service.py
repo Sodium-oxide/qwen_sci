@@ -19,6 +19,7 @@ _STAGE_ARTIFACT_DIRECTORIES = {
     "author": "author",
 }
 _MAX_DISCOVERED_STAGE_IMAGES = 256
+_MAX_DISCOVERED_AUTHOR_PDFS = 64
 
 
 def _safe_path(paths: ScienceRunPaths, value: object) -> Path | None:
@@ -48,6 +49,7 @@ def artifact_index(paths: ScienceRunPaths, state: Mapping[str, object]) -> dict[
                 if path is not None:
                     indexed[f"{stage_name}:{output_name}"] = path
     _index_stage_images(paths, indexed)
+    _index_author_pdfs(paths, indexed)
     for manifest_path in (paths.materials_manifest, paths.multimodal_input_manifest):
         if manifest_path.is_file():
             indexed[f"inputs:{manifest_path.stem}"] = manifest_path
@@ -68,6 +70,47 @@ def artifact_index(paths: ScienceRunPaths, state: Mapping[str, object]) -> dict[
                 continue
             indexed[f"quantitative:{relative}"] = path
     return indexed
+
+
+def _index_author_pdfs(paths: ScienceRunPaths, indexed: dict[str, Path]) -> None:
+    """Discover generated Author PDFs when persisted output paths are unusable.
+
+    Science-stage state can contain an absolute path written on a different
+    host (for example, a Linux path in a state file later served by the
+    Windows frontend).  In that case ``_safe_path`` deliberately rejects the
+    stale path.  The run-owned ``author`` directory is still a safe source of
+    generated report PDFs, so index those files as a fallback without
+    exposing paths outside the run.
+    """
+
+    author_root = paths.run_dir / _STAGE_ARTIFACT_DIRECTORIES["author"]
+    if not author_root.is_dir():
+        return
+
+    known_paths = set(indexed.values())
+    try:
+        candidates = sorted(
+            candidate
+            for candidate in author_root.rglob("*")
+            if candidate.is_file() and candidate.suffix.casefold() == ".pdf"
+        )
+    except OSError:
+        return
+
+    discovered = 0
+    for candidate in candidates:
+        if discovered >= _MAX_DISCOVERED_AUTHOR_PDFS:
+            return
+        path = _safe_path(paths, str(candidate))
+        if path is None or path in known_paths:
+            continue
+        try:
+            relative = path.relative_to(author_root.resolve()).as_posix()
+        except (OSError, ValueError):
+            continue
+        indexed[f"author:pdf:{relative}"] = path
+        known_paths.add(path)
+        discovered += 1
 
 
 def _index_stage_images(paths: ScienceRunPaths, indexed: dict[str, Path]) -> None:
