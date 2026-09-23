@@ -159,11 +159,24 @@ def _record_degradation(
     brief_id: str,
     error: BaseException | None = None,
     disposition: str = "discarded_invalid_llm_batch",
+    error_detail: str | None = None,
 ) -> dict[str, str]:
+    if error_detail or error:
+        detail = str(error_detail or error).strip()
+    elif disposition == "skipped_after_upstream_degradation":
+        detail = (
+            f"{stage} was skipped because a required upstream batch was degraded; "
+            "no valid upstream artifact was available."
+        )
+    else:
+        detail = f"{stage} was degraded because no valid batch was retained."
+    if len(detail) > 2000:
+        detail = detail[:1997] + "..."
     record = {
         "stage": stage,
         "disposition": disposition,
         "error_code": type(error).__name__ if error is not None else "UPSTREAM_DEGRADED",
+        "error_detail": detail,
     }
     if logger is not None:
         logger.event(
@@ -175,6 +188,7 @@ def _record_degradation(
             requires_human_review=True,
             disposition=disposition,
             error_code=record["error_code"],
+            error_detail=detail,
         )
     return record
 
@@ -217,6 +231,9 @@ def _mark_design_degraded(
         warning = (
             f"{stage} was degraded after its LLM or contract-validation batch was discarded; no discarded output is retained."
         )
+        detail = str(degradation.get("error_detail") or "").strip()
+        if detail:
+            warning += f" Detail: {detail[:1000]}"
         if warning not in validation_warnings:
             validation_warnings.append(warning)
     marked["field_statuses"] = field_statuses
@@ -263,6 +280,9 @@ class ExperimentDesignOrchestrator:
         self.completeness_validator = CompletenessValidator()
         self.variable_claim_extractor = VariableClaimExtractor()
         self.formal_reasoning_planner = FormalReasoningPlanner()
+        from .formal_definition_resolver import FormalDefinitionResolver
+
+        self.formal_definition_resolver = FormalDefinitionResolver()
         self.counterexample_analyzer = CounterexampleAnalyzer()
         self.study_type_composer = StudyTypeTemplateComposer(
             template_router=self.template_router,
@@ -472,6 +492,8 @@ class ExperimentDesignOrchestrator:
                 brief,
                 reasoning_context=reasoning_context,
                 llm_call=self._required_reasoning_llm(reasoning_llm_call),
+                logger=logger,
+                brief_id=brief_id,
             )
         except Exception as exc:
             degradations.append(
@@ -504,6 +526,31 @@ class ExperimentDesignOrchestrator:
             record["stage"] == "variable_claim_extraction" for record in degradations
         )
         formal_degraded = False
+        formal_settings = _setting(_setting(self.config, "experiment_design", self.config), "formal_reasoning", {})
+        formal_inputs = None
+        formal_definition_degraded = False
+        formal_definition_failure_detail = ""
+        formal_verification_report = None
+        formal_revision_audit = None
+        if formal_applicable and not variable_claim_degraded and _setting(formal_settings, "enabled", False):
+            if _setting(formal_settings, "definition_resolution", True):
+                try:
+                    formal_inputs = self.formal_definition_resolver.resolve(
+                        brief, reasoning_context, variable_claim_model, evidence_bundle or {},
+                        llm_call=self._required_reasoning_llm(reasoning_llm_call), logger=logger,
+                        settings=_setting(formal_settings, "definition_retrieval", {}),
+                        cache_identity=_llm_cache_context(self.config, self.llm_model),
+                    )
+                except Exception as exc:
+                    formal_definition_degraded = True
+                    degradation = _record_degradation(
+                        logger,
+                        stage="formal_definition_resolver",
+                        brief_id=brief_id,
+                        error=exc,
+                    )
+                    formal_definition_failure_detail = str(degradation.get("error_detail") or "").strip()
+                    degradations.append(degradation)
         if formal_applicable:
             if logger is not None:
                 logger.event(
@@ -528,12 +575,34 @@ class ExperimentDesignOrchestrator:
                         "a qualified human must supply the formalization."
                     ),
                 )
+            elif formal_definition_degraded:
+                formal_degraded = True
+                degradations.append(
+                    _record_degradation(
+                        logger,
+                        stage="formal_reasoning_planner",
+                        brief_id=brief_id,
+                        disposition="skipped_after_upstream_degradation",
+                        error_detail=(
+                            "Formal reasoning was skipped because formal_definition_resolver failed: "
+                            + (formal_definition_failure_detail or "no valid definition batch was retained")
+                        ),
+                    )
+                )
+                formal_reasoning_plan = unavailable_formal_reasoning_plan(
+                    reason=(
+                        "Formal reasoning was not run because the definition resolver failed. "
+                        "Qualified human review must repair the formal definitions first. "
+                        + (formal_definition_failure_detail or "No valid definition batch was retained.")
+                    ),
+                )
             else:
                 try:
                     formal_reasoning_plan = self.formal_reasoning_planner.plan(
                         brief,
                         reasoning_context,
                         variable_claim_model,
+                        **({"formal_inputs": formal_inputs, "evidence_bundle": evidence_bundle} if formal_inputs is not None else {}),
                         llm_call=self._required_reasoning_llm(reasoning_llm_call),
                         logger=logger,
                         brief_id=brief_id,
@@ -551,6 +620,14 @@ class ExperimentDesignOrchestrator:
                     formal_reasoning_plan = unavailable_formal_reasoning_plan(
                         reason=_degradation_reason("formal_reasoning_planner"),
                     )
+                    if formal_inputs is not None:
+                        from .formal_contracts import unresolved_plan_from_definitions
+
+                        retained = unresolved_plan_from_definitions(formal_inputs, "Proof construction failed; resolved definitions and model relations are retained.")
+                        from .reasoning_validation import validate_formal_reasoning_plan
+
+                        if not validate_formal_reasoning_plan(retained, variable_claim_model=variable_claim_model):
+                            formal_reasoning_plan = retained
             if logger is not None:
                 logger.event(
                 "formal_reasoning_planner",
@@ -733,6 +810,23 @@ class ExperimentDesignOrchestrator:
                 error_count=0,
             )
 
+        if formal_reasoning_plan.get("schema_version") == "formal_reasoning_plan_v2":
+            from .formal_revision import run_formal_revision_loop
+
+            formal_reasoning_plan, formal_verification_report, formal_revision_audit = run_formal_revision_loop(
+                formal_reasoning_plan, formal_settings,
+                llm_call=self._required_reasoning_llm(reasoning_llm_call), logger=logger,
+                brief_id=brief_id, evidence_bundle=evidence_bundle, counterexample_analysis=counterexample_analysis,
+            )
+            if any(item.get("status") == "revised" for item in formal_revision_audit["iterations"]):
+                try:
+                    counterexample_analysis = self.counterexample_analyzer.analyze(
+                        brief, reasoning_context, variable_claim_model, formal_reasoning_plan,
+                        llm_call=self._required_reasoning_llm(reasoning_llm_call), logger=logger, brief_id=brief_id,
+                    )
+                except Exception as exc:
+                    counterexample_analysis = unavailable_counterexample_analysis(reason=f"Counterexample regeneration after revision failed: {type(exc).__name__}")
+
         if logger is not None:
             logger.event(
                 "template_composer",
@@ -878,7 +972,7 @@ class ExperimentDesignOrchestrator:
             "errors": [],
             "warnings": [
                 "Forward derivation and counterexample candidates are proposals unless an independent verifier or qualified human confirms them.",
-                "No experiment, simulation, symbolic execution, or exhaustive counterexample search was run.",
+                "No experiment or simulation was run. Mathematical backend activity is recorded in formal_verification_report.",
                 *(
                     [
                         "One or more LLM or workflow batches were discarded and require qualified human replacement."
@@ -888,6 +982,10 @@ class ExperimentDesignOrchestrator:
                 ),
             ],
         }
+        if formal_verification_report is not None:
+            design["formal_verification_report"] = formal_verification_report
+            design["formal_revision_audit"] = formal_revision_audit
+            design["mathematical_verification_policy"] = formal_verification_report["policy"]
         return design
 
     def compose_design_from_idea_path(

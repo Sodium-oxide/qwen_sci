@@ -445,7 +445,7 @@ def _theory_spine_section_references(
     derivation_lemma_ids = [
         _text(record.get("lemma_id"))
         for record in lemma_units
-        if _text(record.get("lemma_id")) and _text(record.get("source_kind")) == "forward_derivation_step"
+        if _text(record.get("lemma_id")) and _text(record.get("source_kind")) in {"forward_derivation_step", "lemma"}
     ]
     all_proof_ids = [
         _text(record.get("proof_obligation_id"))

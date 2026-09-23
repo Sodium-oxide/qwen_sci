@@ -273,6 +273,11 @@ def test_orchestrator_discards_invalid_llm_batches_and_returns_a_valid_design(
         for record in logger.records
     )
     assert all("not-json" not in str(record) for record in logger.records)
+    degraded_record = next(
+        record for record in logger.records
+        if record["stage"] == expected_degraded_stage and record["event"] == "degraded"
+    )
+    assert degraded_record.get("error_detail")
     if failed_stage == "variable":
         assert design["variable_claim_model"]["unknown_items"]
         assert design["formal_reasoning_plan"]["status"] == "requires_human_review"
@@ -841,7 +846,7 @@ def test_counterexample_validation_requires_all_assumptions_and_separates_empiri
         counterexample_analysis=counterexample,
         template_composition={"template_id": "mathematics_theory", "submode": "formal_theory"},
     )
-    assert any("must_check_every_declared_assumption" in error for error in errors)
+    assert any("missing_target_assumptions" in error for error in errors)
     assert any("does_not_satisfy_all_assumptions" in error for error in errors)
 
 

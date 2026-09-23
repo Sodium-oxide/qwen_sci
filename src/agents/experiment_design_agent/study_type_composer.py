@@ -804,6 +804,9 @@ def build_study_type_template_composer_prompt(
         "counterexample_analysis": _mapping(counterexample_analysis),
         "execution_mode": DESIGN_ONLY,
     }
+    from .definition_evidence import bounded_prompt_evidence
+
+    payload = bounded_prompt_evidence(payload, {"brief": brief_payload, "variables": variable_claim_model or {}})
     return _prompt_with_contract(
         STUDY_TYPE_TEMPLATE_COMPOSER_PROMPTS[template_id],
         contract_name="WRITABLE_PATCH_CONTRACT",
@@ -844,6 +847,9 @@ def build_study_type_template_composer_contract_repair_prompt(
         "validation_error_identifiers": validation_summary(validation_errors)["validation_errors"],
         "execution_mode": DESIGN_ONLY,
     }
+    from .definition_evidence import bounded_prompt_evidence
+
+    payload = bounded_prompt_evidence(payload, {"brief": brief_payload, "errors": validation_errors})
     return _prompt_with_contract(
         STUDY_TYPE_TEMPLATE_COMPOSER_CONTRACT_REPAIR_PROMPT,
         contract_name="REPAIR_PATCH_CONTRACT",

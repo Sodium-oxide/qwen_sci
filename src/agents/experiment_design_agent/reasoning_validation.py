@@ -168,6 +168,10 @@ def validate_formal_reasoning_plan(
     variable_claim_model: Mapping[str, Any] | None = None,
 ) -> list[str]:
     plan = _mapping(payload)
+    if plan.get("schema_version") == "formal_reasoning_plan_v2":
+        from .formal_contracts import validate_formal_plan_v2
+
+        return validate_formal_plan_v2(plan, variable_claim_model)
     errors = _required(
         plan,
         (
@@ -416,7 +420,11 @@ _COUNTEREXAMPLE_VALIDITIES = {
 }
 
 
-def validate_counterexample_analysis(payload: Any) -> list[str]:
+def validate_counterexample_analysis(
+    payload: Any, *, formal_reasoning_plan: Mapping[str, Any] | None = None,
+) -> list[str]:
+    from .formal_dependency import build_counterexample_target
+
     analysis = _mapping(payload)
     errors = _required(
         analysis,
@@ -437,6 +445,15 @@ def validate_counterexample_analysis(payload: Any) -> list[str]:
     if analysis.get("schema_version") != "counterexample_analysis_v1":
         errors.append("counterexample_analysis_invalid_schema_version")
     candidates = _records(analysis.get("candidate_counterexamples"))
+    required_assumptions: set[str] | None = None
+    if formal_reasoning_plan is not None and analysis.get("target_claim_id"):
+        try:
+            target = build_counterexample_target(formal_reasoning_plan, str(analysis["target_claim_id"]))
+            required_assumptions = set(target["required_assumption_ids"])
+            if analysis.get("target_specification", target) != target:
+                errors.append("counterexample_analysis_target_specification_mismatch")
+        except ValueError as error:
+            errors.append(str(error))
     errors.extend(_unique_ids(candidates, "counterexample_id", "counterexample_analysis.candidates"))
     for index, candidate in enumerate(candidates):
         for key in ("counterexample_id", "witness", "assumption_checks", "conclusion_check", "validity", "search_method", "limitations"):
@@ -445,8 +462,16 @@ def validate_counterexample_analysis(payload: Any) -> list[str]:
         if candidate.get("validity") not in _COUNTEREXAMPLE_VALIDITIES:
             errors.append(f"counterexample_analysis.candidates[{index}]_invalid_validity")
         checks = _records(candidate.get("assumption_checks"))
-        errors.extend(_unique_ids(checks, "assumption_id", f"counterexample_analysis.candidates[{index}].assumption_checks"))
-        for check_index, check in enumerate(checks):
+        all_checks = checks
+        if required_assumptions is not None:
+            checked_ids = {str(check.get("assumption_id")) for check in checks}
+            if not required_assumptions <= checked_ids:
+                errors.append(f"counterexample_analysis.candidates[{index}]_missing_target_assumptions")
+            checks = [check for check in checks if check.get("assumption_id") in required_assumptions]
+        errors.extend(_unique_ids(all_checks, "assumption_id", f"counterexample_analysis.candidates[{index}].assumption_checks"))
+        for check_index, check in enumerate(all_checks):
+            if formal_reasoning_plan is not None and check.get("assumption_id") not in {record.get("assumption_id") for record in formal_reasoning_plan.get("assumptions", [])}:
+                errors.append(f"counterexample_analysis.candidates[{index}]_unknown_assumption")
             for key in ("assumption_id", "check", "result", "evidence"):
                 if key not in check:
                     errors.append(f"counterexample_analysis.candidates[{index}].assumption_checks[{check_index}]_missing:{key}")
@@ -503,7 +528,7 @@ def validate_reasoning_artifacts(
             )
         )
     if counterexample_analysis is not None:
-        errors.extend(validate_counterexample_analysis(counterexample_analysis))
+        errors.extend(validate_counterexample_analysis(counterexample_analysis, formal_reasoning_plan=formal_reasoning_plan))
     template = _mapping(template_composition)
     formal = _mapping(formal_reasoning_plan)
     counterexamples = _mapping(counterexample_analysis)
@@ -523,18 +548,6 @@ def validate_reasoning_artifacts(
             errors.append("counterexample_analysis_target_claim_must_reference_formal_proposition")
         if counterexamples.get("applicability") == "empirical_consistency":
             errors.append("formal_theorem_and_empirical_consistency_must_remain_separate")
-        declared_assumptions = {
-            str(item.get("assumption_id") or "").strip()
-            for item in _records(formal.get("assumptions"))
-            if str(item.get("assumption_id") or "").strip()
-        }
-        for index, candidate in enumerate(_records(counterexamples.get("candidate_counterexamples"))):
-            checked_assumptions = {
-                str(item.get("assumption_id") or "").strip()
-                for item in _records(candidate.get("assumption_checks"))
-            }
-            if checked_assumptions != declared_assumptions:
-                errors.append(f"counterexample_analysis.candidates[{index}]_must_check_every_declared_assumption")
     if formal.get("applicability") == "empirical_component" and counterexamples.get("applicability") == "formal_theory":
         errors.append("empirical_component_cannot_be_labeled_as_formal_counterexample_analysis")
     research = _mapping(design)

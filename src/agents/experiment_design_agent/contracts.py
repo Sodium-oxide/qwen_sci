@@ -286,6 +286,9 @@ EXPERIMENT_DESIGN_SCHEMA: dict[str, Any] = {
         "evidence_bundle": deepcopy(EVIDENCE_BUNDLE_SCHEMA),
         "variable_claim_model": {"type": "object"},
         "formal_reasoning_plan": {"type": "object"},
+        "formal_verification_report": {"type": "object"},
+        "formal_revision_audit": {"type": "object"},
+        "mathematical_verification_policy": {"type": "object"},
         "counterexample_analysis": {"type": "object"},
         "reasoning_validation_report": {"type": "object"},
         "research_design": {
@@ -570,6 +573,12 @@ def validate_experiment_design(payload: Any) -> list[str]:
             for error in _schema_errors(reasoning_context, REASONING_CONTEXT_SCHEMA)
         )
     from .reasoning_validation import validate_reasoning_artifacts
+    if "formal_verification_report" in payload:
+        from .formal_verification import validate_verification_report
+
+        errors.extend(validate_verification_report(_mapping(payload.get("formal_reasoning_plan")), payload["formal_verification_report"]))
+        if payload.get("mathematical_verification_policy") != _mapping(payload["formal_verification_report"]).get("policy"):
+            errors.append("mathematical_verification_policy_mismatch")
 
     errors.extend(
         validate_reasoning_artifacts(

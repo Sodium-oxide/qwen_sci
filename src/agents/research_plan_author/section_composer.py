@@ -485,7 +485,9 @@ def _artifact_quota_for_route(
         serialized_quota["theory_spine_enabled"] = True
         serialized_quota["theory_unit_requirements"] = unit_requirements
         serialized_quota["no_information_branch_ids"] = no_information_ids
-        if serialized_quota.get("requires_lemma_block") and not collections["lemma_units"]:
+        if serialized_quota.get("requires_lemma_block") and not any(
+            unit.get("source_kind") == "lemma" for unit in collections["lemma_units"]
+        ):
             serialized_quota["requires_lemma_block"] = False
         if serialized_quota.get("requires_dependency_matrix") and not (
             collections["proof_obligations"] or no_information_ids
@@ -527,6 +529,8 @@ def _formal_reference_ids(preparation: Mapping[str, Any]) -> set[str]:
         ("definitions", "definition_id"),
         ("assumptions", "assumption_id"),
         ("propositions", "proposition_id"),
+        ("lemmas", "lemma_id"),
+        ("model_relations", "relation_id"),
         ("proof_obligations", "obligation_id"),
     ):
         for record in plan.get(collection) or []:
@@ -539,6 +543,9 @@ def _formal_reference_ids(preparation: Mapping[str, Any]) -> set[str]:
             identifier = str(step.get("step_id") or "").strip()
             if identifier:
                 identifiers.add(identifier)
+    for attempt in plan.get("proof_attempts", []):
+        for step in attempt.get("steps", []):
+            identifiers.add(f"{attempt['attempt_id']}/{step['step_id']}")
     return identifiers
 
 
@@ -885,9 +892,9 @@ Write with an assertive scholarly voice at the strength actually supported by th
 
 `section_argument_context` divides the paper's intellectual labor. Center the section's `unique_contribution`, use its incoming premises, and leave a concrete transition to the next stage. An owner ledger gives the complete definition or review record. A `consumer_subset` gives only the premises this section needs: use them to derive a new criterion, lemma, comparison, or decision rather than re-listing the ledger. A `reference_only` ledger may be mentioned only as a short dependency consequence. Do not turn unavailable information into repetitive filler.
 
-For a mathematics-theory route, `section_argument_context.theory_spine` is the deterministic audit registry compiled from the frozen handoff. It is not a suggestion to invent new lemmas, proof obligations, falsifiers, branches, formulas, or results. Use only units in this route's spine slice. Put their internal `TS-*` IDs only in a block's optional `theory_unit_ids`; never print those IDs. Use a supplied `display_label` such as `L1`, `PO1`, `F1`, or a readable branch label in visible prose when it improves auditability.
+For a mathematics-theory route, `section_argument_context.theory_spine` is the deterministic audit registry compiled from the frozen handoff. It is not a suggestion to invent new lemmas, proof obligations, falsifiers, branches, formulas, or results. Use only units in this route's spine slice. Put their internal `TS-*` IDs only in a block's optional `theory_unit_ids`; never print those IDs. Preserve the supplied display_label and source_kind: P records are propositions, S records are derivation steps, and only explicit upstream lemmas may be presented as L records or lemma blocks. The legacy collection name lemma_units does not turn propositions or steps into lemmas.
 
-Give mathematical routes distinct work. `candidate_theorem_entry` states the candidate theorem's domain, admissible premises, and a scoped entry lemma. `theory_control_panel` owns the definition ledger, lemma registry, proof-obligation registry, and a dependency-closure matrix. `derivation_and_falsification` consumes the supplied derivation lemmas, explains a numbered equation chain, and gives a falsifier matrix that distinguishes a would-falsify condition, a scope delimiter, and a no-information condition with its response. `preregistered_decision_protocol` gives a decision matrix that maps prespecified outcome branches to the relevant Lemma/PO, allowed conclusion, and next action. A no-information branch means that the dependency does not update theorem status; it is neither proof of failure nor a reason to describe the whole research plan as invalid. If a requested unit slice is empty, state that precise procedural dependency briefly rather than creating a replacement unit.
+Give mathematical routes distinct work. The entry section states the target proposition, domain and premises. The control panel owns definitions, explicit lemmas, proof obligations and dependencies. Derivation consumes supplied proof steps and equations; counterexamples distinguish refutations within the encoded scope, boundary cases and unknown outcomes. Use formal_verification_report for locally computed target status, backend evidence and scope. Numerical checks are not general proofs. DESIGN_ONLY describes experimental execution; when mathematical verification ran, report that activity accurately. If a unit slice is empty, explain the precise missing input instead of inventing a replacement.
 
 `theory_artifact_quota` is a writing task card, not a reason to fabricate or reject the section. Where the task card and upstream formal material support it, produce the stated definition, ledger, proposed proposition, numbered equation, proof obligation, failure condition, and explanatory cross-reference. A `lemma` block is a proposed, source-bounded lemma or lemma registry entry; it must be labeled as Candidate or Unverified in its visible text. A `table` must be a compact Markdown pipe decision matrix with a header and at least two decisions. If an expected mathematical artifact has no supplied basis, state the precise proposed dependency in prose instead of making up a formula.
 
@@ -903,6 +910,9 @@ For the `references` route, use only registered bibliographic inventory metadata
 
 INPUT_JSON:
 """
+    from src.agents.experiment_design_agent.definition_evidence import bounded_prompt_evidence
+
+    payload = bounded_prompt_evidence(payload, {"route": route, "section": blueprint_section})
     return instructions + json.dumps(payload, ensure_ascii=False, sort_keys=True)
 
 
@@ -953,6 +963,10 @@ def _artifact_quota_errors(
     for table in blocks_by_kind.get("table", []):
         errors.extend(_table_shape_errors(table))
     if quota.get("theory_spine_enabled"):
+        explicit_lemma_ids = {unit.get("lemma_id") for unit in _mapping(theory_spine_context).get("lemma_units", []) if unit.get("source_kind") == "lemma"}
+        for block in blocks_by_kind.get("lemma", []):
+            if not explicit_lemma_ids.intersection(block.get("theory_unit_ids", [])):
+                errors.append("lemma block requires an explicit upstream lemma")
         block_unit_ids = {
             _text(block.get("block_id")): {
                 _text(unit_id) for unit_id in block.get("theory_unit_ids") or [] if _text(unit_id)

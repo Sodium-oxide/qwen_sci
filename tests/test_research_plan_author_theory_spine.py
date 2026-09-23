@@ -183,7 +183,7 @@ def test_theory_spine_is_stable_and_references_only_frozen_records() -> None:
         *(unit["branch_id"] for unit in spine["decision_branches"]),
     }
     assert local_ids.isdisjoint(formal_ids | counterexample_ids | outcome_ids | unknown_ids)
-    assert [unit["display_label"] for unit in spine["lemma_units"]] == ["L1", "L2", "L3", "L4"]
+    assert [unit["display_label"] for unit in spine["lemma_units"]] == ["P1", "P2", "S1", "S2"]
     assert [unit["display_label"] for unit in spine["proof_obligations"]] == ["PO1", "PO2"]
 
 
@@ -340,7 +340,7 @@ def test_theory_routes_consume_compiled_units_in_lemmas_and_decision_matrices() 
                 {"block_id": "domain", "kind": "definition", "text": "The candidate theorem is restricted to the declared domain.", "claim_ids": [primary_claim["claim_id"]]},
                 {"block_id": "premises", "kind": "list", "text": "- Retain the declared premise set.\n- Keep the conclusion conditional.", "claim_ids": [primary_claim["claim_id"]]},
                 {"block_id": "relation", "kind": "equation", "text": r"F = G", "claim_ids": [primary_claim["claim_id"]]},
-                {"block_id": "entry-lemma", "kind": "lemma", "text": "Lemma L1 (Candidate): the stated premise has the proposed role in the theorem entry condition.", "claim_ids": [primary_claim["claim_id"]], "reference_block_ids": ["relation"], "theory_unit_ids": [*lemma_ids, *proof_ids]},
+                {"block_id": "entry-proposition", "kind": "proposition", "text": "Proposition P1 (Candidate): the stated premise has the proposed role in the theorem entry condition.", "claim_ids": [primary_claim["claim_id"]], "reference_block_ids": ["relation"], "theory_unit_ids": [*lemma_ids, *proof_ids]},
                 {"block_id": "candidate", "kind": "proposition", "text": "The candidate conclusion remains unverified until its registered proof obligations close.", "claim_ids": [primary_claim["claim_id"]], "reference_block_ids": ["relation"]},
             ]
         elif section_id == "definitions_and_propositions":
@@ -349,7 +349,7 @@ def test_theory_routes_consume_compiled_units_in_lemmas_and_decision_matrices() 
                 {"block_id": "ledger", "kind": "definition", "text": "The definition ledger retains supplied symbols and their declared status.", "claim_ids": [primary_claim["claim_id"]]},
                 {"block_id": "assumptions", "kind": "list", "text": "- Use each supplied premise only within its stated domain.\n- Route unresolved inputs to their proof obligations.", "claim_ids": [primary_claim["claim_id"]]},
                 {"block_id": "relation", "kind": "equation", "text": r"C \geq C_{\mathrm{threshold}}", "claim_ids": [primary_claim["claim_id"]]},
-                {"block_id": "lemma-registry", "kind": "lemma", "text": "Lemma registry (Candidate): the listed units are audit labels for supplied formal records.", "claim_ids": [primary_claim["claim_id"]], "reference_block_ids": ["relation"], "theory_unit_ids": lemma_ids},
+                {"block_id": "proposition-registry", "kind": "proposition", "text": "Proposition registry (Candidate): the listed units retain supplied formal identities.", "claim_ids": [primary_claim["claim_id"]], "reference_block_ids": ["relation"], "theory_unit_ids": lemma_ids},
                 {"block_id": "obligation", "kind": "proposition", "text": "Each registered proof obligation remains unverified until its required input is available.", "claim_ids": [primary_claim["claim_id"]], "reference_block_ids": ["relation"], "theory_unit_ids": proof_ids},
                 {"block_id": "dependency-matrix", "kind": "table", "text": "Dependency | Affected lemma | Status | Branch | Next action\nPO1 | L1 | Unverified | No-information | Resolve the supplied input\nD4 | L2 | Candidate | No-information | Review the definition", "claim_ids": [primary_claim["claim_id"]], "theory_unit_ids": [*proof_ids, *branch_ids]},
             ]
@@ -360,7 +360,7 @@ def test_theory_routes_consume_compiled_units_in_lemmas_and_decision_matrices() 
                 {"block_id": "setup", "kind": "definition", "text": "The derivation consumes only the supplied candidate premises.", "claim_ids": [primary_claim["claim_id"]]},
                 {"block_id": "premises", "kind": "list", "text": "- Preserve the declared scope.\n- Do not update theorem status when a dependency is unavailable.", "claim_ids": [primary_claim["claim_id"]]},
                 {"block_id": "relation", "kind": "equation", "text": r"\theta \leq 0", "claim_ids": [primary_claim["claim_id"]]},
-                {"block_id": "derivation-lemma", "kind": "lemma", "text": "Lemma L3 (Unverified): the supplied derivation step is conditional on its registered premises.", "claim_ids": [primary_claim["claim_id"]], "reference_block_ids": ["relation"], "theory_unit_ids": lemma_ids},
+                {"block_id": "derivation-step", "kind": "paragraph", "text": "Step S1 (Unverified): the supplied derivation step is conditional on its registered premises.", "claim_ids": [primary_claim["claim_id"]], "reference_block_ids": ["relation"], "theory_unit_ids": lemma_ids},
                 {"block_id": "obligation", "kind": "proposition", "text": "The derivation remains unverified pending the linked proof obligations.", "claim_ids": [primary_claim["claim_id"]], "reference_block_ids": ["relation"], "theory_unit_ids": proof_ids},
                 {"block_id": "falsifier-matrix", "kind": "table", "text": "Target lemma | Classification | No-information condition | Response\nL3 | Scope delimiter | Premise fails | Record the boundary\nL4 | Assumptions not satisfied | PO remains open | Withhold theorem-status update", "claim_ids": [counterexample_claim["claim_id"]], "theory_unit_ids": [*falsifier_ids, *branch_ids]},
             ]
@@ -406,7 +406,7 @@ def test_theory_routes_consume_compiled_units_in_lemmas_and_decision_matrices() 
             source_registry=registry,
             llm_call=lambda _prompt, **_kwargs: deepcopy(candidate),
         )
-        assert any(block["kind"] == "lemma" for block in section["blocks"])
+        assert not any(block["kind"] == "lemma" for block in section["blocks"])
         assert audit is None
         foreign_ids = [
             unit_id
@@ -446,7 +446,7 @@ def test_theory_routes_consume_compiled_units_in_lemmas_and_decision_matrices() 
             llm_call=lambda _prompt, **_kwargs: deepcopy(leaked_identifier),
         )
         assert "TS-L-1" not in normalized["blocks"][0]["text"]
-        assert "L1" in normalized["blocks"][0]["text"]
+        assert "P1" in normalized["blocks"][0]["text"]
 
 
 def test_theory_role_activates_the_quota_for_discipline_31() -> None:

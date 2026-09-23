@@ -136,6 +136,8 @@ def build_authoring_knowledge_base(
             "research_design": deepcopy(author_context.get("research_design")),
             "hypothesis_mapping": deepcopy(author_context.get("hypothesis_mapping")),
             "formal_reasoning": deepcopy(author_context.get("formal_reasoning")),
+            "formal_verification_report": deepcopy(author_context.get("formal_verification_report")),
+            "formal_revision_audit": deepcopy(author_context.get("formal_revision_audit")),
             "counterexample_analysis": deepcopy(author_context.get("counterexample_analysis")),
             "outcome_branches": deepcopy(author_context.get("outcome_branches")),
             "reasoning_context": deepcopy(author_context.get("reasoning_context")),

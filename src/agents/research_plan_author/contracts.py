@@ -124,6 +124,9 @@ AUTHOR_INPUT_SCHEMA: dict[str, Any] = {
         "field_statuses": {"type": "object", "additionalProperties": _NONEMPTY_STRING},
         "reasoning_context": deepcopy(REASONING_CONTEXT_SCHEMA),
         "formal_reasoning": _OBJECT,
+        "formal_verification_report": _OBJECT,
+        "formal_revision_audit": _OBJECT,
+        "mathematical_verification_policy": _OBJECT,
         "counterexample_analysis": _OBJECT,
         "outcome_branches": {"type": "array"},
         "unknown_items": {"type": "array"},
@@ -393,6 +396,10 @@ def validate_author_input(payload: object) -> list[str]:
     if not isinstance(payload, Mapping):
         return errors
     handoff = dict(payload)
+    if "formal_verification_report" in handoff:
+        from src.agents.experiment_design_agent.formal_verification import validate_verification_report
+
+        errors.extend(validate_verification_report(_mapping(handoff.get("formal_reasoning")), handoff["formal_verification_report"]))
     selected_direction = _mapping(handoff.get("selected_direction"))
     if not _text(selected_direction.get("id")):
         errors.append("selected_direction.id is required")

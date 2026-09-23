@@ -289,6 +289,10 @@ def _compact_source_registry(evidence_bundle: Mapping[str, Any]) -> dict[str, An
 
 
 def _formal_reasoning_summary(plan: Mapping[str, Any]) -> dict[str, Any]:
+    from .formal_contracts import author_formal_payload
+
+    if plan.get("schema_version") == "formal_reasoning_plan_v2":
+        return author_formal_payload(plan)
     def records(collection: str, identifier: str, fields: tuple[str, ...]) -> list[dict[str, Any]]:
         output: list[dict[str, Any]] = []
         for raw in plan.get(collection) or []:
@@ -306,11 +310,12 @@ def _formal_reasoning_summary(plan: Mapping[str, Any]) -> dict[str, Any]:
         "status": _text(plan.get("status")),
         "target_proposition_id": _text(plan.get("target_proposition_id") or forward.get("target_proposition_id")),
         "final_conclusion": _text(plan.get("final_conclusion") or forward.get("final_conclusion")),
-        "assumptions": records("assumptions", "assumption_id", ("assumption_id", "statement", "status", "variable_references", "symbol_references")),
-        "definitions": records("definitions", "definition_id", ("definition_id", "symbol", "statement", "status", "variable_references", "symbol_references")),
-        "propositions": records("propositions", "proposition_id", ("proposition_id", "statement", "status", "variable_references", "symbol_references")),
-        "proof_obligations": records("proof_obligations", "obligation_id", ("obligation_id", "statement", "status", "proposition_id", "variable_references", "symbol_references")),
+        **{collection: deepcopy(plan.get(collection) or []) for collection in (
+            "assumptions", "definitions", "propositions", "proof_obligations",
+            "lemmas", "model_relations", "proof_attempts", "global_assumption_ids",
+        )},
         "forward_derivation": {
+            **deepcopy(forward),
             "status": _text(forward.get("status")),
             "steps": [
                 {key: deepcopy(step[key]) for key in ("step_id", "premises", "status", "symbol_references", "variable_references", "rule_or_lemma", "derived_statement") if key in step}
@@ -329,10 +334,11 @@ def _counterexample_summary(analysis: Mapping[str, Any]) -> dict[str, Any]:
         "status": _text(analysis.get("status")),
         "target_claim_id": _text(analysis.get("target_claim_id")),
         "negated_conclusion": _text(analysis.get("negated_conclusion")),
+        "target_specification": deepcopy(analysis.get("target_specification", {})),
         "candidate_counterexamples": [
             {
                 key: deepcopy(candidate[key])
-                for key in ("counterexample_id", "witness", "validity", "search_method", "assumption_checks", "conclusion_check")
+                for key in ("counterexample_id", "witness", "witness_assignment", "validity", "search_method", "assumption_checks", "conclusion_check")
                 if key in candidate
             }
             for candidate in analysis.get("candidate_counterexamples") or []
@@ -377,6 +383,7 @@ def build_author_handoff(
         "reasoning_context": deepcopy(_mapping(brief.get("reasoning_context"))),
         "formal_reasoning": _formal_reasoning_summary(_mapping(design.get("formal_reasoning_plan"))),
         "counterexample_analysis": _counterexample_summary(_mapping(design.get("counterexample_analysis"))),
+        **{field: deepcopy(design[field]) for field in ("formal_verification_report", "formal_revision_audit", "mathematical_verification_policy") if field in design},
         "outcome_branches": deepcopy(design.get("outcome_branches") or []),
         "unknown_items": _canonical_unknown_items(design),
         "review_items": _canonical_review_items(design),
@@ -530,6 +537,8 @@ def render_markdown(
         ("Data Governance and Reproducibility", design.get("data_governance_and_reproducibility", {})),
         ("Evidence Bundle and Coverage Ledger", design.get("evidence_bundle", {})),
         ("Formal Reasoning Plan", design.get("formal_reasoning_plan", {})),
+        ("Mathematical Verification Results", design.get("formal_verification_report", {})),
+        ("Scientific Revision History", design.get("formal_revision_audit", {})),
         ("Counterexample Analysis", design.get("counterexample_analysis", {})),
         ("Expected Outcome Branches", design.get("outcome_branches", [])),
         ("Unknown Items", _canonical_unknown_items(design)),

@@ -115,6 +115,8 @@ def _formal_records(author_context: Mapping[str, Any]) -> tuple[dict[str, dict[s
         ("definitions", "definition_id", "definition"),
         ("assumptions", "assumption_id", "assumption"),
         ("propositions", "proposition_id", "proposition"),
+        ("lemmas", "lemma_id", "lemma"),
+        ("model_relations", "relation_id", "model_relation"),
         ("proof_obligations", "obligation_id", "proof_obligation"),
     )
     for collection, identifier_field, kind in collections:
@@ -127,6 +129,14 @@ def _formal_records(author_context: Mapping[str, Any]) -> tuple[dict[str, dict[s
         identifier = _text(record.get("step_id"))
         records.setdefault(identifier, record)
         kinds.setdefault(identifier, "forward_derivation_step")
+    for attempt in formal_reasoning.get("proof_attempts", []):
+        local_steps = {step["step_id"] for step in attempt.get("steps", [])}
+        for record in _stable_records(attempt.get("steps"), identifier_field="step_id"):
+            identifier = f"{attempt['attempt_id']}/{record['step_id']}"
+            record = deepcopy(record)
+            record["premises"] = [f"{attempt['attempt_id']}/{premise}" if premise in local_steps else premise for premise in record.get("premises", [])]
+            records[identifier] = record
+            kinds[identifier] = "forward_derivation_step"
     return records, kinds
 
 
@@ -190,6 +200,7 @@ def _explicit_formal_references(record: Mapping[str, Any], formal_ids: set[str])
         "assumption_ids",
         "formal_reference_ids",
         "required_formal_reference_ids",
+        "required_obligation_ids",
     )
     return references & formal_ids
 
@@ -258,6 +269,7 @@ def build_theory_spine(
     author_context = _mapping(_mapping(preparation.get("source_bundle")).get("author_context"))
     formal_reasoning = _mapping(author_context.get("formal_reasoning"))
     formal_by_id, formal_kinds = _formal_records(author_context)
+    verification_summaries = {item["target_id"]: item for item in _mapping(author_context.get("formal_verification_report")).get("target_summaries", [])}
     formal_ids = set(formal_by_id)
     assumption_records = {
         identifier: record
@@ -285,7 +297,7 @@ def build_theory_spine(
     lemma_sources = [
         (identifier, record)
         for identifier, record in formal_by_id.items()
-        if formal_kinds.get(identifier) in {"proposition", "forward_derivation_step"}
+        if formal_kinds.get(identifier) in {"proposition", "forward_derivation_step", "lemma"}
     ]
     lemma_sources.sort(key=lambda item: (0 if formal_kinds[item[0]] == "proposition" else 1, item[0], _canonical_json(item[1])))
     lemma_units: list[dict[str, Any]] = []
@@ -294,17 +306,21 @@ def build_theory_spine(
         lemma_id = f"TS-L-{index}"
         lemma_id_by_source_id[source_id] = lemma_id
         premise_ids = _explicit_formal_references(record, formal_ids)
-        premise_ids.update(_matching_formal_ids(record, candidates=assumption_records))
-        related_proof_ids = _matching_formal_ids(record, candidates=proof_records)
+        if formal_reasoning.get("schema_version") != "formal_reasoning_plan_v2":
+            premise_ids.update(_matching_formal_ids(record, candidates=assumption_records))
+        related_proof_ids = {identifier for identifier, proof in proof_records.items() if proof.get("target_id") == source_id}
+        if formal_reasoning.get("schema_version") != "formal_reasoning_plan_v2":
+            related_proof_ids.update(_matching_formal_ids(record, candidates=proof_records))
         lemma_units.append(
             {
                 "lemma_id": lemma_id,
-                "display_label": f"L{index}",
+                "display_label": source_id,
                 "source_kind": formal_kinds[source_id],
                 "source_formal_reference_ids": [source_id],
                 "premise_ids": sorted(premise_ids),
                 "status": _status(record.get("status")),
                 "source_status": _text(record.get("status")),
+                "verification_summary": deepcopy(verification_summaries.get(source_id, {})),
                 "proof_obligation_ids": sorted(related_proof_ids),
                 "falsifier_ids": [],
                 "decision_branch_ids": [],
@@ -355,7 +371,7 @@ def build_theory_spine(
     proof_obligations: list[dict[str, Any]] = []
     for index, (source_id, record) in enumerate(sorted(proof_records.items()), start=1):
         local_id = f"TS-PO-{index}"
-        matching_dependencies = _matching_formal_ids(record, candidates={
+        matching_dependencies = set() if formal_reasoning.get("schema_version") == "formal_reasoning_plan_v2" else _matching_formal_ids(record, candidates={
             identifier: candidate
             for identifier, candidate in formal_by_id.items()
             if formal_kinds.get(identifier) in {"definition", "assumption", "proposition", "forward_derivation_step"}
@@ -587,6 +603,9 @@ def validate_theory_spine(
             if set(unknown_references) - unknown_ids:
                 errors.append(f"{collection}/{index}/source_unknown_item_ids contains an unknown source item")
             if collection == "lemma_units":
+                source_ids = _text_list(record.get("source_formal_reference_ids"))
+                if len(source_ids) == 1 and record.get("display_label") != source_ids[0]:
+                    errors.append(f"lemma_units/{index}/display_label must preserve upstream identity")
                 if set(_text_list(record.get("premise_ids"))) - formal_ids:
                     errors.append(f"lemma_units/{index}/premise_ids contains an unknown formal reference")
                 if set(_text_list(record.get("proof_obligation_ids"))) - proof_obligation_ids:

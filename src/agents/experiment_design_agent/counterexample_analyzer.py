@@ -6,6 +6,7 @@ from collections.abc import Callable, Mapping
 from typing import Any
 
 from .formal_reasoning_planner import FORMAL_REASONING_PLAN_SCHEMA_VERSION
+from .formal_dependency import build_counterexample_target
 from .llm_json import call_required_json_with_logging, json_prompt_payload, validation_summary
 from .reasoning_validation import validate_counterexample_analysis
 
@@ -52,6 +53,8 @@ Return exactly this shape:
   ]
 }
 
+Use the supplied target_specification. A counterexample to A implies C requires A AND NOT C, never NOT A OR NOT C. Check every required_assumption_id; other declared assumptions are supplementary and cannot block this target. Target domains and definition conditions remain required. Do not replace the target with an empirical alternative explanation. When the witness has concrete values for all quantified symbols, include witness_assignment as an object mapping symbol names to rational number strings. Do not fabricate values when the witness is only qualitative.
+
 INPUT_JSON:
 """
 
@@ -71,6 +74,11 @@ def build_counterexample_analyzer_prompt(
         "formal_reasoning_plan": dict(formal_reasoning_plan),
         "execution_mode": "DESIGN_ONLY",
     }
+    target_id = formal_reasoning_plan.get("forward_derivation", {}).get("target_proposition_id")
+    if not target_id and formal_reasoning_plan.get("propositions"):
+        target_id = formal_reasoning_plan["propositions"][0]["proposition_id"]
+    if target_id:
+        payload["target_specification"] = build_counterexample_target(formal_reasoning_plan, str(target_id))
     return COUNTEREXAMPLE_ANALYZER_PROMPT + json_prompt_payload(payload)
 
 
@@ -171,7 +179,14 @@ class CounterexampleAnalyzer:
             logger=logger,
             brief_id=effective_brief_id,
         )
-        errors = validate_counterexample_analysis(payload)
+        target_id = str(payload.get("target_claim_id") or "")
+        if target_id:
+            target = build_counterexample_target(formal_reasoning_plan, target_id)
+            payload["target_specification"] = target
+            payload["negated_conclusion"] = f"NOT ({next(record['conclusion'] for record in formal_reasoning_plan['propositions'] if record['proposition_id'] == target_id)})"
+        elif formal_reasoning_plan.get("propositions"):
+            raise ValueError("counterexample_analysis_missing_target_claim")
+        errors = validate_counterexample_analysis(payload, formal_reasoning_plan=formal_reasoning_plan)
         if logger is not None:
             logger.event(
                 "counterexample_analyzer",

@@ -323,6 +323,12 @@ def build_default_json_llm_call(
             raise RequiredJsonLLMError(
                 "experiment_design: no model is configured for the experiment-design LLM role"
             )
+        kwargs.setdefault("timeout", float(experiment_design_setting("request_timeout_seconds", 600)))
+        with_options = getattr(getattr(agent, "chat_model", None), "with_options", None)
+        if callable(with_options):
+            agent.chat_model = with_options(
+                max_retries=max(0, int(experiment_design_setting("request_max_retries", 1)))
+            )
         return agent.chat(prompt, model=resolved_model, **kwargs)
 
     return _call
