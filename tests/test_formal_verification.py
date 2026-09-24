@@ -1,8 +1,11 @@
 from copy import deepcopy
 import subprocess
+from threading import Lock
+from time import sleep
+import json
 
 from test_formal_contracts_v2 import formal_plan
-from src.agents.experiment_design_agent.formal_verification import build_verification_task, run_verification_task, verify_formal_plan
+from src.agents.experiment_design_agent.formal_verification import build_verification_task, verify_formal_plan
 from src.agents.experiment_design_agent.formal_revision import apply_semantic_revision, run_formal_revision_loop
 
 
@@ -132,6 +135,57 @@ def test_revision_budget_and_preservation_of_unrelated_objects():
         apply_semantic_revision(plan, {"schema_version": "formal_revision_patch_v1", "reason": "change unrelated", "replacements": [{"collection": "definitions", "record": plan["definitions"][0]}]}, {"P1"})
 
 
+def test_revision_sends_one_target_subgraph_per_request():
+    plan = formal_plan()
+    second = deepcopy(plan["propositions"][0])
+    second["proposition_id"] = "P2"
+    plan["propositions"].append(second)
+    seen = []
+
+    def no_change(prompt, **_kwargs):
+        payload = json.loads(prompt.split("INPUT_JSON:\n", 1)[1])
+        seen.append(payload["target_ids"])
+        assert len(payload["plan"]["propositions"]) == 1
+        return {"schema_version": "formal_revision_patch_v1", "reason": "No supported change", "replacements": [], "additions": [], "proof_attempts": []}
+
+    _current, _report, audit = run_formal_revision_loop(
+        plan, {"verification": {"enabled": False}, "max_semantic_revisions": 2},
+        llm_call=no_change,
+    )
+
+    assert seen == [["P1"], ["P2"]]
+    assert [item["status"] for item in audit["iterations"]] == ["no_progress", "no_progress"]
+
+
+def test_verification_runs_independent_targets_concurrently(monkeypatch):
+    import src.agents.experiment_design_agent.formal_verification as module
+
+    plan = formal_plan()
+    second = deepcopy(plan["propositions"][0])
+    second["proposition_id"] = "P2"
+    plan["propositions"].append(second)
+    lock = Lock()
+    active = 0
+    peak = 0
+
+    def execute(task, *, enabled=True):
+        nonlocal active, peak
+        with lock:
+            active += 1
+            peak = max(peak, active)
+        sleep(0.03)
+        with lock:
+            active -= 1
+        return {**task, "result": "unsupported", "evidence_kind": "none", "executed": False}
+
+    monkeypatch.setattr(module, "run_verification_task", execute)
+    report = verify_formal_plan(plan, {"enabled": True, "backends": ["z3"], "max_parallel_tasks": 2})
+
+    assert peak == 2
+    assert report["task_summary"]["task_count"] == 2
+    assert {item["target_id"] for item in report["results"]} == {"P1", "P2"}
+
+
 def test_analyzer_candidate_is_checked_and_remains_numerical_evidence():
     plan = formal_plan()
     plan["propositions"][0]["conclusion_expression"]["args"][1] = {"number": "1"}
@@ -181,6 +235,29 @@ def test_revision_verification_exception_keeps_original_plan_and_report(monkeypa
     assert current == plan
     assert report == original_report
     assert audit["iterations"][-1]["status"] == "stopped"
+
+
+def test_revision_target_preparation_failure_is_recorded(monkeypatch):
+    import src.agents.experiment_design_agent.formal_revision as revision_module
+
+    plan = formal_plan()
+    original_report = verify_formal_plan(plan, {"enabled": False})
+
+    def broken_target_subgraph(*_args):
+        raise ValueError("broken target dependency")
+
+    def unexpected_request(*_args, **_kwargs):
+        raise AssertionError("request must not run")
+
+    monkeypatch.setattr(revision_module, "target_subgraph", broken_target_subgraph)
+    current, report, audit = run_formal_revision_loop(
+        plan, {"verification": {"enabled": False}, "max_semantic_revisions": 2},
+        llm_call=unexpected_request,
+    )
+    assert current == plan
+    assert report == original_report
+    assert audit["iterations"][0]["status"] == "stopped"
+    assert "broken target dependency" in audit["iterations"][0]["reason"]
 
 
 def test_counterexample_drives_a_versioned_repaired_proposition():

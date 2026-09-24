@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-from src.agents.experiment_design_agent.formal_dependency import build_counterexample_target
+from src.agents.experiment_design_agent.formal_dependency import build_counterexample_target, target_subgraph
 from src.agents.experiment_design_agent.artifacts import _formal_reasoning_summary
 from src.agents.experiment_design_agent.reasoning_validation import validate_counterexample_analysis
 
@@ -32,6 +32,15 @@ def test_global_and_transitive_assumptions_are_required():
     formal["definitions"][0].pop("depends_on")
     formal["global_assumption_ids"] = ["A2"]
     assert build_counterexample_target(formal, "P1")["required_assumption_ids"] == ["A1", "A2"]
+
+
+def test_target_subgraph_includes_proof_obligation_dependencies():
+    formal = plan()
+    formal["propositions"][0]["required_obligation_ids"] = ["PO1"]
+    formal["proof_obligations"][0]["premises"] = ["A2"]
+    local = target_subgraph(formal, "P1")
+    assert [item["obligation_id"] for item in local["proof_obligations"]] == ["PO1"]
+    assert {item["assumption_id"] for item in local["assumptions"]} == {"A1", "A2"}
 
 
 def test_author_handoff_retains_mathematical_content():

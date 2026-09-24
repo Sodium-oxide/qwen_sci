@@ -420,7 +420,7 @@ _COUNTEREXAMPLE_VALIDITIES = {
 }
 
 
-def validate_counterexample_analysis(
+def _validate_single_counterexample_analysis(
     payload: Any, *, formal_reasoning_plan: Mapping[str, Any] | None = None,
 ) -> list[str]:
     from .formal_dependency import build_counterexample_target
@@ -503,6 +503,45 @@ def validate_counterexample_analysis(
     exhaustiveness = _mapping(analysis.get("exhaustiveness"))
     if exhaustiveness.get("is_exhaustive") is True:
         errors.append("counterexample_analysis_finite_or_llm_search_cannot_prove_exhaustiveness")
+    return errors
+
+
+def validate_counterexample_analysis(
+    payload: Any, *, formal_reasoning_plan: Mapping[str, Any] | None = None,
+) -> list[str]:
+    errors = _validate_single_counterexample_analysis(
+        payload, formal_reasoning_plan=formal_reasoning_plan,
+    )
+    analyses = _mapping(payload).get("target_analyses")
+    if analyses is None:
+        return errors
+    if not isinstance(analyses, list) or not analyses:
+        return [*errors, "counterexample_target_analyses_not_array"]
+    seen = set()
+    for index, analysis in enumerate(analyses):
+        if not isinstance(analysis, Mapping):
+            errors.append(f"counterexample_target_analyses[{index}]_not_object")
+            continue
+        target_id = str(analysis.get("target_claim_id") or "")
+        if not target_id or target_id in seen:
+            errors.append(f"counterexample_target_analyses[{index}]_missing_or_duplicate_target")
+        seen.add(target_id)
+        errors.extend(
+            f"target_analyses[{index}].{error}"
+            for error in _validate_single_counterexample_analysis(
+                analysis, formal_reasoning_plan=formal_reasoning_plan,
+            )
+        )
+    if isinstance(analyses[0], Mapping) and _mapping(payload).get("target_claim_id") != analyses[0].get("target_claim_id"):
+        errors.append("counterexample_primary_target_mismatch")
+    if formal_reasoning_plan is not None:
+        required = {
+            str(record.get("proposition_id"))
+            for record in formal_reasoning_plan.get("propositions", [])
+            if isinstance(record, Mapping) and record.get("proposition_id")
+        }
+        if not required <= seen:
+            errors.append("counterexample_missing_proposition_analysis")
     return errors
 
 

@@ -241,6 +241,8 @@ def normalize_definition_conditions(payload):
 def keep_group_definitions(payload, group, assigned):
     """Discard primary definitions for other groups; they will be requested there."""
     current_ids = {str(variable["variable_id"]) for variable in group}
+    if not current_ids:
+        return deepcopy(payload), []
     foreign_ids = set(assigned.values()) - {assigned[variable_id] for variable_id in current_ids}
     filtered = deepcopy(payload)
     retained = []
@@ -261,13 +263,122 @@ def keep_group_definitions(payload, group, assigned):
     return filtered, dropped
 
 
+def namespace_group_records(payload, *, id_prefix, primary_ids):
+    if not isinstance(payload, Mapping):
+        return payload, []
+    normalized = deepcopy(payload)
+    redirects = {}
+    for collection, id_field in (("definitions", "definition_id"), ("model_relations", "relation_id")):
+        for record in normalized.get(collection, []):
+            if not isinstance(record, Mapping):
+                continue
+            identifier = record.get(id_field)
+            if not isinstance(identifier, str) or not identifier.strip():
+                continue
+            if (collection == "definitions" and identifier in primary_ids) or identifier.startswith(id_prefix):
+                continue
+            renamed = f"{id_prefix}{identifier}"
+            record[id_field] = renamed
+            redirects[identifier] = renamed
+    if redirects:
+        for collection in ("definitions", "model_relations"):
+            for record in normalized.get(collection, []):
+                if isinstance(record, Mapping) and isinstance(record.get("depends_on"), list):
+                    record["depends_on"] = [redirects.get(item, item) for item in record["depends_on"]]
+        for item in normalized.get("unknown_items", []) if isinstance(normalized.get("unknown_items"), list) else []:
+            if isinstance(item, Mapping) and isinstance(item.get("field_path"), str):
+                item["field_path"] = ".".join(redirects.get(part, part) for part in item["field_path"].split("."))
+    return normalized, [f"{old}->{new}" for old, new in sorted(redirects.items())]
+
+
+def normalize_model_relations(payload, *, id_prefix):
+    if not isinstance(payload, Mapping) or not isinstance(payload.get("model_relations"), list):
+        return payload, [], []
+    normalized = deepcopy(payload)
+    relations = normalized["model_relations"]
+    existing_ids = {
+        relation.get("relation_id") for relation in relations
+        if isinstance(relation, Mapping) and isinstance(relation.get("relation_id"), str)
+        and relation["relation_id"].strip()
+    }
+    repaired = []
+    quarantined = []
+    retained = []
+    for index, relation in enumerate(relations):
+        path = f"model_relations[{index}]"
+        if isinstance(relation, list) and len(relation) == 1 and isinstance(relation[0], Mapping):
+            relation = relation[0]
+            repaired.append(f"{path}: unwrapped one relation object")
+        if isinstance(relation, str) and relation.strip():
+            assigned_id = f"{id_prefix}R{index + 1}"
+            while assigned_id in existing_ids:
+                assigned_id += "_"
+            retained.append({
+                "relation_id": assigned_id,
+                "statement": relation.strip(),
+                "expression_latex": "",
+                "formal_expression": None,
+                "depends_on": [],
+                "symbol_references": [],
+                "variable_references": [],
+                "status": "unresolved",
+                "origin": "unresolved",
+                "source_refs": [],
+                "scope": "",
+                "conditions": [],
+                "condition_expressions": [],
+                "selection_reason": "Relation returned as unstructured text; mathematical interpretation requires review.",
+            })
+            existing_ids.add(assigned_id)
+            repaired.append(f"{path}: preserved unstructured text as unresolved {assigned_id}")
+            if isinstance(normalized.get("unknown_items"), list):
+                normalized["unknown_items"].append({
+                    "field_path": path,
+                    "reason": f"{path}: relation was unstructured text; formal expression and provenance require human review.",
+                    "status": "needs_human_input",
+                    "category": "shape_repair",
+                })
+            continue
+        if not isinstance(relation, Mapping):
+            detail = f"{path}: expected object, got {type(relation).__name__}"
+            quarantined.append(detail)
+            if isinstance(normalized.get("unknown_items"), list):
+                unknown = {
+                    "field_path": path,
+                    "reason": detail + "; relation content requires human review.",
+                    "status": "needs_human_input",
+                    "category": "shape_repair",
+                }
+                if relation is not None:
+                    snapshot = json.dumps(relation, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+                    unknown["raw_excerpt"] = snapshot[:4000]
+                    unknown["raw_excerpt_truncated"] = len(snapshot) > 4000
+                normalized["unknown_items"].append(unknown)
+            continue
+        relation_id = relation.get("relation_id")
+        if not isinstance(relation_id, str) or not relation_id.strip():
+            assigned_id = f"{id_prefix}R{index + 1}"
+            while assigned_id in existing_ids:
+                assigned_id += "_"
+            relation["relation_id"] = assigned_id
+            existing_ids.add(assigned_id)
+            repaired.append(
+                f"{path}.relation_id: assigned {assigned_id} "
+                f"from {type(relation_id).__name__}"
+            )
+        retained.append(relation)
+    normalized["model_relations"] = retained
+    return normalized, repaired, quarantined
+
+
 class FormalDefinitionResolver:
     def resolve(self, research_brief, reasoning_context, variable_claim_model, evidence_bundle, *, llm_call, logger=None, settings=None, cache_identity=None):
         settings = dict(settings or {})
         card_limit = max(1, min(40, int(settings.get("max_cards_per_request", 40))))
         initial_limit = min(card_limit, max(1, int(settings.get("initial_cards", 16))))
         max_chars = max(1000, int(settings.get("max_prompt_chars", 120000)))
-        rounds = max(0, min(3, int(settings.get("max_supplement_rounds", 2))))
+        rounds = max(0, min(3, int(settings.get("max_supplement_rounds", 1))))
+        supplement_limit = min(card_limit, max(1, int(settings.get("supplement_cards", 10))))
         group_size = max(1, min(8, int(settings.get("variables_per_group", 4))))
         cards = evidence_cards(evidence_bundle or {})
         index = DefinitionEvidenceIndex(cards)
@@ -284,6 +395,7 @@ class FormalDefinitionResolver:
             seen = set()
             available = {}
             query = {"variables": group}
+            previous_gaps = None
             for round_number in range(rounds + 1):
                 context = {
                 "research_brief": research_brief, "reasoning_context": reasoning_context,
@@ -298,7 +410,7 @@ class FormalDefinitionResolver:
                 budget = max_chars - len(prefix) - len(json_prompt_payload(context)) - 100
                 if budget < 0:
                     raise ValueError("definition_context_exceeds_prompt_budget")
-                selected = index.select(query, limit=initial_limit if round_number == 0 else card_limit, max_chars=budget, excluded=seen)
+                selected = index.select(query, limit=initial_limit if round_number == 0 else supplement_limit, max_chars=budget, excluded=seen)
                 if round_number and not selected:
                     break
                 available.update({card["card_id"]: card for card in selected})
@@ -320,30 +432,68 @@ class FormalDefinitionResolver:
                 else:
                     current = cached
                 current, dropped = keep_group_definitions(current, group, assigned)
+                current, renamed_ids = namespace_group_records(
+                    current, id_prefix=f"G{group_number}_",
+                    primary_ids={assigned[variable["variable_id"]] for variable in group},
+                )
+                current, repaired_relations, quarantined_relations = normalize_model_relations(
+                    current, id_prefix=f"G{group_number}_",
+                )
                 current, normalized_fields = normalize_definition_conditions(current)
-                if logger is not None and (dropped or normalized_fields):
+                if logger is not None and (dropped or renamed_ids or normalized_fields or repaired_relations or quarantined_relations):
                     logger.event(
                         "formal_definition_resolver", "response_shape_repaired", status="REPAIRED",
                         brief_id=brief_id, group_number=group_number,
                         discarded_out_of_group_definition_ids=dropped,
+                        namespaced_record_ids=renamed_ids,
                         normalized_condition_fields=normalized_fields,
+                        assigned_relation_ids=repaired_relations,
+                        quarantined_relation_errors=quarantined_relations,
                     )
                 self._validate(current, {"evidence_cards": list(available.values())})
                 if cached is None:
                     cache.write("definition_groups", identity, current)
                 audit.append({"group": group_number, "round": round_number, "card_ids": [card["card_id"] for card in selected], "prompt_chars": len(prompt), "cache_hit": cached is not None})
+                relation_review_count = sum(
+                    isinstance(item, Mapping)
+                    and item.get("category") == "shape_repair"
+                    and str(item.get("field_path") or "").startswith("model_relations")
+                    for item in current["unknown_items"]
+                )
                 if logger is not None:
-                    logger.event("formal_definition_resolver", "group_completed", status="COMPLETED", brief_id=brief_id,
-                                 group_number=group_number, supplement_round=round_number, definition_count=len(current["definitions"]))
+                    logger.event("formal_definition_resolver", "group_completed",
+                                 level="WARNING" if relation_review_count else "INFO",
+                                 status="DEGRADED" if relation_review_count else "COMPLETED", brief_id=brief_id,
+                                 group_number=group_number, supplement_round=round_number,
+                                 definition_count=len(current["definitions"]),
+                                 relation_review_count=relation_review_count,
+                                 requires_human_review=bool(relation_review_count))
                 missing = self._missing(current, group)
-                requests = current.get("evidence_requests", [])
+                requests = [
+                    item for item in current.get("evidence_requests", [])
+                    if isinstance(item, Mapping) and str(item.get("query") or "").strip()
+                ]
                 actionable_unknown_items = [
                     item for item in current.get("unknown_items", [])
                     if not isinstance(item, Mapping) or item.get("category") != "shape_repair"
                 ]
-                if not missing and not requests and not actionable_unknown_items and not any(relation.get("status") == "unresolved" for relation in current["model_relations"]):
+                if not missing and not requests:
                     break
-                query = {"variables": group, "missing": missing, "requests": requests, "unknown_items": actionable_unknown_items}
+                gaps = (
+                    tuple(sorted(missing)),
+                    tuple(sorted(str(item["query"]).strip() for item in requests)),
+                    tuple(sorted(str(relation.get("relation_id")) for relation in current["model_relations"]
+                                 if relation.get("status") == "unresolved")),
+                )
+                if gaps == previous_gaps:
+                    if logger is not None:
+                        logger.event("formal_definition_resolver", "supplement_skipped", status="NO_PROGRESS",
+                                     brief_id=brief_id, group_number=group_number,
+                                     supplement_round=round_number, reason="unchanged_definition_gaps")
+                    break
+                previous_gaps = gaps
+                query = {"variables": group, "missing": missing, "requests": requests,
+                         "unknown_items": actionable_unknown_items}
             for collection in ("definitions", "model_relations", "unknown_items"):
                 merged[collection].extend(deepcopy(current[collection]))
             for request in current.get("evidence_requests", []):
@@ -365,37 +515,60 @@ model_relations and unknown_items arrays. Do not claim mathematical verification
 INPUT_JSON:
 """) + json_prompt_payload({"candidates": candidates, "variable_claim_model": variable_claim_model,
                             "research_brief": research_brief, "definition_fields": list(DEFINITION_FIELDS)})
-            if len(prompt) > max_chars:
-                raise ValueError("definition_reconciliation_exceeds_prompt_budget")
-            identity = {"version": 1, "prompt": prompt, "llm": cache_identity or {}}
-            reconciled = cache.read("definition_reconciliation", identity)
-            cache_hit = reconciled is not None
-            if reconciled is None:
-                if cache.offline:
-                    raise ValueError("definition_reconciliation_checkpoint_miss")
-                reconciled = self._request(llm_call, prompt, logger, brief_id, settings, request_kind="reconcile_definitions")
-            reconciled, normalized_fields = normalize_definition_conditions(reconciled)
-            if logger is not None and normalized_fields:
-                logger.event("formal_definition_resolver", "response_shape_repaired", status="REPAIRED",
-                             brief_id=brief_id, normalized_condition_fields=normalized_fields)
-            self._validate(reconciled, evidence_bundle)
-            allowed_refs = {json_prompt_payload(reference) for collection in ("definitions", "model_relations") for record in candidates[collection] for reference in record.get("source_refs", [])}
-            for collection in ("definitions", "model_relations"):
-                for record in reconciled[collection]:
-                    if any(json_prompt_payload(reference) not in allowed_refs for reference in record.get("source_refs", [])):
-                        raise ValueError("reconciliation_introduced_unseen_source")
-            before = {variable for definition in candidates["definitions"] for variable in definition.get("variable_references", [])}
-            after = {variable for definition in reconciled["definitions"] for variable in definition.get("variable_references", [])}
-            if before - after:
-                raise ValueError("reconciliation_dropped_variables")
-            if {record["relation_id"] for record in candidates["model_relations"]} - {record["relation_id"] for record in reconciled["model_relations"]}:
-                raise ValueError("reconciliation_dropped_model_relations")
-            self._merge(reconciled)
-            if not cache_hit:
-                cache.write("definition_reconciliation", identity, reconciled)
-            reconciled["unknown_items"].extend(item for item in candidates["unknown_items"] if item not in reconciled["unknown_items"])
-            merged = reconciled
-            audit.append({"stage": "reconcile_definitions", "card_ids": [], "prompt_chars": len(prompt), "cache_hit": cache_hit})
+            cache_hit = False
+            try:
+                if len(prompt) > max_chars:
+                    raise ValueError(f"definition_reconciliation_exceeds_prompt_budget:{len(prompt)}>{max_chars}")
+                identity = {"version": 1, "prompt": prompt, "llm": cache_identity or {}}
+                reconciled = cache.read("definition_reconciliation", identity)
+                cache_hit = reconciled is not None
+                if reconciled is None:
+                    if cache.offline:
+                        raise ValueError("definition_reconciliation_checkpoint_miss")
+                    reconciled = self._request(llm_call, prompt, logger, brief_id, settings, request_kind="reconcile_definitions")
+                reconciled, normalized_fields = normalize_definition_conditions(reconciled)
+                reconciled, repaired_relations, quarantined_relations = normalize_model_relations(
+                    reconciled, id_prefix="RECON_",
+                )
+                if logger is not None and (normalized_fields or repaired_relations or quarantined_relations):
+                    logger.event("formal_definition_resolver", "response_shape_repaired", status="REPAIRED",
+                                 brief_id=brief_id, normalized_condition_fields=normalized_fields,
+                                 assigned_relation_ids=repaired_relations,
+                                 quarantined_relation_errors=quarantined_relations)
+                self._validate(reconciled, evidence_bundle)
+                allowed_refs = {json_prompt_payload(reference) for collection in ("definitions", "model_relations") for record in candidates[collection] for reference in record.get("source_refs", [])}
+                for collection in ("definitions", "model_relations"):
+                    for record in reconciled[collection]:
+                        if any(json_prompt_payload(reference) not in allowed_refs for reference in record.get("source_refs", [])):
+                            raise ValueError("reconciliation_introduced_unseen_source")
+                before = {variable for definition in candidates["definitions"] for variable in definition.get("variable_references", [])}
+                after = {variable for definition in reconciled["definitions"] for variable in definition.get("variable_references", [])}
+                if before - after:
+                    raise ValueError("reconciliation_dropped_variables")
+                if {record["relation_id"] for record in candidates["model_relations"]} - {record["relation_id"] for record in reconciled["model_relations"]}:
+                    raise ValueError("reconciliation_dropped_model_relations")
+                self._merge(reconciled)
+                if not cache_hit:
+                    cache.write("definition_reconciliation", identity, reconciled)
+                reconciled["unknown_items"].extend(item for item in candidates["unknown_items"] if item not in reconciled["unknown_items"])
+                merged = reconciled
+            except Exception as error:
+                detail = f"{type(error).__name__}: {error}"
+                merged = candidates
+                merged["unknown_items"].append({
+                    "field_path": "definition_reconciliation",
+                    "reason": detail,
+                    "status": "needs_human_input",
+                })
+                if logger is not None:
+                    logger.event("formal_definition_resolver", "reconciliation_degraded", level="ERROR",
+                                 status="DEGRADED", brief_id=brief_id,
+                                 disposition="kept_valid_group_candidates", requires_human_review=True,
+                                 error_code=type(error).__name__, error_detail=str(error))
+            audit.append({"stage": "reconcile_definitions", "card_ids": [],
+                          "prompt_chars": len(prompt), "cache_hit": cache_hit,
+                          "status": "completed" if merged is not candidates else "degraded",
+                          "error_detail": detail if merged is candidates else ""})
         merged = self._merge(merged)
         self._validate(merged, evidence_bundle)
         for variable in self._missing(merged, variables):
@@ -519,9 +692,14 @@ INPUT_JSON:
             raise ValueError("; ".join(errors))
         for definition in payload["definitions"]:
             errors.extend(validate_definition(definition))
-        for relation in payload["model_relations"]:
-            if not isinstance(relation, Mapping) or not isinstance(relation.get("relation_id"), str):
-                errors.append("invalid_model_relation")
+        for index, relation in enumerate(payload["model_relations"]):
+            if not isinstance(relation, Mapping):
+                errors.append(f"model_relations[{index}]: expected object, got {type(relation).__name__}")
+            elif not isinstance(relation.get("relation_id"), str) or not relation["relation_id"].strip():
+                errors.append(
+                    f"model_relations[{index}].relation_id: expected nonempty string, "
+                    f"got {type(relation.get('relation_id')).__name__}"
+                )
         if errors:
             raise ValueError("; ".join(errors))
         errors.extend(validate_source_grounding([*payload["definitions"], *payload["model_relations"]], evidence_bundle))

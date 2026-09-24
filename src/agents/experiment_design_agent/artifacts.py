@@ -328,7 +328,7 @@ def _formal_reasoning_summary(plan: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _counterexample_summary(analysis: Mapping[str, Any]) -> dict[str, Any]:
-    return {
+    summary = {
         "schema_version": _text(analysis.get("schema_version")),
         "applicability": _text(analysis.get("applicability")),
         "status": _text(analysis.get("status")),
@@ -347,6 +347,13 @@ def _counterexample_summary(analysis: Mapping[str, Any]) -> dict[str, Any]:
         "limitations": deepcopy(analysis.get("limitations") or []),
         "unknown_items": deepcopy(analysis.get("unknown_items") or []),
     }
+    if isinstance(analysis.get("target_analyses"), list):
+        summary["target_analyses"] = [
+            _counterexample_summary(item)
+            for item in analysis["target_analyses"]
+            if isinstance(item, Mapping)
+        ]
+    return summary
 
 
 def build_author_handoff(

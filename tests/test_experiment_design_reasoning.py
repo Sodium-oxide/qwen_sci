@@ -325,16 +325,17 @@ def test_counterexample_analyzer_logs_json_contract_failure_without_raw_response
     logger = ExperimentDesignRunLogger("counterexample-json-failure", console_stream=StringIO())
     rejected_response = "not a complete JSON object"
 
-    with pytest.raises(RequiredJsonLLMError):
-        CounterexampleAnalyzer().analyze(
-            _brief(),
-            {"schema_version": "reasoning_context_v1"},
-            _variable_claim_model(),
-            _formal_plan(),
-            llm_call=lambda *_args, **_kwargs: rejected_response,
-            logger=logger,
-            brief_id="reasoning-brief",
-        )
+    analysis = CounterexampleAnalyzer().analyze(
+        _brief(),
+        {"schema_version": "reasoning_context_v1"},
+        _variable_claim_model(),
+        _formal_plan(),
+        llm_call=lambda *_args, **_kwargs: rejected_response,
+        logger=logger,
+        brief_id="reasoning-brief",
+    )
+    assert analysis["target_claim_id"] == "P1"
+    assert analysis["status"] == "requires_human_review"
 
     events = [
         record
@@ -342,12 +343,76 @@ def test_counterexample_analyzer_logs_json_contract_failure_without_raw_response
         if record["stage"] == "counterexample_analyzer"
     ]
     assert [record["event"] for record in events] == [
+        "input_profiled",
         "llm_request_started",
         "llm_response_received",
         "llm_json_contract_failed",
+        "target_degraded",
     ]
-    assert events[1]["response_character_count"] == len(rejected_response)
+    assert events[2]["response_character_count"] == len(rejected_response)
     assert all(rejected_response not in str(record) for record in events)
+
+
+def test_counterexample_analyzer_covers_each_proposition_with_local_context() -> None:
+    plan = _formal_plan()
+    second = deepcopy(plan["propositions"][0])
+    second["proposition_id"] = "P2"
+    second["conclusion"] = "x > 1"
+    plan["propositions"].append(second)
+    seen_targets = []
+
+    def llm_call(prompt: str, **_kwargs: object) -> dict:
+        context = json.loads(prompt.split("INPUT_JSON:\n", 1)[1])
+        target_id = context["target_specification"]["target_claim_id"]
+        seen_targets.append(target_id)
+        assert [item["proposition_id"] for item in context["formal_reasoning_plan"]["propositions"]] == [target_id]
+        return {**_counterexample_plan(), "target_claim_id": target_id}
+
+    analysis = CounterexampleAnalyzer().analyze(
+        _brief(), {}, _variable_claim_model(), plan, llm_call=llm_call,
+    )
+
+    assert seen_targets == ["P1", "P2"]
+    assert [item["target_claim_id"] for item in analysis["target_analyses"]] == seen_targets
+    assert validate_counterexample_analysis(analysis, formal_reasoning_plan=plan) == []
+    json.dumps(analysis)
+
+
+def test_counterexample_analyzer_retains_other_targets_after_one_failure() -> None:
+    plan = _formal_plan()
+    second = deepcopy(plan["propositions"][0])
+    second["proposition_id"] = "P2"
+    plan["propositions"].append(second)
+
+    def llm_call(prompt: str, **_kwargs: object) -> object:
+        target_id = json.loads(prompt.split("INPUT_JSON:\n", 1)[1])["target_specification"]["target_claim_id"]
+        return "invalid JSON" if target_id == "P1" else {**_counterexample_plan(), "target_claim_id": "P2"}
+
+    analysis = CounterexampleAnalyzer().analyze(
+        _brief(), {}, _variable_claim_model(), plan, llm_call=llm_call,
+    )
+
+    assert analysis["status"] == "requires_human_review"
+    assert analysis["target_analyses"][0]["status"] == "requires_human_review"
+    assert analysis["target_analyses"][1]["target_claim_id"] == "P2"
+    assert validate_counterexample_analysis(analysis, formal_reasoning_plan=plan) == []
+
+
+def test_counterexample_analyzer_preserves_every_target_when_all_fail() -> None:
+    plan = _formal_plan()
+    second = deepcopy(plan["propositions"][0])
+    second["proposition_id"] = "P2"
+    plan["propositions"].append(second)
+
+    analysis = CounterexampleAnalyzer().analyze(
+        _brief(), {}, _variable_claim_model(), plan,
+        llm_call=lambda *_args, **_kwargs: "invalid JSON",
+    )
+
+    assert analysis["status"] == "requires_human_review"
+    assert [item["target_claim_id"] for item in analysis["target_analyses"]] == ["P1", "P2"]
+    assert all(item["unknown_items"] for item in analysis["target_analyses"])
+    assert validate_counterexample_analysis(analysis, formal_reasoning_plan=plan) == []
 
 
 def test_final_validation_logs_profile_and_safe_invalid_contract(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping
+from copy import deepcopy
 from typing import Any
 
-from .formal_reasoning_planner import FORMAL_REASONING_PLAN_SCHEMA_VERSION
 from .formal_dependency import build_counterexample_target
+from .formal_dependency import target_subgraph
 from .llm_json import call_required_json_with_logging, json_prompt_payload, validation_summary
 from .reasoning_validation import validate_counterexample_analysis
 
@@ -64,21 +65,26 @@ def build_counterexample_analyzer_prompt(
     reasoning_context: Mapping[str, Any],
     variable_claim_model: Mapping[str, Any],
     formal_reasoning_plan: Mapping[str, Any],
+    *,
+    target_id: str | None = None,
 ) -> str:
     brief_payload = dict(research_brief)
     brief_payload.pop("reasoning_context", None)
+    selected_target_id = target_id
+    if not selected_target_id:
+        selected_target_id = formal_reasoning_plan.get("forward_derivation", {}).get("target_proposition_id")
+    if not selected_target_id and formal_reasoning_plan.get("propositions"):
+        selected_target_id = formal_reasoning_plan["propositions"][0]["proposition_id"]
+    local_plan = target_subgraph(formal_reasoning_plan, str(selected_target_id)) if selected_target_id else dict(formal_reasoning_plan)
     payload = {
         "research_brief": brief_payload,
         "reasoning_context": dict(reasoning_context),
         "variable_claim_model": dict(variable_claim_model),
-        "formal_reasoning_plan": dict(formal_reasoning_plan),
+        "formal_reasoning_plan": local_plan,
         "execution_mode": "DESIGN_ONLY",
     }
-    target_id = formal_reasoning_plan.get("forward_derivation", {}).get("target_proposition_id")
-    if not target_id and formal_reasoning_plan.get("propositions"):
-        target_id = formal_reasoning_plan["propositions"][0]["proposition_id"]
-    if target_id:
-        payload["target_specification"] = build_counterexample_target(formal_reasoning_plan, str(target_id))
+    if selected_target_id:
+        payload["target_specification"] = build_counterexample_target(local_plan, str(selected_target_id))
     return COUNTEREXAMPLE_ANALYZER_PROMPT + json_prompt_payload(payload)
 
 
@@ -164,39 +170,99 @@ class CounterexampleAnalyzer:
         llm_call: Callable[..., object] | None = None,
         logger: Any | None = None,
         brief_id: str = "",
+        analyzer_settings: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
         effective_brief_id = str(brief_id or research_brief.get("brief_id") or "")
-        payload = call_required_json_with_logging(
-            llm_call,
-            build_counterexample_analyzer_prompt(
-                research_brief,
-                reasoning_context,
-                variable_claim_model,
-                formal_reasoning_plan,
-            ),
-            stage="counterexample_analyzer",
-            request_kind="counterexample_analysis",
-            logger=logger,
-            brief_id=effective_brief_id,
-        )
-        target_id = str(payload.get("target_claim_id") or "")
-        if target_id:
-            target = build_counterexample_target(formal_reasoning_plan, target_id)
-            payload["target_specification"] = target
-            payload["negated_conclusion"] = f"NOT ({next(record['conclusion'] for record in formal_reasoning_plan['propositions'] if record['proposition_id'] == target_id)})"
-        elif formal_reasoning_plan.get("propositions"):
-            raise ValueError("counterexample_analysis_missing_target_claim")
-        errors = validate_counterexample_analysis(payload, formal_reasoning_plan=formal_reasoning_plan)
-        if logger is not None:
-            logger.event(
-                "counterexample_analyzer",
-                "contract_validated",
-                level="ERROR" if errors else "INFO",
-                status="INVALID" if errors else "VALID",
-                brief_id=effective_brief_id,
-                **_counterexample_structure_summary(payload),
-                **validation_summary(errors),
+        settings = dict(analyzer_settings or {})
+        target_ids = [
+            str(record.get(identifier))
+            for collection, identifier in (("propositions", "proposition_id"), ("lemmas", "lemma_id"))
+            for record in formal_reasoning_plan.get(collection, [])
+            if isinstance(record, Mapping) and record.get(identifier)
+        ]
+        if not target_ids:
+            target_ids = [""]
+        analyses = []
+        failures = []
+        for target_id in target_ids:
+            try:
+                prompt = build_counterexample_analyzer_prompt(
+                    research_brief, reasoning_context, variable_claim_model,
+                    formal_reasoning_plan, target_id=target_id or None,
+                )
+                max_prompt_chars = max(10000, int(settings.get("max_prompt_chars", 45000)))
+                if len(prompt) > max_prompt_chars:
+                    raise ValueError(f"counterexample_prompt_exceeds_budget:{len(prompt)}>{max_prompt_chars}")
+                if logger is not None:
+                    logger.event(
+                        "counterexample_analyzer", "input_profiled", status="PROFILED",
+                        brief_id=effective_brief_id, target_id=target_id,
+                        prompt_chars=len(prompt), target_count=len(target_ids),
+                    )
+                payload = call_required_json_with_logging(
+                    llm_call, prompt, stage="counterexample_analyzer",
+                    request_kind="counterexample_analysis", logger=logger,
+                    brief_id=effective_brief_id,
+                )
+                returned_target_id = str(payload.get("target_claim_id") or target_id)
+                if target_id and returned_target_id != target_id:
+                    raise ValueError(f"counterexample_target_mismatch:{target_id}!={returned_target_id}")
+                local_plan = target_subgraph(formal_reasoning_plan, returned_target_id) if returned_target_id else formal_reasoning_plan
+                if returned_target_id:
+                    target = build_counterexample_target(local_plan, returned_target_id)
+                    payload["target_specification"] = target
+                    target_record = next(
+                        record for collection in ("propositions", "lemmas")
+                        for record in local_plan.get(collection, [])
+                        if record.get("proposition_id", record.get("lemma_id")) == returned_target_id
+                    )
+                    payload["negated_conclusion"] = f"NOT ({target_record.get('conclusion', '')})"
+                elif formal_reasoning_plan.get("propositions"):
+                    raise ValueError("counterexample_analysis_missing_target_claim")
+                errors = validate_counterexample_analysis(payload, formal_reasoning_plan=local_plan)
+                if logger is not None:
+                    logger.event(
+                        "counterexample_analyzer", "contract_validated",
+                        level="ERROR" if errors else "INFO",
+                        status="INVALID" if errors else "VALID",
+                        brief_id=effective_brief_id, target_id=returned_target_id,
+                        **_counterexample_structure_summary(payload),
+                        **validation_summary(errors),
+                    )
+                if errors:
+                    raise ValueError("counterexample_analyzer: invalid JSON contract: " + "; ".join(errors))
+                analyses.append(payload)
+            except Exception as error:
+                failures.append(error)
+                if logger is not None:
+                    logger.event(
+                        "counterexample_analyzer", "target_degraded", level="ERROR",
+                        status="DEGRADED", brief_id=effective_brief_id,
+                        target_id=target_id, error_code=type(error).__name__,
+                        error_detail=str(error),
+                    )
+                if target_id:
+                    local_plan = target_subgraph(formal_reasoning_plan, target_id)
+                    target_record = next(
+                        record for collection in ("propositions", "lemmas")
+                        for record in local_plan.get(collection, [])
+                        if record.get("proposition_id", record.get("lemma_id")) == target_id
+                    )
+                    unavailable = unavailable_counterexample_analysis(reason=f"{type(error).__name__}: {error}")
+                    unavailable["target_claim_id"] = target_id
+                    unavailable["target_specification"] = build_counterexample_target(local_plan, target_id)
+                    unavailable["negated_conclusion"] = f"NOT ({target_record.get('conclusion', '')})"
+                    unavailable["search_domain"] = str(target_record.get("scope") or "")
+                    analyses.append(unavailable)
+        primary = deepcopy(analyses[0])
+        if len(analyses) > 1:
+            primary["target_analyses"] = deepcopy(analyses)
+        if failures:
+            primary["status"] = "requires_human_review"
+            primary["unknown_items"].extend(
+                {"field_path": f"target_analyses.{item['target_claim_id']}",
+                 "reason": item["unknown_items"][0]["reason"],
+                 "status": "needs_human_input"}
+                for item in analyses if item.get("status") == "requires_human_review"
             )
-        if errors:
-            raise ValueError("counterexample_analyzer: invalid JSON contract: " + "; ".join(errors))
-        return payload
+        return primary

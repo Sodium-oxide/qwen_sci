@@ -3,6 +3,7 @@ from __future__ import annotations
 from copy import deepcopy
 import json
 
+from src.agents.experiment_design_agent.artifacts import _counterexample_summary
 from src.agents.research_plan_author.authoring_blueprint import (
     argument_ledger_context_for_section,
     build_authoring_argument_ledger,
@@ -185,6 +186,44 @@ def test_theory_spine_is_stable_and_references_only_frozen_records() -> None:
     assert local_ids.isdisjoint(formal_ids | counterexample_ids | outcome_ids | unknown_ids)
     assert [unit["display_label"] for unit in spine["lemma_units"]] == ["P1", "P2", "S1", "S2"]
     assert [unit["display_label"] for unit in spine["proof_obligations"]] == ["PO1", "PO2"]
+
+
+def test_theory_spine_preserves_counterexamples_for_each_target() -> None:
+    preparation = _preparation()
+    analysis = preparation["source_bundle"]["author_context"]["counterexample_analysis"]
+    analysis["target_analyses"] = [
+        deepcopy(analysis),
+        {
+            "target_claim_id": "P1",
+            "candidate_counterexamples": [
+                {"counterexample_id": "CE3", "validity": "boundary_case"},
+            ],
+        },
+    ]
+    spine = build_theory_spine(preparation, routing=_routing(), source_registry=_source_registry())
+    assert [(item["target_formal_reference_ids"], item["source_counterexample_ids"]) for item in spine["falsifiers"]] == [
+        (["P1"], ["CE3"]),
+        (["P2"], ["CE1"]),
+        (["P2"], ["CE2"]),
+    ]
+    assert not validate_theory_spine(spine, preparation=preparation, source_registry=_source_registry())
+    spine["falsifiers"][0]["target_formal_reference_ids"] = ["P2"]
+    assert any("does not belong to target" in error for error in validate_theory_spine(
+        spine, preparation=preparation, source_registry=_source_registry(),
+    ))
+
+
+def test_author_counterexample_summary_preserves_target_analyses() -> None:
+    analysis = _preparation()["source_bundle"]["author_context"]["counterexample_analysis"]
+    analysis["target_analyses"] = [
+        deepcopy(analysis),
+        {"target_claim_id": "P1", "candidate_counterexamples": [
+            {"counterexample_id": "CE3", "validity": "boundary_case"},
+        ]},
+    ]
+    summary = _counterexample_summary(analysis)
+    assert [item["target_claim_id"] for item in summary["target_analyses"]] == ["P2", "P1"]
+    assert summary["target_analyses"][1]["candidate_counterexamples"][0]["counterexample_id"] == "CE3"
 
 
 def test_theory_spine_turns_missing_inputs_into_procedural_no_information_branches() -> None:

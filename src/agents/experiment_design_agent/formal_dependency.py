@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from copy import deepcopy
 from typing import Any
 
 
@@ -110,3 +111,85 @@ def build_counterexample_target(plan: Mapping[str, Any], target_id: str) -> dict
             ],
         },
     }
+
+
+def target_subgraph(plan: Mapping[str, Any], target_id: str) -> dict[str, Any]:
+    """Return the smallest canonical plan slice needed by one target."""
+
+    required = target_dependencies(plan, target_id) | {target_id}
+    target = formal_records(plan)[target_id]
+    required.update(target.get("required_obligation_ids", []))
+    required.update(
+        record.get("obligation_id") for record in plan.get("proof_obligations", [])
+        if isinstance(record, Mapping) and record.get("target_id") == target_id
+    )
+    required.discard(None)
+    obligation_ids = {
+        record.get("obligation_id") for record in plan.get("proof_obligations", [])
+        if isinstance(record, Mapping)
+    }
+    for obligation_id in required & obligation_ids:
+        required.update(target_dependencies(plan, obligation_id))
+    collections = {
+        "definitions": "definition_id",
+        "model_relations": "relation_id",
+        "assumptions": "assumption_id",
+        "propositions": "proposition_id",
+        "lemmas": "lemma_id",
+        "proof_obligations": "obligation_id",
+    }
+    local = {
+        "schema_version": plan.get("schema_version"),
+        "revision": plan.get("revision", 1),
+        "applicability": plan.get("applicability", "formal_theory"),
+        "status": plan.get("status", "unverified"),
+        "global_assumption_ids": [item for item in plan.get("global_assumption_ids", []) if item in required],
+        "proof_attempts": [],
+        "semantic_diagnostics": [
+            deepcopy(item) for item in plan.get("semantic_diagnostics", [])
+            if isinstance(item, Mapping) and (item.get("target_id") in required or not item.get("target_id"))
+        ],
+        "unknown_items": [
+            deepcopy(item) for item in plan.get("unknown_items", [])
+            if isinstance(item, Mapping) and (
+                not item.get("field_path")
+                or str(item.get("field_path")).startswith("variables.")
+                or set(str(item.get("field_path")).split(".")) & required
+            )
+        ],
+    }
+    for collection, identifier in collections.items():
+        local[collection] = [
+            deepcopy(record) for record in plan.get(collection, [])
+            if isinstance(record, Mapping) and record.get(identifier) in required
+        ]
+    local["proof_attempts"] = [
+        deepcopy(record) for record in plan.get("proof_attempts", [])
+        if isinstance(record, Mapping) and record.get("target_id") in required
+    ]
+    steps = [
+        deepcopy(step) for step in plan.get("forward_derivation", {}).get("steps", [])
+        if isinstance(step, Mapping)
+        and (
+            target_id == plan.get("forward_derivation", {}).get("target_proposition_id")
+            or step.get("target_id") == target_id
+        )
+    ]
+    proposition_ids = {item.get("proposition_id") for item in local["propositions"]}
+    local["forward_derivation"] = {
+        "steps": steps,
+        "target_proposition_id": target_id if target_id in proposition_ids else "",
+        "final_conclusion_step": (
+            plan.get("forward_derivation", {}).get("final_conclusion_step", "")
+            if target_id == plan.get("forward_derivation", {}).get("target_proposition_id") else ""
+        ),
+        "final_conclusion": (
+            plan.get("forward_derivation", {}).get("final_conclusion", "")
+            if target_id == plan.get("forward_derivation", {}).get("target_proposition_id") else ""
+        ),
+        "status": (
+            plan.get("forward_derivation", {}).get("status", "unresolved")
+            if target_id == plan.get("forward_derivation", {}).get("target_proposition_id") else "unresolved"
+        ),
+    }
+    return local

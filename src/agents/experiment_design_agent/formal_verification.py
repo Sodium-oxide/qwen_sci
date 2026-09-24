@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor
 
 from .formal_dependency import formal_records, target_dependencies
 
@@ -155,6 +156,21 @@ def run_verification_task(task, *, enabled=True):
     return record
 
 
+def _task_result(task, previous, enabled):
+    cached = next((
+        record for record in previous
+        if enabled and not task["blockers"]
+        and record.get("target_id") == task["target_id"]
+        and record.get("backend") == task["backend"]
+        and record.get("input_snapshot") == task["input_snapshot"]
+        and record.get("constraints") == task["constraints"]
+        and record.get("result") in {"passed", "failed"}
+    ), None)
+    result = deepcopy(cached) if cached else run_verification_task(task, enabled=enabled)
+    result["reused"] = cached is not None
+    return result
+
+
 def summarize_targets(plan, results):
     summaries = []
     records = formal_records(plan)
@@ -191,25 +207,52 @@ def verify_formal_plan(plan, settings, *, previous_report=None):
     previous = (previous_report or {}).get("results", [])
     enabled = bool(settings.get("enabled", False))
     targets = [*plan.get("proof_obligations", []), *plan.get("lemmas", []), *plan.get("propositions", [])]
-    pending = {target.get("obligation_id", target.get("proposition_id", target.get("lemma_id"))): target for target in targets}
-    ordered = []
-    while pending:
-        ready = [identifier for identifier, target in pending.items() if not ((target_dependencies(plan, identifier) | set(target.get("required_obligation_ids", []))) & set(pending))]
-        if not ready:
-            ready = [next(iter(pending))]
-        for identifier in ready:
-            ordered.append((identifier, pending.pop(identifier)))
-    for target_id, target in ordered:
-        backends = list(settings.get("backends", ["sympy", "z3"]))
-        if target.get("candidate_points") and "numerical" not in backends:
-            backends.append("numerical")
-        for backend in backends:
-            task = build_verification_task(plan, target_id, backend, settings.get("timeout_seconds", 60), results)
-            cached = next((record for record in previous if enabled and not task["blockers"] and record.get("target_id") == target_id and record.get("backend") == backend and record.get("input_snapshot") == task["input_snapshot"] and record.get("constraints") == task["constraints"] and record.get("result") in {"passed", "failed"}), None)
-            result = deepcopy(cached) if cached else run_verification_task(task, enabled=enabled)
-            result["reused"] = cached is not None
-            results.append(result)
-    return {"schema_version": REPORT_VERSION, "policy": {"enabled": enabled, "experiment_execution": False}, "results": results, "target_summaries": summarize_targets(plan, results)}
+    ordered = [
+        (target.get("obligation_id", target.get("proposition_id", target.get("lemma_id"))), target)
+        for target in targets
+    ]
+    max_workers = max(1, int(settings.get("max_parallel_tasks", 1)))
+    with ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="formal-verify") as executor:
+        while ordered:
+            ready = []
+            remaining = []
+            pending_ids = {identifier for identifier, _target in ordered}
+            for target_id, target in ordered:
+                dependencies = target_dependencies(plan, target_id) | set(target.get("required_obligation_ids", []))
+                if dependencies & (pending_ids - {target_id}):
+                    remaining.append((target_id, target))
+                else:
+                    ready.append((target_id, target))
+            if not ready:
+                ready = [remaining.pop(0)]
+            wave_tasks = []
+            for target_id, target in ready:
+                backends = list(settings.get("backends", ["sympy", "z3"]))
+                if target.get("candidate_points") and "numerical" not in backends:
+                    backends.append("numerical")
+                for backend in backends:
+                    wave_tasks.append(build_verification_task(plan, target_id, backend, settings.get("timeout_seconds", 60), results))
+            wave_results = list(executor.map(lambda task: _task_result(task, previous, enabled), wave_tasks))
+            results.extend(wave_results)
+            ordered = remaining
+    summaries = summarize_targets(plan, results)
+    return {
+        "schema_version": REPORT_VERSION,
+        "policy": {
+            "enabled": enabled,
+            "experiment_execution": False,
+            "max_parallel_tasks": max(1, int(settings.get("max_parallel_tasks", 1))),
+        },
+        "results": results,
+        "target_summaries": summaries,
+        "task_summary": {
+            "task_count": len(results),
+            "reused_count": sum(bool(item.get("reused")) for item in results),
+            "executed_count": sum(bool(item.get("executed")) for item in results),
+            "unsupported_count": sum(item.get("result") == "unsupported" for item in results),
+            "timeout_count": sum(item.get("result") == "timeout" for item in results),
+        },
+    }
 
 
 def validate_verification_report(plan, report):

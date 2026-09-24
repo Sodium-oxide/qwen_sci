@@ -1,4 +1,5 @@
 from copy import deepcopy
+import json
 
 from src.agents.experiment_design_agent.formal_contracts import adapt_legacy_plan, validate_formal_plan_v2
 from src.agents.experiment_design_agent.formal_definition_resolver import FormalDefinitionResolver
@@ -80,6 +81,92 @@ def test_resolver_and_planner_preserve_resolved_science():
     changed["definitions"][0]["statement"] = "Unapproved replacement"
     generated = FormalReasoningPlanner().plan({}, {}, {"variables": [{"variable_id": "V1"}]}, formal_inputs=resolved, llm_call=lambda *_args, **_kwargs: changed)
     assert generated["definitions"] == resolved["definitions"]
+
+
+def test_planner_builds_skeleton_then_target_proof_batches():
+    plan = formal_plan()
+    unrelated_definition = deepcopy(plan["definitions"][0])
+    unrelated_definition.update(definition_id="D2", symbol="y", variable_references=[])
+    plan["definitions"].append(unrelated_definition)
+    plan["forward_derivation"] = {
+        "steps": [{
+            "step_id": "S_P1_1", "premises": ["A1"], "symbol_references": ["x"],
+            "variable_references": ["V1"], "rule_or_lemma": "Order implication",
+            "derived_statement": "x >= 0", "status": "proposed",
+        }],
+        "target_proposition_id": "P1", "final_conclusion_step": "S_P1_1",
+        "final_conclusion": "x >= 0", "status": "unverified",
+    }
+    resolution = {
+        "schema_version": "formal_definition_resolution_v1",
+        "definitions": plan["definitions"],
+        "model_relations": [],
+        "unknown_items": [],
+    }
+    calls = []
+
+    def callback(prompt, **kwargs):
+        if "skeleton stage" in prompt:
+            calls.append("v2_skeleton")
+            skeleton = deepcopy(plan)
+            skeleton["proof_attempts"] = []
+            skeleton["forward_derivation"]["steps"] = []
+            skeleton["forward_derivation"]["final_conclusion_step"] = ""
+            skeleton["forward_derivation"]["status"] = "unresolved"
+            return skeleton
+        calls.append("v2_target_proof")
+        target_input = json.loads(prompt.split("INPUT_JSON:\n", 1)[1])
+        assert [item["definition_id"] for item in target_input["skeleton"]["definitions"]] == ["D1"]
+        return {
+            "target_results": [{
+                "target_id": "P1",
+                "proof_obligations": [],
+                "proof_attempts": deepcopy(plan["proof_attempts"]),
+                "derivation_steps": deepcopy(plan["forward_derivation"]["steps"]),
+                "status": "unverified",
+            }],
+            "semantic_diagnostics": [],
+            "unknown_items": [],
+        }
+
+    generated = FormalReasoningPlanner().plan(
+        {}, {}, {"variables": [{"variable_id": "V1"}]},
+        formal_inputs=resolution, llm_call=callback,
+        planner_settings={"max_targets_per_request": 2, "max_evidence_cards": 4},
+    )
+    assert calls == ["v2_skeleton", "v2_target_proof"]
+    assert generated["proof_attempts"]
+    assert generated["forward_derivation"]["steps"]
+
+
+def test_planner_keeps_successful_target_when_later_group_fails():
+    plan = formal_plan()
+    second = deepcopy(plan["propositions"][0])
+    second["proposition_id"] = "P2"
+    plan["propositions"].append(second)
+    resolution = {
+        "schema_version": "formal_definition_resolution_v1",
+        "definitions": plan["definitions"], "model_relations": [], "unknown_items": [],
+    }
+
+    def callback(prompt, **_kwargs):
+        if "skeleton stage" in prompt:
+            skeleton = deepcopy(plan)
+            skeleton["proof_attempts"] = []
+            return skeleton
+        if json.loads(prompt.split("INPUT_JSON:\n", 1)[1])["target_group_number"] == 1:
+            return {"target_results": [{"target_id": "P1", "proof_attempts": deepcopy(plan["proof_attempts"])}]}
+        raise RuntimeError("target P2 backend timeout")
+
+    generated = FormalReasoningPlanner().plan(
+        {}, {}, {"variables": [{"variable_id": "V1"}]},
+        formal_inputs=resolution, llm_call=callback,
+        planner_settings={"max_targets_per_request": 1},
+    )
+    assert [item["proposition_id"] for item in generated["propositions"]] == ["P1", "P2"]
+    assert generated["proof_attempts"][0]["target_id"] == "P1"
+    assert generated["status"] == "requires_human_review"
+    assert any(item["field_path"] == "proof_attempts.P2" and "backend timeout" in item["reason"] for item in generated["unknown_items"])
 
 
 def test_resolver_rejects_fabricated_source():

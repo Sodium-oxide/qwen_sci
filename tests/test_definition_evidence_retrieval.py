@@ -1,5 +1,6 @@
 import json
 from copy import deepcopy
+from io import StringIO
 
 import pytest
 
@@ -8,7 +9,10 @@ from src.agents.experiment_design_agent.definition_evidence import DefinitionEvi
 from src.agents.experiment_design_agent.formal_definition_resolver import (
     FormalDefinitionResolver,
     normalize_definition_conditions,
+    normalize_model_relations,
+    namespace_group_records,
 )
+from src.agents.experiment_design_agent.run_logging import ExperimentDesignRunLogger
 
 
 def card(number, statement="expansion density definition"):
@@ -132,6 +136,111 @@ def test_shape_repair_does_not_trigger_redundant_supplement_round():
         settings={"max_supplement_rounds": 2},
     )
     assert len(calls) == 1
+
+
+def test_malformed_relations_do_not_discard_valid_definitions():
+    payload = resolution()
+    payload["model_relations"] = [
+        {"relation_id": None, "statement": "rho is positive", "depends_on": []},
+        None,
+        "rho = mass / volume",
+    ]
+    logger = ExperimentDesignRunLogger("malformed-relations", console_stream=StringIO())
+    result = FormalDefinitionResolver().resolve(
+        {}, {}, {"variables": [{"variable_id": "V1", "name": "density"}]},
+        {}, llm_call=lambda *_args, **_kwargs: payload,
+        settings={"max_supplement_rounds": 0}, logger=logger,
+    )
+    assert result["definitions"][0]["definition_id"] == "D1"
+    assert result["model_relations"][0]["relation_id"] == "G1_R1"
+    assert result["model_relations"][0]["statement"] == "rho is positive"
+    assert result["model_relations"][1]["relation_id"] == "G1_R3"
+    assert result["model_relations"][1]["statement"] == "rho = mass / volume"
+    assert result["model_relations"][1]["status"] == "unresolved"
+    assert result["unknown_items"][0]["field_path"] == "model_relations[1]"
+    completed = next(item for item in logger.records if item["event"] == "group_completed")
+    assert completed["status"] == "DEGRADED"
+    assert completed["relation_review_count"] == 2
+
+
+def test_relation_validation_reports_index_and_type():
+    payload = resolution()
+    payload["model_relations"] = [None, {"relation_id": 2}]
+    with pytest.raises(ValueError, match=r"model_relations\[0\]: expected object, got NoneType") as error:
+        FormalDefinitionResolver._validate(payload, {})
+    assert "model_relations[1].relation_id: expected nonempty string, got int" in str(error.value)
+    normalized, repaired, quarantined = normalize_model_relations(payload, id_prefix="G1_")
+    assert normalized["model_relations"] == [{"relation_id": "G1_R2"}]
+    assert repaired and quarantined
+
+
+def test_group_namespace_updates_relation_dependencies():
+    payload = resolution()
+    payload["model_relations"] = [
+        {"relation_id": "R1", "depends_on": []},
+        {"relation_id": "R2", "depends_on": ["R1", "D1"]},
+    ]
+    normalized, renamed = namespace_group_records(payload, id_prefix="G2_", primary_ids={"D1"})
+    assert renamed == ["R1->G2_R1", "R2->G2_R2"]
+    assert normalized["model_relations"][1]["depends_on"] == ["G2_R1", "D1"]
+    assert payload["model_relations"][0]["relation_id"] == "R1"
+
+
+def test_quarantined_nested_relations_retain_bounded_raw_excerpt():
+    payload = resolution()
+    payload["model_relations"] = [[{"relation_id": "R1"}, {"relation_id": "R2"}]]
+    normalized, _repaired, quarantined = normalize_model_relations(payload, id_prefix="G1_")
+    assert normalized["model_relations"] == []
+    assert quarantined
+    assert '"relation_id":"R2"' in normalized["unknown_items"][0]["raw_excerpt"]
+
+
+def test_supplement_stops_after_unchanged_gaps_and_caps_new_cards():
+    calls = []
+
+    def callback(prompt, **_kwargs):
+        calls.append(input_payload(prompt))
+        result = resolution()
+        result["definitions"][0].update(definition_status="unresolved", origin="unresolved")
+        result["evidence_requests"] = [{"query": "density", "reason": "Need a definition"}]
+        return result
+
+    FormalDefinitionResolver().resolve(
+        {}, {}, {"variables": [{"variable_id": "V1", "name": "density"}]},
+        {"evidence_cards": [card(number) for number in range(20)]},
+        llm_call=callback,
+        settings={"initial_cards": 1, "supplement_cards": 10, "max_supplement_rounds": 2},
+    )
+    assert len(calls) == 2
+    assert len(calls[1]["evidence_cards"]) == 10
+
+
+def test_invalid_reconciliation_keeps_valid_group_relations():
+    variables = [{"variable_id": "V1", "name": "density"},
+                 {"variable_id": "V2", "name": "spectrum"}]
+
+    def callback(prompt, **_kwargs):
+        payload = input_payload(prompt)
+        if "candidates" in payload:
+            invalid = deepcopy(payload["candidates"])
+            invalid["model_relations"] = [None]
+            return invalid
+        variable = payload["variable_claim_model"]["variables"][0]["variable_id"]
+        result = resolution(variable, "rho" if variable == "V1" else "flux",
+                            "D1" if variable == "V1" else "D2")
+        result["model_relations"] = [{"relation_id": "R1",
+                                      "statement": "rho relation" if variable == "V1" else "flux relation",
+                                      "depends_on": [], "status": "unresolved", "source_refs": []}]
+        return result
+
+    result = FormalDefinitionResolver().resolve(
+        {}, {}, {"variables": variables}, {}, llm_call=callback,
+        settings={"variables_per_group": 1, "max_supplement_rounds": 0},
+    )
+    assert {item["definition_id"] for item in result["definitions"]} == {"D1", "D2"}
+    assert [item["relation_id"] for item in result["model_relations"]] == ["G1_R1", "G2_R1"]
+    assert [item["statement"] for item in result["model_relations"]] == ["rho relation", "flux relation"]
+    assert any(item["field_path"] == "definition_reconciliation" for item in result["unknown_items"])
 
 
 def test_checkpoint_reuses_successful_group_after_failure(tmp_path):

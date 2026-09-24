@@ -170,8 +170,6 @@ def _record_degradation(
         )
     else:
         detail = f"{stage} was degraded because no valid batch was retained."
-    if len(detail) > 2000:
-        detail = detail[:1997] + "..."
     record = {
         "stage": stage,
         "disposition": disposition,
@@ -603,10 +601,25 @@ class ExperimentDesignOrchestrator:
                         reasoning_context,
                         variable_claim_model,
                         **({"formal_inputs": formal_inputs, "evidence_bundle": evidence_bundle} if formal_inputs is not None else {}),
+                        planner_settings=_setting(formal_settings, "planner", {}),
                         llm_call=self._required_reasoning_llm(reasoning_llm_call),
                         logger=logger,
                         brief_id=brief_id,
                     )
+                    target_failures = [
+                        item for item in formal_reasoning_plan.get("unknown_items", [])
+                        if isinstance(item, Mapping)
+                        and str(item.get("field_path") or "").startswith("proof_attempts.")
+                    ]
+                    if target_failures:
+                        formal_degraded = True
+                        detail = "; ".join(str(item.get("reason") or "Target proof group failed.") for item in target_failures)
+                        degradations.append(_record_degradation(
+                            logger, stage="formal_reasoning_planner", brief_id=brief_id,
+                            error=ValueError(detail),
+                            disposition="retained_target_group_degradation",
+                            error_detail=detail,
+                        ))
                 except Exception as exc:
                     formal_degraded = True
                     degradations.append(
@@ -677,7 +690,21 @@ class ExperimentDesignOrchestrator:
                         llm_call=self._required_reasoning_llm(reasoning_llm_call),
                         logger=logger,
                         brief_id=brief_id,
+                        analyzer_settings=_setting(formal_settings, "counterexample", {}),
                     )
+                    if counterexample_analysis.get("status") == "requires_human_review":
+                        counterexample_degraded = True
+                        detail = "; ".join(
+                            str(item.get("reason"))
+                            for item in counterexample_analysis.get("unknown_items", [])
+                            if isinstance(item, Mapping) and item.get("reason")
+                        ) or "One or more counterexample targets require human review."
+                        degradations.append(_record_degradation(
+                            logger, stage="counterexample_analyzer", brief_id=brief_id,
+                            error=ValueError(detail),
+                            disposition="retained_target_level_degradation",
+                            error_detail=detail,
+                        ))
                 except Exception as exc:
                     counterexample_degraded = True
                     degradations.append(
@@ -692,12 +719,25 @@ class ExperimentDesignOrchestrator:
                         reason=_degradation_reason("counterexample_analyzer"),
                     )
             if logger is not None:
+                target_analyses = counterexample_analysis.get("target_analyses")
+                if not isinstance(target_analyses, list):
+                    target_analyses = [counterexample_analysis]
+                candidate_count = sum(
+                    _sequence_count(item.get("candidate_counterexamples"))
+                    for item in target_analyses if isinstance(item, Mapping)
+                )
+                review_target_count = sum(
+                    item.get("status") == "requires_human_review"
+                    for item in target_analyses if isinstance(item, Mapping)
+                )
                 logger.event(
-                "counterexample_analyzer",
-                "completed",
-                status="DEGRADED" if counterexample_degraded else "COMPLETED",
+                    "counterexample_analyzer",
+                    "completed",
+                    status="DEGRADED" if counterexample_degraded or review_target_count else "COMPLETED",
                     brief_id=brief_id,
-                    candidate_count=_sequence_count(counterexample_analysis.get("candidate_counterexamples")),
+                    target_count=len(target_analyses),
+                    review_target_count=review_target_count,
+                    candidate_count=candidate_count,
                     unknown_item_count=_sequence_count(counterexample_analysis.get("unknown_items")),
                     exhaustiveness_is_exhaustive=bool(
                         _mapping(counterexample_analysis.get("exhaustiveness")).get("is_exhaustive")
@@ -823,9 +863,29 @@ class ExperimentDesignOrchestrator:
                     counterexample_analysis = self.counterexample_analyzer.analyze(
                         brief, reasoning_context, variable_claim_model, formal_reasoning_plan,
                         llm_call=self._required_reasoning_llm(reasoning_llm_call), logger=logger, brief_id=brief_id,
+                        analyzer_settings=_setting(formal_settings, "counterexample", {}),
                     )
+                    if counterexample_analysis.get("status") == "requires_human_review":
+                        counterexample_degraded = True
+                        detail = "; ".join(
+                            str(item.get("reason"))
+                            for item in counterexample_analysis.get("unknown_items", [])
+                            if isinstance(item, Mapping) and item.get("reason")
+                        ) or "One or more counterexample targets require human review."
+                        degradations.append(_record_degradation(
+                            logger, stage="counterexample_analyzer", brief_id=brief_id,
+                            error=ValueError(detail),
+                            disposition="retained_target_level_degradation",
+                            error_detail=detail,
+                        ))
                 except Exception as exc:
-                    counterexample_analysis = unavailable_counterexample_analysis(reason=f"Counterexample regeneration after revision failed: {type(exc).__name__}")
+                    detail = f"Counterexample regeneration after revision failed: {type(exc).__name__}: {exc}"
+                    degradations.append(_record_degradation(
+                        logger, stage="counterexample_analyzer", brief_id=brief_id,
+                        error=exc, disposition="regeneration_after_revision_failed",
+                        error_detail=detail,
+                    ))
+                    counterexample_analysis = unavailable_counterexample_analysis(reason=detail)
 
         if logger is not None:
             logger.event(

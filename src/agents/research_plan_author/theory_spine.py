@@ -424,9 +424,9 @@ def build_theory_spine(
         )
 
     counterexample_analysis = _mapping(author_context.get("counterexample_analysis"))
-    counterexamples = _stable_records(counterexample_analysis.get("candidate_counterexamples"), identifier_field="counterexample_id")
-    counterexample_target_id = _text(counterexample_analysis.get("target_claim_id"))
-    target_lemma_ids = [lemma_id_by_source_id[counterexample_target_id]] if counterexample_target_id in lemma_id_by_source_id else []
+    target_analyses = counterexample_analysis.get("target_analyses")
+    if not isinstance(target_analyses, list):
+        target_analyses = [counterexample_analysis]
     falsifiers: list[dict[str, Any]] = []
     outcome_candidates_by_classification = {
         "would_falsify": ("null_or_contradictory",),
@@ -434,24 +434,34 @@ def build_theory_spine(
         "assumptions_not_satisfied": ("uninformative_or_invalid",),
         "no_information": ("uninformative_or_invalid",),
     }
-    for index, record in enumerate(counterexamples, start=1):
-        counterexample_id = _text(record.get("counterexample_id"))
-        classification = _counterexample_classification(record)
-        falsifier_id = f"TS-F-{index}"
-        falsifiers.append(
-            {
-                "falsifier_id": falsifier_id,
-                "display_label": f"F{index}",
-                "source_counterexample_ids": [counterexample_id],
-                "target_formal_reference_ids": [counterexample_target_id] if counterexample_target_id in formal_ids else [],
-                "target_lemma_ids": target_lemma_ids,
-                "classification": classification,
-                "source_outcome_branch_ids": _outcome_branch_id(
-                    outcome_ids,
-                    *outcome_candidates_by_classification[classification],
-                ),
-            }
-        )
+    target_analyses = sorted(
+        (_mapping(item) for item in target_analyses),
+        key=lambda item: _text(item.get("target_claim_id")),
+    )
+    for target_analysis in target_analyses:
+        counterexample_target_id = _text(target_analysis.get("target_claim_id"))
+        if counterexample_target_id not in formal_ids:
+            continue
+        target_lemma_ids = [lemma_id_by_source_id[counterexample_target_id]] if counterexample_target_id in lemma_id_by_source_id else []
+        counterexamples = _stable_records(target_analysis.get("candidate_counterexamples"), identifier_field="counterexample_id")
+        for record in counterexamples:
+            counterexample_id = _text(record.get("counterexample_id"))
+            classification = _counterexample_classification(record)
+            index = len(falsifiers) + 1
+            falsifiers.append(
+                {
+                    "falsifier_id": f"TS-F-{index}",
+                    "display_label": f"F{index}",
+                    "source_counterexample_ids": [counterexample_id],
+                    "target_formal_reference_ids": [counterexample_target_id] if counterexample_target_id in formal_ids else [],
+                    "target_lemma_ids": target_lemma_ids,
+                    "classification": classification,
+                    "source_outcome_branch_ids": _outcome_branch_id(
+                        outcome_ids,
+                        *outcome_candidates_by_classification[classification],
+                    ),
+                }
+            )
     for falsifier in falsifiers:
         for lemma_id in falsifier["target_lemma_ids"]:
             for unit in lemma_units:
@@ -513,11 +523,19 @@ def validate_theory_spine(
         resolved_source_registry = build_frozen_source_registry(preparation)
     formal_by_id, _formal_kinds = _formal_records(author_context)
     formal_ids = set(formal_by_id)
-    counterexample_ids = {
-        _text(record.get("counterexample_id"))
-        for record in _mapping(author_context.get("counterexample_analysis")).get("candidate_counterexamples") or []
-        if isinstance(record, Mapping) and _text(record.get("counterexample_id"))
+    counterexample_analysis = _mapping(author_context.get("counterexample_analysis"))
+    target_analyses = counterexample_analysis.get("target_analyses")
+    if not isinstance(target_analyses, list):
+        target_analyses = [counterexample_analysis]
+    counterexample_ids_by_target = {
+        _text(analysis.get("target_claim_id")): {
+            _text(record.get("counterexample_id"))
+            for record in analysis.get("candidate_counterexamples") or []
+            if isinstance(record, Mapping) and _text(record.get("counterexample_id"))
+        }
+        for analysis in target_analyses if isinstance(analysis, Mapping)
     }
+    counterexample_ids = set().union(*counterexample_ids_by_target.values()) if counterexample_ids_by_target else set()
     outcome_ids = {
         _text(record.get("branch_id"))
         for record in author_context.get("outcome_branches") or []
@@ -622,6 +640,14 @@ def validate_theory_spine(
                     errors.append(f"proof_obligations/{index}/if_unavailable_branch_id contains an unknown local decision branch")
             elif collection == "falsifiers" and set(_text_list(record.get("target_lemma_ids"))) - lemma_ids:
                 errors.append(f"falsifiers/{index}/target_lemma_ids contains an unknown local lemma")
+            if collection == "falsifiers":
+                target_ids = _text_list(record.get("target_formal_reference_ids"))
+                source_ids = _text_list(record.get("source_counterexample_ids"))
+                if len(target_ids) != 1 or any(
+                    source_id not in counterexample_ids_by_target.get(target_ids[0], set())
+                    for source_id in source_ids
+                ):
+                    errors.append(f"falsifiers/{index} counterexample does not belong to target")
     return sorted(set(errors))
 
 

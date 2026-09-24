@@ -89,11 +89,15 @@ def variable_groups(variables, group_size=4):
     return groups or [[]]
 
 
-def bounded_formal_evidence(bundle, query):
+def bounded_formal_evidence(bundle, query, *, card_limit=40, catalog_limit=80):
     cards = [card for card in bundle.get("evidence_cards", []) if isinstance(card, Mapping)]
     index = DefinitionEvidenceIndex(cards)
-    return {"evidence_cards": index.select(query, limit=40),
-            "evidence_catalog": index.catalog(), "total_card_count": len(cards),
+    selected = index.select(query, limit=max(1, min(40, int(card_limit))))
+    selected_ids = {str(card.get("card_id")) for card in selected}
+    catalog = [item for item in index.catalog() if str(item.get("card_id")) in selected_ids]
+    catalog = catalog[:max(1, min(80, int(catalog_limit)))]
+    return {"evidence_cards": selected,
+            "evidence_catalog": catalog, "total_card_count": len(cards),
             "selection_policy": "Relevant excerpts only; absence from this selection is not absence of evidence."}
 
 

@@ -23,6 +23,41 @@ Deep Survey is an automated academic survey generation pipeline. Given a researc
 
 `logs/`, `outputs/`, and `database/` are generated/runtime directories and are ignored by git. The `logs/` directory can usually be ignored when reading the codebase.
 
+## Run Survey from the repository root
+
+The supported source entry point is `uv run qwensci survey` from the Qwen-Sci repository root, not a bare `qwensci` command in an unrelated active virtual environment. On Linux/WSL, select one project environment and use the same setting in each new shell:
+
+```bash
+cd /path/to/qwensci
+export UV_PROJECT_ENVIRONMENT="$HOME/.venvs/qwen-sci-dev"
+uv sync --all-groups --locked
+source "$UV_PROJECT_ENVIRONMENT/bin/activate"
+uv run qwensci doctor
+```
+
+Configure provider credentials in a private `.env` or configuration file before running. `src/config/default.yaml` is the canonical project configuration; copy it for project-specific settings and pass the copy with `--config /path/to/config.yaml`. Never commit credentials or generated research artifacts.
+
+```bash
+uv run qwensci survey \
+  --topic "Global changes in flash-drought frequency" \
+  --declared-domain "climate science" \
+  --research-objective "Compare changes in flash-drought frequency and onset mechanisms."
+```
+
+Use `--base-dir`, `--save-path`, and `--save-json-path` to select output locations. For local research figures, repeat `--multimodal-file /path/to/figure.png` for each file. Local-only processing is the default; add `--allow-remote-perception` only after reviewing non-sensitive inputs and explicitly consenting to bounded remote visual inspection. Use `uv run qwensci survey --help` for all options. Do not pass `...` as a literal argument or use `uv run --no-sync`.
+
+### Optional local embedding models
+
+The repository does not include downloaded models. ModelScope is installed by the `--all-groups` step above (or by `uv sync --group pdf --locked` when setting up a smaller environment). If the configured retrieval paths require these models, download both from the repository root:
+
+```bash
+mkdir -p models/bge-m3 models/all-MiniLM-L6-v2
+modelscope download --model BAAI/bge-m3 --local_dir "$PWD/models/bge-m3"
+modelscope download --model sentence-transformers/all-MiniLM-L6-v2 --local_dir "$PWD/models/all-MiniLM-L6-v2"
+```
+
+Keep model directories, caches, PDFs, logs, and outputs outside commits. The repository-root README has the full provider and asset setup.
+
 ## Pipeline overview
 
 The main Deep Survey pipeline follows these stages:
@@ -63,6 +98,8 @@ The main Deep Survey pipeline follows these stages:
 - `modules/paper_graph_retriever.py`: retrieves papers from local graph/database resources.
 
 ## Important scripts
+
+The scripts below are advanced standalone/Hydra entry points. Run their relative paths from `src/agents/survey_agent/` with a compatible environment and their own configs; they are not the recommended Qwen-Sci CLI workflow above.
 
 ### Single-topic Hydra entry point
 
@@ -130,6 +167,10 @@ This script evaluates outputs from Deep Survey and baseline systems such as Auto
 - `scripts/run_model_ablation.sh`: run model ablation experiments.
 
 ## Configuration
+
+The unified CLI uses `src/config/default.yaml` by default, or a project-specific copy supplied through `--config`. The following `config/` examples describe the standalone Hydra scripts only; do not assume their relative paths or settings apply to `uv run qwensci survey`.
+
+For the unified Survey workflow, `survey.ModuleInfo.SurveyGenerator.outline_evidence_plan_max_input_tokens` is `120000` in `src/config/default.yaml`. The standalone `config/deep_survey.yaml` also uses `120000`. This is the compact evidence-plan component limit, not a guarantee that the whole outline prompt fits: `outline_prompt_max_input_tokens` also bounds the total input. If preflight still rejects a plan, reduce allowed-paper constraints or adjust the relevant limits explicitly in a private config and pass it with `--config`.
 
 Configurations live under `config/`. The common top-level sections are:
 
@@ -219,7 +260,7 @@ The exact outputs depend on `ModuleInfo.SurveyGenerator` and `ModuleInfo.Judge` 
 
 ## Docker environment
 
-The repository includes a Dockerfile at `Dockerfile`. It is the intended environment configuration for Deep Survey and PDF parsing utilities.
+This directory includes a standalone Dockerfile at `Dockerfile`. It is separate from the repository-root `uv` environment and may have different dependency versions; use the root workflow above for current Qwen-Sci runs.
 
 The image is based on:
 
@@ -265,7 +306,7 @@ docker run --gpus all --rm -it \
   python3 scripts/run_deep_survey_batch_arg.py --config ./config/personal/deep_survey_batch_0514.yaml
 ```
 
-If building fails around the final Python package installation block, check the trailing shell continuation after `pip install hdbscan`. The last command in a chained `RUN` block should not leave a dangling `&& \` before the next Docker instruction.
+If building the standalone image, review its dependency versions and Dockerfile independently before using it for a current Qwen-Sci run.
 
 ## PDF and MinerU utilities
 
@@ -280,6 +321,8 @@ utils/html_utils.py
 `utils/mineru_utils.py` contains MinerU-based parsing helpers for converting PDFs into markdown-like outputs. The Dockerfile installs MinerU and pre-downloads its models so PDF parsing can run with local MinerU model sources.
 
 ## Recommended run patterns
+
+For normal Survey runs, use `uv run qwensci survey` as shown above. The batch examples below apply only to the standalone scripts and their YAML configs.
 
 ### Foreground run
 
@@ -305,6 +348,18 @@ bash scripts/memory_monitor.sh
 For long experiments on remote/HPC machines, prefer using `tmux`, `screen`, or a job scheduler so the process is not interrupted by SSH session disconnection.
 
 ## Troubleshooting
+
+### `qwensci: command not found` or Hydra rejects `...`
+
+From source, run `uv run qwensci survey --help` in the repository root with `UV_PROJECT_ENVIRONMENT` set to the environment used for `uv sync`. Activating a different environment does not install the CLI there. Replace `...` in examples with real flags; Hydra treats it as an invalid override.
+
+### Compact outline evidence plan exceeds its prompt budget
+
+The current evidence-plan component limit is `120000` tokens. A larger allowed-paper set may still exceed this limit or the overall outline-prompt budget. Narrow the paper constraints first; if a larger budget is justified, edit a private copy of `src/config/default.yaml` and supply it with `--config`.
+
+### `cv2` or MinerU import errors
+
+Multiple OpenCV distributions can overwrite the same `cv2` namespace and cause import or missing-attribute errors. The root `pyproject.toml` pins `opencv-python-headless` and overrides GUI OpenCV dependencies; synchronize with `uv` and avoid bare `pip install` into that environment. The root `scripts/install_heavy.sh` also targets the selected `uv` environment.
 
 ### `Killed`
 
