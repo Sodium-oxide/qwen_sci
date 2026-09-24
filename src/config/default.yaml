@@ -895,7 +895,7 @@ experiment_design:
       initial_cards: 16
       supplement_cards: 10
       variables_per_group: 4
-      max_prompt_chars: 120000
+      parallel_workers: 3
       max_supplement_rounds: 1
       heartbeat_seconds: 30
       checkpoint:
@@ -903,25 +903,24 @@ experiment_design:
         root: ".science/cache/experiment_design/definitions-v1"
         mode: "read_write"
     planner:
+      parallel_workers: 3
       max_targets_per_request: 2
       max_evidence_cards: 12
       max_catalog_cards: 40
       max_unknown_items: 30
-      max_prompt_chars: 70000
       max_proof_steps_per_target: 8
     counterexample:
+      parallel_workers: 3
       max_targets_per_request: 1
-      max_prompt_chars: 45000
     revision:
       max_evidence_cards: 8
       max_catalog_cards: 20
-      max_prompt_chars: 50000
     max_semantic_revisions: 2
     verification:
       enabled: true
       backends: ["sympy", "z3"]
       timeout_seconds: 60
-      max_parallel_tasks: 4
+      max_parallel_tasks: 3
   provider: "${oc.env:EXPERIMENT_DESIGN_LLM_PROVIDER,'qwen'}"
   model: "${oc.env:EXPERIMENT_DESIGN_LLM_MODEL,'qwen3.8-max'}"
   request_timeout_seconds: 1800
@@ -936,7 +935,9 @@ experiment_design:
     cache:
       # Immutable content-addressed snapshots plus per-run manifests. Set
       # mode=read_only for offline replay; a cache miss then degrades only the
-      # affected query, paper, or card instead of contacting an external service.
+      # affected query, paper, card, or design stage instead of contacting an
+      # external service or LLM. Successful variable, formal-plan,
+      # counterexample, and template-composition outputs are cached here.
       enabled: true
       root: ".science/cache/experiment_design/v1"
       mode: "read_write"

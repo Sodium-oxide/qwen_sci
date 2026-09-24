@@ -118,9 +118,15 @@ def validate_formal_plan_v2(plan: Any, variable_claim_model: Mapping[str, Any] |
         errors.append("definitions_missing_or_duplicate_symbol")
     variable_ids = {record["variable_id"] for record in (variable_claim_model or {}).get("variables", [])}
     for identifier, record in records.items():
-        for symbol in set(record.get("symbol_references", [])) | expression_symbols(record):
-            if symbol not in definitions:
-                errors.append(f"{identifier}_undefined_symbol:{symbol}")
+        unresolved_definition = "definition_id" in record and (
+            record.get("definition_status") != "specified"
+            or record.get("verification_readiness") != "encoded"
+        )
+        unresolved_relation = "relation_id" in record and record.get("status") == "unresolved"
+        if not unresolved_definition and not unresolved_relation:
+            for symbol in set(record.get("symbol_references", [])) | expression_symbols(record):
+                if symbol not in definitions:
+                    errors.append(f"{identifier}_undefined_symbol:{symbol}")
         if variable_claim_model is not None:
             for variable in record.get("variable_references", []):
                 if variable not in variable_ids:

@@ -583,7 +583,14 @@ def validate_reasoning_artifacts(
             if str(item.get("proposition_id") or "").strip()
         }
         target_claim_id = str(counterexamples.get("target_claim_id") or "").strip()
-        if target_claim_id not in proposition_ids:
+        no_target_review = (
+            not proposition_ids
+            and not _records(formal.get("lemmas"))
+            and not target_claim_id
+            and counterexamples.get("status") in {"requires_human_review", "not_run"}
+            and counterexamples.get("applicability") in {"formal_theory", "not_applicable"}
+        )
+        if target_claim_id not in proposition_ids and not no_target_review:
             errors.append("counterexample_analysis_target_claim_must_reference_formal_proposition")
         if counterexamples.get("applicability") == "empirical_consistency":
             errors.append("formal_theorem_and_empirical_consistency_must_remain_separate")

@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from concurrent.futures import ThreadPoolExecutor
 from io import StringIO
 import json
+from threading import Barrier, Lock
+from time import sleep
 
 import pytest
 
@@ -378,6 +381,94 @@ def test_counterexample_analyzer_covers_each_proposition_with_local_context() ->
     json.dumps(analysis)
 
 
+def test_counterexample_targets_run_three_at_a_time_and_merge_in_order() -> None:
+    plan = _formal_plan()
+    plan["propositions"] = [
+        {**deepcopy(plan["propositions"][0]), "proposition_id": f"P{number}"}
+        for number in range(1, 5)
+    ]
+    barrier = Barrier(3)
+    lock = Lock()
+    active = 0
+    max_active = 0
+
+    def llm_call(prompt: str, **_kwargs: object) -> dict:
+        nonlocal active, max_active
+        target_id = json.loads(prompt.split("INPUT_JSON:\n", 1)[1])["target_specification"]["target_claim_id"]
+        with lock:
+            active += 1
+            max_active = max(max_active, active)
+        try:
+            if target_id in {"P1", "P2", "P3"}:
+                barrier.wait(timeout=5)
+            sleep(0.02)
+            return {**_counterexample_plan(), "target_claim_id": target_id}
+        finally:
+            with lock:
+                active -= 1
+
+    analysis = CounterexampleAnalyzer().analyze(
+        _brief(), {}, _variable_claim_model(), plan, llm_call=llm_call,
+        analyzer_settings={"parallel_workers": 10},
+    )
+
+    assert max_active == 3
+    assert [item["target_claim_id"] for item in analysis["target_analyses"]] == ["P1", "P2", "P3", "P4"]
+
+
+def test_large_counterexample_prompt_reaches_llm() -> None:
+    brief = _brief()
+    brief["large_context"] = "x" * 170000
+    prompts = []
+
+    def llm_call(prompt: str, **_kwargs: object) -> dict:
+        prompts.append(prompt)
+        return _counterexample_plan()
+
+    analysis = CounterexampleAnalyzer().analyze(
+        brief, {}, _variable_claim_model(), _formal_plan(), llm_call=llm_call,
+    )
+
+    assert len(prompts) == 1
+    assert len(prompts[0]) > 170000
+    assert analysis["target_claim_id"] == "P1"
+    assert analysis["status"] == "no_candidate_found_in_declared_scope"
+
+
+def test_counterexample_without_formal_target_skips_llm() -> None:
+    plan = _formal_plan()
+    plan["propositions"] = []
+    plan["lemmas"] = []
+    calls = []
+    logger = ExperimentDesignRunLogger("counterexample-no-target", console_stream=StringIO())
+
+    def llm_call(prompt: str, **_kwargs: object) -> dict:
+        calls.append(prompt)
+        return _counterexample_plan()
+
+    analysis = CounterexampleAnalyzer().analyze(
+        _brief(), {}, _variable_claim_model(), plan,
+        llm_call=llm_call, logger=logger,
+    )
+
+    assert calls == []
+    assert analysis["status"] == "not_run"
+    assert analysis["applicability"] == "not_applicable"
+    assert analysis["candidate_counterexamples"] == []
+    assert validate_counterexample_analysis(analysis, formal_reasoning_plan=plan) == []
+    assert any(record["event"] == "skipped_no_target" for record in logger.records)
+    from test_formal_contracts_v2 import formal_plan
+
+    validated_plan = formal_plan()
+    validated_plan["propositions"] = []
+    validated_plan["proof_attempts"] = []
+    assert validate_reasoning_artifacts(
+        variable_claim_model=None,
+        formal_reasoning_plan=validated_plan,
+        counterexample_analysis=analysis,
+    ) == []
+
+
 def test_counterexample_analyzer_retains_other_targets_after_one_failure() -> None:
     plan = _formal_plan()
     second = deepcopy(plan["propositions"][0])
@@ -478,6 +569,34 @@ def test_default_callback_uses_the_project_agent_and_json_mode(monkeypatch) -> N
     assert callback("return JSON", response_format={"type": "json_object"}) == '{"ok": true}'
     assert calls[0]["model"] == "test-experiment-design-model"
     assert calls[0]["response_format"] == {"type": "json_object"}
+
+
+def test_default_callback_uses_separate_agents_for_parallel_requests(monkeypatch) -> None:
+    instances = []
+    barrier = Barrier(3)
+
+    class Provider:
+        default_models = {"experiment_design": "test-model"}
+
+    class FakeAgent:
+        provider = Provider()
+
+        def __init__(self, *, config=None, provider_name=None) -> None:
+            instances.append(self)
+
+        def chat(self, prompt: str, *, model: str, **kwargs: object) -> str:
+            barrier.wait(timeout=5)
+            return '{"ok": true}'
+
+    import src.agents.idea_agent.agent.base as base
+
+    monkeypatch.setattr(base, "AgentBase", FakeAgent)
+    callback = build_default_json_llm_call(config={"llm": {}})
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        responses = list(executor.map(lambda _item: callback("return JSON"), range(3)))
+
+    assert responses == ['{"ok": true}'] * 3
+    assert len({id(agent) for agent in instances}) == 3
 
 
 def test_default_callback_uses_experiment_design_qwen_model_and_provider(monkeypatch) -> None:

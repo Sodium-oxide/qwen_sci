@@ -25,7 +25,12 @@ from .formal_reasoning_planner import (
 )
 from .llm_json import build_default_json_llm_call, validation_summary
 from .reasoning_context import build_reasoning_context_from_brief
-from .reasoning_validation import validate_reasoning_artifacts
+from .reasoning_validation import (
+    validate_counterexample_analysis,
+    validate_formal_reasoning_plan,
+    validate_reasoning_artifacts,
+    validate_variable_claim_model,
+)
 from .scope_gate import ScopeAndSafetyGate
 from .study_type_composer import StudyTypeTemplateComposer
 from .survey_evidence import SurveyEvidenceAdapter
@@ -57,11 +62,27 @@ def _experiment_design_cache_config(config: object | None) -> object:
 
 
 def _llm_cache_context(config: object | None, model: str | None) -> dict[str, str]:
-    experiment_design = _setting(config, "experiment_design", config)
-    return {
-        "provider": str(_setting(experiment_design, "provider", "") or ""),
-        "model": str(model or _setting(experiment_design, "model", "") or ""),
-    }
+    runtime_config = config
+    if runtime_config is None:
+        try:
+            from src.config import get_config
+
+            runtime_config = get_config()
+        except Exception:
+            return {}
+    experiment_design = _setting(runtime_config, "experiment_design", runtime_config)
+    resolved_model = str(model or _setting(experiment_design, "model", "") or "").strip()
+    provider = str(_setting(experiment_design, "provider", "") or "").strip()
+    if not resolved_model:
+        return {}
+    if model or not provider:
+        try:
+            from src.llm.provider_registry import resolve_model
+
+            provider = resolve_model(runtime_config, resolved_model).provider
+        except Exception:
+            return {}
+    return {"provider": provider, "model": resolved_model} if provider else {}
 
 
 def _sequence_count(value: object) -> int:
@@ -302,6 +323,101 @@ class ExperimentDesignOrchestrator:
     def _required_composer_llm(self, override: Callable[..., object] | None = None) -> Callable[..., object]:
         return override or self.composer_llm_call or self.llm_call or self._required_reasoning_llm()
 
+    def _write_stage_cache(
+        self,
+        stage: str,
+        identity: Mapping[str, Any],
+        payload: Mapping[str, Any],
+        *,
+        run_id: str,
+        logger: ExperimentDesignRunLogger | None,
+        brief_id: str,
+    ) -> None:
+        try:
+            snapshot_key = self.cache.write(stage, identity, payload, run_id=run_id)
+        except (TypeError, ValueError, OSError) as error:
+            if logger is not None:
+                logger.event(stage, "cache_write_failed", level="WARNING", status="BYPASSED",
+                             brief_id=brief_id, error_code=type(error).__name__,
+                             error_detail=str(error))
+            return
+        if snapshot_key and logger is not None:
+            logger.event(stage, "cache_written", status="SAVED", brief_id=brief_id,
+                         snapshot_key=snapshot_key)
+
+    def _cached_stage_result(
+        self,
+        stage: str,
+        inputs: Mapping[str, Any],
+        generate: Callable[[], dict[str, Any]],
+        reusable: Callable[[Mapping[str, Any]], bool],
+        *,
+        llm_override: Callable[..., object] | None = None,
+        logger: ExperimentDesignRunLogger | None = None,
+        brief_id: str = "",
+        pending_writes: list[tuple[str, dict[str, Any], dict[str, Any], str]] | None = None,
+    ) -> dict[str, Any]:
+        callback = llm_override or self.llm_call
+        is_default_callback = callback is None or callback is self._default_llm_call
+        callback_identity = getattr(callback, "experiment_design_cache_identity", None) if callback else None
+        if not is_default_callback and not callback_identity:
+            if self.cache.offline:
+                raise ValueError(f"{stage}_cache_identity_required_in_read_only_mode")
+            if logger is not None and self.cache.can_read:
+                logger.event(stage, "cache_bypassed", status="BYPASSED", brief_id=brief_id,
+                             reason="custom_llm_missing_cache_identity")
+            return generate()
+        llm_identity = _llm_cache_context(self.config, self.llm_model) if is_default_callback else callback_identity
+        if not llm_identity:
+            if self.cache.offline:
+                raise ValueError(f"{stage}_cache_model_identity_unavailable_in_read_only_mode")
+            if logger is not None and self.cache.can_read:
+                logger.event(stage, "cache_bypassed", status="BYPASSED", brief_id=brief_id,
+                             reason="llm_model_identity_unavailable")
+            return generate()
+        identity = {
+            "version": 1,
+            "inputs": inputs,
+            "llm": llm_identity,
+        }
+        run_id = logger.run_id if logger is not None else ""
+
+        def valid(payload: Mapping[str, Any]) -> bool:
+            try:
+                return bool(reusable(payload))
+            except Exception as error:
+                if logger is not None:
+                    logger.event(stage, "cache_validation_failed", level="WARNING", status="BYPASSED",
+                                 brief_id=brief_id, error_code=type(error).__name__,
+                                 error_detail=str(error))
+                return False
+
+        try:
+            cached = self.cache.read(stage, identity, run_id=run_id)
+        except (TypeError, ValueError, OSError) as error:
+            cached = None
+            if logger is not None:
+                logger.event(stage, "cache_read_failed", level="WARNING", status="BYPASSED",
+                             brief_id=brief_id, error_code=type(error).__name__,
+                             error_detail=str(error))
+        if cached is not None and valid(cached):
+            if logger is not None:
+                logger.event(stage, "cache_hit", status="REUSED", brief_id=brief_id)
+            return cached
+        if logger is not None and self.cache.can_read:
+            logger.event(stage, "cache_miss", status="RUNNING", brief_id=brief_id,
+                         invalid_cached_result=cached is not None)
+        if self.cache.offline:
+            raise ValueError(f"{stage}_cache_miss_in_read_only_mode")
+        result = generate()
+        if valid(result):
+            if pending_writes is not None and self.cache.can_write:
+                pending_writes.append((stage, identity, deepcopy(result), run_id))
+            elif pending_writes is None:
+                self._write_stage_cache(stage, identity, result, run_id=run_id,
+                                        logger=logger, brief_id=brief_id)
+        return result
+
     def prepare(
         self,
         research_brief: Mapping[str, Any],
@@ -466,6 +582,7 @@ class ExperimentDesignOrchestrator:
         reasoning_context = build_reasoning_context_from_brief(brief)
         brief_id = str(brief.get("brief_id") or "")
         degradations: list[dict[str, str]] = []
+        pending_stage_cache: list[tuple[str, dict[str, Any], dict[str, Any], str]] = []
         if logger is not None:
             logger.event(
                 "reasoning_context",
@@ -486,12 +603,19 @@ class ExperimentDesignOrchestrator:
                 brief_id=brief_id,
             )
         try:
-            variable_claim_model = self.variable_claim_extractor.extract(
-                brief,
-                reasoning_context=reasoning_context,
-                llm_call=self._required_reasoning_llm(reasoning_llm_call),
-                logger=logger,
-                brief_id=brief_id,
+            variable_claim_model = self._cached_stage_result(
+                "variable_claim_extraction",
+                {"research_brief": brief, "reasoning_context": reasoning_context},
+                lambda: self.variable_claim_extractor.extract(
+                    brief,
+                    reasoning_context=reasoning_context,
+                    llm_call=self._required_reasoning_llm(reasoning_llm_call),
+                    logger=logger,
+                    brief_id=brief_id,
+                ),
+                lambda payload: not validate_variable_claim_model(payload),
+                llm_override=reasoning_llm_call, logger=logger, brief_id=brief_id,
+                pending_writes=pending_stage_cache,
             )
         except Exception as exc:
             degradations.append(
@@ -533,11 +657,27 @@ class ExperimentDesignOrchestrator:
         if formal_applicable and not variable_claim_degraded and _setting(formal_settings, "enabled", False):
             if _setting(formal_settings, "definition_resolution", True):
                 try:
+                    definition_callback = reasoning_llm_call or self.llm_call
+                    definition_identity = (
+                        getattr(definition_callback, "experiment_design_cache_identity", None)
+                        if definition_callback is not None and definition_callback is not self._default_llm_call
+                        else _llm_cache_context(self.config, self.llm_model)
+                    )
+                    definition_settings = _mapping(_setting(formal_settings, "definition_retrieval", {}))
+                    checkpoint = _mapping(_setting(definition_settings, "checkpoint", {}))
+                    if self.cache.offline:
+                        if not definition_identity:
+                            raise ValueError("definition_cache_identity_unavailable_in_read_only_mode")
+                        checkpoint.update(enabled=True, mode="read_only")
+                        definition_settings["checkpoint"] = checkpoint
+                    elif not definition_identity:
+                        checkpoint["enabled"] = False
+                        definition_settings["checkpoint"] = checkpoint
                     formal_inputs = self.formal_definition_resolver.resolve(
                         brief, reasoning_context, variable_claim_model, evidence_bundle or {},
                         llm_call=self._required_reasoning_llm(reasoning_llm_call), logger=logger,
-                        settings=_setting(formal_settings, "definition_retrieval", {}),
-                        cache_identity=_llm_cache_context(self.config, self.llm_model),
+                        settings=definition_settings,
+                        cache_identity=definition_identity,
                     )
                 except Exception as exc:
                     formal_definition_degraded = True
@@ -596,15 +736,35 @@ class ExperimentDesignOrchestrator:
                 )
             else:
                 try:
-                    formal_reasoning_plan = self.formal_reasoning_planner.plan(
-                        brief,
-                        reasoning_context,
-                        variable_claim_model,
-                        **({"formal_inputs": formal_inputs, "evidence_bundle": evidence_bundle} if formal_inputs is not None else {}),
-                        planner_settings=_setting(formal_settings, "planner", {}),
-                        llm_call=self._required_reasoning_llm(reasoning_llm_call),
-                        logger=logger,
-                        brief_id=brief_id,
+                    formal_reasoning_plan = self._cached_stage_result(
+                        "formal_reasoning_planner",
+                        {
+                            "research_brief": brief,
+                            "reasoning_context": reasoning_context,
+                            "variable_claim_model": variable_claim_model,
+                            "formal_inputs": formal_inputs,
+                            "evidence_bundle": evidence_bundle,
+                            "planner_settings": _setting(formal_settings, "planner", {}),
+                        },
+                        lambda: self.formal_reasoning_planner.plan(
+                            brief,
+                            reasoning_context,
+                            variable_claim_model,
+                            **({"formal_inputs": formal_inputs, "evidence_bundle": evidence_bundle} if formal_inputs is not None else {}),
+                            planner_settings=_setting(formal_settings, "planner", {}),
+                            llm_call=self._required_reasoning_llm(reasoning_llm_call),
+                            logger=logger,
+                            brief_id=brief_id,
+                        ),
+                        lambda payload: not validate_formal_reasoning_plan(
+                            payload, variable_claim_model=variable_claim_model,
+                        ) and not any(
+                            isinstance(item, Mapping)
+                            and str(item.get("field_path") or "").startswith("proof_attempts.")
+                            for item in payload.get("unknown_items", [])
+                        ),
+                        llm_override=reasoning_llm_call, logger=logger, brief_id=brief_id,
+                        pending_writes=pending_stage_cache,
                     )
                     target_failures = [
                         item for item in formal_reasoning_plan.get("unknown_items", [])
@@ -637,8 +797,6 @@ class ExperimentDesignOrchestrator:
                         from .formal_contracts import unresolved_plan_from_definitions
 
                         retained = unresolved_plan_from_definitions(formal_inputs, "Proof construction failed; resolved definitions and model relations are retained.")
-                        from .reasoning_validation import validate_formal_reasoning_plan
-
                         if not validate_formal_reasoning_plan(retained, variable_claim_model=variable_claim_model):
                             formal_reasoning_plan = retained
             if logger is not None:
@@ -682,17 +840,36 @@ class ExperimentDesignOrchestrator:
                 )
             else:
                 try:
-                    counterexample_analysis = self.counterexample_analyzer.analyze(
-                        brief,
-                        reasoning_context,
-                        variable_claim_model,
-                        formal_reasoning_plan,
-                        llm_call=self._required_reasoning_llm(reasoning_llm_call),
-                        logger=logger,
-                        brief_id=brief_id,
-                        analyzer_settings=_setting(formal_settings, "counterexample", {}),
+                    counterexample_analysis = self._cached_stage_result(
+                        "counterexample_analyzer",
+                        {
+                            "research_brief": brief,
+                            "reasoning_context": reasoning_context,
+                            "variable_claim_model": variable_claim_model,
+                            "formal_reasoning_plan": formal_reasoning_plan,
+                            "analyzer_settings": _setting(formal_settings, "counterexample", {}),
+                        },
+                        lambda: self.counterexample_analyzer.analyze(
+                            brief,
+                            reasoning_context,
+                            variable_claim_model,
+                            formal_reasoning_plan,
+                            llm_call=self._required_reasoning_llm(reasoning_llm_call),
+                            logger=logger,
+                            brief_id=brief_id,
+                            analyzer_settings=_setting(formal_settings, "counterexample", {}),
+                        ),
+                        lambda payload: payload.get("status") != "requires_human_review"
+                        and not validate_counterexample_analysis(
+                            payload, formal_reasoning_plan=formal_reasoning_plan,
+                        ),
+                        llm_override=reasoning_llm_call, logger=logger, brief_id=brief_id,
+                        pending_writes=pending_stage_cache,
                     )
-                    if counterexample_analysis.get("status") == "requires_human_review":
+                    if (
+                        counterexample_analysis.get("status") == "requires_human_review"
+                        and counterexample_analysis.get("target_claim_id")
+                    ):
                         counterexample_degraded = True
                         detail = "; ".join(
                             str(item.get("reason"))
@@ -850,22 +1027,54 @@ class ExperimentDesignOrchestrator:
                 error_count=0,
             )
 
+        if not any(record["stage"] == "reasoning_validation" for record in degradations):
+            for stage, identity, payload, run_id in pending_stage_cache:
+                self._write_stage_cache(stage, identity, payload, run_id=run_id,
+                                        logger=logger, brief_id=brief_id)
+
         if formal_reasoning_plan.get("schema_version") == "formal_reasoning_plan_v2":
             from .formal_revision import run_formal_revision_loop
 
+            revision_settings = (
+                {**_mapping(formal_settings), "max_semantic_revisions": 0}
+                if self.cache.offline else formal_settings
+            )
             formal_reasoning_plan, formal_verification_report, formal_revision_audit = run_formal_revision_loop(
-                formal_reasoning_plan, formal_settings,
+                formal_reasoning_plan, revision_settings,
                 llm_call=self._required_reasoning_llm(reasoning_llm_call), logger=logger,
                 brief_id=brief_id, evidence_bundle=evidence_bundle, counterexample_analysis=counterexample_analysis,
             )
             if any(item.get("status") == "revised" for item in formal_revision_audit["iterations"]):
                 try:
-                    counterexample_analysis = self.counterexample_analyzer.analyze(
-                        brief, reasoning_context, variable_claim_model, formal_reasoning_plan,
-                        llm_call=self._required_reasoning_llm(reasoning_llm_call), logger=logger, brief_id=brief_id,
-                        analyzer_settings=_setting(formal_settings, "counterexample", {}),
+                    counterexample_analysis = self._cached_stage_result(
+                        "counterexample_analyzer",
+                        {
+                            "research_brief": brief,
+                            "reasoning_context": reasoning_context,
+                            "variable_claim_model": variable_claim_model,
+                            "formal_reasoning_plan": formal_reasoning_plan,
+                            "analyzer_settings": _setting(formal_settings, "counterexample", {}),
+                        },
+                        lambda: self.counterexample_analyzer.analyze(
+                            brief, reasoning_context, variable_claim_model, formal_reasoning_plan,
+                            llm_call=self._required_reasoning_llm(reasoning_llm_call), logger=logger, brief_id=brief_id,
+                            analyzer_settings=_setting(formal_settings, "counterexample", {}),
+                        ),
+                        lambda payload: payload.get("status") != "requires_human_review"
+                        and not validate_counterexample_analysis(
+                            payload, formal_reasoning_plan=formal_reasoning_plan,
+                        ) and not validate_reasoning_artifacts(
+                            variable_claim_model=variable_claim_model,
+                            formal_reasoning_plan=formal_reasoning_plan,
+                            counterexample_analysis=payload,
+                            template_composition=routing,
+                        ),
+                        llm_override=reasoning_llm_call, logger=logger, brief_id=brief_id,
                     )
-                    if counterexample_analysis.get("status") == "requires_human_review":
+                    if (
+                        counterexample_analysis.get("status") == "requires_human_review"
+                        and counterexample_analysis.get("target_claim_id")
+                    ):
                         counterexample_degraded = True
                         detail = "; ".join(
                             str(item.get("reason"))
@@ -896,18 +1105,36 @@ class ExperimentDesignOrchestrator:
                 template_id=str(routing.get("primary_template") or ""),
             )
         try:
-            design = self.study_type_composer.compose(
-                brief,
-                template_routing=routing,
-                evidence_bundle=evidence_bundle,
-                user_constraints=user_constraints,
-                llm_call=self._required_composer_llm(composer_llm_call),
-                reasoning_context=reasoning_context,
-                variable_claim_model=variable_claim_model,
-                formal_reasoning_plan=formal_reasoning_plan,
-                counterexample_analysis=counterexample_analysis,
-                logger=logger,
-                brief_id=brief_id,
+            effective_composer_llm = self._required_composer_llm(composer_llm_call)
+            design = self._cached_stage_result(
+                "template_composer",
+                {
+                    "research_brief": brief,
+                    "template_routing": routing,
+                    "evidence_bundle": evidence_bundle,
+                    "user_constraints": user_constraints,
+                    "scope_gate": scope_gate,
+                    "reasoning_context": reasoning_context,
+                    "variable_claim_model": variable_claim_model,
+                    "formal_reasoning_plan": formal_reasoning_plan,
+                    "counterexample_analysis": counterexample_analysis,
+                },
+                lambda: self.study_type_composer.compose(
+                    brief,
+                    template_routing=routing,
+                    evidence_bundle=evidence_bundle,
+                    user_constraints=user_constraints,
+                    llm_call=effective_composer_llm,
+                    reasoning_context=reasoning_context,
+                    variable_claim_model=variable_claim_model,
+                    formal_reasoning_plan=formal_reasoning_plan,
+                    counterexample_analysis=counterexample_analysis,
+                    logger=logger,
+                    brief_id=brief_id,
+                ),
+                lambda payload: not degradations and not validate_experiment_design(payload),
+                llm_override=effective_composer_llm,
+                logger=logger, brief_id=brief_id,
             )
         except Exception as exc:
             degradations.append(

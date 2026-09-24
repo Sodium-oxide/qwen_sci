@@ -186,6 +186,35 @@ def test_verification_runs_independent_targets_concurrently(monkeypatch):
     assert {item["target_id"] for item in report["results"]} == {"P1", "P2"}
 
 
+def test_verification_caps_parallel_tasks_at_three(monkeypatch):
+    import src.agents.experiment_design_agent.formal_verification as module
+
+    plan = formal_plan()
+    plan["propositions"] = [
+        {**deepcopy(plan["propositions"][0]), "proposition_id": f"P{number}"}
+        for number in range(1, 5)
+    ]
+    lock = Lock()
+    active = 0
+    peak = 0
+
+    def execute(task, *, enabled=True):
+        nonlocal active, peak
+        with lock:
+            active += 1
+            peak = max(peak, active)
+        sleep(0.03)
+        with lock:
+            active -= 1
+        return {**task, "result": "unsupported", "evidence_kind": "none", "executed": False}
+
+    monkeypatch.setattr(module, "run_verification_task", execute)
+    report = verify_formal_plan(plan, {"enabled": True, "backends": ["z3"], "max_parallel_tasks": 10})
+
+    assert peak == 3
+    assert report["policy"]["max_parallel_tasks"] == 3
+
+
 def test_analyzer_candidate_is_checked_and_remains_numerical_evidence():
     plan = formal_plan()
     plan["propositions"][0]["conclusion_expression"]["args"][1] = {"number": "1"}

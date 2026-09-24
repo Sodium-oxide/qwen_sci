@@ -112,7 +112,6 @@ def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id=
                     target["candidate_ids"] = [candidate["counterexample_id"] for candidate in target_analysis.get("candidate_counterexamples", []) if isinstance(candidate.get("witness_assignment"), dict)]
     verification_settings = settings.get("verification", {})
     revision_settings = settings.get("revision", {}) if isinstance(settings.get("revision", {}), dict) else {}
-    max_prompt_chars = max(10000, int(revision_settings.get("max_prompt_chars", 50000)))
     evidence_card_limit = max(1, min(16, int(revision_settings.get("max_evidence_cards", 8))))
     report = verify_formal_plan(current, verification_settings)
     if logger is not None:
@@ -196,8 +195,6 @@ def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id=
                         affected_id_count=len(batch_affected), prompt_chars=len(prompt),
                         evidence_card_count=len(evidence.get("evidence_cards", [])),
                     )
-                if len(prompt) > max_prompt_chars:
-                    raise ValueError(f"formal_revision_prompt_exceeds_budget:{len(prompt)}>{max_prompt_chars}")
                 patch = call_required_json_with_logging(
                     llm_call, prompt, stage="formal_semantic_revision",
                     request_kind="scientific_revision", logger=logger, brief_id=brief_id,

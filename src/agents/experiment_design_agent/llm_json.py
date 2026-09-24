@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 from collections.abc import Callable, Mapping
+from threading import local
 from time import perf_counter
 from typing import Optional
 from typing import Any
@@ -276,7 +277,7 @@ def build_default_json_llm_call(
     JSON-object mode and explicit failure.
     """
 
-    holder: dict[str, Any] = {}
+    holder = local()
 
     def setting(value: Any, key: str, default: Any = "") -> Any:
         if isinstance(value, Mapping):
@@ -309,12 +310,12 @@ def build_default_json_llm_call(
         provider_name = str(experiment_design_setting("provider") or "").strip()
         if str(model or "").strip():
             provider_name = resolve_model(runtime_config, resolved_model).provider
-        agent = holder.get("agent")
+        agent = getattr(holder, "agent", None)
         if agent is None:
             from src.agents.idea_agent.agent.base import AgentBase
 
             agent = AgentBase(config=runtime_config, provider_name=provider_name or None)
-            holder["agent"] = agent
+            holder.agent = agent
         if not resolved_model:
             resolved_model = str(agent.provider.default_models.get("experiment_design") or "").strip()
         if not resolved_model:

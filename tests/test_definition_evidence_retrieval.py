@@ -1,6 +1,8 @@
 import json
 from copy import deepcopy
 from io import StringIO
+from threading import Barrier, Lock
+from time import sleep
 
 import pytest
 
@@ -71,13 +73,48 @@ def test_supplement_uses_new_cards_and_previous_candidate():
     assert result["definitions"][0]["definition_status"] == "specified"
 
 
-def test_rejects_reference_to_unseen_card():
+def test_uncatalogued_card_reference_does_not_discard_definition():
     result = resolution()
     result["definitions"][0].update(origin="source_grounded", source_refs=[{"card_id": "EC2", "locator": "Eq 1", "quote": "spectral opacity"}])
-    with pytest.raises(ValueError, match="not_grounded"):
-        FormalDefinitionResolver().resolve({}, {}, {"variables": [{"variable_id": "V1", "name": "density"}]},
-            {"evidence_cards": [card(1), card(2, "spectral opacity")]}, llm_call=lambda *args, **kwargs: result,
-            settings={"initial_cards": 1})
+    resolved = FormalDefinitionResolver().resolve(
+        {}, {}, {"variables": [{"variable_id": "V1", "name": "density"}]},
+        {"evidence_cards": [card(1), card(2, "spectral opacity")]},
+        llm_call=lambda *args, **kwargs: result,
+        settings={"initial_cards": 1},
+    )
+    assert resolved["definitions"][0]["source_refs"][0]["card_id"] == "EC2"
+
+
+@pytest.mark.parametrize("reference", [
+    {"card_id": "EC1", "locator": "Eq 1", "quote": "The paper defines a density measure."},
+    {"card_id": "EC1", "locator": "Eq 1"},
+])
+def test_source_reference_accepts_paraphrase_or_no_quote(reference):
+    result = resolution()
+    result["definitions"][0].update(origin="source_grounded", source_refs=[reference])
+
+    resolved = FormalDefinitionResolver().resolve(
+        {}, {}, {"variables": [{"variable_id": "V1", "name": "density"}]},
+        {"evidence_cards": [card(1)]}, llm_call=lambda *_args, **_kwargs: result,
+        settings={"max_supplement_rounds": 0},
+    )
+
+    assert resolved["definitions"][0]["source_refs"] == [reference]
+
+
+def test_source_reference_still_requires_card_locator():
+    result = resolution()
+    result["definitions"][0].update(
+        origin="source_grounded",
+        source_refs=[{"card_id": "EC1", "locator": "Eq 2", "quote": "Paraphrased"}],
+    )
+
+    with pytest.raises(ValueError, match="definition_source_locator_not_grounded"):
+        FormalDefinitionResolver().resolve(
+            {}, {}, {"variables": [{"variable_id": "V1", "name": "density"}]},
+            {"evidence_cards": [card(1)]}, llm_call=lambda *_args, **_kwargs: result,
+            settings={"max_supplement_rounds": 0},
+        )
 
 
 def test_normalizes_unambiguous_condition_shapes_without_dropping_definition():
@@ -221,10 +258,8 @@ def test_invalid_reconciliation_keeps_valid_group_relations():
 
     def callback(prompt, **_kwargs):
         payload = input_payload(prompt)
-        if "candidates" in payload:
-            invalid = deepcopy(payload["candidates"])
-            invalid["model_relations"] = [None]
-            return invalid
+        if "candidate_catalog" in payload:
+            return {"issues": "invalid"}
         variable = payload["variable_claim_model"]["variables"][0]["variable_id"]
         result = resolution(variable, "rho" if variable == "V1" else "flux",
                             "D1" if variable == "V1" else "D2")
@@ -243,19 +278,83 @@ def test_invalid_reconciliation_keeps_valid_group_relations():
     assert any(item["field_path"] == "definition_reconciliation" for item in result["unknown_items"])
 
 
+def test_reconciliation_review_preserves_source_references():
+    variables = [{"variable_id": "V1", "name": "density"},
+                 {"variable_id": "V2", "name": "spectrum"}]
+    long_quote = "PROVENANCE_ONLY " * 5000
+    reconciliation_prompts = []
+
+    def callback(prompt, **_kwargs):
+        payload = input_payload(prompt)
+        if "candidate_catalog" in payload:
+            reconciliation_prompts.append(prompt)
+            return {"issues": []}
+        variable = payload["variable_claim_model"]["variables"][0]["variable_id"]
+        result = resolution(variable, "rho" if variable == "V1" else "flux",
+                            "D1" if variable == "V1" else "D2")
+        result["definitions"][0].update(
+            origin="source_grounded",
+            source_refs=[{"card_id": payload["evidence_cards"][0]["card_id"],
+                          "locator": "Eq 1", "quote": long_quote}],
+        )
+        return result
+
+    result = FormalDefinitionResolver().resolve(
+        {}, {}, {"variables": variables},
+        {"evidence_cards": [card(1, "density"), card(2, "spectrum")]},
+        llm_call=callback,
+        settings={"variables_per_group": 1, "max_supplement_rounds": 0},
+    )
+
+    assert result["retrieval_audit"][-1]["status"] == "completed"
+    assert len(reconciliation_prompts) == 1
+    assert "PROVENANCE_ONLY" not in reconciliation_prompts[0]
+    assert len(reconciliation_prompts[0]) < 120000
+    assert result["definitions"][0]["source_refs"][0]["quote"] == long_quote
+
+
+def test_reconciliation_review_marks_only_reported_conflicts():
+    variables = [{"variable_id": "V1", "name": "density"}, {"variable_id": "V2", "name": "spectrum"}]
+
+    def callback(prompt, **_kwargs):
+        payload = input_payload(prompt)
+        if "candidate_catalog" in payload:
+            assert [item["definition_id"] for item in payload["candidate_catalog"]["definitions"]] == ["D1", "D2"]
+            return {"issues": [{"record_ids": ["D1"], "reason": "Its domain conflicts with the selected model."}]}
+        variable_id = payload["variable_claim_model"]["variables"][0]["variable_id"]
+        number = int(variable_id[1:])
+        return resolution(variable_id, f"symbol{number}", f"D{number}")
+
+    result = FormalDefinitionResolver().resolve(
+        {}, {}, {"variables": variables}, {}, llm_call=callback,
+        settings={"variables_per_group": 1, "max_supplement_rounds": 0},
+    )
+
+    assert result["definitions"][0]["verification_readiness"] == "blocked"
+    assert result["definitions"][1]["definition_status"] == "specified"
+    assert any(item["field_path"] == "definition_reconciliation.D1" for item in result["unknown_items"])
+
+
 def test_checkpoint_reuses_successful_group_after_failure(tmp_path):
     calls = []
+    failed_v2 = False
+    lock = Lock()
     variables = [{"variable_id": "V1", "name": "density"}, {"variable_id": "V2", "name": "spectrum"}]
     settings = {"checkpoint": {"root": str(tmp_path), "enabled": True}, "variables_per_group": 1}
 
     def callback(prompt, **kwargs):
+        nonlocal failed_v2
         payload = input_payload(prompt)
-        calls.append(payload)
-        if "candidates" in payload:
-            return payload["candidates"]
+        with lock:
+            calls.append(payload)
+        if "candidate_catalog" in payload:
+            return {"issues": []}
         variable = payload["variable_claim_model"]["variables"][0]["variable_id"]
-        if variable == "V2" and len(calls) == 2:
-            raise RuntimeError("interrupted")
+        if variable == "V2":
+            with lock:
+                if not failed_v2:
+                    failed_v2 = True
+                    raise RuntimeError("interrupted")
         return resolution(variable, "rho" if variable == "V1" else "flux", "D1" if variable == "V1" else "D2")
 
     resolver = FormalDefinitionResolver()
@@ -265,6 +364,67 @@ def test_checkpoint_reuses_successful_group_after_failure(tmp_path):
     assert len(calls) == 4
     assert len(result["definitions"]) == 2
     assert result["retrieval_audit"][0]["cache_hit"]
+
+
+def test_definition_groups_run_three_at_a_time_and_merge_in_order():
+    barrier = Barrier(3)
+    lock = Lock()
+    active = 0
+    max_active = 0
+
+    def callback(prompt, **_kwargs):
+        nonlocal active, max_active
+        payload = input_payload(prompt)
+        if "candidate_catalog" in payload:
+            return {"issues": []}
+        group_number = int(payload["id_prefix"].strip("G_"))
+        with lock:
+            active += 1
+            max_active = max(max_active, active)
+        try:
+            if group_number <= 3:
+                barrier.wait(timeout=5)
+            sleep(0.02)
+            return resolution(f"V{group_number}", f"symbol{group_number}", f"D{group_number}")
+        finally:
+            with lock:
+                active -= 1
+
+    result = FormalDefinitionResolver().resolve(
+        {}, {}, {"variables": [{"variable_id": f"V{number}", "name": f"quantity{number}"} for number in range(1, 5)]},
+        {}, llm_call=callback,
+        settings={"variables_per_group": 1, "max_supplement_rounds": 0, "parallel_workers": 10},
+    )
+
+    assert max_active == 3
+    assert [item["definition_id"] for item in result["definitions"]] == ["D1", "D2", "D3", "D4"]
+    assert [item["group"] for item in result["retrieval_audit"][:4]] == [1, 2, 3, 4]
+
+
+def test_dependent_definition_group_receives_completed_definitions():
+    variables = [
+        {"variable_id": "V1", "name": "density"},
+        {"variable_id": "V2", "name": "expansion", "depends_on": ["V1"]},
+        {"variable_id": "V3", "name": "spectrum"},
+    ]
+    seen = {}
+
+    def callback(prompt, **_kwargs):
+        payload = input_payload(prompt)
+        if "candidate_catalog" in payload:
+            return {"issues": []}
+        variable_id = payload["variable_claim_model"]["variables"][0]["variable_id"]
+        seen[variable_id] = [item["definition_id"] for item in payload["existing_definitions"]]
+        number = int(variable_id[1:])
+        return resolution(variable_id, f"symbol{number}", f"D{number}")
+
+    result = FormalDefinitionResolver().resolve(
+        {}, {}, {"variables": variables}, {}, llm_call=callback,
+        settings={"variables_per_group": 1, "max_supplement_rounds": 0},
+    )
+
+    assert "D1" in seen["V2"]
+    assert [item["definition_id"] for item in result["definitions"]] == ["D1", "D2", "D3"]
 
 
 def test_missing_symbols_and_cycles_remain_unresolved():
@@ -277,13 +437,61 @@ def test_missing_symbols_and_cycles_remain_unresolved():
     assert FormalDefinitionResolver._merge(payload)["unknown_items"]
 
 
-def test_oversized_context_stops_before_llm():
-    def callback(*args, **kwargs):
-        pytest.fail("Oversized request must not reach LLM")
+def test_merge_resolves_definition_ids_and_unique_function_names():
+    payload = resolution(symbol="t_fo", identifier="G2_primitive_freeze_out_time")
+    function = resolution("V2", "A_spec(t)", "D2")["definitions"][0]
+    dependent = resolution("V3", "U_act", "D3")["definitions"][0]
+    dependent["symbol_references"] = ["G2_primitive_freeze_out_time", "A_spec", "missing"]
+    payload["definitions"].extend([function, dependent])
 
-    with pytest.raises(ValueError, match="budget"):
-        FormalDefinitionResolver().resolve({"text": "a" * 10000}, {}, {"variables": []}, {},
-            llm_call=callback, settings={"max_prompt_chars": 1000})
+    merged = FormalDefinitionResolver._merge(payload)
+
+    assert dependent["symbol_references"] == ["t_fo", "A_spec(t)", "missing"]
+    assert dependent["verification_readiness"] == "blocked"
+    assert any("missing" in item["reason"] for item in merged["unknown_items"])
+
+
+def test_merge_does_not_guess_ambiguous_function_reference():
+    payload = resolution(symbol="A_spec(t)")
+    payload["definitions"].append(resolution("V2", "A_spec(u)", "D2")["definitions"][0])
+    dependent = resolution("V3", "U_act", "D3")["definitions"][0]
+    dependent["symbol_references"] = ["A_spec"]
+    payload["definitions"].append(dependent)
+
+    FormalDefinitionResolver._merge(payload)
+
+    assert dependent["symbol_references"] == ["A_spec"]
+    assert dependent["verification_readiness"] == "blocked"
+
+
+def test_merge_does_not_guess_id_function_name_collision():
+    payload = resolution(symbol="other", identifier="A_spec")
+    payload["definitions"].append(resolution("V2", "A_spec(t)", "D2")["definitions"][0])
+    dependent = resolution("V3", "U_act", "D3")["definitions"][0]
+    dependent["symbol_references"] = ["A_spec"]
+    payload["definitions"].append(dependent)
+
+    FormalDefinitionResolver._merge(payload)
+
+    assert dependent["symbol_references"] == ["A_spec"]
+    assert dependent["verification_readiness"] == "blocked"
+
+
+def test_large_definition_context_reaches_llm():
+    prompts = []
+
+    def callback(prompt, **_kwargs):
+        prompts.append(prompt)
+        return resolution()
+
+    result = FormalDefinitionResolver().resolve(
+        {"text": "a" * 10000}, {}, {"variables": [{"variable_id": "V1", "name": "density"}]}, {},
+        llm_call=callback, settings={"max_supplement_rounds": 0},
+    )
+
+    assert len(prompts) == 1
+    assert len(prompts[0]) > 10000
+    assert result["definitions"][0]["definition_status"] == "specified"
 
 
 def test_nested_prompt_removes_duplicate_evidence_but_preserves_registry():

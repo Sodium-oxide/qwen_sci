@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping
+from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
 from typing import Any
 
@@ -132,6 +133,19 @@ def unavailable_counterexample_analysis(*, reason: str) -> dict[str, Any]:
     }
 
 
+def no_target_counterexample_analysis() -> dict[str, Any]:
+    analysis = not_applicable_counterexample_analysis()
+    analysis["exhaustiveness"] = {
+        "scope": "No formal proposition or lemma was generated.",
+        "is_exhaustive": False,
+        "reason": "Counterexample analysis is not applicable without a formal target.",
+    }
+    analysis["limitations"] = [
+        "Counterexample analysis was skipped because no formal conclusion was available.",
+    ]
+    return analysis
+
+
 def _sequence_count(value: object) -> int:
     return len(value) if isinstance(value, list) else 0
 
@@ -181,18 +195,21 @@ class CounterexampleAnalyzer:
             if isinstance(record, Mapping) and record.get(identifier)
         ]
         if not target_ids:
-            target_ids = [""]
-        analyses = []
-        failures = []
-        for target_id in target_ids:
+            if logger is not None:
+                logger.event(
+                    "counterexample_analyzer", "skipped_no_target", status="SKIPPED",
+                    brief_id=effective_brief_id,
+                    reason="No proposition or lemma was generated; counterexample analysis is not applicable.",
+                )
+            return no_target_counterexample_analysis()
+        parallel_workers = max(1, min(3, int(settings.get("parallel_workers", 3))))
+
+        def analyze_target(target_id):
             try:
                 prompt = build_counterexample_analyzer_prompt(
                     research_brief, reasoning_context, variable_claim_model,
                     formal_reasoning_plan, target_id=target_id or None,
                 )
-                max_prompt_chars = max(10000, int(settings.get("max_prompt_chars", 45000)))
-                if len(prompt) > max_prompt_chars:
-                    raise ValueError(f"counterexample_prompt_exceeds_budget:{len(prompt)}>{max_prompt_chars}")
                 if logger is not None:
                     logger.event(
                         "counterexample_analyzer", "input_profiled", status="PROFILED",
@@ -201,7 +218,7 @@ class CounterexampleAnalyzer:
                     )
                 payload = call_required_json_with_logging(
                     llm_call, prompt, stage="counterexample_analyzer",
-                    request_kind="counterexample_analysis", logger=logger,
+                    request_kind=f"counterexample_analysis_target_{target_id or 'general'}", logger=logger,
                     brief_id=effective_brief_id,
                 )
                 returned_target_id = str(payload.get("target_claim_id") or target_id)
@@ -231,9 +248,8 @@ class CounterexampleAnalyzer:
                     )
                 if errors:
                     raise ValueError("counterexample_analyzer: invalid JSON contract: " + "; ".join(errors))
-                analyses.append(payload)
+                return payload, None
             except Exception as error:
-                failures.append(error)
                 if logger is not None:
                     logger.event(
                         "counterexample_analyzer", "target_degraded", level="ERROR",
@@ -253,7 +269,13 @@ class CounterexampleAnalyzer:
                     unavailable["target_specification"] = build_counterexample_target(local_plan, target_id)
                     unavailable["negated_conclusion"] = f"NOT ({target_record.get('conclusion', '')})"
                     unavailable["search_domain"] = str(target_record.get("scope") or "")
-                    analyses.append(unavailable)
+                    return unavailable, error
+                return unavailable_counterexample_analysis(reason=f"{type(error).__name__}: {error}"), error
+
+        with ThreadPoolExecutor(max_workers=min(parallel_workers, len(target_ids))) as executor:
+            results = list(executor.map(analyze_target, target_ids))
+        analyses = [analysis for analysis, _error in results]
+        failures = [error for _analysis, error in results if error is not None]
         primary = deepcopy(analyses[0])
         if len(analyses) > 1:
             primary["target_analyses"] = deepcopy(analyses)

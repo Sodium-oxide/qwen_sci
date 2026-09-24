@@ -211,7 +211,7 @@ def verify_formal_plan(plan, settings, *, previous_report=None):
         (target.get("obligation_id", target.get("proposition_id", target.get("lemma_id"))), target)
         for target in targets
     ]
-    max_workers = max(1, int(settings.get("max_parallel_tasks", 1)))
+    max_workers = max(1, min(3, int(settings.get("max_parallel_tasks", 1))))
     with ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="formal-verify") as executor:
         while ordered:
             ready = []
@@ -241,7 +241,7 @@ def verify_formal_plan(plan, settings, *, previous_report=None):
         "policy": {
             "enabled": enabled,
             "experiment_execution": False,
-            "max_parallel_tasks": max(1, int(settings.get("max_parallel_tasks", 1))),
+            "max_parallel_tasks": max(1, min(3, int(settings.get("max_parallel_tasks", 1)))),
         },
         "results": results,
         "target_summaries": summaries,
