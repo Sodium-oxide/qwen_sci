@@ -96,7 +96,14 @@ unknown_items arrays. Each target_result has target_id, proof_obligations,
 proof_attempts, derivation_steps and status. Use globally unique IDs: obligations
 must be PO_<target_id>_<n>, attempts PA_<target_id>_<n>, and steps S_<target_id>_<n>.
 Every proof step is proposed or unverified and may use only declared assumptions,
-definitions, propositions, lemmas, proof obligations, or earlier steps. Do not use
+definitions, propositions, lemmas, proof obligations, or earlier steps. When a step
+can be checked locally, include derived_expression in the restricted AST and use
+one of assumption_reuse, definition_unfolding, order_weakening, transitivity,
+contradiction, or algebraic_normalization. Text-only steps remain unverified
+drafts. When reusing a verified lemma with different quantified symbols, add a
+ target-level lemma_instantiations entry with lemma_id, an instantiation mapping,
+ and explicit side_conditions in the restricted AST. Every quantified lemma symbol
+ must be mapped; do not use
 the target or an unresolved obligation as a proven premise. If a target is not
 tractable, return an empty proof_attempts array and a precise unknown_item. Do not
 invent definitions, equations, citations, numerical values or verification claims.

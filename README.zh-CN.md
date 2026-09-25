@@ -91,7 +91,26 @@ uv run qwensci science \
 ```bash
 git clone https://github.com/Sodium-oxide/qwen_sci.git
 cd qwen_sci
+```
 
+在同一个 WSL 环境中安装 Lean 的工具链管理器 Elan：
+
+```bash
+curl https://elan.lean-lang.org/elan-init.sh -sSf | sh
+source "$HOME/.elan/env"
+elan --version
+```
+
+安装本仓库 [`lean-toolchain`](lean-toolchain) 锁定的 Lean 版本，并检查安装结果：
+
+```bash
+elan toolchain install "$(cat lean-toolchain)"
+lean --version
+```
+
+然后同步 Python 依赖：
+
+```bash
 export UV_PROJECT_ENVIRONMENT="$HOME/.venvs/qwen-sci-dev"
 uv sync --all-groups --locked
 uv run qwensci --help
@@ -102,10 +121,22 @@ uv run qwensci --help
 | 能力 | 命令 |
 | --- | --- |
 | 核心 API 驱动工作流 | `uv sync` |
+| 数学形式化推理（SymPy/Z3） | `uv sync --group formal` |
 | 向量检索与本地模型 | `uv sync --group memory --group ml` |
 | PDF 解析与全文综述路径 | `uv sync --group pdf` |
 | 显式图像、表格、信号、音频、视频、3D 或轨迹材料 | `uv sync --group multimodal` |
-| 完整开发环境 | `uv sync --all-groups --locked` |
+| 完整开发环境（包含数学形式化推理） | `uv sync --all-groups --locked` |
+
+`uv sync --all-groups --locked` 会自动同步 `[dependency-groups]` 下的全部组，
+因此也会安装 `formal` 组中的 SymPy 和 Z3。
+
+数学形式化推理组提供 `experiment_design` 数学理论分支使用的 SymPy/Z3
+Python 后端。Lean 内核校验属于外部工具链：请安装 Elan，并按
+[`lean-toolchain`](lean-toolchain) 中锁定的版本执行
+`elan toolchain install "$(cat lean-toolchain)"`，
+再确保 `lean` 在 `PATH` 中。Lean 不是 Python 包，因此不会写入
+`requirements.txt`；未安装 Lean 时后端会返回
+`proof_assistant_unsupported`，不会把缺失工具当成证明成功。
 
 复制配置模板，并确保密钥文件不进入版本控制：
 

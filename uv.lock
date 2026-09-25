@@ -6179,6 +6179,10 @@ dev = [
     { name = "pytest" },
     { name = "twine" },
 ]
+formal = [
+    { name = "sympy" },
+    { name = "z3-solver" },
+]
 memory = [
     { name = "faiss-cpu" },
     { name = "hdbscan" },
@@ -6376,6 +6380,10 @@ dev = [
     { name = "build", specifier = ">=1.2.2" },
     { name = "pytest", specifier = "==9.0.2" },
     { name = "twine", specifier = "==7.0.0" },
+]
+formal = [
+    { name = "sympy", specifier = "==1.14.0" },
+    { name = "z3-solver", specifier = "==4.15.4.0" },
 ]
 memory = [
     { name = "faiss-cpu", specifier = "==1.12.0" },

@@ -33,17 +33,78 @@ Experimental execution remains governed by the existing discipline policy. A
 `DESIGN_ONLY` artifact can contain mathematical verification evidence without
 claiming experimental observations; its `observed_results` remains empty.
 
-Install the optional backends into the Python environment that runs the workflow:
+Install the optional Python backends into the environment that runs the workflow:
 
 ```powershell
-python -m pip install sympy==1.14.0 z3-solver==4.15.4.0
+uv sync --group formal
 ```
+
+Lean is an external proof-assistant toolchain rather than a Python package. On
+systems using Elan, install the pinned toolchain from the repository root:
+
+```powershell
+elan toolchain install (Get-Content lean-toolchain)
+```
+
+The pinned version is recorded in `lean-toolchain`. `requirements.txt` and
+`uv.lock` therefore contain the Python backends, while Lean itself is managed
+by Elan. Mathlib imports additionally require a Lean project that provides
+Mathlib; the adapter continues to report `proof_assistant_unsupported` when
+the configured executable or its imports are unavailable.
 
 Set `verification.backends` to `["sympy", "z3"]` and `timeout_seconds` to the desired
 per-task wall-clock budget. The isolated backend process uses that same Python
 interpreter. Missing dependencies produce `unsupported`, not successful checks.
-The reserved proof-assistant backend currently returns `unsupported` when no
-adapter is configured. Arbitrary commands or generated Python are never evaluated.
+The proof-assistant backend is opt-in: `lean` must be listed in
+`verification.backends` and `verification.proof_assistant.enabled` must be true.
+When the backend is listed but disabled, it returns `unsupported` with an explicit
+disabled reason. The current adapter generates a temporary theorem source and
+invokes the configured Lean executable; only a successful Lean process exit is
+recorded as `lean_kernel_checked`. Missing Lean, malformed theorem input, timeouts,
+and rejected proofs never count as proof. The generated theorem source is retained
+as `certificate_source` for auditability, while `certificate_ref` is a stable
+generated filename rather than a path on the local machine. Arbitrary commands or
+generated Python are never evaluated.
+
+Lean diagnostics also retain explicit assistant states: `proof_assistant_verified`,
+`proof_assistant_failed`, `proof_assistant_timeout`, and
+`proof_assistant_unsupported`.
+
+Verification results expose a capability level: `solver_verified` for Z3/SymPy,
+`bounded_checked` for candidate-point search, `rule_verified` for the bounded local
+rule engine, `kernel_verified` for a successful Lean check, and `unresolved` for
+unsupported or incomplete work. These levels describe the checking mechanism and
+scope; they do not turn a conditional or domain-limited result into a universal
+scientific claim.
+
+The restricted AST supports arithmetic, comparisons, Boolean connectives
+(`implies`, `iff`, `xor`) and conditional expressions (`ite`). Proof attempts may
+attach `derived_expression` to a step. Such steps are checked locally using only
+assumption reuse, definition unfolding, order weakening, transitivity,
+contradiction, or algebraic normalization. A text-only `rule_or_lemma` remains a
+proof draft, and an unrecognized rule is never treated as trusted evidence. Local
+rule evidence is reported as `rule_derivation` and does not carry a proof-assistant
+certificate.
+
+Verified lemmas can be reused with an explicit `lemma_instantiations` record on
+the target. The record names the `lemma_id`, maps every quantified lemma symbol
+through `instantiation` (or the compatibility alias `substitution`), and lists
+AST `side_conditions`. The verifier substitutes the expressions, checks that the
+result only uses declared target symbols, adds the side conditions to the target
+constraints, and imports the instantiated lemma as an implication. Without this
+record, the previous same-quantifier compatibility rule remains in force.
+
+Example opt-in configuration:
+
+```yaml
+verification:
+  enabled: true
+  backends: ["sympy", "z3", "lean"]
+  proof_assistant:
+    enabled: true
+    backend: "lean"
+    executable: "lean"
+```
 
 `max_semantic_revisions` defaults to two, is capped at five, and stops early when
 no content changes. Definitions and model relations are resolved before proofs.
@@ -57,8 +118,11 @@ The design JSON and Author handoff carry `formal_verification_report` and
 `formal_revision_audit`; the Markdown includes both. Each backend result records
 the encoded task, assumptions, scope, version, outcome and witness or residual.
 The report is the persisted verification artifact; its embedded evidence is
-validated against the current plan before handoff. It is not a cryptographic
-certificate or an independent proof-kernel attestation.
+validated against the current plan before handoff. Solver and local-rule results
+are not cryptographic certificates. A `lean_kernel_checked` result records the
+configured Lean process check for the generated theorem, including its source and
+environment scope; it is not a portable certificate independent of that Lean
+installation.
 
 SymPy verifies polynomial identities; Z3 checks satisfiable domains and searches
 for witnesses to premises AND NOT conclusion. Division is restricted to nonzero

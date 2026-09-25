@@ -921,6 +921,10 @@ experiment_design:
       backends: ["sympy", "z3"]
       timeout_seconds: 60
       max_parallel_tasks: 3
+      proof_assistant:
+        enabled: false
+        backend: "lean"
+        executable: "lean"
   provider: "${oc.env:EXPERIMENT_DESIGN_LLM_PROVIDER,'qwen'}"
   model: "${oc.env:EXPERIMENT_DESIGN_LLM_MODEL,'qwen3.8-max'}"
   request_timeout_seconds: 1800

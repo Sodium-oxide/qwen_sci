@@ -134,6 +134,10 @@ dev = [
   "pytest==9.0.2",
   "twine==7.0.0",
 ]
+formal = [
+  "sympy==1.14.0",
+  "z3-solver==4.15.4.0",
+]
 memory = [
   "faiss-cpu==1.12.0",
   "hdbscan==0.8.42",

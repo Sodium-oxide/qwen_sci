@@ -10,10 +10,38 @@ import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 
-from .formal_dependency import formal_records, target_dependencies
+from .formal_dependency import expression_symbols, formal_records, target_dependencies
+from .formal_capabilities import backend_capabilities, is_registered_backend
+from .proof_assistant_backend import build_lean_source
+from .proof_checker import RULE_ENGINE_VERSION, verify_target_proof
 
 
 REPORT_VERSION = "formal_verification_report_v1"
+
+
+def _substitute_expression(node, substitution):
+    if isinstance(node, Mapping):
+        if set(node) == {"symbol"} and node.get("symbol") in substitution:
+            return deepcopy(substitution[node["symbol"]])
+        if set(node) == {"op", "args"} and isinstance(node.get("args"), list):
+            return {"op": node["op"], "args": [_substitute_expression(item, substitution) for item in node["args"]]}
+    return deepcopy(node)
+
+
+def _lemma_instance(target, lemma_id):
+    instances = target.get("lemma_instantiations", [])
+    if not isinstance(instances, list):
+        return None
+    for instance in instances:
+        if isinstance(instance, Mapping) and str(instance.get("lemma_id") or "") == str(lemma_id):
+            return instance
+    return None
+
+
+def _normalize_instantiation_value(value):
+    if isinstance(value, str) and value.strip():
+        return {"symbol": value.strip()}
+    return deepcopy(value)
 
 
 def semantic_snapshot(plan, target_id):
@@ -34,7 +62,14 @@ def semantic_snapshot(plan, target_id):
     return snapshot
 
 
-def build_verification_task(plan, target_id, backend, timeout_seconds=60, verified_results=()):
+def build_verification_task(
+    plan,
+    target_id,
+    backend,
+    timeout_seconds=60,
+    verified_results=(),
+    proof_assistant=None,
+):
     records = formal_records(plan)
     target = deepcopy(records[target_id])
     if "obligation_id" in target:
@@ -42,6 +77,37 @@ def build_verification_task(plan, target_id, backend, timeout_seconds=60, verifi
         for field in ("quantifiers", "scope", "domain_expression"):
             target.setdefault(field, parent.get(field))
     dependencies = target_dependencies(plan, target_id)
+    if backend == "lean":
+        proof_assistant = proof_assistant if isinstance(proof_assistant, Mapping) else {}
+        proof_script = target.get("proof_script") or target.get("lean_proof_script")
+        theorem_statement = target.get("lean_theorem_statement")
+        blockers = []
+        if not isinstance(theorem_statement, str) or not theorem_statement.strip():
+            blockers.append("missing_lean_theorem_statement")
+        if not isinstance(proof_script, str) or not proof_script.strip():
+            blockers.append("missing_lean_proof_script")
+        return {
+            "task_kind": "proof_assistant_check",
+            "backend": backend,
+            "target_id": target_id,
+            "target_revision": plan.get("revision", 1),
+            "theorem_name": target.get("lean_theorem_name", f"formal_{target_id}"),
+            "theorem_statement": theorem_statement or "",
+            "proof_script": proof_script or "",
+            "lean_imports": target.get("lean_imports", "Mathlib"),
+            "quantifiers": deepcopy(target.get("quantifiers", [])),
+            "constraints": [],
+            "conclusion_expression": None,
+            "encoding_scope": target.get("scope", ""),
+            "timeout_seconds": timeout_seconds,
+            "proof_assistant_enabled": bool(proof_assistant.get("enabled", False)),
+            "executable": proof_assistant.get("executable", "lean"),
+            "assumptions_used": sorted(identifier for identifier in dependencies if "assumption_id" in records[identifier]),
+            "remaining_obligations": list(target.get("required_obligation_ids", [])),
+            "capabilities": backend_capabilities("lean"),
+            "blockers": blockers,
+            "input_snapshot": semantic_snapshot(plan, target_id),
+        }
     blockers = []
     constraints = []
     if not target.get("quantifiers") or any(item.get("quantifier") != "forall" or item.get("sort") not in {"real", "integer", "boolean"} for item in target.get("quantifiers", [])):
@@ -78,17 +144,67 @@ def build_verification_task(plan, target_id, backend, timeout_seconds=60, verifi
             else:
                 constraints.append(record["formal_expression"])
         elif "proposition_id" in record or "lemma_id" in record:
-            evidence = next((result for result in verified_results if result.get("target_id") == identifier and result.get("result") == "passed" and result.get("evidence_kind") in {"smt_unsat", "symbolic_identity"} and result.get("input_snapshot") == semantic_snapshot(plan, identifier)), None)
+            evidence = next((result for result in verified_results if result.get("target_id") == identifier and result.get("result") == "passed" and result.get("evidence_kind") in {"smt_unsat", "symbolic_identity", "rule_derivation", "lean_kernel_checked"} and result.get("input_snapshot") == semantic_snapshot(plan, identifier)), None)
             if evidence is None or any(obligation not in {result.get("target_id") for result in verified_results if result.get("result") == "passed"} for obligation in record.get("required_obligation_ids", [])):
                 blockers.append(f"requires_verified_dependency:{identifier}")
             elif record.get("conclusion_expression") is not None:
-                if record.get("quantifiers") != target.get("quantifiers"):
-                    blockers.append(f"unsupported_lemma_instantiation:{identifier}")
+                instance = _lemma_instance(target, identifier)
+                if instance is None:
+                    if record.get("quantifiers") != target.get("quantifiers"):
+                        blockers.append(f"unsupported_lemma_instantiation:{identifier}")
+                    else:
+                        constraints.append({"op": "or", "args": [
+                            {"op": "not", "args": [{"op": "and", "args": evidence["constraints"]}]},
+                            record["conclusion_expression"],
+                        ]})
                 else:
-                    constraints.append({"op": "or", "args": [
-                        {"op": "not", "args": [{"op": "and", "args": evidence["constraints"]}]},
-                        record["conclusion_expression"],
-                    ]})
+                    raw_substitution = instance.get("instantiation", instance.get("substitution"))
+                    substitution = {
+                        str(symbol): _normalize_instantiation_value(value)
+                        for symbol, value in raw_substitution.items()
+                    } if isinstance(raw_substitution, Mapping) else {}
+                    lemma_symbols = {
+                        str(item.get("symbol"))
+                        for item in record.get("quantifiers", [])
+                        if isinstance(item, Mapping) and item.get("symbol")
+                    }
+                    if set(substitution) != lemma_symbols:
+                        blockers.append(f"invalid_lemma_instantiation:{identifier}")
+                    else:
+                        substituted_constraints = [
+                            _substitute_expression(item, substitution)
+                            for item in evidence.get("constraints", [])
+                        ]
+                        substituted_conclusion = _substitute_expression(record["conclusion_expression"], substitution)
+                        side_conditions = instance.get("side_conditions", [])
+                        if not isinstance(side_conditions, list):
+                            blockers.append(f"invalid_lemma_side_conditions:{identifier}")
+                        else:
+                            normalized_side_conditions = [
+                                _substitute_expression(item, substitution)
+                                for item in side_conditions
+                            ]
+                            declared_symbols = {
+                                str(item.get("symbol"))
+                                for item in target.get("quantifiers", [])
+                                if isinstance(item, Mapping) and item.get("symbol")
+                            } | {
+                                str(item.get("symbol"))
+                                for item in plan.get("definitions", [])
+                                if isinstance(item, Mapping) and item.get("symbol")
+                            }
+                            imported_symbols = set().union(*(
+                                expression_symbols(item)
+                                for item in [*substituted_constraints, substituted_conclusion, *normalized_side_conditions]
+                            ))
+                            if imported_symbols - declared_symbols:
+                                blockers.append(f"lemma_instantiation_uses_undeclared_symbol:{identifier}")
+                            else:
+                                constraints.extend(normalized_side_conditions)
+                                constraints.append({"op": "or", "args": [
+                                    {"op": "not", "args": [{"op": "and", "args": substituted_constraints}]},
+                                    substituted_conclusion,
+                                ]})
             else:
                 blockers.append(f"missing_lemma_encoding:{identifier}")
             continue
@@ -118,6 +234,12 @@ def build_verification_task(plan, target_id, backend, timeout_seconds=60, verifi
         "candidate_points": deepcopy(target.get("candidate_points", [])),
         "candidate_ids": deepcopy(target.get("candidate_ids", [])),
         "remaining_obligations": list(target.get("required_obligation_ids", [])),
+        "capabilities": backend_capabilities(backend) if is_registered_backend(backend) else {
+            "backend": backend,
+            "verification_level": "unresolved",
+            "verification_method": "unregistered_backend",
+            "certificate": False,
+        },
         "blockers": blockers, "input_snapshot": semantic_snapshot(plan, target_id),
     }
 
@@ -131,7 +253,7 @@ def run_verification_task(task, *, enabled=True):
     if task["blockers"]:
         record.update(result="unsupported", limitations=list(task["blockers"]))
         return record
-    if task["backend"] not in {"sympy", "z3", "numerical"}:
+    if task["backend"] not in {"sympy", "z3", "numerical", "lean"}:
         record.update(result="unsupported", limitations=["Proof assistant backend is not configured."])
         return record
     try:
@@ -146,7 +268,12 @@ def run_verification_task(task, *, enabled=True):
             record.update(result="unknown", limitations=[f"Backend exit code {process.returncode}"])
         else:
             result = json.loads(process.stdout)
-            for field in ("result", "evidence_kind", "limitations", "witness", "counterexample_id", "backend_version", "residual"):
+            for field in (
+                "result", "evidence_kind", "limitations", "witness", "counterexample_id",
+                "backend_version", "residual", "verification_level", "verification_method",
+                "certificate", "certificate_ref", "certificate_source", "diagnostics", "coverage",
+                "proof_assistant_status",
+            ):
                 if field in result:
                     record[field] = result[field]
     except subprocess.TimeoutExpired:
@@ -171,6 +298,32 @@ def _task_result(task, previous, enabled):
     return result
 
 
+def _rule_result(plan, target_id):
+    """Check AST-bearing proof steps with the bounded local rule set."""
+
+    checked = verify_target_proof(plan, target_id)
+    if checked is None:
+        return None
+    task = build_verification_task(plan, target_id, "rules", timeout_seconds=0)
+    result = {
+        **task,
+        "result": checked.get("result", "unknown"),
+        "evidence_kind": checked.get("evidence_kind", "none"),
+        "artifact_refs": [],
+        "limitations": list(checked.get("limitations", [])),
+        "executed": checked.get("result") == "passed",
+        "reused": False,
+        "backend_version": RULE_ENGINE_VERSION,
+        "verification_level": "rule_verified",
+        "verification_method": "trusted_local_rule_set",
+        "certificate": False,
+        "coverage": {"rule_engine_version": RULE_ENGINE_VERSION},
+    }
+    if "step_audits" in checked:
+        result["step_audits"] = checked["step_audits"]
+    return result
+
+
 def summarize_targets(plan, results):
     summaries = []
     records = formal_records(plan)
@@ -179,7 +332,7 @@ def summarize_targets(plan, results):
         snapshot = semantic_snapshot(plan, target_id)
         current = [record for record in results if record["target_id"] == target_id and record.get("input_snapshot") == snapshot]
         remaining = sorted(set(target.get("required_obligation_ids", [])) | {record["obligation_id"] for record in plan.get("proof_obligations", []) if record.get("target_id") == target_id})
-        discharged = {record["target_id"] for record in results if record.get("result") == "passed" and record.get("evidence_kind") in {"smt_unsat", "symbolic_identity"} and record.get("input_snapshot") == semantic_snapshot(plan, record["target_id"])}
+        discharged = {record["target_id"] for record in results if record.get("result") == "passed" and record.get("evidence_kind") in {"smt_unsat", "symbolic_identity", "rule_derivation", "lean_kernel_checked"} and record.get("input_snapshot") == semantic_snapshot(plan, record["target_id"])}
         remaining = [identifier for identifier in remaining if identifier not in discharged]
         dependencies = target_dependencies(plan, target_id)
         missing = [identifier for identifier in dependencies if (
@@ -192,7 +345,7 @@ def summarize_targets(plan, results):
             status = "unresolved"
         elif any(record["result"] == "failed" and record["evidence_kind"] == "smt_witness" for record in current):
             status = "refuted_in_declared_scope"
-        elif any(record["result"] == "passed" and record["evidence_kind"] in {"smt_unsat", "symbolic_identity"} for record in current):
+        elif any(record["result"] == "passed" and record["evidence_kind"] in {"smt_unsat", "symbolic_identity", "rule_derivation", "lean_kernel_checked"} for record in current):
             status = "partially_verified" if remaining else "verified_in_declared_scope"
         elif any(attempt.get("target_id") == target_id and attempt.get("steps") for attempt in plan.get("proof_attempts", [])):
             status = "proof_draft_available"
@@ -227,11 +380,22 @@ def verify_formal_plan(plan, settings, *, previous_report=None):
                 ready = [remaining.pop(0)]
             wave_tasks = []
             for target_id, target in ready:
+                local_rule_result = _rule_result(plan, target_id)
+                if local_rule_result is not None:
+                    results.append(local_rule_result)
                 backends = list(settings.get("backends", ["sympy", "z3"]))
+                proof_assistant = settings.get("proof_assistant", {})
                 if target.get("candidate_points") and "numerical" not in backends:
                     backends.append("numerical")
                 for backend in backends:
-                    wave_tasks.append(build_verification_task(plan, target_id, backend, settings.get("timeout_seconds", 60), results))
+                    wave_tasks.append(build_verification_task(
+                        plan,
+                        target_id,
+                        backend,
+                        settings.get("timeout_seconds", 60),
+                        results,
+                        proof_assistant=proof_assistant,
+                    ))
             wave_results = list(executor.map(lambda task: _task_result(task, previous, enabled), wave_tasks))
             results.extend(wave_results)
             ordered = remaining
@@ -287,11 +451,41 @@ def validate_verification_report(plan, report):
         if result.get("result") not in {"passed", "failed", "unknown", "timeout", "unsupported", "not_run"}:
             errors.append("invalid_verification_result_status")
         if result.get("result") in {"passed", "failed"}:
-            kinds = {"z3": {"passed": "smt_unsat", "failed": "smt_witness"}, "sympy": {"passed": "symbolic_identity"}, "numerical": {"failed": "numerical_candidate"}}
+            kinds = {
+                "z3": {"passed": "smt_unsat", "failed": "smt_witness"},
+                "sympy": {"passed": "symbolic_identity"},
+                "numerical": {"failed": "numerical_candidate"},
+                "rules": {"passed": "rule_derivation"},
+                "lean": {"passed": "lean_kernel_checked", "failed": "lean_kernel_rejected"},
+            }
             if result.get("evidence_kind") != kinds.get(backend, {}).get(result["result"]):
                 errors.append("verification_evidence_backend_mismatch")
             if not policy.get("enabled") or result.get("executed") is not True or not result.get("backend_version") or expected["blockers"]:
                 errors.append("verification_success_without_valid_execution")
+            if backend == "lean" and result.get("result") == "passed" and result.get("certificate") is not True:
+                errors.append("lean_success_without_kernel_certificate")
+            if backend == "lean" and result.get("proof_assistant_status") is not None:
+                expected_assistant_status = {
+                    "passed": "proof_assistant_verified",
+                    "failed": "proof_assistant_failed",
+                }.get(result.get("result"))
+                if result.get("proof_assistant_status") != expected_assistant_status:
+                    errors.append("lean_proof_assistant_status_mismatch")
+            if backend == "lean" and result.get("result") == "passed":
+                certificate_source = result.get("certificate_source")
+                if not isinstance(certificate_source, str) or len(certificate_source) > 120000:
+                    errors.append("lean_certificate_source_missing_or_too_large")
+                else:
+                    try:
+                        if certificate_source != build_lean_source(expected):
+                            errors.append("lean_certificate_source_mismatch")
+                    except (TypeError, ValueError):
+                        errors.append("lean_certificate_source_invalid")
+            declared = expected.get("capabilities", {})
+            if result.get("verification_level") is not None and result.get("verification_level") != declared.get("verification_level"):
+                errors.append("verification_level_backend_mismatch")
+            if result.get("verification_method") is not None and result.get("verification_method") != declared.get("verification_method"):
+                errors.append("verification_method_backend_mismatch")
         accepted.append(result)
     if not errors:
         if report.get("target_summaries") != summarize_targets(plan, accepted):

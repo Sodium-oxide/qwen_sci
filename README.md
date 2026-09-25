@@ -29,6 +29,14 @@ uv --version
 uv python install 3.12
 ```
 
+Install Elan, Lean's toolchain manager, in the same WSL environment:
+
+```bash
+curl https://elan.lean-lang.org/elan-init.sh -sSf | sh
+source "$HOME/.elan/env"
+elan --version
+```
+
 Keep the checkout inside the WSL filesystem for faster dependency and build operations:
 
 ```bash
@@ -44,7 +52,15 @@ If the repository already exists on the Windows drive, use its WSL-mounted path 
 cd /mnt/c/Users/<WindowsUser>/Desktop/2026tzb/aiscientist-v0820
 ```
 
-Create the project environment, install **all** dependency groups, activate that exact environment, and verify the interpreter:
+Install the Lean toolchain pinned by this checkout and verify it:
+
+```bash
+elan toolchain install "$(cat lean-toolchain)"
+lean --version
+```
+
+Create the project environment, install **all** dependency groups (including the
+`formal` SymPy/Z3 group), activate that exact environment, and verify the interpreter:
 
 ```bash
 export UV_PROJECT_ENVIRONMENT="$HOME/.venvs/qwen-sci-dev"
@@ -599,10 +615,22 @@ For a complete development checkout, prefer `uv sync --all-groups`. Focused inst
 | Capability | Command |
 | --- | --- |
 | Core API-driven workflow | `uv sync` |
+| Formal reasoning (SymPy/Z3) | `uv sync --group formal` |
 | Memory and vector retrieval | `uv sync --group memory --group ml` |
 | PDF parsing and full-text survey paths | `uv sync --group pdf` |
 | Explicit image, video, signal, table, audio, 3D, or trajectory inputs | `uv sync --group multimodal` |
-| Complete development setup | `uv sync --all-groups` |
+| Complete development setup (includes formal reasoning) | `uv sync --all-groups` |
+
+`uv sync --all-groups` includes every entry under `[dependency-groups]`, so it
+also installs the `formal` SymPy/Z3 group.
+
+The formal reasoning group provides the Python backends used by the
+`experiment_design` mathematical theory branch. Lean kernel checking is an
+external toolchain: install Elan and run `elan toolchain install "$(cat lean-toolchain)"`
+for the version pinned in [`lean-toolchain`](lean-toolchain), then ensure `lean` is on
+`PATH`. Lean is intentionally not listed in `requirements.txt` because it is
+not a Python package; when it is unavailable, the Lean backend reports
+`proof_assistant_unsupported` instead of claiming a proof.
 
 ## Web workspace V2
 

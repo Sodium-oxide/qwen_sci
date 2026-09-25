@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from copy import deepcopy
+from fractions import Fraction
 from typing import Any
 
 from .formal_dependency import COLLECTION_IDS, dependency_ids, expression_symbols, formal_records, target_dependencies
@@ -12,12 +13,64 @@ from .formal_dependency import COLLECTION_IDS, dependency_ids, expression_symbol
 FORMAL_PLAN_V2 = "formal_reasoning_plan_v2"
 DEFINITION_RESOLUTION_V1 = "formal_definition_resolution_v1"
 PROPOSAL_STATUSES = {"candidate_formalization", "proposed", "unverified", "unresolved", "needs_human_input", "user_declared"}
+_DERIVATION_RULES = {
+    "assumption_reuse", "definition_unfolding", "order_weakening", "transitivity",
+    "contradiction", "algebraic_normalization",
+}
 DEFINITION_FIELDS = (
     "definition_id", "symbol", "statement", "expression_latex", "formal_expression",
     "domain", "codomain", "unit", "conditions", "condition_expressions", "depends_on",
     "origin", "source_refs", "selection_reason", "definition_status", "verification_readiness",
     "variable_references", "symbol_references", "object_kind",
 )
+
+
+def _normalized_derivation_rule(value: Any) -> str:
+    normalized = str(value or "").strip().casefold().replace("-", "_").replace(" ", "_")
+    return {
+        "direct": "assumption_reuse",
+        "assumption": "assumption_reuse",
+        "assumption_reuse": "assumption_reuse",
+        "definition": "definition_unfolding",
+        "definition_unfolding": "definition_unfolding",
+        "strict_order_implies_weak_order": "order_weakening",
+        "order_weakening": "order_weakening",
+        "transitivity": "transitivity",
+        "contradiction": "contradiction",
+        "algebraic_normalization": "algebraic_normalization",
+    }.get(normalized, normalized)
+
+
+def _valid_restricted_expression(value: Any, depth: int = 0) -> bool:
+    if depth > 40 or not isinstance(value, Mapping):
+        return False
+    if set(value) == {"symbol"}:
+        return isinstance(value.get("symbol"), str) and bool(value["symbol"].strip())
+    if set(value) == {"bool"}:
+        return type(value.get("bool")) is bool
+    if set(value) == {"number"}:
+        number = value.get("number")
+        if not isinstance(number, str) or not number or len(number) > 100:
+            return False
+        try:
+            Fraction(number)
+        except (ValueError, ZeroDivisionError):
+            return False
+        return True
+    if set(value) != {"op", "args"} or not isinstance(value.get("op"), str) or not isinstance(value.get("args"), list):
+        return False
+    operator = value["op"]
+    arity = {
+        "add": 2, "sub": 2, "mul": 2, "div": 2, "pow": 2,
+        "eq": 2, "ne": 2, "lt": 2, "le": 2, "gt": 2, "ge": 2,
+        "not": 1, "implies": 2, "iff": 2, "xor": 2, "ite": 3,
+    }
+    args = value["args"]
+    if operator in {"and", "or"}:
+        return bool(args) and all(_valid_restricted_expression(item, depth + 1) for item in args)
+    if operator not in arity or len(args) != arity[operator]:
+        return False
+    return all(_valid_restricted_expression(item, depth + 1) for item in args)
 
 
 def adapt_legacy_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
@@ -177,6 +230,29 @@ def validate_formal_plan_v2(plan: Any, variable_claim_model: Mapping[str, Any] |
         for obligation_id in target.get("required_obligation_ids", []):
             if obligation_id not in records or records[obligation_id].get("target_id") != identifier:
                 errors.append(f"{identifier}_invalid_obligation:{obligation_id}")
+        instances = target.get("lemma_instantiations", [])
+        if not isinstance(instances, list):
+            errors.append(f"{identifier}_lemma_instantiations_not_array")
+        else:
+            seen_instances: set[str] = set()
+            for instance in instances:
+                if not isinstance(instance, Mapping):
+                    errors.append(f"{identifier}_lemma_instantiation_not_object")
+                    continue
+                lemma_id = instance.get("lemma_id")
+                if not isinstance(lemma_id, str) or not lemma_id.strip() or lemma_id in seen_instances:
+                    errors.append(f"{identifier}_invalid_lemma_instantiation_id:{lemma_id}")
+                seen_instances.add(str(lemma_id))
+                if lemma_id not in records or "lemma_id" not in records[lemma_id]:
+                    errors.append(f"{identifier}_unknown_lemma_instantiation:{lemma_id}")
+                substitution = instance.get("instantiation", instance.get("substitution"))
+                if not isinstance(substitution, Mapping) or not all(isinstance(key, str) and key.strip() for key in substitution):
+                    errors.append(f"{identifier}_invalid_lemma_substitution:{lemma_id}")
+                elif not all(_valid_restricted_expression(value) or (isinstance(value, str) and bool(value.strip())) for value in substitution.values()):
+                    errors.append(f"{identifier}_invalid_lemma_substitution_expression:{lemma_id}")
+                side_conditions = instance.get("side_conditions", [])
+                if not isinstance(side_conditions, list) or not all(_valid_restricted_expression(item) for item in side_conditions):
+                    errors.append(f"{identifier}_invalid_lemma_side_conditions:{lemma_id}")
     if errors:
         return sorted(set(errors))
     for obligation in plan["proof_obligations"]:
@@ -210,6 +286,11 @@ def validate_formal_plan_v2(plan: Any, variable_claim_model: Mapping[str, Any] |
             for field in ("derived_statement", "rule_or_lemma", "premises"):
                 if not step.get(field):
                     errors.append(f"{step_id}_missing:{field}")
+            if "derived_expression" in step:
+                if not _valid_restricted_expression(step.get("derived_expression")):
+                    errors.append(f"{step_id}_invalid_derived_expression")
+                elif _normalized_derivation_rule(step.get("rule_or_lemma")) not in _DERIVATION_RULES:
+                    errors.append(f"{step_id}_unsupported_derived_rule")
             for symbol in set(step.get("symbol_references", [])) | expression_symbols(step):
                 if symbol not in definitions:
                     errors.append(f"{step_id}_undefined_symbol:{symbol}")
