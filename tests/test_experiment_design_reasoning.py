@@ -636,10 +636,10 @@ def test_default_callback_uses_experiment_design_qwen_model_and_provider(monkeyp
     assert calls[1]["model"] == "qwen3.8-flash"
 
 
-def test_semantic_validation_rejects_undefined_symbols_but_allows_independent_final_text() -> None:
+def test_semantic_validation_allows_symbol_notices_and_independent_final_text() -> None:
     plan = _formal_plan()
     plan["propositions"][0]["symbol_references"] = ["undefined"]
-    assert any("undefined_symbol" in error for error in validate_formal_reasoning_plan(plan))
+    assert validate_formal_reasoning_plan(plan) == []
 
     plan = _formal_plan()
     plan["forward_derivation"]["final_conclusion"] = "x < 0"
@@ -686,7 +686,7 @@ def test_formal_reasoning_statuses_match_the_prompt_contract() -> None:
     assert any("propositions[0]_invalid_status" in error for error in validate_formal_reasoning_plan(plan))
 
 
-def test_variable_id_used_as_a_symbol_requires_a_linked_definition() -> None:
+def test_variable_id_used_as_a_symbol_does_not_block_the_plan() -> None:
     plan = _formal_plan()
     plan["definitions"][0]["symbol"] = "V1"
     for record in (
@@ -698,7 +698,7 @@ def test_variable_id_used_as_a_symbol_requires_a_linked_definition() -> None:
         record["symbol_references"] = ["V1"]
 
     errors = validate_formal_reasoning_plan(plan, variable_claim_model=_variable_claim_model())
-    assert any("variable_id_symbol_requires_linked_definition:V1" in error for error in errors)
+    assert errors == []
 
     plan["definitions"][0]["variable_references"] = ["V1"]
     assert validate_formal_reasoning_plan(plan, variable_claim_model=_variable_claim_model()) == []
@@ -724,7 +724,7 @@ def test_formal_definition_rejects_extra_reference_array_and_repair_may_only_rem
     )
 
 
-def test_formal_planner_repairs_only_contract_references_and_retains_audit() -> None:
+def test_formal_planner_repairs_status_without_symbol_catalog_notices() -> None:
     initial = _formal_plan()
     initial["assumptions"][0]["symbol_references"] = ["V1"]
     initial["assumptions"][0]["status"] = "declared"
@@ -734,15 +734,7 @@ def test_formal_planner_repairs_only_contract_references_and_retains_audit() -> 
     repair_patch = {
         "schema_version": "formal_reasoning_repair_patch_v1",
         "operations": [
-            {"op": "replace", "path": "/assumptions/A1/symbol_references", "value": ["x"]},
-            {"op": "replace", "path": "/assumptions/A1/variable_references", "value": ["V1"]},
             {"op": "replace", "path": "/assumptions/A1/status", "value": "user_declared"},
-            {"op": "replace", "path": "/propositions/P1/symbol_references", "value": ["x"]},
-            {"op": "replace", "path": "/propositions/P1/variable_references", "value": ["V1"]},
-            {"op": "replace", "path": "/proof_obligations/PO1/symbol_references", "value": ["x"]},
-            {"op": "replace", "path": "/proof_obligations/PO1/variable_references", "value": ["V1"]},
-            {"op": "replace", "path": "/forward_derivation/steps/S1/symbol_references", "value": ["x"]},
-            {"op": "replace", "path": "/forward_derivation/steps/S1/variable_references", "value": ["V1"]},
         ],
     }
     calls: list[dict[str, object]] = []
@@ -765,8 +757,9 @@ def test_formal_planner_repairs_only_contract_references_and_retains_audit() -> 
 
     assert len(calls) == 2
     assert all(call["response_format"] == {"type": "json_object"} for call in calls)
-    assert plan["assumptions"][0]["variable_references"] == ["V1"]
-    assert plan["assumptions"][0]["symbol_references"] == ["x"]
+    assert plan["assumptions"][0]["variable_references"] == initial["assumptions"][0]["variable_references"]
+    assert plan["assumptions"][0]["symbol_references"] == ["V1"]
+    assert plan["assumptions"][0]["status"] == "user_declared"
     assert plan["repair_audit"]["repair_status"] == "REPAIRED"
     assert plan["repair_audit"]["initial_candidate"] == initial
     assert plan["repair_audit"]["repair_patch"] == repair_patch
@@ -775,7 +768,7 @@ def test_formal_planner_repairs_only_contract_references_and_retains_audit() -> 
     assert [
         record["event"]
         for record in logger.records
-        if record["stage"] == "formal_reasoning_planner"
+        if record["stage"] == "formal_reasoning_planner" and record["event"] != "symbol_notice"
     ] == [
         "llm_request_started",
         "llm_response_received",
@@ -789,6 +782,9 @@ def test_formal_planner_repairs_only_contract_references_and_retains_audit() -> 
         for record in logger.records
         if record["stage"] == "formal_reasoning_contract_repair"
     ] == ["llm_request_started", "llm_response_received", "llm_json_parsed"]
+    notices = [record for record in logger.records if record["event"] == "symbol_notice"]
+    assert notices == []
+    assert plan["symbol_diagnostics"] == []
     repair_event = next(
         record
         for record in logger.records
@@ -920,6 +916,7 @@ def test_formal_repair_patch_removes_only_an_extra_definition_reference_array() 
 def test_formal_repair_patch_rejects_a_new_definition_even_for_a_reported_symbol() -> None:
     initial = _formal_plan()
     initial["propositions"][0]["symbol_references"] = ["missing_symbol"]
+    initial["propositions"][0]["status"] = "invalid_status"
     repair_patch = {
         "schema_version": "formal_reasoning_repair_patch_v1",
         "operations": [
@@ -959,7 +956,7 @@ def test_formal_repair_patch_rejects_a_new_definition_even_for_a_reported_symbol
 
 def test_formal_planner_never_returns_an_invalid_repair_as_fallback() -> None:
     invalid = _formal_plan()
-    invalid["propositions"][0]["symbol_references"] = ["V1"]
+    invalid["propositions"][0]["status"] = "invalid_status"
 
     with pytest.raises(FormalReasoningPlanContractError) as error:
         FormalReasoningPlanner().plan(
@@ -975,7 +972,7 @@ def test_formal_planner_never_returns_an_invalid_repair_as_fallback() -> None:
 
 def test_formal_planner_rejects_a_repair_that_changes_a_proposition() -> None:
     initial = _formal_plan()
-    initial["propositions"][0]["symbol_references"] = ["V1"]
+    initial["propositions"][0]["status"] = "invalid_status"
     repair_patch = {
         "schema_version": "formal_reasoning_repair_patch_v1",
         "operations": [

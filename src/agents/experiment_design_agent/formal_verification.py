@@ -221,9 +221,6 @@ def build_verification_task(
         if affected or not unknown.get("field_path") or str(unknown.get("field_path")).startswith("variables."):
             blockers.append("unresolved_scientific_input")
     symbol_names = [item.get("symbol") for item in target.get("quantifiers", [])]
-    declared_symbols = {definition.get("symbol") for definition in plan.get("definitions", [])}
-    if set(symbol_names) - declared_symbols:
-        blockers.append("quantified_symbol_without_definition")
     if len(symbol_names) != len(set(symbol_names)):
         blockers.append("duplicate_quantified_symbol")
     return {

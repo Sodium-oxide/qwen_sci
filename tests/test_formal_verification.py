@@ -130,9 +130,11 @@ def test_revision_budget_and_preservation_of_unrelated_objects():
     assert len(calls) == 1
     assert audit["iterations"][0]["status"] == "no_progress"
     assert current == plan
-    import pytest
-    with pytest.raises(ValueError, match="outside_affected_scope"):
-        apply_semantic_revision(plan, {"schema_version": "formal_revision_patch_v1", "reason": "change unrelated", "replacements": [{"collection": "definitions", "record": plan["definitions"][0]}]}, {"P1"})
+    unchanged, rejected = apply_semantic_revision(plan, {"schema_version": "formal_revision_patch_v1", "reason": "change unrelated", "replacements": [{"collection": "definitions", "record": plan["definitions"][0]}]}, {"P1"})
+    assert unchanged == plan
+    assert rejected["status"] == "no_progress"
+    assert rejected["rejected_operations"][0]["record_id"] == "D1"
+    assert rejected["rejected_operations"][0]["error_code"] == "semantic_revision_outside_affected_scope"
 
 
 def test_revision_sends_one_target_subgraph_per_request():

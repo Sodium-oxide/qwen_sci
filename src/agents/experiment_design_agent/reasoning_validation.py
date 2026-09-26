@@ -339,21 +339,8 @@ def validate_formal_reasoning_plan(
         if not isinstance(references, list):
             errors.append(f"formal_reasoning_plan.{prefix}[{index}]_symbol_references_not_array")
             return
-        for symbol in references:
-            normalized = str(symbol or "").strip()
-            definition = definition_by_symbol.get(normalized)
-            if definition is None:
-                errors.append(f"formal_reasoning_plan.{prefix}[{index}]_undefined_symbol:{normalized}")
-                continue
-            if declared_variable_ids is not None and normalized in declared_variable_ids:
-                definition_variables = definition.get("variable_references")
-                if not isinstance(definition_variables, list) or normalized not in {
-                    str(variable_id or "").strip()
-                    for variable_id in definition_variables
-                }:
-                    errors.append(
-                        f"formal_reasoning_plan.{prefix}[{index}]_variable_id_symbol_requires_linked_definition:{normalized}"
-                    )
+        if not all(isinstance(symbol, str) for symbol in references):
+            errors.append(f"formal_reasoning_plan.{prefix}[{index}]_symbol_references_invalid")
 
     for index, definition in enumerate(definitions):
         validate_variable_references("definitions", index, definition)

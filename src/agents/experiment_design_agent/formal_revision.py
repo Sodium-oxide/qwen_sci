@@ -1,10 +1,12 @@
 """Bounded scientific revisions that preserve independent work and prior evidence."""
 
+from collections.abc import Mapping
 from copy import deepcopy
+import json
 
 from .formal_contracts import validate_formal_plan_v2
 from .definition_evidence import bounded_formal_evidence
-from .formal_dependency import COLLECTION_IDS, formal_records, target_dependencies, target_subgraph
+from .formal_dependency import COLLECTION_IDS, dependency_ids, formal_records, target_subgraph
 from .formal_verification import semantic_snapshot, verify_formal_plan
 from .llm_json import call_required_json_with_logging, json_prompt_payload
 
@@ -15,6 +17,13 @@ reason, replacements (objects with collection, record), additions (same shape),
 proof_attempts (replacement proof attempts only for affected targets), unknown_items
 (the updated explicit gap ledger) and semantic_diagnostics (updated target diagnostics).
 Change only affected_ids or add a necessary definition/model/assumption/lemma/obligation.
+affected_ids and editable_records cover all canonical records in the supplied local
+plan, including the target's proof obligations and their dependencies. Other fields,
+including forward_derivation, are read-only context. Do not repeat unrelated records.
+Replace existing records only through replacements; new IDs belong in additions.
+Proof attempts may replace only attempts belonging to editable_target_ids and must
+preserve their target association. Diagnostics must name a record_id, target_id or
+field_path within affected_ids. Return only substantive changes, not a full plan.
 Retain all unrelated records. No record deletion. Preserve identifiers. New assumptions
 require independent justification; never assume the conclusion to eliminate a witness.
 Update required_obligation_ids and references coherently. Distinguish refined scopes,
@@ -31,70 +40,251 @@ def affected_ids(plan, report):
     for summary in report["target_summaries"]:
         if summary["status"] != "verified_in_declared_scope":
             target_id = summary["target_id"]
-            affected.add(target_id)
-            affected.update(target_dependencies(plan, target_id))
-            affected.update(summary.get("remaining_obligations", []))
+            affected.update(_editable_records(target_subgraph(plan, target_id)))
     return affected
 
 
-def apply_semantic_revision(plan, patch, allowed_ids, *, evidence_bundle=None):
-    if patch.get("schema_version") != "formal_revision_patch_v1" or not patch.get("reason"):
+def _editable_records(plan):
+    return {record[id_field]: collection for collection, id_field in COLLECTION_IDS.items()
+            for record in plan.get(collection, []) if isinstance(record, Mapping)
+            and isinstance(record.get(id_field), str)}
+
+
+class _RevisionRequestLogger:
+    def __init__(self, logger, target_id, iteration):
+        self.logger = logger
+        self.context = {"record_id": target_id, "target_ids": [target_id], "iteration": iteration}
+
+    def event(self, stage, event, **fields):
+        return self.logger.event(stage, event, **{**self.context, **fields})
+
+    def exception(self, stage, error, **fields):
+        return self.logger.exception(stage, error, **{**self.context, **fields, "level": "WARNING", "status": "WARNING"})
+
+
+def apply_semantic_revision(plan, patch, allowed_ids, *, evidence_bundle=None, logger=None,
+                            brief_id="", iteration=None, target_ids=None):
+    from .formal_definition_resolver import validate_source_grounding
+    from .reasoning_validation import _verified_markers
+
+    if not isinstance(patch, Mapping) or patch.get("schema_version") != "formal_revision_patch_v1" or not isinstance(patch.get("reason"), str) or not patch["reason"].strip():
         raise ValueError("invalid_semantic_revision_patch")
-    revised = deepcopy(plan)
-    changes = []
+    allowed_ids = {identifier for identifier in allowed_ids if isinstance(identifier, str)}
     old_records = formal_records(plan)
+    editable_targets = {identifier for identifier in allowed_ids if identifier in old_records
+                        and any(field in old_records[identifier] for field in ("proposition_id", "lemma_id"))}
+    rejected = []
+    candidates = []
+    seen = set()
+
+    def reject(action, index, operation, code, reason, *, collection=None, identifier=None, target_id=None):
+        diagnostic = {"action": action, "operation_index": index, "collection": collection,
+                      "record_id": identifier if isinstance(identifier, str) else None,
+                      "target_id": target_id if isinstance(target_id, str) else None,
+                      "error_code": code, "reason": reason,
+                      "raw_json": json.dumps(operation, ensure_ascii=False, sort_keys=True)}
+        rejected.append(diagnostic)
+        if logger is not None:
+            logger.event("formal_semantic_revision", "operation_warning", level="WARNING", status="WARNING",
+                         brief_id=brief_id, iteration=iteration, target_ids=target_ids or [],
+                         action=action, operation_index=index, collection=collection,
+                         record_id=diagnostic["record_id"], target_id=diagnostic["target_id"],
+                         error_code=code, error_detail=reason, disposition="ignored_and_archived")
+
     for action in ("replacements", "additions"):
         operations = patch.get(action, [])
         if not isinstance(operations, list) or len(operations) > 64:
-            raise ValueError("invalid_semantic_operations")
-        for operation in operations:
-            collection = operation.get("collection")
-            record = operation.get("record")
-            if collection not in COLLECTION_IDS or not isinstance(record, dict):
-                raise ValueError("invalid_semantic_record")
+            reject(action, None, operations, "invalid_semantic_operations", "Operations must be an array with at most 64 entries.")
+            continue
+        for index, operation in enumerate(operations):
+            collection = operation.get("collection") if isinstance(operation, Mapping) else None
+            record = operation.get("record") if isinstance(operation, Mapping) else None
+            if not isinstance(collection, str) or collection not in COLLECTION_IDS or not isinstance(record, dict):
+                reject(action, index, operation, "invalid_semantic_record", "Expected a canonical collection and record object.",
+                       collection=collection if isinstance(collection, str) else None)
+                continue
             identifier_field = COLLECTION_IDS[collection]
             identifier = record.get(identifier_field)
+            if not isinstance(identifier, str) or not identifier.strip():
+                reject(action, index, operation, "invalid_semantic_record_id", f"Missing or malformed {identifier_field}.", collection=collection)
+                continue
             if action == "replacements":
                 if identifier not in allowed_ids or identifier not in old_records:
-                    raise ValueError("semantic_revision_outside_affected_scope")
-                found = next((index for index, item in enumerate(revised[collection]) if item[identifier_field] == identifier), None)
-                if found is None:
-                    raise ValueError("semantic_revision_cannot_change_record_kind")
-                if revised[collection][found] != record:
-                    changes.append({"record_id": identifier, "before": deepcopy(revised[collection][found]), "after": deepcopy(record)})
-                    revised[collection][found] = deepcopy(record)
+                    reason = "Record is outside the editable ID whitelist." if identifier in old_records else "Replacement ID does not exist; new records must use additions."
+                    reject(action, index, operation, "semantic_revision_outside_affected_scope", reason,
+                           collection=collection, identifier=identifier)
+                    continue
+                if not any(item.get(identifier_field) == identifier for item in plan[collection]):
+                    reject(action, index, operation, "semantic_revision_cannot_change_record_kind", "Replacement cannot change a record's collection.",
+                           collection=collection, identifier=identifier)
+                    continue
+                if old_records[identifier] == record:
+                    continue
             else:
-                if not identifier or identifier in formal_records(revised):
-                    raise ValueError("semantic_addition_duplicate_id")
+                if identifier in old_records:
+                    reject(action, index, operation, "semantic_addition_duplicate_id", "Addition ID already exists.", collection=collection, identifier=identifier)
+                    continue
                 if collection == "assumptions" and not record.get("selection_reason"):
-                    raise ValueError("new_assumption_requires_independent_justification")
-                revised[collection].append(deepcopy(record))
-                changes.append({"record_id": identifier, "before": None, "after": deepcopy(record)})
-    for attempt in patch.get("proof_attempts", []):
-        if attempt.get("target_id") not in allowed_ids:
-            raise ValueError("semantic_proof_revision_outside_scope")
-        revised["proof_attempts"] = [item for item in revised["proof_attempts"] if item.get("attempt_id") != attempt.get("attempt_id")]
-        revised["proof_attempts"].append(deepcopy(attempt))
+                    reject(action, index, operation, "new_assumption_requires_independent_justification", "New assumption lacks independent justification.",
+                           collection=collection, identifier=identifier)
+                    continue
+            if identifier in seen:
+                reject(action, index, operation, "semantic_revision_duplicate_operation", "Only the first accepted operation for this ID is retained.",
+                       collection=collection, identifier=identifier)
+                continue
+            try:
+                errors = _verified_markers(record) + validate_source_grounding([record], evidence_bundle)
+            except (TypeError, ValueError, KeyError) as error:
+                errors = [f"{type(error).__name__}: {error}"]
+            if errors:
+                reject(action, index, operation, "invalid_semantic_record", "; ".join(errors), collection=collection, identifier=identifier)
+                continue
+            seen.add(identifier)
+            candidates.append({"action": action, "index": index, "collection": collection, "record_id": identifier,
+                               "record": deepcopy(record), "operation": operation})
+    attempts = patch.get("proof_attempts", [])
+    if not isinstance(attempts, list) or len(attempts) > 64:
+        reject("proof_attempts", None, attempts, "invalid_semantic_proof_operations", "Proof attempts must be an array with at most 64 entries.")
+        attempts = []
+    old_attempts = {item["attempt_id"]: item for item in plan["proof_attempts"]}
+    for index, attempt in enumerate(attempts):
+        identifier = attempt.get("attempt_id") if isinstance(attempt, Mapping) else None
+        target_id = attempt.get("target_id") if isinstance(attempt, Mapping) else None
+        if not isinstance(identifier, str) or not identifier.strip() or not isinstance(target_id, str) or target_id not in editable_targets:
+            reject("proof_attempts", index, attempt, "semantic_proof_revision_outside_scope", "Proof attempt must have a valid ID and an editable proposition or lemma target.",
+                   collection="proof_attempts", identifier=identifier, target_id=target_id)
+            continue
+        if identifier in old_attempts and old_attempts[identifier].get("target_id") != target_id:
+            reject("proof_attempts", index, attempt, "semantic_proof_revision_cannot_change_target", "Existing proof attempt cannot be reassigned to another target.",
+                   collection="proof_attempts", identifier=identifier, target_id=target_id)
+            continue
+        if old_attempts.get(identifier) == attempt:
+            continue
+        if identifier in seen or _verified_markers(attempt):
+            reject("proof_attempts", index, attempt, "invalid_semantic_proof_record", "Duplicate operation or untrusted verification claims.",
+                   collection="proof_attempts", identifier=identifier, target_id=target_id)
+            continue
+        seen.add(identifier)
+        candidates.append({"action": "proof_attempts", "index": index, "collection": "proof_attempts", "record_id": identifier,
+                           "record": deepcopy(attempt), "operation": attempt})
+
+    def in_scope(item):
+        if not isinstance(item, Mapping):
+            return False
+        owners = {item[field] for field in ("record_id", "target_id") if isinstance(item.get(field), str)}
+        path_ids = set(str(item.get("field_path", "")).split(".")) & old_records.keys()
+        return bool((owners | path_ids) & allowed_ids) and not (owners | path_ids) - allowed_ids
+
+    ledgers = {}
     for field in ("unknown_items", "semantic_diagnostics"):
         if field in patch:
             if not isinstance(patch[field], list):
-                raise ValueError(f"semantic_revision_invalid:{field}")
-            unrelated = [item for item in plan.get(field, []) if item.get("target_id") not in allowed_ids and not any(identifier in str(item.get("field_path", "")).split(".") for identifier in allowed_ids)]
-            revised[field] = deepcopy(patch[field])
-            for item in unrelated:
-                if item not in revised[field]:
-                    revised[field].append(deepcopy(item))
-    if revised == plan:
-        return revised, {"status": "no_progress", "reason": patch["reason"], "changes": []}
-    revised["revision"] = plan["revision"] + 1
-    errors = validate_formal_plan_v2(revised)
-    from .formal_definition_resolver import validate_source_grounding
+                reject(field, None, patch[field], "invalid_semantic_diagnostics", "Diagnostic ledger must be an array.", collection=field)
+                continue
+            retained = []
+            invalid = False
+            for index, item in enumerate(patch[field]):
+                if not in_scope(item) or _verified_markers(item):
+                    invalid = True
+                    reject(field, index, item, "semantic_diagnostic_outside_scope", "Diagnostic must refer to an editable record and contain no verification claims.",
+                           collection=field, identifier=item.get("record_id") if isinstance(item, Mapping) else None,
+                           target_id=item.get("target_id") if isinstance(item, Mapping) else None)
+                    continue
+                retained.append(deepcopy(item))
+            ledgers[field] = deepcopy(plan.get(field, [])) if invalid else [deepcopy(item) for item in plan.get(field, []) if not in_scope(item)]
+            ledgers[field].extend(item for item in retained if item not in ledgers[field])
 
-    errors.extend(validate_source_grounding([change["after"] for change in changes], evidence_bundle))
-    if errors:
-        raise ValueError("invalid_semantic_revision: " + "; ".join(errors))
-    invalidated = [target["proposition_id"] for target in plan["propositions"] if semantic_snapshot(plan, target["proposition_id"]) != semantic_snapshot(revised, target["proposition_id"])]
-    return revised, {"status": "revised", "reason": patch["reason"], "changes": changes, "invalidated_targets": invalidated, "revision": revised["revision"]}
+    def build(operations):
+        candidate = deepcopy(plan)
+        for item in operations:
+            collection = item["collection"]
+            id_field = "attempt_id" if collection == "proof_attempts" else COLLECTION_IDS[collection]
+            found = next((index for index, record in enumerate(candidate[collection]) if record.get(id_field) == item["record_id"]), None)
+            if found is None:
+                candidate[collection].append(deepcopy(item["record"]))
+            else:
+                candidate[collection][found] = deepcopy(item["record"])
+        candidate.update(deepcopy(ledgers))
+        return candidate
+
+    while True:
+        revised = build(candidates)
+        try:
+            errors = validate_formal_plan_v2(revised)
+        except (TypeError, ValueError, KeyError) as error:
+            errors = [f"invalid_record_shape: {type(error).__name__}: {error}"]
+        if not errors:
+            break
+        invalid_ids = set()
+        for item in candidates:
+            names = {item["record_id"]}
+            if item["collection"] == "proof_attempts":
+                steps = item["record"].get("steps", [])
+                if isinstance(steps, list):
+                    names.update(step["step_id"] for step in steps if isinstance(step, Mapping) and isinstance(step.get("step_id"), str))
+            if any(error.startswith(f"{identifier}_") for error in errors for identifier in names):
+                invalid_ids.add(item["record_id"])
+            try:
+                if set(validate_formal_plan_v2(build([item]))) & set(errors):
+                    invalid_ids.add(item["record_id"])
+            except (TypeError, ValueError, KeyError):
+                invalid_ids.add(item["record_id"])
+        records = formal_records(revised)
+        for error in errors:
+            if error.startswith("formal_dependency_cycle:"):
+                pending = [error.split(":", 1)[1]]
+                visited = set()
+                while pending:
+                    identifier = pending.pop()
+                    if identifier in visited or identifier not in records:
+                        continue
+                    visited.add(identifier)
+                    pending.extend(dependency_ids(records[identifier], revised) - visited)
+                reverse = {identifier: set() for identifier in visited}
+                for identifier in visited:
+                    for dependency in dependency_ids(records[identifier], revised) & visited:
+                        reverse[dependency].add(identifier)
+                pending = [error.split(":", 1)[1]]
+                cycle_members = set()
+                while pending:
+                    identifier = pending.pop()
+                    if identifier in cycle_members or identifier not in reverse:
+                        continue
+                    cycle_members.add(identifier)
+                    pending.extend(reverse[identifier] - cycle_members)
+                invalid_ids.update(item["record_id"] for item in candidates if item["record_id"] in cycle_members)
+            if error == "definitions_missing_or_duplicate_symbol":
+                symbols = [record.get("symbol") for record in revised["definitions"]]
+                invalid_ids.update(item["record_id"] for item in candidates if item["collection"] == "definitions"
+                                   and symbols.count(item["record"].get("symbol")) > 1
+                                   and (item["action"] == "additions" or old_records[item["record_id"]].get("symbol") != item["record"].get("symbol")))
+        if not invalid_ids:
+            if not candidates:
+                raise ValueError("invalid_semantic_revision: " + "; ".join(errors))
+            invalid_ids = {item["record_id"] for item in candidates}
+        retained = []
+        for item in candidates:
+            if item["record_id"] in invalid_ids:
+                reject(item["action"], item["index"], item["operation"], "invalid_semantic_revision", "; ".join(errors),
+                       collection=item["collection"], identifier=item["record_id"], target_id=item["record"].get("target_id"))
+            else:
+                retained.append(item)
+        candidates = retained
+        if not candidates:
+            ledgers = {}
+    changes = [{"record_id": item["record_id"],
+                "before": deepcopy(old_attempts.get(item["record_id"]) if item["collection"] == "proof_attempts" else old_records.get(item["record_id"])),
+                "after": deepcopy(item["record"])} for item in candidates]
+    audit = {"status": "no_progress", "reason": patch["reason"], "changes": changes,
+             "rejected_operations": rejected, "warning_count": len(rejected)}
+    if revised == plan:
+        return revised, audit
+    revised["revision"] = plan["revision"] + 1
+    invalidated = [identifier for identifier, record in old_records.items()
+                   if any(field in record for field in ("proposition_id", "lemma_id"))
+                   and semantic_snapshot(plan, identifier) != semantic_snapshot(revised, identifier)]
+    audit.update(status="revised", invalidated_targets=invalidated, revision=revised["revision"])
+    return revised, audit
 
 
 def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id="", evidence_bundle=None, counterexample_analysis=None):
@@ -127,9 +317,6 @@ def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id=
         )
     audit = []
     for iteration in range(max(0, min(5, int(settings.get("max_semantic_revisions", 2))))):
-        affected = affected_ids(current, report)
-        if not affected:
-            break
         target_ids = [
             str(summary.get("target_id"))
             for summary in report.get("target_summaries", [])
@@ -141,6 +328,8 @@ def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id=
         iteration_revised = False
         for target_id in target_ids:
             batch_targets = [target_id]
+            patch = None
+            record = None
             try:
                 target_summary = next(
                     (item for item in report.get("target_summaries", []) if item.get("target_id") == target_id),
@@ -148,8 +337,11 @@ def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id=
                 )
                 if target_summary.get("status") == "verified_in_declared_scope":
                     continue
-                batch_affected = ({target_id} | target_dependencies(current, target_id)) & affected_ids(current, report)
                 local_plan = target_subgraph(current, batch_targets[0])
+                editable_records = _editable_records(local_plan)
+                batch_affected = set(editable_records)
+                editable_target_ids = [identifier for identifier, collection in editable_records.items()
+                                       if collection in ("propositions", "lemmas")]
                 local_report = {
                     "schema_version": report.get("schema_version"),
                     "policy": deepcopy(report.get("policy", {})),
@@ -184,6 +376,10 @@ def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id=
                     "verification_report": local_report,
                     "counterexample_analysis": local_analysis,
                     "affected_ids": sorted(batch_affected),
+                    "editable_records": [{"record_id": identifier, "collection": editable_records[identifier]}
+                                         for identifier in sorted(batch_affected)],
+                    "editable_target_ids": sorted(editable_target_ids),
+                    "read_only_fields": ["forward_derivation", "revision", "schema_version", "applicability", "status"],
                     "evidence_bundle": evidence,
                     "target_ids": batch_targets,
                 }
@@ -197,18 +393,24 @@ def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id=
                     )
                 patch = call_required_json_with_logging(
                     llm_call, prompt, stage="formal_semantic_revision",
-                    request_kind="scientific_revision", logger=logger, brief_id=brief_id,
+                    request_kind="scientific_revision",
+                    logger=_RevisionRequestLogger(logger, target_id, iteration + 1) if logger is not None else None,
+                    brief_id=brief_id,
                 )
-                revised, record = apply_semantic_revision(current, patch, batch_affected, evidence_bundle=evidence_bundle)
+                revised, record = apply_semantic_revision(current, patch, batch_affected, evidence_bundle=evidence_bundle,
+                                                         logger=logger, brief_id=brief_id, iteration=iteration + 1,
+                                                         target_ids=batch_targets)
                 record["target_ids"] = batch_targets
                 record["iteration"] = iteration + 1
                 if record["status"] == "no_progress":
                     audit.append(record)
                     if logger is not None:
                         logger.event(
-                            "formal_semantic_revision", "completed", status="NO_PROGRESS",
+                            "formal_semantic_revision", "completed",
+                            level="WARNING" if record["warning_count"] else "INFO",
+                            status="WARNING" if record["warning_count"] else "NO_PROGRESS",
                             brief_id=brief_id, iteration=iteration + 1, target_ids=batch_targets,
-                            reason=record.get("reason", ""),
+                            reason=record.get("reason", ""), result_status="no_progress", warning_count=record["warning_count"],
                         )
                     continue
                 revised_report = verify_formal_plan(revised, verification_settings, previous_report=report)
@@ -218,18 +420,25 @@ def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id=
                 audit.append(record)
                 if logger is not None:
                     logger.event(
-                        "formal_semantic_revision", "completed", status=record["status"],
+                        "formal_semantic_revision", "completed",
+                        level="WARNING" if record["warning_count"] else "INFO",
+                        status="WARNING" if record["warning_count"] else record["status"],
                         brief_id=brief_id, iteration=iteration + 1, target_ids=batch_targets,
-                        change_count=len(record.get("changes", [])),
+                        change_count=len(record.get("changes", [])), result_status=record["status"], warning_count=record["warning_count"],
                     )
             except Exception as error:
                 detail = f"{type(error).__name__}: {error}"
-                audit.append({"status": "stopped", "reason": detail, "iteration": iteration + 1, "target_ids": batch_targets})
+                failure = dict(record or {}, status="stopped", reason=detail, iteration=iteration + 1,
+                               target_ids=batch_targets, disposition="kept_previous_plan")
+                if patch is not None:
+                    failure["raw_patch_json"] = json.dumps(patch, ensure_ascii=False, sort_keys=True)
+                audit.append(failure)
                 if logger is not None:
                     logger.event(
-                        "formal_semantic_revision", "failed", level="ERROR", status="DEGRADED",
+                        "formal_semantic_revision", "warning", level="WARNING", status="WARNING",
                         brief_id=brief_id, iteration=iteration + 1, target_ids=batch_targets,
-                        error_detail=detail,
+                        record_id=target_id, error_code=type(error).__name__, error_detail=detail,
+                        disposition="kept_previous_plan",
                     )
                 continue
         if not iteration_revised:

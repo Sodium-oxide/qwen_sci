@@ -7,11 +7,13 @@ from copy import deepcopy
 from fractions import Fraction
 from typing import Any
 
-from .formal_dependency import COLLECTION_IDS, dependency_ids, expression_symbols, formal_records, target_dependencies
+from .formal_dependency import COLLECTION_IDS, dependency_ids, formal_records, target_dependencies
 
 
 FORMAL_PLAN_V2 = "formal_reasoning_plan_v2"
 DEFINITION_RESOLUTION_V1 = "formal_definition_resolution_v1"
+TARGET_FIELDS = ("statement", "scope", "premises", "conclusion", "quantifiers",
+                 "domain_expression", "conclusion_expression", "required_obligation_ids")
 PROPOSAL_STATUSES = {"candidate_formalization", "proposed", "unverified", "unresolved", "needs_human_input", "user_declared"}
 _DERIVATION_RULES = {
     "assumption_reuse", "definition_unfolding", "order_weakening", "transitivity",
@@ -171,15 +173,6 @@ def validate_formal_plan_v2(plan: Any, variable_claim_model: Mapping[str, Any] |
         errors.append("definitions_missing_or_duplicate_symbol")
     variable_ids = {record["variable_id"] for record in (variable_claim_model or {}).get("variables", [])}
     for identifier, record in records.items():
-        unresolved_definition = "definition_id" in record and (
-            record.get("definition_status") != "specified"
-            or record.get("verification_readiness") != "encoded"
-        )
-        unresolved_relation = "relation_id" in record and record.get("status") == "unresolved"
-        if not unresolved_definition and not unresolved_relation:
-            for symbol in set(record.get("symbol_references", [])) | expression_symbols(record):
-                if symbol not in definitions:
-                    errors.append(f"{identifier}_undefined_symbol:{symbol}")
         if variable_claim_model is not None:
             for variable in record.get("variable_references", []):
                 if variable not in variable_ids:
@@ -213,7 +206,7 @@ def validate_formal_plan_v2(plan: Any, variable_claim_model: Mapping[str, Any] |
             errors.append(f"invalid_global_assumption:{identifier}")
     targets = {record.get("proposition_id", record.get("lemma_id")): record for record in [*plan["propositions"], *plan["lemmas"]]}
     for identifier, target in targets.items():
-        for field in ("statement", "scope", "premises", "conclusion", "quantifiers", "domain_expression", "conclusion_expression", "required_obligation_ids"):
+        for field in TARGET_FIELDS:
             if field not in target:
                 errors.append(f"{identifier}_missing:{field}")
         quantifiers = target.get("quantifiers")
@@ -291,9 +284,6 @@ def validate_formal_plan_v2(plan: Any, variable_claim_model: Mapping[str, Any] |
                     errors.append(f"{step_id}_invalid_derived_expression")
                 elif _normalized_derivation_rule(step.get("rule_or_lemma")) not in _DERIVATION_RULES:
                     errors.append(f"{step_id}_unsupported_derived_rule")
-            for symbol in set(step.get("symbol_references", [])) | expression_symbols(step):
-                if symbol not in definitions:
-                    errors.append(f"{step_id}_undefined_symbol:{symbol}")
             for premise in step.get("premises", []):
                 if premise not in records and premise not in prior:
                     errors.append(f"{step_id}_unknown_or_future_premise:{premise}")

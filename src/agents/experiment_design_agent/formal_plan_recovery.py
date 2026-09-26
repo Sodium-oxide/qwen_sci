@@ -5,7 +5,7 @@ from copy import deepcopy
 import json
 
 from .formal_contracts import FORMAL_PLAN_V2, PROPOSAL_STATUSES, validate_formal_plan_v2
-from .formal_dependency import COLLECTION_IDS, dependency_ids, expression_symbols, formal_records
+from .formal_dependency import COLLECTION_IDS, dependency_ids, formal_records, log_symbol_diagnostics
 
 
 def unwrap_formal_plan(payload):
@@ -84,14 +84,14 @@ def normalize_variable_dependencies(plan, variable_claim_model=None, *, logger=N
                 converted = [aliases.get(reference, reference) if isinstance(reference, str)
                              and reference not in identifiers else reference for reference in references]
                 if converted != references:
-                    repair = {"record_id": record[id_field], "field": field,
+                    repair = {"record_id": record.get(id_field, collection), "field": field,
                               "original": deepcopy(references), "normalized": converted}
                     if repair not in plan.setdefault("dependency_repairs", []):
                         plan["dependency_repairs"].append(repair)
                     record[field] = converted
                     if logger is not None:
                         logger.event("formal_reasoning_planner", "dependency_reference_repaired", status="REPAIRED",
-                                     brief_id=brief_id, record_id=record[id_field], field=field,
+                                     brief_id=brief_id, record_id=record.get(id_field, collection), field=field,
                                      original_references=references, normalized_references=converted)
     return plan
 
@@ -225,9 +225,13 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
             if collection in ("propositions", "lemmas"):
                 defaults = {"statement": "", "scope": "", "conclusion": "", "premises": [], "quantifiers": [],
                             "domain_expression": None, "conclusion_expression": None, "required_obligation_ids": []}
+                missing_fields = [field for field in defaults if field not in record]
+                if missing_fields:
+                    _block_record(plan, record, identifier, "target_fields",
+                                  f"Missing target fields: {', '.join(missing_fields)}; original draft retained.",
+                                  logger=logger, brief_id=brief_id)
                 for field, default in defaults.items():
                     if field not in record:
-                        _block_record(plan, record, identifier, field, "Missing target content remains unresolved.", logger=logger, brief_id=brief_id)
                         record[field] = deepcopy(default)
                 quantifiers = record["quantifiers"]
                 if not isinstance(quantifiers, list) or any(not isinstance(item, Mapping)
@@ -312,16 +316,6 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
             if missing:
                 _block_record(plan, record, identifier, "variable_references", f"Unknown variables: {missing}", logger=logger, brief_id=brief_id)
                 record["variable_references"] = [reference for reference in record["variable_references"] if reference not in missing]
-        missing_symbols = (set(record.get("symbol_references", [])) | expression_symbols(record)) - symbols
-        if missing_symbols and ("definition_id" not in record or record.get("definition_status") == "specified"):
-            _block_record(plan, record, identifier, "symbol_references", f"Undeclared symbols: {sorted(missing_symbols)}", logger=logger, brief_id=brief_id)
-            record["symbol_references"] = [symbol for symbol in record.get("symbol_references", []) if symbol in symbols]
-            for field in ("formal_expression", "predicate_expression", "domain_expression", "conclusion_expression"):
-                if field in record:
-                    record[field] = None
-            record["condition_expressions"] = []
-            if "quantifiers" in record:
-                record["quantifiers"] = []
     invalid_globals = [identifier for identifier in plan["global_assumption_ids"]
                        if not isinstance(identifier, str) or identifier not in records or "assumption_id" not in records[identifier]]
     plan["global_assumption_ids"] = [identifier for identifier in plan["global_assumption_ids"] if identifier not in invalid_globals]
@@ -430,9 +424,10 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
             errors = validate_formal_plan_v2(trial, variable_claim_model) + _verified_markers(attempt)
         except (TypeError, ValueError, KeyError) as error:
             errors = [f"{type(error).__name__}: {error}"]
-        if not isinstance(target_id, str) or target_id not in targets or targets[target_id].get("construction_status") == "blocked" or errors:
+        if not isinstance(target_id, str) or target_id not in targets or errors:
             archive_formal_record(plan, f"proof_attempts[{index}]", attempt, "; ".join(errors) or "Target construction is blocked.")
             construction_warning(plan, target_id if isinstance(target_id, str) else f"proof_attempts[{index}]", "proof_attempts", "; ".join(errors) or "Target construction is blocked.", logger=logger, brief_id=brief_id)
         else:
             plan["proof_attempts"].append(deepcopy(attempt))
+    log_symbol_diagnostics(plan, logger=logger, brief_id=brief_id)
     return plan

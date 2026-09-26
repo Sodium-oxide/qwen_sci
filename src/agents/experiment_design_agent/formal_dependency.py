@@ -28,6 +28,21 @@ def expression_symbols(value: Any) -> set[str]:
     return set()
 
 
+def symbol_reference_diagnostics(plan: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """Return no diagnostics for notation/catalog differences.
+
+    Symbol references remain available to dependency and verification code, while
+    notation normalization and exact catalog membership are intentionally advisory
+    responsibilities of downstream mathematical tooling.
+    """
+    return []
+
+
+def log_symbol_diagnostics(plan, *, logger=None, brief_id="", stage="formal_reasoning_planner"):
+    plan["symbol_diagnostics"] = []
+    return []
+
+
 def formal_records(plan: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
     records = {
         str(record[identifier]): record

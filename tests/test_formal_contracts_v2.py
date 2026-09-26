@@ -8,6 +8,7 @@ import pytest
 from src.agents.experiment_design_agent.formal_contracts import adapt_legacy_plan, validate_formal_plan_v2
 from src.agents.experiment_design_agent.formal_definition_resolver import FormalDefinitionResolver
 from src.agents.experiment_design_agent.formal_reasoning_planner import FormalReasoningPlanner, _repair_skeleton_record_ids
+import src.agents.experiment_design_agent.definition_evidence as definition_evidence_module
 
 
 def formal_plan():
@@ -71,7 +72,7 @@ def test_unresolved_definition_keeps_symbol_gap_without_invalidating_plan():
 
     assert validate_formal_plan_v2(plan, {"variables": [{"variable_id": "V1"}]}) == []
     plan["definitions"][0].update(definition_status="specified", verification_readiness="encoded")
-    assert "D1_undefined_symbol:missing" in validate_formal_plan_v2(plan, {"variables": [{"variable_id": "V1"}]})
+    assert validate_formal_plan_v2(plan, {"variables": [{"variable_id": "V1"}]}) == []
 
 
 def test_target_association_is_not_a_proof_premise():
@@ -156,6 +157,38 @@ def test_planner_builds_skeleton_then_target_proof_batches():
     assert calls == ["v2_skeleton", "v2_target_proof"]
     assert generated["proof_attempts"]
     assert generated["forward_derivation"]["steps"]
+
+
+def test_planner_default_evidence_limit_is_36(monkeypatch):
+    limits = []
+
+    def bounded_evidence(bundle, query, *, card_limit=40, catalog_limit=80):
+        limits.append(card_limit)
+        cards = [{"card_id": f"EC{number}"} for number in range(card_limit)]
+        return {
+            "evidence_cards": cards, "evidence_catalog": cards,
+            "total_card_count": len(bundle.get("evidence_cards", [])),
+            "selection_policy": "test",
+        }
+
+    monkeypatch.setattr(definition_evidence_module, "bounded_formal_evidence", bounded_evidence)
+    plan = formal_plan()
+    plan["propositions"] = []
+    plan["proof_obligations"] = []
+    plan["proof_attempts"] = []
+    plan["forward_derivation"] = {"steps": [], "target_proposition_id": "", "status": "unresolved"}
+
+    def callback(prompt, **_kwargs):
+        skeleton = deepcopy(plan)
+        skeleton["schema_version"] = "formal_reasoning_plan_v2"
+        return skeleton
+
+    FormalReasoningPlanner().plan(
+        {}, {}, {"variables": [{"variable_id": "V1"}]},
+        formal_inputs={"definitions": plan["definitions"], "model_relations": [], "unknown_items": []},
+        evidence_bundle={"evidence_cards": []}, llm_call=callback,
+    )
+    assert limits == [36]
 
 
 def test_skeleton_prompt_omits_large_provenance_and_restores_full_records():

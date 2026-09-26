@@ -257,7 +257,7 @@ def test_blocked_premise_cannot_pass_rule_or_backend(monkeypatch):
     report = verify_formal_plan(generated, {"enabled": True, "backends": ["z3", "lean"]})
     assert calls == []
     assert report["target_summaries"][0]["status"] == "unresolved"
-    assert generated["proof_attempts"] == []
+    assert generated["proof_attempts"] == plan["proof_attempts"]
     assert generated["construction_archive"]
 
 
@@ -309,7 +309,7 @@ def test_ambiguous_or_cyclic_premise_blocks_affected_proof(conflict):
     generated = recover_formal_plan(plan, VARIABLES)
     assert generated["propositions"][0]["construction_status"] == "blocked"
     assert generated["construction_archive"]
-    assert generated["proof_attempts"] == []
+    assert generated["proof_attempts"] == plan["proof_attempts"]
     assert validate_formal_plan_v2(generated, VARIABLES) == []
 
 
