@@ -79,6 +79,20 @@ def evidence_cards(evidence_bundle: Mapping[str, Any]) -> list[dict[str, Any]]:
     return [dict(card) for card in evidence_bundle.get("evidence_cards", []) if isinstance(card, Mapping)]
 
 
+def unavailable_formal_definition_resolution(*, reason: str) -> dict[str, Any]:
+    return {
+        "schema_version": DEFINITION_RESOLUTION_V1,
+        "definitions": [],
+        "model_relations": [],
+        "unknown_items": [{
+            "field_path": "formal_definition_resolver",
+            "reason": reason,
+            "status": "needs_human_input",
+        }],
+        "evidence_requests": [],
+    }
+
+
 def _reconciliation_context(research_brief, variable_claim_model):
     return {
         "research_scope": {
@@ -430,7 +444,7 @@ class FormalDefinitionResolver:
     def resolve(self, research_brief, reasoning_context, variable_claim_model, evidence_bundle, *, llm_call, logger=None, settings=None, cache_identity=None):
         settings = dict(settings or {})
         card_limit = max(1, min(40, int(settings.get("max_cards_per_request", 40))))
-        initial_limit = min(card_limit, max(1, int(settings.get("initial_cards", 16))))
+        initial_limit = min(card_limit, max(1, int(settings.get("initial_cards", 24))))
         rounds = max(0, min(3, int(settings.get("max_supplement_rounds", 1))))
         supplement_limit = min(card_limit, max(1, int(settings.get("supplement_cards", 10))))
         group_size = max(1, min(8, int(settings.get("variables_per_group", 4))))
@@ -451,7 +465,7 @@ class FormalDefinitionResolver:
             for variable in group
         }
 
-        def resolve_group(item):
+        def _resolve_group(item):
             group_number, group, existing_definitions = item
             current = None
             seen = set()
@@ -479,10 +493,14 @@ class FormalDefinitionResolver:
                 prompt = prefix + json_prompt_payload(context)
                 identity = {"version": 1, "prompt": prompt, "llm": cache_identity or {}}
                 cached = cache.read("definition_groups", identity)
+                cache_rejected = cached is not None and not self._cacheable_group_result(cached, group)
+                if cache_rejected:
+                    cached = None
                 if logger is not None:
                     logger.event("formal_definition_resolver", "group_started", status="RUNNING", brief_id=brief_id,
                                  group_number=group_number, group_count=len(groups), supplement_round=round_number,
-                                 evidence_card_count=len(selected), prompt_chars=len(prompt), cache_hit=cached is not None)
+                                 evidence_card_count=len(selected), prompt_chars=len(prompt), cache_hit=cached is not None,
+                                 cache_rejected=cache_rejected)
                 if cached is None:
                     if cache.offline:
                         raise ValueError("definition_checkpoint_miss_in_read_only_mode")
@@ -512,7 +530,7 @@ class FormalDefinitionResolver:
                         quarantined_relation_errors=quarantined_relations,
                     )
                 self._validate(current, {"evidence_cards": list(available.values())})
-                if cached is None:
+                if cached is None and self._cacheable_group_result(current, group):
                     cache.write("definition_groups", identity, current)
                 group_audit.append({"group": group_number, "round": round_number, "card_ids": [card["card_id"] for card in selected], "prompt_chars": len(prompt), "cache_hit": cached is not None})
                 relation_review_count = sum(
@@ -524,7 +542,7 @@ class FormalDefinitionResolver:
                 if logger is not None:
                     logger.event("formal_definition_resolver", "group_completed",
                                  level="WARNING" if relation_review_count else "INFO",
-                                 status="DEGRADED" if relation_review_count else "COMPLETED", brief_id=brief_id,
+                                 status="WARNING" if relation_review_count else "COMPLETED", brief_id=brief_id,
                                  group_number=group_number, supplement_round=round_number,
                                  definition_count=len(current["definitions"]),
                                  relation_review_count=relation_review_count,
@@ -559,6 +577,31 @@ class FormalDefinitionResolver:
             for request in current.get("evidence_requests", []):
                 group_result["unknown_items"].append({"field_path": f"definition_groups.{group_number}", "reason": f"Evidence request remains unresolved: {request}", "status": "needs_human_input"})
             return group_result, group_audit
+
+        def resolve_group(item):
+            group_number, _group, _existing_definitions = item
+            try:
+                return _resolve_group(item)
+            except Exception as error:
+                detail = f"{type(error).__name__}: {error}"
+                if logger is not None:
+                    logger.event(
+                        "formal_definition_resolver", "group_warning", level="WARNING",
+                        status="WARNING", brief_id=brief_id, group_number=group_number,
+                        group_count=len(groups), requires_human_review=True,
+                        error_code=type(error).__name__, error_detail=detail,
+                    )
+                return {
+                    "schema_version": DEFINITION_RESOLUTION_V1,
+                    "definitions": [],
+                    "model_relations": [],
+                    "unknown_items": [{
+                        "field_path": f"definition_groups.{group_number}",
+                        "reason": detail,
+                        "status": "needs_human_input",
+                    }],
+                    "evidence_requests": [],
+                }, []
 
         pending_groups = dict(enumerate(groups, 1))
         completed_groups = {}
@@ -612,6 +655,8 @@ class FormalDefinitionResolver:
                     )
                 identity = {"version": 1, "prompt": prompt, "llm": cache_identity or {}}
                 review = cache.read("definition_reconciliation", identity)
+                if review is not None and not self._cacheable_reconciliation_review(review):
+                    review = None
                 cache_hit = review is not None
                 if review is None:
                     if cache.offline:
@@ -634,7 +679,7 @@ class FormalDefinitionResolver:
                             or not all(isinstance(identifier, str) and identifier in identifiers for identifier in record_ids)
                             or not isinstance(reason, str) or not reason.strip()):
                         raise ValueError(f"definition_reconciliation_issue_{issue_number}_invalid")
-                if not cache_hit:
+                if not cache_hit and not issues:
                     cache.write("definition_reconciliation", identity, review)
                 for issue in issues:
                     record_ids = set(issue["record_ids"])
@@ -656,7 +701,7 @@ class FormalDefinitionResolver:
                                  brief_id=brief_id, issue_count=len(issues), cache_hit=cache_hit)
             except Exception as error:
                 detail = f"{type(error).__name__}: {error}"
-                review_status = "degraded"
+                review_status = "warning"
                 merged = candidates
                 merged["unknown_items"].append({
                     "field_path": "definition_reconciliation",
@@ -664,20 +709,106 @@ class FormalDefinitionResolver:
                     "status": "needs_human_input",
                 })
                 if logger is not None:
-                    logger.event("formal_definition_resolver", "reconciliation_degraded", level="ERROR",
-                                 status="DEGRADED", brief_id=brief_id,
+                    logger.event("formal_definition_resolver", "reconciliation_warning", level="WARNING",
+                                 status="WARNING", brief_id=brief_id,
                                  disposition="kept_valid_group_candidates", requires_human_review=True,
                                  error_code=type(error).__name__, error_detail=str(error))
             audit.append({"stage": "reconcile_definitions", "card_ids": [],
                           "prompt_chars": len(prompt), "cache_hit": cache_hit,
                           "status": review_status,
-                          "error_detail": detail if review_status == "degraded" else ""})
-        merged = self._merge(merged)
-        self._validate(merged, evidence_bundle)
-        for variable in self._missing(merged, variables):
+                          "error_detail": detail if review_status == "warning" else ""})
+        try:
+            merged = self._merge(merged)
+        except Exception as error:
+            detail = f"{type(error).__name__}: {error}"
+            merged["unknown_items"].append({
+                "field_path": "formal_definition_resolver.merge",
+                "reason": detail,
+                "status": "needs_human_input",
+            })
+            if logger is not None:
+                logger.event(
+                    "formal_definition_resolver", "merge_warning", level="WARNING",
+                    status="WARNING", brief_id=brief_id,
+                    requires_human_review=True, error_code=type(error).__name__,
+                    error_detail=detail,
+                )
+        try:
+            self._validate(merged, evidence_bundle)
+        except Exception as error:
+            detail = f"{type(error).__name__}: {error}"
+            merged["unknown_items"].append({
+                "field_path": "formal_definition_resolver.validation",
+                "reason": detail,
+                "status": "needs_human_input",
+            })
+            if logger is not None:
+                logger.event(
+                    "formal_definition_resolver", "validation_warning", level="WARNING",
+                    status="WARNING", brief_id=brief_id,
+                    requires_human_review=True, error_code=type(error).__name__,
+                    error_detail=detail,
+                )
+        try:
+            missing_variables = self._missing(merged, variables)
+        except Exception as error:
+            detail = f"{type(error).__name__}: {error}"
+            missing_variables = []
+            merged["unknown_items"].append({
+                "field_path": "formal_definition_resolver.missing_variables",
+                "reason": detail,
+                "status": "needs_human_input",
+            })
+            if logger is not None:
+                logger.event(
+                    "formal_definition_resolver", "missing_variables_warning", level="WARNING",
+                    status="WARNING", brief_id=brief_id,
+                    requires_human_review=True, error_code=type(error).__name__,
+                    error_detail=detail,
+                )
+        for variable in missing_variables:
             merged["unknown_items"].append({"field_path": f"variables.{variable}", "reason": "No specified definition returned after bounded evidence retrieval.", "status": "needs_human_input"})
         merged["retrieval_audit"] = audit
         return merged
+
+    @staticmethod
+    def _cacheable_group_result(payload, variables):
+        if not isinstance(payload, Mapping):
+            return False
+        if payload.get("unknown_items"):
+            return False
+        requests = payload.get("evidence_requests", [])
+        if not isinstance(requests, list):
+            return False
+        if any(
+            isinstance(item, Mapping) and str(item.get("query") or "").strip()
+            for item in requests
+        ):
+            return False
+        definitions = payload.get("definitions")
+        relations = payload.get("model_relations")
+        if not isinstance(definitions, list) or not isinstance(relations, list):
+            return False
+        try:
+            if FormalDefinitionResolver._missing(payload, variables):
+                return False
+        except (KeyError, TypeError):
+            return False
+        for definition in definitions:
+            if (
+                not isinstance(definition, Mapping)
+                or definition.get("definition_status") != "specified"
+                or definition.get("verification_readiness") != "encoded"
+            ):
+                return False
+        for relation in relations:
+            if not isinstance(relation, Mapping) or relation.get("status") == "unresolved":
+                return False
+        return True
+
+    @staticmethod
+    def _cacheable_reconciliation_review(payload):
+        return isinstance(payload, Mapping) and isinstance(payload.get("issues"), list) and not payload["issues"]
 
     @staticmethod
     def _request(llm_call, prompt, logger, brief_id, settings, request_kind="resolve_definitions"):

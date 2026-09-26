@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from collections.abc import Mapping
+import shutil
 from typing import Any
 
 from .latex_compiler import LatexCompilerError, compile_latex_project, resolve_executable
@@ -56,12 +57,60 @@ def render_research_plan_document(
     configured_rendering: Mapping[str, Any] | None = None,
     author_name: str = "Anonymous Research Plan Author",
     logger: Any | None = None,
+    visualization_llm_call: Any | None = None,
+    visualization_config: Mapping[str, Any] | None = None,
+    project_config: Any | None = None,
+    visualization_image_client_factory: Any | None = None,
+    visualization_vision_client_factory: Any | None = None,
 ) -> AuthorRenderingResult:
     """Render, compile, and validate a proposal PDF without an execution fallback."""
 
     settings = _mapping(configured_rendering)
     writer = AuthorRenderArtifactWriter(output_dir)
     paths = writer.allocate(timestamp=timestamp, preparation_collision_index=preparation_collision_index)
+    visual_figures: tuple[dict[str, Any], ...] = ()
+    visual_manifest_path: Path | None = None
+    visualization_settings = _mapping(visualization_config) or _mapping(settings.get("visualization"))
+    if bool(visualization_settings.get("enabled", False)):
+        try:
+            from .author_visualization import AuthorVisualizer
+
+            visual_workspace = paths.project_dir.parent / f"{paths.project_dir.name}_visuals"
+            visual_result = AuthorVisualizer(
+                config=project_config or {"research_plan_author": {"visualization": visualization_settings}},
+                llm_call=visualization_llm_call,
+                logger=logger,
+                image_client_factory=visualization_image_client_factory,
+                vision_client_factory=visualization_vision_client_factory,
+            ).run(document, output_dir=visual_workspace)
+            visual_figures = tuple(
+                dict(item)
+                for item in visual_result.get("figures", [])
+                if isinstance(item, Mapping)
+            )
+            raw_manifest_path = _text(visual_result.get("author_visual_manifest"))
+            if raw_manifest_path:
+                candidate_manifest_path = Path(raw_manifest_path)
+                if candidate_manifest_path.is_file():
+                    visual_manifest_path = candidate_manifest_path
+            if logger is not None:
+                logger.emit(
+                    "visualization",
+                    "completed",
+                    status="COMPLETED",
+                    figure_count=len(visual_figures),
+                )
+        except Exception as error:
+            if not bool(visualization_settings.get("fail_open", True)):
+                raise AuthorRenderingError("visualization", str(error), paths=paths) from error
+            if logger is not None:
+                logger.emit(
+                    "visualization",
+                    "failed_optional",
+                    level="WARNING",
+                    status="FAILED_OPTIONAL",
+                    error=str(error),
+                )
     try:
         required_page_count = normalize_minimum_pages(
             minimum_pages if minimum_pages is not None else settings.get("minimum_pages")
@@ -81,7 +130,14 @@ def render_research_plan_document(
             project_dir=paths.project_dir,
             profile=profile,
             author_name=author_name,
+            visual_figures=visual_figures,
         )
+        if visual_manifest_path is not None:
+            try:
+                shutil.copyfile(visual_manifest_path, tex.project_dir / "author_visual_manifest.json")
+            except OSError as error:
+                if not bool(visualization_settings.get("fail_open", True)):
+                    raise RenderArtifactError(f"cannot publish Author visual manifest: {error}") from error
         writer.publish_sources(tex, paths)
         if logger is not None:
             logger.emit(

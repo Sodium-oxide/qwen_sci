@@ -172,6 +172,17 @@ The repository also provides an **optional, supervised quantitative-modeling sid
 | **ExperimentDesign** | Retrieves design evidence, composes a testable design, and validates the design-only plan. | JSON, Markdown, Author handoff JSON, and a JSONL run log. |
 | **Author** | Composes an English research-plan package from verified Survey and ExperimentDesign handoffs. | Research-plan artifacts; optionally a copied LaTeX project and validated PDF. |
 
+Author can optionally create conceptual scientific figures after composition and insert them into the final LaTeX/PDF report. It reuses Survey's `SurveyVisualizer`, while the default Author mode grounds figures in completed manuscript sections without requiring Survey evidence-plan or paper-path matching. Enable it in configuration:
+
+```yaml
+research_plan_author:
+  visualization:
+    enabled: true
+    strict_evidence: false
+```
+
+Generated images and `author_visual_manifest.json` remain inside the timestamped Author render project. With the default `fail_open: true`, image-generation or visual-QC failures leave the text report renderable.
+
 The recommended entry point is `qwensci science`. Each stage is also available as an individual command when you want to inspect, supply, or reuse a particular handoff.
 
 ## Quick start: an auditable science run

@@ -280,6 +280,15 @@ EXPERIMENT_DESIGN_SCHEMA: dict[str, Any] = {
                 "mode": {"enum": [DESIGN_ONLY, DIGITAL_EXECUTION_ELIGIBLE]},
                 "allow_digital_execution": {"type": "boolean"},
                 "reason": _NONEMPTY_STRING,
+                "methodology_detail_level": {
+                    "enum": [
+                        "FULL_METHODOLOGY_PLAN",
+                        "FORMAL_VERIFICATION_PLAN",
+                        "RESTRICTED_HIGH_RISK_PLAN",
+                    ]
+                },
+                "methodology_detail_allowed": {"type": "boolean"},
+                "methodology_detail_reason": {"type": "string"},
             },
         },
         "research_brief": deepcopy(RESEARCH_BRIEF_SCHEMA),
@@ -299,6 +308,15 @@ EXPERIMENT_DESIGN_SCHEMA: dict[str, Any] = {
                 "design_type": _NONEMPTY_STRING,
                 "experimental_unit": _NONEMPTY_STRING,
                 "time_structure": _NONEMPTY_STRING,
+                "design_structure": {"type": "string"},
+                "allocation_unit": {"type": "string"},
+                "analysis_unit": {"type": "string"},
+                "study_phases": {"type": "array"},
+                "protocol_version": {"type": "string"},
+                "preregistration": {"type": "object"},
+                "site_or_facility": {"type": "object"},
+                "timeline": {"type": "object"},
+                "resource_requirements": {"type": "object"},
             },
         },
         "hypothesis_mapping": {
@@ -336,6 +354,10 @@ EXPERIMENT_DESIGN_SCHEMA: dict[str, Any] = {
                 "source": {"type": "object"},
                 "eligibility_criteria": {"type": "object"},
                 "sample_size_or_power_basis": {"type": "object"},
+                "target_sample_size": {"type": "object"},
+                "recruitment_or_acquisition": {"type": "object"},
+                "retention_and_exclusion": {"type": "object"},
+                "sample_handling": {"type": "object"},
             },
         },
         "measurement_and_calibration": {
@@ -347,6 +369,10 @@ EXPERIMENT_DESIGN_SCHEMA: dict[str, Any] = {
                 "measurement_plan": {"type": "object"},
                 "calibration": {"type": "object"},
                 "quality_control": {"type": "object"},
+                "measurement_endpoints": {"type": "array"},
+                "instrument_plan": {"type": "object"},
+                "calibration_plan": {"type": "object"},
+                "acceptance_criteria": {"type": "array"},
             },
         },
         "comparison_and_robustness": {
@@ -359,6 +385,10 @@ EXPERIMENT_DESIGN_SCHEMA: dict[str, Any] = {
                 "baselines": {"type": "array"},
                 "comparisons": {"type": "array"},
                 "ablation_sensitivity_robustness": {"type": "array"},
+                "condition_matrix": {"type": "array"},
+                "allocation_and_sequence": {"type": "object"},
+                "primary_comparisons": {"type": "array"},
+                "stopping_rules": {"type": "object"},
             },
         },
         "analysis_plan": {
@@ -372,6 +402,12 @@ EXPERIMENT_DESIGN_SCHEMA: dict[str, Any] = {
                 "batch_effects": {"type": "object"},
                 "missing_data": {"type": "object"},
                 "statistical_analysis": {"type": "object"},
+                "estimands": {"type": "array"},
+                "model_specification": {"type": "object"},
+                "effect_size_and_uncertainty": {"type": "object"},
+                "multiple_testing": {"type": "object"},
+                "outlier_and_exclusion": {"type": "object"},
+                "analysis_software": {"type": "object"},
             },
         },
         "data_governance_and_reproducibility": {
@@ -381,6 +417,44 @@ EXPERIMENT_DESIGN_SCHEMA: dict[str, Any] = {
             "properties": {
                 "data_management": {"type": "object"},
                 "reproducibility": {"type": "object"},
+                "data_dictionary": {"type": "object"},
+                "storage_and_access": {"type": "object"},
+                "versioning_and_audit": {"type": "object"},
+                "code_and_environment": {"type": "object"},
+                "preregistration_and_deviations": {"type": "object"},
+            },
+        },
+        "materials_and_resources": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "materials": {"type": "array"},
+                "sample_preparation": {"type": "array"},
+                "facility_requirements": {"type": "array"},
+                "personnel_and_roles": {"type": "array"},
+                "procurement_and_availability": {"type": "object"},
+            },
+        },
+        "protocol_plan": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "preparation": {"type": "array"},
+                "steps": {"type": "array"},
+                "monitoring_and_recording": {"type": "array"},
+                "deviation_and_failure_handling": {"type": "array"},
+                "termination_criteria": {"type": "array"},
+                "formal_verification_steps": {"type": "array"},
+            },
+        },
+        "methodology_completeness": {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["status", "covered_sections", "open_items"],
+            "properties": {
+                "status": {"enum": ["COMPLETE_PLAN", "COMPLETE_WITH_ASSUMPTIONS", "RESTRICTED_PLAN", "REQUIRES_INPUT"]},
+                "covered_sections": {"type": "array", "items": _NONEMPTY_STRING},
+                "open_items": {"type": "array"},
             },
         },
         "outcome_branches": {"type": "array", "minItems": 4, "items": deepcopy(OUTCOME_BRANCH_SCHEMA)},
@@ -553,6 +627,117 @@ def validate_outcome_branch(payload: Any) -> list[str]:
     return _schema_errors(payload, OUTCOME_BRANCH_SCHEMA)
 
 
+def _methodology_detail_errors(payload: Mapping[str, Any]) -> list[str]:
+    policy = payload.get("execution_policy")
+    if not isinstance(policy, Mapping):
+        return []
+    level = str(policy.get("methodology_detail_level") or "")
+    if level != "FULL_METHODOLOGY_PLAN":
+        return []
+    errors: list[str] = []
+
+    def mapping_at(path: str) -> dict[str, Any]:
+        current: Any = payload
+        for part in path.split("."):
+            if not isinstance(current, Mapping):
+                return {}
+            current = current.get(part)
+        return dict(current) if isinstance(current, Mapping) else {}
+
+    def value_at(path: str) -> Any:
+        current: Any = payload
+        for part in path.split("."):
+            if not isinstance(current, Mapping) or part not in current:
+                return None
+            current = current[part]
+        return current
+
+    statuses = payload.get("field_statuses")
+    if isinstance(statuses, Mapping):
+        for path, status in statuses.items():
+            path_text = str(path)
+            if (
+                str(status) == "needs_human_input"
+                and path_text.startswith(
+                    (
+                        "research_design",
+                        "variables_and_operationalization",
+                        "sampling_and_eligibility",
+                        "measurement_and_calibration",
+                        "comparison_and_robustness",
+                        "analysis_plan",
+                        "data_governance_and_reproducibility",
+                        "materials_and_resources",
+                        "protocol_plan",
+                        "template_details",
+                    )
+                )
+                and value_at(path_text) not in (None, "", [], {})
+            ):
+                errors.append(f"methodology_detail_requires_assumption_or_value:{path_text}")
+
+    for path in (
+        "materials_and_resources.materials",
+        "measurement_and_calibration.instruments",
+        "measurement_and_calibration.measurement_endpoints",
+        "comparison_and_robustness.condition_matrix",
+        "comparison_and_robustness.primary_comparisons",
+        "comparison_and_robustness.ablation_sensitivity_robustness",
+        "analysis_plan.estimands",
+        "protocol_plan.steps",
+    ):
+        value = value_at(path)
+        if not isinstance(value, list) or not value:
+            errors.append(f"methodology_detail_missing:{path}")
+
+    protocol_steps = value_at("protocol_plan.steps")
+    if isinstance(protocol_steps, list):
+        minimum_steps = 4 if level == "FORMAL_VERIFICATION_PLAN" else 5
+        if len(protocol_steps) < minimum_steps:
+            errors.append(f"methodology_detail_protocol_steps_too_short:{minimum_steps}")
+
+    instruments = value_at("measurement_and_calibration.instruments")
+    if isinstance(instruments, list) and any(
+        not isinstance(item, Mapping)
+        or not item.get("category")
+        or not item.get("selection_criteria")
+        for item in instruments
+    ):
+        errors.append("methodology_detail_instrument_description_missing")
+    condition_matrix = value_at("comparison_and_robustness.condition_matrix")
+    if isinstance(condition_matrix, list) and any(
+        not isinstance(item, Mapping)
+        or not item.get("condition_id")
+        or not item.get("role")
+        or not item.get("definition")
+        for item in condition_matrix
+    ):
+        errors.append("methodology_detail_condition_description_missing")
+
+    target_sample_size = mapping_at("sampling_and_eligibility.target_sample_size")
+    if not target_sample_size or not (
+        target_sample_size.get("proposed_independent_units_per_condition")
+        or target_sample_size.get("calculation")
+    ):
+        errors.append("methodology_detail_sample_size_basis_missing")
+    for path in (
+        "measurement_and_calibration.measurement_plan",
+        "measurement_and_calibration.calibration_plan",
+        "measurement_and_calibration.quality_control",
+        "analysis_plan.model_specification",
+        "analysis_plan.effect_size_and_uncertainty",
+        "analysis_plan.multiple_testing",
+        "data_governance_and_reproducibility.data_management",
+        "data_governance_and_reproducibility.reproducibility",
+    ):
+        if not mapping_at(path):
+            errors.append(f"methodology_detail_missing:{path}")
+    template_details = payload.get("template_details")
+    if not isinstance(template_details, Mapping) or not template_details:
+        errors.append("methodology_detail_template_details_missing")
+    return errors
+
+
 def validate_experiment_design(payload: Any) -> list[str]:
     errors = _schema_errors(payload, EXPERIMENT_DESIGN_SCHEMA)
     if not isinstance(payload, Mapping):
@@ -599,6 +784,8 @@ def validate_experiment_design(payload: Any) -> list[str]:
         "comparison_and_robustness",
         "analysis_plan",
         "data_governance_and_reproducibility",
+        "materials_and_resources",
+        "protocol_plan",
         "template_details",
     }
     def nested_status_paths(value: object, path: str) -> list[str]:
@@ -650,6 +837,32 @@ def validate_experiment_design(payload: Any) -> list[str]:
         )
         if policy.get("mode") != expected["mode"]:
             errors.append("execution_policy_mode_does_not_match_discipline_scope")
+    methodology = payload.get("methodology_completeness")
+    if isinstance(methodology, Mapping):
+        required_sections = {
+            "research_design",
+            "hypothesis_mapping",
+            "variables_and_operationalization",
+            "materials_and_resources",
+            "sampling_and_eligibility",
+            "measurement_and_calibration",
+            "comparison_and_robustness",
+            "protocol_plan",
+            "analysis_plan",
+            "data_governance_and_reproducibility",
+        }
+        covered_sections = {
+            str(section).strip()
+            for section in methodology.get("covered_sections") or []
+            if str(section).strip()
+        }
+        missing_sections = sorted(required_sections - covered_sections)
+        if missing_sections:
+            errors.append("methodology_completeness_missing_sections:" + ",".join(missing_sections))
+        protocol = payload.get("protocol_plan")
+        if not isinstance(protocol, Mapping) or not isinstance(protocol.get("steps"), list) or not protocol.get("steps"):
+            errors.append("methodology_completeness_protocol_steps_missing")
+    errors.extend(_methodology_detail_errors(payload))
     return errors
 
 

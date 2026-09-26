@@ -1093,6 +1093,7 @@ class SurveyEvidenceAdapter:
         paper_index: int,
         paper: Mapping[str, Any],
         planned_slots: Sequence[str],
+        methodology_detail_policy: Mapping[str, Any] | None,
         logger: Any | None,
         cache_run_id: str,
     ) -> dict[str, Any]:
@@ -1121,6 +1122,7 @@ class SurveyEvidenceAdapter:
             "source_text_sha256": text_digest(source_text),
             "requested_slots": list(planned_slots),
             "card_prompt_sha256": text_digest(EVIDENCE_CARD_EXTRACTOR_PROMPT),
+            "methodology_detail_policy": _mapping(methodology_detail_policy),
             "cache_context": self.cache_context,
         }
         if logger is not None:
@@ -1172,6 +1174,7 @@ class SurveyEvidenceAdapter:
             extracted, extraction_warnings = self.card_extractor.extract(
                 paper,
                 requested_slots=planned_slots,
+                methodology_detail_policy=methodology_detail_policy,
                 llm_call=self.card_llm_call,
             )
         except Exception as exc:
@@ -1256,6 +1259,7 @@ class SurveyEvidenceAdapter:
         *,
         brief_id: str,
         evidence_plan: Mapping[str, Any],
+        methodology_detail_policy: Mapping[str, Any] | None = None,
         survey_artifacts: Mapping[str, Any] | Sequence[Mapping[str, Any]] | None = None,
         max_results_per_query: int = 10,
         max_fulltext_papers: int = 15,
@@ -1293,6 +1297,7 @@ class SurveyEvidenceAdapter:
                         paper_index=paper_index,
                         paper=paper,
                         planned_slots=planned_slots,
+                        methodology_detail_policy=methodology_detail_policy,
                         logger=logger,
                         cache_run_id=cache_run_id,
                     ): paper_index

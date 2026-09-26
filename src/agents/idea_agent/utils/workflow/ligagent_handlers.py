@@ -901,9 +901,9 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
         get_config_value(
             agent.config,
             "mcts.screening_max_iterations",
-            getattr(agent.mcts.config, "screening_max_iterations", 6),
+            getattr(agent.mcts.config, "screening_max_iterations", 12),
         )
-        or getattr(agent.mcts.config, "screening_max_iterations", 6)
+        or getattr(agent.mcts.config, "screening_max_iterations", 12)
     )
     raw_data_budget_cap = get_config_value(
         agent.config,

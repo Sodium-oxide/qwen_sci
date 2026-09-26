@@ -1382,15 +1382,14 @@ class FormalReasoningPlanner:
                         except Exception as merge_error:
                             error = merge_error
                     detail = f"{type(error).__name__}: {error}"
-                    plan["status"] = "requires_human_review"
                     plan["unknown_items"].extend(
                         {"field_path": f"proof_attempts.{target_id}", "reason": detail, "status": "needs_human_input"}
                         for target_id in sorted(target_ids)
                     )
                     if logger is not None:
                         logger.event(
-                            "formal_reasoning_planner", "target_group_failed", level="ERROR",
-                            status="DEGRADED", brief_id=brief_id,
+                            "formal_reasoning_planner", "target_group_warning", level="WARNING",
+                            status="WARNING", brief_id=brief_id,
                             target_group_number=group_number, target_ids=sorted(target_ids),
                             error_code=type(error).__name__, error_detail=str(error),
                         )

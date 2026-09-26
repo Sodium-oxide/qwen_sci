@@ -118,7 +118,10 @@ class CompletenessValidator:
                         "blocks_final_design": True,
                     }
                 )
-        status = "READY_FOR_HUMAN_REVIEW" if not errors and not unknown_items else "DRAFT_REQUIRES_INPUT"
+        blocking_unknowns = [
+            item for item in unknown_items if item.get("status") == "needs_human_input"
+        ]
+        status = "READY_FOR_HUMAN_REVIEW" if not errors and not blocking_unknowns else "DRAFT_REQUIRES_INPUT"
         return {
             "schema_version": COMPLETENESS_REPORT_SCHEMA_VERSION,
             "status": status,

@@ -5,6 +5,7 @@ from .artifacts import (
     AuthorPreparationArtifactWriter,
     write_author_preparation_artifacts,
 )
+from .author_visualization import AuthorVisualizer
 from .contracts import (
     AUTHOR_SOURCE_BUNDLE_SCHEMA_VERSION,
     RESEARCH_PLAN_AUTHOR_INPUT_SCHEMA_VERSION,
@@ -30,6 +31,7 @@ __all__ = [
     "RESEARCH_PLAN_AUTHOR_INPUT_SCHEMA_VERSION",
     "RESEARCH_PLAN_DOCUMENT_SCHEMA_VERSION",
     "AuthorInputLoadError",
+    "AuthorVisualizer",
     "AuthorCompositionError",
     "AuthorPreparationArtifactPaths",
     "AuthorPreparationArtifactWriter",

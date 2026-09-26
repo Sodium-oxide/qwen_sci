@@ -212,6 +212,34 @@ def _record_degradation(
     return record
 
 
+def _record_stage_warning(
+    logger: ExperimentDesignRunLogger | None,
+    *,
+    stage: str,
+    brief_id: str,
+    error: BaseException | None = None,
+    warning_detail: str | None = None,
+) -> dict[str, str]:
+    detail = str(warning_detail or error or f"{stage} returned an incomplete result.").strip()
+    record = {
+        "stage": stage,
+        "error_code": type(error).__name__ if error is not None else "STAGE_WARNING",
+        "error_detail": detail,
+    }
+    if logger is not None:
+        logger.event(
+            stage,
+            "warning",
+            level="WARNING",
+            status="WARNING",
+            brief_id=brief_id,
+            requires_human_review=True,
+            error_code=record["error_code"],
+            error_detail=detail,
+        )
+    return record
+
+
 def _mark_design_degraded(
     design: Mapping[str, Any],
     degradations: Sequence[Mapping[str, str]],
@@ -299,9 +327,10 @@ class ExperimentDesignOrchestrator:
         self.completeness_validator = CompletenessValidator()
         self.variable_claim_extractor = VariableClaimExtractor()
         self.formal_reasoning_planner = FormalReasoningPlanner()
-        from .formal_definition_resolver import FormalDefinitionResolver
+        from .formal_definition_resolver import FormalDefinitionResolver, unavailable_formal_definition_resolution
 
         self.formal_definition_resolver = FormalDefinitionResolver()
+        self.unavailable_formal_definition_resolution = unavailable_formal_definition_resolution
         self.counterexample_analyzer = CounterexampleAnalyzer()
         self.study_type_composer = StudyTypeTemplateComposer(
             template_router=self.template_router,
@@ -485,6 +514,7 @@ class ExperimentDesignOrchestrator:
                 }
             )
         human_review = scope_gate["risk_and_human_review"]
+        methodology_detail = _mapping(scope_gate.get("methodology_detail_policy"))
         if human_review["human_review_required"]:
             unknown_items.append(
                 {
@@ -496,7 +526,7 @@ class ExperimentDesignOrchestrator:
             )
         if scope_gate["status"] != "IN_SCOPE" or brief_errors:
             validation_status = "BLOCKED_BY_SCOPE"
-        elif human_review["human_review_required"]:
+        elif methodology_detail.get("level") == "RESTRICTED_HIGH_RISK_PLAN":
             validation_status = "BLOCKED_BY_RISK_REVIEW"
         else:
             validation_status = completeness["status"]
@@ -648,10 +678,9 @@ class ExperimentDesignOrchestrator:
             record["stage"] == "variable_claim_extraction" for record in degradations
         )
         formal_degraded = False
+        formal_warning = False
         formal_settings = _setting(_setting(self.config, "experiment_design", self.config), "formal_reasoning", {})
         formal_inputs = None
-        formal_definition_degraded = False
-        formal_definition_failure_detail = ""
         formal_verification_report = None
         formal_revision_audit = None
         if formal_applicable and not variable_claim_degraded and _setting(formal_settings, "enabled", False):
@@ -680,15 +709,15 @@ class ExperimentDesignOrchestrator:
                         cache_identity=definition_identity,
                     )
                 except Exception as exc:
-                    formal_definition_degraded = True
-                    degradation = _record_degradation(
+                    _record_stage_warning(
                         logger,
                         stage="formal_definition_resolver",
                         brief_id=brief_id,
                         error=exc,
                     )
-                    formal_definition_failure_detail = str(degradation.get("error_detail") or "").strip()
-                    degradations.append(degradation)
+                    formal_inputs = self.unavailable_formal_definition_resolution(
+                        reason=f"{type(exc).__name__}: {exc}"
+                    )
         if formal_applicable:
             if logger is not None:
                 logger.event(
@@ -699,39 +728,19 @@ class ExperimentDesignOrchestrator:
                 )
             if variable_claim_degraded:
                 formal_degraded = True
-                degradations.append(
-                    _record_degradation(
-                        logger,
-                        stage="formal_reasoning_planner",
-                        brief_id=brief_id,
-                        disposition="skipped_after_upstream_degradation",
-                    )
+                formal_warning = True
+                _record_stage_warning(
+                    logger,
+                    stage="formal_reasoning_planner",
+                    brief_id=brief_id,
+                    warning_detail=(
+                        "Formal reasoning was not run because the variable and claim model was unavailable."
+                    ),
                 )
                 formal_reasoning_plan = unavailable_formal_reasoning_plan(
                     reason=(
                         "Formal reasoning was not run because the variable and claim extraction batch was discarded; "
                         "a qualified human must supply the formalization."
-                    ),
-                )
-            elif formal_definition_degraded:
-                formal_degraded = True
-                degradations.append(
-                    _record_degradation(
-                        logger,
-                        stage="formal_reasoning_planner",
-                        brief_id=brief_id,
-                        disposition="skipped_after_upstream_degradation",
-                        error_detail=(
-                            "Formal reasoning was skipped because formal_definition_resolver failed: "
-                            + (formal_definition_failure_detail or "no valid definition batch was retained")
-                        ),
-                    )
-                )
-                formal_reasoning_plan = unavailable_formal_reasoning_plan(
-                    reason=(
-                        "Formal reasoning was not run because the definition resolver failed. "
-                        "Qualified human review must repair the formal definitions first. "
-                        + (formal_definition_failure_detail or "No valid definition batch was retained.")
                     ),
                 )
             else:
@@ -772,26 +781,25 @@ class ExperimentDesignOrchestrator:
                         and str(item.get("field_path") or "").startswith("proof_attempts.")
                     ]
                     if target_failures:
-                        formal_degraded = True
+                        formal_warning = True
                         detail = "; ".join(str(item.get("reason") or "Target proof group failed.") for item in target_failures)
-                        degradations.append(_record_degradation(
+                        _record_stage_warning(
                             logger, stage="formal_reasoning_planner", brief_id=brief_id,
-                            error=ValueError(detail),
-                            disposition="retained_target_group_degradation",
-                            error_detail=detail,
-                        ))
-                except Exception as exc:
-                    formal_degraded = True
-                    degradations.append(
-                        _record_degradation(
-                            logger,
-                            stage="formal_reasoning_planner",
-                            brief_id=brief_id,
-                            error=exc,
+                            error=ValueError(detail), warning_detail=detail,
                         )
+                except Exception as exc:
+                    formal_warning = True
+                    _record_stage_warning(
+                        logger,
+                        stage="formal_reasoning_planner",
+                        brief_id=brief_id,
+                        error=exc,
                     )
                     formal_reasoning_plan = unavailable_formal_reasoning_plan(
-                        reason=_degradation_reason("formal_reasoning_planner"),
+                        reason=(
+                            "Formal reasoning planner returned no usable plan after a warning: "
+                            f"{type(exc).__name__}: {exc}"
+                        ),
                     )
                     if formal_inputs is not None:
                         from .formal_contracts import unresolved_plan_from_definitions
@@ -803,7 +811,7 @@ class ExperimentDesignOrchestrator:
                 logger.event(
                 "formal_reasoning_planner",
                 "completed",
-                status="DEGRADED" if formal_degraded else "COMPLETED",
+                status="WARNING" if formal_warning else "COMPLETED",
                     brief_id=brief_id,
                     assumption_count=_sequence_count(formal_reasoning_plan.get("assumptions")),
                     definition_count=_sequence_count(formal_reasoning_plan.get("definitions")),
@@ -821,16 +829,16 @@ class ExperimentDesignOrchestrator:
                     status="RUNNING",
                     brief_id=brief_id,
                 )
-            counterexample_degraded = False
+            counterexample_warning = False
             if formal_degraded:
-                counterexample_degraded = True
-                degradations.append(
-                    _record_degradation(
-                        logger,
-                        stage="counterexample_analyzer",
-                        brief_id=brief_id,
-                        disposition="skipped_after_upstream_degradation",
-                    )
+                counterexample_warning = True
+                _record_stage_warning(
+                    logger,
+                    stage="counterexample_analyzer",
+                    brief_id=brief_id,
+                    warning_detail=(
+                        "Counterexample analysis was not run because the formal reasoning input was unavailable."
+                    ),
                 )
                 counterexample_analysis = unavailable_counterexample_analysis(
                     reason=(
@@ -859,7 +867,7 @@ class ExperimentDesignOrchestrator:
                             brief_id=brief_id,
                             analyzer_settings=_setting(formal_settings, "counterexample", {}),
                         ),
-                        lambda payload: payload.get("status") != "requires_human_review"
+                        lambda payload: payload.get("status") not in {"requires_human_review", "not_run"}
                         and not validate_counterexample_analysis(
                             payload, formal_reasoning_plan=formal_reasoning_plan,
                         ),
@@ -870,30 +878,28 @@ class ExperimentDesignOrchestrator:
                         counterexample_analysis.get("status") == "requires_human_review"
                         and counterexample_analysis.get("target_claim_id")
                     ):
-                        counterexample_degraded = True
                         detail = "; ".join(
                             str(item.get("reason"))
                             for item in counterexample_analysis.get("unknown_items", [])
                             if isinstance(item, Mapping) and item.get("reason")
                         ) or "One or more counterexample targets require human review."
-                        degradations.append(_record_degradation(
+                        _record_stage_warning(
                             logger, stage="counterexample_analyzer", brief_id=brief_id,
-                            error=ValueError(detail),
-                            disposition="retained_target_level_degradation",
-                            error_detail=detail,
-                        ))
-                except Exception as exc:
-                    counterexample_degraded = True
-                    degradations.append(
-                        _record_degradation(
-                            logger,
-                            stage="counterexample_analyzer",
-                            brief_id=brief_id,
-                            error=exc,
+                            error=ValueError(detail), warning_detail=detail,
                         )
+                except Exception as exc:
+                    counterexample_warning = True
+                    _record_stage_warning(
+                        logger,
+                        stage="counterexample_analyzer",
+                        brief_id=brief_id,
+                        error=exc,
                     )
                     counterexample_analysis = unavailable_counterexample_analysis(
-                        reason=_degradation_reason("counterexample_analyzer"),
+                        reason=(
+                            "Counterexample analyzer returned no usable analysis after a warning: "
+                            f"{type(exc).__name__}: {exc}"
+                        ),
                     )
             if logger is not None:
                 target_analyses = counterexample_analysis.get("target_analyses")
@@ -904,13 +910,13 @@ class ExperimentDesignOrchestrator:
                     for item in target_analyses if isinstance(item, Mapping)
                 )
                 review_target_count = sum(
-                    item.get("status") == "requires_human_review"
+                    item.get("status") in {"requires_human_review", "not_run"}
                     for item in target_analyses if isinstance(item, Mapping)
                 )
                 logger.event(
                     "counterexample_analyzer",
                     "completed",
-                    status="DEGRADED" if counterexample_degraded or review_target_count else "COMPLETED",
+                    status="WARNING" if counterexample_warning or review_target_count else "COMPLETED",
                     brief_id=brief_id,
                     target_count=len(target_analyses),
                     review_target_count=review_target_count,
@@ -1060,7 +1066,7 @@ class ExperimentDesignOrchestrator:
                             llm_call=self._required_reasoning_llm(reasoning_llm_call), logger=logger, brief_id=brief_id,
                             analyzer_settings=_setting(formal_settings, "counterexample", {}),
                         ),
-                        lambda payload: payload.get("status") != "requires_human_review"
+                        lambda payload: payload.get("status") not in {"requires_human_review", "not_run"}
                         and not validate_counterexample_analysis(
                             payload, formal_reasoning_plan=formal_reasoning_plan,
                         ) and not validate_reasoning_artifacts(
@@ -1075,25 +1081,21 @@ class ExperimentDesignOrchestrator:
                         counterexample_analysis.get("status") == "requires_human_review"
                         and counterexample_analysis.get("target_claim_id")
                     ):
-                        counterexample_degraded = True
                         detail = "; ".join(
                             str(item.get("reason"))
                             for item in counterexample_analysis.get("unknown_items", [])
                             if isinstance(item, Mapping) and item.get("reason")
                         ) or "One or more counterexample targets require human review."
-                        degradations.append(_record_degradation(
+                        _record_stage_warning(
                             logger, stage="counterexample_analyzer", brief_id=brief_id,
-                            error=ValueError(detail),
-                            disposition="retained_target_level_degradation",
-                            error_detail=detail,
-                        ))
+                            error=ValueError(detail), warning_detail=detail,
+                        )
                 except Exception as exc:
                     detail = f"Counterexample regeneration after revision failed: {type(exc).__name__}: {exc}"
-                    degradations.append(_record_degradation(
+                    _record_stage_warning(
                         logger, stage="counterexample_analyzer", brief_id=brief_id,
-                        error=exc, disposition="regeneration_after_revision_failed",
-                        error_detail=detail,
-                    ))
+                        error=exc, warning_detail=detail,
+                    )
                     counterexample_analysis = unavailable_counterexample_analysis(reason=detail)
 
         if logger is not None:
@@ -1331,6 +1333,7 @@ class ExperimentDesignOrchestrator:
         evidence = adapter.collect_and_extract(
             brief_id=str(research_brief.get("brief_id") or ""),
             evidence_plan=plan,
+            methodology_detail_policy=_mapping(_mapping(preparation.get("scope_gate")).get("methodology_detail_policy")),
             survey_artifacts=survey_artifacts,
             max_results_per_query=max_results_per_query,
             max_fulltext_papers=max_fulltext_papers,
@@ -1402,6 +1405,7 @@ class ExperimentDesignOrchestrator:
                 evidence = survey_evidence_adapter.collect_and_extract(
                     brief_id=brief_id,
                     evidence_plan=evidence_plan,
+                    methodology_detail_policy=_mapping(scope_gate.get("methodology_detail_policy")),
                     survey_artifacts=survey_artifacts,
                     max_results_per_query=max(1, int(max_results_per_query)),
                     max_fulltext_papers=max(0, int(max_fulltext_papers)),
@@ -1416,6 +1420,7 @@ class ExperimentDesignOrchestrator:
                     evidence = survey_evidence_adapter.collect_and_extract(
                         brief_id=brief_id,
                         evidence_plan=evidence_plan,
+                        methodology_detail_policy=_mapping(scope_gate.get("methodology_detail_policy")),
                         survey_artifacts=survey_artifacts,
                         max_results_per_query=max(1, int(max_results_per_query)),
                         max_fulltext_papers=max(0, int(max_fulltext_papers)),

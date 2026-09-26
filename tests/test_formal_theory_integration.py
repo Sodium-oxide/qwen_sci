@@ -91,12 +91,18 @@ def test_definition_resolution_failure_skips_initial_formal_plan():
     design = ExperimentDesignOrchestrator(llm_call=callback, config=config).compose_design(_brief(), logger=logger)
 
     assert design["formal_reasoning_plan"]["status"] == "requires_human_review"
-    assert any("formal_definition_resolver" in item for item in design["field_statuses"])
-    assert not any('request_kind": "initial_plan"' in prompt for prompt in calls)
+    assert not any("formal_definition_resolver" in item for item in design["field_statuses"])
+    assert any("Formal Reasoning Planner" in prompt for prompt in calls)
+    assert any(
+        record["stage"] == "formal_definition_resolver"
+        and record["event"] == "group_warning"
+        and record["status"] == "WARNING"
+        and record.get("error_detail")
+        for record in logger.records
+    )
     assert any(
         record["stage"] == "formal_reasoning_planner"
-        and record["event"] == "degraded"
-        and record["disposition"] == "skipped_after_upstream_degradation"
-        and record.get("error_detail")
+        and record["event"] == "warning"
+        and record["status"] == "WARNING"
         for record in logger.records
     )

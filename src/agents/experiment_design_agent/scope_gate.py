@@ -53,6 +53,17 @@ _TEXT_SIGNALS = {
 _CLINICAL_DISCIPLINES = frozenset({"27", "29", "35", "36"})
 _LIFE_VETERINARY_DISCIPLINES = frozenset({"13", "24", "28", "30", "34"})
 _CHEMISTRY_SAFETY_DISCIPLINES = frozenset({"15", "16"})
+_RESTRICTED_DETAIL_TRIGGERS = frozenset(
+    {
+        "HUMAN_PARTICIPANT_REVIEW",
+        "CLINICAL_OR_HEALTH_EXPERT_REVIEW",
+        "ANIMAL_USE_REVIEW",
+        "PATHOGEN_OR_RESTRICTED_BIOLOGICAL_REVIEW",
+        "GENETIC_MODIFICATION_REVIEW",
+        "HAZARDOUS_MATERIAL_REVIEW",
+        "HIGH_ENERGY_OR_PRESSURE_REVIEW",
+    }
+)
 
 
 def _mapping(value: object) -> dict[str, Any]:
@@ -147,6 +158,26 @@ def _review_requirements(
     }
 
 
+def _methodology_detail_policy(review: Mapping[str, Any]) -> dict[str, Any]:
+    """Decide whether a complete non-executing methodology may be drafted."""
+
+    triggers = {str(item) for item in review.get("review_triggers") or []}
+    restricted = bool(triggers & _RESTRICTED_DETAIL_TRIGGERS)
+    if restricted:
+        return {
+            "level": "RESTRICTED_HIGH_RISK_PLAN",
+            "allowed": False,
+            "reason": "High-ethics or high-hazard review is required before detailed operating instructions can be reported.",
+            "restricted_triggers": sorted(triggers & _RESTRICTED_DETAIL_TRIGGERS),
+        }
+    return {
+        "level": "FULL_METHODOLOGY_PLAN",
+        "allowed": True,
+        "reason": "The declared scope has no high-ethics or high-hazard trigger; a complete non-executing methodology plan may be drafted.",
+        "restricted_triggers": [],
+    }
+
+
 class ScopeAndSafetyGate:
     """Apply scope, execution, risk, and human-review policies before planning."""
 
@@ -164,6 +195,7 @@ class ScopeAndSafetyGate:
         baseline_risk = _maximum_risk([entry.baseline_risk for entry in get_discipline_entries(discipline_ids)])
         review = _review_requirements(discipline_ids, brief, constraints)
         review["risk_level"] = _maximum_risk([baseline_risk, review["risk_level"]])
+        methodology_detail = _methodology_detail_policy(review)
         eligibility = resolve_execution_policy(
             discipline_ids,
             allow_digital_execution=allow_digital_execution,
@@ -195,4 +227,5 @@ class ScopeAndSafetyGate:
                 "reason": "ExperimentDesign preparation is design-only and never invokes an executor.",
             },
             "risk_and_human_review": review,
+            "methodology_detail_policy": methodology_detail,
         }

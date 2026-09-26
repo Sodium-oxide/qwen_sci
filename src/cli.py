@@ -1418,6 +1418,13 @@ def _author_command(args: argparse.Namespace) -> int:
                     configured_rendering=rendering_config,
                     author_name=args.author_name,
                     logger=logger,
+                    visualization_llm_call=build_author_json_llm_call(config=config, model=args.model),
+                    visualization_config=(
+                        dict(author_config.get("visualization") or {})
+                        if hasattr(author_config, "get")
+                        else None
+                    ),
+                    project_config=config,
                 )
             render_artifacts = rendered.artifacts.as_dict()
         except Exception as exc:

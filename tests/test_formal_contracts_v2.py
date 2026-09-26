@@ -331,7 +331,7 @@ def test_planner_keeps_successful_target_when_later_group_fails():
     )
     assert [item["proposition_id"] for item in generated["propositions"]] == ["P1", "P2"]
     assert generated["proof_attempts"][0]["target_id"] == "P1"
-    assert generated["status"] == "requires_human_review"
+    assert generated["status"] == "unverified"
     assert any(item["field_path"] == "proof_attempts.P2" and "backend timeout" in item["reason"] for item in generated["unknown_items"])
 
 

@@ -766,8 +766,19 @@ def _author_context_for_assignment(preparation: Mapping[str, Any], route: Mappin
     claim_kinds = set(route.get("allowed_claim_kinds") or [])
     payload = {
         "selected_direction": author_context.get("selected_direction"),
+        "methodology_detail_policy": author_context.get("methodology_detail_policy"),
         "research_design": author_context.get("research_design"),
         "hypothesis_mapping": author_context.get("hypothesis_mapping"),
+        "variables_and_operationalization": author_context.get("variables_and_operationalization"),
+        "sampling_and_eligibility": author_context.get("sampling_and_eligibility"),
+        "measurement_and_calibration": author_context.get("measurement_and_calibration"),
+        "comparison_and_robustness": author_context.get("comparison_and_robustness"),
+        "analysis_plan": author_context.get("analysis_plan"),
+        "data_governance_and_reproducibility": author_context.get("data_governance_and_reproducibility"),
+        "materials_and_resources": author_context.get("materials_and_resources"),
+        "protocol_plan": author_context.get("protocol_plan"),
+        "methodology_completeness": author_context.get("methodology_completeness"),
+        "template_details": author_context.get("template_details"),
         "field_statuses": author_context.get("field_statuses"),
         "authoring_constraints": author_context.get("authoring_constraints"),
     }

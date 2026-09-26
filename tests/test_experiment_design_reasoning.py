@@ -266,19 +266,25 @@ def test_orchestrator_discards_invalid_llm_batches_and_returns_a_valid_design(
     )
 
     assert validate_experiment_design(design) == []
-    assert design["risk_and_human_review"]["human_review_required"] is True
-    assert "LLM_OR_WORKFLOW_DEGRADATION_REVIEW" in design["risk_and_human_review"]["review_triggers"]
-    assert design["field_statuses"][f"degraded_stages.{expected_degraded_stage}"] == "needs_human_input"
+    warning_only = failed_stage in {"formal", "counterexample"}
+    warning_event = "target_warning" if failed_stage == "counterexample" else "warning"
+    assert design["risk_and_human_review"]["human_review_required"] is (not warning_only)
+    if warning_only:
+        assert f"degraded_stages.{expected_degraded_stage}" not in design["field_statuses"]
+    else:
+        assert "LLM_OR_WORKFLOW_DEGRADATION_REVIEW" in design["risk_and_human_review"]["review_triggers"]
+        assert design["field_statuses"][f"degraded_stages.{expected_degraded_stage}"] == "needs_human_input"
     assert any(
         record["stage"] == expected_degraded_stage
-        and record["event"] == "degraded"
-        and record["status"] == "DEGRADED"
+        and record["event"] == (warning_event if warning_only else "degraded")
+        and record["status"] == ("WARNING" if warning_only else "DEGRADED")
         for record in logger.records
     )
     assert all("not-json" not in str(record) for record in logger.records)
     degraded_record = next(
         record for record in logger.records
-        if record["stage"] == expected_degraded_stage and record["event"] == "degraded"
+        if record["stage"] == expected_degraded_stage
+        and record["event"] == (warning_event if warning_only else "degraded")
     )
     assert degraded_record.get("error_detail")
     if failed_stage == "variable":
@@ -286,9 +292,9 @@ def test_orchestrator_discards_invalid_llm_batches_and_returns_a_valid_design(
         assert design["formal_reasoning_plan"]["status"] == "requires_human_review"
     if failed_stage == "formal":
         assert design["formal_reasoning_plan"]["status"] == "requires_human_review"
-        assert design["counterexample_analysis"]["status"] == "requires_human_review"
+        assert design["counterexample_analysis"]["status"] == "not_run"
     if failed_stage == "counterexample":
-        assert design["counterexample_analysis"]["status"] == "requires_human_review"
+        assert design["counterexample_analysis"]["status"] == "not_run"
     if failed_stage == "template":
         assert design["template_composition"]["llm_used"] is False
 
@@ -338,7 +344,7 @@ def test_counterexample_analyzer_logs_json_contract_failure_without_raw_response
         brief_id="reasoning-brief",
     )
     assert analysis["target_claim_id"] == "P1"
-    assert analysis["status"] == "requires_human_review"
+    assert analysis["status"] == "not_run"
 
     events = [
         record
@@ -350,7 +356,7 @@ def test_counterexample_analyzer_logs_json_contract_failure_without_raw_response
         "llm_request_started",
         "llm_response_received",
         "llm_json_contract_failed",
-        "target_degraded",
+        "target_warning",
     ]
     assert events[2]["response_character_count"] == len(rejected_response)
     assert all(rejected_response not in str(record) for record in events)
@@ -483,8 +489,8 @@ def test_counterexample_analyzer_retains_other_targets_after_one_failure() -> No
         _brief(), {}, _variable_claim_model(), plan, llm_call=llm_call,
     )
 
-    assert analysis["status"] == "requires_human_review"
-    assert analysis["target_analyses"][0]["status"] == "requires_human_review"
+    assert analysis["status"] == "not_run"
+    assert analysis["target_analyses"][0]["status"] == "not_run"
     assert analysis["target_analyses"][1]["target_claim_id"] == "P2"
     assert validate_counterexample_analysis(analysis, formal_reasoning_plan=plan) == []
 
@@ -500,7 +506,7 @@ def test_counterexample_analyzer_preserves_every_target_when_all_fail() -> None:
         llm_call=lambda *_args, **_kwargs: "invalid JSON",
     )
 
-    assert analysis["status"] == "requires_human_review"
+    assert analysis["status"] == "not_run"
     assert [item["target_claim_id"] for item in analysis["target_analyses"]] == ["P1", "P2"]
     assert all(item["unknown_items"] for item in analysis["target_analyses"])
     assert validate_counterexample_analysis(analysis, formal_reasoning_plan=plan) == []

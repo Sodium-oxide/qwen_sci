@@ -285,15 +285,17 @@ class SurveyVisualizer:
         image_client_factory: Callable[..., Any] = DashScopeImageClient,
         vision_client_factory: Callable[..., Any] = QwenVisionClient,
         project_config: Any = None,
+        settings: Any = None,
     ) -> None:
         self.config = config
         self.chat_agent = chat_agent
         self.logger = logger
-        self.settings = _read(_read(config, "ModuleInfo", {}), "SurveyVisualization", {})
+        self.settings = settings if settings is not None else _read(_read(config, "ModuleInfo", {}), "SurveyVisualization", {})
         self.image_client_factory = image_client_factory
         self.vision_client_factory = vision_client_factory
         self.project_config = project_config or load_config()
         self._brief_rejections: list[dict[str, Any]] = []
+        self._strict_evidence = True
 
     @property
     def enabled(self) -> bool:
@@ -308,6 +310,7 @@ class SurveyVisualizer:
         evidence_plan: Mapping[str, Any] | None = None,
         outline: Mapping[str, Any] | None = None,
         claim_traceability: Mapping[str, Any] | None = None,
+        strict_evidence: bool = True,
     ) -> dict[str, Any]:
         """Write optional visual artifacts; caller owns the fail-open boundary."""
 
@@ -315,6 +318,7 @@ class SurveyVisualizer:
             return {"status": "disabled", "figure_count": 0}
 
         self._brief_rejections = []
+        self._strict_evidence = bool(strict_evidence)
         survey_path = Path(survey_path)
         output_dir = survey_path.parent
         reference_ids = _reference_ids(references)
@@ -1520,12 +1524,14 @@ class SurveyVisualizer:
             )
             requires_anchor = bool(_read(self.settings, "require_evidence_anchor", True))
             allow_unsupported = bool(_read(self.settings, "allow_unsupported_claims", False))
-            if not evidence_paths and (requires_anchor or not allow_unsupported):
+            if self._strict_evidence and not evidence_paths and (requires_anchor or not allow_unsupported):
                 reject(f"no evidence path for grounded relation in paragraph {paragraph_index}")
                 continue
-            support_kind = self._conservative_support_kind(
-                {path.support_kind for path in evidence_paths}
-            ) if evidence_paths else "BACKGROUND_CONTEXT"
+            support_kind = (
+                self._conservative_support_kind({path.support_kind for path in evidence_paths})
+                if evidence_paths and self._strict_evidence
+                else "BACKGROUND_CONTEXT"
+            )
             evidence_paper_ids = tuple(sorted({path.paper_id for path in evidence_paths if path.paper_id})) or audited_paper_ids
             result.append(
                 VisualRelation(
@@ -1696,8 +1702,8 @@ class SurveyVisualizer:
                 unique.append(path)
         return tuple(unique)
 
-    @staticmethod
     def _evidence_context(
+        self,
         evidence_plan: Mapping[str, Any],
         *,
         include_gaps: bool,
@@ -1715,6 +1721,12 @@ class SurveyVisualizer:
                     f"{sh_id or 'SH'}: allowed mode={mode or 'unspecified'}; "
                     f"explicit gaps={missing or 'none recorded' if include_gaps else 'suppressed'}"
                 )
+        if not self._strict_evidence:
+            return (
+                "Use only the supplied completed-manuscript section paragraphs as visual "
+                "content. No external evidence ledger or paper-path comparison is required; "
+                "keep uncertain or proposed relationships visually qualified."
+            )
         base = (
             "Only the supplied section paragraphs provide visualisable scientific facts. "
             "Direct evidence may use solid primary pathways; qualified, background, and gap "

@@ -14,6 +14,7 @@ from src.agents.experiment_design_agent.formal_definition_resolver import (
     normalize_model_relations,
     namespace_group_records,
 )
+import src.agents.experiment_design_agent.formal_definition_resolver as formal_definition_resolver_module
 from src.agents.experiment_design_agent.run_logging import ExperimentDesignRunLogger
 
 
@@ -109,12 +110,33 @@ def test_source_reference_still_requires_card_locator():
         source_refs=[{"card_id": "EC1", "locator": "Eq 2", "quote": "Paraphrased"}],
     )
 
-    with pytest.raises(ValueError, match="definition_source_locator_not_grounded"):
-        FormalDefinitionResolver().resolve(
-            {}, {}, {"variables": [{"variable_id": "V1", "name": "density"}]},
-            {"evidence_cards": [card(1)]}, llm_call=lambda *_args, **_kwargs: result,
-            settings={"max_supplement_rounds": 0},
-        )
+    resolved = FormalDefinitionResolver().resolve(
+        {}, {}, {"variables": [{"variable_id": "V1", "name": "density"}]},
+        {"evidence_cards": [card(1)]}, llm_call=lambda *_args, **_kwargs: result,
+        settings={"max_supplement_rounds": 0},
+    )
+    assert any("definition_source_locator_not_grounded" in item["reason"] for item in resolved["unknown_items"])
+
+
+def test_cross_group_definition_is_retained_as_warning():
+    payload = resolution()
+    payload["definitions"][0]["definition_id"] = "G3_S_E"
+    payload["definitions"][0]["variable_references"] = ["V1", "V3"]
+    logger = ExperimentDesignRunLogger("cross-group-warning", console_stream=StringIO())
+
+    resolved = FormalDefinitionResolver().resolve(
+        {}, {}, {"variables": [
+            {"variable_id": "V1", "name": "first"},
+            {"variable_id": "V2", "name": "second"},
+            {"variable_id": "V3", "name": "third"},
+        ]},
+        {}, llm_call=lambda *_args, **_kwargs: payload,
+        settings={"variables_per_group": 2, "max_supplement_rounds": 0}, logger=logger,
+    )
+
+    assert resolved["schema_version"] == "formal_definition_resolution_v1"
+    assert any("references_variables_outside_group" in item["reason"] for item in resolved["unknown_items"])
+    assert all(record["status"] != "DEGRADED" for record in logger.records if record["stage"] == "formal_definition_resolver")
 
 
 def test_normalizes_unambiguous_condition_shapes_without_dropping_definition():
@@ -196,7 +218,7 @@ def test_malformed_relations_do_not_discard_valid_definitions():
     assert result["model_relations"][1]["status"] == "unresolved"
     assert result["unknown_items"][0]["field_path"] == "model_relations[1]"
     completed = next(item for item in logger.records if item["event"] == "group_completed")
-    assert completed["status"] == "DEGRADED"
+    assert completed["status"] == "WARNING"
     assert completed["relation_review_count"] == 2
 
 
@@ -364,6 +386,48 @@ def test_checkpoint_reuses_successful_group_after_failure(tmp_path):
     assert len(calls) == 4
     assert len(result["definitions"]) == 2
     assert result["retrieval_audit"][0]["cache_hit"]
+
+
+def test_degraded_definition_groups_are_not_written_or_reused(monkeypatch):
+    degraded = resolution()
+    degraded["definitions"][0].update(definition_status="unresolved", verification_readiness="blocked", origin="unresolved")
+    degraded["unknown_items"] = [{"field_path": "definitions.D1", "reason": "requires review", "status": "needs_human_input"}]
+
+    class RecordingCache:
+        def __init__(self, cached=None):
+            self.cached = deepcopy(cached)
+            self.read_count = 0
+            self.writes = []
+            self.offline = False
+
+        def read(self, *_args, **_kwargs):
+            self.read_count += 1
+            return deepcopy(self.cached)
+
+        def write(self, _namespace, _identity, payload, **_kwargs):
+            self.writes.append(deepcopy(payload))
+            return "snapshot"
+
+    cache = RecordingCache()
+    monkeypatch.setattr(formal_definition_resolver_module, "ExperimentDesignCache", lambda _settings: cache)
+    result = FormalDefinitionResolver().resolve(
+        {}, {}, {"variables": [{"variable_id": "V1", "name": "density"}]}, {},
+        llm_call=lambda *_args, **_kwargs: degraded,
+        settings={"checkpoint": {"enabled": True}, "max_supplement_rounds": 0},
+    )
+    assert result["unknown_items"]
+    assert cache.writes == []
+
+    cache.cached = degraded
+    recovered = resolution()
+    result = FormalDefinitionResolver().resolve(
+        {}, {}, {"variables": [{"variable_id": "V1", "name": "density"}]}, {},
+        llm_call=lambda *_args, **_kwargs: recovered,
+        settings={"checkpoint": {"enabled": True}, "max_supplement_rounds": 0},
+    )
+    assert result["definitions"][0]["definition_status"] == "specified"
+    assert cache.read_count >= 2
+    assert cache.writes[-1]["definitions"][0]["definition_status"] == "specified"
 
 
 def test_definition_groups_run_three_at_a_time_and_merge_in_order():

@@ -797,7 +797,7 @@ idea:
     # Two-stage route-matrix budget: screen every seed cheaply, then fully
     # explore only the highest-scoring seeds.
     max_iterations: 8
-    screening_max_iterations: 6
+    screening_max_iterations: 12
     refinement_max_iterations: 8
     max_depth: 3
     branching_factor: 3
@@ -892,7 +892,7 @@ experiment_design:
     definition_resolution: true
     definition_retrieval:
       max_cards_per_request: 40
-      initial_cards: 16
+      initial_cards: 24
       supplement_cards: 10
       variables_per_group: 4
       parallel_workers: 3
@@ -1016,6 +1016,26 @@ research_plan_author:
     max_iterations: 3
     allow_raw_internal_reasoning: false
     require_source_anchors: true
+  # Optional post-draft conceptual figures. Figures reuse SurveyVisualizer,
+  # but Author mode only grounds them in the finished manuscript sections.
+  visualization:
+    enabled: false
+    min_figures: 1
+    max_figures: 3
+    candidates_per_figure: 2
+    final_image_role: academic_figure
+    final_image_size: "2048x1536"
+    compatible_image_size: "2048x1536"
+    append_english_label_strip: true
+    generate_article_style_profile: true
+    lock_palette_per_survey: true
+    visual_brief_repair_enabled: true
+    visual_qc_enabled: true
+    fail_open: true
+    strict_evidence: false
+    require_evidence_anchor: false
+    allow_unsupported_claims: true
+    allow_generated_numeric_charts: false
   rendering:
     # The source template is treated as read-only. Each Author run copies it
     # into its own timestamped output project before any insertion occurs.

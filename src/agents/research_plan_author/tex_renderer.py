@@ -6,9 +6,10 @@ from dataclasses import dataclass
 import os
 from pathlib import Path
 import re
+import shutil
 import tempfile
 from collections.abc import Mapping
-from typing import Any
+from typing import Any, Sequence
 
 from .bibtex_renderer import BibtexRenderResult, ensure_citation_coverage, render_bibtex
 from .contracts import AUTHORING_LANGUAGE, validate_research_plan_document
@@ -38,6 +39,7 @@ class TexRenderResult:
     main_tex: Path
     bibtex: Path
     bibliography: BibtexRenderResult
+    visual_figures: tuple[dict[str, Any], ...] = ()
 
     def as_dict(self) -> dict[str, Any]:
         return {
@@ -47,6 +49,7 @@ class TexRenderResult:
             "main_tex": str(self.main_tex),
             "bibtex": str(self.bibtex),
             "bibliography": self.bibliography.as_dict(),
+            "visual_figures": [dict(item) for item in self.visual_figures],
         }
 
 
@@ -301,6 +304,7 @@ def _render_section(
     theory_registry: Mapping[str, Mapping[str, Any]],
     document_equation_labels: Mapping[str, str],
     appendix: bool,
+    visual_figures: Sequence[Mapping[str, Any]] = (),
 ) -> str:
     section_id = _text(section.get("section_id"))
     title = escape_latex_text(
@@ -331,10 +335,34 @@ def _render_section(
         blocks.insert(0, "\\emph{Not applicable to this proposal.}")
     if not blocks:
         blocks.append("\\emph{No additional prose is available for this source-bounded proposal section.}")
-    return heading + "{" + title + "}\n" + "\n\n".join(blocks)
+    rendered = heading + "{" + title + "}\n" + "\n\n".join(blocks)
+    section_title = _text(section.get("title")).casefold()
+    matching_figures = [
+        figure for figure in visual_figures
+        if _text(figure.get("source_section_title")).casefold() == section_title
+    ]
+    for figure_index, figure in enumerate(matching_figures, start=1):
+        file_name = _text(figure.get("file"))
+        caption = _text(figure.get("caption_en")) or "Conceptual scientific synthesis."
+        figure_id = _label_component(figure.get("figure_id") or f"{section_id}-{figure_index}")
+        if file_name:
+            if not re.fullmatch(r"[A-Za-z0-9._-]+", file_name):
+                raise TexRenderError("visual figure filename contains unsupported characters")
+            rendered += (
+                "\n\n\\begin{figure}[t]\n\\centering\n"
+                f"\\includegraphics[width=\\linewidth]{{{file_name}}}\n"
+                f"\\caption{{{escape_latex_text(caption, label='figure caption')}}}\n"
+                f"\\label{{fig:{figure_id}}}\n\\end{{figure}}"
+            )
+    return rendered
 
 
-def _render_body(document: Mapping[str, Any], *, profile: TemplateProfile) -> str:
+def _render_body(
+    document: Mapping[str, Any],
+    *,
+    profile: TemplateProfile,
+    visual_figures: Sequence[Mapping[str, Any]] = (),
+) -> str:
     claims = _claim_map(document)
     theory_registry = theory_unit_registry(document)
     document_equation_labels = {
@@ -358,6 +386,7 @@ def _render_body(document: Mapping[str, Any], *, profile: TemplateProfile) -> st
             theory_registry=theory_registry,
             document_equation_labels=document_equation_labels,
             appendix=False,
+            visual_figures=visual_figures,
         )
         for section in document.get("sections") or []
         if isinstance(section, Mapping) and _text(section.get("section_id")) != "references"
@@ -370,6 +399,7 @@ def _render_body(document: Mapping[str, Any], *, profile: TemplateProfile) -> st
             theory_registry=theory_registry,
             document_equation_labels=document_equation_labels,
             appendix=True,
+            visual_figures=visual_figures,
         )
         for section in document.get("appendices") or []
         if isinstance(section, Mapping)
@@ -448,6 +478,47 @@ def _validate_document(document: Mapping[str, Any]) -> None:
     normalize_visible_text(metadata.get("title"), label="document title")
 
 
+def _copy_visual_figures(
+    figures: Sequence[Mapping[str, Any]],
+    *,
+    project_dir: Path,
+) -> tuple[dict[str, Any], ...]:
+    copied: list[dict[str, Any]] = []
+    for figure in figures:
+        file_name = _text(figure.get("file"))
+        source_path = Path(_text(figure.get("source_path"))).expanduser()
+        if not file_name or Path(file_name).name != file_name:
+            raise TexRenderError("visual figure filename must be a simple relative filename")
+        if not source_path.is_file():
+            raise TexRenderError(f"visual figure source does not exist: {source_path}")
+        destination = project_dir / file_name
+        try:
+            shutil.copyfile(source_path, destination)
+        except OSError as error:
+            raise TexRenderError(f"cannot copy visual figure '{file_name}': {error}") from error
+        copied.append(
+            {
+                "file": file_name,
+                "caption_en": _text(figure.get("caption_en")),
+                "alt_text_en": _text(figure.get("alt_text_en")),
+                "figure_id": _text(figure.get("figure_id")),
+                "source_section_index": figure.get("source_section_index"),
+                "source_section_title": _text(figure.get("source_section_title")),
+            }
+        )
+    return tuple(copied)
+
+
+def _ensure_graphics_package(tex: str) -> str:
+    if "\\includegraphics" not in tex or "\\usepackage{graphicx}" in tex:
+        return tex
+    documentclass = re.search(r"\\documentclass(?:\[[^]]*\])?\{[^}]+\}", tex)
+    if not documentclass:
+        raise TexRenderError("visual figures require a documentclass insertion point for graphicx")
+    end = documentclass.end()
+    return tex[:end] + "\n\\usepackage{graphicx}" + tex[end:]
+
+
 def render_tex_project(
     document: Mapping[str, Any],
     *,
@@ -455,6 +526,7 @@ def render_tex_project(
     project_dir: str | Path,
     profile: TemplateProfile,
     author_name: str = "Anonymous Research Plan Author",
+    visual_figures: Sequence[Mapping[str, Any]] = (),
 ) -> TexRenderResult:
     """Copy a declared template and render one source-bounded TeX project."""
 
@@ -468,13 +540,14 @@ def render_tex_project(
         )
         author = escape_latex_text(author_name, label="author name")
         abstract = _render_abstract(document, profile=profile)
-        body = _render_body(document, profile=profile)
+        body = _render_body(document, profile=profile, visual_figures=visual_figures)
         bibliography_fragment = _render_bibliography(bibliography, profile=profile)
     except (LatexSafetyError, TemplateAdapterError) as error:
         raise TexRenderError(str(error)) from error
     adapter = TemplateAdapter()
     try:
         materialized: MaterializedTemplate = adapter.materialize(template_dir, project_dir, profile)
+        copied_figures = _copy_visual_figures(visual_figures, project_dir=materialized.project_dir)
         _write_text_atomically(materialized.generated_bib, bibliography.content)
         main_tex = adapter.apply(
             materialized,
@@ -487,7 +560,9 @@ def render_tex_project(
                 "bibliography": bibliography_fragment,
             },
         )
-        rendered_tex = main_tex.read_text(encoding="utf-8")
+        rendered_tex = _ensure_graphics_package(main_tex.read_text(encoding="utf-8"))
+        if rendered_tex != main_tex.read_text(encoding="utf-8"):
+            _write_text_atomically(main_tex, rendered_tex)
         if _FORBIDDEN_NONROUTE_SECTION.search(rendered_tex):
             raise TexRenderError(
                 "rendered report contains an Acknowledgment section outside the four-agent route"
@@ -500,6 +575,7 @@ def render_tex_project(
         main_tex=main_tex,
         bibtex=materialized.generated_bib,
         bibliography=bibliography,
+        visual_figures=copied_figures,
     )
 
 

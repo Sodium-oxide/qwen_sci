@@ -34,6 +34,17 @@ Survey ──► Idea ──► ExperimentDesign ──► Author
 | **ExperimentDesign** | 生成、检索支撑并校验 design-only 研究设计。 | JSON、Markdown、Author 交接 JSON、JSONL 运行日志。 |
 | **Author** | 仅根据已经验证的 Survey/Idea/Design 交接组织研究计划。 | 研究计划产物；可选 LaTeX 项目与经校验 PDF。 |
 
+Author 也支持在成稿完成后生成概念性科研图并插入最终 LaTeX/PDF 报告。它复用 Survey 的 `SurveyVisualizer`，但默认只以 Author 成稿的章节文字作为视觉输入，不要求 Survey 的证据计划或论文路径逐条对照。该功能默认关闭，可在配置中开启：
+
+```yaml
+research_plan_author:
+  visualization:
+    enabled: true
+    strict_evidence: false
+```
+
+图像、`author_visual_manifest.json` 和 TeX 工程会保存在本次 Author render project 中；图像服务或视觉质检失败时，默认 `fail_open: true` 会保留无图报告并继续渲染。
+
 ## 快速开始：命令行科研运行
 
 主命令会运行完整的可执行科研工作流。下面的示例使用 Qwen-Sci 提供的研究问题：

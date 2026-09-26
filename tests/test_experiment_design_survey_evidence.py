@@ -535,6 +535,40 @@ def test_invalid_card_is_skipped_without_discarding_valid_cards_from_same_paper(
     assert warnings == ["evidence_card_extractor:W123:2: excerpt not grounded"]
 
 
+def test_full_methodology_policy_allows_explicit_safe_detail_from_fulltext() -> None:
+    paper = _paper(level="fulltext")
+    paper["fulltext"] = "The validated sensor was sampled at 10 Hz for 30 minutes."
+    paper["fulltext_source_location"] = "methods:p1"
+
+    def card_llm(prompt: str, **_kwargs: object) -> dict[str, object]:
+        assert "FULL_METHODOLOGY_PLAN" in prompt
+        excerpt = paper["fulltext"]
+        return {
+            "cards": [{
+                "claim_slot": "measurement_calibration",
+                "statement": "The full text explicitly reports a 10 Hz sampling rate for 30 minutes.",
+                "design_implication": "A comparable safe design may use the reported sampling schedule as a source-bounded assumption.",
+                "source_id": "W123",
+                "source_location": "methods:p1",
+                "evidence_level": "fulltext",
+                "evidence_excerpt": excerpt,
+                "limitations": [],
+                "does_not_establish": ["It does not establish suitability for a different endpoint."],
+            }]
+        }
+
+    cards, warnings = EvidenceCardExtractor().extract(
+        paper,
+        requested_slots=["measurement_calibration"],
+        methodology_detail_policy={"level": "FULL_METHODOLOGY_PLAN", "allowed": True},
+        llm_call=card_llm,
+    )
+
+    assert warnings == []
+    assert len(cards) == 1
+    assert "10 Hz" in cards[0]["statement"]
+
+
 def test_one_paper_card_failure_does_not_abort_evidence_bundle() -> None:
     papers = []
     for index in range(1, 4):

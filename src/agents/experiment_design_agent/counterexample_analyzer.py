@@ -105,7 +105,7 @@ def not_applicable_counterexample_analysis() -> dict[str, Any]:
 
 
 def unavailable_counterexample_analysis(*, reason: str) -> dict[str, Any]:
-    """Represent an unrun formal counterexample review after a discarded batch."""
+    """Represent an unrun formal counterexample review after a warning."""
 
     return {
         "schema_version": COUNTEREXAMPLE_ANALYSIS_SCHEMA_VERSION,
@@ -119,7 +119,7 @@ def unavailable_counterexample_analysis(*, reason: str) -> dict[str, Any]:
             "is_exhaustive": False,
             "reason": "No counterexample search was run.",
         },
-        "status": "requires_human_review",
+        "status": "not_run",
         "limitations": [
             "Counterexample analysis was not run; no conclusion about counterexamples may be drawn.",
         ],
@@ -252,8 +252,8 @@ class CounterexampleAnalyzer:
             except Exception as error:
                 if logger is not None:
                     logger.event(
-                        "counterexample_analyzer", "target_degraded", level="ERROR",
-                        status="DEGRADED", brief_id=effective_brief_id,
+                        "counterexample_analyzer", "target_warning", level="WARNING",
+                        status="WARNING", brief_id=effective_brief_id,
                         target_id=target_id, error_code=type(error).__name__,
                         error_detail=str(error),
                     )
@@ -280,7 +280,6 @@ class CounterexampleAnalyzer:
         if len(analyses) > 1:
             primary["target_analyses"] = deepcopy(analyses)
         if failures:
-            primary["status"] = "requires_human_review"
             primary["unknown_items"].extend(
                 {"field_path": f"target_analyses.{item['target_claim_id']}",
                  "reason": item["unknown_items"][0]["reason"],

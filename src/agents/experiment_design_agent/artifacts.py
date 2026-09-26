@@ -378,14 +378,29 @@ def build_author_handoff(
         or _text(_mapping(source.get("upstream_source_paths")).get("idea_result"))
     )
     risk = _mapping(design.get("risk_and_human_review"))
+    execution = _mapping(design.get("execution_policy"))
     return {
         "schema_version": AUTHOR_HANDOFF_SCHEMA_VERSION,
         "generated_at": _iso_datetime(generated_at),
         "source_design_id": design_id,
+        "methodology_detail_policy": {
+            key: deepcopy(execution[key])
+            for key in ("methodology_detail_level", "methodology_detail_allowed", "methodology_detail_reason")
+            if key in execution
+        },
         "selected_direction": deepcopy(brief.get("selected_direction") or {}),
         "research_design": deepcopy(design.get("research_design") or {}),
         "hypothesis_mapping": deepcopy(design.get("hypothesis_mapping") or []),
         "variables_and_operationalization": deepcopy(design.get("variables_and_operationalization") or {}),
+        "sampling_and_eligibility": deepcopy(design.get("sampling_and_eligibility") or {}),
+        "measurement_and_calibration": deepcopy(design.get("measurement_and_calibration") or {}),
+        "comparison_and_robustness": deepcopy(design.get("comparison_and_robustness") or {}),
+        "analysis_plan": deepcopy(design.get("analysis_plan") or {}),
+        "data_governance_and_reproducibility": deepcopy(design.get("data_governance_and_reproducibility") or {}),
+        "materials_and_resources": deepcopy(design.get("materials_and_resources") or {}),
+        "protocol_plan": deepcopy(design.get("protocol_plan") or {}),
+        "methodology_completeness": deepcopy(design.get("methodology_completeness") or {}),
+        "template_details": deepcopy(design.get("template_details") or {}),
         "field_statuses": deepcopy(design.get("field_statuses") or {}),
         "reasoning_context": deepcopy(_mapping(brief.get("reasoning_context"))),
         "formal_reasoning": _formal_reasoning_summary(_mapping(design.get("formal_reasoning_plan"))),
@@ -512,6 +527,7 @@ def render_markdown(
         ("Research Design", design.get("research_design", {})),
         ("Hypothesis-to-Observable Mapping", design.get("hypothesis_mapping", [])),
         ("Variables and Operationalization", design.get("variables_and_operationalization", {})),
+        ("Materials and Resources", design.get("materials_and_resources", {})),
         ("Sampling and Eligibility", design.get("sampling_and_eligibility", {})),
         ("Measurement and Calibration", design.get("measurement_and_calibration", {})),
         (
@@ -542,6 +558,9 @@ def render_markdown(
             },
         ),
         ("Data Governance and Reproducibility", design.get("data_governance_and_reproducibility", {})),
+        ("Protocol Plan", design.get("protocol_plan", {})),
+        ("Methodology Completeness", design.get("methodology_completeness", {})),
+        ("Methodology Field Statuses", design.get("field_statuses", {})),
         ("Evidence Bundle and Coverage Ledger", design.get("evidence_bundle", {})),
         ("Formal Reasoning Plan", design.get("formal_reasoning_plan", {})),
         ("Mathematical Verification Results", design.get("formal_verification_report", {})),

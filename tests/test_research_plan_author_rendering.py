@@ -1,13 +1,17 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import io
 from pathlib import Path
 import json
 import shutil
 from types import SimpleNamespace
 
 import pytest
+from PIL import Image
+from src.llm.image_generation import ImageGenerationResult
 
+from src.agents.research_plan_author.author_visualization import AuthorVisualizer
 from src.agents.research_plan_author.bibtex_renderer import (
     BibtexRenderError,
     bibliography_preflight_errors,
@@ -167,6 +171,143 @@ def test_marker_profile_copies_source_and_escapes_text(tmp_path: Path) -> None:
     assert "\\label{tab:introduction-B3}" in text
     assert "\\nocite" not in text
     assert rendered.bibliography.emitted_keys == ("cite_example_1",)
+
+
+def test_renderer_copies_and_inserts_optional_visual_figures(tmp_path: Path) -> None:
+    template = _marker_template(tmp_path / "figure-template")
+    image_path = tmp_path / "figure.png"
+    Image.new("RGB", (24, 16), "white").save(image_path)
+    document = _document()
+    document["sections"][0]["title"] = "Introduction & Scope"
+
+    rendered = render_tex_project(
+        document,
+        template_dir=template,
+        project_dir=tmp_path / "figure-render",
+        profile=load_template_profile("markers_v1"),
+        visual_figures=[
+            {
+                "file": "figure.png",
+                "source_path": str(image_path),
+                "figure_id": "fig_01_overview",
+                "source_section_title": "Introduction & Scope",
+                "caption_en": "A generated conceptual overview.",
+            }
+        ],
+    )
+
+    tex = rendered.main_tex.read_text(encoding="utf-8")
+    assert "\\usepackage{graphicx}" in tex
+    assert "\\includegraphics[width=\\linewidth]{figure.png}" in tex
+    assert "\\caption{A generated conceptual overview.}" in tex
+    assert (rendered.project_dir / "figure.png").is_file()
+    assert rendered.visual_figures[0]["figure_id"] == "fig_01_overview"
+
+
+def test_author_visualizer_reuses_survey_visualizer_without_evidence_paths(tmp_path: Path) -> None:
+    responses = iter(
+        [
+            json.dumps(
+                {
+                    "candidates": [
+                        {
+                            "section_index": 2,
+                            "figure_type": "overview_framework",
+                            "source_paragraph_indices": [1],
+                            "insert_after_paragraph": 1,
+                            "main_message_en": "Connect the planned method and outcome.",
+                            "composition_en": "Use a left to right conceptual pathway.",
+                            "entities_en": ["Planned method", "Intermediate process", "Outcome"],
+                            "importance": 5,
+                        }
+                    ]
+                }
+            ),
+            json.dumps(
+                {
+                    "main_message_en": "Connect the planned method and outcome.",
+                    "relations": [
+                        {
+                            "relation_en": "The planned method defines the intended outcome.",
+                            "source_paragraph_index": 1,
+                            "source_quote": "The planned method uses 50% coverage",
+                        }
+                    ],
+                    "entities_en": ["Planned method", "Intermediate process", "Outcome"],
+                    "uncertainties_en": ["The result remains unobserved."],
+                    "composition_en": "Use a left to right conceptual pathway.",
+                    "allowed_overlay_labels_en": ["Planned method", "Outcome"],
+                    "caption_en": "Conceptual overview of the planned method and outcome.",
+                    "alt_text_en": "A conceptual pathway from the planned method to the outcome.",
+                }
+            ),
+            json.dumps(
+                {
+                    "visual_language_en": "A restrained editorial scientific figure style.",
+                    "palette": {
+                        "background": "#F4F1EA",
+                        "ink": "#252B33",
+                        "primary": "#356C89",
+                        "secondary": "#6F7E59",
+                        "accent": "#C47A3A",
+                        "uncertainty": "#9AA1A5",
+                    },
+                }
+            ),
+        ]
+    )
+
+    class ImageClient:
+        def __init__(self, **_kwargs: object) -> None:
+            pass
+
+        def generate(self, **kwargs: object) -> ImageGenerationResult:
+            buffer = io.BytesIO()
+            Image.new("RGB", (64, 48), "white").save(buffer, format="PNG")
+            return ImageGenerationResult(
+                images=(buffer.getvalue(),),
+                model=str(kwargs["model"]),
+                provider="test",
+            )
+
+    config = {
+        "llm": {
+            "default_provider": "qwen",
+            "providers": {"qwen": {"api_key": "test-key", "base_url": "https://example.test"}},
+        },
+        "image_generation": {
+            "provider": "qwen",
+            "role_models": {"academic_figure": "wan2.7-image-pro"},
+        },
+        "research_plan_author": {
+            "visualization": {
+                "enabled": True,
+                "max_figures": 1,
+                "candidates_per_figure": 1,
+                "visual_qc_enabled": False,
+                "strict_evidence": False,
+                "require_evidence_anchor": False,
+                "allow_unsupported_claims": True,
+            }
+        },
+    }
+    visualizer = AuthorVisualizer(
+        config=config,
+        llm_call=lambda *_args, **_kwargs: next(responses),
+        logger=SimpleNamespace(info=lambda *_args: None, warning=lambda *_args: None),
+        image_client_factory=ImageClient,
+    )
+
+    result = visualizer.run(_document(), output_dir=tmp_path)
+
+    assert result["status"] == "completed"
+    assert result["figure_count"] == 1
+    manifest = json.loads((tmp_path / "author_visual_manifest.json").read_text(encoding="utf-8"))
+    assert manifest["mode"] == "relaxed_manuscript_grounding"
+    assert manifest["figures"][0]["source_section_title"] == "Introduction & Scope"
+    relation = json.loads((tmp_path / "survey_visual_manifest.json").read_text(encoding="utf-8"))["figures"][0]["relations"][0]
+    assert relation["support_kind"] == "BACKGROUND_CONTEXT"
+    assert relation["evidence_paths"] == []
 
 
 def test_renderer_renders_optional_block_heading_as_subsection(tmp_path: Path) -> None:

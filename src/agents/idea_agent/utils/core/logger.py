@@ -23,6 +23,12 @@ _CONSOLE_LOG_FORMAT = (
     "<cyan>{extra[logger_name]}</cyan> | "
     "<level>{message}</level>"
 )
+_FALLBACK_CONSOLE_LOG_FORMAT = (
+    "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | "
+    "<level>{level:<8}</level> | "
+    "<cyan>{name}</cyan> | "
+    "<level>{message}</level>"
+)
 _logger: Optional["LoguruCompatLogger"] = None
 _loguru_runtime_ready = False
 _fallback_sink_id: Optional[int] = None
@@ -57,7 +63,7 @@ def _ensure_loguru_runtime() -> None:
         _fallback_sink_id = _loguru_logger.add(
             sys.stderr,
             level="DEBUG",
-            format=_CONSOLE_LOG_FORMAT,
+            format=_FALLBACK_CONSOLE_LOG_FORMAT,
             colorize=True,
             enqueue=True,
             filter=lambda record: not str(record["extra"].get("logger_name", "")).startswith(

@@ -249,7 +249,7 @@ def test_template_prompt_exposes_the_writable_schema_contract() -> None:
     assert "WRITABLE_PATCH_CONTRACT:" in prompt
     assert '"randomization"' in prompt
     assert "Never emit evidence_backed" in prompt
-    assert "Do not output every section merely to cover this list." in prompt
+    assert "populate every applicable canonical section" in prompt
     assert "Include the common ExperimentDesign v1 sections" not in prompt
 
 
@@ -441,7 +441,7 @@ def test_template_composer_normalizes_logged_extra_properties_before_one_targete
 
     assert calls == 1
     assert validate_experiment_design(design) == []
-    assert design["field_statuses"]["analysis_plan"] == "needs_human_input"
+    assert design["field_statuses"]["analysis_plan"] == "design_assumption"
     events = [record for record in logger.records if record["stage"] == "template_composer"]
     normalization = next(record for record in events if record["event"] == "patch_contract_normalized")
     assert normalization["removed_extra_property_count"] >= 14
@@ -744,9 +744,80 @@ def test_high_risk_template_families_end_in_human_review(
 
     assert design["risk_and_human_review"]["human_review_required"] is True
     assert review_trigger in design["risk_and_human_review"]["review_triggers"]
-    assert design["validation_report"]["status"] == "BLOCKED_BY_RISK_REVIEW"
     assert design["execution_policy"]["mode"] == "DESIGN_ONLY"
     assert design["execution_policy"]["allow_digital_execution"] is False
+    if discipline_id == "27":
+        assert design["validation_report"]["status"] == "BLOCKED_BY_RISK_REVIEW"
+        assert design["execution_policy"]["methodology_detail_level"] == "RESTRICTED_HIGH_RISK_PLAN"
+        assert design["methodology_completeness"]["status"] == "RESTRICTED_PLAN"
+    else:
+        assert design["validation_report"]["status"] == "READY_FOR_HUMAN_REVIEW"
+        assert design["execution_policy"]["methodology_detail_level"] == "FULL_METHODOLOGY_PLAN"
+        assert design["methodology_completeness"]["status"] == "COMPLETE_WITH_ASSUMPTIONS"
+
+
+@pytest.mark.parametrize(
+    ("discipline_id", "constraints", "review_trigger"),
+    (
+        ("13", {"pathogen": True}, "PATHOGEN_OR_RESTRICTED_BIOLOGICAL_REVIEW"),
+        ("16", {"hazardous_materials": True}, "HAZARDOUS_MATERIAL_REVIEW"),
+        ("17", {"human_participants": True}, "HUMAN_PARTICIPANT_REVIEW"),
+    ),
+)
+def test_extreme_risk_constraints_restrict_methodology_detail(
+    discipline_id: str,
+    constraints: dict[str, bool],
+    review_trigger: str,
+) -> None:
+    design = StudyTypeTemplateComposer().compose_deterministically(
+        _brief(discipline_id),
+        user_constraints=constraints,
+    )
+
+    assert review_trigger in design["risk_and_human_review"]["review_triggers"]
+    assert design["execution_policy"]["methodology_detail_level"] == "RESTRICTED_HIGH_RISK_PLAN"
+    assert design["methodology_completeness"]["status"] == "RESTRICTED_PLAN"
+    assert design["validation_report"]["status"] == "BLOCKED_BY_RISK_REVIEW"
+
+
+def test_low_risk_design_contains_complete_methodology_sections() -> None:
+    design = StudyTypeTemplateComposer().compose_deterministically(_brief("17"))
+
+    assert design["execution_policy"]["methodology_detail_level"] == "FULL_METHODOLOGY_PLAN"
+    assert design["execution_policy"]["methodology_detail_allowed"] is True
+    assert design["materials_and_resources"]["materials"]
+    assert design["comparison_and_robustness"]["condition_matrix"]
+    assert len(design["protocol_plan"]["steps"]) >= 5
+    assert design["analysis_plan"]["model_specification"]
+    assert design["sampling_and_eligibility"]["target_sample_size"]["proposed_independent_units_per_condition"] == 25
+    assert design["measurement_and_calibration"]["instruments"][0]["proposed_configuration"]
+    assert design["template_details"]["dataset_or_corpus"]["description"]
+    assert all(status != "needs_human_input" for status in design["field_statuses"].values())
+    assert design["methodology_completeness"]["status"] == "COMPLETE_WITH_ASSUMPTIONS"
+    assert validate_experiment_design(design) == []
+
+
+def test_full_methodology_validation_rejects_deleted_required_detail() -> None:
+    design = StudyTypeTemplateComposer().compose_deterministically(_brief("17"))
+    design["comparison_and_robustness"]["condition_matrix"] = []
+
+    errors = validate_experiment_design(design)
+
+    assert "methodology_detail_missing:comparison_and_robustness.condition_matrix" in errors
+
+
+def test_formal_theory_design_contains_verification_steps_without_claiming_proof() -> None:
+    design = StudyTypeTemplateComposer().compose_deterministically(
+        _brief("26", topic="A theorem with a proof obligation and counterexample boundary."),
+    )
+
+    assert design["execution_policy"]["methodology_detail_level"] == "FORMAL_VERIFICATION_PLAN"
+    assert len(design["protocol_plan"]["steps"]) >= 4
+    assert design["protocol_plan"]["formal_verification_steps"]
+    assert design["sampling_and_eligibility"]["sample_size_or_power_basis"]
+    assert design["field_statuses"]["sampling_and_eligibility.sample_size_or_power_basis"] == "not_applicable"
+    assert design["observed_results"] == []
+    assert validate_experiment_design(design) == []
 
 
 def test_design_has_the_complete_four_branch_expected_outcome_tree() -> None:
