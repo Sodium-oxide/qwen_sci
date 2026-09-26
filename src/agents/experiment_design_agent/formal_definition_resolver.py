@@ -317,7 +317,7 @@ def normalize_definition_conditions(payload):
 
 
 def quarantine_record(payload, path, reason, record):
-    snapshot = json.dumps(record, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    snapshot = json.dumps(record, ensure_ascii=False, sort_keys=True, separators=(",", ":"), default=str)
     payload["unknown_items"].append({
         "field_path": path,
         "reason": reason,
@@ -327,6 +327,48 @@ def quarantine_record(payload, path, reason, record):
         "raw_excerpt_truncated": len(snapshot) > 4000,
         "record_id": record.get("definition_id", record.get("relation_id")) if isinstance(record, Mapping) else None,
     })
+
+
+def _unique_definition_id(records, index):
+    used = {
+        str(record.get("definition_id"))
+        for record in records
+        if isinstance(record, Mapping) and record.get("definition_id")
+    }
+    base = f"UNRESOLVED_D{index + 1}"
+    identifier = base
+    suffix = 2
+    while identifier in used:
+        identifier = f"{base}_{suffix}"
+        suffix += 1
+    return identifier
+
+
+def _preserve_definition_record(record, index, existing_records):
+    """Keep malformed definition candidates as unresolved structured records."""
+    original = deepcopy(record)
+    preserved = deepcopy(dict(record)) if isinstance(record, Mapping) else {}
+    identifier = preserved.get("definition_id")
+    if not isinstance(identifier, str) or not identifier.strip():
+        preserved["definition_id"] = _unique_definition_id(existing_records, index)
+        if identifier is not None:
+            preserved["source_definition_id"] = identifier
+    if not isinstance(record, Mapping):
+        preserved["raw_candidate"] = original
+    array_defaults = {
+        "conditions": [], "condition_expressions": [], "depends_on": [],
+        "source_refs": [], "variable_references": [], "symbol_references": [],
+    }
+    for field, value in array_defaults.items():
+        if not isinstance(preserved.get(field), list):
+            preserved[field] = deepcopy(value)
+    for field in ("symbol", "statement", "expression_latex", "formal_expression",
+                  "domain", "codomain", "unit", "selection_reason", "object_kind"):
+        preserved.setdefault(field, None)
+    preserved["origin"] = "unresolved"
+    preserved["definition_status"] = "unresolved"
+    preserved["verification_readiness"] = "blocked"
+    return preserved
 
 
 def normalize_group_collections(payload):
@@ -362,8 +404,12 @@ def normalize_group_collections(payload):
             normalized[collection] = list(records.values())
             reason = f"{collection}_not_array: converted a mapping of records into an array for individual validation."
         else:
-            normalized[collection] = []
-            reason = f"{collection}_not_array: discarded the malformed collection; other collections are retained."
+            if collection == "definitions":
+                normalized[collection] = [records] if records is not None else []
+                reason = f"{collection}_not_array: preserved the malformed candidate for individual validation."
+            else:
+                normalized[collection] = []
+                reason = f"{collection}_not_array: discarded the malformed collection; other collections are retained."
         quarantine_record(normalized, collection, reason, records)
         diagnostics.append(collection)
     return normalized, diagnostics
@@ -415,15 +461,21 @@ def normalize_record_collections(payload, *, previous=None, repair_targets=None,
             if identifier is None or destination is None or kind_conflict:
                 path = f"{collection}[{index}]"
                 reason = "Record ID or mathematical record kind conflicts with the canonical collection; other records are retained."
+                if collection == "definitions":
+                    record = _preserve_definition_record(record, index, normalized["definitions"])
+                    identifier = record.get("definition_id")
+                    routed["definitions"].append(record)
+                    reason = "Definition identity or mathematical kind is unresolved; the definition candidate was retained."
                 quarantine_record(normalized, path, reason, record)
                 normalized["unknown_items"][-1].update(
                     record_id=identifier, record_path=path, field="record_kind",
-                    category="patch_rejection" if previous is not None else "record_quarantine",
+                    category="record_validation" if collection == "definitions" else ("patch_rejection" if previous is not None else "record_quarantine"),
                     field_path=f"{destination}.{identifier}" if destination else f"record_collections.{identifier or index}",
                     error_code="record_kind_conflict" if kind_conflict else "ambiguous_record_identity",
-                    disposition="ignored_and_archived",
+                    disposition="kept_unresolved" if collection == "definitions" else "ignored_and_archived",
                 )
-                discarded.append(path)
+                if collection != "definitions":
+                    discarded.append(path)
                 continue
             destination_field = id_fields[destination]
             if destination != collection or record.get(destination_field) != identifier or len(
@@ -672,6 +724,24 @@ def merge_definition_patch(previous, patch, targets):
             identifier = record[id_field]
             expected = owners.get(identifier, declarations[identifier])
             if expected != {collection}:
+                if collection == "definitions":
+                    preserved = _preserve_definition_record(record, len(records), list(records.values()))
+                    preserved_id = _unique_record_id(records, identifier, "definition")
+                    preserved["definition_id"] = preserved_id
+                    preserved["definition_status"] = "unresolved"
+                    preserved["verification_readiness"] = "blocked"
+                    records[preserved_id] = preserved
+                    patch_unknowns.append({
+                        "field_path": f"definitions.{preserved_id}",
+                        "record_id": preserved_id,
+                        "field": "record_kind",
+                        "error_code": "cross_collection_id_conflict",
+                        "reason": "Definition candidate conflicts with a relation ID; the definition was retained as unresolved.",
+                        "category": "record_validation",
+                        "status": "needs_human_input",
+                        "disposition": "kept_unresolved",
+                    })
+                    continue
                 quarantine_record(merged, f"{collection}.{identifier}",
                                   "Patch cannot reuse an ID across definition and relation collections.", record)
                 diagnostic = merged["unknown_items"].pop()
@@ -696,10 +766,43 @@ def merge_definition_patch(previous, patch, targets):
             if owners.get(identifier, declarations[identifier]) != {collection}:
                 continue
             if identifier in conflicts:
+                if collection == "definitions":
+                    preserved = _preserve_definition_record(record, len(records), list(records.values()))
+                    preserved_id = _unique_record_id(records, identifier, "definition")
+                    preserved["definition_id"] = preserved_id
+                    preserved["definition_status"] = "unresolved"
+                    preserved["verification_readiness"] = "blocked"
+                    records[preserved_id] = preserved
                 continue
             if identifier in records and identifier not in target_ids:
+                if collection == "definitions":
+                    if record == records[identifier]:
+                        continue
+                    preserved = _preserve_definition_record(record, len(records), list(records.values()))
+                    preserved_id = _unique_record_id(records, identifier, "definition")
+                    preserved["definition_id"] = preserved_id
+                    preserved["definition_status"] = "unresolved"
+                    preserved["verification_readiness"] = "blocked"
+                    records[preserved_id] = preserved
                 ignored.append(identifier)
                 continue
+            if collection == "definitions" and identifier in records:
+                existing = records[identifier]
+                candidate_is_unresolved = (
+                    record.get("definition_status") == "unresolved"
+                    or record.get("verification_readiness") == "blocked"
+                )
+                existing_is_accepted = (
+                    existing.get("definition_status") == "specified"
+                    and existing.get("verification_readiness") == "encoded"
+                )
+                if candidate_is_unresolved and existing_is_accepted:
+                    preserved = _preserve_definition_record(record, len(records), list(records.values()))
+                    preserved_id = _unique_record_id(records, identifier, "definition")
+                    preserved["definition_id"] = preserved_id
+                    records[preserved_id] = preserved
+                    ignored.append(identifier)
+                    continue
             records[identifier] = deepcopy(record)
             replaced.add(identifier)
         merged[collection] = list(records.values())
@@ -721,34 +824,41 @@ def merge_definition_patch(previous, patch, targets):
     return merged, ignored
 
 
+def _unique_record_id(records, identifier, kind):
+    base = str(identifier or "UNRESOLVED")
+    suffix = f"__{kind}_conflict"
+    candidate = f"{base}{suffix}"
+    counter = 2
+    while candidate in records:
+        candidate = f"{base}{suffix}_{counter}"
+        counter += 1
+    return candidate
+
+
 def keep_group_definitions(payload, group, assigned):
-    """Discard primary definitions for other groups; they will be requested there."""
+    """Retain every definition candidate; group scope is advisory only."""
+    retained = deepcopy(payload)
     current_ids = {str(variable["variable_id"]) for variable in group}
-    if not current_ids:
-        return deepcopy(payload), []
-    foreign_ids = set(assigned.values()) - {assigned[variable_id] for variable_id in current_ids}
-    filtered = deepcopy(payload)
-    retained = []
-    dropped = []
-    for definition in filtered.get("definitions", []):
+    for definition in retained.get("definitions", []):
         if not isinstance(definition, Mapping):
-            retained.append(definition)
             continue
         references = set(definition.get("variable_references") or [])
-        identifier = str(definition.get("definition_id") or "")
-        if (references and references.isdisjoint(current_ids)) or identifier in foreign_ids:
-            dropped.append(identifier)
+        outside = references - current_ids
+        if not outside:
             continue
-        if references - current_ids:
-            quarantine_record(
-                filtered, f"definitions.{identifier}",
-                f"{identifier}_references_variables_outside_group", definition,
-            )
-            dropped.append(identifier)
-            continue
-        retained.append(definition)
-    filtered["definitions"] = retained
-    return filtered, dropped
+        identifier = str(definition.get("definition_id") or "?")
+        retained.setdefault("unknown_items", []).append({
+            "field_path": f"definitions.{identifier}.variable_references",
+            "record_path": f"definitions.{identifier}",
+            "record_id": identifier,
+            "field": "variable_references",
+            "error_code": "references_variables_outside_group",
+            "reason": f"{identifier}_references_variables_outside_group: {sorted(outside)}; definition retained for later reconciliation.",
+            "category": "record_validation",
+            "disposition": "kept_unresolved",
+            "status": "needs_human_input",
+        })
+    return retained, []
 
 
 def namespace_group_records(payload, *, id_prefix, primary_ids):
@@ -896,6 +1006,7 @@ class FormalDefinitionResolver:
             for group_number, group in enumerate(groups, 1)
             for variable in group
         }
+        group_candidates = {}
 
         def _resolve_group(item):
             group_number, group, existing_definitions = item
@@ -1050,6 +1161,7 @@ class FormalDefinitionResolver:
                         record_collection_repairs=[{key: value for key, value in repair.items() if key != "original"}
                                                    for repair in record_collection_repairs],
                     )
+                group_candidates[group_number] = current
                 self._validate(current, evidence_bundle or {})
                 if cached is None and self._cacheable_group_result(current, group):
                     cache.write("definition_groups", identity, current)
@@ -1134,6 +1246,15 @@ class FormalDefinitionResolver:
                         group_count=len(groups), requires_human_review=True,
                         error_code=type(error).__name__, error_detail=detail,
                     )
+                previous_candidate = group_candidates.get(group_number)
+                if previous_candidate is not None:
+                    previous_candidate.setdefault("unknown_items", []).append({
+                        "field_path": f"definition_groups.{group_number}",
+                        "reason": detail,
+                        "status": "needs_human_input",
+                        "disposition": "kept_previous_group_candidate",
+                    })
+                    return previous_candidate, []
                 return {
                     "schema_version": DEFINITION_RESOLUTION_V1,
                     "definitions": [],
@@ -1323,11 +1444,20 @@ class FormalDefinitionResolver:
         discarded = []
         for collection, identifier_field in (("definitions", "definition_id"), ("model_relations", "relation_id")):
             retained = []
-            for index, record in enumerate(normalized[collection]):
+            for index, original_record in enumerate(normalized[collection]):
+                record = original_record
                 path = f"{collection}[{index}]"
                 try:
                     errors = []
                     error_fields = []
+                    if collection == "definitions" and (
+                        not isinstance(record, Mapping)
+                        or not isinstance(record.get(identifier_field), str)
+                        or not record.get(identifier_field).strip()
+                    ):
+                        record = _preserve_definition_record(record, index, [*retained, *normalized[collection][index + 1:]])
+                        errors.append(f"{path}.{identifier_field}_invalid_preserved")
+                        error_fields.append(identifier_field)
                     if isinstance(record, Mapping):
                         identifier = record.get(identifier_field)
                         if not isinstance(identifier, str) or not identifier.strip():
@@ -1356,6 +1486,19 @@ class FormalDefinitionResolver:
                         raise ValueError("; ".join(errors))
                     FormalDefinitionResolver._validate(trial, evidence_bundle)
                 except Exception as error:
+                    if collection == "definitions":
+                        if not isinstance(record, Mapping):
+                            record = _preserve_definition_record(record, index, retained)
+                        record["origin"] = "unresolved"
+                        record["definition_status"] = "unresolved"
+                        record["verification_readiness"] = "blocked"
+                        quarantine_record(normalized, path, f"{type(error).__name__}: {error}", record)
+                        normalized["unknown_items"][-1].update(
+                            field=",".join(error_fields) or "record", error_code=type(error).__name__,
+                            disposition="kept_unresolved", category="record_validation",
+                        )
+                        retained.append(record)
+                        continue
                     quarantine_record(normalized, path, f"{type(error).__name__}: {error}", record)
                     normalized["unknown_items"][-1].update(
                         field=",".join(error_fields) or "record", error_code=type(error).__name__,
@@ -1437,10 +1580,29 @@ class FormalDefinitionResolver:
         symbols = {}
         redirects = {}
 
+        def accepted_definition(record):
+            return (
+                isinstance(record, Mapping)
+                and record.get("definition_status") == "specified"
+                and record.get("verification_readiness") == "encoded"
+            )
+
+        def unresolved_definition(record):
+            return (
+                isinstance(record, Mapping)
+                and (
+                    record.get("definition_status") == "unresolved"
+                    or record.get("verification_readiness") == "blocked"
+                )
+            )
+
         def retain_conflict(existing, alternative):
             existing["verification_readiness"] = "blocked"
             existing["definition_status" if "definition_id" in existing else "status"] = "unresolved"
             existing["variable_references"] = sorted(set(existing.get("variable_references", [])) | set(alternative.get("variable_references", [])))
+            if "definition_id" in alternative:
+                alternative["verification_readiness"] = "blocked"
+                alternative["definition_status"] = "unresolved"
             payload["unknown_items"].append({"field_path": existing.get("definition_id", existing.get("relation_id")),
                                            "reason": "Conflicting definition candidates require scientific resolution: " + json_prompt_payload(alternative),
                                            "status": "needs_human_input"})
@@ -1454,14 +1616,52 @@ class FormalDefinitionResolver:
                 if identifier in identifiers:
                     if record == identifiers[identifier]:
                         continue
+                    if collection == "definitions":
+                        alternative = deepcopy(record)
+                        alternative_id = _unique_record_id(identifiers, identifier, "definition")
+                        alternative[field] = alternative_id
+                        if not (accepted_definition(identifiers[identifier]) and unresolved_definition(alternative)):
+                            retain_conflict(identifiers[identifier], alternative)
+                        else:
+                            alternative["verification_readiness"] = "blocked"
+                            alternative["definition_status"] = "unresolved"
+                        identifiers[alternative_id] = alternative
+                        unique.append(alternative)
+                        payload["unknown_items"].append({
+                            "field_path": alternative_id,
+                            "record_id": alternative_id,
+                            "reason": f"Conflicting definition candidate retained under {alternative_id}.",
+                            "status": "needs_human_input",
+                            "disposition": "kept_unresolved",
+                        })
+                        continue
                     retain_conflict(identifiers[identifier], record)
                     continue
                 if collection == "definitions" and record.get("symbol"):
                     symbol = record["symbol"]
                     if symbol in symbols:
                         retained_id = symbols[symbol]
-                        retain_conflict(identifiers[retained_id], record)
-                        redirects[identifier] = retained_id
+                        alternative = deepcopy(record)
+                        alternative_id = (
+                            str(identifier)
+                            if str(identifier) not in identifiers
+                            else _unique_record_id(identifiers, identifier, "definition")
+                        )
+                        alternative[field] = alternative_id
+                        if not (accepted_definition(identifiers[retained_id]) and unresolved_definition(alternative)):
+                            retain_conflict(identifiers[retained_id], alternative)
+                        else:
+                            alternative["verification_readiness"] = "blocked"
+                            alternative["definition_status"] = "unresolved"
+                        identifiers[alternative_id] = alternative
+                        unique.append(alternative)
+                        payload["unknown_items"].append({
+                            "field_path": alternative_id,
+                            "record_id": alternative_id,
+                            "reason": f"Definition with duplicate symbol retained under {alternative_id}.",
+                            "status": "needs_human_input",
+                            "disposition": "kept_unresolved",
+                        })
                         continue
                     symbols[symbol] = identifier
                 identifiers[identifier] = record
