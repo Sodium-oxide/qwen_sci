@@ -387,13 +387,14 @@ def test_planner_waits_for_prerequisite_proof_group():
     def callback(prompt, **_kwargs):
         if "skeleton stage" in prompt:
             return deepcopy(plan)
-        target_group = json.loads(prompt.split("INPUT_JSON:\n", 1)[1])["target_group_number"]
-        if target_group == 1:
+        target_input = json.loads(prompt.split("INPUT_JSON:\n", 1)[1])
+        target_id = target_input["skeleton"]["targets"][0]["proposition_id"]
+        if target_id == "P1":
             sleep(0.05)
             first_done.set()
-        if target_group == 2:
+        if target_id == "P2":
             assert first_done.is_set()
-        return {"target_results": [{"target_id": f"P{target_group}"}]}
+        return {"target_results": [{"target_id": target_id}]}
 
     generated = FormalReasoningPlanner()._plan_v2_two_stage(
         {}, {}, {"variables": [{"variable_id": "V1"}]}, resolved, {},

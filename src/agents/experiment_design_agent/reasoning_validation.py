@@ -444,6 +444,8 @@ def _validate_single_counterexample_analysis(
     )
     if analysis.get("schema_version") != "counterexample_analysis_v1":
         errors.append("counterexample_analysis_invalid_schema_version")
+    if not isinstance(analysis.get("candidate_counterexamples"), list):
+        errors.append("counterexample_analysis_candidates_not_array")
     candidates = _records(analysis.get("candidate_counterexamples"))
     required_assumptions: set[str] | None = None
     if formal_reasoning_plan is not None and analysis.get("target_claim_id"):

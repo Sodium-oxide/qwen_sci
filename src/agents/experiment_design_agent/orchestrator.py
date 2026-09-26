@@ -769,7 +769,8 @@ class ExperimentDesignOrchestrator:
                             payload, variable_claim_model=variable_claim_model,
                         ) and not any(
                             isinstance(item, Mapping)
-                            and str(item.get("field_path") or "").startswith("proof_attempts.")
+                            and (str(item.get("field_path") or "").startswith("proof_attempts.")
+                                 or item.get("category") == "construction_warning")
                             for item in payload.get("unknown_items", [])
                         ),
                         llm_override=reasoning_llm_call, logger=logger, brief_id=brief_id,
@@ -778,7 +779,8 @@ class ExperimentDesignOrchestrator:
                     target_failures = [
                         item for item in formal_reasoning_plan.get("unknown_items", [])
                         if isinstance(item, Mapping)
-                        and str(item.get("field_path") or "").startswith("proof_attempts.")
+                        and (str(item.get("field_path") or "").startswith("proof_attempts.")
+                             or item.get("category") == "construction_warning")
                     ]
                     if target_failures:
                         formal_warning = True
@@ -805,6 +807,9 @@ class ExperimentDesignOrchestrator:
                         from .formal_contracts import unresolved_plan_from_definitions
 
                         retained = unresolved_plan_from_definitions(formal_inputs, "Proof construction failed; resolved definitions and model relations are retained.")
+                        from .formal_plan_recovery import recover_formal_plan
+
+                        retained = recover_formal_plan(retained, variable_claim_model, logger=logger, brief_id=brief_id)
                         if not validate_formal_reasoning_plan(retained, variable_claim_model=variable_claim_model):
                             formal_reasoning_plan = retained
             if logger is not None:
@@ -953,7 +958,19 @@ class ExperimentDesignOrchestrator:
                 brief_id=brief_id,
             )
 
-        def discarded_reasoning_artifacts(reason: str) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+        partial_formal_recovery = formal_reasoning_plan.get("schema_version") == "formal_reasoning_plan_v2"
+        reasoning_warning = False
+
+        def recovered_reasoning_artifacts(reason: str) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+            if partial_formal_recovery:
+                from .formal_plan_recovery import recover_counterexample_analysis, recover_formal_plan
+
+                retained_variables = variable_claim_model
+                if validate_variable_claim_model(retained_variables):
+                    retained_variables = _degraded_variable_claim_model(reason=reason)
+                retained_plan = recover_formal_plan(formal_reasoning_plan, retained_variables, logger=logger, brief_id=brief_id)
+                retained_analysis = recover_counterexample_analysis(counterexample_analysis, retained_plan, logger=logger, brief_id=brief_id)
+                return retained_variables, retained_plan, retained_analysis
             degraded_variable_claim_model = _degraded_variable_claim_model(reason=reason)
             if formal_applicable:
                 degraded_formal_reasoning_plan = unavailable_formal_reasoning_plan(reason=reason)
@@ -975,15 +992,14 @@ class ExperimentDesignOrchestrator:
                 template_composition=routing,
             )
         except Exception as exc:
-            degradations.append(
-                _record_degradation(
-                    logger,
-                    stage="reasoning_validation",
-                    brief_id=brief_id,
-                    error=exc,
+            if partial_formal_recovery:
+                reasoning_warning = True
+                _record_stage_warning(logger, stage="reasoning_validation", brief_id=brief_id, error=exc)
+            else:
+                degradations.append(
+                    _record_degradation(logger, stage="reasoning_validation", brief_id=brief_id, error=exc)
                 )
-            )
-            variable_claim_model, formal_reasoning_plan, counterexample_analysis = discarded_reasoning_artifacts(
+            variable_claim_model, formal_reasoning_plan, counterexample_analysis = recovered_reasoning_artifacts(
                 _degradation_reason("reasoning_validation"),
             )
             reasoning_errors = validate_reasoning_artifacts(
@@ -996,21 +1012,20 @@ class ExperimentDesignOrchestrator:
             if logger is not None:
                 logger.event(
                     "reasoning_validation",
-                    "discarded_invalid_batch",
+                    "records_recovered" if partial_formal_recovery else "discarded_invalid_batch",
                     level="WARNING",
-                    status="DEGRADED",
+                    status="WARNING" if partial_formal_recovery else "DEGRADED",
                     brief_id=brief_id,
                     error_count=len(reasoning_errors),
                     errors=reasoning_errors,
                 )
-            degradations.append(
-                _record_degradation(
-                    logger,
-                    stage="reasoning_validation",
-                    brief_id=brief_id,
+            if partial_formal_recovery:
+                reasoning_warning = True
+            else:
+                degradations.append(
+                    _record_degradation(logger, stage="reasoning_validation", brief_id=brief_id)
                 )
-            )
-            variable_claim_model, formal_reasoning_plan, counterexample_analysis = discarded_reasoning_artifacts(
+            variable_claim_model, formal_reasoning_plan, counterexample_analysis = recovered_reasoning_artifacts(
                 _degradation_reason("reasoning_validation"),
             )
             reasoning_errors = validate_reasoning_artifacts(
@@ -1021,19 +1036,19 @@ class ExperimentDesignOrchestrator:
             )
             if reasoning_errors:
                 raise RuntimeError(
-                    "experiment_design: deterministic reasoning degradation failed validation: "
+                    "experiment_design: recovered reasoning artifacts failed validation: "
                     + "; ".join(reasoning_errors)
                 )
         if logger is not None:
             logger.event(
                 "reasoning_validation",
                 "completed",
-                status="DEGRADED" if degradations else "COMPLETED",
+                status="WARNING" if reasoning_warning else "DEGRADED" if degradations else "COMPLETED",
                 brief_id=brief_id,
                 error_count=0,
             )
 
-        if not any(record["stage"] == "reasoning_validation" for record in degradations):
+        if not reasoning_warning and not any(record["stage"] == "reasoning_validation" for record in degradations):
             for stage, identity, payload, run_id in pending_stage_cache:
                 self._write_stage_cache(stage, identity, payload, run_id=run_id,
                                         logger=logger, brief_id=brief_id)

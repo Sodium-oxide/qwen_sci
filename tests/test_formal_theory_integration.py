@@ -63,17 +63,17 @@ def test_verification_report_rejects_stale_or_forged_summary():
     assert any("stale_or_mismatched" in error for error in validate_verification_report(plan, report))
 
 
-def test_definition_resolution_failure_skips_initial_formal_plan():
+def test_definition_resolution_warning_does_not_skip_formal_plan():
     calls = []
 
     def callback(prompt, **kwargs):
         calls.append(prompt)
         if "Variable and Claim Extractor" in prompt:
             return _variable_claim_model()
-            if "Formal Definition Resolver" in prompt:
-                malformed = deepcopy(formal_plan()["definitions"])
-                malformed[0]["variable_references"] = ["V1"]
-                malformed[0]["origin"] = "invalid_origin_from_model"
+        if "Formal Definition Resolver" in prompt:
+            malformed = deepcopy(formal_plan()["definitions"])
+            malformed[0]["variable_references"] = ["V1"]
+            malformed[0]["origin"] = "invalid_origin_from_model"
             return {
                 "schema_version": "formal_definition_resolution_v1",
                 "definitions": malformed,
@@ -81,7 +81,7 @@ def test_definition_resolution_failure_skips_initial_formal_plan():
                 "unknown_items": [],
             }
         if "Formal Reasoning Planner" in prompt or "Formal Reasoning Planner v2" in prompt:
-            raise AssertionError("formal reasoning LLM must not run after definition resolution failure")
+            raise RuntimeError("formal planner unavailable")
         if "Counterexample Analyzer" in prompt:
             raise AssertionError("counterexample LLM must not run after definition resolution failure")
         return {"open_design_questions": []}
@@ -95,9 +95,10 @@ def test_definition_resolution_failure_skips_initial_formal_plan():
     assert any("Formal Reasoning Planner" in prompt for prompt in calls)
     assert any(
         record["stage"] == "formal_definition_resolver"
-        and record["event"] == "group_warning"
+        and record["event"] == "record_warning"
         and record["status"] == "WARNING"
-        and record.get("error_detail")
+        and record.get("field") == "origin"
+        and record.get("disposition") == "kept_unresolved"
         for record in logger.records
     )
     assert any(

@@ -77,11 +77,13 @@ def build_verification_task(
         for field in ("quantifiers", "scope", "domain_expression"):
             target.setdefault(field, parent.get(field))
     dependencies = target_dependencies(plan, target_id)
+    construction_blockers = [f"blocked_construction:{identifier}" for identifier in dependencies | {target_id}
+                             if records[identifier].get("construction_status") == "blocked"]
     if backend == "lean":
         proof_assistant = proof_assistant if isinstance(proof_assistant, Mapping) else {}
         proof_script = target.get("proof_script") or target.get("lean_proof_script")
         theorem_statement = target.get("lean_theorem_statement")
-        blockers = []
+        blockers = list(construction_blockers)
         if not isinstance(theorem_statement, str) or not theorem_statement.strip():
             blockers.append("missing_lean_theorem_statement")
         if not isinstance(proof_script, str) or not proof_script.strip():
@@ -108,7 +110,7 @@ def build_verification_task(
             "blockers": blockers,
             "input_snapshot": semantic_snapshot(plan, target_id),
         }
-    blockers = []
+    blockers = list(construction_blockers)
     constraints = []
     if not target.get("quantifiers") or any(item.get("quantifier") != "forall" or item.get("sort") not in {"real", "integer", "boolean"} for item in target.get("quantifiers", [])):
         blockers.append("missing_or_unsupported_quantifiers")
@@ -301,6 +303,10 @@ def _task_result(task, previous, enabled):
 def _rule_result(plan, target_id):
     """Check AST-bearing proof steps with the bounded local rule set."""
 
+    records = formal_records(plan)
+    if any(records[identifier].get("construction_status") == "blocked"
+           for identifier in target_dependencies(plan, target_id) | {target_id}):
+        return None
     checked = verify_target_proof(plan, target_id)
     if checked is None:
         return None
@@ -339,7 +345,9 @@ def summarize_targets(plan, results):
             "definition_id" in records[identifier] and records[identifier].get("definition_status") != "specified"
         ) or ("relation_id" in records[identifier] and records[identifier].get("status") == "unresolved")]
         diagnostics = [item for item in plan.get("semantic_diagnostics", []) if item.get("target_id") in dependencies | {target_id} and not item.get("resolved", False)]
-        if missing:
+        if target.get("construction_status") == "blocked":
+            status = "unresolved"
+        elif missing:
             status = "blocked_by_definition"
         elif diagnostics:
             status = "unresolved"

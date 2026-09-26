@@ -124,7 +124,7 @@ class OutcomeRAG:
         text = re.sub(r"^#+\s*", "", text)
         return text.strip()
 
-    def retrieve(self, query: str, top_k: int = 5, mode: str = "content", alpha: float = 0.5, cite_top_k: Optional[int] = None) -> List[Dict]:
+    def retrieve(self, query: str, top_k: Optional[int] = None, mode: str = "content", alpha: float = 0.5, cite_top_k: Optional[int] = None) -> List[Dict]:
         if self.embeddings is None or not self.subsections:
             raise ValueError("Index not built. Call build_index first.")
         query_emb = self.model.encode([query], convert_to_tensor=True, device=self.device)
@@ -143,7 +143,10 @@ class OutcomeRAG:
         else:
             scores = util.pytorch_cos_sim(query_emb, self.embeddings)[0]
 
-        top_k = min(top_k, len(self.subsections))
+        if top_k is None or int(top_k) <= 0:
+            top_k = len(self.subsections)
+        else:
+            top_k = min(int(top_k), len(self.subsections))
         values, indices = torch.topk(scores, k=top_k)
         results = []
         for score, idx in zip(values.tolist(), indices.tolist()):

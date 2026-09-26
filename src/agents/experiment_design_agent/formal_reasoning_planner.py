@@ -11,6 +11,9 @@ from typing import Any
 from .formal_dependency import target_dependencies, target_subgraph
 from .llm_json import call_required_json_with_logging, json_prompt_payload, validation_summary as _validation_summary
 from .reasoning_validation import validate_formal_reasoning_plan
+from .formal_plan_recovery import (
+    archive_formal_record, construction_warning, recover_formal_plan, unwrap_formal_plan,
+)
 
 
 FORMAL_REASONING_PLAN_SCHEMA_VERSION = "formal_reasoning_plan_v1"
@@ -108,6 +111,9 @@ the target or an unresolved obligation as a proven premise. If a target is not
 tractable, return an empty proof_attempts array and a precise unknown_item. Do not
 invent definitions, equations, citations, numerical values or verification claims.
 Use null for unsupported AST expressions and preserve the exact target statement.
+For targeted_repair, return only the requested failed targets. Use the supplied
+diagnostics and archived candidates to repair their records. Preserve all accepted
+record IDs, target statements and premises; do not replace accepted proof records.
 INPUT_JSON:
 """
 _DEFINITION_SCHEMA_FIELDS = frozenset(
@@ -1138,6 +1144,54 @@ class FormalReasoningPlanner:
     """Generate a structured, explicitly unverified formal reasoning plan."""
 
     @staticmethod
+    def _merge_protected(plan, existing, additions, identifier, target_ids):
+        if not isinstance(additions, list):
+            if additions is not None:
+                archive_formal_record(plan, identifier, additions, "Malformed target response collection.")
+                for target_id in target_ids:
+                    construction_warning(plan, target_id, "proof_attempts", "Malformed target response collection.")
+            return
+        index = {record.get(identifier): record for record in existing if isinstance(record, Mapping)
+                 and isinstance(record.get(identifier), str)}
+        for record in additions:
+            if not isinstance(record, Mapping) or not isinstance(record.get(identifier), str):
+                archive_formal_record(plan, identifier, record, "Malformed target response record.")
+                for target_id in target_ids:
+                    construction_warning(plan, target_id, "proof_attempts", "Malformed target response record.")
+                continue
+            owner = record.get("target_id")
+            if owner is None and len(target_ids) != 1:
+                archive_formal_record(plan, f"{identifier}.{record[identifier]}", record, "Ambiguous target association.")
+                for target_id in target_ids:
+                    construction_warning(plan, target_id, "proof_attempts", "Ambiguous target association.")
+                continue
+            if owner is not None and (not isinstance(owner, str) or owner not in target_ids):
+                archive_formal_record(plan, f"{identifier}.{record[identifier]}", record, "Record belongs to another target.")
+                continue
+            previous = index.get(record[identifier])
+            if previous is not None:
+                if identifier == "obligation_id":
+                    completion_fields = {"conclusion_expression", "domain_expression", "predicate_expression",
+                                         "symbol_references", "variable_references"}
+                    conflicts = [field for field, value in record.items() if field in previous
+                                 and value != previous[field]
+                                 and not (field in completion_fields and previous[field] in (None, "", []))]
+                    if not conflicts:
+                        for field in completion_fields:
+                            if field in record and previous.get(field) in (None, "", []):
+                                previous[field] = deepcopy(record[field])
+                        continue
+                if previous != record:
+                    archive_formal_record(plan, f"{identifier}.{record[identifier]}", record, "An accepted record cannot be overwritten by proof generation.")
+                    construction_warning(plan, owner or record[identifier], identifier, "Conflicting replacement retained in archive.")
+                continue
+            added = deepcopy(dict(record))
+            if owner is None and len(target_ids) == 1:
+                added["target_id"] = next(iter(target_ids))
+            existing.append(added)
+            index[added[identifier]] = added
+
+    @staticmethod
     def _target_groups(plan: Mapping[str, Any], max_targets_per_request: int) -> list[list[dict[str, Any]]]:
         targets = [
             dict(record)
@@ -1145,31 +1199,58 @@ class FormalReasoningPlanner:
             for record in plan.get(collection, [])
             if isinstance(record, Mapping) and _target_id(record)
         ]
-        return [targets[offset:offset + max_targets_per_request] for offset in range(0, len(targets), max_targets_per_request)]
+        pending = {_target_id(target): target for target in targets if target.get("construction_status") != "blocked"}
+        groups = []
+        while pending:
+            ready = []
+            for identifier, target in pending.items():
+                try:
+                    dependencies = target_dependencies(plan, identifier)
+                except (ValueError, TypeError, KeyError):
+                    continue
+                if not dependencies.intersection(pending):
+                    ready.append(target)
+            if not ready:
+                break
+            for offset in range(0, len(ready), max_targets_per_request):
+                groups.append(ready[offset:offset + max_targets_per_request])
+            for target in ready:
+                del pending[_target_id(target)]
+        return groups
 
     @staticmethod
     def _merge_target_response(plan: dict[str, Any], response: Mapping[str, Any], target_ids: set[str]) -> None:
         results = response.get("target_results")
         if isinstance(results, list):
+            returned_ids = {result.get("target_id") for result in results
+                            if isinstance(result, Mapping) and isinstance(result.get("target_id"), str)}
+            for target_id in target_ids - returned_ids:
+                construction_warning(plan, target_id, "proof_attempts", "Requested target is absent from target_results.")
             for result in results:
                 if not isinstance(result, Mapping) or str(result.get("target_id") or "") not in target_ids:
                     continue
                 target_id = str(result["target_id"])
-                _merge_by_id(plan["proof_obligations"], result.get("proof_obligations"), "obligation_id")
-                _merge_by_id(plan["proof_attempts"], result.get("proof_attempts"), "attempt_id")
-                _merge_by_id(plan["forward_derivation"]["steps"], result.get("derivation_steps"), "step_id")
-                for collection, identifier in (("propositions", "proposition_id"), ("lemmas", "lemma_id")):
-                    _merge_by_id(plan[collection], [record for record in response.get(collection, []) if _target_id(record) == target_id], identifier)
+                FormalReasoningPlanner._merge_protected(plan, plan["proof_obligations"], result.get("proof_obligations"), "obligation_id", {target_id})
+                FormalReasoningPlanner._merge_protected(plan, plan["proof_attempts"], result.get("proof_attempts"), "attempt_id", {target_id})
+                steps = [dict(record, target_id=record.get("target_id", target_id)) for record in result.get("derivation_steps", [])
+                         if isinstance(record, Mapping)] if isinstance(result.get("derivation_steps"), list) else []
+                FormalReasoningPlanner._merge_protected(plan, plan["forward_derivation"]["steps"], steps, "step_id", {target_id})
+                if "lemma_instantiations" in result:
+                    target = next(record for record in plan["propositions"] + plan["lemmas"] if _target_id(record) == target_id)
+                    previous = target.get("lemma_instantiations", [])
+                    instances = result["lemma_instantiations"]
+                    if not previous and isinstance(instances, list):
+                        target["lemma_instantiations"] = deepcopy(instances)
+                    elif instances != previous:
+                        archive_formal_record(plan, f"targets.{target_id}.lemma_instantiations", instances, "Conflicting lemma application.")
+                        construction_warning(plan, target_id, "lemma_instantiations", "Conflicting lemma application retained in archive.")
         else:
             # Compatibility with callbacks and cached providers that still return a full v2 plan.
-            _merge_by_id(plan["proof_obligations"], response.get("proof_obligations"), "obligation_id")
-            _merge_by_id(plan["proof_attempts"], response.get("proof_attempts"), "attempt_id")
+            FormalReasoningPlanner._merge_protected(plan, plan["proof_obligations"], response.get("proof_obligations"), "obligation_id", target_ids)
+            FormalReasoningPlanner._merge_protected(plan, plan["proof_attempts"], response.get("proof_attempts"), "attempt_id", target_ids)
             derivation = response.get("forward_derivation")
             if isinstance(derivation, Mapping):
-                _merge_by_id(plan["forward_derivation"]["steps"], derivation.get("steps"), "step_id")
-            for collection, identifier in (("propositions", "proposition_id"), ("lemmas", "lemma_id")):
-                records = [record for record in response.get(collection, []) if _target_id(record) in target_ids]
-                _merge_by_id(plan[collection], records, identifier)
+                FormalReasoningPlanner._merge_protected(plan, plan["forward_derivation"]["steps"], derivation.get("steps"), "step_id", target_ids)
         for item in response.get("semantic_diagnostics", []) if isinstance(response.get("semantic_diagnostics"), list) else []:
             if item not in plan["semantic_diagnostics"]:
                 plan["semantic_diagnostics"].append(deepcopy(item))
@@ -1189,6 +1270,7 @@ class FormalReasoningPlanner:
         logger: Any | None,
         brief_id: str,
         planner_settings: Mapping[str, Any],
+        partial_result: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         from .definition_evidence import bounded_formal_evidence
 
@@ -1201,7 +1283,7 @@ class FormalReasoningPlanner:
         compact_variables = _compact_variable_claim_model(variable_claim_model)
         evidence = bounded_formal_evidence(
             evidence_bundle or {},
-            {"claims": compact_variables.get("claims", []), "definitions": compact_inputs.get("definitions", [])},
+            {"claims": compact_variables.get("claims", []), "definitions": _skeleton_formal_inputs(compact_inputs).get("definitions", [])},
             card_limit=evidence_limit,
             catalog_limit=max(1, min(80, int(planner_settings.get("max_catalog_cards", 40)))),
         )
@@ -1218,7 +1300,7 @@ class FormalReasoningPlanner:
             },
             "variable_claim_model": _skeleton_variable_claim_model(compact_variables),
             "resolved_inputs": _skeleton_formal_inputs(compact_inputs),
-            "evidence_bundle": {"evidence_catalog": evidence.get("evidence_catalog", [])[:6], "total_card_count": evidence.get("total_card_count", 0)},
+            "evidence_bundle": evidence,
             "proof_policy": {"prove_only_from_encoded_definitions": True, "proof_steps_deferred": True},
         }
         skeleton_prompt = FORMAL_REASONING_SKELETON_PROMPT + json_prompt_payload(skeleton_payload)
@@ -1229,7 +1311,7 @@ class FormalReasoningPlanner:
                 definition_count=len(compact_inputs["definitions"]),
                 relation_count=len(compact_inputs["model_relations"]),
                 variable_count=len(compact_variables["variables"]),
-                evidence_card_count=0,
+                evidence_card_count=len(evidence.get("evidence_cards", [])),
                 evidence_catalog_count=len(skeleton_payload["evidence_bundle"]["evidence_catalog"]),
                 skeleton_definition_chars=len(json_prompt_payload(skeleton_payload["resolved_inputs"])),
             )
@@ -1241,17 +1323,30 @@ class FormalReasoningPlanner:
         )
         if not isinstance(skeleton, Mapping):
             raise ValueError("formal_v2_skeleton_not_object")
-        plan = deepcopy(dict(skeleton))
+        plan, wrappers = unwrap_formal_plan(skeleton)
+        if wrappers and logger is not None:
+            logger.event("formal_reasoning_planner", "response_unwrapped", status="REPAIRED",
+                         brief_id=brief_id, wrapper_fields=wrappers)
         plan["schema_version"] = "formal_reasoning_plan_v2"
         plan.setdefault("revision", 1)
         plan.setdefault("applicability", "formal_theory")
         plan.setdefault("status", "unverified")
         for collection in ("assumptions", "propositions", "lemmas", "proof_obligations", "proof_attempts", "global_assumption_ids", "unknown_items", "semantic_diagnostics"):
-            if not isinstance(plan.get(collection), list):
+            if isinstance(plan.get(collection), Mapping):
+                records = plan[collection]
+                identifier = {"assumptions": "assumption_id", "propositions": "proposition_id", "lemmas": "lemma_id",
+                              "proof_obligations": "obligation_id", "proof_attempts": "attempt_id"}.get(collection)
+                plan[collection] = [dict(records)] if identifier in records else list(records.values())
+            elif not isinstance(plan.get(collection), list):
+                if collection in plan:
+                    archive_formal_record(plan, collection, plan[collection], "Malformed skeleton collection.")
                 plan[collection] = []
         plan["definitions"] = deepcopy(compact_inputs["definitions"])
         plan["model_relations"] = deepcopy(compact_inputs["model_relations"])
-        plan["forward_derivation"] = dict(plan.get("forward_derivation") or {})
+        derivation = plan.get("forward_derivation")
+        if derivation is not None and not isinstance(derivation, Mapping):
+            archive_formal_record(plan, "forward_derivation", derivation, "Malformed derivation envelope.")
+        plan["forward_derivation"] = dict(derivation) if isinstance(derivation, Mapping) else {}
         plan["forward_derivation"].setdefault("steps", [])
         plan["forward_derivation"].setdefault("target_proposition_id", "")
         plan["forward_derivation"].setdefault("final_conclusion_step", "")
@@ -1263,10 +1358,19 @@ class FormalReasoningPlanner:
         for item in compact_inputs["unknown_items"]:
             if item not in plan["unknown_items"]:
                 plan["unknown_items"].append(deepcopy(item))
+        if partial_result is not None:
+            partial_result.update(deepcopy(plan))
         id_gaps = _normalize_skeleton_record_shapes(plan)
-        _repair_skeleton_record_ids(
-            plan, id_gaps, llm_call=llm_call, logger=logger, brief_id=brief_id,
-        )
+        try:
+            _repair_skeleton_record_ids(
+                plan, id_gaps, llm_call=llm_call, logger=logger, brief_id=brief_id,
+            )
+        except Exception as error:
+            construction_warning(plan, "skeleton", "record_ids", f"{type(error).__name__}: {error}", logger=logger, brief_id=brief_id)
+        plan = recover_formal_plan(plan, variable_claim_model, logger=logger, brief_id=brief_id)
+        if partial_result is not None:
+            partial_result.update(deepcopy(plan))
+        skeleton_status = plan["status"]
 
         target_groups = self._target_groups(plan, max_targets)
         parallel_workers = max(1, min(3, int(planner_settings.get("parallel_workers", 3))))
@@ -1290,9 +1394,17 @@ class FormalReasoningPlanner:
             }
 
         def prepare_and_prove_group(item):
-            group_number, targets, source_plan = item
+            group_number, targets, source_plan, repair_round = item
             target_ids = {_target_id(target) for target in targets}
             local_plans = [target_subgraph(source_plan, target_id) for target_id in sorted(target_ids)]
+            included_targets = set(target_ids)
+            for local_plan in local_plans:
+                for collection in ("propositions", "lemmas"):
+                    for record in local_plan[collection]:
+                        identifier = _target_id(record)
+                        if identifier not in included_targets:
+                            included_targets.add(identifier)
+                            local_plans.append(target_subgraph(source_plan, identifier))
 
             def local_records(collection: str, identifier: str) -> list[dict[str, Any]]:
                 seen_ids: set[str] = set()
@@ -1311,6 +1423,13 @@ class FormalReasoningPlanner:
                 "definitions": [record for record in local_records("definitions", "definition_id") if record.get("verification_readiness") == "encoded"],
                 "model_relations": local_records("model_relations", "relation_id"),
                 "proof_obligations": local_records("proof_obligations", "obligation_id"),
+                "propositions": local_records("propositions", "proposition_id"),
+                "lemmas": local_records("lemmas", "lemma_id"),
+                "proof_attempts": [deepcopy(attempt) for attempt in source_plan["proof_attempts"]
+                                   if attempt.get("target_id") in {_target_id(record) for local_plan in local_plans
+                                       for collection in ("propositions", "lemmas") for record in local_plan.get(collection, [])}],
+                "construction_archive": [deepcopy(entry) for entry in source_plan.get("construction_archive", [])
+                                         if any(identifier in str(entry) for identifier in target_ids)],
             }
             target_evidence = bounded_formal_evidence(
                 evidence_bundle or {}, dependencies,
@@ -1324,6 +1443,12 @@ class FormalReasoningPlanner:
                 "skeleton": dependencies,
                 "evidence_bundle": target_evidence,
                 "target_group_number": group_number,
+                "targeted_repair": {
+                    "round": repair_round, "target_ids": sorted(target_ids),
+                    "diagnostics": [deepcopy(item) for item in source_plan["unknown_items"]
+                                    if isinstance(item, Mapping) and (item.get("record_id") in target_ids
+                                        or item.get("field_path") in {f"proof_attempts.{identifier}" for identifier in target_ids})],
+                } if repair_round else None,
                 "proof_policy": {"prove_only_from_encoded_definitions": True, "max_steps_per_target": int(planner_settings.get("max_proof_steps_per_target", 8))},
             }
             target_prompt = FORMAL_REASONING_TARGET_PROMPT + json_prompt_payload(target_payload)
@@ -1355,6 +1480,7 @@ class FormalReasoningPlanner:
             except Exception as error:
                 return {_target_id(target) for target in item[1]}, None, error
 
+        max_repairs = max(0, min(2, int(planner_settings.get("max_target_repairs", 1))))
         with ThreadPoolExecutor(max_workers=min(parallel_workers, max(1, len(target_groups)))) as executor:
             next_group = 1
             while next_group <= len(target_groups):
@@ -1369,31 +1495,57 @@ class FormalReasoningPlanner:
                     batch_numbers.append(group_number)
                 source_plan = deepcopy(plan)
                 results = list(executor.map(prove_group, [
-                    (group_number, target_groups[group_number - 1], source_plan)
+                    (group_number, target_groups[group_number - 1], source_plan, 0)
                     for group_number in batch_numbers
                 ]))
                 for group_number, (target_ids, response, error) in zip(batch_numbers, results):
-                    if error is None:
-                        try:
-                            revised_plan = deepcopy(plan)
-                            self._merge_target_response(revised_plan, response, target_ids)
-                            plan = revised_plan
-                            continue
-                        except Exception as merge_error:
-                            error = merge_error
-                    detail = f"{type(error).__name__}: {error}"
-                    plan["unknown_items"].extend(
-                        {"field_path": f"proof_attempts.{target_id}", "reason": detail, "status": "needs_human_input"}
-                        for target_id in sorted(target_ids)
-                    )
-                    if logger is not None:
-                        logger.event(
-                            "formal_reasoning_planner", "target_group_warning", level="WARNING",
-                            status="WARNING", brief_id=brief_id,
-                            target_group_number=group_number, target_ids=sorted(target_ids),
-                            error_code=type(error).__name__, error_detail=str(error),
-                        )
+                    pending_ids = set(target_ids)
+                    for repair_round in range(max_repairs + 1):
+                        if repair_round:
+                            repair_targets = [target for target in target_groups[group_number - 1] if _target_id(target) in pending_ids]
+                            target_ids, response, error = prove_group((group_number, repair_targets, deepcopy(plan), repair_round))
+                        if error is None:
+                            try:
+                                revised_plan = deepcopy(plan)
+                                self._merge_target_response(revised_plan, response, target_ids)
+                                plan = recover_formal_plan(revised_plan, variable_claim_model, logger=logger, brief_id=brief_id)
+                                successful_ids = {attempt.get("target_id") for attempt in plan["proof_attempts"]} & target_ids
+                                successful_paths = {f"proof_attempts.{identifier}" for identifier in successful_ids}
+                                plan["unknown_items"] = [item for item in plan["unknown_items"] if not (
+                                    item.get("field_path") in successful_paths or
+                                    (item.get("record_id") in successful_ids and item.get("field") == "proof_attempts"))]
+                                pending_ids = {item["record_id"] for item in plan["unknown_items"]
+                                               if item.get("field") == "proof_attempts" and item.get("record_id") in target_ids}
+                                pending_ids.update(identifier for identifier in target_ids if any(
+                                    item.get("field_path") == f"proof_attempts.{identifier}" for item in plan["unknown_items"]))
+                                if repair_round and logger is not None:
+                                    logger.event("formal_reasoning_planner", "target_repair_completed",
+                                                 status="REPAIRED" if successful_ids else "NO_PROGRESS", brief_id=brief_id,
+                                                 target_ids=sorted(target_ids), repair_round=repair_round)
+                            except Exception as merge_error:
+                                error = merge_error
+                                archive_formal_record(plan, f"target_groups.{group_number}", response, f"{type(error).__name__}: {error}")
+                        if error is not None:
+                            detail = f"{type(error).__name__}: {error}"
+                            for target_id in sorted(target_ids):
+                                diagnostic = {"field_path": f"proof_attempts.{target_id}", "reason": detail, "status": "needs_human_input"}
+                                if diagnostic not in plan["unknown_items"]:
+                                    plan["unknown_items"].append(diagnostic)
+                            if logger is not None:
+                                logger.event("formal_reasoning_planner", "target_group_warning", level="WARNING",
+                                             status="WARNING", brief_id=brief_id, target_group_number=group_number,
+                                             target_ids=sorted(target_ids), error_code=type(error).__name__, error_detail=str(error))
+                        if not pending_ids:
+                            break
+                    if partial_result is not None:
+                        partial_result.clear()
+                        partial_result.update(deepcopy(plan))
                 next_group += len(batch_numbers)
+        if skeleton_status == "unverified" and not any(
+            item.get("category") == "construction_warning" or str(item.get("field_path", "")).startswith("proof_attempts.")
+            for item in plan["unknown_items"]
+        ):
+            plan["status"] = skeleton_status
         return plan
 
     def plan(
@@ -1411,22 +1563,23 @@ class FormalReasoningPlanner:
     ) -> dict[str, Any]:
         effective_brief_id = str(brief_id or research_brief.get("brief_id") or "")
         if formal_inputs is not None:
-            payload = self._plan_v2_two_stage(
-                research_brief, reasoning_context, variable_claim_model, formal_inputs, evidence_bundle,
-                llm_call=llm_call, logger=logger, brief_id=effective_brief_id,
-                planner_settings=planner_settings or {},
-            )
+            partial_result = {}
+            try:
+                payload = self._plan_v2_two_stage(
+                    research_brief, reasoning_context, variable_claim_model, formal_inputs, evidence_bundle,
+                    llm_call=llm_call, logger=logger, brief_id=effective_brief_id,
+                    planner_settings=planner_settings or {},
+                    partial_result=partial_result,
+                )
+            except Exception as error:
+                from .formal_contracts import unresolved_plan_from_definitions
+
+                payload = partial_result or unresolved_plan_from_definitions(formal_inputs, f"{type(error).__name__}: {error}")
+                construction_warning(payload, "skeleton", "generation", f"{type(error).__name__}: {error}", logger=logger, brief_id=effective_brief_id)
             for collection in ("definitions", "model_relations"):
                 payload[collection] = deepcopy(formal_inputs.get(collection, []))
             payload.setdefault("unknown_items", []).extend(deepcopy(formal_inputs.get("unknown_items", [])))
-            errors = validate_formal_reasoning_plan(payload, variable_claim_model=variable_claim_model)
-            if errors:
-                from .formal_contracts import retain_independent_targets
-
-                payload, errors = retain_independent_targets(payload, variable_claim_model)
-                if errors:
-                    raise ValueError("formal_v2_contract: " + "; ".join(errors))
-            return payload
+            return recover_formal_plan(payload, variable_claim_model, logger=logger, brief_id=effective_brief_id)
         payload = call_required_json_with_logging(
             llm_call,
             build_formal_reasoning_planner_prompt(research_brief, reasoning_context, variable_claim_model),

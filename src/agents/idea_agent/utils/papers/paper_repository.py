@@ -256,7 +256,7 @@ class PaperRepository:
     def retrieve_outcome_rag(
         self,
         query: str,
-        top_k: int = 5,
+        top_k: Optional[int] = None,
         mode: str = "content",
         alpha: float = 0.5,
         cite_top_k: Optional[int] = None,
@@ -301,7 +301,7 @@ class PaperRepository:
             keynote = self._load_stored_keynote(paper_id)
             if not keynote:
                 if self.logger is not None:
-                    self.logger.info(
+                    self.logger.warning(
                         "Skipping paper_id=%s because no stored survey keynote was found.",
                         paper_id,
                     )

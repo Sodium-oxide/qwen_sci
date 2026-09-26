@@ -1961,7 +1961,7 @@ def ka_outcome_rag_stage(agent: Any, ctx: StageContext) -> StageResult:
     rag_query = ctx.state["rag_query"]
     rag_hits = retrieve_outcome_rag(
         query=rag_query,
-        top_k=5,
+        top_k=None,
         paper_repository=agent.paper_repository,
         logger=_logger(agent, ctx),
     )
@@ -2032,7 +2032,7 @@ def ka_reference_selection_stage(agent: Any, ctx: StageContext) -> StageResult:
     rag_query = ctx.state["rag_query"]
     rag_hits = ctx.state.get("rag_hits", [])
     ranked_keynotes = list(ctx.state.get("ranked_keynotes", []) or [])
-    keynote_keep_top_k = min(1, int(get_config_value(agent.config, "agent.paper_keynote_keep_top_k", 5)))
+    keynote_keep_top_k = max(0, int(get_config_value(agent.config, "agent.paper_keynote_keep_top_k", 5)))
     top_keynotes = ranked_keynotes[:keynote_keep_top_k]
     remaining_keynotes = ranked_keynotes[keynote_keep_top_k:]
     curated_references = [
