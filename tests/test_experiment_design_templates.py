@@ -727,6 +727,64 @@ def test_template_composer_logs_invalid_patch_without_patch_content() -> None:
     assert all(rejected_value not in str(record) for record in events)
 
 
+def test_template_composer_retains_patch_with_source_and_prior_result_text() -> None:
+    logger = ExperimentDesignRunLogger("source-bearing-composer-patch", console_stream=StringIO())
+    design_type = "Design informed by prior observed results at https://example.org/study."
+
+    design = StudyTypeTemplateComposer().compose(
+        _brief("17"),
+        llm_call=lambda *_args, **_kwargs: {"research_design": {"design_type": design_type}},
+        logger=logger,
+        brief_id="brief-17",
+    )
+
+    assert design["research_design"]["design_type"] == design_type
+    assert design["template_composition"]["llm_used"] is True
+    assert design["observed_results"] == []
+    assert validate_experiment_design(design) == []
+    validation = next(record for record in logger.records if record["event"] == "patch_envelope_validated")
+    assert validation["status"] == "VALID"
+    assert validation["patch_has_source_or_result_claim"] is True
+
+
+def test_orchestrator_keeps_source_bearing_composer_patch() -> None:
+    design_type = "Design informed by prior observed results at https://example.org/study."
+
+    def llm_call(prompt, **kwargs):
+        if "Variable and Claim Extractor" in prompt:
+            return _template_llm(prompt, **kwargs)
+        return {"research_design": {"design_type": design_type}}
+
+    design = ExperimentDesignOrchestrator(llm_call=llm_call).compose_design(_brief("17"))
+
+    assert design["research_design"]["design_type"] == design_type
+    assert design["template_composition"]["llm_used"] is True
+    assert design["observed_results"] == []
+    assert validate_experiment_design(design) == []
+
+
+def test_template_composer_accepts_source_text_in_contract_repair() -> None:
+    logger = ExperimentDesignRunLogger("source-bearing-composer-repair", console_stream=StringIO())
+    design_type = "Design motivated by the prior report doi:10.1234/example."
+
+    def llm_call(prompt, **_kwargs):
+        if "Contract Repairer" in prompt:
+            return {"schema_version": "template_contract_repair_patch_v1",
+                    "operations": [{"op": "replace", "path": "/research_design/design_type",
+                                    "value": design_type}]}
+        return {"research_design": {"design_type": {"invalid": "value"}}}
+
+    design = StudyTypeTemplateComposer().compose(
+        _brief("17"), llm_call=llm_call, logger=logger, brief_id="brief-17",
+    )
+
+    assert design["research_design"]["design_type"] == design_type
+    assert validate_experiment_design(design) == []
+    validation = next(record for record in logger.records if record["event"] == "contract_repair_patch_validated")
+    assert validation["status"] == "VALID"
+    assert validation["patch_has_source_or_result_claim"] is True
+
+
 @pytest.mark.parametrize(
     ("discipline_id", "review_trigger"),
     (

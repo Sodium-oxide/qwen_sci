@@ -180,7 +180,7 @@ def test_incomplete_source_reference_is_preserved_as_unresolved(reference):
     assert result["retrieval_audit"][0]["reference_repairs"][0]["original"] == reference
 
 
-def test_cross_group_definition_is_retained_as_warning():
+def test_cross_group_definition_is_registered_without_group_warning():
     payload = resolution()
     payload["definitions"][0]["definition_id"] = "G3_S_E"
     payload["definitions"][0]["variable_references"] = ["V1", "V3"]
@@ -197,8 +197,29 @@ def test_cross_group_definition_is_retained_as_warning():
     )
 
     assert resolved["schema_version"] == "formal_definition_resolution_v1"
-    assert any("references_variables_outside_group" in item["reason"] for item in resolved["unknown_items"])
+    assert not any("references_variables_outside_group" in item["reason"] for item in resolved["unknown_items"])
+    dependency = next(item for item in resolved["variable_dependency_registry"] if item["record_id"] == "G1_G3_S_E")
+    assert dependency["variable_references"] == ["V1", "V3"]
+    assert dependency["missing_variable_ids"] == []
     assert all(record["status"] != "DEGRADED" for record in logger.records if record["stage"] == "formal_definition_resolver")
+
+
+def test_global_dependency_check_reports_only_unknown_variables():
+    payload = resolution()
+    payload["definitions"][0]["variable_references"] = ["V1", "V3"]
+
+    resolved = FormalDefinitionResolver().resolve(
+        {}, {}, {"variables": [{"variable_id": "V1"}, {"variable_id": "V2"}]},
+        {}, llm_call=lambda *_args, **_kwargs: payload,
+        settings={"variables_per_group": 2, "max_supplement_rounds": 0},
+    )
+
+    dependency = next(item for item in resolved["variable_dependency_registry"] if item["record_id"] == "D1")
+    assert dependency["missing_variable_ids"] == ["V3"]
+    diagnostic = next(item for item in resolved["unknown_items"] if item.get("error_code") == "unknown_variable_reference")
+    assert diagnostic["record_id"] == "D1"
+    assert diagnostic["disposition"] == "kept_unresolved"
+    assert resolved["definitions"][0]["definition_status"] == "unresolved"
 
 
 @pytest.mark.parametrize("relations", [None, 42, {"unexpected": "value"}, {"relation_id": "R1", "depends_on": []}])
@@ -248,12 +269,20 @@ def test_invalid_definition_does_not_discard_other_records(invalid_kind):
         assert result["definitions"][1]["definition_status"] == "unresolved"
         diagnostic = next(item for item in result["unknown_items"] if item.get("record_id") == "G1_bad")
         assert diagnostic["disposition"] == "kept_unresolved"
+    elif invalid_kind == "outside_group":
+        assert [item["definition_id"] for item in result["definitions"]] == ["D1", "G1_bad"]
+        assert result["definitions"][1]["definition_status"] == "unresolved"
+        diagnostic = next(item for item in result["unknown_items"]
+                          if item.get("record_id") == "G1_bad"
+                          and item.get("error_code") == "unknown_variable_reference")
+        assert diagnostic["disposition"] == "kept_unresolved"
     else:
         assert [item["definition_id"] for item in result["definitions"]] == ["D1"]
         diagnostic = next(item for item in result["unknown_items"] if item.get("category") == "record_quarantine")
         assert diagnostic["field_path"].startswith("definitions")
     assert result["model_relations"][0]["relation_id"] == "G1_R1"
-    assert "raw_excerpt" in diagnostic
+    if invalid_kind != "outside_group":
+        assert "raw_excerpt" in diagnostic
     assert not FormalDefinitionResolver._cacheable_group_result(result, [{"variable_id": "V1"}])
     FormalDefinitionResolver._validate(result, {"evidence_cards": [card(1)]})
 

@@ -41,7 +41,7 @@ def test_ast_dependencies_cannot_bypass_missing_definition():
     plan["assumptions"][0]["symbol_references"] = []
     plan["definitions"][0]["definition_status"] = "unresolved"
     report = verify_formal_plan(plan, SETTINGS)
-    assert report["results"][0]["result"] == "unsupported"
+    assert report["results"][0]["result"] == "dependency_missing"
     assert report["target_summaries"][0]["status"] == "blocked_by_definition"
 
 
@@ -63,7 +63,7 @@ def test_disabled_missing_encoding_and_unconfigured_assistant_never_prove():
         assert report["target_summaries"][0]["status"] != "verified_in_declared_scope"
     plan = formal_plan()
     plan["propositions"][0]["conclusion_expression"] = None
-    assert verify_formal_plan(plan, SETTINGS)["results"][0]["result"] == "unsupported"
+    assert verify_formal_plan(plan, SETTINGS)["results"][0]["result"] == "not_encoded"
 
 
 def test_timeout_is_not_a_proof(monkeypatch):
@@ -84,7 +84,7 @@ def test_semantic_change_invalidates_success_but_prose_does_not():
     assert second["results"][0]["reused"]
     plan["semantic_diagnostics"] = [{"target_id": "P1", "reason": "Circular premise requires review"}]
     third = verify_formal_plan(plan, SETTINGS, previous_report=second)
-    assert not third["results"][0]["reused"]
+    assert third["results"][0]["reused"]
     assert third["target_summaries"][0]["status"] == "unresolved"
 
 
@@ -244,7 +244,7 @@ def test_missing_backend_is_unsupported(monkeypatch):
     monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(build_verification_task(formal_plan(), "P1", "z3"))))
     monkeypatch.setattr(sys, "stdout", output)
     main()
-    assert json.loads(output.getvalue())["result"] == "unsupported"
+    assert json.loads(output.getvalue())["result"] == "backend_unavailable"
 
 
 def test_revision_verification_exception_keeps_original_plan_and_report(monkeypatch):
@@ -304,7 +304,9 @@ def test_counterexample_drives_a_versioned_repaired_proposition():
     assert report["target_summaries"][0]["status"] == "verified_in_declared_scope"
     assert not report["results"][0]["reused"]
     assert audit["iterations"][0]["invalidated_targets"] == ["P1"]
-    assert audit["iterations"][0]["previous_verification_report"]["target_summaries"][0]["status"] == "refuted_in_declared_scope"
+    from src.agents.experiment_design_agent.formal_storage import archived_report
+    previous = archived_report(audit, audit["iterations"][0]["previous_report_ref"])
+    assert previous["target_summaries"][0]["status"] == "refuted_in_declared_scope"
     assert current["definitions"] == plan["definitions"]
 
 

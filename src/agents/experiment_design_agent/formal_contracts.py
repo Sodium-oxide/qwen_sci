@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from .formal_expression import valid_expression, valid_declarations
+
 from collections.abc import Mapping
 from copy import deepcopy
 from fractions import Fraction
@@ -44,35 +46,9 @@ def _normalized_derivation_rule(value: Any) -> str:
 
 
 def _valid_restricted_expression(value: Any, depth: int = 0) -> bool:
-    if depth > 40 or not isinstance(value, Mapping):
+    if isinstance(value, Mapping) and value.get("op") == "unknown":
         return False
-    if set(value) == {"symbol"}:
-        return isinstance(value.get("symbol"), str) and bool(value["symbol"].strip())
-    if set(value) == {"bool"}:
-        return type(value.get("bool")) is bool
-    if set(value) == {"number"}:
-        number = value.get("number")
-        if not isinstance(number, str) or not number or len(number) > 100:
-            return False
-        try:
-            Fraction(number)
-        except (ValueError, ZeroDivisionError):
-            return False
-        return True
-    if set(value) != {"op", "args"} or not isinstance(value.get("op"), str) or not isinstance(value.get("args"), list):
-        return False
-    operator = value["op"]
-    arity = {
-        "add": 2, "sub": 2, "mul": 2, "div": 2, "pow": 2,
-        "eq": 2, "ne": 2, "lt": 2, "le": 2, "gt": 2, "ge": 2,
-        "not": 1, "implies": 2, "iff": 2, "xor": 2, "ite": 3,
-    }
-    args = value["args"]
-    if operator in {"and", "or"}:
-        return bool(args) and all(_valid_restricted_expression(item, depth + 1) for item in args)
-    if operator not in arity or len(args) != arity[operator]:
-        return False
-    return all(_valid_restricted_expression(item, depth + 1) for item in args)
+    return valid_expression(value, depth)
 
 
 def adapt_legacy_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
@@ -187,7 +163,8 @@ def validate_formal_plan_v2(plan: Any, variable_claim_model: Mapping[str, Any] |
 
     def visit(identifier: str) -> None:
         if identifier in active:
-            errors.append(f"formal_dependency_cycle:{identifier}")
+            if records.get(identifier, {}).get("dependency_health") != "cyclic":
+                errors.append(f"formal_dependency_cycle:{identifier}")
             return
         if identifier in visited or identifier not in records:
             return
@@ -210,11 +187,7 @@ def validate_formal_plan_v2(plan: Any, variable_claim_model: Mapping[str, Any] |
             if field not in target:
                 errors.append(f"{identifier}_missing:{field}")
         quantifiers = target.get("quantifiers")
-        if not isinstance(quantifiers, list) or any(
-            not isinstance(item, Mapping) or not isinstance(item.get("symbol"), str)
-            or item.get("sort") not in {"real", "integer", "boolean"}
-            or item.get("quantifier") != "forall" for item in quantifiers
-        ):
+        if not valid_declarations(quantifiers):
             errors.append(f"{identifier}_invalid_quantifiers")
         obligations = target.get("required_obligation_ids")
         if not isinstance(obligations, list) or not all(isinstance(item, str) for item in obligations):
@@ -289,7 +262,10 @@ def validate_formal_plan_v2(plan: Any, variable_claim_model: Mapping[str, Any] |
                     errors.append(f"{step_id}_unknown_or_future_premise:{premise}")
                 elif premise in records:
                     if premise == target_id or target_id in target_dependencies(plan, premise):
-                        errors.append(f"{step_id}_circular_proof:{target_id}")
+                        if records.get(target_id, {}).get("dependency_health") not in {
+                            "cyclic", "missing", "invalid_or_blocked", "blocked_by_dependency",
+                        }:
+                            errors.append(f"{step_id}_circular_proof:{target_id}")
                     if "obligation_id" in records[premise]:
                         errors.append(f"{step_id}_cannot_use_unresolved_obligation:{premise}")
             prior.add(step_id)

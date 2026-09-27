@@ -8,15 +8,20 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import os
+import re
+import tempfile
 from concurrent.futures import ThreadPoolExecutor
 
-from .formal_dependency import expression_symbols, formal_records, target_dependencies
+from .formal_dependency import dependency_ids, expression_symbols, expression_variable_ids, formal_records, target_dependencies
+from .formal_expression import valid_declarations
 from .formal_capabilities import backend_capabilities, is_registered_backend
 from .proof_assistant_backend import build_lean_source
 from .proof_checker import RULE_ENGINE_VERSION, verify_target_proof
-
-
-REPORT_VERSION = "formal_verification_report_v1"
+from .formal_storage import (
+    REPORT_VERSION, compact_report, diagnostic_applies, execution_snapshot, expand_report, normalize_snapshot,
+    resolve_report_reference, semantic_content,
+)
 
 
 def _substitute_expression(node, substitution):
@@ -44,22 +49,59 @@ def _normalize_instantiation_value(value):
     return deepcopy(value)
 
 
-def semantic_snapshot(plan, target_id):
+def verification_dependencies(plan, target_id):
+    return target_dependencies(plan, target_id, allow_missing=True)
+
+
+def scoped_diagnostics(plan, target_id):
     records = formal_records(plan)
-    identifiers = target_dependencies(plan, target_id) | {target_id}
+    identifiers = verification_dependencies(plan, target_id) | {target_id}
+    if records[target_id].get("target_id"):
+        identifiers.add(records[target_id]["target_id"])
+    for identifier in list(identifiers):
+        identifiers.update(records.get(identifier, {}).get("variable_references", []))
+        identifiers.update(expression_variable_ids(records.get(identifier, {})))
+    known = set(records) | identifiers
+    def normalize_owner(item):
+        if not isinstance(item, Mapping):
+            return item
+        match = re.match(r"^(\w+)\[(\d+)\]", str(item.get("field_path") or item.get("path") or ""))
+        if match and isinstance(plan.get(match[1]), list) and int(match[2]) < len(plan[match[1]]):
+            owner = plan[match[1]][int(match[2])]
+            identifier = next((owner[key] for key in ("definition_id", "relation_id", "assumption_id", "proposition_id", "lemma_id", "obligation_id") if key in owner), None)
+            if identifier:
+                return {**item, "record_id": identifier}
+        return item
+    return {field: [item for original in plan.get(field, []) if isinstance((item := normalize_owner(original)), Mapping)
+                    and not item.get("resolved", False) and item.get("status") not in {"resolved", "completed"}
+                    and diagnostic_applies(item, identifiers, known)]
+            for field in ("semantic_diagnostics", "unknown_items")}
+
+
+def semantic_snapshot(plan, target_id, *, legacy=False):
+    records = formal_records(plan)
+    identifiers = verification_dependencies(plan, target_id) | {target_id}
     pending = list(identifiers)
     while pending:
         identifier = pending.pop()
-        extra = target_dependencies(plan, identifier) - identifiers
+        extra = verification_dependencies(plan, identifier) - identifiers
         identifiers.update(extra)
         pending.extend(extra)
-    snapshot = {identifier: {key: deepcopy(value) for key, value in records[identifier].items() if key not in {"statement", "selection_reason", "source_path", "source_refs"}} for identifier in sorted(identifiers)}
-    snapshot["$diagnostics"] = deepcopy([item for item in plan.get("semantic_diagnostics", []) if item.get("target_id") in identifiers])
-    snapshot["$unknown_items"] = deepcopy(plan.get("unknown_items", []))
-    snapshot["$definition_bindings"] = {record.get("symbol"): record.get("definition_id") for record in plan.get("definitions", [])}
+    snapshot = {identifier: {key: semantic_content(value) for key, value in records[identifier].items() if key not in {"statement", "selection_reason", "source_path", "source_refs"}} for identifier in sorted(identifiers)}
+    snapshot["$diagnostics"] = plan.get("semantic_diagnostics", [])
+    if legacy:
+        snapshot["$diagnostics"] = [item for item in snapshot["$diagnostics"] if item.get("target_id") in identifiers]
+    snapshot["$unknown_items"] = plan.get("unknown_items", [])
+    if not legacy:
+        diagnostics = scoped_diagnostics(plan, target_id)
+        snapshot["$diagnostics"] = diagnostics["semantic_diagnostics"]
+        snapshot["$unknown_items"] = diagnostics["unknown_items"]
+    snapshot["$definition_bindings"] = {record.get("symbol"): record.get("definition_id")
+                                        for record in plan.get("definitions", [])
+                                        if legacy or record.get("definition_id") in identifiers}
     if "obligation_id" in records[target_id]:
-        snapshot["$parent"] = deepcopy(records.get(records[target_id].get("target_id"), {}))
-    return snapshot
+        snapshot["$parent"] = semantic_content(records.get(records[target_id].get("target_id"), {}))
+    return normalize_snapshot(snapshot)
 
 
 def build_verification_task(
@@ -69,16 +111,41 @@ def build_verification_task(
     timeout_seconds=60,
     verified_results=(),
     proof_assistant=None,
+    snapshot_cache=None,
 ):
     records = formal_records(plan)
     target = deepcopy(records[target_id])
+    candidate = target.get("backend_encodings", {}).get(backend, {})
+    if isinstance(candidate, Mapping):
+        target.update({field: deepcopy(value) for field, value in candidate.items() if field in {
+            "quantifiers", "domain_expression", "conclusion_expression", "calculation_steps", "variable_bindings",
+        }})
+    if snapshot_cache is None:
+        snapshot = semantic_snapshot(plan, target_id)
+    else:
+        if target_id not in snapshot_cache:
+            snapshot_cache[target_id] = semantic_snapshot(plan, target_id)
+        snapshot = snapshot_cache[target_id]
+    if candidate:
+        snapshot = deepcopy(snapshot)
+        snapshot["$backend_encoding"] = semantic_content(candidate)
     if "obligation_id" in target:
         parent = records[target["target_id"]]
         for field in ("quantifiers", "scope", "domain_expression"):
             target.setdefault(field, parent.get(field))
-    dependencies = target_dependencies(plan, target_id)
-    construction_blockers = [f"blocked_construction:{identifier}" for identifier in dependencies | {target_id}
-                             if records[identifier].get("construction_status") == "blocked"]
+    dependencies = verification_dependencies(plan, target_id)
+    missing_dependencies = (set(plan.get("global_assumption_ids", [])) | set().union(*(
+        dependency_ids(records[identifier], plan) for identifier in dependencies | {target_id}
+    ))) - set(records)
+    construction_blockers = [
+        f"dependency_not_ready:{identifier}:{records[identifier].get('dependency_health')}"
+        for identifier in dependencies | {target_id}
+        if records[identifier].get("construction_status") == "blocked"
+        or records[identifier].get("dependency_health") in {
+            "cyclic", "missing", "invalid_or_blocked", "blocked_by_dependency",
+        }
+    ]
+    construction_blockers.extend(f"missing_dependency:{identifier}" for identifier in sorted(missing_dependencies))
     if backend == "lean":
         proof_assistant = proof_assistant if isinstance(proof_assistant, Mapping) else {}
         proof_script = target.get("proof_script") or target.get("lean_proof_script")
@@ -108,11 +175,13 @@ def build_verification_task(
             "remaining_obligations": list(target.get("required_obligation_ids", [])),
             "capabilities": backend_capabilities("lean"),
             "blockers": blockers,
-            "input_snapshot": semantic_snapshot(plan, target_id),
+            "input_snapshot": snapshot,
         }
     blockers = list(construction_blockers)
     constraints = []
-    if not target.get("quantifiers") or any(item.get("quantifier") != "forall" or item.get("sort") not in {"real", "integer", "boolean"} for item in target.get("quantifiers", [])):
+    if not valid_declarations(target.get("quantifiers", [])) or (
+        not target.get("quantifiers") and expression_symbols(target.get("conclusion_expression"))
+    ):
         blockers.append("missing_or_unsupported_quantifiers")
     if target.get("domain_expression") is None:
         blockers.append("missing_domain_encoding")
@@ -147,7 +216,7 @@ def build_verification_task(
                 constraints.append(record["formal_expression"])
         elif "proposition_id" in record or "lemma_id" in record:
             evidence = next((result for result in verified_results if result.get("target_id") == identifier and result.get("result") == "passed" and result.get("evidence_kind") in {"smt_unsat", "symbolic_identity", "rule_derivation", "lean_kernel_checked"} and result.get("input_snapshot") == semantic_snapshot(plan, identifier)), None)
-            if evidence is None or any(obligation not in {result.get("target_id") for result in verified_results if result.get("result") == "passed"} for obligation in record.get("required_obligation_ids", [])):
+            if evidence is None or record.get("encoding_alignment_status") == "requires_review" or any(obligation not in {result.get("target_id") for result in verified_results if result.get("result") == "passed"} for obligation in record.get("required_obligation_ids", [])):
                 blockers.append(f"requires_verified_dependency:{identifier}")
             elif record.get("conclusion_expression") is not None:
                 instance = _lemma_instance(target, identifier)
@@ -213,13 +282,11 @@ def build_verification_task(
         if record.get("conditions") and len(record.get("conditions", [])) != len(record.get("condition_expressions", [])):
             blockers.append(f"missing_condition_encoding:{identifier}")
         constraints.extend(record.get("condition_expressions", []))
-    for diagnostic in plan.get("semantic_diagnostics", []):
-        if diagnostic.get("target_id") in dependencies | {target_id} and not diagnostic.get("resolved", False):
-            blockers.append("semantic_diagnostic_requires_review")
-    for unknown in plan.get("unknown_items", []):
-        affected = set(str(unknown.get("field_path", "")).split(".")) & (dependencies | {target_id})
-        if affected or not unknown.get("field_path") or str(unknown.get("field_path")).startswith("variables."):
-            blockers.append("unresolved_scientific_input")
+    diagnostics = scoped_diagnostics(plan, target_id)
+    if diagnostics["semantic_diagnostics"]:
+        blockers.append("semantic_diagnostic_requires_review")
+    if diagnostics["unknown_items"]:
+        blockers.append("unresolved_scientific_input")
     symbol_names = [item.get("symbol") for item in target.get("quantifiers", [])]
     if len(symbol_names) != len(set(symbol_names)):
         blockers.append("duplicate_quantified_symbol")
@@ -232,6 +299,8 @@ def build_verification_task(
         "assumptions_used": sorted(identifier for identifier in dependencies if "assumption_id" in records[identifier]),
         "candidate_points": deepcopy(target.get("candidate_points", [])),
         "candidate_ids": deepcopy(target.get("candidate_ids", [])),
+        "calculation_steps": deepcopy(target.get("calculation_steps", [])),
+        "variable_bindings": deepcopy(target.get("variable_bindings", {})),
         "remaining_obligations": list(target.get("required_obligation_ids", [])),
         "capabilities": backend_capabilities(backend) if is_registered_backend(backend) else {
             "backend": backend,
@@ -239,7 +308,7 @@ def build_verification_task(
             "verification_method": "unregistered_backend",
             "certificate": False,
         },
-        "blockers": blockers, "input_snapshot": semantic_snapshot(plan, target_id),
+        "blockers": sorted(set(blockers)), "input_snapshot": snapshot,
     }
 
 
@@ -249,19 +318,27 @@ def run_verification_task(task, *, enabled=True):
     if not enabled:
         record["limitations"] = ["Mathematical verification is disabled."]
         return record
-    if task["blockers"]:
-        record.update(result="unsupported", limitations=list(task["blockers"]))
+    blockers = _execution_blockers(task)
+    if blockers:
+        dependency_prefixes = ("undefined:", "missing_dependency:", "requires_verified_dependency:", "blocked_construction:")
+        status = "dependency_missing" if any(item.startswith(dependency_prefixes) for item in blockers) else "not_encoded"
+        record.update(result=status, limitations=blockers)
         return record
     if task["backend"] not in {"sympy", "z3", "numerical", "lean"}:
         record.update(result="unsupported", limitations=["Proof assistant backend is not configured."])
         return record
     try:
-        process = subprocess.run(
-            [sys.executable, str(Path(__file__).with_name("formal_verification_worker.py"))],
-            input=json.dumps(task, allow_nan=False), text=True, capture_output=True,
-            timeout=max(0.01, float(task["timeout_seconds"])),
-            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-        )
+        environment = {key: value for key, value in os.environ.items() if key.upper() in {
+            "PATH", "SYSTEMROOT", "WINDIR", "TEMP", "TMP", "TMPDIR", "PYTHONPATH", "LEAN_PATH",
+            "SYMPY_GROUND_TYPES", "MPMATH_NOGMPY", "LANG", "LC_ALL",
+        }}
+        with tempfile.TemporaryDirectory(prefix="formal-math-") as directory:
+            process = subprocess.run(
+                [sys.executable, str(Path(__file__).with_name("formal_verification_worker.py"))],
+                input=json.dumps(task, allow_nan=False), text=True, capture_output=True,
+                timeout=max(0.01, float(task["timeout_seconds"])), cwd=directory, env=environment,
+                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+            )
         record["executed"] = True
         if process.returncode != 0:
             record.update(result="unknown", limitations=[f"Backend exit code {process.returncode}"])
@@ -282,27 +359,43 @@ def run_verification_task(task, *, enabled=True):
     return record
 
 
-def _task_result(task, previous, enabled):
+def _task_result(task, previous, enabled, refresh_diagnostics_only=False):
     cached = next((
         record for record in previous
-        if enabled and not task["blockers"]
+        if (refresh_diagnostics_only or enabled and not _execution_blockers(task))
+        and _execution_blockers(record) == _execution_blockers(task)
         and record.get("target_id") == task["target_id"]
         and record.get("backend") == task["backend"]
-        and record.get("input_snapshot") == task["input_snapshot"]
+        and execution_snapshot(record.get("input_snapshot", {})) == execution_snapshot(task["input_snapshot"])
         and record.get("constraints") == task["constraints"]
-        and record.get("result") in {"passed", "failed"}
+        and all(record.get(field) == task.get(field) for field in (
+            "conclusion_expression", "quantifiers", "encoding_scope", "assumptions_used",
+            "candidate_points", "candidate_ids", "proof_script", "theorem_statement", "lean_imports",
+            "proof_assistant_enabled", "executable", "timeout_seconds", "capabilities",
+            "calculation_steps", "variable_bindings",
+        ))
+        and (refresh_diagnostics_only or record.get("result") in {"passed", "failed"})
     ), None)
-    result = deepcopy(cached) if cached else run_verification_task(task, enabled=enabled)
+    result = {**deepcopy(cached), **task} if cached else run_verification_task(task, enabled=enabled)
     result["reused"] = cached is not None
     return result
+
+
+def _execution_blockers(task):
+    return [blocker for blocker in task["blockers"]
+            if blocker not in {"semantic_diagnostic_requires_review", "unresolved_scientific_input"}]
 
 
 def _rule_result(plan, target_id):
     """Check AST-bearing proof steps with the bounded local rule set."""
 
     records = formal_records(plan)
-    if any(records[identifier].get("construction_status") == "blocked"
-           for identifier in target_dependencies(plan, target_id) | {target_id}):
+    if any(
+        records.get(identifier, {}).get("construction_status") == "blocked"
+        or records.get(identifier, {}).get("dependency_health") in {
+            "cyclic", "missing", "invalid_or_blocked", "blocked_by_dependency",
+        }
+           for identifier in verification_dependencies(plan, target_id) | {target_id}):
         return None
     checked = verify_target_proof(plan, target_id)
     if checked is None:
@@ -336,17 +429,22 @@ def summarize_targets(plan, results):
         current = [record for record in results if record["target_id"] == target_id and record.get("input_snapshot") == snapshot]
         remaining = sorted(set(target.get("required_obligation_ids", [])) | {record["obligation_id"] for record in plan.get("proof_obligations", []) if record.get("target_id") == target_id})
         discharged = {record["target_id"] for record in results if record.get("result") == "passed" and record.get("evidence_kind") in {"smt_unsat", "symbolic_identity", "rule_derivation", "lean_kernel_checked"} and record.get("input_snapshot") == semantic_snapshot(plan, record["target_id"])}
-        remaining = [identifier for identifier in remaining if identifier not in discharged]
-        dependencies = target_dependencies(plan, target_id)
+        remaining = [identifier for identifier in remaining if identifier not in discharged or records.get(identifier, {}).get("encoding_alignment_status") == "requires_review"]
+        dependencies = verification_dependencies(plan, target_id)
         missing = [identifier for identifier in dependencies if (
             "definition_id" in records[identifier] and records[identifier].get("definition_status") != "specified"
         ) or ("relation_id" in records[identifier] and records[identifier].get("status") == "unresolved")]
-        diagnostics = [item for item in plan.get("semantic_diagnostics", []) if item.get("target_id") in dependencies | {target_id} and not item.get("resolved", False)]
+        scoped = scoped_diagnostics(plan, target_id)
+        diagnostics = [*scoped["semantic_diagnostics"], *scoped["unknown_items"]]
         if target.get("construction_status") == "blocked":
             status = "unresolved"
+        elif target.get("encoding_alignment_status") == "requires_review":
+            status = "encoding_requires_review"
         elif missing:
             status = "blocked_by_definition"
         elif diagnostics:
+            status = "unresolved"
+        elif any(record.get("result") == "passed" and "unresolved_scientific_input" in record.get("blockers", []) for record in current):
             status = "unresolved"
         elif any(record["result"] == "failed" and record["evidence_kind"] == "smt_witness" for record in current):
             status = "refuted_in_declared_scope"
@@ -360,9 +458,10 @@ def summarize_targets(plan, results):
     return summaries
 
 
-def verify_formal_plan(plan, settings, *, previous_report=None):
+def verify_formal_plan(plan, settings, *, previous_report=None, refresh_diagnostics_only=False):
     results = []
-    previous = (previous_report or {}).get("results", [])
+    previous = expand_report(previous_report).get("results", []) if previous_report else []
+    snapshot_cache = {}
     enabled = bool(settings.get("enabled", False))
     targets = [*plan.get("proof_obligations", []), *plan.get("lemmas", []), *plan.get("propositions", [])]
     ordered = [
@@ -376,7 +475,7 @@ def verify_formal_plan(plan, settings, *, previous_report=None):
             remaining = []
             pending_ids = {identifier for identifier, _target in ordered}
             for target_id, target in ordered:
-                dependencies = target_dependencies(plan, target_id) | set(target.get("required_obligation_ids", []))
+                dependencies = verification_dependencies(plan, target_id) | set(target.get("required_obligation_ids", []))
                 if dependencies & (pending_ids - {target_id}):
                     remaining.append((target_id, target))
                 else:
@@ -400,13 +499,17 @@ def verify_formal_plan(plan, settings, *, previous_report=None):
                         settings.get("timeout_seconds", 60),
                         results,
                         proof_assistant=proof_assistant,
+                        snapshot_cache=snapshot_cache,
                     ))
-            wave_results = list(executor.map(lambda task: _task_result(task, previous, enabled), wave_tasks))
+            wave_results = list(executor.map(
+                lambda task: _task_result(task, previous, enabled, refresh_diagnostics_only), wave_tasks,
+            ))
             results.extend(wave_results)
             ordered = remaining
     summaries = summarize_targets(plan, results)
-    return {
-        "schema_version": REPORT_VERSION,
+    return compact_report({
+        "schema_version": "formal_verification_report_v1",
+        "snapshot_semantics": "scoped_v2",
         "policy": {
             "enabled": enabled,
             "experiment_execution": False,
@@ -419,15 +522,22 @@ def verify_formal_plan(plan, settings, *, previous_report=None):
             "reused_count": sum(bool(item.get("reused")) for item in results),
             "executed_count": sum(bool(item.get("executed")) for item in results),
             "unsupported_count": sum(item.get("result") == "unsupported" for item in results),
+            "not_encoded_count": sum(item.get("result") == "not_encoded" for item in results),
+            "dependency_missing_count": sum(item.get("result") == "dependency_missing" for item in results),
+            "backend_unavailable_count": sum(item.get("result") == "backend_unavailable" for item in results),
             "timeout_count": sum(item.get("result") == "timeout" for item in results),
         },
-    }
+    })
 
 
 def validate_verification_report(plan, report):
     errors = []
-    if not isinstance(report, Mapping) or report.get("schema_version") != REPORT_VERSION:
+    if not isinstance(report, Mapping):
         return ["invalid_formal_verification_report"]
+    try:
+        report = expand_report(resolve_report_reference(report))
+    except (ValueError, KeyError, TypeError, AttributeError) as error:
+        return [str(error)]
     if not isinstance(report.get("results"), list) or not isinstance(report.get("policy"), Mapping):
         return ["invalid_formal_verification_report_shape"]
     policy = report["policy"]
@@ -451,9 +561,16 @@ def validate_verification_report(plan, report):
             errors.append("verification_result_unknown_target")
             continue
         for field in ("input_snapshot", "constraints", "conclusion_expression", "quantifiers", "encoding_scope", "assumptions_used"):
-            if result.get(field) != expected[field]:
+            expected_value = expected[field]
+            if field == "input_snapshot" and report.get("snapshot_semantics", "legacy_v1") == "legacy_v1":
+                expected_value = semantic_snapshot(plan, target_id, legacy=True)
+            if result.get(field) != expected_value:
                 errors.append(f"verification_result_stale_or_mismatched:{target_id}:{field}")
-        if result.get("result") not in {"passed", "failed", "unknown", "timeout", "unsupported", "not_run"}:
+        for field in ("calculation_steps", "variable_bindings"):
+            default = [] if field == "calculation_steps" else {}
+            if result.get(field, default) != expected.get(field, default):
+                errors.append(f"verification_result_stale_or_mismatched:{target_id}:{field}")
+        if result.get("result") not in {"passed", "failed", "unknown", "timeout", "unsupported", "not_run", "not_encoded", "dependency_missing", "backend_unavailable"}:
             errors.append("invalid_verification_result_status")
         if result.get("result") in {"passed", "failed"}:
             kinds = {
@@ -465,7 +582,7 @@ def validate_verification_report(plan, report):
             }
             if result.get("evidence_kind") != kinds.get(backend, {}).get(result["result"]):
                 errors.append("verification_evidence_backend_mismatch")
-            if not policy.get("enabled") or result.get("executed") is not True or not result.get("backend_version") or expected["blockers"]:
+            if not policy.get("enabled") or result.get("executed") is not True or not result.get("backend_version") or _execution_blockers(expected):
                 errors.append("verification_success_without_valid_execution")
             if backend == "lean" and result.get("result") == "passed" and result.get("certificate") is not True:
                 errors.append("lean_success_without_kernel_certificate")
@@ -491,7 +608,7 @@ def validate_verification_report(plan, report):
                 errors.append("verification_level_backend_mismatch")
             if result.get("verification_method") is not None and result.get("verification_method") != declared.get("verification_method"):
                 errors.append("verification_method_backend_mismatch")
-        accepted.append(result)
+        accepted.append({**result, "input_snapshot": expected["input_snapshot"]})
     if not errors:
         if report.get("target_summaries") != summarize_targets(plan, accepted):
             errors.append("verification_target_summary_mismatch")

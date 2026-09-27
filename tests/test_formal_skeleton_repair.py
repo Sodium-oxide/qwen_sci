@@ -133,7 +133,7 @@ def test_failed_skeleton_repair_still_drafts_all_targets(failure):
     assert result["propositions"][0] == plan["propositions"][0]
     assert result["proof_attempts"][0] == plan["proof_attempts"][0]
     assert any(attempt["target_id"] == "P2" for attempt in result["proof_attempts"])
-    assert result["propositions"][1]["construction_status"] == "blocked"
+    assert result["propositions"][1]["construction_status"] == "needs_review"
     assert build_verification_task(result, "P2", "z3")["blockers"]
     notices = [record for record in logger.records if record["event"] == "record_warning" and record.get("field") == "target_fields"]
     assert len(notices) == 1

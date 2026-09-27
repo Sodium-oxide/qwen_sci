@@ -706,6 +706,29 @@ uv run qwensci exp_design \
 
 Use `--selected-direction` to choose an Idea direction, `--model` to override the configured model, and `--output-dir` to control where the design artifacts are written. The output includes an `experiment_design_author_<timestamp>.json` handoff for Author.
 
+Formal verification uses `formal_verification_report_v2`: results reference shared snapshots,
+record versions, and diagnostic entries. Revision history references report versions instead
+of copying each previous report. Changes to mathematical inputs invalidate the affected
+results; diagnostic changes refresh target status while retaining applicable backend evidence.
+
+Formal expressions use `formal_expression_v2`. SymPy and Z3 calculation candidates may call
+their public mathematical APIs for matrices, rank, calculus, functions, sets, bit-vectors,
+and other model objects through structured `call`/`method` nodes; the previous fixed operator
+allowlist is no longer used. The planner can ask the LLM for target-scoped quantifiers,
+bindings, calculation steps, and proof arguments. LLM proof arguments remain candidates;
+only isolated SymPy/Z3 worker results receive mathematical verification status. Existing
+scientific expressions are preserved; a replacement is stored as a backend candidate and
+marked for review. Workers enforce time, memory, filesystem, network, and child-process
+boundaries, and unresolved diagnostics are scoped to their declared targets.
+
+Each artifact set also includes `experiment_design_<timestamp>.audit.json`. It stores the
+complete verification history, original rejected operations, and raw diagnostic payloads.
+The design JSON and Author handoff carry compact summaries and a checked reference to this
+archive. Keep the archive with the artifact set when using Author. Existing inline v1
+verification reports remain readable. Markdown contains the design and verification summaries
+with links to the companion files, rather than an embedded copy of the complete JSON.
+Artifacts are streamed to temporary files and published together with rollback on failure.
+
 ### 4. Author
 
 ```bash

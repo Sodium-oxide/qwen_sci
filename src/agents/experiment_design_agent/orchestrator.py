@@ -1062,10 +1062,11 @@ class ExperimentDesignOrchestrator:
             )
             formal_reasoning_plan, formal_verification_report, formal_revision_audit = run_formal_revision_loop(
                 formal_reasoning_plan, revision_settings,
-                llm_call=self._required_reasoning_llm(reasoning_llm_call), logger=logger,
+                llm_call=self._required_reasoning_llm(reasoning_llm_call), variable_claim_model=variable_claim_model, logger=logger,
                 brief_id=brief_id, evidence_bundle=evidence_bundle, counterexample_analysis=counterexample_analysis,
             )
-            if any(item.get("status") == "revised" for item in formal_revision_audit["iterations"]):
+            if any(item.get("status") == "revised" and item.get("changes")
+                   for item in formal_revision_audit["iterations"]):
                 try:
                     counterexample_analysis = self._cached_stage_result(
                         "counterexample_analyzer",

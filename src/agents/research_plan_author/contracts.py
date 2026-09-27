@@ -136,6 +136,7 @@ AUTHOR_INPUT_SCHEMA: dict[str, Any] = {
         "formal_reasoning": _OBJECT,
         "formal_verification_report": _OBJECT,
         "formal_revision_audit": _OBJECT,
+        "formal_audit_ref": _OBJECT,
         "mathematical_verification_policy": _OBJECT,
         "counterexample_analysis": _OBJECT,
         "outcome_branches": {"type": "array"},

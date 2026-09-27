@@ -28,6 +28,19 @@ def expression_symbols(value: Any) -> set[str]:
     return set()
 
 
+def expression_variable_ids(value):
+    if isinstance(value, Mapping):
+        references = {value["variable_id"]} if value.get("op") == "variable_ref" and isinstance(value.get("variable_id"), str) else set()
+        if isinstance(value.get("variable_ref"), str):
+            references.add(value["variable_ref"])
+        for item in value.values():
+            references.update(expression_variable_ids(item))
+        return references
+    if isinstance(value, list):
+        return set().union(*(expression_variable_ids(item) for item in value)) if value else set()
+    return set()
+
+
 def symbol_reference_diagnostics(plan: Mapping[str, Any]) -> list[dict[str, Any]]:
     """Return no diagnostics for notation/catalog differences.
 
@@ -66,11 +79,12 @@ def dependency_ids(record: Mapping[str, Any], plan: Mapping[str, Any]) -> set[st
     symbols = set(record.get("symbol_references", [])) | expression_symbols(record)
     symbols.update(item.get("symbol") for item in record.get("quantifiers", []) if isinstance(item, Mapping))
     variables = set(record.get("variable_references", []))
+    encoded_variables = expression_variable_ids(record)
     references.update(
         str(definition["definition_id"])
         for definition in plan.get("definitions", [])
         if definition.get("definition_id") != record.get("definition_id")
-        and (definition.get("symbol") in symbols or (
+        and (definition.get("symbol") in symbols or encoded_variables.intersection(definition.get("variable_references", [])) or (
             plan.get("schema_version") != "formal_reasoning_plan_v2"
             and "definition_id" not in record
             and variables.intersection(definition.get("variable_references", []))
@@ -79,7 +93,7 @@ def dependency_ids(record: Mapping[str, Any], plan: Mapping[str, Any]) -> set[st
     return references
 
 
-def target_dependencies(plan: Mapping[str, Any], target_id: str) -> set[str]:
+def target_dependencies(plan: Mapping[str, Any], target_id: str, *, allow_missing=False) -> set[str]:
     records = formal_records(plan)
     if target_id not in records:
         raise ValueError(f"unknown_formal_target:{target_id}")
@@ -98,6 +112,8 @@ def target_dependencies(plan: Mapping[str, Any], target_id: str) -> set[str]:
         if identifier in visited:
             continue
         if identifier not in records:
+            if allow_missing:
+                continue
             raise ValueError(f"unknown_formal_dependency:{identifier}")
         visited.add(identifier)
         if identifier != target_id and ("lemma_id" in records[identifier] or "proposition_id" in records[identifier]):

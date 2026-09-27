@@ -73,8 +73,10 @@ with a new unique ID. Return complete target records using the corresponding fie
 list, not partial field fragments. Keep source_refs and mathematical content intact.
 previous_candidate is read-only context: do not return or rewrite accepted records.
 Return outstanding evidence_requests and unknown_items for the patch. No proof claims.
-Return only definitions whose variable_references belong to the current variable group;
-do not expand assigned_definition_ids into definitions for other groups.
+variable_references may refer to any variable_id in the global variable registry;
+including variables assigned to another group. Do not redefine another group's
+variables. Cross-group references are recorded for final global reconciliation;
+report only references that are absent from the global registry.
 """
 
 RECONCILIATION_REVIEW_PROMPT = """You are reviewing independently resolved formal definitions.
@@ -106,6 +108,7 @@ def unavailable_formal_definition_resolution(*, reason: str) -> dict[str, Any]:
             "status": "needs_human_input",
         }],
         "evidence_requests": [],
+        "variable_dependency_registry": [],
     }
 
 
@@ -836,29 +839,84 @@ def _unique_record_id(records, identifier, kind):
 
 
 def keep_group_definitions(payload, group, assigned):
-    """Retain every definition candidate; group scope is advisory only."""
-    retained = deepcopy(payload)
-    current_ids = {str(variable["variable_id"]) for variable in group}
-    for definition in retained.get("definitions", []):
-        if not isinstance(definition, Mapping):
-            continue
-        references = set(definition.get("variable_references") or [])
-        outside = references - current_ids
-        if not outside:
-            continue
-        identifier = str(definition.get("definition_id") or "?")
-        retained.setdefault("unknown_items", []).append({
-            "field_path": f"definitions.{identifier}.variable_references",
-            "record_path": f"definitions.{identifier}",
+    """Retain every definition candidate and defer variable scope checks globally."""
+    return deepcopy(payload), []
+
+
+def register_global_variable_dependencies(payload, variables, *, logger=None, brief_id=""):
+    variable_ids = {
+        str(variable.get("variable_id"))
+        for variable in variables
+        if isinstance(variable, Mapping)
+        and isinstance(variable.get("variable_id"), str)
+        and variable.get("variable_id").strip()
+    }
+    registry = []
+    missing_by_record = {}
+    for collection, identifier_field in (("definitions", "definition_id"), ("model_relations", "relation_id")):
+        for record in payload.get(collection, []):
+            if not isinstance(record, Mapping):
+                continue
+            identifier = record.get(identifier_field)
+            references = record.get("variable_references", [])
+            if not isinstance(references, list):
+                continue
+            normalized_references = list(dict.fromkeys(
+                reference for reference in references
+                if isinstance(reference, str) and reference.strip()
+            ))
+            missing = sorted(set(normalized_references) - variable_ids)
+            registry.append({
+                "collection": collection,
+                "record_id": str(identifier or ""),
+                "variable_references": normalized_references,
+                "missing_variable_ids": missing,
+                "scope": "global",
+            })
+            if missing:
+                missing_by_record[(collection, str(identifier or ""))] = missing
+    payload["variable_dependency_registry"] = registry
+    diagnostics = []
+    for (collection, identifier), missing in missing_by_record.items():
+        identifier_field = "definition_id" if collection == "definitions" else "relation_id"
+        record = next(
+            (candidate for candidate in payload.get(collection, [])
+             if isinstance(candidate, Mapping) and str(candidate.get(identifier_field) or "") == identifier),
+            None,
+        )
+        if isinstance(record, dict):
+            if collection == "definitions":
+                record["definition_status"] = "unresolved"
+                record["verification_readiness"] = "blocked"
+            else:
+                record["status"] = "unresolved"
+        diagnostic = {
+            "field_path": f"{collection}.{identifier}.variable_references",
+            "record_path": f"{collection}.{identifier}",
             "record_id": identifier,
             "field": "variable_references",
-            "error_code": "references_variables_outside_group",
-            "reason": f"{identifier}_references_variables_outside_group: {sorted(outside)}; definition retained for later reconciliation.",
-            "category": "record_validation",
+            "error_code": "unknown_variable_reference",
+            "reason": f"Unknown variable IDs after global reconciliation: {missing}.",
+            "category": "global_dependency_validation",
             "disposition": "kept_unresolved",
             "status": "needs_human_input",
-        })
-    return retained, []
+        }
+        payload.setdefault("unknown_items", []).append(diagnostic)
+        diagnostics.append(diagnostic)
+        if logger is not None:
+            logger.event(
+                "formal_definition_resolver", "global_dependency_warning", level="WARNING",
+                status="WARNING", brief_id=brief_id, record_id=identifier,
+                field_path=diagnostic["field_path"], error_code=diagnostic["error_code"],
+                error_detail=diagnostic["reason"], unknown_variable_ids=missing,
+                disposition=diagnostic["disposition"], requires_human_review=True,
+            )
+    if logger is not None:
+        logger.event(
+            "formal_definition_resolver", "global_dependency_registry", status="COMPLETED",
+            brief_id=brief_id, reference_count=len(registry), missing_variable_reference_count=len(diagnostics),
+        )
+    return registry, diagnostics
 
 
 def namespace_group_records(payload, *, id_prefix, primary_ids):
@@ -999,7 +1057,13 @@ class FormalDefinitionResolver:
         registry = [{key: variable.get(key) for key in ("variable_id", "name", "symbol", "claim_links")} for variable in variables]
         cache = ExperimentDesignCache(settings.get("checkpoint", {"enabled": False}))
         brief_id = str(research_brief.get("brief_id") or "")
-        merged = {"schema_version": DEFINITION_RESOLUTION_V1, "definitions": [], "model_relations": [], "unknown_items": []}
+        merged = {
+            "schema_version": DEFINITION_RESOLUTION_V1,
+            "definitions": [],
+            "model_relations": [],
+            "unknown_items": [],
+            "variable_dependency_registry": [],
+        }
         audit = []
         group_by_variable = {
             str(variable["variable_id"]): group_number
@@ -1399,6 +1463,23 @@ class FormalDefinitionResolver:
                     status="WARNING", brief_id=brief_id,
                     requires_human_review=True, error_code=type(error).__name__,
                     error_detail=detail,
+                )
+        try:
+            register_global_variable_dependencies(
+                merged, variables, logger=logger, brief_id=brief_id,
+            )
+        except Exception as error:
+            detail = f"{type(error).__name__}: {error}"
+            merged["unknown_items"].append({
+                "field_path": "formal_definition_resolver.global_dependencies",
+                "reason": detail,
+                "status": "needs_human_input",
+            })
+            if logger is not None:
+                logger.event(
+                    "formal_definition_resolver", "global_dependency_warning", level="WARNING",
+                    status="WARNING", brief_id=brief_id, requires_human_review=True,
+                    error_code=type(error).__name__, error_detail=detail,
                 )
         try:
             self._validate(merged, evidence_bundle)

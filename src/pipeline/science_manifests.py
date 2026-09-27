@@ -51,6 +51,20 @@ def _text(value: object) -> str:
     return str(value or "").strip()
 
 
+def _canonical_discipline_ids(values: list[object], *, label: str) -> list[str]:
+    from src.agents.experiment_design_agent.discipline_catalog import normalize_discipline_ids
+
+    identifiers = []
+    for value in values:
+        resolved = normalize_discipline_ids([value])
+        if not resolved:
+            raise ScienceManifestError(f"{label} has an unknown discipline: {value!r}")
+        for identifier in resolved:
+            if identifier not in identifiers:
+                identifiers.append(identifier)
+    return identifiers
+
+
 def _read_json(path: Path, *, label: str) -> dict[str, Any]:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
@@ -275,6 +289,8 @@ def write_experiment_design_manifest(
         "experiment_design_markdown": artifact_paths["experiment_design_markdown"],
         "author_json": artifact_paths["author_json"],
     }
+    if artifact_paths.get("formal_audit_json"):
+        artifacts["formal_audit_json"] = artifact_paths["formal_audit_json"]
     if log_path is not None and Path(log_path).is_file():
         artifacts["log"] = log_path
     attempt = Path(attempt_dir).expanduser().resolve()
@@ -293,7 +309,7 @@ def write_experiment_design_manifest(
             metadata={
                 "design_id": _text(design_id),
                 "selected_direction_id": _text(selected_direction_id),
-                "discipline_ids": [str(value).strip() for value in discipline_ids if str(value).strip()],
+                "discipline_ids": _canonical_discipline_ids(discipline_ids, label="ExperimentDesign manifest"),
                 "execution_mode": "DESIGN_ONLY",
             },
         ),
@@ -527,10 +543,13 @@ def verify_experiment_design_manifest(
     design_disciplines = _mapping(design.get("research_brief")).get("discipline_ids")
     if not isinstance(design_disciplines, list) or not design_disciplines:
         raise ScienceManifestError("ExperimentDesign JSON has no discipline_ids")
-    normalized_manifest_disciplines = [_text(value) for value in disciplines if _text(value)]
-    normalized_design_disciplines = [_text(value) for value in design_disciplines if _text(value)]
+    normalized_manifest_disciplines = _canonical_discipline_ids(disciplines, label="ExperimentDesign manifest")
+    normalized_design_disciplines = _canonical_discipline_ids(design_disciplines, label="ExperimentDesign JSON")
     if normalized_design_disciplines != normalized_manifest_disciplines:
-        raise ScienceManifestError("ExperimentDesign JSON discipline_ids differ from its manifest")
+        raise ScienceManifestError(
+            "ExperimentDesign JSON discipline_ids differ from its manifest: "
+            f"design={normalized_design_disciplines}, manifest={normalized_manifest_disciplines}"
+        )
     handoff = _read_json(author_json, label="ExperimentDesign Author handoff")
     if _text(handoff.get("schema_version")) != "research_plan_author_input_v3":
         raise ScienceManifestError("ExperimentDesign Author handoff has an unsupported schema")

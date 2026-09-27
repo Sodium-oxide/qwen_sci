@@ -915,12 +915,15 @@ experiment_design:
       parallel_workers: 3
       max_targets_per_request: 1
     revision:
-      max_evidence_cards: 8
+      max_evidence_cards: 24
       max_catalog_cards: 20
     max_semantic_revisions: 2
     verification:
       enabled: true
       backends: ["sympy", "z3"]
+      encoding:
+        enabled: true
+        max_rounds: 2
       timeout_seconds: 60
       max_parallel_tasks: 3
       proof_assistant:

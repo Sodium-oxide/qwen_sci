@@ -5,6 +5,7 @@ from copy import deepcopy
 
 from .formal_contracts import PROPOSAL_STATUSES, TARGET_FIELDS, _valid_restricted_expression
 from .formal_dependency import COLLECTION_IDS
+from .formal_expression import EXPRESSION_CONTRACT, valid_declarations
 from .formal_plan_recovery import archive_formal_record
 from .llm_json import call_required_json_with_logging, json_prompt_payload
 
@@ -23,12 +24,7 @@ def skeleton_output_contract():
     lemma["lemma_id"] = "L1"
     lemma.pop("proposition_id")
     return {"required_target_fields": list(TARGET_FIELDS), "target_examples": {"proposition": example, "lemma": lemma},
-            "expression_language": {
-                "leaves": [{"symbol": "name"}, {"number": "rational_string"}, {"bool": True}],
-                "operation": {"op": "operator", "args": ["AST", "AST"]},
-                "operators": ["add", "sub", "mul", "div", "pow", "eq", "ne", "lt", "le", "gt", "ge", "and", "or", "not"],
-                "unsupported_expression": None,
-            }}
+            "expression_language": deepcopy(EXPRESSION_CONTRACT)}
 
 
 def normalize_skeleton_target_fields(plan, *, logger=None, brief_id=""):
@@ -73,9 +69,7 @@ def skeleton_repair_targets(plan):
                     if field in record and (not isinstance(record[field], str) or not record[field].strip()):
                         issues[field] = "Scientific text is missing or malformed."
                 quantifiers = record.get("quantifiers", [])
-                if not isinstance(quantifiers, list) or any(not isinstance(item, Mapping)
-                    or not isinstance(item.get("symbol"), str) or item.get("sort") not in ("real", "integer", "boolean")
-                    or item.get("quantifier") != "forall" for item in quantifiers):
+                if not valid_declarations(quantifiers):
                     issues["quantifiers"] = "Quantifier format is unsupported."
                 obligations = record.get("required_obligation_ids", [])
                 if not isinstance(obligations, list) or not all(isinstance(item, str) for item in obligations):
@@ -85,7 +79,7 @@ def skeleton_repair_targets(plan):
                     issues["required_obligation_ids"] = "Obligation references are absent or associated with another target."
             for field in ("domain_expression", "conclusion_expression", "predicate_expression"):
                 if record.get(field) is not None and not _valid_restricted_expression(record[field]):
-                    issues[field] = "Expression must use the restricted AST or null."
+                    issues[field] = "Expression must use formal_expression_v2 or null."
             for field in ("premises", "depends_on", "assumption_ids", "symbol_references", "variable_references"):
                 references = record.get(field, [])
                 if not isinstance(references, list) or not all(isinstance(item, str) for item in references):

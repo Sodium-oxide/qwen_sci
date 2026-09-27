@@ -297,6 +297,7 @@ EXPERIMENT_DESIGN_SCHEMA: dict[str, Any] = {
         "formal_reasoning_plan": {"type": "object"},
         "formal_verification_report": {"type": "object"},
         "formal_revision_audit": {"type": "object"},
+        "formal_audit_ref": {"type": "object"},
         "mathematical_verification_policy": {"type": "object"},
         "counterexample_analysis": {"type": "object"},
         "reasoning_validation_report": {"type": "object"},

@@ -1,9 +1,11 @@
 from copy import deepcopy
 from io import StringIO
+import json
 
 from test_formal_contracts_v2 import formal_plan
 from test_experiment_design_reasoning import _brief, _counterexample_plan, _variable_claim_model
 from src.agents.experiment_design_agent.orchestrator import ExperimentDesignOrchestrator
+from src.agents.experiment_design_agent.formal_contracts import validate_formal_plan_v2
 from src.agents.experiment_design_agent.run_logging import ExperimentDesignRunLogger
 from src.agents.experiment_design_agent.artifacts import build_author_handoff, write_experiment_design_artifacts
 from src.agents.experiment_design_agent.contracts import validate_experiment_design
@@ -61,6 +63,94 @@ def test_verification_report_rejects_stale_or_forged_summary():
     assert "verification_success_without_valid_execution" in validate_verification_report(plan, forged)
     plan["propositions"][0]["conclusion_expression"]["args"][1] = {"number": "100"}
     assert any("stale_or_mismatched" in error for error in validate_verification_report(plan, report))
+
+
+def test_diagnostic_only_revision_does_not_repeat_counterexample_analysis():
+    plan = formal_plan()
+    plan["definitions"][0]["variable_references"] = []
+    counterexample_calls = 0
+
+    def callback(prompt, **_kwargs):
+        nonlocal counterexample_calls
+        if "Variable and Claim Extractor" in prompt:
+            return {"schema_version": "variable_claim_model_v1", "status": "complete_or_requires_input",
+                    "variables": [], "claims": [], "unknown_items": []}
+        if "Formal Definition Resolver" in prompt:
+            return {"schema_version": "formal_definition_resolution_v1",
+                    "definitions": deepcopy(plan["definitions"]), "model_relations": [], "unknown_items": []}
+        if "Formal Reasoning Planner v2" in prompt:
+            return deepcopy(plan)
+        if "Counterexample Analyzer" in prompt:
+            counterexample_calls += 1
+            return _counterexample_plan()
+        if "Formal Scientific Revision Planner" in prompt:
+            return {"schema_version": "formal_revision_patch_v1", "reason": "Record the remaining scope question",
+                    "unknown_items": [{"record_id": "P1", "target_id": "P1", "field_path": "propositions.P1.scope",
+                                       "reason": "Clarify the declared scope", "status": "needs_human_input"}]}
+        return {"open_design_questions": []}
+
+    orchestrator = ExperimentDesignOrchestrator(
+        llm_call=callback,
+        config={"experiment_design": {"formal_reasoning": {
+            "enabled": True, "definition_resolution": True, "max_semantic_revisions": 1,
+            "verification": {"enabled": False},
+        }}},
+    )
+
+    logger = ExperimentDesignRunLogger("diagnostic-only-revision", console_stream=StringIO())
+    design = orchestrator.compose_design(_brief(), logger=logger)
+
+    assert counterexample_calls == 1
+    assert design["formal_revision_audit"]["iterations"][0]["status"] == "diagnostics_updated"
+    assert design["formal_reasoning_plan"]["unknown_items"][0]["record_id"] == "P1"
+    completion = next(item for item in logger.records if item["stage"] == "formal_semantic_revision"
+                      and item["event"] == "completed")
+    assert completion["change_count"] == 0
+    assert completion["result_status"] == "diagnostics_updated"
+
+
+def test_orchestrator_retains_valid_revision_when_another_record_invents_variable():
+    plan = formal_plan()
+    plan["definitions"][0]["variable_references"] = []
+
+    def callback(prompt, **_kwargs):
+        if "Variable and Claim Extractor" in prompt:
+            return {"schema_version": "variable_claim_model_v1", "status": "complete_or_requires_input",
+                    "variables": [], "claims": [], "unknown_items": []}
+        if "Formal Definition Resolver" in prompt:
+            return {"schema_version": "formal_definition_resolution_v1",
+                    "definitions": deepcopy(plan["definitions"]), "model_relations": [], "unknown_items": []}
+        if "Formal Reasoning Planner v2" in prompt:
+            return deepcopy(plan)
+        if "Counterexample Analyzer" in prompt:
+            return _counterexample_plan()
+        if "Formal Scientific Revision Planner" in prompt:
+            request = json.loads(prompt.split("INPUT_JSON:\n", 1)[1])
+            assumption = deepcopy(request["plan"]["assumptions"][0])
+            assumption["variable_references"] = ["V16"]
+            definition = deepcopy(request["plan"]["definitions"][0])
+            definition["selection_reason"] = "Clarify the registered definition"
+            return {"schema_version": "formal_revision_patch_v1", "reason": "Clarify the definition",
+                    "replacements": [{"collection": "assumptions", "record": assumption},
+                                     {"collection": "definitions", "record": definition}]}
+        return {"open_design_questions": []}
+
+    logger = ExperimentDesignRunLogger("unknown-variable-orchestration", console_stream=StringIO())
+    design = ExperimentDesignOrchestrator(
+        llm_call=callback,
+        config={"experiment_design": {"formal_reasoning": {
+            "enabled": True, "definition_resolution": True, "max_semantic_revisions": 1,
+            "verification": {"enabled": False},
+        }}},
+    ).compose_design(_brief(), logger=logger)
+
+    assert design["formal_reasoning_plan"]["definitions"][0]["selection_reason"] == "Clarify the registered definition"
+    assert design["formal_reasoning_plan"]["assumptions"][0] == plan["assumptions"][0]
+    assert validate_formal_plan_v2(design["formal_reasoning_plan"], design["variable_claim_model"]) == []
+    assert validate_experiment_design(design) == []
+    warning = next(record for record in logger.records if record.get("error_code") == "unknown_variable_reference")
+    assert warning["record_id"] == "A1"
+    assert warning["field_path"] == "assumptions.A1.variable_references"
 
 
 def test_definition_resolution_warning_does_not_skip_formal_plan():

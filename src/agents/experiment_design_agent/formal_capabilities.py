@@ -31,11 +31,8 @@ _BACKENDS: dict[str, dict[str, Any]] = {
         "supports": {
             "sorts": ["real", "integer", "boolean"],
             "quantifiers": ["forall"],
-            "operators": [
-                "add", "sub", "mul", "div", "pow", "eq", "ne", "lt",
-                "le", "gt", "ge", "and", "or", "not", "implies", "iff",
-                "xor", "ite",
-            ],
+            "operators": "public_mathematical_backend_api",
+            "expression_language": "formal_expression_v2",
         },
     },
     "sympy": {
@@ -46,11 +43,8 @@ _BACKENDS: dict[str, dict[str, Any]] = {
         "supports": {
             "sorts": ["real", "integer"],
             "quantifiers": ["forall"],
-            "operators": [
-                "add", "sub", "mul", "div", "pow", "eq", "ne", "lt",
-                "le", "gt", "ge", "and", "or", "not", "implies", "iff",
-                "xor", "ite",
-            ],
+            "operators": "public_mathematical_backend_api",
+            "expression_language": "formal_expression_v2",
         },
     },
     "numerical": {
@@ -61,11 +55,8 @@ _BACKENDS: dict[str, dict[str, Any]] = {
         "supports": {
             "sorts": ["real", "integer"],
             "quantifiers": ["forall"],
-            "operators": [
-                "add", "sub", "mul", "div", "pow", "eq", "ne", "lt",
-                "le", "gt", "ge", "and", "or", "not", "implies", "iff",
-                "xor", "ite",
-            ],
+            "operators": "public_mathematical_backend_api",
+            "expression_language": "formal_expression_v2",
         },
     },
     "rules": {
@@ -76,11 +67,8 @@ _BACKENDS: dict[str, dict[str, Any]] = {
         "supports": {
             "sorts": ["real", "integer", "boolean"],
             "quantifiers": ["forall"],
-            "operators": [
-                "add", "sub", "mul", "div", "pow", "eq", "ne", "lt",
-                "le", "gt", "ge", "and", "or", "not", "implies", "iff",
-                "xor", "ite",
-            ],
+            "operators": "public_mathematical_backend_api",
+            "expression_language": "formal_expression_v2",
         },
     },
     "lean": {

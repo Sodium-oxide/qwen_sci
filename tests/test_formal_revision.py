@@ -149,6 +149,28 @@ def test_jointly_dependent_addition_and_replacement_are_accepted():
     assert validate_formal_plan_v2(current) == []
 
 
+def test_definition_warnings_only_include_their_own_errors():
+    plan = formal_plan()
+    additions = []
+    for identifier, symbol in (("D2", "y"), ("D3", "z")):
+        definition = deepcopy(plan["definitions"][0])
+        definition.update(definition_id=identifier, symbol=symbol, variable_references=[])
+        definition.pop("domain")
+        additions.append(replacement("definitions", definition))
+    assumption = deepcopy(plan["assumptions"][0])
+    assumption["statement"] = "An independently refined premise"
+    current, audit = apply_semantic_revision(
+        plan, patch(additions=additions, replacements=[replacement("assumptions", assumption)]), {"A1"},
+    )
+    assert current["assumptions"][0] == assumption
+    assert current["definitions"] == plan["definitions"]
+    assert len(audit["rejected_operations"]) == 2
+    for warning in audit["rejected_operations"]:
+        identifier = warning["record_id"]
+        assert warning["field_path"] == f"definitions.{identifier}"
+        assert all(error.startswith(identifier + "_") for error in warning["reason"].split("; "))
+
+
 def test_discarded_addition_does_not_leave_dangling_references():
     plan = formal_plan()
     definition = deepcopy(plan["definitions"][0])
@@ -205,6 +227,103 @@ def test_unrelated_diagnostics_remain_intact():
     assert current["unknown_items"] == [unrelated, scoped]
     assert audit["warning_count"] == 1
     assert audit["rejected_operations"][0]["record_id"] == "P2"
+
+
+def test_diagnostic_only_patch_does_not_report_record_revision():
+    plan = formal_plan()
+    diagnostic = {"record_id": "P1", "target_id": "P1", "field_path": "propositions.P1.scope",
+                  "reason": "Clarify the declared scope", "status": "needs_human_input"}
+
+    current, audit = apply_semantic_revision(plan, patch(unknown_items=[diagnostic]), {"P1"})
+
+    assert current["unknown_items"] == [diagnostic]
+    assert current["revision"] == 2
+    assert audit["status"] == "diagnostics_updated"
+    assert audit["changes"] == []
+
+
+def test_unknown_variable_reference_rejects_only_affected_record():
+    plan = formal_plan()
+    assumption = deepcopy(plan["assumptions"][0])
+    assumption["variable_references"] = ["V16"]
+    definition = deepcopy(plan["definitions"][0])
+    definition["selection_reason"] = "Clarify the registered scalar's role"
+    logger = ExperimentDesignRunLogger("unknown-variable-revision", console_stream=StringIO())
+    variable_claim_model = {"variables": [{"variable_id": "V1", "name": "registered_scalar"}]}
+
+    current, audit = apply_semantic_revision(
+        plan, patch(replacements=[replacement("assumptions", assumption), replacement("definitions", definition)]),
+        {"A1", "D1"}, variable_claim_model=variable_claim_model, logger=logger,
+    )
+
+    assert current["assumptions"] == plan["assumptions"]
+    assert current["definitions"] == [definition]
+    assert validate_formal_plan_v2(current, variable_claim_model) == []
+    assert audit["status"] == "revised"
+    assert [item["record_id"] for item in audit["changes"]] == ["D1"]
+    assert audit["rejected_operations"][0]["error_code"] == "unknown_variable_reference"
+    assert audit["rejected_operations"][0]["field_path"] == "assumptions.A1.variable_references"
+    warning = next(record for record in logger.records if record["event"] == "operation_warning")
+    assert warning["record_id"] == "A1"
+    assert warning["field_path"] == "assumptions.A1.variable_references"
+    assert "V16" in warning["error_detail"]
+
+
+def test_revision_prompt_lists_registered_variables_and_rejects_unknown_id():
+    plan = formal_plan()
+    variable_claim_model = {"variables": [{"variable_id": "V1", "name": "registered_scalar"}]}
+
+    def callback(prompt, **_kwargs):
+        request = json.loads(prompt.split("INPUT_JSON:\n", 1)[1])
+        assert request["registered_variables"] == variable_claim_model["variables"]
+        assert "formal_expression" in request["output_contract"]["definition_required_fields"]
+        assert "verification_readiness" in request["output_contract"]["definition_required_fields"]
+        assumption = deepcopy(plan["assumptions"][0])
+        assumption["variable_references"] = ["V16"]
+        return patch(replacements=[replacement("assumptions", assumption)])
+
+    current, _report, audit = run_formal_revision_loop(
+        plan, {"verification": {"enabled": False}, "max_semantic_revisions": 1},
+        llm_call=callback, variable_claim_model=variable_claim_model,
+    )
+
+    assert current == plan
+    assert audit["iterations"][0]["status"] == "no_progress"
+    assert audit["iterations"][0]["rejected_operations"][0]["record_id"] == "A1"
+    assert validate_formal_plan_v2(current, variable_claim_model) == []
+
+
+def test_existing_unknown_variable_reference_keeps_records_and_allows_revision():
+    plan = formal_plan()
+    plan["assumptions"][0]["variable_references"] = ["V16"]
+    plan["definitions"][0]["variable_references"] = ["V1", "V16"]
+    variable_claim_model = {"variables": [{"variable_id": "V1"}]}
+    definition = deepcopy(plan["definitions"][0])
+    definition["variable_references"] = ["V1"]
+    definition["selection_reason"] = "Clarify the registered scalar"
+    logger = ExperimentDesignRunLogger("existing-unknown-variable", console_stream=StringIO())
+
+    def callback(_prompt, **_kwargs):
+        return patch(replacements=[replacement("definitions", definition)])
+
+    current, report, audit = run_formal_revision_loop(
+        plan, {"verification": {"enabled": False}, "max_semantic_revisions": 1},
+        llm_call=callback, variable_claim_model=variable_claim_model, logger=logger,
+    )
+
+    assert current["assumptions"][0]["variable_references"] == []
+    assert current["definitions"][0]["variable_references"] == ["V1"]
+    assert current["definitions"][0]["selection_reason"] == "Clarify the registered scalar"
+    assert len(current["definitions"]) == len(plan["definitions"])
+    assert current["revision"] == 3
+    assert audit["iterations"][0]["status"] == "revised"
+    assert audit["iterations"][0]["validation_errors"] == ["D1_unknown_variable:V16", "A1_unknown_variable:V16"]
+    assert audit["iterations"][1]["status"] == "revised"
+    assert {item["record_id"] for item in audit["iterations"][0]["changes"]} == {"A1", "D1"}
+    assert {item["record_id"] for item in current["unknown_items"]} == {"A1", "D1"}
+    assert {item["record_id"] for item in logger.records if item["event"] == "record_warning"} == {"A1", "D1"}
+    assert report["target_summaries"]
+    assert validate_formal_plan_v2(current, variable_claim_model) == []
 
 
 def test_loop_reports_partial_success_as_warning():

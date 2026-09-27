@@ -1,6 +1,7 @@
 """Preserve formal construction drafts while isolating invalid computational records."""
 
 from collections.abc import Mapping
+from .formal_expression import valid_declarations
 from copy import deepcopy
 import json
 
@@ -45,14 +46,26 @@ def construction_warning(plan, identifier, field, reason, *, logger=None, brief_
     plan["status"] = "requires_human_review"
 
 
-def _block_record(plan, record, identifier, field, reason, *, logger=None, brief_id=""):
-    if record.get("construction_status") != "blocked":
-        archive_formal_record(plan, f"records.{identifier}", record, reason)
-    record["construction_status"] = "blocked"
-    if "definition_id" in record:
-        record.update(definition_status="unresolved", verification_readiness="blocked")
-    else:
+def _mark_dependency_review(record, health, *, definition=False):
+    """Keep the scientific draft while separating dependency health from validity."""
+    if not isinstance(record, dict):
+        return
+    record["construction_status"] = "needs_review"
+    record["dependency_health"] = health
+    if definition:
+        if record.get("definition_status") not in {"specified", "unresolved"}:
+            record["definition_status"] = "unresolved"
+        if record.get("verification_readiness") == "encoded":
+            record["verification_readiness"] = "requires_encoding"
+    elif "status" in record:
         record["status"] = "unresolved"
+
+
+def _block_record(plan, record, identifier, field, reason, *, logger=None, brief_id=""):
+    if isinstance(record, Mapping) and record.get("dependency_health") != "invalid_or_blocked":
+        archive_formal_record(plan, f"records.{identifier}", record, reason)
+    if isinstance(record, Mapping):
+        _mark_dependency_review(record, "invalid_or_blocked", definition="definition_id" in record)
     construction_warning(plan, identifier, field, reason, logger=logger, brief_id=brief_id)
 
 
@@ -234,9 +247,7 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
                     if field not in record:
                         record[field] = deepcopy(default)
                 quantifiers = record["quantifiers"]
-                if not isinstance(quantifiers, list) or any(not isinstance(item, Mapping)
-                        or not isinstance(item.get("symbol"), str) or item.get("sort") not in ("real", "integer", "boolean")
-                        or item.get("quantifier") != "forall" for item in quantifiers):
+                if not valid_declarations(quantifiers):
                     _block_record(plan, record, identifier, "quantifiers", "Unsupported quantifiers retained in archive.", logger=logger, brief_id=brief_id)
                     record["quantifiers"] = []
                 if not isinstance(record["required_obligation_ids"], list) or not all(isinstance(item, str) for item in record["required_obligation_ids"]):
@@ -360,12 +371,18 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
     def visit(identifier, path):
         if identifier in active:
             for member in path[path.index(identifier):]:
-                _block_record(plan, records[member], member, "depends_on", "Cyclic construction dependency.", logger=logger, brief_id=brief_id)
-                for field in ("premises", "depends_on", "assumption_ids", "symbol_references", "condition_expressions"):
-                    records[member][field] = []
-                for field in ("formal_expression", "predicate_expression", "conclusion_expression", "domain_expression"):
-                    if field in records[member]:
-                        records[member][field] = None
+                if records[member].get("dependency_health") != "cyclic":
+                    archive_formal_record(
+                        plan, f"records.{member}", records[member],
+                        "Cyclic construction dependency.",
+                    )
+                _mark_dependency_review(
+                    records[member], "cyclic", definition="definition_id" in records[member],
+                )
+                construction_warning(
+                    plan, member, "depends_on", "Cyclic construction dependency.",
+                    logger=logger, brief_id=brief_id,
+                )
             return
         if identifier in visited:
             return
@@ -379,12 +396,30 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
     for identifier in records:
         visit(identifier, [])
     errors = validate_formal_plan_v2(plan, variable_claim_model)
+    cycle_errors = [error for error in errors if error.startswith("formal_dependency_cycle:")]
+    for error in cycle_errors:
+        identifier = error.split(":", 1)[1]
+        if identifier in records:
+            if records[identifier].get("dependency_health") != "cyclic":
+                archive_formal_record(
+                    plan, f"records.{identifier}", records[identifier],
+                    "Cyclic construction dependency.",
+                )
+            _mark_dependency_review(
+                records[identifier], "cyclic", definition="definition_id" in records[identifier],
+            )
+            construction_warning(
+                plan, identifier, "depends_on", "Cyclic construction dependency.",
+                logger=logger, brief_id=brief_id,
+            )
+    errors = [error for error in errors if not error.startswith("formal_dependency_cycle:")]
     for identifier, target in targets.items():
         instance_errors = [error for error in errors if error.startswith(f"{identifier}_") and "lemma_" in error]
         if instance_errors:
             _block_record(plan, target, identifier, "lemma_instantiations", "; ".join(instance_errors), logger=logger, brief_id=brief_id)
             target["lemma_instantiations"] = []
     errors = validate_formal_plan_v2(plan, variable_claim_model)
+    errors = [error for error in errors if not error.startswith("formal_dependency_cycle:")]
     if errors:
         affected = {identifier for identifier in records if any(error.startswith(f"{identifier}_") for error in errors)}
         if not affected:
@@ -407,9 +442,28 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
             if identifier in targets:
                 dependencies.update(plan["global_assumption_ids"])
                 dependencies.update(item["assumption_id"] for item in plan["assumptions"] if item.get("is_global") is True)
-            if any(records[dependency].get("construction_status") == "blocked" for dependency in dependencies if dependency in records):
-                _block_record(plan, record, identifier, "premises", "A prerequisite construction remains blocked.", logger=logger, brief_id=brief_id)
-                changed = True
+            unhealthy = [
+                dependency for dependency in dependencies
+                if dependency in records
+                and records[dependency].get("dependency_health") in {
+                    "cyclic", "missing", "invalid_or_blocked", "blocked_by_dependency",
+                }
+            ]
+            if unhealthy:
+                if record.get("dependency_health") not in {"cyclic", "blocked_by_dependency"}:
+                    archive_formal_record(
+                        plan, f"records.{identifier}", record,
+                        f"A prerequisite construction remains unresolved: {unhealthy}.",
+                    )
+                    _mark_dependency_review(
+                        record, "blocked_by_dependency", definition="definition_id" in record,
+                    )
+                    construction_warning(
+                        plan, identifier, "premises",
+                        f"A prerequisite construction remains unresolved: {unhealthy}.",
+                        logger=logger, brief_id=brief_id,
+                    )
+                    changed = True
     for field, id_field in (("target_proposition_id", "proposition_id"), ("final_conclusion_step", "step_id")):
         identifier = plan["forward_derivation"].get(field)
         if identifier and (not isinstance(identifier, str) or identifier not in records or id_field not in records[identifier]):
@@ -427,6 +481,16 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
         if not isinstance(target_id, str) or target_id not in targets or errors:
             archive_formal_record(plan, f"proof_attempts[{index}]", attempt, "; ".join(errors) or "Target construction is blocked.")
             construction_warning(plan, target_id if isinstance(target_id, str) else f"proof_attempts[{index}]", "proof_attempts", "; ".join(errors) or "Target construction is blocked.", logger=logger, brief_id=brief_id)
+            if (
+                isinstance(attempt, Mapping)
+                and isinstance(attempt.get("steps"), list)
+                and isinstance(target_id, str)
+                and target_id in targets
+                and targets[target_id].get("dependency_health") in {
+                    "cyclic", "blocked_by_dependency",
+                }
+            ):
+                plan["proof_attempts"].append(deepcopy(dict(attempt)))
         else:
             plan["proof_attempts"].append(deepcopy(attempt))
     log_symbol_diagnostics(plan, logger=logger, brief_id=brief_id)

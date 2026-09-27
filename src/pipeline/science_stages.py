@@ -535,6 +535,7 @@ def run_experiment_design_stage(request: ExperimentDesignStageRequest) -> Scienc
                 30,
                 f"ExperimentDesign scope rejected input: {scope.get('status')}: {scope.get('reason')}",
             )
+        discipline_ids = list(scope["discipline_ids"])
         request.attempt_dir.mkdir(parents=True, exist_ok=True)
         timestamp = generate_timestamp()
         log_path = request.attempt_dir / f"experiment_design_{timestamp}.jsonl"
@@ -597,6 +598,8 @@ def run_experiment_design_stage(request: ExperimentDesignStageRequest) -> Scienc
             "author_json",
         )
     }
+    if artifacts.get("formal_audit_json"):
+        string_artifacts["formal_audit_json"] = str(artifacts["formal_audit_json"])
     try:
         manifest_path = write_experiment_design_manifest(
             attempt_dir=request.attempt_dir,

@@ -60,7 +60,7 @@ def test_ambiguous_variable_dependency_blocks_only_affected_target():
     plan["propositions"].append(affected)
     generated = recover_formal_plan(plan, VARIABLES)
     assert generated["propositions"][0] == plan["propositions"][0]
-    assert generated["propositions"][1]["construction_status"] == "blocked"
+    assert generated["propositions"][1]["construction_status"] == "needs_review"
     assert generated["proof_attempts"] == plan["proof_attempts"]
     archived = [json.loads(entry["raw_json"]) for entry in generated["construction_archive"]]
     assert any(record.get("depends_on") == ["V1"] for record in archived)
@@ -307,9 +307,28 @@ def test_ambiguous_or_cyclic_premise_blocks_affected_proof(conflict):
         duplicate["statement"] = "An incompatible definition"
         plan["definitions"].append(duplicate)
     generated = recover_formal_plan(plan, VARIABLES)
-    assert generated["propositions"][0]["construction_status"] == "blocked"
+    assert generated["propositions"][0]["construction_status"] == "needs_review"
     assert generated["construction_archive"]
     assert generated["proof_attempts"] == plan["proof_attempts"]
+    assert validate_formal_plan_v2(generated, VARIABLES) == []
+
+
+def test_cyclic_definitions_remain_intact_but_are_not_verification_ready():
+    plan = formal_plan()
+    first = plan["definitions"][0]
+    second = deepcopy(first)
+    second.update(definition_id="D2", symbol="y", variable_references=[])
+    first["depends_on"] = ["D2"]
+    second["depends_on"] = ["D1"]
+    plan["definitions"].append(second)
+    original_expressions = [first["formal_expression"], second["formal_expression"]]
+
+    generated = recover_formal_plan(plan, VARIABLES)
+
+    assert [record["formal_expression"] for record in generated["definitions"]] == original_expressions
+    assert all(record.get("dependency_health") == "cyclic" for record in generated["definitions"])
+    assert all(record.get("construction_status") == "needs_review" for record in generated["definitions"])
+    assert all(record.get("verification_readiness") != "blocked" for record in generated["definitions"])
     assert validate_formal_plan_v2(generated, VARIABLES) == []
 
 
@@ -348,7 +367,7 @@ def test_cross_artifact_validation_preserves_formal_plan(monkeypatch):
     assert generated["definitions"] == plan["definitions"]
     assert generated["propositions"][0] == plan["propositions"][0]
     assert generated["proof_attempts"] == plan["proof_attempts"]
-    assert generated["propositions"][1]["construction_status"] == "blocked"
+    assert generated["propositions"][1]["construction_status"] == "needs_review"
     assert validate_experiment_design(design) == []
     assert any(record["event"] == "records_recovered" for record in logger.records)
     assert not any(record["status"] == "DEGRADED" for record in logger.records)

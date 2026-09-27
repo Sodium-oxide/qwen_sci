@@ -4,10 +4,13 @@ from collections.abc import Mapping
 from copy import deepcopy
 import json
 
-from .formal_contracts import validate_formal_plan_v2
+from .formal_contracts import DEFINITION_FIELDS, validate_formal_plan_v2
 from .definition_evidence import bounded_formal_evidence
 from .formal_dependency import COLLECTION_IDS, dependency_ids, formal_records, target_subgraph
 from .formal_verification import semantic_snapshot, verify_formal_plan
+from .formal_storage import archive_report, execution_snapshot
+from .formal_encoding import repair_verification_encodings
+from .formal_expression import EXPRESSION_CONTRACT
 from .llm_json import call_required_json_with_logging, json_prompt_payload
 
 
@@ -31,6 +34,23 @@ weakened conclusions and new modeling conventions in reason. Do not claim proof.
 Return empty replacements/additions/proof_attempts if missing external information or no
 substantive progress is possible. Keep unsupported mathematics explicit. Use existing
 v2 record shapes and AST language, never arbitrary code or new execution commands.
+Use only variable_id values in registered_variables for variable_references.
+Definition IDs and mathematical symbols do not create new variable IDs.
+Every addition and replacement must contain the complete record, including all fields
+in output_contract.definition_required_fields for definitions. A definition is not an
+assumption: use formal_expression, definition_status and verification_readiness, not
+predicate_expression, definition_kind or a generic status as their substitutes.
+definition_status is specified or unresolved; verification_readiness is encoded,
+requires_encoding or blocked; origin is source_grounded, modeling_convention or unresolved.
+conditions, condition_expressions, depends_on, source_refs, variable_references and
+symbol_references are arrays. object_kind is primitive or derived when specified.
+Use null for missing scientific content, retain all required keys and explain the gap
+in unknown_items. Use output_contract.expression_language: symbols, numbers, booleans,
+native API calls, mathematical methods, lists and calculation step references. There
+is no fixed mathematical operator whitelist. Variable references require explicit
+variable_bindings; named predicates require definitions. Preserve their scientific
+meaning and leave genuinely missing scientific content unresolved. LLM proof arguments
+may be supplied as unverified candidates alongside executable SymPy/Z3 calculation steps.
 INPUT_JSON:
 """
 
@@ -62,7 +82,7 @@ class _RevisionRequestLogger:
         return self.logger.exception(stage, error, **{**self.context, **fields, "level": "WARNING", "status": "WARNING"})
 
 
-def apply_semantic_revision(plan, patch, allowed_ids, *, evidence_bundle=None, logger=None,
+def apply_semantic_revision(plan, patch, allowed_ids, *, variable_claim_model=None, evidence_bundle=None, logger=None,
                             brief_id="", iteration=None, target_ids=None):
     from .formal_definition_resolver import validate_source_grounding
     from .reasoning_validation import _verified_markers
@@ -73,14 +93,20 @@ def apply_semantic_revision(plan, patch, allowed_ids, *, evidence_bundle=None, l
     old_records = formal_records(plan)
     editable_targets = {identifier for identifier in allowed_ids if identifier in old_records
                         and any(field in old_records[identifier] for field in ("proposition_id", "lemma_id"))}
+    registered_variable_ids = (
+        {record["variable_id"] for record in variable_claim_model.get("variables", [])
+         if isinstance(record, Mapping) and isinstance(record.get("variable_id"), str)}
+        if isinstance(variable_claim_model, Mapping) else None
+    )
     rejected = []
     candidates = []
     seen = set()
 
-    def reject(action, index, operation, code, reason, *, collection=None, identifier=None, target_id=None):
+    def reject(action, index, operation, code, reason, *, collection=None, identifier=None, target_id=None, field_path=None):
         diagnostic = {"action": action, "operation_index": index, "collection": collection,
                       "record_id": identifier if isinstance(identifier, str) else None,
                       "target_id": target_id if isinstance(target_id, str) else None,
+                      "field_path": field_path,
                       "error_code": code, "reason": reason,
                       "raw_json": json.dumps(operation, ensure_ascii=False, sort_keys=True)}
         rejected.append(diagnostic)
@@ -89,6 +115,7 @@ def apply_semantic_revision(plan, patch, allowed_ids, *, evidence_bundle=None, l
                          brief_id=brief_id, iteration=iteration, target_ids=target_ids or [],
                          action=action, operation_index=index, collection=collection,
                          record_id=diagnostic["record_id"], target_id=diagnostic["target_id"],
+                         field_path=field_path,
                          error_code=code, error_detail=reason, disposition="ignored_and_archived")
 
     for action in ("replacements", "additions"):
@@ -132,6 +159,16 @@ def apply_semantic_revision(plan, patch, allowed_ids, *, evidence_bundle=None, l
                 reject(action, index, operation, "semantic_revision_duplicate_operation", "Only the first accepted operation for this ID is retained.",
                        collection=collection, identifier=identifier)
                 continue
+            variable_references = record.get("variable_references", [])
+            if registered_variable_ids is not None and isinstance(variable_references, list):
+                unknown_variables = sorted({reference for reference in variable_references
+                                            if isinstance(reference, str) and reference not in registered_variable_ids})
+                if unknown_variables:
+                    reject(action, index, operation, "unknown_variable_reference",
+                           f"Unknown variable IDs: {', '.join(unknown_variables)}.",
+                           collection=collection, identifier=identifier,
+                           field_path=f"{collection}.{identifier}.variable_references")
+                    continue
             try:
                 errors = _verified_markers(record) + validate_source_grounding([record], evidence_bundle)
             except (TypeError, ValueError, KeyError) as error:
@@ -210,25 +247,30 @@ def apply_semantic_revision(plan, patch, allowed_ids, *, evidence_bundle=None, l
     while True:
         revised = build(candidates)
         try:
-            errors = validate_formal_plan_v2(revised)
+            errors = validate_formal_plan_v2(revised, variable_claim_model)
         except (TypeError, ValueError, KeyError) as error:
             errors = [f"invalid_record_shape: {type(error).__name__}: {error}"]
         if not errors:
             break
         invalid_ids = set()
+        operation_errors = {}
         for item in candidates:
             names = {item["record_id"]}
             if item["collection"] == "proof_attempts":
                 steps = item["record"].get("steps", [])
                 if isinstance(steps, list):
                     names.update(step["step_id"] for step in steps if isinstance(step, Mapping) and isinstance(step.get("step_id"), str))
-            if any(error.startswith(f"{identifier}_") for error in errors for identifier in names):
+            local_errors = [error for error in errors if any(error.startswith(f"{identifier}_") for identifier in names)]
+            if local_errors:
                 invalid_ids.add(item["record_id"])
             try:
-                if set(validate_formal_plan_v2(build([item]))) & set(errors):
+                isolated_errors = set(validate_formal_plan_v2(build([item]), variable_claim_model)) & set(errors)
+                if isolated_errors:
                     invalid_ids.add(item["record_id"])
+                    local_errors.extend(error for error in errors if error in isolated_errors and error not in local_errors)
             except (TypeError, ValueError, KeyError):
                 invalid_ids.add(item["record_id"])
+            operation_errors[item["record_id"]] = local_errors
         records = formal_records(revised)
         for error in errors:
             if error.startswith("formal_dependency_cycle:"):
@@ -265,8 +307,14 @@ def apply_semantic_revision(plan, patch, allowed_ids, *, evidence_bundle=None, l
         retained = []
         for item in candidates:
             if item["record_id"] in invalid_ids:
-                reject(item["action"], item["index"], item["operation"], "invalid_semantic_revision", "; ".join(errors),
-                       collection=item["collection"], identifier=item["record_id"], target_id=item["record"].get("target_id"))
+                local_errors = operation_errors.get(item["record_id"]) or [
+                    error for error in errors if error.startswith("formal_dependency_cycle:")
+                    or error in ("definitions_missing_or_duplicate_symbol",)
+                    or error.startswith("invalid_record_shape:")
+                ] or ["Operation could not be isolated as valid in the combined revision."]
+                reject(item["action"], item["index"], item["operation"], "invalid_semantic_revision", "; ".join(local_errors),
+                       collection=item["collection"], identifier=item["record_id"], target_id=item["record"].get("target_id"),
+                       field_path=f"{item['collection']}.{item['record_id']}")
             else:
                 retained.append(item)
         candidates = retained
@@ -283,11 +331,12 @@ def apply_semantic_revision(plan, patch, allowed_ids, *, evidence_bundle=None, l
     invalidated = [identifier for identifier, record in old_records.items()
                    if any(field in record for field in ("proposition_id", "lemma_id"))
                    and semantic_snapshot(plan, identifier) != semantic_snapshot(revised, identifier)]
-    audit.update(status="revised", invalidated_targets=invalidated, revision=revised["revision"])
+    audit.update(status="revised" if changes else "diagnostics_updated",
+                 invalidated_targets=invalidated, revision=revised["revision"])
     return revised, audit
 
 
-def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id="", evidence_bundle=None, counterexample_analysis=None):
+def run_formal_revision_loop(plan, settings, *, llm_call, variable_claim_model=None, logger=None, brief_id="", evidence_bundle=None, counterexample_analysis=None):
     current = deepcopy(plan)
     analysis = counterexample_analysis or {}
     analyses = analysis.get("target_analyses") if isinstance(analysis.get("target_analyses"), list) else [analysis]
@@ -302,8 +351,20 @@ def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id=
                     target["candidate_ids"] = [candidate["counterexample_id"] for candidate in target_analysis.get("candidate_counterexamples", []) if isinstance(candidate.get("witness_assignment"), dict)]
     verification_settings = settings.get("verification", {})
     revision_settings = settings.get("revision", {}) if isinstance(settings.get("revision", {}), dict) else {}
-    evidence_card_limit = max(1, min(16, int(revision_settings.get("max_evidence_cards", 8))))
+    evidence_card_limit = max(1, min(40, int(revision_settings.get("max_evidence_cards", 24))))
+    audit = []
+    if isinstance(variable_claim_model, Mapping):
+        current, reference_audit = _remove_unknown_variable_references(
+            current, variable_claim_model, logger=logger, brief_id=brief_id,
+        )
+        if reference_audit is not None:
+            audit.append(reference_audit)
     report = verify_formal_plan(current, verification_settings)
+    report, encoding_audit = repair_verification_encodings(current, verification_settings, report,
+        llm_call=llm_call, logger=logger, brief_id=brief_id)
+    audit.extend(encoding_audit)
+    report_archive = {}
+    current_report_id = archive_report(report_archive, report)
     if logger is not None:
         logger.event(
             "formal_verification", "completed", status="COMPLETED", brief_id=brief_id,
@@ -315,7 +376,6 @@ def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id=
             timeout_count=report.get("task_summary", {}).get("timeout_count", 0),
             max_parallel_tasks=report.get("policy", {}).get("max_parallel_tasks", 1),
         )
-    audit = []
     for iteration in range(max(0, min(5, int(settings.get("max_semantic_revisions", 2))))):
         target_ids = [
             str(summary.get("target_id"))
@@ -372,6 +432,7 @@ def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id=
                     catalog_limit=max(1, min(40, int(revision_settings.get("max_catalog_cards", 20)))),
                 )
                 revision_payload = {
+                    "output_contract": {"definition_required_fields": list(DEFINITION_FIELDS), "expression_language": EXPRESSION_CONTRACT},
                     "plan": local_plan,
                     "verification_report": local_report,
                     "counterexample_analysis": local_analysis,
@@ -383,6 +444,12 @@ def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id=
                     "evidence_bundle": evidence,
                     "target_ids": batch_targets,
                 }
+                if isinstance(variable_claim_model, Mapping):
+                    revision_payload["registered_variables"] = [
+                        {key: variable[key] for key in ("variable_id", "name") if key in variable}
+                        for variable in variable_claim_model.get("variables", [])
+                        if isinstance(variable, Mapping) and isinstance(variable.get("variable_id"), str)
+                    ]
                 prompt = REVISION_PROMPT + json_prompt_payload(revision_payload)
                 if logger is not None:
                     logger.event(
@@ -397,7 +464,8 @@ def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id=
                     logger=_RevisionRequestLogger(logger, target_id, iteration + 1) if logger is not None else None,
                     brief_id=brief_id,
                 )
-                revised, record = apply_semantic_revision(current, patch, batch_affected, evidence_bundle=evidence_bundle,
+                revised, record = apply_semantic_revision(current, patch, batch_affected,
+                                                         variable_claim_model=variable_claim_model, evidence_bundle=evidence_bundle,
                                                          logger=logger, brief_id=brief_id, iteration=iteration + 1,
                                                          target_ids=batch_targets)
                 record["target_ids"] = batch_targets
@@ -413,10 +481,39 @@ def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id=
                             reason=record.get("reason", ""), result_status="no_progress", warning_count=record["warning_count"],
                         )
                     continue
-                revised_report = verify_formal_plan(revised, verification_settings, previous_report=report)
-                record["previous_verification_report"] = deepcopy(report)
+                target_records = [*current.get("propositions", []), *current.get("lemmas", []), *current.get("proof_obligations", [])]
+                verification_ids = [item.get("proposition_id", item.get("lemma_id", item.get("obligation_id")))
+                                    for item in target_records]
+                verification_changed = any(semantic_snapshot(current, identifier) != semantic_snapshot(revised, identifier)
+                                           for identifier in verification_ids)
+                mathematical_change = any(execution_snapshot(semantic_snapshot(current, identifier))
+                                          != execution_snapshot(semantic_snapshot(revised, identifier))
+                                          for identifier in verification_ids)
+                mathematical_change = mathematical_change or any(
+                    change.get("before") is None or "attempt_id" in change.get("after", {})
+                    for change in record.get("changes", [])
+                )
+                verification_changed = verification_changed or mathematical_change
+                revised_report = (verify_formal_plan(revised, verification_settings, previous_report=report,
+                                                    refresh_diagnostics_only=not mathematical_change)
+                                  if verification_changed else {**report, "target_summaries": [
+                                      {**item, "revision": revised["revision"]} for item in report["target_summaries"]]})
+                record["previous_report_ref"] = current_report_id
+                if mathematical_change:
+                    revised_report, encoding_audit = repair_verification_encodings(revised, verification_settings, revised_report,
+                        llm_call=llm_call, logger=logger, brief_id=brief_id)
+                    audit.extend(encoding_audit)
+                current_report_id = archive_report(report_archive, revised_report)
+                record["current_report_ref"] = current_report_id
+                previous_summaries = {item["target_id"]: item for item in report["target_summaries"]}
+                record["verification_changes"] = [
+                    {"target_id": item["target_id"], "before": previous_summaries.get(item["target_id"]), "after": item}
+                    for item in revised_report["target_summaries"]
+                    if {key: value for key, value in item.items() if key != "revision"}
+                    != {key: value for key, value in previous_summaries.get(item["target_id"], {}).items() if key != "revision"}
+                ]
                 current, report = revised, revised_report
-                iteration_revised = True
+                iteration_revised = iteration_revised or mathematical_change
                 audit.append(record)
                 if logger is not None:
                     logger.event(
@@ -460,4 +557,53 @@ def run_formal_revision_loop(plan, settings, *, llm_call, logger=None, brief_id=
                 timeout_count=report.get("task_summary", {}).get("timeout_count", 0),
                 max_parallel_tasks=report.get("policy", {}).get("max_parallel_tasks", 1),
             )
-    return current, report, {"schema_version": "formal_revision_audit_v1", "iterations": audit, "budget": settings.get("max_semantic_revisions", 2)}
+    if isinstance(variable_claim_model, Mapping):
+        current, reference_audit = _remove_unknown_variable_references(
+            current, variable_claim_model, logger=logger, brief_id=brief_id,
+        )
+        if reference_audit is not None:
+            audit.append(reference_audit)
+            report = verify_formal_plan(current, verification_settings, previous_report=report)
+    archive_report(report_archive, report)
+    return current, report, {"schema_version": "formal_revision_audit_v2", "iterations": audit,
+                             "budget": settings.get("max_semantic_revisions", 2), **report_archive}
+
+
+def _remove_unknown_variable_references(plan, variable_claim_model, *, logger=None, brief_id=""):
+    registered_ids = {variable["variable_id"] for variable in variable_claim_model.get("variables", [])
+                      if isinstance(variable, Mapping) and isinstance(variable.get("variable_id"), str)}
+    changes = []
+    validation_errors = []
+    for collection, id_field in COLLECTION_IDS.items():
+        for record in plan.get(collection, []):
+            references = record.get("variable_references", [])
+            if not isinstance(references, list):
+                continue
+            unknown = [reference for reference in references if isinstance(reference, str)
+                       and reference not in registered_ids]
+            if not unknown:
+                continue
+            identifier = record[id_field]
+            before = deepcopy(record)
+            record["variable_references"] = [reference for reference in references if reference not in unknown]
+            changes.append({"record_id": identifier, "before": before, "after": deepcopy(record)})
+            field_path = f"{collection}.{identifier}.variable_references"
+            validation_errors.extend(f"{identifier}_unknown_variable:{reference}" for reference in unknown)
+            diagnostic = {"record_id": identifier, "field_path": field_path,
+                          "reason": f"Unregistered variable IDs: {', '.join(sorted(set(unknown)))}",
+                          "status": "needs_human_input"}
+            if diagnostic not in plan["unknown_items"]:
+                plan["unknown_items"].append(diagnostic)
+            if logger is not None:
+                logger.event("formal_semantic_revision", "record_warning", level="WARNING", status="WARNING",
+                             brief_id=brief_id, record_id=identifier, field_path=field_path,
+                             error_code="unknown_variable_reference", error_detail=diagnostic["reason"],
+                             unknown_variable_ids=sorted(set(unknown)),
+                             disposition="removed_invalid_references_kept_record")
+    if not changes:
+        return plan, None
+    plan["revision"] += 1
+    plan["status"] = "requires_human_review"
+    return plan, {"status": "revised", "reason": "Removed unregistered variable references while retaining their records.",
+                  "changes": changes, "validation_errors": validation_errors, "warning_count": len(changes),
+                  "revision": plan["revision"]}

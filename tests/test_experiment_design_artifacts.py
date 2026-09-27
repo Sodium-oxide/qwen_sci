@@ -234,14 +234,17 @@ def test_writer_generates_three_consistent_artifacts_and_author_handoff(tmp_path
     assert paths.experiment_design_json.name == "experiment_design_20260828-004610-870347.json"
     assert paths.experiment_design_markdown.name == "experiment_design_20260828-004610-870347.md"
     assert paths.author_json.name == "experiment_design_author_20260828-004610-870347.json"
-    assert json.loads(paths.experiment_design_json.read_text(encoding="utf-8")) == design
+    published = json.loads(paths.experiment_design_json.read_text(encoding="utf-8"))
+    assert {key: value for key, value in published.items() if key != "formal_audit_ref"} == design
+    assert paths.formal_audit_json.is_file()
 
     markdown = paths.experiment_design_markdown.read_text(encoding="utf-8")
     assert "## Expected Outcome Branches" in markdown
     assert "Execution Mode: `DESIGN_ONLY`" in markdown
     assert "Observed Results: none" in markdown
-    snapshot = markdown.split("~~~json\n", 1)[1].split("\n~~~", 1)[0]
-    assert json.loads(snapshot) == design
+    assert "## Complete ExperimentDesign JSON" not in markdown
+    assert paths.experiment_design_json.name in markdown
+    assert paths.formal_audit_json.name in markdown
 
     author = json.loads(paths.author_json.read_text(encoding="utf-8"))
     assert author["schema_version"] == AUTHOR_HANDOFF_SCHEMA_VERSION

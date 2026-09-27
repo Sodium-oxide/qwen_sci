@@ -9,6 +9,7 @@ from copy import deepcopy
 from typing import Any
 
 from .formal_dependency import log_symbol_diagnostics, target_dependencies, target_subgraph
+from .formal_expression import EXPRESSION_CONTRACT
 from .formal_skeleton_repair import normalize_skeleton_target_fields, repair_skeleton_records, skeleton_output_contract
 from .llm_json import call_required_json_with_logging, json_prompt_payload, validation_summary as _validation_summary
 from .reasoning_validation import validate_formal_reasoning_plan
@@ -34,7 +35,7 @@ Every assumption has assumption_id, statement, predicate, predicate_expression (
 scope, assumption_kind (modeling_premise or hypothesis), is_global, depends_on,
 symbol_references, variable_references and status candidate_formalization.
 Every proposition or lemma has proposition_id or lemma_id, statement, premises (IDs),
-conclusion, scope, quantifiers [{symbol, sort: real|integer|boolean, quantifier: forall}],
+conclusion, scope, quantifiers [{symbol, sort, quantifier: forall|exists|parameter, declaration: optional native AST}],
 domain_expression (AST or null), conclusion_expression (AST or null),
 required_obligation_ids, symbol_references, variable_references, status candidate_formalization.
 Every proof obligation has obligation_id, target_id, target (the obligation statement),
@@ -49,10 +50,13 @@ to prove uniqueness). Put these in semantic_diagnostics with target_id and reaso
 revise the claim to a meaningful conditional identifiability question where possible.
 Unknown items have field_path, reason, status needs_human_input. Preserve unresolved
 model relations; do not delete missing equations to make a theorem easier to prove.
-AST uses {symbol: name}, {number: rational_string}, {bool: true/false}, or
-{op: add|sub|mul|div|pow|eq|ne|lt|le|gt|ge|and|or|not, args: [AST,...]}.
+AST uses formal_expression_v2: symbol, number, bool, literal, list, ref, variable_ref,
+call/args/kwargs for public SymPy/Z3 mathematical APIs, and method/object/args for
+mathematical methods. Arithmetic op aliases remain compatible. No fixed operator list.
+Use calculation_steps [{name, backend, expression, explanation}] for multi-step work.
+Provide variable_bindings for variable IDs and explicit definitions for named predicates.
 Never encode vague prose as true, omit domain conditions, or assume the conclusion.
-Leave unsupported mathematics as null with a precise proof obligation. An identity
+Leave genuinely missing scientific content as null with a precise proof obligation. An identity
 derivation can be checked symbolically; universal algebraic targets can be queried by SMT.
 INPUT_JSON:
 """
@@ -71,8 +75,9 @@ lemma must have a stable proposition_id or lemma_id and status candidate_formali
 Include EVERY field in output_contract.required_target_fields for every target, using
 output_contract.target_examples as the record shape. statement, scope and conclusion
 are explicit text; premises and required_obligation_ids are arrays of declared IDs.
-quantifiers is an array of {symbol, sort: real|integer|boolean, quantifier: forall}.
-domain_expression and conclusion_expression use the restricted AST or null. Missing
+quantifiers is an array of {symbol, sort, quantifier: forall|exists|parameter} with optional
+native declaration expressions for matrices, functions, arrays and other backend types.
+domain_expression and conclusion_expression use output_contract.expression_language or null. Missing
 encodings must be null with a precise unknown_item, while all keys remain present.
 Never put required fields only inside statement or an undocumented nested object.
 Modeling scope and premises must follow the supplied science, not the example's facts.
@@ -98,7 +103,7 @@ patches: [{collection, record_id, fields: {field_name: corrected_value}}]. Retur
 the requested records and fields in repair_targets. Keep existing IDs and all accepted
 fields unchanged. Do not regenerate the skeleton, accepted targets, proofs or definitions.
 Complete missing fields only from the original target statement and supplied scientific
-context. Follow output_contract and the restricted AST language. Premises must reference
+context. Follow output_contract and its open mathematical AST language. Premises must reference
 declared record IDs. Declare local quantified symbols explicitly with their supported
 sort, without requiring new global definitions. Symbol spelling mismatches are advisory.
 Use null for an unsupported AST and describe the scientific gap in unknown_items with
@@ -128,19 +133,24 @@ proof_attempts, derivation_steps and status. Use globally unique IDs: obligation
 must be PO_<target_id>_<n>, attempts PA_<target_id>_<n>, and steps S_<target_id>_<n>.
 Every proof step is proposed or unverified and may use only declared assumptions,
 definitions, propositions, lemmas, proof obligations, or earlier steps. When a step
-can be checked locally, include derived_expression in the restricted AST and use
+can be checked locally, include derived_expression in formal_expression_v2 and use
 one of assumption_reuse, definition_unfolding, order_weakening, transitivity,
 contradiction, or algebraic_normalization. Text-only steps remain unverified
 drafts. When reusing a verified lemma with different quantified symbols, add a
  target-level lemma_instantiations entry with lemma_id, an instantiation mapping,
- and explicit side_conditions in the restricted AST. Every quantified lemma symbol
+ and explicit side_conditions in formal_expression_v2. Every quantified lemma symbol
  must be mapped; do not use
 the target or an unresolved obligation as a proven premise. If a target is not
 tractable, return an empty proof_attempts array and a precise unknown_item. Do not
 invent definitions, equations, citations, numerical values or verification claims.
-Use null for unsupported AST expressions and preserve the exact target statement.
-construction_status blocked limits machine verification, not drafting. Preserve such
-targets, attempt only supported conditional reasoning and report their precise gaps.
+Use the full mathematical SymPy/Z3 API via call/method nodes and preserve the exact target
+statement. Native calculation steps and LLM proof candidates may be developed
+freely; no missing empirical facts, proof placeholders or verified claims may be invented.
+Definitions and targets with dependency_health=cyclic, missing, or
+blocked_by_dependency remain valid drafting context, but they are not accepted
+proof premises. Preserve their statements and expressions, reason conditionally
+when useful, and report the exact unresolved dependency. Only records listed in
+accepted_definition_ids may support a verified proof result.
 Symbol name mismatches are advisory; preserve notation and draft content.
 For targeted_repair, return only the requested failed targets. Use the supplied
 diagnostics and archived candidates to repair their records. Preserve all accepted
@@ -229,6 +239,7 @@ def _skeleton_formal_inputs(formal_inputs: Mapping[str, Any]) -> dict[str, Any]:
             for key in (
                 "definition_id", "symbol", "object_kind", "depends_on", "variable_references",
                 "definition_status", "verification_readiness",
+                "dependency_health",
             )
         }
         if record.get("verification_readiness") == "encoded":
@@ -1455,9 +1466,10 @@ class FormalReasoningPlanner:
                 return selected
 
             dependencies = {
+                "expression_contract": EXPRESSION_CONTRACT,
                 "targets": targets,
                 "assumptions": local_records("assumptions", "assumption_id"),
-                "definitions": [record for record in local_records("definitions", "definition_id") if record.get("verification_readiness") == "encoded"],
+                "definitions": local_records("definitions", "definition_id"),
                 "model_relations": local_records("model_relations", "relation_id"),
                 "proof_obligations": local_records("proof_obligations", "obligation_id"),
                 "propositions": local_records("propositions", "proposition_id"),
@@ -1488,7 +1500,18 @@ class FormalReasoningPlanner:
                                     if isinstance(item, Mapping) and (item.get("record_id") in target_ids
                                         or item.get("field_path") in {f"proof_attempts.{identifier}" for identifier in target_ids})],
                 } if repair_round else None,
-                "proof_policy": {"prove_only_from_encoded_definitions": True, "max_steps_per_target": int(planner_settings.get("max_proof_steps_per_target", 8))},
+                "proof_policy": {
+                    "prove_only_from_encoded_definitions": True,
+                    "accepted_definition_ids": sorted(
+                        record["definition_id"] for record in dependencies["definitions"]
+                        if record.get("verification_readiness") == "encoded"
+                    ),
+                    "context_only_definition_ids": sorted(
+                        record["definition_id"] for record in dependencies["definitions"]
+                        if record.get("verification_readiness") != "encoded"
+                    ),
+                    "max_steps_per_target": int(planner_settings.get("max_proof_steps_per_target", 8)),
+                },
             }
             target_prompt = FORMAL_REASONING_TARGET_PROMPT + json_prompt_payload(target_payload)
             if logger is not None:

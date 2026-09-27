@@ -11,10 +11,14 @@ import os
 from pathlib import Path
 import re
 import tempfile
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
 from typing import Any
 
 from .contracts import validate_experiment_design
+from .formal_storage import (
+    archive_report, archived_report, compact_revision_audit, externalize_raw,
+    report_summary, revision_summary, semantic_content,
+)
 
 
 ARTIFACT_SCHEMA_VERSION = "experiment_design_artifacts_v1"
@@ -37,13 +41,14 @@ class ArtifactWriteError(ArtifactError):
 
 @dataclass(frozen=True)
 class ExperimentDesignArtifactPaths:
-    """Paths for the three artifacts produced from one validated design."""
+    """Paths for design, readable summary, Author handoff, and audit archive."""
 
     timestamp: str
     collision_index: int
     experiment_design_json: Path
     experiment_design_markdown: Path
     author_json: Path
+    formal_audit_json: Path | None = None
 
     def as_dict(self) -> dict[str, Any]:
         return {
@@ -53,6 +58,7 @@ class ExperimentDesignArtifactPaths:
             "experiment_design_json": str(self.experiment_design_json),
             "experiment_design_markdown": str(self.experiment_design_markdown),
             "author_json": str(self.author_json),
+            **({"formal_audit_json": str(self.formal_audit_json)} if self.formal_audit_json else {}),
         }
 
 
@@ -455,41 +461,12 @@ def _markdown_scalar(value: object) -> str:
     return str(value).replace("\r\n", "\n").replace("\r", "\n")
 
 
-def _render_markdown_block(value: object, *, indent: int = 0) -> list[str]:
-    prefix = "  " * indent
-    if isinstance(value, dict):
-        if not value:
-            return [f"{prefix}- not provided"]
-        lines: list[str] = []
-        for key in sorted(value):
-            item = value[key]
-            label = _human_label(key)
-            if isinstance(item, (dict, list, tuple)):
-                lines.append(f"{prefix}- **{label}:**")
-                lines.extend(_render_markdown_block(item, indent=indent + 1))
-            else:
-                lines.append(f"{prefix}- **{label}:** {_markdown_scalar(item)}")
-        return lines
-    if isinstance(value, (list, tuple)):
-        if not value:
-            return [f"{prefix}- not provided"]
-        lines = []
-        for item in value:
-            if isinstance(item, (dict, list, tuple)):
-                lines.append(f"{prefix}-")
-                lines.extend(_render_markdown_block(item, indent=indent + 1))
-            else:
-                lines.append(f"{prefix}- {_markdown_scalar(item)}")
-        return lines
-    return [f"{prefix}- {_markdown_scalar(value)}"]
-
-
-def render_markdown(
+def iter_markdown(
     payload: object,
     *,
     generated_at: datetime | None = None,
     timestamp: str | None = None,
-) -> str:
+) -> Iterator[str]:
     """Render a complete design package deterministically without an LLM."""
 
     design, run_payload = _extract_design(payload)
@@ -562,9 +539,9 @@ def render_markdown(
         ("Methodology Completeness", design.get("methodology_completeness", {})),
         ("Methodology Field Statuses", design.get("field_statuses", {})),
         ("Evidence Bundle and Coverage Ledger", design.get("evidence_bundle", {})),
-        ("Formal Reasoning Plan", design.get("formal_reasoning_plan", {})),
-        ("Mathematical Verification Results", design.get("formal_verification_report", {})),
-        ("Scientific Revision History", design.get("formal_revision_audit", {})),
+        ("Formal Reasoning Plan", semantic_content(design.get("formal_reasoning_plan", {}))),
+        ("Mathematical Verification Results", report_summary(design.get("formal_verification_report", {}))),
+        ("Scientific Revision History", revision_summary(design.get("formal_revision_audit", {}))),
         ("Counterexample Analysis", design.get("counterexample_analysis", {})),
         ("Expected Outcome Branches", design.get("outcome_branches", [])),
         ("Unknown Items", _canonical_unknown_items(design)),
@@ -585,28 +562,41 @@ def render_markdown(
         f"- Evidence Status: `{_text(design.get('evidence_status')) or 'DESIGNED_NOT_EXECUTED'}`",
         "",
     ]
+    yield "\n".join(lines) + "\n"
     for heading, content in sections:
-        lines.append(f"## {heading}")
-        lines.extend(_render_markdown_block(content))
-        lines.append("")
-    lines.extend(
-        [
-            "## Complete ExperimentDesign JSON",
-            "",
-            "~~~json",
-            json.dumps(design, ensure_ascii=False, indent=2, sort_keys=True, allow_nan=False),
-            "~~~",
-            "",
-        ]
-    )
-    return "\n".join(lines)
+        yield f"## {heading}\n"
+        for line in _iter_markdown_block(content):
+            yield line + "\n"
+        yield "\n"
+    yield "## Machine-readable Data and Audit\n\n"
+    links = run_payload.get("artifact_links", {})
+    for label, filename in links.items():
+        yield f"- [{_human_label(label)}]({filename})\n"
+    if not links:
+        yield "- The complete design and audit are provided as companion JSON files.\n"
 
 
-def _json_text(payload: object) -> str:
-    return json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True, allow_nan=False) + "\n"
+def _iter_markdown_block(value, *, indent=0):
+    prefix = "  " * indent
+    if isinstance(value, (dict, list, tuple)):
+        if not value:
+            yield f"{prefix}- not provided"
+        entries = ((f"{prefix}- **{_human_label(key)}:**", value[key]) for key in sorted(value)) if isinstance(value, dict) else ((f"{prefix}-", item) for item in value)
+        for label, item in entries:
+            if isinstance(item, (dict, list, tuple)):
+                yield label
+                yield from _iter_markdown_block(item, indent=indent + 1)
+            else:
+                yield f"{label} {_markdown_scalar(item)}"
+    else:
+        yield f"{prefix}- {_markdown_scalar(value)}"
 
 
-def _write_temp_text(directory: Path, filename: str, content: str) -> Path:
+def render_markdown(payload, *, generated_at=None, timestamp=None):
+    return "".join(iter_markdown(payload, generated_at=generated_at, timestamp=timestamp))
+
+
+def _write_temp_chunks(directory, filename, chunks):
     try:
         descriptor, raw_path = tempfile.mkstemp(
             prefix=f".{filename}.",
@@ -616,7 +606,8 @@ def _write_temp_text(directory: Path, filename: str, content: str) -> Path:
         )
         temp_path = Path(raw_path)
         with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as handle:
-            handle.write(content)
+            for chunk in chunks:
+                handle.write(chunk)
             handle.flush()
             os.fsync(handle.fileno())
         return temp_path
@@ -668,11 +659,12 @@ def _candidate_paths(output_dir: Path, timestamp: str, collision_index: int) -> 
         experiment_design_json=output_dir / f"{stem}.json",
         experiment_design_markdown=output_dir / f"{stem}.md",
         author_json=output_dir / f"experiment_design_author_{timestamp}{suffix}.json",
+        formal_audit_json=output_dir / f"{stem}.audit.json",
     )
 
 
 class ExperimentDesignArtifactWriter:
-    """Validate and atomically write the three design artifacts."""
+    """Validate and publish streamed design artifacts with a shared audit archive."""
 
     def __init__(self, output_dir: str | Path) -> None:
         self.output_dir = Path(output_dir).expanduser().resolve()
@@ -695,37 +687,68 @@ class ExperimentDesignArtifactWriter:
         except OSError as exc:
             raise ArtifactWriteError(f"Cannot create artifact directory '{self.output_dir}': {exc}") from exc
 
+        archive = {"schema_version": "formal_audit_archive_v1"}
+        has_audit = "formal_revision_audit" in design
+        audit = compact_revision_audit(design.get("formal_revision_audit", {}), archive)
+        report_id = archive_report(archive, design["formal_verification_report"]) if design.get("formal_verification_report") else None
+        design = externalize_raw({key: value for key, value in design.items()
+                                  if key not in {"formal_verification_report", "formal_revision_audit"}}, archive)
+        if report_id:
+            design["formal_verification_report"] = archived_report(archive, report_id)
+        if has_audit:
+            design["formal_revision_audit"] = audit
+        archive["revision_audit"] = audit
         author_handoff = build_author_handoff(
-            {"experiment_design": design, **run_payload},
+            {**run_payload, "experiment_design": design},
             generated_at=effective_generated_at,
             idea_result_path=idea_result_path,
         )
-        markdown = render_markdown(
-            {"experiment_design": design, **run_payload},
-            generated_at=effective_generated_at,
-            timestamp=effective_timestamp,
-        )
-        contents = {
-            "experiment_design_json": _json_text(design),
-            "experiment_design_markdown": markdown,
-            "author_json": _json_text(author_handoff),
-        }
-
         for collision_index in range(1000):
             paths = _candidate_paths(self.output_dir, effective_timestamp, collision_index)
             targets = [
                 paths.experiment_design_json,
                 paths.experiment_design_markdown,
                 paths.author_json,
+                paths.formal_audit_json,
             ]
             if any(target.exists() for target in targets):
                 continue
             temporary_paths: dict[str, Path] = {}
             published: list[Path] = []
             try:
-                for key, target in zip(contents, targets):
-                    temporary_paths[key] = _write_temp_text(self.output_dir, target.name, contents[key])
-                for key, target in zip(contents, targets):
+                encoder = json.JSONEncoder(ensure_ascii=False, indent=2, sort_keys=True, allow_nan=False)
+                audit_temp = _write_temp_chunks(self.output_dir, paths.formal_audit_json.name, encoder.iterencode(archive))
+                temporary_paths["formal_audit_json"] = audit_temp
+                digest = hashlib.sha256()
+                with audit_temp.open("rb") as stream:
+                    for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                        digest.update(chunk)
+                reference = {"path": str(paths.formal_audit_json), "sha256": digest.hexdigest()}
+                if report_id:
+                    summary = {**report_summary(archived_report(archive, report_id)),
+                               "archive_ref": {**reference, "report_id": report_id}}
+                    design["formal_verification_report"] = summary
+                    author_handoff["formal_verification_report"] = deepcopy(summary)
+                if has_audit:
+                    design["formal_revision_audit"] = {**revision_summary(audit), "archive_ref": reference}
+                    author_handoff["formal_revision_audit"] = deepcopy(design["formal_revision_audit"])
+                design["formal_audit_ref"] = reference
+                author_handoff["formal_audit_ref"] = reference
+                contents = {
+                    "experiment_design_json": encoder.iterencode(design),
+                    "author_json": encoder.iterencode(author_handoff),
+                    "experiment_design_markdown": iter_markdown(
+                        {"experiment_design": design, "artifact_links": {
+                            "complete_design": paths.experiment_design_json.name,
+                            "verification_and_revision_audit": paths.formal_audit_json.name,
+                        }}, generated_at=effective_generated_at, timestamp=effective_timestamp,
+                    ),
+                }
+                targets_by_key = {key: getattr(paths, key) for key in (*contents, "formal_audit_json")}
+                for key, chunks in contents.items():
+                    temporary_paths[key] = _write_temp_chunks(self.output_dir, targets_by_key[key].name, chunks)
+                for key in ("formal_audit_json", *contents):
+                    target = targets_by_key[key]
                     _publish_without_overwrite(temporary_paths[key], target)
                     published.append(target)
                 return paths

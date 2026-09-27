@@ -8,6 +8,9 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from .contracts import validate_author_input
+from src.agents.experiment_design_agent.formal_storage import (
+    SUMMARY_VERSION, compact_report, resolve_archive_reference, resolve_report_reference, revision_summary, semantic_content,
+)
 
 
 class AuthorInputLoadError(ValueError):
@@ -32,9 +35,29 @@ def load_author_input_with_identity(path: str | Path) -> tuple[Path, dict[str, A
         raise AuthorInputLoadError(f"Research Plan Author input is not UTF-8 JSON: {resolved_path}: {error}") from error
     if not isinstance(payload, Mapping):
         raise AuthorInputLoadError("Research Plan Author input must contain one JSON object")
+    report = payload.get("formal_verification_report")
+    if isinstance(report, Mapping) and report.get("schema_version") == SUMMARY_VERSION:
+        try:
+            resolve_report_reference(report, base_dir=resolved_path.parent)
+            report["archive_ref"]["path"] = str((resolved_path.parent / report["archive_ref"]["path"]).resolve())
+        except (ValueError, TypeError) as error:
+            raise AuthorInputLoadError(f"Research Plan Author verification reference is invalid: {error}") from error
+    elif payload.get("formal_audit_ref"):
+        try:
+            archive = resolve_archive_reference(payload["formal_audit_ref"], base_dir=resolved_path.parent)
+            summary = payload.get("formal_revision_audit")
+            if summary and {key: value for key, value in summary.items() if key != "archive_ref"} != revision_summary(archive["revision_audit"]):
+                raise ValueError("revision_summary_mismatch")
+        except (ValueError, TypeError, KeyError) as error:
+            raise AuthorInputLoadError(f"Research Plan Author audit reference is invalid: {error}") from error
     errors = validate_author_input(payload)
     if errors:
         raise AuthorInputLoadError("Research Plan Author input validation failed: " + "; ".join(errors))
+    if isinstance(report, Mapping) and report.get("schema_version") != SUMMARY_VERSION:
+        payload["formal_verification_report"] = compact_report(report)
+    if "formal_revision_audit" in payload:
+        payload["formal_revision_audit"] = revision_summary(payload["formal_revision_audit"])
+    payload = semantic_content(payload)
     return (
         resolved_path,
         dict(payload),
