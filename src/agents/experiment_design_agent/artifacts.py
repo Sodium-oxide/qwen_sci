@@ -329,6 +329,7 @@ def _formal_reasoning_summary(plan: Mapping[str, Any]) -> dict[str, Any]:
                 if isinstance(step, Mapping) and _text(step.get("step_id"))
             ],
         },
+        "candidate_completions": deepcopy(plan.get("candidate_completions") or []),
         "unknown_items": deepcopy(plan.get("unknown_items") or []),
     }
 

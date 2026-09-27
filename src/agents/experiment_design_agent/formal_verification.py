@@ -146,6 +146,11 @@ def build_verification_task(
         }
     ]
     construction_blockers.extend(f"missing_dependency:{identifier}" for identifier in sorted(missing_dependencies))
+    construction_blockers.extend(
+        f"candidate_completion_requires_review:{identifier}"
+        for identifier in sorted(dependencies | {target_id})
+        if records[identifier].get("candidate_completion_pending") is True
+    )
     if backend == "lean":
         proof_assistant = proof_assistant if isinstance(proof_assistant, Mapping) else {}
         proof_script = target.get("proof_script") or target.get("lean_proof_script")
@@ -320,7 +325,7 @@ def run_verification_task(task, *, enabled=True):
         return record
     blockers = _execution_blockers(task)
     if blockers:
-        dependency_prefixes = ("undefined:", "missing_dependency:", "requires_verified_dependency:", "blocked_construction:")
+        dependency_prefixes = ("undefined:", "missing_dependency:", "requires_verified_dependency:", "blocked_construction:", "candidate_completion_requires_review:")
         status = "dependency_missing" if any(item.startswith(dependency_prefixes) for item in blockers) else "not_encoded"
         record.update(result=status, limitations=blockers)
         return record
@@ -395,6 +400,7 @@ def _rule_result(plan, target_id):
         or records.get(identifier, {}).get("dependency_health") in {
             "cyclic", "missing", "invalid_or_blocked", "blocked_by_dependency",
         }
+        or records.get(identifier, {}).get("candidate_completion_pending") is True
            for identifier in verification_dependencies(plan, target_id) | {target_id}):
         return None
     checked = verify_target_proof(plan, target_id)

@@ -99,6 +99,14 @@ def repair_skeleton_records(plan, context, *, settings, repair_prompt, llm_call,
     rounds = max(0, min(2, int(settings.get("max_skeleton_repairs", 1))))
     batch_size = max(1, min(8, int(settings.get("max_records_per_skeleton_repair", 4))))
     audit = plan.setdefault("skeleton_repair_audit", [])
+    candidate_completions = plan.setdefault("candidate_completions", [])
+    if not isinstance(candidate_completions, list):
+        archive_formal_record(plan, "candidate_completions", candidate_completions, "Malformed candidate completion audit.")
+        candidate_completions = plan["candidate_completions"] = []
+    unknown_items = plan.setdefault("unknown_items", [])
+    if not isinstance(unknown_items, list):
+        archive_formal_record(plan, "unknown_items", unknown_items, "Malformed unknown-item collection.")
+        unknown_items = plan["unknown_items"] = []
     if not isinstance(audit, list):
         archive_formal_record(plan, "skeleton_repair_audit", audit, "Malformed repair audit.")
         audit = plan["skeleton_repair_audit"] = []
@@ -163,15 +171,59 @@ def repair_skeleton_records(plan, context, *, settings, repair_prompt, llm_call,
                                          disposition="kept_previous_fields", blocking=False)
                     fields = {field: value for field, value in fields.items() if field not in rejected}
                     if fields and any(record.get(field) != value or field not in record for field, value in fields.items()):
+                        original_record = deepcopy(record)
                         archive_formal_record(plan, f"skeleton_repair.{key[1]}", record, "Original draft before targeted field repair.")
                         record.update(fields)
+                        candidate_fields = []
+                        for field, value in fields.items():
+                            before = deepcopy(original_record.get(field)) if field in original_record else None
+                            completion = {
+                                "collection": key[0], "record_id": key[1], "field": field,
+                                "field_path": f"{key[0]}.{key[1]}.{field}",
+                                "original_present": field in original_record,
+                                "original": before,
+                                "candidate": deepcopy(value),
+                                "before": before,
+                                "after": deepcopy(value),
+                                "status": "needs_human_input",
+                                "reason": "Model-generated completion requires human confirmation of scientific meaning.",
+                                "source": "skeleton_record_repair",
+                                "repair_round": repair_round,
+                            }
+                            candidate_completions.append(completion)
+                            candidate_fields.append(field)
+                            diagnostic = {
+                                "record_id": key[1], "field": field,
+                                "field_path": completion["field_path"],
+                                "reason": completion["reason"],
+                                "status": "needs_human_input", "category": "model_completion",
+                                "diagnostic_origin": "skeleton_record_repair",
+                            }
+                            if diagnostic not in unknown_items:
+                                unknown_items.append(diagnostic)
+                        record["candidate_completion_pending"] = True
+                        record["candidate_completion_fields"] = sorted(set(
+                            [*record.get("candidate_completion_fields", []), *candidate_fields]
+                        ))
+                        plan["status"] = "requires_human_review"
                         resolved_fields = {field for field, value in fields.items() if value not in (None, "", [])}
-                        plan["unknown_items"] = [item for item in plan["unknown_items"] if not (
+                        unknown_items[:] = [item for item in unknown_items if not (
                             isinstance(item, Mapping) and item.get("diagnostic_origin") == "skeleton_record_repair"
-                            and item.get("record_id") == key[1] and item.get("field") in resolved_fields)]
-                        entry["updated_fields"].append({"record_id": key[1], "fields": sorted(fields)})
+                            and item.get("record_id") == key[1] and item.get("field") in resolved_fields
+                            and item.get("category") != "model_completion")]
+                        entry["updated_fields"].append({"record_id": key[1], "fields": sorted(fields), "candidate_review_required": True})
+                        entry.setdefault("candidate_completions", []).extend(
+                            deepcopy(item) for item in candidate_completions
+                            if item.get("record_id") == key[1]
+                            and item.get("repair_round") == repair_round
+                            and item.get("field") in fields
+                        )
                         progress = True
-                        entry["status"] = "REPAIRED"
+                        entry["status"] = "REPAIRED_WITH_REVIEW"
+                        if logger is not None:
+                            logger.event("formal_reasoning_planner", "skeleton_candidate_completion", level="WARNING",
+                                         status="REVIEW_REQUIRED", brief_id=brief_id, record_id=key[1],
+                                         fields=sorted(fields), disposition="adopted_with_review", blocking=False)
                 for item in response.get("unknown_items", []) if isinstance(response.get("unknown_items"), list) else []:
                     if isinstance(item, Mapping) and isinstance(item.get("record_id"), str) and item["record_id"] in entry["record_ids"]:
                         key = next(key for key in allowed if key[1] == item["record_id"])
@@ -186,8 +238,8 @@ def repair_skeleton_records(plan, context, *, settings, repair_prompt, llm_call,
                                           status="needs_human_input", category="construction_warning",
                                           diagnostic_origin="skeleton_record_repair")
                         entry.setdefault("diagnostics", []).append(deepcopy(diagnostic))
-                        if diagnostic not in plan["unknown_items"]:
-                            plan["unknown_items"].append(diagnostic)
+                        if diagnostic not in unknown_items:
+                            unknown_items.append(diagnostic)
             except Exception as error:
                 entry.update(status="WARNING", reason=f"{type(error).__name__}: {error}")
                 if logger is not None:

@@ -12,7 +12,7 @@ from src.agents.experiment_design_agent.formal_reasoning_planner import FormalRe
 from src.agents.experiment_design_agent.formal_skeleton_repair import (
     normalize_skeleton_target_fields, repair_skeleton_records, skeleton_repair_targets,
 )
-from src.agents.experiment_design_agent.formal_verification import build_verification_task
+from src.agents.experiment_design_agent.formal_verification import build_verification_task, run_verification_task
 from src.agents.experiment_design_agent.run_logging import ExperimentDesignRunLogger
 
 
@@ -69,9 +69,12 @@ def test_eleven_incomplete_targets_are_repaired_then_receive_proof_drafts():
     result = FormalReasoningPlanner().plan({}, {}, VARIABLES, formal_inputs=inputs(complete), llm_call=callback)
     assert [len(batch) for batch in repair_batches] == [4, 4, 3]
     assert set(proof_targets) == {f"P{number}" for number in range(1, 12)}
-    assert result["propositions"] == complete["propositions"]
+    for actual, expected in zip(result["propositions"], complete["propositions"]):
+        assert {key: value for key, value in actual.items()
+                if key not in {"candidate_completion_pending", "candidate_completion_fields"}} == expected
     assert len(result["proof_attempts"]) == 11
-    assert result["unknown_items"] == []
+    assert len(result["candidate_completions"]) == 11 * len(MISSING_FIELDS)
+    assert all(item["status"] == "needs_human_input" for item in result["candidate_completions"])
     assert validate_formal_plan_v2(result, VARIABLES) == []
 
 
@@ -233,7 +236,9 @@ def test_repair_rounds_only_request_remaining_fields_and_clear_resolved_diagnost
     repair_skeleton_records(plan, {}, settings={"max_skeleton_repairs": 2}, repair_prompt="INPUT_JSON:\n", llm_call=callback)
     assert set(rounds[0]) == {"scope", "conclusion_expression"}
     assert set(rounds[1]) == {"conclusion_expression"}
-    assert plan["unknown_items"] == []
+    assert {item["field"] for item in plan["unknown_items"] if item.get("category") == "model_completion"} == {
+        "scope", "conclusion_expression",
+    }
     assert plan["skeleton_repair_audit"][0]["diagnostics"][0]["reason"] == "Encoding absent"
     assert skeleton_repair_targets(plan) == []
 
@@ -250,4 +255,33 @@ def test_malformed_neighbor_record_does_not_prevent_valid_field_patch():
 
     repair_skeleton_records(plan, {}, settings={}, repair_prompt="INPUT_JSON:\n", llm_call=callback)
     assert plan["propositions"][1]["scope"] == "real scalars"
-    assert plan["skeleton_repair_audit"][0]["status"] == "REPAIRED"
+    assert plan["skeleton_repair_audit"][0]["status"] == "REPAIRED_WITH_REVIEW"
+
+
+def test_candidate_completion_is_adopted_and_blocks_verification_until_review():
+    plan = formal_plan()
+    original = plan["propositions"][0].pop("domain_expression")
+
+    def callback(*_args, **_kwargs):
+        return {"schema_version": "skeleton_record_patch_v1", "patches": [
+            {"collection": "propositions", "record_id": "P1", "fields": {
+                "domain_expression": {"bool": True},
+            }},
+        ]}
+
+    repair_skeleton_records(plan, {}, settings={}, repair_prompt="INPUT_JSON:\n", llm_call=callback)
+    completion = plan["candidate_completions"][0]
+    assert plan["propositions"][0]["domain_expression"] == {"bool": True}
+    assert completion["original_present"] is False
+    assert completion["original"] is None
+    assert completion["candidate"] == {"bool": True}
+    assert completion["before"] is None
+    assert completion["after"] == {"bool": True}
+    assert completion["status"] == "needs_human_input"
+    assert plan["propositions"][0]["candidate_completion_pending"] is True
+    assert any("Original draft before targeted field repair." == item["reason"] for item in plan["construction_archive"])
+    task = build_verification_task(plan, "P1", "z3")
+    assert "candidate_completion_requires_review:P1" in task["blockers"]
+    verification = run_verification_task(task)
+    assert verification["result"] == "dependency_missing"
+    assert "candidate_completion_requires_review:P1" in verification["limitations"]
