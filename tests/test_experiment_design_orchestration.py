@@ -103,18 +103,9 @@ def test_design_fixtures_stay_in_design_only_mode(
     assert prepared["scope_gate"]["execution"]["mode"] == DESIGN_ONLY, fixture_name
     assert prepared["scope_gate"]["execution"]["execution_prohibited"] is True, fixture_name
     assert prepared["template_routing"]["primary_template"] == template_id, fixture_name
-    assert prepared["evidence_retrieval_plan"]["planning_mode"] == "QUERY_PLANNING_ONLY", fixture_name
-    assert [task["slot"] for task in prepared["evidence_retrieval_plan"]["queries"]] == [
-        "mechanism",
-        "research_object_measurability",
-        "study_design",
-        "comparison_controls",
-        "measurement_calibration",
-        "statistics_bias",
-        "boundary_conditions",
-        "risk_ethics_reproducibility",
-    ], fixture_name
-    assert prepared["evidence_retrieval_plan"]["retrieved_evidence"] == [], fixture_name
+    assert prepared["evidence_retrieval_plan"]["execution_policy"] == "SURVEY_PAPERS_ONLY", fixture_name
+    assert prepared["evidence_retrieval_plan"]["queries"] == [], fixture_name
+    assert prepared["evidence_retrieval_plan"]["reference_slots"] == ["research_object_measurability", "mechanism"], fixture_name
     assert prepared["observed_results"] == [], fixture_name
     assert prepared["completeness"]["status"] == "DRAFT_REQUIRES_INPUT", fixture_name
     assert prepared["unknown_items"], fixture_name

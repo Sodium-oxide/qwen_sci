@@ -80,15 +80,11 @@ def test_run_uses_one_preparation_plan_for_evidence_and_does_not_reprepare(
         lambda *_args, **_kwargs: brief,
     )
 
-    def plan(_brief: object, _routing: object, *, llm_call: object) -> dict[str, object]:
-        planner_calls.append(llm_call)
-        return {
-            "planning_status": "READY_FOR_RETRIEVAL",
-            "queries": [{"task_id": "EDQ1", "slot": "mechanism", "query": "interface mechanism"}],
-            "warnings": [],
-        }
-
-    monkeypatch.setattr(orchestrator.evidence_planner, "plan", plan)
+    original_prepare = orchestrator.prepare
+    def prepare(*args, **kwargs):
+        planner_calls.append(True)
+        return original_prepare(*args, **kwargs)
+    monkeypatch.setattr(orchestrator, "prepare", prepare)
 
     class EvidenceAdapter:
         def collect_and_extract(self, **kwargs: object) -> dict[str, object]:

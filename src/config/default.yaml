@@ -889,6 +889,14 @@ idea:
 # ============================================
 experiment_design:
   enabled: true
+  evidence_source: survey_retrieval
+  evidence_papers:
+    max_count: 32
+    max_graph_papers: 12
+    min_graph_relevance_score: 3
+  evidence_cards:
+    role: reference
+    variable_definition_only: true
   formal_reasoning:
     enabled: true
     definition_resolution: true
@@ -912,7 +920,6 @@ experiment_design:
       max_evidence_cards: 36
       max_catalog_cards: 40
       max_unknown_items: 30
-      max_proof_steps_per_target: 8
     counterexample:
       parallel_workers: 3
       max_targets_per_request: 1
@@ -939,10 +946,8 @@ experiment_design:
   execution:
     allow_digital_execution: false
   retrieval:
-    # Each slot has at most two concise query variants. Keep provider result
-    # pages small; the global candidate budget below bounds all subsequent LLM work.
-    max_results_per_query: 6
-    max_fulltext_papers: 15
+    # Acquire text only for selected original Survey papers; no independent discovery.
+    max_fulltext_papers: 32
     cache:
       # Immutable content-addressed snapshots plus per-run manifests. Set
       # mode=read_only for offline replay; a cache miss then degrades only the
@@ -952,10 +957,6 @@ experiment_design:
       enabled: true
       root: ".science/cache/experiment_design/v1"
       mode: "read_write"
-    paper_screening:
-      fulltext_budget: 15
-      max_candidates_before_llm: 32
-      parallel_workers: 8
     evidence_card_extraction:
       # Card extraction may use bounded LLM concurrency; full-text acquisition
       # and MinerU parsing remain serial in the collector.
@@ -963,7 +964,7 @@ experiment_design:
     fulltext:
       enabled: true
       cache_dir: "workspace/experiment_design/fulltext_cache"
-      max_papers: 15
+      max_papers: 32
       max_candidates_per_paper: 12
       max_pdf_bytes: 50000000
       timeout_seconds: 30
@@ -978,13 +979,6 @@ experiment_design:
       failure_non_pdf_ttl_seconds: 21600
       failure_access_denied_ttl_seconds: 1800
       failure_rate_limited_ttl_seconds: 900
-    openalex:
-      api_key: "${oc.env:OPENALEX_API_KEY,''}"
-      email: "${oc.env:OPENALEX_EMAIL,''}"
-      base_url: "https://api.openalex.org"
-    semantic_scholar:
-      api_key: "${api.semantic_scholar.api_key}"
-      base_url: "https://api.semanticscholar.org/graph/v1"
 
 # ============================================
 # Research Plan Author Configuration

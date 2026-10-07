@@ -437,6 +437,7 @@ def test_workflow_runs_four_services_with_exact_paths_and_identity(tmp_path) -> 
     assert isinstance(author_request, AuthorStageRequest)
     assert survey_request.attempt_dir == paths.run_dir / "survey" / "attempt-001"
     assert idea_request.survey_manifest_path == survey_request.attempt_dir / "survey_manifest.json"
+    assert design_request.survey_manifest_path == idea_request.survey_manifest_path
     assert design_request.idea_manifest_path == idea_request.attempt_dir / "idea_manifest.json"
     assert design_request.idea_result_path == idea_request.attempt_dir / "idea_result.json"
     assert author_request.author_input_path == design_request.attempt_dir / "experiment_design_author.json"

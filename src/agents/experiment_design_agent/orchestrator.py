@@ -11,7 +11,6 @@ from typing import Any
 from .cache import ExperimentDesignCache
 from .completeness import CompletenessValidator
 from .contracts import validate_experiment_design, validate_research_brief
-from .evidence_planner import EvidenceRetrievalPlanner
 from .idea_adapter import IdeaResultAdapter
 from .counterexample_analyzer import (
     CounterexampleAnalyzer,
@@ -323,7 +322,6 @@ class ExperimentDesignOrchestrator:
         self.idea_adapter = IdeaResultAdapter()
         self.scope_gate = ScopeAndSafetyGate()
         self.template_router = TemplateRouter()
-        self.evidence_planner = EvidenceRetrievalPlanner(cache=self.cache)
         self.completeness_validator = CompletenessValidator()
         self.variable_claim_extractor = VariableClaimExtractor()
         self.formal_reasoning_planner = FormalReasoningPlanner()
@@ -473,38 +471,16 @@ class ExperimentDesignOrchestrator:
             ),
         )
         cache_run_id = self.cache.begin_run(brief.get("brief_id"))
-        planning_degraded = False
-        if scope_gate["status"] == "IN_SCOPE" and not brief_errors:
-            try:
-                planner_kwargs: dict[str, Any] = {"llm_call": self._required_reasoning_llm()}
-                planner_parameters = inspect.signature(self.evidence_planner.plan).parameters
-                if "logger" in planner_parameters:
-                    planner_kwargs["logger"] = logger
-                if "cache_run_id" in planner_parameters:
-                    planner_kwargs["cache_run_id"] = cache_run_id
-                if "cache_context" in planner_parameters:
-                    planner_kwargs["cache_context"] = _llm_cache_context(self.config, self.llm_model)
-                evidence_plan = self.evidence_planner.plan(brief, template_routing, **planner_kwargs)
-            except Exception as exc:
-                planning_degraded = True
-                _record_degradation(
-                    logger,
-                    stage="evidence_retrieval_planner",
-                    brief_id=str(brief.get("brief_id") or ""),
-                    error=exc,
-                )
-                evidence_plan = self.evidence_planner.degraded_plan(
-                    brief,
-                    template_routing,
-                    reason=_degradation_reason("evidence_retrieval_planner"),
-                )
-        else:
-            evidence_plan = _blocked_evidence_plan(brief.get("brief_id"))
-        planning_degraded = planning_degraded or (
-            scope_gate["status"] == "IN_SCOPE"
-            and not brief_errors
-            and not bool(evidence_plan.get("llm_used"))
-        )
+        from .survey_paper_pool import REFERENCE_SLOTS
+        evidence_plan = {
+            "schema_version": "experiment_design_evidence_retrieval_plan_v2",
+            "brief_id": brief.get("brief_id", ""),
+            "planning_status": "READY_FOR_RETRIEVAL" if scope_gate["status"] == "IN_SCOPE" and not brief_errors else "NOT_PLANNED_BLOCKED_SCOPE",
+            "execution_policy": "SURVEY_PAPERS_ONLY",
+            "evidence_source": "survey_retrieval",
+            "queries": [], "reference_slots": list(REFERENCE_SLOTS),
+            "warnings": [], "llm_used": False,
+        }
         completeness = self.completeness_validator.assess(
             brief,
             template_routing,
@@ -512,15 +488,6 @@ class ExperimentDesignOrchestrator:
             evidence_bundle=evidence_bundle,
         )
         unknown_items = list(completeness["unknown_items"])
-        if planning_degraded:
-            unknown_items.append(
-                {
-                    "field_path": "evidence_retrieval_plan.queries",
-                    "status": "needs_human_input",
-                    "reason": _degradation_reason("evidence_retrieval_planner"),
-                    "blocks_final_design": True,
-                }
-            )
         human_review = scope_gate["risk_and_human_review"]
         methodology_detail = _mapping(scope_gate.get("methodology_detail_policy"))
         if human_review["human_review_required"]:
@@ -648,10 +615,11 @@ class ExperimentDesignOrchestrator:
         try:
             variable_claim_model = self._cached_stage_result(
                 "variable_claim_extraction",
-                {"research_brief": brief, "reasoning_context": reasoning_context},
+                {"research_brief": brief, "reasoning_context": reasoning_context, "evidence_bundle": evidence_bundle},
                 lambda: self.variable_claim_extractor.extract(
                     brief,
                     reasoning_context=reasoning_context,
+                    evidence_bundle=evidence_bundle,
                     llm_call=self._required_reasoning_llm(reasoning_llm_call),
                     logger=logger,
                     brief_id=brief_id,
@@ -1342,7 +1310,7 @@ class ExperimentDesignOrchestrator:
         survey_artifacts: Mapping[str, Any] | Sequence[Mapping[str, Any]] | None = None,
         card_llm_call: Callable[[str], object] | None = None,
         max_results_per_query: int = 10,
-        max_fulltext_papers: int = 15,
+        max_fulltext_papers: int = 32,
     ) -> dict[str, Any]:
         """Collect and extract traceable design evidence after scope and plan validation."""
 
@@ -1358,6 +1326,7 @@ class ExperimentDesignOrchestrator:
             return preparation
         adapter = survey_evidence_adapter or SurveyEvidenceAdapter.from_config(
             card_llm_call=card_llm_call or self._required_reasoning_llm(),
+            config=self.config,
         )
         evidence = adapter.collect_and_extract(
             brief_id=str(research_brief.get("brief_id") or ""),
@@ -1383,7 +1352,7 @@ class ExperimentDesignOrchestrator:
         composer_llm_call: Callable[..., object] | None = None,
         reasoning_llm_call: Callable[..., object] | None = None,
         max_results_per_query: int = 10,
-        max_fulltext_papers: int = 15,
+        max_fulltext_papers: int = 32,
         logger: ExperimentDesignRunLogger | None = None,
         _emit_run_events: bool = True,
     ) -> dict[str, Any]:
@@ -1564,7 +1533,7 @@ class ExperimentDesignOrchestrator:
         composer_llm_call: Callable[..., object] | None = None,
         reasoning_llm_call: Callable[..., object] | None = None,
         max_results_per_query: int = 10,
-        max_fulltext_papers: int = 15,
+        max_fulltext_papers: int = 32,
         logger: ExperimentDesignRunLogger | None = None,
     ) -> dict[str, Any]:
         """Run intake, one preparation pass, evidence, composition, and validation."""
@@ -1595,6 +1564,11 @@ class ExperimentDesignOrchestrator:
                     )
             if not isinstance(brief, Mapping):
                 raise ValueError("IdeaResultAdapter did not return a ResearchBrief object.")
+            if survey_artifacts is None:
+                from .survey_paper_pool import resolve_survey_source
+                survey_artifacts = resolve_survey_source(
+                    idea_result_path, _mapping(brief.get("source")).get("survey_binding"),
+                )
             if logger is None:
                 preparation = self.prepare(brief, user_constraints=user_constraints)
             else:

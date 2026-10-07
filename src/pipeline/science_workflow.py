@@ -399,6 +399,7 @@ def _stage_request(
             discipline_ids=tuple(str(value) for value in options.get("discipline_ids") or []),
             selected_direction=selected_direction,
             model=_text(_mapping(options.get("models")).get("experiment_design")) or None,
+            survey_manifest_path=survey.canonical_path,
         )
 
     design = _completed_stage(

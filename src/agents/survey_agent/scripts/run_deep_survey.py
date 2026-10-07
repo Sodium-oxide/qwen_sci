@@ -91,6 +91,9 @@ def run_pipeline(config, work_collector, database, work_analyzer, survey_generat
         force_complete_section_paper_ids=forced_complete_section_reads,
     )
     logger.info("Deep reading completed.")
+    from src.pipeline.survey_retrieval_export import publish_survey_retrieval
+
+    publish_survey_retrieval(config, work_collector, seed_paper_ids, expanded_paper_ids)
     if err_papers:
         logger.warning(f"Some papers failed to read {len(err_papers)} papers after retries")
         collected_papers = [pid for pid in collected_papers if pid not in err_papers]

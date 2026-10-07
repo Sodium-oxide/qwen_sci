@@ -4520,6 +4520,7 @@ class WorkCollector:
                 papers,
                 research_context,
             )
+            self.retrieval_candidates = list(papers)
             max_seed_papers = int(self._work_collector_setting("max_seed_paper_num", 5))
             selected_papers = self._select_lane_balanced_seed_candidates(
                 papers,

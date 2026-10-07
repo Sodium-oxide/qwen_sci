@@ -8,6 +8,7 @@ from copy import deepcopy
 from typing import Any
 
 from .formal_dependency import build_counterexample_target
+from .formal_dependency import expression_variable_ids
 from .formal_dependency import target_subgraph
 from .llm_json import call_required_json_with_logging, json_prompt_payload, validation_summary
 from .reasoning_validation import validate_counterexample_analysis
@@ -61,6 +62,83 @@ INPUT_JSON:
 """
 
 
+def _mapping_strings(value: Any) -> set[str]:
+    if isinstance(value, Mapping):
+        result: set[str] = set()
+        for item in value.values():
+            result.update(_mapping_strings(item))
+        return result
+    if isinstance(value, list):
+        result: set[str] = set()
+        for item in value:
+            result.update(_mapping_strings(item))
+        return result
+    return {value} if isinstance(value, str) else set()
+
+
+def _compact_counterexample_context(
+    research_brief: Mapping[str, Any],
+    reasoning_context: Mapping[str, Any],
+    variable_claim_model: Mapping[str, Any],
+    local_plan: Mapping[str, Any],
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """Keep only context that can affect the selected target's reverse check."""
+
+    brief_fields = (
+        "brief_id", "topic", "discipline_ids", "selected_direction", "research_object",
+        "intervention_or_transformation", "discriminating_observations", "boundary_conditions",
+        "alternative_explanations", "known_unknowns", "evidence_status", "source",
+    )
+    compact_brief = {key: deepcopy(research_brief[key]) for key in brief_fields if key in research_brief}
+    required_variables = set()
+    for collection in ("definitions", "model_relations", "assumptions", "propositions", "lemmas", "proof_obligations"):
+        for record in local_plan.get(collection, []):
+            if isinstance(record, Mapping):
+                required_variables.update(record.get("variable_references", []) or [])
+                required_variables.update(expression_variable_ids(record))
+    variables = []
+    for variable in variable_claim_model.get("variables", []) if isinstance(variable_claim_model, Mapping) else []:
+        if not isinstance(variable, Mapping):
+            continue
+        variable_id = variable.get("variable_id")
+        if variable_id in required_variables:
+            variables.append(deepcopy(variable))
+    if not variables and isinstance(variable_claim_model, Mapping):
+        variables = [deepcopy(item) for item in variable_claim_model.get("variables", [])[:8] if isinstance(item, Mapping)]
+    variable_ids = {item.get("variable_id") for item in variables if isinstance(item.get("variable_id"), str)}
+    claims = []
+    for claim in variable_claim_model.get("claims", []) if isinstance(variable_claim_model, Mapping) else []:
+        if not isinstance(claim, Mapping):
+            continue
+        links = set(claim.get("variable_references", []) or []) | set(claim.get("claim_links", []) or [])
+        if links & (required_variables | variable_ids) or any(
+            identifier in _mapping_strings(local_plan) for identifier in (claim.get("claim_id"), claim.get("id")) if identifier
+        ):
+            claims.append(deepcopy(claim))
+    compact_variables = {
+        "schema_version": variable_claim_model.get("schema_version") if isinstance(variable_claim_model, Mapping) else None,
+        "status": variable_claim_model.get("status") if isinstance(variable_claim_model, Mapping) else None,
+        "variables": variables,
+        "claims": claims,
+        "unknown_items": [
+            deepcopy(item) for item in (variable_claim_model.get("unknown_items", []) if isinstance(variable_claim_model, Mapping) else [])
+            if not isinstance(item, Mapping) or not item.get("field_path")
+            or any(identifier in str(item.get("field_path")) for identifier in required_variables | variable_ids)
+        ][:20],
+    }
+    context_fields = (
+        "schema_version", "selected_direction_id", "claim_scope", "assumptions", "falsifiers",
+        "boundary_conditions", "alternative_explanations", "formal_symbols", "source_priority",
+    )
+    compact_context = {key: deepcopy(reasoning_context[key]) for key in context_fields if key in reasoning_context}
+    compact_context["gap_records"] = [
+        deepcopy(item) for item in reasoning_context.get("gap_records", [])
+        if not isinstance(item, Mapping) or not item.get("field_path")
+        or any(identifier in str(item.get("field_path")) for identifier in required_variables | variable_ids)
+    ][:20]
+    return compact_brief, compact_context, compact_variables
+
+
 def build_counterexample_analyzer_prompt(
     research_brief: Mapping[str, Any],
     reasoning_context: Mapping[str, Any],
@@ -69,18 +147,19 @@ def build_counterexample_analyzer_prompt(
     *,
     target_id: str | None = None,
 ) -> str:
-    brief_payload = dict(research_brief)
-    brief_payload.pop("reasoning_context", None)
     selected_target_id = target_id
     if not selected_target_id:
         selected_target_id = formal_reasoning_plan.get("forward_derivation", {}).get("target_proposition_id")
     if not selected_target_id and formal_reasoning_plan.get("propositions"):
         selected_target_id = formal_reasoning_plan["propositions"][0]["proposition_id"]
     local_plan = target_subgraph(formal_reasoning_plan, str(selected_target_id)) if selected_target_id else dict(formal_reasoning_plan)
+    brief_payload, compact_context, compact_variables = _compact_counterexample_context(
+        research_brief, reasoning_context, variable_claim_model, local_plan,
+    )
     payload = {
         "research_brief": brief_payload,
-        "reasoning_context": dict(reasoning_context),
-        "variable_claim_model": dict(variable_claim_model),
+        "reasoning_context": compact_context,
+        "variable_claim_model": compact_variables,
         "formal_reasoning_plan": local_plan,
         "execution_mode": "DESIGN_ONLY",
     }

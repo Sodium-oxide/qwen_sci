@@ -92,6 +92,22 @@ def test_supplement_uses_new_cards_and_previous_candidate():
     assert result["definitions"][0]["definition_status"] == "specified"
 
 
+def test_survey_reference_cards_reach_definition_prompt_without_restricting_completion():
+    requests = []
+
+    def callback(prompt, **kwargs):
+        requests.append(input_payload(prompt))
+        return resolution()
+
+    result = FormalDefinitionResolver().resolve(
+        {}, {}, {"variables": [{"variable_id": "V1", "name": "density"}]},
+        {"usage": "variables_and_definitions", "evidence_role": "reference", "evidence_cards": [card(1)]},
+        llm_call=callback, settings={"max_supplement_rounds": 0},
+    )
+    assert requests[0]["evidence_cards"][0]["card_id"] == "EC1"
+    assert result["definitions"][0]["definition_status"] == "specified"
+
+
 def test_uncatalogued_card_reference_does_not_discard_definition():
     result = resolution()
     result["definitions"][0].update(origin="source_grounded", source_refs=[{"card_id": "EC2", "locator": "Eq 1", "quote": "spectral opacity"}])
@@ -401,6 +417,13 @@ def test_bad_supplement_preserves_previous_valid_definition(failure):
 
     def callback(prompt, **_kwargs):
         calls.append(input_payload(prompt))
+        if "candidate_catalog" in calls[-1]:
+            return {"issues": [], "merges": [{
+                "retained_id": "D1", "merged_ids": [
+                    record["definition_id"] for record in calls[-1]["candidate_catalog"]["definitions"]
+                    if record["definition_id"] != "D1"
+                ],
+            }]}
         if len(calls) == 1:
             payload = resolution()
             payload["evidence_requests"] = [{"query": "density", "reason": "Need further evidence"}]
@@ -416,14 +439,14 @@ def test_bad_supplement_preserves_previous_valid_definition(failure):
         {"evidence_cards": [card(1), card(2)]}, llm_call=callback,
         settings={"initial_cards": 1, "max_supplement_rounds": 1},
     )
-    assert len(calls) == 2
+    assert len(calls) == (2 if failure == "request_failure" else 3)
     assert result["definitions"][0]["definition_id"] == "D1"
     assert result["definitions"][0]["definition_status"] == "specified"
     if failure == "request_failure":
         assert result["unknown_items"]
     else:
         assert any("Evidence request remains unresolved" in item["reason"] for item in result["unknown_items"])
-        assert result["retrieval_audit"][-1]["ignored_patch_record_ids"] == ["D1"]
+        assert any(item.get("ignored_patch_record_ids") == ["D1"] for item in result["retrieval_audit"])
 
 
 def test_targeted_supplement_preserves_accepted_records_and_repairs_only_targets():

@@ -10,9 +10,6 @@ import time
 from src.agents.experiment_design_agent import (
     CompletenessValidator,
     EvidenceCardExtractor,
-    OpenAlexWorksClient,
-    ProviderUnavailable,
-    SemanticScholarWorksClient,
     SurveyEvidenceAdapter,
     SurveyEvidenceCollector,
     build_traceable_evidence_bundle,
@@ -79,70 +76,6 @@ class _Session:
         return self.response
 
 
-def test_openalex_client_ignores_legacy_native_field_filter() -> None:
-    session = _Session(
-        _Response(
-            200,
-            {
-                "results": [
-                    {
-                        "id": "https://api.openalex.org/works/W123",
-                        "title": "A material measurement study",
-                        "doi": "https://doi.org/10.1000/example",
-                        "publication_year": 2025,
-                        "authorships": [{"author": {"display_name": "Ada Analyst"}}],
-                        "primary_location": {
-                            "landing_page_url": "https://doi.org/10.1000/example",
-                            "source": {"display_name": "Journal of Interface Measurement"},
-                        },
-                        "abstract_inverted_index": {"Calibration": [0], "matters": [1]},
-                        "open_access": {"is_oa": False},
-                    }
-                ]
-            },
-        )
-    )
-
-    papers = OpenAlexWorksClient(session=session).search(_task(), limit=7)
-
-    assert "filter" not in session.calls[0]["params"]
-    assert session.calls[0]["params"]["per-page"] == 7
-    assert papers[0]["canonical_paper_id"] == "W123"
-    assert papers[0]["abstract"] == "Calibration matters"
-    assert papers[0]["authors"] == ["Ada Analyst"]
-    assert papers[0]["venue"] == "Journal of Interface Measurement"
-    assert papers[0]["url"] == "https://doi.org/10.1000/example"
-
-
-def test_semantic_scholar_client_preserves_bibliographic_metadata() -> None:
-    session = _Session(
-        _Response(
-            200,
-            {
-                "data": [
-                    {
-                        "paperId": "S2-123",
-                        "title": "A material measurement study",
-                        "abstract": "Calibration matters.",
-                        "year": 2025,
-                        "authors": [{"name": "Ada Analyst"}, {"name": "Blaise Builder"}],
-                        "venue": "Journal of Interface Measurement",
-                        "url": "https://example.test/paper/S2-123",
-                        "externalIds": {"DOI": "10.1000/example"},
-                    }
-                ]
-            },
-        )
-    )
-
-    papers = SemanticScholarWorksClient(session=session).search(_task(), limit=7)
-
-    assert papers[0]["authors"] == ["Ada Analyst", "Blaise Builder"]
-    assert papers[0]["venue"] == "Journal of Interface Measurement"
-    assert papers[0]["url"] == "https://doi.org/10.1000/example"
-    assert "authors" in session.calls[0]["params"]["fields"]
-
-
 def test_evidence_bundle_marks_incomplete_bibliography_for_human_completion() -> None:
     paper = _paper()
     paper.pop("authors")
@@ -160,161 +93,6 @@ def test_evidence_bundle_marks_incomplete_bibliography_for_human_completion() ->
     assert record["citation_missing_fields"] == ["authors", "venue"]
 
 
-def test_valid_openalex_empty_result_does_not_trigger_semantic_scholar() -> None:
-    class OpenAlexEmpty:
-        def search(self, query_task: Mapping[str, object], *, limit: int) -> list[dict]:
-            return []
-
-    class SemanticUnexpected:
-        def __init__(self) -> None:
-            self.called = False
-
-        def search(self, query_task: Mapping[str, object], *, limit: int) -> list[dict]:
-            self.called = True
-            return [_paper()]
-
-    semantic = SemanticUnexpected()
-    collector = SurveyEvidenceCollector(
-        openalex_client=OpenAlexEmpty(),
-        semantic_scholar_client=semantic,
-        fulltext_fetcher=lambda _: {},
-    )
-
-    collection = collector.collect(_plan(_task()), max_fulltext_papers=0)
-
-    assert semantic.called is False
-    assert collection["papers"] == []
-    assert collection["provider_runs"][0]["status"] == "EMPTY"
-
-
-def test_semantic_scholar_is_used_only_when_openalex_is_unavailable() -> None:
-    class OpenAlexUnavailable:
-        def search(self, query_task: Mapping[str, object], *, limit: int) -> list[dict]:
-            raise ProviderUnavailable("maintenance")
-
-    class SemanticFallback:
-        def __init__(self) -> None:
-            self.called = False
-
-        def search(self, query_task: Mapping[str, object], *, limit: int) -> list[dict]:
-            self.called = True
-            paper = _paper()
-            paper["providers"] = ["semantic_scholar"]
-            paper["provider_ids"] = {"semantic_scholar": "S2-paper", "openalex": "W123"}
-            return [paper]
-
-    semantic = SemanticFallback()
-    collection = SurveyEvidenceCollector(
-        openalex_client=OpenAlexUnavailable(),
-        semantic_scholar_client=semantic,
-        fulltext_fetcher=lambda _: {},
-    ).collect(_plan(_task()), max_fulltext_papers=0)
-
-    assert semantic.called is True
-    assert [run["status"] for run in collection["provider_runs"]] == ["UNAVAILABLE", "FALLBACK_SUCCESS"]
-    assert collection["provider_runs"][1]["native_field_filter_applied"] is False
-    assert collection["papers"][0]["canonical_paper_id"] == "W123"
-
-
-def test_collector_logs_openalex_query_and_traceable_result_metadata() -> None:
-    class OpenAlexPapers:
-        base_url = "https://api.openalex.test"
-
-        def search(self, query_task: Mapping[str, object], *, limit: int) -> list[dict]:
-            assert query_task["query"] == '"material interface" AND "calibration"'
-            assert limit == 3
-            return [_paper()]
-
-    logger = ExperimentDesignRunLogger(
-        "evidence-retrieval-test",
-        console_stream=StringIO(),
-    )
-    SurveyEvidenceCollector(
-        openalex_client=OpenAlexPapers(),
-        semantic_scholar_client=object(),
-        fulltext_fetcher=lambda _: {},
-    ).collect(
-        _plan(_task()),
-        max_results_per_query=3,
-        max_fulltext_papers=0,
-        logger=logger,
-    )
-
-    events = [record for record in logger.records if record["stage"] == "evidence_retrieval"]
-    assert events[0]["event"] == "openalex_query"
-    assert events[0]["status"] == "RUNNING"
-    assert events[0]["query"] == '"material interface" AND "calibration"'
-    assert events[0]["native_field_filter"] == []
-    assert events[0]["endpoint"] == "https://api.openalex.test/works"
-    assert events[1]["event"] == "openalex_results"
-    assert events[1]["status"] == "SUCCESS"
-    assert events[1]["paper_count"] == 1
-    assert events[1]["papers"] == [
-        {
-            "canonical_paper_id": "W123",
-            "title": "Calibration of an interface measurement",
-            "doi": "10.1000/example",
-            "year": "2025",
-            "content_availability": "abstract",
-            "fulltext_candidate_count": 0,
-        }
-    ]
-
-
-def test_collector_expands_bounded_variants_then_limits_llm_candidates() -> None:
-    def paper(identifier: str, *, slot: str) -> dict:
-        result = _paper()
-        result["canonical_paper_id"] = identifier
-        result["title"] = f"Paper {identifier}"
-        result["doi"] = f"10.1000/{identifier.casefold()}"
-        result["provider_ids"] = {"openalex": identifier, "doi": result["doi"]}
-        result["query_slots"] = [slot]
-        return result
-
-    class OpenAlexVariants:
-        def __init__(self) -> None:
-            self.calls: list[dict] = []
-
-        def search(self, query_task: Mapping[str, object], *, limit: int) -> list[dict]:
-            self.calls.append(dict(query_task))
-            if query_task["query_variant_id"] == "core":
-                return [paper(f"W-core-{index}", slot="mechanism") for index in range(1, 4)]
-            return [paper(f"W-method-{index}", slot="mechanism") for index in range(1, 4)]
-
-    openalex = OpenAlexVariants()
-    logger = ExperimentDesignRunLogger("bounded-retrieval-test", console_stream=StringIO())
-    collection = SurveyEvidenceCollector(
-        openalex_client=openalex,
-        semantic_scholar_client=object(),
-        fulltext_fetcher=lambda _: {},
-        max_screening_candidates=3,
-    ).collect(
-        _plan(
-            {
-                "task_id": "EDQ1",
-                "slot": "mechanism",
-                "query_variants": [
-                    {"variant_id": "core", "query": "material interface mechanism", "purpose": "Mechanism evidence."},
-                    {"variant_id": "method", "query": "material interface theory", "purpose": "Theory evidence."},
-                ],
-            }
-        ),
-        max_fulltext_papers=0,
-        logger=logger,
-    )
-
-    assert [call["task_id"] for call in openalex.calls] == ["EDQ1.core", "EDQ1.method"]
-    assert all("openalex_field_filter" not in call for call in openalex.calls)
-    assert collection["paper_count"] == 3
-    screening = collection["paper_screening"]
-    assert screening["discovered_unique_paper_count"] == 6
-    assert screening["screening_candidate_budget"] == 3
-    assert screening["omitted_before_screening_count"] == 3
-    assert [record["event"] for record in logger.records if record["stage"] == "evidence_retrieval"][-1] == (
-        "screening_candidates_bounded"
-    )
-
-
 def test_evidence_cards_bind_fulltext_identity_location_and_field_ledger() -> None:
     class OpenAlexPapers:
         def search(self, query_task: Mapping[str, object], *, limit: int) -> list[dict]:
@@ -327,7 +105,7 @@ def test_evidence_cards_bind_fulltext_identity_location_and_field_ledger() -> No
         return {
             "cards": [
                 {
-                    "claim_slot": "measurement_calibration",
+                    "claim_slot": "mechanism",
                     "statement": "The paper reports calibration against a certified reference before measurement.",
                     "design_implication": "If this measurement approach is adopted, a comparable calibration reference should be justified and confirmed.",
                     "source_id": "W123",
@@ -355,9 +133,9 @@ def test_evidence_cards_bind_fulltext_identity_location_and_field_ledger() -> No
         survey_artifacts={
             "papers": [
                 {
-                    "paper_id": "W123",
+                    **_paper(),
                     "fulltext": fulltext,
-                    "source_location": "fulltext:survey_artifact",
+                    "fulltext_source_location": "fulltext:survey_artifact",
                     "keynote": "Existing Survey keynote is retained as an artifact reference.",
                 }
             ]
@@ -379,8 +157,8 @@ def test_evidence_cards_bind_fulltext_identity_location_and_field_ledger() -> No
     assert paper_record["citation_rendering_status"] == "RENDERABLE"
     assert paper_record["citation_missing_fields"] == []
     ledger = {record["field_path"]: record for record in bundle["field_evidence_ledger"]}
-    assert ledger["measurement_and_calibration"]["status"] == "evidence_backed"
-    assert ledger["measurement_and_calibration"]["source_ids"] == ["W123"]
+    assert ledger["hypothesis_mapping"]["status"] == "evidence_backed"
+    assert ledger["hypothesis_mapping"]["source_ids"] == ["W123"]
 
 
 def test_evidence_card_and_bundle_steps_emit_progress_events() -> None:
@@ -395,7 +173,7 @@ def test_evidence_card_and_bundle_steps_emit_progress_events() -> None:
         return {
             "cards": [
                 {
-                    "claim_slot": "measurement_calibration",
+                    "claim_slot": "mechanism",
                     "statement": "The paper reports calibration against a certified reference before measurement.",
                     "design_implication": "A comparable calibration reference should be confirmed.",
                     "source_id": "W123",
@@ -424,9 +202,9 @@ def test_evidence_card_and_bundle_steps_emit_progress_events() -> None:
         survey_artifacts={
             "papers": [
                 {
-                    "paper_id": "W123",
+                    **_paper(),
                     "fulltext": fulltext,
-                    "source_location": "fulltext:survey_artifact",
+                    "fulltext_source_location": "fulltext:survey_artifact",
                 }
             ]
         },
@@ -508,7 +286,7 @@ def test_invalid_card_is_skipped_without_discarding_valid_cards_from_same_paper(
 
     def card_llm(_: str, **_kwargs: object) -> dict[str, object]:
         base = {
-            "claim_slot": "measurement_calibration",
+            "claim_slot": "mechanism",
             "statement": "The abstract identifies an interface measurement problem.",
             "design_implication": "A measurement plan should address the identified interface problem.",
             "source_id": "W123",
@@ -526,7 +304,7 @@ def test_invalid_card_is_skipped_without_discarding_valid_cards_from_same_paper(
 
     cards, warnings = EvidenceCardExtractor().extract(
         paper,
-        requested_slots=["measurement_calibration"],
+        requested_slots=["mechanism"],
         llm_call=card_llm,
     )
 
@@ -545,7 +323,7 @@ def test_full_methodology_policy_allows_explicit_safe_detail_from_fulltext() -> 
         excerpt = paper["fulltext"]
         return {
             "cards": [{
-                "claim_slot": "measurement_calibration",
+                "claim_slot": "mechanism",
                 "statement": "The full text explicitly reports a 10 Hz sampling rate for 30 minutes.",
                 "design_implication": "A comparable safe design may use the reported sampling schedule as a source-bounded assumption.",
                 "source_id": "W123",
@@ -559,7 +337,7 @@ def test_full_methodology_policy_allows_explicit_safe_detail_from_fulltext() -> 
 
     cards, warnings = EvidenceCardExtractor().extract(
         paper,
-        requested_slots=["measurement_calibration"],
+        requested_slots=["mechanism"],
         methodology_detail_policy={"level": "FULL_METHODOLOGY_PLAN", "allowed": True},
         llm_call=card_llm,
     )
@@ -637,6 +415,7 @@ def test_metadata_cannot_produce_cards_and_unqualified_field_is_downgraded() -> 
     bundle = adapter.collect_and_extract(
         brief_id="brief-materials",
         evidence_plan=_plan(_task()),
+        survey_artifacts={"papers": [_paper(level="metadata")]},
         max_fulltext_papers=0,
     )["evidence_bundle"]
     ledger = {record["field_path"]: record for record in bundle["field_evidence_ledger"]}

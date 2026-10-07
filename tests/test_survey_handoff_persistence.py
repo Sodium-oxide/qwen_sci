@@ -82,12 +82,17 @@ def _publish(tmp_path: Path, *, gap_llm_call=None) -> dict:
 
 
 def test_completed_publication_writes_valid_linked_artifacts(tmp_path: Path) -> None:
+    (tmp_path / "survey_retrieval_manifest.json").write_text(
+        json.dumps({"schema_version": "survey_retrieval_manifest_v1", "papers": [{"paper_id": "W1", "abstract": "Original abstract"}]}),
+        encoding="utf-8",
+    )
     published = _publish(tmp_path)
     manifest = json.loads(Path(published["manifest_path"]).read_text(encoding="utf-8"))
     ledger = json.loads(Path(published["gap_ledger_path"]).read_text(encoding="utf-8"))
     handoff = json.loads(Path(published["idea_handoff_path"]).read_text(encoding="utf-8"))
 
     assert published["status"] == "completed"
+    assert "retrieval_papers" in manifest["artifacts"]
     assert Path(published["artifacts"]["survey_markdown"]).read_text(encoding="utf-8") == "\n# Survey\n\nCanonical body.\n"
     assert validate_gap_ledger_payload(ledger, verify_fingerprint=True) == []
     assert validate_handoff_payload(handoff, verify_fingerprint=True) == []

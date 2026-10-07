@@ -90,6 +90,9 @@ def variable_groups(variables, group_size=4):
 
 
 def bounded_formal_evidence(bundle, query, *, card_limit=40, catalog_limit=80):
+    if bundle.get("usage") == "variables_and_definitions":
+        return {"evidence_cards": [], "evidence_catalog": [], "total_card_count": 0,
+                "selection_policy": "Use extracted variables and definitions; proof generation is mathematically open."}
     cards = [card for card in bundle.get("evidence_cards", []) if isinstance(card, Mapping)]
     index = DefinitionEvidenceIndex(cards)
     selected = index.select(query, limit=max(1, min(40, int(card_limit))))
@@ -102,6 +105,10 @@ def bounded_formal_evidence(bundle, query, *, card_limit=40, catalog_limit=80):
 
 
 def bounded_prompt_evidence(payload, query):
+    if isinstance(payload.get("evidence_bundle"), Mapping) and payload["evidence_bundle"].get("usage") == "variables_and_definitions":
+        payload = dict(payload)
+        payload["evidence_bundle"] = {}
+        return payload
     cards = {}
 
     def collect(value):

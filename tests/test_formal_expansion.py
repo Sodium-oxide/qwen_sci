@@ -104,7 +104,10 @@ def test_derived_expression_contract_is_optional_but_validated_when_present():
     assert any("invalid_derived_expression" in item for item in validate_formal_plan_v2(plan))
     plan["proof_attempts"][0]["steps"][0]["derived_expression"] = {"op": "ge", "args": [{"symbol": "x"}, {"number": "0"}]}
     plan["proof_attempts"][0]["steps"][0]["rule_or_lemma"] = "an LLM invented rule"
-    assert any("unsupported_derived_rule" in item for item in validate_formal_plan_v2(plan))
+    assert validate_formal_plan_v2(plan) == []
+    report = verify_formal_plan(plan, {"enabled": True, "backends": []})
+    assert report["results"][0]["result"] == "unknown"
+    assert report["target_summaries"][0]["status"] == "proof_draft_available"
 
 
 def test_lean_is_explicitly_opt_in_and_reports_kernel_outcomes(monkeypatch):

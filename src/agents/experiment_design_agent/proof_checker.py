@@ -11,6 +11,7 @@ from copy import deepcopy
 import json
 from typing import Any
 
+from .formal_dependency import target_dependencies
 
 RULE_ENGINE_VERSION = "formal_rule_engine_v1"
 
@@ -154,6 +155,12 @@ def verify_proof_attempt(plan: Mapping[str, Any], attempt: Mapping[str, Any]) ->
     target = targets.get(target_id)
     if target is None:
         return {"result": "unknown", "limitations": ["unknown_proof_target"]}
+    def dependency_blocked(record):
+        return record.get("construction_status") == "blocked" or record.get("dependency_health") in {
+            "cyclic", "missing", "invalid_or_blocked", "blocked_by_dependency",
+        }
+    if dependency_blocked(target):
+        return {"result": "unknown", "limitations": [f"dependency_not_ready:{target_id}"]}
     if target.get("required_obligation_ids"):
         return {"result": "unknown", "limitations": ["unresolved_target_obligations"]}
     steps = attempt.get("steps")
@@ -182,9 +189,17 @@ def verify_proof_attempt(plan: Mapping[str, Any], attempt: Mapping[str, Any]) ->
         premise_values: list[Any] = []
         premise_records: list[Mapping[str, Any]] = []
         for premise_id in premise_ids:
+            if premise_id == target_id or (
+                premise_id in records and target_id in target_dependencies(plan, premise_id, allow_missing=True)
+            ):
+                return {"result": "unknown", "limitations": [f"circular_proof_premise:{premise_id}"],
+                        "step_audits": step_audits}
             if premise_id in derived_by_id:
                 premise_values.append(derived_by_id[premise_id])
             elif premise_id in records:
+                if dependency_blocked(records[premise_id]):
+                    return {"result": "unknown", "limitations": [f"dependency_not_ready:{premise_id}"],
+                            "step_audits": step_audits}
                 value = record_expression(records[premise_id])
                 if value is None and "definition_id" not in records[premise_id]:
                     return {"result": "unknown", "limitations": [f"premise_without_expression:{premise_id}"], "step_audits": step_audits}

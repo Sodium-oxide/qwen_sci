@@ -43,6 +43,7 @@ _ARTIFACT_FILENAMES = {
     "gap_triage": "survey_gap_triage.json",
     "multimodal_evidence": "multimodal_evidence.json",
     "idea_handoff": "survey_idea_handoff.json",
+    "retrieval_papers": "survey_retrieval_manifest.json",
 }
 
 
@@ -402,6 +403,9 @@ def publish_survey_run_artifacts(
                 "idea_handoff": _json_bytes(handoff),
             }
         )
+    retrieval_path = root / _ARTIFACT_FILENAMES["retrieval_papers"]
+    if retrieval_path.is_file():
+        artifacts["retrieval_papers"] = retrieval_path.read_bytes()
     now = _text(created_at) or _utc_now()
     manifest_path = root / SURVEY_MANIFEST_FILENAME
     in_progress = _manifest_payload(

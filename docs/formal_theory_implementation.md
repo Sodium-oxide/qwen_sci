@@ -1,5 +1,43 @@
 # Mathematical theory implementation
 
+## Survey 原始论文作为 ExperimentDesign 参考
+
+ExperimentDesign 已取消独立论文发现、查询规划与二次 LLM 论文筛选。
+Survey 在深度阅读后导出 `survey_retrieval_manifest.json`，并将其作为
+`retrieval_papers` 纳入 `survey_manifest.json`。该文件保存检索所得原论文的
+元数据、原摘要、已有原全文、相关度和引用图来源，不包含生成的综述或 keynote。
+
+论文池按 Survey 相关度排序，主检索论文与图扩展论文合计最多 32 篇。
+默认最多选入 12 篇一跳图扩展论文，图论文的 Survey 相关度须至少为 3，
+且其父论文必须入选；剩余额度由主检索论文补足。可通过
+`experiment_design.evidence_papers` 调整配额和图相关度阈值，配置不能突破 32 篇。
+Survey 已选出的论文直接接纳，不再调用可信度筛选模型。
+仅对入选的同一论文身份补取缺失全文，不搜索或加入新论文。
+
+证据卡标记为 `evidence_role: reference`、`usage: variables_and_definitions`。
+它们为变量提取和定义构造提供原文参考，证明规划、反例分析、语义修订与
+最终设计合成依赖上游变量和定义，不再将卡片原文塞入所有后续提示词。
+LLM 可以补充数学定义、方程、假设、辅助引理、任意候选规则和证明步骤；
+生成后的检查仍记录证明状态。循环定义保留为研究草稿，不能作为已成立的证明前提。
+
+完整 Science 流程自动传递对应 Survey manifest。单独重跑时可显式指定：
+
+```bash
+python -m src.cli exp_design --config src/config/default.yaml \
+  --idea-json "$IDEA" --survey-manifest "$SURVEY" --output-dir "$ED_OUT"
+```
+
+未显式指定时优先使用 Idea 保存的 Survey 绑定。旧 Survey 运行没有原论文清单时，
+仅从绑定 attempt 的 `sh_graph_provenance.json` 与仓库 `database` 中已有的
+原摘要、MinerU 原文缓存恢复；不会读取 `survey.md` 或 `survey.json`。
+旧缓存只能恢复已持久化的论文，缓存缺失会记录明确诊断并允许无参考数学构造继续，
+不会启动独立搜索或替换成另一个 Survey attempt。自定义缓存位置的历史运行应提供
+原论文清单，或重新运行 Survey 生成新的交接文件。
+
+运行日志提供 `survey_paper_pool_loaded`、`survey_high_score_papers_selected`、
+`citation_graph_expansion_completed`、`survey_selected_fulltext_acquisition` 和
+`survey_evidence_cards_extracted`，便于核对原论文数量及参考卡来源。
+
 The implementation follows three functional batches in the existing checkout.
 
 | Batch | Scope | Risk | Validation | Review |
@@ -112,6 +150,30 @@ Each revision records before/after scientific records and invalidated targets.
 Successful solver results are reused only when their target, dependency snapshot,
 diagnostics and encoded constraints are unchanged. No hash-based gate is used.
 
+## Mathematical completion and notation repair
+
+Evidence cards are reference material for mathematical construction. The definition
+resolver, skeleton planner and proof planner may supply new definitions, parameterized
+governing relations, assumptions and auxiliary lemmas from their own mathematical
+reasoning. New mathematical models use origin modeling_convention; they do not need
+a paper for every expression or derivation step. Source references remain attached to
+records that actually use a source, and unknown numerical parameters can stay symbolic.
+
+Global reconciliation now returns repair patches, equivalent-definition merges and
+scoped symbol renames. It runs before duplicate notation can remove a candidate from
+the active plan, including conflicts introduced during proof generation. A merge
+redirects dependency IDs and preserves both candidates' source and variable references.
+A symbol rename identifies its consumers explicitly so ASTs, quantifiers, formulas
+and proof steps use the same notation. Original records and repair changes are retained
+in the reconciliation audit.
+
+Proof generation can add supporting definitions, model relations, assumptions and
+lemmas, complete unresolved input records and retain rules outside the local checker's
+small rule set. Such drafts can be evaluated by the configured mathematical backends.
+The final planner keeps these completions rather than replacing them with its original
+input definitions. Cyclic definitions remain available as drafts; neither circular
+premises nor unresolved cycles can establish a verified proof.
+
 ## Result interpretation
 
 The design JSON and Author handoff carry `formal_verification_report` and
@@ -179,6 +241,8 @@ retained only for compatibility with the existing document registry.
 # 按问题检索定义证据
 
 `formal_definition_resolver` 现在先建立本地词项索引，按变量的显式依赖、共同 claim 和名称关联分组，再检索相关证据。无需向量数据库或新增依赖。英文词项和中文字符匹配不保证召回所有同义词；模型可通过 `evidence_requests` 提出补取查询，仍未解决的缺口会保留。
+
+Resolver 的 LLM 请求使用 `formal_definition_wire_v1` 紧凑传输格式。定义和关系只返回科学内容、条件对象、来源和必要的变量引用；`symbol_references`、`depends_on`、`condition_expressions`、`definition_status`、`verification_readiness` 与 `variable_dependency_registry` 由 Python 在响应后确定性补全。条件在传输中使用 `{text, formal_expression}` 对象数组，随后展开为内部契约的可读条件和形式条件数组。完整的 `formal_definition_resolution_v1` 仍作为后续 Planner、Verifier 和 Author 的稳定接口，旧版完整 LLM 响应继续兼容。
 
 默认配置位于 `experiment_design.formal_reasoning.definition_retrieval`：每组最多 4 个变量，首轮最多 24 张原卡，默认最多补取 1 轮、每轮最多 10 张新卡；`max_cards_per_request: 40` 仍是单请求的硬上限。提示词长度会记录，但不会因本地字符预算被拒绝发送；模型服务端的上下文限制仍然适用。原卡不做摘录截断，相关性和来源多样性共同决定选择顺序。没有待修复记录、缺失定义或证据查询，以及连续两轮缺口和字段诊断不变时，不再补取。没有新卡时，可使用已有相关证据完成有限的记录修复，不将缺失文献改写成已证实事实。引用的卡片 ID 未出现在当前证据包中不再导致整组失败；不再通过 `locator` 是否为卡片 `source_location` 的子串判断来源定位有效性，不产生 `definition_source_locator_not_grounded` 报错。来源引用仍需对象结构及非空字符串 `card_id`、`locator`，定位原文保留用于溯源。引文可以是释义或省略，不要求逐字匹配卡片原文。
 

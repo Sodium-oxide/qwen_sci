@@ -292,6 +292,10 @@ def _build_root_parser() -> argparse.ArgumentParser:
     )
     exp_design.add_argument("--config", default=str(DEFAULT_CONFIG_PATH), help="Path to config YAML")
     exp_design.add_argument(
+        "--survey-manifest", default="",
+        help="Original Survey retrieval manifest, Survey manifest, or Survey run directory",
+    )
+    exp_design.add_argument(
         "--idea-json",
         required=True,
         help="Path to idea_result.json or an Idea Agent run directory",
@@ -1571,6 +1575,7 @@ def _exp_design_command(args: argparse.Namespace) -> int:
             config=config,
             llm_model=args.model,
             logger=logger,
+            survey_manifest_path=getattr(args, "survey_manifest", "") or None,
         )
         with logger.stage("artifacts", output_dir=str(output_dir)):
             paths = write_experiment_design_artifacts(

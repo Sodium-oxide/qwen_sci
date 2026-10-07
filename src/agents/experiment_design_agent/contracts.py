@@ -103,6 +103,9 @@ EVIDENCE_BUNDLE_SCHEMA: dict[str, Any] = {
     "additionalProperties": False,
     "required": ["schema_version", "brief_id", "evidence_cards", "coverage"],
     "properties": {
+        "evidence_role": {"type": "string"},
+        "usage": {"type": "string"},
+        "paper_pool": {"type": "object"},
         "schema_version": {"const": EVIDENCE_BUNDLE_SCHEMA_VERSION},
         "brief_id": _NONEMPTY_STRING,
         "evidence_cards": {
@@ -133,6 +136,8 @@ EVIDENCE_BUNDLE_SCHEMA: dict[str, Any] = {
                     "evidence_excerpt": _NONEMPTY_STRING,
                     "limitations": _STRING_LIST,
                     "does_not_establish": _STRING_LIST,
+                    "evidence_role": {"type": "string"},
+                    "usage": {"type": "string"},
                 },
             },
         },
@@ -165,6 +170,9 @@ EVIDENCE_BUNDLE_SCHEMA: dict[str, Any] = {
                     "provider_ids": {"type": "object", "minProperties": 1},
                     "providers": _STRING_LIST,
                     "query_task_ids": _STRING_LIST,
+                    "source_kind": {"type": "string"},
+                    "relevance_score": {"type": "number"},
+                    "parent_paper_ids": _STRING_LIST,
                     "content_availability": {"enum": ["fulltext", "abstract", "metadata", "user_supplied", "unavailable"]},
                     "fulltext_source_location": {"type": "string"},
                     "keynote_status": {"enum": ["TRACEABLE_CARDS_AVAILABLE", "NO_CARDS_EXTRACTED", "NO_ELIGIBLE_TEXT"]},

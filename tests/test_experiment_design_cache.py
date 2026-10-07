@@ -250,7 +250,7 @@ def test_read_only_composition_never_calls_definition_llm_on_checkpoint_miss() -
     variable_model = _variable_claim_model()
     orchestrator._cached_stage_result(
         "variable_claim_extraction",
-        {"research_brief": brief, "reasoning_context": reasoning_context},
+        {"research_brief": brief, "reasoning_context": reasoning_context, "evidence_bundle": None},
         lambda: variable_model, lambda _payload: True, llm_override=callback,
     )
     orchestrator.cache.offline = True
@@ -258,7 +258,7 @@ def test_read_only_composition_never_calls_definition_llm_on_checkpoint_miss() -
     design = orchestrator.compose_design(brief)
 
     assert llm_calls == 0
-    assert design["field_statuses"]["degraded_stages.formal_definition_resolver"] == "needs_human_input"
+    assert any("definition_checkpoint_miss" in item.get("reason", "") for item in design["formal_reasoning_plan"]["unknown_items"])
 
 
 def test_formal_stage_outputs_replay_without_repeating_llm_requests() -> None:
@@ -548,7 +548,7 @@ def test_retrieval_collection_cache_replays_and_read_only_skips_provider(tmp_pat
         cache=ExperimentDesignCache({"enabled": True, "root": str(cache.root)}),
     ).collect(_collection_plan(), max_fulltext_papers=0)
 
-    assert source.calls == 1
+    assert source.calls == 0
     assert blocked.calls == 0
     assert replayed == first
 
@@ -562,7 +562,7 @@ def test_retrieval_collection_cache_replays_and_read_only_skips_provider(tmp_pat
 
     assert offline_provider.calls == 0
     assert degraded["papers"] == []
-    assert degraded["provider_runs"][0]["status"] == "CACHE_MISS"
+    assert degraded["provider_runs"] == []
 
 
 def test_evidence_card_cache_replays_per_paper_without_disabling_parallel_flow(tmp_path: Path) -> None:
@@ -581,6 +581,7 @@ def test_evidence_card_cache_replays_per_paper_without_disabling_parallel_flow(t
     first = first_adapter.collect_and_extract(
         brief_id="brief-cache",
         evidence_plan=_collection_plan(),
+        survey_artifacts={"papers": [_paper()]},
         max_fulltext_papers=0,
     )
     manifest_namespaces = {
@@ -599,15 +600,16 @@ def test_evidence_card_cache_replays_per_paper_without_disabling_parallel_flow(t
     ).collect_and_extract(
         brief_id="brief-cache",
         evidence_plan=_collection_plan(),
+        survey_artifacts={"papers": [_paper()]},
         max_fulltext_papers=0,
     )
 
-    assert source.calls == 1
+    assert source.calls == 0
     assert extractor.calls == 1
     assert blocked.calls == 0
     assert replay_extractor.calls == 0
     assert second["warnings"] == ["no_card_needed_for_cache_test"]
-    assert {"retrieval_collections", "evidence_cards"} <= manifest_namespaces
+    assert "evidence_cards" in manifest_namespaces
 
 
 def test_pdf_markdown_cache_reuses_identical_pdf_and_read_only_blocks_download(tmp_path: Path) -> None:

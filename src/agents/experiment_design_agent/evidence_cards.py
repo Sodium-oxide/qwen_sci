@@ -315,6 +315,9 @@ def build_traceable_evidence_bundle(
                 "content_availability": content_level,
                 "fulltext_source_location": _text(paper.get("fulltext_source_location"), limit=300),
                 "keynote_status": keynote_status,
+                "source_kind": paper.get("source_kind", "survey_retrieval"),
+                "relevance_score": paper.get("relevance_score", 0),
+                "parent_paper_ids": list(paper.get("parent_paper_ids") or []),
             }
         )
         keynotes.append(

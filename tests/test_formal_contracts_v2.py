@@ -137,6 +137,8 @@ def test_planner_builds_skeleton_then_target_proof_batches():
         calls.append("v2_target_proof")
         target_input = json.loads(prompt.split("INPUT_JSON:\n", 1)[1])
         assert [item["definition_id"] for item in target_input["skeleton"]["definitions"]] == ["D1"]
+        assert target_input["skeleton"]["propositions"] == []
+        assert [item["variable_id"] for item in target_input["variable_claim_model"]["variables"]] == ["V1"]
         return {
             "target_results": [{
                 "target_id": "P1",
@@ -150,7 +152,7 @@ def test_planner_builds_skeleton_then_target_proof_batches():
         }
 
     generated = FormalReasoningPlanner().plan(
-        {}, {}, {"variables": [{"variable_id": "V1"}]},
+        {}, {}, {"variables": [{"variable_id": "V1"}, {"variable_id": "V2", "name": "unrelated"}]},
         formal_inputs=resolution, llm_call=callback,
         planner_settings={"max_targets_per_request": 2, "max_evidence_cards": 4},
     )

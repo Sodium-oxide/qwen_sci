@@ -318,7 +318,7 @@ def test_one_failed_paper_does_not_abort_other_screening_tasks() -> None:
     )
 
 
-def test_collector_from_config_routes_parallel_workers_to_paper_screener() -> None:
+def test_collector_from_config_ignores_removed_paper_screener() -> None:
     collector = SurveyEvidenceCollector.from_config(
         {
             "experiment_design": {
@@ -334,11 +334,11 @@ def test_collector_from_config_routes_parallel_workers_to_paper_screener() -> No
         }
     )
 
-    assert collector.paper_screener.parallel_workers == 3
-    assert collector.max_screening_candidates == 32
+    assert not hasattr(collector, "paper_screener")
+    assert collector.max_papers == 32
 
 
-def test_collector_screens_all_candidates_then_acquires_only_budgeted_fifteen() -> None:
+def test_collector_accepts_survey_papers_without_screening_then_acquires_budgeted_text() -> None:
     papers = [
         _paper(f"W{index:03}", "Mechanism evidence", "Abstract support.")
         for index in range(1, 17)
@@ -356,7 +356,7 @@ def test_collector_screens_all_candidates_then_acquires_only_budgeted_fifteen() 
         def __init__(self) -> None:
             self.acquired: list[str] = []
 
-        def acquire(self, paper: Mapping[str, object], *, logger: object | None = None) -> dict[str, object]:
+        def acquire(self, paper: Mapping[str, object], *, logger: object | None = None, cache_run_id: str = "") -> dict[str, object]:
             del logger
             paper_id = str(paper["canonical_paper_id"])
             self.acquired.append(paper_id)
@@ -387,15 +387,15 @@ def test_collector_screens_all_candidates_then_acquires_only_budgeted_fifteen() 
             ]
         },
         max_results_per_query=20,
-        max_fulltext_papers=20,
-        screener_llm_call=_classification_llm,
+        max_fulltext_papers=15,
+        survey_artifacts={"papers": papers},
+        screener_llm_call=lambda *_args, **_kwargs: pytest.fail("No second screening of Survey papers"),
     )
 
     screening = collection["paper_screening"]
-    assert screening["screened_paper_count"] == 16
-    assert screening["fulltext_budget"] == 15
-    assert len(screening["selected_paper_ids"]) == 15
-    assert acquirer.acquired == screening["selected_paper_ids"]
+    assert screening == {"policy": "survey_scores_accepted", "llm_used": False}
+    assert len(collection["papers"]) == 16
+    assert acquirer.acquired == [f"W{index:03}" for index in range(1, 16)]
     assert sum(paper["content_availability"] == "fulltext" for paper in collection["papers"]) == 15
     omitted = next(paper for paper in collection["papers"] if paper["canonical_paper_id"] == "W016")
-    assert omitted["design_evidence_screening"]["fulltext_priority"]["selection_reason"] == "fulltext_budget_exhausted"
+    assert omitted["content_availability"] == "abstract"

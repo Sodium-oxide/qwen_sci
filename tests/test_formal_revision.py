@@ -6,8 +6,11 @@ import pytest
 
 from test_formal_contracts_v2 import formal_plan
 from src.agents.experiment_design_agent.formal_contracts import validate_formal_plan_v2
-from src.agents.experiment_design_agent.formal_dependency import COLLECTION_IDS
-from src.agents.experiment_design_agent.formal_revision import affected_ids, apply_semantic_revision, run_formal_revision_loop
+from src.agents.experiment_design_agent.formal_dependency import COLLECTION_IDS, target_subgraph
+from src.agents.experiment_design_agent.formal_revision import (
+    _revision_prompt_plan, affected_ids, apply_semantic_revision, run_formal_revision_loop,
+)
+from src.agents.experiment_design_agent.llm_json import json_prompt_payload
 from src.agents.experiment_design_agent.run_logging import ExperimentDesignRunLogger
 
 
@@ -65,6 +68,88 @@ def test_revision_whitelist_matches_supplied_records_and_obligation_dependencies
     assert audit["iterations"][0]["rejected_operations"] == []
     assert affected_ids(plan, {"target_summaries": [{"target_id": "P1", "status": "unresolved"}]}) == seen[0]
     assert validate_formal_plan_v2(current) == []
+
+
+def test_revision_prompt_bounds_diagnostics_without_losing_original_ledger():
+    plan = formal_plan()
+    original = {"record_id": "D1", "field_path": "definitions.D1.domain",
+                "reason": "Conflicting definition candidates require scientific resolution: " + "candidate text " * 300,
+                "raw_excerpt": "private excerpt " * 300, "status": "needs_human_input"}
+    plan["unknown_items"] = [deepcopy(original) for _ in range(80)]
+    compact = _revision_prompt_plan(plan, "P1", max_unknown_chars=600)
+    assert len(json_prompt_payload({"unknown_items": compact["unknown_items"]})) <= 600
+    assert compact["unknown_item_summary"]["total_count"] == 80
+    assert compact["unknown_items"][0]["count"] == 80
+    assert compact["unknown_items"][0]["source_indices"] == list(range(80))
+    assert "private excerpt" not in json_prompt_payload(compact)
+    assert "candidate text" not in json_prompt_payload(compact)
+    assert plan["unknown_items"] == [original] * 80
+
+    added = {"record_id": "P1", "field_path": "propositions.P1.scope",
+             "reason": "New scope condition needs review", "status": "needs_human_input"}
+
+    def callback(prompt, **_kwargs):
+        request = json.loads(prompt.split("INPUT_JSON:\n", 1)[1])
+        assert request["plan"]["unknown_item_summary"]["total_count"] == 80
+        assert "private excerpt" not in prompt
+        return patch(unknown_items=[added])
+
+    current, _report, _audit = run_formal_revision_loop(
+        plan, {"verification": {"enabled": False}, "max_semantic_revisions": 1}, llm_call=callback,
+    )
+    assert current["unknown_items"] == [original] * 80 + [added]
+
+
+def test_revision_prompt_marks_transitive_dependencies_read_only():
+    plan = formal_plan()
+    transitive = deepcopy(plan["definitions"][0])
+    transitive["definition_id"] = "D2"
+    transitive["symbol"] = "y"
+    transitive["variable_references"] = []
+    plan["definitions"].append(transitive)
+    plan["definitions"][0]["depends_on"] = ["D2"]
+
+    local_plan = target_subgraph(plan, "P1")
+    compact = _revision_prompt_plan(local_plan, "P1")
+
+    definition = next(item for item in compact["definitions"] if item["definition_id"] == "D2")
+    assert definition["read_only"] is True
+    assert "D2" not in compact["editable_record_ids"]
+    assert {item["record_id"] for item in compact["read_only_records"]} == {"D2"}
+
+
+def test_revision_resolves_only_gaps_with_related_record_changes():
+    plan = formal_plan()
+    gap = {"record_id": "D1", "field_path": "definitions.D1.selection_reason",
+           "reason": "Selection rationale needs clarification", "status": "needs_human_input"}
+    plan["unknown_items"] = [gap]
+    unchanged, audit = apply_semantic_revision(
+        plan, patch(resolved_unknown_item_indices=[0]), {"D1"}, resolvable_unknown_items=[gap],
+    )
+    assert unchanged["unknown_items"] == [gap]
+    assert audit["rejected_operations"][0]["error_code"] == "unresolved_gap_without_record_change"
+
+    unrelated_gap = dict(gap, field_path="definitions.D1.domain")
+    changed_definition = deepcopy(plan["definitions"][0])
+    changed_definition["selection_reason"] = "The scalar is defined explicitly for this target"
+    unchanged_field, audit = apply_semantic_revision(
+        {**plan, "unknown_items": [unrelated_gap]},
+        patch(replacements=[replacement("definitions", changed_definition)], resolved_unknown_item_indices=[0]),
+        {"D1"}, resolvable_unknown_items=[unrelated_gap],
+    )
+    assert unchanged_field["unknown_items"] == [unrelated_gap]
+    assert audit["rejected_operations"][0]["error_code"] == "unresolved_gap_without_record_change"
+
+    def callback(prompt, **_kwargs):
+        request = json.loads(prompt.split("INPUT_JSON:\n", 1)[1])
+        assert request["plan"]["unknown_items"][0]["source_indices"] == [0]
+        return patch(replacements=[replacement("definitions", changed_definition)], resolved_unknown_item_indices=[0])
+
+    current, _report, _audit = run_formal_revision_loop(
+        plan, {"verification": {"enabled": False}, "max_semantic_revisions": 1}, llm_call=callback,
+    )
+    assert current["unknown_items"] == []
+    assert current["definitions"][0]["selection_reason"] == "The scalar is defined explicitly for this target"
 
 
 @pytest.mark.parametrize("order", ["first", "last"])

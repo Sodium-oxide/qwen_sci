@@ -202,8 +202,9 @@ def test_every_required_stage_receives_json_object_mode() -> None:
     orchestrator = ExperimentDesignOrchestrator(llm_call=_llm_callback(calls))
 
     prepared = orchestrator.prepare(_brief())
-    assert prepared["evidence_retrieval_plan"]["llm_used"] is True
-    assert calls[0]["response_format"] == {"type": "json_object"}
+    assert prepared["evidence_retrieval_plan"]["llm_used"] is False
+    assert prepared["evidence_retrieval_plan"]["queries"] == []
+    assert not any("Evidence Retrieval Planner" in call["prompt"] for call in calls)
 
     calls.clear()
     design = orchestrator.compose_design(_brief())
@@ -213,7 +214,7 @@ def test_every_required_stage_receives_json_object_mode() -> None:
     assert design["formal_reasoning_plan"]["forward_derivation"]["status"] == "unverified"
 
 
-def test_orchestrator_degrades_an_invalid_query_plan_without_fabricating_evidence() -> None:
+def test_orchestrator_does_not_request_or_degrade_query_planning() -> None:
     prepared = ExperimentDesignOrchestrator(
         llm_call=lambda _prompt, **_kwargs: "not-json"
     ).prepare(_brief())
@@ -221,9 +222,9 @@ def test_orchestrator_degrades_an_invalid_query_plan_without_fabricating_evidenc
     plan = prepared["evidence_retrieval_plan"]
     assert plan["planning_status"] == "READY_FOR_RETRIEVAL"
     assert plan["llm_used"] is False
-    assert plan["retrieved_evidence"] == []
-    assert plan["warnings"]
-    assert any(item["field_path"] == "evidence_retrieval_plan.queries" for item in prepared["unknown_items"])
+    assert plan["queries"] == []
+    assert plan["warnings"] == []
+    assert not any(item["field_path"] == "evidence_retrieval_plan.queries" for item in prepared["unknown_items"])
 
 
 @pytest.mark.parametrize(
@@ -422,7 +423,7 @@ def test_counterexample_targets_run_three_at_a_time_and_merge_in_order() -> None
     assert [item["target_claim_id"] for item in analysis["target_analyses"]] == ["P1", "P2", "P3", "P4"]
 
 
-def test_large_counterexample_prompt_reaches_llm() -> None:
+def test_large_counterexample_prompt_discards_unrelated_brief_context() -> None:
     brief = _brief()
     brief["large_context"] = "x" * 170000
     prompts = []
@@ -436,7 +437,8 @@ def test_large_counterexample_prompt_reaches_llm() -> None:
     )
 
     assert len(prompts) == 1
-    assert len(prompts[0]) > 170000
+    assert len(prompts[0]) < 20000
+    assert "large_context" not in prompts[0]
     assert analysis["target_claim_id"] == "P1"
     assert analysis["status"] == "no_candidate_found_in_declared_scope"
 

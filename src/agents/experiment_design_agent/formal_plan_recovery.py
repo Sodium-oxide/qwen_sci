@@ -69,6 +69,44 @@ def _block_record(plan, record, identifier, field, reason, *, logger=None, brief
     construction_warning(plan, identifier, field, reason, logger=logger, brief_id=brief_id)
 
 
+def normalize_proof_attempts(value, target_ids):
+    if isinstance(value, Mapping):
+        value = [value] if "steps" in value else list(value.values())
+    if not isinstance(value, list):
+        return value
+    normalized = []
+    for original in value:
+        if not isinstance(original, Mapping):
+            normalized.append(original)
+            continue
+        attempt = deepcopy(dict(original))
+        if "target_id" not in attempt and len(target_ids) == 1:
+            attempt["target_id"] = next(iter(target_ids))
+        target_id = attempt.get("target_id")
+        if not isinstance(target_id, str) or target_id not in target_ids:
+            normalized.append(attempt)
+            continue
+        steps = attempt.get("steps")
+        if isinstance(steps, Mapping):
+            steps = [steps] if "derived_statement" in steps or "statement" in steps else list(steps.values())
+            attempt["steps"] = steps
+        if isinstance(steps, list) and steps:
+            attempt.setdefault("attempt_id", f"PA_{target_id}_{len(normalized) + 1}")
+            for position, step in enumerate(steps, 1):
+                if not isinstance(step, dict):
+                    continue
+                step.setdefault("step_id", f"S_{attempt['attempt_id']}_{position}")
+                if "derived_statement" not in step and isinstance(step.get("statement"), str):
+                    step["derived_statement"] = step["statement"]
+                if "rule_or_lemma" not in step and isinstance(step.get("rule"), str):
+                    step["rule_or_lemma"] = step["rule"]
+                step.setdefault("status", "proposed")
+            if isinstance(steps[-1], Mapping):
+                attempt.setdefault("final_step_id", steps[-1].get("step_id"))
+        normalized.append(attempt)
+    return normalized
+
+
 def normalize_variable_dependencies(plan, variable_claim_model=None, *, logger=None, brief_id=""):
     definitions = [record for record in plan.get("definitions", []) if isinstance(record, Mapping)]
     variables = [record for record in (variable_claim_model or {}).get("variables", [])
@@ -155,6 +193,12 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
     from .reasoning_validation import _verified_markers
 
     plan, wrappers = unwrap_formal_plan(payload)
+    for collection in COLLECTION_IDS:
+        for record in plan.get(collection, []) if isinstance(plan.get(collection), list) else []:
+            if isinstance(record, dict) and record.get("dependency_health") in {"cyclic", "blocked_by_dependency"}:
+                record.pop("dependency_health", None)
+                if record.get("construction_status") == "needs_review":
+                    record.pop("construction_status", None)
     plan.update(schema_version=FORMAL_PLAN_V2, applicability="formal_theory")
     if type(plan.get("revision")) is not int or plan["revision"] < 1:
         plan["revision"] = 1
@@ -352,7 +396,7 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
             parent["required_obligation_ids"].append(record["obligation_id"])
         obligations.append(record)
     plan["proof_obligations"] = obligations
-    attempts = plan.get("proof_attempts", [])
+    attempts = normalize_proof_attempts(plan.get("proof_attempts", []), set(targets))
     if not isinstance(attempts, list):
         archive_formal_record(plan, "proof_attempts", attempts, "Malformed proof attempts.")
         attempts = []

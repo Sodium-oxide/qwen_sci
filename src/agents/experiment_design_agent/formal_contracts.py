@@ -17,10 +17,6 @@ DEFINITION_RESOLUTION_V1 = "formal_definition_resolution_v1"
 TARGET_FIELDS = ("statement", "scope", "premises", "conclusion", "quantifiers",
                  "domain_expression", "conclusion_expression", "required_obligation_ids")
 PROPOSAL_STATUSES = {"candidate_formalization", "proposed", "unverified", "unresolved", "needs_human_input", "user_declared"}
-_DERIVATION_RULES = {
-    "assumption_reuse", "definition_unfolding", "order_weakening", "transitivity",
-    "contradiction", "algebraic_normalization",
-}
 DEFINITION_FIELDS = (
     "definition_id", "symbol", "statement", "expression_latex", "formal_expression",
     "domain", "codomain", "unit", "conditions", "condition_expressions", "depends_on",
@@ -249,14 +245,15 @@ def validate_formal_plan_v2(plan: Any, variable_claim_model: Mapping[str, Any] |
                 errors.append(f"proof_step_invalid_id:{step_id}")
             if step.get("status") not in {"proposed", "unverified", "needs_human_input"}:
                 errors.append(f"{step_id}_invalid_status")
-            for field in ("derived_statement", "rule_or_lemma", "premises"):
+            for field in ("derived_statement", "rule_or_lemma"):
                 if not step.get(field):
                     errors.append(f"{step_id}_missing:{field}")
-            if "derived_expression" in step:
+            if not isinstance(step.get("premises"), list) or not all(isinstance(item, str) for item in step["premises"]):
+                errors.append(f"{step_id}_invalid_premises")
+                continue
+            if step.get("derived_expression") is not None:
                 if not _valid_restricted_expression(step.get("derived_expression")):
                     errors.append(f"{step_id}_invalid_derived_expression")
-                elif _normalized_derivation_rule(step.get("rule_or_lemma")) not in _DERIVATION_RULES:
-                    errors.append(f"{step_id}_unsupported_derived_rule")
             for premise in step.get("premises", []):
                 if premise not in records and premise not in prior:
                     errors.append(f"{step_id}_unknown_or_future_premise:{premise}")

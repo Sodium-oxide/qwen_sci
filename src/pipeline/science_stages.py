@@ -94,6 +94,7 @@ class ExperimentDesignStageRequest:
     discipline_ids: tuple[str, ...]
     selected_direction: str
     model: str | None
+    survey_manifest_path: Path | None = None
 
 
 @dataclass(frozen=True)
@@ -549,6 +550,7 @@ def run_experiment_design_stage(request: ExperimentDesignStageRequest) -> Scienc
                 config=config,
                 llm_model=request.model,
                 logger=logger,
+                survey_manifest_path=request.survey_manifest_path,
             )
             with logger.stage("artifacts", output_dir=str(request.attempt_dir)):
                 artifact_paths = write_experiment_design_artifacts(

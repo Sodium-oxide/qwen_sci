@@ -198,6 +198,7 @@ def run_experiment_design(
     card_llm_call: Callable[[str], object] | None = None,
     survey_evidence_adapter: SurveyEvidenceAdapter | None = None,
     survey_artifacts: Mapping[str, Any] | Sequence[Mapping[str, Any]] | None = None,
+    survey_manifest_path: str | Path | None = None,
     orchestrator: ExperimentDesignOrchestrator | None = None,
     logger: ExperimentDesignRunLogger | None = None,
     max_results_per_query: int | None = None,
@@ -272,6 +273,13 @@ def run_experiment_design(
         log_fields={"canonical_input_path": str(idea_path)},
     )
     research_brief = dict(research_brief)
+    if survey_artifacts is None:
+        from .survey_paper_pool import resolve_survey_source
+
+        survey_artifacts = resolve_survey_source(
+            idea_path, _mapping(research_brief.get("source")).get("survey_binding"),
+            explicit_source=survey_manifest_path,
+        )
     intake = _build_intake_record(idea_path, research_brief)
 
     def prepare_design() -> Mapping[str, Any]:
@@ -325,7 +333,7 @@ def run_experiment_design(
             else _config_int(runtime_config, ("experiment_design", "retrieval", "max_results_per_query"), 10),
             max_fulltext_papers=max_fulltext_papers
             if max_fulltext_papers is not None
-            else _config_int(runtime_config, ("experiment_design", "retrieval", "max_fulltext_papers"), 15),
+            else _config_int(runtime_config, ("experiment_design", "retrieval", "max_fulltext_papers"), 32),
             logger=logger,
             cache_run_id=str(preparation.get("cache_run_id") or ""),
         )
@@ -445,6 +453,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--config", help="Path to config YAML")
     parser.add_argument("--idea-json", required=True, help="idea_result.json or an Idea Agent run directory")
+    parser.add_argument("--survey-manifest", help="Original Survey paper manifest or Survey run directory")
     parser.add_argument(
         "--discipline-id",
         action="append",
@@ -470,6 +479,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             selected_direction=args.selected_direction,
             config_path=args.config,
             llm_model=args.model,
+            survey_manifest_path=args.survey_manifest,
         )
     except ExperimentDesignRunError as exc:
         print(f"experiment_design failed at {exc.stage}: {exc}", file=sys.stderr)

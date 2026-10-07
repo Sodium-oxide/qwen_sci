@@ -341,6 +341,7 @@ def test_collector_retains_abstract_when_fulltext_acquisition_fails(tmp_path: Pa
 
     collection = collector.collect(
         {"queries": [{"task_id": "EDQ1", "slot": "measurement_calibration", "query": "calibration"}]},
+        survey_artifacts={"papers": _OpenAlex().search({}, limit=1)},
         max_fulltext_papers=1,
         screener_llm_call=lambda prompt, **kwargs: {
             "slot_assessments": [
