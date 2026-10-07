@@ -127,6 +127,7 @@ def test_run_uses_one_preparation_plan_for_evidence_and_does_not_reprepare(
     assert len(evidence_calls) == 1
     assert evidence_calls[0]["evidence_plan"]["planning_status"] == "READY_FOR_RETRIEVAL"
     assert len(composition_calls) == 1
+    assert composition_calls[0]["template_routing"] == result["preparation"]["template_routing"]
     assert composition_calls[0]["evidence_bundle"] == {
         "brief_id": "brief-materials",
         "evidence_cards": [],

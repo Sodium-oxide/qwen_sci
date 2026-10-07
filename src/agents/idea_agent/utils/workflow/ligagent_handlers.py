@@ -876,9 +876,9 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
                 get_config_value(
                     agent.config,
                     "portfolio.screening_route_expansions_per_seed",
-                    2,
+                    len(IDEA_ROUTE_POLICIES),
                 )
-                or 2
+                or len(IDEA_ROUTE_POLICIES)
             )
             route_specs = _resolve_screening_routes(
                 get_config_value(agent.config, "portfolio.screening_route_ids", None),

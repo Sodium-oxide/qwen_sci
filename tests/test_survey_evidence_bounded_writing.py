@@ -22,6 +22,7 @@ from modules.pe import (
     SURVEY_OUTLINE_GENERATION_PAPER_ASSIGNMENT,
 )
 from modules.survey_generator import SurveyGenerator
+from modules.survey_integrity import repeated_passages, strip_claim_trace_metadata
 from src.pipeline.survey_evidence_plan import (
     EVIDENCE_BACKED_SYNTHESIS,
     QUALIFIED_SYNTHESIS,
@@ -699,6 +700,32 @@ def test_bounded_title_citation_rejects_database_resolved_graph_candidate() -> N
     assert "outside the evidence-bounded paper set" in errors[0]
 
 
+@pytest.mark.parametrize(
+    "validator_name",
+    ["validate_id_citation_draft", "validate_title_citation_draft"],
+)
+def test_draft_validation_preserves_hash_in_prose(validator_name: str) -> None:
+    generator = _generator()
+    generator.always_omit_error = False
+    generator.config = SimpleNamespace(
+        BasicInfo=SimpleNamespace(debug=False),
+        ModuleInfo=SimpleNamespace(
+            SurveyGenerator=SimpleNamespace(
+                draft_length_relax_ratio=1.0,
+                include_other_relevant_papers_RAG=False,
+            )
+        ),
+    )
+    generator.database = SimpleNamespace(valid_paper_ids=set())
+    text = "The #1 candidate remains under investigation."
+
+    valid, errors, cleaned = getattr(generator, validator_name)(text, [])
+
+    assert valid is True
+    assert errors == []
+    assert cleaned == text
+
+
 def test_title_mode_accepts_permitted_openalex_id_citations() -> None:
     generator = _generator()
     generator.always_omit_error = False
@@ -1267,3 +1294,205 @@ def test_bounded_quality_review_skips_when_strict_claim_trace_is_active() -> Non
     assert original in survey
     assert references == ["W1"]
     assert generator.chat_agent.calls == []
+
+
+def test_claim_trace_cleanup_removes_unclosed_metadata_without_losing_next_section() -> None:
+    draft = (
+        "Visible prose <Paper ID: W1>.\n\n[[SH_CLAIM_TRACE]]\n"
+        '[{"claim_index": 1, "paper_path": ["W1"]}]\n\n'
+        "## Next section\n\nMore visible prose."
+    )
+    visible, payloads, errors = strip_claim_trace_metadata(draft)
+
+    assert "SH_CLAIM_TRACE" not in visible
+    assert "## Next section" in visible
+    assert payloads == ['[{"claim_index": 1, "paper_path": ["W1"]}]']
+    assert errors == []
+
+    generator = _quality_generator([])
+    visible, claims, errors = generator._extract_claim_trace(draft)
+    assert "SH_CLAIM_TRACE" not in visible
+    assert claims == []
+    assert errors
+
+
+def test_cross_section_repetition_detects_identical_long_leads() -> None:
+    paragraph = "Physical limits constrain every computational substrate and shape achievable performance. " * 4
+    issues = repeated_passages([
+        "## First\n\n" + paragraph,
+        "## Second\n\n" + paragraph,
+    ])
+
+    assert issues[0]["source_section"] == 1
+    assert issues[0]["target_section"] == 2
+
+
+def test_claim_support_audit_rejects_unsupported_revision() -> None:
+    original = "## 1. Evidence\n\nA cautious observation is reported <Paper ID: W1>."
+    revised = "## 1. Evidence\n\nA major effect is proven <Paper ID: W1>."
+    generator = _quality_generator([
+        json.dumps({
+            "scores": {"readability": 7, "scientific": 7, "framework": 7},
+            "suggestions": ["Clarify the claim."],
+        }),
+        json.dumps({"revised_section": revised}),
+        json.dumps({"assessments": [{
+            "claim_id": 1, "paper_id": "W1", "verdict": "unsupported",
+            "evidence_quote": "", "reason": "The source does not show this effect.",
+        }]}),
+        json.dumps({"assessments": [{
+            "claim_id": 1, "paper_id": "W1", "verdict": "supported",
+            "evidence_quote": "A cautious observation is reported",
+            "reason": "The source reports the observation.",
+        }]}),
+    ])
+    generator.config.ModuleInfo.SurveyGenerator.claim_support_audit_enabled = True
+    generator.work_analyzer = SimpleNamespace(
+        work_collector=SimpleNamespace(get_paper_title_abstract=lambda _paper_id: (
+            "Evidence study", "A cautious observation is reported in the study."
+        )),
+        get_paper_keynote=lambda _paper_id: "A cautious observation is reported in the study.",
+    )
+    generator._finalize_evidence_bounded_draft = lambda draft: (draft["full_draft"], ["W1"])
+
+    survey, _ = generator.refine_draft(_quality_draft(original))
+
+    assert original in survey
+    assert revised not in survey
+    assert any(
+        issue["kind"] == "claim_support" and issue["resolution"] == "reject_revision"
+        for issue in generator.survey_integrity_artifact["issues"]
+    )
+
+
+def test_outline_scope_records_argument_and_evidence_gaps() -> None:
+    generator = _quality_generator([])
+    generator.config.BasicInfo.topic = "Physical limits and quantum computing"
+    generator.work_analyzer = SimpleNamespace(work_collector=SimpleNamespace(
+        get_paper_title_abstract=lambda _paper_id: (
+            "Superconducting transmon processor", "A superconducting quantum processor."
+        )
+    ))
+    outline = {
+        "title": "Quantum computing modalities",
+        "sections": [{
+            "title": "Qubit Modalities",
+            "description": "Compare platforms.",
+            "papers_to_use": ["W1"],
+            "subsections": [{
+                "title": "Superconducting circuits",
+                "description": "Transmon devices.",
+                "papers_to_use": ["W1"],
+            }],
+        }],
+    }
+
+    checked = generator._check_outline_argument_and_coverage(outline)
+
+    assert "Universal physical bounds" in checked["argument_spine"]
+    assert checked["sections"][0]["title"] == "Qubit Modalities"
+    assert checked["coverage_audit"]["superconducting"]["status"] == "covered"
+    assert checked["coverage_audit"]["neutral atoms"]["status"] == "not_promised"
+
+    outline["title"] = "All Qubit Modalities"
+    outline["sections"][0]["title"] = "All Qubit Modalities"
+    broad = generator._check_outline_argument_and_coverage(outline)
+
+    assert broad["title"] == "Selected Qubit Modalities"
+    assert broad["sections"][0]["title"] == "Selected Qubit Modalities"
+    assert broad["coverage_audit"]["neutral atoms"]["status"] == "promised_without_evidence"
+
+
+def test_consolidation_revises_only_the_conflicting_section() -> None:
+    original = "## 1. Broad claim\n\nAll quantum devices have no leakage <Paper ID: W1>."
+    other = "## 2. Device observation\n\nTransmon devices exhibit leakage <Paper ID: W1>."
+    revised = "## 1. Broad claim\n\nSome quantum devices exhibit leakage <Paper ID: W1>."
+    generator = _quality_generator([
+        json.dumps({"contradictions": [{
+            "source_section": 2,
+            "target_section": 1,
+            "source_excerpt": "Transmon devices exhibit leakage",
+            "target_excerpt": "All quantum devices have no leakage",
+            "reason": "The universal claim conflicts with the device observation.",
+        }]}),
+        json.dumps({"revised_section": revised}),
+    ])
+    generator.config.ModuleInfo.SurveyGenerator.survey_consolidation_enabled = True
+    draft = {
+        "title": "A survey",
+        "outline": {"sections": [
+            {"title": "Broad claim", "description": "Scope", "papers_to_use": ["W1"], "subsections": []},
+            {"title": "Device observation", "description": "Evidence", "papers_to_use": ["W1"], "subsections": []},
+        ]},
+        "section_drafts": [original, other],
+    }
+
+    result = generator._consolidate_evidence_bounded_draft(draft)
+
+    assert result["section_drafts"] == [revised, other]
+    assert generator.survey_integrity_artifact["issues"][0]["resolution"] == "revised"
+
+
+def test_final_support_audit_repairs_unsupported_claim_before_publication() -> None:
+    original = "## 1. Evidence\n\nA major effect is proven <Paper ID: W1>."
+    revised = "## 1. Evidence\n\nA cautious observation is reported <Paper ID: W1>."
+    generator = _quality_generator([
+        json.dumps({"assessments": [{
+            "claim_id": 1, "paper_id": "W1", "verdict": "unsupported",
+            "evidence_quote": "", "reason": "The source reports only an observation.",
+        }]}),
+        json.dumps({"revised_section": revised}),
+        json.dumps({"assessments": [{
+            "claim_id": 1, "paper_id": "W1", "verdict": "supported",
+            "evidence_quote": "A cautious observation is reported",
+            "reason": "The excerpt supports this narrower claim.",
+        }]}),
+    ])
+    generator.config.ModuleInfo.SurveyGenerator.claim_support_audit_enabled = True
+    generator.work_analyzer = SimpleNamespace(
+        work_collector=SimpleNamespace(get_paper_title_abstract=lambda _paper_id: (
+            "Evidence study", "A cautious observation is reported in the study."
+        )),
+        get_paper_keynote=lambda _paper_id: "A cautious observation is reported in the study.",
+    )
+
+    repaired = generator._repair_final_claim_support(_quality_draft(original))
+
+    assert repaired["section_drafts"] == [revised]
+    assert any(
+        issue["kind"] == "final_claim_support_repair" and issue["resolution"] == "revised"
+        for issue in generator.survey_integrity_artifact["issues"]
+    )
+
+
+def test_consistency_audit_receives_long_section_middle() -> None:
+    generator = _quality_generator([json.dumps({"contradictions": [], "repetitions": []})])
+    generator.config.ModuleInfo.SurveyGenerator.survey_consolidation_enabled = True
+    middle_marker = "MIDDLE_ASSERTION_THAT_MUST_BE_AUDITED"
+    long_section = "## 1. Evidence\n\n" + "a " * 4000 + middle_marker + " b" * 4000
+    draft = {
+        "title": "A survey",
+        "outline": {"sections": [{
+            "title": "Evidence", "description": "Evidence", "papers_to_use": [], "subsections": []
+        }]},
+        "section_drafts": [long_section],
+    }
+
+    generator._consolidate_evidence_bounded_draft(draft)
+
+    assert middle_marker in generator.chat_agent.calls[0]["prompt"]
+
+
+def test_uncited_conclusion_is_not_exempted_by_html_tag() -> None:
+    generator = _quality_generator([])
+    generator.config.ModuleInfo.SurveyGenerator.claim_support_audit_enabled = True
+    prose = ("This <em>specific</em> claim describes a substantial scientific conclusion " * 8).strip()
+
+    generator._audit_section_claim_support(
+        "## 6. Conclusion\n\n" + prose, section_index=6, stage="final"
+    )
+
+    assert any(
+        issue["kind"] == "uncited_conclusion_or_future_work"
+        for issue in generator.survey_integrity_artifact["issues"]
+    )

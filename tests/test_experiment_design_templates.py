@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
 from io import StringIO
 import json
 
@@ -187,6 +188,76 @@ def test_physics_formal_signal_uses_the_mathematics_variant_without_an_eighth_te
 
     assert routing["primary_template"] == "mathematics_theory"
     assert routing["submode"] == "formal_theory"
+
+
+def test_llm_selects_theory_as_primary_for_computing_physics_theorem() -> None:
+    brief = _brief("17", topic="A computational speed limit theorem.")
+    brief["discipline_ids"] = ["17", "31"]
+    prompts = []
+
+    def select_template(prompt: str, **kwargs: object) -> dict:
+        prompts.append(prompt)
+        assert kwargs["response_format"] == {"type": "json_object"}
+        return {"primary_template": "mathematics_theory", "reason": "The main claim needs proof."}
+
+    routing = TemplateRouter().route(brief, llm_call=select_template)
+
+    assert len(prompts) == 1
+    assert routing["primary_template"] == "mathematics_theory"
+    assert routing["secondary_template"] == "computational_digital"
+    assert routing["submode"] == "formal_theory"
+    assert routing["selection_status"] == "llm_selected"
+
+
+def test_llm_template_choice_is_restricted_to_declared_scope() -> None:
+    brief = _brief("17", topic="A computational speed limit theorem.")
+    brief["discipline_ids"] = ["17", "31"]
+
+    routing = TemplateRouter().route(
+        brief,
+        llm_call=lambda *_args, **_kwargs: {"primary_template": "clinical_health"},
+    )
+
+    assert routing["primary_template"] == "mathematics_theory"
+    assert routing["selection_status"] == "deterministic_fallback"
+
+
+def test_llm_can_select_computational_design_for_mixed_scope() -> None:
+    brief = _brief("17", topic="A computational speed limit theorem.")
+    brief["discipline_ids"] = ["17", "31"]
+
+    routing = TemplateRouter().route(
+        brief,
+        llm_call=lambda *_args, **_kwargs: {"primary_template": "computational_digital"},
+    )
+
+    assert routing["primary_template"] == "computational_digital"
+    assert routing["selection_status"] == "llm_selected"
+
+
+def test_prepared_theory_route_runs_formal_design_without_reselection() -> None:
+    brief = _brief("17", topic="A computational speed limit theorem.")
+    brief["discipline_ids"] = ["17", "31"]
+    selection_calls = []
+
+    def llm_call(prompt: str, **kwargs: object) -> dict:
+        if "Select the primary ExperimentDesign methodology" in prompt:
+            selection_calls.append(prompt)
+            return {"primary_template": "mathematics_theory", "reason": "The claim is a theorem."}
+        return _template_llm(prompt, **kwargs)
+
+    orchestrator = ExperimentDesignOrchestrator(llm_call=llm_call)
+    preparation = orchestrator.prepare(brief)
+    design = orchestrator.compose_design(
+        brief,
+        template_routing=preparation["template_routing"],
+    )
+
+    assert len(selection_calls) == 1
+    assert design["template_composition"]["template_id"] == "mathematics_theory"
+    assert design["formal_reasoning_plan"]["applicability"] == "formal_theory"
+    assert design["counterexample_analysis"]["applicability"] == "formal_theory"
+    assert design["execution_policy"]["mode"] == "DESIGN_ONLY"
 
 
 @pytest.mark.parametrize("discipline_id", sorted(EXCLUDED_DISCIPLINE_IDS, key=int))
@@ -480,6 +551,40 @@ def test_template_composer_restores_a_malformed_container_without_authorizing_re
         and record["event"] == "patch_contract_normalized"
     )
     assert normalization["restored_invalid_type_count"] == 1
+
+
+def test_template_composer_restores_only_incomplete_methodology_rows() -> None:
+    brief = _brief("17")
+    baseline = StudyTypeTemplateComposer().compose_deterministically(brief)
+    instrument = deepcopy(baseline["measurement_and_calibration"]["instruments"][0])
+    instrument["selection_criteria"] = ""
+    conditions = deepcopy(baseline["comparison_and_robustness"]["condition_matrix"])
+    conditions[0]["definition"] = ""
+    conditions[1]["definition"] = "A retained comparison condition."
+    logger = ExperimentDesignRunLogger("incomplete-methodology-rows", console_stream=StringIO())
+    calls = 0
+
+    def llm_call(_prompt: str, **kwargs: object) -> dict:
+        nonlocal calls
+        assert kwargs["response_format"] == {"type": "json_object"}
+        calls += 1
+        return {
+            "measurement_and_calibration": {"instruments": [instrument, {"category": "orphan"}]},
+            "comparison_and_robustness": {"condition_matrix": [*conditions, {"role": "orphan"}]},
+        }
+
+    design = StudyTypeTemplateComposer().compose(brief, llm_call=llm_call, logger=logger)
+
+    assert calls == 1
+    assert validate_experiment_design(design) == []
+    assert design["template_composition"]["llm_used"] is True
+    assert design["measurement_and_calibration"]["instruments"] == baseline["measurement_and_calibration"]["instruments"]
+    repaired_conditions = design["comparison_and_robustness"]["condition_matrix"]
+    assert repaired_conditions[0] == baseline["comparison_and_robustness"]["condition_matrix"][0]
+    assert repaired_conditions[1] == conditions[1]
+    normalization = next(record for record in logger.records if record["event"] == "patch_contract_normalized")
+    assert normalization["restored_incomplete_methodology_row_count"] == 4
+    assert all(record["event"] != "contract_repair_started" for record in logger.records)
 
 
 def test_template_contract_repair_rejects_unrelated_scientific_field_changes() -> None:

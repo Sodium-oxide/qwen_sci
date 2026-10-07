@@ -576,6 +576,8 @@ survey:
       # Temporary operational bypass: keep visible citation checks, but do not
       # block drafting on LLM-generated claim-trace metadata.
       claim_trace_validation_enabled: false
+      claim_support_audit_enabled: true
+      survey_consolidation_enabled: true
       # A structurally invalid evidence trace repairs metadata only.  It never
       # regenerates an otherwise accepted long subsection.
       claim_trace_repair_max_attempts: 2
@@ -794,8 +796,8 @@ idea:
       max_output_tokens: 65536
 
   mcts:
-    # Two-stage route-matrix budget: screen every seed cheaply, then fully
-    # explore only the highest-scoring seeds.
+    # Two-stage route-matrix budget: run every route for every seed in the
+    # initial pass, then further explore only the highest-scoring seeds.
     max_iterations: 8
     screening_max_iterations: 12
     refinement_max_iterations: 8
@@ -835,8 +837,8 @@ idea:
   portfolio:
     min_independent_ideas: 2
     max_candidates_per_seed: 5
-    screening_route_expansions_per_seed: 2
-    screening_route_ids: ["object_substitution", "mechanism_replacement"]
+    screening_route_expansions_per_seed: 5
+    screening_route_ids: ["premise_inversion", "object_substitution", "mechanism_replacement", "representation_shift", "verification_reversal"]
     refinement_top_seeds: 3
     refinement_route_expansions_per_seed: 5
     max_route_expansions_per_seed: 5

@@ -514,6 +514,8 @@ SURVEY_OUTLINE_GENERATION = """You are an expert research survey generator. Your
 - Ensure that each section/subsection reflects the combined contributions of the analysis results and the keynotes, capturing important insights, trends, and examples.
 - If the evidence plan has evidence_bounded_writing=true, it is a hard scientific boundary: account for every SH, use its allowed_writing_mode, do not assign graph-expanded candidates as evidence, and do not turn background-only material into direct support.
 - The final outline must make room to account for every SH, including evidence gaps, rejected scope, and limitations; this does not require one chapter per SH.
+- State one defensible argument spine and give every section a distinct role in it. For physical limits and quantum computing, universal physical bounds apply to every architecture, whereas quantum advantage is a task-specific comparison with a current classical baseline; never imply that quantum hardware escapes universal bounds.
+- Check the hardware modalities promised by the survey title or section titles against assigned evidence. Give each evidenced modality an identifiable place; narrow an overbroad title or state a documented evidence gap when coverage is unavailable.
 """
 
 SURVEY_OUTLINE_GENERATION_OUTLINE_DRAFT = """You are an expert research survey generator. Your task is to generate and iteratively update an existing survey outline using a batch of new paper keynotes, the current outline, and the analysis results of relevant papers for the topic/subtopic being written.
@@ -577,6 +579,8 @@ SURVEY_OUTLINE_GENERATION_OUTLINE_DRAFT = """You are an expert research survey g
 - Only generate the outline in the required JSON format. Do not include specific paper IDs in the outline.
 - If the evidence plan has evidence_bounded_writing=true, it is a hard scientific boundary: account for every SH, use its allowed_writing_mode, do not assign graph-expanded candidates as evidence, and do not turn background-only material into direct support.
 - The final outline must make room to account for every SH, including evidence gaps, rejected scope, and limitations; this does not require one chapter per SH.
+- State one defensible argument spine and give every section a distinct role in it. For physical limits and quantum computing, universal physical bounds apply to every architecture, whereas quantum advantage is a task-specific comparison with a current classical baseline; never imply that quantum hardware escapes universal bounds.
+- Check hardware modalities promised by titles against assigned evidence. Include evidenced modalities or narrow the promised scope when admissible evidence is absent.
 """
 
 SURVEY_OUTLINE_REPAIR = """Repair a survey outline response that failed local validation.
@@ -751,7 +755,6 @@ Utilize the input content in a safe and reasonable manner, and ensure that the r
 - Do not generate a bibliography or reference list here.
 - Aim for about {subsection_target_words} words; the visible prose must not exceed {subsection_max_words} words. Be concise: merge closely related findings into synthesis rather than enumerating papers.
 - Generate the content directly. DO NOT generate any subsection title or section header here.
-- CRITICAL: '#' is used for section/subsection anchor. Avoid any '#' in the output content.
 - When evidence_bounded_writing=true in the plan: every substantive SH claim must obey its allowed_writing_mode and paper_role_constraints. A GRAPH_EXPANDED_CANDIDATE remains lineage/retrieval context and is never evidence by itself. It may be cited only when the current SH evidence plan explicitly includes the same paper through a FULLTEXT_PROMOTION role earned from that paper's own complete-section reading; then use exactly its listed direct, qualified, or background strength. Do not use BACKGROUND_CONTEXT papers for direct empirical support. A QUALIFIED_SH_CONTRIBUTION may support only QUALIFIED_SYNTHESIS and must state the applicable limitation rather than asserting a complete causal chain. An EVIDENCE_GAP_REPORT must report the gap and must not make an affirmative scientific conclusion. A ``multimodal_projection`` is a bounded observation from supplied local data, not a paper: retain its sample scope and claim limits, name competing explanations, and use only cautious compatibility language. Never say that it proves, establishes, or generally demonstrates a mechanism.
 - In evidence-bounded mode, end the response with exactly one final metadata block, using this literal delimiter (not angle brackets):
 [[SH_CLAIM_TRACE]]
@@ -806,7 +809,6 @@ Utilize the input content in a safe and reasonable manner, and ensure that the r
 - Do not generate a bibliography or reference list here.
 - Aim for about {subsection_target_words} words; the visible prose must not exceed {subsection_max_words} words. Be concise: merge closely related findings into synthesis rather than enumerating papers.
 - Generate the content directly. DO NOT generate any subsection title or section header here.
-- CRITICAL: '#' is used for section/subsection anchor. Avoid any '#' in the output content.
 - When evidence_bounded_writing=true in the plan: every substantive SH claim must obey its allowed_writing_mode and paper_role_constraints. A GRAPH_EXPANDED_CANDIDATE remains lineage/retrieval context and is never evidence by itself. It may be cited only when the current SH evidence plan explicitly includes the same paper through a FULLTEXT_PROMOTION role earned from that paper's own complete-section reading; then use exactly its listed direct, qualified, or background strength. Do not use BACKGROUND_CONTEXT papers for direct empirical support. A QUALIFIED_SH_CONTRIBUTION may support only QUALIFIED_SYNTHESIS and must state the applicable limitation rather than asserting a complete causal chain. An EVIDENCE_GAP_REPORT must report the gap and must not make an affirmative scientific conclusion. A ``multimodal_projection`` is a bounded observation from supplied local data, not a paper: retain its sample scope and claim limits, name competing explanations, and use only cautious compatibility language. Never say that it proves, establishes, or generally demonstrates a mechanism.
 - In evidence-bounded mode, end the response with exactly one final metadata block, using this literal delimiter (not angle brackets):
 [[SH_CLAIM_TRACE]]
@@ -970,7 +972,6 @@ Use the format: <paper_title>.
 6. Use about {section_target_citations} citations (never more than {section_max_citations}) to ground the section's scope when its SH plan allows evidence-backed or qualified synthesis. If the section only explains EVIDENCE_GAP_REPORT or OUT_OF_SCOPE_OR_REJECTED SHs, this generic target does not apply: identify the limitation and do not invent citations.
 7. Utilize the input content in a safe and reasonable manner, and ensure that the readability, structure, and depth of the content of the paragraph meet the requirements of a top-tier conference survey.
 8. Length: Aim for about {section_target_words} words and do not exceed {section_max_words} words. Keep this preamble compact so the subsection budgets control the complete survey length.
-9. CRITICAL: '#' is used for section/subsection anchor. Avoid any '#' in the output content.
 
 **Input**:
 - Section Title:
@@ -1172,6 +1173,20 @@ Return exactly one JSON object and nothing else:
 {{
   "revised_section": "complete revised section text"
 }}
+"""
+
+SURVEY_CLAIM_SUPPORT_AUDIT = """Check whether each cited claim is supported by the supplied source excerpts. Use only these excerpts, not outside knowledge. A source being on the topic is insufficient. Distinguish direct evidence from background context and do not treat a background source as proof of a specific result. If the excerpt is too short or unavailable, mark uncertain.
+
+Claims and admitted source excerpts:
+{claims_and_sources}
+
+Return exactly one JSON object: {{"assessments": [{{"claim_id": 1, "paper_id": "W...", "verdict": "supported|unsupported|uncertain", "evidence_quote": "exact contiguous source excerpt or empty", "reason": "brief explanation"}}]}}. Provide one assessment for every claim and cited paper. A supported verdict requires a quote copied verbatim from the supplied source excerpt. Do not invent quotes.
+"""
+
+SURVEY_CONSISTENCY_AUDIT = """Inspect these survey sections for material factual contradictions and repeated arguments, including repetition across subsections of the same section. Do not flag differences in scope or terminology unless the two quoted factual statements cannot both be true as written. Use the exact section numbers and copy both excerpts verbatim. Return exactly one JSON object: {{"contradictions": [{{"source_section": 1, "target_section": 2, "source_excerpt": "exact text", "target_excerpt": "exact text", "reason": "brief explanation"}}], "repetitions": [{{"source_section": 1, "target_section": 2, "source_excerpt": "exact text", "target_excerpt": "exact text", "reason": "brief explanation"}}]}}. Return empty lists if none are evident.
+
+Sections:
+{section_texts}
 """
 
 SURVEY_REVIEW = """You are an expert reviewer for an academic survey paper concerning topic: {topic}. You are reviewing the whole survey.

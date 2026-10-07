@@ -36,6 +36,7 @@ class OutcomeRAG:
         self.emb_subsection_titles: List[str] = []
         self.embeddings: Optional[torch.Tensor] = None
         self.title_embeddings: Optional[torch.Tensor] = None
+        self._citation_lookup_cache: Dict[int, Dict[str, str]] = {}
 
         with open(self.json_path, "r", encoding="utf-8") as f:
             try:
@@ -190,16 +191,23 @@ class OutcomeRAG:
         return uniq, occurs
 
     def _lookup_citation(self, cid: int) -> Dict[str, str]:
+        cached = self._citation_lookup_cache.get(cid)
+        if cached is not None:
+            return cached
         paper_ids = self.json_data.get("references") if self.json_data else None
         if isinstance(paper_ids, list) and 1 <= cid <= len(paper_ids):
             paper_id = paper_ids[cid - 1]  # assuming cid starts from 1
-            return {
-                "paper_id": paper_id,
-                "title": self.work_collector.get_paper_title(paper_id),
-            }
+            try:
+                title = self.work_collector.get_paper_title(paper_id)
+            except Exception as exc:
+                self.logger.warning("Skipping citation %s (paper_id=%s): title lookup failed: %s", cid, paper_id, exc)
+                title = ""
+            entry = {"paper_id": paper_id if title else "", "title": title}
         else:
             self.logger.warning(f"Invalid citation id {cid} or references missing; skipping title lookup")
-            return {"paper_id": "", "title": ""}
+            entry = {"paper_id": "", "title": ""}
+        self._citation_lookup_cache[cid] = entry
+        return entry
 
     def log_hits(self, hits: List[Dict], label: str = "Hits") -> None:
         self.logger.info(f"{label}: {len(hits)} result(s)")

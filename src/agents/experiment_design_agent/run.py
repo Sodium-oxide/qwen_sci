@@ -359,6 +359,7 @@ def run_experiment_design(
         result = orchestrator.compose_design(
             research_brief,
             user_constraints=user_constraints,
+            template_routing=_mapping(preparation.get("template_routing")),
             evidence_bundle=dict(evidence_bundle),
             composer_llm_call=composer_llm_call,
             reasoning_llm_call=llm_call,

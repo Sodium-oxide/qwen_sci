@@ -463,7 +463,15 @@ class ExperimentDesignOrchestrator:
             user_constraints=user_constraints,
             allow_digital_execution=self.allow_digital_execution,
         )
-        template_routing = self.template_router.route(brief, user_constraints=user_constraints)
+        template_routing = self.template_router.route(
+            brief,
+            user_constraints=user_constraints,
+            llm_call=(
+                self._required_reasoning_llm()
+                if scope_gate["status"] == "IN_SCOPE" and not brief_errors
+                else None
+            ),
+        )
         cache_run_id = self.cache.begin_run(brief.get("brief_id"))
         planning_degraded = False
         if scope_gate["status"] == "IN_SCOPE" and not brief_errors:
@@ -593,6 +601,7 @@ class ExperimentDesignOrchestrator:
         research_brief: Mapping[str, Any],
         *,
         user_constraints: Mapping[str, Any] | None = None,
+        template_routing: Mapping[str, Any] | None = None,
         evidence_bundle: Mapping[str, Any] | None = None,
         composer_llm_call: Callable[..., object] | None = None,
         reasoning_llm_call: Callable[..., object] | None = None,
@@ -608,7 +617,11 @@ class ExperimentDesignOrchestrator:
         )
         if scope_gate["status"] != "IN_SCOPE" or validate_research_brief(brief):
             raise ValueError("ExperimentDesign composition is unavailable until the ResearchBrief is valid and in scope.")
-        routing = self.template_router.route(brief, user_constraints=user_constraints)
+        routing = _mapping(template_routing) or self.template_router.route(
+            brief,
+            user_constraints=user_constraints,
+            llm_call=reasoning_llm_call or self._required_reasoning_llm(),
+        )
         reasoning_context = build_reasoning_context_from_brief(brief)
         brief_id = str(brief.get("brief_id") or "")
         degradations: list[dict[str, str]] = []
@@ -1453,6 +1466,7 @@ class ExperimentDesignOrchestrator:
             compose_call = lambda: self.compose_design(
                 brief,
                 user_constraints=user_constraints,
+                template_routing=_mapping(prepared.get("template_routing")),
                 evidence_bundle=dict(evidence_bundle),
                 composer_llm_call=composer_llm_call,
                 reasoning_llm_call=reasoning_llm_call,
@@ -1492,6 +1506,7 @@ class ExperimentDesignOrchestrator:
                         )
                     design = self.study_type_composer.compose_deterministically(
                         brief,
+                        template_routing=_mapping(prepared.get("template_routing")),
                         evidence_bundle=dict(evidence_bundle),
                         user_constraints=user_constraints,
                     )
