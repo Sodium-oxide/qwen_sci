@@ -20,6 +20,24 @@ Survey 已选出的论文直接接纳，不再调用可信度筛选模型。
 LLM 可以补充数学定义、方程、假设、辅助引理、任意候选规则和证明步骤；
 生成后的检查仍记录证明状态。循环定义保留为研究草稿，不能作为已成立的证明前提。
 
+### 定义字段与分组修订
+
+已明确的定义必须给出非空的 `symbol`、`statement`、`domain`、`codomain`、
+`unit` 和 `selection_reason`。原始对象也须描述值域或对象类型，例如图的
+`codomain` 可以是加权图；无物理量纲的结构对象可填写 `unit: not_applicable`，
+比例等无量纲量填写 `dimensionless`。这些说明同步用于定义解析、全局协调、
+证明规划和语义修订。没有机器编码的文字定义可以保持已明确状态。
+
+缺失或为空的字段分别记录字段路径和补全建议，并进入对应定义的局部修订目标。
+组内 `assigned_definition_ids` 只包含本组主定义；全局注册表保留所有变量和
+对应主定义 ID，供跨组引用。误返回的其他组主定义归档在
+`retrieval_audit.out_of_group_candidates`，不参与本组诊断和补全；
+所需辅助定义及有效跨组依赖仍然保留。
+
+`variable_references` 只存变量 ID。误放入其中的已知正式记录 ID 会移入
+`depends_on`，并记录 `dependency_repairs`；未知引用保留诊断，不根据名称猜测。
+全局协调保留字符串形式的研究缺口，不因对其调用对象方法而中断整个协调阶段。
+
 完整 Science 流程自动传递对应 Survey manifest。单独重跑时可显式指定：
 
 ```bash
@@ -260,7 +278,7 @@ definition 和 relation 逐条检查必要字段、状态、引用数组和来�
 
 每 30 秒输出 `llm_request_waiting`，每组输出组号、补取轮次、卡片数、提示词字符数和缓存命中状态。ExperimentDesign 默认设置 `request_timeout_seconds: 1800`、`request_max_retries: 1`，传递给 SDK；这是请求超时/重试设置，不是整个阶段的硬墙钟截止时间。等待心跳表示本地仍在等待，不表示服务端正在生成。
 
-形式推理采用两阶段流程。第一阶段 `v2_skeleton` 只生成假设、命题、引理、证明义务和依赖骨架，不生成详细证明步骤；它接收已编码定义与关系的关键数学字段、未编码项的简短索引及默认最多 36 张相关证据卡的正文。检索查询只使用数学内容摘要与主张，避免完整来源引文影响相关性检索。提示词明确要求假设的 `assumption_id` 与候选状态、证明义务的 `obligation_id` 与未解决状态；可确定的通用 ID 字段和缺失状态由本地归一化。仍缺 ID 时最多发送一次只含缺口记录及引用索引的小型修复请求，修复结果须与目标引用一致。修复请求失败时保留骨架，为缺 ID 记录分配仅用于追踪的 ID，不猜测其科学关联。完整定义和关系在本地注入骨架产物，模型无需复述。可明确识别的单对象包装会展开；`depends_on`、`premises` 和 `assumption_ids` 中误用的变量 ID，在主定义关联明确或匹配唯一时转换为正式定义 ID，记录 `dependency_reference_repaired`。有歧义的引用保留原文并阻止受影响记录参与验证。
+形式推理采用两阶段流程。第一阶段 `v2_skeleton` 只生成假设、命题、引理、证明义务和依赖骨架，不生成详细证明步骤；它在首次请求时按依赖闭包分组，每组最多 24 个定义和 16 个关系。组外记录只以 `external_dependencies`/`omitted_context` 的短索引出现，完整定义和关系在本地注入骨架产物，模型无需复述。Skeleton 请求禁用底层原样重试；单组请求失败时先缩短数学文本和证据摘要，再以压缩输入重试，仍失败则拆成更小组并保留失败组的待审草稿，不清空其他组结果。Skeleton 不设置专用提示词字符上限、900 秒超时或 12000 输出 token 上限；请求超时沿用 ExperimentDesign 的通用设置，输出仍服从模型服务及项目通用配置。它接收已编码定义与关系的关键数学字段、未编码项的简短索引及默认最多 36 张相关证据卡的正文。检索查询只使用数学内容摘要与主张，避免完整来源引文影响相关性检索。提示词明确要求假设的 `assumption_id` 与候选状态、证明义务的 `obligation_id` 与未解决状态；可确定的通用 ID 字段和缺失状态由本地归一化。仍缺 ID 时最多发送一次只含缺口记录及引用索引的小型修复请求，修复结果须与目标引用一致。修复请求失败时保留骨架，为缺 ID 记录分配仅用于追踪的 ID，不猜测其科学关联。可明确识别的单对象包装会展开；`depends_on`、`premises` 和 `assumption_ids` 中误用的变量 ID，在主定义关联明确或匹配唯一时转换为正式定义 ID，记录 `dependency_reference_repaired`。有歧义的引用保留原文并阻止受影响记录参与验证。
 
 骨架提示词通过共享的 `output_contract.required_target_fields` 和完整示例明确列出每个命题、引理的 `statement`、`scope`、`premises`、`conclusion`、`quantifiers`、`domain_expression`、`conclusion_expression`、`required_obligation_ids`，所有键必须出现；无法编码的数学表达式用 `null` 并解释缺口。可明确识别的字段别名先归一化，然后只对仍缺失或格式错误的字段发起 `v2_skeleton_repair_round_<n>_batch_<n>`。修复返回 `skeleton_record_patch_v1` 的 `patches`，仅允许修改指定 ID 的指定字段；拒绝覆盖合格字段、删除前提以规避检查或增加未请求的记录。默认 `planner.max_skeleton_repairs: 1`（可设 0–2）、`planner.max_records_per_skeleton_repair: 4`（可设 1–8），每轮只请求剩余问题，无进展时停止。补丁部分有效时逐字段接收，错误字段、请求失败或无补丁时保留原稿，历史候选和批次结果分别写入 `construction_archive` 与 `skeleton_repair_audit`。
 

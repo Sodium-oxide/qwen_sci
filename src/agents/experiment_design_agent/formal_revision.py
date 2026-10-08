@@ -5,7 +5,7 @@ from collections.abc import Mapping
 from copy import deepcopy
 import json
 
-from .formal_contracts import DEFINITION_FIELDS, validate_formal_plan_v2
+from .formal_contracts import DEFINITION_FIELDS, DEFINITION_TEXT_CONTRACT, validate_formal_plan_v2
 from .definition_evidence import bounded_formal_evidence
 from .formal_dependency import COLLECTION_IDS, dependency_ids, formal_records, target_subgraph
 from .formal_verification import semantic_snapshot, verify_formal_plan
@@ -68,6 +68,9 @@ meaning and leave genuinely missing scientific content unresolved. LLM proof arg
 may be supplied as unverified candidates alongside executable SymPy/Z3 calculation steps.
 INPUT_JSON:
 """
+
+
+REVISION_PROMPT = REVISION_PROMPT.replace("INPUT_JSON:\n", DEFINITION_TEXT_CONTRACT + "\nINPUT_JSON:\n")
 
 
 def affected_ids(plan, report):

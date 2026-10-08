@@ -13,7 +13,7 @@ from time import perf_counter
 
 from .cache import ExperimentDesignCache
 from .definition_evidence import DefinitionEvidenceIndex, variable_groups
-from .formal_contracts import DEFINITION_FIELDS, DEFINITION_RESOLUTION_V1, validate_definition
+from .formal_contracts import DEFINITION_FIELDS, DEFINITION_RESOLUTION_V1, DEFINITION_TEXT_CONTRACT, validate_definition
 from .formal_dependency import expression_symbols, log_symbol_diagnostics
 from .llm_json import call_required_json_with_logging, json_prompt_payload
 
@@ -40,8 +40,9 @@ Compact definition records should contain: definition_id, symbol, statement, obj
 expression_latex when useful, formal_expression only when a trustworthy encoding is available,
 domain, codomain, unit, origin, source_refs, variable_references when needed to disambiguate,
 and optional selection_reason. `conditions` is one array of objects with `text` and optional
-`formal_expression`; do not return a separate condition_expressions array. Do not return
-symbol_references, depends_on, verification_readiness, definition_status, or a variable
+`formal_expression`; do not return a separate condition_expressions array. Optional
+depends_on may explicitly name definition/relation IDs used by the definition. Do not return
+symbol_references, verification_readiness, definition_status, or a variable
 dependency registry; the host derives them. Use origin source_grounded, modeling_convention,
 or unresolved. For a definition whose content is specified, `object_kind` is required and
 must be exactly `primitive` (a base quantity/object not defined by another expression) or
@@ -70,12 +71,17 @@ conditions and selection_reason concise. Preserve existing IDs and record kinds.
 INPUT_JSON:
 """
 
+DEFINITION_PROMPT = DEFINITION_PROMPT.replace("INPUT_JSON:\n", DEFINITION_TEXT_CONTRACT + "\nINPUT_JSON:\n")
+
 RETRIEVAL_INSTRUCTIONS = """
 Resolve only the variables in variable_claim_model.variables, using the global variable
 registry to keep IDs stable. Existing definitions are context, not new evidence.
 Use assigned_definition_ids for the corresponding primary definitions. Additional
 primitive or relation IDs must start with id_prefix. Do not redefine another group's
-variables. Cards are a retrieved subset: absence here is not absence in the library.
+variables. assigned_definition_ids contains only this group's primary IDs. The global
+registry is read-only: never return other groups' primary definitions, even as stubs.
+New supporting definitions must use id_prefix and be needed by this group's mathematics.
+Cards are a retrieved subset: absence here is not absence in the library.
 Return optional evidence_requests as objects with query and reason when a formula,
 scope, units, competing definition or governing relation needs additional evidence.
 If retrieval does not supply a definition or relation, develop it yourself as an
@@ -131,6 +137,11 @@ facts, citations or mathematical verification. Return {"issues": []}
 when no additional conflict is found. Do not repeat the full definition records.
 INPUT_JSON:
 """
+
+
+RECONCILIATION_REVIEW_PROMPT = RECONCILIATION_REVIEW_PROMPT.replace(
+    "INPUT_JSON:\n", DEFINITION_TEXT_CONTRACT + "\nINPUT_JSON:\n",
+)
 
 
 def evidence_cards(evidence_bundle: Mapping[str, Any]) -> list[dict[str, Any]]:
@@ -853,15 +864,19 @@ def normalize_record_completeness(payload, evidence_bundle):
                         issues.append(("verification_readiness", "invalid_readiness", "Verification readiness is missing or unrecognized."))
                     record["verification_readiness"] = "blocked"
                 if record["definition_status"] == "specified":
-                    for field in ("symbol", "statement", "domain", "codomain", "unit", "selection_reason"):
-                        if record[field] is None or isinstance(record[field], str) and not record[field].strip():
-                            issues.append((field, "unspecified_content", f"Specified definition requires meaningful {field}."))
                     if record.get("object_kind") not in ("primitive", "derived"):
                         issues.append(("object_kind", "invalid_object_kind", "Primitive or derived object kind is required."))
                     if record.get("object_kind") == "derived" and not record.get("expression_latex") and not record.get("formal_expression"):
                         issues.append(("formal_expression", "missing_expression", "Derived definition has no mathematical expression."))
                     if record["origin"] == "unresolved":
                         issues.append(("origin", "unresolved_origin", "Definition origin remains unresolved."))
+                for field in ("symbol", "statement", "domain", "codomain", "unit", "selection_reason"):
+                    if field not in missing_fields and (not isinstance(record.get(field), str) or not record[field].strip()):
+                        hint = {
+                            "codomain": "State the value set or object type, including for a primitive object.",
+                            "unit": "State physical units, dimensionless, or not_applicable for a structural object.",
+                        }.get(field, "Supply the mathematical description explicitly.")
+                        issues.append((field, "unspecified_content", f"Definition requires a nonempty {field} string. {hint}"))
             else:
                 if record.get("status") not in ("candidate_formalization", "unresolved"):
                     if "status" not in missing_fields:
@@ -1081,9 +1096,76 @@ def _unique_record_id(records, identifier, kind):
     return candidate
 
 
-def keep_group_definitions(payload, group, assigned):
-    """Retain every definition candidate and defer variable scope checks globally."""
-    return deepcopy(payload), []
+def keep_group_definitions(payload, group, assigned, *, group_number=None):
+    """Keep local definitions and dependency-closed supporting records only."""
+    normalized = deepcopy(payload)
+    group_ids = {variable["variable_id"] for variable in group}
+    if not group_ids:
+        return normalized, []
+    local_primary_ids = {identifier for variable, identifier in assigned.items() if variable in group_ids}
+    all_primary_ids = set(assigned.values())
+    definitions = [record for record in normalized.get("definitions", []) if isinstance(record, Mapping)]
+    by_id = {str(record.get("definition_id")): record for record in definitions if record.get("definition_id")}
+    allowed = set(local_primary_ids)
+    local_prefix = f"G{group_number}_" if group_number is not None else None
+    for identifier, record in by_id.items():
+        variables = set(record.get("variable_references", []) or [])
+        if variables.intersection(group_ids) or (local_prefix and identifier.startswith(local_prefix)):
+            allowed.add(identifier)
+    # A supporting record can be referenced by ID before normalization moves it
+    # from variable_references to depends_on; retain it for that local closure.
+    referenced_support = {
+        reference for record in by_id.values()
+        if str(record.get("definition_id")) in allowed
+        for reference in record.get("variable_references", []) or []
+        if isinstance(reference, str) and reference in by_id
+    }
+    allowed.update(referenced_support)
+    # Unowned records are retained as supporting drafts. Explicit foreign
+    # primary IDs, foreign namespaces, and records tied to foreign variables
+    # are the only records removed from this group.
+    for identifier, record in by_id.items():
+        variables = set(record.get("variable_references", []) or [])
+        if identifier in all_primary_ids and identifier not in allowed:
+            continue
+        if local_prefix and identifier.startswith("G") and not identifier.startswith(local_prefix):
+            continue
+        if local_prefix is None and re.match(r"^G\d+_", identifier):
+            continue
+        if variables and not variables.intersection(group_ids) and not variables.intersection(allowed):
+            continue
+        allowed.add(identifier)
+    pending = list(allowed)
+    while pending:
+        identifier = pending.pop()
+        record = by_id.get(identifier)
+        if record is None:
+            continue
+        for dependency in record.get("depends_on", []) or []:
+            if dependency in by_id and dependency not in allowed:
+                allowed.add(dependency)
+                pending.append(dependency)
+    foreign_records = [record for record in definitions
+                       if record.get("definition_id") not in allowed]
+    dropped = [record.get("definition_id") for record in foreign_records if record.get("definition_id")]
+    normalized["definitions"] = [record for record in normalized.get("definitions", [])
+                                 if isinstance(record, Mapping) and record.get("definition_id") in allowed]
+    normalized.setdefault("out_of_group_candidates", []).extend(foreign_records)
+    normalized["unknown_items"] = [item for item in normalized.get("unknown_items", [])
+                                   if not isinstance(item, Mapping)
+                                   or (item.get("record_id") in allowed
+                                       or item.get("record_id") not in set(dropped))]
+    # Relations are local only when they reference retained definitions or local variables.
+    relations = []
+    for relation in normalized.get("model_relations", []):
+        if not isinstance(relation, Mapping):
+            continue
+        refs = set(relation.get("depends_on", []) or [])
+        variables = set(relation.get("variable_references", []) or [])
+        if refs.intersection(allowed) or variables.intersection(group_ids) or not refs.intersection(all_primary_ids):
+            relations.append(relation)
+    normalized["model_relations"] = relations
+    return normalized, dropped
 
 
 def register_global_variable_dependencies(payload, variables, *, logger=None, brief_id=""):
@@ -1096,6 +1178,11 @@ def register_global_variable_dependencies(payload, variables, *, logger=None, br
     }
     registry = []
     missing_by_record = {}
+    formal_record_ids = {
+        str(record.get(identifier))
+        for collection, identifier in (('definitions', 'definition_id'), ('model_relations', 'relation_id'))
+        for record in payload.get(collection, []) if isinstance(record, Mapping) and record.get(identifier)
+    }
     for collection, identifier_field in (("definitions", "definition_id"), ("model_relations", "relation_id")):
         for record in payload.get(collection, []):
             if not isinstance(record, Mapping):
@@ -1108,6 +1195,12 @@ def register_global_variable_dependencies(payload, variables, *, logger=None, br
                 reference for reference in references
                 if isinstance(reference, str) and reference.strip()
             ))
+            record_references = [reference for reference in normalized_references if reference in formal_record_ids]
+            if record_references:
+                record.setdefault("depends_on", [])
+                record["depends_on"] = list(dict.fromkeys([*record["depends_on"], *record_references]))
+                record["variable_references"] = [reference for reference in normalized_references if reference not in formal_record_ids]
+                normalized_references = list(record["variable_references"])
             missing = sorted(set(normalized_references) - variable_ids)
             registry.append({
                 "collection": collection,
@@ -1285,6 +1378,8 @@ def normalize_model_relations(payload, *, id_prefix):
 
 class FormalDefinitionResolver:
     def resolve(self, research_brief, reasoning_context, variable_claim_model, evidence_bundle, *, llm_call, logger=None, settings=None, cache_identity=None):
+        from .formal_plan_recovery import normalize_variable_dependencies
+
         settings = dict(settings or {})
         card_limit = max(1, min(40, int(settings.get("max_cards_per_request", 40))))
         initial_limit = min(card_limit, max(1, int(settings.get("initial_cards", 24))))
@@ -1297,7 +1392,11 @@ class FormalDefinitionResolver:
         variables = variable_claim_model.get("variables", [])
         groups = variable_groups(variables, group_size)
         assigned = {variable["variable_id"]: f"D{position}" for position, variable in enumerate(variables, 1)}
-        registry = [{key: variable.get(key) for key in ("variable_id", "name", "symbol", "claim_links")} for variable in variables]
+        registry = [
+            {**{key: variable.get(key) for key in ("variable_id", "name", "symbol", "claim_links")},
+             "definition_id": assigned[variable["variable_id"]]}
+            for variable in variables
+        ]
         cache = ExperimentDesignCache(settings.get("checkpoint", {"enabled": False}))
         brief_id = str(research_brief.get("brief_id") or "")
         merged = {
@@ -1328,7 +1427,8 @@ class FormalDefinitionResolver:
                 context = {
                 "research_brief": research_brief, "reasoning_context": reasoning_context,
                 "variable_claim_model": {**variable_claim_model, "variables": group, "unknown_items": []},
-                "global_variable_registry": registry, "assigned_definition_ids": assigned,
+                "global_variable_registry": registry,
+                "assigned_definition_ids": {variable["variable_id"]: assigned[variable["variable_id"]] for variable in group},
                 "id_prefix": f"G{group_number}_",
                 "previous_candidate": compact_candidate_context(current, repair_targets),
                 "existing_definitions": existing_definitions,
@@ -1403,16 +1503,17 @@ class FormalDefinitionResolver:
                     current, previous=previous, repair_targets=repair_targets,
                     primary_ids=set(assigned.values()),
                 )
+                current, dropped = keep_group_definitions(current, group, assigned, group_number=group_number)
                 current, repaired_relations, quarantined_relations = normalize_model_relations(
                     current, id_prefix=f"G{group_number}_",
                 )
                 current, normalized_fields = normalize_definition_conditions(current)
                 current, reference_repairs = normalize_definition_references(current)
+                normalize_variable_dependencies(current, variable_claim_model)
                 current = normalize_record_completeness(current, evidence_bundle or {})
                 current, discarded_records = self._quarantine_invalid_records(
                     current, evidence_bundle or {},
                 )
-                current, dropped = keep_group_definitions(current, group, assigned)
                 current, renamed_ids = namespace_group_records(
                     current, id_prefix=f"G{group_number}_",
                     primary_ids=set(assigned.values()),
@@ -1491,6 +1592,8 @@ class FormalDefinitionResolver:
                                     "reference_repairs": reference_repairs})
                 group_audit[-1].update(record_diagnostics=record_diagnostics, repair_targets=repair_targets,
                                        ignored_patch_record_ids=ignored_patch_ids,
+                                       out_of_group_candidates=deepcopy(current.get("out_of_group_candidates", [])),
+                                       dependency_repairs=deepcopy(current.get("dependency_repairs", [])),
                                        record_collection_repairs=record_collection_repairs)
                 relation_review_count = sum(
                     isinstance(item, Mapping)
@@ -1627,8 +1730,6 @@ class FormalDefinitionResolver:
         )
 
         if len(groups) > 1 or definition_conflicts(merged):
-            from .formal_plan_recovery import normalize_variable_dependencies
-
             normalize_variable_dependencies(merged, variable_claim_model, logger=logger, brief_id=brief_id)
             candidates = prepare_definition_candidates(merged)
             review_scope = reconciliation_record_scope(candidates)
@@ -1668,6 +1769,8 @@ class FormalDefinitionResolver:
                     if cache.offline:
                         raise ValueError("definition_reconciliation_checkpoint_miss")
                     review = self._request(llm_call, prompt, logger, brief_id, settings, request_kind="reconcile_definitions")
+                if not isinstance(review, Mapping):
+                    raise ValueError(f"definition_reconciliation_response_not_object:{type(review).__name__}")
                 issues = review.get("issues")
                 if not isinstance(issues, list):
                     raise ValueError("definition_reconciliation_issues_not_array")
@@ -1703,6 +1806,8 @@ class FormalDefinitionResolver:
                     })
                     repaired = self._request(llm_call, repair_prompt, logger, brief_id, settings,
                                              request_kind="repair_definition_conflicts")
+                    if not isinstance(repaired, Mapping):
+                        raise ValueError(f"definition_reconciliation_repair_response_not_object:{type(repaired).__name__}")
                     remaining = repaired.get("issues")
                     if not isinstance(remaining, list) or not all(
                         isinstance(issue, Mapping) and isinstance(issue.get("record_ids"), list)
@@ -1751,8 +1856,6 @@ class FormalDefinitionResolver:
                           "status": review_status,
                           "error_detail": detail if review_status == "warning" else ""})
         try:
-            from .formal_plan_recovery import normalize_variable_dependencies
-
             normalize_variable_dependencies(merged, variable_claim_model, logger=logger, brief_id=brief_id)
             merged = self._merge(merged, logger=logger, brief_id=brief_id)
         except Exception as error:

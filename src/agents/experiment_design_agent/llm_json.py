@@ -19,6 +19,7 @@ from src.llm.provider_registry import resolve_model
 
 JSON_OBJECT_RESPONSE_FORMAT = {"type": "json_object"}
 MAX_LOGGED_VALIDATION_ERRORS = 20
+_REQUEST_OPTIONS = local()
 _SAFE_CONTRACT_FIELD_IDENTIFIERS = frozenset(
     {
         "source",
@@ -183,6 +184,7 @@ def call_required_json_with_logging(
     request_kind: str,
     logger: Any | None,
     brief_id: str,
+    request_options: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Invoke one strict JSON request and emit only safe transport metadata."""
 
@@ -195,9 +197,14 @@ def call_required_json_with_logging(
             brief_id=brief_id,
             request_kind=request_kind,
             response_format="json_object",
+            **dict(request_options or {}),
         )
 
     def observed_llm_call(inner_prompt: str, **kwargs: object) -> object:
+        previous_options = getattr(_REQUEST_OPTIONS, "value", {})
+        _REQUEST_OPTIONS.value = dict(request_options or {})
+        if request_kind.startswith("v2_skeleton"):
+            _REQUEST_OPTIONS.value["max_retries"] = 0
         try:
             raw = llm_call(inner_prompt, **kwargs) if llm_call is not None else None
         except Exception as exc:
@@ -212,6 +219,8 @@ def call_required_json_with_logging(
                     request_kind=request_kind,
                 )
             raise
+        finally:
+            _REQUEST_OPTIONS.value = previous_options
         if logger is not None:
             logger.event(
                 stage,
@@ -324,11 +333,14 @@ def build_default_json_llm_call(
             raise RequiredJsonLLMError(
                 "experiment_design: no model is configured for the experiment-design LLM role"
             )
-        kwargs.setdefault("timeout", float(experiment_design_setting("request_timeout_seconds", 600)))
+        options = getattr(_REQUEST_OPTIONS, "value", {})
+        kwargs.setdefault("timeout", float(options.get("timeout", experiment_design_setting("request_timeout_seconds", 600))))
+        if "max_output_tokens" in options:
+            kwargs.setdefault("max_tokens", int(options["max_output_tokens"]))
         with_options = getattr(getattr(agent, "chat_model", None), "with_options", None)
         if callable(with_options):
             agent.chat_model = with_options(
-                max_retries=max(0, int(experiment_design_setting("request_max_retries", 1)))
+                max_retries=max(0, int(options.get("max_retries", experiment_design_setting("request_max_retries", 1))))
             )
         return agent.chat(prompt, model=resolved_model, **kwargs)
 

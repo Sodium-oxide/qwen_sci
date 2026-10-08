@@ -124,10 +124,31 @@ def normalize_variable_dependencies(plan, variable_claim_model=None, *, logger=N
     identifiers = {record[id_field] for collection, id_field in COLLECTION_IDS.items()
                    for record in plan.get(collection, []) if isinstance(record, Mapping)
                    and isinstance(record.get(id_field), str)}
+    registered_variables = {variable["variable_id"] for variable in variables}
     for collection, id_field in COLLECTION_IDS.items():
         for record in plan.get(collection, []):
             if not isinstance(record, Mapping):
                 continue
+            references = record.get("variable_references")
+            if isinstance(references, list):
+                misplaced = [reference for reference in references if isinstance(reference, str)
+                             and reference in identifiers and reference not in registered_variables]
+                if misplaced:
+                    dependencies = record.get("depends_on", [])
+                    if isinstance(dependencies, list):
+                        converted = [reference for reference in references if reference not in misplaced]
+                        repair = {"record_id": record.get(id_field, collection), "field": "variable_references",
+                                  "original": deepcopy(references), "normalized": converted,
+                                  "moved_to_depends_on": list(dict.fromkeys(misplaced))}
+                        if repair not in plan.setdefault("dependency_repairs", []):
+                            plan["dependency_repairs"].append(repair)
+                        record["variable_references"] = converted
+                        record["depends_on"] = list(dict.fromkeys([*dependencies, *misplaced]))
+                        if logger is not None:
+                            logger.event("formal_reasoning_planner", "dependency_reference_repaired", status="REPAIRED",
+                                         brief_id=brief_id, record_id=record.get(id_field, collection),
+                                         field="variable_references", original_references=references,
+                                         normalized_references=converted, moved_to_depends_on=repair["moved_to_depends_on"])
             for field in ("depends_on", "premises", "assumption_ids"):
                 references = record.get(field)
                 if not isinstance(references, list):

@@ -5,13 +5,39 @@ import pytest
 
 from test_formal_contracts_v2 import formal_plan
 from src.agents.experiment_design_agent.formal_contracts import validate_formal_plan_v2
-from src.agents.experiment_design_agent.formal_plan_recovery import recover_counterexample_analysis, recover_formal_plan
+from src.agents.experiment_design_agent.formal_plan_recovery import (
+    normalize_variable_dependencies, recover_counterexample_analysis, recover_formal_plan,
+)
 from src.agents.experiment_design_agent.formal_reasoning_planner import FormalReasoningPlanner
 from src.agents.experiment_design_agent.formal_verification import build_verification_task, verify_formal_plan
 from src.agents.experiment_design_agent.reasoning_validation import validate_counterexample_analysis
 
 
 VARIABLES = {"variables": [{"variable_id": "V1"}]}
+
+
+def test_formal_ids_in_variable_references_move_to_dependencies_and_unknown_ids_remain():
+    plan = formal_plan()
+    helper = deepcopy(plan["definitions"][0])
+    helper.update(definition_id="D2", symbol="y", variable_references=["V1", "D1", "missing", "D1"],
+                  depends_on=["A1"])
+    plan["definitions"].append(helper)
+
+    normalize_variable_dependencies(plan, VARIABLES)
+
+    assert helper["variable_references"] == ["V1", "missing"]
+    assert helper["depends_on"] == ["A1", "D1"]
+    assert plan["dependency_repairs"][0]["moved_to_depends_on"] == ["D1"]
+    snapshot = deepcopy(plan)
+    assert normalize_variable_dependencies(plan, VARIABLES) == snapshot
+
+
+def test_registered_variable_ids_take_precedence_over_colliding_formal_ids():
+    plan = formal_plan()
+    plan["propositions"][0]["variable_references"] = ["D1"]
+    normalize_variable_dependencies(plan, {"variables": [{"variable_id": "D1"}]})
+    assert plan["propositions"][0]["variable_references"] == ["D1"]
+    assert "dependency_repairs" not in plan
 
 
 def resolution(plan):

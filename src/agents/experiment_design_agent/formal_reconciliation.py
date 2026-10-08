@@ -8,11 +8,23 @@ from .formal_dependency import COLLECTION_IDS
 
 
 def _plan_steps(payload):
-    for step in payload.get("forward_derivation", {}).get("steps", []):
-        yield f"forward_derivation/{step.get('step_id')}", step
-    for attempt in payload.get("proof_attempts", []):
-        for step in attempt.get("steps", []):
-            yield f"{attempt.get('attempt_id')}/{step.get('step_id')}", step
+    derivation = payload.get("forward_derivation", {})
+    if isinstance(derivation, Mapping):
+        for step in derivation.get("steps", []) if isinstance(derivation.get("steps", []), list) else []:
+            if isinstance(step, Mapping):
+                yield f"forward_derivation/{step.get('step_id')}", step
+    attempts = payload.get("proof_attempts", [])
+    if not isinstance(attempts, list):
+        return
+    for attempt in attempts:
+        if not isinstance(attempt, Mapping):
+            continue
+        steps = attempt.get("steps", [])
+        if not isinstance(steps, list):
+            continue
+        for step in steps:
+            if isinstance(step, Mapping):
+                yield f"{attempt.get('attempt_id')}/{step.get('step_id')}", step
 
 
 def _rewrite_symbols(value, renames):
@@ -51,11 +63,18 @@ def apply_definition_reconciliation(payload, patch, evidence_bundle=None):
 
     if not isinstance(patch, Mapping):
         raise ValueError("definition_reconciliation_patch_not_object")
+    if not isinstance(payload, Mapping):
+        raise ValueError("definition_reconciliation_payload_not_object")
     result = deepcopy(payload)
     records = {}
     collections = {}
     for collection, identifier in COLLECTION_IDS.items():
-        for record in result.get(collection, []):
+        values = result.get(collection, [])
+        if not isinstance(values, list):
+            raise ValueError(f"definition_reconciliation_invalid_collection:{collection}")
+        for index, record in enumerate(values):
+            if not isinstance(record, Mapping):
+                raise ValueError(f"definition_reconciliation_record_not_object:{collection}[{index}]")
             record_id = record.get(identifier)
             if record_id in records:
                 raise ValueError(f"definition_reconciliation_duplicate_id:{record_id}")
@@ -181,6 +200,8 @@ def apply_definition_reconciliation(payload, patch, evidence_bundle=None):
         if set(records[identifier].get("depends_on", [])) - known_ids:
             raise ValueError(f"definition_reconciliation_unknown_dependency:{identifier}")
     for item in result.get("unknown_items", []):
+        if not isinstance(item, Mapping):
+            continue
         owner = item.get("record_id") or next((part for part in str(item.get("field_path", "")).split(".") if part in touched), None)
         if owner in touched and records[owner] != original[owner] and records[owner].get("verification_readiness") != "blocked":
             item.update(resolved=True, status="resolved")
@@ -198,7 +219,9 @@ def definition_conflicts(payload):
     seen_ids = set()
     seen_symbols = set()
     conflicts = []
-    for record in payload.get("definitions", []):
+    for record in payload.get("definitions", []) if isinstance(payload, Mapping) else []:
+        if not isinstance(record, Mapping):
+            continue
         identifier = record.get("definition_id")
         symbol = record.get("symbol")
         if identifier in seen_ids or symbol in seen_symbols:

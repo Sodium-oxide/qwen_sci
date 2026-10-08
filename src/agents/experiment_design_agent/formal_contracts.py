@@ -24,6 +24,19 @@ DEFINITION_FIELDS = (
     "variable_references", "symbol_references", "object_kind",
 )
 
+DEFINITION_TEXT_CONTRACT = """For a specified definition, symbol, statement, domain,
+codomain, unit and selection_reason must be nonempty strings, never null. domain
+describes the admissible objects or inputs. codomain describes the value set or
+object type even for a primitive: use positive integers for a count, weighted graphs
+for a topology, or admissible physical computers for a computer object. unit must
+state physical units, dimensionless for a ratio/predicate, or not_applicable for a
+structural object without physical units. These markers describe the object; do not
+invent physical units. A derived object requires expression_latex or formal_expression.
+Missing machine encoding alone does not make a textual definition unresolved.
+variable_references contains only registered variable IDs; put definition/relation
+IDs in depends_on, not variable_references. New objects may have variable_references=[].
+"""
+
 
 def _normalized_derivation_rule(value: Any) -> str:
     normalized = str(value or "").strip().casefold().replace("-", "_").replace(" ", "_")

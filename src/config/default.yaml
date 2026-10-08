@@ -914,6 +914,10 @@ experiment_design:
         mode: "read_write"
     planner:
       parallel_workers: 3
+      skeleton_max_definitions_per_group: 24
+      skeleton_max_relations_per_group: 16
+      skeleton_max_compact_retries: 1
+      skeleton_parallel_workers: 3
       max_targets_per_request: 2
       max_skeleton_repairs: 1
       max_records_per_skeleton_repair: 4

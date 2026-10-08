@@ -21,6 +21,32 @@ def resolution():
             "definitions": deepcopy(plan["definitions"]), "model_relations": [], "unknown_items": []}
 
 
+def test_reconciliation_preserves_text_diagnostics_while_applying_definition_repair():
+    payload = resolution()
+    payload["unknown_items"] = [
+        "An open research question remains.",
+        {"record_id": "D1", "field_path": "definitions.D1.unit",
+         "reason": "Unit was missing", "status": "needs_human_input"},
+    ]
+    repaired = apply_definition_reconciliation(payload, {
+        "repairs": [{"record_id": "D1", "fields": {"selection_reason": "A revised mathematical convention"}}],
+    })
+
+    assert repaired["unknown_items"][0] == payload["unknown_items"][0]
+    assert repaired["unknown_items"][1]["resolved"] is True
+    assert "reconciliation_audit" in repaired
+    assert "resolved" not in payload["unknown_items"][1]
+    assert apply_definition_reconciliation(payload, {"issues": []}) == payload
+
+
+def test_reconciliation_reports_malformed_record_location_without_attribute_error():
+    payload = resolution()
+    payload["definitions"].append("Invalid definition object")
+
+    with pytest.raises(ValueError, match=r"record_not_object:definitions\[1\]"):
+        apply_definition_reconciliation(payload, {})
+
+
 def test_reconciliation_scope_keeps_conflicts_and_direct_consumers_only():
     payload = resolution()
     duplicate = deepcopy(payload["definitions"][0])
