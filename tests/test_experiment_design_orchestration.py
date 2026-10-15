@@ -121,6 +121,17 @@ def test_clinical_fixture_requires_human_review_and_never_executes() -> None:
     assert prepared["scope_gate"]["execution"]["mode"] == DESIGN_ONLY
 
 
+def test_non_human_pathosystem_preparation_is_not_blocked_by_biological_review() -> None:
+    prepared = ExperimentDesignOrchestrator(llm_call=_json_llm).prepare(
+        _brief("24", "Model pathogen and pathovar comparison for Chenopodium pallidicaule plant immunity."),
+    )
+
+    assert "PATHOGEN_OR_RESTRICTED_BIOLOGICAL_REVIEW" in prepared["risk_and_human_review"]["review_triggers"]
+    assert prepared["scope_gate"]["methodology_detail_policy"]["level"] == "FULL_METHODOLOGY_PLAN"
+    assert prepared["validation_report"]["status"] != "BLOCKED_BY_RISK_REVIEW"
+    assert prepared["scope_gate"]["execution"]["mode"] == DESIGN_ONLY
+
+
 def test_cs_remains_design_only_when_future_eligibility_is_enabled() -> None:
     prepared = ExperimentDesignOrchestrator(allow_digital_execution=True, llm_call=_json_llm).prepare(
         _brief("17", "Robust evaluation of a computational representation.")

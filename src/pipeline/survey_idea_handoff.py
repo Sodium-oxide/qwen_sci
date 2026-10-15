@@ -521,6 +521,7 @@ class SurveyIdeaHandoff:
     scope: ScopeRecord = field(default_factory=ScopeRecord)
     constraints: dict[str, Any] = field(default_factory=dict)
     gap_triage: dict[str, Any] = field(default_factory=dict)
+    scientific_candidates: dict[str, Any] = field(default_factory=dict)
     source_artifacts: dict[str, Any] = field(default_factory=dict)
     created_at: str = ""
     status: str = "ready"
@@ -550,6 +551,8 @@ class SurveyIdeaHandoff:
         }
         if self.handoff_fingerprint:
             payload["handoff_fingerprint"] = _text(self.handoff_fingerprint)
+        if self.scientific_candidates:
+            payload["scientific_candidates"] = _canonicalize(self.scientific_candidates)
         return payload
 
 
@@ -838,6 +841,29 @@ def validate_handoff_payload(payload: Any, *, verify_fingerprint: bool = False) 
                 errors.append(
                     f"payload.anchors[{index}].supports_gap_ids references unknown gap: {_text(gap_id)}"
                 )
+    scientific = payload.get("scientific_candidates")
+    if scientific is not None:
+        if not isinstance(scientific, Mapping):
+            errors.append("payload.scientific_candidates must be an object")
+        else:
+            if scientific.get("schema_version") != "scientific_candidate_ledger_v2" or scientific.get("frozen") is not True:
+                errors.append("scientific_candidates must reference a frozen v2 ledger")
+            if not re.fullmatch(r"[0-9a-f]{64}", str(scientific.get("ledger_fingerprint") or "")):
+                errors.append("scientific_candidates requires a source ledger fingerprint")
+            records = scientific.get("records")
+            if not isinstance(records, list):
+                errors.append("scientific_candidates.records must be an array")
+            else:
+                ids = [r.get("candidate_id") for r in records if isinstance(r, Mapping)]
+                if len(ids) != len(records) or len(set(ids)) != len(ids) or any(not cid for cid in ids):
+                    errors.append("scientific_candidates records require unique candidate IDs")
+                roots = [scientific.get("primary_candidate_id"), *scientific.get("challenger_candidate_ids", [])]
+                if any(cid and cid not in ids for cid in roots):
+                    errors.append("scientific_candidates root references unknown candidate")
+                if len([cid for cid in roots if cid]) != len(set(cid for cid in roots if cid)):
+                    errors.append("scientific_candidates primary/challengers must be independent")
+            if scientific.get("best_candidate_claim_allowed") is True and scientific.get("comparison_status") != "sufficient":
+                errors.append("scientific_candidates cannot allow a best claim for insufficient comparison")
     if verify_fingerprint:
         expected = _text(payload.get("handoff_fingerprint"))
         if not expected:
@@ -1024,6 +1050,7 @@ SURVEY_IDEA_HANDOFF_SCHEMA: dict[str, Any] = {
         "evidence_roles": {"type": "array", "items": {"type": "object"}},
         "constraints": {"type": "object"},
         "gap_triage": {"type": "object"},
+        "scientific_candidates": {"type": "object"},
         "source_artifacts": {"type": "object"},
         "created_at": {"type": "string"},
         "status": {"type": "string", "enum": sorted(HANDOFF_STATUSES)},

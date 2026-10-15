@@ -58,6 +58,14 @@ def compare_mature_ideas(
 ) -> Dict[str, Any]:
     """Return field-level structural overlap and a conservative duplicate decision."""
 
+    left_candidate = left.get("scientific_candidate_id")
+    right_candidate = right.get("scientific_candidate_id")
+    if left_candidate and right_candidate and left_candidate != right_candidate and (
+        left.get("candidate_ledger_fingerprint") and left.get("candidate_ledger_fingerprint") == right.get("candidate_ledger_fingerprint")
+    ):
+        return {"duplicate": False, "field_similarity": {}, "overlap_fields": [],
+                "rationale": "Distinct source-grounded scientific candidates in the same frozen comparison ledger."}
+
     scores: Dict[str, float] = {}
     for field in _STRUCTURAL_FIELDS:
         left_value = left.get(field)

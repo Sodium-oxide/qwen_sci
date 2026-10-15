@@ -51,6 +51,31 @@ def test_debate_keeps_direction_and_gap_ids_and_runs_two_rounds_without_llm() ->
     }
 
 
+def test_debate_prompt_retains_the_primary_gap_and_context_constraints() -> None:
+    direction = _direction()
+    gap = {
+        "gap_id": "constraint", "statement": "Restrict claims to observed conditions.",
+        **{f"detail_{index}": "Additional metadata" for index in range(10)},
+        "eligibility_route": "supporting_constraint", "evidence_eligibility": "BACKGROUND_EVIDENCE_ONLY",
+    }
+    focus = {
+        "primary_gap_id": "gap-1", "route_id": "mechanism_replacement",
+        "primary_gap": {**gap, "gap_id": "gap-1"}, "context_constraints": [gap],
+    }
+    direction["gap_search_focus"] = focus
+    direction["scientific_intervention"]["gap_search_focus"] = focus
+    prompt = _debate_prompt(
+        direction=direction, topic="A general question", round_number=1,
+        profile_id="physical_materials_chemical", profile_context="", survey_handoff={}, profile_drift={}, baseline={},
+    )
+    assert "primary_gap_id" in prompt
+    assert "Restrict claims to observed conditions." in prompt
+    assert "supporting_constraint" in prompt
+    assert "BACKGROUND_EVIDENCE_ONLY" in prompt
+    result = debate_direction_set([direction], topic="A general question")
+    assert result["directions"][0]["gap_search_focus"] == focus
+
+
 class _ChangingDebateRuntime:
     def llm_json(self, **kwargs):
         return {

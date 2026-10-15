@@ -225,6 +225,7 @@ def _input_identity(
     metadata: Mapping[str, Any],
     stage_name: str,
     quantitative_handoff_manifest_path: Path | None = None,
+    computational_handoff_manifest_path: Path | None = None,
 ) -> dict[str, Any]:
     topic, _options, immutable_inputs = _metadata_inputs(metadata)
     science_run_id = _text(metadata.get("science_run_id"))
@@ -281,6 +282,9 @@ def _input_identity(
     if quantitative_handoff_manifest_path is not None:
         identity["quantitative_handoff_manifest_path"] = str(quantitative_handoff_manifest_path)
         identity["quantitative_handoff_manifest_sha256"] = file_sha256(quantitative_handoff_manifest_path)
+    if computational_handoff_manifest_path is not None:
+        identity["computational_handoff_manifest_path"] = str(computational_handoff_manifest_path)
+        identity["computational_handoff_manifest_sha256"] = file_sha256(computational_handoff_manifest_path)
     return identity
 
 
@@ -293,6 +297,7 @@ def _stage_request(
     attempt: int,
     quiet: bool,
     quantitative_handoff_manifest_path: Path | None = None,
+    computational_handoff_manifest_path: Path | None = None,
 ) -> SurveyStageRequest | IdeaStageRequest | ExperimentDesignStageRequest | AuthorStageRequest:
     topic, options, _immutable_inputs = _metadata_inputs(metadata)
     attempt_dir = _stage_attempt_dir(paths, stage_name, attempt)
@@ -424,6 +429,8 @@ def _stage_request(
         render_required=bool(_mapping(options.get("author_rendering")).get("required", False)),
         survey_appendix=_text(options.get("survey_appendix")) or "source-link",
         quantitative_handoff_manifest_path=quantitative_handoff_manifest_path,
+        computational_handoff_manifest_path=computational_handoff_manifest_path,
+        science_run_id=science_run_id,
     )
 
 
@@ -693,7 +700,8 @@ def _run_stage(
     services: ScienceStageServices,
     quiet: bool,
     quantitative_handoff_manifest_path: Path | None = None,
-) -> None:
+    computational_handoff_manifest_path: Path | None = None,
+) -> bool | None:
     with locked_science_run(paths):
         persisted_metadata, state = load_science_run(paths)
         if persisted_metadata.get("science_run_id") != metadata.get("science_run_id"):
@@ -716,6 +724,11 @@ def _run_stage(
                         "Author is already completed without this quantitative handoff; "
                         "use --restart-from author --force",
                     )
+            if stage_name == "author" and computational_handoff_manifest_path is not None:
+                recorded_handoff = _text(_mapping(stage.get("input_identity")).get("computational_handoff_manifest_path"))
+                if recorded_handoff != str(computational_handoff_manifest_path):
+                    raise ScienceWorkflowError("author", _STAGE_EXIT_CODES["author"],
+                        "Author is already completed without this computational handoff; use --restart-from author --force")
             _completed_stage(
                 paths,
                 state,
@@ -741,6 +754,7 @@ def _run_stage(
                 persisted_metadata,
                 stage_name,
                 quantitative_handoff_manifest_path,
+                computational_handoff_manifest_path,
             )
             mark_stage_running(state, stage_name, input_identity=input_identity)
             attempt = int(_mapping(_mapping(state.get("stages")).get(stage_name)).get("attempt") or 0)
@@ -752,6 +766,7 @@ def _run_stage(
                 attempt=attempt,
                 quiet=quiet,
                 quantitative_handoff_manifest_path=quantitative_handoff_manifest_path,
+                computational_handoff_manifest_path=computational_handoff_manifest_path,
             )
         except Exception as exc:
             error = _coerce_stage_error(stage_name, exc)
@@ -796,6 +811,20 @@ def _run_stage(
             attempt_dir=attempt_dir,
         )
         topic, options, _immutable_inputs = _metadata_inputs(metadata)
+        if stage_name == "survey" and result.metadata.get("survey_status") == "insufficient_evidence":
+            with locked_science_run(paths):
+                _persisted_metadata, state = load_science_run(paths)
+                current = state["stages"][stage_name]
+                if current.get("status") != "RUNNING" or current.get("attempt") != attempt:
+                    raise ScienceRunStateError("Cannot record insufficient evidence after the Survey attempt changed")
+                mark_stage_failed(state, stage_name, exit_code=0,
+                    message="Survey insufficient evidence: " + _text(result.metadata.get("reason")),
+                    error_type="InsufficientEvidence")
+                state["stages"][stage_name].update(outcome="insufficient_evidence", outputs=dict(result.outputs))
+                save_science_state(paths, state)
+                append_science_event(paths, event_type="STAGE_INSUFFICIENT_EVIDENCE", stage=stage_name,
+                    attempt=attempt, result_path=str(result.result_path), reason=result.metadata.get("reason"))
+            return False
         _verify_published_stage_result(
             result,
             stage_name=stage_name,
@@ -823,6 +852,7 @@ def _run_stage(
             outputs=result.outputs,
             result_identity=result.identity,
         )
+        state["stages"][stage_name].pop("outcome", None)
         save_science_state(paths, state)
         append_science_event(
             paths,
@@ -838,6 +868,11 @@ def _run_stage(
 def _finish_workflow(paths: ScienceRunPaths, *, until: str) -> ScienceWorkflowOutcome:
     with locked_science_run(paths):
         metadata, state = load_science_run(paths)
+        from src.pipeline.computational_state import load_state
+        branch = load_state(paths.run_dir / "computation")
+        if branch:
+            state["computation"] = {key: branch.get(key) for key in ("mode", "status", "manifest_path", "result_ids", "unresolved_items")}
+            save_science_state(paths, state)
         cancellation = _mapping(state.get("cancellation"))
         if is_science_cancellation_requested(state):
             if not _text(cancellation.get("acknowledged_at")):
@@ -906,19 +941,47 @@ def run_science_workflow(
                 f"quantitative Author handoff does not exist: {handoff_path}",
             )
     _recover_interrupted_stages(paths, metadata)
-    for stage_name in SCIENCE_STAGE_NAMES[: SCIENCE_STAGE_NAMES.index(until) + 1]:
-        if _workflow_is_cancelled(paths):
-            return _finish_workflow(paths, until=until)
-        _run_stage(
-            paths=paths,
-            metadata=metadata,
-            stage_name=stage_name,
-            services=active_services,
-            quiet=quiet,
-            quantitative_handoff_manifest_path=handoff_path,
-        )
-        if _workflow_is_cancelled(paths):
-            return _finish_workflow(paths, until=until)
+    from src.pipeline.computational_workflow import computation_mode, join_branch, start_branch, stop_branch
+    computation_process = None
+    computation_handoff = None
+    try:
+        for stage_name in SCIENCE_STAGE_NAMES[: SCIENCE_STAGE_NAMES.index(until) + 1]:
+            if _workflow_is_cancelled(paths):
+                if computation_mode(metadata) != "off":
+                    join_branch(paths.run_dir, computation_process, cancel=lambda: True)
+                return _finish_workflow(paths, until=until)
+            if stage_name == "exp_design" and computation_mode(metadata) != "off":
+                try:
+                    computation_process = start_branch(paths.run_dir)
+                except Exception as failure:
+                    from src.pipeline.computational_state import update_state
+                    update_state(paths.run_dir / "computation", status="FAILED", error="branch_launch_failed:" + str(failure))
+            if stage_name == "author" and computation_mode(metadata) != "off":
+                computation_handoff = join_branch(paths.run_dir, computation_process,
+                    cancel=lambda: _workflow_is_cancelled(paths))
+            stage_completed = _run_stage(
+                paths=paths,
+                metadata=metadata,
+                stage_name=stage_name,
+                services=active_services,
+                quiet=quiet,
+                quantitative_handoff_manifest_path=handoff_path,
+                computational_handoff_manifest_path=computation_handoff,
+            )
+            if stage_completed is False:
+                return _finish_workflow(paths, until=until)
+            if _workflow_is_cancelled(paths):
+                if computation_mode(metadata) != "off":
+                    join_branch(paths.run_dir, computation_process, cancel=lambda: True)
+                return _finish_workflow(paths, until=until)
+        if computation_mode(metadata) != "off" and until == "exp_design":
+            join_branch(paths.run_dir, computation_process, cancel=lambda: _workflow_is_cancelled(paths))
+    except BaseException:
+        if computation_mode(metadata) != "off":
+            from src.pipeline.computational_state import load_state, owner_alive
+            if owner_alive(load_state(paths.run_dir / "computation").get("owner") or {}):
+                stop_branch(paths.run_dir / "computation", "CANCELLED", "main_workflow_interrupted")
+        raise
     return _finish_workflow(paths, until=until)
 
 

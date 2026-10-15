@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from .formal_expression import valid_expression, valid_declarations
+from .formal_expression import expression_diagnostics, valid_declarations
 
 from collections.abc import Mapping
 from copy import deepcopy
@@ -55,9 +55,7 @@ def _normalized_derivation_rule(value: Any) -> str:
 
 
 def _valid_restricted_expression(value: Any, depth: int = 0) -> bool:
-    if isinstance(value, Mapping) and value.get("op") == "unknown":
-        return False
-    return valid_expression(value, depth)
+    return not expression_diagnostics(value, depth, reject_unknown=True)
 
 
 def adapt_legacy_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
@@ -158,14 +156,15 @@ def validate_formal_plan_v2(plan: Any, variable_claim_model: Mapping[str, Any] |
         errors.append("definitions_missing_or_duplicate_symbol")
     variable_ids = {record["variable_id"] for record in (variable_claim_model or {}).get("variables", [])}
     for identifier, record in records.items():
+        retained_draft = record.get("dependency_health") in {"missing", "cyclic", "blocked_by_dependency"}
         if variable_claim_model is not None:
             for variable in record.get("variable_references", []):
-                if variable not in variable_ids:
+                if variable not in variable_ids and not retained_draft:
                     errors.append(f"{identifier}_unknown_variable:{variable}")
         for dependency in dependency_ids(record, plan):
-            if dependency not in records:
+            if dependency not in records and not retained_draft:
                 errors.append(f"{identifier}_unknown_dependency:{dependency}")
-            elif "obligation_id" in records[dependency]:
+            elif dependency in records and "obligation_id" in records[dependency]:
                 errors.append(f"{identifier}_cannot_use_unresolved_obligation:{dependency}")
     visited: set[str] = set()
     active: set[str] = set()
@@ -189,7 +188,8 @@ def validate_formal_plan_v2(plan: Any, variable_claim_model: Mapping[str, Any] |
         return sorted(set(errors))
     for identifier in plan["global_assumption_ids"]:
         if identifier not in records or "assumption_id" not in records[identifier]:
-            errors.append(f"invalid_global_assumption:{identifier}")
+            if plan.get("status") != "requires_human_review":
+                errors.append(f"invalid_global_assumption:{identifier}")
     targets = {record.get("proposition_id", record.get("lemma_id")): record for record in [*plan["propositions"], *plan["lemmas"]]}
     for identifier, target in targets.items():
         for field in TARGET_FIELDS:
@@ -204,7 +204,8 @@ def validate_formal_plan_v2(plan: Any, variable_claim_model: Mapping[str, Any] |
             continue
         for obligation_id in target.get("required_obligation_ids", []):
             if obligation_id not in records or records[obligation_id].get("target_id") != identifier:
-                errors.append(f"{identifier}_invalid_obligation:{obligation_id}")
+                if target.get("dependency_health") != "missing":
+                    errors.append(f"{identifier}_invalid_obligation:{obligation_id}")
         instances = target.get("lemma_instantiations", [])
         if not isinstance(instances, list):
             errors.append(f"{identifier}_lemma_instantiations_not_array")
@@ -269,9 +270,10 @@ def validate_formal_plan_v2(plan: Any, variable_claim_model: Mapping[str, Any] |
                     errors.append(f"{step_id}_invalid_derived_expression")
             for premise in step.get("premises", []):
                 if premise not in records and premise not in prior:
-                    errors.append(f"{step_id}_unknown_or_future_premise:{premise}")
+                    if records.get(target_id, {}).get("dependency_health") not in {"missing", "blocked_by_dependency"}:
+                        errors.append(f"{step_id}_unknown_or_future_premise:{premise}")
                 elif premise in records:
-                    if premise == target_id or target_id in target_dependencies(plan, premise):
+                    if premise == target_id or target_id in target_dependencies(plan, premise, allow_missing=True):
                         if records.get(target_id, {}).get("dependency_health") not in {
                             "cyclic", "missing", "invalid_or_blocked", "blocked_by_dependency",
                         }:

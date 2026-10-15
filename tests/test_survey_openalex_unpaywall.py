@@ -1,9 +1,11 @@
 import os
+import pickle
 import sys
 from types import SimpleNamespace
 from urllib.parse import parse_qs, urlparse
 
 import networkx as nx
+import pytest
 import requests
 
 
@@ -30,7 +32,7 @@ class _Logger:
         pass
 
 
-def test_metadata_only_sh_root_is_passed_to_graph_expansion_but_not_reading_pipeline():
+def test_metadata_only_sh_root_is_passed_to_graph_expansion():
     """A full-text failure must not erase a semantically admitted graph root."""
 
     collector = object.__new__(WorkCollector)
@@ -644,7 +646,7 @@ def test_reference_graph_is_openalex_only_and_rebuilds_with_canonical_ids(tmp_pa
 
     assert resolved == ["W1"]
     assert set(collector.reference_graph.nodes) == {"W1", "W2", "W3"}
-    assert collector.reference_graph.graph == {
+    assert {key: collector.reference_graph.graph[key] for key in ("provider", "schema_version", "client")} == {
         "provider": "openalex",
         "schema_version": 2,
         "client": "pyalex",
@@ -655,6 +657,173 @@ def test_reference_graph_is_openalex_only_and_rebuilds_with_canonical_ids(tmp_pa
         node["provider"] == "openalex"
         for _, node in collector.reference_graph.nodes(data=True)
     )
+
+
+def _graph_failure_collector(tmp_path, api, *, depth=1):
+    collector = object.__new__(WorkCollector)
+    collector.config = SimpleNamespace(
+        APIInfo=SimpleNamespace(openalex_graph_cache_schema_version=2),
+        ModuleInfo=SimpleNamespace(WorkCollector=SimpleNamespace(
+            related_work_top_k=30, reference_graph_depth=depth,
+            RAG_source_use_embedding_filter=True, RAG_source_use_LLM_filter=False,
+            sentence_transformer_batch_size=4, related_work_threshold=0.5,
+            related_work_threshold_for_llm=3, relatedness_temperature=0.0,
+        )),
+    )
+    collector.reference_graph_path = str(tmp_path / "reference_graph.pkl")
+    collector.reference_graph = None
+    collector._openalex_id_aliases = {}
+    collector.data_manager = SimpleNamespace(
+        openalex_api=api, _resolve_paper_reference_id=lambda paper: paper.get("paperId"),
+    )
+    collector.logger = _Logger()
+    collector.graph_paper_ids = set()
+    collector.ignore_paper = set()
+    collector.relatedness_cache = {}
+    collector.get_project_research_context = lambda: {"input_fingerprint": "graph-test"}
+    return collector
+
+
+@pytest.mark.parametrize("failed_directions", [{"out"}, {"in"}, {"out", "in"}])
+def test_graph_relation_failure_retains_details_and_other_direction(tmp_path, failed_directions):
+    class GraphAPI:
+        def resolve_work_id(self, paper_id):
+            return paper_id
+
+        def get_paper_details(self, paper_id):
+            return {"paperId": paper_id, "title": "Retained seed", "abstract": "Seed evidence"}
+
+        def get_related_papers(self, paper_id, direction, limit):
+            if direction in failed_directions:
+                raise requests.Timeout("relation timeout")
+            return [{"paperId": "W2", "title": "Related paper"}]
+
+    collector = _graph_failure_collector(tmp_path, GraphAPI())
+    assert collector.update_reference_graph(["W1"]) == ["W1"]
+    assert collector.reference_graph.nodes["W1"]["abstract"] == "Seed evidence"
+    status = collector.reference_graph.graph["seed_update_statuses"]["W1"]
+    assert status["detail_status"] == "retrieved"
+    assert status["node_status"] == "present"
+    assert status["expansion_status"] == "incomplete_relations"
+    for direction in ("out", "in"):
+        assert status["relation_status_by_direction"][direction] == ("failed" if direction in failed_directions else "returned")
+    if "out" not in failed_directions:
+        assert collector.reference_graph.has_edge("W1", "W2")
+    if "in" not in failed_directions:
+        assert collector.reference_graph.has_edge("W2", "W1")
+    with open(collector.reference_graph_path, "rb") as reader:
+        persisted = pickle.load(reader)
+    assert persisted.graph["seed_update_statuses"]["W1"] == status
+
+
+@pytest.mark.parametrize("detail_failure", ["unavailable", "failed"])
+def test_graph_missing_details_do_not_return_missing_seed(tmp_path, detail_failure):
+    class GraphAPI:
+        def __init__(self):
+            self.detail_calls = []
+            self.relation_calls = []
+
+        def resolve_work_id(self, paper_id):
+            return paper_id
+
+        def get_paper_details(self, paper_id):
+            self.detail_calls.append(paper_id)
+            if paper_id == "W1":
+                if detail_failure == "failed":
+                    raise requests.Timeout("detail timeout")
+                return None
+            return {"paperId": paper_id, "title": "Valid seed"}
+
+        def get_related_papers(self, paper_id, direction, limit):
+            self.relation_calls.append(paper_id)
+            return []
+
+    api = GraphAPI()
+    collector = _graph_failure_collector(tmp_path, api)
+    assert collector.update_reference_graph(["W1", "W2"]) == ["W2"]
+    assert api.detail_calls.count("W1") == 1
+    assert "W1" not in api.relation_calls
+    status = collector.reference_graph.graph["seed_update_statuses"]["W1"]
+    assert status["id_resolution_status"] == "resolved"
+    assert status["detail_status"] == detail_failure
+    assert status["node_status"] == "missing"
+    assert status["expansion_status"] == "skipped_missing_node"
+    assert set(collector.reference_graph) == {"W2"}
+
+
+@pytest.mark.parametrize("depth,mode", [(0, "evidence_normal"), (1, "do_not_expand"), (1, "context_only")])
+def test_zero_depth_keeps_seed_metadata_without_expanding_cached_neighbors(tmp_path, depth, mode):
+    class GraphAPI:
+        def resolve_work_id(self, paper_id):
+            return paper_id
+
+        def get_paper_details(self, paper_id):
+            return {"paperId": paper_id, "title": "Seed"}
+
+        def get_related_papers(self, *args):
+            pytest.fail("Zero depth must not request relations")
+
+    collector = _graph_failure_collector(tmp_path, GraphAPI(), depth=depth)
+    collector.graph_seed_expansion_modes = {"W1": mode}
+    collector.reference_graph = nx.DiGraph()
+    collector.reference_graph.add_node("W-cached", title="Cached seed")
+    collector.reference_graph.add_edge("W-cached", "W-related")
+    collector.graph_seed_expansion_modes["W-cached"] = mode
+    assert collector.update_reference_graph(["W1", "W-cached"]) == []
+    assert collector.reference_graph.nodes["W1"]["title"] == "Seed"
+    assert collector.reference_graph.graph["seed_update_statuses"]["W1"]["expansion_status"] == "skipped_depth_limit"
+    assert collector.reference_graph.graph["seed_update_statuses"]["W-cached"]["expansion_status"] == "skipped_depth_limit"
+
+
+def test_unresolved_seed_status_is_saved_without_detail_requests(tmp_path):
+    api = SimpleNamespace(
+        resolve_work_id=lambda paper_id: "",
+        get_paper_details=lambda paper_id: pytest.fail("Unresolved IDs must not request details"),
+    )
+    collector = _graph_failure_collector(tmp_path, api)
+    assert collector.update_reference_graph(["unresolved-seed"]) == []
+    with open(collector.reference_graph_path, "rb") as reader:
+        graph = pickle.load(reader)
+    assert graph.graph["seed_update_statuses"]["unresolved-seed"]["expansion_status"] == "skipped_unresolved_id"
+
+
+@pytest.mark.parametrize("include_isolated_seed", [False, True])
+def test_relatedness_skips_missing_and_isolated_nodes_without_loading_embeddings(tmp_path, include_isolated_seed):
+    collector = _graph_failure_collector(tmp_path, None)
+    collector.reference_graph = nx.DiGraph()
+    seed_ids = ["W-missing"]
+    if include_isolated_seed:
+        collector.reference_graph.add_node("W-isolated", title="Seed")
+        seed_ids.append("W-isolated")
+    collector._get_embedding_model = lambda: pytest.fail("No available neighbors must not load embeddings")
+    collector._last_fulltext_candidate_records = [{"paper_id": "stale"}]
+    collector._last_graph_expansion_pre_llm_candidate_ids = {"stale"}
+    assert collector.compute_relatedness_scores_and_filter(seed_ids) == []
+    assert collector._last_fulltext_candidate_records == []
+    assert collector._last_graph_expansion_pre_llm_candidate_ids == set()
+
+
+def test_relatedness_continues_for_valid_seed_after_missing_seed(tmp_path):
+    import torch
+
+    collector = _graph_failure_collector(tmp_path, None)
+    collector.reference_graph = nx.DiGraph()
+    collector.reference_graph.add_node("W-valid", title="Seed", abstract="Seed evidence")
+    collector.reference_graph.add_node("W-related", title="Related", abstract="Related evidence")
+    collector.reference_graph.add_edge("W-valid", "W-related")
+    observed = []
+
+    def encode(texts, **kwargs):
+        observed.extend(texts)
+        return torch.ones((len(texts), 2))
+
+    collector._get_embedding_model = lambda: SimpleNamespace(encode=encode)
+    collector.chat_agent = SimpleNamespace(batch_remote_chat=lambda prompts, **kwargs: ['{"relevance_score": 5}'] * len(prompts))
+    collector._build_fulltext_candidate_records = lambda saved, scores, context: [{"paper_id": "W-related"}]
+    assert collector.compute_relatedness_scores_and_filter(["W-missing", "W-valid"]) == ["W-related"]
+    assert len(observed) == 2
+    assert collector._last_fulltext_candidate_records == [{"paper_id": "W-related"}]
+    assert collector._last_graph_expansion_pre_llm_candidate_ids == {"W-related"}
 
 
 def test_work_analyzer_uses_the_current_openalex_graph_for_mla(tmp_path):

@@ -3,7 +3,7 @@
 from collections.abc import Mapping
 from copy import deepcopy
 
-from .formal_dependency import COLLECTION_IDS, expression_symbols, expression_variable_ids
+from .formal_dependency import COLLECTION_IDS, declared_dependencies, expression_variable_ids, related_context_ids
 
 
 def record_index(formal_inputs):
@@ -16,33 +16,14 @@ def record_index(formal_inputs):
 
 
 def record_dependencies(record, records):
-    dependencies = {
-        reference for reference in record.get("depends_on", []) or []
-        if isinstance(reference, str)
-    }
-    symbols = expression_symbols({key: record.get(key) for key in ("formal_expression", "condition_expressions")})
-    symbols.update(reference for reference in record.get("symbol_references", []) or [] if isinstance(reference, str))
-    variables = expression_variable_ids(record)
-    stack = [record.get("formal_expression"), record.get("condition_expressions")]
-    while stack:
-        value = stack.pop()
-        if isinstance(value, Mapping):
-            if isinstance(value.get("ref"), str):
-                dependencies.add(value["ref"])
-            stack.extend(value.values())
-        elif isinstance(value, list):
-            stack.extend(value)
-    dependencies.update(
-        identifier for identifier, candidate in records.items()
-        if "definition_id" in candidate
-        and (candidate.get("symbol") in symbols
-             or variables.intersection(candidate.get("variable_references", []) or []))
-    )
-    return dependencies - {record.get("definition_id"), record.get("relation_id")}
+    return declared_dependencies(record)
 
 
 def dependency_batch(formal_inputs, root_ids, *, max_definitions=24, max_relations=16):
     records = record_index(formal_inputs)
+    registry_objects = formal_inputs.get("object_registry", {}).get("objects", {})
+    known_records = {identifier: entry.get("record", {}) for identifier, entry in registry_objects.items()}
+    known_records.update(records)
     selected = {}
     pending = list(dict.fromkeys(root_ids))
     omitted = set()
@@ -76,9 +57,10 @@ def dependency_batch(formal_inputs, root_ids, *, max_definitions=24, max_relatio
                           if isinstance(item, Mapping) and any(identifier in str(item.get("field_path", "")) for identifier in selected)][:12],
         "variable_ids": sorted(variables),
         "external_dependencies": [
-            {"record_id": identifier, "symbol": records.get(identifier, {}).get("symbol"),
-             "statement": str(records.get(identifier, {}).get("statement") or "")[:160],
-             "status": "context_only"}
+            {"record_id": identifier, "symbol": known_records.get(identifier, {}).get("symbol"),
+             "statement": str(known_records.get(identifier, {}).get("statement") or "")[:160],
+             "status": "context_only" if identifier in known_records else "missing",
+             "exists_in_registry": identifier in known_records}
             for identifier in sorted(omitted)
         ],
     }
@@ -164,21 +146,9 @@ def namespace_skeleton_response(response, group_id, existing_ids):
         if not isinstance(values, list):
             continue
         for record in values:
-            if isinstance(record, Mapping) and isinstance(record.get(field), str) and record[field] not in existing_ids:
+            if (isinstance(record, Mapping) and isinstance(record.get(field), str)
+                    and record[field] not in existing_ids and not record[field].startswith(f"{group_id}_")):
                 redirects[record[field]] = f"{group_id}_{record[field]}"
 
-    reference_fields = set(COLLECTION_IDS.values()) | {
-        "premises", "depends_on", "assumption_ids", "global_assumption_ids", "required_obligation_ids",
-        "target_id", "ref", "record_id", "target_proposition_id", "lemma_id",
-    }
-
-    def rewrite(value, field=""):
-        if isinstance(value, Mapping):
-            return {key: rewrite(item, key) for key, item in value.items()}
-        if isinstance(value, list):
-            return [rewrite(item, field) for item in value]
-        if isinstance(value, str) and field in reference_fields:
-            return redirects.get(value, value)
-        return value
-
-    return rewrite(result)
+    from .formal_object_registry import rewrite_live_references
+    return rewrite_live_references(result, redirects)

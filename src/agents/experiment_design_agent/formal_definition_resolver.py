@@ -14,8 +14,12 @@ from time import perf_counter
 from .cache import ExperimentDesignCache
 from .definition_evidence import DefinitionEvidenceIndex, variable_groups
 from .formal_contracts import DEFINITION_FIELDS, DEFINITION_RESOLUTION_V1, DEFINITION_TEXT_CONTRACT, validate_definition
-from .formal_dependency import expression_symbols, log_symbol_diagnostics
+from .formal_dependency import expression_symbols, log_symbol_diagnostics, partition_relation_premises
 from .llm_json import call_required_json_with_logging, json_prompt_payload
+from .formal_object_registry import (
+    OBJECT_PROMPT, adapt_group_delta, build_registry, commit_group_delta,
+    inspect_dependency_graph, project_group_context, registry_cache_context,
+)
 
 
 DEFINITION_PROMPT = """You are the Formal Definition Resolver.
@@ -53,10 +57,14 @@ is unresolved. source_grounded records require source_refs with card_id and loca
 
 Compact relation records should contain: relation_id, statement, expression_latex when useful,
 formal_expression when encodable, scope, origin, source_refs, optional selection_reason,
-status (candidate_formalization or unresolved), optional premises or depends_on, optional
+status (candidate_formalization or unresolved), optional depends_on (object IDs), optional
 variable_references, and the same single conditions array. Do not return symbol_references or
 condition_expressions; the host derives them. Return relations connecting inputs to outcomes,
 not merely a list of named quantities.
+Use depends_on for definition/relation/assumption IDs, including explicit missing IDs.
+Put natural-language prerequisites in conditions as {text, optional formal_expression},
+never as object references. Legacy premises, if returned, must contain object IDs only.
+Preserve every prerequisite even when depends_on already contains dependencies.
 
 Protocol value contract: relation `status` must be exactly `candidate_formalization` or
 `unresolved`; `origin` must be exactly `source_grounded`, `modeling_convention`, or
@@ -530,13 +538,17 @@ def normalize_record_collections(payload, *, previous=None, repair_targets=None,
                 if collection == "definitions":
                     record = _preserve_definition_record(record, index, normalized["definitions"])
                     identifier = record.get("definition_id")
+                    if identifier in owners and "definitions" not in owners[identifier]:
+                        identifier = _unique_record_id(owners | {item.get("definition_id"): item for item in routed["definitions"]}, identifier, "definition")
+                        record["definition_id"] = identifier
                     routed["definitions"].append(record)
                     reason = "Definition identity or mathematical kind is unresolved; the definition candidate was retained."
                 quarantine_record(normalized, path, reason, record)
                 normalized["unknown_items"][-1].update(
                     record_id=identifier, record_path=path, field="record_kind",
                     category="record_validation" if collection == "definitions" else ("patch_rejection" if previous is not None else "record_quarantine"),
-                    field_path=f"{destination}.{identifier}" if destination else f"record_collections.{identifier or index}",
+                    field_path=f"definitions.{identifier}.record_kind" if collection == "definitions"
+                               else (f"{destination}.{identifier}" if destination else f"record_collections.{identifier or index}"),
                     error_code="record_kind_conflict" if kind_conflict else "ambiguous_record_identity",
                     disposition="kept_unresolved" if collection == "definitions" else "ignored_and_archived",
                 )
@@ -618,6 +630,189 @@ RELATION_FIELDS = (
 )
 
 
+def normalize_relation_premises(record, *, known_ids=()):
+    if "premises" not in record:
+        return record
+    original = record.pop("premises")
+    record.setdefault("format_originals", {}).setdefault("premises", json.dumps(original, ensure_ascii=False, sort_keys=True))
+    existing = record.get("depends_on", [])
+    existing = existing if isinstance(existing, list) else [existing] if existing is not None else []
+    references, conditions, uninterpreted = partition_relation_premises(
+        original, known_ids=set(known_ids) | {reference for reference in existing if isinstance(reference, str)},
+    )
+    record["depends_on"] = deepcopy(existing)
+    record["depends_on"].extend(reference for reference in references if reference not in record["depends_on"])
+    readable = record.get("conditions", [])
+    pair = _compact_condition_pairs(readable)
+    encoded = record.get("condition_expressions", [])
+    if not isinstance(encoded, list):
+        record.setdefault("format_originals", {}).setdefault("condition_expressions", json.dumps(encoded, ensure_ascii=False, sort_keys=True))
+        encoded = [encoded] if encoded is not None else []
+    record["condition_expressions"] = deepcopy(encoded)
+    if pair is not None:
+        record["conditions"] = pair[0]
+        if not record["condition_expressions"]:
+            record["condition_expressions"] = pair[1]
+    elif not isinstance(readable, list):
+        record["conditions"] = [readable] if readable is not None else []
+    else:
+        record["conditions"] = deepcopy(readable)
+    for condition in conditions:
+        readable, encoded = record["conditions"], record["condition_expressions"]
+        if "formal_expression" not in condition:
+            if condition["text"] not in readable:
+                readable.append(condition["text"])
+            continue
+        if len(readable) == len(encoded) and any(
+            text == condition["text"] and expression == condition["formal_expression"]
+            for text, expression in zip(readable, encoded)
+        ):
+            continue
+        readable.append(condition["text"])
+        encoded.append(deepcopy(condition["formal_expression"]))
+    record["premise_normalization"] = {
+        "reference_ids": references, "text_condition_count": len(conditions),
+        "uninterpreted_count": len(uninterpreted),
+    }
+    if uninterpreted:
+        record.setdefault("machine_encoding_issues", []).append("premises")
+        record.setdefault("format_diagnostics", []).append({
+            "record_id": record.get("relation_id"), "field": "premises",
+            "field_path": f"model_relations.{record.get('relation_id')}.premises",
+            "category": "record_encoding", "status": "encoding_pending", "disposition": "kept_draft",
+            "reason": "Some prerequisites cannot be interpreted as object references or conditions; original premises retained.",
+        })
+    return record
+
+
+def normalize_model_relation_formats(payload):
+    normalized = deepcopy(payload)
+    known_ids = {record[field] for collection, field in (
+        ("definitions", "definition_id"), ("model_relations", "relation_id"), ("assumptions", "assumption_id"),
+    ) for record in normalized.get(collection, []) if isinstance(record, Mapping) and isinstance(record.get(field), str)}
+    used_ids = {record.get("relation_id") for record in normalized.get("model_relations", [])
+                if isinstance(record, Mapping) and isinstance(record.get("relation_id"), str)}
+    retained = []
+    for index, original in enumerate(normalized.get("model_relations", [])):
+        record = deepcopy(dict(original)) if isinstance(original, Mapping) else {"original_record": deepcopy(original)}
+        identifier = record.get("relation_id")
+        if not isinstance(identifier, str) or not identifier.strip():
+            identifier = f"RECOVERED_RELATION_{index + 1}"
+            while identifier in used_ids:
+                identifier += "_draft"
+            record["relation_id"] = identifier
+            used_ids.add(identifier)
+        originals = record.setdefault("format_originals", {})
+        diagnostics = record.setdefault("format_diagnostics", [])
+        execution_issues = record.setdefault("machine_encoding_issues", [])
+        pending_values = record.setdefault("format_pending_values", {})
+        resolved_fields = {field for field, value in pending_values.items() if record.get(field) != value}
+        if resolved_fields:
+            diagnostics[:] = [item for item in diagnostics if item.get("field") not in resolved_fields]
+            execution_issues[:] = [field for field in execution_issues if field not in resolved_fields]
+            normalized["unknown_items"] = [item for item in normalized.get("unknown_items", [])
+                                           if not (isinstance(item, Mapping) and item.get("category") == "record_encoding"
+                                                   and item.get("record_id") == identifier
+                                                   and item.get("field") in resolved_fields)]
+            for field in resolved_fields:
+                pending_values.pop(field)
+
+        def diagnose(field, reason, *, execution=False):
+            originals.setdefault(field, json.dumps(original.get(field) if isinstance(original, Mapping) else original,
+                                                  ensure_ascii=False, sort_keys=True))
+            diagnostic = {"record_id": identifier, "field": field,
+                          "field_path": f"model_relations.{identifier}.{field}",
+                          "category": "record_encoding", "status": "encoding_pending",
+                          "disposition": "kept_draft", "reason": reason}
+            if diagnostic not in diagnostics:
+                diagnostics.append(diagnostic)
+            if diagnostic not in normalized.setdefault("unknown_items", []):
+                normalized["unknown_items"].append(deepcopy(diagnostic))
+            if execution and field not in execution_issues:
+                execution_issues.append(field)
+
+        for field, keys in {
+            "depends_on": ("definition_id", "relation_id", "id"),
+            "symbol_references": ("symbol",), "variable_references": ("variable_id",),
+        }.items():
+            value = record.get(field, [])
+            candidates = value if isinstance(value, list) else [value]
+            converted = []
+            invalid = False
+            for reference in candidates:
+                if isinstance(reference, Mapping):
+                    identifiers = [reference[key] for key in keys if key in reference]
+                    reference = identifiers[0] if identifiers and all(item == identifiers[0] for item in identifiers) else None
+                if isinstance(reference, str) and reference.strip():
+                    converted.append(reference.strip())
+                else:
+                    invalid = True
+            record[field] = list(dict.fromkeys(converted))
+            if invalid:
+                diagnose(field, "Reference encoding cannot be converted unambiguously; original retained.", execution=True)
+            elif record[field] != value:
+                originals.setdefault(field, json.dumps(value, ensure_ascii=False, sort_keys=True))
+        normalize_relation_premises(record, known_ids=known_ids)
+        value = record.get("source_refs", [])
+        candidates = value if isinstance(value, list) else [value]
+        converted = []
+        for reference in candidates:
+            if isinstance(reference, Mapping):
+                converted.append(deepcopy(dict(reference)))
+            elif isinstance(reference, str) and reference.strip():
+                converted.append({"card_id": reference.strip()})
+            else:
+                diagnose("source_refs", "Source reference format is incomplete; original retained.")
+        record["source_refs"] = converted
+        if converted != value:
+            originals.setdefault("source_refs", json.dumps(value, ensure_ascii=False, sort_keys=True))
+        if record.get("origin") not in ("source_grounded", "modeling_convention", "unresolved"):
+            diagnose("origin", "Origin metadata is missing or unrecognized.")
+            record["origin"] = "unresolved"
+        source_errors = validate_source_grounding([record], {})
+        if source_errors:
+            diagnose("source_refs", "; ".join(source_errors))
+            diagnose("origin", "Source attribution is incomplete; mathematical content remains a candidate.")
+            record["origin"] = "unresolved"
+        if record.get("status") not in ("candidate_formalization", "unresolved"):
+            diagnose("status", "Status label normalized to an unverified candidate.")
+            record["status"] = "candidate_formalization"
+        for field in RELATION_FIELDS:
+            if field not in record:
+                record[field] = [] if field in {"conditions", "condition_expressions"} else None
+                if field not in {"statement", "scope", "formal_expression", "expression_latex"}:
+                    diagnose(field, "Missing metadata field retained as an encoding diagnostic.")
+        if not isinstance(record.get("selection_reason"), str) or not record["selection_reason"].strip():
+            diagnose("selection_reason", "Selection metadata is incomplete; mathematical content remains available.")
+        for field in ("conditions", "condition_expressions"):
+            if not isinstance(record[field], list):
+                value = record[field]
+                if isinstance(value, (str, Mapping)):
+                    record[field] = [value]
+                    originals.setdefault(field, json.dumps(value, ensure_ascii=False, sort_keys=True))
+                else:
+                    record[field] = []
+                    diagnose(field, "Condition encoding cannot be interpreted; original retained.", execution=True)
+        if record.get("symbol") is not None and not isinstance(record["symbol"], str):
+            diagnose("symbol", "Invalid optional symbol metadata retained.")
+            record.pop("symbol")
+        for diagnostic in diagnostics:
+            if diagnostic not in normalized.setdefault("unknown_items", []):
+                normalized["unknown_items"].append(deepcopy(diagnostic))
+            pending_values[diagnostic["field"]] = deepcopy(record.get(diagnostic["field"]))
+        if not pending_values:
+            record.pop("format_pending_values")
+        if not originals:
+            record.pop("format_originals")
+        if not diagnostics:
+            record.pop("format_diagnostics")
+        if not execution_issues:
+            record.pop("machine_encoding_issues")
+        retained.append(record)
+    normalized["model_relations"] = retained
+    return normalized
+
+
 def _compact_condition_pairs(value):
     """Expand the wire-format condition objects into the legacy parallel arrays."""
     if not isinstance(value, list):
@@ -694,8 +889,6 @@ def expand_compact_resolution(payload, *, variables=None, assigned=None, existin
             record["source_refs"] = [record["source_refs"]]
         record.setdefault("source_refs", [])
         record.setdefault("variable_references", [])
-        if not isinstance(record.get("variable_references"), list):
-            record["variable_references"] = []
         if not record["variable_references"] and isinstance(record.get("variable_ids"), list):
             record["variable_references"] = [
                 value for value in record["variable_ids"] if isinstance(value, str) and value in variable_ids
@@ -724,9 +917,7 @@ def expand_compact_resolution(payload, *, variables=None, assigned=None, existin
                     else "requires_encoding"
                 )
         else:
-            if "depends_on" not in record and isinstance(record.get("premises"), list):
-                record["depends_on"] = [value for value in record["premises"] if isinstance(value, str)]
-            record.pop("premises", None)
+            normalize_relation_premises(record, known_ids=set(assigned.values()) | set(symbol_to_definition.values()))
             record.setdefault("status", "candidate_formalization" if record.get("statement") else "unresolved")
             record.setdefault("scope", None)
         record.setdefault("depends_on", [])
@@ -745,16 +936,14 @@ def expand_compact_resolution(payload, *, variables=None, assigned=None, existin
             except (TypeError, ValueError, AttributeError):
                 references = []
             record["symbol_references"] = references
-        if not isinstance(record.get("symbol_references"), list):
-            record["symbol_references"] = []
         known_symbols = dict(symbol_to_definition)
         if isinstance(record.get("symbol"), str) and isinstance(identifier, str):
             known_symbols[record["symbol"]] = identifier
         if not record["depends_on"]:
-            record["depends_on"] = list(dict.fromkeys(
+            record["inferred_related_objects"] = list(dict.fromkeys(
                 known_symbols[reference]
-                for reference in record["symbol_references"]
-                if reference in known_symbols and known_symbols[reference] != identifier
+                for reference in (record["symbol_references"] if isinstance(record["symbol_references"], list) else [])
+                if isinstance(reference, str) and reference in known_symbols and known_symbols[reference] != identifier
             ))
         if collection == "definitions":
             record.setdefault("expression_latex", None)
@@ -820,18 +1009,21 @@ def validate_resolution_relation(record):
     if record.get("status") not in ("candidate_formalization", "unresolved"):
         errors.append(f"{identifier}_invalid_status")
     if record.get("status") == "candidate_formalization":
+        format_fields = {item.get("field") for item in record.get("format_diagnostics", []) if isinstance(item, Mapping)}
         for field in ("statement", "scope", "selection_reason"):
+            if field == "selection_reason" and field in format_fields:
+                continue
             if not isinstance(record.get(field), str) or not record[field].strip():
                 errors.append(f"{identifier}_candidate_requires:{field}")
         if not record.get("formal_expression") and not record.get("expression_latex"):
             errors.append(f"{identifier}_candidate_requires_expression")
-        if record.get("origin") == "unresolved":
+        if record.get("origin") == "unresolved" and "origin" not in format_fields:
             errors.append(f"{identifier}_candidate_origin_unresolved")
     return errors
 
 
 def normalize_record_completeness(payload, evidence_bundle):
-    normalized = deepcopy(payload)
+    normalized = normalize_model_relation_formats(payload)
     array_fields = {"conditions", "condition_expressions", "depends_on", "source_refs",
                     "variable_references", "symbol_references"}
     for collection, id_field, fields in (
@@ -850,6 +1042,11 @@ def normalize_record_completeness(payload, evidence_bundle):
                     issues.append((field, "missing_field", f"Missing required field: {field}"))
             if isinstance(record.get("source_refs"), Mapping):
                 record["source_refs"] = [record["source_refs"]]
+            for field in array_fields:
+                if field in record and not isinstance(record[field], list):
+                    issues.append((field, "invalid_array", f"{field} requires an array; original retained in the diagnostic."))
+                    record.setdefault("format_originals", {})[field] = json.dumps(original.get(field), ensure_ascii=False)
+                    record[field] = []
             if record.get("origin") not in ("source_grounded", "modeling_convention", "unresolved"):
                 if "origin" not in missing_fields:
                     issues.append(("origin", "invalid_origin", "Origin is missing or unrecognized."))
@@ -878,17 +1075,20 @@ def normalize_record_completeness(payload, evidence_bundle):
                         }.get(field, "Supply the mathematical description explicitly.")
                         issues.append((field, "unspecified_content", f"Definition requires a nonempty {field} string. {hint}"))
             else:
+                format_fields = {item.get("field") for item in record.get("format_diagnostics", []) if isinstance(item, Mapping)}
                 if record.get("status") not in ("candidate_formalization", "unresolved"):
                     if "status" not in missing_fields:
                         issues.append(("status", "invalid_status", "Relation status is missing or unrecognized."))
                     record["status"] = "unresolved"
                 if record["status"] == "candidate_formalization":
                     for field in ("statement", "scope", "selection_reason"):
+                        if field == "selection_reason" and field in format_fields:
+                            continue
                         if not isinstance(record[field], str) or not record[field].strip():
                             issues.append((field, "unspecified_content", f"Candidate relation requires meaningful {field}."))
                     if not record.get("formal_expression") and not record.get("expression_latex"):
                         issues.append(("formal_expression", "missing_expression", "Candidate relation has no mathematical expression."))
-                    if record["origin"] == "unresolved":
+                    if record["origin"] == "unresolved" and "origin" not in format_fields:
                         issues.append(("origin", "unresolved_origin", "Relation origin remains unresolved."))
             if isinstance(record.get("source_refs"), list):
                 source_errors = validate_source_grounding([record], evidence_bundle)
@@ -924,21 +1124,11 @@ def definition_repair_targets(payload, group, assigned):
     }
     relation_ids = {
         record["relation_id"] for record in payload["model_relations"]
-        if record.get("status") == "unresolved"
+        if record.get("status") == "unresolved" or record.get("machine_encoding_issues")
     }
-    for request in payload.get("evidence_requests", []):
-        if not isinstance(request, Mapping):
-            continue
-        requested_ids = request.get("record_ids", [])
-        if isinstance(requested_ids, list):
-            definition_ids.update(identifier for identifier in requested_ids
-                                  if isinstance(identifier, str) and any(record["definition_id"] == identifier
-                                                                         for record in payload["definitions"]))
-            relation_ids.update(identifier for identifier in requested_ids
-                                if isinstance(identifier, str) and any(record["relation_id"] == identifier
-                                                                       for record in payload["model_relations"]))
     diagnostics = [item for item in payload["unknown_items"] if isinstance(item, Mapping)
-                   and item.get("category") in ("record_validation", "record_quarantine", "shape_repair")]
+                   and not item.get("resolved")
+                   and item.get("category") in ("record_validation", "record_quarantine")]
     for item in diagnostics:
         identifier = item.get("record_id")
         if not isinstance(identifier, str) or identifier in foreign_ids:
@@ -1070,7 +1260,7 @@ def merge_definition_patch(previous, patch, targets):
     merged["unknown_items"] = [
         item for item in merged["unknown_items"]
         if not (isinstance(item, Mapping) and isinstance(item.get("record_id"), str) and item["record_id"] in replaced
-                and item.get("category") in ("record_validation", "record_quarantine", "shape_repair"))
+                and item.get("category") in ("record_validation", "record_quarantine", "shape_repair", "record_encoding"))
     ]
     merged["unknown_items"].extend(
         deepcopy(item) for item in patch_unknowns
@@ -1105,11 +1295,17 @@ def keep_group_definitions(payload, group, assigned, *, group_number=None):
     local_primary_ids = {identifier for variable, identifier in assigned.items() if variable in group_ids}
     all_primary_ids = set(assigned.values())
     definitions = [record for record in normalized.get("definitions", []) if isinstance(record, Mapping)]
+    for index, record in enumerate(normalized.get("definitions", [])):
+        if not isinstance(record, Mapping):
+            quarantine_record(normalized, f"definitions[{index}]", "Definition candidate is not an object.", record)
     by_id = {str(record.get("definition_id")): record for record in definitions if record.get("definition_id")}
+    def string_references(record, field):
+        values = record.get(field, [])
+        return {reference for reference in values if isinstance(reference, str)} if isinstance(values, list) else set()
     allowed = set(local_primary_ids)
     local_prefix = f"G{group_number}_" if group_number is not None else None
     for identifier, record in by_id.items():
-        variables = set(record.get("variable_references", []) or [])
+        variables = string_references(record, "variable_references")
         if variables.intersection(group_ids) or (local_prefix and identifier.startswith(local_prefix)):
             allowed.add(identifier)
     # A supporting record can be referenced by ID before normalization moves it
@@ -1125,7 +1321,7 @@ def keep_group_definitions(payload, group, assigned, *, group_number=None):
     # primary IDs, foreign namespaces, and records tied to foreign variables
     # are the only records removed from this group.
     for identifier, record in by_id.items():
-        variables = set(record.get("variable_references", []) or [])
+        variables = string_references(record, "variable_references")
         if identifier in all_primary_ids and identifier not in allowed:
             continue
         if local_prefix and identifier.startswith("G") and not identifier.startswith(local_prefix):
@@ -1141,7 +1337,7 @@ def keep_group_definitions(payload, group, assigned, *, group_number=None):
         record = by_id.get(identifier)
         if record is None:
             continue
-        for dependency in record.get("depends_on", []) or []:
+        for dependency in string_references(record, "depends_on"):
             if dependency in by_id and dependency not in allowed:
                 allowed.add(dependency)
                 pending.append(dependency)
@@ -1160,8 +1356,8 @@ def keep_group_definitions(payload, group, assigned, *, group_number=None):
     for relation in normalized.get("model_relations", []):
         if not isinstance(relation, Mapping):
             continue
-        refs = set(relation.get("depends_on", []) or [])
-        variables = set(relation.get("variable_references", []) or [])
+        refs = string_references(relation, "depends_on")
+        variables = string_references(relation, "variable_references")
         if refs.intersection(allowed) or variables.intersection(group_ids) or not refs.intersection(all_primary_ids):
             relations.append(relation)
     normalized["model_relations"] = relations
@@ -1280,10 +1476,21 @@ def namespace_group_records(payload, *, id_prefix, primary_ids):
         if identifier and identifier not in primary_ids and not identifier.startswith(id_prefix):
             redirects.setdefault(identifier, f"{id_prefix}{identifier}")
     if redirects:
+        from .formal_object_registry import rewrite_live_references
+        normalized = rewrite_live_references(normalized, redirects)
+        normalized.setdefault("local_object_aliases", {}).update(redirects)
         for collection in ("definitions", "model_relations"):
             for record in normalized.get(collection, []):
                 if isinstance(record, Mapping) and isinstance(record.get("depends_on"), list):
                     record["depends_on"] = [redirects.get(item, item) for item in record["depends_on"]]
+                    pending = record.get("format_pending_values", {})
+                    if isinstance(pending.get("depends_on"), list):
+                        pending["depends_on"] = [redirects.get(item, item) for item in pending["depends_on"]]
+                if isinstance(record, Mapping):
+                    for diagnostic in record.get("format_diagnostics", []):
+                        diagnostic["record_id"] = redirects.get(diagnostic.get("record_id"), diagnostic.get("record_id"))
+                        diagnostic["field_path"] = ".".join(redirects.get(part, part)
+                                                            for part in diagnostic["field_path"].split("."))
         for item in normalized.get("unknown_items", []) if isinstance(normalized.get("unknown_items"), list) else []:
             if isinstance(item, Mapping) and isinstance(item.get("field_path"), str):
                 item["field_path"] = ".".join(redirects.get(part, part) for part in item["field_path"].split("."))
@@ -1346,10 +1553,20 @@ def normalize_model_relations(payload, *, id_prefix):
             continue
         if not isinstance(relation, Mapping):
             detail = f"{path}: expected object, got {type(relation).__name__}"
-            quarantined.append(detail)
+            assigned_id = f"{id_prefix}R{index + 1}"
+            while assigned_id in existing_ids:
+                assigned_id += "_"
+            preserved = normalize_model_relation_formats({"model_relations": [{
+                "relation_id": assigned_id, "status": "unresolved",
+                "original_record": json.dumps(relation, ensure_ascii=False, sort_keys=True),
+            }], "unknown_items": []})
+            retained.extend(preserved["model_relations"])
+            existing_ids.add(assigned_id)
+            repaired.append(f"{path}: retained uninterpreted draft as {assigned_id}")
             if isinstance(normalized.get("unknown_items"), list):
                 unknown = {
                     "field_path": path,
+                    "record_id": assigned_id,
                     "reason": detail + "; relation content requires human review.",
                     "status": "needs_human_input",
                     "category": "shape_repair",
@@ -1412,16 +1629,46 @@ class FormalDefinitionResolver:
             for group_number, group in enumerate(groups, 1)
             for variable in group
         }
+        merged["object_registry"] = build_registry(
+            merged, variables=variables, assigned=assigned,
+            owners={identifier: f"G{number}" for identifier, number in group_by_variable.items()},
+        )
+        claim_groups = {}
+        for number, group in enumerate(groups, 1):
+            for variable in group:
+                for claim in variable.get("claim_links", []):
+                    claim_groups.setdefault(claim, set()).add(number)
+        shared_scores = {
+            number: sum(4 * sum(str(variable.get("variable_id")) in candidate.get("depends_on", [])
+                                for candidate in variables)
+                        + sum(len(claim_groups.get(claim, ())) - 1 for claim in variable.get("claim_links", []))
+                        for variable in group)
+            for number, group in enumerate(groups, 1)
+        }
         group_candidates = {}
 
+        def save_checkpoint(namespace, identity, payload, **context):
+            try:
+                snapshot_key = cache.write(namespace, identity, payload)
+            except (OSError, TypeError, ValueError) as error:
+                if logger is not None:
+                    logger.event("formal_definition_resolver", "checkpoint_warning", level="WARNING",
+                                 status="WARNING", brief_id=brief_id, namespace=namespace,
+                                 error_code=type(error).__name__, error_detail=str(error), **context)
+                return
+            if snapshot_key and logger is not None:
+                logger.event("formal_definition_resolver", "checkpoint_written", status="SAVED",
+                             brief_id=brief_id, namespace=namespace, snapshot_key=snapshot_key, **context)
+
         def _resolve_group(item):
-            group_number, group, existing_definitions = item
+            group_number, group, existing_definitions, object_context = item
             current = None
             seen = set()
             available = {}
             query = {"variables": group}
             previous_gaps = None
             group_audit = []
+            progress_identity = None
             for round_number in range(rounds + 1):
                 repair_targets = definition_repair_targets(current, group, assigned) if current is not None else None
                 context = {
@@ -1432,6 +1679,7 @@ class FormalDefinitionResolver:
                 "id_prefix": f"G{group_number}_",
                 "previous_candidate": compact_candidate_context(current, repair_targets),
                 "existing_definitions": existing_definitions,
+                "mathematical_object_context": object_context,
                 "definition_fields": [
                     "definition_id", "symbol", "statement", "object_kind", "expression_latex",
                     "formal_expression", "domain", "codomain", "unit", "conditions", "origin",
@@ -1440,11 +1688,11 @@ class FormalDefinitionResolver:
                 "relation_fields": [
                     "relation_id", "statement", "expression_latex", "formal_expression", "scope",
                     "conditions", "origin", "source_refs", "variable_references", "selection_reason",
-                    "status", "premises",
+                    "status", "depends_on",
                 ],
                 "expression_language": {"symbol": "declared name", "number": "rational string", "bool": True, "op": "add|sub|mul|div|pow|eq|ne|lt|le|gt|ge|and|or|not", "args": []},
                 }
-                prefix = DEFINITION_PROMPT.replace("INPUT_JSON:\n", RETRIEVAL_INSTRUCTIONS + "\nINPUT_JSON:\n")
+                prefix = DEFINITION_PROMPT.replace("INPUT_JSON:\n", RETRIEVAL_INSTRUCTIONS + "\n" + OBJECT_PROMPT + "\nINPUT_JSON:\n")
                 if repair_targets is not None:
                     context["repair_targets"] = repair_targets
                     context["request_mode"] = "targeted_patch"
@@ -1455,11 +1703,47 @@ class FormalDefinitionResolver:
                 seen.update(available)
                 context["evidence_cards"] = selected
                 prompt = prefix + json_prompt_payload(context)
-                identity = {"version": 2, "prompt": prompt, "llm": cache_identity or {}}
+                cache_context = deepcopy(context)
+                cache_context["mathematical_object_context"] = registry_cache_context(object_context)
+                relevant_variables = {variable["variable_id"] for variable in group}
+                relevant_variables.update(reference for record in object_context["full_records"]
+                                          for reference in record.get("variable_references", []))
+                cache_context["global_variable_registry"] = [entry for entry in registry
+                                                             if entry.get("variable_id") in relevant_variables]
+                identity = {"version": 5, "prompt": prefix + json_prompt_payload(cache_context), "llm": cache_identity or {}}
+                if round_number == 0:
+                    progress_identity = identity
+                    progress = cache.read("definition_group_progress", progress_identity)
+                    if self._cacheable_group_result(progress, group):
+                        current = deepcopy(progress)
+                        group_candidates[group_number] = current
+                        next_targets = definition_repair_targets(current, group, assigned)
+                        group_audit.append({"group": group_number, "round": 0,
+                                            "card_ids": list(available), "prompt_chars": len(prompt),
+                                            "cache_hit": True, "resumed": True, "repair_targets": next_targets})
+                        if logger is not None:
+                            logger.event("formal_definition_resolver", "group_resumed", status="REUSED",
+                                         brief_id=brief_id, group_number=group_number, cache_hit=True,
+                                         definition_count=len(current["definitions"]),
+                                         target_definition_ids=next_targets["definition_ids"],
+                                         target_relation_ids=next_targets["relation_ids"])
+                        if not next_targets["definition_ids"] and not next_targets["relation_ids"]:
+                            break
+                        if cache.offline:
+                            break
+                        query = {"variables": group, "missing": next_targets["missing_variable_ids"],
+                                 "requests": current.get("evidence_requests", []),
+                                 "unknown_items": next_targets["diagnostics"]}
+                        continue
                 cached = cache.read("definition_groups", identity)
                 cache_rejected = cached is not None and not self._cacheable_group_result(cached, group)
                 if cache_rejected:
                     cached = None
+                normalized_cache_hit = cached is not None
+                if cached is None:
+                    raw_response = cache.read("definition_group_responses", identity)
+                    if isinstance(raw_response, Mapping):
+                        cached = raw_response
                 if logger is not None:
                     logger.event("formal_definition_resolver", "group_started", status="RUNNING", brief_id=brief_id,
                                  group_number=group_number, group_count=len(groups), supplement_round=round_number,
@@ -1481,6 +1765,9 @@ class FormalDefinitionResolver:
                             "field_path": f"definition_groups.{group_number}.rounds.{round_number}",
                             "reason": detail, "status": "needs_human_input",
                         })
+                        if self._cacheable_group_result(current, group):
+                            save_checkpoint("definition_group_progress", progress_identity, current,
+                                            group_number=group_number, supplement_round=round_number)
                         if logger is not None:
                             logger.event(
                                 "formal_definition_resolver", "group_warning", level="WARNING",
@@ -1491,7 +1778,22 @@ class FormalDefinitionResolver:
                         break
                 else:
                     candidate = cached
+                if cached is None and isinstance(candidate, Mapping):
+                    save_checkpoint("definition_group_responses", identity, candidate,
+                                    group_number=group_number, supplement_round=round_number)
                 previous = current
+                candidate = adapt_group_delta(candidate)
+                raw_snapshots = deepcopy(candidate.get("object_registry_raw_diagnostics", [])) if normalized_cache_hit else []
+                if not raw_snapshots:
+                    raw_candidate = cache.read("definition_group_responses", identity) if normalized_cache_hit else candidate
+                    raw_diagnostics = inspect_dependency_graph(
+                        adapt_group_delta(raw_candidate) if isinstance(raw_candidate, Mapping) else candidate,
+                        known_ids={entry["canonical_id"] for entry in object_context["catalog"]},
+                    )
+                    raw_diagnostics.update(supplement_round=round_number, diagnostic_source=(
+                        "legacy_normalized_cache" if normalized_cache_hit and not isinstance(raw_candidate, Mapping) else "raw_response"
+                    ))
+                    raw_snapshots = [raw_diagnostics]
                 candidate = expand_compact_resolution(
                     candidate,
                     variables=group,
@@ -1499,16 +1801,22 @@ class FormalDefinitionResolver:
                     existing_definitions=existing_definitions,
                 )
                 current, collection_repairs = normalize_group_collections(candidate)
+                for field in ("proposed_aliases", "dependency_updates", "reused_object_ids", "updated_objects", "object_delta_expanded"):
+                    if field in candidate:
+                        current[field] = deepcopy(candidate[field])
+                current["object_registry_consumed_versions"] = deepcopy(object_context["read_versions"])
                 current, record_collection_repairs, collection_discarded_records = normalize_record_collections(
                     current, previous=previous, repair_targets=repair_targets,
                     primary_ids=set(assigned.values()),
                 )
-                current, dropped = keep_group_definitions(current, group, assigned, group_number=group_number)
+                current, initial_reference_repairs = normalize_definition_references(current)
                 current, repaired_relations, quarantined_relations = normalize_model_relations(
                     current, id_prefix=f"G{group_number}_",
                 )
                 current, normalized_fields = normalize_definition_conditions(current)
                 current, reference_repairs = normalize_definition_references(current)
+                reference_repairs = initial_reference_repairs + reference_repairs
+                current, dropped = keep_group_definitions(current, group, assigned, group_number=group_number)
                 normalize_variable_dependencies(current, variable_claim_model)
                 current = normalize_record_completeness(current, evidence_bundle or {})
                 current, discarded_records = self._quarantine_invalid_records(
@@ -1520,7 +1828,10 @@ class FormalDefinitionResolver:
                 )
                 record_diagnostics = [
                     deepcopy(item) for item in current["unknown_items"] if isinstance(item, Mapping)
-                    and item.get("category") in ("record_validation", "record_quarantine", "shape_repair", "patch_rejection")
+                    and (item.get("category") in ("record_validation", "record_quarantine", "shape_repair", "patch_rejection")
+                         or item.get("category") == "record_encoding" and any(
+                             record.get("relation_id") == item.get("record_id") and item.get("field") in record.get("machine_encoding_issues", [])
+                             for record in current["model_relations"]))
                 ]
                 ignored_patch_ids = []
                 if previous is not None:
@@ -1534,6 +1845,19 @@ class FormalDefinitionResolver:
                     record_diagnostics = [item for item in record_diagnostics
                                           if item.get("record_id") not in ignored_patch_ids
                                           or item.get("category") == "patch_rejection"]
+                current["object_registry_raw_diagnostics"] = deepcopy(previous.get("object_registry_raw_diagnostics", [])) if previous else []
+                current["object_registry_raw_diagnostics"].extend(
+                    snapshot for snapshot in raw_snapshots if snapshot not in current["object_registry_raw_diagnostics"]
+                )
+                if logger is not None:
+                    premise_records = [
+                        {"record_id": record["relation_id"], **deepcopy(record["premise_normalization"])}
+                        for record in current["model_relations"] if record.get("premise_normalization")
+                    ]
+                    if premise_records:
+                        logger.event("formal_definition_resolver", "relation_premises_normalized", status="PRESERVED",
+                                     brief_id=brief_id, group_number=group_number, supplement_round=round_number,
+                                     records=premise_records)
                 if logger is not None:
                     warning_groups = {}
                     for diagnostic in record_diagnostics:
@@ -1585,9 +1909,13 @@ class FormalDefinitionResolver:
                                                    for repair in record_collection_repairs],
                     )
                 group_candidates[group_number] = current
+                if self._cacheable_group_result(current, group):
+                    if not normalized_cache_hit:
+                        save_checkpoint("definition_groups", identity, current,
+                                        group_number=group_number, supplement_round=round_number)
+                    save_checkpoint("definition_group_progress", progress_identity, current,
+                                    group_number=group_number, supplement_round=round_number)
                 self._validate(current, evidence_bundle or {})
-                if cached is None and self._cacheable_group_result(current, group):
-                    cache.write("definition_groups", identity, current)
                 group_audit.append({"group": group_number, "round": round_number, "card_ids": [card["card_id"] for card in selected], "prompt_chars": len(prompt), "cache_hit": cached is not None,
                                     "reference_repairs": reference_repairs})
                 group_audit[-1].update(record_diagnostics=record_diagnostics, repair_targets=repair_targets,
@@ -1655,11 +1983,13 @@ class FormalDefinitionResolver:
                          "unknown_items": actionable_unknown_items}
             group_result = deepcopy(current)
             for request in current.get("evidence_requests", []):
-                group_result["unknown_items"].append({"field_path": f"definition_groups.{group_number}", "reason": f"Evidence request remains unresolved: {request}", "status": "needs_human_input"})
+                diagnostic = {"field_path": f"definition_groups.{group_number}", "reason": f"Evidence request remains unresolved: {request}", "status": "needs_human_input"}
+                if diagnostic not in group_result["unknown_items"]:
+                    group_result["unknown_items"].append(diagnostic)
             return group_result, group_audit
 
         def resolve_group(item):
-            group_number, _group, _existing_definitions = item
+            group_number, _group, _existing_definitions, _object_context = item
             try:
                 return _resolve_group(item)
             except Exception as error:
@@ -1705,31 +2035,42 @@ class FormalDefinitionResolver:
                         for dependency in variable.get("depends_on", [])
                     )
                 ]
+                ready_groups.sort(key=lambda item: (-shared_scores[item[0]], item[0]))
                 batch = (ready_groups or [next(iter(pending_groups.items()))])[:parallel_workers]
-                existing_definitions = [
-                    {key: definition.get(key) for key in ("definition_id", "symbol", "variable_references", "expression_latex", "unit", "conditions")}
-                    for completed_number in sorted(completed_groups)
-                    for definition in completed_groups[completed_number][0]["definitions"]
-                ]
+                requests = []
+                for number, group in batch:
+                    roots = [assigned[variable["variable_id"]] for variable in group]
+                    roots.extend(assigned[dependency] for variable in group for dependency in variable.get("depends_on", [])
+                                 if dependency in assigned)
+                    object_context = project_group_context(merged["object_registry"], roots, group_id=f"G{number}")
+                    existing_definitions = [record for record in object_context["full_records"]
+                                            if record.get("definition_id") and record["definition_id"] not in roots[:len(group)]]
+                    requests.append((number, group, existing_definitions, object_context))
                 for (group_number, _group), result in zip(
                     batch,
-                    executor.map(resolve_group, [
-                        (number, group, existing_definitions) for number, group in batch
-                    ]),
+                    executor.map(resolve_group, requests),
                 ):
                     completed_groups[group_number] = result
+                    group_result, group_audit = result
+                    merged, delta, redirects = commit_group_delta(
+                        merged, group_result, group_id=f"G{group_number}", llm_call=llm_call,
+                        logger=logger, brief_id=brief_id,
+                        checkpoint=settings.get("checkpoint"), cache_identity=cache_identity,
+                    )
+                    commit_identity = {"version": 1, "group_id": group_number,
+                                       "delta": group_result, "llm": cache_identity or {}}
+                    save_checkpoint("definition_group_commits", commit_identity,
+                                    {"delta": delta, "id_redirects": redirects,
+                                     "read_versions": group_result.get("object_registry_consumed_versions", {})},
+                                    group_number=group_number)
+                    audit.extend(group_audit)
                     del pending_groups[group_number]
-        for group_number in range(1, len(groups) + 1):
-            group_result, group_audit = completed_groups[group_number]
-            for collection in ("definitions", "model_relations", "unknown_items"):
-                merged[collection].extend(group_result[collection])
-            audit.extend(group_audit)
         from .formal_reconciliation import (
             apply_definition_reconciliation, definition_conflicts, prepare_definition_candidates,
             reconciliation_dependent_records, reconciliation_record_scope, reconciliation_variable_ids,
         )
 
-        if len(groups) > 1 or definition_conflicts(merged):
+        if definition_conflicts(merged):
             normalize_variable_dependencies(merged, variable_claim_model, logger=logger, brief_id=brief_id)
             candidates = prepare_definition_candidates(merged)
             review_scope = reconciliation_record_scope(candidates)
@@ -1760,7 +2101,7 @@ class FormalDefinitionResolver:
                         conflict_definition_ids=review_scope["conflict_definition_ids"],
                         direct_consumer_ids=review_scope["direct_consumer_ids"],
                     )
-                identity = {"version": 1, "prompt": prompt, "llm": cache_identity or {}}
+                identity = {"version": 2, "prompt": prompt, "llm": cache_identity or {}}
                 review = cache.read("definition_reconciliation", identity)
                 if review is not None and not self._cacheable_reconciliation_review(review):
                     review = None
@@ -1769,6 +2110,8 @@ class FormalDefinitionResolver:
                     if cache.offline:
                         raise ValueError("definition_reconciliation_checkpoint_miss")
                     review = self._request(llm_call, prompt, logger, brief_id, settings, request_kind="reconcile_definitions")
+                    if isinstance(review, Mapping):
+                        save_checkpoint("definition_reconciliation_responses", identity, review)
                 if not isinstance(review, Mapping):
                     raise ValueError(f"definition_reconciliation_response_not_object:{type(review).__name__}")
                 issues = review.get("issues")
@@ -1788,10 +2131,13 @@ class FormalDefinitionResolver:
                             or not all(isinstance(identifier, str) and identifier in identifiers for identifier in record_ids)
                             or not isinstance(reason, str) or not reason.strip()):
                         raise ValueError(f"definition_reconciliation_issue_{issue_number}_invalid")
-                if not cache_hit and not issues:
-                    cache.write("definition_reconciliation", identity, review)
-                candidates = apply_definition_reconciliation(candidates, review, evidence_bundle)
-                if issues or definition_conflicts(candidates):
+                if not cache_hit:
+                    save_checkpoint("definition_reconciliation", identity, review)
+                patches = deepcopy(review.get("patches", [review]))
+                for patch in patches:
+                    candidates = apply_definition_reconciliation(candidates, patch, evidence_bundle,
+                                                                 logger=logger, brief_id=brief_id)
+                if (issues or definition_conflicts(candidates)) and not cache.offline:
                     repair_scope = reconciliation_record_scope(candidates)
                     repair_prompt = RECONCILIATION_REVIEW_PROMPT + json_prompt_payload({
                         "candidate_catalog": _reconciliation_catalog(repair_scope["payload"]),
@@ -1806,6 +2152,9 @@ class FormalDefinitionResolver:
                     })
                     repaired = self._request(llm_call, repair_prompt, logger, brief_id, settings,
                                              request_kind="repair_definition_conflicts")
+                    if isinstance(repaired, Mapping):
+                        repair_identity = {"version": 2, "prompt": repair_prompt, "llm": cache_identity or {}}
+                        save_checkpoint("definition_reconciliation_responses", repair_identity, repaired)
                     if not isinstance(repaired, Mapping):
                         raise ValueError(f"definition_reconciliation_repair_response_not_object:{type(repaired).__name__}")
                     remaining = repaired.get("issues")
@@ -1817,8 +2166,12 @@ class FormalDefinitionResolver:
                         for issue in remaining
                     ):
                         raise ValueError("definition_reconciliation_invalid_residual_issues")
-                    candidates = apply_definition_reconciliation(candidates, repaired, evidence_bundle)
+                    candidates = apply_definition_reconciliation(candidates, repaired, evidence_bundle,
+                                                                 logger=logger, brief_id=brief_id)
                     issues = remaining
+                    patches.append(deepcopy(repaired))
+                    save_checkpoint("definition_reconciliation", identity,
+                                    {"issues": deepcopy(issues), "patches": patches})
                 for issue in issues:
                     record_ids = set(issue["record_ids"])
                     for definition in candidates["definitions"]:
@@ -1889,6 +2242,11 @@ class FormalDefinitionResolver:
                     status="WARNING", brief_id=brief_id, requires_human_review=True,
                     error_code=type(error).__name__, error_detail=detail,
                 )
+        merged["object_registry"] = build_registry(merged)
+        merged["object_registry_diagnostics"] = inspect_dependency_graph(merged)
+        if logger is not None:
+            logger.event("formal_object_registry", "graph_profiled", status="PROFILED", brief_id=brief_id,
+                         phase="dependency_recovered", **merged["object_registry_diagnostics"])
         try:
             self._validate(merged, evidence_bundle)
         except Exception as error:
@@ -1929,7 +2287,7 @@ class FormalDefinitionResolver:
 
     @staticmethod
     def _quarantine_invalid_records(payload, evidence_bundle):
-        normalized = deepcopy(payload)
+        normalized = normalize_model_relation_formats(payload)
         discarded = []
         for collection, identifier_field in (("definitions", "definition_id"), ("model_relations", "relation_id")):
             retained = []
@@ -1988,12 +2346,14 @@ class FormalDefinitionResolver:
                         )
                         retained.append(record)
                         continue
+                    record["status"] = "unresolved"
+                    record.setdefault("original_record", json.dumps(original_record, ensure_ascii=False, sort_keys=True))
                     quarantine_record(normalized, path, f"{type(error).__name__}: {error}", record)
                     normalized["unknown_items"][-1].update(
                         field=",".join(error_fields) or "record", error_code=type(error).__name__,
-                        disposition="quarantined",
+                        disposition="kept_draft", category="record_validation",
                     )
-                    discarded.append(path)
+                    retained.append(record)
                     continue
                 retained.append(record)
             normalized[collection] = retained
@@ -2003,40 +2363,27 @@ class FormalDefinitionResolver:
     def _cacheable_group_result(payload, variables):
         if not isinstance(payload, Mapping):
             return False
-        if payload.get("unknown_items"):
+        if payload.get("schema_version", DEFINITION_RESOLUTION_V1) != DEFINITION_RESOLUTION_V1:
             return False
-        requests = payload.get("evidence_requests", [])
-        if not isinstance(requests, list):
+        if not isinstance(payload.get("unknown_items", []), list):
             return False
-        if any(
-            isinstance(item, Mapping) and str(item.get("query") or "").strip()
-            for item in requests
-        ):
-            return False
-        definitions = payload.get("definitions")
-        relations = payload.get("model_relations")
-        if not isinstance(definitions, list) or not isinstance(relations, list):
-            return False
-        try:
-            if FormalDefinitionResolver._missing(payload, variables):
+        identifiers = set()
+        for collection, id_field in (("definitions", "definition_id"), ("model_relations", "relation_id")):
+            records = payload.get(collection)
+            if not isinstance(records, list):
                 return False
-        except (KeyError, TypeError):
-            return False
-        for definition in definitions:
-            if (
-                not isinstance(definition, Mapping)
-                or definition.get("definition_status") != "specified"
-                or definition.get("verification_readiness") != "encoded"
-            ):
-                return False
-        for relation in relations:
-            if not isinstance(relation, Mapping) or relation.get("status") == "unresolved":
-                return False
+            for record in records:
+                identifier = record.get(id_field) if isinstance(record, Mapping) else None
+                if not isinstance(identifier, str) or not identifier.strip() or identifier in identifiers:
+                    return False
+                identifiers.add(identifier)
         return True
 
     @staticmethod
     def _cacheable_reconciliation_review(payload):
-        return isinstance(payload, Mapping) and isinstance(payload.get("issues"), list) and not payload["issues"]
+        return (isinstance(payload, Mapping) and isinstance(payload.get("issues"), list)
+                and isinstance(payload.get("patches", []), list)
+                and all(isinstance(patch, Mapping) for patch in payload.get("patches", [])))
 
     @staticmethod
     def _request(llm_call, prompt, logger, brief_id, settings, request_kind="resolve_definitions"):
@@ -2065,6 +2412,20 @@ class FormalDefinitionResolver:
 
     @staticmethod
     def _merge(payload, *, logger=None, brief_id=""):
+        if payload.get("object_registry"):
+            from .formal_reconciliation import normalize_duplicate_definitions
+            from .formal_plan_recovery import _mark_dependency_review
+            normalized = normalize_duplicate_definitions(payload, logger=logger, brief_id=brief_id)
+            diagnostics = inspect_dependency_graph(normalized)
+            cyclic_ids = {identifier for component in diagnostics["cyclic_components"] for identifier in component}
+            missing_ids = {item["record_id"] for item in diagnostics["missing_definition_references"]
+                           + diagnostics["missing_premise_references"]}
+            for record in normalized["definitions"] + normalized["model_relations"]:
+                identifier = record.get("definition_id", record.get("relation_id"))
+                if identifier in cyclic_ids | missing_ids:
+                    _mark_dependency_review(record, "cyclic" if identifier in cyclic_ids else "missing",
+                                            definition="definition_id" in record)
+            return normalized
         identifiers = {}
         symbols = {}
         redirects = {}

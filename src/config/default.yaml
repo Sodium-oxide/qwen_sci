@@ -305,7 +305,7 @@ survey:
     use_stream_mode: false
     # Keep remote LLM connection pressure below the token-plan endpoint's
     # stable operating range. Survey presets may not exceed this default.
-    batch_chat_agent_worker: 4
+    batch_chat_agent_worker: 10
     chat_timeout: 900
     batch_chat_timeout: 1800
     # OpenAlex is the primary literature-discovery provider. API keys are
@@ -395,8 +395,25 @@ survey:
       fulltext_provenance_enabled: true
       cache_enabled: true
       max_seed_paper_num: 18
+      survey_search_strategy: "model_feedback"
+      survey_initial_queries_per_sh: 3
+      survey_queries_per_sh: 60
+      survey_logical_query_limit: 60
+      survey_feedback_rounds: 2
+      survey_query_workers: 4
+      survey_results_per_query: 10
+      survey_paper_assessment_batch_size: 4
+      survey_active_candidates_per_sh: 3
+      survey_http_attempt_limit: 1200
+      survey_primary_http_limit: 720
+      survey_retry_fallback_http_limit: 240
+      survey_metadata_graph_http_limit: 240
+      survey_model_request_limit: 800
+      survey_prompt_input_limit: 120000
+      survey_planning_batch_limit: 48
+      survey_planning_workers: 10
       use_seed_filter_LLM: true
-      LLM_seed_threshold: 4
+      LLM_seed_threshold: 3
       auto_decompose_subhypotheses: true
       subhypothesis_decomposition_provider: "qwen"
       subhypothesis_decomposition_model: "qwen3.8-max"
@@ -426,6 +443,7 @@ survey:
       enable_arxiv_discovery: false
       subhypothesis_relevance_threshold: 3
       subhypothesis_max_unique_papers: 10
+      min_seed_papers_per_sh: 2
       subhypothesis_max_slots_per_paper: 2
       # A slot's query variants are alternative recall paths, never a joint
       # eligibility condition for one paper. Values can only narrow the
@@ -439,6 +457,25 @@ survey:
       # Run independent slot tasks concurrently. Their OpenAlex requests still
       # share the process-wide requests-per-second limiter under APIInfo.
       slot_retrieval_parallel_workers: 4
+      candidate_http_attempt_limit: 120
+      candidate_discovery_http_limit: 200
+      candidate_discovery_planning_batch_size: 16
+      candidate_discovery_batch_size: 4
+      candidate_screening_http_limit: 90
+      candidate_comparison_http_limit: 150
+      candidate_supplement_http_limit: 60
+      candidate_model_assessment_limit: 48
+      candidate_discovery_assessment_limit: 180
+      candidate_relevance_assessment_limit: 60
+      candidate_screening_assessment_limit: 128
+      candidate_comparison_assessment_limit: 180
+      candidate_supplement_assessment_limit: 60
+      candidate_role_clarification_limit: 12
+      candidate_relevance_batch_size: 24
+      candidate_screening_dimensions: 1
+      candidate_deep_comparison_limit_per_sh: 12
+      candidate_comparison_batch_size: 4
+      candidate_low_yield_batches: 3
       reference_graph_depth: 1
       # Exploration seeds are useful graph roots, but receive a bounded
       # traversal budget distinct from direct evidence seeds.
@@ -796,10 +833,8 @@ idea:
       max_output_tokens: 65536
 
   mcts:
-    # Two-stage route-matrix budget: run every route for every seed in the
-    # initial pass, then further explore only the highest-scoring seeds.
     max_iterations: 8
-    screening_max_iterations: 12
+    screening_max_iterations: 3
     refinement_max_iterations: 8
     max_depth: 3
     branching_factor: 3
@@ -839,8 +874,8 @@ idea:
     max_candidates_per_seed: 5
     screening_route_expansions_per_seed: 5
     screening_route_ids: ["premise_inversion", "object_substitution", "mechanism_replacement", "representation_shift", "verification_reversal"]
-    refinement_top_seeds: 3
-    refinement_route_expansions_per_seed: 5
+    screening_search_budget: 0
+    refinement_search_budget: 3
     max_route_expansions_per_seed: 5
     primary_selection_policy: "scientific_maturity_diversity_validation"
 
@@ -887,6 +922,31 @@ idea:
 # ============================================
 # ExperimentDesign Agent Configuration
 # ============================================
+computational_experiments:
+  mode: off
+  inputs: []
+  constraints: {}
+  failure_policy: continue_main
+  author_join: wait_within_budget
+  planning:
+    max_experiments: 2
+    prioritize_primary_gaps: true
+  iteration:
+    max_code_repairs: 3
+    max_protocol_revisions: 1
+    max_total_executions: 12
+  runtime:
+    backend: docker
+    max_parallel_experiments: 1
+    max_wall_seconds: 3600
+    max_execution_seconds: 900
+    cpu_cores: 4
+    memory_mb: 4096
+    network_enabled: true
+    environment_id: qwensci-computation:py312-v1
+  backends:
+    enabled: [mathir, python_project, pyscf]
+
 experiment_design:
   enabled: true
   evidence_source: survey_retrieval

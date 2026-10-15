@@ -331,6 +331,43 @@ def _analysis_source_ideas(analysis: Any) -> List[Dict[str, Any]]:
     return ideas
 
 
+def _survey_scientific_candidate_ideas(survey_handoff: Any) -> List[Dict[str, Any]]:
+    handoff = _mapping(survey_handoff)
+    ledger = _mapping(handoff.get("scientific_candidates"))
+    if not ledger.get("frozen") or not ledger.get("ledger_fingerprint"):
+        return []
+    by_id = {_text(r.get("candidate_id")): r for r in _list(ledger.get("records")) if isinstance(r, Mapping)}
+    root_ids = _unique([ledger.get("primary_candidate_id"), *_list(ledger.get("challenger_candidate_ids"))])
+    ideas = []
+    for index, cid in enumerate(root_ids):
+        record = by_id.get(cid)
+        if not record:
+            continue
+        name = _text(record.get("name"))
+        sh_ids = set(_list(record.get("sub_hypothesis_ids")))
+        gap_ids = [_text(gap.get("gap_id")) for gap in _list(handoff.get("gaps"))
+                   if isinstance(gap, Mapping) and gap.get("subhypothesis_id") in sh_ids]
+        role = "primary" if index == 0 else "challenger"
+        ideas.append(_source_record({
+            "idea_id": "survey-scientific-" + cid, "title": f"Independent {role} candidate: {name}",
+            "hypothesis": f"Evaluate whether {name} meets the required evidence dimensions relative to the registered alternatives.",
+            "scientific_object": {"candidate_id": cid, "name": name, "aliases": record.get("aliases", [])},
+            "mechanism_or_relation": f"Candidate-specific comparison of {name} under the Survey evidence contract.",
+            "intervention_or_transformation": f"Evaluate {name} using the shared comparison dimensions.",
+            "target_gap_ids": gap_ids,
+            "evidence_basis": {"paper_ids": record.get("qualified_paper_ids") or record.get("discovery_paper_ids", []),
+                "minimum_evidence_matrix": record.get("minimum_evidence_matrix", {}),
+                "ranking_eligible": record.get("ranking_eligible", False),
+                "best_candidate_claim_allowed": ledger.get("best_candidate_claim_allowed", False)},
+            "refinement_scope": "Compare registered scientific candidates; record missing evidence and claim limits.",
+            "falsifier": f"Comparable evidence that {name} fails the required dimensions or is outperformed by an independent candidate.",
+            "scientific_candidate_id": cid, "scientific_candidate_root_role": role,
+            "candidate_ledger_fingerprint": ledger["ledger_fingerprint"],
+            "maturity_status": "provisional",
+        }, "survey_gap", lineage={"source": "scientific_candidate_ledger", "candidate_id": cid, "role": role}))
+    return ideas
+
+
 def collect_mature_idea_sources(
     *,
     existing: Any = None,
@@ -347,7 +384,7 @@ def collect_mature_idea_sources(
 ) -> List[Dict[str, Any]]:
     """Collect, structurally deduplicate, and annotate mature ideas by lineage."""
 
-    records: List[Dict[str, Any]] = []
+    records: List[Dict[str, Any]] = _survey_scientific_candidate_ideas(survey_handoff)
     for raw in normalize_mature_ideas(existing, default_source="user_input"):
         records.append(
             _source_record(
@@ -390,13 +427,14 @@ def collect_mature_idea_sources(
         ):
             continue
         enriched.append(record)
-    limit = max(1, int(max_ideas or 12))
+    reserved = [record for record in enriched if record.get("scientific_candidate_root_role") in {"primary", "challenger"}]
+    limit = max(1, int(max_ideas or 12), len(reserved))
     if len(enriched) <= limit:
         return enriched
-    selected: List[Dict[str, Any]] = []
-    selected_ids = set()
+    selected: List[Dict[str, Any]] = list(reserved)
+    selected_ids = {id(record) for record in reserved}
     for source in MATURE_IDEA_SOURCES:
-        item = next((record for record in enriched if record.get("idea_source") == source), None)
+        item = next((record for record in enriched if record.get("idea_source") == source and id(record) not in selected_ids), None)
         if item is not None:
             selected.append(item)
             selected_ids.add(id(item))
@@ -541,6 +579,11 @@ def build_mature_idea_evidence_context(
         for assessment in _list(data_evidence.get("paper_assessments"))
         if isinstance(assessment, Mapping) and _text(assessment.get("paper_id"))
     )
+    candidate_id = _text(idea.get("scientific_candidate_id"))
+    if candidate_id:
+        candidate_record = next((record for record in _list(_mapping(handoff.get("scientific_candidates")).get("records"))
+            if isinstance(record, Mapping) and record.get("candidate_id") == candidate_id), {})
+        scoped_paper_ids.update(_list(candidate_record.get("qualified_paper_ids")) + _list(candidate_record.get("discovery_paper_ids")))
     for reference in references or []:
         if not isinstance(reference, Mapping):
             continue

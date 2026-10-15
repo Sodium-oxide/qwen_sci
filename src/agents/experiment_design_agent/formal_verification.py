@@ -13,7 +13,7 @@ import re
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
 
-from .formal_dependency import dependency_ids, expression_symbols, expression_variable_ids, formal_records, target_dependencies
+from .formal_dependency import dependency_ids, context_dependency_ids, expression_symbols, expression_variable_ids, formal_records, target_dependencies
 from .formal_expression import valid_declarations
 from .formal_capabilities import backend_capabilities, is_registered_backend
 from .proof_assistant_backend import build_lean_source
@@ -53,6 +53,21 @@ def verification_dependencies(plan, target_id):
     return target_dependencies(plan, target_id, allow_missing=True)
 
 
+def verification_context_ids(plan, target_id):
+    records = formal_records(plan)
+    required = target_dependencies(plan, target_id, allow_missing=True) | {target_id}
+    pending = list(required)
+    while pending:
+        identifier = pending.pop()
+        record = records.get(identifier)
+        if record is None:
+            continue
+        dependencies = context_dependency_ids(record, plan) & set(records)
+        pending.extend(dependencies - required)
+        required.update(dependencies)
+    return required - {target_id}
+
+
 def scoped_diagnostics(plan, target_id):
     records = formal_records(plan)
     identifiers = verification_dependencies(plan, target_id) | {target_id}
@@ -74,17 +89,19 @@ def scoped_diagnostics(plan, target_id):
         return item
     return {field: [item for original in plan.get(field, []) if isinstance((item := normalize_owner(original)), Mapping)
                     and not item.get("resolved", False) and item.get("status") not in {"resolved", "completed"}
+                    and not (item.get("category") == "model_completion"
+                             and item.get("diagnostic_origin") == "skeleton_record_repair")
                     and diagnostic_applies(item, identifiers, known)]
             for field in ("semantic_diagnostics", "unknown_items")}
 
 
 def semantic_snapshot(plan, target_id, *, legacy=False):
     records = formal_records(plan)
-    identifiers = verification_dependencies(plan, target_id) | {target_id}
+    identifiers = verification_context_ids(plan, target_id) | {target_id}
     pending = list(identifiers)
     while pending:
         identifier = pending.pop()
-        extra = verification_dependencies(plan, identifier) - identifiers
+        extra = verification_context_ids(plan, identifier) - identifiers
         identifiers.update(extra)
         pending.extend(extra)
     snapshot = {identifier: {key: semantic_content(value) for key, value in records[identifier].items() if key not in {"statement", "selection_reason", "source_path", "source_refs"}} for identifier in sorted(identifiers)}
@@ -147,9 +164,9 @@ def build_verification_task(
     ]
     construction_blockers.extend(f"missing_dependency:{identifier}" for identifier in sorted(missing_dependencies))
     construction_blockers.extend(
-        f"candidate_completion_requires_review:{identifier}"
+        f"encoding_issue:{identifier}:{field}"
         for identifier in sorted(dependencies | {target_id})
-        if records[identifier].get("candidate_completion_pending") is True
+        for field in records[identifier].get("machine_encoding_issues", [])
     )
     if backend == "lean":
         proof_assistant = proof_assistant if isinstance(proof_assistant, Mapping) else {}
@@ -215,10 +232,12 @@ def build_verification_task(
             else:
                 constraints.append(record["predicate_expression"])
         elif "relation_id" in record:
-            if record.get("formal_expression") is None or record.get("status") == "unresolved":
+            if record.get("formal_expression") is None:
                 blockers.append(f"missing_model_encoding:{identifier}")
             else:
                 constraints.append(record["formal_expression"])
+                if record.get("status") == "unresolved":
+                    blockers.append("unresolved_scientific_input")
         elif "proposition_id" in record or "lemma_id" in record:
             evidence = next((result for result in verified_results if result.get("target_id") == identifier and result.get("result") == "passed" and result.get("evidence_kind") in {"smt_unsat", "symbolic_identity", "rule_derivation", "lean_kernel_checked"} and result.get("input_snapshot") == semantic_snapshot(plan, identifier)), None)
             if evidence is None or record.get("encoding_alignment_status") == "requires_review" or any(obligation not in {result.get("target_id") for result in verified_results if result.get("result") == "passed"} for obligation in record.get("required_obligation_ids", [])):
@@ -290,7 +309,7 @@ def build_verification_task(
     diagnostics = scoped_diagnostics(plan, target_id)
     if diagnostics["semantic_diagnostics"]:
         blockers.append("semantic_diagnostic_requires_review")
-    if diagnostics["unknown_items"]:
+    if any(item.get("category") != "record_encoding" for item in diagnostics["unknown_items"]):
         blockers.append("unresolved_scientific_input")
     symbol_names = [item.get("symbol") for item in target.get("quantifiers", [])]
     if len(symbol_names) != len(set(symbol_names)):
@@ -325,7 +344,7 @@ def run_verification_task(task, *, enabled=True):
         return record
     blockers = _execution_blockers(task)
     if blockers:
-        dependency_prefixes = ("undefined:", "missing_dependency:", "requires_verified_dependency:", "blocked_construction:", "candidate_completion_requires_review:")
+        dependency_prefixes = ("undefined:", "missing_dependency:", "requires_verified_dependency:", "blocked_construction:")
         status = "dependency_missing" if any(item.startswith(dependency_prefixes) for item in blockers) else "not_encoded"
         record.update(result=status, limitations=blockers)
         return record
@@ -397,10 +416,10 @@ def _rule_result(plan, target_id):
     records = formal_records(plan)
     if any(
         records.get(identifier, {}).get("construction_status") == "blocked"
+        or records.get(identifier, {}).get("machine_encoding_issues")
         or records.get(identifier, {}).get("dependency_health") in {
             "cyclic", "missing", "invalid_or_blocked", "blocked_by_dependency",
         }
-        or records.get(identifier, {}).get("candidate_completion_pending") is True
            for identifier in verification_dependencies(plan, target_id) | {target_id}):
         return None
     checked = verify_target_proof(plan, target_id)
@@ -441,7 +460,8 @@ def summarize_targets(plan, results):
             "definition_id" in records[identifier] and records[identifier].get("definition_status") != "specified"
         ) or ("relation_id" in records[identifier] and records[identifier].get("status") == "unresolved")]
         scoped = scoped_diagnostics(plan, target_id)
-        diagnostics = [*scoped["semantic_diagnostics"], *scoped["unknown_items"]]
+        diagnostics = [*scoped["semantic_diagnostics"],
+                       *(item for item in scoped["unknown_items"] if item.get("category") != "record_encoding")]
         if target.get("construction_status") == "blocked":
             status = "unresolved"
         elif target.get("encoding_alignment_status") == "requires_review":
@@ -460,7 +480,17 @@ def summarize_targets(plan, results):
             status = "proof_draft_available"
         else:
             status = "unresolved"
-        summaries.append({"target_id": target_id, "status": status, "revision": plan.get("revision", 1), "remaining_obligations": remaining, "missing_dependencies": missing, "scope": target.get("scope", "")})
+        summaries.append({"target_id": target_id, "status": status, "revision": plan.get("revision", 1),
+                          "remaining_obligations": remaining, "missing_dependencies": missing,
+                          "scope": target.get("scope", ""),
+                          "computation_results": [{"backend": result.get("backend"), "result": result.get("result"),
+                                                   "executed": result.get("executed", False),
+                                                   "evidence_kind": result.get("evidence_kind")}
+                                                  for result in current],
+                          "semantic_status": "requires_review" if diagnostics or target.get("encoding_alignment_status") == "requires_review"
+                                             else "not_reviewed",
+                          "encoding_diagnostic_count": sum(item.get("category") == "record_encoding"
+                                                           for item in scoped["unknown_items"])})
     return summaries
 
 

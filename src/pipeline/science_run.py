@@ -214,6 +214,10 @@ def normalize_immutable_options(options: Mapping[str, object]) -> dict[str, Any]
     quantitative_mode = (quantitative_mode or "off").casefold()
     if quantitative_mode not in {"off", "optional", "required"}:
         raise ScienceRunInputError("quantitative_mode must be off, optional, or required")
+    computation = options.get("computation") if isinstance(options.get("computation"), Mapping) else {}
+    computation_mode = str(options.get("computation_mode") or computation.get("mode") or "off").casefold()
+    if computation_mode not in {"off", "plan", "run"}:
+        raise ScienceRunInputError("computation_mode must be off, plan, or run")
 
     return {
         "discipline_ids": normalized_disciplines,
@@ -224,6 +228,8 @@ def normalize_immutable_options(options: Mapping[str, object]) -> dict[str, Any]
             "quantitative": _optional_text(options.get("quantitative_model")),
         },
         "quantitative": {"mode": quantitative_mode},
+        "computation": {"mode": computation_mode,
+            "model": _optional_text(options.get("computation_model")) or _optional_text(computation.get("model"))},
         "author_rendering": {
             "template_dir": _optional_text(options.get("template_dir")),
             "template_profile": _optional_text(options.get("template_profile")),
@@ -910,6 +916,11 @@ def validate_resume_inputs(
     expected_options = immutable_inputs.get("options")
     if not isinstance(expected_config, Mapping) or not isinstance(expected_options, Mapping):
         raise ScienceRunStateError("science_run.json has incomplete immutable inputs")
+    persisted_computation = expected_options.get("computation", {})
+    for option, key, default in (("computation_mode", "mode", "off"), ("computation_model", "model", None)):
+        provided = explicit_options.get(option)
+        if provided is not None and provided != persisted_computation.get(key, default):
+            raise ScienceRunConflictError(f"Resume {option} differs from the science run")
 
     if config_path is not None:
         if not config_path.is_file():

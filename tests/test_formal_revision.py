@@ -22,6 +22,28 @@ def replacement(collection, record):
     return {"collection": collection, "record": deepcopy(record)}
 
 
+def test_relation_revision_normalizes_format_without_rejecting_mathematical_candidate():
+    from test_formal_plan_recovery import encoded_relation
+    from src.agents.experiment_design_agent.formal_verification import build_verification_task
+
+    plan = formal_plan()
+    plan["model_relations"] = [encoded_relation()]
+    plan["propositions"][0]["premises"] = ["R1"]
+    revised_relation = encoded_relation(source_refs="EC1", origin="source_grounded",
+                                        depends_on={"definition_id": "D1"})
+    revised, audit = apply_semantic_revision(
+        plan, patch(replacements=[replacement("model_relations", revised_relation)]), {"R1", "D1", "P1"},
+        variable_claim_model={"variables": [{"variable_id": "V1"}]},
+    )
+    assert not audit["rejected_operations"]
+    relation = revised["model_relations"][0]
+    assert relation["formal_expression"] == revised_relation["formal_expression"]
+    assert relation["depends_on"] == ["D1"]
+    assert relation["source_refs"] == [{"card_id": "EC1"}]
+    assert revised["unknown_items"]
+    assert build_verification_task(revised, "P1", "z3")["blockers"] == []
+
+
 def refined_target(plan):
     target = deepcopy(plan["propositions"][0])
     target["scope"] = "real scalars satisfying the explicit assumption A1"

@@ -20,6 +20,7 @@ from .survey_idea_handoff import (
     build_handoff_payload,
     validate_gap_ledger_payload,
 )
+from .scientific_candidates import verify_candidate_ledger
 from .survey_gap_triage import build_gap_triage_artifact
 from .multimodal_evidence.handoff_binding import (
     MULTIMODAL_EVIDENCE_ARTIFACT,
@@ -419,6 +420,32 @@ def build_survey_idea_handoff_projection(
     )
     if multimodal_evidence is not None:
         artifacts["multimodal_evidence"] = MULTIMODAL_EVIDENCE_ARTIFACT
+    candidate_ledger = _mapping(_mapping(survey.get("subhypothesis_retrieval")).get("candidate_discovery"))
+    scientific_candidates = {}
+    if candidate_ledger.get("schema_version") == "scientific_candidate_ledger_v2":
+        if not verify_candidate_ledger(candidate_ledger):
+            raise ValueError("Scientific candidate ledger is not a verified frozen snapshot")
+        record_fields = ("candidate_id", "name", "aliases", "taxonomic_level", "candidate_kind", "sub_hypothesis_ids",
+            "discovery_paper_ids", "qualified_paper_ids", "negative_evidence_ids", "minimum_evidence_satisfied",
+            "ranking_eligible", "ranking_readiness_by_subhypothesis", "admission_status", "fulltext_status", "minimum_evidence_matrix",
+            "roles_by_subhypothesis", "screening_status_by_subhypothesis", "search_status_by_subhypothesis", "assessment_status_by_subhypothesis", "promoted_subhypothesis_ids",
+            "candidate_relevance_by_subhypothesis", "candidate_relevance_status", "candidate_relevance_scores_by_subhypothesis",
+            "candidate_relevance_reasons", "candidate_relevance_admission_reasons", "candidate_source_evidence_by_subhypothesis", "candidate_admission_by_subhypothesis",
+            "candidate_evidence_boundaries_by_subhypothesis", "relevance_assessment_submitted_by_subhypothesis", "active_status_by_subhypothesis", "active_rank_by_subhypothesis", "opportunity_by_subhypothesis", "root_seed_source_ids")
+        scientific_candidates = {key: candidate_ledger.get(key) for key in (
+            "schema_version", "ledger_fingerprint", "discovery_status", "discovery_retrieval_status", "comparison_status", "best_candidate_claim_allowed",
+            "balance", "balance_by_comparator_group", "primary_candidate_id", "challenger_candidate_ids", "challenger_status",
+            "comparison_scope", "retrieval_budget", "stop_reason", "comparison_metrics", "retrieval_strategy")}
+        scientific_candidates["records"] = [{key: record.get(key) for key in record_fields}
+            for record in _records(candidate_ledger.get("records"))]
+        scientific_candidates["source_pointer"] = {"artifact": "survey.json", "json_pointer": "/subhypothesis_retrieval/candidate_discovery"}
+        scientific_candidates["frozen"] = True
+        scientific_candidates["funnel"] = {
+            **{key: value for key, value in candidate_ledger.get("funnel", {}).items()
+               if key not in {"hits_by_lane", "zero_result_queries", "failed_queries", "unsearched_queries"}},
+            "candidate_records_into_idea": len(scientific_candidates["records"]),
+            "independent_candidate_roots_into_idea": int(bool(candidate_ledger.get("primary_candidate_id"))) + len(candidate_ledger.get("challenger_candidate_ids", [])),
+        }
     handoff = SurveyIdeaHandoff(
         project_id=project_id,
         survey_run_id=survey_run_id,
@@ -436,11 +463,15 @@ def build_survey_idea_handoff_projection(
             "may_generate_new_gap": False,
             "accepted_candidate_decisions": sorted(_ACCEPTED_DECISIONS),
             "evidence_bounded_writing": bool(plan.get("evidence_bounded_writing")),
+            **({"best_scientific_candidate_claim_allowed": bool(candidate_ledger.get("best_candidate_claim_allowed")),
+                "candidate_comparison_status": candidate_ledger.get("comparison_status"),
+                "retain_independent_candidate_challenger": True} if scientific_candidates else {}),
             "requires_human_confirmation": bool(
                 _mapping(ledger.get("profile_resolution")).get("requires_human_confirmation")
             ),
         },
         gap_triage=gap_triage,
+        scientific_candidates=scientific_candidates,
         source_artifacts=artifacts,
         created_at=_text(created_at),
         status="ready" if gaps else "partial",

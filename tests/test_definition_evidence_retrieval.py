@@ -251,7 +251,7 @@ def test_non_array_relations_preserve_valid_definitions(relations):
     )
 
     assert result["definitions"][0]["definition_id"] == "D1"
-    assert len(result["model_relations"]) == (1 if isinstance(relations, dict) and "relation_id" in relations else 0)
+    assert len(result["model_relations"]) == (1 if isinstance(relations, dict) else 0)
     assert any("model_relations_not_array" in item["reason"] for item in result["unknown_items"])
     assert not any(record["event"] == "group_warning" for record in logger.records)
     FormalDefinitionResolver._validate(result, {})
@@ -280,7 +280,7 @@ def test_invalid_definition_does_not_discard_other_records(invalid_kind):
         llm_call=lambda *_args, **_kwargs: payload, settings={"max_supplement_rounds": 0},
     )
 
-    if invalid_kind in ("missing_fields", "invalid_source"):
+    if invalid_kind in ("missing_fields", "invalid_source", "references_not_array"):
         assert [item["definition_id"] for item in result["definitions"]] == ["D1", "G1_bad"]
         assert result["definitions"][1]["definition_status"] == "unresolved"
         diagnostic = next(item for item in result["unknown_items"] if item.get("record_id") == "G1_bad")
@@ -299,7 +299,7 @@ def test_invalid_definition_does_not_discard_other_records(invalid_kind):
     assert result["model_relations"][0]["relation_id"] == "G1_R1"
     if invalid_kind != "outside_group":
         assert "raw_excerpt" in diagnostic
-    assert not FormalDefinitionResolver._cacheable_group_result(result, [{"variable_id": "V1"}])
+    assert FormalDefinitionResolver._cacheable_group_result(result, [{"variable_id": "V1"}])
     FormalDefinitionResolver._validate(result, {"evidence_cards": [card(1)]})
 
 
@@ -360,10 +360,12 @@ def test_ambiguous_reference_still_quarantines_only_its_record(reference):
         llm_call=lambda *_args, **_kwargs: payload, settings={"max_supplement_rounds": 0},
     )
     assert [item["definition_id"] for item in result["definitions"]] == ["D1"]
-    assert [item["relation_id"] for item in result["model_relations"]] == ["G1_good"]
-    diagnostic = next(item for item in result["unknown_items"] if item.get("category") == "record_quarantine")
+    assert [item["relation_id"] for item in result["model_relations"]] == ["G1_good", "G1_bad"]
+    assert result["model_relations"][1]["machine_encoding_issues"] == ["depends_on"]
+    diagnostic = next(item for item in result["unknown_items"]
+                      if item.get("category") == "record_encoding" and item.get("record_id") == "G1_bad" and item.get("field") == "depends_on")
     assert diagnostic["field_path"] == "model_relations.G1_bad.depends_on"
-    assert diagnostic["record_path"] == "model_relations[1]"
+    assert result["model_relations"][1]["format_originals"]["depends_on"]
 
 
 def test_reference_normalization_preserves_missing_dependencies_for_merge_review():
@@ -406,7 +408,8 @@ def test_object_collections_preserve_valid_records():
     )
     assert [item["definition_id"] for item in result["definitions"]] == ["D1", "G1_bad"]
     assert result["definitions"][1]["definition_status"] == "unresolved"
-    assert [item["relation_id"] for item in result["model_relations"]] == ["G1_R1"]
+    assert [item["relation_id"] for item in result["model_relations"]] == ["G1_R1", "G1_R2"]
+    assert result["model_relations"][1]["status"] == "unresolved"
     assert any(item.get("record_id") == "G1_bad" for item in result["unknown_items"])
     FormalDefinitionResolver._validate(result, {})
 
@@ -461,6 +464,8 @@ def test_targeted_supplement_preserves_accepted_records_and_repairs_only_targets
 
     def callback(prompt, **_kwargs):
         payload = input_payload(prompt)
+        if "candidate_catalog" in payload:
+            return {"issues": []}
         calls.append(payload)
         if len(calls) == 1:
             return {
@@ -488,7 +493,7 @@ def test_targeted_supplement_preserves_accepted_records_and_repairs_only_targets
     assert result["definitions"][1]["definition_status"] == "specified"
     assert result["model_relations"][0]["statement"] == accepted_relation["statement"]
     assert all(record["status"] == "candidate_formalization" for record in result["model_relations"])
-    assert not result["unknown_items"]
+    assert all(item.get("record_id") != "D2" for item in result["unknown_items"])
     assert result["retrieval_audit"][1]["ignored_patch_record_ids"] == ["D1", "G1_R1"]
     warning = next(record for record in logger.records if record["event"] == "record_warning"
                    and record["record_id"] == "D2" and record["field"] == "domain")
@@ -527,7 +532,9 @@ def test_conflicting_patch_ids_preserve_previous_candidate_and_report_conflict()
     conflict["unit"] = "conflicting unit"
     patch["definitions"].append(conflict)
     result, ignored = merge_definition_patch(previous, patch, {"definition_ids": ["D1"], "relation_ids": []})
-    assert result["definitions"] == previous["definitions"]
+    assert result["definitions"][0] == previous["definitions"][0]
+    assert len(result["definitions"]) == 3
+    assert all(record["definition_status"] == "unresolved" for record in result["definitions"])
     assert not ignored
     assert result["unknown_items"][0]["error_code"] == "conflicting_patch_id"
 
@@ -564,7 +571,8 @@ def test_relation_patch_in_definitions_is_routed_before_validation(id_field):
     )
     assert len(calls) == 2
     assert result["definitions"] == [accepted]
-    assert [record["relation_id"] for record in result["model_relations"]] == ["G1_R0", "G1_R1", "G1_R2", "G1_R4"]
+    assert [record["relation_id"] for record in result["model_relations"]] == ["G1_R0"]
+    assert {result["object_registry"]["aliases"][identifier] for identifier in ("G1_R1", "G1_R2", "G1_R4")} == {"G1_R0"}
     assert result["model_relations"][0]["statement"] == accepted_relation["statement"]
     assert all(record["status"] == "candidate_formalization" for record in result["model_relations"])
     assert not result["unknown_items"]
@@ -608,7 +616,10 @@ def test_bad_definition_using_relation_id_does_not_block_valid_relation_repair()
     logger = ExperimentDesignRunLogger("partial-kind-conflict", console_stream=StringIO())
 
     def callback(prompt, **_kwargs):
-        calls.append(input_payload(prompt))
+        request = input_payload(prompt)
+        if "candidate_catalog" in request:
+            return {"issues": []}
+        calls.append(request)
         result = resolution()
         if len(calls) == 1:
             result["model_relations"] = [relation(status="unresolved")]
@@ -621,19 +632,21 @@ def test_bad_definition_using_relation_id_does_not_block_valid_relation_repair()
 
     result = FormalDefinitionResolver().resolve(
         {}, {}, {"variables": [{"variable_id": "V1"}]}, {}, llm_call=callback,
-        settings={"max_supplement_rounds": 2}, logger=logger,
+        settings={"max_supplement_rounds": 1}, logger=logger,
     )
     assert len(calls) == 2
-    assert result["definitions"] == resolution()["definitions"]
+    assert result["definitions"][0] == resolution()["definitions"][0]
+    assert result["definitions"][1]["definition_status"] == "unresolved"
     assert result["model_relations"][0]["status"] == "candidate_formalization"
     rejection = next(item for item in result["unknown_items"] if item.get("error_code") == "record_kind_conflict")
-    assert rejection["category"] == "patch_rejection"
+    assert rejection["category"] == "record_validation"
     assert rejection["raw_excerpt"]
     targets = definition_repair_targets(result, [{"variable_id": "V1"}], {"V1": "D1"})
-    assert targets["definition_ids"] == targets["relation_ids"] == []
+    assert targets["relation_ids"] == []
+    assert targets["definition_ids"] == [result["definitions"][1]["definition_id"]]
     completed = [record for record in logger.records if record["event"] == "group_completed"][-1]
-    assert completed["discarded_record_count"] == completed["quarantined_record_count"] == 1
-    assert completed["unresolved_record_count"] == 0
+    assert completed["discarded_record_count"] == completed["quarantined_record_count"] == 0
+    assert completed["unresolved_record_count"] == 1
 
 
 def test_initial_record_collection_uses_explicit_id_kind_without_prefix_guessing():
@@ -668,11 +681,12 @@ def test_ambiguous_record_kind_archives_only_bad_records(damage):
     normalized, repairs, discarded = normalize_record_collections(
         payload, previous=previous, primary_ids={"D1"},
     )
-    assert normalized["definitions"] == resolution()["definitions"]
+    assert normalized["definitions"][0] == resolution()["definitions"][0]
+    assert len(normalized["definitions"]) == (2 if damage == "new_cross_collection_id" else 1)
     assert not normalized["model_relations"]
-    assert len(discarded) == (2 if damage == "new_cross_collection_id" else 1)
+    assert len(discarded) == 1
     assert not repairs
-    assert all(item["disposition"] == "ignored_and_archived" and item["raw_excerpt"]
+    assert all(item["disposition"] in {"ignored_and_archived", "kept_unresolved"} and item["raw_excerpt"]
                for item in normalized["unknown_items"])
     assert previous["model_relations"][0]["status"] == "unresolved"
 
@@ -688,11 +702,12 @@ def test_patch_merge_rejects_cross_collection_id_and_keeps_independent_change(re
     patch_payload["definitions"].append(bad)
     result, ignored = merge_definition_patch(previous, patch_payload,
         {"definition_ids": ["D1"], "relation_ids": relation_targets})
-    assert result["definitions"] == [patch_payload["definitions"][0]]
+    assert result["definitions"][0] == patch_payload["definitions"][0]
+    assert result["definitions"][1]["definition_status"] == "unresolved"
     assert result["model_relations"] == previous["model_relations"]
-    assert ignored == ["G1_R1"]
+    assert ignored == []
     assert result["unknown_items"][0]["error_code"] == "cross_collection_id_conflict"
-    assert result["unknown_items"][0]["disposition"] == "ignored_and_archived"
+    assert result["unknown_items"][0]["disposition"] == "kept_unresolved"
 
 
 def test_relation_metadata_symbol_does_not_make_it_a_definition():
@@ -718,9 +733,10 @@ def test_patch_merge_rejects_new_cross_collection_id_without_removing_valid_reco
     patch_payload["model_relations"] = [relation("new_id")]
     result, ignored = merge_definition_patch(previous, patch_payload,
         {"definition_ids": [], "relation_ids": []})
-    assert result["definitions"] == previous["definitions"]
+    assert result["definitions"][0] == previous["definitions"][0]
+    assert result["definitions"][1]["definition_status"] == "unresolved"
     assert not result["model_relations"]
-    assert ignored == ["new_id", "new_id"]
+    assert ignored == ["new_id"]
     assert len(result["unknown_items"]) == 2
 
 
@@ -746,7 +762,7 @@ def test_missing_record_fields_log_once_and_do_not_count_as_discarded_records():
     assert completed["discarded_record_count"] == completed["quarantined_record_count"] == 0
 
 
-def test_targeted_repair_caches_only_complete_candidates_and_reuses_patch(monkeypatch):
+def test_targeted_repair_caches_progress_and_reuses_latest_candidate(monkeypatch):
     class RecordingCache:
         offline = False
 
@@ -781,12 +797,13 @@ def test_targeted_repair_caches_only_complete_candidates_and_reuses_patch(monkey
     resolver = FormalDefinitionResolver()
     first = resolver.resolve({}, {}, {"variables": variables}, {}, llm_call=callback)
     second = resolver.resolve({}, {}, {"variables": variables}, {}, llm_call=callback)
-    assert len(calls) == 3
-    assert len(cache.writes) == 1
-    assert not cache.writes[0]["unknown_items"]
-    assert len(cache.writes[0]["definitions"]) == 2
+    assert len(calls) == 2
+    groups = [payload for payload in cache.writes if "definitions" in payload]
+    assert any(payload["unknown_items"] for payload in groups)
+    assert not groups[-1]["unknown_items"]
+    assert len(groups[-1]["definitions"]) == 2
     assert first["definitions"] == second["definitions"]
-    assert second["retrieval_audit"][1]["cache_hit"]
+    assert second["retrieval_audit"][0]["cache_hit"]
     assert not second["unknown_items"]
 
 
@@ -852,9 +869,9 @@ def test_failed_targeted_patch_keeps_unresolved_content_and_original_diagnostic(
     )
     assert len(calls) == 2
     assert result["model_relations"][0]["statement"] == original["statement"]
-    assert result["model_relations"][0]["scope"] is None
-    assert result["model_relations"][0]["status"] == "unresolved"
-    assert any(item.get("record_id") == "G1_R1" and item.get("field") == "scope"
+    assert result["model_relations"][0]["scope"] == "Positive density model"
+    assert result["model_relations"][0]["machine_encoding_issues"] == ["depends_on"]
+    assert any(item.get("record_id") == "G1_R1" and item.get("field") == "depends_on"
                for item in result["unknown_items"])
 
 
@@ -953,8 +970,8 @@ def test_malformed_relations_do_not_discard_valid_definitions():
     assert result["definitions"][0]["definition_id"] == "D1"
     assert result["model_relations"][0]["relation_id"] == "G1_R1"
     assert result["model_relations"][0]["statement"] == "rho is positive"
-    assert result["model_relations"][1]["relation_id"] == "G1_R3"
-    assert result["model_relations"][1]["statement"] == "rho = mass / volume"
+    assert result["model_relations"][2]["relation_id"] == "G1_R3"
+    assert result["model_relations"][2]["statement"] == "rho = mass / volume"
     assert result["model_relations"][1]["status"] == "unresolved"
     assert result["unknown_items"][0]["field_path"] == "model_relations[1]"
     completed = next(item for item in logger.records if item["event"] == "group_completed")
@@ -969,8 +986,10 @@ def test_relation_validation_reports_index_and_type():
         FormalDefinitionResolver._validate(payload, {})
     assert "model_relations[1].relation_id: expected nonempty string, got int" in str(error.value)
     normalized, repaired, quarantined = normalize_model_relations(payload, id_prefix="G1_")
-    assert normalized["model_relations"] == [{"relation_id": "G1_R2"}]
-    assert repaired and quarantined
+    assert [record["relation_id"] for record in normalized["model_relations"]] == ["G1_R1", "G1_R2"]
+    assert normalized["model_relations"][0]["status"] == "unresolved"
+    assert repaired and not quarantined
+    assert normalized["unknown_items"][0]["field_path"] == "model_relations[0]"
 
 
 def test_group_namespace_updates_relation_dependencies():
@@ -989,8 +1008,9 @@ def test_quarantined_nested_relations_retain_bounded_raw_excerpt():
     payload = resolution()
     payload["model_relations"] = [[{"relation_id": "R1"}, {"relation_id": "R2"}]]
     normalized, _repaired, quarantined = normalize_model_relations(payload, id_prefix="G1_")
-    assert normalized["model_relations"] == []
-    assert quarantined
+    assert len(normalized["model_relations"]) == 1
+    assert normalized["model_relations"][0]["status"] == "unresolved"
+    assert not quarantined
     assert '"relation_id":"R2"' in normalized["unknown_items"][0]["raw_excerpt"]
 
 
@@ -1037,7 +1057,7 @@ def test_invalid_reconciliation_keeps_valid_group_relations():
     assert {item["definition_id"] for item in result["definitions"]} == {"D1", "D2"}
     assert [item["relation_id"] for item in result["model_relations"]] == ["G1_R1", "G2_R1"]
     assert [item["statement"] for item in result["model_relations"]] == ["rho relation", "flux relation"]
-    assert any(item["field_path"] == "definition_reconciliation" for item in result["unknown_items"])
+    assert not any(item["field_path"] == "definition_reconciliation" for item in result["unknown_items"])
 
 
 def test_reconciliation_review_preserves_source_references():
@@ -1052,7 +1072,7 @@ def test_reconciliation_review_preserves_source_references():
             reconciliation_prompts.append(prompt)
             return {"issues": []}
         variable = payload["variable_claim_model"]["variables"][0]["variable_id"]
-        result = resolution(variable, "rho" if variable == "V1" else "flux",
+        result = resolution(variable, "rho",
                             "D1" if variable == "V1" else "D2")
         result["definitions"][0].update(
             origin="source_grounded",
@@ -1069,9 +1089,9 @@ def test_reconciliation_review_preserves_source_references():
     )
 
     assert result["retrieval_audit"][-1]["status"] == "completed"
-    assert len(reconciliation_prompts) == 1
-    assert "PROVENANCE_ONLY" not in reconciliation_prompts[0]
-    assert len(reconciliation_prompts[0]) < 120000
+    assert len(reconciliation_prompts) == 2
+    assert all("PROVENANCE_ONLY" not in prompt for prompt in reconciliation_prompts)
+    assert all(len(prompt) < 120000 for prompt in reconciliation_prompts)
     assert result["definitions"][0]["source_refs"][0]["quote"] == long_quote
 
 
@@ -1085,7 +1105,7 @@ def test_reconciliation_review_marks_only_reported_conflicts():
             return {"issues": [{"record_ids": ["D1"], "reason": "Its domain conflicts with the selected model."}]}
         variable_id = payload["variable_claim_model"]["variables"][0]["variable_id"]
         number = int(variable_id[1:])
-        return resolution(variable_id, f"symbol{number}", f"D{number}")
+        return resolution(variable_id, "shared", f"D{number}")
 
     result = FormalDefinitionResolver().resolve(
         {}, {}, {"variables": variables}, {}, llm_call=callback,
@@ -1099,6 +1119,7 @@ def test_reconciliation_review_marks_only_reported_conflicts():
 
 def test_checkpoint_reuses_successful_group_after_failure(tmp_path):
     calls = []
+    generated_variables = []
     failed_v2 = False
     lock = Lock()
     variables = [{"variable_id": "V1", "name": "density"}, {"variable_id": "V2", "name": "spectrum"}]
@@ -1112,6 +1133,7 @@ def test_checkpoint_reuses_successful_group_after_failure(tmp_path):
         if "candidate_catalog" in payload:
             return {"issues": []}
         variable = payload["variable_claim_model"]["variables"][0]["variable_id"]
+        generated_variables.append(variable)
         if variable == "V2":
             with lock:
                 if not failed_v2:
@@ -1120,15 +1142,16 @@ def test_checkpoint_reuses_successful_group_after_failure(tmp_path):
         return resolution(variable, "rho" if variable == "V1" else "flux", "D1" if variable == "V1" else "D2")
 
     resolver = FormalDefinitionResolver()
-    with pytest.raises(Exception, match="interrupted"):
-        resolver.resolve({}, {}, {"variables": variables}, {}, llm_call=callback, settings=settings)
+    partial = resolver.resolve({}, {}, {"variables": variables}, {}, llm_call=callback, settings=settings)
+    assert partial["unknown_items"]
     result = resolver.resolve({}, {}, {"variables": variables}, {}, llm_call=callback, settings=settings)
-    assert len(calls) == 4
+    assert generated_variables.count("V1") == 1
+    assert generated_variables.count("V2") == 2
     assert len(result["definitions"]) == 2
     assert result["retrieval_audit"][0]["cache_hit"]
 
 
-def test_degraded_definition_groups_are_not_written_or_reused(monkeypatch):
+def test_degraded_definition_groups_are_saved_and_reused_without_promoting_status(monkeypatch):
     degraded = resolution()
     degraded["definitions"][0].update(definition_status="unresolved", verification_readiness="blocked", origin="unresolved")
     degraded["unknown_items"] = [{"field_path": "definitions.D1", "reason": "requires review", "status": "needs_human_input"}]
@@ -1156,18 +1179,19 @@ def test_degraded_definition_groups_are_not_written_or_reused(monkeypatch):
         settings={"checkpoint": {"enabled": True}, "max_supplement_rounds": 0},
     )
     assert result["unknown_items"]
-    assert cache.writes == []
+    assert cache.writes
+    assert next(payload for payload in reversed(cache.writes) if "definitions" in payload)["definitions"][0]["definition_status"] == "unresolved"
 
     cache.cached = degraded
-    recovered = resolution()
     result = FormalDefinitionResolver().resolve(
         {}, {}, {"variables": [{"variable_id": "V1", "name": "density"}]}, {},
-        llm_call=lambda *_args, **_kwargs: recovered,
+        llm_call=lambda *_args, **_kwargs: pytest.fail("A cached draft must be reused when repair rounds are disabled"),
         settings={"checkpoint": {"enabled": True}, "max_supplement_rounds": 0},
     )
-    assert result["definitions"][0]["definition_status"] == "specified"
+    assert result["definitions"][0]["definition_status"] == "unresolved"
+    assert result["definitions"][0]["verification_readiness"] == "blocked"
     assert cache.read_count >= 2
-    assert cache.writes[-1]["definitions"][0]["definition_status"] == "specified"
+    assert next(payload for payload in reversed(cache.writes) if "definitions" in payload)["definitions"][0]["definition_status"] == "unresolved"
 
 
 def test_definition_groups_run_three_at_a_time_and_merge_in_order():
@@ -1228,7 +1252,7 @@ def test_dependent_definition_group_receives_completed_definitions():
     )
 
     assert "D1" in seen["V2"]
-    assert [item["definition_id"] for item in result["definitions"]] == ["D1", "D2", "D3"]
+    assert {item["definition_id"] for item in result["definitions"]} == {"D1", "D2", "D3"}
 
 
 def test_missing_symbols_are_advisory_and_cycles_remain_unresolved():
@@ -1321,5 +1345,5 @@ def test_conflict_does_not_discard_independent_definitions():
     merged = FormalDefinitionResolver._merge(payload)
     assert merged["definitions"][0]["definition_status"] == "unresolved"
     assert merged["definitions"][0]["variable_references"] == ["V1", "V2"]
-    assert merged["definitions"][1]["definition_status"] == "specified"
+    assert next(record for record in merged["definitions"] if record["definition_id"] == "D3")["definition_status"] == "specified"
     assert merged["unknown_items"]

@@ -109,6 +109,7 @@ def test_open_math_api_does_not_enable_source_evaluation(node):
 
 def test_diagnostics_follow_target_needed_for_and_variable_paths():
     plan = scalar_plan()
+    plan["propositions"][0]["variable_references"] = ["V1"]
     second = deepcopy(plan["propositions"][0])
     second.update(proposition_id="P2", quantifiers=[], symbol_references=[], variable_references=[],
                   conclusion_expression={"op": "eq", "args": [number(2), number(2)]})
@@ -191,6 +192,7 @@ def test_variable_division_requires_nonzero_domain(backend):
 
 def test_unscoped_diagnostic_is_advisory_but_explicit_global_applies():
     plan = scalar_plan()
+    plan["propositions"][0]["object_bindings"] = {"x": "D1"}
     plan["unknown_items"] = [{"reason": "unassigned warning"}, {"field_path": "definitions[0].domain", "reason": "local"}]
     assert len(scoped_diagnostics(plan, "P1")["unknown_items"]) == 1
     plan["unknown_items"].append({"scope": "global", "reason": "global assumption pending"})

@@ -7,9 +7,9 @@ import json
 
 from .formal_contracts import DEFINITION_FIELDS, DEFINITION_TEXT_CONTRACT, validate_formal_plan_v2
 from .definition_evidence import bounded_formal_evidence
-from .formal_dependency import COLLECTION_IDS, dependency_ids, formal_records, target_subgraph
+from .formal_dependency import COLLECTION_IDS, dependency_ids, context_dependency_ids, formal_records, target_subgraph
 from .formal_verification import semantic_snapshot, verify_formal_plan
-from .formal_storage import archive_report, execution_snapshot
+from .formal_storage import archive_report, execution_snapshot, semantic_content
 from .formal_encoding import repair_verification_encodings
 from .formal_expression import EXPRESSION_CONTRACT
 from .llm_json import call_required_json_with_logging, json_prompt_payload
@@ -95,7 +95,7 @@ def _revision_edit_scope(local_plan, target_id):
     scope = {target_id}
     target = records.get(target_id)
     if isinstance(target, Mapping):
-        scope.update(dependency_ids(target, local_plan))
+        scope.update(context_dependency_ids(target, local_plan))
         scope.update(identifier for identifier in target.get("required_obligation_ids", []) if isinstance(identifier, str))
     for obligation in local_plan.get("proof_obligations", []):
         if not isinstance(obligation, Mapping):
@@ -105,7 +105,7 @@ def _revision_edit_scope(local_plan, target_id):
         identifier = obligation.get("obligation_id")
         if isinstance(identifier, str):
             scope.add(identifier)
-        scope.update(dependency_ids(obligation, local_plan))
+        scope.update(context_dependency_ids(obligation, local_plan))
     scope.update(identifier for identifier in local_plan.get("global_assumption_ids", []) if isinstance(identifier, str))
     return scope
 
@@ -216,7 +216,7 @@ class _RevisionRequestLogger:
 
 def apply_semantic_revision(plan, patch, allowed_ids, *, variable_claim_model=None, evidence_bundle=None, logger=None,
                             brief_id="", iteration=None, target_ids=None, resolvable_unknown_items=None):
-    from .formal_definition_resolver import validate_source_grounding
+    from .formal_definition_resolver import normalize_model_relation_formats, validate_source_grounding
     from .reasoning_validation import _verified_markers
 
     if not isinstance(patch, Mapping) or patch.get("schema_version") != "formal_revision_patch_v1" or not isinstance(patch.get("reason"), str) or not patch["reason"].strip():
@@ -291,6 +291,9 @@ def apply_semantic_revision(plan, patch, allowed_ids, *, variable_claim_model=No
                 reject(action, index, operation, "semantic_revision_duplicate_operation", "Only the first accepted operation for this ID is retained.",
                        collection=collection, identifier=identifier)
                 continue
+            if collection == "model_relations" and not _verified_markers(record):
+                envelope = normalize_model_relation_formats({"model_relations": [record], "unknown_items": []})
+                record = envelope["model_relations"][0]
             variable_references = record.get("variable_references", [])
             if registered_variable_ids is not None and isinstance(variable_references, list):
                 unknown_variables = sorted({reference for reference in variable_references
@@ -362,7 +365,13 @@ def apply_semantic_revision(plan, patch, allowed_ids, *, variable_claim_model=No
                 retained.append(deepcopy(item))
             ledgers[field] = (deepcopy(plan.get(field, [])) if invalid or field == "unknown_items" and resolvable_unknown_items is not None
                               else [deepcopy(item) for item in plan.get(field, []) if not in_scope(item)])
-            ledgers[field].extend(item for item in retained if item not in ledgers[field])
+            for item in retained:
+                existing = next((index for index, previous in enumerate(ledgers[field])
+                                 if semantic_content(previous) == semantic_content(item)), None)
+                if existing is None:
+                    ledgers[field].append(item)
+                else:
+                    ledgers[field][existing] = item
 
     def build(operations):
         candidate = deepcopy(plan)
@@ -375,6 +384,11 @@ def apply_semantic_revision(plan, patch, allowed_ids, *, variable_claim_model=No
             else:
                 candidate[collection][found] = deepcopy(item["record"])
         candidate.update(deepcopy(ledgers))
+        for item in operations:
+            if item["collection"] == "model_relations":
+                for diagnostic in item["record"].get("format_diagnostics", []):
+                    if diagnostic not in candidate["unknown_items"]:
+                        candidate["unknown_items"].append(deepcopy(diagnostic))
         return candidate
 
     while True:

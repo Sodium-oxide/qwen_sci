@@ -617,7 +617,7 @@ class IdeaNode:
 @dataclass
 class MCTSConfig:
     max_iterations: int = _mcts_default("exploration_budget", _mcts_default("max_iterations", 128))
-    screening_max_iterations: int = _mcts_default("screening_max_iterations", 12)
+    screening_max_iterations: int = _mcts_default("screening_max_iterations", 3)
     refinement_max_iterations: int = _mcts_default(
         "refinement_max_iterations", _mcts_default("max_iterations", 128)
     )
@@ -1994,6 +1994,7 @@ class MemoryGuidedMCTS:
                     "signature": target.state.signature,
                     "edit_plan": target.state.edit_plan,
                     "skill_metrics": target.state.skill_metrics,
+                    "gap_search_focus": dict(target.state.scientific_intervention.get("gap_search_focus") or {}),
                     "data_anchored_coverage_branch": (
                         dict(
                             target.state.scientific_intervention.get(

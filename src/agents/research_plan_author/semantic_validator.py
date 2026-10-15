@@ -47,6 +47,9 @@ def validate_composed_research_plan(
     if not isinstance(document, Mapping):
         return errors
     payload = dict(document)
+    from .computational_evidence_adapter import append_computational_evidence_section
+    computation = _mapping(_mapping(preparation.get("source_bundle")).get("computational_evidence"))
+    expected_computation = append_computational_evidence_section({}, computation)["sections"][0] if computation else None
     if payload.get("document_status") != "PROPOSAL_NO_OBSERVED_RESULTS":
         errors.append("composed document must remain PROPOSAL_NO_OBSERVED_RESULTS")
     if payload.get("language") != AUTHORING_LANGUAGE:
@@ -112,6 +115,9 @@ def validate_composed_research_plan(
     claim_id_set = set(claim_ids)
     for section in all_sections:
         section_id = _text(section.get("section_id"))
+        trusted_computation = section_id == "computational_experiment_evidence" and expected_computation is not None and _canonical(section) == _canonical(expected_computation)
+        if section_id == "computational_experiment_evidence" and not trusted_computation:
+            errors.append("computational evidence section differs from verified source capsule")
         allowed_theory_units = {
             _text(unit_id)
             for field_name in ("lemma_ids", "proof_obligation_ids", "falsifier_ids", "decision_branch_ids")
@@ -134,10 +140,10 @@ def validate_composed_research_plan(
                     errors.append(
                         f"section block {block_id} exposes private theory identifiers in {field_name}: {private_ids}"
                     )
-            if not (section_id == "references" and block_id == "bibliography") and contains_observed_result_language(block_text):
+            if not trusted_computation and not (section_id == "references" and block_id == "bibliography") and contains_observed_result_language(block_text):
                 errors.append(f"section block {block_id} presents an observed result")
             block_claim_ids = {_text(claim_id) for claim_id in block.get("claim_ids") or [] if _text(claim_id)}
-            if block_text and not block_claim_ids and _text(block.get("kind")) != "quantitative_evidence":
+            if block_text and not block_claim_ids and not trusted_computation and _text(block.get("kind")) != "quantitative_evidence":
                 errors.append(f"section block {block_id} must reference at least one claim ID")
             unknown_claims = block_claim_ids - claim_id_set
             if unknown_claims:

@@ -12,6 +12,7 @@ from src.pipeline.evidence_coverage_ledger import (
     select_sh_seed_candidates,
 )
 from src.pipeline.research_identity import build_project_research_context
+from src.pipeline.sh_graph_provenance import build_seed_annotation_index
 
 
 class _Logger:
@@ -27,6 +28,9 @@ class _CapturingLogger(_Logger):
         self.messages: list[str] = []
 
     def info(self, message, *args, **_kwargs):
+        self.messages.append(message % args if args else message)
+
+    def warning(self, message, *args, **_kwargs):
         self.messages.append(message % args if args else message)
 
 
@@ -194,11 +198,13 @@ def _collector(fake_chat: _FakeChatAgent) -> WorkCollector:
         BasicInfo=SimpleNamespace(debug=False),
         ModuleInfo=SimpleNamespace(
             WorkCollector=SimpleNamespace(
+                survey_search_strategy="staged_legacy",
                 enable_sh_paper_semantic_assessment=True,
                 sh_paper_semantic_assessment_cache_enabled=True,
                 use_seed_filter_LLM=False,
                 LLM_seed_threshold=4,
                 max_seed_paper_num=5,
+                min_seed_papers_per_sh=0,
                 subhypothesis_relevance_threshold=3,
                 subhypothesis_max_unique_papers=6,
                 subhypothesis_max_slots_per_paper=2,
@@ -290,6 +296,7 @@ def test_project_screen_rejects_deferred_candidates_when_accepted_pool_is_suffic
     retained = collector.filter_seed_papers(
         context["original_topic"],
         papers,
+        threshold=4,
         research_context=context,
         retain_all=True,
         retain_deferred_if_accepted_below=2,
@@ -328,6 +335,7 @@ def test_project_screen_retains_deferred_candidates_when_accepted_pool_is_insuff
     retained = collector.filter_seed_papers(
         context["original_topic"],
         papers,
+        threshold=4,
         research_context=context,
         retain_all=True,
         retain_deferred_if_accepted_below=2,
@@ -360,7 +368,8 @@ def test_sh_semantic_parse_failure_keeps_candidate_as_uncertain() -> None:
     assessment = assessed[0]["sh_semantic_assessments"][0]
     assert assessment["assessment_status"] == "unavailable"
     assert assessment["overall_relation"] == "uncertain"
-    assert assessment["recommended_graph_role"] == "do_not_expand"
+    assert assessment["recommended_graph_role"] == "undetermined"
+    assert assessment["recommended_graph_role_raw"] is None
 
 
 def test_missing_abstract_is_assessed_without_being_rejected() -> None:
@@ -537,6 +546,234 @@ def test_explicit_exclusion_is_rejected_and_cannot_enter_graph() -> None:
     assert decision["graph_expansion_eligible"] is False
     assert decision["graph_expansion_mode"] == "do_not_expand"
 
+
+def _quota_paper(paper_id: str, sh_id: str, *, score: int = 4, graph_role: str = "exploration_seed") -> dict:
+    paper = _paper()
+    paper["paperId"] = paper_id
+    assessment = _assessment(
+        relation="partial" if graph_role != "context_seed" else "background",
+        contribution_type="PARTIAL_EVIDENCE" if graph_role != "context_seed" else "BACKGROUND_CONTEXT",
+        support_level="partial" if graph_role != "context_seed" else "none",
+        graph_role=graph_role,
+        score=score,
+    )
+    assessment["sub_hypothesis_id"] = sh_id
+    paper["sh_semantic_assessments"] = [assessment]
+    return paper
+
+
+def _quota_sh(sh_id: str) -> dict:
+    return {**_subhypothesis(), "sub_hypothesis_id": sh_id}
+
+
+def test_seed_minimum_defaults_to_two_papers_per_sh() -> None:
+    selection = select_sh_seed_candidates(
+        [
+            _quota_paper("sh1-first", "SH1"),
+            _quota_paper("sh1-second", "SH1"),
+            _quota_paper("sh3-first", "SH3"),
+            _quota_paper("sh3-second", "SH3"),
+        ],
+        [_quota_sh("SH1"), _quota_sh("SH3")],
+        max_seed_papers=1,
+    )
+    assert selection["minimum_seed_papers_per_sh"] == 2
+    assert selection["effective_seed_budget"] == 4
+    assert selection["minimum_seed_counts_by_sh"] == {"SH1": 2, "SH3": 2}
+    assert selection["minimum_seed_unmet_by_sh"] == {}
+
+
+def test_seed_minimum_reserves_two_distinct_papers_for_every_sh_before_global_fill() -> None:
+    papers = [_quota_paper(f"early-{index}", "SH1") for index in range(10)]
+    papers += [_quota_paper(f"late-{index}", "SH3", score=3) for index in range(2)]
+    selection = select_sh_seed_candidates(
+        papers, [_quota_sh("SH1"), _quota_sh("SH3")],
+        max_seed_papers=4, min_seed_papers_per_sh=2,
+    )
+    assert len(selection["selected_papers"]) == 4
+    assert selection["minimum_seed_counts_by_sh"] == {"SH1": 2, "SH3": 2}
+    assert selection["minimum_seed_unmet_by_sh"] == {}
+
+
+def test_seed_minimum_uses_low_strength_context_without_promoting_direct_evidence() -> None:
+    papers = [_quota_paper(f"context-{index}", "SH4", score=1, graph_role="context_seed") for index in range(2)]
+    selection = select_sh_seed_candidates(
+        papers, [_quota_sh("SH4")], max_seed_papers=1, min_seed_papers_per_sh=2,
+    )
+    assert selection["effective_seed_budget"] == 2
+    assert len(selection["context_seed_papers"]) == 2
+    assert selection["evidence_seed_papers"] == []
+    assert selection["minimum_seed_unmet_by_sh"] == {}
+    for paper in selection["context_seed_papers"]:
+        assert paper["seed_selection"]["selection_basis"] == "minimum_sh_quota_fallback"
+        assert paper["seed_selection"]["semantic_assessment_ids"] == ["SH4"]
+        assert paper["seed_selection"]["graph_expansion_eligible"] is False
+    annotations = build_seed_annotation_index(
+        selection["selected_papers"], {},
+        project_id="quota-test", project_context_fingerprint="quota-test",
+    )
+    assert len(annotations) == 2
+    for records in annotations.values():
+        assert records[0]["semantic_relevance_score"] == 1
+        assert records[0]["admission_status"] == "BACKGROUND_CONTEXT_ONLY"
+        assert records[0]["covered_slots"] == []
+        assert records[0]["seed_selection_basis"] == "minimum_sh_quota_fallback"
+
+
+def test_seed_minimum_prefers_strong_sh_contribution_over_other_sh_score() -> None:
+    shared = _quota_paper("shared", "SH1", score=5)
+    weak = _quota_paper("shared", "SH4", score=1, graph_role="context_seed")
+    shared["sh_semantic_assessments"].extend(weak["sh_semantic_assessments"])
+    papers = [shared, _quota_paper("sh1-second", "SH1")]
+    papers += [_quota_paper(f"strong-{index}", "SH4", score=3) for index in range(2)]
+    selection = select_sh_seed_candidates(
+        papers, [_quota_sh("SH1"), _quota_sh("SH4")],
+        max_seed_papers=4, min_seed_papers_per_sh=2,
+    )
+    assert {paper["paperId"] for paper in selection["selected_papers"]} == {
+        "shared", "sh1-second", "strong-0", "strong-1",
+    }
+
+
+def test_seed_minimum_bounds_low_score_evidence_role_even_with_legacy_coverage() -> None:
+    papers = [
+        _quota_paper(f"weak-{index}", "SH4", score=1, graph_role="evidence_seed")
+        for index in range(2)
+    ]
+    for paper in papers:
+        paper["project_relevance"] = {"relevance_score": 5}
+        paper["sh_matches"] = [{"sub_hypothesis_id": "SH4", "coverage_slots": ["formal_claim"]}]
+    selection = select_sh_seed_candidates(
+        papers, [{"sub_hypothesis_id": "SH4"}], max_seed_papers=2,
+    )
+    assert selection["minimum_seed_counts_by_sh"] == {"SH4": 2}
+    assert selection["evidence_seed_papers"] == []
+    assert len(selection["exploration_seed_papers"]) == 2
+    for paper in selection["selected_papers"]:
+        assert paper["seed_selection"]["graph_expansion_mode"] == "bounded_exploration"
+        assert paper["sh_semantic_assessments"][0]["recommended_graph_role"] == "evidence_seed"
+
+
+def test_seed_minimum_preserves_independently_qualified_evidence_role() -> None:
+    shared = _quota_paper("shared", "SH1", score=4, graph_role="evidence_seed")
+    shared["sh_semantic_assessments"].extend(
+        _quota_paper("shared", "SH4", score=1, graph_role="context_seed")["sh_semantic_assessments"]
+    )
+    selection = select_sh_seed_candidates(
+        [shared, _quota_paper("second", "SH4", score=1, graph_role="context_seed")],
+        [_quota_sh("SH4")], max_seed_papers=2, min_seed_papers_per_sh=2,
+    )
+    assert selection["minimum_seed_unmet_by_sh"] == {}
+    assert shared["seed_selection"]["graph_expansion_mode"] == "evidence_normal"
+    assert shared["seed_selection"]["quota_fallback_assessment_ids"] == ["SH4"]
+
+
+def test_seed_minimum_never_counts_duplicate_or_explicitly_excluded_papers() -> None:
+    duplicate = _quota_paper("same-paper", "SH5", score=2)
+    excluded = _quota_paper("excluded", "SH5", score=2)
+    excluded["project_relevance"] = {"violated_exclusions": ["outside scope"]}
+    irrelevant = _quota_paper("irrelevant", "SH5", score=0, graph_role="do_not_expand")
+    selection = select_sh_seed_candidates(
+        [duplicate, duplicate.copy(), excluded, irrelevant], [_quota_sh("SH5")],
+        max_seed_papers=2, min_seed_papers_per_sh=2,
+    )
+    assert selection["minimum_seed_counts_by_sh"] == {"SH5": 1}
+    assert selection["minimum_seed_unmet_by_sh"] == {"SH5": 1}
+    assert {paper["paperId"] for paper in selection["selected_papers"]} == {"same-paper"}
+
+
+def test_seed_minimum_does_not_count_unassessed_legacy_slot_coverage() -> None:
+    paper = _paper()
+    paper["project_relevance"] = {"relevance_score": 5}
+    paper["sh_matches"] = [{"sub_hypothesis_id": "SH5", "coverage_slots": ["formal_claim"]}]
+    selection = select_sh_seed_candidates(
+        [paper], [_quota_sh("SH5")], max_seed_papers=2, min_seed_papers_per_sh=2,
+    )
+    assert selection["minimum_seed_counts_by_sh"] == {"SH5": 0}
+    assert selection["minimum_seed_unmet_by_sh"] == {"SH5": 2}
+
+
+def test_collect_sh_minimum_warns_and_persists_deficit_without_stopping(tmp_path) -> None:
+    context = _context()
+    collector = _collector(_FakeChatAgent([_semantic_response()]))
+    collector.logger = _CapturingLogger()
+    collector.config.ModuleInfo.WorkCollector.min_seed_papers_per_sh = 2
+    collector.config.BasicInfo.base_dir = str(tmp_path)
+    collector._discover_subhypothesis_candidates = lambda *_args, **_kwargs: [_paper()]
+    selected, selection = collector._collect_sh_seed_candidates(
+        context["original_topic"], context,
+        {"subhypotheses": [_subhypothesis()]}, [_subhypothesis()],
+    )
+    assert [paper["paperId"] for paper in selected] == ["W-PGx-1"]
+    assert selection["minimum_seed_unmet_by_sh"] == {"SH_PGx": 1}
+    artifact = json.loads((tmp_path / "subhypothesis_retrieval.json").read_text(encoding="utf-8"))
+    assert artifact["seed_selection"]["minimum_seed_unmet_by_sh"] == {"SH_PGx": 1}
+    assert artifact["quota_recovery_batches"] == 0
+    assert collector.sh_graph_provenance_artifact["seed_minimum"]["unmet_by_sh"] == {"SH_PGx": 1}
+    assert any(
+        "SH_PGx (1 missing). Continuing Survey with 1 selected seed papers" in message
+        for message in collector.logger.messages
+    )
+    assert not any("SH seed minimum satisfied:" in message for message in collector.logger.messages)
+
+
+def test_collect_sh_minimum_assesses_all_candidates_without_initial_cutoff() -> None:
+    context = _context()
+    fake_chat = _FakeChatAgent([_semantic_response(), _semantic_response()])
+    collector = _collector(fake_chat)
+    settings = collector.config.ModuleInfo.WorkCollector
+    settings.min_seed_papers_per_sh = 2
+    settings.subhypothesis_max_unique_papers = 1
+    reserve = _paper()
+    reserve["paperId"] = "W-reserve"
+    collector._discover_subhypothesis_candidates = lambda *_args, **_kwargs: [_paper(), reserve]
+    selected, selection = collector._collect_sh_seed_candidates(
+        context["original_topic"], context,
+        {"subhypotheses": [_subhypothesis()]}, [_subhypothesis()],
+    )
+    assert {paper["paperId"] for paper in selected} == {"W-PGx-1", "W-reserve"}
+    assert selection["minimum_seed_unmet_by_sh"] == {}
+    assert collector.subhypothesis_retrieval_artifact["quota_recovery_batches"] == 0
+    assert fake_chat.calls == 2
+    assert len(fake_chat.prompts) == 3
+
+
+def test_collect_sh_screens_all_33_candidates_before_seed_selection() -> None:
+    context = _context()
+    response = json.dumps({
+        **json.loads(_project_relevance_response(5)),
+        **json.loads(_semantic_response()),
+    })
+    fake_chat = _FakeChatAgent([response] * 33)
+    collector = _collector(fake_chat)
+    collector.logger = _CapturingLogger()
+    settings = collector.config.ModuleInfo.WorkCollector
+    settings.use_seed_filter_LLM = True
+    settings.subhypothesis_max_unique_papers = 10
+    settings.max_seed_paper_num = 5
+    papers = [{**_paper(), "paperId": f"W-candidate-{index}"} for index in range(33)]
+    collector._discover_subhypothesis_candidates = lambda *_args, **_kwargs: papers
+
+    selected, _selection = collector._collect_sh_seed_candidates(
+        context["original_topic"], context,
+        {"subhypotheses": [_subhypothesis()]}, [_subhypothesis()],
+    )
+
+    assessed = collector.subhypothesis_retrieval_artifact["candidate_papers"]
+    assert {paper["paperId"] for paper in assessed} == {paper["paperId"] for paper in papers}
+    assert all(paper["project_relevance"]["relevance_score"] == 5 for paper in assessed)
+    assert all(paper["sh_semantic_assessments"] for paper in assessed)
+    assert fake_chat.calls == 3
+    assert len(fake_chat.prompts) == 71
+    assert len(selected) == 5
+    assert any(
+        "merged_unique_candidates=33 candidates_sent_to_project_screen=33 "
+        "subhypotheses=1 pre_screen_truncation=disabled." in message
+        for message in collector.logger.messages
+    )
+
+
+    assert collector.subhypothesis_retrieval_artifact["candidate_discovery"]["discovery_status"] == "unavailable"
 
 def test_collect_seed_papers_passes_only_expandable_modes_to_graph_roots() -> None:
     context = _context()

@@ -331,6 +331,7 @@ def write_author_manifest(
     rendering: Mapping[str, Any],
     document_quality: Mapping[str, Any] | None = None,
     quantitative_handoff_manifest_path: str | Path | None = None,
+    computational_handoff_manifest_path: str | Path | None = None,
 ) -> Path:
     required = ("preparation_json", "author_context_json", "document_json", "idea_evolution_json")
     artifacts = {name: artifact_paths[name] for name in required}
@@ -372,10 +373,13 @@ def write_author_manifest(
     }
     if quantitative_handoff_manifest_path is not None:
         inputs["quantitative_handoff_manifest"] = quantitative_handoff_manifest_path
+    if computational_handoff_manifest_path is not None:
+        inputs["computational_handoff_manifest"] = computational_handoff_manifest_path
     metadata = {
         "source_design_id": _text(source_design_id),
         "selected_direction_id": _text(selected_direction_id),
         "quantitative_handoff_bound": quantitative_handoff_manifest_path is not None,
+        "computational_handoff_bound": computational_handoff_manifest_path is not None,
         "rendering": rendering_payload,
     }
     if quality_summary is not None:
@@ -622,6 +626,23 @@ def verify_author_manifest(
             )
         except Exception as exc:
             raise ScienceManifestError(f"Author quantitative handoff validation failed: {exc}") from exc
+    computational_handoff = _mapping(payload.get("inputs")).get("computational_handoff_manifest")
+    computational_handoff_path: Path | None = None
+    if computational_handoff is not None:
+        computational_handoff_path = _verify_input(payload, "computational_handoff_manifest", manifest_path=path)
+        run_root = path.parents[2]
+        try:
+            computational_handoff_path.relative_to((run_root / "computation").resolve())
+        except ValueError as exc:
+            raise ScienceManifestError("Author computational handoff escapes the science run") from exc
+        try:
+            from src.agents.research_plan_author.computational_evidence_adapter import load_computational_evidence_capsule
+            run_identity = _read_json(run_root / "science_run.json", label="science run identity")
+            load_computational_evidence_capsule(computational_handoff_path,
+                expected_identity={**idea.identity, "idea_result_sha256": file_sha256(idea.canonical_path),
+                    "science_run_id": run_identity["science_run_id"]})
+        except Exception as exc:
+            raise ScienceManifestError(f"Author computational handoff validation failed: {exc}") from exc
     document = artifacts.get("document_json")
     if document is None:
         raise ScienceManifestError("Author manifest has no document_json artifact")
@@ -728,6 +749,10 @@ def verify_author_manifest(
         quantitative_handoff_path is not None
     ):
         raise ScienceManifestError("Author manifest quantitative handoff binding metadata differs from its input")
+    if bool(_mapping(payload.get("metadata")).get("computational_handoff_bound")) != (
+        computational_handoff_path is not None
+    ):
+        raise ScienceManifestError("Author manifest computational handoff binding metadata differs from its input")
     if expected_render_required is not None and required != expected_render_required:
         raise ScienceManifestError("Author manifest rendering requirement differs from the science run")
     return VerifiedStageManifest(

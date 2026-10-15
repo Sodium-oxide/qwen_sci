@@ -23,6 +23,12 @@ Survey ──► Idea ──► ExperimentDesign ──► Author
 
 主流程默认是 **design-only**：Qwen-Sci 会检索证据、生成与校验方案、组织文稿，但不会执行任意 Python/Shell/Matlab 程序、实验仪器、采集任务或真实物理实验。`ExperimentDesign` 产出可审查的设计，而不是实验结果。
 
+Survey 默认以每个子假设（SH）至少选中两篇不同的种子论文为目标，通过 `survey.ModuleInfo.WorkCollector.min_seed_papers_per_sh` 配置；默认全局种子预算为 36 篇，通过 `max_seed_paper_num` 配置。SH 检索合并去重后的全部候选进入项目相关性筛选，不再按 `subhypothesis_max_unique_papers` 在筛选前截断；通过该阶段保留的候选进入 SH 语义评估，然后执行种子选择。先满足各 SH 的最低名额，再分配其余种子预算；总预算不足时自动提高到最低名额所需的上限。正常语义相关性门槛不足时，可以保留已经评估为背景、方法或间接贡献的低分论文，并记录为最低名额补位，保留原有证据等级和使用限制。无关、明确排除或评估失败的论文不能补位。穷尽候选后仍不足时仅发出警告，使用已选种子继续 Survey；缺口保留在 `subhypothesis_retrieval.json` 和 `sh_graph_provenance.json` 中。每次选择会保存 `subhypothesis_retrieval.json`，记录候选评估、种子选择、各 SH 数量和补评批次。最低名额是选择目标，全文是否可以下载和解析仍由后续获取记录说明。
+
+在 WSL/Bash 中，运行 `bash scripts/run_mpa_fresh.sh` 可使用预设的 mPA 课题从 Survey 执行到 Author；添加 `--until survey` 可只运行 Survey。脚本每次生成新的运行 ID 和独立缓存路径，关闭结果缓存及 Idea 历史记忆，并要求每个 SH 至少两篇种子；旧运行和旧缓存保留。运行 `bash scripts/run_mpa_fresh.sh --prepare-only` 只生成配置并通过项目加载器验证完整解析，不调用科研流程。生成配置时保留 `${repo_root}` 等占位符，由项目加载器统一处理。
+
+Survey 的提纲生成、论文分配、提纲修复、小节初稿（含代码上下文模板）及章节引言统一传入 `original_research_question`，内容为 `--topic` 对应的完整 `BasicInfo.topic`，不会替换成领域标签或 SH 摘要，也不会截断原问题。提示词使用原问题约束研究范围，同时遵守证据计划，不把问题中的前提当成已验证证据；原问题计入输入预算，无法容纳时明确报错。
+
 可选的量化建模支线与主四阶段状态机隔离。它只能使用代码库已注册的 ODE、优化、Monte Carlo 和 PDE 模型族；每次参数确认、模拟执行、结果解释和修订均需要明确人工授权，不能把数值模拟描述为实验或观测事实。
 
 ## 工作流产物
@@ -358,6 +364,8 @@ uv run qwensci quantitative parameters extract-batch \
 权。全文下载默认每篇最多尝试两个声明的 PDF URL，并对临时 HTTP 失败重试一次。
 
 ## 安全
+
+ExperimentDesign 支持可选计算实验 B 路：`--computation-mode plan` 生成计算协议，`--computation-mode run` 与现有设计 A 路并行生成代码、容器执行、验证和分析，默认 `off`。实验程序默认可联网，文件与控制进程凭据仍隔离；合格结果通过独立证据包进入 Author。环境搭建、支持范围、预算和恢复方式见[计算实验说明](docs/computational_experiments.md)。
 
 - 任何 API key 都应视为密钥；一旦出现在提交、聊天、日志或截图中，应立即轮换。
 - Web 日志是诊断视图，不是任意文件浏览器；服务只公开允许的阶段日志并进行脱敏。

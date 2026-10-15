@@ -3121,6 +3121,43 @@ def test_final_semantic_validation_scans_abstract_and_free_block_text(monkeypatc
     assert any("must reference at least one claim ID" in error for error in errors)
 
 
+def test_verified_computational_results_survive_quality_revision(monkeypatch, tmp_path: Path) -> None:
+    import src.agents.research_plan_author.run as author_run
+    from src.agents.computational_experiment_agent.orchestrator import ComputationalOrchestrator
+    from src.agents.research_plan_author.computational_evidence_adapter import load_computational_evidence_capsule
+    from test_computational_experiments import FakeRuntime, callback, context
+    computation_dir = tmp_path / "calculation"
+    ComputationalOrchestrator(computation_dir, llm_call=callback(), runtime=FakeRuntime()).start(context=context(), mode="run")
+    capsule = load_computational_evidence_capsule(computation_dir / "computation/manifest.json")
+    path = _write_input(tmp_path, _author_input())
+    original_prepare = author_run.run_author_preparation
+
+    def prepare(*args, **kwargs):
+        result = original_prepare(*args, **kwargs)
+        result["source_bundle"]["computational_evidence"] = capsule
+        return result
+
+    def revise(document, **kwargs):
+        altered = deepcopy(document)
+        section = next(item for item in altered["sections"] if item["section_id"] == "computational_experiment_evidence")
+        section["blocks"][1]["text"] = "This study observed an output of 99."
+        return altered, {"enabled": True, "candidates": []}
+
+    monkeypatch.setattr(author_run, "run_author_preparation", prepare)
+    monkeypatch.setattr(author_run, "load_verified_survey_sources", lambda _path: _survey_sources(tmp_path))
+    monkeypatch.setattr(author_run, "optimize_research_plan_document", revise)
+    result = run_research_plan_author(path, survey_manifest_path=tmp_path / "survey_manifest.json",
+        include_idea_evolution="off", llm_call=_fake_author_llm)
+    section = next(item for item in result["document"]["sections"] if item["section_id"] == "computational_experiment_evidence")
+    assert "final_concentration=0.367879" in section["blocks"][1]["text"]
+    assert "99" not in section["blocks"][1]["text"]
+    invalid = deepcopy(result["document"])
+    next(item for item in invalid["sections"] if item["section_id"] == "computational_experiment_evidence")["blocks"][1]["text"] = "Invented result."
+    errors = validate_composed_research_plan(invalid, preparation=result,
+        routing=route_author_sections(result["source_bundle"]["author_context"]), source_registry=build_frozen_source_registry(result))
+    assert "computational evidence section differs from verified source capsule" in errors
+
+
 def test_section_validator_allows_formal_contextual_evidence_without_lexical_safety_gate(monkeypatch, tmp_path: Path) -> None:
     path = _write_input(tmp_path, _author_input("26"))
     import src.agents.research_plan_author.run as author_run

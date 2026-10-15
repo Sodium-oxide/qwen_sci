@@ -673,7 +673,7 @@ def test_prepare_survey_evidence_plan_uses_builder_keyword_contract(monkeypatch)
     }
 
 
-def test_bounded_title_citation_rejects_database_resolved_graph_candidate() -> None:
+def test_bounded_title_citation_allows_database_resolved_graph_candidate() -> None:
     generator = _generator()
     generator.always_omit_error = False
     generator.config = SimpleNamespace(
@@ -696,8 +696,8 @@ def test_bounded_title_citation_rejects_database_resolved_graph_candidate() -> N
         omit_error=True,
     )
 
-    assert valid is False
-    assert "outside the evidence-bounded paper set" in errors[0]
+    assert valid is True
+    assert errors == []
 
 
 @pytest.mark.parametrize(
@@ -836,6 +836,7 @@ def test_bounded_outline_removes_unassessed_graph_candidates() -> None:
 
 def test_subsection_prompt_exposes_the_evidence_plan_and_trace_contract() -> None:
     prompt_values = {
+        "original_research_question": "Compare mechanisms and measurement limits across conditions.",
         "title": "Evidence",
         "description": "Discuss only admitted evidence.",
         "papers": "Paper ID: W1",
@@ -861,6 +862,7 @@ def test_subsection_prompt_exposes_the_evidence_plan_and_trace_contract() -> Non
     assert "[[SH_CLAIM_TRACE]]" in code_prompt
 
     section_prompt = SECTION_DRAFT.format(
+        original_research_question=prompt_values["original_research_question"],
         title="Evidence",
         description="Discuss only admitted evidence.",
         subsection_drafts="",
@@ -878,6 +880,7 @@ def test_subsection_prompt_exposes_the_evidence_plan_and_trace_contract() -> Non
 
 def test_all_outline_prompts_accept_the_evidence_plan_parameter() -> None:
     values = {
+        "original_research_question": "Compare mechanisms and measurement limits across conditions.",
         "paper_keynotes": "Paper ID: W1",
         "current_outline": "{}",
         "papers_analysis": "",
@@ -1020,6 +1023,12 @@ def test_draft_survey_strips_validated_trace_blocks_and_persists_claim_artifact(
     )
 
     assert "SH_CLAIM_TRACE" not in draft["full_draft"]
+    drafting_prompts = [
+        prompt for prompt in generator.chat_agent.prompts
+        if "original_research_question" in prompt
+    ]
+    assert len(drafting_prompts) == 2
+    assert all(generator.config.BasicInfo.topic in prompt for prompt in drafting_prompts)
     assert draft["outline"]["sections"][0]["papers_to_use"] == []
     assert draft["outline"]["sections"][0]["subsections"][0]["papers_to_use"] == ["W1"]
     assert (

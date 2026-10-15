@@ -33,6 +33,11 @@ from .quantitative_evidence_adapter import (
     append_quantitative_evidence_section,
     load_quantitative_evidence_capsule,
 )
+from .computational_evidence_adapter import (
+    ComputationalEvidenceLoadError,
+    append_computational_evidence_section,
+    load_computational_evidence_capsule,
+)
 from .run_logging import AuthorRunLogger
 from .section_cache import SectionCompositionCache, section_cache_identity
 from .section_composer import SectionComposer, SectionCompositionError, validate_section_output
@@ -148,6 +153,8 @@ def run_author_preparation(
     max_idea_iterations: int = 3,
     strict_survey_binding: bool = False,
     quantitative_handoff_manifest_path: str | Path | None = None,
+    computational_handoff_manifest_path: str | Path | None = None,
+    science_run_id: str | None = None,
     logger: AuthorRunLogger | None = None,
 ) -> dict[str, Any]:
     """Verify all Batch-A sources and produce no prose, TeX, or PDF yet."""
@@ -228,6 +235,23 @@ def run_author_preparation(
             )
         except QuantitativeEvidenceLoadError as error:
             raise AuthorRunError("input", f"quantitative Author handoff validation failed: {error}") from error
+    computational_evidence: dict[str, Any] = {}
+    if computational_handoff_manifest_path is not None:
+        try:
+            from src.pipeline.science_run import file_sha256
+            bound_idea_path = _resolve_optional_path(idea_result_path) or _resolve_optional_path(provenance.get("idea_result_path"))
+            if bound_idea_path is None:
+                raise ComputationalEvidenceLoadError("computational_evidence_requires_canonical_idea")
+            expected_computation = {**survey_binding["resolved"], "selected_direction_id": selected_direction_id,
+                "idea_result_sha256": file_sha256(bound_idea_path)}
+            if science_run_id:
+                expected_computation["science_run_id"] = science_run_id
+            computational_evidence = load_computational_evidence_capsule(
+                computational_handoff_manifest_path,
+                expected_identity=expected_computation,
+            )
+        except ComputationalEvidenceLoadError as error:
+            raise AuthorRunError("input", f"computational Author handoff validation failed: {error}") from error
     requested_idea_path = _resolve_optional_path(idea_result_path)
     inherited_idea_path = _resolve_optional_path(provenance.get("idea_result_path"))
     resolved_idea_path = requested_idea_path or inherited_idea_path
@@ -279,6 +303,7 @@ def run_author_preparation(
         survey_binding=survey_binding,
         idea_evolution=idea_evolution,
         quantitative_evidence=quantitative_evidence,
+        computational_evidence=computational_evidence,
     )
     document = build_research_plan_document_skeleton(author_input, source_bundle)
     theory_preparation = {
@@ -452,6 +477,8 @@ def run_research_plan_author(
     max_idea_iterations: int = 3,
     strict_survey_binding: bool = False,
     quantitative_handoff_manifest_path: str | Path | None = None,
+    computational_handoff_manifest_path: str | Path | None = None,
+    science_run_id: str | None = None,
     llm_call: Callable[..., object] | None = None,
     max_contract_repairs: int = 1,
     composer_concurrency: int = 5,
@@ -485,6 +512,8 @@ def run_research_plan_author(
         max_idea_iterations=max_idea_iterations,
         strict_survey_binding=strict_survey_binding,
         quantitative_handoff_manifest_path=quantitative_handoff_manifest_path,
+        computational_handoff_manifest_path=computational_handoff_manifest_path,
+        science_run_id=science_run_id,
         logger=logger,
     )
     if composer_concurrency < 1:
@@ -725,6 +754,11 @@ def run_research_plan_author(
             raise AuthorCompositionError(
                 "quantitative evidence disclosure validation failed: " + "; ".join(disclosure_errors)
             )
+    computational_evidence = _mapping_value(
+        _mapping_value(preparation.get("source_bundle")).get("computational_evidence")
+    )
+    if computational_evidence:
+        document = append_computational_evidence_section(document, computational_evidence)
     # Whole-document quality scoring and revision now owns cross-section
     # coherence, deduplication, and scholarly depth.  Do not pre-edit the
     # canonical 15-section manuscript with the legacy constrained editor:
@@ -763,6 +797,8 @@ def run_research_plan_author(
                 candidate_count=len(document_quality.get("candidates") or []),
                 warning_count=len(document_quality.get("warnings") or []),
             )
+    if computational_evidence:
+        document = append_computational_evidence_section(document, computational_evidence)
     errors = validate_composed_research_plan(
         document,
         preparation=preparation,

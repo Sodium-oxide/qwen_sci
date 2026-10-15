@@ -9,10 +9,13 @@ the Survey Generator may use for SH-specific writing.
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
+import logging
 from typing import Any
 
 from src.pipeline.evidence_coverage_ledger import (
     EVIDENCE_COVERAGE_LEDGER_SCHEMA_VERSION,
+    associate_papers_with_subhypotheses,
+    build_evidence_coverage_ledger,
 )
 from src.pipeline.sh_cluster_projection import SH_CLUSTER_COVERAGE_SCHEMA_VERSION
 from src.pipeline.sh_graph_provenance import (
@@ -33,6 +36,7 @@ from src.pipeline.multimodal_evidence.survey_integration import (
 
 
 SURVEY_EVIDENCE_PLAN_SCHEMA_VERSION = "survey_sh_evidence_plan_v1"
+logger = logging.getLogger(__name__)
 
 EVIDENCE_BACKED_SYNTHESIS = "EVIDENCE_BACKED_SYNTHESIS"
 QUALIFIED_SYNTHESIS = "QUALIFIED_SYNTHESIS"
@@ -66,15 +70,18 @@ def _records(value: Any) -> list[dict[str, Any]]:
 
 def _report_index(coverage_ledger: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
     reports: dict[str, dict[str, Any]] = {}
+    discarded = []
     for raw_report in _records(coverage_ledger.get("subhypotheses")):
         identifier = str(raw_report.get("sub_hypothesis_id") or "").strip()
         if not identifier:
-            raise ValueError("Evidence coverage ledger contains a report without sub_hypothesis_id.")
+            discarded.append("missing_sub_hypothesis_id")
+            continue
         if identifier in reports:
-            raise ValueError(f"Evidence coverage ledger contains duplicate SH '{identifier}'.")
+            discarded.append(f"duplicate:{identifier}")
+            continue
         reports[identifier] = raw_report
-    if not reports:
-        raise ValueError("Evidence coverage ledger contains no SH reports for survey writing.")
+    if discarded:
+        logger.warning("Survey evidence ledger format warning: discarded_reports=%s details=%s.", len(discarded), discarded)
     return reports
 
 
@@ -581,6 +588,8 @@ def build_survey_evidence_plan(
     subhypothesis_contracts: Sequence[Mapping[str, Any]] | None,
     max_writable_papers_per_sh: int = 20,
     multimodal_evidence: Mapping[str, Any] | None = None,
+    candidate_ledger: Mapping[str, Any] | None = None,
+    candidate_papers: Sequence[Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Compile every SH into its allowed writing mode and evidence boundary."""
 
@@ -599,17 +608,29 @@ def build_survey_evidence_plan(
     reports_by_sh = _report_index(ledger)
     contracts_by_sh = _contract_index(subhypothesis_contracts)
     provenance_roles_by_sh = _provenance_role_index(provenance)
+    recovery = {}
     if set(reports_by_sh) != set(contracts_by_sh):
         missing_reports = sorted(set(contracts_by_sh) - set(reports_by_sh))
         unexpected_reports = sorted(set(reports_by_sh) - set(contracts_by_sh))
-        details: list[str] = []
-        if missing_reports:
-            details.append("missing ledger reports=" + ",".join(missing_reports))
-        if unexpected_reports:
-            details.append("unexpected ledger reports=" + ",".join(unexpected_reports))
-        raise ValueError(
-            "Survey evidence plan requires an exact contract/ledger SH set: "
-            + "; ".join(details)
+        # Recover only missing reports, retaining all valid final-ledger evidence.
+        # Force semantic assessment during recovery: a query hit or legacy
+        # keyword match must never manufacture direct evidence for a missing SH.
+        contracts = [dict(contracts_by_sh[key], retrieval_strategy="model_feedback")
+                     for key in missing_reports]
+        papers = associate_papers_with_subhypotheses(
+            candidate_papers, contracts,
+            project_fingerprint=str(ledger.get("project_context_fingerprint") or ""),
+        )
+        rebuilt = build_evidence_coverage_ledger(papers, contracts)
+        recovered = _report_index(rebuilt)
+        reports_by_sh = {key: reports_by_sh.get(key, recovered.get(key)) for key in contracts_by_sh}
+        recovery = {"recovered_subhypothesis_ids": missing_reports,
+                    "ignored_uncontracted_subhypothesis_ids": unexpected_reports,
+                    "source": "saved_semantic_assessments_or_explicit_evidence_gaps"}
+        logger.warning(
+            "Survey evidence ledger recovered: missing_SH=%s ignored_uncontracted_SH=%s; "
+            "saved semantic assessments reused where available, unresolved slots remain evidence gaps.",
+            missing_reports, unexpected_reports,
         )
     entries: list[dict[str, Any]] = []
 
@@ -851,6 +872,22 @@ def build_survey_evidence_plan(
             "claims_require_sh_slot_paper_trace": True,
         },
     }
+    if recovery:
+        payload["coverage_ledger_recovery"] = recovery
+    if candidate_ledger and candidate_ledger.get("schema_version") == "scientific_candidate_ledger_v2":
+        comparison = {key: candidate_ledger.get(key) for key in (
+            "comparison_status", "discovery_status", "best_candidate_claim_allowed", "balance",
+            "balance_by_comparator_group", "primary_candidate_id", "challenger_candidate_ids", "comparison_scope",
+            "retrieval_budget", "stop_reason")}
+        comparison["claim_rule"] = (
+            "Candidate coverage and concentration describe retrieved evidence, not exhaustive scientific completeness. "
+            "When best_candidate_claim_allowed is false, present candidates as provisional alternatives; "
+            "do not claim a best candidate or interpret failed/zero searches as scientific counterevidence."
+        )
+        comparison["candidate_aliases"] = list(dict.fromkeys(alias for record in candidate_ledger.get("records", [])
+            for alias in record.get("aliases", [])))
+        payload["scientific_candidate_comparison"] = comparison
+        payload["writing_rules"]["best_candidate_claim_requires_balanced_effective_evidence"] = True
     if multimodal_projection is not None:
         payload["multimodal_evidence_projection"] = multimodal_projection
         payload["writing_rules"]["multimodal_observations_are_not_literature"] = True

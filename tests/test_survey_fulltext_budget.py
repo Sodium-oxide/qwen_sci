@@ -114,7 +114,7 @@ def test_budget_uses_global_max_embedding_score_and_preserves_metadata_status(tm
     assert [record["paper_id"] for record in persisted_plan["selected_for_fulltext"]] == selected_ids
 
 
-def test_expansion_downloads_only_globally_ranked_budget_candidates(tmp_path):
+def test_expansion_returns_budget_candidates_and_retains_metadata_candidates(tmp_path):
     collector = _collector(tmp_path, budget=2)
     collector.expand_in_local_paper_graph = False
     collector.paper_graph_retriever = None
@@ -185,8 +185,8 @@ def test_expansion_downloads_only_globally_ranked_budget_candidates(tmp_path):
     result = collector.expand_seed_papers_by_reference_and_citation(["S1"])
 
     assert collector.data_manager.download_requests == [["W-high", "W-middle"]]
-    assert result == ["W-high", "W-middle"]
-    assert collector.graph_paper_ids == {"S1", "W-high", "W-middle"}
+    assert result == ["W-high", "W-middle", "W-low"]
+    assert collector.graph_paper_ids == {"S1", "W-high", "W-middle", "W-low"}
     assert collector.metadata_only_expanded_paper_ids == {"W-low"}
     assert collector.config.BasicInfo.fulltext_acquisition_by_paper["W-low"]["status"] == (
         "metadata_only_by_fulltext_budget"
@@ -256,8 +256,8 @@ def test_local_graph_and_remote_fallback_share_one_global_budget(tmp_path):
 
     result = collector.expand_seed_papers_by_reference_and_citation(["S-local"])
 
-    assert result == ["W-fallback", "W-local"]
-    assert collector.graph_paper_ids == {"W-fallback", "W-local"}
+    assert result == ["W-fallback", "W-local", "W-local-low"]
+    assert collector.graph_paper_ids == {"W-fallback", "W-local", "W-local-low"}
     assert collector.metadata_only_expanded_paper_ids == {"W-local-low"}
     assert collector.fulltext_budget_plan["selected_for_fulltext_count"] == 2
     assert collector.fulltext_budget_plan["metadata_only_count"] == 1

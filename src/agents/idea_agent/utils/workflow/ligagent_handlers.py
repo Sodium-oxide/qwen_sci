@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import hashlib
 import re
+from collections.abc import Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from copy import deepcopy
 from typing import Any, Dict, List
@@ -31,6 +33,12 @@ from src.agents.idea_agent.utils.workflow.advanced_analysis_contract import (
     validate_advanced_analysis_response,
 )
 from src.agents.idea_agent.utils.workflow.idea_diversity import filter_independent_mature_ideas
+from src.agents.idea_agent.utils.workflow.gap_search_schedule import (
+    GapSearchTask,
+    build_gap_refinement_tasks,
+    build_gap_screening_tasks,
+    gap_coverage_report,
+)
 from src.agents.idea_agent.utils.workflow.mature_idea_sources import (
     build_mature_idea_evidence_context,
     collect_mature_idea_sources,
@@ -101,42 +109,6 @@ def _session(agent: Any, ctx: StageContext) -> Any:
     return ctx.session or getattr(agent, "session", None)
 
 
-def _select_refinement_seeds(
-    seed_specs: list[Dict[str, Any] | None],
-    best_scores_by_seed: Dict[str, float],
-    top_seed_count: int,
-) -> list[Dict[str, Any]]:
-    """Select the highest-scoring mature seeds for the refinement phase.
-
-    Seeds without a successful screening score are retained only when there
-    are fewer successful seeds than the requested slot count. This keeps the
-    two-stage search fail-open while ensuring failed screening results do not
-    displace viable candidates when enough successful seeds exist.
-    """
-
-    if top_seed_count <= 0:
-        return []
-    successful = [
-        seed
-        for seed in seed_specs
-        if seed is not None and str(seed.get("idea_id") or "").strip() in best_scores_by_seed
-    ]
-    unsuccessful = [
-        seed
-        for seed in seed_specs
-        if seed is not None and str(seed.get("idea_id") or "").strip() not in best_scores_by_seed
-    ]
-    successful.sort(
-        key=lambda seed: (
-            float(best_scores_by_seed[str(seed.get("idea_id") or "")]),
-            str(seed.get("idea_id") or ""),
-        ),
-        reverse=True,
-    )
-    unsuccessful.sort(key=lambda seed: str(seed.get("idea_id") or ""))
-    return (successful + unsuccessful)[:top_seed_count]
-
-
 def _build_route_matrix_tasks(
     seed_specs: list[Dict[str, Any] | None],
     route_specs: list[Any],
@@ -153,7 +125,7 @@ def _resolve_screening_routes(
     """Resolve the compact screening set while retaining a deterministic fallback."""
 
     route_by_id = {route.route_id: route for route in IDEA_ROUTE_POLICIES}
-    if isinstance(configured_route_ids, (list, tuple)):
+    if isinstance(configured_route_ids, Sequence) and not isinstance(configured_route_ids, (str, bytes)):
         routes = [
             route_by_id[str(route_id)]
             for route_id in configured_route_ids
@@ -162,30 +134,6 @@ def _resolve_screening_routes(
         if routes:
             return routes[: max(1, route_count)]
     return list(IDEA_ROUTE_POLICIES)[: max(1, route_count)]
-
-
-def _two_stage_mcts_budget(
-    *,
-    screening_seed_count: int,
-    screening_route_count: int,
-    screening_iterations: int,
-    refinement_seed_count: int,
-    refinement_route_count: int,
-    refinement_iterations: int,
-) -> Dict[str, int]:
-    """Calculate ordinary MCTS searches and iteration budget for both phases."""
-
-    screening_searches = screening_seed_count * screening_route_count
-    refinement_searches = refinement_seed_count * refinement_route_count
-    screening_total = screening_searches * screening_iterations
-    refinement_total = refinement_searches * refinement_iterations
-    return {
-        "screening_searches": screening_searches,
-        "refinement_searches": refinement_searches,
-        "screening_iterations": screening_total,
-        "refinement_iterations": refinement_total,
-        "total_iterations": screening_total + refinement_total,
-    }
 
 
 def _chat(agent: Any, ctx: StageContext, op_name: str):
@@ -821,6 +769,9 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
             entry["mature_idea"] = deepcopy(seed)
             for field_name in (
                 "maturity",
+                "scientific_candidate_id",
+                "scientific_candidate_root_role",
+                "candidate_ledger_fingerprint",
                 "maturity_is_not_rank",
                 "maturity_status",
                 "lineage",
@@ -850,7 +801,20 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
             entry.setdefault("route_signature", {"route_id": f"legacy:{mode}", "direction_mode": mode})
         if seed is not None and is_data_anchored(seed):
             entry = apply_data_anchored_idea_constraints(entry, seed=seed)
+        focus = (seed or {}).get("gap_search_focus")
+        if isinstance(focus, dict):
+            entry["gap_search_focus"] = deepcopy(focus)
+            if focus.get("primary_gap_id"):
+                entry["target_gap_ids"] = [focus["primary_gap_id"]]
+            entry["route_signature"]["primary_gap_id"] = focus.get("primary_gap_id")
+        identity = (entry.get("seed_id"), entry.get("route_id"), (focus or {}).get("primary_gap_id"))
+        existing = next((item for item in completed_modes if item.get("identity") == identity), None)
+        if existing is not None:
+            if float(existing["entry"].get("search_score") or 0.0) >= float(entry.get("search_score") or 0.0):
+                return
+            completed_modes.remove(existing)
         completed_modes.append({
+            "identity": identity,
             "mode": mode,
             "result": result,
             "entry": entry,
@@ -897,14 +861,29 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
     else:
         route_specs = [None]
     tasks = _build_route_matrix_tasks(seed_specs, route_specs)
-    screening_iterations_per_search = int(
-        get_config_value(
-            agent.config,
-            "mcts.screening_max_iterations",
-            getattr(agent.mcts.config, "screening_max_iterations", 12),
+    screening_iterations_per_search = int(get_config_value(
+        agent.config, "mcts.screening_max_iterations", 3,
+    ) or 0)
+    screening_iterations_per_search = max(0, min(agent.mcts.config.max_iterations, screening_iterations_per_search))
+    gap_schedule: Dict[str, Any] = {}
+    all_gap_tasks: list[GapSearchTask] = []
+    if two_stage_matrix_enabled:
+        all_gap_tasks = build_gap_screening_tasks(
+            seed_specs,
+            route_specs,
+            context.get("survey_idea_handoff") or {},
+            iterations=screening_iterations_per_search,
         )
-        or getattr(agent.mcts.config, "screening_max_iterations", 12)
-    )
+        screening_search_budget = max(0, int(get_config_value(agent.config, "portfolio.screening_search_budget", 0) or 0))
+        tasks = build_gap_screening_tasks(
+            seed_specs, route_specs, context.get("survey_idea_handoff") or {},
+            iterations=screening_iterations_per_search, search_budget=screening_search_budget,
+        ) if screening_search_budget else all_gap_tasks
+        gap_schedule = {
+            "policy": "gap_coverage_first",
+            "eligible_gap_ids": sorted({task.primary_gap_id for task in all_gap_tasks if task.primary_gap_id}),
+            "screening_tasks": [task.to_payload() for task in tasks],
+        }
     raw_data_budget_cap = get_config_value(
         agent.config,
         "survey.multimodal_evidence.data_sh_mcts_budget_cap",
@@ -962,10 +941,11 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
         screening_iterations_per_search,
     )
 
-    def _mcts_task_identity(seed: Dict[str, Any] | None, route: Any) -> tuple[str, str]:
+    def _mcts_task_identity(seed: Dict[str, Any] | None, route: Any) -> tuple[str, str, str]:
         seed_id = str(seed.get("idea_id") if seed else "legacy-primary")
         route_id = str(route.route_id if route is not None else "default")
-        return seed_id, route_id
+        gap_id = str(((seed or {}).get("gap_search_focus") or {}).get("primary_gap_id") or "")
+        return seed_id, gap_id, route_id
 
     def _route_context(seed: Dict[str, Any] | None, route: Any) -> Dict[str, Any]:
         isolated = deepcopy(context)
@@ -980,7 +960,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
                 ),
                 None,
             )
-            if evidence_context is None:
+            if evidence_context is None or seed.get("gap_search_focus"):
                 evidence_context = build_mature_idea_evidence_context(
                     seed,
                     topic=topic,
@@ -991,6 +971,8 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
                     multimodal_evidence_projection=context.get("multimodal_evidence_projection"),
                 )
             isolated["mature_idea_evidence_context"] = evidence_context
+            if seed.get("gap_search_focus"):
+                isolated["gap_search_focus"] = deepcopy(seed["gap_search_focus"])
             isolated["public_facts"] = deepcopy(evidence_context.get("public_facts") or {})
             isolated["survey_gap_ledger"] = {
                 "gaps": deepcopy(evidence_context.get("gap_explanation") or [])
@@ -1135,12 +1117,12 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
             )
 
     def _run_matrix_tasks(
-        task_batch: list[tuple[Dict[str, Any] | None, Any]],
+        task_batch: list[Any],
         *,
         phase: str,
         iterations: int,
-    ) -> dict[tuple[str, str], Any]:
-        """Run one route-matrix phase and return results keyed by seed/route."""
+    ) -> dict[tuple[str, str, str], Any]:
+        """Run one search phase with distinct seed/gap/route identities."""
 
         if not task_batch:
             return {}
@@ -1162,21 +1144,23 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
 
         def _run_task(
             task_number: int,
-            seed: Dict[str, Any] | None,
-            route: Any,
+            task: Any,
         ) -> Any:
-            seed_id, route_id = _mcts_task_identity(seed, route)
+            seed, route = (task.focused_seed(), task.route) if isinstance(task, GapSearchTask) else task
+            task_iterations = task.iterations if isinstance(task, GapSearchTask) else iterations
+            seed_id, gap_id, route_id = _mcts_task_identity(seed, route)
             logger.info(
-                "🚀 MCTS %s %s/%s started (seed_id=%s, route_id=%s, iterations=%s).",
+                "🚀 MCTS %s %s/%s started (seed_id=%s, primary_gap_id=%s, route_id=%s, iterations=%s).",
                 phase,
                 task_number,
                 len(task_batch),
                 seed_id,
+                gap_id,
                 route_id,
-                iterations,
+                task_iterations,
             )
             task_context = _route_context(seed, route)
-            task_context["mcts_iteration_budget"] = iterations
+            task_context["mcts_iteration_budget"] = task_iterations
             if route is None:
                 return agent.mcts.search(topic=topic, context=task_context)
             return agent.build_mcts_for_mode(
@@ -1185,40 +1169,43 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
                 route_id=route.route_id,
             ).search(topic, task_context)
 
-        results: dict[tuple[str, str], Any] = {}
+        results: dict[tuple[str, str, str], Any] = {}
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = {
-                executor.submit(_run_task, task_number, seed, route): (seed, route)
-                for task_number, (seed, route) in enumerate(task_batch, start=1)
+                executor.submit(_run_task, task_number, task): task
+                for task_number, task in enumerate(task_batch, start=1)
             }
             for future in as_completed(futures):
-                seed, route = futures[future]
+                task = futures[future]
+                seed, route = (task.focused_seed(), task.route) if isinstance(task, GapSearchTask) else task
                 mode = route.route_id if route is not None else "default"
-                seed_id, route_id = _mcts_task_identity(seed, route)
-                key = (seed_id, route_id)
+                key = _mcts_task_identity(seed, route)
+                seed_id, gap_id, route_id = key
                 result = None
                 try:
                     result = future.result()
                 except Exception as exc:
                     logger.warning(
-                        "⚠️ MCTS %s failed (seed_id=%s, route_id=%s); fallback may be used: %s",
+                        "⚠️ MCTS %s failed (seed_id=%s, primary_gap_id=%s, route_id=%s); fallback may be used: %s",
                         phase,
                         seed_id,
+                        gap_id,
                         route_id,
                         exc,
                     )
                 results[key] = result
-                mode_results[f"{seed_id}:{mode}"] = result
+                mode_results[f"{seed_id}:{gap_id}:{mode}"] = result
                 logger.info(
-                    "✅ MCTS %s completed (seed_id=%s, route_id=%s; candidate=%s).",
+                    "✅ MCTS %s completed (seed_id=%s, primary_gap_id=%s, route_id=%s; candidate=%s).",
                     phase,
                     seed_id,
+                    gap_id,
                     route_id,
                     "yes" if result is not None and result.best else "no",
                 )
         return results
 
-    if len(tasks) == 1 and tasks[0][0] is None and tasks[0][1] is None:
+    if not two_stage_matrix_enabled and len(tasks) == 1 and tasks[0][0] is None and tasks[0][1] is None:
         logger.info("🚀 MCTS 1/1 started (seed_id=legacy-primary, route_id=default).")
         with suspend_console_handlers(logger):
             result = agent.mcts.search(topic=topic, context=context)
@@ -1236,90 +1223,51 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
             phase="screening",
             iterations=screening_iterations_per_search,
         )
-        initial_best_by_seed: dict[str, tuple[float, Any, Any]] = {}
-        for seed, route in tasks:
-            seed_id, route_id = _mcts_task_identity(seed, route)
-            result = screening_results.get((seed_id, route_id))
-            if result is None or not result.best or seed is None:
-                continue
-            try:
-                score = float(result.best.evaluation.composite)
-            except (AttributeError, TypeError, ValueError):
-                score = 0.0
-            previous = initial_best_by_seed.get(seed_id)
-            if previous is None or score > previous[0]:
-                initial_best_by_seed[seed_id] = (score, result, route)
-
-        top_seed_count = int(
-            get_config_value(agent.config, "portfolio.refinement_top_seeds", 3) or 3
+        gap_schedule["screening_coverage"] = gap_coverage_report(tasks, screening_results)
+        for task in tasks:
+            result = screening_results.get(task.key)
+            if result is not None and result.best:
+                _complete_mode(task.route.route_id, result, seed=task.focused_seed(), route=task.route)
+        refinement_iterations = int(get_config_value(
+            agent.config, "mcts.refinement_max_iterations", getattr(agent.mcts.config, "max_iterations", 8),
+        ) or 0)
+        refinement_iterations = max(0, min(agent.mcts.config.max_iterations, refinement_iterations))
+        refinement_search_budget = max(0, int(get_config_value(agent.config, "portfolio.refinement_search_budget", 3)))
+        refinement_tasks = build_gap_refinement_tasks(
+            all_gap_tasks,
+            screening_results,
+            route_specs,
+            iterations=refinement_iterations,
+            search_budget=refinement_search_budget,
         )
-        top_seeds = _select_refinement_seeds(
-            seed_specs,
-            {
-                seed_id: score_and_result[0]
-                for seed_id, score_and_result in initial_best_by_seed.items()
-            },
-            top_seed_count,
-        )
-        refinement_iterations = int(
-            get_config_value(
-                agent.config,
-                "mcts.refinement_max_iterations",
-                getattr(agent.mcts.config, "max_iterations", 8),
-            )
-            or getattr(agent.mcts.config, "max_iterations", 8)
-        )
-        refinement_route_count = int(
-            get_config_value(
-                agent.config,
-                "portfolio.refinement_route_expansions_per_seed",
-                len(IDEA_ROUTE_POLICIES),
-            )
-            or len(IDEA_ROUTE_POLICIES)
-        )
-        refinement_routes = list(IDEA_ROUTE_POLICIES)[: max(1, refinement_route_count)]
-        refinement_tasks = _build_route_matrix_tasks(top_seeds, refinement_routes)
-        mcts_budget = _two_stage_mcts_budget(
-            screening_seed_count=len(seed_specs),
-            screening_route_count=len(route_specs),
-            screening_iterations=screening_iterations_per_search,
-            refinement_seed_count=len(top_seeds),
-            refinement_route_count=len(refinement_routes),
-            refinement_iterations=refinement_iterations,
-        )
+        gap_schedule["refinement_tasks"] = [task.to_payload() for task in refinement_tasks]
         logger.info(
-            "🧭 MCTS two-stage budget: screening=%s seed(s) × %s route(s) × %s iteration(s)=%s; "
-            "refinement=%s seed(s) × %s route(s) × %s iteration(s)=%s; total ordinary iterations=%s.",
-            len(seed_specs),
-            len(route_specs),
-            screening_iterations_per_search,
-            mcts_budget["screening_iterations"],
-            len(top_seeds),
-            len(refinement_routes),
-            refinement_iterations,
-            mcts_budget["refinement_iterations"],
-            mcts_budget["total_iterations"],
+            "🧭 Gap-focused MCTS budget: screening=%s searches / %s iterations; "
+            "refinement=%s searches / %s iterations; gaps without screening candidates=%s.",
+            len(tasks), sum(task.iterations for task in tasks),
+            len(refinement_tasks), sum(task.iterations for task in refinement_tasks),
+            gap_schedule["screening_coverage"]["gaps_without_candidates"],
         )
         refinement_results = _run_matrix_tasks(
             refinement_tasks,
             phase="refinement",
             iterations=refinement_iterations,
         )
-        refined_seed_ids: set[str] = set()
-        for seed, route in refinement_tasks:
-            seed_id, route_id = _mcts_task_identity(seed, route)
-            result = refinement_results.get((seed_id, route_id))
+        for task in refinement_tasks:
+            result = refinement_results.get(task.key)
             if result is not None and result.best:
-                _complete_mode(route.route_id, result, seed=seed, route=route)
-                refined_seed_ids.add(seed_id)
-        for seed in top_seeds:
-            seed_id = str(seed.get("idea_id") or "")
-            if seed_id in refined_seed_ids:
-                continue
-            fallback = initial_best_by_seed.get(seed_id)
-            if fallback is not None:
-                _, result, route = fallback
-                _complete_mode(route.route_id, result, seed=seed, route=route)
+                _complete_mode(task.route.route_id, result, seed=task.focused_seed(), route=task.route)
+        combined_results = dict(screening_results)
+        for key, result in refinement_results.items():
+            previous = combined_results.get(key)
+            if result is not None and result.best and (
+                previous is None or not previous.best or result.best.evaluation.composite > previous.best.evaluation.composite
+            ):
+                combined_results[key] = result
+        gap_schedule["final_coverage"] = gap_coverage_report([*tasks, *refinement_tasks], combined_results)
+        gap_schedule["unsearched_gap_ids"] = sorted(
+            set(gap_schedule["eligible_gap_ids"]) - set(gap_schedule["final_coverage"]["targeted_gap_ids"])
+        )
     elif tasks:
         standard_results = _run_matrix_tasks(
             tasks,
@@ -1327,8 +1275,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
             iterations=int(getattr(agent.mcts.config, "max_iterations", 0) or 0),
         )
         for seed, route in tasks:
-            seed_id, route_id = _mcts_task_identity(seed, route)
-            result = standard_results.get((seed_id, route_id))
+            result = standard_results.get(_mcts_task_identity(seed, route))
             if result is not None and result.best:
                 mode = route.route_id if route is not None else "default"
                 _complete_mode(mode, result, seed=seed, route=route)
@@ -1340,6 +1287,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
             if latest_candidate_payload is not None
             else {}
         )
+        replace_patch["gap_route_schedule"] = gap_schedule
         return StageResult(
             status="degraded",
             artifact_patch=ArtifactPatch(replace=replace_patch),
@@ -1379,7 +1327,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
         mode_entries = list(synthesis_result.get("directions") or raw_mode_entries)
     else:
         synthesis_result = {
-            "synthesis_mode": "mature_idea_route_matrix" if matrix_mode else "single_direction_compatibility",
+            "synthesis_mode": "gap_focused_routes" if gap_schedule else ("mature_idea_route_matrix" if matrix_mode else "single_direction_compatibility"),
             "directions": list(raw_mode_entries),
             "cross_direction_notes": [],
             "fallbacks": [],
@@ -1389,6 +1337,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
                 {
                     "idea_id": item.get("idea_id") or item.get("seed_id"),
                     "route_id": item.get("route_id"),
+                    "primary_gap_id": (item.get("gap_search_focus") or {}).get("primary_gap_id"),
                 }
                 for item in raw_mode_entries
                 if item.get("route_id")
@@ -1462,6 +1411,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
             artifact_patch=ArtifactPatch(replace={
                 "idea_portfolio": idea_portfolio,
                 "data_anchored_mcts_schedule": data_schedule,
+                "gap_route_schedule": gap_schedule,
                 "route_clusters": idea_portfolio.get("route_clusters", []),
                 "diversity_report": idea_portfolio.get("diversity_report", {}),
             }),
@@ -1523,7 +1473,12 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
             / "mode_idea_results"
             / (
                 f"{_safe_result_filename_component(direction.get('idea_id') or direction.get('seed_id'))}_"
-                f"{_safe_result_filename_component(mode)}.json"
+                f"{_safe_result_filename_component(mode)}"
+                + (
+                    "_" + hashlib.sha256(str(direction["gap_search_focus"]["primary_gap_id"]).encode("utf-8")).hexdigest()[:12]
+                    if (direction.get("gap_search_focus") or {}).get("primary_gap_id") else ""
+                )
+                + ".json"
             ),
             logger,
         )
@@ -1552,7 +1507,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
         session.set_slot("idea_result.latest", final_payload)
     step = (
         f"\nIn this idea_generation action, I ran memory-guided MCTS over '{topic}'. "
-        f"{'The mature-idea × route matrix used isolated roots and contexts. ' if matrix_mode else ''}"
+        f"{'Gap-focused routes used isolated roots and coverage-first budgets. ' if gap_schedule else ('The mature-idea × route matrix used isolated roots and contexts. ' if matrix_mode else '')}"
         f"{'All legacy idea taste modes were retained. ' if ligagent_pro and not matrix_mode else ''}"
         f"{'A direction-preserving synthesis pass retained all expected modes. ' if ligagent_pro else ''}"
         f"{'A fail-open scientific debate pass calibrated claims and scope. ' if ligagent_pro else ''}"
@@ -1570,6 +1525,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
                 "synthesis_result": synthesis_result,
                 "debate_result": debate_result,
                 "idea_portfolio": idea_portfolio,
+                "gap_route_schedule": gap_schedule,
                 "route_clusters": idea_portfolio.get("route_clusters", []),
                 "diversity_report": idea_portfolio.get("diversity_report", {}),
                 "cross_seed_debate_result": debate_result.get("cross_seed_debate", {}),

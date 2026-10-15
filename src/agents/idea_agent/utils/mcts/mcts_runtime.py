@@ -1586,6 +1586,9 @@ def materialize_child_state(
         parent_contract,
         instantiated_contract,
     )
+    gap_focus = scientific_intervention.get("gap_search_focus") or {}
+    if gap_focus.get("primary_gap_id"):
+        scientific_contract["target_gap_ids"] = [gap_focus["primary_gap_id"]]
     if scientific_contract:
         scientific_intervention["hypothesis_contract"] = scientific_contract
     direction_mode = str(
@@ -1686,6 +1689,22 @@ def apply_instantiated_mapping_to_plan(
             edit.details = f"ADD_COMPONENT on {edit.component}"
 
 
+def _gap_focus_prompt(state: Any) -> str:
+    focus = (getattr(state, "scientific_intervention", {}) or {}).get("gap_search_focus")
+    if not isinstance(focus, Mapping) or not focus.get("primary_gap_id"):
+        return ""
+    return (
+        "\n\n== Primary scientific gap for this search ==\n"
+        + pretty_json(dict(focus))
+        + "\nFocus the scientific change and evaluation on this primary gap. "
+        "Keep target_gap_ids equal to the supplied primary_gap_id; never invent or edit gap IDs. "
+        "Other context gaps are constraints, not a requirement to solve every gap in one candidate. "
+        "Explain what assumption, relation, or discriminating observation advances the primary gap "
+        "and what remains unresolved. Extra terminology or additional components alone are not progress. "
+        "A designed observation is not evidence that the gap has been experimentally resolved."
+    )
+
+
 def instantiate_compiled_plan_for_node(
     mcts: Any,
     plan: Any,
@@ -1766,6 +1785,7 @@ def instantiate_compiled_plan_for_node(
         "sample sizes, statistical tests, instrument configurations, ablation plans, or failure-repair plans."
     )
     prompt += _data_anchored_contract_prompt(parent_state)
+    prompt += _gap_focus_prompt(parent_state)
     survey_handoff = getattr(mcts, "survey_idea_handoff", {})
     if isinstance(survey_handoff, dict) and survey_handoff:
         prompt += "\n\n== Verified Survey -> Idea handoff ==\n" + pretty_json(survey_handoff)
@@ -2339,6 +2359,7 @@ def simulate_node_value(
         symbolic_memory_hints=symbolic_hints,
     )
     prompt += _data_anchored_contract_prompt(node.state)
+    prompt += _gap_focus_prompt(node.state)
     survey_handoff = getattr(mcts, "survey_idea_handoff", {})
     if isinstance(survey_handoff, dict) and survey_handoff:
         prompt += "\n\n== Verified Survey -> Idea handoff ==\n" + pretty_json(survey_handoff)
@@ -2844,6 +2865,8 @@ def build_root_state(
     if route_identity:
         scientific_intervention["route_id"] = route_identity
         scientific_intervention["route_policy"] = context.get("route_policy") or {}
+    if isinstance(context.get("gap_search_focus"), Mapping):
+        scientific_intervention["gap_search_focus"] = dict(context["gap_search_focus"])
     routed_gap_context = {
         key: [dict(item) for item in context.get(key, []) if isinstance(item, dict)]
         for key in (

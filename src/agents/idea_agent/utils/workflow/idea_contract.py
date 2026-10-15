@@ -384,6 +384,9 @@ def normalize_mature_idea(
         "anti_anchor_reason": _as_text(raw.get("anti_anchor_reason")),
         "reframed_problem_id": _as_text(raw.get("reframed_problem_id")),
         "rejected_gap_ids": _as_list(raw.get("rejected_gap_ids")),
+        "scientific_candidate_id": _as_text(raw.get("scientific_candidate_id")),
+        "scientific_candidate_root_role": _as_text(raw.get("scientific_candidate_root_role")),
+        "candidate_ledger_fingerprint": _as_text(raw.get("candidate_ledger_fingerprint")),
     }
 
 

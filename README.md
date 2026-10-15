@@ -185,6 +185,8 @@ Generated images and `author_visual_manifest.json` remain inside the timestamped
 
 The recommended entry point is `qwensci science`. Each stage is also available as an individual command when you want to inspect, supply, or reuse a particular handoff.
 
+Survey targets at least two distinct selected seed papers per sub-hypothesis (SH), configured by `survey.ModuleInfo.WorkCollector.min_seed_papers_per_sh`; the default global seed budget is 36 via `max_seed_paper_num`. All merged, deduplicated SH retrieval candidates enter project relevance screening without truncation by `subhypothesis_max_unique_papers`; retained candidates proceed to SH semantic assessment before seed selection. Selection reserves each SH's minimum before filling the remaining global budget and raises an insufficient budget to accommodate the quota. Assessed background, method, or indirect contributions below the normal semantic threshold may fill a minimum slot while retaining their original evidence limits; irrelevant, excluded, and unassessed papers cannot. An unresolved deficit after exhausting candidates produces a warning and Survey continues with the available selected seeds. Deficits remain recorded in `subhypothesis_retrieval.json` and `sh_graph_provenance.json`; the retrieval artifact also records assessments, seed decisions, per-SH counts, and recovery batches. The minimum is a selection target; subsequent full-text availability remains independently recorded.
+
 ## Quick start: an auditable science run
 
 The primary command runs the full code-executed workflow. This example uses a topic supplied for Qwen-Sci:
@@ -730,6 +732,8 @@ with links to the companion files, rather than an embedded copy of the complete 
 Artifacts are streamed to temporary files and published together with rollback on failure.
 
 ### 4. Author
+
+ExperimentDesign also supports an optional computational branch: add `--computation-mode plan` to design computational protocols, or `--computation-mode run` to generate and execute bounded container projects alongside the existing design stage. Default mode is `off`. Numerical and chemical results enter Author through a verified evidence capsule. See [computational experiments](docs/computational_experiments.md) for setup, supported methods, network/isolation defaults, budgets, cancellation and recovery.
 
 ```bash
 uv run qwensci author \

@@ -7,8 +7,10 @@ filters are an additive, auditable lane and never replace that baseline.
 from __future__ import annotations
 
 import re
+import hashlib
 from collections.abc import Mapping, Sequence
 from typing import Any
+from src.pipeline.candidate_discovery_queries import discovery_semantics, contextual_query_terms
 
 from src.pipeline.research_question_contract import (
     MAX_RETRIEVAL_QUERY_TERMS_PER_VARIANT,
@@ -34,6 +36,7 @@ RETRIEVAL_LANES_SCHEMA_VERSION = "retrieval_lanes_v1"
 SUBHYPOTHESIS_RETRIEVAL_SCHEMA_VERSION = "subhypothesis_retrieval_v6"
 SUBHYPOTHESIS_CONTRACT_SCHEMA_VERSION = SCIENCE_SUBHYPOTHESIS_SCHEMA_VERSION
 SLOT_RECOVERY_TASK_SCHEMA_VERSION = "slot_recovery_task_v1"
+CANDIDATE_DISCOVERY_TASK_SCHEMA_VERSION = "candidate_discovery_task_v1"
 SUPPORTED_EVIDENCE_MODES = frozenset(
     {
         "overview",
@@ -861,6 +864,399 @@ def build_slot_recovery_tasks(
     return tasks
 
 
+_CANDIDATE_DISCOVERY_SLOT_MARKERS = (
+    "candidate",
+    "comparator",
+    "alternative",
+    "variant",
+    "model",
+    "source_system",
+    "target_system",
+)
+_CANDIDATE_DISCOVERY_GENERIC_TERMS = frozenset(
+    {
+        "candidate",
+        "candidates",
+        "alternative",
+        "alternatives",
+        "comparison",
+        "comparative",
+        "screening",
+        "screen",
+        "model",
+        "models",
+        "benchmark",
+        "benchmarks",
+        "approach",
+        "approaches",
+        "method",
+        "methods",
+    }
+)
+
+
+def _candidate_discovery_anchors(
+    project_context: Mapping[str, Any],
+    contract: Mapping[str, Any],
+) -> list[str]:
+    scope = _mapping(contract.get("scientific_scope"))
+    anchors: list[str] = []
+    for key in (
+        "research_object",
+        "population_or_system",
+        "target_system",
+        "source_system",
+        "comparison_frame",
+        "condition_or_regime",
+    ):
+        anchors.extend(_unique_texts(scope.get(key) or [], limit=2))
+        if len(anchors) >= 2:
+            break
+    if len(anchors) < 2:
+        anchors.extend(_unique_texts(_mapping(project_context).get("core_entities") or [], limit=4))
+    if not anchors:
+        anchors.extend(
+            _question_anchor_terms(_text(contract.get("question"), limit=1800))
+        )
+    return _unique_texts(anchors, limit=2)
+
+
+def _candidate_discovery_concepts(contract: Mapping[str, Any]) -> list[str]:
+    definitions = _mapping(contract.get("slot_definitions"))
+    concepts: list[str] = []
+    for slot_name, raw_definition in definitions.items():
+        definition = _mapping(raw_definition)
+        concepts.extend(_unique_texts(definition.get("retrieval_concepts") or [], limit=8))
+    return _unique_texts(concepts, limit=8)
+
+
+def _candidate_discovery_evidence_dimensions(
+    contract: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    """Derive discovery axes from the SH evidence contract.
+
+    The discovery stage must not know whether a project is biological,
+    engineering, or computational.  Required slots are therefore treated as
+    generic evidence dimensions; their meanings and retrieval concepts are the
+    only domain-specific inputs.
+    """
+
+    definitions = _mapping(contract.get("slot_definitions"))
+    required_slots = contract.get("required_slots")
+    slot_names = (
+        [str(item).strip() for item in required_slots if str(item).strip()]
+        if isinstance(required_slots, Sequence) and not isinstance(required_slots, (str, bytes))
+        else list(definitions)
+    )
+    question_kind = _text(contract.get("question_kind"), limit=80).upper()
+    dimensions: list[dict[str, Any]] = []
+    for slot_name in _unique_texts(slot_names, limit=max(1, len(slot_names))):
+        definition = _mapping(definitions.get(slot_name))
+        concepts = _unique_texts(definition.get("retrieval_concepts") or [], limit=3)
+        meaning = _text(definition.get("meaning"), limit=180)
+        if not concepts and meaning:
+            concepts = [meaning]
+        if not concepts:
+            concepts = [slot_name.replace("_", " ")]
+        try:
+            independent_works = max(1, int(definition.get("minimum_independent_works", 1)))
+        except (TypeError, ValueError):
+            independent_works = 1
+        dimensions.append(
+            {
+                "slot_name": slot_name,
+                "evidence_role": _slot_evidence_role(slot_name, question_kind),
+                "meaning": meaning,
+                "retrieval_concepts": concepts,
+                "minimum_evidence": _text(definition.get("minimum_evidence"), limit=300),
+                "admission_rule": _text(definition.get("admission_rule"), limit=300),
+                "required": definition.get("required", True),
+                "minimum_independent_works": independent_works,
+                "screening_priority": definition.get("screening_priority", False),
+                "direct_comparison": definition.get("direct_comparison", False),
+                "comparison_candidate_ids": list(definition.get("comparison_candidate_ids") or []),
+            }
+        )
+    return dimensions
+
+
+def build_candidate_discovery_tasks(
+    subhypothesis_contract: Mapping[str, Any],
+    *,
+    project_context: Mapping[str, Any] | None,
+    include_arxiv: bool = True,
+    retrieval_profile: Mapping[str, Any] | None = None,
+    discovery_semantic_plan: Mapping[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    """Compile high-recall candidate discovery tasks independently of slot proof."""
+
+    del retrieval_profile
+    contract = _mapping(subhypothesis_contract)
+    project = _mapping(project_context)
+    identifier = _text(contract.get("sub_hypothesis_id"), limit=120)
+    if not identifier:
+        return []
+    anchors = _candidate_discovery_anchors(project, contract)
+    concepts = _candidate_discovery_concepts(contract)
+    contexts, judgments = discovery_semantics(concepts, anchors, discovery_semantic_plan)
+    evidence_dimensions = _candidate_discovery_evidence_dimensions(contract)
+    query_specs: list[dict[str, Any]] = []
+
+    def add_spec(
+        variant_id: str,
+        terms: Sequence[str],
+        *,
+        dimension: str,
+        candidate_term: str = "",
+        purpose: str,
+        semantic_metadata: Mapping[str, Any] | None = None,
+    ) -> None:
+        normalized_terms, warnings = _normalized_variant_terms(list(terms))
+        if not normalized_terms:
+            return
+        query, query_warnings = _bounded_query(" ".join(normalized_terms))
+        if not query or any(item.get("query") == query for item in query_specs):
+            return
+        query_specs.append(
+            {
+                "variant_id": variant_id,
+                "purpose": purpose,
+                "query_terms": normalized_terms,
+                "query": query,
+                "candidate_discovery_dimension": dimension,
+                "candidate_term": candidate_term,
+                "query_quality_warnings": _unique_texts(
+                    [*warnings, *query_warnings], limit=8
+                ),
+                "source": "candidate_discovery_v1",
+                **dict(semantic_metadata or {}),
+            }
+        )
+
+    # Discovery queries do not request proof of an evidence dimension. Interleave
+    # heterogeneous anchor and concept views before applying the recall budget.
+    primary_anchor = [contexts[0]["term"]] if contexts else []
+    if primary_anchor:
+        add_spec(
+            "anchor_candidate",
+            [*primary_anchor, "candidate"],
+            dimension="candidate_pool",
+            purpose="open-world candidate recall",
+            semantic_metadata={"discovery_context_ladder": contexts, "discovery_context_index": 0,
+                               "discovery_context_level": contexts[0]["level"], "discovery_query_purpose": "candidate"},
+        )
+    for index, concept in enumerate(concepts, start=1):
+        if len(query_specs) >= 12:
+            break
+        judgment = judgments.get(concept, {"kind": "unresolved", "reason": "Model classification unavailable", "status": "fallback_contextual"})
+        standalone = judgment["kind"] == "distinctive_name" and judgment["status"] == "model_classified"
+        if not standalone and not contexts:
+            continue
+        terms = [concept] if standalone else contextual_query_terms(contexts[0]["term"], concept)
+        add_spec(
+            f"concept_{index}",
+            terms,
+            dimension="named_candidate_concept",
+            candidate_term="",
+            purpose="named candidate concept recall",
+            semantic_metadata={"discovery_concept": concept, "discovery_concept_kind": judgment["kind"],
+                "discovery_semantic_status": judgment["status"], "discovery_semantic_reason": judgment["reason"],
+                "discovery_context_ladder": [] if standalone else contexts, "discovery_context_index": 0,
+                "discovery_context_level": "standalone_name" if standalone else contexts[0]["level"],
+                "discovery_query_purpose": concept},
+        )
+        if len(query_specs) >= 12:
+            break
+    if primary_anchor:
+        for purpose in ("alternative", "comparison", "screening"):
+            add_spec(f"anchor_{purpose}", [*primary_anchor, purpose], dimension=f"{purpose}_pool",
+                     purpose=f"independent {purpose} recall")
+    if len(contexts) > 1 and len(query_specs) < 12:
+        add_spec("secondary_anchor", [contexts[1]["term"], "comparison"], dimension="proxy_pool", purpose="independent source-system recall")
+
+    effective_context = {
+        **project,
+        "exclusion_terms": _unique_texts(
+            [*(project.get("exclusion_terms") or []), *(contract.get("exclusion_terms") or [])]
+        ),
+    }
+    effective_resolution = resolve_subhypothesis_discipline_taxonomy(
+        _mapping(project.get("taxonomy_resolution")),
+        contract,
+    )
+    route_plans: list[dict[str, Any]] = []
+    task_lanes: list[dict[str, Any]] = []
+    for index, query_spec in enumerate(query_specs):
+        route_plan = build_query_lanes(
+            effective_context,
+            query=query_spec.get("query"),
+            taxonomy_resolution=effective_resolution,
+            evidence_mode="overview",
+            lane_prefix=f"cd.{hashlib.sha256(identifier.encode()).hexdigest()[:16]}.{query_spec['variant_id']}",
+            openalex_precision_lanes=[],
+            execution_phase="initial",
+            include_arxiv=bool(include_arxiv and index == 0),
+        )
+        variant_lanes: list[dict[str, Any]] = []
+        for lane in route_plan.get("query_lanes", []):
+            if not isinstance(lane, Mapping):
+                continue
+            variant_lanes.append(
+                {
+                    **lane,
+                    "sub_hypothesis_id": identifier,
+                    "slot_recovery_task_id": f"{identifier}.candidate_discovery",
+                    "slot_name": "candidate_discovery",
+                    "expected_evidence_role": "DISCOVERY",
+                    "query_variant_id": query_spec["variant_id"],
+                    "query_variant_index": index,
+                    "query_variant_purpose": query_spec["purpose"],
+                    "query_variant_terms": list(query_spec["query_terms"]),
+                    "query_variant_source": query_spec["source"],
+                    "query_quality_warnings": list(query_spec["query_quality_warnings"]),
+                    "candidate_discovery_dimension": query_spec[
+                        "candidate_discovery_dimension"
+                    ],
+                    "candidate_discovery_evidence_dimensions": [],
+                    "candidate_term": query_spec["candidate_term"],
+                    "retrieval_stage": "candidate_discovery",
+                    "purpose": "candidate_discovery",
+                    **{key: value for key, value in query_spec.items() if key.startswith("discovery_")},
+                }
+            )
+        route_plan = {
+            **route_plan,
+            "query_variant": dict(query_spec),
+            "query_lanes": variant_lanes,
+        }
+        route_plans.append(route_plan)
+        task_lanes.extend(variant_lanes)
+    if not task_lanes:
+        return []
+    return [
+        {
+            "schema_version": CANDIDATE_DISCOVERY_TASK_SCHEMA_VERSION,
+            "task_id": f"{identifier}.candidate_discovery",
+            "sub_hypothesis_id": identifier,
+            "slot_name": "candidate_discovery",
+            "question_kind": _text(contract.get("question_kind"), limit=80).upper(),
+            "question": _text(contract.get("question"), limit=1800),
+            "scientific_scope": _mapping(contract.get("scientific_scope")),
+            "expected_evidence_role": "DISCOVERY",
+            "retrieval_stage": "candidate_discovery",
+            "discovery_mode": "open_world",
+            "discovery_concepts": concepts,
+            "discovery_anchors": anchors,
+            "discovery_semantic_plan": dict(discovery_semantic_plan or {}),
+            "discovery_semantic_status": "model_classified" if judgments else "fallback_contextual",
+            "query": query_specs[0]["query"],
+            "query_terms": list(query_specs[0]["query_terms"]),
+            "query_variants": query_specs,
+            "evidence_dimensions": evidence_dimensions,
+            "effective_taxonomy_resolution": effective_resolution,
+            "retrieval_plan": {
+                "schema_version": RETRIEVAL_LANES_SCHEMA_VERSION,
+                "execution_policy": "candidate_discovery_query_matrix",
+                "baseline_query": query_specs[0]["query"],
+                "query_variants": query_specs,
+                "variant_route_plans": route_plans,
+                "query_lanes": task_lanes,
+            },
+        }
+    ]
+
+
+def build_candidate_evidence_tasks(
+    contract: Mapping[str, Any], candidates: Sequence[Mapping[str, Any]],
+    *, project_context: Mapping[str, Any] | None = None, phase: str = "comparison",
+    dimension_names: Sequence[str] | None = None, include_aliases: bool = False,
+    max_tasks: int | None = None, candidate_ids: Sequence[str] | None = None,
+    query_rewrite: bool = False,
+) -> list[dict[str, Any]]:
+    """Give every registered candidate a separate minimum matrix budget.
+
+    Each candidate/dimension is a task so a hit for another candidate or axis
+    cannot suppress its fallback. Aliases are queried separately, never ANDed.
+    """
+    from .scientific_candidates import is_decision_candidate
+    identifier = str(contract.get("sub_hypothesis_id") or "")
+    dimensions = candidate_evidence_dimensions(contract)
+    if dimension_names is not None:
+        dimensions = [dimension for dimension in dimensions if dimension["slot_name"] in dimension_names]
+    tasks = []
+    for dimension in dimensions:
+        for candidate in candidates:
+            if candidate_ids is not None and candidate["candidate_id"] not in candidate_ids:
+                continue
+            if identifier not in candidate.get("sub_hypothesis_ids", []) or not is_decision_candidate(candidate, identifier):
+                continue
+            if max_tasks is not None and len(tasks) >= max_tasks:
+                return tasks
+            slot = dimension["slot_name"]
+            task_id = f"{identifier}.{candidate['candidate_id']}.{slot}"
+            aliases = list(dict.fromkeys([candidate["name"], *candidate["aliases"]]))[:2 if include_aliases else 1]
+            lanes = []
+            for index, alias in enumerate(aliases):
+                concepts = compile_candidate_evidence_concepts(dimension, candidate, candidates)
+                purpose = concepts[0]
+                if query_rewrite:
+                    alternate = compile_candidate_evidence_concepts(
+                        {**dimension, "retrieval_concepts": [*concepts[1:], dimension.get("meaning", ""), slot.replace("_", " ")]},
+                        candidate, candidates)
+                    purpose = next((concept for concept in alternate if concept and concept.casefold() != purpose.casefold()), None)
+                    if purpose is None:
+                        continue
+                purpose = " ".join(purpose.split()[:max(1, 12 - len(alias.split()))])
+                terms = [alias, purpose]
+                query, _warnings = _bounded_query(" ".join(terms))
+                variant_id = "rewrite_1" if query_rewrite else f"alias_{index}"
+                plan = build_query_lanes(project_context or {}, query=query, evidence_mode="overview",
+                    lane_prefix=f"cv.{hashlib.sha256(task_id.encode()).hexdigest()[:24]}.{variant_id}", openalex_precision_lanes=[], include_arxiv=False)
+                for lane in plan["query_lanes"]:
+                    lanes.append({**lane, "sub_hypothesis_id": identifier, "candidate_id": candidate["candidate_id"],
+                        "candidate_term": candidate["name"], "evidence_dimension": slot,
+                        "alias_expansion": index > 0, "query_rewrite": query_rewrite, "query_variant_id": variant_id, "query_variant_index": index,
+                        "query_variant_terms": terms, "slot_recovery_task_id": task_id, "slot_name": slot,
+                        "retrieval_stage": "candidate_validation", "execution_phase": "initial",
+                        "budget_phase": "supplement" if index > 0 or query_rewrite else phase,
+                        "expected_evidence_role": dimension["evidence_role"]})
+            tasks.append({"task_id": task_id, "slot_name": slot, "retrieval_stage": "candidate_validation",
+                "candidate_id": candidate["candidate_id"], "slot_definition": dimension,
+                "expected_evidence_role": dimension["evidence_role"], "retrieval_plan": {"query_lanes": lanes}})
+    return tasks
+
+
+def candidate_evidence_dimensions(contract):
+    dimensions = _candidate_discovery_evidence_dimensions(contract)
+    if not any(d["evidence_role"] == "LIMITING_OR_CHALLENGING_EVIDENCE" for d in dimensions):
+        dimensions.append({"slot_name": "counterevidence_search", "meaning": "Reported limitations or contradictory findings for this candidate",
+            "retrieval_concepts": ["limitations"], "minimum_evidence": "A reported finding, not an absence of search results",
+            "admission_rule": "Explicit evidence concerning the candidate", "evidence_role": "LIMITING_OR_CHALLENGING_EVIDENCE", "required": False})
+    return dimensions
+
+
+def compile_candidate_evidence_concepts(dimension, candidate, registry):
+    from .scientific_candidates import is_decision_candidate, mentions
+    concepts = []
+    for concept in dimension["retrieval_concepts"]:
+        identities = [alias for record in registry if is_decision_candidate(record) for alias in record.get("aliases", [])
+                      if mentions(alias, concept)]
+        if not identities:
+            concepts.append(concept)
+        elif dimension.get("direct_comparison") is True and dimension.get("comparison_candidate_ids"):
+            allowed = {candidate["candidate_id"], *dimension["comparison_candidate_ids"]}
+            if all(record["candidate_id"] in allowed for record in registry if is_decision_candidate(record)
+                   and any(mentions(alias, concept) for alias in record.get("aliases", []))):
+                if not any(mentions(alias, concept) for alias in candidate.get("aliases", [])):
+                    concepts.append(concept)
+    if not concepts:
+        meaning = dimension.get("meaning", "")
+        polluted = any(mentions(alias, meaning) for record in registry if is_decision_candidate(record)
+                       for alias in record.get("aliases", []))
+        concepts = [meaning] if meaning and not polluted else [dimension["slot_name"].replace("_", " ")]
+    return concepts
+
+
 def _flatten_slot_query_lanes(tasks: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
     lanes: list[dict[str, Any]] = []
     for task in tasks:
@@ -935,6 +1331,7 @@ def build_subhypothesis_context(
     include_arxiv: bool = True,
     query_variant_bindings: Sequence[Mapping[str, Any]] | None = None,
     retrieval_profile: Mapping[str, Any] | None = None,
+    search_strategy: str = "staged_legacy",
 ) -> dict[str, Any]:
     """Compile a validated v2 SH into one retrieval task per required slot."""
 
@@ -947,7 +1344,24 @@ def build_subhypothesis_context(
     )
     validation = _mapping(contract.get("validation"))
     tasks: list[dict[str, Any]] = []
-    if validation.get("valid"):
+    candidate_discovery_tasks: list[dict[str, Any]] = []
+    if validation.get("valid") and search_strategy == "model_feedback":
+        definitions = _mapping(contract.get("slot_definitions"))
+        tasks = [{"task_id": f"{contract['sub_hypothesis_id']}.{dimension['slot_name']}",
+                  "sub_hypothesis_id": contract["sub_hypothesis_id"], **dimension,
+                  "slot_definition": _mapping(definitions.get(dimension["slot_name"])),
+                  "expected_evidence_role": dimension["evidence_role"],
+                  "allowed_evidence_scope": _mapping(contract.get("scientific_scope")),
+                  "excluded_evidence_scope": _mapping(contract.get("excluded_evidence_scope")),
+                  "retrieval_plan": {"query_lanes": []}}
+                 for dimension in _candidate_discovery_evidence_dimensions(contract)]
+    elif validation.get("valid"):
+        candidate_discovery_tasks = build_candidate_discovery_tasks(
+            contract,
+            project_context=project,
+            include_arxiv=include_arxiv,
+            retrieval_profile=retrieval_profile,
+        )
         tasks = build_slot_recovery_tasks(
             contract,
             project_context=project,
@@ -968,7 +1382,8 @@ def build_subhypothesis_context(
             tasks = []
     return {
         **contract,
-        "retrieval_strategy": "slot_driven_required_slot_recovery",
+        "retrieval_strategy": search_strategy if search_strategy == "model_feedback" else "slot_driven_required_slot_recovery",
+        "candidate_discovery_strategy": "open_world_then_contract_validation",
         "inherited_project_fingerprint": _text(project.get("input_fingerprint"), limit=128),
         "core_entities": _unique_texts(project.get("core_entities") or []),
         "exclusion_terms": _unique_texts(
@@ -983,6 +1398,8 @@ def build_subhypothesis_context(
         ),
         "slot_recovery_tasks": tasks,
         "slot_query_lanes": _flatten_slot_query_lanes(tasks),
+        "candidate_discovery_tasks": candidate_discovery_tasks,
+        "candidate_discovery_lanes": _flatten_slot_query_lanes(candidate_discovery_tasks),
     }
 
 
@@ -993,6 +1410,7 @@ def build_subhypothesis_retrieval_plan(
     include_arxiv: bool = True,
     query_variant_bindings: Sequence[Mapping[str, Any]] | None = None,
     subhypothesis_metadata: Mapping[str, Mapping[str, Any]] | None = None,
+    search_strategy: str = "staged_legacy",
 ) -> dict[str, Any]:
     """Build a layered retrieval contract for a bounded SH list without LLM calls."""
 
@@ -1011,6 +1429,7 @@ def build_subhypothesis_retrieval_plan(
             candidate,
             index=index,
             include_arxiv=include_arxiv,
+            search_strategy=search_strategy,
             query_variant_bindings=active_bindings,
             retrieval_profile=_mapping(
                 metadata_by_id.get(
@@ -1022,7 +1441,7 @@ def build_subhypothesis_retrieval_plan(
     ]
     plan = {
         "schema_version": SUBHYPOTHESIS_RETRIEVAL_SCHEMA_VERSION,
-        "retrieval_strategy": "slot_driven_required_slot_recovery",
+        "retrieval_strategy": search_strategy if search_strategy == "model_feedback" else "slot_driven_required_slot_recovery",
         "project_context": subhypothesis_decomposition_context_payload(project_context),
         "subhypotheses": normalized,
     }

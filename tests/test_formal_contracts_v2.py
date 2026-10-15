@@ -7,7 +7,9 @@ import pytest
 
 from src.agents.experiment_design_agent.formal_contracts import adapt_legacy_plan, validate_formal_plan_v2
 from src.agents.experiment_design_agent.formal_definition_resolver import FormalDefinitionResolver
-from src.agents.experiment_design_agent.formal_reasoning_planner import FormalReasoningPlanner, _repair_skeleton_record_ids
+from src.agents.experiment_design_agent.formal_reasoning_planner import (
+    FormalReasoningPlanner, _repair_skeleton_record_ids, target_proof_output_contract,
+)
 import src.agents.experiment_design_agent.definition_evidence as definition_evidence_module
 
 
@@ -24,7 +26,7 @@ def formal_plan():
             "definition_status": "specified", "verification_readiness": "encoded",
         }],
         "model_relations": [],
-        "assumptions": [{"assumption_id": "A1", "statement": "Positive scalar", "predicate": "x > 0", "predicate_expression": {"op": "gt", "args": [{"symbol": "x"}, {"number": "0"}]}, "status": "candidate_formalization", "symbol_references": ["x"]}],
+        "assumptions": [{"assumption_id": "A1", "statement": "Positive scalar", "predicate": "x > 0", "predicate_expression": {"op": "gt", "args": [{"symbol": "x"}, {"number": "0"}]}, "status": "candidate_formalization", "symbol_references": ["x"], "object_bindings": {"x": "D1"}}],
         "propositions": [{
             "proposition_id": "P1", "statement": "A positive real is nonnegative", "premises": ["A1"],
             "conclusion": "x >= 0", "scope": "real scalars", "status": "candidate_formalization",
@@ -100,7 +102,9 @@ def test_resolver_and_planner_preserve_resolved_science():
     changed = deepcopy(plan)
     changed["definitions"][0]["statement"] = "Unapproved replacement"
     generated = FormalReasoningPlanner().plan({}, {}, {"variables": [{"variable_id": "V1"}]}, formal_inputs=resolved, llm_call=lambda *_args, **_kwargs: changed)
-    assert generated["definitions"] == resolved["definitions"]
+    assert generated["definitions"][0] == resolved["definitions"][0]
+    assert any(record["statement"] == "Unapproved replacement" and record["definition_id"] != "D1"
+               for record in generated["definitions"])
 
 
 def test_planner_builds_skeleton_then_target_proof_batches():
@@ -159,6 +163,50 @@ def test_planner_builds_skeleton_then_target_proof_batches():
     assert calls == ["v2_skeleton", "v2_target_proof"]
     assert generated["proof_attempts"]
     assert generated["forward_derivation"]["steps"]
+
+
+def test_target_proof_example_passes_the_actual_merge_and_validation():
+    contract = target_proof_output_contract()
+    plan = formal_plan()
+    plan["propositions"] = [deepcopy(contract["target_examples"]["proposition"])]
+    plan["assumptions"] = [deepcopy(contract["target_examples"]["assumption"])]
+    plan["proof_attempts"] = []
+    plan["forward_derivation"] = {"steps": []}
+
+    FormalReasoningPlanner._merge_target_response(plan, contract["response_example"], {"P1"})
+
+    assert validate_formal_plan_v2(plan, {"variables": [{"variable_id": "V1"}]}) == []
+    assert len(plan["lemmas"]) == 1
+    assert {attempt["target_id"] for attempt in plan["proof_attempts"]} == {"P1", "L1"}
+    assert plan["unknown_items"] == []
+
+
+def test_planner_target_request_contract_supports_auxiliary_lemma_and_nested_steps():
+    plan = formal_plan()
+    plan["proof_attempts"] = []
+    calls = []
+
+    def callback(prompt, **_kwargs):
+        if "skeleton stage" in prompt:
+            return deepcopy(plan)
+        inputs = json.loads(prompt.split("INPUT_JSON:\n", 1)[1])
+        contract = inputs["output_contract"]
+        calls.append(inputs)
+        example = deepcopy(contract["response_example"])
+        example["target_results"][0]["assumptions"] = []
+        return example
+
+    generated = FormalReasoningPlanner().plan(
+        {}, {}, {"variables": [{"variable_id": "V1"}]},
+        formal_inputs={"definitions": plan["definitions"], "model_relations": [], "unknown_items": []},
+        llm_call=callback,
+    )
+
+    assert len(calls) == 1
+    assert generated["lemmas"][0]["lemma_id"] == "TP1_L1"
+    assert len(generated["proof_attempts"]) == 2
+    assert not generated["unknown_items"]
+    assert validate_formal_plan_v2(generated, {"variables": [{"variable_id": "V1"}]}) == []
 
 
 def test_planner_default_evidence_limit_is_36(monkeypatch):
@@ -223,13 +271,15 @@ def test_skeleton_prompt_omits_large_provenance_and_restores_full_records():
         llm_call=callback,
     )
 
-    assert len(prompts) == 1
-    assert len(prompts[0]) < 70000
-    assert "PROVENANCE_ONLY" not in prompts[0]
+    assert len(prompts) == 2
+    assert all(len(prompt) < 70000 for prompt in prompts)
+    assert all("PROVENANCE_ONLY" not in prompt for prompt in prompts)
+    groups = [json.loads(prompt.split("INPUT_JSON:\n", 1)[1])["resolved_inputs"]["definitions"] for prompt in prompts]
+    assert sorted(len(group) for group in groups) == [16, 24]
     assert generated["definitions"] == definitions
 
 
-def test_large_skeleton_prompt_reaches_llm():
+def test_large_research_topic_is_compacted_before_skeleton_request():
     plan = formal_plan()
     prompts = []
 
@@ -244,7 +294,8 @@ def test_large_skeleton_prompt_reaches_llm():
     )
 
     assert len(prompts) == 1
-    assert len(prompts[0]) > 120000
+    assert len(prompts[0]) < 70000
+    assert "x" * 1000 in prompts[0]
     assert generated["definitions"] == plan["definitions"]
 
 

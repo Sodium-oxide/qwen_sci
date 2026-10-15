@@ -464,8 +464,8 @@ def _build_root_parser() -> argparse.ArgumentParser:
         "science",
         help="Initialize or resume the Survey -> Idea -> ExperimentDesign -> Author workflow",
         description=(
-            "Create or resume an auditable, design-only science run. "
-            "This command never executes experiments."
+            "Create or resume an auditable science run. ExperimentDesign remains DESIGN_ONLY; "
+            "the optional computation run mode executes generated programs in containers."
         ),
     )
     science.add_argument(
@@ -585,6 +585,16 @@ def _build_root_parser() -> argparse.ArgumentParser:
         help="Print only the stable science_run_result_v1 JSON result",
     )
     science.set_defaults(func=_science_command)
+
+    science.add_argument("--computation-mode", choices=("off", "plan", "run"),
+        help="Optional computational branch: disabled, planning only, or isolated execution")
+    science.add_argument("--computation-model", help="Override the computational branch LLM")
+    computation = subparsers.add_parser("computation", help="Inspect, resume or cancel the optional computational branch")
+    computation_subparsers = computation.add_subparsers(dest="computation_command", required=True)
+    for action in ("status", "resume", "cancel"):
+        command = computation_subparsers.add_parser(action)
+        command.add_argument("--run-dir", required=True)
+        command.set_defaults(func=_computation_command)
 
     quantitative = subparsers.add_parser(
         "quantitative",
@@ -1664,6 +1674,8 @@ def _science_immutable_options(args: argparse.Namespace) -> dict[str, object]:
         "author_model": args.author_model,
         "quantitative_mode": quantitative_mode,
         "quantitative_model": args.quantitative_model,
+        "computation_mode": getattr(args, "computation_mode", None),
+        "computation_model": getattr(args, "computation_model", None),
         "template_dir": _science_path_option(args.template_dir),
         "template_profile": _science_template_profile_option(args.template_profile),
         "template_main": args.template_main,
@@ -1753,6 +1765,7 @@ def _science_result_payload(
         "until": until,
         "state_revision": state.get("revision", 0),
         "stages": stage_summary,
+        **({"computation": state["computation"]} if state.get("computation") else {}),
     }
 
 
@@ -1827,6 +1840,26 @@ def _bind_quantitative_publication_bundle(
         )
     except Exception as exc:
         raise ScienceRunStateError(f"Cannot bind the two formal PDFs: {exc}") from exc
+
+
+def _computation_command(args: argparse.Namespace) -> int:
+    from src.pipeline.computational_state import load_state, request_cancel
+    from src.pipeline.computational_workflow import join_branch, start_branch
+    root = _resolve_cli_path(args.run_dir)
+    try:
+        if args.computation_command == "cancel":
+            state = request_cancel(root / "computation")
+        elif args.computation_command == "resume":
+            process = start_branch(root, force_resume=True)
+            join_branch(root, process)
+            state = load_state(root / "computation")
+        else:
+            state = load_state(root / "computation")
+        print(json.dumps(state, ensure_ascii=False, indent=2, allow_nan=False))
+        return 0
+    except (OSError, ValueError) as error:
+        print(f"computation error: {error}", file=sys.stderr)
+        return 2
 
 
 def _science_command(args: argparse.Namespace) -> int:
@@ -1971,6 +2004,9 @@ def _science_command(args: argparse.Namespace) -> int:
                 return SCIENCE_EXIT_INPUT_ERROR
             config_path = _resolve_config_path(args.config)
             _ensure_config_exists(config_path)
+            if explicit_options.get("computation_mode") is None:
+                from src.config import load_config
+                explicit_options["computation_mode"] = load_config(str(config_path)).get("computational_experiments", {}).get("mode", "off")
             output_root = _resolve_cli_path(args.output_root) if args.output_root else DEFAULT_SCIENCE_OUTPUT_ROOT
             paths, metadata, state = initialize_science_run(
                 output_root=output_root,

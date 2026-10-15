@@ -3,6 +3,7 @@
 from collections.abc import Mapping
 from fractions import Fraction
 import importlib
+import math
 import operator
 from types import ModuleType
 
@@ -16,39 +17,91 @@ EXPRESSION_CONTRACT = {
     "steps": [{"name": "matrix", "backend": "sympy", "expression": {"call": "eye", "args": [{"number": "2"}]}}],
     "declaration": {"symbol": "A", "sort": "matrix", "quantifier": "forall",
                     "declaration": {"call": "MatrixSymbol", "args": [{"literal": "A"}, {"number": "2"}, {"number": "2"}]}},
+    "structure_rules": {
+        "number": "Use a numeric string such as \"0\", \"0.5\" or \"1/3\", not a JSON number.",
+        "symbol": "A symbol leaf contains only symbol; declare sort and quantifier separately.",
+        "args": "Each argument is an expression object, not formula text or a bare number.",
+        "unencoded": "Use null with an encoding-gap explanation; do not use op unknown.",
+    },
+    "predicate": {"op": "predicate", "predicate": "admissible", "args": [{"symbol": "computer"}]},
     "notes": "Calls use the selected backend's public mathematical API; no mathematical operator whitelist. "
              "Use explicit definitions for named predicates. No Python source evaluation or filesystem/network APIs. "
              "variable_ref requires an explicit variable_bindings entry; calculation steps are candidates, not proofs.",
 }
 
 
-def valid_expression(node, depth=0):
-    if depth > 100 or not isinstance(node, Mapping):
-        return False
+def expression_diagnostics(node, depth=0, *, path="$", reject_unknown=False):
+    def error(code, expected, value=node, node_path=path):
+        return [{"node_path": node_path, "error_code": code,
+                 "actual_type": type(value).__name__, "expected": expected}]
+
+    if depth > 100:
+        return error("expression_depth_exceeded", "At most 100 nested expression levels.")
+    if not isinstance(node, Mapping):
+        return error("expression_requires_object", "An expression object; put formula text in the text field.")
+    if reject_unknown and node.get("op") == "unknown":
+        return error("unknown_expression", "A symbolic expression or null with an encoding-gap explanation.")
     if set(node) & {"symbol", "ref", "constant", "variable_ref"}:
-        return len(node) == 1 and isinstance(next(iter(node.values())), str) and bool(next(iter(node.values())).strip())
+        if len(node) != 1:
+            return error("leaf_has_extra_keys", "A single-key leaf; declarations belong outside the expression.")
+        name = next(iter(node.values()))
+        return [] if isinstance(name, str) and name.strip() else error("invalid_leaf_name", "A nonempty string.")
     if set(node) == {"number"}:
+        if not isinstance(node["number"], str):
+            return error("number_requires_string", 'A numeric string such as "0" or "1/3".',
+                         node["number"], f"{path}.number")
         try:
             Fraction(node["number"])
-            return isinstance(node["number"], str)
+            return []
         except (TypeError, ValueError, ZeroDivisionError):
-            return False
+            return error("invalid_number", "A finite rational numeric string.", node["number"], f"{path}.number")
     if set(node) == {"bool"}:
-        return type(node["bool"]) is bool
+        return [] if type(node["bool"]) is bool else error("invalid_bool", "A JSON boolean.", node["bool"], f"{path}.bool")
     if set(node) == {"literal"}:
-        return isinstance(node["literal"], (str, int, float, bool)) or node["literal"] is None
+        return [] if isinstance(node["literal"], (str, int, float, bool)) or node["literal"] is None else error("invalid_literal", "A scalar literal.")
     if set(node) == {"list"}:
-        return isinstance(node["list"], list) and all(valid_expression(item, depth + 1) for item in node["list"])
+        if not isinstance(node["list"], list):
+            return error("list_requires_array", "An array of expression nodes.", node["list"], f"{path}.list")
+        return [issue for index, item in enumerate(node["list"])
+                for issue in expression_diagnostics(item, depth + 1, path=f"{path}.list[{index}]", reject_unknown=reject_unknown)]
     if node.get("op") == "variable_ref":
-        return isinstance(node.get("variable_id"), str)
+        return [] if isinstance(node.get("variable_id"), str) else error("invalid_variable_reference", "A string variable_id.")
     if node.get("op") == "predicate":
-        return isinstance(node.get("predicate"), str) and isinstance(node.get("args"), list) and all(valid_expression(item, depth + 1) for item in node["args"])
+        if not isinstance(node.get("predicate"), str):
+            return error("invalid_predicate_name", "A string predicate name.")
+        if "args" not in node:
+            return error("predicate_requires_args", "An explicit args array.")
     name = node.get("op", node.get("call", node.get("method")))
-    return (isinstance(name, str) and bool(name.strip()) and isinstance(node.get("args", []), list)
-            and all(valid_expression(item, depth + 1) for item in node.get("args", []))
-            and isinstance(node.get("kwargs", {}), Mapping)
-            and all(valid_expression(item, depth + 1) for item in node.get("kwargs", {}).values())
-            and ("method" not in node or valid_expression(node.get("object"), depth + 1)))
+    if not isinstance(name, str) or not name.strip():
+        return error("missing_expression_operator", "A nonempty op, call or method name.")
+    if not isinstance(node.get("args", []), list):
+        return error("args_requires_array", "An array of expression objects.", node["args"], f"{path}.args")
+    if not isinstance(node.get("kwargs", {}), Mapping):
+        return error("kwargs_requires_object", "An object of named expression arguments.", node["kwargs"], f"{path}.kwargs")
+    issues = [issue for index, item in enumerate(node.get("args", []))
+              for issue in expression_diagnostics(item, depth + 1, path=f"{path}.args[{index}]", reject_unknown=reject_unknown)]
+    issues.extend(issue for key, item in node.get("kwargs", {}).items()
+                  for issue in expression_diagnostics(item, depth + 1, path=f"{path}.kwargs.{key}", reject_unknown=reject_unknown))
+    if "method" in node:
+        issues.extend(expression_diagnostics(node.get("object"), depth + 1, path=f"{path}.object", reject_unknown=reject_unknown))
+    return issues
+
+
+def valid_expression(node, depth=0):
+    return not expression_diagnostics(node, depth)
+
+
+def normalize_expression(node, depth=0):
+    if depth > 100:
+        return node
+    if isinstance(node, Mapping):
+        if set(node) == {"number"} and (type(node["number"]) is int or
+                                        type(node["number"]) is float and math.isfinite(node["number"])):
+            return {"number": str(node["number"])}
+        return {key: normalize_expression(value, depth + 1) for key, value in node.items()}
+    if isinstance(node, list):
+        return [normalize_expression(value, depth + 1) for value in node]
+    return node
 
 
 def valid_declarations(value):

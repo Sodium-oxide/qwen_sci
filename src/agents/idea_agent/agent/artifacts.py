@@ -43,6 +43,7 @@ FIELD_SPECS: Dict[str, Dict[str, Any]] = {
     "synthesis_result": {"namespace": "ideation", "path": "synthesis_result", "kind": "dict"},
     "debate_result": {"namespace": "ideation", "path": "debate_result", "kind": "dict"},
     "idea_portfolio": {"namespace": "ideation", "path": "idea_portfolio", "kind": "dict"},
+    "gap_route_schedule": {"namespace": "ideation", "path": "gap_route_schedule", "kind": "dict"},
     "route_clusters": {"namespace": "ideation", "path": "route_clusters", "kind": "list"},
     "diversity_report": {"namespace": "ideation", "path": "diversity_report", "kind": "dict"},
     "cross_seed_debate_result": {"namespace": "ideation", "path": "cross_seed_debate_result", "kind": "dict"},

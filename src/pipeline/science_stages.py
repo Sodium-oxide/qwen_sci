@@ -113,6 +113,8 @@ class AuthorStageRequest:
     render_required: bool = False
     survey_appendix: str = "source-link"
     quantitative_handoff_manifest_path: Path | None = None
+    computational_handoff_manifest_path: Path | None = None
+    science_run_id: str = ""
 
 
 @dataclass(frozen=True)
@@ -337,6 +339,16 @@ def run_survey_stage(request: SurveyStageRequest) -> ScienceStageResult:
         ) from callback_error
     if return_code:
         raise ScienceStageError("survey", 10, f"Survey process exited with code {return_code}")
+    status_path = request.attempt_dir / "survey_status.json"
+    if status_path.is_file():
+        status = json.loads(status_path.read_text(encoding="utf-8"))
+        if status.get("survey_status") == "insufficient_evidence" and status.get("topic") == request.topic:
+            outputs = {"survey_status": str(status_path)}
+            diagnostics = request.attempt_dir / "subhypothesis_retrieval.json"
+            if diagnostics.is_file():
+                outputs["retrieval_diagnostics"] = str(diagnostics)
+            return ScienceStageResult(stage="survey", result_path=status_path, outputs=outputs,
+                identity={"survey_run_id": request.survey_run_id}, metadata=status)
     manifest_path = request.attempt_dir / "survey_manifest.json"
     try:
         context = load_survey_idea_context(manifest_path)
@@ -718,6 +730,8 @@ def run_author_stage(request: AuthorStageRequest) -> ScienceStageResult:
                 max_idea_iterations=int(idea_config.get("max_iterations") or 3),
                 strict_survey_binding=True,
                 quantitative_handoff_manifest_path=request.quantitative_handoff_manifest_path,
+                computational_handoff_manifest_path=request.computational_handoff_manifest_path,
+                science_run_id=request.science_run_id,
                 llm_call=build_author_json_llm_call(config=config, model=request.model),
                 max_contract_repairs=int(1 if configured_section_repairs is None else configured_section_repairs),
                 composer_concurrency=int(authoring_config.get("composer_concurrency") or 5),
@@ -881,6 +895,7 @@ def run_author_stage(request: AuthorStageRequest) -> ScienceStageResult:
             rendering=render_status,
             document_quality=quality_summary,
             quantitative_handoff_manifest_path=request.quantitative_handoff_manifest_path,
+            computational_handoff_manifest_path=request.computational_handoff_manifest_path,
         )
     except (KeyError, ScienceManifestError) as exc:
         raise ScienceStageError("author", 41, f"Author manifest publication failed: {exc}") from exc

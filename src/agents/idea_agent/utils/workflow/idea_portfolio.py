@@ -64,6 +64,7 @@ def _candidate_key(candidate: Mapping[str, Any]) -> str:
             _text(candidate.get("idea_id") or candidate.get("candidate_id") or candidate.get("title")),
             _text(candidate.get("seed_id")),
             _text(candidate.get("route_id")),
+            _text((candidate.get("gap_search_focus") or {}).get("primary_gap_id")),
         )
     )
 

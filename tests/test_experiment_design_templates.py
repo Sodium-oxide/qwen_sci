@@ -909,22 +909,77 @@ def test_high_risk_template_families_end_in_human_review(
     assert review_trigger in design["risk_and_human_review"]["review_triggers"]
     assert design["execution_policy"]["mode"] == "DESIGN_ONLY"
     assert design["execution_policy"]["allow_digital_execution"] is False
-    if discipline_id == "27":
-        assert design["validation_report"]["status"] == "BLOCKED_BY_RISK_REVIEW"
-        assert design["execution_policy"]["methodology_detail_level"] == "RESTRICTED_HIGH_RISK_PLAN"
-        assert design["methodology_completeness"]["status"] == "RESTRICTED_PLAN"
-    else:
-        assert design["validation_report"]["status"] == "READY_FOR_HUMAN_REVIEW"
-        assert design["execution_policy"]["methodology_detail_level"] == "FULL_METHODOLOGY_PLAN"
-        assert design["methodology_completeness"]["status"] == "COMPLETE_WITH_ASSUMPTIONS"
+    assert design["validation_report"]["status"] == "READY_FOR_HUMAN_REVIEW"
+    assert design["execution_policy"]["methodology_detail_level"] == "FULL_METHODOLOGY_PLAN"
+    assert design["methodology_completeness"]["status"] == "COMPLETE_WITH_ASSUMPTIONS"
+
+
+@pytest.mark.parametrize(
+    ("discipline_id", "topic", "constraints", "review_trigger"),
+    (
+        ("11", "Chenopodium pallidicaule plant pathosystem and model pathogen selection.", {}, "PATHOGEN_OR_RESTRICTED_BIOLOGICAL_REVIEW"),
+        ("24", "Plant pathogen screening and biosafety review.", {}, "PATHOGEN_OR_RESTRICTED_BIOLOGICAL_REVIEW"),
+        ("13", "A declared biological relation.", {"pathogen": True}, "PATHOGEN_OR_RESTRICTED_BIOLOGICAL_REVIEW"),
+        ("13", "A declared biological relation.", {"restricted_biological_material": True}, "PATHOGEN_OR_RESTRICTED_BIOLOGICAL_REVIEW"),
+        ("13", "Gene editing in a plant model.", {}, "GENETIC_MODIFICATION_REVIEW"),
+        ("13", "A declared biological relation.", {"genetic_modification": True}, "GENETIC_MODIFICATION_REVIEW"),
+        ("13", "A declared biological relation.", {"animal_subjects": True}, "ANIMAL_USE_REVIEW"),
+        ("34", "A declared veterinary model.", {}, "ANIMAL_USE_REVIEW"),
+        ("27", "A non-human laboratory model.", {}, "CLINICAL_OR_HEALTH_EXPERT_REVIEW"),
+        ("13", "A study in non-human subjects.", {}, "LIFE_SCIENCE_OR_VETERINARY_REVIEW"),
+        ("13", "Non human experiments in a plant model.", {}, "LIFE_SCIENCE_OR_VETERINARY_REVIEW"),
+        ("13", "非人体实验研究。", {}, "LIFE_SCIENCE_OR_VETERINARY_REVIEW"),
+        ("27", "A human experimental cell culture model without recruitment.", {}, "CLINICAL_OR_HEALTH_EXPERT_REVIEW"),
+        ("27", "Commercial human subject-derived organoids in a laboratory model.", {}, "CLINICAL_OR_HEALTH_EXPERT_REVIEW"),
+        ("27", "Patient-derived cells from a commercial repository.", {}, "CLINICAL_OR_HEALTH_EXPERT_REVIEW"),
+    ),
+)
+def test_non_human_biological_review_allows_complete_methodology(
+    discipline_id: str,
+    topic: str,
+    constraints: dict[str, bool],
+    review_trigger: str,
+) -> None:
+    design = StudyTypeTemplateComposer().compose_deterministically(
+        _brief(discipline_id, topic=topic), user_constraints=constraints,
+    )
+
+    assert review_trigger in design["risk_and_human_review"]["review_triggers"]
+    assert design["risk_and_human_review"]["human_review_required"] is True
+    assert design["risk_and_human_review"]["restricted_content"] == []
+    assert design["execution_policy"]["methodology_detail_level"] == "FULL_METHODOLOGY_PLAN"
+    assert design["execution_policy"]["methodology_detail_allowed"] is True
+    assert design["execution_policy"]["mode"] == "DESIGN_ONLY"
+    assert design["methodology_completeness"]["status"] == "COMPLETE_WITH_ASSUMPTIONS"
+    assert design["validation_report"]["status"] == "READY_FOR_HUMAN_REVIEW"
+    assert len(design["protocol_plan"]["steps"]) >= 5
+    assert validate_experiment_design(design) == []
+
+
+def test_non_human_biological_llm_methodology_is_not_restored_to_baseline() -> None:
+    brief = _brief("24", topic="Chenopodium pallidicaule model pathogen comparison.")
+    model = {"model": "Prespecified model for independent plant observations."}
+    steps = [{"step_id": f"S{index}", "action": f"Record prespecified design stage {index}."} for index in range(1, 6)]
+
+    def llm_call(prompt, **_kwargs):
+        assert '"level": "FULL_METHODOLOGY_PLAN"' in prompt
+        return {"analysis_plan": {"model_specification": model}, "protocol_plan": {"steps": steps}}
+
+    design = StudyTypeTemplateComposer().compose(brief, llm_call=llm_call)
+
+    assert design["analysis_plan"]["model_specification"]["model"] == model["model"]
+    assert design["protocol_plan"]["steps"] == steps
+    assert validate_experiment_design(design) == []
 
 
 @pytest.mark.parametrize(
     ("discipline_id", "constraints", "review_trigger"),
     (
-        ("13", {"pathogen": True}, "PATHOGEN_OR_RESTRICTED_BIOLOGICAL_REVIEW"),
         ("16", {"hazardous_materials": True}, "HAZARDOUS_MATERIAL_REVIEW"),
         ("17", {"human_participants": True}, "HUMAN_PARTICIPANT_REVIEW"),
+        ("13", {"pathogen": True, "human_participants": True}, "HUMAN_PARTICIPANT_REVIEW"),
+        ("24", {"genetic_modification": True, "hazardous_materials": True}, "HAZARDOUS_MATERIAL_REVIEW"),
+        ("13", {"animal_subjects": True, "high_energy": True}, "HIGH_ENERGY_OR_PRESSURE_REVIEW"),
     ),
 )
 def test_extreme_risk_constraints_restrict_methodology_detail(
@@ -940,6 +995,27 @@ def test_extreme_risk_constraints_restrict_methodology_detail(
     assert review_trigger in design["risk_and_human_review"]["review_triggers"]
     assert design["execution_policy"]["methodology_detail_level"] == "RESTRICTED_HIGH_RISK_PLAN"
     assert design["methodology_completeness"]["status"] == "RESTRICTED_PLAN"
+    assert design["validation_report"]["status"] == "BLOCKED_BY_RISK_REVIEW"
+
+
+@pytest.mark.parametrize(
+    ("discipline_id", "topic"),
+    (
+        ("13", "Study in human participants."),
+        ("13", "Study in human subjects."),
+        ("13", "A human experiment."),
+        ("13", "Clinical outcome in a patient population."),
+        ("13", "人体实验研究。"),
+        ("27", "Randomized placebo-controlled drug intervention in healthy adult volunteers."),
+        ("27", "招募健康志愿者进行药物干预试验。"),
+        ("13", "开展受试者干预研究。"),
+    ),
+)
+def test_human_participant_text_still_restricts_biological_methodology(discipline_id: str, topic: str) -> None:
+    design = StudyTypeTemplateComposer().compose_deterministically(_brief(discipline_id, topic=topic))
+
+    assert "HUMAN_PARTICIPANT_REVIEW" in design["risk_and_human_review"]["review_triggers"]
+    assert design["execution_policy"]["methodology_detail_level"] == "RESTRICTED_HIGH_RISK_PLAN"
     assert design["validation_report"]["status"] == "BLOCKED_BY_RISK_REVIEW"
 
 

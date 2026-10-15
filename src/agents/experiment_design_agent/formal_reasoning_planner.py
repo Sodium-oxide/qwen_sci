@@ -6,17 +6,21 @@ import re
 from collections.abc import Callable, Mapping
 from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
-from threading import Lock
 from typing import Any
 
-from .formal_contracts import DEFINITION_TEXT_CONTRACT
+from .formal_contracts import DEFINITION_TEXT_CONTRACT, PROPOSAL_STATUSES
 from .formal_dependency import expression_variable_ids, log_symbol_diagnostics, target_dependencies, target_subgraph
 from .formal_expression import EXPRESSION_CONTRACT
+from .cache import ExperimentDesignCache
+from .formal_object_registry import (
+    OBJECT_PROMPT, build_registry, commit_group_delta, project_group_context,
+    registry_cache_context, repair_dependency_cycles,
+)
 from .formal_reconciliation import repair_plan_symbol_conflicts
 from .formal_skeleton_repair import normalize_skeleton_target_fields, repair_skeleton_records, skeleton_output_contract
 from .formal_skeleton_batches import (
     build_skeleton_batches, compact_skeleton_payload, dependency_batch,
-    namespace_skeleton_response, record_index,
+    record_index,
 )
 from .llm_json import call_required_json_with_logging, json_prompt_payload, validation_summary as _validation_summary
 from .reasoning_validation import validate_formal_reasoning_plan
@@ -132,6 +136,9 @@ output_contract.target_examples as the record shape. statement, scope and conclu
 are explicit text; premises and required_obligation_ids are arrays of declared IDs.
 quantifiers is an array of {symbol, sort, quantifier: forall|exists|parameter} with optional
 native declaration expressions for matrices, functions, arrays and other backend types.
+Use output_contract.target_examples.assumption for predicate_expression and declarations;
+use the paired lemma and proof_obligation examples for required_obligation_ids and target_id.
+Follow output_contract.expression_language.structure_rules for every expression node.
 domain_expression and conclusion_expression use output_contract.expression_language or null. Missing
 encodings must be null with a precise unknown_item, while all keys remain present.
 Never put required fields only inside statement or an undocumented nested object.
@@ -158,7 +165,10 @@ patches: [{collection, record_id, fields: {field_name: corrected_value}}]. Retur
 the requested records and fields in repair_targets. Keep existing IDs and all accepted
 fields unchanged. Do not regenerate the skeleton, accepted targets, proofs or definitions.
 Complete missing fields from the original target statement and supplied scientific
-context. Follow output_contract and its open mathematical AST language. Premises must reference
+context. Follow output_contract and its open mathematical AST language, including structure_rules
+and the assumption/target/obligation examples. field_diagnostics gives the failing node_path,
+error_code and expected shape; correct the identified node rather than repeating the invalid AST.
+Premises must reference
 declared record IDs. Declare local quantified symbols explicitly with their supported
 sort, without requiring new global definitions. Symbol spelling mismatches are advisory.
 Use only these status values: assumptions use candidate_formalization, user_declared,
@@ -166,12 +176,22 @@ needs_human_input or unresolved; propositions and lemmas use candidate_formaliza
 unresolved; proof obligations use unresolved or needs_human_input. The plan status is
 unverified, requires_human_review or not_applicable, and forward_derivation status is
 unverified, unresolved or not_applicable.
-For missing fields, propose the strongest structurally valid candidate supported by the
-statement and context, even when its scientific interpretation still needs human confirmation.
+Use mathematical knowledge to complete conditions and expressions from the statement and context;
+evidence is reference material, not a prerequisite for mathematical completion.
+Repair invalid reference IDs using invalid_references, valid_obligation_ids and record_catalog.
+An obligation reference must point to a proof_obligation whose target_id is this target's ID.
+Replace or remove absent, wrongly typed or misassociated references; keep valid dependencies
+and valid obligations. Related target-reference and obligation-association patches are applied
+and validated together. Use only requested records and fields, including related repair targets.
 Use explicit symbolic predicates or restricted AST nodes for unresolved concepts instead of
 silently claiming that a condition is true. Do not invent citations, measured values or proof
 claims. The system adopts structurally valid candidates, retains the original values, records
-the before/after difference, and marks the candidate for human review. Do not replace valid
+the before/after difference, and continues with proof generation and verification.
+If executable encoding cannot be completed, retain the mathematical text and return null
+with an unknown_items entry of category encoding_gap and a precise reason. Do not conflate
+missing encoding with scientific error. Only a concrete semantic conflict or decision requiring
+the user should use category semantic_conflict or needs_user_decision with an explicit reason.
+Do not replace valid
 fields or introduce new records. Do not include proof steps.
 INPUT_JSON:
 """
@@ -208,7 +228,24 @@ user_declared. A relation must include relation_id, statement, expression_latex,
 formal_expression, scope, origin, source_refs, conditions, condition_expressions,
 selection_reason, status, depends_on, variable_references and symbol_references.
 Preserve array fields as arrays.
-Every proof step is proposed or unverified and may use only declared assumptions,
+Follow INPUT_JSON.output_contract for all supporting records and proof attempts,
+including during targeted_repair. Every auxiliary lemma requires lemma_id, statement,
+scope, premises, conclusion, quantifiers, domain_expression, conclusion_expression,
+required_obligation_ids and status. Keep all these keys even when a list is empty;
+use null plus an encoding-gap diagnostic for an expression that cannot be encoded.
+Lemma status uses the same candidate statuses as model relations. Register each
+required obligation in proof_obligations with target_id equal to that lemma_id.
+proof_attempts is an array of objects, each with attempt_id, target_id, steps and
+final_step_id. steps must be an ordered array of objects nested inside its attempt,
+never a string, a mapping, or a sibling field of the target_result. Each step requires
+step_id, premises (an array of string IDs), derived_statement, rule_or_lemma and
+status. derived_expression is optional; when supplied it uses formal_expression_v2.
+final_step_id must name a step in that same attempt. Attempt target_id must refer to
+an existing target or an auxiliary lemma declared in this response. Step IDs must
+be globally unique and distinct from derivation_steps IDs; do not duplicate the same
+step in both arrays. The examples illustrate structure; use the actual input IDs and
+mathematics, without copying example records into your answer.
+Every proof step is proposed, unverified or needs_human_input and may use only declared assumptions,
 definitions, propositions, lemmas, proof obligations, or earlier steps. When a step
 can be checked locally, include derived_expression in formal_expression_v2 and use
 any appropriate mathematical rule or lemma. The local checker recognizes
@@ -248,6 +285,52 @@ FORMAL_REASONING_TARGET_PROMPT = FORMAL_REASONING_TARGET_PROMPT.replace(
     "INPUT_JSON:\n", DEFINITION_TEXT_CONTRACT + "\nINPUT_JSON:\n",
 )
 
+
+def target_proof_output_contract():
+    contract = skeleton_output_contract()
+    attempts = []
+    for target_id in ("L1", "P1"):
+        attempts.append({
+            "attempt_id": f"PA_{target_id}_1", "target_id": target_id,
+            "steps": [
+                {"step_id": f"S_{target_id}_1", "premises": ["A1"],
+                 "derived_statement": "x > 0", "rule_or_lemma": "assumption_reuse",
+                 "derived_expression": {"op": "gt", "args": [{"symbol": "x"}, {"number": "0"}]},
+                 "status": "proposed"},
+                {"step_id": f"S_{target_id}_2", "premises": [f"S_{target_id}_1"],
+                 "derived_statement": "x >= 0", "rule_or_lemma": "order_weakening",
+                 "derived_expression": {"op": "ge", "args": [{"symbol": "x"}, {"number": "0"}]},
+                 "status": "unverified"},
+            ],
+            "final_step_id": f"S_{target_id}_2",
+        })
+    contract.update({
+        "required_lemma_fields": ["lemma_id", *contract["required_target_fields"], "status"],
+        "lemma_status_values": sorted(PROPOSAL_STATUSES),
+        "required_attempt_fields": ["attempt_id", "target_id", "steps", "final_step_id"],
+        "required_step_fields": ["step_id", "premises", "derived_statement", "rule_or_lemma", "status"],
+        "step_status_values": ["proposed", "unverified", "needs_human_input"],
+        "proof_reference_rules": {
+            "premises": "Declared formal record IDs or earlier steps in the same attempt; never the target, "
+                        "future steps, circular premises or unresolved obligations.",
+            "final_step_id": "Must reference a step in the same attempt.",
+            "step_id": "Globally unique; do not repeat proof steps in derivation_steps.",
+            "rules": "Any mathematical rule or lemma is allowed as a candidate, subject to later verification.",
+        },
+        "response_example": {
+            "target_results": [{
+                "target_id": "P1", "definitions": [], "model_relations": [],
+                "assumptions": [deepcopy(contract["target_examples"]["assumption"])],
+                "lemmas": [deepcopy(contract["target_examples"]["lemma"])],
+                "proof_obligations": [deepcopy(contract["target_examples"]["proof_obligation"])],
+                "proof_attempts": attempts, "derivation_steps": [], "status": "unverified",
+            }],
+            "semantic_diagnostics": [], "unknown_items": [],
+        },
+    })
+    return contract
+
+
 _DEFINITION_SCHEMA_FIELDS = frozenset(
     {
         "definition_id",
@@ -271,15 +354,20 @@ def _compact_formal_inputs(formal_inputs: Mapping[str, Any], *, max_unknown_item
         "origin", "source_refs", "selection_reason", "definition_status",
         "verification_readiness", "variable_references", "symbol_references", "object_kind",
         "dependency_health", "construction_status",
+        "owner_group", "object_bindings", "scope",
     )
     relation_fields = (
         "relation_id", "statement", "expression_latex", "formal_expression", "depends_on",
         "symbol_references", "variable_references", "status", "origin", "source_refs",
         "scope", "conditions", "condition_expressions", "selection_reason",
         "dependency_health", "construction_status",
+        "owner_group", "object_bindings",
     )
     def compact_record(record: Mapping[str, Any], fields: tuple[str, ...]) -> dict[str, Any]:
         compacted = {key: deepcopy(record.get(key)) for key in fields}
+        for field in ("machine_encoding_issues", "format_diagnostics"):
+            if field in record:
+                compacted[field] = deepcopy(record[field])
         for reference in compacted.get("source_refs", []) or []:
             if isinstance(reference, Mapping) and isinstance(reference.get("quote"), str):
                 reference["quote"] = reference["quote"][:800]
@@ -303,6 +391,7 @@ def _compact_formal_inputs(formal_inputs: Mapping[str, Any], *, max_unknown_item
             if isinstance(record, Mapping)
         ],
         "unknown_items": deepcopy(unknown_items[:max_unknown_items]),
+        "object_registry": deepcopy(formal_inputs.get("object_registry") or build_registry(formal_inputs)),
     }
 
 
@@ -416,7 +505,7 @@ def _skeleton_formal_inputs(formal_inputs: Mapping[str, Any]) -> dict[str, Any]:
             for key in (
                 "definition_id", "symbol", "object_kind", "depends_on", "variable_references",
                 "definition_status", "verification_readiness",
-                "dependency_health",
+                "dependency_health", "object_bindings",
             )
         }
         if record.get("verification_readiness") == "encoded":
@@ -445,7 +534,7 @@ def _skeleton_formal_inputs(formal_inputs: Mapping[str, Any]) -> dict[str, Any]:
         summary = {
             key: deepcopy(record.get(key))
             for key in (
-                "relation_id", "depends_on", "variable_references", "status",
+                "relation_id", "depends_on", "variable_references", "status", "object_bindings",
             )
         }
         if record.get("status") == "candidate_formalization":
@@ -460,6 +549,9 @@ def _skeleton_formal_inputs(formal_inputs: Mapping[str, Any]) -> dict[str, Any]:
             summary["statement"] = str(record.get("statement") or "")[:80]
             summary["condition_count"] = len(record.get("conditions", []))
         relations.append(summary)
+        for field in ("machine_encoding_issues", "format_diagnostics"):
+            if field in record:
+                summary[field] = deepcopy(record[field])
 
     return {
         "definitions": definitions,
@@ -1384,67 +1476,18 @@ class FormalReasoningPlanner:
                 FormalReasoningPlanner._redirect_supporting_dependencies(item, redirects)
 
     @staticmethod
-    def _merge_supporting_records(plan, response):
-        redirects = {}
-        for collection, identifier in (
-            ("definitions", "definition_id"), ("model_relations", "relation_id"),
-            ("assumptions", "assumption_id"), ("lemmas", "lemma_id"),
-        ):
-            additions = response.get(collection, [])
-            if not isinstance(additions, list):
-                archive_formal_record(plan, collection, additions, "Malformed supporting record collection.")
-                continue
-            existing = plan.setdefault(collection, [])
-            indexed = {record.get(identifier): record for record in existing if isinstance(record, Mapping)}
-            for record in additions:
-                if not isinstance(record, Mapping) or not isinstance(record.get(identifier), str):
-                    archive_formal_record(plan, collection, record, "Malformed supporting record.")
-                    continue
-                previous = indexed.get(record[identifier])
-                if previous is None:
-                    if collection in {"definitions", "model_relations"}:
-                        comparison_fields = {
-                            "symbol", "statement", "object_kind", "expression_latex", "formal_expression",
-                            "domain", "codomain", "unit", "conditions", "condition_expressions", "depends_on",
-                            "definition_status", "verification_readiness", "status", "origin", "scope",
-                        }
-                        equivalent = next((candidate for candidate in existing if isinstance(candidate, Mapping)
-                                           and all(candidate.get(field) == record.get(field)
-                                                   for field in comparison_fields)), None)
-                        if equivalent is not None:
-                            redirects[record[identifier]] = equivalent[identifier]
-                            for field in ("source_refs", "variable_references"):
-                                for item in record.get(field, []):
-                                    if item not in equivalent.setdefault(field, []):
-                                        equivalent[field].append(deepcopy(item))
-                            continue
-                    added = deepcopy(dict(record))
-                    existing.append(added)
-                    indexed[record[identifier]] = added
-                elif previous != record:
-                    incomplete = (
-                        previous.get("definition_status") == "unresolved"
-                        or previous.get("verification_readiness") in {"blocked", "requires_encoding"}
-                        or previous.get("status") in {"unresolved", "needs_human_input"}
-                    )
-                    if incomplete:
-                        archive_formal_record(plan, f"{collection}.{record[identifier]}", previous,
-                                              "Supporting mathematical candidate completed during proof generation.")
-                        replacement = deepcopy(dict(record))
-                        for field in ("source_refs", "variable_references"):
-                            for item in previous.get(field, []):
-                                if item not in replacement.setdefault(field, []):
-                                    replacement[field].append(deepcopy(item))
-                        previous.clear()
-                        previous.update(replacement)
-                    else:
-                        archive_formal_record(plan, f"{collection}.{record[identifier]}", record,
-                                              "Conflicting supporting candidate retained in archive.")
-        for collection in (
-            "definitions", "model_relations", "assumptions", "lemmas", "propositions",
-            "proof_obligations", "proof_attempts", "forward_derivation",
-        ):
-            FormalReasoningPlanner._redirect_supporting_dependencies(plan.get(collection), redirects)
+    def _merge_supporting_records(plan, response, *, group_id="", llm_call=None, logger=None, brief_id="",
+                                  checkpoint=None, cache_identity=None):
+        merged, rewritten, redirects = commit_group_delta(
+            plan, response, group_id=group_id, llm_call=llm_call, logger=logger, brief_id=brief_id,
+            collections=("definitions", "model_relations", "assumptions", "lemmas"),
+            checkpoint=checkpoint, cache_identity=cache_identity,
+        )
+        plan.clear()
+        plan.update(merged)
+        if isinstance(response, dict):
+            response.clear()
+            response.update(rewritten)
         return redirects
 
     @staticmethod
@@ -1525,11 +1568,14 @@ class FormalReasoningPlanner:
         return groups
 
     @staticmethod
-    def _merge_target_response(plan: dict[str, Any], response: Mapping[str, Any], target_ids: set[str]) -> None:
+    def _merge_target_response(plan: dict[str, Any], response: Mapping[str, Any], target_ids: set[str],
+                               *, group_id="", llm_call=None, logger=None, brief_id="",
+                               checkpoint=None, cache_identity=None) -> None:
         response = deepcopy(dict(response))
         original_lemmas = {record["lemma_id"] for record in plan.get("lemmas", [])}
-        redirects = FormalReasoningPlanner._merge_supporting_records(plan, response)
-        FormalReasoningPlanner._redirect_supporting_dependencies(response, redirects)
+        FormalReasoningPlanner._merge_supporting_records(plan, response, group_id=group_id,
+                                                       llm_call=llm_call, logger=logger, brief_id=brief_id,
+                                                       checkpoint=checkpoint, cache_identity=cache_identity)
         results = response.get("target_results")
         if isinstance(results, list):
             returned_ids = {result.get("target_id") for result in results
@@ -1540,8 +1586,9 @@ class FormalReasoningPlanner:
                 if not isinstance(result, Mapping) or str(result.get("target_id") or "") not in target_ids:
                     continue
                 target_id = str(result["target_id"])
-                redirects = FormalReasoningPlanner._merge_supporting_records(plan, result)
-                FormalReasoningPlanner._redirect_supporting_dependencies(result, redirects)
+                FormalReasoningPlanner._merge_supporting_records(plan, result, group_id=group_id,
+                                                               llm_call=llm_call, logger=logger, brief_id=brief_id,
+                                                               checkpoint=checkpoint, cache_identity=cache_identity)
                 supporting_targets = {target_id} | {
                     record["lemma_id"] for record in plan["lemmas"] if record["lemma_id"] not in original_lemmas
                 }
@@ -1583,24 +1630,42 @@ class FormalReasoningPlanner:
         definition_limit = max(1, min(24, int(planner_settings.get("skeleton_max_definitions_per_group", 24))))
         relation_limit = max(1, int(planner_settings.get("skeleton_max_relations_per_group", 16)))
         batches = build_skeleton_batches(compact_inputs, max_definitions=definition_limit, max_relations=relation_limit)
-        existing_ids = set(record_index(compact_inputs))
         aggregate = {collection: [] for collection in (
             "definitions", "model_relations", "assumptions", "propositions", "lemmas",
             "proof_obligations", "proof_attempts", "global_assumption_ids", "unknown_items", "semantic_diagnostics",
         )}
+        aggregate["object_registry"] = deepcopy(compact_inputs.get("object_registry", {}))
+        for collection in ("definitions", "model_relations"):
+            aggregate[collection] = [
+                deepcopy(aggregate["object_registry"].get("objects", {}).get(
+                    record.get("definition_id", record.get("relation_id")), {}).get("record", record))
+                for record in compact_inputs[collection]
+            ]
+        aggregate["object_registry"] = build_registry(aggregate)
+        cache = ExperimentDesignCache(planner_settings.get("checkpoint", {"enabled": False}))
         audit = []
-        aggregate_lock = Lock()
         options = {"max_retries": 0}
 
-        def run_batch(batch, group_id, *, recovery=False):
+        def run_batch(batch, group_id, registry_snapshot, *, recovery=False):
             context, variables = _target_context_payload(reasoning_context, compact_variables, batch)
+            object_context = project_group_context(registry_snapshot, batch["root_ids"], group_id=group_id)
+            detailed_ids = {record.get("definition_id", record.get("relation_id"))
+                            for collection in ("definitions", "model_relations") for record in batch[collection]}
+            object_context["full_records"] = [record for record in object_context["full_records"]
+                                              if record.get("definition_id", record.get("relation_id")) in detailed_ids]
+            projected = _skeleton_formal_inputs({
+                "definitions": [record for record in object_context["full_records"] if "definition_id" in record],
+                "model_relations": [record for record in object_context["full_records"] if "relation_id" in record],
+                "unknown_items": [],
+            })
+            object_context["full_records"] = projected["definitions"] + projected["model_relations"]
             payload = {
-                "research_brief": _target_research_brief(research_brief),
-                "reasoning_context": context,
+                "research_brief": _target_research_brief(research_brief), "reasoning_context": context,
                 "variable_claim_model": _skeleton_variable_claim_model(variables),
                 "resolved_inputs": _skeleton_formal_inputs(batch),
                 "root_ids": batch["root_ids"], "id_prefix": f"{group_id}_",
                 "external_dependencies": batch["external_dependencies"],
+                "mathematical_object_context": object_context,
                 "omitted_context": {
                     "nonlocal_definition_count": len(compact_inputs["definitions"]) - len(batch["definitions"]),
                     "nonlocal_relation_count": len(compact_inputs["model_relations"]) - len(batch["model_relations"]),
@@ -1613,17 +1678,22 @@ class FormalReasoningPlanner:
                 "output_contract": skeleton_output_contract(),
             }
             retry_count = 0 if recovery else max(0, min(1, int(planner_settings.get("skeleton_max_compact_retries", 1))))
-            error = None
-            previous_prompt = None
+            error, previous_prompt, entries = None, None, []
             for attempt in range(retry_count + 1):
                 request = compact_skeleton_payload(payload, aggressive=bool(attempt or recovery))
-                prompt = FORMAL_REASONING_SKELETON_PROMPT + json_prompt_payload(request)
+                prefix = FORMAL_REASONING_SKELETON_PROMPT.replace("INPUT_JSON:\n", OBJECT_PROMPT + "\nINPUT_JSON:\n")
+                prompt = prefix + json_prompt_payload(request)
                 if previous_prompt == prompt:
                     break
+                cache_request = deepcopy(request)
+                cache_request["mathematical_object_context"] = registry_cache_context(object_context)
+                cache_request.pop("omitted_context", None)
+                identity = {"version": 1, "prompt": prefix + json_prompt_payload(cache_request),
+                            "llm": planner_settings.get("cache_identity", {})}
                 entry = {"group_id": group_id, "root_ids": batch["root_ids"], "attempt": attempt,
-                         "recovery": recovery, "prompt_chars": len(prompt), "status": "RUNNING"}
-                with aggregate_lock:
-                    audit.append(entry)
+                         "recovery": recovery, "prompt_chars": len(prompt), "status": "RUNNING",
+                         "read_versions": object_context["read_versions"]}
+                entries.append(entry)
                 if logger is not None:
                     logger.event("formal_reasoning_planner", "input_profiled", status="PROFILED", brief_id=brief_id,
                                  phase="skeleton", skeleton_group_id=group_id, skeleton_group_count=len(batches),
@@ -1633,33 +1703,30 @@ class FormalReasoningPlanner:
                                  evidence_card_count=len(request["evidence_bundle"]["evidence_cards"]),
                                  external_dependency_count=len(batch["external_dependencies"]), **options)
                 try:
-                    response = call_required_json_with_logging(
-                        llm_call, prompt, stage="formal_reasoning_planner",
-                        request_kind=f"v2_skeleton_group_{group_id}_attempt_{attempt}",
-                        logger=logger, brief_id=brief_id, request_options=options,
-                    )
+                    response = cache.read("skeleton_group_responses", identity)
+                    cache_hit = response is not None
+                    if response is None:
+                        if cache.offline:
+                            raise ValueError("skeleton_group_checkpoint_miss")
+                        response = call_required_json_with_logging(
+                            llm_call, prompt, stage="formal_reasoning_planner",
+                            request_kind=f"v2_skeleton_group_{group_id}_attempt_{attempt}",
+                            logger=logger, brief_id=brief_id, request_options=options,
+                        )
                     response, wrappers = unwrap_formal_plan(response)
-                    if len(batches) > 1 or recovery or group_id != "SG1":
-                        response = namespace_skeleton_response(response, group_id, existing_ids)
-                    for collection in tuple(aggregate):
-                        values = response.get(collection, [])
-                        if isinstance(values, Mapping):
-                            identifier = {"assumptions": "assumption_id", "propositions": "proposition_id",
-                                          "lemmas": "lemma_id", "proof_obligations": "obligation_id",
-                                          "definitions": "definition_id", "model_relations": "relation_id"}.get(collection)
-                            values = [dict(values)] if identifier in values else list(values.values())
-                        if isinstance(values, list):
-                            with aggregate_lock:
-                                aggregate[collection].extend(deepcopy(values))
-                        elif values:
-                            with aggregate_lock:
-                                aggregate["unknown_items"].append({"field_path": f"skeleton_groups.{group_id}.{collection}",
-                                                                   "reason": "Malformed skeleton collection.", "status": "needs_human_input"})
-                    entry.update(status="COMPLETED", wrapper_fields=wrappers)
+                    if not cache_hit:
+                        try:
+                            cache.write("skeleton_group_responses", identity, response)
+                        except (OSError, TypeError, ValueError):
+                            if logger is not None:
+                                logger.event("formal_reasoning_planner", "checkpoint_warning", level="WARNING",
+                                             status="WARNING", brief_id=brief_id, skeleton_group_id=group_id)
+                    entry.update(status="COMPLETED", wrapper_fields=wrappers, cache_hit=cache_hit)
                     if logger is not None:
                         logger.event("formal_reasoning_planner", "skeleton_group_completed", status="COMPLETED",
-                                     brief_id=brief_id, skeleton_group_id=group_id, attempt=attempt, recovery=recovery)
-                    return
+                                     brief_id=brief_id, skeleton_group_id=group_id, attempt=attempt,
+                                     recovery=recovery, cache_hit=cache_hit)
+                    return [(group_id, response, entries, identity)]
                 except Exception as failure:
                     error = failure
                     entry.update(status="FAILED", error=f"{type(failure).__name__}: {failure}")
@@ -1669,25 +1736,57 @@ class FormalReasoningPlanner:
                                      error_detail=str(error), disposition="compact_retry" if attempt < retry_count else "group_recovery")
                     previous_prompt = prompt
             if not recovery and len(batch["root_ids"]) > 1:
-                split_batch(batch, group_id, recovery=True)
-                return
-            with aggregate_lock:
-                aggregate["unknown_items"].append({
-                    "field_path": f"skeleton_groups.{group_id}", "root_ids": batch["root_ids"],
-                    "reason": f"Skeleton group retained as upstream definition draft: {type(error).__name__}: {error}",
-                    "status": "needs_human_input", "disposition": "kept_draft",
-                })
-
-        def split_batch(batch, group_id, *, recovery):
-            midpoint = max(1, len(batch["root_ids"]) // 2)
-            for position, roots in enumerate((batch["root_ids"][:midpoint], batch["root_ids"][midpoint:]), 1):
-                if roots:
-                    child = dependency_batch(compact_inputs, roots, max_definitions=definition_limit, max_relations=relation_limit)
-                    run_batch(child, f"{group_id}_{position}", recovery=recovery)
+                midpoint = max(1, len(batch["root_ids"]) // 2)
+                results = []
+                for position, roots in enumerate((batch["root_ids"][:midpoint], batch["root_ids"][midpoint:]), 1):
+                    if roots:
+                        child = dependency_batch(compact_inputs, roots, max_definitions=definition_limit, max_relations=relation_limit)
+                        results.extend(run_batch(child, f"{group_id}_{position}", registry_snapshot, recovery=True))
+                if results:
+                    results[0][2][:0] = entries
+                return results
+            return [(group_id, {"unknown_items": [{
+                "field_path": f"skeleton_groups.{group_id}", "root_ids": batch["root_ids"],
+                "reason": f"Skeleton retained as upstream definition draft: {type(error).__name__}: {error}",
+                "status": "needs_human_input", "disposition": "kept_draft",
+            }]}, entries, None)]
 
         skeleton_workers = max(1, min(3, int(planner_settings.get("skeleton_parallel_workers", planner_settings.get("parallel_workers", 3)))))
         with ThreadPoolExecutor(max_workers=min(skeleton_workers, len(batches))) as executor:
-            list(executor.map(lambda item: run_batch(item[1], f"SG{item[0]}"), enumerate(batches, 1)))
+            for wave_start in range(0, len(batches), skeleton_workers):
+                snapshot = deepcopy(aggregate["object_registry"])
+                requests = list(enumerate(batches[wave_start:wave_start + skeleton_workers], wave_start + 1))
+                results = executor.map(lambda item: run_batch(item[1], f"SG{item[0]}", snapshot), requests)
+                for responses in results:
+                    for group_id, response, entries, identity in responses:
+                        aggregate, delta, redirects = commit_group_delta(
+                            aggregate, response, group_id=group_id, llm_call=llm_call,
+                            logger=logger, brief_id=brief_id,
+                            namespace_new_ids=len(batches) > 1 or "_" in group_id,
+                            checkpoint=planner_settings.get("checkpoint"), cache_identity=planner_settings.get("cache_identity"),
+                        )
+                        target_ids = {_target_id(target) for target in aggregate["propositions"] + aggregate["lemmas"]}
+                        self._merge_protected(aggregate, aggregate.setdefault("proof_attempts", []),
+                                              delta.get("proof_attempts"), "attempt_id", target_ids)
+                        derivation = delta.get("forward_derivation")
+                        if isinstance(derivation, Mapping):
+                            forward = aggregate.setdefault("forward_derivation", {"steps": []})
+                            self._merge_protected(aggregate, forward.setdefault("steps", []),
+                                                  derivation.get("steps"), "step_id", target_ids)
+                            for field in ("target_proposition_id", "final_conclusion_step", "final_conclusion", "status"):
+                                if field in derivation and (len(batches) == 1 or field not in forward):
+                                    forward[field] = deepcopy(derivation[field])
+                        audit.extend(entries)
+                        if identity is not None:
+                            try:
+                                cache.write("skeleton_group_commits", identity, {
+                                    "delta": delta, "id_redirects": redirects,
+                                    "read_versions": entries[-1]["read_versions"],
+                                })
+                            except (OSError, TypeError, ValueError):
+                                if logger is not None:
+                                    logger.event("formal_reasoning_planner", "checkpoint_warning", level="WARNING",
+                                                 status="WARNING", brief_id=brief_id, skeleton_group_id=group_id)
         aggregate["skeleton_batch_audit"] = audit
         repair_context = {"research_brief": _target_research_brief(research_brief),
                           "proof_policy": {"evidence_role": "reference", "allow_mathematical_completion": True}}
@@ -1747,10 +1846,6 @@ class FormalReasoningPlanner:
                 if collection in plan:
                     archive_formal_record(plan, collection, plan[collection], "Malformed skeleton collection.")
                 plan[collection] = []
-        supporting = {collection: plan.get(collection, []) for collection in ("definitions", "model_relations")}
-        plan["definitions"] = deepcopy(formal_inputs["definitions"])
-        plan["model_relations"] = deepcopy(formal_inputs["model_relations"])
-        self._merge_supporting_records(plan, supporting)
         derivation = plan.get("forward_derivation")
         if derivation is not None and not isinstance(derivation, Mapping):
             archive_formal_record(plan, "forward_derivation", derivation, "Malformed derivation envelope.")
@@ -1782,12 +1877,17 @@ class FormalReasoningPlanner:
                                 llm_call=llm_call, logger=logger, brief_id=brief_id)
         plan = repair_plan_symbol_conflicts(plan, variable_claim_model, llm_call=llm_call,
                                            logger=logger, brief_id=brief_id)
+        if int(planner_settings.get("max_cycle_repairs", 1)) > 0:
+            plan = repair_dependency_cycles(plan, llm_call=llm_call, logger=logger, brief_id=brief_id,
+                                            max_components=min(3, int(planner_settings.get("max_cycle_repairs", 1))),
+                                            checkpoint=planner_settings.get("checkpoint"), cache_identity=planner_settings.get("cache_identity"))
         plan = recover_formal_plan(plan, variable_claim_model, logger=logger, brief_id=brief_id)
         if partial_result is not None:
             partial_result.update(deepcopy(plan))
         skeleton_status = plan["status"]
 
         target_groups = self._target_groups(plan, max_targets)
+        target_cache = ExperimentDesignCache(planner_settings.get("checkpoint", {"enabled": False}))
         parallel_workers = max(1, min(3, int(planner_settings.get("parallel_workers", 3))))
         target_to_group = {
             _target_id(target): group_number
@@ -1873,7 +1973,16 @@ class FormalReasoningPlanner:
                 "variable_claim_model": target_variables,
                 "skeleton": dependencies,
                 "evidence_bundle": target_evidence,
+                "mathematical_object_context": project_group_context(
+                    source_plan.get("object_registry") or build_registry(source_plan),
+                    sorted(target_ids | {record.get(identifier) for collection, identifier in (
+                        ("definitions", "definition_id"), ("model_relations", "relation_id"),
+                        ("assumptions", "assumption_id"), ("lemmas", "lemma_id"), ("propositions", "proposition_id"),
+                        ("proof_obligations", "obligation_id")) for record in dependencies[collection]
+                        if isinstance(record.get(identifier), str)}), group_id=f"TP{group_number}",
+                ),
                 "target_group_number": group_number,
+                "output_contract": target_proof_output_contract(),
                 "targeted_repair": {
                     "round": repair_round, "target_ids": sorted(target_ids),
                     "diagnostics": [deepcopy(item) for item in source_plan["unknown_items"]
@@ -1901,7 +2010,12 @@ class FormalReasoningPlanner:
                     "proof_rule_policy": "Unrestricted candidate rules; verification is applied after generation.",
                 },
             }
-            target_prompt = FORMAL_REASONING_TARGET_PROMPT + json_prompt_payload(target_payload)
+            target_prefix = FORMAL_REASONING_TARGET_PROMPT.replace("INPUT_JSON:\n", OBJECT_PROMPT + "\nINPUT_JSON:\n")
+            target_prompt = target_prefix + json_prompt_payload(target_payload)
+            cache_payload = deepcopy(target_payload)
+            cache_payload["mathematical_object_context"] = registry_cache_context(target_payload["mathematical_object_context"])
+            identity = {"version": 1, "prompt": target_prefix + json_prompt_payload(cache_payload),
+                        "llm": planner_settings.get("cache_identity", {})}
             if logger is not None:
                 logger.event(
                     "formal_reasoning_planner", "input_profiled", status="PROFILED", brief_id=brief_id,
@@ -1912,14 +2026,24 @@ class FormalReasoningPlanner:
                     evidence_card_count=len(target_evidence.get("evidence_cards", [])),
                 )
             try:
-                response = call_required_json_with_logging(
-                    llm_call,
-                    target_prompt,
-                    stage="formal_reasoning_planner", request_kind=f"v2_target_proof_group_{group_number}",
-                    logger=logger, brief_id=brief_id,
-                )
+                response = target_cache.read("target_group_responses", identity)
+                if response is None:
+                    if target_cache.offline:
+                        raise ValueError("target_group_checkpoint_miss")
+                    response = call_required_json_with_logging(
+                        llm_call, target_prompt, stage="formal_reasoning_planner",
+                        request_kind=f"v2_target_proof_group_{group_number}", logger=logger, brief_id=brief_id,
+                    )
+                    try:
+                        target_cache.write("target_group_responses", identity, response)
+                    except (OSError, TypeError, ValueError):
+                        if logger is not None:
+                            logger.event("formal_reasoning_planner", "checkpoint_warning", level="WARNING",
+                                         status="WARNING", brief_id=brief_id, target_group_number=group_number)
                 if not isinstance(response, Mapping):
                     raise ValueError(f"formal_v2_target_{group_number}_not_object")
+                response = deepcopy(dict(response))
+                response["object_registry_consumed_versions"] = target_payload["mathematical_object_context"]["read_versions"]
                 return target_ids, response, None
             except Exception as error:
                 return target_ids, None, error
@@ -1957,12 +2081,42 @@ class FormalReasoningPlanner:
                         if error is None:
                             try:
                                 revised_plan = deepcopy(plan)
-                                self._merge_target_response(revised_plan, response, target_ids)
+                                self._merge_target_response(revised_plan, response, target_ids,
+                                                            group_id=f"TP{group_number}", llm_call=llm_call,
+                                                            logger=logger, brief_id=brief_id,
+                                                            checkpoint=planner_settings.get("checkpoint"),
+                                                            cache_identity=planner_settings.get("cache_identity"))
                                 revised_plan = repair_plan_symbol_conflicts(
                                     revised_plan, variable_claim_model, llm_call=llm_call,
                                     logger=logger, brief_id=brief_id,
                                 )
                                 plan = recover_formal_plan(revised_plan, variable_claim_model, logger=logger, brief_id=brief_id)
+                                group_audits = [entry for entry in plan.get("object_registry_audit", [])
+                                                if entry.get("group_id") == f"TP{group_number}"]
+                                written_ids = {change.get("record_id") for entry in group_audits
+                                               for change in entry.get("changes", [])
+                                               if change.get("action") in {"add", "complete"}}
+                                try:
+                                    target_cache.write("target_group_commits", {
+                                        "version": 1, "target_ids": sorted(target_ids), "response": response,
+                                        "llm": planner_settings.get("cache_identity", {}),
+                                    }, {
+                                        "read_versions": response.get("object_registry_consumed_versions", {}),
+                                        "id_redirects": {source: destination for entry in group_audits
+                                                         for source, destination in entry.get("id_redirects", {}).items()},
+                                        "delta": {
+                                            collection: [record for record in plan.get(collection, [])
+                                                         if record.get(identifier) in written_ids]
+                                            for collection, identifier in (("definitions", "definition_id"),
+                                                ("model_relations", "relation_id"), ("assumptions", "assumption_id"), ("lemmas", "lemma_id"))
+                                        },
+                                        "proof_attempts": [attempt for attempt in plan["proof_attempts"]
+                                                           if attempt.get("target_id") in target_ids | written_ids],
+                                    })
+                                except (OSError, TypeError, ValueError):
+                                    if logger is not None:
+                                        logger.event("formal_reasoning_planner", "checkpoint_warning", level="WARNING",
+                                                     status="WARNING", brief_id=brief_id, target_group_number=group_number)
                                 successful_ids = {attempt.get("target_id") for attempt in plan["proof_attempts"]} & target_ids
                                 successful_paths = {f"proof_attempts.{identifier}" for identifier in successful_ids}
                                 plan["unknown_items"] = [item for item in plan["unknown_items"] if not (
@@ -2029,6 +2183,11 @@ class FormalReasoningPlanner:
                 from .formal_contracts import unresolved_plan_from_definitions
 
                 payload = partial_result or unresolved_plan_from_definitions(formal_inputs, f"{type(error).__name__}: {error}")
+                if logger is not None:
+                    logger.event("formal_reasoning_planner", "warning", level="WARNING", status="WARNING",
+                                 brief_id=effective_brief_id, error_code=type(error).__name__,
+                                 error_detail=str(error), disposition="kept_previous_plan",
+                                 requires_human_review=True)
                 construction_warning(payload, "skeleton", "generation", f"{type(error).__name__}: {error}", logger=logger, brief_id=effective_brief_id)
             for collection in ("definitions", "model_relations"):
                 payload.setdefault(collection, deepcopy(formal_inputs.get(collection, [])))

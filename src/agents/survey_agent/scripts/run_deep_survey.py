@@ -33,6 +33,7 @@ from modules.code_collector import CodeCollector, CodeAnalyzer
 from modules.code_report_generator import CodeReportGenerator
 
 from utils.file_utils import write_domain_header, write_topic_header, write_result, write_domain_result, save_analysis_artifacts
+from src.pipeline.science_run import atomic_write_json
 
 logger = get_logger("Deep Survey")
 
@@ -45,6 +46,16 @@ def run_pipeline(config, work_collector, database, work_analyzer, survey_generat
     seed_paper_ids = work_collector.collect_seed_papers(config.BasicInfo.topic)
     # seed_paper_ids = work_collector.collect_seed_papers_debug()
     logger.info(f"Collected seed paper IDs: {seed_paper_ids}")
+
+    if not seed_paper_ids:
+        reason = getattr(work_collector, "_candidate_stop_reason", "insufficient_evidence")
+        logger.warning("Survey has no seed papers: reason=%s. Skipping paper-dependent stages.", reason)
+        atomic_write_json(Path(config.BasicInfo.base_dir) / "survey_status.json", {
+            "schema_version": "survey_status_v1", "survey_status": "insufficient_evidence",
+            "topic": config.BasicInfo.topic, "reason": reason, "seed_paper_ids": [],
+            "retrieval_diagnostics": "subhypothesis_retrieval.json",
+        })
+        return {"survey_status": "insufficient_evidence"}, {"survey_status": reason}
 
     # expand seed papers by reference and citation
     logger.info("Expanding seed papers by reference and citation...")

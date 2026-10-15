@@ -1,5 +1,77 @@
 # Mathematical theory implementation
 
+## 全局数学对象管理
+
+`formal_object_registry.py` 为 Resolver、Skeleton 和 Target Proof 提供统一入口：
+`build_registry`、`project_group_context`、`commit_group_delta`、
+`resolve_reference`、`rewrite_live_references`、`inspect_dependency_graph`。
+注册表区分对象的规范 ID 与数学符号，保存单位、条件、作用域、上游变量、
+负责人、版本、历史 ID 和符号别名；来源与科学状态保留在活动记录中。
+注册表不赋予数学结论“已验证”状态，也不要求候选证明逐步引用证据卡。
+
+Resolver 在生成前复用原有 `V → D` 映射预登记主定义，并登记 `owner_group`。
+组调度根据显式变量依赖和跨组 claim 共享情况优先处理公共对象，不包含课题专用物理量。
+各组读取全局简表、本组与依赖详情；LLM 请求仍最多并行 3 个。
+每轮结果由主线程按固定组顺序提交，下一轮读取更新后的注册表。
+Skeleton 保留每组最多 24 个定义，压缩重试和子组恢复的结果同样统一提交。
+已有对象因容量省略详情时标为 `context_only`；确实不存在的对象标为 `missing`。
+新增局部 ID 的名称空间分配具有幂等性，已有规范 ID 持续复用。
+
+组输出兼容旧集合以及可选的增量：
+
+```json
+{
+  "object_delta": {
+    "reused_object_ids": ["D1"],
+    "updated_objects": [],
+    "new_objects": [],
+    "proposed_aliases": [],
+    "dependency_updates": []
+  }
+}
+```
+
+`new_objects`、`updated_objects` 使用 `{collection, record}`；别名建议使用
+`{alias_id, canonical_id, reason}`，依赖补丁使用 `{record_id, depends_on, premises, assumption_ids}`。
+已完成对象的定向更新与未完成对象补齐分别处理；条件或作用域不同的对象可以独立存在。
+不确定的相近对象只向 LLM 提供两个候选及最多 8 个直接消费者，支持合并、保持独立与局部修改。
+证明新增的定义、关系、假设、引理通过相同提交入口，消费者的 ID 绑定和表达式同步改写。
+全局符号变化保护量词、嵌套绑定和证明步骤局部变量，历史审计原文不参与改写。
+
+依赖分为明确声明、已解析别名和推测相关对象。符号或变量关联只用于选择上下文，
+不会直接制造证明前提或构造依赖边。缺失引用保留在草稿和诊断中；循环按强连通分量记录。
+验证快照和修订提示词可包含相关上下文，但可执行验证任务只使用明确绑定的依赖与全局假设。
+相关定义的条件不会自动加入证明约束，其循环状态也不会阻塞无明确依赖的目标。
+计算步骤的局部结果名称与数学对象 ID 分开解析，避免将矩阵计算中的局部 `ref` 当作缺失定义。
+默认在 Skeleton 后尝试一次局部修复（`planner.max_cycle_repairs`，最多 3 个分量）。
+未解决循环继续保留为待研究定义，不作为已成立的证明前提；局部机器验证分别记录依赖就绪状态。
+
+日志按 `raw_group_output`、`identity_unified`、`dependency_recovered` 区分三个时点，
+记录缺失定义、缺失前提、歧义绑定、循环分量和受影响目标。
+Resolver 在字段规范化、跨组过滤和局部 ID 改写之前记录原始响应中的可解析对象与引用；
+补充轮次分别保留原始诊断，缓存重放仍输出这些诊断。紧凑响应中尚未展开的定义
+只在后续规范对象图中统计，不将规范化后的数字冒充原始输出统计。
+`missing_variable_reference_count` 仍只代表变量引用检查，不能表示整个数学依赖图完整。
+
+Resolver 的关系使用 `depends_on` 保存对象 ID，文字前提保存为 `conditions`。
+兼容旧 `premises` 时，引用与已有依赖合并，文字与已有条件合并，原字段存入
+`format_originals`；无法解释的项目保留编码诊断，不静默删除。
+原始图诊断分别统计 `textual_premise_count` 和 `uninterpreted_premise_count`，
+文字条件不冒充缺失对象 ID，未声明的 ID 仍计入缺失依赖。
+Resolver 组缓存身份升级为版本 5，防止复用旧转换曾丢失前提的规范化结果。
+已启动的旧进程须重新启动才会载入修复；既有输出不自动改写。
+
+Resolver 组缓存使用相关对象上下文与读取版本；Skeleton、Target Proof、对象对比较及循环审查
+具有局部缓存。缓存保存生成结果、提交增量、读取版本及 ID 映射，命中后仍经过统一提交入口。
+全局简表的无关变化不会导致所有组失效；提交时重新处理新增对象之间的身份关系。
+组间重名的局部别名只保存在各自 `group_aliases` 中，不以最后一次写入覆盖全局身份。
+增量适配仅展开一次；格式错误按操作记录，避免一个坏补丁丢掉同一响应中的合法对象。
+Planner 默认继承 Resolver 的 checkpoint 配置，未提供稳定模型身份的自定义回调继续关闭缓存。
+
+回归覆盖见 `test_formal_object_registry.py`：跨组复用、条件差异、ID 冲突、显式绑定、
+局部符号保护、全局更新、来源与审计保留、循环与缺失诊断、并行提交顺序和缓存重放。
+真实证明验证还由 `test_formal_verification.py` 和 `test_formal_theory_integration.py` 覆盖。
+
 ## Survey 原始论文作为 ExperimentDesign 参考
 
 ExperimentDesign 已取消独立论文发现、查询规划与二次 LLM 论文筛选。
@@ -19,6 +91,19 @@ Survey 已选出的论文直接接纳，不再调用可信度筛选模型。
 最终设计合成依赖上游变量和定义，不再将卡片原文塞入所有后续提示词。
 LLM 可以补充数学定义、方程、假设、辅助引理、任意候选规则和证明步骤；
 生成后的检查仍记录证明状态。循环定义保留为研究草稿，不能作为已成立的证明前提。
+
+### 格式恢复与科学状态
+
+符号协调补丁逐项接纳：一个无效改名只拒绝该操作及确实依赖它的操作，独立合法操作继续执行。
+完全等价的重复定义合并时同步重定向依赖、前提和证明引用；同名但含义不同的定义保留并消歧，
+无法确定所有者的引用仅影响其使用者。模型关系格式诊断不删除公式或关系。
+Resolver、Planner 恢复、符号协调和语义修订使用同一关系格式规范化策略。
+
+`machine_encoding_issues` 表示暂不能执行的局部字段，不作为科学错误沿依赖链改写状态。
+真实缺失前提或循环依赖仍保留影响范围诊断；传播后的定义和关系保留自身科学状态，
+日志只记录新出现或变化的依赖影响，同一状态重复恢复不重复警告。
+验证汇总分别输出 `computation_results`、`semantic_status` 和 `encoding_diagnostic_count`。
+后端通过说明声明的数学编码得到相应核验结果，语义待审与计算结果同时保留。
 
 ### 定义字段与分组修订
 
@@ -185,6 +270,23 @@ A symbol rename identifies its consumers explicitly so ASTs, quantifiers, formul
 and proof steps use the same notation. Original records and repair changes are retained
 in the reconciliation audit.
 
+Patch operations are checked individually. Invalid repairs, merges or renames are
+excluded without discarding independent valid operations. Each rejected operation
+records its original operation index, record ID, invalid referenced IDs and reason
+in the audit and `reconciliation_operation_warning` log. Consumers affected by a
+merge are redirected before dependency recovery; existing unrelated record errors
+do not invalidate a notation repair.
+
+Exact, specified mathematical duplicates are merged before requesting LLM notation
+repair. Their source references and compatible variable bindings are retained, and
+live dependency and proof-premise references use the canonical ID. Distinct meanings
+remain separate definitions. If LLM reconciliation leaves a repeated symbol, recovery
+assigns unique notation and updates consumers whose explicit dependencies or unique
+variable bindings identify the definition. Ambiguous consumers retain their drafts
+with review diagnostics. Audit history is never rewritten, and unresolved dependency
+cycles remain drafts. `plan_symbol_repair_input_profiled` records prompt size and the
+conflict and consumer IDs submitted for review.
+
 Proof generation can add supporting definitions, model relations, assumptions and
 lemmas, complete unresolved input records and retain rules outside the local checker's
 small rule set. Such drafts can be evaluated by the configured mathematical backends.
@@ -268,11 +370,13 @@ Resolver 的 LLM 请求使用 `formal_definition_wire_v1` 紧凑传输格式。�
 
 definition 和 relation 逐条检查必要字段、状态、引用数组和来源。字段检查前，先按已有记录、主定义 ID 和修复目标确定 ID 的集合归属；可确认的错放记录移到正确集合并修正 ID 字段，数学内容和来源引用保持原样。新记录可依据明确的 ID 字段纠正集合，不按 `D`/`R` 字符前缀猜测类型。提示词明确区分两类修复目标的返回集合，并要求返回完整目标记录。同 ID 跨类型冲突、互相矛盾的 ID 字段或科学类型不符时，逐条忽略并归档原文，保留既有记录和独立合法补丁；归属修复保存在 `retrieval_audit.record_collection_repairs`。
 
-可明确解释的引用对象、单对象来源引用等先转换为规范格式。缺少单位、定义域、关系适用范围等科研内容时，保留原始候选，缺失字段用空值占位，并标记 `unresolved`/`blocked`；不自动补造科研内容。来源引用缺失或字段结构错误仍保留候选与诊断，将来源标为未解决；定位字符串与卡片位置元数据不匹配不影响记录状态、定向补充或语义修订接收。无法可靠解析的引用或记录结构才隔离单条。`record_warning` 按记录汇总字段诊断，保留稳定的 `record_id`、`field_path`、`field`、`error_code`、`error_detail` 和 `disposition`，并提供 `fields`、`field_diagnostics`；缺失状态字段不再重复报状态无效。`unknown_items` 保留逐字段诊断、原始数组位置及限长原文片段。`group_completed` 的 `record_diagnostic_count` 统计诊断条目，`unresolved_record_count` 统计保留但未解决的记录，`quarantined_record_count` 统计本轮隔离的记录，`discarded_record_count` 统计本轮隔离、排除的外组定义与拒绝的合并操作，不把字段诊断当成丢弃记录。成功修复后清除该记录当前的旧诊断，历史诊断仍保存在 `retrieval_audit.record_diagnostics`。局部异常保持警告，不触发 resolver 阶段降级。
+可明确解释的引用对象、单对象来源引用、单个量词对象先转换为规范数组。模型关系的格式失败不移出 `model_relations`：保留数学陈述、公式、原始字段和精确诊断，无法解释的整条内容以完整 `original_record` 留在活动草稿中。来源元数据不完整时将来源标为 `unresolved`，不编造 locator，也不据此否定公式；来源、选择理由等元数据诊断使用 `record_encoding`，不统一升级计划为人工待审。无法转换的执行引用或条件记录在 `machine_encoding_issues`，只跳过依赖这些字段的机器任务，不将格式问题传播为科学内容未解决。缺少单位、定义域、关系适用范围等科研描述仍保留候选和内容诊断。编码完整的关系即使科学状态为 `unresolved`，也允许后端检查其声明的条件体系；计算结果与科学状态分别记录，不能因此宣称科学问题已经解决。成功修复后清除相应当前编码问题，保留历史原文。`group_completed` 的诊断数与丢弃记录数分别统计，局部异常不触发 resolver 阶段降级。
 
-多组结果再进行一次精简语义审阅：请求只包含定义与关系的科学字段目录、简短研究范围和变量索引，不重新发送原卡、完整引文或完整候选。LLM 仅返回有冲突的已有记录 ID 与原因；原始定义、关系、引用和详细条件由本地保留，不要求 LLM 重写。审阅指出的记录标记为未解决，并留下人工审查项。组内附加定义和关系统一使用组号前缀，并同步重写显式依赖，避免不同组都返回 `R1` 时误合并。关系对象仅缺少有效 ID 时，本地分配稳定的组内 ID，不改变其科学字段；非空字符串关系保留为未解决文本，单元素对象列表直接展开，其他无法解释的关系隔离为待审项并保存限长原文片段。校验错误记录具体数组位置和字段类型。审阅响应无效或超预算时，保留各组已校验的候选并记录详细原因。随后本地合并检查 ID、依赖及循环；定义 ID 和明确的函数基名仍可做无损归一，但不再按字符串精确匹配符号目录，也不生成 `symbol_diagnostics` 或 `symbol_notice`。原始符号引用、公式和局部记号保持不变。真实缺失的前提、声明冲突和依赖循环仍留下待审项。局部结构检查和 LLM 审阅均不是数学证明。
+多组结果按轮提交到全局数学对象注册表，确定等价的定义先复用规范 ID，不确定的对象对进行局部比较。只有仍有定义冲突时才运行既有 reconciliation 审阅；其输入限定为冲突记录与直接消费者，不重新发送原卡或完整候选。组内附加定义和关系使用稳定名称空间，同步改写活动引用和明确绑定的表达式；局部量词与证明绑定保持原含义。关系仅缺少有效 ID 时本地分配稳定 ID；非空字符串关系保留为未解决文本，单元素对象列表直接展开，无法解释的记录保留原文与字段诊断。审阅无效时保留已生成候选。合并后检查实际对象图中的缺失引用、歧义与循环，并分别报告，不把删去引用当作修复成功。局部结构检查和 LLM 审阅均不是数学证明。
 
-定义组与协调结果通过现有内容寻址缓存存储在 `.science/cache/experiment_design/definitions-v1`，缓存身份包含完整请求、模型和 provider。定向修复的定义组请求使用第 2 版缓存身份，避免复用旧的整组替换响应。含未解决记录、待审诊断或未完成证据请求的定义组不写入或复用；只有无冲突的协调审阅可以缓存。重跑相同输入可以复用已成功批次；输入或模型改变会失效。它不等于整个 science run 的阶段恢复，也不会改变已经发出的请求。
+定义组与协调结果通过现有内容寻址缓存存储在 `.science/cache/experiment_design/definitions-v1`，缓存身份包含完整请求、模型和 provider。定义组请求使用第 3 版身份、协调请求使用第 2 版身份，以隔离旧缓存语义。缓存保存进度，不要求全部定义为 `specified/encoded`，也不要求诊断、未解决关系或参考证据请求为空。可解析、记录 ID 可识别的规范化组写入 `definition_groups`，每轮最新合并结果写入 `definition_group_progress`；原始对象响应另存 `definition_group_responses`，规范化中断后也可复用原始响应。缓存读取不改变数学状态，循环依赖仍为草稿，未编码结果仍为 `requires_encoding`。
+
+重跑相同初始请求先恢复最新定义组快照，已完成定义保持只读，只对未完成 definition/relation ID 和缺失变量进行定向补充；编码能力和已完成的格式修复不会单独触发再生成。剩余问题受现有 `max_supplement_rounds` 限制；设为 0 时只恢复，`read_only` 模式下有部分快照也不会发出修复请求。输入、提示词或模型改变会失效，单纯调整补充轮数不会使初始组快照失效。协调缓存保留首次审阅及后续修复的补丁序列，恢复时按顺序重放，仍有冲突时仅继续局部修复；协调中断不丢失首次结果。`checkpoint_written` 明确记录写入命名空间和快照 ID，`group_resumed` 记录恢复组与剩余修复 ID。它不等于整个 science run 的阶段恢复，也不会改变已经发出的请求。
 
 变量与主张提取、形式证明规划、反例分析及模板合成的有效产物使用 `experiment_design.retrieval.cache` 指定的内容寻址缓存。缓存身份包含各阶段完整输入、相关设置及 LLM provider/model；上游输入变化会使下游阶段失效。变量、证明规划和初轮反例产物在跨工件推理校验通过后才写入；无法通过契约校验、含失败目标或需要重新生成的降级产物不写入缓存。自定义 LLM 回调默认不复用缓存，只有显式提供 `experiment_design_cache_identity` 时才允许复用。缓存命中和写入会出现在对应阶段的运行日志中；只读模式下缓存缺失不会调用 LLM。定义解析的变量组、形式推理的证明目标组、反例分析的目标在各自模块内最多并行 3 个，结果按原顺序合并；有明确前置依赖的定义组和证明目标组等待上游组完成。模块之间仍按定义、推导、反例的依赖顺序串行执行。组内的补充检索仍依赖前一轮结果，继续串行。
 
@@ -280,9 +384,19 @@ definition 和 relation 逐条检查必要字段、状态、引用数组和来�
 
 形式推理采用两阶段流程。第一阶段 `v2_skeleton` 只生成假设、命题、引理、证明义务和依赖骨架，不生成详细证明步骤；它在首次请求时按依赖闭包分组，每组最多 24 个定义和 16 个关系。组外记录只以 `external_dependencies`/`omitted_context` 的短索引出现，完整定义和关系在本地注入骨架产物，模型无需复述。Skeleton 请求禁用底层原样重试；单组请求失败时先缩短数学文本和证据摘要，再以压缩输入重试，仍失败则拆成更小组并保留失败组的待审草稿，不清空其他组结果。Skeleton 不设置专用提示词字符上限、900 秒超时或 12000 输出 token 上限；请求超时沿用 ExperimentDesign 的通用设置，输出仍服从模型服务及项目通用配置。它接收已编码定义与关系的关键数学字段、未编码项的简短索引及默认最多 36 张相关证据卡的正文。检索查询只使用数学内容摘要与主张，避免完整来源引文影响相关性检索。提示词明确要求假设的 `assumption_id` 与候选状态、证明义务的 `obligation_id` 与未解决状态；可确定的通用 ID 字段和缺失状态由本地归一化。仍缺 ID 时最多发送一次只含缺口记录及引用索引的小型修复请求，修复结果须与目标引用一致。修复请求失败时保留骨架，为缺 ID 记录分配仅用于追踪的 ID，不猜测其科学关联。可明确识别的单对象包装会展开；`depends_on`、`premises` 和 `assumption_ids` 中误用的变量 ID，在主定义关联明确或匹配唯一时转换为正式定义 ID，记录 `dependency_reference_repaired`。有歧义的引用保留原文并阻止受影响记录参与验证。
 
-骨架提示词通过共享的 `output_contract.required_target_fields` 和完整示例明确列出每个命题、引理的 `statement`、`scope`、`premises`、`conclusion`、`quantifiers`、`domain_expression`、`conclusion_expression`、`required_obligation_ids`，所有键必须出现；无法编码的数学表达式用 `null` 并解释缺口。可明确识别的字段别名先归一化，然后只对仍缺失或格式错误的字段发起 `v2_skeleton_repair_round_<n>_batch_<n>`。修复返回 `skeleton_record_patch_v1` 的 `patches`，仅允许修改指定 ID 的指定字段；拒绝覆盖合格字段、删除前提以规避检查或增加未请求的记录。默认 `planner.max_skeleton_repairs: 1`（可设 0–2）、`planner.max_records_per_skeleton_repair: 4`（可设 1–8），每轮只请求剩余问题，无进展时停止。补丁部分有效时逐字段接收，错误字段、请求失败或无补丁时保留原稿，历史候选和批次结果分别写入 `construction_archive` 与 `skeleton_repair_audit`。
+骨架提示词通过共享的 `output_contract.required_target_fields` 和完整示例明确列出每个命题、引理的 `statement`、`scope`、`premises`、`conclusion`、`quantifiers`、`domain_expression`、`conclusion_expression`、`required_obligation_ids`，所有键必须出现；同时提供 assumption 和配套 lemma/proof_obligation 示例。数字叶节点使用字符串、符号声明与表达式分开、参数使用表达式对象。无法编码的数学表达式用 `null` 并解释编码缺口，不把编码缺口等同于科学错误。可明确识别的字段别名和有限数值叶节点先归一化，然后只对仍缺失或格式错误的字段发起 `v2_skeleton_repair_round_<n>_batch_<n>`。
+
+修复返回 `skeleton_record_patch_v1` 的 `patches`，仅允许修改指定 ID 的指定字段，拒绝覆盖合格字段或增加未请求的记录。错误引用允许删除或替换，不按列表长度判断是否削弱；有效前提、有效依赖及属于当前目标的有效证明义务必须保留。`required_obligation_ids` 必须引用 proof_obligation，且其 `target_id` 与目标一致；目标也须登记关联到它的义务。关联冲突的目标和义务放入同一批，在临时副本中应用所有补丁后统一校验；拒绝某字段后重新检查依赖它的其他字段，独立有效字段继续保留。默认 `planner.max_skeleton_repairs: 1`（可设 0–2）、`planner.max_records_per_skeleton_repair: 4`（可设 1–8）；批次大小是独立记录的打包目标，互有关联的修复组件不拆开，可以超过此大小。每轮只请求剩余问题，无进展时停止。
+
+修复请求提供错误引用、合法义务 ID、相关记录的类型、`target_id` 和状态；目录仅选相关记录。表达式校验返回 `node_path`、`error_code`、`actual_type` 和 `expected`，诊断同时进入请求、`skeleton_patch_warning` 和审计记录。修复请求记录 `prompt_chars`。历史候选、修改前后内容和批次结果分别写入 `construction_archive`、`candidate_completions` 与 `skeleton_repair_audit`。
+
+结构合法的数学补充以 `unverified` 保存，自动进入目标证明、验证、反例分析和语义审查，不因模型补充而统一要求人工确认。成功补充记录 `INFO/REPAIRED`，保留数学文本但编码未完成时记录 `INFO/ENCODING_PENDING`，不合法补丁记录 `WARNING` 并附失败路径。模型明确报告 `semantic_conflict` 或 `needs_user_decision` 且提供具体原因时才产生 `WARNING/REVIEW_REQUIRED`；API 失败仍保留原始错误类型。旧产物的通用 `candidate_completion_pending` 和修复节点的 `model_completion` 诊断不再独立阻止验证；实际缺失依赖、循环依赖和不可执行编码仍分别处理。循环定义可保留为研究草稿，但不能作为已成立的证明前提。
 
 第二阶段 `v2_target_proof` 按最多两个目标一批生成证明尝试和推导步骤，按显式依赖先安排前置引理、命题，再处理依赖它们的目标；独立目标仍可并行。未补齐的目标仍进入草稿生成，并携带构造诊断；`construction_status: blocked` 限制机器验证，不跳过整个目标的草稿。目标批次接收相关假设、已编码定义、关系、命题、引理、证明义务、前置目标的证明尝试，以及默认最多 36 张相关证据卡。前置引理自身的依赖上下文也递归纳入。已接受的命题内容和证明记录不被后续响应同 ID 覆盖，冲突候选进入 `construction_archive`。目标返回的引理实例化只允许填入尚未提供的元数据，冲突记录待人工审查。
+
+目标证明首轮和定向修复均携带 `output_contract`，复用 Skeleton 的完整辅助引理、假设与证明义务示例，并补充合法的嵌套证明尝试示例。辅助引理必须提供 `lemma_id`、全部 `TARGET_FIELDS` 与候选状态；证明尝试必须提供 `attempt_id`、`target_id`、有序对象数组 `steps` 和同一尝试内的 `final_step_id`。每步明确包含 `step_id`、字符串 ID 数组 `premises`、`derived_statement`、`rule_or_lemma` 与 `status`，可选 `derived_expression` 遵循表达式契约。步骤只能引用已声明记录或本尝试内更早的步骤；同一步不能同时出现在证明尝试和 `derivation_steps` 中。示例仅说明结构，实际输出使用当前研究的 ID 和数学内容；候选数学规则仍可自由选择。
+
+依赖恢复先完成循环识别与传播，达到稳定状态后统一生成诊断。每条传播或循环诊断保存排序去重的 `dependency_ids` 和对应 `dependency_states`，只在新增、阻塞集合变化或依赖健康状态变化时记录 WARNING 和原始候选归档。当前 `unknown_items` 每个记录、每类依赖问题只保留一条完整诊断；兼容旧版文本诊断并合并重复项。已修复的传播或循环问题从当前诊断中移除，已有历史归档保留。未变化的依赖问题仍保留供后续推理、验证参考，但重复合并不会继续刷日志或增加相同问题的归档。
 
 记录先做可解释的格式转换，再逐条校验。符号名称不匹配仅产生非阻断提示，同一份产物中的重复诊断不反复记录；表达式、量词、引用和证明草稿保持完整。无法解决的前提引用、量词格式和引理应用保留原始内容与精确的 ID/字段诊断，受影响记录标记 `construction_status: blocked`；仅这些记录及其依赖目标不能参与机器验证。同一目标缺少多个必需字段时合并为一条日志，列出全部字段名。结构合法的证明尝试即使依赖待审前提也作为草稿保留；非法尝试单独归档，其他尝试、定义和命题继续保留。默认 `experiment_design.formal_reasoning.planner.max_target_repairs: 1`，可设置 0–2：只请求失败或遗漏的目标，传入 `targeted_repair` 的目标 ID、失败原因与对应原始候选，不重生成成功目标。结构修复不能补造科学前提，也不能把缺失依赖删去后宣称证明成立。规则检查及 SMT、符号计算和 Lean 均阻止被标记的构造参与验证；求解器仍需要合法的类型和数学编码才能给出验证结论。原始候选以完整 JSON 字符串归档，避免归档中的未经验证状态被误当作当前证明声明。
 

@@ -662,6 +662,8 @@ class ExperimentDesignOrchestrator:
         formal_warning = False
         formal_settings = _setting(_setting(self.config, "experiment_design", self.config), "formal_reasoning", {})
         formal_inputs = None
+        definition_settings = {}
+        definition_identity = None
         formal_verification_report = None
         formal_revision_audit = None
         if formal_applicable and not variable_claim_degraded and _setting(formal_settings, "enabled", False):
@@ -699,6 +701,9 @@ class ExperimentDesignOrchestrator:
                     formal_inputs = self.unavailable_formal_definition_resolution(
                         reason=f"{type(exc).__name__}: {exc}"
                     )
+        planner_runtime_settings = _mapping(_setting(formal_settings, "planner", {}))
+        planner_runtime_settings.setdefault("checkpoint", definition_settings.get("checkpoint", {"enabled": False}))
+        planner_runtime_settings["cache_identity"] = definition_identity or {}
         if formal_applicable:
             if logger is not None:
                 logger.event(
@@ -734,14 +739,14 @@ class ExperimentDesignOrchestrator:
                             "variable_claim_model": variable_claim_model,
                             "formal_inputs": formal_inputs,
                             "evidence_bundle": evidence_bundle,
-                            "planner_settings": _setting(formal_settings, "planner", {}),
+                            "planner_settings": planner_runtime_settings,
                         },
                         lambda: self.formal_reasoning_planner.plan(
                             brief,
                             reasoning_context,
                             variable_claim_model,
                             **({"formal_inputs": formal_inputs, "evidence_bundle": evidence_bundle} if formal_inputs is not None else {}),
-                            planner_settings=_setting(formal_settings, "planner", {}),
+                            planner_settings=planner_runtime_settings,
                             llm_call=self._required_reasoning_llm(reasoning_llm_call),
                             logger=logger,
                             brief_id=brief_id,

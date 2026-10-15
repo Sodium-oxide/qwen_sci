@@ -983,7 +983,7 @@ def test_work_collector_omits_arxiv_lanes_when_discovery_is_disabled() -> None:
     collector = object.__new__(WorkCollector)
     collector.config = SimpleNamespace(
         ModuleInfo=SimpleNamespace(
-            WorkCollector=SimpleNamespace(enable_arxiv_discovery=False)
+                WorkCollector=SimpleNamespace(enable_arxiv_discovery=False, survey_search_strategy="staged_legacy")
         )
     )
     collector.get_project_research_context = lambda _topic: context
@@ -1234,6 +1234,7 @@ def test_sh_seed_collection_runs_one_targeted_supplement_and_separates_context_s
                 LLM_seed_threshold=4,
                 max_seed_paper_num=5,
                 enable_subhypothesis_retrieval=True,
+                min_seed_papers_per_sh=0,
                 subhypothesis_relevance_threshold=3,
                 subhypothesis_max_unique_papers=6,
                 subhypothesis_max_slots_per_paper=2,
@@ -1245,6 +1246,7 @@ def test_sh_seed_collection_runs_one_targeted_supplement_and_separates_context_s
     )
     collector.data_manager = _DataManager()
     collector.logger = _Logger()
+    collector.config.ModuleInfo.WorkCollector.survey_search_strategy = "staged_legacy"
     collector.expand_in_local_paper_graph = False
     collector.graph_paper_ids = set()
     collector.ignore_paper = set()
@@ -1304,6 +1306,7 @@ def test_sh_semantic_candidates_do_not_trigger_formal_coverage_supplement() -> N
                 use_seed_filter_LLM=False,
                 LLM_seed_threshold=4,
                 max_seed_paper_num=5,
+                min_seed_papers_per_sh=0,
                 subhypothesis_relevance_threshold=3,
                 subhypothesis_max_unique_papers=6,
                 subhypothesis_max_slots_per_paper=2,
@@ -1311,6 +1314,7 @@ def test_sh_semantic_candidates_do_not_trigger_formal_coverage_supplement() -> N
         ),
     )
     collector.logger = _Logger()
+    collector.config.ModuleInfo.WorkCollector.survey_search_strategy = "staged_legacy"
     collector.get_project_research_context = lambda _topic: context
     collector._store_subhypothesis_retrieval_artifact = lambda artifact: setattr(
         collector, "subhypothesis_retrieval_artifact", dict(artifact)
@@ -1380,6 +1384,7 @@ def test_work_collector_does_not_run_ledger_direct_coverage_refinement() -> None
                 use_seed_filter_LLM=False,
                 LLM_seed_threshold=4,
                 max_seed_paper_num=5,
+                min_seed_papers_per_sh=0,
                 subhypothesis_relevance_threshold=3,
                 subhypothesis_max_unique_papers=6,
                 subhypothesis_max_slots_per_paper=2,
@@ -1387,6 +1392,7 @@ def test_work_collector_does_not_run_ledger_direct_coverage_refinement() -> None
         ),
     )
     collector.logger = _Logger()
+    collector.config.ModuleInfo.WorkCollector.survey_search_strategy = "staged_legacy"
     collector.get_project_research_context = lambda _topic: context
     collector._store_subhypothesis_retrieval_artifact = lambda artifact: setattr(
         collector, "subhypothesis_retrieval_artifact", dict(artifact)

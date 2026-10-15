@@ -11,6 +11,7 @@ import re
 from collections.abc import Mapping, Sequence
 from typing import Any
 
+from .survey_evidence_judgments import has_local_contribution
 
 EVIDENCE_COVERAGE_LEDGER_SCHEMA_VERSION = "evidence_coverage_ledger_v1"
 _SCOPE_TEXT_KEYS = ("contexts", "study_designs")
@@ -51,6 +52,41 @@ _MEASUREMENT_SLOT_SETS = {
 
 def _mapping(value: Any) -> dict[str, Any]:
     return dict(value) if isinstance(value, Mapping) else {}
+
+
+def _coverage_subhypotheses(subhypotheses):
+    """Keep the evidence contract independent of the query execution strategy.
+
+    Missing task metadata still produces an uncovered required slot. In
+    particular, model-feedback discovery need not execute a query per slot.
+    """
+    result = []
+    seen = set()
+    for raw in subhypotheses or []:
+        sh = _mapping(raw)
+        identifier = str(sh.get("sub_hypothesis_id") or "").strip()
+        if not identifier or identifier in seen:
+            continue
+        seen.add(identifier)
+        tasks = {
+            str(task.get("slot_name")): dict(task)
+            for task in sh.get("slot_recovery_tasks", []) or []
+            if isinstance(task, Mapping) and task.get("slot_name")
+        }
+        slots = _texts(sh.get("required_slots"), limit=100) or list(tasks)
+        definitions = _mapping(sh.get("slot_definitions"))
+        sh["slot_recovery_tasks"] = [
+            {
+                "task_id": f"{identifier}.{slot}",
+                "slot_name": slot,
+                "slot_definition": _mapping(definitions.get(slot)),
+                **_mapping(definitions.get(slot)),
+                **tasks.get(slot, {}),
+            }
+            for slot in slots
+        ]
+        result.append(sh)
+    return result
 
 
 def _texts(value: Any, *, limit: int = 12) -> list[str]:
@@ -285,6 +321,7 @@ def _slot_assessment(
     task: Mapping[str, Any],
     exclusion_violations: Sequence[str],
     semantic_assessment: Mapping[str, Any] | None = None,
+    require_semantic: bool = False,
 ) -> dict[str, Any]:
     task_id = str(task.get("task_id") or "")
     definition = _mapping(task.get("slot_definition"))
@@ -338,7 +375,11 @@ def _slot_assessment(
     # Without an LLM result retain the legacy coverage ledger behavior for
     # offline/backward-compatible runs. Once semantic assessment exists, its
     # contribution type—not literal slot wording—determines the evidence state.
-    if not semantic:
+    if require_semantic and (not semantic or semantic.get("assessment_status") != "assessed"):
+        status = "UNCERTAIN"
+        admission_status = "INSUFFICIENT_FOR_DIRECT_CLAIM"
+        graph_value_status = "UNASSESSED"
+    elif not semantic:
         status = heuristic_status
         admission_status = (
             "DIRECT_EVIDENCE" if status == "COVERED" else "NOT_DIRECT_EVIDENCE"
@@ -432,6 +473,8 @@ def _semantic_assessment_is_seed_candidate(
 ) -> bool:
     """Use LLM contribution semantics, not slot-count heuristics, for seed candidacy."""
 
+    if "evidence_boundaries" in assessment:
+        return has_local_contribution(assessment, threshold=threshold)
     if not assessment or assessment.get("assessment_status") != "assessed":
         return False
     if assessment.get("overall_relation") == "irrelevant":
@@ -457,13 +500,7 @@ def associate_papers_with_subhypotheses(
     """Attach retrieval/coverage facts and LLM SH semantics without slot-count scoring."""
 
     del max_slots_per_paper
-    sh_list = [
-        _mapping(item)
-        for item in subhypotheses or []
-        if isinstance(item, Mapping)
-        and _mapping(item).get("sub_hypothesis_id")
-        and _mapping(item).get("retrieval_strategy") == "slot_driven_required_slot_recovery"
-    ]
+    sh_list = _coverage_subhypotheses(subhypotheses)
     output: list[dict[str, Any]] = []
     for original in papers or []:
         if not isinstance(original, Mapping):
@@ -489,6 +526,7 @@ def associate_papers_with_subhypotheses(
                     task=_mapping(task),
                     exclusion_violations=exclusion_violations,
                     semantic_assessment=semantic_assessment,
+                    require_semantic=sh.get("retrieval_strategy") == "model_feedback",
                 )
                 for task in sh.get("slot_recovery_tasks", [])
                 if isinstance(task, Mapping)
@@ -695,11 +733,7 @@ def build_evidence_coverage_ledger(
     """Build a slot-level ledger and a separate bounded seed-allocation view."""
 
     paper_list = [dict(paper) for paper in papers or [] if isinstance(paper, Mapping)]
-    sh_list = [
-        _mapping(item)
-        for item in subhypotheses or []
-        if _mapping(item).get("retrieval_strategy") == "slot_driven_required_slot_recovery"
-    ]
+    sh_list = _coverage_subhypotheses(subhypotheses)
     per_sh_limit = max(1, int(max_unique_papers_per_sh))
     cap = max(1, int(max_slots_per_paper))
     all_assignments: list[dict[str, str]] = []
@@ -906,6 +940,38 @@ def _semantic_seed_candidates(
     return candidates
 
 
+def _semantic_quota_candidates(paper: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """Return assessed, non-excluded contributions usable for SH quota fill."""
+
+    allowed_relations = {
+        "partial",
+        "indirect",
+        "boundary",
+        "counterevidence",
+        "method",
+        "hypothesis_generating",
+        "background",
+    }
+    candidates: list[dict[str, Any]] = []
+    for raw in paper.get("sh_semantic_assessments", []):
+        assessment = _mapping(raw)
+        if assessment.get("assessment_status") != "assessed":
+            continue
+        if assessment.get("overall_relation") not in allowed_relations:
+            continue
+        if assessment.get("recommended_graph_role") == "do_not_expand":
+            continue
+        if assessment.get("explicit_exclusion_matches"):
+            continue
+        try:
+            if int(assessment.get("semantic_relevance_score") or 0) < 1:
+                continue
+        except (TypeError, ValueError):
+            continue
+        candidates.append(assessment)
+    return candidates
+
+
 def _semantic_seed_kind(assessments: Sequence[Mapping[str, Any]]) -> str:
     """Classify a graph root by its most evidence-bearing LLM contribution."""
 
@@ -983,6 +1049,8 @@ def select_sh_seed_candidates(
     project_relevance_threshold: int = 4,
     semantic_relevance_threshold: int = 3,
     coverage_ledger: Mapping[str, Any] | None = None,
+    min_seed_papers_per_sh: int = 2,
+    candidate_ledger: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Choose evidence, exploration, and context seeds after SH semantic annotation."""
 
@@ -1005,6 +1073,10 @@ def select_sh_seed_candidates(
             paper,
             threshold=semantic_relevance_threshold,
         )
+        for index, paper in enumerate(candidates)
+    }
+    quota_semantic_by_index = {
+        index: _semantic_quota_candidates(paper)
         for index, paper in enumerate(candidates)
     }
     eligible: set[int] = set()
@@ -1043,6 +1115,96 @@ def select_sh_seed_candidates(
 
     selected: list[int] = []
     selected_slots: dict[int, list[dict[str, str]]] = {}
+    candidate_reservations: dict[int, list[str]] = {}
+    candidate_records = _mapping(candidate_ledger).get("records", [])
+    for record in sorted(candidate_records, key=lambda item: (not item.get("ranking_eligible"), str(item.get("candidate_id")))):
+        if "screening_status_by_subhypothesis" in record and not record.get("promoted_subhypothesis_ids"):
+            continue
+        # Completeness determines evidence vs exploration role, never whether
+        # another scientific candidate gets its minimum representation.
+        qualified = set(record.get("qualified_paper_ids", []))
+        available = [index for index, paper in enumerate(candidates)
+                     if paper_identity(paper) in qualified and not _has_explicit_project_exclusion(paper)]
+        if not available:
+            continue
+        index = min(available, key=lambda value: paper_identity(candidates[value]))
+        eligible.add(index)
+        if index not in candidate_reservations or record.get("ranking_eligible"):
+            seed_kind_by_index[index] = "evidence_seed" if record.get("ranking_eligible") else "exploration_seed"
+        candidate_reservations.setdefault(index, []).append(record["candidate_id"])
+        rejected.pop(index, None)
+        if index not in selected:
+            selected.append(index)
+        selected_slots[index] = []
+
+    minimum = max(0, int(min_seed_papers_per_sh))
+    sh_ids = list(dict.fromkeys(
+        str(item.get("sub_hypothesis_id") or "")
+        for item in subhypotheses or []
+        if isinstance(item, Mapping)
+        and item.get("sub_hypothesis_id")
+    ))
+    effective_seed_budget = max(max_seed_papers, minimum * len(sh_ids), len(selected))
+    minimum_candidates_by_sh: dict[str, list[int]] = {sh_id: [] for sh_id in sh_ids}
+    for index in sorted(eligible):
+        for assessment in semantic_by_index[index]:
+            sh_id = str(assessment.get("sub_hypothesis_id") or "")
+            if sh_id in minimum_candidates_by_sh:
+                minimum_candidates_by_sh[sh_id].append(index)
+    for index, assessments in quota_semantic_by_index.items():
+        if index in rejected:
+            continue
+        for assessment in assessments:
+            sh_id = str(assessment.get("sub_hypothesis_id") or "")
+            if sh_id in minimum_candidates_by_sh:
+                minimum_candidates_by_sh[sh_id].append(index)
+                if not semantic_by_index[index] and index not in candidate_reservations:
+                    fallback_kind = _semantic_seed_kind(assessments)
+                    seed_kind_by_index[index] = (
+                        "context_seed" if fallback_kind == "context_seed" else "exploration_seed"
+                    )
+
+    quota_selected_indices: set[int] = set()
+    for sh_id in sorted(sh_ids, key=lambda item: (len(set(minimum_candidates_by_sh[item])), item)):
+        def quota_priority(index: int) -> tuple[int, int, int, str]:
+            assessments = semantic_by_index[index] + quota_semantic_by_index[index]
+            scores = [
+                int(assessment.get("semantic_relevance_score") or 0)
+                for assessment in assessments
+                if str(assessment.get("sub_hypothesis_id") or "") == sh_id
+            ]
+            return (
+                0 if max(scores, default=0) >= semantic_relevance_threshold else 1,
+                0 if index in selected else 1,
+                -max(scores, default=0),
+                paper_identity(candidates[index]),
+            )
+
+        candidates_for_sh = sorted(
+            set(minimum_candidates_by_sh[sh_id]),
+            key=quota_priority,
+        )
+        chosen_identities: set[str] = set()
+        for index in candidates_for_sh:
+            if len(chosen_identities) >= minimum:
+                break
+            identity = paper_identity(candidates[index])
+            if identity in chosen_identities:
+                continue
+            if index not in selected:
+                if len(selected) >= effective_seed_budget:
+                    break
+                selected.append(index)
+            selected_slots.setdefault(index, []).append(
+                {
+                    "sub_hypothesis_id": sh_id,
+                    "slot": "",
+                    "task_id": "",
+                }
+            )
+            chosen_identities.add(identity)
+            quota_selected_indices.add(index)
+
     for raw_assignment in _mapping(ledger.get("allocation")).get("slot_assignments", []):
         assignment = _mapping(raw_assignment)
         paper_id = str(assignment.get("paper_id") or "")
@@ -1051,7 +1213,7 @@ def select_sh_seed_candidates(
             key=eligible_priority,
         )
         index = matching_indices[0] if matching_indices else None
-        if index is None or (index not in selected and len(selected) >= max_seed_papers):
+        if index is None or (index not in selected and len(selected) >= effective_seed_budget):
             continue
         if index not in selected:
             selected.append(index)
@@ -1063,8 +1225,10 @@ def select_sh_seed_candidates(
             }
         )
     for index in sorted(eligible.difference(selected), key=eligible_priority):
-        if len(selected) >= max_seed_papers:
+        if len(selected) >= effective_seed_budget:
             break
+        if any(paper_identity(candidates[index]) == paper_identity(candidates[item]) for item in selected):
+            continue
         selected.append(index)
         selected_slots.setdefault(index, [])
 
@@ -1074,6 +1238,14 @@ def select_sh_seed_candidates(
     holdout_candidates: list[dict[str, Any]] = []
     rejected_papers: list[dict[str, Any]] = []
     selected_set = set(selected)
+    minimum_counts = {
+        sh_id: len({
+            paper_identity(candidates[index])
+            for index in minimum_candidates_by_sh[sh_id]
+            if index in selected_set
+        })
+        for sh_id in sh_ids
+    }
     for index, paper in enumerate(candidates):
         if index not in selected_set:
             if index in rejected:
@@ -1115,21 +1287,41 @@ def select_sh_seed_candidates(
             "selected": True,
             "seed_kind": seed_kind,
             "selected_slots": selected_slots.get(index, []),
+            "scientific_candidate_ids": candidate_reservations.get(index, []),
             "graph_expansion_eligible": seed_kind in {"evidence_seed", "exploration_seed"},
             "graph_expansion_mode": _seed_expansion_mode(seed_kind),
             "decision_reason": (
-                "LLM classified this paper as a useful SH contribution for the selected seed role."
+                "Reserved grounded evidence for an independent scientific candidate."
+                if index in candidate_reservations
+                else "Selected to satisfy the per-SH minimum seed quota."
+                if index in quota_selected_indices and not semantic_by_index[index]
+                else "LLM classified this paper as a useful SH contribution for the selected seed role."
                 if semantic_by_index[index]
                 else "Legacy fallback retained a covered slot while LLM SH assessment was unavailable."
             ),
             "selection_basis": (
-                "llm_sh_semantic_assessment"
+                "scientific_candidate_minimum"
+                if index in candidate_reservations
+                else "llm_sh_semantic_assessment"
                 if semantic_by_index[index]
+                else "minimum_sh_quota_fallback"
+                if index in quota_selected_indices
                 else "legacy_covered_slot_fallback"
             ),
-            "semantic_assessment_ids": [
+            "semantic_assessment_ids": list(dict.fromkeys(
                 str(assessment.get("sub_hypothesis_id") or "")
-                for assessment in semantic_by_index[index]
+                for assessment in (
+                    semantic_by_index[index]
+                    + quota_semantic_by_index[index]
+                    if index in quota_selected_indices
+                    else semantic_by_index[index]
+                )
+            )),
+            "quota_fallback_assessment_ids": [
+                str(assessment.get("sub_hypothesis_id") or "")
+                for assessment in quota_semantic_by_index[index]
+                if index in quota_selected_indices
+                and int(assessment.get("semantic_relevance_score") or 0) < semantic_relevance_threshold
             ],
             "confirmed_evidence_roles": sorted(roles),
         }
@@ -1147,4 +1339,12 @@ def select_sh_seed_candidates(
         "holdout_candidates": holdout_candidates,
         "rejected_papers": rejected_papers,
         "allocation": _mapping(ledger.get("allocation")),
+        "minimum_seed_papers_per_sh": minimum,
+        "minimum_seed_counts_by_sh": minimum_counts,
+        "minimum_seed_unmet_by_sh": {
+            sh_id: minimum - count
+            for sh_id, count in minimum_counts.items()
+            if count < minimum
+        },
+        "effective_seed_budget": effective_seed_budget,
     }

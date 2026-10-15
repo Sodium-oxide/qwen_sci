@@ -1,6 +1,7 @@
 """Preserve formal construction drafts while isolating invalid computational records."""
 
 from collections.abc import Mapping
+from ast import literal_eval
 from .formal_expression import valid_declarations
 from copy import deepcopy
 import json
@@ -34,16 +35,19 @@ def archive_formal_record(plan, path, record, reason):
         archive.append(entry)
 
 
-def construction_warning(plan, identifier, field, reason, *, logger=None, brief_id=""):
+def construction_warning(plan, identifier, field, reason, *, logger=None, brief_id="", encoding=False):
     diagnostic = {"record_id": identifier, "field": field, "field_path": f"construction_records.{identifier}.{field}",
-                  "reason": reason, "status": "needs_human_input", "category": "construction_warning"}
+                  "reason": reason, "status": "encoding_pending" if encoding else "needs_human_input",
+                  "category": "record_encoding" if encoding else "construction_warning"}
     if diagnostic not in plan["unknown_items"]:
         plan["unknown_items"].append(diagnostic)
         if logger is not None:
-            logger.event("formal_reasoning_planner", "record_warning", level="WARNING", status="WARNING",
+            logger.event("formal_reasoning_planner", "record_warning", level="INFO" if encoding else "WARNING",
+                         status="ENCODING_PENDING" if encoding else "WARNING",
                          brief_id=brief_id, record_id=identifier, field=field, error_detail=reason,
-                         disposition="kept_draft", requires_human_review=True)
-    plan["status"] = "requires_human_review"
+                         disposition="kept_draft", requires_human_review=not encoding)
+    if not encoding:
+        plan["status"] = "requires_human_review"
 
 
 def _mark_dependency_review(record, health, *, definition=False):
@@ -52,6 +56,8 @@ def _mark_dependency_review(record, health, *, definition=False):
         return
     record["construction_status"] = "needs_review"
     record["dependency_health"] = health
+    if health == "blocked_by_dependency":
+        return
     if definition:
         if record.get("definition_status") not in {"specified", "unresolved"}:
             record["definition_status"] = "unresolved"
@@ -61,12 +67,88 @@ def _mark_dependency_review(record, health, *, definition=False):
         record["status"] = "unresolved"
 
 
-def _block_record(plan, record, identifier, field, reason, *, logger=None, brief_id=""):
+def _dependency_warning_kind(diagnostic):
+    if diagnostic.get("category") != "construction_warning" or not isinstance(diagnostic.get("record_id"), str):
+        return None
+    reason = diagnostic.get("reason", "")
+    if diagnostic.get("error_code") == "unresolved_prerequisite" or (
+        isinstance(reason, str) and reason.startswith("A prerequisite construction remains unresolved: ")
+    ):
+        return "blocked_by_dependency"
+    if reason == "Cyclic construction dependency.":
+        return "cyclic"
+    return None
+
+
+def _dependency_warning_matches(previous, current):
+    dependencies = previous.get("dependency_ids")
+    if dependencies is None and current["dependency_health"] == "cyclic":
+        return previous.get("reason") == current["reason"]
+    if dependencies is None and current["dependency_health"] == "blocked_by_dependency":
+        reason = previous.get("reason")
+        if not isinstance(reason, str):
+            return False
+        try:
+            dependencies = literal_eval(reason.split(": ", 1)[1].removesuffix("."))
+        except (ValueError, SyntaxError, IndexError):
+            return False
+    return (isinstance(dependencies, list) and all(isinstance(item, str) for item in dependencies)
+            and sorted(set(dependencies)) == current["dependency_ids"]
+            and previous.get("dependency_states", current["dependency_states"]) == current["dependency_states"])
+
+
+def _sync_dependency_warnings(plan, records, dependencies, snapshots, *, logger=None, brief_id=""):
+    previous = {}
+    retained = []
+    for diagnostic in plan["unknown_items"]:
+        kind = _dependency_warning_kind(diagnostic)
+        if kind is None:
+            retained.append(diagnostic)
+        else:
+            previous.setdefault((diagnostic.get("record_id"), kind), []).append(diagnostic)
+    plan["unknown_items"] = retained
+    for identifier, record in records.items():
+        health = record.get("dependency_health")
+        if health not in {"cyclic", "blocked_by_dependency"}:
+            continue
+        unhealthy = sorted(dependency for dependency in dependencies[identifier]
+                           if dependency in records and records[dependency].get("dependency_health") in {
+                               "cyclic", "missing", "invalid_or_blocked", "blocked_by_dependency",
+                           })
+        field = "depends_on" if health == "cyclic" else "premises"
+        reason = ("Cyclic construction dependency." if health == "cyclic"
+                  else f"A prerequisite construction remains unresolved: {unhealthy}.")
+        diagnostic = {
+            "record_id": identifier, "field": field, "field_path": f"construction_records.{identifier}.{field}",
+            "reason": reason, "status": "needs_human_input", "category": "construction_warning",
+            "error_code": "cyclic_dependency" if health == "cyclic" else "unresolved_prerequisite",
+            "dependency_health": health, "dependency_ids": unhealthy,
+            "dependency_states": {dependency: records[dependency].get("dependency_health") for dependency in unhealthy},
+        }
+        plan["unknown_items"].append(diagnostic)
+        plan["status"] = "requires_human_review"
+        if any(_dependency_warning_matches(item, diagnostic) for item in previous.get((identifier, health), [])):
+            continue
+        archive_formal_record(plan, f"records.{identifier}", snapshots[identifier], reason)
+        if logger is not None:
+            logger.event("formal_reasoning_planner", "record_warning", level="WARNING", status="WARNING",
+                         brief_id=brief_id, record_id=identifier, field=field, error_detail=reason,
+                         error_code=diagnostic["error_code"], dependency_ids=unhealthy,
+                         dependency_states=diagnostic["dependency_states"],
+                         disposition="kept_draft", requires_human_review=True)
+
+
+def _block_record(plan, record, identifier, field, reason, *, logger=None, brief_id="", encoding=False):
     if isinstance(record, Mapping) and record.get("dependency_health") != "invalid_or_blocked":
         archive_formal_record(plan, f"records.{identifier}", record, reason)
     if isinstance(record, Mapping):
-        _mark_dependency_review(record, "invalid_or_blocked", definition="definition_id" in record)
-    construction_warning(plan, identifier, field, reason, logger=logger, brief_id=brief_id)
+        if encoding:
+            issues = record.setdefault("machine_encoding_issues", [])
+            if field not in issues:
+                issues.append(field)
+        else:
+            _mark_dependency_review(record, "invalid_or_blocked", definition="definition_id" in record)
+    construction_warning(plan, identifier, field, reason, logger=logger, brief_id=brief_id, encoding=encoding)
 
 
 def normalize_proof_attempts(value, target_ids):
@@ -209,8 +291,10 @@ def recover_counterexample_analysis(payload, plan, *, logger=None, brief_id=""):
 
 
 def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brief_id=""):
+    previous_graph = payload.get("object_registry_diagnostics") if isinstance(payload, Mapping) else None
     from .formal_definition_resolver import normalize_definition_conditions, normalize_definition_references
     from .formal_definition_resolver import normalize_record_completeness, FormalDefinitionResolver
+    from .formal_definition_resolver import normalize_model_relation_formats
     from .reasoning_validation import _verified_markers
 
     plan, wrappers = unwrap_formal_plan(payload)
@@ -267,6 +351,13 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
                 construction_warning(plan, f"{collection}[{index}]", "record", "Malformed record retained in archive.", logger=logger, brief_id=brief_id)
                 continue
             record = deepcopy(dict(original))
+            if collection in ("definitions", "model_relations"):
+                envelope = {"definitions": [], "model_relations": [], "unknown_items": [], collection: [record]}
+                if collection == "model_relations":
+                    envelope = normalize_model_relation_formats(envelope)
+                envelope, _repairs = normalize_definition_references(envelope)
+                record = envelope[collection][0]
+                plan["unknown_items"].extend(item for item in envelope["unknown_items"] if item not in plan["unknown_items"])
             identifier = record.get(id_field, record.get("id"))
             if not isinstance(identifier, str) or not identifier.strip():
                 identifier = f"RECOVERED_{collection}_{index + 1}"
@@ -275,9 +366,21 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
                 if record == accepted_records[identifier]:
                     continue
                 archive_formal_record(plan, f"{collection}.{identifier}", record, "Duplicate identifier candidate.")
-                _block_record(plan, accepted_records[identifier], identifier, id_field, "Conflicting identifier candidates require review.", logger=logger, brief_id=brief_id)
-                construction_warning(plan, identifier, id_field, "Duplicate candidate retained in archive.", logger=logger, brief_id=brief_id)
-                continue
+                if collection in {"definitions", "model_relations"}:
+                    original_id = identifier
+                    identifier = f"{original_id}__candidate"
+                    suffix = 2
+                    while identifier in used_ids:
+                        identifier = f"{original_id}__candidate_{suffix}"
+                        suffix += 1
+                    record[id_field] = identifier
+                    _block_record(plan, record, identifier, id_field,
+                                  f"Distinct candidate retained separately from canonical object {original_id}.",
+                                  logger=logger, brief_id=brief_id)
+                else:
+                    _block_record(plan, accepted_records[identifier], identifier, id_field, "Conflicting identifier candidates require review.", logger=logger, brief_id=brief_id)
+                    construction_warning(plan, identifier, id_field, "Duplicate candidate retained in archive.", logger=logger, brief_id=brief_id)
+                    continue
             used_ids.add(identifier)
             record[id_field] = identifier
             accepted_records[identifier] = record
@@ -293,8 +396,29 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
                 references = record[field]
                 if isinstance(references, str):
                     references = [references]
+                if isinstance(references, Mapping):
+                    references = [references]
+                reference_keys = {
+                    "premises": ("definition_id", "relation_id", "assumption_id", "lemma_id", "proposition_id", "id"),
+                    "depends_on": ("definition_id", "relation_id", "assumption_id", "lemma_id", "proposition_id", "id"),
+                    "assumption_ids": ("assumption_id", "id"),
+                    "symbol_references": ("symbol",), "variable_references": ("variable_id",),
+                }[field]
+                if isinstance(references, list):
+                    converted = []
+                    for reference in references:
+                        if isinstance(reference, Mapping):
+                            identifiers = [reference[key] for key in reference_keys if key in reference]
+                            if identifiers and all(item == identifiers[0] for item in identifiers):
+                                reference = identifiers[0]
+                        converted.append(reference)
+                    references = converted
+                if references != record[field]:
+                    archive_formal_record(plan, f"records.{identifier}.{field}", record[field],
+                                          "Reference container normalized without changing its IDs.")
                 if not isinstance(references, list) or not all(isinstance(item, str) for item in references):
-                    _block_record(plan, record, identifier, field, "Unparseable references retained in archive.", logger=logger, brief_id=brief_id)
+                    _block_record(plan, record, identifier, field, "Unparseable references retained in archive.",
+                                  logger=logger, brief_id=brief_id, encoding=True)
                     references = []
                 record[field] = references
             if collection != "definitions" and (not isinstance(record.get("status"), str)
@@ -312,14 +436,20 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
                     if field not in record:
                         record[field] = deepcopy(default)
                 quantifiers = record["quantifiers"]
+                if isinstance(quantifiers, Mapping) and "symbol" in quantifiers:
+                    record["quantifiers"] = [quantifiers]
+                    quantifiers = record["quantifiers"]
                 if not valid_declarations(quantifiers):
-                    _block_record(plan, record, identifier, "quantifiers", "Unsupported quantifiers retained in archive.", logger=logger, brief_id=brief_id)
+                    _block_record(plan, record, identifier, "quantifiers", "Unsupported quantifiers retained in archive.",
+                                  logger=logger, brief_id=brief_id, encoding=True)
                     record["quantifiers"] = []
                 if not isinstance(record["required_obligation_ids"], list) or not all(isinstance(item, str) for item in record["required_obligation_ids"]):
-                    _block_record(plan, record, identifier, "required_obligation_ids", "Malformed obligation references.", logger=logger, brief_id=brief_id)
+                    _block_record(plan, record, identifier, "required_obligation_ids", "Malformed obligation references.",
+                                  logger=logger, brief_id=brief_id, encoding=True)
                     record["required_obligation_ids"] = []
                 if not isinstance(record.get("lemma_instantiations", []), list):
-                    _block_record(plan, record, identifier, "lemma_instantiations", "Malformed lemma instantiations.", logger=logger, brief_id=brief_id)
+                    _block_record(plan, record, identifier, "lemma_instantiations", "Malformed lemma instantiations.",
+                                  logger=logger, brief_id=brief_id, encoding=True)
                     record["lemma_instantiations"] = []
             retained.append(record)
         plan[collection] = retained
@@ -355,22 +485,22 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
             if record[id_field] not in retained_ids:
                 archive_formal_record(plan, f"{collection}.{record[id_field]}", record, "Invalid formal input retained in archive.")
                 construction_warning(plan, record[id_field], "record", "Invalid formal input retained in archive.", logger=logger, brief_id=brief_id)
-    symbols = set()
-    symbol_records = {}
+    from .formal_reconciliation import normalize_duplicate_definitions
+
+    plan["definitions"] = envelope["definitions"]
+    plan["model_relations"] = envelope["model_relations"]
+    plan = normalize_duplicate_definitions(plan, logger=logger, brief_id=brief_id)
+    envelope["definitions"] = plan["definitions"]
+    envelope["model_relations"] = plan["model_relations"]
     for collection in ("definitions", "model_relations"):
         retained = []
         for record in envelope[collection]:
             if collection == "definitions":
                 symbol = record.get("symbol")
-                if not isinstance(symbol, str) or not symbol or symbol in symbols:
-                    archive_formal_record(plan, f"definitions.{record['definition_id']}", record, "Missing or duplicate declared symbol.")
+                if not isinstance(symbol, str) or not symbol:
+                    archive_formal_record(plan, f"definitions.{record['definition_id']}", record, "Missing declared symbol.")
                     construction_warning(plan, record["definition_id"], "symbol", "Symbol candidate retained in archive.", logger=logger, brief_id=brief_id)
-                    if isinstance(symbol, str) and symbol in symbol_records:
-                        previous = symbol_records[symbol]
-                        _block_record(plan, previous, previous["definition_id"], "symbol", "Conflicting symbol declarations require review.", logger=logger, brief_id=brief_id)
                     continue
-                symbols.add(symbol)
-                symbol_records[symbol] = record
             retained.append(record)
         plan[collection] = retained
     for item in envelope["unknown_items"]:
@@ -386,26 +516,26 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
             missing = [reference for reference in references if reference not in records or "obligation_id" in records[reference]]
             if missing:
                 _block_record(plan, record, identifier, field, f"Unresolved references: {missing}", logger=logger, brief_id=brief_id)
-                record[field] = [reference for reference in references if reference not in missing]
+                _mark_dependency_review(record, "missing", definition="definition_id" in record)
         if variable_claim_model is not None:
             missing = [reference for reference in record.get("variable_references", []) if reference not in variable_ids]
             if missing:
                 _block_record(plan, record, identifier, "variable_references", f"Unknown variables: {missing}", logger=logger, brief_id=brief_id)
-                record["variable_references"] = [reference for reference in record["variable_references"] if reference not in missing]
+                _mark_dependency_review(record, "missing", definition="definition_id" in record)
     invalid_globals = [identifier for identifier in plan["global_assumption_ids"]
                        if not isinstance(identifier, str) or identifier not in records or "assumption_id" not in records[identifier]]
-    plan["global_assumption_ids"] = [identifier for identifier in plan["global_assumption_ids"] if identifier not in invalid_globals]
     targets = {record.get("proposition_id", record.get("lemma_id")): record
                for record in plan["propositions"] + plan["lemmas"]}
     for target in targets.values():
         identifier = target.get("proposition_id", target.get("lemma_id"))
         if invalid_globals:
             _block_record(plan, target, identifier, "global_assumption_ids", "A global premise cannot be resolved.", logger=logger, brief_id=brief_id)
+            _mark_dependency_review(target, "missing")
         missing = [reference for reference in target["required_obligation_ids"]
                    if reference not in records or records[reference].get("target_id") != identifier]
         if missing:
             _block_record(plan, target, identifier, "required_obligation_ids", f"Unresolved obligations: {missing}", logger=logger, brief_id=brief_id)
-            target["required_obligation_ids"] = [reference for reference in target["required_obligation_ids"] if reference not in missing]
+            _mark_dependency_review(target, "missing")
     obligations = []
     for record in plan["proof_obligations"]:
         parent = targets.get(record.get("target_id")) if isinstance(record.get("target_id"), str) else None
@@ -431,22 +561,19 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
             target["lemma_instantiations"] = []
     records = formal_records(plan)
     active = set()
+    dependency_snapshots = deepcopy(records)
+    dependencies_by_id = {identifier: dependency_ids(record, plan) for identifier, record in records.items()}
+    for identifier in targets:
+        dependencies_by_id[identifier].update(plan["global_assumption_ids"])
+        dependencies_by_id[identifier].update(item["assumption_id"] for item in plan["assumptions"]
+                                              if item.get("is_global") is True)
     visited = set()
 
     def visit(identifier, path):
         if identifier in active:
             for member in path[path.index(identifier):]:
-                if records[member].get("dependency_health") != "cyclic":
-                    archive_formal_record(
-                        plan, f"records.{member}", records[member],
-                        "Cyclic construction dependency.",
-                    )
                 _mark_dependency_review(
                     records[member], "cyclic", definition="definition_id" in records[member],
-                )
-                construction_warning(
-                    plan, member, "depends_on", "Cyclic construction dependency.",
-                    logger=logger, brief_id=brief_id,
                 )
             return
         if identifier in visited:
@@ -465,17 +592,8 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
     for error in cycle_errors:
         identifier = error.split(":", 1)[1]
         if identifier in records:
-            if records[identifier].get("dependency_health") != "cyclic":
-                archive_formal_record(
-                    plan, f"records.{identifier}", records[identifier],
-                    "Cyclic construction dependency.",
-                )
             _mark_dependency_review(
                 records[identifier], "cyclic", definition="definition_id" in records[identifier],
-            )
-            construction_warning(
-                plan, identifier, "depends_on", "Cyclic construction dependency.",
-                logger=logger, brief_id=brief_id,
             )
     errors = [error for error in errors if not error.startswith("formal_dependency_cycle:")]
     for identifier, target in targets.items():
@@ -503,12 +621,8 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
         for identifier, record in records.items():
             if record.get("construction_status") == "blocked":
                 continue
-            dependencies = dependency_ids(record, plan)
-            if identifier in targets:
-                dependencies.update(plan["global_assumption_ids"])
-                dependencies.update(item["assumption_id"] for item in plan["assumptions"] if item.get("is_global") is True)
             unhealthy = [
-                dependency for dependency in dependencies
+                dependency for dependency in dependencies_by_id[identifier]
                 if dependency in records
                 and records[dependency].get("dependency_health") in {
                     "cyclic", "missing", "invalid_or_blocked", "blocked_by_dependency",
@@ -516,19 +630,12 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
             ]
             if unhealthy:
                 if record.get("dependency_health") not in {"cyclic", "blocked_by_dependency"}:
-                    archive_formal_record(
-                        plan, f"records.{identifier}", record,
-                        f"A prerequisite construction remains unresolved: {unhealthy}.",
-                    )
                     _mark_dependency_review(
                         record, "blocked_by_dependency", definition="definition_id" in record,
                     )
-                    construction_warning(
-                        plan, identifier, "premises",
-                        f"A prerequisite construction remains unresolved: {unhealthy}.",
-                        logger=logger, brief_id=brief_id,
-                    )
                     changed = True
+    _sync_dependency_warnings(plan, records, dependencies_by_id, dependency_snapshots,
+                              logger=logger, brief_id=brief_id)
     for field, id_field in (("target_proposition_id", "proposition_id"), ("final_conclusion_step", "step_id")):
         identifier = plan["forward_derivation"].get(field)
         if identifier and (not isinstance(identifier, str) or identifier not in records or id_field not in records[identifier]):
@@ -552,11 +659,17 @@ def recover_formal_plan(payload, variable_claim_model=None, *, logger=None, brie
                 and isinstance(target_id, str)
                 and target_id in targets
                 and targets[target_id].get("dependency_health") in {
-                    "cyclic", "blocked_by_dependency",
+                    "cyclic", "missing", "blocked_by_dependency",
                 }
             ):
                 plan["proof_attempts"].append(deepcopy(dict(attempt)))
         else:
             plan["proof_attempts"].append(deepcopy(attempt))
     log_symbol_diagnostics(plan, logger=logger, brief_id=brief_id)
+    from .formal_object_registry import build_registry, inspect_dependency_graph
+    plan["object_registry"] = build_registry(plan)
+    plan["object_registry_diagnostics"] = inspect_dependency_graph(plan)
+    if logger is not None and plan["object_registry_diagnostics"] != previous_graph:
+        logger.event("formal_object_registry", "graph_profiled", status="PROFILED", brief_id=brief_id,
+                     phase="dependency_recovered", **plan["object_registry_diagnostics"])
     return plan

@@ -45,6 +45,7 @@ def _new_run(
     *,
     survey_appendix: str = "source-link",
     render_required: bool = False,
+    computation_mode: str = "off",
 ) -> tuple[science_run.ScienceRunPaths, dict[str, Any]]:
     config_path = _write_config(tmp_path)
     paths, metadata, _state = science_run.initialize_science_run(
@@ -55,6 +56,7 @@ def _new_run(
             "discipline_ids": ["25"],
             "survey_appendix": survey_appendix,
             "render_required": render_required,
+            "computation": {"mode": computation_mode},
         },
         run_id="closed-loop",
     )
@@ -181,6 +183,56 @@ def test_require_identity_rejects_inconsistent_author_verified_binding() -> None
             stage="author",
             exit_code=40,
         )
+
+
+def test_survey_insufficient_evidence_returns_partial_and_skips_downstream(tmp_path: Path):
+    paths, metadata = _new_run(tmp_path)
+    calls = []
+    defaults = _fake_services(calls)
+
+    def insufficient_survey(request):
+        calls.append(("survey", request))
+        payload = {"survey_status": "insufficient_evidence", "topic": request.topic, "reason": "query_plan_unavailable"}
+        status_path = _publish_json(request, "survey_status.json", payload)
+        return ScienceStageResult(stage="survey", result_path=status_path,
+            outputs={"survey_status": str(status_path)}, identity={"survey_run_id": request.survey_run_id}, metadata=payload)
+
+    services = ScienceStageServices(survey=insufficient_survey, idea=defaults.idea, exp_design=defaults.exp_design, author=defaults.author)
+    outcome = run_science_workflow(paths=paths, metadata=metadata, services=services)
+    assert [name for name, _request in calls] == ["survey"]
+    assert outcome.state["status"] == "PARTIAL"
+    stage = outcome.state["stages"]["survey"]
+    assert stage["status"] != "COMPLETED"
+    assert stage["outcome"] == "insufficient_evidence"
+    assert stage["failure"]["exit_code"] == 0
+    assert stage["failure"]["error_type"] == "InsufficientEvidence"
+    assert Path(stage["outputs"]["survey_status"]).is_file()
+    assert outcome.state["stages"]["idea"]["status"] == "PENDING"
+
+
+def test_survey_service_reads_insufficient_status_without_success_manifest(tmp_path: Path, monkeypatch):
+    attempt = tmp_path / "attempt-001"
+    attempt.mkdir()
+    runtime_config = tmp_path / "runtime.yaml"
+    runtime_config.write_text("{}", encoding="utf-8")
+    request = SurveyStageRequest(config_path=runtime_config, topic="test topic", attempt_dir=attempt, survey_run_id="survey-test")
+    _publish_json(request, "survey_status.json", {"survey_status": "insufficient_evidence", "topic": request.topic, "reason": "no_information_gain"})
+    _publish_json(request, "subhypothesis_retrieval.json", {"stop_reason": "no_information_gain"})
+    monkeypatch.setattr(science_stages, "_survey_runtime_config", lambda _request: runtime_config)
+    monkeypatch.setattr(science_stages, "_stage_environment", lambda _config: {})
+
+    class Process:
+        pid = 100
+
+        def wait(self):
+            return 0
+
+    monkeypatch.setattr(science_stages.subprocess, "Popen", lambda *_args, **_kwargs: Process())
+    result = science_stages.run_survey_stage(request)
+    assert result.result_path.name == "survey_status.json"
+    assert result.metadata["survey_status"] == "insufficient_evidence"
+    assert "retrieval_diagnostics" in result.outputs
+    assert not (attempt / "survey_manifest.json").exists()
 
 
 def _fake_services(calls: list[tuple[str, object]]) -> ScienceStageServices:
@@ -331,6 +383,7 @@ def _fake_services(calls: list[tuple[str, object]]) -> ScienceStageServices:
             source_design_id="design-001",
             selected_direction_id=selected_direction,
             rendering=render_status,
+            computational_handoff_manifest_path=request.computational_handoff_manifest_path,
         )
         return ScienceStageResult(
             stage="author",
@@ -358,6 +411,59 @@ def _fake_services(calls: list[tuple[str, object]]) -> ScienceStageServices:
         exp_design=exp_design,
         author=author,
     )
+
+
+def test_computational_branch_launch_join_author_and_resume(tmp_path, monkeypatch):
+    from src.pipeline import computational_workflow
+    from src.agents.computational_experiment_agent.orchestrator import ComputationalOrchestrator
+    from test_computational_experiments import context, callback
+    paths, metadata = _new_run(tmp_path, computation_mode="plan")
+    calls = []
+    original_join = computational_workflow.join_branch
+
+    def launch(run_dir):
+        calls.append(("computation_start", None))
+        _, state = science_run.load_science_run(paths)
+        idea = verify_idea_manifest(Path(state["stages"]["idea"]["result_manifest_path"]))
+        inputs = context()
+        inputs["source_binding"] = {key: idea.identity[key] for key in inputs["source_binding"] if key in idea.identity}
+        inputs["source_binding"].update(science_run_id=metadata["science_run_id"],
+            idea_result_sha256=science_run.file_sha256(idea.artifacts["idea_result"]))
+        ComputationalOrchestrator(run_dir, llm_call=callback()).start(context=inputs, mode="plan")
+
+    def join(run_dir, process=None, **kwargs):
+        calls.append(("computation_join", None))
+        return original_join(run_dir, process, **kwargs)
+
+    monkeypatch.setattr(computational_workflow, "start_branch", launch)
+    monkeypatch.setattr(computational_workflow, "join_branch", join)
+    services = _fake_services(calls)
+    outcome = run_science_workflow(paths=paths, metadata=metadata, services=services)
+    assert outcome.state["status"] == "COMPLETED"
+    names = [name for name, _ in calls]
+    assert names.index("computation_start") < names.index("exp_design") < names.index("computation_join") < names.index("author")
+    author_request = next(request for name, request in calls if name == "author")
+    assert author_request.computational_handoff_manifest_path == paths.run_dir / "computation/manifest.json"
+    assert outcome.state["computation"]["status"] == "PLANNED"
+    calls.clear()
+    resumed = run_science_workflow(paths=paths, metadata=metadata, services=services)
+    assert resumed.state["stages"]["exp_design"]["attempt"] == outcome.state["stages"]["exp_design"]["attempt"]
+    assert all(name.startswith("computation_") for name, _ in calls)
+
+
+def test_computational_launch_failure_continues_a_and_author(tmp_path, monkeypatch):
+    from src.pipeline import computational_workflow
+    paths, metadata = _new_run(tmp_path, computation_mode="run")
+    calls = []
+
+    def failed_launch(run_dir):
+        raise OSError("runtime startup unavailable")
+
+    monkeypatch.setattr(computational_workflow, "start_branch", failed_launch)
+    outcome = run_science_workflow(paths=paths, metadata=metadata, services=_fake_services(calls))
+    assert outcome.state["status"] == "COMPLETED"
+    assert outcome.state["computation"]["status"] == "FAILED"
+    assert [name for name, _ in calls] == ["survey", "idea", "exp_design", "author"]
 
 
 def _read_json(path: Path) -> dict[str, Any]:

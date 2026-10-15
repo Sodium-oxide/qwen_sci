@@ -153,11 +153,15 @@ def compact_direction_document(direction: Any) -> Dict[str, Any]:
     if not isinstance(direction, Mapping):
         return {}
     fields = (
+        "scientific_candidate_id",
+        "scientific_candidate_root_role",
+        "candidate_ledger_fingerprint",
         "idea_id",
         "seed_id",
         "route_id",
         "route_signature",
         "route_policy",
+        "gap_search_focus",
         "legacy_direction_mode",
         "mature_idea",
         "maturity",
@@ -223,11 +227,15 @@ def compact_candidate_entry(entry: Any) -> Dict[str, Any]:
     if not isinstance(entry, Mapping):
         return {}
     fields = (
+        "scientific_candidate_id",
+        "scientific_candidate_root_role",
+        "candidate_ledger_fingerprint",
         "idea_id",
         "seed_id",
         "route_id",
         "route_signature",
         "route_policy",
+        "gap_search_focus",
         "legacy_direction_mode",
         "mature_idea",
         "maturity",
@@ -389,6 +397,7 @@ def compact_mature_idea_contexts(value: Any) -> List[Dict[str, Any]]:
 def compact_mature_ideas(value: Any) -> List[Dict[str, Any]]:
     """Persist the mature-idea roster without raw generation state."""
     fields = (
+        "scientific_candidate_id", "scientific_candidate_root_role", "candidate_ledger_fingerprint",
         "idea_id", "title", "hypothesis", "central_hypothesis", "scientific_object",
         "mechanism", "mechanism_or_relation", "assumptions", "evidence_basis",
         "target_gap_ids", "gap_alignment", "refinement_scope", "falsifier",
@@ -474,6 +483,7 @@ def _compact_intervention(value: Any) -> Dict[str, Any]:
         "seed_id",
         "route_id",
         "route_policy",
+        "gap_search_focus",
         "direction_mode",
         "direction_summary",
         "scientific_object_schema",

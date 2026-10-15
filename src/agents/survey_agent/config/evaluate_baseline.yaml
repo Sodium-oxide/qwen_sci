@@ -18,9 +18,9 @@ APIInfo:
   llm_api_base_url: 
   llm_model_name: mimo-v2.5
   llm_max_context_length: 1000000
-  batch_chat_agent_worker: 4
+  batch_chat_agent_worker: 10
   chat_timeout: 900
-  batch_chat_timeout: 1800
+  batch_chat_timeout: 5400
   use_stream_mode: False
   openalex_api_key: "${oc.env:OPENALEX_API_KEY,''}"
   semantic_scholar_api_key: 

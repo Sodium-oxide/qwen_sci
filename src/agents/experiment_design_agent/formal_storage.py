@@ -10,7 +10,8 @@ from pathlib import Path
 REPORT_VERSION = "formal_verification_report_v2"
 SUMMARY_VERSION = "formal_verification_summary_v1"
 TABLES = ("snapshots", "records", "diagnostics")
-RAW_FIELDS = frozenset({"raw_json", "raw_excerpt", "raw_patch_json", "construction_archive"})
+RAW_FIELDS = frozenset({"raw_json", "raw_excerpt", "raw_patch_json", "construction_archive",
+                        "format_originals", "original_record"})
 
 
 def content_id(value):

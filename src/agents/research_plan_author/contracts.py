@@ -211,6 +211,7 @@ _BLOCK_SCHEMA: dict[str, Any] = {
                 "outcome_branch",
                 "review_checklist",
                 "quantitative_evidence",
+                "computational_evidence",
             ]
         },
         "text": {"type": "string"},
@@ -339,6 +340,7 @@ AUTHOR_SOURCE_BUNDLE_SCHEMA: dict[str, Any] = {
         },
         "idea_evolution": _OBJECT,
         "quantitative_evidence": _OBJECT,
+        "computational_evidence": _OBJECT,
     },
 }
 
@@ -545,7 +547,7 @@ def validate_research_plan_document(payload: object) -> list[str]:
                         skip_observed_result_detection=is_bibliographic_inventory_block(
                             section_id,
                             block_id,
-                        ) or (section_id == "computational_evidence" and _text(block.get("kind")) == "quantitative_evidence"),
+                        ) or (section_id in {"computational_evidence", "computational_experiment_evidence"} and _text(block.get("kind")) in {"quantitative_evidence", "computational_evidence"}),
                     )
                     block_claim_ids = {
                         _text(claim_id)
@@ -553,8 +555,8 @@ def validate_research_plan_document(payload: object) -> list[str]:
                         if _text(claim_id)
                     }
                     is_quantitative_evidence = (
-                        section_id == "computational_evidence"
-                        and _text(block.get("kind")) == "quantitative_evidence"
+                        section_id in {"computational_evidence", "computational_experiment_evidence"}
+                        and _text(block.get("kind")) in {"quantitative_evidence", "computational_evidence"}
                     )
                     if block_text and not block_claim_ids and not is_quantitative_evidence:
                         errors.append(f"visible section block {block_id} must reference at least one claim ID")

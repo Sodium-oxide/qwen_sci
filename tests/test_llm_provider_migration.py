@@ -311,6 +311,59 @@ def test_survey_non_streaming_qwen_fixture(monkeypatch):
     assert request["stream"] is False
 
 
+@pytest.mark.parametrize("token_capacity", [None, 10000])
+def test_survey_model_budget_propagates_to_both_batch_executor_modes(monkeypatch, token_capacity):
+    from src.pipeline.retrieval_budget import RetrievalBudget, model_request_scope
+    monkeypatch.setattr(api_call, "load_config", _project_config)
+    monkeypatch.setattr(api_call.tiktoken, "encoding_for_model", lambda _model: _CharacterEncoding())
+    requests_sent = []
+
+    def fake_post(*_args, **_kwargs):
+        requests_sent.append(True)
+        return _FakeResponse({"choices": [{"message": {"content": "answer"}}]})
+
+    monkeypatch.setattr(api_call.requests, "post", fake_post)
+    agent = api_call.ChatAgent(_survey_config())
+    budget = RetrievalBudget(assessment_limit=2)
+    lease = budget.reserve_model_capacity(2)
+    try:
+        with model_request_scope(budget, lease):
+            assert agent.batch_remote_chat(["one", "two"], workers=2, max_output_tokens=12, max_in_flight_tokens=token_capacity) == ["answer", "answer"]
+    finally:
+        budget.release_model_capacity(lease)
+    assert len(requests_sent) == budget.snapshot()["model_assessment_requests"] == 2
+
+
+@pytest.mark.parametrize("limit", [1, 2])
+def test_survey_model_budget_charges_internal_retry_and_blocks_overflow(monkeypatch, limit):
+    from src.pipeline.retrieval_budget import RetrievalBudget, RetrievalBudgetExceeded, model_request_scope
+    monkeypatch.setattr(api_call, "load_config", _project_config)
+    monkeypatch.setattr(api_call.tiktoken, "encoding_for_model", lambda _model: _CharacterEncoding())
+    requests_sent = []
+
+    def fake_post(*_args, **_kwargs):
+        requests_sent.append(True)
+        if len(requests_sent) == 1:
+            raise api_call.requests.ConnectionError("controlled transient error")
+        return _FakeResponse({"choices": [{"message": {"content": "answer"}}]})
+
+    monkeypatch.setattr(api_call.requests, "post", fake_post)
+    agent = api_call.ChatAgent(_survey_config())
+    monkeypatch.setattr(agent.remote_chat.retry, "wait", lambda _state: 0)
+    budget = RetrievalBudget(assessment_limit=limit)
+    lease = budget.reserve_model_capacity(1)
+    try:
+        with model_request_scope(budget, lease):
+            if limit == 1:
+                with pytest.raises(RetrievalBudgetExceeded):
+                    agent.remote_chat("question", max_output_tokens=12)
+            else:
+                assert agent.remote_chat("question", max_output_tokens=12) == "answer"
+    finally:
+        budget.release_model_capacity(lease)
+    assert len(requests_sent) == budget.snapshot()["model_assessment_requests"] == limit
+
+
 def test_survey_qwen_json_object_response_format(monkeypatch):
     project_config = _project_config()
     request = {}
@@ -438,9 +491,9 @@ def test_deep_survey_limits_batch_chat_concurrency():
         )
     )
 
-    assert config.APIInfo.batch_chat_agent_worker == 4
+    assert config.APIInfo.batch_chat_agent_worker == 10
     assert config.APIInfo.chat_timeout == 600
-    assert config.APIInfo.batch_chat_timeout == 1800
+    assert config.APIInfo.batch_chat_timeout == 5400
 
 
 def test_batch_chat_marks_unfinished_requests_for_retry(monkeypatch):

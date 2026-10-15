@@ -59,6 +59,7 @@ class DataManager:
         self.paper_abstract_cache = dc.Cache(
             os.path.join(self.cache_path, "paper_abstracts")
         )
+        self._short_abstract_warning_hashes = set()
         
         # title to paper_id lookup cache (for filter_papers_local_paper_graph)
         self.title_lookup_cache = dc.Cache(
@@ -139,8 +140,19 @@ class DataManager:
             return False
         if not abstract or abstract.strip() == "" or abstract == "abstract not found" or len(abstract) < 50:
             return False
-        if len(abstract) < 300 and len(abstract) > 50:
-            self.logger.warning(f"abstract too short, deug for safety: {abstract}")
+        if len(abstract) < 300:
+            warning_hashes = getattr(self, "_short_abstract_warning_hashes", None)
+            if warning_hashes is None:
+                warning_hashes = set()
+                self._short_abstract_warning_hashes = warning_hashes
+            abstract_hash = get_hash(abstract)
+            if abstract_hash not in warning_hashes:
+                warning_hashes.add(abstract_hash)
+                self.logger.warning(
+                    "Short metadata abstract (%s chars); continuing with abstract fallback: %s",
+                    len(abstract),
+                    abstract,
+                )
         return True
 
     def add_papers_abstracts_in_cache(self, papers: List[str], retry: int = 1):

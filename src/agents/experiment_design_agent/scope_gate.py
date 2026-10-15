@@ -20,6 +20,8 @@ SCOPE_GATE_SCHEMA_VERSION = "experiment_design_scope_gate_v1"
 _RISK_ORDER = {"low": 0, "medium": 1, "high": 2, "critical": 3}
 _CONSTRAINT_SIGNALS = {
     "human_participants": "HUMAN_PARTICIPANT_REVIEW",
+    "human_subjects": "HUMAN_PARTICIPANT_REVIEW",
+    "human_experiments": "HUMAN_PARTICIPANT_REVIEW",
     "animal_subjects": "ANIMAL_USE_REVIEW",
     "pathogen": "PATHOGEN_OR_RESTRICTED_BIOLOGICAL_REVIEW",
     "restricted_biological_material": "PATHOGEN_OR_RESTRICTED_BIOLOGICAL_REVIEW",
@@ -36,6 +38,17 @@ _CONSTRAINT_SIGNALS = {
 }
 _TEXT_SIGNALS = {
     "human participant": "HUMAN_PARTICIPANT_REVIEW",
+    "human subject": "HUMAN_PARTICIPANT_REVIEW",
+    "human experiment": "HUMAN_PARTICIPANT_REVIEW",
+    "human intervention": "HUMAN_PARTICIPANT_REVIEW",
+    "human study": "HUMAN_PARTICIPANT_REVIEW",
+    "human studies": "HUMAN_PARTICIPANT_REVIEW",
+    "volunteer": "HUMAN_PARTICIPANT_REVIEW",
+    "人体实验": "HUMAN_PARTICIPANT_REVIEW",
+    "人体试验": "HUMAN_PARTICIPANT_REVIEW",
+    "人类受试者": "HUMAN_PARTICIPANT_REVIEW",
+    "受试者": "HUMAN_PARTICIPANT_REVIEW",
+    "志愿者": "HUMAN_PARTICIPANT_REVIEW",
     "patient": "HUMAN_PARTICIPANT_REVIEW",
     "clinical trial": "HUMAN_PARTICIPANT_REVIEW",
     "animal": "ANIMAL_USE_REVIEW",
@@ -56,10 +69,6 @@ _CHEMISTRY_SAFETY_DISCIPLINES = frozenset({"15", "16"})
 _RESTRICTED_DETAIL_TRIGGERS = frozenset(
     {
         "HUMAN_PARTICIPANT_REVIEW",
-        "CLINICAL_OR_HEALTH_EXPERT_REVIEW",
-        "ANIMAL_USE_REVIEW",
-        "PATHOGEN_OR_RESTRICTED_BIOLOGICAL_REVIEW",
-        "GENETIC_MODIFICATION_REVIEW",
         "HAZARDOUS_MATERIAL_REVIEW",
         "HIGH_ENERGY_OR_PRESSURE_REVIEW",
     }
@@ -110,7 +119,20 @@ def _review_requirements(
             triggers.add(trigger)
     source_text = _payload_text(research_brief.get("research_object"), research_brief, constraints)
     for phrase, trigger in _TEXT_SIGNALS.items():
-        if phrase in source_text:
+        signal_pattern = re.escape(phrase)
+        if phrase.startswith("human "):
+            signal_pattern = r"(?<!non-)(?<!non )\b" + signal_pattern + r"s?\b(?![- ]derived\b)"
+        elif phrase == "volunteer":
+            signal_pattern = r"\b" + signal_pattern + r"s?\b"
+        elif phrase == "patient":
+            signal_pattern = r"\bpatients?\b(?![- ]derived\b)"
+        elif phrase.startswith("人体"):
+            signal_pattern = r"(?<!非)" + signal_pattern
+        elif phrase == "人类受试者":
+            signal_pattern = r"(?<!非)" + signal_pattern
+        elif phrase == "受试者":
+            signal_pattern = r"(?<!非人类)(?<!非人)" + signal_pattern
+        if re.search(signal_pattern, source_text):
             triggers.add(trigger)
     if set(discipline_ids) & _CLINICAL_DISCIPLINES:
         triggers.update({"CLINICAL_OR_HEALTH_EXPERT_REVIEW", "ETHICS_AND_DATA_APPROVAL"})
@@ -138,6 +160,11 @@ def _review_requirements(
         approval_dependencies.append("site_or_field_permission_confirmation")
     if "SENSITIVE_DATA_REVIEW" in triggers:
         approval_dependencies.append("data_stewardship_confirmation")
+    restricted_content: list[str] = []
+    if "HUMAN_PARTICIPANT_REVIEW" in triggers:
+        restricted_content.append("Human-participant recruitment, treatment, and experimental procedures remain high-level pending human review.")
+    if "HAZARDOUS_MATERIAL_REVIEW" in triggers or "HIGH_ENERGY_OR_PRESSURE_REVIEW" in triggers:
+        restricted_content.append("Hazardous recipes and dangerous high-energy or pressure operating instructions are not emitted.")
     return {
         "risk_level": (
             "critical"
@@ -150,11 +177,7 @@ def _review_requirements(
         "review_triggers": sorted(triggers),
         "approval_dependencies": list(dict.fromkeys(approval_dependencies)),
         "execution_prohibited": True,
-        "restricted_content": [
-            "No dangerous operational parameters, clinical recruitment instructions, animal SOPs, or restricted biological protocols are emitted.",
-        ]
-        if required
-        else [],
+        "restricted_content": restricted_content,
     }
 
 
@@ -167,13 +190,13 @@ def _methodology_detail_policy(review: Mapping[str, Any]) -> dict[str, Any]:
         return {
             "level": "RESTRICTED_HIGH_RISK_PLAN",
             "allowed": False,
-            "reason": "High-ethics or high-hazard review is required before detailed operating instructions can be reported.",
+            "reason": "Human-participant or hazardous-material/energy review is required before detailed operating instructions can be reported.",
             "restricted_triggers": sorted(triggers & _RESTRICTED_DETAIL_TRIGGERS),
         }
     return {
         "level": "FULL_METHODOLOGY_PLAN",
         "allowed": True,
-        "reason": "The declared scope has no high-ethics or high-hazard trigger; a complete non-executing methodology plan may be drafted.",
+        "reason": "No human-participant or hazardous-material/energy detail restriction applies; non-human biological review does not limit a complete non-executing methodology plan.",
         "restricted_triggers": [],
     }
 

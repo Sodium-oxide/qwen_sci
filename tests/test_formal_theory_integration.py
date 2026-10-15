@@ -145,7 +145,9 @@ def test_orchestrator_retains_valid_revision_when_another_record_invents_variabl
     ).compose_design(_brief(), logger=logger)
 
     assert design["formal_reasoning_plan"]["definitions"][0]["selection_reason"] == "Clarify the registered definition"
-    assert design["formal_reasoning_plan"]["assumptions"][0] == plan["assumptions"][0]
+    expected_assumption = deepcopy(plan["assumptions"][0])
+    expected_assumption["object_bindings"] = {"x": design["formal_reasoning_plan"]["definitions"][0]["definition_id"]}
+    assert design["formal_reasoning_plan"]["assumptions"][0] == expected_assumption
     assert validate_formal_plan_v2(design["formal_reasoning_plan"], design["variable_claim_model"]) == []
     assert validate_experiment_design(design) == []
     warning = next(record for record in logger.records if record.get("error_code") == "unknown_variable_reference")
@@ -180,20 +182,22 @@ def test_definition_resolution_warning_does_not_skip_formal_plan():
     config = {"experiment_design": {"formal_reasoning": {"enabled": True, "definition_resolution": True}}}
     design = ExperimentDesignOrchestrator(llm_call=callback, config=config).compose_design(_brief(), logger=logger)
 
-    assert design["formal_reasoning_plan"]["status"] == "requires_human_review"
+    assert design["formal_reasoning_plan"]["status"] == "unverified"
+    assert design["formal_reasoning_plan"]["definitions"]
+    assert design["formal_reasoning_plan"]["unknown_items"]
     assert not any("formal_definition_resolver" in item for item in design["field_statuses"])
     assert any("Formal Reasoning Planner" in prompt for prompt in calls)
     assert any(
         record["stage"] == "formal_definition_resolver"
         and record["event"] == "record_warning"
         and record["status"] == "WARNING"
-        and record.get("field") == "origin"
-        and record.get("disposition") == "kept_unresolved"
+        and "origin" in record.get("fields", [])
+        and record.get("disposition") in {"kept_unresolved", "kept_draft"}
         for record in logger.records
     )
     assert any(
         record["stage"] == "formal_reasoning_planner"
-        and record["event"] == "warning"
+        and record["event"] == "skeleton_group_warning"
         and record["status"] == "WARNING"
         for record in logger.records
     )

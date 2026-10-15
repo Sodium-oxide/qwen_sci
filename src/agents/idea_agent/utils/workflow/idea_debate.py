@@ -29,6 +29,7 @@ IMMUTABLE_IDENTITY_FIELDS = (
     "target_gap_ids",
     "route_id",
     "route_signature",
+    "gap_search_focus",
     "lineage",
 )
 _DEBATE_CANDIDATE_FIELDS = (
@@ -52,6 +53,7 @@ _DEBATE_CANDIDATE_FIELDS = (
     "falsifier",
     "risks",
     "target_gap_ids",
+    "gap_search_focus",
     "scientific_object",
     "intervention_or_transformation",
     "independence_status",
@@ -59,6 +61,7 @@ _DEBATE_CANDIDATE_FIELDS = (
     "scientific_intervention",
 )
 _DEBATE_INTERVENTION_FIELDS = (
+    "gap_search_focus",
     "profile_id",
     "profile_label",
     "contribution_mode",
@@ -258,6 +261,25 @@ def effective_scientific_contract(direction: Mapping[str, Any]) -> Dict[str, Any
     return effective
 
 
+def _debate_gap_focus_view(focus: Mapping[str, Any]) -> Dict[str, Any]:
+    gap_fields = (
+        "gap_id", "statement", "gap_kind", "target_slot", "eligibility_route",
+        "evidence_eligibility", "gap_audit", "support_level",
+    )
+
+    def project_gap(gap: Any) -> Dict[str, Any]:
+        return {key: gap[key] for key in gap_fields if key in gap} if isinstance(gap, Mapping) else {}
+
+    return {
+        "primary_gap_id": focus.get("primary_gap_id"),
+        "primary_gap": project_gap(focus.get("primary_gap")),
+        "context_constraints": [project_gap(gap) for gap in focus.get("context_constraints", [])],
+        "route_id": focus.get("route_id"),
+        "route_selection_reason": focus.get("route_selection_reason"),
+        "coverage_before": focus.get("coverage_before"),
+    }
+
+
 def _debate_candidate_view(direction: Mapping[str, Any]) -> Dict[str, Any]:
     effective = effective_scientific_contract(direction)
     view: Dict[str, Any] = {}
@@ -265,12 +287,16 @@ def _debate_candidate_view(direction: Mapping[str, Any]) -> Dict[str, Any]:
         if field_name not in effective:
             continue
         value = effective.get(field_name)
+        if field_name == "gap_search_focus" and isinstance(value, Mapping):
+            value = _debate_gap_focus_view(value)
         if field_name == "scientific_intervention" and isinstance(value, Mapping):
             value = {
                 key: value.get(key)
                 for key in _DEBATE_INTERVENTION_FIELDS
                 if key in value
             }
+            if isinstance(value.get("gap_search_focus"), Mapping):
+                value["gap_search_focus"] = _debate_gap_focus_view(value["gap_search_focus"])
         view[field_name] = _compact_prompt_value(value)
     return view
 
@@ -313,7 +339,7 @@ def _debate_handoff_view(
         return {}
     target_ids = set(_list(target_gap_ids))
     view: Dict[str, Any] = {}
-    for field_name in ("survey_run_id", "project_id", "topic", "profile_resolution", "scope", "constraints"):
+    for field_name in ("survey_run_id", "project_id", "topic", "profile_resolution", "scope", "constraints", "scientific_candidates"):
         if field_name in survey_handoff:
             view[field_name] = _compact_prompt_value(survey_handoff.get(field_name))
     gaps = []

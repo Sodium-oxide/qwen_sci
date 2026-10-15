@@ -2,6 +2,7 @@ import requests
 import time
 import re
 import threading
+from contextvars import copy_context
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 from collections.abc import Mapping
@@ -34,6 +35,9 @@ if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
 
 from src.config import load_config
+from src.pipeline.retrieval_budget import (
+    RetrievalBudgetExceeded, reserve_retrieval_http_attempt, has_retrieval_request_scope, provider_retrieval_budget, reserve_model_http_attempt,
+)
 from src.llm.provider_registry import (
     build_chat_completions_url,
     require_model_capabilities,
@@ -62,13 +66,28 @@ _OPENALEX_REQUEST_RATE_LOCK = threading.Lock()
 _OPENALEX_NEXT_REQUEST_NOT_BEFORE = 0.0
 
 
+class _BudgetedHTTPAdapter(requests.adapters.HTTPAdapter):
+    def __init__(self, retrieval_budget=None, *, budgeted_search=False):
+        super().__init__(max_retries=0)
+        self.retrieval_budget = retrieval_budget
+        self.budgeted_search = budgeted_search
+
+    def send(self, request, **kwargs):
+        if self.budgeted_search:
+            reserve_retrieval_http_attempt(self.retrieval_budget, request.method + ":" + request.url)
+        return super().send(request, **kwargs)
+
+
 class _TimeoutSession(requests.Session):
     """Requests session that supplies a timeout when a library omits one."""
 
-    def __init__(self, timeout: tuple[float, float]):
+    def __init__(self, timeout: tuple[float, float], retrieval_budget=None, *, budgeted_search=False):
         super().__init__()
         self.request_timeout = timeout
         self.last_response = None
+        self.retrieval_budget = retrieval_budget
+        self.mount("https://", _BudgetedHTTPAdapter(retrieval_budget, budgeted_search=budgeted_search))
+        self.mount("http://", _BudgetedHTTPAdapter(retrieval_budget, budgeted_search=budgeted_search))
 
     def request(self, method, url, **kwargs):
         if kwargs.get("timeout") is None:
@@ -97,7 +116,7 @@ class ArxivAPI:
         paper = {}
         
         for retry_count in range(self.config.APIInfo.arxiv_api_max_retry):
-            response = requests.get(arxiv_url, timeout=120)
+            response = requests.get(arxiv_url, timeout=120, allow_redirects=False)
             if response.status_code == 200:
                 break
             else:
@@ -140,7 +159,7 @@ class ArxivAPI:
         
         papers = []
         for retry_count in range(self.config.APIInfo.arxiv_api_max_retry):
-            response = requests.get(arxiv_url, timeout=120)
+            response = requests.get(arxiv_url, timeout=120, allow_redirects=False)
             if response.status_code == 200:
                 break
             else:
@@ -248,7 +267,7 @@ class ArxivAPI:
         max_retries = max(1, int(getattr(self.config.APIInfo, "arxiv_api_max_retry", 3) or 3))
         while retry_count < max_retries:
             try:
-                response = requests.get(arxiv_url, timeout=120)
+                response = requests.get(arxiv_url, timeout=120, allow_redirects=False)
             except requests.RequestException as exc:
                 self.logger.warning("arXiv discovery request failed for %s: %s", query_text, exc)
                 retry_count += 1
@@ -266,12 +285,12 @@ class ArxivAPI:
             if response.status_code == 429 and retry_count < max_retries:
                 time.sleep(60 * retry_count)
         if response is None or response.status_code != 200:
-            return []
+            raise requests.RequestException("arXiv discovery failed without a valid response")
         try:
             root = ET.fromstring(response.content)
         except ET.ParseError as exc:
             self.logger.warning("arXiv returned invalid Atom XML for %s: %s", query_text, exc)
-            return []
+            raise requests.RequestException("arXiv returned invalid Atom XML") from exc
         namespace = {"atom": "http://www.w3.org/2005/Atom"}
         papers = [
             self._paper_from_atom_entry(entry, namespace)
@@ -293,14 +312,16 @@ class SemanticScholarAPI:
         self.config = config
         self.last_status_code = None
 
-    def search_papers(self, query: str, fields: str, retry_time: int = 0):
+    def search_papers(self, query: str, fields: str, retry_time: int = 0, limit=None):
         """Search papers with bounded retries; log every attempt."""
         max_retry = self.config.APIInfo.semantic_scholar_api_max_retry
         url = f"{self.base_url}/paper/search"
         params = {"query": query, "fields": fields}
+        if limit is not None:
+            params["limit"] = int(limit)
 
         resp = requests.get(
-            url, headers=self.headers, params=params, timeout=60
+            url, headers=self.headers, params=params, timeout=60, allow_redirects=False
         )
         self.last_status_code = resp.status_code
         if resp.status_code == 200:
@@ -318,17 +339,17 @@ class SemanticScholarAPI:
         if resp.status_code == 429:
             self.logger.info("Rate limit exceeded. Waiting 60 seconds before retrying...")
             time.sleep(60)
-            return self.search_papers(query, fields, retry_time + 1)
+            return self.search_papers(query, fields, retry_time + 1, limit=limit)
         else:
             time.sleep(min(5, 1 + retry_time))
 
-        return self.search_papers(query, fields, retry_time+1)
+        return self.search_papers(query, fields, retry_time+1, limit=limit)
 
     def get_paper_details(self, paper_id: str, fields: str, retry_time: int = 0):
         """Fetch paper details with bounded retries; raises on final failure."""
         max_retry = self.config.APIInfo.semantic_scholar_api_max_retry
         url = f"{self.base_url}/paper/{paper_id}?fields={fields}"
-        resp = requests.get(url, headers=self.headers, timeout=60)
+        resp = requests.get(url, headers=self.headers, timeout=60, allow_redirects=False)
 
         if resp.status_code == 200:
             return resp.json()
@@ -454,8 +475,8 @@ class OpenAlexAPI:
     def _request_timeout(self) -> tuple[float, float]:
         return (self.connect_timeout_seconds, self.read_timeout_seconds)
 
-    def _new_timeout_session(self) -> _TimeoutSession:
-        return _TimeoutSession(self._request_timeout)
+    def _new_timeout_session(self, *, budgeted_search=False) -> _TimeoutSession:
+        return _TimeoutSession(self._request_timeout, provider_retrieval_budget(self), budgeted_search=budgeted_search)
 
     def _wait_for_request_rate_slot(self) -> float:
         """Reserve one paced OpenAlex request start across concurrent callers."""
@@ -594,7 +615,7 @@ class OpenAlexAPI:
             )
         return works.get(per_page=per_page)
 
-    def _call_pyalex(self, label, operation):
+    def _call_pyalex(self, label, operation, *, budgeted_search=False):
         if not self.api_key:
             self.logger.warning(
                 "OpenAlex request skipped label=%s reason=missing_api_key. "
@@ -618,7 +639,7 @@ class OpenAlexAPI:
                 self.read_timeout_seconds,
             )
             try:
-                with self._new_timeout_session() as session:
+                with self._new_timeout_session(budgeted_search=budgeted_search) as session:
                     result = operation(session)
                     rate_limit_values = self._rate_limit_log_values(session.last_response)
                 self.logger.info(
@@ -632,6 +653,11 @@ class OpenAlexAPI:
                     *rate_limit_values,
                 )
                 return result
+            except RetrievalBudgetExceeded:
+                if has_retrieval_request_scope():
+                    raise
+                self.logger.info("OpenAlex search deferred: label=%s reason=budget_exhausted.", label)
+                return None
             except Exception as exc:
                 elapsed_seconds = time.monotonic() - started_at
                 status_code = self._status_code_from_exception(exc)
@@ -778,6 +804,7 @@ class OpenAlexAPI:
         result = self._call_pyalex(
             f"search {query!r}" + (" with exact field filter" if filter_kwargs else ""),
             search_works,
+            budgeted_search=True,
         )
         if return_success:
             # _call_pyalex returns ``None`` only after a request failure or a
@@ -1350,6 +1377,7 @@ class PromptBudgetExceeded(ValueError):
     pass
 
 class ChatAgent:
+    accounts_model_attempts = True
     Record_splitter = "||"
     Record_show_length = 200
 
@@ -1682,6 +1710,7 @@ class ChatAgent:
             if request_timeout <= 0:
                 raise ValueError("request_timeout must be positive when provided.")
             chat_timeout = min(chat_timeout, request_timeout)
+        reserve_model_http_attempt()
         response = requests.post(url, headers=header, json=payload, timeout=chat_timeout, stream=use_stream)
         res = None
         if self.config.APIInfo.low_flow_mode:
@@ -2011,7 +2040,7 @@ class ChatAgent:
         if workers is None:
             workers = self.batch_workers
         if future_timeout is None:
-            future_timeout = getattr(self.config.APIInfo, "batch_chat_timeout", 1800.0)
+            future_timeout = getattr(self.config.APIInfo, "batch_chat_timeout", 5400.0)
         if workers <= 0:
             raise ValueError("workers must be positive.")
         if future_timeout <= 0:
@@ -2081,6 +2110,7 @@ class ChatAgent:
                         return
                     index, prompt, estimated_tokens = queued.pop(queue_position)
                     future = executor.submit(
+                        copy_context().run,
                         self._token_admitted_remote_chat,
                         index=index,
                         prompt=prompt,
@@ -2217,6 +2247,7 @@ class ChatAgent:
         executor = ThreadPoolExecutor(max_workers=workers)
         future_to_index = {
             executor.submit(
+                copy_context().run,
                 self._token_admitted_remote_chat,
                 index=index,
                 prompt=prompt,
@@ -2306,7 +2337,7 @@ class ChatAgent:
         max_in_flight_tokens: int | None = None,
     ) -> list[str]:
         if future_timeout is None:
-            future_timeout = getattr(self.config.APIInfo, "batch_chat_timeout", 1800.0)
+            future_timeout = getattr(self.config.APIInfo, "batch_chat_timeout", 5400.0)
         """
         Batch remote chat with retry logic for failed validations.
         

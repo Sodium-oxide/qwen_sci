@@ -463,7 +463,14 @@ Input:
 Output:
 """
 
-SURVEY_OUTLINE_GENERATION = """You are an expert research survey generator. Your task is to iteratively update an existing survey outline using a batch of new paper keynotes, the current outline, and the analysis results of relevant papers for the topic/subtopic being written.
+ORIGINAL_RESEARCH_QUESTION_CONTEXT = """Original research question (original_research_question):
+{original_research_question}
+
+Use the original research question to govern the survey's scope and requested analyses. Address the parts relevant to this writing task within the overall survey structure. The question defines the research request, not verified scientific evidence; respect the supplied evidence plan and report evidence gaps rather than inventing support.
+
+"""
+
+SURVEY_OUTLINE_GENERATION = ORIGINAL_RESEARCH_QUESTION_CONTEXT + """You are an expert research survey generator. Your task is to iteratively update an existing survey outline using a batch of new paper keynotes, the current outline, and the analysis results of relevant papers for the topic/subtopic being written.
 
 **Guidance:**
 - The analysis results contain summarized insights, comparisons, trends, and key points extracted from prior work. They should be the **important source of guidance** when updating the outline.
@@ -518,7 +525,7 @@ SURVEY_OUTLINE_GENERATION = """You are an expert research survey generator. Your
 - Check the hardware modalities promised by the survey title or section titles against assigned evidence. Give each evidenced modality an identifiable place; narrow an overbroad title or state a documented evidence gap when coverage is unavailable.
 """
 
-SURVEY_OUTLINE_GENERATION_OUTLINE_DRAFT = """You are an expert research survey generator. Your task is to generate and iteratively update an existing survey outline using a batch of new paper keynotes, the current outline, and the analysis results of relevant papers for the topic/subtopic being written.
+SURVEY_OUTLINE_GENERATION_OUTLINE_DRAFT = ORIGINAL_RESEARCH_QUESTION_CONTEXT + """You are an expert research survey generator. Your task is to generate and iteratively update an existing survey outline using a batch of new paper keynotes, the current outline, and the analysis results of relevant papers for the topic/subtopic being written.
 
 **Guidance:**
 - The analysis results contain summarized insights, comparisons, trends, and key points extracted from prior work. They should be the **important source of guidance** when updating the outline.
@@ -583,7 +590,7 @@ SURVEY_OUTLINE_GENERATION_OUTLINE_DRAFT = """You are an expert research survey g
 - Check hardware modalities promised by titles against assigned evidence. Include evidenced modalities or narrow the promised scope when admissible evidence is absent.
 """
 
-SURVEY_OUTLINE_REPAIR = """Repair a survey outline response that failed local validation.
+SURVEY_OUTLINE_REPAIR = ORIGINAL_RESEARCH_QUESTION_CONTEXT + """Repair a survey outline response that failed local validation.
 
 Return exactly one JSON object. Do not use Markdown fences or explanatory prose.
 
@@ -623,7 +630,7 @@ Requirements:
 4. Do not include paper IDs in this draft outline; paper assignment happens later.
 """
 
-SURVEY_OUTLINE_GENERATION_PAPER_ASSIGNMENT = """You are an expert research survey writer. Your task is to assign papers to be cited to corresponding sections and subsections.
+SURVEY_OUTLINE_GENERATION_PAPER_ASSIGNMENT = ORIGINAL_RESEARCH_QUESTION_CONTEXT + """You are an expert research survey writer. Your task is to assign papers to be cited to corresponding sections and subsections.
 
 **Guidance:**
 1. Assign papers based on their relevance to the section and subsection topics.
@@ -711,7 +718,7 @@ Rules:
 5. The returned object repairs metadata only; it must not imply evidence absent from the immutable prose or the supplied admissible paths.
 """
 
-SUBSECTION_DRAFT = """You are an expert in writing top academic conference standards surveys. The ultimate goal is to complete a acadamic survey with depth, insights and can boost further development, rather than simply listing methods.
+SUBSECTION_DRAFT = ORIGINAL_RESEARCH_QUESTION_CONTEXT + """You are an expert in writing top academic conference standards surveys. The ultimate goal is to complete a acadamic survey with depth, insights and can boost further development, rather than simply listing methods.
 
 Now you are responsible for writing a subsection of the survey paper. 
 
@@ -763,7 +770,7 @@ Utilize the input content in a safe and reasonable manner, and ensure that the r
 The metadata must be valid JSON, must be final, and must not introduce claims or paper IDs absent from the prose/plan. ``claim_index`` is one-based among visible prose sentences and lets the program recover the exact sentence despite harmless spacing or punctuation differences. Do not emit evidence_role, support_kind, or limitation_slots: the program derives them from the authoritative evidence plan. A paper path may trace a citation; a multimodal-observation path uses only ``source_type``, SH, and ``observation_id`` and is not a literature citation. A LOCAL_DATA_OBSERVATION must use only its listed multimodal-observation path, for example ``{{"source_type":"multimodal_observation","sub_hypothesis_id":"MM_SH_01","observation_id":"one plan-listed supplied-data observation"}}``, and must retain supplied-data scope plus uncertainty in the visible prose. Every bounded response must include at least one claim. For EVIDENCE_GAP_REPORT or OUT_OF_SCOPE_OR_REJECTED, use evidence_paths: [] and include an appropriate claim_index / claim_anchor; do not cite a paper. If the plan is inactive, omit this block.
 """
 
-SUBSECTION_DRAFT_WITH_CODE = """You are an expert in writing top academic conference standards surveys. The ultimate goal is to complete a acadamic survey with depth, insights and can boost further development, rather than simply listing methods.
+SUBSECTION_DRAFT_WITH_CODE = ORIGINAL_RESEARCH_QUESTION_CONTEXT + """You are an expert in writing top academic conference standards surveys. The ultimate goal is to complete a acadamic survey with depth, insights and can boost further development, rather than simply listing methods.
 
 Now you are responsible for writing a subsection of the survey paper. 
 
@@ -958,7 +965,7 @@ Description: {cluster_description}
 }}
 """
 
-SECTION_DRAFT = """You are writing the Introductory Paragraphs/Preamble for a specific section of an academic top-tier conference survey paper. 
+SECTION_DRAFT = ORIGINAL_RESEARCH_QUESTION_CONTEXT + """You are writing the Introductory Paragraphs/Preamble for a specific section of an academic top-tier conference survey paper.
 **Task**:
 Write the opening text that appears immediately after the Section Title but before the first subsection. This content should serve as a high-level synthesis and roadmap for the reader.
 

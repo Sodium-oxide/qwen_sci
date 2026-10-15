@@ -72,6 +72,7 @@ from src.pipeline.multimodal_evidence.survey_integration import (
     multimodal_trace_details,
 )
 from src.pipeline.paper_identity import canonical_paper_id, canonical_paper_ids
+from src.pipeline.scientific_candidates import refresh_candidate_fulltext
 from src.pipeline.survey_handoff_persistence import publish_survey_run_artifacts
 
 
@@ -268,6 +269,12 @@ class SurveyGenerator:
             "subhypothesis_contracts": list(contracts),
             "max_writable_papers_per_sh": max_writable_papers_per_sh,
         }
+        candidate_papers = retrieval.get("candidate_papers")
+        if isinstance(candidate_papers, Sequence) and not isinstance(candidate_papers, (str, bytes)):
+            sources["candidate_papers"] = list(candidate_papers)
+        candidate_ledger = self._as_mapping(retrieval.get("candidate_discovery"))
+        if candidate_ledger.get("schema_version") == "scientific_candidate_ledger_v2":
+            sources["candidate_ledger"] = candidate_ledger
         multimodal_evidence = self._survey_runtime_multimodal_evidence(collector)
         if multimodal_evidence is not None:
             sources["multimodal_evidence"] = multimodal_evidence
@@ -484,10 +491,12 @@ class SurveyGenerator:
             "schema_version": OUTLINE_EVIDENCE_PROMPT_SCHEMA_VERSION,
             "source_schema_version": str(plan.get("schema_version") or ""),
             "evidence_bounded_writing": True,
+            **({"scientific_candidate_comparison": plan["scientific_candidate_comparison"]} if plan.get("scientific_candidate_comparison") else {}),
             "subhypotheses": entries,
             "writing_rules": {
                 key: bool(writing_rules.get(key))
                 for key in (
+                    "best_candidate_claim_requires_balanced_effective_evidence",
                     "all_subhypotheses_accounted_for",
                     "graph_expanded_candidates_are_not_evidence",
                     "complete_section_promoted_expanded_papers_may_be_used_only_by_their_own_sh_role",
@@ -861,10 +870,12 @@ class SurveyGenerator:
             "projection_scope": "outline_representative_evidence_only",
             "selected_representative_paper_ids": selected_ids,
             "evidence_bounded_writing": True,
+            **({"scientific_candidate_comparison": plan["scientific_candidate_comparison"]} if plan.get("scientific_candidate_comparison") else {}),
             "subhypotheses": entries,
             "writing_rules": {
                 key: bool(writing_rules.get(key))
                 for key in (
+                    "best_candidate_claim_requires_balanced_effective_evidence",
                     "all_subhypotheses_accounted_for",
                     "background_context_is_not_direct_evidence",
                     "partial_or_indirect_seed_contributions_require_qualified_synthesis",
@@ -959,6 +970,9 @@ class SurveyGenerator:
         )
         return content
 
+    def _original_research_question(self) -> str:
+        return str(getattr(self.config.BasicInfo, "topic", "") or "")
+
     def _build_outline_prompt(
         self,
         *,
@@ -973,6 +987,7 @@ class SurveyGenerator:
         """Build an outline prompt under explicit component and total budgets."""
         generator_config = self.config.ModuleInfo.SurveyGenerator
         components = {
+            "original_research_question": self._original_research_question(),
             "survey_evidence_plan": self._survey_evidence_plan_prompt(
                 representative_paper_ids=representative_paper_ids
             ),
@@ -1132,6 +1147,7 @@ class SurveyGenerator:
             8_000,
         )
         prompt = SURVEY_OUTLINE_REPAIR.format(
+            original_research_question=self._original_research_question(),
             validation_error=self._truncate_outline_component(
                 "repair_error", validation_error, 1_000
             ),
@@ -1894,7 +1910,7 @@ class SurveyGenerator:
     ) -> list[str]:
         """Reject unsafe quality rewrites while retaining the last valid draft."""
 
-        errors: list[str] = []
+        errors: list[str] = self._candidate_comparison_errors(revised_section)
         if self._section_heading_signature(revised_section) != self._section_heading_signature(
             original_section
         ):
@@ -3049,6 +3065,8 @@ class SurveyGenerator:
         if not claims:
             return ["Evidence-bounded writing requires at least one SH claim trace."]
 
+        comparison = self._as_mapping(self.survey_evidence_plan.get("scientific_candidate_comparison"))
+
         for index, raw_claim in enumerate(claims, start=1):
             claim = dict(raw_claim)
             claim_text = re.sub(r"\s+", " ", str(claim.get("claim_text") or "")).strip()
@@ -3058,6 +3076,12 @@ class SurveyGenerator:
             paths = [dict(path) for path in raw_paths if isinstance(path, Mapping)] if isinstance(raw_paths, list) else []
             limitation_slots = self._as_texts(claim.get("limitation_slots"))
             prefix = f"claim {index}"
+
+            if comparison and comparison.get("best_candidate_claim_allowed") is not True and (
+                claim.get("candidate_claim_type") == "best_candidate" or
+                self._candidate_comparison_errors(claim_text)
+            ):
+                errors.append(f"{prefix}: best_candidate claim is prohibited by the scientific comparison ledger.")
 
             if not claim_text or claim_text.casefold() not in normalized_text:
                 errors.append(f"{prefix}: claim_text must be a verbatim sentence from the prose.")
@@ -3257,6 +3281,45 @@ class SurveyGenerator:
             ):
                 errors.append(f"{prefix}: background-only claims require background paper paths.")
         return errors
+
+    def _candidate_comparison_errors(self, prose: str) -> list[str]:
+        comparison = self._as_mapping(getattr(self, "survey_evidence_plan", {}).get("scientific_candidate_comparison"))
+        if not comparison or comparison.get("best_candidate_claim_allowed") is True:
+            return []
+        pattern = r"\b(?:best|optimal|most suitable|most appropriate|superior to all)\b|最佳|最优|最适合|最合适"
+        qualified = r"\b(?:cannot conclude|cannot determine|not established|insufficient evidence|whether|not the best|not optimal|not the most)\b|尚不能|不能认定|无法确定|证据不足|是否|尚未证实"
+        errors = []
+        for sentence in re.split(r"(?<=[.!?。！？])\s+|\n", str(prose or "")):
+            if not re.search(qualified, sentence, re.IGNORECASE) and not sentence.rstrip().endswith(("?", "？")) and re.search(pattern, sentence, re.IGNORECASE) and any(
+                alias.casefold() in sentence.casefold() for alias in self._as_texts(comparison.get("candidate_aliases"))
+            ):
+                errors.append("Insufficient candidate comparison prohibits this best-candidate statement: " + sentence[:300])
+        return errors
+
+    def _repair_final_candidate_comparison(self, draft: dict) -> dict:
+        sections = list(draft.get("section_drafts", []))
+        outline = self._as_mapping(draft.get("outline"))
+        outlines = outline.get("sections", [])
+        budget = self._survey_length_budget(outline)
+        cap = math.ceil(budget["survey_max_words"] / max(1, budget["section_count"]))
+        for index, section in enumerate(sections):
+            errors = self._candidate_comparison_errors(section)
+            if not errors:
+                continue
+            section_outline = outlines[index] if index < len(outlines) else {}
+            candidate = self._revise_evidence_bounded_section_quality(section_text=section,
+                section_outline=section_outline, suggestions=[*errors,
+                    "State candidates as provisional alternatives and describe the missing comparison evidence. Preserve citations and headings."],
+                section_word_cap=cap, settings=self._evidence_bounded_section_quality_settings())
+            validation = self._validate_evidence_bounded_section_quality_revision(original_section=section,
+                revised_section=candidate or "", allowed_paper_ids=self._evidence_bounded_section_allowed_paper_ids(section_outline),
+                section_word_cap=cap) if candidate else errors
+            if validation:
+                raise ValueError("Survey candidate comparison repair failed: " + " | ".join(validation))
+            sections[index] = candidate
+        draft["section_drafts"] = sections
+        draft["full_draft"] = str(draft.get("title") or "") + "\n\n" + "\n\n".join(sections)
+        return draft
 
     @staticmethod
     def _is_bounded_multimodal_claim(
@@ -4216,6 +4279,7 @@ class SurveyGenerator:
         self.logger.info(f"Total unique papers used in outline: {len(used_paper_ids)}")
 
     def build_prompt_with_truncation(self, template: str, papers_list: list[str], params: dict):
+        params = {**params, "original_research_question": self._original_research_question()}
         paper_num = len(papers_list)
         papers = ""
         use_full_text = self.config.ModuleInfo.SurveyGenerator.use_full_text_in_survey_generation
@@ -4226,9 +4290,17 @@ class SurveyGenerator:
 
         estimated_prompt_tokens = self.chat_agent.estimate_tokens(template.format(**params_no_papers))
 
-        per_paper_allowd = (self.config.APIInfo.llm_max_context_length 
-                        - self.config.ModuleInfo.SurveyGenerator.llm_max_context_overhead_length_generation
-                        - estimated_prompt_tokens) // max(paper_num, 1)
+        available_paper_tokens = (
+            self.config.APIInfo.llm_max_context_length
+            - self.config.ModuleInfo.SurveyGenerator.llm_max_context_overhead_length_generation
+            - estimated_prompt_tokens
+        )
+        if available_paper_tokens < 0 or (papers_list and available_paper_tokens == 0):
+            raise ValueError(
+                "Survey draft prompt exceeds its input budget with the complete original research question: "
+                f"prompt={estimated_prompt_tokens}, available_paper_tokens={available_paper_tokens}."
+            )
+        per_paper_allowd = available_paper_tokens // max(paper_num, 1)
 
         for paper_id in papers_list:
             try:
@@ -4872,27 +4944,11 @@ class SurveyGenerator:
                 f"Draft too long for title validation: {len(section_draft.split())} words > {max_words}."
             )
 
-        papers_set = set(papers)
-        if self.config.ModuleInfo.SurveyGenerator.include_other_relevant_papers_RAG:
-            papers_set.update(self.database.valid_paper_ids)
-
         valid, paper_ids, titles, err_titles = self.extract_and_validate_titles_in_text(section_draft)
         if too_long:
             valid = False
         if not valid:
             citation_valid = False
-
-        if self._evidence_bounded_writing_enabled():
-            unauthorized_paper_ids = [
-                paper_id for paper_id in paper_ids if paper_id not in papers_set
-            ]
-            if unauthorized_paper_ids:
-                valid = False
-                citation_valid = False
-                err_info.append(
-                    "Resolved title citations are outside the evidence-bounded "
-                    "paper set: " + ", ".join(dict.fromkeys(unauthorized_paper_ids))
-                )
 
         for err_paper_title in err_titles:
             err_info.append(f"Paper title '{err_paper_title}' not found in database, probably a wrong or incomplete title, or the paper is not in valid citation range.\n")
@@ -5517,6 +5573,9 @@ class SurveyGenerator:
 
         survey = self._format_full_survey_text_from_drafts(draft)
         survey, _, strip_errors = strip_claim_trace_metadata(survey)
+        comparison_errors = self._candidate_comparison_errors(survey)
+        if comparison_errors:
+            raise ValueError("Survey scientific comparison remains insufficient: " + " | ".join(comparison_errors))
         if strip_errors:
             self._record_integrity("issues", {
                 "kind": "final_claim_trace_cleanup", "reason": " | ".join(strip_errors),
@@ -5550,6 +5609,7 @@ class SurveyGenerator:
             draft = self._improve_evidence_bounded_sections(draft)
             draft = self._consolidate_evidence_bounded_draft(draft)
             draft = self._repair_final_claim_support(draft)
+            draft = self._repair_final_candidate_comparison(draft)
             return self._finalize_evidence_bounded_draft(draft)
         # Optional: first refine each section independently with local context, keeping <title> citations.
         draft_text = draft["full_draft"]
@@ -5949,6 +6009,15 @@ class SurveyGenerator:
             subhypothesis_retrieval = self._json_compatible(
                 raw_subhypothesis_retrieval or {}
             )
+            candidate_ledger = subhypothesis_retrieval.get("candidate_discovery", {})
+            if candidate_ledger.get("schema_version") == "scientific_candidate_ledger_v2":
+                budget = getattr(active_collector, "_candidate_retrieval_budget", None)
+                if budget is not None:
+                    candidate_ledger["retrieval_budget"] = budget.snapshot()
+                acquisition = getattr(self.config.BasicInfo, "fulltext_acquisition_by_paper", {})
+                candidate_ledger = refresh_candidate_fulltext(candidate_ledger, acquisition or {})
+                subhypothesis_retrieval["candidate_discovery"] = candidate_ledger
+                subhypothesis_retrieval["candidate_balance"] = candidate_ledger["balance"]
         except (TypeError, ValueError):
             subhypothesis_retrieval = {}
         try:
@@ -5961,6 +6030,10 @@ class SurveyGenerator:
             survey_evidence_plan = self._json_compatible(raw_survey_evidence_plan or {})
         except (TypeError, ValueError):
             survey_evidence_plan = {}
+        comparison = survey_evidence_plan.get("scientific_candidate_comparison")
+        final_candidate_ledger = subhypothesis_retrieval.get("candidate_discovery", {})
+        if isinstance(comparison, Mapping) and final_candidate_ledger.get("retrieval_budget") is not None:
+            comparison["retrieval_budget"] = final_candidate_ledger["retrieval_budget"]
         try:
             claim_traceability = self._json_compatible(raw_claim_traceability or {})
         except (TypeError, ValueError):

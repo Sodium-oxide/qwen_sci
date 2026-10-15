@@ -10,6 +10,7 @@ from src.pipeline.research_identity import build_project_research_context
 from src.pipeline.research_question_contract import QUESTION_KIND_SPECS
 from src.pipeline.retrieval_lanes import build_subhypothesis_retrieval_plan
 from src.pipeline.subhypothesis_decomposition import (
+    SUBHYPOTHESIS_DECOMPOSITION_MAX_ATTEMPTS,
     SUBHYPOTHESIS_DECOMPOSITION_MODEL,
     SUBHYPOTHESIS_DECOMPOSITION_PROVIDER,
     build_subhypothesis_decomposition_prompt,
@@ -128,6 +129,15 @@ def _project_context() -> dict:
     )
 
 
+def test_prompt_revision_invalidates_cached_decomposition(monkeypatch) -> None:
+    from src.pipeline import subhypothesis_decomposition as decomposition
+
+    context = _project_context()
+    fingerprint = decomposition.subhypothesis_decomposition_fingerprint(context)
+    monkeypatch.setattr(decomposition, "SUBHYPOTHESIS_DECOMPOSITION_PROMPT_REVISION", "next_prompt_revision")
+    assert decomposition.subhypothesis_decomposition_fingerprint(context) != fingerprint
+
+
 def test_prompt_and_response_compile_to_one_slot_recovery_task_per_required_slot() -> None:
     context = _project_context()
     prompt = build_subhypothesis_decomposition_prompt(context)
@@ -144,6 +154,12 @@ def test_prompt_and_response_compile_to_one_slot_recovery_task_per_required_slot
     assert "research_design_inventory" in prompt
     assert "retrieval_query_variants is optional" in prompt
     assert "2-6 short canonical English query_terms" in prompt
+    for question_kind, specification in QUESTION_KIND_SPECS.items():
+        assert question_kind in prompt
+        for field in (*specification["required_slots"], *specification["required_scope"]):
+            assert f'"{field}"' in prompt
+    assert '"one_required_slot"' not in prompt
+    assert "never empty strings or punctuation-only keys" in prompt
     assert context["primary_discipline"] in prompt
     assert len(parsed) == 4
     assert all(item["validation"]["valid"] for item in plan["subhypotheses"])
@@ -315,12 +331,145 @@ def test_raw_qwen_response_diagnostic_runs_before_parse_failure_and_redacts_secr
             "response_type": "dict",
             "preview": '{"output": "not the required JSON object", "api_key": "<redacted>"}',
         }
-    ]
+    ] * SUBHYPOTHESIS_DECOMPOSITION_MAX_ATTEMPTS
     direct = subhypothesis_decomposition_response_diagnostic(
         "Bearer token-value-for-test"
     )
     assert direct["response_type"] == "str"
     assert direct["preview"] == "Bearer <redacted>"
+
+
+@pytest.mark.parametrize(
+    ("damage", "expected_error"),
+    [
+        ("invalid_json", "invalid JSON"),
+        ("collapsed_fields", "missing_required_scope:research_object"),
+        ("missing_slot", "missing_slot_definition:candidate"),
+        ("duplicate_key", "duplicate JSON object key: question"),
+    ],
+)
+@pytest.mark.parametrize("success_attempt", [2, 3])
+def test_invalid_decomposition_regenerates_from_context_and_caches_only_valid_output(
+    tmp_path, damage: str, expected_error: str, success_attempt: int
+) -> None:
+    context = _project_context()
+    valid_response = json.dumps({"subhypotheses": _precision_medicine_subhypotheses(context)})
+    damaged = _precision_medicine_subhypotheses(context)
+    if damage == "invalid_json":
+        bad_response = '{"subhypotheses":[{"scientific_scope":{"research_object":[], "]," :"observation"'
+    elif damage == "collapsed_fields":
+        damaged[0]["scientific_scope"] = {"research_object": [], ":": "observation"}
+        damaged[0]["required_slots"] = ["", "", "", ":"]
+        damaged[0]["slot_definitions"] = {":": "collapsed definition"}
+        bad_response = json.dumps({"subhypotheses": damaged})
+    elif damage == "missing_slot":
+        damaged[0]["slot_definitions"].pop("candidate")
+        bad_response = json.dumps({"subhypotheses": damaged})
+    else:
+        bad_response = valid_response.replace('"question":', '"question": "lost value", "question":', 1)
+    responses = iter([bad_response] * (success_attempt - 1) + [valid_response])
+    prompts = []
+    raw_diagnostics = []
+    failures = []
+    cache_path = tmp_path / "decomposition.json"
+    reserved = [{
+        "sub_hypothesis_id": "DATA1",
+        "title": "Local observation",
+        "question_kind": "EMPIRICAL_COVERAGE",
+        "question": "What local observation requires explanation?",
+    }]
+    observations = {"claims": [{"claim_id": "LOCAL1", "local_data_statement": "Bounded local evidence"}]}
+
+    def llm_call(prompt: str):
+        assert not cache_path.exists()
+        prompts.append(prompt)
+        return next(responses)
+
+    artifact = load_or_build_subhypothesis_decomposition(
+        cache_path=cache_path,
+        project_context=context,
+        llm_call=llm_call,
+        raw_response_observer=raw_diagnostics.append,
+        validation_failure_observer=failures.append,
+        reserved_subhypotheses=reserved,
+        observation_projection=observations,
+    )
+
+    assert artifact["generation_attempts"] == success_attempt
+    assert artifact["validation"]["valid"] is True
+    assert json.loads(cache_path.read_text(encoding="utf-8"))["subhypotheses"] == json.loads(valid_response)["subhypotheses"]
+    assert len(raw_diagnostics) == success_attempt
+    assert failures == [{
+        "attempt": attempt,
+        "max_attempts": SUBHYPOTHESIS_DECOMPOSITION_MAX_ATTEMPTS,
+        "error": failures[0]["error"],
+        "retrying": True,
+    } for attempt in range(1, success_attempt)]
+    assert expected_error in failures[0]["error"]
+    assert prompts[1].startswith(prompts[0])
+    assert expected_error in prompts[1]
+    assert "DATA1" in prompts[1]
+    assert "LOCAL1" in prompts[1]
+    assert "Return only the complete replacement object" in prompts[1]
+    cached = load_or_build_subhypothesis_decomposition(
+        cache_path=cache_path,
+        project_context=context,
+        llm_call=lambda _prompt: pytest.fail("Validated retry result should be cached"),
+        reserved_subhypotheses=reserved,
+        observation_projection=observations,
+    )
+    assert cached["cache_status"] == "hit"
+    assert cached["generation_attempts"] == success_attempt
+
+
+def test_validation_retries_are_bounded_redacted_and_do_not_accumulate_feedback(tmp_path) -> None:
+    prompts = []
+    failures = []
+
+    def llm_call(prompt: str):
+        prompts.append(prompt)
+        return {
+            "output": "invalid",
+            "api_key": "plain-secret-value",
+            "authorization": "Bearer hidden",
+            "access_token": "token-with spaces",
+        }
+
+    cache_path = tmp_path / "invalid.json"
+    with pytest.raises(ValueError, match="failed validation after 3 attempts"):
+        load_or_build_subhypothesis_decomposition(
+            cache_path=cache_path,
+            project_context=_project_context(),
+            llm_call=llm_call,
+            validation_failure_observer=failures.append,
+        )
+
+    assert len(prompts) == SUBHYPOTHESIS_DECOMPOSITION_MAX_ATTEMPTS
+    assert [failure["retrying"] for failure in failures] == [True, True, False]
+    assert [failure["attempt"] for failure in failures] == [1, 2, 3]
+    assert prompts[1] == prompts[2]
+    assert "plain-secret-value" not in prompts[1]
+    assert "token-with spaces" not in prompts[1]
+    assert "hidden" not in prompts[1]
+    assert "<redacted>" in prompts[1]
+    assert not cache_path.exists()
+    assert not cache_path.with_suffix(".json.tmp").exists()
+
+
+def test_provider_failures_are_not_retried_as_invalid_json() -> None:
+    calls = []
+
+    def llm_call(prompt: str):
+        calls.append(prompt)
+        raise TimeoutError("provider unavailable")
+
+    with pytest.raises(TimeoutError, match="provider unavailable"):
+        load_or_build_subhypothesis_decomposition(
+            cache_path=None,
+            project_context=_project_context(),
+            llm_call=llm_call,
+        )
+    assert len(calls) == 1
 
 
 def _collector_for_auto_decomposition(tmp_path, agent) -> WorkCollector:
@@ -393,7 +542,8 @@ def test_work_collector_logs_raw_qwen_preview_before_invalid_response_is_rejecte
             self.messages.append(message % args if args else message)
 
         def warning(self, *_args, **_kwargs):
-            pass
+            message, *args = _args
+            self.messages.append(message % tuple(args) if args else message)
 
     class _QwenAgent:
         def remote_chat(self, _prompt, **_kwargs):
@@ -414,6 +564,13 @@ def test_work_collector_logs_raw_qwen_preview_before_invalid_response_is_rejecte
     assert '"output": "Qwen declined to emit JSON"' in diagnostic_log
     assert "<redacted>" in diagnostic_log
     assert "hidden" not in diagnostic_log
+    validation_logs = [
+        message for message in collector.logger.messages
+        if message.startswith("SH decomposition validation failed")
+    ]
+    assert len(validation_logs) == SUBHYPOTHESIS_DECOMPOSITION_MAX_ATTEMPTS
+    assert "attempt=1/3 retrying=True" in validation_logs[0]
+    assert "attempt=3/3 retrying=False" in validation_logs[-1]
 
 
 def test_chat_agent_provider_override_keeps_the_survey_model_unchanged(monkeypatch) -> None:

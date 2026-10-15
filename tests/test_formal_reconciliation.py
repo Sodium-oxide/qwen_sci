@@ -6,7 +6,7 @@ import pytest
 from test_formal_contracts_v2 import formal_plan
 from src.agents.experiment_design_agent.formal_definition_resolver import FormalDefinitionResolver
 from src.agents.experiment_design_agent.formal_reconciliation import (
-    apply_definition_reconciliation, reconciliation_record_scope, repair_plan_symbol_conflicts,
+    apply_definition_reconciliation, normalize_duplicate_definitions, reconciliation_record_scope, repair_plan_symbol_conflicts,
 )
 from src.agents.experiment_design_agent.formal_reasoning_planner import FormalReasoningPlanner
 from src.agents.experiment_design_agent.formal_contracts import validate_formal_plan_v2
@@ -19,6 +19,23 @@ def resolution():
     plan = formal_plan()
     return {"schema_version": "formal_definition_resolution_v1",
             "definitions": deepcopy(plan["definitions"]), "model_relations": [], "unknown_items": []}
+
+
+def test_relation_format_repair_normalizes_metadata_and_preserves_independent_repair():
+    from test_formal_plan_recovery import encoded_relation
+
+    payload = resolution()
+    payload["model_relations"] = [encoded_relation()]
+    repaired = apply_definition_reconciliation(payload, {"repairs": [
+        {"record_id": "R1", "fields": {"source_refs": "EC1", "origin": "source_grounded"}},
+        {"record_id": "D1", "fields": {"selection_reason": "A clearer mathematical description"}},
+    ]})
+    assert repaired["definitions"][0]["selection_reason"] == "A clearer mathematical description"
+    relation = repaired["model_relations"][0]
+    assert relation["source_refs"] == [{"card_id": "EC1"}]
+    assert relation["formal_expression"] == payload["model_relations"][0]["formal_expression"]
+    assert any(item.get("category") == "record_encoding" for item in repaired["unknown_items"])
+    assert not any(item.get("rejected_operations") for item in repaired["reconciliation_audit"])
 
 
 def test_reconciliation_preserves_text_diagnostics_while_applying_definition_repair():
@@ -171,7 +188,7 @@ def test_proof_generation_completes_model_without_evidence_and_adds_supporting_r
     assert generated["definitions"][0]["definition_status"] == "specified"
     assert len(generated["definitions"]) == 2
     assert len(generated["assumptions"]) == 2
-    assert generated["proof_attempts"][0]["steps"][0]["premises"] == ["A1", "D2", "A2"]
+    assert generated["proof_attempts"][0]["steps"][0]["premises"] == ["A1", "TP1_D2", "TP1_A2"]
     assert validate_formal_plan_v2(generated, {"variables": [{"variable_id": "V1"}]}) == []
     assert not any(blocker.startswith("undefined:") for blocker in build_verification_task(generated, "P1", "z3")["blockers"])
 
@@ -225,10 +242,11 @@ def test_missing_literature_relation_can_be_completed_as_a_symbolic_model():
 
 def test_symbol_repair_updates_existing_proof_steps_and_target_ast():
     plan = recover_formal_plan(formal_plan())
+    plan["propositions"][0]["quantifiers"] = []
     renamed = apply_definition_reconciliation(plan, {
         "symbol_renames": [{"definition_id": "D1", "symbol": "y", "affected_ids": ["A1", "P1", "S1"]}],
     })
-    assert renamed["propositions"][0]["quantifiers"][0]["symbol"] == "y"
+    assert renamed["propositions"][0]["quantifiers"] == []
     assert renamed["propositions"][0]["conclusion_expression"]["args"][0] == {"symbol": "y"}
     assert renamed["proof_attempts"][0]["steps"][0]["derived_statement"] == "y >= 0"
     assert renamed["assumptions"][0]["predicate_expression"]["args"][0] == {"symbol": "y"}
@@ -256,6 +274,7 @@ def test_repeated_supporting_definition_reuses_canonical_id_and_updates_proof():
 
 def test_scoped_step_rename_does_not_overwrite_another_attempt_with_same_step_id():
     plan = recover_formal_plan(formal_plan())
+    plan["propositions"][0]["quantifiers"] = []
     first_attempt = plan["proof_attempts"][0]
     second_attempt = deepcopy(first_attempt)
     second_attempt["attempt_id"] = "PR2"
@@ -293,6 +312,7 @@ def test_failed_symbol_repair_keeps_explicit_diagnostic_and_candidates():
     plan = recover_formal_plan(formal_plan())
     duplicate = deepcopy(plan["definitions"][0])
     duplicate["definition_id"] = "D2"
+    duplicate["statement"] = "A different physical scalar"
     plan["definitions"].append(duplicate)
     repaired = repair_plan_symbol_conflicts(plan, {}, llm_call=lambda *_args, **_kwargs: {})
     assert len(repaired["definitions"]) == 2
@@ -345,6 +365,236 @@ def test_direct_proof_check_rejects_unready_target_or_definition(health, record_
 def test_invalid_reconciliation_is_transactional(patch):
     payload = resolution()
     original = deepcopy(payload)
-    with pytest.raises(ValueError):
-        apply_definition_reconciliation(payload, patch)
+    result = apply_definition_reconciliation(payload, patch)
+    assert result["definitions"] == original["definitions"]
+    assert result["reconciliation_audit"][-1]["accepted_operation_count"] == 0
+    assert result["reconciliation_audit"][-1]["rejected_operations"]
     assert payload == original
+
+
+def test_invalid_rename_keeps_valid_repairs_and_renames_with_specific_ids():
+    payload = resolution()
+    duplicate = deepcopy(payload["definitions"][0])
+    duplicate.update(definition_id="D2", statement="A different scalar")
+    payload["definitions"].append(duplicate)
+    original = deepcopy(payload)
+    events = []
+
+    class Logger:
+        def event(self, stage, event, **values):
+            events.append({"stage": stage, "event": event, **values})
+
+    result = apply_definition_reconciliation(payload, {
+        "repairs": [{"record_id": "D1", "fields": {"selection_reason": "Clarified convention"}}],
+        "symbol_renames": [
+            {"definition_id": "D2", "symbol": "y", "affected_ids": []},
+            {"definition_id": "D1", "symbol": "z", "affected_ids": ["missing_consumer"]},
+        ],
+    }, logger=Logger())
+    assert result["definitions"][0]["selection_reason"] == "Clarified convention"
+    assert [record["symbol"] for record in result["definitions"]] == ["x", "y"]
+    rejected = result["reconciliation_audit"][-1]["rejected_operations"][0]
+    assert rejected["record_id"] == "D1"
+    assert rejected["invalid_ids"] == ["missing_consumer"]
+    assert rejected["operation_index"] == 1
+    assert events[0]["event"] == "reconciliation_operation_warning"
+    assert events[0]["invalid_ids"] == ["missing_consumer"]
+    assert payload == original
+
+
+def test_valid_merge_survives_rename_of_already_merged_definition():
+    payload = resolution()
+    duplicate = deepcopy(payload["definitions"][0])
+    duplicate.update(definition_id="D2", source_refs=[{"card_id": "EC2", "locator": "definition"}])
+    payload["definitions"].append(duplicate)
+    result = apply_definition_reconciliation(payload, {
+        "merges": [{"retained_id": "D1", "merged_ids": ["D2"]}],
+        "symbol_renames": [{"definition_id": "D2", "symbol": "y", "affected_ids": []}],
+    })
+    assert len(result["definitions"]) == 1
+    assert result["definitions"][0]["source_refs"] == duplicate["source_refs"]
+    assert result["reconciliation_audit"][-1]["rejected_operations"][0]["invalid_ids"] == ["D2"]
+
+
+def test_invalid_repair_does_not_discard_independent_valid_operation():
+    payload = resolution()
+    result = apply_definition_reconciliation(payload, {"repairs": [
+        {"record_id": "D1", "fields": {"domain": ""}},
+        {"record_id": "D1", "fields": {"unit": "a dimensionless scalar"}},
+    ]})
+    assert result["definitions"][0]["domain"] == "R"
+    assert result["definitions"][0]["unit"] == "a dimensionless scalar"
+    assert len(result["reconciliation_audit"][-1]["rejected_operations"]) == 1
+
+
+def test_symbol_repair_is_not_rejected_by_unrelated_invalid_relation():
+    payload = resolution()
+    payload["model_relations"] = [{"relation_id": "R_bad", "statement": "An incomplete relation"}]
+    result = apply_definition_reconciliation(payload, {
+        "symbol_renames": [{"definition_id": "D1", "symbol": "y", "affected_ids": []}],
+    })
+    assert result["definitions"][0]["symbol"] == "y"
+    assert result["model_relations"] == payload["model_relations"]
+
+
+def test_equivalent_definitions_merge_before_recovery_and_redirect_live_references():
+    plan = formal_plan()
+    duplicate = deepcopy(plan["definitions"][0])
+    duplicate.update(definition_id="D_copy", source_refs=[{"card_id": "EC2", "locator": "definition"}])
+    plan["definitions"].append(duplicate)
+    plan["assumptions"][0]["depends_on"] = ["D_copy"]
+    plan["propositions"][0]["premises"].append("D_copy")
+    plan["proof_attempts"][0]["steps"][0]["premises"].append("D_copy")
+    plan["reconciliation_audit"] = [{"before": {"depends_on": ["D_copy"]}}]
+    original = deepcopy(plan)
+    recovered = recover_formal_plan(plan)
+    assert len(recovered["definitions"]) == 1
+    assert recovered["definitions"][0]["source_refs"] == duplicate["source_refs"]
+    assert recovered["assumptions"][0]["depends_on"] == ["D1"]
+    assert recovered["propositions"][0]["premises"] == ["A1", "D1"]
+    assert recovered["proof_attempts"][0]["steps"][0]["premises"] == ["A1", "D1"]
+    assert recovered["reconciliation_audit"][0]["before"]["depends_on"] == ["D_copy"]
+    assert not recovered["unknown_items"]
+    assert plan == original
+
+
+def test_distinct_duplicate_symbols_preserve_definitions_and_explicit_consumers():
+    plan = formal_plan()
+    plan["propositions"][0]["quantifiers"] = []
+    duplicate = deepcopy(plan["definitions"][0])
+    duplicate.update(definition_id="D_other", statement="A different scalar", variable_references=["V2"])
+    plan["definitions"].append(duplicate)
+    plan["assumptions"][0]["depends_on"] = ["D_other"]
+    plan["assumptions"][0]["object_bindings"] = {"x": "D_other"}
+    plan["propositions"][0]["premises"].append("D_other")
+    plan["proof_attempts"][0]["steps"][0]["premises"].append("D_other")
+    recovered = recover_formal_plan(plan)
+    renamed = recovered["definitions"][1]["symbol"]
+    assert renamed != "x"
+    assert len(recovered["definitions"]) == 2
+    assert recovered["assumptions"][0]["depends_on"] == ["D_other"]
+    assert recovered["assumptions"][0]["predicate_expression"]["args"][0] == {"symbol": renamed}
+    assert recovered["propositions"][0]["conclusion_expression"]["args"][0] == {"symbol": renamed}
+    assert recovered["proof_attempts"][0]["steps"][0]["derived_statement"] == f"{renamed} >= 0"
+    assert not recovered["unknown_items"]
+    assert normalize_duplicate_definitions(recovered) == recovered
+
+
+def test_ambiguous_symbol_keeps_candidates_and_reports_consumer_only():
+    plan = formal_plan()
+    plan["propositions"][0]["quantifiers"] = []
+    duplicate = deepcopy(plan["definitions"][0])
+    duplicate.update(definition_id="D_other", statement="A different scalar")
+    plan["definitions"].append(duplicate)
+    recovered = recover_formal_plan(plan)
+    assert len(recovered["definitions"]) == 2
+    assert all(record.get("dependency_health") != "invalid_or_blocked" for record in recovered["definitions"])
+    assert any(item["record_id"] == "P1" and "ownership" in item["reason"] for item in recovered["unknown_items"])
+    assert not any("Unresolved references" in item["reason"] for item in recovered["unknown_items"])
+
+
+def test_invalid_and_malformed_rename_operations_do_not_discard_valid_rename():
+    payload = resolution()
+    result = apply_definition_reconciliation(payload, {"symbol_renames": [
+        "not an operation", {"definition_id": ["D1"], "symbol": "y", "affected_ids": []},
+        {"definition_id": "D1", "symbol": "y", "affected_ids": []},
+    ]})
+    assert result["definitions"][0]["symbol"] == "y"
+    rejected = result["reconciliation_audit"][-1]["rejected_operations"]
+    assert {item["operation_index"] for item in rejected} == {0, 1}
+
+
+def test_new_symbol_collision_is_rejected_without_losing_independent_repair():
+    payload = resolution()
+    other = deepcopy(payload["definitions"][0])
+    other.update(definition_id="D2", symbol="y", statement="A different scalar")
+    payload["definitions"].append(other)
+    result = apply_definition_reconciliation(payload, {
+        "repairs": [{"record_id": "D1", "fields": {"selection_reason": "Clarified"}}],
+        "symbol_renames": [{"definition_id": "D1", "symbol": "y", "affected_ids": []}],
+    })
+    assert result["definitions"][0]["selection_reason"] == "Clarified"
+    assert [record["symbol"] for record in result["definitions"]] == ["x", "y"]
+    assert result["reconciliation_audit"][-1]["rejected_operations"][0]["invalid_ids"] == ["D2"]
+
+
+def test_chain_of_definition_merges_redirects_every_consumer_to_final_id():
+    payload = resolution()
+    for identifier, symbol in (("D2", "y"), ("D3", "z")):
+        definition = deepcopy(payload["definitions"][0])
+        definition.update(definition_id=identifier, symbol=symbol)
+        payload["definitions"].append(definition)
+    consumer = deepcopy(payload["definitions"][0])
+    consumer.update(definition_id="D4", symbol="w", depends_on=["D2"],
+                    object_kind="derived", formal_expression={"symbol": "y"}, symbol_references=["y"])
+    payload["definitions"].append(consumer)
+    result = apply_definition_reconciliation(payload, {"merges": [
+        {"retained_id": "D1", "merged_ids": ["D2"]},
+        {"retained_id": "D3", "merged_ids": ["D1"]},
+    ]})
+    assert result["definitions"][-1]["depends_on"] == ["D3"]
+    assert result["definitions"][-1]["formal_expression"] == {"symbol": "z"}
+
+
+def test_exact_duplicate_normalization_avoids_unnecessary_llm_request():
+    plan = formal_plan()
+    duplicate = deepcopy(plan["definitions"][0])
+    duplicate["definition_id"] = "D_copy"
+    plan["definitions"].append(duplicate)
+
+    def unexpected_request(*_args, **_kwargs):
+        raise AssertionError("Equivalent definitions should merge before requesting notation repair")
+
+    repaired = repair_plan_symbol_conflicts(plan, {}, llm_call=unexpected_request)
+    assert len(repaired["definitions"]) == 1
+
+
+def test_repeated_unrelated_references_do_not_discard_valid_rename():
+    plan = formal_plan()
+    plan["propositions"][0]["premises"] = ["A1", "A1"]
+    result = apply_definition_reconciliation(plan, {"symbol_renames": [{
+        "definition_id": "D1", "symbol": "y", "affected_ids": [],
+    }]})
+    assert result["definitions"][0]["symbol"] == "y"
+    assert result["propositions"][0]["premises"] == ["A1", "A1"]
+
+
+def test_malformed_reference_repair_does_not_discard_independent_valid_rename():
+    payload = resolution()
+    result = apply_definition_reconciliation(payload, {
+        "repairs": [{"record_id": "D1", "fields": {"depends_on": None}}],
+        "symbol_renames": [{"definition_id": "D1", "symbol": "y", "affected_ids": []}],
+    })
+    assert result["definitions"][0]["symbol"] == "y"
+    assert result["definitions"][0]["depends_on"] == []
+    assert len(result["reconciliation_audit"][-1]["rejected_operations"]) == 1
+
+
+def test_duplicate_normalization_preserves_malformed_candidate_for_later_validation():
+    plan = formal_plan()
+    plan["definitions"][0]["variable_references"] = [{"variable_id": "V1"}]
+    duplicate = deepcopy(plan["definitions"][0])
+    duplicate.update(definition_id="D_other", variable_references=["V1"])
+    plan["definitions"].append(duplicate)
+    result = normalize_duplicate_definitions(plan)
+    assert len(result["definitions"]) == 2
+    assert result["definitions"][0]["variable_references"] == [{"variable_id": "V1"}]
+    assert result["definitions"][1]["symbol"] != "x"
+
+
+def test_definition_merge_updates_proof_premises_and_their_symbols_together():
+    plan = formal_plan()
+    plan["propositions"][0]["quantifiers"] = []
+    duplicate = deepcopy(plan["definitions"][0])
+    duplicate.update(definition_id="D_copy", symbol="y")
+    plan["definitions"].append(duplicate)
+    step = plan["proof_attempts"][0]["steps"][0]
+    step.update(premises=["D_copy"], derived_statement="y >= 0",
+                derived_expression={"op": "ge", "args": [{"symbol": "y"}, {"number": "0"}]})
+    result = apply_definition_reconciliation(plan, {"merges": [{
+        "retained_id": "D1", "merged_ids": ["D_copy"],
+    }]})
+    updated = result["proof_attempts"][0]["steps"][0]
+    assert updated["premises"] == ["D1"]
+    assert updated["derived_statement"] == "x >= 0"
+    assert updated["derived_expression"]["args"][0] == {"symbol": "x"}

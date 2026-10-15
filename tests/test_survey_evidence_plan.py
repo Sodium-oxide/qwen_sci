@@ -262,17 +262,19 @@ def test_survey_evidence_plan_rejects_cross_project_cluster_projection() -> None
         )
 
 
-def test_survey_evidence_plan_requires_a_contract_for_every_ledger_sh() -> None:
-    with pytest.raises(ValueError, match="exact contract/ledger SH set"):
-        build_survey_evidence_plan(
-            provenance_artifact=_provenance(),
-            coverage_ledger=_ledger(),
-            cluster_coverage_artifact=_clusters(),
-            subhypothesis_contracts=_contracts()[:-1],
-        )
+def test_survey_evidence_plan_ignores_uncontracted_reports_with_audit(caplog) -> None:
+    plan = build_survey_evidence_plan(
+        provenance_artifact=_provenance(),
+        coverage_ledger=_ledger(),
+        cluster_coverage_artifact=_clusters(),
+        subhypothesis_contracts=_contracts()[:-1],
+    )
+    assert len(plan["subhypotheses"]) == 3
+    assert plan["coverage_ledger_recovery"]["ignored_uncontracted_subhypothesis_ids"] == ["SH4"]
+    assert "ignored_uncontracted_SH" in caplog.text
 
 
-def test_survey_evidence_plan_rejects_a_contract_without_final_ledger_report() -> None:
+def test_survey_evidence_plan_recovers_missing_report_as_evidence_gap() -> None:
     contracts = _contracts() + [
         {
             "sub_hypothesis_id": "SH5",
@@ -283,13 +285,18 @@ def test_survey_evidence_plan_rejects_a_contract_without_final_ledger_report() -
         }
     ]
 
-    with pytest.raises(ValueError, match="exact contract/ledger SH set"):
-        build_survey_evidence_plan(
-            provenance_artifact=_provenance(),
-            coverage_ledger=_ledger(),
-            cluster_coverage_artifact=_clusters(),
-            subhypothesis_contracts=contracts,
-        )
+    plan = build_survey_evidence_plan(
+        provenance_artifact=_provenance(),
+        coverage_ledger=_ledger(),
+        cluster_coverage_artifact=_clusters(),
+        subhypothesis_contracts=contracts,
+    )
+    by_sh = {item["sub_hypothesis_id"]: item for item in plan["subhypotheses"]}
+    assert by_sh["SH1"]["evidence_paper_ids"] == ["W1", "W2"]
+    assert by_sh["SH5"]["allowed_writing_mode"] == EVIDENCE_GAP_REPORT
+    assert by_sh["SH5"]["missing_slots"] == ["direct_observation"]
+    assert by_sh["SH5"]["conclusion_admissibility"]["admissible"] is False
+    assert plan["coverage_ledger_recovery"]["recovered_subhypothesis_ids"] == ["SH5"]
 
 
 def test_survey_evidence_plan_rejects_duplicate_contract_or_mismatched_slots() -> None:

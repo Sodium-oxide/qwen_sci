@@ -11,9 +11,259 @@ from src.agents.experiment_design_agent.formal_plan_recovery import (
 from src.agents.experiment_design_agent.formal_reasoning_planner import FormalReasoningPlanner
 from src.agents.experiment_design_agent.formal_verification import build_verification_task, verify_formal_plan
 from src.agents.experiment_design_agent.reasoning_validation import validate_counterexample_analysis
+from src.agents.experiment_design_agent.run_logging import ExperimentDesignRunLogger
 
 
 VARIABLES = {"variables": [{"variable_id": "V1"}]}
+
+
+def encoded_relation(**fields):
+    relation = {"relation_id": "R1", "statement": "The scalar is positive", "expression_latex": "x > 0",
+                "formal_expression": {"op": "gt", "args": [{"symbol": "x"}, {"number": "0"}]},
+                "scope": "real scalars", "origin": "modeling_convention", "source_refs": [],
+                "conditions": [], "condition_expressions": [], "selection_reason": "Study a positive scalar",
+                "depends_on": ["D1"], "symbol_references": ["x"], "variable_references": ["V1"],
+                "status": "candidate_formalization"}
+    relation.update(fields)
+    return relation
+
+
+def test_relation_metadata_normalization_preserves_math_and_executes_backend():
+    plan = formal_plan()
+    original = encoded_relation(origin="source_grounded", source_refs="EC1",
+                                depends_on={"definition_id": "D1"},
+                                symbol_references={"symbol": "x"}, variable_references="V1")
+    plan["model_relations"] = [original]
+    plan["propositions"][0]["premises"] = ["R1"]
+
+    generated = recover_formal_plan(plan, VARIABLES)
+    relation = generated["model_relations"][0]
+    assert relation["formal_expression"] == original["formal_expression"]
+    assert relation["expression_latex"] == original["expression_latex"]
+    assert relation["depends_on"] == ["D1"]
+    assert relation["source_refs"] == [{"card_id": "EC1"}]
+    assert json.loads(relation["format_originals"]["source_refs"]) == "EC1"
+    assert relation["origin"] == "unresolved"
+    assert relation["status"] == "candidate_formalization"
+    assert generated["status"] == "unverified"
+    assert not any(record.get("dependency_health") for record in [relation, generated["propositions"][0]])
+    assert build_verification_task(generated, "P1", "z3")["blockers"] == []
+    report = verify_formal_plan(generated, {"enabled": True, "backends": ["z3"], "timeout_seconds": 10})
+    summary = report["target_summaries"][0]
+    assert summary["status"] == "verified_in_declared_scope"
+    assert summary["computation_results"][0]["executed"]
+    assert summary["computation_results"][0]["result"] == "passed"
+    assert summary["semantic_status"] == "not_reviewed"
+    assert summary["encoding_diagnostic_count"] > 0
+    assert recover_formal_plan(generated, VARIABLES) == generated
+
+
+def test_unparseable_relation_reference_retains_draft_and_only_skips_affected_execution():
+    plan = formal_plan()
+    original = encoded_relation(depends_on={"unexpected": "D1"})
+    plan["model_relations"] = [original]
+    affected = deepcopy(plan["propositions"][0])
+    affected.update(proposition_id="P2", premises=["R1"])
+    plan["propositions"].append(affected)
+
+    generated = recover_formal_plan(plan, VARIABLES)
+    relation = generated["model_relations"][0]
+    assert relation["statement"] == original["statement"]
+    assert relation["formal_expression"] == original["formal_expression"]
+    assert json.loads(relation["format_originals"]["depends_on"]) == original["depends_on"]
+    assert relation["machine_encoding_issues"] == ["depends_on"]
+    assert generated["status"] == "unverified"
+    assert not generated["propositions"][1].get("dependency_health")
+    assert build_verification_task(generated, "P1", "z3")["blockers"] == []
+    assert "encoding_issue:R1:depends_on" in build_verification_task(generated, "P2", "z3")["blockers"]
+    assert validate_formal_plan_v2(generated, VARIABLES) == []
+    assert recover_formal_plan(generated, VARIABLES) == generated
+
+    relation["depends_on"] = ["D1"]
+    repaired = recover_formal_plan(generated, VARIABLES)
+    assert not repaired["model_relations"][0].get("machine_encoding_issues")
+    assert build_verification_task(repaired, "P2", "z3")["blockers"] == []
+
+
+def test_invalid_relation_record_remains_in_live_list_with_full_original():
+    from src.agents.experiment_design_agent.formal_definition_resolver import FormalDefinitionResolver
+
+    original = encoded_relation(scope=None, source_refs=9)
+    payload = {"schema_version": "formal_definition_resolution_v1", "definitions": [],
+               "model_relations": [original], "unknown_items": []}
+    retained, discarded = FormalDefinitionResolver._quarantine_invalid_records(payload, {})
+    assert discarded == []
+    relation = retained["model_relations"][0]
+    assert relation["statement"] == original["statement"]
+    assert relation["formal_expression"] == original["formal_expression"]
+    assert relation["status"] == "unresolved"
+    assert relation["original_record"]
+    assert json.loads(relation["format_originals"]["source_refs"]) == 9
+
+
+def test_uninterpretable_relation_shape_keeps_full_content_in_live_draft():
+    from src.agents.experiment_design_agent.formal_definition_resolver import normalize_model_relations
+
+    original = [{"statement": "First mathematical candidate"}, {"statement": "Second mathematical candidate"}]
+    normalized, _repairs, discarded = normalize_model_relations(
+        {"model_relations": [original], "unknown_items": []}, id_prefix="G1_",
+    )
+    assert discarded == []
+    assert len(normalized["model_relations"]) == 1
+    assert json.loads(normalized["model_relations"][0]["original_record"]) == original
+
+
+def test_semantic_issue_and_backend_result_are_recorded_separately():
+    plan = formal_plan()
+    plan["semantic_diagnostics"] = [{"target_id": "P1", "reason": "Physical applicability remains to be reviewed."}]
+    report = verify_formal_plan(plan, {"enabled": True, "backends": ["z3"], "timeout_seconds": 10})
+    summary = report["target_summaries"][0]
+    assert summary["semantic_status"] == "requires_review"
+    assert summary["computation_results"][0]["executed"]
+    assert summary["computation_results"][0]["result"] == "passed"
+    assert summary["status"] == "unresolved"
+
+
+def test_single_reference_object_and_quantifier_object_normalize_without_dependency_blocking():
+    plan = formal_plan()
+    target = plan["propositions"][0]
+    target["premises"] = {"assumption_id": "A1"}
+    target["quantifiers"] = target["quantifiers"][0]
+    generated = recover_formal_plan(plan, VARIABLES)
+    assert generated["propositions"][0]["premises"] == ["A1"]
+    assert generated["propositions"][0]["quantifiers"] == formal_plan()["propositions"][0]["quantifiers"]
+    assert build_verification_task(generated, "P1", "z3")["blockers"] == []
+    assert generated["status"] == "unverified"
+
+
+def test_unresolved_relation_semantics_do_not_hide_computational_result():
+    plan = formal_plan()
+    plan["model_relations"] = [encoded_relation(status="unresolved")]
+    plan["propositions"][0]["premises"] = ["R1"]
+    generated = recover_formal_plan(plan, VARIABLES)
+    report = verify_formal_plan(generated, {"enabled": True, "backends": ["z3"], "timeout_seconds": 10})
+    summary = report["target_summaries"][0]
+    assert summary["computation_results"][0]["executed"]
+    assert summary["computation_results"][0]["result"] == "passed"
+    assert summary["status"] != "verified_in_declared_scope"
+    assert summary["semantic_status"] == "requires_review"
+
+
+def dependency_plan():
+    plan = formal_plan()
+    helper = deepcopy(plan["definitions"][0])
+    helper.update(definition_id="D2", symbol="y", variable_references=[], depends_on=["D4"])
+    cyclic = deepcopy(helper)
+    cyclic.update(definition_id="D4", symbol="w")
+    plan["definitions"][0]["depends_on"] = ["D4", "D2"]
+    plan["definitions"].extend([helper, cyclic])
+    return plan
+
+
+def dependency_diagnostics(plan):
+    return {item["record_id"]: item for item in plan["unknown_items"]
+            if item.get("error_code") in {"unresolved_prerequisite", "cyclic_dependency"}}
+
+
+def test_dependency_warnings_use_final_closure_and_do_not_repeat_or_grow_archive():
+    logger = ExperimentDesignRunLogger("dependency-deltas", console_enabled=False)
+    generated = recover_formal_plan(dependency_plan(), VARIABLES, logger=logger)
+    diagnostics = dependency_diagnostics(generated)
+    assert diagnostics["D1"]["dependency_ids"] == ["D2", "D4"]
+    event_count = len(logger.records)
+    snapshot = deepcopy(generated)
+    generated["definitions"][0]["depends_on"].reverse()
+    repeated = recover_formal_plan(generated, VARIABLES, logger=logger)
+
+    assert len(logger.records) == event_count
+    assert repeated["unknown_items"] == snapshot["unknown_items"]
+    assert repeated["construction_archive"] == snapshot["construction_archive"]
+    assert validate_formal_plan_v2(repeated, VARIABLES) == []
+
+
+def test_dependency_warnings_report_only_new_or_changed_blockers():
+    logger = ExperimentDesignRunLogger("changed-dependencies", console_enabled=False)
+    generated = recover_formal_plan(dependency_plan(), VARIABLES, logger=logger)
+    event_count = len(logger.records)
+    additional = deepcopy(generated["definitions"][2])
+    additional.update(definition_id="D3", symbol="z", depends_on=["D3"])
+    generated["definitions"].append(additional)
+    generated["definitions"][0]["depends_on"].append("D3")
+
+    changed = recover_formal_plan(generated, VARIABLES, logger=logger)
+
+    assert {item["record_id"] for item in logger.records[event_count:] if item.get("event") != "graph_profiled"} == {"D1", "D3"}
+    assert dependency_diagnostics(changed)["D1"]["dependency_ids"] == ["D2", "D3", "D4"]
+    assert len([item for item in changed["unknown_items"] if item.get("record_id") == "D1"]) == 1
+    event_count = len(logger.records)
+    changed["definitions"][0]["depends_on"].remove("D3")
+    reduced = recover_formal_plan(changed, VARIABLES, logger=logger)
+    assert [item["record_id"] for item in logger.records[event_count:] if item.get("event") != "graph_profiled"] == ["D1"]
+    assert dependency_diagnostics(reduced)["D1"]["dependency_ids"] == ["D2", "D4"]
+
+
+def test_resolved_dependencies_remove_stale_cycle_and_propagation_diagnostics():
+    logger = ExperimentDesignRunLogger("resolved-dependencies", console_enabled=False)
+    generated = recover_formal_plan(dependency_plan(), VARIABLES, logger=logger)
+    assert dependency_diagnostics(generated)
+    event_count = len(logger.records)
+    generated["definitions"][2]["depends_on"] = []
+
+    resolved = recover_formal_plan(generated, VARIABLES, logger=logger)
+
+    assert dependency_diagnostics(resolved) == {}
+    assert not resolved["unknown_items"]
+    assert all(not record.get("dependency_health") for record in resolved["definitions"])
+    assert not resolved["propositions"][0].get("dependency_health")
+    assert not [item for item in logger.records[event_count:] if item.get("event") != "graph_profiled"]
+    assert validate_formal_plan_v2(resolved, VARIABLES) == []
+
+
+def test_dependency_health_change_is_reported_with_unchanged_reference_ids():
+    logger = ExperimentDesignRunLogger("dependency-health-change", console_enabled=False)
+    generated = recover_formal_plan(dependency_plan(), VARIABLES, logger=logger)
+    event_count = len(logger.records)
+    generated["definitions"][2].update(depends_on=[], dependency_health="invalid_or_blocked")
+
+    changed = recover_formal_plan(generated, VARIABLES, logger=logger)
+
+    assert {item["record_id"] for item in logger.records[event_count:] if item.get("event") != "graph_profiled"} == {"D1", "D2"}
+    assert dependency_diagnostics(changed)["D1"]["dependency_ids"] == ["D2", "D4"]
+    assert dependency_diagnostics(changed)["D1"]["dependency_states"]["D4"] == "invalid_or_blocked"
+
+
+def test_legacy_dependency_warnings_collapse_without_repeating_unchanged_warnings():
+    generated = recover_formal_plan(dependency_plan(), VARIABLES)
+    legacy = []
+    for diagnostic in generated["unknown_items"]:
+        original = {key: value for key, value in diagnostic.items()
+                    if key not in {"dependency_ids", "dependency_states", "dependency_health", "error_code"}}
+        if diagnostic["record_id"] == "D1":
+            original["reason"] = "A prerequisite construction remains unresolved: ['D4', 'D2']."
+            legacy.append(dict(original, reason="A prerequisite construction remains unresolved: ['D4']."))
+        legacy.append(original)
+    generated["unknown_items"] = legacy
+    logger = ExperimentDesignRunLogger("legacy-dependencies", console_enabled=False)
+
+    migrated = recover_formal_plan(generated, VARIABLES, logger=logger)
+
+    assert not logger.records
+    assert len([item for item in migrated["unknown_items"] if item.get("record_id") == "D1"]) == 1
+    assert dependency_diagnostics(migrated)["D1"]["dependency_ids"] == ["D2", "D4"]
+
+
+def test_malformed_dependency_diagnostic_does_not_abort_other_records():
+    plan = dependency_plan()
+    malformed_id = {"record_id": [], "category": "construction_warning", "reason": "Cyclic construction dependency."}
+    malformed_reason = {"record_id": "D1", "category": "construction_warning",
+                        "error_code": "unresolved_prerequisite", "reason": {"unexpected": "object"}}
+    plan["unknown_items"] = [malformed_id, malformed_reason]
+
+    generated = recover_formal_plan(plan, VARIABLES)
+
+    assert malformed_id in generated["unknown_items"]
+    assert dependency_diagnostics(generated)["D1"]["dependency_ids"] == ["D2", "D4"]
+    assert validate_formal_plan_v2(generated, VARIABLES) == []
 
 
 def test_formal_ids_in_variable_references_move_to_dependencies_and_unknown_ids_remain():
@@ -78,6 +328,7 @@ def test_wrapped_skeleton_and_variable_dependencies_preserve_results():
 def test_ambiguous_variable_dependency_blocks_only_affected_target():
     plan = formal_plan()
     plan["definitions"][0]["definition_id"] = "DA"
+    plan["assumptions"][0]["object_bindings"] = {"x": "DA"}
     alternative = deepcopy(plan["definitions"][0])
     alternative.update(definition_id="DB", symbol="y")
     plan["definitions"].append(alternative)
@@ -147,6 +398,7 @@ def test_failed_target_is_repaired_without_changing_successful_target():
             return skeleton
         inputs = json.loads(prompt.split("INPUT_JSON:\n", 1)[1])
         ids = [target["proposition_id"] for target in inputs["skeleton"]["targets"]]
+        assert inputs["output_contract"]["required_attempt_fields"] == ["attempt_id", "target_id", "steps", "final_step_id"]
         calls.append(ids)
         if len(calls) == 1:
             return {"target_results": [{"target_id": "P1", "proof_attempts": [good]},
@@ -330,12 +582,23 @@ def test_ambiguous_or_cyclic_premise_blocks_affected_proof(conflict):
         duplicate = deepcopy(plan["definitions"][0])
         if conflict == "symbol":
             duplicate["definition_id"] = "D2"
+            plan["assumptions"][0].pop("object_bindings")
         duplicate["statement"] = "An incompatible definition"
         plan["definitions"].append(duplicate)
     generated = recover_formal_plan(plan, VARIABLES)
-    assert generated["propositions"][0]["construction_status"] == "needs_review"
+    if conflict == "id":
+        assert generated["propositions"][0].get("construction_status") != "needs_review"
+    else:
+        assert generated["propositions"][0]["construction_status"] == "needs_review"
     assert generated["construction_archive"]
-    assert generated["proof_attempts"] == plan["proof_attempts"]
+    if conflict == "symbol":
+        step = generated["proof_attempts"][0]["steps"][0]
+        assert step["derived_statement"] == plan["proof_attempts"][0]["steps"][0]["derived_statement"]
+        assert step["premises"] == plan["proof_attempts"][0]["steps"][0]["premises"]
+        assert step.get("construction_status") != "needs_review"
+        assert build_verification_task(generated, "P1", "z3")["blockers"]
+    else:
+        assert generated["proof_attempts"] == plan["proof_attempts"]
     assert validate_formal_plan_v2(generated, VARIABLES) == []
 
 

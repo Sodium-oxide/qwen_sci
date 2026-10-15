@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -261,6 +262,11 @@ def test_openalex_graph_keeps_direct_seed_evidence_and_candidate_only_neighbors(
     assert Path(tmp_path / "sh_graph_provenance.json").exists()
 
     assert collector.update_reference_graph(["seed-paper"]) == ["W1"]
+    status = collector.sh_graph_provenance_artifact["graph_seed_update_statuses"]["W1"]
+    assert status["node_status"] == "present"
+    assert status["expansion_status"] == "processed"
+    stored = json.loads((tmp_path / "sh_graph_provenance.json").read_text(encoding="utf-8"))
+    assert stored["graph_seed_update_statuses"]["W1"] == status
 
     seed_annotations = collector.reference_graph.nodes["W1"]["sh_annotations"]
     reference_annotations = collector.reference_graph.nodes["W2"]["sh_annotations"]

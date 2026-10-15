@@ -7,7 +7,12 @@ from test_formal_contracts_v2 import formal_plan
 from src.agents.experiment_design_agent.formal_contracts import DEFINITION_TEXT_CONTRACT
 from src.agents.experiment_design_agent.formal_definition_resolver import (
     DEFINITION_PROMPT, RECONCILIATION_REVIEW_PROMPT, FormalDefinitionResolver,
+    expand_compact_resolution, normalize_model_relation_formats,
 )
+from src.agents.experiment_design_agent.formal_dependency import declared_dependencies
+from src.agents.experiment_design_agent.formal_object_registry import inspect_dependency_graph
+from src.agents.experiment_design_agent.formal_verification import build_verification_task
+from test_formal_plan_recovery import encoded_relation
 from src.agents.experiment_design_agent.formal_reasoning_planner import (
     FORMAL_REASONING_V2_PROMPT, FORMAL_REASONING_SKELETON_PROMPT, FORMAL_REASONING_TARGET_PROMPT,
 )
@@ -65,6 +70,121 @@ def test_compact_definition_wire_format_is_enriched_deterministically():
     assert definition["symbol_references"] == []
     assert "wire_format" not in result
     assert result["variable_dependency_registry"][0]["record_id"] == "D1"
+
+
+@pytest.mark.parametrize("wire_format", [False, True])
+def test_relation_prerequisites_survive_existing_dependencies_and_cache_replay(tmp_path, wire_format):
+    payload = {"schema_version": "formal_definition_resolution_v1", "definitions": formal_plan()["definitions"],
+               "model_relations": [encoded_relation(premises=["D1", "A_missing", "Finite energy budget"],
+                                                    conditions=["Existing scope condition"])], "unknown_items": []}
+    if wire_format:
+        payload["wire_format"] = "formal_definition_wire_v1"
+    calls = []
+    def callback(prompt, **_kwargs):
+        request = json.loads(prompt.split("INPUT_JSON:\n", 1)[1])
+        assert "depends_on" in request["relation_fields"]
+        assert "premises" not in request["relation_fields"]
+        calls.append(prompt)
+        return deepcopy(payload)
+    settings = {"max_supplement_rounds": 0, "checkpoint": {"enabled": True, "root": str(tmp_path)}}
+    resolver = FormalDefinitionResolver()
+    arguments = ({}, {}, {"variables": [{"variable_id": "V1"}]}, {})
+    first = resolver.resolve(*arguments, llm_call=callback, settings=settings)
+    second = resolver.resolve(*arguments, llm_call=callback, settings=settings)
+    assert len(calls) == 1
+    for result in (first, second):
+        relation = result["model_relations"][0]
+        assert relation["depends_on"] == ["D1", "A_missing"]
+        assert relation["conditions"] == ["Existing scope condition", "Finite energy budget"]
+        assert json.loads(relation["format_originals"]["premises"]) == payload["model_relations"][0]["premises"]
+        assert "premises" not in relation
+        assert result["object_registry_diagnostics"]["missing_definition_reference_count"] == 1
+        assert result["object_registry_diagnostics"]["textual_premise_count"] == 1
+
+
+def test_raw_relation_graph_distinguishes_text_and_explicit_missing_ids():
+    payload = {"definitions": formal_plan()["definitions"], "model_relations": [encoded_relation(
+        premises=["D1", "A_missing", "Finite power budget", {"object_id": "external definition"}],
+    )]}
+    diagnostic = inspect_dependency_graph(payload)
+    assert declared_dependencies(payload["model_relations"][0]) == {"D1", "A_missing", "external definition"}
+    assert diagnostic["missing_premise_reference_count"] == 2
+    assert diagnostic["textual_premise_count"] == 1
+    assert {item["missing_id"] for item in diagnostic["missing_premise_references"]} == {"A_missing", "external definition"}
+
+
+def test_relation_structured_prerequisites_keep_expressions_and_are_idempotent():
+    expression = {"op": "gt", "args": [{"symbol": "x"}, {"number": "0"}]}
+    payload = {"wire_format": "formal_definition_wire_v1", "definitions": [], "unknown_items": [],
+               "model_relations": [encoded_relation(premises=[
+                   {"definition_id": "D2"}, {"text": "x is positive", "formal_expression": expression},
+               ])]}
+    expanded = expand_compact_resolution(payload)
+    normalized = normalize_model_relation_formats(expanded)
+    relation = normalized["model_relations"][0]
+    assert relation["depends_on"] == ["D1", "D2"]
+    assert relation["conditions"] == ["x is positive"]
+    assert relation["condition_expressions"] == [expression]
+    assert normalize_model_relation_formats(normalized) == normalized
+
+
+def test_relation_uninterpretable_prerequisite_is_archived_and_diagnosed():
+    original = [{"ref": ["invalid"]}, 17, "Finite energy budget"]
+    normalized = normalize_model_relation_formats({"model_relations": [encoded_relation(premises=original)], "unknown_items": []})
+    relation = normalized["model_relations"][0]
+    assert json.loads(relation["format_originals"]["premises"]) == original
+    assert relation["conditions"] == ["Finite energy budget"]
+    assert "premises" in relation["machine_encoding_issues"]
+    assert any(item["field"] == "premises" for item in normalized["unknown_items"])
+    assert inspect_dependency_graph(normalized)["uninterpreted_premise_count"] == 2
+
+
+def test_relation_same_encoding_with_different_text_keeps_condition_pairs():
+    expression = {"op": "gt", "args": [{"symbol": "x"}, {"number": "0"}]}
+    payload = {"unknown_items": [], "model_relations": [encoded_relation(
+        conditions=["x is positive"], condition_expressions=[expression],
+        premises=[{"text": "x > 0", "formal_expression": expression},
+                  {"text": "x > 0", "formal_expression": expression}],
+    )]}
+    relation = normalize_model_relation_formats(payload)["model_relations"][0]
+    assert relation["conditions"] == ["x is positive", "x > 0"]
+    assert relation["condition_expressions"] == [expression, expression]
+
+
+def test_relation_new_premise_encoding_survives_legacy_single_expression():
+    positive = {"op": "gt", "args": [{"symbol": "x"}, {"number": "0"}]}
+    bounded = {"op": "lt", "args": [{"symbol": "x"}, {"number": "10"}]}
+    payload = {"unknown_items": [], "model_relations": [encoded_relation(
+        conditions=["x is positive"], condition_expressions=positive,
+        premises=[{"text": "x is bounded", "formal_expression": bounded}],
+    )]}
+    relation = normalize_model_relation_formats(payload)["model_relations"][0]
+    assert relation["conditions"] == ["x is positive", "x is bounded"]
+    assert relation["condition_expressions"] == [positive, bounded]
+
+
+def test_retained_text_prerequisite_reaches_proof_context_and_requires_encoding():
+    from src.agents.experiment_design_agent.formal_reasoning_planner import _compact_formal_inputs, _skeleton_formal_inputs
+    from src.agents.experiment_design_agent.formal_plan_recovery import recover_formal_plan
+    from src.agents.experiment_design_agent.formal_contracts import author_formal_payload
+    plan = formal_plan()
+    plan["model_relations"] = [encoded_relation(premises=["Finite energy budget"])]
+    plan["propositions"][0]["premises"] = ["R1"]
+    recovered = recover_formal_plan(normalize_model_relation_formats(plan))
+    inputs = _skeleton_formal_inputs(_compact_formal_inputs(recovered, max_unknown_items=30))
+    assert inputs["model_relations"][0]["conditions"] == ["Finite energy budget"]
+    assert "missing_condition_encoding:R1" in build_verification_task(recovered, "P1", "z3")["blockers"]
+    assert author_formal_payload(recovered)["model_relations"][0]["conditions"] == ["Finite energy budget"]
+
+
+def test_explicit_known_reference_with_spaces_is_not_reclassified_as_text():
+    payload = {"definitions": [{"definition_id": "external definition"}], "unknown_items": [],
+               "model_relations": [encoded_relation(premises=["external definition"])]}
+    diagnostic = inspect_dependency_graph(payload)
+    assert diagnostic["textual_premise_count"] == 0
+    assert diagnostic["missing_premise_reference_count"] == 0
+    normalized = normalize_model_relation_formats(payload)
+    assert normalized["model_relations"][0]["depends_on"] == ["D1", "external definition"]
 
 
 @pytest.mark.parametrize("prompt", [

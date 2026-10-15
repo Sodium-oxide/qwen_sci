@@ -16,7 +16,14 @@ from modules.survey_generator import (
     OutlineGenerationError,
     SurveyGenerator,
 )
-from modules.pe import SURVEY_OUTLINE_GENERATION_PAPER_ASSIGNMENT
+from modules.pe import (
+    SECTION_DRAFT,
+    SUBSECTION_DRAFT,
+    SUBSECTION_DRAFT_WITH_CODE,
+    SURVEY_OUTLINE_GENERATION,
+    SURVEY_OUTLINE_GENERATION_OUTLINE_DRAFT,
+    SURVEY_OUTLINE_GENERATION_PAPER_ASSIGNMENT,
+)
 from src.pipeline.survey_evidence_plan import (
     EVIDENCE_BACKED_SYNTHESIS,
     EVIDENCE_GAP_REPORT,
@@ -420,6 +427,8 @@ def test_outline_retry_uses_short_repair_prompt_and_json_mode():
         plan=_full_plan(),
         responses=['{"title":"missing sections"}', __import__("json").dumps(_valid_outline())],
     )
+    original_question = "Compare adaptive systems.\n(a) Explain {mechanisms}.\n(b) Discuss measurement limits."
+    generator.config.BasicInfo.topic = original_question
     generator._bounded_writing_analysis = lambda *_args: ""
 
     outline = generator.generate_outline_draft_outline([], "", [], retry=1)
@@ -427,11 +436,95 @@ def test_outline_retry_uses_short_repair_prompt_and_json_mode():
     assert outline == _valid_outline()
     assert len(generator.chat_agent.calls) == 2
     first, second = generator.chat_agent.calls
+    assert original_question in first["text_content"]
+    assert original_question in second["text_content"]
     assert first["response_format"] == "json_object"
     assert first["strict_input_budget"] is True
     assert "Repair a survey outline response" in second["text_content"]
     assert "Outline must have a 'sections' field of type list" in second["text_content"]
     assert second["response_format"] == "json_object"
+
+
+@pytest.mark.parametrize("template", [
+    SURVEY_OUTLINE_GENERATION,
+    SURVEY_OUTLINE_GENERATION_OUTLINE_DRAFT,
+    SURVEY_OUTLINE_GENERATION_PAPER_ASSIGNMENT,
+])
+def test_outline_prompt_preserves_complete_original_question_when_other_inputs_are_capped(template):
+    generator = _generator(plan=_full_plan())
+    original_question = "研究原问题\n" + "Compare conditions and explain {measurement limits}.\n" * 50
+    generator.config.BasicInfo.topic = original_question
+
+    prompt, breakdown = generator._build_outline_prompt(
+        template=template, phase="test", paper_keynotes="k" * 10_000,
+        current_outline={}, papers_analysis="a" * 10_000,
+        other_relevant_papers="r" * 10_000,
+    )
+
+    assert original_question in prompt
+    assert breakdown["original_research_question"] == len(original_question)
+    assert breakdown["paper_keynotes"] <= 100
+
+
+@pytest.mark.parametrize("repair", [False, True])
+def test_outline_rejects_over_budget_original_question_without_a_model_call(repair):
+    generator = _generator(plan=_full_plan())
+    generator.config.BasicInfo.topic = "Explain the relation. " * 2_000
+
+    with pytest.raises(OutlineGenerationError, match="preflight budget"):
+        if repair:
+            generator._build_outline_repair_prompt(
+                current_outline={}, validation_error="invalid", previous_response="{}",
+            )
+        else:
+            generator._build_outline_prompt(
+                template=SURVEY_OUTLINE_GENERATION_OUTLINE_DRAFT,
+                phase="test", paper_keynotes="", current_outline={},
+                papers_analysis="", other_relevant_papers="",
+            )
+    assert generator.chat_agent.calls == []
+
+
+@pytest.mark.parametrize("template", [SUBSECTION_DRAFT, SUBSECTION_DRAFT_WITH_CODE, SECTION_DRAFT])
+def test_draft_prompt_reserves_full_original_question_before_truncating_papers(template):
+    generator = _generator()
+    original_question = "研究原问题\nExplain {mechanisms} and distinguish assumptions from evidence.\n" * 10
+    generator.config.BasicInfo.topic = original_question
+    settings = generator.config.ModuleInfo.SurveyGenerator
+    settings.use_full_text_in_survey_generation = False
+    settings.llm_max_context_overhead_length_generation = 100
+    generator.use_title_in_draft = False
+    generator.work_analyzer = SimpleNamespace(
+        work_collector=SimpleNamespace(get_paper_title_abstract=lambda _paper: ("Paper", "Abstract")),
+        get_paper_keynote=lambda _paper: "x" * 30_000,
+    )
+    captured_limits = []
+
+    def truncate_paper(_paper, text, limit):
+        captured_limits.append(limit)
+        return text[:limit]
+
+    generator.chat_agent.truncate_text = truncate_paper
+    params = {
+        "original_research_question": "A shortened summary must not replace the original.",
+        "title": "Evidence", "description": "Discuss limits.", "papers": "",
+        "other_relevant_papers": "", "survey_outline": "{}", "relevant_analysis": "",
+        "survey_evidence_plan": "{}", "code_report_prompt": "", "subsection_drafts": "",
+        "subsection_target_citations": 1, "subsection_max_citations": 2,
+        "subsection_target_words": 100, "subsection_max_words": 150,
+        "section_target_citations": 1, "section_max_citations": 2,
+        "section_target_words": 100, "section_max_words": 150,
+    }
+    prompt, paper_ids = generator.build_prompt_with_truncation(template, ["W1"], params)
+
+    assert original_question in prompt
+    assert paper_ids == ["W1"]
+    assert 0 < captured_limits[0] < 30_000
+
+    generator.config.APIInfo.llm_max_context_length = 100
+    with pytest.raises(ValueError, match="complete original research question"):
+        generator.build_prompt_with_truncation(template, ["W1"], params)
+    assert len(captured_limits) == 1
 
 
 def test_invalid_draft_cannot_fall_through_to_none_type_assignment():
