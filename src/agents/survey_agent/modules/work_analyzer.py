@@ -2510,6 +2510,61 @@ class WorkAnalyzer:
         except Exception as e:
             raise ValueError(f"Invalid cluster table response: {e}")
 
+    @staticmethod
+    def _fallback_cluster_table(cluster: Mapping[str, Any], parsed: Any = None) -> Dict[str, Any]:
+        dimensions: list[str] = []
+        if isinstance(parsed, Mapping):
+            raw_dimensions = parsed.get("comparison_dimensions")
+            if isinstance(raw_dimensions, list):
+                dimensions = [
+                    str(dimension).strip()
+                    for dimension in raw_dimensions
+                    if str(dimension or "").strip()
+                ]
+            raw_rows = parsed.get("table_data")
+            if not dimensions and isinstance(raw_rows, list):
+                for row in raw_rows:
+                    if not isinstance(row, Mapping):
+                        continue
+                    columns = row.get("columns")
+                    if isinstance(columns, Mapping):
+                        dimensions.extend(
+                            str(dimension).strip()
+                            for dimension in columns
+                            if str(dimension or "").strip()
+                        )
+                dimensions = list(dict.fromkeys(dimensions))
+        if not dimensions:
+            dimensions = ["Evidence"]
+
+        papers = cluster.get("papers") if isinstance(cluster, Mapping) else []
+        rows = []
+        if isinstance(papers, list):
+            for paper in papers:
+                if not isinstance(paper, Mapping):
+                    continue
+                paper_id = str(paper.get("id") or paper.get("paper_id") or "").strip()
+                paper_title = str(
+                    paper.get("title") or paper.get("paper_title") or paper_id or "Untitled paper"
+                ).strip()
+                rows.append(
+                    {
+                        "paper_id": paper_id,
+                        "paper_title": paper_title,
+                        "columns": {dimension: "N/A" for dimension in dimensions},
+                    }
+                )
+        if not rows:
+            cluster_name = str(cluster.get("cluster_name") or "Untitled cluster").strip()
+            rows.append(
+                {
+                    "paper_id": "",
+                    "paper_title": cluster_name,
+                    "columns": {dimension: "N/A" for dimension in dimensions},
+                }
+            )
+        return {"comparison_dimensions": dimensions, "table_data": rows}
+
     def generate_cluster_tables(self, clusters: List[Dict]):
         """
         Build comparison tables for all clusters using CLUSTER_TABLE_GENERATION in batch.
@@ -2518,7 +2573,7 @@ class WorkAnalyzer:
         and optionally 'summary'.
 
         Returns a dict {cluster_name: table_json} parsed from the LLM responses.
-        Raises if any cluster still fails after retries.
+        Unrecoverable format responses use a metadata-only fallback table.
         """
         pending_tasks = []
 
@@ -2562,10 +2617,33 @@ class WorkAnalyzer:
         prompts = [t["prompt"] for t in pending_tasks]
         cluster_names = [t["cluster_name"] for t in pending_tasks]
 
+        fallback_tables = {
+            index: self._fallback_cluster_table(cluster)
+            for index, cluster in enumerate(clusters)
+        }
+
+        def validate_cluster_table_or_fallback(result, info_dict):
+            try:
+                return self._validate_cluster_table(result, info_dict)
+            except Exception:
+                index = info_dict.get("idx")
+                fallback = fallback_tables.get(index)
+                if fallback is None:
+                    raise
+                try:
+                    parsed = extract_json(result)
+                except Exception:
+                    parsed = None
+                self.logger.info(
+                    "Cluster table response unavailable for prompt %s; using metadata fallback.",
+                    index,
+                )
+                return True, self._fallback_cluster_table(clusters[index], parsed)
+
         # Use batch_remote_chat_with_retry for cleaner retry logic
         parsed_results = self.chat_agent.batch_remote_chat_with_retry(
             prompts=prompts,
-            validate_fn=self._validate_cluster_table,
+            validate_fn=validate_cluster_table_or_fallback,
             max_retry=max_retry,
             desc="Cluster table generation",
             temperature=temperature,

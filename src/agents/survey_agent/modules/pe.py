@@ -947,6 +947,11 @@ Description: {cluster_description}
   (``[...]``), Markdown table, or prose. A list response is invalid and will be
   regenerated.
 - Include both ``comparison_dimensions`` and ``table_data`` exactly as shown.
+- ``table_data`` MUST contain one JSON object for every paper listed above. It
+  must never be empty; use ``"N/A"`` for unavailable evidence instead of
+  omitting a row or returning ``[]``. If the cluster has no papers, return one
+  placeholder row with an empty ``paper_id`` and ``paper_title`` set to the
+  cluster name.
 - Output strictly in JSON format with the following structure:
 {{
     "comparison_dimensions": ["Dimension 1", "Dimension 2", "Dimension 3", ...],

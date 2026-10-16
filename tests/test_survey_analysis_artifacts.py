@@ -155,3 +155,68 @@ def test_cluster_table_requests_json_object_when_provider_declares_support():
     assert captured["response_format"] == "json_object"
     assert captured["future_timeout"] == 300.0
     assert result["cluster-a"]["table_data"][0]["paper_id"] == "W1"
+
+
+def test_cluster_table_empty_data_uses_paper_metadata_fallback():
+    class _Logger:
+        def info(self, *args, **kwargs):
+            return None
+
+        def warning(self, *args, **kwargs):
+            return None
+
+    class _ChatAgent:
+        def supports_response_format(self, response_format):
+            return response_format == "json_object"
+
+        def batch_remote_chat_with_retry(self, **kwargs):
+            valid, table = kwargs["validate_fn"](
+                '{"comparison_dimensions": ["Method"], "table_data": []}',
+                {"idx": 0},
+            )
+            assert valid is True
+            return [table]
+
+    analyzer = object.__new__(WorkAnalyzer)
+    analyzer.logger = _Logger()
+    analyzer.get_paper_keynote = lambda paper_id: ""
+    analyzer.config = type(
+        "Config",
+        (),
+        {
+            "BasicInfo": type("BasicInfo", (), {"debug": False})(),
+            "ModuleInfo": type(
+                "ModuleInfo",
+                (),
+                {
+                    "WorkAnalyzer": type(
+                        "WorkAnalyzerConfig",
+                        (),
+                        {"cluster_table_max_retry": 3, "cluster_table_temperature": 0.3},
+                    )()
+                },
+            )(),
+        },
+    )()
+    analyzer.chat_agent = _ChatAgent()
+
+    result = analyzer.generate_cluster_tables(
+        [
+            {
+                "cluster_name": "cluster-a",
+                "summary": "",
+                "papers": [{"id": "W1", "title": "Paper One"}],
+            }
+        ]
+    )
+
+    assert result["cluster-a"] == {
+        "comparison_dimensions": ["Method"],
+        "table_data": [
+            {
+                "paper_id": "W1",
+                "paper_title": "Paper One",
+                "columns": {"Method": "N/A"},
+            }
+        ],
+    }

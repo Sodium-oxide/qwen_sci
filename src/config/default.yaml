@@ -53,7 +53,7 @@ llm:
       tokenizer_fallback: "utf8_bytes"
       token_limit_parameter: "max_tokens"
       default_models:
-        survey: "qwen3.6-flash"
+        survey: "qwen3.8-flash"
         judge: "qwen3.8-max"
         blog: "qwen3.8-max"
         idea: "qwen3.8-flash"
@@ -373,7 +373,7 @@ survey:
       fulltext_per_host_concurrency: 2
       # Bounded, polite retries are only for transient GET failures (429/5xx
       # and transport errors), never for authentication or subscription walls.
-      fulltext_http_max_retries: 2
+      fulltext_http_max_retries: 5
       fulltext_http_retry_base_delay_seconds: 1
       fulltext_http_retry_max_delay_seconds: 10
       fulltext_connect_timeout_seconds: 10
@@ -394,7 +394,7 @@ survey:
       invalidate_fulltext_failure_cache: false
       fulltext_provenance_enabled: true
       cache_enabled: true
-      max_seed_paper_num: 18
+      max_seed_paper_num: 40
       survey_search_strategy: "model_feedback"
       survey_initial_queries_per_sh: 3
       survey_queries_per_sh: 60
@@ -402,14 +402,18 @@ survey:
       survey_feedback_rounds: 2
       survey_query_workers: 4
       survey_results_per_query: 10
-      survey_paper_assessment_batch_size: 4
+      survey_paper_assessment_batch_size: 1
       survey_active_candidates_per_sh: 3
       survey_http_attempt_limit: 1200
       survey_primary_http_limit: 720
       survey_retry_fallback_http_limit: 240
       survey_metadata_graph_http_limit: 240
       survey_model_request_limit: 800
-      survey_prompt_input_limit: 120000
+      survey_prompt_input_limit: 160000
+      survey_confirmation_workers: 10
+      survey_confirmation_pairs_per_batch: 16
+      survey_confirmation_score_repair_request_limit: 8
+      survey_confirmation_score_repair_item_limit: 8
       survey_planning_batch_limit: 48
       survey_planning_workers: 10
       use_seed_filter_LLM: true
@@ -487,7 +491,7 @@ survey:
       related_work_top_k: 30 
       log_related_work_num: -1
       related_work_threshold: 0.5
-      related_work_threshold_for_llm: 4
+      related_work_threshold_for_llm: 3
       # `related_work_top_k` is a per-seed embedding pre-filter.  This is the
       # run-level cap applied only after all graph candidates pass LLM
       # relatedness filtering, so only the globally highest-related papers
