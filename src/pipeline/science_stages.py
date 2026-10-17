@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import codecs
 import contextlib
 import json
 import os
@@ -308,6 +309,9 @@ def run_survey_stage(request: SurveyStageRequest) -> ScienceStageResult:
     environment["no_proxy"] = "58.210.177.113,localhost,127.0.0.1"
     environment.setdefault("HF_ENDPOINT", "https://hf-mirror.com")
     environment.setdefault("MINERU_MODEL_SOURCE", "modelscope")
+    environment["PYTHONUNBUFFERED"] = "1"
+    environment["PYTHONIOENCODING"] = "utf-8"
+    environment["NO_COLOR"] = "1"
     command = [
         sys.executable,
         str(REPO_ROOT / "src" / "agents" / "survey_agent" / "scripts" / "run_deep_survey.py"),
@@ -316,21 +320,43 @@ def run_survey_stage(request: SurveyStageRequest) -> ScienceStageResult:
         "--config-name",
         runtime_config.stem,
     ]
-    run_kwargs: dict[str, object] = {"cwd": str(REPO_ROOT), "env": environment}
-    if request.quiet:
-        run_kwargs.update({"stdout": subprocess.DEVNULL, "stderr": subprocess.DEVNULL})
-    try:
-        process = subprocess.Popen(command, **run_kwargs)
-    except OSError as exc:
-        raise ScienceStageError("survey", 10, f"Survey process could not start: {exc}") from exc
     callback_error: Exception | None = None
     try:
-        if request.on_service_process_started is not None:
+        with (request.attempt_dir / "console.log").open("ab", buffering=0) as log:
+            output = None
             try:
-                request.on_service_process_started(process.pid)
-            except Exception as exc:
-                callback_error = exc
-        return_code = process.wait()
+                process = subprocess.Popen(
+                    command, cwd=str(REPO_ROOT), env=environment,
+                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                )
+            except OSError as exc:
+                raise ScienceStageError("survey", 10, f"Survey process could not start: {exc}") from exc
+            try:
+                if request.on_service_process_started is not None:
+                    try:
+                        request.on_service_process_started(process.pid)
+                    except Exception as exc:
+                        callback_error = exc
+                output = process.stdout
+                if output is not None:
+                    decoder = codecs.getincrementaldecoder("utf-8")(errors="replace")
+                    while chunk := output.read1(16_384):
+                        log.write(chunk)
+                        if not request.quiet:
+                            sys.stdout.write(decoder.decode(chunk))
+                            sys.stdout.flush()
+                    if not request.quiet:
+                        sys.stdout.write(decoder.decode(b"", final=True))
+                        sys.stdout.flush()
+                return_code = process.wait()
+            except BaseException:
+                if process.poll() is None:
+                    process.terminate()
+                process.wait()
+                raise
+            finally:
+                if output is not None:
+                    output.close()
     finally:
         runtime_config.unlink(missing_ok=True)
     if callback_error is not None:

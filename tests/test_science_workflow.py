@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import socket
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 
@@ -223,6 +224,7 @@ def test_survey_service_reads_insufficient_status_without_success_manifest(tmp_p
 
     class Process:
         pid = 100
+        stdout = BytesIO()
 
         def wait(self):
             return 0

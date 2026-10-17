@@ -80,6 +80,10 @@ Python renderer 只执行服务器模板，使用每次 attempt 独立目录、�
 
 `GET /api/disciplines` 返回全部 20 个支持学科。研究启动页提供中文手动选择，最多两项，并显示目录加载、失败重试和已选状态。
 
+运行详情页的“运行日志”同时展示持久化系统事件和各阶段日志。Survey 启动时，后端把子进程的标准输出与标准错误合并写入当前 attempt 的 `console.log`，并设置无缓冲 UTF-8 输出；Idea、ExperimentDesign 和 Author 使用各自的 JSONL 或文本日志。前端默认每 2 秒刷新日志目录和当前日志游标，可单独关闭自动同步或自动滚动，也可手动切换日志源。日志读取按完整行增量推进，服务端清理终端控制序列、脱敏密钥和本机路径，并拒绝阶段目录外的符号链接；页面最多保留最近 100 万字符，完整文件仍留在运行目录。
+
+系统事件使用现有的 `GET /api/runs/{run_id}/events?follow=false&after=<event_id>`，阶段文件使用 `GET /api/runs/{run_id}/logs` 和 `GET /api/runs/{run_id}/logs/{log_id}?offset=<byte_offset>`。历史运行中已经丢弃的终端输出无法回补；更新后的新运行会从 Survey 启动时开始同步。
+
 `POST /api/disciplines/resolve` 保留默认的 `method="taxonomy"` 本地分类；传入 `method="model"` 时固定使用 `qwen3.8-flash` 识别中英文课题。模型只能返回目录内的 1–2 个 ID，并附简短原因；无法判断或不在支持范围时返回空建议。结果经服务端校验后才交给页面，用户仍可手动修改。识别失败不会退回本地规则冒充模型结果，也不会阻止手动选科。
 
 远程识别遵守工作区 `local-only` 与 `network_access="never"` 限制，模型调用超时为 45 秒；开发代理为识别接口单独保留 60 秒超时。输入课题变化、用户手动修改学科或页面卸载时，前端取消等待并忽略过期结果。

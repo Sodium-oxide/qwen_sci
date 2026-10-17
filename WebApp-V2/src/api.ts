@@ -1,5 +1,6 @@
 import type { ActionPayload, CreateRunPayload, Discipline, DisciplineResolution, MaterialDraft, ParameterSearchJob, ParameterSearchRequest, ParameterSearchResult, ParameterSearchSelection, ResearchRun, RunEvent, RunLogChunk, RunLogSource, RepresentativeProject } from "./types";
 import { checkedResponse, request } from "./shared/api/http";
+import { createParser } from "eventsource-parser";
 
 const API_BASE = "/api";
 
@@ -40,9 +41,19 @@ export const api = {
     `/runs/${encodeURIComponent(runId)}/quantitative/parameter-search/${encodeURIComponent(jobId)}/select`,
     { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) },
   ),
-  logs: (runId: string) => requestJson<RunLogSource[]>(`/runs/${encodeURIComponent(runId)}/logs`),
-  logChunk: (runId: string, logId: string, offset = 0) => requestJson<RunLogChunk>(
+  logs: (runId: string, signal?: AbortSignal) => requestJson<RunLogSource[]>(`/runs/${encodeURIComponent(runId)}/logs`, { signal }),
+  async logEvents(runId: string, after = 0, signal?: AbortSignal): Promise<RunEvent[]> {
+    const response = await checkedResponse(`${API_BASE}/runs/${encodeURIComponent(runId)}/events?follow=false&after=${after}`, { signal });
+    const events: RunEvent[] = [];
+    const parser = createParser({ onEvent(message) {
+      if (message.event === "run_event") events.push(JSON.parse(message.data) as RunEvent);
+    } });
+    parser.feed(await response.text());
+    return events;
+  },
+  logChunk: (runId: string, logId: string, offset = 0, signal?: AbortSignal) => requestJson<RunLogChunk>(
     `/runs/${encodeURIComponent(runId)}/logs/${encodeURIComponent(logId)}?offset=${offset}`,
+    { signal },
   ),
   representative: () => requestJson<RepresentativeProject[]>("/representative"),
   async uploadMaterials(runId: string, drafts: MaterialDraft[]): Promise<ResearchRun> {

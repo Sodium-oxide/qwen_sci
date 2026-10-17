@@ -150,6 +150,12 @@
 .detail-summary span { color: var(--subtle); font: 10px var(--mono); text-transform: uppercase; }
 .detail-summary strong { margin-top: 5px; font-size: 13px; font-weight: 500; }
 .detail-columns { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 18px; margin-top: 18px; }
+.run-logs-panel .field-hint, .run-logs-panel .check-label { color: var(--muted); }
+.run-logs-panel .check-label { min-height: 44px; cursor: pointer; }
+.run-logs-panel .check-label input { accent-color: var(--primary); }
+.run-logs-panel .log-source-select { min-width: 0; }
+.run-logs-panel .log-source-select select { width: 100%; min-width: 0; min-height: 44px; border-color: var(--rule); background: var(--raised); color: var(--ink); }
+.run-logs-panel .button { min-height: 44px; }
 .back-link { display: inline-block; margin-top: 28px; color: var(--primary); text-decoration: none; }
 .preferences-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .preference-section { padding: 22px; }
