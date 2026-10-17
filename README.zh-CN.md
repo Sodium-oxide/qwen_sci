@@ -363,9 +363,110 @@ uv run qwensci quantitative parameters extract-batch \
 据模型服务和提供方速率限制调整；并行不会替代人工候选选择、参数批准或仿真授
 权。全文下载默认每篇最多尝试两个声明的 PDF URL，并对临时 HTTP 失败重试一次。
 
-## 安全
+## 在 WSL 中运行可选计算实验
 
-ExperimentDesign 支持可选计算实验 B 路：`--computation-mode plan` 生成计算协议，`--computation-mode run` 与现有设计 A 路并行生成代码、容器执行、验证和分析，默认 `off`。实验程序默认可联网，文件与控制进程凭据仍隔离；合格结果通过独立证据包进入 Author。环境搭建、支持范围、预算和恢复方式见[计算实验说明](docs/computational_experiments.md)。
+使用 `--computation-mode run` 可以在 ExperimentDesign 期间生成并执行计算实验。它与 Q1/Q2 量化建模分支分别控制；只启用这里的计算实验时，保留 `--quantitative-mode off`。
+
+| 模式 | 行为 |
+| --- | --- |
+| `--computation-mode off` | 默认值，关闭计算实验。 |
+| `--computation-mode plan` | 生成计算协议，不执行程序。 |
+| `--computation-mode run` | 生成协议和代码，在 Docker 中执行、验证和分析结果。 |
+
+### 1. 连接 WSL 与 Docker Desktop
+
+在 Windows 中安装并启动 Docker Desktop。在 **Settings → General** 中启用 **Use the WSL 2 based engine**，再在 **Settings → Resources → WSL Integration** 中开启当前发行版并应用设置。在 WSL 中执行：
+
+```bash
+docker info
+docker run --rm hello-world
+```
+
+`docker info` 必须能显示 **Server** 信息。WSL 使用指向 `unix:///var/run/docker.sock` 的 `default` context 即可；连接正常时保留该设置，不要切换到 Windows 命名管道地址。
+
+- `docker.sock` 报 `no such file or directory`：启动 Docker Desktop 并检查 WSL 集成。如果使用的是直接安装在 WSL 内的 Docker Engine，则用 `sudo systemctl start docker` 启动服务；没有 systemd 时使用 `sudo service docker start`。
+- `docker.sock` 报 `permission denied`：先执行 `ls -l /var/run/docker.sock` 和 `sudo docker info`。如果 socket 属于 `docker` 组，且带 `sudo` 能正常连接，将当前 WSL 用户加入该组并刷新 shell：
+
+```bash
+sudo groupadd -f docker
+sudo usermod -aG docker "$USER"
+newgrp docker
+docker info
+```
+
+加入 `docker` 组会获得 Docker daemon 的控制权限。保持 socket 原有权限，不要执行 `chmod 666`。使用 Docker Desktop 集成或单独管理的 WSL Docker Engine 中的一种，确保 CLI 连接的是预期服务。
+
+### 2. 构建并验证执行镜像
+
+在 WSL 的项目根目录中执行（例如先运行 `cd ~/qwen_sci-main`）：
+
+```bash
+docker build \
+  -t qwensci-computation:py312-v1 \
+  -f src/agents/computational_experiment_agent/execution/Dockerfile \
+  .
+
+docker run --rm qwensci-computation:py312-v1 \
+  python -c "import numpy, scipy, sympy, pyscf; print('Computational environment OK')"
+```
+
+验证应输出 `Computational environment OK`。首次使用时构建一次；修改 Dockerfile 或镜像依赖后再重新构建。镜像内包含 Python、NumPy、SciPy、SymPy 和 PySCF。
+
+### 3. 启动包含数值实验的研究运行
+
+在当前 WSL shell 中定义完整课题，并明确希望执行的数值任务。例如：
+
+```bash
+run_id="cpallidicaule-pathosystem-$(date +%Y%m%d-%H%M%S)"
+topic=$(cat <<'TOPIC'
+Propose and justify a model pathogen and pathovar screening design for
+Chenopodium pallidicaule. Execute numerical experiments to assess sample
+size, statistical power, and ranking robustness under measurement noise.
+Declare assumed parameters and sensitivity ranges. Use simulations to
+evaluate the screening design; base biological virulence claims on
+experimental or cited empirical evidence.
+TOPIC
+)
+
+uv run qwensci science \
+  --config src/config/default.yaml \
+  --topic "$topic" \
+  --discipline-id "24" \
+  --discipline-id "11" \
+  --run-id "$run_id" \
+  --output-root workspace/science-runs \
+  --quantitative-mode off \
+  --computation-mode run \
+  --until author
+```
+
+将示例课题替换为你的完整问题。关闭 shell 后变量会丢失，新会话需要重新定义 `topic` 和 `run_id`；用于其他研究领域时，也要调整学科 ID。
+
+计算分支在 Survey 和 Idea 完成后启动，与 ExperimentDesign 并行。Author 在预算内等待计算分支结束，并通过独立证据包使用已验证结果。当前默认最多生成 2 个实验、总计执行 12 次，计算分支总预算为 3600 秒，单次执行最多 900 秒。缺少数据、软件或验证失败时，计算分支可能未完成而主报告仍正常生成，因此要单独查看计算状态。
+
+### 4. 查看状态与恢复计算
+
+在另一个终端中使用实际运行目录：
+
+```bash
+uv run qwensci computation status --run-dir workspace/science-runs/ACTUAL_RUN_ID
+uv run qwensci computation resume --run-dir workspace/science-runs/ACTUAL_RUN_ID
+```
+
+`status` 查看进度；`resume` 恢复可恢复的计算失败，也适用于修复 Docker 和镜像后的 `ENVIRONMENT_UNAVAILABLE` 状态。日志与产物位于 `workspace/science-runs/ACTUAL_RUN_ID/computation/`。计算模式和模型在创建运行时固定：原来以计算模式 `off` 创建的运行，需要新建运行 ID 才能启用计算。
+
+如果 Author 已完成，而计算结果是在恢复后才生成，需要重跑 Author 才能将新交接结果纳入报告：
+
+```bash
+uv run qwensci science \
+  --resume workspace/science-runs/ACTUAL_RUN_ID \
+  --restart-from author --force \
+  --until author
+```
+
+输入数据、支持方法、联网与隔离设置、取消、预算和结果验证详见[计算实验说明](docs/computational_experiments.md)。
+
+## 安全
 
 - 任何 API key 都应视为密钥；一旦出现在提交、聊天、日志或截图中，应立即轮换。
 - Web 日志是诊断视图，不是任意文件浏览器；服务只公开允许的阶段日志并进行脱敏。

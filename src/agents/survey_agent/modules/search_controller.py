@@ -135,8 +135,9 @@ Project and SH scores are integers 0..5:
 0 unrelated/excluded, 1 shared terms only, 2 background without identifiable contribution,
 3 meaningful partial/proxy/exploratory contribution, 4 useful method/mechanism/comparison/
 counterevidence, 5 specific key contribution. Counterevidence and transferable systems can score
-high; state scope limits. Missing abstracts or insufficient information: use null scores and
-uncertain, never invent zero. Project scores summarize breadth, not a veto on a useful SH contribution.
+high; state scope limits. Missing abstracts or insufficient information: still emit the required
+integer score from the available title, query provenance and supplied context, explain uncertainty
+in reason, and do not invent a specific finding. Project scores summarize breadth, not a veto on a useful SH contribution.
 Do not lower local contribution merely because the paper does not supply the final target
 validation or candidate ordering. Paper-level exclusion_basis uses the same allowed values as
 evidence_boundaries.exclusion_basis; excluded=true requires actual irrelevance or an explicit
@@ -157,13 +158,14 @@ project_reason, overall_relation, recommended_graph_role, confidence and reason 
 roles_by_subhypothesis is an object mapping supplied SH IDs to one role string.
 Use only this SH's supplied slot_recovery_tasks.slot_name in candidate_slot_contributions;
 support_level is an explicit reported judgment, never guess it from a slot name.
-Scores are integer 0..5 or null when unknown; scope_pass, evidence_role_pass,
+Scores are integers 0..5 and are never null or omitted; scope_pass, evidence_role_pass,
 minimum_evidence_pass and excluded are JSON booleans. All source summaries require
 source="title" or "abstract" and a nonempty text string referring to the supplied source.
 Always emit project_score on each paper and semantic_relevance_score on EVERY SH assessment.
 Use JSON numbers, for example "project_score": 4 and "semantic_relevance_score": 3.
 Do not use confidence as a relevance score or omit scores because a graph is not expanded.
-If genuinely unknown, emit null and explain which source information is missing in reason.
+If genuinely uncertain, emit the lowest defensible integer score and explain which source information
+is missing in reason; never omit the score or replace it with confidence.
 Example slot contribution: {"slot_name": "SUPPLIED_SLOT_ID", "support_level": "partial",
 "reason": "This reported result addresses part of the required evidence."}
 Replace SUPPLIED_SLOT_ID with a real supplied slot ID; do not emit the placeholder.
@@ -171,7 +173,16 @@ The top-level response MUST be one JSON object whose only collection wrapper is 
 field. Do not return a bare array, one object per line, Markdown, or multiple JSON documents.
 Return exactly one record for EACH input paper, with its supplied paper_id unchanged. Keep
 assessments attached to that ID; do not substitute titles, reorder identities or omit records.
-""" + EVIDENCE_BOUNDARIES_PROMPT
+""" + EVIDENCE_BOUNDARIES_PROMPT + """
+
+MANDATORY FINAL SCORE CHECK BEFORE RETURNING JSON:
+1. Copy every input paper_id exactly once into the papers array.
+2. For every paper, include project_score as a JSON integer from 0 through 5 and include a nonempty project_reason.
+3. For every supplied SH ID, include exactly one sh_assessments entry with that exact sub_hypothesis_id.
+4. In every sh_assessments entry, include semantic_relevance_score as a JSON integer from 0 through 5 and include a nonempty reason.
+5. Never omit these score keys, emit null, use a string, use confidence, or stop after the first paper or SH.
+Do this completeness check against the supplied input arrays before sending the response.
+"""
 
 CONFIRM_PROMPT = """Confirm merged objects' relevance and roles in batches using the FULL original
 topic, all SH questions and previously assessed source summaries. Return JSON {candidates:
@@ -190,7 +201,31 @@ A background or mechanism object can be highly relevant; a selectable option can
 while its source establishes identity only. Preserve its role and describe source limitations.
 The top-level response MUST be one JSON object with a `candidates` array. Do not return a bare
 array, Markdown, or multiple JSON documents.
-""" + EVIDENCE_BOUNDARIES_PROMPT
+""" + EVIDENCE_BOUNDARIES_PROMPT + """
+Before returning, check every supplied candidate_id and each of its sub_hypothesis_ids:
+emit exactly one assessments entry per requested candidate-SH pair. EACH entry MUST contain
+both project_score and sh_score as JSON integers 0..5, candidate_role and a nonempty reason.
+These are the candidate's own discovery-relevance judgments; do not simply copy a source
+paper's score. Missing target validation or ranking evidence does not make relevance unknown.
+Never omit either score key, substitute confidence, or put scores outside assessments entries.
+Use null only when the supplied information cannot support a relevance judgment, explain the
+specific missing information in reason, and retain all other valid fields. Do not invent scores.
+"""
+
+CONFIRM_SCORE_REPAIR_PROMPT = """Complete only the missing or invalid discovery-relevance scores
+for the supplied repair_items using the original topic, SHs, candidate and source assessments.
+Return ONE JSON object {candidates: [{candidate_id, assessments: [{sub_hypothesis_id,
+project_score, sh_score}]}]}. Copy candidate_id and sub_hypothesis_id exactly from repair_items.
+For EACH requested pair, return the fields in missing_fields as JSON integers 0..5:
+0 unrelated/excluded, 1 shared terms only, 2 background without identifiable contribution,
+3 meaningful partial/proxy contribution, 4 useful specific contribution, 5 key contribution.
+Score the candidate itself; a source paper's score is context, not an automatic replacement.
+Missing target validation or ranking is not missing discovery relevance. Preserve the existing
+role, reason, evidence boundaries and any valid score; do not reassess or return other fields.
+If source information cannot support a score, return null for that field. Do not invent scores,
+new evidence, candidate IDs or SH IDs. Return JSON only: group all requested SH assessments
+under exactly one candidates entry per candidate_id, with one assessment per requested pair.
+"""
 
 
 FEEDBACK_REPAIR_PROMPT = """Repair only the feedback metadata of the supplied existing queries.
@@ -242,6 +277,8 @@ class SurveySearchController:
         self.feedback_lease = None
         self.feedback_repair_attempts = 0
         self.context_repair_attempts = 0
+        self.confirmation_score_repair_requests = 0
+        self.confirmation_score_repaired_pairs = set()
         self.planning_outcome = {}
 
     def setting(self, key, default):
@@ -392,7 +429,7 @@ class SurveySearchController:
         chat = getattr(self.collector, "chat_agent", None)
         api_config = getattr(getattr(chat, "config", None), "APIInfo", None)
         available = int(getattr(api_config, "llm_max_context_length", 880000)) - 16000 - 1024
-        return min(self.setting("survey_prompt_input_limit", 120000), max(0, available))
+        return min(self.setting("survey_prompt_input_limit", 160000), max(0, available))
 
     def source_is_eligible(self, paper, sh_id):
         return any(item.get("sub_hypothesis_id") == sh_id for item in seed_assessments(paper))
@@ -836,6 +873,109 @@ class SurveySearchController:
             self.publish_format(diagnostic)
             self.checkpoint_assessment_alignment(alignment_record, diagnostic)
 
+    def repair_confirmation_scores(self, returned, batch, sources, diagnostic):
+        returned = deepcopy(returned)
+        pending = []
+        for record in batch:
+            matches = [item for item in returned if item.get("candidate_id") == record["candidate_id"]]
+            if len(matches) != 1:
+                continue
+            candidate = matches[0]
+            context = {"candidate_id": record["candidate_id"], "paper_ids": record["discovery_paper_ids"]}
+            candidate["assessments"] = self.records(candidate.get("assessments", []), "assessments",
+                "confirmation", diagnostic, **context)
+            for sh_id in record["sub_hypothesis_ids"]:
+                matches = [item for item in candidate["assessments"] if item.get("sub_hypothesis_id") == sh_id]
+                if len(matches) != 1:
+                    continue
+                item = matches[0]
+                pair = (record["candidate_id"], sh_id)
+                if (pair in self.confirmation_score_repaired_pairs or not isinstance(item.get("candidate_role"), str)
+                    or item["candidate_role"] not in OBJECT_ROLES
+                    or not isinstance(item.get("reason"), str) or not item["reason"].strip()):
+                    continue
+                missing = [field for field in ("project_score", "sh_score") if score_field(item, field, diagnostic) is None]
+                if missing:
+                    pending.append((record, item, missing))
+        item_limit = self.setting("survey_confirmation_score_repair_item_limit", 8)
+        request_limit = self.setting("survey_confirmation_score_repair_request_limit", 8)
+        for start in range(0, len(pending), item_limit):
+            if self.confirmation_score_repair_requests >= request_limit or not self.budget.model_remaining():
+                self.collector.logger.info("Survey confirmation score repair skipped: pending=%s reason=%s.",
+                    len(pending) - start, "repair_limit" if self.confirmation_score_repair_requests >= request_limit else "model_budget_exhausted")
+                break
+            selected = pending[start:start + item_limit]
+            repair_items = [{"candidate_id": record["candidate_id"], "sub_hypothesis_id": item["sub_hypothesis_id"],
+                "missing_fields": missing, "assessment": deepcopy(item),
+                "candidate": project_fields(record, ("name", "candidate_kind", "role_reason", "discovery_evidence_spans")),
+                "source_assessments": {identifier: sources[identifier] for identifier in record["discovery_paper_ids"]
+                    if identifier in sources}} for record, item, missing in selected]
+            self.confirmation_score_repair_requests += 1
+            self.confirmation_score_repaired_pairs.update((record["candidate_id"], item["sub_hypothesis_id"])
+                for record, item, _missing in selected)
+            repair_diagnostic = self.format_batch("confirmation_score_repair")
+            self.collector.logger.info("Survey confirmation score repair: request=%s/%s pairs=%s.",
+                self.confirmation_score_repair_requests, request_limit, len(selected))
+            payload = {**self.payload(), "repair_items": repair_items}
+            response = self.model([serialize_prompt(CONFIRM_SCORE_REPAIR_PROMPT, payload)],
+                "Repairing Survey Confirmation Scores", diagnostics=[repair_diagnostic], workers=1)[0]
+            patches = self.records(response.get("candidates", []), "candidates", "confirmation_score_repair", repair_diagnostic)
+            recovered = 0
+            for record, item, missing in selected:
+                matches = [patch for patch in patches if patch.get("candidate_id") == record["candidate_id"]]
+                if len(matches) != 1:
+                    continue
+                assessments = self.records(matches[0].get("assessments", []), "assessments", "confirmation_score_repair", repair_diagnostic)
+                matches = [patch for patch in assessments if patch.get("sub_hypothesis_id") == item["sub_hypothesis_id"]]
+                if len(matches) != 1:
+                    continue
+                patch = matches[0]
+                for field in missing:
+                    value = score_field(patch, field, repair_diagnostic)
+                    if value is None:
+                        continue
+                    for key in score_fields_raw(item, field):
+                        item.pop(key)
+                    item[field] = value
+                    recovered += 1
+                    diagnostic.recovered(field, "bounded_confirmation_score_repair")
+            self.prompt_audit.append({"stage": "confirmation_score_repair", "batch_id": diagnostic.batch_id,
+                "repair_items": repair_items, "response": deepcopy(response), "recovered_scores": recovered})
+            self.publish_format(repair_diagnostic)
+        return returned
+
+    def confirmation_inputs(self, pending):
+        pair_limit = self.setting("survey_confirmation_pairs_per_batch", 16)
+        batches, batch, pairs = [], [], 0
+        for record in pending:
+            count = len(record["sub_hypothesis_ids"])
+            if batch and (len(batch) >= self.object_batch or pairs + count > pair_limit):
+                batches.append(batch)
+                batch, pairs = [], 0
+            batch.append(record)
+            pairs += count
+        if batch:
+            batches.append(batch)
+        jobs = []
+        while batches:
+            batch = batches.pop(0)
+            sources = {paper_identity(paper): {"project_relevance": paper.get("project_relevance"),
+                "sh_semantic_assessments": [compact_value(project_fields(item, ("sub_hypothesis_id", "assessment_status",
+                    "semantic_relevance_score", "reason", "evidence_spans", "claim_limits", "explicit_exclusion_matches", "evidence_boundaries")), text_limit=600)
+                    for item in paper.get("sh_semantic_assessments", [])]}
+                for paper in self.papers if any(paper_identity(paper) in record["discovery_paper_ids"] for record in batch)}
+            candidates = [compact_value(project_fields(record, ("candidate_id", "name", "aliases", "candidate_kind",
+                "taxonomic_level", "sub_hypothesis_ids", "roles_by_subhypothesis", "role_reason", "discovery_paper_ids",
+                "discovery_evidence_spans")), text_limit=600) for record in batch]
+            payload = {**self.payload(), "candidates": candidates, "prior_source_assessments": sources}
+            prompt = serialize_prompt(CONFIRM_PROMPT, payload)
+            if len(batch) > 1 and self.measure_prompt(prompt) > self.prompt_limit():
+                midpoint = len(batch) // 2
+                batches[:0] = [batch[:midpoint], batch[midpoint:]]
+                continue
+            jobs.append((batch, sources, prompt))
+        return jobs
+
     def confirm(self):
         old = {record["candidate_id"]: record for record in self.registry}
         self.registry = register_candidates(self.observations, self.papers, literal_verification=False)
@@ -854,24 +994,33 @@ class SurveySearchController:
             record["candidate_relevance_status"] = "assessment_unavailable"
             record["relevance_assessment_submitted_by_subhypothesis"] = {sh_id: False for sh_id in record["sub_hypothesis_ids"]}
             pending.append(record)
-        for start in range(0, len(pending), self.object_batch):
-            batch = pending[start:start + self.object_batch]
-            if not self.budget.model_remaining():
-                for record in batch:
-                    record["candidate_relevance_by_subhypothesis"] = {sh_id: "deferred_budget" for sh_id in record["sub_hypothesis_ids"]}
-                    record["candidate_relevance_status"] = "deferred_budget"
-                continue
-            sources = {paper_identity(paper): {"project_relevance": paper.get("project_relevance"),
-                "sh_semantic_assessments": [compact_value(project_fields(item, ("sub_hypothesis_id", "assessment_status",
-                    "semantic_relevance_score", "reason", "evidence_spans", "claim_limits", "explicit_exclusion_matches", "evidence_boundaries")), text_limit=600)
-                    for item in paper.get("sh_semantic_assessments", [])]}
-                for paper in self.papers if any(paper_identity(paper) in record["discovery_paper_ids"] for record in batch)}
-            candidates = [compact_value(project_fields(record, ("candidate_id", "name", "aliases", "candidate_kind",
-                "taxonomic_level", "sub_hypothesis_ids", "roles_by_subhypothesis", "role_reason", "discovery_paper_ids",
-                "discovery_evidence_spans", "candidate_source_evidence_by_subhypothesis")), text_limit=600) for record in batch]
-            diagnostic = self.format_batch("confirmation", paper_ids=list(sources))
-            response = self.model([CONFIRM_PROMPT + json.dumps({**self.payload(), "candidates": candidates, "prior_source_assessments": sources}, ensure_ascii=False)], "Confirming Survey Candidate Relevance", diagnostics=[diagnostic])[0]
+        jobs = self.confirmation_inputs(pending)
+        capacity = self.budget.model_remaining()
+        for batch, _sources, _prompt in jobs[capacity:]:
+            for record in batch:
+                record["candidate_relevance_by_subhypothesis"] = {sh_id: "deferred_budget" for sh_id in record["sub_hypothesis_ids"]}
+                record["candidate_relevance_status"] = "deferred_budget"
+        jobs = jobs[:capacity]
+        diagnostics = [self.format_batch("confirmation", paper_ids=list(sources)) for _batch, sources, _prompt in jobs]
+        responses = [{"_survey_response_unavailable": True} for _job in jobs]
+        submitted = []
+        for index, (_batch, _sources, prompt) in enumerate(jobs):
+            if self.measure_prompt(prompt) > self.prompt_limit():
+                diagnostics[index].unresolved("response", "prompt_budget_too_small",
+                    input_units=self.measure_prompt(prompt), input_limit=self.prompt_limit())
+            else:
+                submitted.append(index)
+        completed = self.model([jobs[index][2] for index in submitted], "Confirming Survey Candidate Relevance",
+            diagnostics=[diagnostics[index] for index in submitted], workers=self.setting("survey_confirmation_workers", 10))
+        for index, response in zip(submitted, completed):
+            responses[index] = response
+        for (batch, sources, _prompt), response, diagnostic in zip(jobs, responses, diagnostics):
+            if response.get("_survey_response_unavailable"):
+                if not diagnostic.issues:
+                    diagnostic.unresolved("response", "confirmation_response_unavailable")
+                diagnostic.suppress_derived = True
             returned = self.records(response.get("candidates", []), "candidates", "confirmation", diagnostic)
+            returned = self.repair_confirmation_scores(returned, batch, sources, diagnostic)
             for record in batch:
                 context = {"candidate_id": record["candidate_id"], "paper_ids": record["discovery_paper_ids"]}
                 record["relevance_assessment_submitted_by_subhypothesis"] = {sh_id: True for sh_id in record["sub_hypothesis_ids"]}
@@ -1056,7 +1205,7 @@ class SurveySearchController:
         self.papers = associate_papers_with_subhypotheses(self.papers, self.subhypotheses,
             project_fingerprint=str(self.context.get("input_fingerprint") or ""), relevance_threshold=3, max_slots_per_paper=2)
         self.selection = bounded_seed_selection(self.papers, self.subhypotheses, self.registry,
-            min(18, self.setting("max_seed_paper_num", 18)), self.setting("min_seed_papers_per_sh", 2))
+            self.setting("max_seed_paper_num", 40), self.setting("min_seed_papers_per_sh", 2))
         self.ledger = build_candidate_ledger(self.registry, self.papers, self.dimensions, self.lanes, self.summaries,
             selected_paper_ids=[paper_identity(paper) for paper in self.selection["selected_papers"]], discovery_status="completed")
         self.metrics = comparison_metrics(self.ledger, self.subhypotheses, self.selection["minimum_seed_counts_by_sh"], self.setting("min_seed_papers_per_sh", 2))

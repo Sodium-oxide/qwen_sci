@@ -39,7 +39,7 @@ def test_five_sh_can_use_sixty_logical_calls_and_http_limit_is_120():
     hypotheses = [{**SH, "sub_hypothesis_id": f"SH{index}"} for index in range(5)]
     controller = SurveySearchController(collector, TOPIC, {}, {}, hypotheses)
     assert controller.logical_limit == 60
-    assert controller.prompt_limit() == 120000
+    assert controller.prompt_limit() == 160000
     assert controller.budget.snapshot()["http_limit"] == 120
     assert controller.budget.stages == {"primary": 96, "retry_fallback": 24}
 

@@ -44,6 +44,11 @@ llm:
         memory_filter: "gpt-5-mini"
         memory_router: "gpt-5-mini"
         memory_synthesis: "gpt-5.4"
+        research: "gpt-5.4"
+        figure: "gpt-5.4"
+        polish: "gpt-5.4"
+        translation: "gpt-5.4"
+        reader: "gpt-5.4"
     qwen:
       api_key_env: "DASHSCOPE_API_KEY"
       api_key: "${oc.env:DASHSCOPE_API_KEY,''}"
@@ -69,6 +74,11 @@ llm:
         memory_filter: "qwen3.6-flash"
         memory_router: "qwen3.6-flash"
         memory_synthesis: "qwen3.8-max"
+        research: "qwen3.8-flash"
+        figure: "qwen3.7-plus"
+        polish: "qwen3.8-flash"
+        translation: "qwen3.8-flash"
+        reader: "qwen3.8-flash"
   models:
     qwen3-max-2026-01-23:
       provider: "qwen"
@@ -184,6 +194,59 @@ image_generation:
       supports_edit: false
       supports_mask: false
       supports_4k: false
+
+# ============================================
+# Web control-plane jobs and skill-derived prompts
+# ============================================
+web:
+  jobs:
+    backend: "sqlite"
+    database: "${workspace.root}/qwensci.db"
+    root: "${workspace.root}/jobs"
+    max_workers: 4
+    max_retries: 2
+    heartbeat_seconds: 15
+    stale_after_seconds: 120
+    default_timeout_seconds: 1800
+  prompts:
+    strict_versioning: true
+    store_prompt_hash: true
+    store_raw_prompt: false
+  files:
+    max_upload_bytes: 52428800
+    max_project_bytes: 1073741824
+    max_uncompressed_bytes: 268435456
+    allowed_network: false
+
+figure:
+  enabled: true
+  default_backend: "python"
+  allow_r: false
+  execution_timeout_seconds: 600
+  cpu_seconds: 120
+  memory_bytes: 2147483648
+  max_rows: 100000
+  max_output_bytes: 52428800
+  network_enabled: false
+  image_model_role: "academic_figure"
+
+polish:
+  enabled: true
+  model_role: "polish"
+  max_input_chars: 200000
+  max_segments: 2000
+
+translation:
+  enabled: true
+  parser_backend: "mineru"
+  ocr_enabled: true
+  max_pages: 300
+  max_pdf_bytes: 52428800
+  model_role: "translation"
+
+preferences:
+  backend: "file"
+  require_auth: false
 
 api:
   openai:
@@ -307,7 +370,7 @@ survey:
     # stable operating range. Survey presets may not exceed this default.
     batch_chat_agent_worker: 10
     chat_timeout: 900
-    batch_chat_timeout: 1800
+    batch_chat_timeout: 5400
     # OpenAlex is the primary literature-discovery provider. API keys are
     # required by the current OpenAlex API; the adapter sends this value only
     # as an Authorization header and never writes it to logs or cache artifacts.

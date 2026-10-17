@@ -5,10 +5,12 @@ from __future__ import annotations
 import math
 from typing import Annotated, Literal, Union
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from src.llm.model_policy import TextModelName
 
 
 QuantitativeMode = Literal["off", "optional", "required"]
+ComputationMode = Literal["off", "plan", "run"]
 RunActionType = Literal[
     "start_workflow",
     "resume_science",
@@ -59,7 +61,29 @@ class CreateRunRequest(StrictModel):
     language: Literal["zh-CN", "en"] = "zh-CN"
     minimum_pages: int = Field(default=7, ge=7, le=80)
     quantitative_mode: QuantitativeMode = "off"
+    computation_mode: ComputationMode = "off"
     allow_remote_perception: bool = False
+    research_depth: Literal["light", "full"] = "full"
+    workflow_profile: Literal["full_research", "light_research"] = "full_research"
+    prompt_profile: Literal["research-default", "research-light"] = "research-default"
+    project_id: str | None = Field(default=None, max_length=256)
+    model_name: TextModelName | None = None
+    computation_model: TextModelName | None = None
+
+    @model_validator(mode="after")
+    def align_research_profile(self) -> "CreateRunRequest":
+        from src.pipeline.research_profiles import resolve_research_profile
+
+        profile = resolve_research_profile(
+            self.research_depth,
+            workflow=self.workflow_profile if "workflow_profile" in self.model_fields_set else None,
+            prompt=self.prompt_profile if "prompt_profile" in self.model_fields_set else None,
+            quantitative_mode=self.quantitative_mode,
+            computation_mode=self.computation_mode,
+        )
+        self.workflow_profile = profile.workflow_profile
+        self.prompt_profile = profile.prompt_profile
+        return self
 
     @field_validator("topic")
     @classmethod
@@ -258,6 +282,7 @@ RunActionRequest = Annotated[
 
 class ResolveDisciplineRequest(StrictModel):
     topic: str = Field(min_length=3, max_length=8_000)
+    method: Literal["taxonomy", "model"] = "taxonomy"
 
     @field_validator("topic")
     @classmethod
@@ -380,6 +405,7 @@ class RunView(BaseModel):
     execution_mode: str
     discipline_ids: list[str]
     quantitative_mode: QuantitativeMode
+    computation_mode: ComputationMode = "off"
     language: str
     remote_perception_authorized: bool
     stages: dict[str, dict[str, object]]
@@ -390,6 +416,15 @@ class RunView(BaseModel):
     event_url: str
     artifacts: list[ArtifactView]
     quantitative: dict[str, object] | None = None
+    research_depth: Literal["light", "full"] = "full"
+    workflow_profile: str = "full_research"
+    prompt_profile: str = "research-default"
+    model_name: TextModelName | None = None
+    prompt_version: str | None = None
+    prompt_hash: str | None = None
+    project_id: str | None = None
+    available_endpoints: list[str] = Field(default_factory=list)
+    completed_outputs: list[str] = Field(default_factory=list)
 
 
 class MaterialUploadResponse(BaseModel):

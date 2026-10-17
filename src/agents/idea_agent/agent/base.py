@@ -15,6 +15,7 @@ from src.agents.idea_agent.utils.core.chat_transport import (
     resolve_chat_transport,
 )
 from src.llm.provider_registry import resolve_model, resolve_provider
+from src.llm.research_policy import research_messages, research_policy
 
 
 DEFAULT_IDEA_CHAT_MODEL = "qwen3.7-plus"
@@ -127,6 +128,7 @@ class AgentBase:
         self.action_space: Dict[str, str] = actions or {}
         self.project_config = _load_runtime_project_config(config)
         selected_provider = provider_name or os.getenv("QWENSCI_LLM_PROVIDER") or None
+        selected_provider = research_policy(self.project_config).get("provider") or selected_provider
         self.provider = resolve_provider(self.project_config, selected_provider)
         self.base_url = (
             os.getenv("OPENAI_BASE_URL")
@@ -153,7 +155,7 @@ class AgentBase:
         """
         if not str(prompt or "").strip():
             raise ValueError("Chat prompt must not be empty.")
-        resolved_model = resolve_idea_chat_model(model, self.default_model)
+        resolved_model = resolve_idea_chat_model(research_policy(self.project_config).get("model_name"), model, self.default_model)
         resolve_model(self.project_config, resolved_model, self.provider.name)
         transport = resolve_chat_transport(
             self._current_base_url(),
@@ -184,7 +186,7 @@ class AgentBase:
                 request_kwargs["stream"] = True
             response = self.chat_model.chat.completions.create(
                 model=resolved_model,
-                messages=[{"role": "user", "content": prompt}],
+                messages=research_messages(self.project_config, prompt),
                 **request_kwargs,
             )
             if stream_requested:
@@ -204,7 +206,7 @@ class AgentBase:
             request_kwargs["stream"] = True
         response = self.chat_model.responses.create(
             model=resolved_model,
-            input=[{"role": "user", "content": prompt}],
+            input=research_messages(self.project_config, prompt),
             **request_kwargs,
         )
         if stream_requested:

@@ -6,7 +6,7 @@ import base64
 import os
 import time
 from dataclasses import dataclass
-from typing import Any, Iterable, Mapping, Optional
+from typing import Any, Callable, Iterable, Mapping, Optional
 
 import requests
 
@@ -186,6 +186,7 @@ class DashScopeImageClient:
         mask: Optional[bytes] = None,
         output_format: str = "png",
         timeout: Optional[float] = None,
+        on_task_submitted: Callable[[str], None] | None = None,
     ) -> ImageGenerationResult:
         if not self.api_key:
             raise ImageGenerationError("DASHSCOPE_API_KEY is required for Qwen image generation.")
@@ -225,13 +226,28 @@ class DashScopeImageClient:
         )
         data = _response_json(response)
         task_id = _find_first(data, ("task_id", "taskId"))
+        if task_id and on_task_submitted is not None:
+            on_task_submitted(str(task_id))
         if task_id and not _extract_image_values(data)[0] and not _extract_image_values(data)[1]:
             data = self._poll_task(str(task_id), headers, request_timeout)
+
+        return self._materialize_result(data, model=model, task_id=task_id, timeout=request_timeout)
+
+    def resume(self, *, task_id: str, model: str, timeout: float | None = None) -> ImageGenerationResult:
+        if not task_id or any(character not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_" for character in task_id):
+            raise ImageGenerationError("Image generation task identifier is invalid.")
+        if not self.api_key:
+            raise ImageGenerationError("DASHSCOPE_API_KEY is required for Qwen image generation.")
+        request_timeout = max(1, float(timeout or self.timeout))
+        data = self._poll_task(task_id, {"Authorization": f"Bearer {self.api_key}"}, request_timeout)
+        return self._materialize_result(data, model=model, task_id=task_id, timeout=request_timeout)
+
+    def _materialize_result(self, data, *, model: str, task_id: str | None, timeout: float) -> ImageGenerationResult:
 
         encoded_images, source_urls = _extract_image_values(data)
         images = [base64.b64decode(value) for value in encoded_images]
         for url in source_urls:
-            downloaded = self.session.get(url, timeout=request_timeout)
+            downloaded = self.session.get(url, timeout=timeout)
             if getattr(downloaded, "status_code", 200) >= 400:
                 raise ImageGenerationError(
                     f"Failed to download temporary image URL: HTTP {downloaded.status_code}"

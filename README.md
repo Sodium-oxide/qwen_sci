@@ -667,6 +667,109 @@ Open [http://127.0.0.1:8010](http://127.0.0.1:8010). The Web API serves the buil
 
 Browser responses and log views redact local paths and credential-like fields such as API keys, tokens, Authorization headers, passwords, and cookies. The logging API deliberately excludes the uploaded `inputs/` directory. Do not rely on this UI redaction as a reason to place secrets into research prompts or files.
 
+## Optional computational experiments in WSL
+
+Use `--computation-mode run` to generate and execute computational experiments alongside ExperimentDesign. This branch is separate from Q1/Q2 quantitative modeling; keep `--quantitative-mode off` when you only want the computational experiments described here.
+
+| Mode | Behavior |
+| --- | --- |
+| `--computation-mode off` | Default; computational experiments are disabled. |
+| `--computation-mode plan` | Generate computational protocols without executing programs. |
+| `--computation-mode run` | Generate protocols and code, execute in Docker, validate and analyze results. |
+
+### 1. Connect WSL to Docker Desktop
+
+Install and start Docker Desktop on Windows. Enable **Settings → General → Use the WSL 2 based engine**, then enable your distribution under **Settings → Resources → WSL Integration** and apply the changes. Run the following commands inside WSL:
+
+```bash
+docker info
+docker run --rm hello-world
+```
+
+`docker info` must display a **Server** section. A working `default` context pointing to `unix:///var/run/docker.sock` is suitable for WSL; keep it instead of selecting a Windows named-pipe endpoint.
+
+- `no such file or directory` for `docker.sock`: start Docker Desktop and check WSL integration. If you use a Docker Engine installed directly inside WSL instead, start that daemon with `sudo systemctl start docker` (or `sudo service docker start` without systemd).
+- `permission denied` for `docker.sock`: first check `ls -l /var/run/docker.sock` and try `sudo docker info`. If the socket belongs to group `docker` and the elevated command succeeds, add your WSL user to that group and refresh the shell:
+
+```bash
+sudo groupadd -f docker
+sudo usermod -aG docker "$USER"
+newgrp docker
+docker info
+```
+
+Docker group membership grants control over the Docker daemon. Keep the socket permissions unchanged; do not use `chmod 666`. Use either Docker Desktop integration or a separately managed WSL Docker Engine, so the CLI connects to the intended daemon.
+
+### 2. Build and verify the execution image
+
+From the repository root in WSL (for example, `cd ~/qwen_sci-main`), build the supplied image:
+
+```bash
+docker build \
+  -t qwensci-computation:py312-v1 \
+  -f src/agents/computational_experiment_agent/execution/Dockerfile \
+  .
+
+docker run --rm qwensci-computation:py312-v1 \
+  python -c "import numpy, scipy, sympy, pyscf; print('Computational environment OK')"
+```
+
+The verification should print `Computational environment OK`. Build the image once, then rebuild after changing its Dockerfile or dependencies. The bundled environment includes Python, NumPy, SciPy, SymPy and PySCF.
+
+### 3. Start a run with numerical experiments
+
+Define the complete research topic in the current WSL shell, including the numerical work you want performed. For example:
+
+```bash
+run_id="cpallidicaule-pathosystem-$(date +%Y%m%d-%H%M%S)"
+topic=$(cat <<'TOPIC'
+Propose and justify a model pathogen and pathovar screening design for
+Chenopodium pallidicaule. Execute numerical experiments to assess sample
+size, statistical power, and ranking robustness under measurement noise.
+Declare assumed parameters and sensitivity ranges. Use simulations to
+evaluate the screening design; base biological virulence claims on
+experimental or cited empirical evidence.
+TOPIC
+)
+
+uv run qwensci science \
+  --config src/config/default.yaml \
+  --topic "$topic" \
+  --discipline-id "24" \
+  --discipline-id "11" \
+  --run-id "$run_id" \
+  --output-root workspace/science-runs \
+  --quantitative-mode off \
+  --computation-mode run \
+  --until author
+```
+
+Replace the example topic with your full question. Shell variables are lost when you close the shell; define `topic` and `run_id` again in a new session. For another research domain, change the discipline IDs as well.
+
+The computation branch starts after Survey and Idea, alongside ExperimentDesign. Author waits for it within its budget and consumes verified results through a separate evidence package. Current defaults allow two experiments, twelve total execution attempts, a 3,600-second branch budget and a 900-second limit per execution. Missing data, software or failed validation can leave the computation incomplete while the main report still completes; inspect its status separately.
+
+### 4. Inspect and resume computations
+
+Use the actual run directory when running these commands in another terminal:
+
+```bash
+uv run qwensci computation status --run-dir workspace/science-runs/ACTUAL_RUN_ID
+uv run qwensci computation resume --run-dir workspace/science-runs/ACTUAL_RUN_ID
+```
+
+`status` reports progress; `resume` resumes recoverable computation failures, including `ENVIRONMENT_UNAVAILABLE` after Docker and the image have been fixed. Branch logs and artifacts are under `workspace/science-runs/ACTUAL_RUN_ID/computation/`. Mode and model are fixed when a run is created: an existing run created with computation `off` needs a new run ID to enable it.
+
+If Author has already completed before the recovered computation becomes available, regenerate Author to incorporate the new handoff:
+
+```bash
+uv run qwensci science \
+  --resume workspace/science-runs/ACTUAL_RUN_ID \
+  --restart-from author --force \
+  --until author
+```
+
+See [computational experiments](docs/computational_experiments.md) for input datasets, supported methods, network and isolation settings, cancellation, budgets and result qualification.
+
 ## Run stages individually
 
 Individual commands are useful when a stage needs a carefully reviewed input, a custom output location, or a separately managed handoff.
@@ -732,8 +835,6 @@ with links to the companion files, rather than an embedded copy of the complete 
 Artifacts are streamed to temporary files and published together with rollback on failure.
 
 ### 4. Author
-
-ExperimentDesign also supports an optional computational branch: add `--computation-mode plan` to design computational protocols, or `--computation-mode run` to generate and execute bounded container projects alongside the existing design stage. Default mode is `off`. Numerical and chemical results enter Author through a verified evidence capsule. See [computational experiments](docs/computational_experiments.md) for setup, supported methods, network/isolation defaults, budgets, cancellation and recovery.
 
 ```bash
 uv run qwensci author \

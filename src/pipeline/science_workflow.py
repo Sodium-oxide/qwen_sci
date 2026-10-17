@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import copy
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -913,6 +913,7 @@ def run_science_workflow(
     services: ScienceStageServices | None = None,
     quiet: bool = False,
     quantitative_handoff_manifest_path: str | Path | None = None,
+    execution_checkpoint: Callable[[], None] | None = None,
 ) -> ScienceWorkflowOutcome:
     """Run pending stages serially with exact persisted handoff paths.
 
@@ -922,6 +923,12 @@ def run_science_workflow(
 
     if until not in SCIENCE_STAGE_NAMES:
         raise ScienceWorkflowError("survey", 2, f"Unknown science stage: {until}")
+    from .research_profiles import profile_from_options
+
+    try:
+        profile_from_options(_mapping(_mapping(metadata.get("immutable_inputs")).get("options"))).validate_stage(until)
+    except ValueError as exc:
+        raise ScienceWorkflowError("survey", 2, str(exc)) from exc
     active_services = services or default_science_stage_services()
     handoff_path: Path | None = None
     if quantitative_handoff_manifest_path is not None:
@@ -946,6 +953,8 @@ def run_science_workflow(
     computation_handoff = None
     try:
         for stage_name in SCIENCE_STAGE_NAMES[: SCIENCE_STAGE_NAMES.index(until) + 1]:
+            if execution_checkpoint is not None:
+                execution_checkpoint()
             if _workflow_is_cancelled(paths):
                 if computation_mode(metadata) != "off":
                     join_branch(paths.run_dir, computation_process, cancel=lambda: True)
@@ -970,6 +979,8 @@ def run_science_workflow(
             )
             if stage_completed is False:
                 return _finish_workflow(paths, until=until)
+            if execution_checkpoint is not None:
+                execution_checkpoint()
             if _workflow_is_cancelled(paths):
                 if computation_mode(metadata) != "off":
                     join_branch(paths.run_dir, computation_process, cancel=lambda: True)

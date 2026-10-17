@@ -1,25 +1,20 @@
-import type { ActionPayload, CreateRunPayload, Discipline, MaterialDraft, ParameterSearchJob, ParameterSearchRequest, ParameterSearchResult, ParameterSearchSelection, ResearchRun, RunEvent, RunLogChunk, RunLogSource, RepresentativeProject } from "./types";
+import type { ActionPayload, CreateRunPayload, Discipline, DisciplineResolution, MaterialDraft, ParameterSearchJob, ParameterSearchRequest, ParameterSearchResult, ParameterSearchSelection, ResearchRun, RunEvent, RunLogChunk, RunLogSource, RepresentativeProject } from "./types";
+import { checkedResponse, request } from "./shared/api/http";
 
 const API_BASE = "/api";
 
 async function requestJson<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, options);
-  const contentType = response.headers.get("content-type") ?? "";
-  const body: unknown = contentType.includes("application/json") ? await response.json() : await response.text();
-  if (!response.ok) {
-    const detail = typeof body === "object" && body && "detail" in body ? String(body.detail) : String(body);
-    throw new Error(detail || "服务端未能完成该操作。");
-  }
-  return body as T;
+  return request<T>(`${API_BASE}${path}`, options);
 }
 
 export const api = {
   health: () => requestJson<{ status: string; runs_detected: number }>("/health"),
   disciplines: () => requestJson<{ disciplines: Discipline[] }>("/disciplines"),
-  resolveDisciplines: (topic: string) => requestJson<{ suggested_catalog_ids?: string[]; reason?: string; primary?: { label?: string } }>("/disciplines/resolve", {
+  resolveDisciplines: (topic: string, method: "taxonomy" | "model" = "taxonomy", signal?: AbortSignal) => requestJson<DisciplineResolution>("/disciplines/resolve", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ topic }),
+    body: JSON.stringify({ topic, method }),
+    signal,
   }),
   runs: (query = "") => requestJson<ResearchRun[]>(`/runs?query=${encodeURIComponent(query)}`),
   run: (runId: string) => requestJson<ResearchRun>(`/runs/${encodeURIComponent(runId)}`),
@@ -59,11 +54,8 @@ export const api = {
       scope: draft.scope,
       contains_sensitive_data: draft.contains_sensitive_data,
     }))));
-    const response = await fetch(`${API_BASE}/runs/${encodeURIComponent(runId)}/materials`, { method: "POST", body: form });
-    const body: unknown = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      throw new Error(typeof body === "object" && body && "detail" in body ? String(body.detail) : "材料上传失败。");
-    }
+    const response = await checkedResponse(`${API_BASE}/runs/${encodeURIComponent(runId)}/materials`, { method: "POST", body: form });
+    const body: unknown = await response.json();
     return (body as { run: ResearchRun }).run;
   },
   removeMaterial: (runId: string, materialId: string) => requestJson<ResearchRun>(`/runs/${encodeURIComponent(runId)}/materials/${encodeURIComponent(materialId)}`, {
@@ -72,8 +64,7 @@ export const api = {
   materialUrl: (runId: string, materialId: string) => `${API_BASE}/runs/${encodeURIComponent(runId)}/materials/${encodeURIComponent(materialId)}`,
   artifactUrl: (runId: string, artifactId: string) => `${API_BASE}/runs/${encodeURIComponent(runId)}/artifacts/${encodeURIComponent(artifactId)}`,
   artifactText: async (runId: string, artifactId: string) => {
-    const response = await fetch(`${API_BASE}/runs/${encodeURIComponent(runId)}/artifacts/${encodeURIComponent(artifactId)}`);
-    if (!response.ok) throw new Error("无法读取已登记的产物。");
+    const response = await checkedResponse(`${API_BASE}/runs/${encodeURIComponent(runId)}/artifacts/${encodeURIComponent(artifactId)}`);
     return response.text();
   },
 };

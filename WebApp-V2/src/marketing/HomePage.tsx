@@ -1,0 +1,16 @@
+import { ArrowDown, ArrowRight, Check, CircleDot, FileCheck2, GitBranch, ScanSearch, ShieldCheck } from "lucide-react";
+import { Link } from "react-router-dom";
+import { modules } from "../app/catalog";
+import { ActionLink } from "../shared/ui";
+import { QwenParticleVisual } from "./QwenParticleVisual";
+
+const loop = [{title: "科学问题", detail: "topic", icon: CircleDot}, {title: "证据登记", detail: "materials", icon: FileCheck2}, {title: "模型与工具", detail: "actions", icon: GitBranch}, {title: "实验与审阅", detail: "review", icon: ShieldCheck}, {title: "论文成果", detail: "artifacts", icon: ScanSearch}];
+
+export function HomePage() {
+  return <div className="home-page"><section className="home-hero"><div className="hero-copy"><p className="eyebrow">QWENSCI / EVIDENCE-BOUND RESEARCH SYSTEM</p><h1>让每一个科学问题，<em>都有一条可追溯的路径</em></h1><p className="hero-lede">从课题、材料与文献出发，推进综述、构思、实验设计与写作。每个阶段都保留来源、审阅与成果记录。</p><div className="hero-actions"><ActionLink to="/products/qwensci" primary>打开 QwenSci 预览</ActionLink><a className="text-link" href="#loop">查看研究闭环 <ArrowDown size={15} /></a></div></div><QwenParticleVisual /></section>
+    <section id="loop" className="home-loop section-block"><div className="section-intro"><p className="eyebrow">A RESEARCH LOOP, NOT A CHAT BOX</p><h2>科学发现不从答案开始，<br /><em>从可核对的问题开始。</em></h2><p>QwenSci 把研究推进拆成可暂停、可恢复、可审阅的服务端运行。你始终知道下一步是什么、它依据什么、谁可以确认。</p></div><div className="loop-track">{loop.map((item, index) => <div className="loop-node" key={item.title}><div className="loop-marker"><item.icon size={17} /></div><strong>{item.title}</strong><code>{item.detail}</code>{index < loop.length - 1 && <span className="loop-connector" />}</div>)}</div></section>
+    <section className="home-modules section-block"><div className="section-intro split"><div><p className="eyebrow">SIX WAYS TO MOVE A QUESTION</p><h2>从完整研究到一页图，<br /><em>选择合适的深度。</em></h2></div><p>每个入口对应一套真实的后端契约。能力状态来自运行环境，不把规划中的功能写成已上线承诺。</p></div><div className="module-editorial">{modules.slice(0, 5).map((item, index) => <Link to={`/products/qwensci?module=${item.id}`} className="module-row" key={item.id}><span className="module-index">0{index + 1}</span><div><h3>{item.title}</h3><p>{item.description}</p></div><div className="module-outcome"><small>交付</small><strong>{item.outcome}</strong></div><ArrowRight size={18} /></Link>)}</div></section>
+    <section className="home-proof section-block"><div className="proof-quote"><p className="eyebrow">EVIDENCE &amp; REVIEW</p><blockquote>“结果不是终点。<br /><em>它要带着来源回来。</em>”</blockquote><p>真实工作区会保留输入 hash、Prompt 版本、模型角色、执行 attempt、内容 revision、产物 QA 和人工审阅版本。</p><Link className="text-link" to="/products/qwensci?module=full-research">查看一个代表性运行 <ArrowRight size={15} /></Link></div><div className="proof-card"><div className="proof-card-head"><span>REPRESENTATIVE / STATIC PREVIEW</span><span className="proof-status"><Check size={14} /> source mapped</span></div><div className="proof-map"><div>survey<span>literature</span></div><i /><div>idea<span>hypothesis</span></div><i /><div>author<span>handoff</span></div></div><p className="proof-caption">预览数据会明确标识为代表性样本，不伪造实时运行。</p></div></section>
+    <section className="home-cta section-block"><p className="eyebrow">START WITH A QUESTION</p><h2>把下一次研究，<em>交给一条有记录的路径。</em></h2><ActionLink to="/app/full-research/new" primary>启动研究</ActionLink></section>
+  </div>;
+}

@@ -46,6 +46,19 @@ uv run qwensci survey \
 
 Use `--base-dir`, `--save-path`, and `--save-json-path` to select output locations. For local research figures, repeat `--multimodal-file /path/to/figure.png` for each file. Local-only processing is the default; add `--allow-remote-perception` only after reviewing non-sensitive inputs and explicitly consenting to bounded remote visual inspection. Use `uv run qwensci survey --help` for all options. Do not pass `...` as a literal argument or use `uv run --no-sync`.
 
+Candidate relevance confirmation submits independent batches together using
+`survey.ModuleInfo.WorkCollector.survey_confirmation_workers` (default: 10).
+`survey_confirmation_pairs_per_batch` limits each batch to 16 candidate-SH pairs
+by default, and oversized batches split further before submission. Missing or invalid `project_score`/`sh_score`
+values trigger a targeted score completion request while retaining valid scores,
+roles and reasons. Each pair gets at most one completion attempt per run; the
+defaults allow at most 8 completion requests with 8 pairs each, charged to the
+shared model request budget. Configure these bounds with
+`survey_confirmation_score_repair_request_limit` and
+`survey_confirmation_score_repair_item_limit` under the same WorkCollector section.
+Successful completions appear as format recoveries; unresolved scores stay
+unavailable with a warning, and valid results continue through the pipeline.
+
 ### Optional local embedding models
 
 The repository does not include downloaded models. ModelScope is installed by the `--all-groups` step above (or by `uv sync --group pdf --locked` when setting up a smaller environment). If the configured retrieval paths require these models, download both from the repository root:

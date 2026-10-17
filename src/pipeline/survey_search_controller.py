@@ -113,7 +113,7 @@ def admit_query(raw, subhypotheses, topic, papers, *, feedback=False):
         return None, "invalid_scores"
     fit, purpose, context = scores
     quality = 20 * (0.5 * fit + 0.25 * purpose + 0.25 * context)
-    if quality < 75 or fit < 3 or context < 3:
+    if quality < 70 or fit < 3 or context < 3:
         return None, "query_quality_below_threshold"
     if feedback and (not isinstance(raw.get("action"), str) or raw["action"] not in ACTIONS - {"stop"}
         or not isinstance(raw.get("feedback_reason"), str) or not raw["feedback_reason"].strip()
@@ -202,7 +202,7 @@ def seed_assessments(paper):
     return [item for item in paper.get("sh_semantic_assessments", []) if has_local_contribution(item)]
 
 
-def bounded_seed_selection(papers, subhypotheses, registry, limit=18, minimum=2):
+def bounded_seed_selection(papers, subhypotheses, registry, limit=40, minimum=2):
     eligible = []
     for paper in papers:
         project = paper.get("project_relevance", {})

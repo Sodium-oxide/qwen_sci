@@ -1,4 +1,5 @@
 export type QuantitativeMode = "off" | "optional" | "required";
+export type ComputationMode = "off" | "plan" | "run";
 export type ScienceStage = "survey" | "idea" | "exp_design" | "author";
 
 export type RunActionType =
@@ -29,6 +30,14 @@ export interface Discipline {
   domain: string;
   template_family: string;
   allowed: boolean;
+}
+
+export interface DisciplineResolution {
+  suggested_catalog_ids: string[];
+  reason: string;
+  status: "resolved" | "ambiguous" | "unresolved" | "out_of_scope";
+  model_name?: string;
+  primary?: { label?: string };
 }
 
 export interface MaterialRecord {
@@ -205,6 +214,7 @@ export interface ResearchRun {
   execution_mode: string;
   discipline_ids: string[];
   quantitative_mode: QuantitativeMode;
+  computation_mode: ComputationMode;
   language: string;
   remote_perception_authorized: boolean;
   stages: Record<string, StageState>;
@@ -215,6 +225,15 @@ export interface ResearchRun {
   event_url: string;
   artifacts: Artifact[];
   quantitative?: QuantitativeState | null;
+  research_depth: "light" | "full";
+  workflow_profile?: string;
+  prompt_profile?: string;
+  model_name?: string | null;
+  prompt_version?: string | null;
+  prompt_hash?: string | null;
+  project_id?: string | null;
+  available_endpoints?: ScienceStage[];
+  completed_outputs?: string[];
 }
 
 export interface CreateRunPayload {
@@ -224,7 +243,14 @@ export interface CreateRunPayload {
   language: "zh-CN" | "en";
   minimum_pages: number;
   quantitative_mode: QuantitativeMode;
+  computation_mode?: ComputationMode;
   allow_remote_perception: boolean;
+  research_depth?: "light" | "full";
+  workflow_profile?: "light_research" | "full_research";
+  prompt_profile?: "research-light" | "research-default";
+  project_id?: string;
+  model_name?: string;
+  computation_model?: string;
 }
 
 export interface MaterialDraft {

@@ -1,3 +1,0 @@
-# Visual survey
-
-Body.
