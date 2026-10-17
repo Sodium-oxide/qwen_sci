@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
-import qwenLogo from "../assets/qwen-logo.svg";
+import qwenLogo from "../assets/qwen-logo.svg?raw";
 
 const fullTurn = Math.PI * 2;
 
@@ -24,6 +24,45 @@ function createGlow(color: string) {
     context.fillRect(0, 0, 32, 32);
   }
   return sprite;
+}
+
+function createLogoField(compact: boolean) {
+  const fieldSize = 256;
+  const source = new DOMParser().parseFromString(qwenLogo, "image/svg+xml");
+  const [viewX, viewY, viewWidth, viewHeight] = source.documentElement.getAttribute("viewBox")!.split(/\s+/).map(Number);
+  const directions = [
+    { horizontal: 1, vertical: 0 },
+    { horizontal: -0.5, vertical: -Math.sqrt(3) / 2 },
+    { horizontal: -0.5, vertical: Math.sqrt(3) / 2 },
+  ];
+  const spacing = compact ? 5 : 4;
+  const sprites = [createGlow("#557fff"), createGlow("#8aafff"), createGlow("#c9ddff")];
+  return Array.from(source.querySelectorAll("path"), (path, arm) => {
+    const mask = document.createElement("canvas");
+    mask.width = fieldSize;
+    mask.height = fieldSize;
+    const context = mask.getContext("2d", { willReadFrequently: true })!;
+    context.scale(fieldSize / viewWidth, fieldSize / viewHeight);
+    context.translate(-viewX, -viewY);
+    context.fill(new Path2D(path.getAttribute("d")!));
+    const alpha = context.getImageData(0, 0, fieldSize, fieldSize).data;
+    const particles = [];
+    for (let vertical = 0; vertical < fieldSize; vertical += spacing) {
+      for (let horizontal = 0; horizontal < fieldSize; horizontal += spacing) {
+        const seed: number = particles.length + arm * 5000;
+        particles.push({
+          horizontal: horizontal + noise(seed + 90) * spacing,
+          vertical: vertical + noise(seed + 130) * spacing,
+          speed: 6 + noise(seed + 170) * 5,
+          phase: noise(seed + 210) * fullTurn,
+          size: 0.5 + noise(seed + 250) ** 2 * 0.65,
+          opacity: 0.45 + noise(seed + 290) * 0.55,
+          sprite: sprites[seed % sprites.length],
+        });
+      }
+    }
+    return { alpha, direction: directions[arm], particles };
+  });
 }
 
 function createScene(width: number, height: number) {
@@ -116,6 +155,32 @@ function createScene(width: number, height: number) {
     opacity: 0.25 + noise(index + 50) * 0.75,
     sprite: sprites[index % sprites.length],
   }));
+  const logoField = createLogoField(width < 450);
+  const logoWidth = width * 0.35;
+  const logoHeight = logoWidth * 52 / 51;
+  const logoLeft = centerX - logoWidth / 2;
+  const logoTop = height * 0.37 - logoHeight / 2;
+
+  const paintLogo = (context: CanvasRenderingContext2D, elapsed: number) => {
+    context.globalCompositeOperation = "lighter";
+    for (const stream of logoField) {
+      for (const particle of stream.particles) {
+        const travel = elapsed * particle.speed;
+        const horizontal = ((particle.horizontal + travel * stream.direction.horizontal) % 256 + 256) % 256;
+        const vertical = ((particle.vertical + travel * stream.direction.vertical) % 256 + 256) % 256;
+        const coverage = stream.alpha[(Math.floor(vertical) * 256 + Math.floor(horizontal)) * 4 + 3] / 255;
+        if (coverage === 0) continue;
+        const highlight = 0.66 + Math.sin(horizontal * 0.04 + vertical * 0.035 - elapsed * 0.9 + particle.phase * 0.25) * 0.24;
+        const size = particle.size * (width < 450 ? 5.5 : 7);
+        context.globalAlpha = coverage * particle.opacity * highlight;
+        const positionX = logoLeft + horizontal / 256 * logoWidth;
+        const positionY = logoTop + vertical / 256 * logoHeight;
+        context.drawImage(particle.sprite, positionX - size / 2, positionY - size / 2, size, size);
+      }
+    }
+    context.globalAlpha = 1;
+    context.globalCompositeOperation = "source-over";
+  };
 
   return (context: CanvasRenderingContext2D, elapsed: number) => {
     context.clearRect(0, 0, width, height);
@@ -136,6 +201,7 @@ function createScene(width: number, height: number) {
     };
     paintParticles(false);
     context.drawImage(core, 0, 0, width, height);
+    paintLogo(context, elapsed);
     context.drawImage(foreground, 0, 0, width, height);
     paintParticles(true);
   };
@@ -207,10 +273,9 @@ export function QwenParticleVisual() {
   }, [paused, reducedMotion]);
 
   return (
-    <figure className="hero-visual qwen-particle-visual" ref={containerRef} aria-label="QwenSci Logo 与流动粒子光环">
+    <figure className="hero-visual qwen-particle-visual" ref={containerRef} aria-label="由蓝白色流动粒子组成的 Qwen Logo 与环绕光环">
       <canvas ref={canvasRef} aria-hidden="true" />
       <div className="qwen-particle-brand">
-        <img src={qwenLogo} width={153} height={156} alt="Qwen Logo" />
         <span>QwenSci</span>
       </div>
       <figcaption>问题 · 证据 · 研究</figcaption>

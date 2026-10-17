@@ -78,6 +78,12 @@ Python renderer 只执行服务器模板，使用每次 attempt 独立目录、�
 
 ## 运行和验证
 
+`GET /api/disciplines` 返回全部 20 个支持学科。研究启动页提供中文手动选择，最多两项，并显示目录加载、失败重试和已选状态。
+
+`POST /api/disciplines/resolve` 保留默认的 `method="taxonomy"` 本地分类；传入 `method="model"` 时固定使用 `qwen3.8-flash` 识别中英文课题。模型只能返回目录内的 1–2 个 ID，并附简短原因；无法判断或不在支持范围时返回空建议。结果经服务端校验后才交给页面，用户仍可手动修改。识别失败不会退回本地规则冒充模型结果，也不会阻止手动选科。
+
+远程识别遵守工作区 `local-only` 与 `network_access="never"` 限制，模型调用超时为 45 秒；开发代理为识别接口单独保留 60 秒超时。输入课题变化、用户手动修改学科或页面卸载时，前端取消等待并忽略过期结果。
+
 使用 Python 3.12 环境，通过 `.venv/bin/python -m src.webapp.api` 启动服务，默认监听 `127.0.0.1:8010`。`/docs` 提供 OpenAPI 页面；`/api/capabilities` 显示当前依赖和模型配置状态。服务按原有生命周期恢复持久化任务，测试应使用独立的临时 `run_root`，避免对实际研究运行触发恢复。
 
 可选依赖维持现有 extras：`multimodal` 提供 Python 绘图与表格处理，`pdf` 提供 MinerU、pypdf、DOCX 和 PDF 导出。缺失依赖通过 capability 或明确错误反馈。前端构建产物不属于本轮交付；缺少 `WebApp-V2/dist/index.html` 时，网站根路径按现有逻辑返回 `503`，API 与 `/docs` 可独立访问。

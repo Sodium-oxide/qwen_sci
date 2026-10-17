@@ -61,7 +61,21 @@
 .choice { min-height: 60px; border: 1px solid var(--rule-soft); border-radius: 7px; background: transparent; color: var(--muted); text-align: left; padding: 9px 10px; cursor: pointer; }
 .choice small { display: block; margin-top: 3px; color: var(--subtle); font-size: 10px; }
 .choice:hover, .choice.active { border-color: var(--primary); background: rgba(155, 167, 255, .08); color: var(--ink); }
+.discipline-recognition { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; margin: -2px 0 20px; }
+.discipline-recognition p { flex: 1 1 220px; margin: 0; color: var(--muted); font-size: 12px; }
+.discipline-fieldset { min-inline-size: 0; margin: 0 0 16px; border: 0; padding: 0; }
+.discipline-fieldset legend { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; padding: 0; color: var(--ink); font-size: 14px; }
+.discipline-fieldset legend span { color: var(--muted); font-size: 12px; }
+.discipline-help { margin-bottom: 16px; color: var(--muted); font-size: 13px; }
+.discipline-fieldset .choice { min-width: 0; min-height: 76px; }
+.discipline-fieldset .choice > span { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
+.discipline-fieldset .choice svg { flex-shrink: 0; margin-top: 3px; }
+.discipline-fieldset .choice small { color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
+.discipline-fieldset .choice:disabled { opacity: .45; cursor: not-allowed; }
+.discipline-fieldset .choice:disabled:hover { border-color: var(--rule-soft); background: transparent; color: var(--muted); }
 .selected-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 16px; }
+.discipline-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; border: 1px solid transparent; border-radius: 6px; padding: 5px 9px; background: rgba(155, 167, 255, .12); color: var(--primary-hover); font-size: 12px; cursor: pointer; }
+.discipline-chip:hover { border-color: var(--primary); }
 .selected-chips span { border-radius: 999px; background: rgba(155, 167, 255, .12); color: var(--primary-hover); padding: 3px 8px; font-size: 11px; }
 .selected-chips small { color: var(--subtle); }
 .file-drop { position: relative; display: flex; align-items: center; gap: 9px; min-height: 68px; border: 1px dashed var(--rule); border-radius: 8px; color: var(--muted); padding: 12px; cursor: pointer; }

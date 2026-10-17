@@ -1,17 +1,19 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, FilePlus2, Sparkles } from "lucide-react";
+import { ArrowRight, Check, FilePlus2, Sparkles, X } from "lucide-react";
 import { api } from "../../api";
 import type {
   ComputationMode,
   CreateRunPayload,
   Discipline,
+  DisciplineResolution,
   MaterialDraft,
   QuantitativeMode,
   ScienceStage,
 } from "../../types";
-import { Button, ErrorNotice, Field, PageHeading, Notice } from "../../shared/ui";
+import { Button, ErrorNotice, Field, Loading, PageHeading, Notice } from "../../shared/ui";
+import { disciplineLabel } from "./disciplineLabels";
 
 export function ResearchLaunchPage({ depth }: { depth: "full" | "light" }) {
   const navigate = useNavigate();
@@ -31,12 +33,53 @@ export function ResearchLaunchPage({ depth }: { depth: "full" | "light" }) {
   const [files, setFiles] = useState<MaterialDraft[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
+  const [recognizing, setRecognizing] = useState(false);
+  const [recognition, setRecognition] = useState<DisciplineResolution | null>(null);
+  const [recognitionError, setRecognitionError] = useState<unknown>(null);
+  const recognitionRequest = useRef<AbortController | null>(null);
+
+  useEffect(() => () => recognitionRequest.current?.abort(), []);
 
   const catalog = disciplines.data || [];
+  const supported = catalog.filter((item) => item.allowed);
   const selectedLabels = useMemo(
-    () => selected.map((id) => catalog.find((item) => item.id === id)?.label || id),
+    () => selected.map((id) => disciplineLabel(id, catalog.find((item) => item.id === id)?.label || id)),
     [selected, catalog],
   );
+
+  const cancelRecognition = () => {
+    recognitionRequest.current?.abort();
+    setRecognizing(false);
+    setRecognition(null);
+    setRecognitionError(null);
+  };
+
+  const recognize = async () => {
+    if (topic.trim().length < 8 || supported.length === 0) return;
+    recognitionRequest.current?.abort();
+    const controller = new AbortController();
+    recognitionRequest.current = controller;
+    setRecognizing(true);
+    setRecognitionError(null);
+    setRecognition(null);
+    try {
+      const result = await api.resolveDisciplines(topic.trim(), "model", controller.signal);
+      if (controller.signal.aborted) return;
+      const suggestions = result.suggested_catalog_ids.filter((id) => supported.some((item) => item.id === id));
+      if (result.status === "resolved" && suggestions.length === 0) throw new Error("识别结果不在当前学科目录中，请重试或手动选择。");
+      setRecognition(result);
+      if (suggestions.length) setSelected(suggestions.slice(0, 2));
+    } catch (recognitionFailure) {
+      if (!controller.signal.aborted) setRecognitionError(recognitionFailure);
+    } finally {
+      if (recognitionRequest.current === controller) setRecognizing(false);
+    }
+  };
+
+  const toggleDiscipline = (id: string) => {
+    cancelRecognition();
+    setSelected((current) => current.includes(id) ? current.filter((value) => value !== id) : current.length < 2 ? [...current, id] : current);
+  };
 
   const submit = async () => {
     if (topic.trim().length < 8 || selected.length < 1) return;
@@ -94,11 +137,27 @@ export function ResearchLaunchPage({ depth }: { depth: "full" | "light" }) {
           <Field label="科学问题" hint="至少 8 个字符；这段文字会进入服务端输入清单。">
             <textarea
               value={topic}
-              onChange={(event) => setTopic(event.target.value)}
+              onChange={(event) => { cancelRecognition(); setTopic(event.target.value); }}
               rows={5}
               placeholder="例如：在给定边界条件下，某机制如何影响系统的稳定性？"
             />
           </Field>
+          <div className="discipline-recognition">
+            <Button pending={recognizing} disabled={busy || topic.trim().length < 8 || supported.length === 0} onClick={() => void recognize()}>
+              {!recognizing && <Sparkles size={16} aria-hidden="true" />}
+              {recognizing ? "正在识别学科…" : "识别学科"}
+            </Button>
+            <p>由 qwen3.8-flash 根据课题识别，识别后可在下方调整。</p>
+          </div>
+          <ErrorNotice error={recognitionError} />
+          {recognition && (
+            <Notice tone={recognition.suggested_catalog_ids.length ? "success" : "warning"}>
+              <div>
+                <strong>{recognition.suggested_catalog_ids.length ? `已选学科：${selectedLabels.join("、")}` : "暂未识别出支持的学科"}</strong>
+                <p>{recognition.reason}</p>
+              </div>
+            </Notice>
+          )}
           <div className="field-grid">
             <Field label="研究语言">
               <select value={language} onChange={(event) => setLanguage(event.target.value as "zh-CN" | "en")}>
@@ -126,35 +185,32 @@ export function ResearchLaunchPage({ depth }: { depth: "full" | "light" }) {
         <div className="form-section">
           <p className="eyebrow">02 / SCOPE</p>
           <h2>给问题一个范围。</h2>
-          <Field label="支持学科" hint="最多选择两项；服务端会在创建时再次校验。">
-            <div className="choice-grid">
-              {catalog
-                .filter((item) => item.allowed)
-                .slice(0, 18)
-                .map((item: Discipline) => (
+          <fieldset className="discipline-fieldset" disabled={busy}>
+            <legend>支持学科 <span>已选 {selected.length}/2</span></legend>
+            <p className="discipline-help">可手动选择 1–2 项，也可以在课题下方点击“识别学科”。</p>
+            {disciplines.isPending ? <Loading label="正在加载学科目录…" /> : disciplines.isError ? (
+              <ErrorNotice error={new Error("学科目录加载失败。请检查后端服务是否启动，再重新读取。")} retry={() => void disciplines.refetch()} />
+            ) : supported.length === 0 ? (
+              <Notice tone="warning"><div><p>当前没有可选学科，请重新读取目录。</p><Button onClick={() => void disciplines.refetch()}>重新读取学科</Button></div></Notice>
+            ) : <div className="choice-grid" role="group" aria-label="支持学科，最多选择两项">
+              {supported.map((item: Discipline) => (
                   <button
                     type="button"
                     className={selected.includes(item.id) ? "choice active" : "choice"}
                     key={item.id}
-                    onClick={() =>
-                      setSelected((current) =>
-                        current.includes(item.id)
-                          ? current.filter((id) => id !== item.id)
-                          : current.length < 2
-                            ? [...current, item.id]
-                            : current,
-                      )
-                    }
+                    aria-pressed={selected.includes(item.id)}
+                    disabled={!selected.includes(item.id) && selected.length >= 2}
+                    onClick={() => toggleDiscipline(item.id)}
                   >
-                    {item.label}
-                    <small>{item.domain}</small>
+                    <span>{disciplineLabel(item.id, item.label)}{selected.includes(item.id) && <Check size={14} aria-hidden="true" />}</span>
+                    <small>{item.label}</small>
                   </button>
                 ))}
-            </div>
-          </Field>
-          <div className="selected-chips">
-            {selectedLabels.map((label) => (
-              <span key={label}>{label}</span>
+            </div>}
+          </fieldset>
+          <div className="selected-chips" aria-live="polite">
+            {selectedLabels.map((label, index) => (
+              <button className="discipline-chip" type="button" key={selected[index]} disabled={busy} aria-label={`移除${label}`} onClick={() => toggleDiscipline(selected[index])}>{label}<X size={12} aria-hidden="true" /></button>
             ))}
             {!selected.length && <small>还没有选择学科</small>}
           </div>
@@ -226,7 +282,7 @@ export function ResearchLaunchPage({ depth }: { depth: "full" | "light" }) {
             <Button
               variant="primary"
               pending={busy}
-              disabled={topic.trim().length < 8 || selected.length === 0}
+              disabled={topic.trim().length < 8 || selected.length === 0 || recognizing}
               onClick={() => void submit()}
             >
               创建并启动研究 <ArrowRight size={16} />
