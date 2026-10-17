@@ -79,6 +79,10 @@ from src.pipeline.sh_graph_provenance import (
     paper_identity,
 )
 from src.pipeline.paper_identity import canonical_paper_id
+from src.pipeline.subhypothesis_retrieval_storage import (
+    expand_subhypothesis_retrieval,
+    serialize_subhypothesis_retrieval,
+)
 from src.pipeline.subhypothesis_decomposition import (
     SUBHYPOTHESIS_DECOMPOSITION_MAX_COUNT,
     SUBHYPOTHESIS_DECOMPOSITION_MIN_COUNT,
@@ -1058,7 +1062,7 @@ class WorkCollector:
         )
 
     def _store_subhypothesis_retrieval_artifact(self, artifact: Mapping[str, Any]) -> None:
-        self.subhypothesis_retrieval_artifact = dict(artifact)
+        self.subhypothesis_retrieval_artifact = expand_subhypothesis_retrieval(artifact)
         try:
             self.config.BasicInfo.subhypothesis_retrieval = self.subhypothesis_retrieval_artifact
         except Exception:
@@ -1068,7 +1072,8 @@ class WorkCollector:
             artifact_path = Path(base_dir) / "subhypothesis_retrieval.json"
             artifact_path.parent.mkdir(parents=True, exist_ok=True)
             artifact_path.write_text(
-                json.dumps(self.subhypothesis_retrieval_artifact, ensure_ascii=False, indent=2),
+                json.dumps(serialize_subhypothesis_retrieval(self.subhypothesis_retrieval_artifact),
+                           ensure_ascii=False, indent=2),
                 encoding="utf-8",
             )
 
@@ -5290,7 +5295,7 @@ class WorkCollector:
         selection = select_sh_seed_candidates(
             list({paper_identity(p): p for p in [*discovered_candidates, *papers]}.values()),
             subhypotheses,
-            max_seed_papers=int(self._work_collector_setting("max_seed_paper_num", 36)),
+            max_seed_papers=int(self._work_collector_setting("max_seed_paper_num", 40)),
             max_slots_per_paper=max_slots_per_paper,
             require_project_relevance=True,
             project_relevance_threshold=int(
@@ -5350,7 +5355,7 @@ class WorkCollector:
             )
             selection = select_sh_seed_candidates(
                 list({paper_identity(p): p for p in [*discovered_candidates, *papers]}.values()), subhypotheses,
-                max_seed_papers=int(self._work_collector_setting("max_seed_paper_num", 36)),
+                max_seed_papers=int(self._work_collector_setting("max_seed_paper_num", 40)),
                 max_slots_per_paper=max_slots_per_paper,
                 project_relevance_threshold=int(self._work_collector_setting("LLM_seed_threshold", 3)),
                 semantic_relevance_threshold=relevance_threshold,
@@ -5483,7 +5488,7 @@ class WorkCollector:
                 research_context,
             )
             self.retrieval_candidates = list(papers)
-            max_seed_papers = int(self._work_collector_setting("max_seed_paper_num", 36))
+            max_seed_papers = int(self._work_collector_setting("max_seed_paper_num", 40))
             selected_papers = self._select_lane_balanced_seed_candidates(
                 papers,
                 max_seed_papers,
@@ -5497,7 +5502,7 @@ class WorkCollector:
             papers = selected_papers
 
         max_seed_papers = max(
-            int(self._work_collector_setting("max_seed_paper_num", 36)),
+            int(self._work_collector_setting("max_seed_paper_num", 40)),
             int(sh_selection.get("effective_seed_budget", 0)),
         )
         context_seed_papers = [

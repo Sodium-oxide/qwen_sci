@@ -22,8 +22,11 @@ from omegaconf import OmegaConf
 import psutil
 
 from src.config import load_config
+from src.llm.model_policy import validate_text_model
+from src.llm.research_policy import freeze_research_policy
 from src.agents.research_plan_author.page_policy import PagePolicyError, normalize_minimum_pages
 from src.research_run_ids import create_research_run_id
+from .research_profiles import resolve_research_profile
 
 
 SCIENCE_RUN_SCHEMA_VERSION = "science_run_v1"
@@ -219,13 +222,28 @@ def normalize_immutable_options(options: Mapping[str, object]) -> dict[str, Any]
     if computation_mode not in {"off", "plan", "run"}:
         raise ScienceRunInputError("computation_mode must be off, plan, or run")
 
+    research_depth = str(options.get("research_depth") or "full").casefold()
+    try:
+        profile = resolve_research_profile(
+            research_depth, workflow=_optional_text(options.get("workflow_profile")),
+            prompt=_optional_text(options.get("prompt_profile")),
+            quantitative_mode=quantitative_mode, computation_mode=computation_mode,
+        )
+    except ValueError as exc:
+        raise ScienceRunInputError(str(exc)) from exc
+    workflow_profile = profile.workflow_profile
+    prompt_profile = profile.prompt_profile
+    model_name = _optional_text(options.get("model_name"))
+    if model_name is not None:
+        validate_text_model(model_name)
+
     return {
         "discipline_ids": normalized_disciplines,
         "selected_direction": _optional_text(options.get("selected_direction")) or "",
         "models": {
-            "experiment_design": _optional_text(options.get("exp_design_model")),
-            "author": _optional_text(options.get("author_model")),
-            "quantitative": _optional_text(options.get("quantitative_model")),
+            "experiment_design": model_name or _optional_text(options.get("exp_design_model")),
+            "author": model_name or _optional_text(options.get("author_model")),
+            "quantitative": model_name or _optional_text(options.get("quantitative_model")),
         },
         "quantitative": {"mode": quantitative_mode},
         "computation": {"mode": computation_mode,
@@ -243,12 +261,24 @@ def normalize_immutable_options(options: Mapping[str, object]) -> dict[str, Any]
             "required": bool(options.get("render_required", False)),
         },
         "survey_appendix": survey_appendix,
+        "research": {
+            "research_depth": research_depth,
+            "workflow_profile": workflow_profile,
+            "prompt_profile": prompt_profile,
+            "project_id": _optional_text(options.get("project_id")),
+            "model_name": model_name,
+            "prompt_snapshot": dict(options.get("research_prompt") or {}),
+        },
     }
 
 
-def _resolved_config_yaml(config_path: Path) -> str:
+def _resolved_config_yaml(config_path: Path, options: Mapping[str, Any] | None = None) -> str:
     try:
         config = load_config(str(config_path))
+        config = OmegaConf.create(OmegaConf.to_container(config, resolve=True))
+        research = (options or {}).get("research", {})
+        if research.get("model_name"):
+            freeze_research_policy(config, model_name=research["model_name"], prompt=research.get("prompt_snapshot", {}))
         return OmegaConf.to_yaml(config, resolve=True)
     except Exception as exc:
         raise ScienceRunInputError(f"Cannot resolve config {config_path}: {exc}") from exc
@@ -534,7 +564,7 @@ def initialize_science_run(
     root = Path(output_root).expanduser().resolve()
     paths = science_run_paths(root / normalized_run_id)
     normalized_options = normalize_immutable_options(immutable_options)
-    resolved_config = _resolved_config_yaml(source_config)
+    resolved_config = _resolved_config_yaml(source_config, normalized_options)
     state = _new_science_state(normalized_run_id)
     metadata = {
         "schema_version": SCIENCE_RUN_SCHEMA_VERSION,

@@ -13,6 +13,7 @@ from src.pipeline.evidence_coverage_ledger import (
 )
 from src.pipeline.research_identity import build_project_research_context
 from src.pipeline.sh_graph_provenance import build_seed_annotation_index
+from src.pipeline.subhypothesis_retrieval_storage import load_subhypothesis_retrieval
 
 
 class _Logger:
@@ -709,6 +710,10 @@ def test_collect_sh_minimum_warns_and_persists_deficit_without_stopping(tmp_path
     artifact = json.loads((tmp_path / "subhypothesis_retrieval.json").read_text(encoding="utf-8"))
     assert artifact["seed_selection"]["minimum_seed_unmet_by_sh"] == {"SH_PGx": 1}
     assert artifact["quota_recovery_batches"] == 0
+    assert "candidate_papers" not in artifact
+    assert artifact["candidate_paper_ids"] == ["W-PGx-1"]
+    assert artifact["seed_selection"]["selected_paper_ids"] == ["W-PGx-1"]
+    assert load_subhypothesis_retrieval(tmp_path / "subhypothesis_retrieval.json") == collector.subhypothesis_retrieval_artifact
     assert collector.sh_graph_provenance_artifact["seed_minimum"]["unmet_by_sh"] == {"SH_PGx": 1}
     assert any(
         "SH_PGx (1 missing). Continuing Survey with 1 selected seed papers" in message

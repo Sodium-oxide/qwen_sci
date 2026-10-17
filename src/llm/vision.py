@@ -168,7 +168,7 @@ class QwenVisionClient:
                 "schema": dict(schema),
             },
         }
-        if getattr(self, "_json_schema_supported", None) is False:
+        if not self.model_spec.capabilities.json_schema or getattr(self, "_json_schema_supported", None) is False:
             raw = self.describe(
                 image_bytes,
                 prompt=prompt,

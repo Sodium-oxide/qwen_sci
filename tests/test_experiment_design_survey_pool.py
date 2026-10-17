@@ -12,6 +12,7 @@ from src.agents.experiment_design_agent.survey_evidence import SurveyEvidenceAda
 from src.agents.experiment_design_agent.definition_evidence import bounded_formal_evidence, bounded_prompt_evidence
 from src.agents.experiment_design_agent.variable_claim_extractor import build_variable_claim_extractor_prompt
 from src.pipeline.survey_retrieval_export import publish_survey_retrieval
+from src.pipeline.subhypothesis_retrieval_storage import serialize_subhypothesis_retrieval
 
 
 def paper(identifier, score, **fields):
@@ -118,7 +119,8 @@ def test_cards_only_feed_variable_and_definition_reference():
     assert bundle["evidence_cards"]
 
 
-def test_survey_export_preserves_original_text_and_scores_without_discovery(tmp_path):
+@pytest.mark.parametrize("reference_storage", [False, True])
+def test_survey_export_preserves_original_text_and_scores_without_discovery(tmp_path, reference_storage):
     cache = {hashlib.md5(b"W2").hexdigest(): {"title": "Graph paper", "abstract": "Original graph abstract"}}
     manager = SimpleNamespace(paper_abstract_cache=cache, _resolve_paper_reference_id=lambda record: record["paper_id"])
     collector = SimpleNamespace(
@@ -126,6 +128,8 @@ def test_survey_export_preserves_original_text_and_scores_without_discovery(tmp_
         sh_graph_provenance_artifact={"paper_annotations": {"W2": [{"root_seed_paper_ids": ["W1"]}]}},
         fulltext_budget_plan={"selected_for_fulltext": [{"paper_id": "W2", "max_llm_relevance_score": 4}]},
     )
+    if reference_storage:
+        collector.subhypothesis_retrieval_artifact = serialize_subhypothesis_retrieval(collector.subhypothesis_retrieval_artifact)
     config = SimpleNamespace(BasicInfo=SimpleNamespace(base_dir=str(tmp_path), cache_path=str(tmp_path), topic="physical computing"))
     path = publish_survey_retrieval(config, collector, ["W1"], ["W2"])
     exported = json.loads(path.read_text(encoding="utf-8"))

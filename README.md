@@ -2,15 +2,22 @@
 
 **Qwen-Sci** is a code-executed scientific research workflow with both a Python CLI and a browser control plane. Starting with a research topic, its orchestration runs an evidence-to-proposal process that produces literature survey artifacts, a structured research idea, a validated experimental design, and a research-plan package.
 
-It provides one public command-line interface, `qwensci`, and uses Qwen/DashScope language-model endpoints.
+It provides the `qwensci` command-line interface and a React 19 / TypeScript browser workspace backed by FastAPI. The workspace includes full research, light research, scientific figures, academic polishing, paper translation, and workspace preferences. Model-backed browser features use Qwen/DashScope; research runs, Jobs, events, and artifacts persist on the server.
 
 [GitHub repository](https://github.com/Sodium-oxide/qwen_sci) · [PyPI](https://pypi.org/project/qwen-sci/)
 
 [English](README.md) · [简体中文](README.zh-CN.md)
 
+| Start here | Documentation |
+| --- | --- |
+| Prepare Linux / WSL and Python | [First-time setup](#first-time-setup-windows-wsl2-and-linux) |
+| Run or develop the frontend | [Web workspace V2](#web-workspace-v2) · [Frontend README](WebApp-V2/README.md) |
+| Start a research run from the CLI | [Science quick start](#quick-start-an-auditable-science-run) |
+| Inspect backend contracts | [Web backend](docs/webapp-backend.md) · [Computational experiments](docs/computational_experiments.md) |
+
 ## First-time setup: Windows, WSL2, and Linux
 
-The supported Windows setup uses a Linux distribution inside WSL2. Run the first block in **PowerShell as Administrator**, restart Windows if the installer asks you to, and complete the Ubuntu user creation step:
+The locked environment targets **Linux x86_64 with Python 3.12**. On Windows, use WSL2. Run the first block in **PowerShell as Administrator**, restart Windows if the installer asks you to, and complete the Ubuntu user creation step. Existing Linux users can start with the Ubuntu commands below.
 
 ```powershell
 wsl --install -d Ubuntu-24.04
@@ -29,14 +36,6 @@ uv --version
 uv python install 3.12
 ```
 
-Install Elan, Lean's toolchain manager, in the same WSL environment:
-
-```bash
-curl https://elan.lean-lang.org/elan-init.sh -sSf | sh
-source "$HOME/.elan/env"
-elan --version
-```
-
 Keep the checkout inside the WSL filesystem for faster dependency and build operations:
 
 ```bash
@@ -49,12 +48,26 @@ cd qwen_sci
 If the repository already exists on the Windows drive, use its WSL-mounted path instead, for example:
 
 ```bash
-cd /mnt/c/Users/<WindowsUser>/Desktop/2026tzb/aiscientist-v0820
+cd /mnt/c/Users/<WindowsUser>/path/to/qwen_sci
 ```
 
-Install the Lean toolchain pinned by this checkout and verify it:
+For the frontend, install **Node.js 22 LTS** in the same Linux / WSL environment using the [Node.js installation instructions](https://nodejs.org/en/download) or [nvm](https://github.com/nvm-sh/nvm#installing-and-updating). Vite 7 requires Node.js **20.19+ on the 20.x line, or 22.12+**. If nvm is already installed:
 
 ```bash
+nvm install 22
+nvm use 22
+node --version
+npm --version
+which node npm
+```
+
+Both executables must resolve to Linux paths rather than Windows programs under `/mnt/c/`. CLI-only use does not require Node.js.
+
+Install Elan and the pinned Lean toolchain when you need Lean proof checking:
+
+```bash
+curl https://elan.lean-lang.org/elan-init.sh -sSf | sh
+source "$HOME/.elan/env"
 elan toolchain install "$(cat lean-toolchain)"
 lean --version
 ```
@@ -64,7 +77,7 @@ Create the project environment, install **all** dependency groups (including the
 
 ```bash
 export UV_PROJECT_ENVIRONMENT="$HOME/.venvs/qwen-sci-dev"
-uv sync --all-groups
+uv sync --all-groups --locked
 source "$UV_PROJECT_ENVIRONMENT/bin/activate"
 python --version       # should report Python 3.12.x
 which python
@@ -135,6 +148,8 @@ All commands are available through `uv run qwensci …` from source, or `qwensci
 | `qwensci exp_design` | Produce and validate a design-only experimental plan. |
 | `qwensci author` | Create an English research-plan package from verified handoffs. |
 | `qwensci science` | Run, resume, or restart the complete auditable workflow. |
+| `qwensci quantitative` | Inspect and advance the supervised quantitative-modeling branch. |
+| `qwensci computation` | Inspect, resume, or cancel the optional computational branch. |
 | `qwensci doctor` | Report local runtime prerequisites. |
 | `qwensci-web` | Serve the same-origin Web workspace and its controlled research-run API. |
 | `qwensci install-mcp-wrappers` | Install local Bash-based MCP wrapper scripts on Linux/WSL. |
@@ -557,7 +572,7 @@ After acceptance, run `quantitative status --run-dir "$RUN_DIR"` again and use i
 - [`uv`](https://docs.astral.sh/uv/) for source/development installation
 - A Qwen/DashScope account and API key
 - Linux x86_64 or **WSL2**
-- [Node.js](https://nodejs.org/) and npm only when building or developing the Web workspace
+- [Node.js](https://nodejs.org/) **20.19+ on 20.x, or 22.12+** and npm when building or developing the Web workspace; **22 LTS** is recommended
 
 The locked development environment targets Linux x86_64. On Windows, use WSL rather than a native Windows virtual environment.
 
@@ -565,7 +580,7 @@ The locked development environment targets Linux x86_64. On Windows, use WSL rat
 
 ### Install a published package
 
-When using a released package from PyPI, create a separate virtual environment outside the repository:
+The browser setup uses a source checkout because `WebApp-V2/` and its build tools live in the repository. To install the CLI from PyPI, create a separate virtual environment outside the repository:
 
 ```bash
 python3.12 -m venv "$HOME/.venvs/qwen-sci"
@@ -623,7 +638,7 @@ After saving `.env`, run the local prerequisite check from the activated WSL env
 uv run qwensci doctor
 ```
 
-For a complete development checkout, prefer `uv sync --all-groups`. Focused installations are available when you do not need every optional capability:
+For a complete development checkout, prefer `uv sync --all-groups --locked`. Focused installations are available when you do not need every optional capability:
 
 | Capability | Command |
 | --- | --- |
@@ -632,9 +647,9 @@ For a complete development checkout, prefer `uv sync --all-groups`. Focused inst
 | Memory and vector retrieval | `uv sync --group memory --group ml` |
 | PDF parsing and full-text survey paths | `uv sync --group pdf` |
 | Explicit image, video, signal, table, audio, 3D, or trajectory inputs | `uv sync --group multimodal` |
-| Complete development setup (includes formal reasoning) | `uv sync --all-groups` |
+| Complete development setup (includes formal reasoning) | `uv sync --all-groups --locked` |
 
-`uv sync --all-groups` includes every entry under `[dependency-groups]`, so it
+`uv sync --all-groups --locked` includes every entry under `[dependency-groups]`, so it
 also installs the `formal` SymPy/Z3 group.
 
 The formal reasoning group provides the Python backends used by the
@@ -647,25 +662,214 @@ not a Python package; when it is unavailable, the Lean backend reports
 
 ## Web workspace V2
 
-The same workflow is available as a local, same-origin browser workspace. It is a control plane over the persistent `workspace/science-runs/` directory, not a browser-side simulation. Build the React client once, then start the Python service from the repository root:
+`WebApp-V2/` contains the current React / TypeScript frontend. FastAPI provides the research and feature APIs, durable Jobs, SSE events, and artifact downloads. Run the commands below from the **repository root in Linux / WSL**, after [installing Python dependencies](#first-time-setup-windows-wsl2-and-linux) and [configuring `.env`](#configure-a-model-provider). Use the same `UV_PROJECT_ENVIRONMENT` in every backend terminal. If this checkout already uses the default `.venv/`, omit the `export UV_PROJECT_ENVIRONMENT=…` lines below; `uv run` will use that project environment.
+
+| Mode | Processes | Browser URL |
+| --- | --- | --- |
+| Built frontend, recommended for local use | FastAPI serves `WebApp-V2/dist/` and `/api` | [http://localhost:8010/app](http://localhost:8010/app) |
+| Frontend development with hot updates | FastAPI on `8010`, Vite on `5173` with an `/api` proxy | [http://localhost:5173/app](http://localhost:5173/app) |
+
+### Build and run locally
+
+Install the frontend dependencies from `package-lock.json`, build the client, and start the backend:
 
 ```bash
-npm --prefix WebApp-V2 install
+export UV_PROJECT_ENVIRONMENT="$HOME/.venvs/qwen-sci-dev"
+npm --prefix WebApp-V2 ci
 npm --prefix WebApp-V2 run build
-uv run qwensci-web
+uv run --locked qwensci-web
 ```
 
-Open [http://127.0.0.1:8010](http://127.0.0.1:8010). The Web API serves the built client from `WebApp-V2/dist`; build it again after changing frontend source. On WSL, use the address printed by the service or the Windows browser's WSL localhost forwarding.
+The equivalent module entry point is `uv run --locked python -m src.webapp.api`. The service listens on `127.0.0.1:8010`. Open [http://localhost:8010/](http://localhost:8010/) for the product homepage, or [http://localhost:8010/app](http://localhost:8010/app) for the workspace. A Windows browser can use these URLs through WSL localhost forwarding.
+
+`npm run build` performs TypeScript checking and generates `WebApp-V2/dist/`. After changing frontend source, rebuild and restart `qwensci-web`; rerun `npm ci` when the dependency lockfile changes. If `dist/index.html` is absent when the backend starts, `/` returns **503** with a build instruction; the API and [Swagger UI](http://localhost:8010/docs) remain available.
+
+From another terminal, check the service and optional capabilities:
+
+```bash
+curl -fsS http://127.0.0.1:8010/api/health
+curl -fsS http://127.0.0.1:8010/api/capabilities
+```
+
+The health response includes `status: "ok"`. Capability responses distinguish installed dependencies and configured credentials from verified remote connectivity: `configured` with `verified: false` still requires a real provider check. The `multimodal` dependency group supplies local plotting and table tools; `pdf` supplies PDF parsing, DOCX, and PDF export.
+
+### Develop the frontend with Vite
+
+Keep two Linux / WSL terminals open, both in the repository root. Install frontend dependencies once with `npm --prefix WebApp-V2 ci` if you have not already done so.
+
+Terminal 1 — backend:
+
+```bash
+export UV_PROJECT_ENVIRONMENT="$HOME/.venvs/qwen-sci-dev"
+uv run --locked qwensci-web
+```
+
+Terminal 2 — frontend:
+
+```bash
+npm --prefix WebApp-V2 run dev -- --port 5173 --strictPort
+```
+
+Open [http://localhost:5173/app](http://localhost:5173/app). Vite updates the page as source files change; this mode does not require a `dist/` build. [`vite.config.ts`](WebApp-V2/vite.config.ts) listens on `0.0.0.0` and proxies relative `/api` requests, including SSE, to `http://127.0.0.1:8010`. Keep the backend running for research, uploads, Jobs, and settings. Open API documentation directly at [http://localhost:8010/docs](http://localhost:8010/docs).
+
+To change the backend port, replace the backend command with:
+
+```bash
+uv run --locked python -m uvicorn src.webapp.api:app --host 127.0.0.1 --port 8020
+```
+
+Then start Vite with the matching proxy target in its launch environment:
+
+```bash
+QWENSCI_API_URL=http://127.0.0.1:8020 npm --prefix WebApp-V2 run dev -- --port 5173 --strictPort
+```
+
+`QWENSCI_API_URL` is read by the Vite configuration process. Provider API keys belong in the backend's private `.env`.
+
+### Pages and persistent data
+
+Use the port for your selected mode with these routes:
+
+| Route | Page |
+| --- | --- |
+| `/`, `/products`, `/products/qwensci` | Product homepage, catalog, and Qwen-Sci overview |
+| `/app` | Workspace overview and task entry points |
+| `/app/full-research` | Survey → Idea → ExperimentDesign → Author, with a selectable stopping point |
+| `/app/light-research` | Survey and optional Idea; quantitative and computational branches are disabled |
+| `/app/figure` | Python data plots or AI schematics, review, and figure artifacts |
+| `/app/polish` | Academic revision with segment comparison, review, and document export |
+| `/app/translate` | PDF translation with page review, terminology, and source mapping |
+| `/app/preferences` | Versioned defaults for models, research, output, and privacy |
+
+By default, `workspace/science-runs/` stores research runs, `workspace/qwensci.db` stores Job state and events, `workspace/jobs/` stores Job inputs and artifacts, `workspace/files/` stores shared uploads, and `workspace/preferences.json` stores workspace defaults. These locations follow [`src/config/default.yaml`](src/config/default.yaml); preferences apply to newly created tasks. The browser and CLI share research-run artifacts.
+
+The workspace currently uses a single workspace without multi-user authentication or ACLs. Figures, polishing, and translation expose review actions before final acceptance or document export; `/api/capabilities` reports which optional operations are available. PDF translation exports text structure and source mapping; reconstruction of the original PDF layout is unsupported.
+
+### Common startup issues
+
+| Symptom | Action |
+| --- | --- |
+| `EBADENGINE`, a Vite Node-version error, or `crypto.hash is not a function` | Switch to supported Linux Node.js, check `which node npm`, and rerun `npm --prefix WebApp-V2 ci`. |
+| `503` / “Web client has not been built” on port `8010` | Run `npm --prefix WebApp-V2 run build`, then restart the backend. |
+| Source edits do not appear on port `8010` | Rebuild and restart, or use Vite on port `5173` during development. |
+| Homepage loads but API requests fail | Check `/api/health` on the backend; in development, verify `QWENSCI_API_URL` and restart Vite after changing it. |
+| Port `8010` or `5173` is occupied | Stop the process using that port, or select a different port and match the proxy target. `--strictPort` makes Vite report a conflict instead of changing ports. |
+| Missing plotting, parser, or export capability | Check `/api/capabilities` and install the required dependency groups into the same Python environment used by the backend. |
+
+See the [bilingual frontend README](WebApp-V2/README.md) for frontend checks and the [Web backend documentation](docs/webapp-backend.md) for API and Job contracts.
 
 ### Browser workflow
 
-1. Enter a topic and choose one or two disciplines from the supported catalog (the interface currently exposes 20 supported scientific disciplines and can suggest up to two from the topic).
+1. Open full or light research, enter a topic, and choose one or two disciplines from the 20-field supported catalog. Optional model recognition uses `qwen3.8-flash`; manual selection remains available when recognition is unavailable or returns no suggestion.
 2. Optionally upload research materials before starting. The browser records them under this run only, checks their hash on later reads, and lets you set their scope and sensitive-data flag.
 3. Choose a stopping point: `Survey`, `Survey + Idea`, `Survey + Idea + ExperimentDesign`, or the full run through `Author`. `required` quantitative mode stops before Author until the separate quantitative review path is complete.
 4. Start or resume the trusted workflow. You can request cancellation while a stage is running; the current stage is allowed to persist atomically, completed outputs remain available, and no later science stage starts. Resume is a separate typed user action and lets you choose the stopping point again.
 5. Inspect artifacts, the full durable event timeline, and controlled stage logs in the page. The timeline contains every persisted event rather than only stage start/end summaries. The log panel discovers `.jsonl` and `.log` files beneath the run's `survey`, `idea`, `experiment_design`, and `author` directories; it pages large files, follows active logs, and never accepts a browser-provided filesystem path.
 
 Browser responses and log views redact local paths and credential-like fields such as API keys, tokens, Authorization headers, passwords, and cookies. The logging API deliberately excludes the uploaded `inputs/` directory. Do not rely on this UI redaction as a reason to place secrets into research prompts or files.
+
+## Optional computational experiments in WSL
+
+Use `--computation-mode run` to generate and execute computational experiments alongside ExperimentDesign. This branch is separate from Q1/Q2 quantitative modeling; keep `--quantitative-mode off` when you only want the computational experiments described here.
+
+| Mode | Behavior |
+| --- | --- |
+| `--computation-mode off` | Default; computational experiments are disabled. |
+| `--computation-mode plan` | Generate computational protocols without executing programs. |
+| `--computation-mode run` | Generate protocols and code, execute in Docker, validate and analyze results. |
+
+### 1. Connect WSL to Docker Desktop
+
+Install and start Docker Desktop on Windows. Enable **Settings → General → Use the WSL 2 based engine**, then enable your distribution under **Settings → Resources → WSL Integration** and apply the changes. Run the following commands inside WSL:
+
+```bash
+docker info
+docker run --rm hello-world
+```
+
+`docker info` must display a **Server** section. A working `default` context pointing to `unix:///var/run/docker.sock` is suitable for WSL; keep it instead of selecting a Windows named-pipe endpoint.
+
+- `no such file or directory` for `docker.sock`: start Docker Desktop and check WSL integration. If you use a Docker Engine installed directly inside WSL instead, start that daemon with `sudo systemctl start docker` (or `sudo service docker start` without systemd).
+- `permission denied` for `docker.sock`: first check `ls -l /var/run/docker.sock` and try `sudo docker info`. If the socket belongs to group `docker` and the elevated command succeeds, add your WSL user to that group and refresh the shell:
+
+```bash
+sudo groupadd -f docker
+sudo usermod -aG docker "$USER"
+newgrp docker
+docker info
+```
+
+Docker group membership grants control over the Docker daemon. Keep the socket permissions unchanged; do not use `chmod 666`. Use either Docker Desktop integration or a separately managed WSL Docker Engine, so the CLI connects to the intended daemon.
+
+### 2. Build and verify the execution image
+
+From the repository root in WSL (for example, `cd ~/qwen_sci-main`), build the supplied image:
+
+```bash
+docker build \
+  -t qwensci-computation:py312-v1 \
+  -f src/agents/computational_experiment_agent/execution/Dockerfile \
+  .
+
+docker run --rm qwensci-computation:py312-v1 \
+  python -c "import numpy, scipy, sympy, pyscf; print('Computational environment OK')"
+```
+
+The verification should print `Computational environment OK`. Build the image once, then rebuild after changing its Dockerfile or dependencies. The bundled environment includes Python, NumPy, SciPy, SymPy and PySCF.
+
+### 3. Start a run with numerical experiments
+
+Define the complete research topic in the current WSL shell, including the numerical work you want performed. For example:
+
+```bash
+run_id="cpallidicaule-pathosystem-$(date +%Y%m%d-%H%M%S)"
+topic=$(cat <<'TOPIC'
+Propose and justify a model pathogen and pathovar screening design for
+Chenopodium pallidicaule. Execute numerical experiments to assess sample
+size, statistical power, and ranking robustness under measurement noise.
+Declare assumed parameters and sensitivity ranges. Use simulations to
+evaluate the screening design; base biological virulence claims on
+experimental or cited empirical evidence.
+TOPIC
+)
+
+uv run qwensci science \
+  --config src/config/default.yaml \
+  --topic "$topic" \
+  --discipline-id "24" \
+  --discipline-id "11" \
+  --run-id "$run_id" \
+  --output-root workspace/science-runs \
+  --quantitative-mode off \
+  --computation-mode run \
+  --until author
+```
+
+Replace the example topic with your full question. Shell variables are lost when you close the shell; define `topic` and `run_id` again in a new session. For another research domain, change the discipline IDs as well.
+
+The computation branch starts after Survey and Idea, alongside ExperimentDesign. Author waits for it within its budget and consumes verified results through a separate evidence package. Current defaults allow two experiments, twelve total execution attempts, a 3,600-second branch budget and a 900-second limit per execution. Missing data, software or failed validation can leave the computation incomplete while the main report still completes; inspect its status separately.
+
+### 4. Inspect and resume computations
+
+Use the actual run directory when running these commands in another terminal:
+
+```bash
+uv run qwensci computation status --run-dir workspace/science-runs/ACTUAL_RUN_ID
+uv run qwensci computation resume --run-dir workspace/science-runs/ACTUAL_RUN_ID
+```
+
+`status` reports progress; `resume` resumes recoverable computation failures, including `ENVIRONMENT_UNAVAILABLE` after Docker and the image have been fixed. Branch logs and artifacts are under `workspace/science-runs/ACTUAL_RUN_ID/computation/`. Mode and model are fixed when a run is created: an existing run created with computation `off` needs a new run ID to enable it.
+
+If Author has already completed before the recovered computation becomes available, regenerate Author to incorporate the new handoff:
+
+```bash
+uv run qwensci science \
+  --resume workspace/science-runs/ACTUAL_RUN_ID \
+  --restart-from author --force \
+  --until author
+```
+
+See [computational experiments](docs/computational_experiments.md) for input datasets, supported methods, network and isolation settings, cancellation, budgets and result qualification.
 
 ## Run stages individually
 
@@ -732,8 +936,6 @@ with links to the companion files, rather than an embedded copy of the complete 
 Artifacts are streamed to temporary files and published together with rollback on failure.
 
 ### 4. Author
-
-ExperimentDesign also supports an optional computational branch: add `--computation-mode plan` to design computational protocols, or `--computation-mode run` to generate and execute bounded container projects alongside the existing design stage. Default mode is `off`. Numerical and chemical results enter Author through a verified evidence capsule. See [computational experiments](docs/computational_experiments.md) for setup, supported methods, network/isolation defaults, budgets, cancellation and recovery.
 
 ```bash
 uv run qwensci author \

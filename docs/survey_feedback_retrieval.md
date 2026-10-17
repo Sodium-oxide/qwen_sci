@@ -152,6 +152,12 @@ SH 种子覆盖 `C_SH = mean(min(n_SH/2,1))`，n_SH 是实际选中且相关性�
 
 `subhypothesis_retrieval` 保留查询历史、来源、评分、准入审计、失败/延期、种子、被动证据矩阵、比较范围、预算和冻结登记表。handoff 保留数值相关性、角色、active/holdout、机会状态、选中根来源和覆盖指标，通过来源指针访问完整查询历史。
 
+`subhypothesis_retrieval.json` 与最终 `survey.json` 内嵌的检索产物使用 `storage_schema_version=subhypothesis_retrieval_refs_v1`，保留 UTF-8 和两空格缩进。`paper_records` 是唯一的论文主表，`candidate_paper_ids`、`scientific_candidate_paper_ids` 和种子筛选下的 `selected_paper_ids`、`evidence_seed_paper_ids`、`exploration_seed_paper_ids`、`context_seed_paper_ids`、`holdout_candidate_ids`、`rejected_paper_ids` 只保存有序引用，保留原顺序和重复项。同一论文 ID 的不同内容快照以 `ID@内容哈希` 分开登记，不合并或丢弃旧版检索中的差异。
+
+`semantic_assessment_records` 保存去重后的语义评估，通过 `sh_semantic_assessment_ids` 和 `semantic_assessment_id` 引用；`evidence_records` 保存证据摘录和论断限制，通过 `evidence_span_ids`、`llm_evidence_span_ids`、`claim_limit_ids`、`llm_claim_limit_ids` 引用。候选登记表、指纹、覆盖台账和原始模型响应审计保留完整原值。运行时仍使用完整论文对象；`src.pipeline.subhypothesis_retrieval_storage.load_subhypothesis_retrieval(path)` 兼容读取新旧文件，`expand_subhypothesis_retrieval(payload)` 还原已解析的独立或内嵌检索产物，缺失引用和未知存储版本会报错。
+
+已有文件可用 `python scripts/compact_subhypothesis_retrieval.py <文件路径>` 迁移。脚本先把保留缩进的新格式写入同目录临时文件，再解析、还原并逐值比较全部原数据，验证成功后原子替换；文件在迁移期间被更新则停止替换。重复执行不改写已迁移的文件。
+
 示例日志格式（非实测效果）：
 
 ```text

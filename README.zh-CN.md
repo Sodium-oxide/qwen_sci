@@ -1,8 +1,19 @@
 # Qwen-Sci
 
-**Qwen-Sci** 是一个可执行、可恢复、可审计的科研工作流：既提供 Python 命令行，也提供浏览器控制台。用户从一个研究课题出发，依次生成可追溯的文献综述、结构化研究想法、实验设计和研究计划；每一步都在服务端持久化，并可在安全边界处恢复。
+**Qwen-Sci** 是一个可执行、可恢复、可审计的科研工作流：既提供 Python 命令行，也提供浏览器工作台。用户从一个研究课题出发，依次生成可追溯的文献综述、结构化研究想法、实验设计和研究计划；每一步都在服务端持久化，并可在安全边界处恢复。
+
+当前工作台使用 React 19 / TypeScript 与 FastAPI，提供全流程科研、轻度研究、科研绘图、学术润色、论文翻译和研究偏好六个模块。网页中的模型功能使用 Qwen/DashScope，科研运行、Job、事件与成果保存在服务端。
+
+[GitHub 仓库](https://github.com/Sodium-oxide/qwen_sci) · [PyPI](https://pypi.org/project/qwen-sci/)
 
 [English](README.md) · [简体中文](README.zh-CN.md)
+
+| 从这里开始 | 文档入口 |
+| --- | --- |
+| 准备 Linux / WSL 与 Python | [安装与配置](#安装与配置) |
+| 启动或开发前端 | [Web 控制台 V2](#web-控制台-v2) · [前端 README](WebApp-V2/README.md) |
+| 从命令行开始研究 | [科研运行示例](#快速开始命令行科研运行) |
+| 查看后端接口与计算实验 | [Web 后端](docs/webapp-backend.md) · [计算实验](docs/computational_experiments.md) |
 
 ## 能力与边界
 
@@ -99,18 +110,53 @@ uv run qwensci science \
 - [`uv`](https://docs.astral.sh/uv/)
 - Qwen/DashScope 账户，或兼容 OpenAI 的模型服务
 - Linux x86_64 或 **WSL2**；Windows 请优先使用 WSL
-- 构建或开发 Web 控制台时，还需要 Node.js 与 npm
+- 构建或开发 Web 控制台时，需要 [Node.js](https://nodejs.org/) **20.x 的 20.19+，或 22.12+** 与 npm，推荐使用 **22 LTS**
 
 ## 安装与配置
 
-以下命令在 WSL 的仓库根目录执行。把开发环境放在仓库外部，避免在仓库中创建或同步 `.venv`：
+锁定的依赖环境面向 **Linux x86_64 与 Python 3.12**。Windows 用户先在**管理员 PowerShell** 中安装 WSL2；按提示重启并完成 Ubuntu 用户创建。已有 Linux 环境可从后续 Ubuntu 命令开始。
+
+```powershell
+wsl --install -d Ubuntu-24.04
+wsl --update
+wsl --set-default-version 2
+```
+
+在 Ubuntu / WSL 终端安装基础工具和 `uv`。Python 由 `uv` 管理，无需另外安装 Windows Python：
 
 ```bash
+sudo apt update
+sudo apt install -y git curl ca-certificates build-essential
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source "$HOME/.local/bin/env"
+uv --version
+uv python install 3.12
+```
+
+推荐把仓库放在 WSL 的 Linux 文件系统中，以减少依赖安装和构建时的文件访问开销：
+
+```bash
+mkdir -p "$HOME/src"
+cd "$HOME/src"
 git clone https://github.com/Sodium-oxide/qwen_sci.git
 cd qwen_sci
 ```
 
-在同一个 WSL 环境中安装 Lean 的工具链管理器 Elan：
+后续命令均在仓库根目录执行。如果仓库已有 Windows 磁盘副本，请在 WSL 中使用 `/mnt/c/Users/<WindowsUser>/path/to/qwen_sci` 等对应路径。
+
+前端需要在同一个 Linux / WSL 环境安装 **Node.js 22 LTS**，可按 [Node.js 安装说明](https://nodejs.org/en/download)或使用 [nvm](https://github.com/nvm-sh/nvm#installing-and-updating)。Vite 7 要求 Node.js **20.x 的 20.19+，或 22.12+**。如果已经安装 nvm：
+
+```bash
+nvm install 22
+nvm use 22
+node --version
+npm --version
+which node npm
+```
+
+`node` 与 `npm` 应指向 Linux 路径，避免调用 `/mnt/c/` 下的 Windows 程序。只使用 CLI 时无需安装 Node.js。
+
+需要 Lean 证明检查时，在同一个 WSL 环境中安装工具链管理器 Elan：
 
 ```bash
 curl https://elan.lean-lang.org/elan-init.sh -sSf | sh
@@ -125,15 +171,18 @@ elan toolchain install "$(cat lean-toolchain)"
 lean --version
 ```
 
-然后同步 Python 依赖：
+然后创建并同步 Python 环境。以下完整开发安装会包含所有依赖组；环境保存在仓库外部，也可以按后面的能力表选择安装范围：
 
 ```bash
 export UV_PROJECT_ENVIRONMENT="$HOME/.venvs/qwen-sci-dev"
 uv sync --all-groups --locked
+source "$UV_PROJECT_ENVIRONMENT/bin/activate"
+python --version       # Python 3.12.x
+which python
 uv run qwensci --help
 ```
 
-在每个使用该仓库的 shell 中设置同一个 `UV_PROJECT_ENVIRONMENT`。如果只需部分能力，可按需同步：
+在每个后端终端中设置同一个 `UV_PROJECT_ENVIRONMENT`，需要直接使用环境中的工具时再激活其 `bin/activate`。不要使用 `uv run --no-sync`。如果只需部分能力，可按需同步：
 
 | 能力 | 命令 |
 | --- | --- |
@@ -246,7 +295,9 @@ modelscope download --model sentence-transformers/all-MiniLM-L6-v2 \
 | `qwensci science` | 初始化、恢复或重启完整可审计流程。 |
 | `qwensci quantitative status` | 查看量化侧车状态和下一步操作。 |
 | `qwensci doctor` | 检查模型提供方与本地可选能力。 |
-| `qwensci-web` | 启动 Web 控制台及其受控运行 API。 |
+| `qwensci quantitative` | 查看和推进需要人工审批的量化建模支线。 |
+| `qwensci computation` | 查看、恢复或取消可选计算实验。 |
+| `qwensci-web` | 启动 Web 工作台、功能 Job 与受控运行 API。 |
 | `qwensci install-mcp-wrappers` | 在 Linux/WSL 上安装本地 Bash MCP 包装脚本。 |
 
 软件包也提供 `qwensci-survey`、`qwensci-idea`、`qwensci-doctor` 和 `qwensci-install-mcp-wrappers` 这些专用入口；新脚本和文档优先使用统一的 `qwensci` 命令。
@@ -287,21 +338,105 @@ uv sync --group multimodal
 
 ## Web 控制台 V2
 
-Web 控制台是持久化科研运行的同源控制面，不是浏览器中的模拟页面。它直接管理 `workspace/science-runs/` 中的真实运行状态和受控产物。
+`WebApp-V2/` 是当前 React / TypeScript 前端。FastAPI 提供科研与独立功能 API、持久化 Job、SSE 事件和成果下载。完成[安装与配置](#安装与配置)并保存 `.env` 后，在 **Linux / WSL 的仓库根目录**执行以下命令；每个后端终端均使用同一个 `UV_PROJECT_ENVIRONMENT`。如果当前仓库已使用默认 `.venv/`，可省略下面的 `export UV_PROJECT_ENVIRONMENT=…` 行，`uv run` 会使用该项目环境。
 
-首次使用或前端源码更新后，在仓库根目录构建并启动：
+| 方式 | 运行进程 | 浏览器地址 |
+| --- | --- | --- |
+| 构建运行，推荐用于本地使用 | FastAPI 同时提供 `WebApp-V2/dist/` 和 `/api` | [http://localhost:8010/app](http://localhost:8010/app) |
+| 前端开发与热更新 | FastAPI 使用 `8010`，Vite 使用 `5173` 并代理 `/api` | [http://localhost:5173/app](http://localhost:5173/app) |
+
+### 构建并在本地运行
+
+按 `package-lock.json` 安装前端依赖、构建页面，再启动后端：
 
 ```bash
-npm --prefix WebApp-V2 install
+export UV_PROJECT_ENVIRONMENT="$HOME/.venvs/qwen-sci-dev"
+npm --prefix WebApp-V2 ci
 npm --prefix WebApp-V2 run build
-uv run qwensci-web
+uv run --locked qwensci-web
 ```
 
-然后打开 [http://127.0.0.1:8010](http://127.0.0.1:8010)。服务会从 `WebApp-V2/dist` 提供已构建的 React 页面。在 WSL 环境中可使用服务输出的地址，或使用 Windows 浏览器的 WSL localhost 转发。
+等价的模块启动方式是 `uv run --locked python -m src.webapp.api`。服务默认监听 `127.0.0.1:8010`。[http://localhost:8010/](http://localhost:8010/) 是产品首页，[http://localhost:8010/app](http://localhost:8010/app) 是工作台；Windows 浏览器可通过 WSL 的 localhost 转发访问。
+
+`npm run build` 会先检查 TypeScript，再生成 `WebApp-V2/dist/`。修改前端源码后，重新构建并重启 `qwensci-web`；依赖锁文件变化后，重新执行 `npm ci`。后端启动时若没有 `dist/index.html`，根路径 `/` 会返回 **503** 并提示构建，API 与 [Swagger 接口文档](http://localhost:8010/docs)仍可访问。
+
+在另一个终端检查服务与可选能力：
+
+```bash
+curl -fsS http://127.0.0.1:8010/api/health
+curl -fsS http://127.0.0.1:8010/api/capabilities
+```
+
+健康响应包含 `status: "ok"`。能力接口区分依赖是否存在、凭据是否配置和远程连通性是否验证；`configured` 且 `verified: false` 表示仍需实际调用确认。`multimodal` 依赖组提供本地绘图与表格工具，`pdf` 组提供 PDF 解析、DOCX 与 PDF 导出。
+
+### 使用 Vite 开发前端
+
+打开两个 Linux / WSL 终端，均进入仓库根目录。若尚未安装前端依赖，先执行一次 `npm --prefix WebApp-V2 ci`。
+
+终端 1：后端。
+
+```bash
+export UV_PROJECT_ENVIRONMENT="$HOME/.venvs/qwen-sci-dev"
+uv run --locked qwensci-web
+```
+
+终端 2：前端。
+
+```bash
+npm --prefix WebApp-V2 run dev -- --port 5173 --strictPort
+```
+
+访问 [http://localhost:5173/app](http://localhost:5173/app)。Vite 会在源码变化后更新页面，开发模式无需先生成 `dist/`。[`vite.config.ts`](WebApp-V2/vite.config.ts)监听 `0.0.0.0`，将相对路径 `/api` 请求（包括 SSE）代理到 `http://127.0.0.1:8010`。科研运行、上传、Job 和偏好读写都需要后端持续运行；接口文档直接访问 [http://localhost:8010/docs](http://localhost:8010/docs)。
+
+需要修改后端端口时，将后端启动命令替换为：
+
+```bash
+uv run --locked python -m uvicorn src.webapp.api:app --host 127.0.0.1 --port 8020
+```
+
+然后在 Vite 启动命令中设置对应的代理目标：
+
+```bash
+QWENSCI_API_URL=http://127.0.0.1:8020 npm --prefix WebApp-V2 run dev -- --port 5173 --strictPort
+```
+
+`QWENSCI_API_URL` 由 Vite 配置进程读取。模型 API 密钥保存在后端私有 `.env` 中。
+
+### 页面入口与持久化数据
+
+根据所选运行方式，使用对应端口访问以下路由：
+
+| 路由 | 页面 |
+| --- | --- |
+| `/`、`/products`、`/products/qwensci` | 产品首页、产品列表与 Qwen-Sci 介绍 |
+| `/app` | 工作台概览与任务入口 |
+| `/app/full-research` | Survey → Idea → ExperimentDesign → Author，可选择流程终点 |
+| `/app/light-research` | Survey 与可选 Idea，量化和计算实验分支关闭 |
+| `/app/figure` | Python 数据图或 AI 示意图、人工复核与图形成果 |
+| `/app/polish` | 学术润色、段落差异、人工复核与文档导出 |
+| `/app/translate` | PDF 翻译、逐页复核、术语与来源映射 |
+| `/app/preferences` | 带版本的模型、研究、输出与隐私默认设置 |
+
+默认情况下，`workspace/science-runs/` 保存科研运行，`workspace/qwensci.db` 保存 Job 状态与事件，`workspace/jobs/` 保存 Job 输入与成果，`workspace/files/` 保存共享上传文件，`workspace/preferences.json` 保存工作区偏好。路径由 [`src/config/default.yaml`](src/config/default.yaml)等配置决定；偏好设置只作用于新建任务。浏览器和 CLI 复用同一套科研运行产物。
+
+当前使用单工作区，未提供多人认证或 ACL。绘图、润色和翻译在最终接受或文档导出前提供人工复核动作；可选功能以 `/api/capabilities` 的实际状态为准。PDF 翻译导出保留文本结构和来源映射，尚不重建原 PDF 版面。
+
+### 常见启动问题
+
+| 现象 | 处理方法 |
+| --- | --- |
+| `EBADENGINE`、Vite 提示 Node 版本不符，或 `crypto.hash is not a function` | 切换到支持的 Linux Node.js，检查 `which node npm`，重新执行 `npm --prefix WebApp-V2 ci`。 |
+| `8010` 返回 `503` / “Web client has not been built” | 执行 `npm --prefix WebApp-V2 run build`，然后重启后端。 |
+| `8010` 页面未显示源码修改 | 重新构建并重启，或在开发时使用 `5173` 的 Vite 页面。 |
+| 首页可打开，但 API 请求失败 | 检查后端 `/api/health`；开发模式还需确认 `QWENSCI_API_URL`，修改后重启 Vite。 |
+| `8010` 或 `5173` 端口被占用 | 停止占用进程，或修改端口并同步代理目标。`--strictPort` 会直接报告冲突，避免 Vite 自动换端口。 |
+| 缺少绘图、解析或导出能力 | 查看 `/api/capabilities`，在运行后端的同一 Python 环境安装所需依赖组。 |
+
+前端检查命令见[双语前端 README](WebApp-V2/README.md)，接口和 Job 契约见 [Web 后端说明](docs/webapp-backend.md)。
 
 ### 在页面中开始研究
 
-1. 输入课题，从当前支持的 20 个学科中选 1–2 个；页面可以根据课题建议最多两个学科。
+1. 进入全流程或轻度研究，输入课题，从 20 个支持学科中选 1–2 个。可选模型识别使用 `qwen3.8-flash`；识别不可用或无建议时仍可手动选择。
 2. 在启动前可上传研究材料并设置其用途与敏感标记。文件只保存到当前运行，并在再次读取时进行哈希校验。
 3. 选择流程终点：只生成 `Survey`、生成到 `Idea`、生成到 `ExperimentDesign`，或完整运行到 `Author`。`required` 量化模式会在 Author 前停在独立的量化审阅流程。
 4. 启动或恢复运行。运行中可请求“在当前阶段后中止”：当前阶段会先原子持久化，已完成产物会保留，后续阶段不会启动。恢复是一个新的受控用户动作，且可重新选择终点。
@@ -363,9 +498,110 @@ uv run qwensci quantitative parameters extract-batch \
 据模型服务和提供方速率限制调整；并行不会替代人工候选选择、参数批准或仿真授
 权。全文下载默认每篇最多尝试两个声明的 PDF URL，并对临时 HTTP 失败重试一次。
 
-## 安全
+## 在 WSL 中运行可选计算实验
 
-ExperimentDesign 支持可选计算实验 B 路：`--computation-mode plan` 生成计算协议，`--computation-mode run` 与现有设计 A 路并行生成代码、容器执行、验证和分析，默认 `off`。实验程序默认可联网，文件与控制进程凭据仍隔离；合格结果通过独立证据包进入 Author。环境搭建、支持范围、预算和恢复方式见[计算实验说明](docs/computational_experiments.md)。
+使用 `--computation-mode run` 可以在 ExperimentDesign 期间生成并执行计算实验。它与 Q1/Q2 量化建模分支分别控制；只启用这里的计算实验时，保留 `--quantitative-mode off`。
+
+| 模式 | 行为 |
+| --- | --- |
+| `--computation-mode off` | 默认值，关闭计算实验。 |
+| `--computation-mode plan` | 生成计算协议，不执行程序。 |
+| `--computation-mode run` | 生成协议和代码，在 Docker 中执行、验证和分析结果。 |
+
+### 1. 连接 WSL 与 Docker Desktop
+
+在 Windows 中安装并启动 Docker Desktop。在 **Settings → General** 中启用 **Use the WSL 2 based engine**，再在 **Settings → Resources → WSL Integration** 中开启当前发行版并应用设置。在 WSL 中执行：
+
+```bash
+docker info
+docker run --rm hello-world
+```
+
+`docker info` 必须能显示 **Server** 信息。WSL 使用指向 `unix:///var/run/docker.sock` 的 `default` context 即可；连接正常时保留该设置，不要切换到 Windows 命名管道地址。
+
+- `docker.sock` 报 `no such file or directory`：启动 Docker Desktop 并检查 WSL 集成。如果使用的是直接安装在 WSL 内的 Docker Engine，则用 `sudo systemctl start docker` 启动服务；没有 systemd 时使用 `sudo service docker start`。
+- `docker.sock` 报 `permission denied`：先执行 `ls -l /var/run/docker.sock` 和 `sudo docker info`。如果 socket 属于 `docker` 组，且带 `sudo` 能正常连接，将当前 WSL 用户加入该组并刷新 shell：
+
+```bash
+sudo groupadd -f docker
+sudo usermod -aG docker "$USER"
+newgrp docker
+docker info
+```
+
+加入 `docker` 组会获得 Docker daemon 的控制权限。保持 socket 原有权限，不要执行 `chmod 666`。使用 Docker Desktop 集成或单独管理的 WSL Docker Engine 中的一种，确保 CLI 连接的是预期服务。
+
+### 2. 构建并验证执行镜像
+
+在 WSL 的项目根目录中执行（例如先运行 `cd ~/qwen_sci-main`）：
+
+```bash
+docker build \
+  -t qwensci-computation:py312-v1 \
+  -f src/agents/computational_experiment_agent/execution/Dockerfile \
+  .
+
+docker run --rm qwensci-computation:py312-v1 \
+  python -c "import numpy, scipy, sympy, pyscf; print('Computational environment OK')"
+```
+
+验证应输出 `Computational environment OK`。首次使用时构建一次；修改 Dockerfile 或镜像依赖后再重新构建。镜像内包含 Python、NumPy、SciPy、SymPy 和 PySCF。
+
+### 3. 启动包含数值实验的研究运行
+
+在当前 WSL shell 中定义完整课题，并明确希望执行的数值任务。例如：
+
+```bash
+run_id="cpallidicaule-pathosystem-$(date +%Y%m%d-%H%M%S)"
+topic=$(cat <<'TOPIC'
+Propose and justify a model pathogen and pathovar screening design for
+Chenopodium pallidicaule. Execute numerical experiments to assess sample
+size, statistical power, and ranking robustness under measurement noise.
+Declare assumed parameters and sensitivity ranges. Use simulations to
+evaluate the screening design; base biological virulence claims on
+experimental or cited empirical evidence.
+TOPIC
+)
+
+uv run qwensci science \
+  --config src/config/default.yaml \
+  --topic "$topic" \
+  --discipline-id "24" \
+  --discipline-id "11" \
+  --run-id "$run_id" \
+  --output-root workspace/science-runs \
+  --quantitative-mode off \
+  --computation-mode run \
+  --until author
+```
+
+将示例课题替换为你的完整问题。关闭 shell 后变量会丢失，新会话需要重新定义 `topic` 和 `run_id`；用于其他研究领域时，也要调整学科 ID。
+
+计算分支在 Survey 和 Idea 完成后启动，与 ExperimentDesign 并行。Author 在预算内等待计算分支结束，并通过独立证据包使用已验证结果。当前默认最多生成 2 个实验、总计执行 12 次，计算分支总预算为 3600 秒，单次执行最多 900 秒。缺少数据、软件或验证失败时，计算分支可能未完成而主报告仍正常生成，因此要单独查看计算状态。
+
+### 4. 查看状态与恢复计算
+
+在另一个终端中使用实际运行目录：
+
+```bash
+uv run qwensci computation status --run-dir workspace/science-runs/ACTUAL_RUN_ID
+uv run qwensci computation resume --run-dir workspace/science-runs/ACTUAL_RUN_ID
+```
+
+`status` 查看进度；`resume` 恢复可恢复的计算失败，也适用于修复 Docker 和镜像后的 `ENVIRONMENT_UNAVAILABLE` 状态。日志与产物位于 `workspace/science-runs/ACTUAL_RUN_ID/computation/`。计算模式和模型在创建运行时固定：原来以计算模式 `off` 创建的运行，需要新建运行 ID 才能启用计算。
+
+如果 Author 已完成，而计算结果是在恢复后才生成，需要重跑 Author 才能将新交接结果纳入报告：
+
+```bash
+uv run qwensci science \
+  --resume workspace/science-runs/ACTUAL_RUN_ID \
+  --restart-from author --force \
+  --until author
+```
+
+输入数据、支持方法、联网与隔离设置、取消、预算和结果验证详见[计算实验说明](docs/computational_experiments.md)。
+
+## 安全
 
 - 任何 API key 都应视为密钥；一旦出现在提交、聊天、日志或截图中，应立即轮换。
 - Web 日志是诊断视图，不是任意文件浏览器；服务只公开允许的阶段日志并进行脱敏。

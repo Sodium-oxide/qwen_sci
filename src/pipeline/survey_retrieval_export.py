@@ -7,6 +7,7 @@ import hashlib
 import math
 
 from .paper_identity import canonical_paper_id
+from .subhypothesis_retrieval_storage import expand_subhypothesis_retrieval
 
 
 def _score(record):
@@ -28,7 +29,9 @@ def _score(record):
 
 def publish_survey_retrieval(config, collector, seed_ids, expanded_ids):
     destination = Path(str(config.BasicInfo.base_dir)) / "survey_retrieval_manifest.json"
-    retrieval = getattr(collector, "subhypothesis_retrieval_artifact", {}) or {}
+    retrieval = expand_subhypothesis_retrieval(
+        getattr(collector, "subhypothesis_retrieval_artifact", {}) or {}
+    )
     candidates = retrieval.get("candidate_papers") or getattr(collector, "retrieval_candidates", [])
     records = {}
     for item in candidates:

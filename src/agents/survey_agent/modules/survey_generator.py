@@ -74,6 +74,10 @@ from src.pipeline.multimodal_evidence.survey_integration import (
 from src.pipeline.paper_identity import canonical_paper_id, canonical_paper_ids
 from src.pipeline.scientific_candidates import refresh_candidate_fulltext
 from src.pipeline.survey_handoff_persistence import publish_survey_run_artifacts
+from src.pipeline.subhypothesis_retrieval_storage import (
+    expand_subhypothesis_retrieval,
+    serialize_subhypothesis_retrieval,
+)
 
 
 OUTLINE_EVIDENCE_PROMPT_SCHEMA_VERSION = "survey_sh_evidence_prompt_v1"
@@ -244,7 +248,7 @@ class SurveyGenerator:
             20,
         )
         provenance = self._as_mapping(provenance)
-        retrieval = self._as_mapping(retrieval)
+        retrieval = expand_subhypothesis_retrieval(self._as_mapping(retrieval))
         cluster_coverage = self._as_mapping(cluster_coverage)
         plan = self._as_mapping(retrieval.get("plan"))
         plan_context = self._as_mapping(plan.get("project_context"))
@@ -6093,7 +6097,7 @@ class SurveyGenerator:
                 },
                 "research_context": research_context,
                 "subhypothesis_decomposition": subhypothesis_decomposition,
-                "subhypothesis_retrieval": subhypothesis_retrieval,
+                "subhypothesis_retrieval": serialize_subhypothesis_retrieval(subhypothesis_retrieval),
                 "survey_evidence_plan": survey_evidence_plan,
                 "claim_traceability": claim_traceability,
                 "survey_integrity": integrity,

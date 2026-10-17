@@ -1632,6 +1632,11 @@ class ChatAgent:
         strict_input_budget: bool = False,
     ) -> str:
         """Chat with remote LLM, return result. Minimal logging; no file writes."""
+        from src.llm.research_policy import research_messages, research_policy
+
+        policy_config = self.config if research_policy(self.config) else self._project_config
+        if not (image_urls or local_images):
+            model = research_policy(policy_config).get("model_name") or model
         if model is None:
             model = self.model_name
         model = str(model or "").strip()
@@ -1682,7 +1687,7 @@ class ChatAgent:
 
         url = self.remote_url
         header = self.header
-        messages = [{"role": "user", "content": text_content}]
+        messages = research_messages(policy_config, text_content)
 
         if image_urls:
             image_url_frame = [

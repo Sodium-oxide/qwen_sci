@@ -180,7 +180,7 @@ def read_material(paths: ScienceRunPaths, material_id: str) -> tuple[Path, str]:
         return path, str(record.get("original_name") or path.name)
 
 
-def remove_material(paths: ScienceRunPaths, material_id: str) -> None:
+def remove_material(paths: ScienceRunPaths, material_id: str, *, file_service=None) -> None:
     """Remove a pre-execution material without allowing a manifest rewrite later."""
 
     if not _MATERIAL_ID_PATTERN.fullmatch(material_id):
@@ -211,6 +211,8 @@ def remove_material(paths: ScienceRunPaths, material_id: str) -> None:
             os.replace(temporary, source)
             raise
         temporary.unlink(missing_ok=True)
+        if file_service is not None and removed.get("file_id"):
+            file_service.release_reference(removed["file_id"], run_id=str(run_metadata["science_run_id"]))
 
 
 async def store_materials(
@@ -218,6 +220,7 @@ async def store_materials(
     paths: ScienceRunPaths,
     uploads: list[UploadFile],
     metadata: list[MaterialMetadata],
+    file_service=None,
 ) -> list[dict[str, Any]]:
     """Stream browser uploads into one run's controlled input directory."""
 
@@ -251,6 +254,7 @@ async def store_materials(
     uploaded_total = 0
     temporary_paths: list[Path] = []
     final_paths: list[Path] = []
+    shared_ids: list[str] = []
     try:
         for upload, item_metadata in zip(uploads, metadata, strict=True):
             original_name, suffix = _safe_filename(upload.filename)
@@ -277,12 +281,23 @@ async def store_materials(
                 size=size,
             )
             record["sha256"] = file_sha256(final_path)
+            if file_service is not None:
+                registered = file_service.register_run_material(
+                    final_path, original_name=original_name, run_id=str(run_metadata["science_run_id"]),
+                    project_id=immutable_inputs.get("web", {}).get("project_id"),
+                    material_scope=item_metadata.scope, sensitive=item_metadata.contains_sensitive_data,
+                )
+                record["file_id"] = registered.file_id
+                shared_ids.append(registered.file_id)
             stored_records.append(record)
     except Exception:
         for temporary_path in temporary_paths:
             temporary_path.unlink(missing_ok=True)
         for final_path in final_paths:
             final_path.unlink(missing_ok=True)
+        for file_id in shared_ids:
+            file_service.release_reference(file_id, run_id=str(run_metadata["science_run_id"]))
+            file_service.delete(file_id)
         raise
     finally:
         for upload in uploads:
@@ -323,6 +338,9 @@ async def store_materials(
     except Exception:
         for final_path in final_paths:
             final_path.unlink(missing_ok=True)
+        for file_id in shared_ids:
+            file_service.release_reference(file_id, run_id=str(run_metadata["science_run_id"]))
+            file_service.delete(file_id)
         raise
     return stored_records
 

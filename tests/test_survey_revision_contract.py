@@ -21,6 +21,7 @@ from modules.refine_agent import (
 from modules.survey_generator import SurveyGenerator
 from utils.utils import extract_json
 from src.pipeline.survey_handoff_persistence import verify_survey_manifest_artifacts
+from src.pipeline.subhypothesis_retrieval_storage import expand_subhypothesis_retrieval
 
 
 class _Logger:
@@ -37,6 +38,8 @@ class _Logger:
 def test_survey_artifact_persists_project_research_context(tmp_path):
     generator = object.__new__(SurveyGenerator)
     generator.logger = _Logger()
+    paper = {"paperId": "W1", "abstract": "Original source evidence", "sh_semantic_assessments": [
+        {"sub_hypothesis_id": "SH1", "evidence_spans": [{"source": "abstract", "text": "Original source evidence"}]}]}
     generator.config = SimpleNamespace(
         BasicInfo=SimpleNamespace(
             save_path=str(tmp_path / "survey.md"),
@@ -50,6 +53,9 @@ def test_survey_artifact_persists_project_research_context(tmp_path):
             subhypothesis_retrieval={
                 "schema_version": "subhypothesis_retrieval_execution_v1",
                 "coverage_final": {"complete": True},
+                "candidate_papers": [paper],
+                "scientific_candidate_papers": [paper],
+                "seed_selection": {"selected_papers": [paper]},
             },
         )
     )
@@ -59,6 +65,9 @@ def test_survey_artifact_persists_project_research_context(tmp_path):
     payload = json.loads((tmp_path / "survey.json").read_text(encoding="utf-8"))
     assert payload["research_context"]["primary_discipline"] == "agricultural_biological_sciences"
     assert payload["subhypothesis_retrieval"]["coverage_final"]["complete"] is True
+    assert payload["subhypothesis_retrieval"]["candidate_paper_ids"] == ["W1"]
+    assert payload["subhypothesis_retrieval"]["seed_selection"]["selected_paper_ids"] == ["W1"]
+    assert expand_subhypothesis_retrieval(payload["subhypothesis_retrieval"]) == generator.config.BasicInfo.subhypothesis_retrieval
     assert payload["paper"] == "Survey body"
 
 

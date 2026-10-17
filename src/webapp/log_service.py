@@ -30,6 +30,7 @@ _STAGE_LABELS = {
 _ATTEMPT_DIRECTORY = re.compile(r"attempt-(\d+)$")
 MAX_LOG_SOURCES = 256
 MAX_LOG_CHUNK_BYTES = 262_144
+_TERMINAL_ESCAPE = re.compile(r"\x1b(?:\[[0-?]*[ -/]*[@-~]|\][^\x07\x1b]*(?:\x07|\x1b\\))")
 
 
 class RunLogError(ValueError):
@@ -140,23 +141,26 @@ def _safe_jsonl_chunk(text: str) -> str:
     return "\n".join(rendered_lines)
 
 
-def _read_chunk(path: Path, *, offset: int, limit: int) -> tuple[bytes, int, int]:
-    try:
-        size_bytes = path.stat().st_size
-    except OSError as exc:
-        raise RunLogError("The requested log is no longer available.") from exc
-    offset = min(offset, size_bytes)
+def _read_chunk(path: Path, *, offset: int, limit: int) -> tuple[bytes, int, int, int]:
     try:
         with path.open("rb") as handle:
+            size_bytes = handle.seek(0, 2)
+            offset = offset if offset <= size_bytes else 0
             handle.seek(offset)
             chunk = handle.read(limit)
+            newline = chunk.rfind(b"\n")
+            if newline >= 0:
+                chunk = chunk[: newline + 1]
+            elif chunk:
+                handle.seek(offset)
+                chunk = handle.readline(MAX_LOG_CHUNK_BYTES + 1)
+                if len(chunk) > MAX_LOG_CHUNK_BYTES:
+                    raise RunLogError("A log record exceeds the readable size limit.")
+                if not chunk.endswith(b"\n"):
+                    chunk = b""
     except OSError as exc:
         raise RunLogError("The requested log could not be read.") from exc
-    if offset + len(chunk) < size_bytes:
-        newline = chunk.rfind(b"\n")
-        if newline >= 0:
-            chunk = chunk[: newline + 1]
-    return chunk, offset + len(chunk), size_bytes
+    return chunk, offset, offset + len(chunk), size_bytes
 
 
 def read_run_log(paths: ScienceRunPaths, *, log_id: str, offset: int, limit: int) -> RunLogChunkView:
@@ -165,13 +169,13 @@ def read_run_log(paths: ScienceRunPaths, *, log_id: str, offset: int, limit: int
     source = _indexed_sources(paths).get(log_id)
     if source is None:
         raise RunLogError("Unknown research log.")
-    chunk, next_offset, size_bytes = _read_chunk(source.path, offset=offset, limit=min(limit, MAX_LOG_CHUNK_BYTES))
-    decoded = chunk.decode("utf-8", errors="replace")
+    chunk, actual_offset, next_offset, size_bytes = _read_chunk(source.path, offset=offset, limit=min(limit, MAX_LOG_CHUNK_BYTES))
+    decoded = _TERMINAL_ESCAPE.sub("", chunk.decode("utf-8", errors="replace"))
     content = _safe_jsonl_chunk(decoded) if source.log_format == "jsonl" else safe_text(decoded)
     return RunLogChunkView(
         log_id=source.log_id,
         format=source.log_format,
-        offset=offset,
+        offset=actual_offset,
         next_offset=next_offset,
         has_more=next_offset < size_bytes,
         content=content,

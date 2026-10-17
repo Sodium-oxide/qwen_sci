@@ -12,6 +12,9 @@ from typing import Any, Callable
 from src.agents.quantitative_modeling.parameter_evidence.providers import AcademicMetadataProviders, ParameterEvidenceSettings
 from src.pipeline.science_run import atomic_write_json, append_science_event, locked_science_run, science_run_paths
 
+from .jobs import JobLeaseLost
+from .jobs.runner import JobCancelled, JobInterrupted
+
 
 def _text(value: object) -> str:
     return str(value or "").strip()
@@ -114,6 +117,7 @@ class ParameterSearchService:
     ) -> None:
         self.config_path = config_path
         self._submit_task = submit_task
+        self.submit_search = None
 
     @staticmethod
     def job_directory(run_dir: Path, idea_id: str, version: int) -> Path:
@@ -183,13 +187,52 @@ class ParameterSearchService:
                 blueprint_identity=blueprint_identity,
             )
 
-        self._submit_task(run_id=run_id, task=task)
+        if self.submit_search is not None:
+            try:
+                self.submit_search(run_id=run_id, descriptor={key: value for key, value in initial.items() if key in {
+                    "job_id", "idea_id", "version", "parameter_id", "parameter_request", "blueprint_identity", "query", "providers", "limit",
+                }})
+            except Exception:
+                self._update(run_dir, path, {"status": "FAILED", "updated_at": _now(), "error": "The search could not be queued."})
+                raise
+        else:
+            self._submit_task(run_id=run_id, task=task)
         return initial
+
+    def execute_descriptor(self, *, run_dir: Path, descriptor: dict[str, Any], checkpoint) -> None:
+        job_id = str(descriptor["job_id"])
+        if not job_id.startswith("psearch-") or not job_id[8:].isalnum():
+            raise ValueError("Invalid parameter-search identifier.")
+        idea_id = str(descriptor["idea_id"])
+        version = int(descriptor["version"])
+        if idea_id not in {"Q1", "Q2"} or version not in {0, 1, 2}:
+            raise ValueError("Invalid parameter-search target.")
+        path = self.job_directory(run_dir, idea_id, version) / f"{job_id}.json"
+        try:
+            checkpoint()
+        except JobCancelled:
+            self._mark_cancelled(run_dir, path, job_id=job_id)
+            raise
+        self._execute(
+            **{key: value for key, value in descriptor.items() if key != "type"},
+            run_dir=run_dir, path=path, checkpoint=checkpoint,
+        )
+        try:
+            checkpoint()
+        except JobCancelled:
+            self._mark_cancelled(run_dir, path, job_id=job_id)
+            raise
+        import json
+
+        if json.loads(path.read_text(encoding="utf-8")).get("status") == "FAILED":
+            raise RuntimeError("The parameter search failed; inspect the run search status.")
 
     def _execute(self, **kwargs: Any) -> None:
         run_dir = Path(kwargs["run_dir"])
         path = Path(kwargs["path"])
         job_id = _text(kwargs["job_id"])
+        provider_runs: list[dict[str, Any]] = []
+        records: list[dict[str, Any]] = []
         try:
             from src.config import load_config
 
@@ -200,15 +243,17 @@ class ParameterSearchService:
                 "openalex": provider_client.search_openalex,
                 "anysearch": provider_client.search_anysearch,
             }
-            provider_runs: list[dict[str, Any]] = []
-            records: list[dict[str, Any]] = []
             selected = [name for name in kwargs["providers"] if name in methods]
             with ThreadPoolExecutor(max_workers=max(1, len(selected))) as executor:
                 futures = {executor.submit(methods[name], kwargs["query"]): name for name in selected}
                 for future in as_completed(futures):
+                    if kwargs.get("checkpoint") is not None:
+                        kwargs["checkpoint"]()
                     provider = futures[future]
                     try:
                         result = list(future.result() or [])[: int(kwargs["limit"])]
+                    except (JobCancelled, JobInterrupted, JobLeaseLost):
+                        raise
                     except Exception as error:
                         provider_runs.append({"provider": provider, "status": "FAILED", "record_count": 0, "error": str(error)[:500]})
                         self._event(run_dir, "PARAMETER_SEARCH_PROVIDER_COMPLETED", job_id=job_id, provider=provider, status="FAILED", record_count=0)
@@ -234,9 +279,62 @@ class ParameterSearchService:
                 },
             )
             self._event(run_dir, "PARAMETER_SEARCH_COMPLETED", job_id=job_id, idea_id=kwargs["idea_id"], version=kwargs["version"], parameter_id=kwargs["parameter_id"])
+        except JobCancelled as error:
+            self._mark_cancelled(
+                run_dir,
+                path,
+                job_id=job_id,
+                provider_runs=provider_runs,
+                records=records,
+                reason=str(error) or "Job cancellation was requested.",
+            )
+            raise
+        except (JobInterrupted, JobLeaseLost):
+            raise
         except Exception as error:
             self._update(run_dir, path, {"status": "FAILED", "updated_at": _now(), "error": str(error)[:1_000]})
             self._event(run_dir, "PARAMETER_SEARCH_FAILED", job_id=job_id, error=str(error)[:500])
+
+    def _mark_cancelled(
+        self,
+        run_dir: Path,
+        path: Path,
+        *,
+        job_id: str,
+        provider_runs: list[dict[str, Any]] | None = None,
+        records: list[dict[str, Any]] | None = None,
+        reason: str = "Job cancellation was requested.",
+    ) -> bool:
+        """Persist cancellation without overwriting a terminal search result."""
+
+        paths = science_run_paths(run_dir)
+        with locked_science_run(paths):
+            try:
+                import json
+
+                current = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                current = {}
+            if current.get("status") not in {"QUEUED", "RUNNING", "CANCEL_REQUESTED"}:
+                return False
+            current.update(
+                {
+                    "status": "CANCELLED",
+                    "updated_at": _now(),
+                    "cancellation_reason": reason[:1_000],
+                    "provider_runs": list(provider_runs or current.get("provider_runs") or []),
+                    "papers": sorted(_merge_records(list(records or [])), key=lambda item: str(item.get("paper_id", ""))),
+                }
+            )
+            atomic_write_json(path, current)
+            append_science_event(
+                paths,
+                event_type="PARAMETER_SEARCH_CANCELLED",
+                job_id=job_id,
+                provider_count=len(current["provider_runs"]),
+                paper_count=len(current["papers"]),
+            )
+            return True
 
     @staticmethod
     def _event(run_dir: Path, event_type: str, **fields: Any) -> None:
@@ -246,14 +344,14 @@ class ParameterSearchService:
 
     @staticmethod
     def _update(run_dir: Path, path: Path, patch: dict[str, Any]) -> None:
-        try:
-            import json
-
-            current = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            current = {}
-        current.update(patch)
         with locked_science_run(science_run_paths(run_dir)):
+            try:
+                import json
+
+                current = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                current = {}
+            current.update(patch)
             atomic_write_json(path, current)
 
 

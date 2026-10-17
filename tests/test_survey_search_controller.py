@@ -217,7 +217,7 @@ def test_default_controller_filters_early_and_keeps_hard_limits():
     assert ledger["stop_reason"] == "seed_pool_ready"
     assert verify_candidate_ledger(ledger)
     assert selection["effective_seed_budget"] == 18
-    assert collector._candidate_retrieval_budget.snapshot()["model_assessment_requests"] == 7
+    assert collector._candidate_retrieval_budget.snapshot()["model_assessment_requests"] == 10
     assert all(source["retrieval_provenance"] for source in selected)
 
 
@@ -263,6 +263,12 @@ def test_missing_abstract_remains_unknown_not_zero():
 ])
 def test_query_admission_validates_scores_identity_and_structure(updates, reason):
     assert admit_query(query("q", **updates), [SH], TOPIC, [])[1] == reason
+
+
+def test_query_quality_at_threshold_is_admitted():
+    admitted, reason = admit_query(query("threshold", purpose_score=3), [SH], TOPIC, [])
+    assert reason == "admitted"
+    assert admitted["quality_score"] == 70
 
 
 @pytest.mark.parametrize("origins", [
@@ -412,6 +418,23 @@ def test_seed_budget_is_hard_and_low_scores_do_not_fill_quotas():
     assert selection["minimum_seed_unmet_by_sh"] == {"SH1": 7}
     assert selection["effective_seed_budget"] == 3
     assert "low" not in {source["paperId"] for source in selection["selected_papers"]}
+
+
+@pytest.mark.parametrize("configured_limit", [None, 40, 7])
+def test_controller_seed_budget_can_select_forty_and_respects_smaller_limits(configured_limit):
+    collector, _calls = runtime(Model(objects=0))
+    settings = collector.config.ModuleInfo.WorkCollector
+    if configured_limit is None:
+        del settings.max_seed_paper_num
+    else:
+        settings.max_seed_paper_num = configured_limit
+    collector._candidate_retrieval_budget = RetrievalBudget()
+    controller = SurveySearchController(collector, TOPIC, {}, {}, [SH])
+    controller.papers = [assessed_paper(f"W{index}") for index in range(45)]
+    controller.update()
+    expected = 40 if configured_limit is None else configured_limit
+    assert controller.selection["effective_seed_budget"] == expected
+    assert len(controller.selection["selected_papers"]) == expected
 
 
 def test_actual_model_attempts_are_atomic_and_reservations_protect_assessment():

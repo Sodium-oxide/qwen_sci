@@ -61,8 +61,10 @@ from src.pipeline.science_run import (
 from src.pipeline.science_workflow import run_science_workflow
 
 from .artifact_service import list_artifacts
+from .job_artifacts import list_job_artifacts, resolve_job_artifact
+from .jobs import JobStore
 from .parameter_search_service import ParameterSearchService
-from .schemas import CreateRunRequest, RunActionRequest, RunActionType, RunView
+from .schemas import ArtifactView, CreateRunRequest, RunActionRequest, RunActionType, RunView
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -173,6 +175,37 @@ class RunService:
             config_path=self.config_path,
             submit_task=self.supervisor.submit_task,
         )
+        self.preferences_service = None
+        self.job_store: JobStore | None = None
+
+    def bind_job_store(self, store: JobStore) -> None:
+        self.job_store = store
+
+    def list_run_job_artifacts(self, run_id: str) -> list[dict[str, object]]:
+        """Return only committed Job artifacts attached to this run."""
+
+        if self.job_store is None:
+            return []
+        records = self.job_store.list(run_id=run_id, limit=1_000)
+        artifacts: list[dict[str, object]] = []
+        for record in records:
+            committed = set(record.output_artifact_ids)
+            for artifact in list_job_artifacts(self.job_store.job_directory(record.job_id)):
+                if artifact.get("artifact_id") not in committed:
+                    continue
+                artifacts.append({**artifact, "job_id": record.job_id, "kind": record.kind})
+        return artifacts
+
+    def resolve_run_job_artifact(self, run_id: str, artifact_id: str) -> tuple[Path, dict[str, object]] | None:
+        if self.job_store is None:
+            return None
+        for record in self.job_store.list(run_id=run_id, limit=1_000):
+            if artifact_id not in record.output_artifact_ids:
+                continue
+            resolved = resolve_job_artifact(self.job_store.job_directory(record.job_id), artifact_id)
+            if resolved is not None:
+                return resolved
+        return None
 
     def start_parameter_search(
         self,
@@ -311,6 +344,23 @@ class RunService:
         return payload
 
     def create_run(self, request: CreateRunRequest) -> RunView:
+        preferences_snapshot = None
+        if self.preferences_service is not None:
+            request, preferences_snapshot = self.preferences_service.resolve_request(request)
+            if preferences_snapshot["values"]["privacy_mode"] == "local-only":
+                raise ScienceRunInputError("Research execution requires a remote model; workspace preferences allow local processing only.")
+        from .prompts import build_default_prompt_registry
+        from .prompts.registry import resolve_text_model
+
+        registry = build_default_prompt_registry()
+        prompt = registry.resolve(job_kind="science", profile=request.prompt_profile)
+        selected_model = resolve_text_model(load_config(str(self.config_path)), prompt, model_name=request.model_name)
+        prompt_snapshot = prompt.snapshot()
+        prompt_snapshot["system_rules"] = "\n".join((
+            prompt.system_prompt,
+            *(rule for rule in dict.fromkeys(prompt.guardrails) if not rule.startswith(("Return only", "Model output"))),
+            "Follow the current research stage's output contract and evidence boundaries.",
+        ))
         scope = resolve_design_scope(request.discipline_ids)
         if scope["status"] != "IN_SCOPE":
             raise ScienceRunInputError(str(scope["reason"]))
@@ -325,7 +375,15 @@ class RunService:
             immutable_options={
                 "discipline_ids": discipline_ids,
                 "quantitative_mode": request.quantitative_mode,
+                "computation_mode": request.computation_mode,
+                "computation_model": request.computation_model,
                 "minimum_pages": request.minimum_pages,
+                "research_depth": request.research_depth,
+                "workflow_profile": request.workflow_profile,
+                "prompt_profile": request.prompt_profile,
+                "project_id": request.project_id,
+                "model_name": selected_model.name,
+                "research_prompt": prompt_snapshot,
             },
         )
         with locked_science_run(paths):
@@ -346,9 +404,38 @@ class RunService:
                 "multimodal_manifest_sha256": None,
                 "remote_perception_authorized": request.allow_remote_perception,
             }
-            immutable_inputs["web"] = {"language": request.language}
+            web_data = {"language": request.language, "project_id": request.project_id}
+            if preferences_snapshot is not None:
+                web_data["preferences_snapshot"] = preferences_snapshot
+            immutable_inputs["web"] = web_data
             atomic_write_json(paths.run_metadata, metadata)
         return self._view(paths, metadata, state)
+
+    def _migrate_research_metadata(
+        self,
+        paths: ScienceRunPaths,
+        metadata: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        immutable_inputs = _mapping(metadata.get("immutable_inputs"))
+        options = _mapping(immutable_inputs.get("options"))
+        if isinstance(options.get("research"), Mapping):
+            return dict(metadata)
+        with locked_science_run(paths):
+            current, _state = load_science_run(paths)
+            current_inputs = _mapping(current.get("immutable_inputs"))
+            current_options = _mapping(current_inputs.get("options"))
+            if not isinstance(current_options.get("research"), Mapping):
+                current_options["research"] = {
+                    "research_depth": "full",
+                    "workflow_profile": "full_research",
+                    "prompt_profile": "research-default",
+                    "project_id": None,
+                }
+                current_inputs["options"] = current_options
+                current["immutable_inputs"] = current_inputs
+                atomic_write_json(paths.run_metadata, current)
+                append_science_event(paths, event_type="RUN_METADATA_MIGRATED", migration="research_profile_v1")
+            return current
 
     def list_runs(self, *, query: str = "") -> list[RunView]:
         if not self.run_root.exists():
@@ -367,6 +454,7 @@ class RunService:
                 continue
             try:
                 metadata, state = load_science_run(paths)
+                metadata = self._migrate_research_metadata(paths, metadata)
                 view = self._view(paths, metadata, state)
             except Exception:
                 continue
@@ -388,6 +476,7 @@ class RunService:
         paths = self.paths_for(run_id)
         try:
             metadata, state = load_science_run(paths)
+            metadata = self._migrate_research_metadata(paths, metadata)
         except Exception as exc:
             raise RunNotFoundError("Research run is unavailable.") from exc
         return self._view(paths, metadata, state)
@@ -408,11 +497,18 @@ class RunService:
     def start_or_resume(self, *, run_id: str, action: RunActionType, until: str) -> RunView:
         paths = self.paths_for(run_id)
         metadata, state = load_science_run(paths)
+        metadata = self._migrate_research_metadata(paths, metadata)
         if self.supervisor.is_active(_text(metadata.get("science_run_id"))):
             raise RunActionConflictError("This research run is already executing.")
         allowed_actions = self._allowed_actions(paths, metadata, state)
         if action not in allowed_actions:
             raise RunActionError("This action is not available for the current research state.")
+        from src.pipeline.research_profiles import profile_from_options
+
+        try:
+            profile_from_options(_mapping(_mapping(metadata.get("immutable_inputs")).get("options"))).validate_stage(until)
+        except ValueError as exc:
+            raise RunActionError(str(exc)) from exc
         if is_science_cancellation_requested(state):
             with locked_science_run(paths):
                 metadata, state = load_science_run(paths)
@@ -434,6 +530,10 @@ class RunService:
             _metadata, state = load_science_run(paths)
             stage_name = self._running_science_stage(state)
             if stage_name is None:
+                cancel_jobs = getattr(self.supervisor, "cancel_jobs", None)
+                if callable(cancel_jobs) and self.supervisor.is_active(run_id):
+                    cancel_jobs(run_id)
+                    return self._view(paths, _metadata, state)
                 raise RunActionError("No science stage is currently running.")
             if not is_science_cancellation_requested(state):
                 request_science_cancellation(state, requested_stage=stage_name)
@@ -443,6 +543,9 @@ class RunService:
                     event_type="RUN_CANCELLATION_REQUESTED",
                     stage=stage_name,
                 )
+        cancel_jobs = getattr(self.supervisor, "cancel_jobs", None)
+        if callable(cancel_jobs):
+            cancel_jobs(run_id)
         return self.get_run(run_id)
 
     def run_action(self, *, run_id: str, action: RunActionRequest) -> RunView:
@@ -455,6 +558,7 @@ class RunService:
 
         paths = self.paths_for(run_id)
         metadata, state = load_science_run(paths)
+        metadata = self._migrate_research_metadata(paths, metadata)
         if self.supervisor.is_active(_text(metadata.get("science_run_id"))):
             raise RunActionConflictError("This research run is already executing.")
         allowed_actions = self._allowed_actions(paths, metadata, state)
@@ -477,10 +581,14 @@ class RunService:
         run_id = _text(metadata.get("science_run_id"))
         stages = _mapping(state.get("stages"))
         statuses = [_text(_mapping(stages.get(name)).get("status")) for name in SCIENCE_STAGE_NAMES]
+        research = _mapping(_mapping(metadata.get("immutable_inputs")).get("options"))
+        profile = _mapping(research.get("research"))
         if "RUNNING" in statuses:
             return [] if is_science_cancellation_requested(state) else ["cancel_science"]
         if self.supervisor.is_active(run_id):
-            return []
+            return ["cancel_science"]
+        if profile.get("workflow_profile") == "light_research" and self._stage_status(state, "survey") == "COMPLETED":
+            return ["resume_science"] if self._stage_status(state, "idea") != "COMPLETED" else []
         quantitative_mode = self._quantitative_mode(metadata)
         quantitative_state = self._load_quantitative_state(paths)
         quantitative_actions = self._quantitative_actions(
@@ -504,6 +612,14 @@ class RunService:
         options = _mapping(immutable_inputs.get("options"))
         mode = _text(_mapping(options.get("quantitative")).get("mode")) or "off"
         return mode if mode in {"off", "optional", "required"} else "off"
+
+    @staticmethod
+    def _computation_mode(metadata: Mapping[str, Any]) -> str:
+        immutable_inputs = _mapping(metadata.get("immutable_inputs"))
+        options = _mapping(immutable_inputs.get("options"))
+        computation = _mapping(options.get("computation"))
+        mode = _text(computation.get("mode")) or _text(options.get("computation_mode")) or "off"
+        return mode if mode in {"off", "plan", "run"} else "off"
 
     @staticmethod
     def _load_quantitative_state(paths: ScienceRunPaths) -> dict[str, Any] | None:
@@ -785,6 +901,9 @@ class RunService:
         version: int,
         expected_statuses: set[str],
     ) -> dict[str, Any]:
+        metadata, _state = load_science_run(paths)
+        if _mapping(_mapping(metadata["immutable_inputs"].get("options")).get("research")).get("research_depth") == "light":
+            raise RunActionError("Quantitative actions are unavailable for light research.")
         quantitative_state = self._load_quantitative_state(paths)
         if quantitative_state is None:
             raise RunActionError("Quantitative workflow has not been initialized for this run.")
@@ -920,7 +1039,11 @@ class RunService:
             )
 
         try:
-            self.supervisor.submit_task(run_id=run_id, task=task)
+            submit_action = getattr(self.supervisor, "submit_action", None)
+            if callable(submit_action):
+                submit_action(run_id=run_id, action=action)
+            else:
+                self.supervisor.submit_task(run_id=run_id, task=task)
         except RunActionConflictError:
             raise
         except RunActionError:
@@ -931,7 +1054,7 @@ class RunService:
             ) from exc
 
     def _perform_quantitative_action(self, *, paths: ScienceRunPaths, action: RunActionRequest) -> None:
-        runtime_config = load_config(str(self.config_path))
+        runtime_config = load_config(str(paths.config_snapshot))
         if action.type == "resume_quantitative":
             resume_quantitative_from_existing_idea(
                 run_dir=paths.run_dir,
@@ -1129,6 +1252,14 @@ class RunService:
                 ),
             }
         quantitative_mode = self._quantitative_mode(metadata)
+        computation_mode = self._computation_mode(metadata)
+        research = _mapping(options.get("research"))
+        research_depth = _text(research.get("research_depth")) or "full"
+        workflow_profile = _text(research.get("workflow_profile")) or "full_research"
+        prompt_profile = _text(research.get("prompt_profile")) or "research-default"
+        selected_model = _text(research.get("model_name")) or None
+        prompt_snapshot = _mapping(research.get("prompt_snapshot"))
+        project_id = _text(research.get("project_id")) or _text(web.get("project_id")) or None
         stored_quantitative = self._load_quantitative_state(paths)
         quantitative = self._quantitative_view(
             paths=paths,
@@ -1148,6 +1279,18 @@ class RunService:
             if raw_cancellation
             else None
         )
+        run_artifacts = list_artifacts(paths, state)
+        for artifact in self.list_run_job_artifacts(_text(metadata.get("science_run_id"))):
+            run_artifacts.append(
+                ArtifactView(
+                    artifact_id=str(artifact.get("artifact_id")),
+                    label=str(artifact.get("label") or "artifact"),
+                    stage=f"job:{artifact.get('kind') or 'science'}",
+                    media_type=str(artifact.get("media_type") or "application/octet-stream"),
+                    previewable=bool(artifact.get("previewable")),
+                    size_bytes=int(artifact.get("size_bytes") or 0),
+                )
+            )
         return RunView(
             run_id=_text(metadata.get("science_run_id")),
             topic=_text(immutable_inputs.get("topic")),
@@ -1157,6 +1300,7 @@ class RunService:
             execution_mode=_text(metadata.get("execution_mode")) or "DESIGN_ONLY",
             discipline_ids=[entry.label for entry in get_discipline_entries(options.get("discipline_ids"))],
             quantitative_mode=quantitative_mode,  # type: ignore[arg-type]
+            computation_mode=computation_mode,  # type: ignore[arg-type]
             language=_text(web.get("language")) or "zh-CN",
             remote_perception_authorized=bool(materials.get("remote_perception_authorized")),
             stages=view_stages,
@@ -1165,8 +1309,22 @@ class RunService:
             next_step=self._next_step(state),
             cancellation=cancellation,
             event_url=f"/api/runs/{_text(metadata.get('science_run_id'))}/events",
-            artifacts=list_artifacts(paths, state),
+            artifacts=run_artifacts,
             quantitative=quantitative,
+            research_depth=research_depth if research_depth in {"light", "full"} else "full",
+            workflow_profile=workflow_profile,
+            prompt_profile=prompt_profile,
+            model_name=selected_model,
+            prompt_version=_text(prompt_snapshot.get("prompt_version")) or None,
+            prompt_hash=_text(prompt_snapshot.get("prompt_hash")) or None,
+            project_id=project_id,
+            available_endpoints=(
+                ["survey", "idea"] if workflow_profile == "light_research" else ["survey", "idea", "exp_design", "author"]
+            ),
+            completed_outputs=[
+                stage_name for stage_name in SCIENCE_STAGE_NAMES
+                if _text(_mapping(stages.get(stage_name)).get("status")) == "COMPLETED"
+            ],
         )
 
     def _quantitative_view(

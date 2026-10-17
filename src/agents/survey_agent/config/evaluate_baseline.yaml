@@ -67,7 +67,7 @@ ModuleInfo:
     fulltext_provenance_enabled: true
     # OpenAlex is the literature-discovery provider; do not emit arXiv lanes.
     enable_arxiv_discovery: false
-    max_seed_paper_num: 18
+    max_seed_paper_num: 40
     use_seed_filter_LLM: True
     LLM_seed_threshold: 4
     reference_graph_depth: 1
@@ -80,7 +80,7 @@ ModuleInfo:
     download_timeout: 300
     log_related_work_num: -1 # set to -1 to log all
     related_work_threshold: 0.6
-    related_work_threshold_for_llm: 4 # 1-5 scale
+    related_work_threshold_for_llm: 3 # 1-5 scale
     relatedness_temperature: 1.0
     RAG_source_use_embedding_filter: True
     RAG_source_use_LLM_filter: False

@@ -30,6 +30,7 @@ from src.pipeline.survey_evidence_plan import (
     build_survey_evidence_plan,
 )
 from src.pipeline.paper_identity import canonical_paper_id, canonical_paper_ids
+from src.pipeline.subhypothesis_retrieval_storage import serialize_subhypothesis_retrieval
 from src.pipeline.sh_graph_provenance import (
     GRAPH_EXPANDED_CANDIDATE_ONLY,
     QUALIFIED_SH_CONTRIBUTION,
@@ -603,6 +604,20 @@ def test_survey_evidence_plan_source_rejects_mismatched_retrieval_project_identi
 
     with pytest.raises(ValueError, match="mismatched SH provenance"):
         generator._survey_evidence_plan_sources()
+
+
+def test_survey_evidence_plan_sources_resolve_stored_paper_and_semantic_ids() -> None:
+    generator = _generator()
+    provenance = {"project_id": "sci_project", "project_context_fingerprint": "context-A"}
+    paper = {"paperId": "W1", "sh_semantic_assessments": [
+        {"sub_hypothesis_id": "SH1", "evidence_spans": [{"text": "Original observation"}]}]}
+    retrieval = {**provenance, "plan": {
+        "project_context": {"project_context_fingerprint": "context-A"}, "subhypotheses": []},
+        "candidate_papers": [paper]}
+    generator.work_analyzer = SimpleNamespace(work_collector=SimpleNamespace(
+        sh_graph_provenance_artifact=provenance,
+        subhypothesis_retrieval_artifact=serialize_subhypothesis_retrieval(retrieval)))
+    assert generator._survey_evidence_plan_sources()["candidate_papers"] == [paper]
 
 
 def test_prepare_survey_evidence_plan_uses_builder_keyword_contract(monkeypatch) -> None:
