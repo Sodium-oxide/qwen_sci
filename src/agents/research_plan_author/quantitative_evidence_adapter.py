@@ -84,6 +84,15 @@ def load_quantitative_evidence_capsule(
         raise QuantitativeEvidenceLoadError("quantitative supplementary PDF differs from this handoff's formal publication")
     if not pdf_path.is_file() or hashlib.sha256(pdf_path.read_bytes()).hexdigest() != _text(pdf_record.get("sha256")):
         raise QuantitativeEvidenceLoadError("quantitative supplementary PDF is missing or modified")
+    from src.result_figures.integration import verify_figure_index
+
+    figure_indexes = manifest.get("artifacts", {}).get("result_figure_indexes", [])
+    root = path.parents[2]
+    for reference in figure_indexes:
+        verify_figure_index(reference, root=root, expected_identity=capsule_identity)
+    capsule["result_figure_indexes"] = figure_indexes
+    capsule["manifest_path"] = str(path)
+    capsule["manifest_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
     return capsule
 
 
@@ -145,6 +154,9 @@ def append_quantitative_evidence_section(
         "execution_mode": "NUMERICAL_SIMULATION",
         "result_kind": "SIMULATED",
         "empirical_claim_status": "NOT_EMPIRICAL",
+        "manifest_path": capsule.get("manifest_path"),
+        "manifest_sha256": capsule.get("manifest_sha256"),
+        "source_identity": capsule.get("source_identity"),
     }
     result["source_manifest"] = source_manifest
     return result

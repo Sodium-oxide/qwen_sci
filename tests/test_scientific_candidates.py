@@ -350,17 +350,24 @@ def test_runtime_discovers_new_objects_then_validates_independent_matrix(monkeyp
     assert any("entropy=" in log for log in collector.logger.messages)
 
 
-def test_claim_validator_blocks_best_candidate_when_comparison_is_insufficient():
+@pytest.mark.parametrize("statement", [
+    "Method Alpha is the best candidate.",
+    "Method Alpha is the optimal choice.",
+    "Method Alpha is best understood as a testable framework.",
+    "Method Alpha 是最佳候选。",
+])
+def test_claim_validator_does_not_gate_candidate_keywords(statement):
     from test_survey_evidence_bounded_writing import _generator
     generator = _generator()
     generator.survey_evidence_plan["scientific_candidate_comparison"] = {
         "best_candidate_claim_allowed": False, "candidate_aliases": ["Method Alpha"]}
-    claim = {"claim_text": "Method Alpha is the best candidate.", "sub_hypothesis_ids": ["SH1"],
+    claim = {"claim_text": statement, "sub_hypothesis_ids": ["SH1"],
              "claim_mode": "EVIDENCE_BACKED_SYNTHESIS", "evidence_paths": []}
     errors = generator._validate_claim_trace(claim["claim_text"], [claim])
+    assert not any("best_candidate" in error for error in errors)
+    claim["candidate_claim_type"] = "best_candidate"
+    errors = generator._validate_claim_trace(claim["claim_text"], [claim])
     assert any("best_candidate claim is prohibited" in error for error in errors)
-    claim["claim_text"] = "The study follows best practices."
-    assert not any("best_candidate" in error for error in generator._validate_claim_trace(claim["claim_text"], [claim]))
 
 
 def test_provider_errors_remain_failures_when_caching_is_disabled():
@@ -374,14 +381,25 @@ def test_provider_errors_remain_failures_when_caching_is_disabled():
     assert summary["failed_lanes"] == [] and summary["zero_result_lanes"] == ["success"]
 
 
-def test_comparison_final_prose_check_is_independent_of_optional_claim_trace():
-    from test_survey_evidence_bounded_writing import _generator
-    generator = _generator()
+@pytest.mark.parametrize("statement", [
+    "Method Alpha is the optimal choice.",
+    "Method Alpha is the best candidate.",
+    "Method Alpha is most suitable for the task.",
+    "Method Alpha is best understood as a testable framework.",
+])
+def test_final_survey_does_not_repair_or_reject_candidate_keywords(statement):
+    from test_survey_evidence_bounded_writing import _quality_draft, _quality_generator
+    generator = _quality_generator([])
+    generator.config.ModuleInfo.SurveyGenerator.evidence_bounded_section_quality_review_enabled = False
     generator.survey_evidence_plan["scientific_candidate_comparison"] = {
         "best_candidate_claim_allowed": False, "candidate_aliases": ["Method Alpha"]}
-    assert generator._candidate_comparison_errors("Method Alpha is the optimal choice.")
-    assert not generator._candidate_comparison_errors("Method Alpha needs further comparison. The study follows best practices.")
-    assert not generator._candidate_comparison_errors("We cannot conclude that Method Alpha is the best candidate.")
+    generator.extract_and_process_citations = lambda text: (text, [], [], [])
+
+    survey, references = generator.refine_draft(_quality_draft("## 1. Evidence\n\n" + statement))
+
+    assert statement in survey
+    assert references == []
+    assert generator.chat_agent.calls == []
 
 
 def test_same_alias_at_different_scientific_levels_is_not_merged():

@@ -274,14 +274,6 @@ def _process_output(
     pipeline_union_make = mineru["pipeline_union_make"]
     vlm_union_make = mineru["vlm_union_make"]
 
-    if f_draw_layout_bbox:
-        draw_layout_bbox(
-            pdf_info, pdf_bytes, local_md_dir, f"{pdf_file_name}_layout.pdf"
-        )
-
-    if f_draw_span_bbox:
-        draw_span_bbox(pdf_info, pdf_bytes, local_md_dir, f"{pdf_file_name}_span.pdf")
-
     if f_dump_orig_pdf:
         md_writer.write(
             f"{pdf_file_name}_origin.pdf",
@@ -318,7 +310,46 @@ def _process_output(
             json.dumps(model_output, ensure_ascii=False, indent=4),
         )
 
+    if f_draw_layout_bbox:
+        _write_optional_bbox_pdf(
+            draw_layout_bbox,
+            pdf_info,
+            pdf_bytes,
+            local_md_dir,
+            f"{pdf_file_name}_layout.pdf",
+            "layout",
+        )
+
+    if f_draw_span_bbox:
+        _write_optional_bbox_pdf(
+            draw_span_bbox,
+            pdf_info,
+            pdf_bytes,
+            local_md_dir,
+            f"{pdf_file_name}_span.pdf",
+            "span",
+        )
+
     logger.info(f"local output dir is {local_md_dir}")
+
+
+def _write_optional_bbox_pdf(
+    draw_bbox,
+    pdf_info,
+    pdf_bytes,
+    output_dir,
+    filename,
+    bbox_kind,
+):
+    try:
+        draw_bbox(pdf_info, pdf_bytes, output_dir, filename)
+    except Exception as exc:
+        logger.warning(
+            "MinerU skipped optional {} bounding-box PDF {}: {}",
+            bbox_kind,
+            filename,
+            exc,
+        )
 
 
 def parse_doc(

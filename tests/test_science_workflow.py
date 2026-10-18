@@ -237,6 +237,77 @@ def test_survey_service_reads_insufficient_status_without_success_manifest(tmp_p
     assert not (attempt / "survey_manifest.json").exists()
 
 
+@pytest.mark.parametrize("return_code", [0, 137])
+def test_survey_service_delivers_saved_draft_on_failure(tmp_path: Path, monkeypatch, return_code):
+    attempt = tmp_path / "attempt-001"
+    attempt.mkdir()
+    runtime_config = tmp_path / "runtime.yaml"
+    runtime_config.write_text("{}", encoding="utf-8")
+    request = SurveyStageRequest(config_path=runtime_config, topic="test topic", attempt_dir=attempt, survey_run_id="survey-test")
+    if not return_code:
+        _publish_json(request, "survey_status.json", {
+            "survey_status": "requires_review", "topic": request.topic, "reason": "citation whitelist mismatch",
+        })
+    _publish_json(request, "survey_draft.json", {"full_draft": "saved prose"})
+    _publish_json(request, "draft.json", {"full_draft": "original prose"})
+    (attempt / "survey_draft.md").write_text("saved prose")
+    monkeypatch.setattr(science_stages, "_survey_runtime_config", lambda _request: runtime_config)
+    monkeypatch.setattr(science_stages, "_stage_environment", lambda _config: {})
+
+    class Process:
+        pid = 100
+        stdout = BytesIO()
+
+        def wait(self):
+            return return_code
+
+    monkeypatch.setattr(science_stages.subprocess, "Popen", lambda *_args, **_kwargs: Process())
+    result = science_stages.run_survey_stage(request)
+    assert result.metadata["survey_status"] == "requires_review"
+    assert result.outputs["survey_draft_json"] == str(attempt / "survey_draft.json")
+    assert result.outputs["initial_draft_json"] == str(attempt / "draft.json")
+    assert result.outputs["survey_draft_markdown"] == str(attempt / "survey_draft.md")
+    if return_code:
+        assert "待复核" in (attempt / "survey_draft.md").read_text()
+        assert json.loads((attempt / "survey_draft.json").read_text())["survey_status"] == "requires_review"
+    assert not (attempt / "survey_manifest.json").exists()
+
+
+def test_survey_requires_review_is_partial_and_reuses_previous_attempt(tmp_path: Path):
+    paths, metadata = _new_run(tmp_path)
+    calls = []
+    defaults = _fake_services(calls)
+
+    def draft_survey(request):
+        if request.resume_dir is not None:
+            assert (request.resume_dir / "checkpoints" / "survey_checkpoint.json").is_file()
+            return defaults.survey(request)
+        calls.append(("survey", request))
+        payload = {"survey_status": "requires_review", "topic": request.topic, "reason": "revision failed"}
+        status_path = _publish_json(request, "survey_status.json", payload)
+        draft_path = _publish_json(request, "survey_draft.json", {"full_draft": "saved prose"})
+        (request.attempt_dir / "checkpoints").mkdir()
+        (request.attempt_dir / "checkpoints" / "survey_checkpoint.json").write_text("{}")
+        return ScienceStageResult(stage="survey", result_path=status_path,
+            outputs={"survey_status": str(status_path), "survey_draft_json": str(draft_path)},
+            identity={"survey_run_id": request.survey_run_id}, metadata=payload)
+
+    services = ScienceStageServices(survey=draft_survey, idea=defaults.idea, exp_design=defaults.exp_design, author=defaults.author)
+    outcome = run_science_workflow(paths=paths, metadata=metadata, services=services)
+    assert [name for name, _request in calls] == ["survey"]
+    assert outcome.state["status"] == "PARTIAL"
+    survey = outcome.state["stages"]["survey"]
+    assert survey["status"] == "FAILED"
+    assert survey["outcome"] == "requires_review"
+    assert survey["failure"]["error_type"] == "SurveyRequiresReview"
+    assert Path(survey["outputs"]["survey_draft_json"]).is_file()
+    assert outcome.state["stages"]["idea"]["status"] == "PENDING"
+    outcome = run_science_workflow(paths=paths, metadata=metadata, services=services)
+    assert outcome.state["status"] == "COMPLETED"
+    assert calls[1][1].resume_dir == calls[0][1].attempt_dir
+    assert outcome.state["stages"]["survey"].get("outcome") != "requires_review"
+
+
 def _fake_services(calls: list[tuple[str, object]]) -> ScienceStageServices:
     def survey(request: SurveyStageRequest) -> ScienceStageResult:
         calls.append(("survey", request))
@@ -814,6 +885,30 @@ def test_workflow_recovers_a_verified_manifest_from_an_interrupted_attempt(tmp_p
     assert outcome.state["stages"]["survey"]["attempt"] == 1
     events = [json.loads(line) for line in paths.events.read_text(encoding="utf-8").splitlines()]
     assert any(event["event_type"] == "STAGE_RECOVERED" for event in events)
+
+
+def test_interrupted_survey_with_export_still_resumes_pending_evaluation(tmp_path):
+    paths, metadata = _new_run(tmp_path)
+    calls = []
+    services = _fake_services(calls)
+    run_science_workflow(paths=paths, metadata=metadata, until="survey", services=services)
+    attempt = paths.run_dir / "survey" / "attempt-001"
+    (attempt / "checkpoints").mkdir()
+    (attempt / "checkpoints" / "survey_checkpoint.json").write_text(json.dumps({
+        "completed": ["draft", "review", "finalize", "export"],
+    }))
+    (attempt / "survey_draft.md").write_text("Already exported, evaluation pending")
+    with science_run.locked_science_run(paths):
+        _loaded, state = science_run.load_science_run(paths)
+        state["status"] = "RUNNING"
+        state["stages"]["survey"].update(status="RUNNING", finished_at=None,
+            execution_owner={"pid": 999_999_999, "hostname": socket.gethostname()})
+        science_run.save_science_state(paths, state)
+    calls.clear()
+    outcome = run_science_workflow(paths=paths, metadata=metadata, until="survey", services=services)
+    assert outcome.state["stages"]["survey"]["attempt"] == 2
+    assert calls[0][1].resume_dir == attempt
+    assert (attempt / "survey_draft.md").read_text() == "Already exported, evaluation pending"
 
 
 def test_workflow_retries_an_interrupted_attempt_without_overwriting_it(tmp_path) -> None:

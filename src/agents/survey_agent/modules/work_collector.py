@@ -5672,6 +5672,9 @@ class WorkCollector:
 
     def get_paper_title_abstract(self, paper_id: str, retry: int = 1):
         """Get paper title and abstract - 委托给 DataManager"""
+        saved_abstracts = getattr(self, "_survey_resume_abstracts", {})
+        if paper_id in saved_abstracts:
+            return tuple(saved_abstracts[paper_id])
         return self.data_manager.get_paper_title_abstract(paper_id, retry)
 
     def get_paper_title(self, paper_id: str, retry: int = 3):

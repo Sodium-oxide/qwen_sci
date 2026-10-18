@@ -112,6 +112,12 @@ def render_research_plan_document(
                     error=str(error),
                 )
     try:
+        from src.result_figures.reporting import report_result_figures
+
+        visual_figures = (*visual_figures, *report_result_figures(document))
+    except (ValueError, OSError, KeyError) as error:
+        raise AuthorRenderingError("result_figures", str(error), paths=paths) from error
+    try:
         required_page_count = normalize_minimum_pages(
             minimum_pages if minimum_pages is not None else settings.get("minimum_pages")
         )

@@ -1,9 +1,49 @@
 from pathlib import Path
+import json
 import re
 
+import pytest
 from omegaconf import OmegaConf
 
 from src import cli
+from src.agents.survey_agent.modules.survey_delivery import _fingerprint
+
+
+@pytest.mark.parametrize("mode", ["automatic", "resume", "new-run"])
+def test_survey_cli_selects_pending_checkpoint_or_explicit_new_run(monkeypatch, tmp_path, mode):
+    root = tmp_path / "outputs"
+    pending = root / "existing-run"
+    (pending / "checkpoints").mkdir(parents=True)
+    config = OmegaConf.create({"survey": {
+        "output": {"root_dir": str(root)}, "BasicInfo": {"topic": "Saved survey"},
+    }})
+    config_path = tmp_path / "survey.yaml"
+    OmegaConf.save(config, config_path)
+    (pending / "checkpoints" / "survey_checkpoint.json").write_text(json.dumps({
+        "schema_version": "survey_checkpoint_v1", "input_fingerprint": _fingerprint(config.survey),
+        "topic": "Saved survey", "context": {"outline": {}}, "completed": ["draft"],
+    }))
+    options = ["survey", "--config", str(config_path)]
+    if mode == "resume":
+        options.extend(["--resume", str(pending)])
+    else:
+        options.extend(["--topic", "Saved survey"])
+    if mode == "new-run":
+        options.extend(["--run-id", "new-survey"])
+    args = cli._build_root_parser().parse_args(options)
+    captured = []
+
+    def run(_command, *, env):
+        captured.append(OmegaConf.load(env["QWENSCI_CONFIG"]))
+        return 0
+
+    monkeypatch.setattr(cli, "_run_command", run)
+    assert args.func(args) == 0
+    basic = captured[0].survey.BasicInfo
+    assert Path(basic.base_dir) == (root / "new-survey" if mode == "new-run" else pending)
+    assert basic.topic == "Saved survey"
+    if mode == "resume":
+        assert Path(basic.survey_resume_dir) == pending
 
 
 def test_survey_topic_with_hydra_sensitive_characters_uses_temporary_config(

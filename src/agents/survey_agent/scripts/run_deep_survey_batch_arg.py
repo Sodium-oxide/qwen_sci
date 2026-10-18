@@ -11,6 +11,7 @@ from modules.work_collector import WorkCollector
 from modules.database import Database
 from modules.work_analyzer import WorkAnalyzer
 from modules.survey_generator import SurveyGenerator
+from modules.survey_delivery import resume_survey_delivery, run_survey_delivery, survey_checkpoint_pending
 from topics.Benchmark_topics import SURVEYGEN_TOPICS, AUTOSURVEY_TOPICS, SUBTEST_TOPICS
 from utils.config_utils import merge_with_default_survey_config
 from utils.file_utils import write_domain_header, write_topic_header, write_result, write_domain_result, write_header
@@ -25,6 +26,9 @@ logger = get_logger("Deep Survey Batch")
 
 def run_pipeline_batch(config, work_collector, database, work_analyzer, survey_generator, judge, code_collector, code_analyzer, code_report_generator):
     try:
+        resumed = resume_survey_delivery(survey_generator, judge, isolate_topic=True)
+        if resumed is not None:
+            return resumed[0].get("survey_status") != "requires_review", *resumed
         if getattr(config, "AblationInfo", None) and getattr(config.AblationInfo, 'work_collector_disabled', False):
             logger.info("Ablation mode: Using database retrieval instead of work_collector expansion...")
             ablation_db_path = getattr(config.AblationInfo, 'db_path')
@@ -136,27 +140,16 @@ def run_pipeline_batch(config, work_collector, database, work_analyzer, survey_g
             survey_generator.log_outline(outline)
             logger.info("Survey generation completed.")
             logger.info("Drafting survey content...")
-            draft = survey_generator.draft_survey(
-                intra_analysis_results, inter_analysis_results, outline, code_report
-            )
+            draft = None
 
-        logger.info("Reviewing and revising survey draft...")
-        draft = survey_generator.review_and_revise_survey_in_parts(draft, outline, code_report, env_report)
-        logger.info("Reviewing and revising survey completed.")
-
-        logger.info("Survey drafting completed.")
-        logger.info("Refining survey draft...")
-        survey, references = survey_generator.refine_draft(draft, code_report, env_report)
-        survey_generator.save_survey(survey, references)
-        logger.info("Survey refinement completed.")
-
-        logger.info("Evaluating survey...")
-        results, reasons = judge.evaluate(survey, references)
-        logger.info("Survey evaluation completed.")
+        results, reasons = run_survey_delivery(
+            survey_generator, judge, intra_analysis_results, inter_analysis_results,
+            outline, code_report, env_report, draft=draft,
+        )
     except Exception as e:
         logger.error(f"Error occurred during pipeline execution: {e}")
         return False, None, None
-    return True, results, reasons
+    return results.get("survey_status") != "requires_review", results, reasons
 
 @hydra.main(config_path="../config", config_name="deep_survey_batch", version_base=None)
 def main(config):
@@ -197,7 +190,7 @@ def main(config):
                 save_md_path = os.path.join(save_path, f"{topic.replace(' ', '_')}.md")
                 save_json_path = os.path.join(save_path, f"{topic.replace(' ', '_')}.json")
                 
-                if os.path.exists(save_md_path) and os.path.exists(save_json_path):
+                if os.path.exists(save_md_path) and os.path.exists(save_json_path) and not survey_checkpoint_pending(config, topic):
                     logger.info(f"Skipping topic '{topic}' as both {topic}.md and {topic}.json already exist.")
                     if not config.ModuleInfo.Judge.skip_evaluation:
                         write_result(config.BasicInfo.evaluation_save_path, topic, {}, "Skipped: files already exist")

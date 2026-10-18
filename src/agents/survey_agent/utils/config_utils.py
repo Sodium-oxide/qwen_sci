@@ -63,12 +63,18 @@ def merge_with_default_survey_config(config: DictConfig) -> DictConfig:
     )
     topic = str(OmegaConf.select(merged, "BasicInfo.topic") or "").strip()
     if topic and not _has_explicit_survey_artifact_paths(merged):
-        from src.agents.survey_agent.utils.topic_survey_storage import apply_topic_survey_paths
+        from src.agents.survey_agent.utils.topic_survey_storage import apply_topic_survey_paths, get_survey_output_root
+        from src.agents.survey_agent.modules.survey_delivery import find_pending_survey_checkpoint
 
+        run_id = OmegaConf.select(merged, "BasicInfo.survey_run_id")
+        if not run_id and not OmegaConf.select(merged, "BasicInfo.survey_resume_dir"):
+            pending = find_pending_survey_checkpoint(merged, get_survey_output_root(merged))
+            if pending is not None:
+                run_id = pending.name
         apply_topic_survey_paths(
             merged,
             topic,
-            research_run_id=OmegaConf.select(merged, "BasicInfo.survey_run_id"),
+            research_run_id=run_id,
         )
     return merged
 

@@ -5,7 +5,7 @@ import threading
 from contextvars import copy_context
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from concurrent.futures import (
     FIRST_COMPLETED,
     ThreadPoolExecutor,
@@ -2041,6 +2041,7 @@ class ChatAgent:
         max_output_tokens: int = 16000,
         response_format: str | None = None,
         max_in_flight_tokens: int | None = None,
+        on_result: Callable[[int, str], None] | None = None,
     ) -> list[str]:
         if workers is None:
             workers = self.batch_workers
@@ -2210,6 +2211,8 @@ class ChatAgent:
                                 )
                                 continue
                             results[completed_index] = response
+                            if on_result is not None:
+                                on_result(completed_index, response)
                             self.logger.info(
                                 "Batch request %s/%s completed.",
                                 completed_index + 1,
@@ -2295,6 +2298,8 @@ class ChatAgent:
                     )
                     continue
                 res_l[index] = response
+                if on_result is not None:
+                    on_result(index, response)
                 log_info = getattr(self.logger, "info", None)
                 if callable(log_info):
                     log_info(

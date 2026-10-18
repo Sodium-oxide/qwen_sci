@@ -96,7 +96,7 @@ interface FormProps {
   refinement: RefinementForm; setRefinement: (value: RefinementForm) => void; revisionAccepted: boolean; setRevisionAccepted: (value: boolean) => void; send: (type: RunActionType, extras?: Record<string, unknown>) => void;
 }
 
-function ActionButton({ action, busy, onClick }: { action: RunActionType; busy: boolean; onClick: () => void }) { return <button className="secondary quant-action" type="button" disabled={busy} onClick={onClick}>{LABELS[action] || action}</button>; }
+function ActionButton({ action, busy, onClick }: { action: RunActionType; busy: boolean; onClick: () => void }) { return <button className="button secondary quant-action" type="button" disabled={busy} onClick={onClick}>{LABELS[action] || action}</button>; }
 
 function QuantitativeActionForm(props: FormProps) {
   const { actions, quantitative, busy, send } = props;

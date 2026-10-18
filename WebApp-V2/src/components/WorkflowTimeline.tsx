@@ -51,11 +51,11 @@ export function WorkflowTimeline({ run, events, connection, onAction }: { run: R
       <div className="panel-head"><div><span className="eyebrow">Auditable pipeline</span><h2>主流程状态</h2></div><span className="badge blue">Survey → Idea → Design → Author</span></div>
       <div className="stage-map">{STAGES.map(([key, title, copy]) => {
         const stage = run?.stages[key];
-        return <article className="stage-node" key={key}><span className={`status ${stage?.status ?? "PENDING"}`}>{stage?.status ?? "PENDING"}</span><h3>{title}</h3><p>{copy}</p><p>第 {stage?.attempt ?? 0} 次尝试</p>{stage?.failure?.message && <p className="stage-failure">{stage.failure.message}</p>}</article>;
+        return <article className="stage-node" data-status={stage?.status ?? "PENDING"} key={key}><span className={`status ${stage?.status ?? "PENDING"}`}>{stage?.status ?? "PENDING"}</span><h3>{title}</h3><p>{copy}</p><p>第 {stage?.attempt ?? 0} 次尝试</p>{stage?.failure?.message && <p className="stage-failure">{stage.failure.message}</p>}</article>;
       })}</div>
       {run?.cancellation && <p className="field-hint">{run.cancellation.acknowledged_at ? "研究已在安全边界停止；已完成的成果仍可查看并可选择终点恢复。" : "正在请求安全停止：当前阶段会先完成持久化，再停止后续阶段。"}</p>}
-      {canResume && <div className="action-row"><label>恢复终点<select value={resumeUntil} onChange={(event) => setResumeUntil(event.target.value as ScienceStage)}><option value="survey">Survey</option><option value="idea">Survey + Idea</option><option value="exp_design">Survey + Idea + ExperimentDesign</option><option value="author">完整流程至 Author</option></select></label><button type="button" className="secondary" onClick={() => onAction({ type: "resume_science", until: resumeUntil })}>恢复当前科学流程</button></div>}
-      {canCancel && <div className="action-row"><button type="button" className="secondary danger-text" onClick={() => onAction({ type: "cancel_science" })}>在当前阶段后中止研究</button><span className="field-hint">不会删除已完成成果，也不会强杀正在写入的阶段。</span></div>}
+      {canResume && <div className="action-row"><label>恢复终点<select value={resumeUntil} onChange={(event) => setResumeUntil(event.target.value as ScienceStage)}><option value="survey">Survey</option><option value="idea">Survey + Idea</option><option value="exp_design">Survey + Idea + ExperimentDesign</option><option value="author">完整流程至 Author</option></select></label><button type="button" className="button secondary" onClick={() => onAction({ type: "resume_science", until: resumeUntil })}>恢复当前科学流程</button></div>}
+      {canCancel && <div className="action-row"><button type="button" className="button danger" onClick={() => onAction({ type: "cancel_science" })}>在当前阶段后中止研究</button><span className="field-hint">不会删除已完成成果，也不会强杀正在写入的阶段。</span></div>}
     </section>
     <section className="panel event-panel">
       <div className="panel-head compact"><div><h2>完整运行事件</h2><p className="field-hint">事件来自持久化记录；展开后可查看已脱敏的完整事件数据。</p></div><span className="event-state">{connection}</span></div>

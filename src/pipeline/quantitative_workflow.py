@@ -1257,7 +1257,11 @@ def qualify_quantitative_execution(
         qualification_path=str(qualification_path),
     )
     atomic_write_json(ledger_path, updated_ledger)
-    return {"qualification": str(qualification_path), "ledger": str(ledger_path)}
+    from src.result_figures.integration import ensure_quantitative_figures, optional_figures
+
+    figures = optional_figures(ensure_quantitative_figures, root, version_dir, execution_id)
+    return {"qualification": str(qualification_path), "ledger": str(ledger_path),
+        **({"figures_manifest": figures["manifest_path"]} if figures else {})}
 
 
 def propose_quantitative_refinement(

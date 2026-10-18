@@ -99,4 +99,21 @@ def verify_manifest(path: Path, expected_identity: dict | None = None) -> dict:
                     result["validation_status"] == "QUALIFIED" and checked["unresolved_items"] != result["unresolved_items"]
                 ):
                     raise ValueError("qualification_differs_from_raw_execution:unresolved_items")
+    from src.result_figures.validation import verify_figure_manifest
+
+    expected_executions = {row["execution_id"] for result in handoff["results"] for row in result["lineage"]}
+    for artifact in manifest["artifacts"]:
+        if artifact.get("role") != "result_figures":
+            continue
+        figure_manifest = verify_figure_manifest(safe_path(root, artifact["path"]), root=root.parent,
+            expected_identity={**handoff["source_binding"], "branch": "computation"})
+        identity = figure_manifest["source_identity"]
+        if identity["execution_id"] not in expected_executions:
+            raise ValueError("figure_without_handoff_execution")
+        dependencies = [*figure_manifest["source_refs"], *[item for figure in figure_manifest["figures"]
+            for item in [*figure["artifacts"], *figure["outputs"]]]]
+        for item in dependencies:
+            dependency = safe_path(root.parent, item["path"]).relative_to(root).as_posix()
+            if dependency not in registered:
+                raise ValueError("unsealed_result_figure_dependency")
     return handoff

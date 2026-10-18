@@ -1436,6 +1436,9 @@ class WorkAnalyzer:
 
     def get_paper_keynote(self, paper_id: str, ds_keynote_fallback: bool = False):
         """Get the keynote of a paper by its ID."""
+        saved_keynotes = getattr(self, "_survey_resume_keynotes", {})
+        if paper_id in saved_keynotes:
+            return saved_keynotes[paper_id]
         hash_id = get_hash(paper_id)
 
         if canonical_paper_id(paper_id) in FULLTEXT_READING_BYPASS_PAPER_IDS:

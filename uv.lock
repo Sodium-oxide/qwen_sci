@@ -3821,6 +3821,16 @@ wheels = [
 ]
 
 [[package]]
+name = "pymupdf"
+version = "1.26.7"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/48/d6/09b28f027b510838559f7748807192149c419b30cb90e6d5f0cf916dc9dc/pymupdf-1.26.7.tar.gz", hash = "sha256:71add8bdc8eb1aaa207c69a13400693f06ad9b927bea976f5d5ab9df0bb489c3", size = 84327033, upload-time = "2025-12-11T21:48:50.694Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2a/6b/3de1714d734ff949be1e90a22375d0598d3540b22ae73eb85c2d7d1f36a9/pymupdf-1.26.7-cp310-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:69dfc78f206a96e5b3ac22741263ebab945fdf51f0dbe7c5757c3511b23d9d72", size = 24115727, upload-time = "2025-12-11T21:47:51.274Z" },
+    { url = "https://files.pythonhosted.org/packages/62/9b/f86224847949577a523be2207315ae0fd3155b5d909cd66c274d095349a3/pymupdf-1.26.7-cp310-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:1d5106f46e1ca0d64d46bd51892372a4f82076bdc14a9678d33d630702abca36", size = 24324386, upload-time = "2025-12-12T14:58:45.483Z" },
+]
+
+[[package]]
 name = "pyobjc"
 version = "12.1"
 source = { registry = "https://pypi.org/simple" }
@@ -6259,6 +6269,11 @@ pdf = [
     { name = "reportlab" },
     { name = "ultralytics" },
 ]
+result-figures = [
+    { name = "matplotlib" },
+    { name = "pillow" },
+    { name = "pymupdf" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -6461,6 +6476,11 @@ pdf = [
     { name = "qwen-vl-utils", specifier = "==0.0.14" },
     { name = "reportlab", specifier = "==4.4.7" },
     { name = "ultralytics", specifier = "==8.3.243" },
+]
+result-figures = [
+    { name = "matplotlib", specifier = "==3.10.8" },
+    { name = "pillow", specifier = "==12.0.0" },
+    { name = "pymupdf", specifier = "==1.26.7" },
 ]
 
 [[package]]

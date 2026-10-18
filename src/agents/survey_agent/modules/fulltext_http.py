@@ -25,7 +25,7 @@ class FulltextHttpClient:
         self.settings = settings
         self.logger = logger
         self.contact_email = self._safe_header_value(contact_email)
-        self.max_retries = max(0, int(self._setting("fulltext_http_max_retries", 5) or 0))
+        self.max_retries = max(0, int(self._setting("fulltext_http_max_retries", 1) or 0))
         self.retry_base_delay_seconds = self._positive_float(
             self._setting("fulltext_http_retry_base_delay_seconds", 1), default=1.0
         )

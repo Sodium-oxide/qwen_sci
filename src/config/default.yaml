@@ -350,6 +350,7 @@ survey:
     research_design_inventory: {}
     project_context_artifact_path: ""
     survey_run_id: ""
+    survey_resume_dir: ""
     subhypotheses: []
     subhypothesis_decomposition: {}
     subhypothesis_decomposition_path: ""
@@ -436,7 +437,7 @@ survey:
       fulltext_per_host_concurrency: 2
       # Bounded, polite retries are only for transient GET failures (429/5xx
       # and transport errors), never for authentication or subscription walls.
-      fulltext_http_max_retries: 5
+      fulltext_http_max_retries: 1
       fulltext_http_retry_base_delay_seconds: 1
       fulltext_http_retry_max_delay_seconds: 10
       fulltext_connect_timeout_seconds: 10
@@ -1295,3 +1296,12 @@ pipeline:
     - "constraint"
     - "retrieval"
     - "augmentation"
+result_figures:
+  enabled: true
+  qualified_only: true
+  formats: [png, pdf]
+  max_figures_per_execution: 6
+  timeout_seconds_per_figure: 30
+  max_total_seconds_per_execution: 120
+  max_output_bytes: 52428800
+  failure_policy: continue_with_warning

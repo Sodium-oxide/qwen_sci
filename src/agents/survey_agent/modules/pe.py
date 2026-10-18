@@ -1135,6 +1135,7 @@ Score each dimension from 0 to 10:
 - framework: fidelity to the supplied section outline, logical organisation, and terminological consistency.
 
 Give at most {max_suggestions} concrete, local revision suggestions.  Each suggestion must be feasible without adding, removing, or replacing a citation, changing any heading, or introducing a new empirical result.
+For every suggestion, copy the affected sentence or excerpt verbatim into target_excerpts. Do not select headings or unaffected sentences.
 
 Previous Section:
 {previous_section_text}
@@ -1155,22 +1156,24 @@ Return exactly one JSON object and nothing else:
     "scientific": 0,
     "framework": 0
   }},
-  "suggestions": ["specific, local suggestion"]
+  "suggestions": ["specific, local suggestion"],
+  "target_excerpts": ["exact affected sentence from the current section"]
 }}
 """
 
 
-EVIDENCE_BOUNDED_SECTION_QUALITY_REVISE = """Revise one section of an evidence-bounded academic survey on {topic}.
+EVIDENCE_BOUNDED_SECTION_QUALITY_REVISE = """Repair specific sentences in an evidence-bounded academic survey on {topic}.
 
 Apply only the supplied quality suggestions.  This is a constrained editorial revision, not new research or a new evidence synthesis.
 
 Strict rules:
-1. Return the complete revised section, including all existing Markdown headings.
-2. Preserve every heading line verbatim.  Do not add, remove, rename, reorder, or promote/demote headings.
-3. Preserve the set of cited papers exactly.  Do not add, remove, replace, or edit any inline citation token in angle brackets.
+1. Return only sentence replacements using the supplied sentence_id values. Do not return a rewritten section.
+2. Edit only the listed editable sentences. Headings and all other text are read-only.
+3. Preserve every inline citation token in each edited sentence exactly, including its order. Do not move citations between sentences.
 4. Do not add empirical facts, numerical results, causal claims, or paper-specific claims that are not already expressed in the original section.
 5. Keep the section aligned with the immutable outline and within {section_word_cap} words.
-6. Improve prose, caveats, transitions, precision, and explanation where possible; if no safe improvement is possible, return the original section unchanged.
+6. Address only the supplied issues. If no safe improvement is possible, return an empty replacements list.
+7. Correct every reported validation failure from the previous attempt. Start from the original text, not a rejected revision.
 
 Immutable Section Outline:
 {section_outline}
@@ -1178,12 +1181,18 @@ Immutable Section Outline:
 Original Section:
 {section_text}
 
+Editable Sentences:
+{editable_sentences}
+
 Quality Suggestions:
 {suggestions}
 
+Previous Attempt Validation Errors:
+{validation_errors}
+
 Return exactly one JSON object and nothing else:
 {{
-  "revised_section": "complete revised section text"
+  "replacements": [{{"sentence_id": {example_sentence_id}, "new_text": "replacement sentence text"}}]
 }}
 """
 

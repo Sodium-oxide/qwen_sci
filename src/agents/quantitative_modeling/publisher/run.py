@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -20,6 +21,8 @@ from src.agents.research_plan_author.latex_compiler import (
 from src.agents.research_plan_author.pdf_validator import PdfValidationError, validate_pdf
 from src.pipeline.quantitative_workflow import QuantitativeWorkflowError, require_experiment_design_completed
 from src.pipeline.science_run import atomic_write_json, atomic_write_text, utc_now
+from src.result_figures.integration import index_visual_figures
+from src.result_figures.validation import audit_pdf, check_reference
 
 
 QUANTITATIVE_PDF_RENDER_MANIFEST_SCHEMA_VERSION = "quantitative_pdf_render_manifest_v1"
@@ -62,6 +65,9 @@ def _finalized_records(run_dir: Path) -> list[dict[str, Any]]:
                 "qualified_entries": qualified,
                 "lineage_summary": lineage,
                 "finalization_path": str(finalization_path),
+                "result_figures": index_visual_figures(finalized["finalization"]["artifacts"]["result_figures"],
+                    root=run_dir, section_title="Numerical Results")
+                    if finalized["finalization"]["artifacts"].get("result_figures") else [],
             }
         )
     if not records:
@@ -82,6 +88,7 @@ def _validate_quantitative_pdf_structure(pdf_path: Path, *, renderer: Path) -> d
         raise QuantitativePublicationError("quantitative PDF must not contain an acknowledgements section")
     return {
         **validation.report,
+        "text_geometry": audit_pdf(pdf_path),
         "quantitative_structure": {
             "text_extracted": bool(visible_text.strip()),
             "acknowledgements_absent": True,
@@ -118,6 +125,12 @@ def publish_quantitative_models_pdf(
     tex = render_quantitative_models_tex(records)
     publication_dir.mkdir(parents=True, exist_ok=False)
     project_dir.mkdir()
+    for record in records:
+        for figure in record["result_figures"]:
+            source = Path(figure["source_path"])
+            reference = {"path": source.relative_to(root).as_posix(), "sha256": figure["source_sha256"]}
+            shutil.copyfile(check_reference(root, reference), project_dir / figure["file"])
+            check_reference(project_dir, {"path": figure["file"], "sha256": figure["source_sha256"]})
     atomic_write_text(tex_path, tex)
     try:
         engine = resolve_executable(
@@ -173,6 +186,7 @@ def publish_quantitative_models_pdf(
             for record in records
         ],
         "execution_boundary": "NUMERICAL_SIMULATION / SIMULATED / NOT_EMPIRICAL",
+        "result_figures": [figure for record in records for figure in record["result_figures"]],
     }
     atomic_write_json(manifest_path, manifest)
     return {

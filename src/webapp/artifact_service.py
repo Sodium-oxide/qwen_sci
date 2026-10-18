@@ -50,6 +50,12 @@ def artifact_index(paths: ScienceRunPaths, state: Mapping[str, object]) -> dict[
                     indexed[f"{stage_name}:{output_name}"] = path
     _index_stage_images(paths, indexed)
     _index_author_pdfs(paths, indexed)
+    survey_root = paths.run_dir / _STAGE_ARTIFACT_DIRECTORIES["survey"]
+    for attempt in sorted(survey_root.glob("attempt-*")):
+        for name in ("draft.json", "draft.md", "survey_draft.json", "survey_draft.md", "survey_status.json"):
+            path = _safe_path(paths, str(attempt / name))
+            if path is not None and path not in indexed.values():
+                indexed[f"survey:draft:{attempt.name}/{name}"] = path
     for manifest_path in (paths.materials_manifest, paths.multimodal_input_manifest):
         if manifest_path.is_file():
             indexed[f"inputs:{manifest_path.stem}"] = manifest_path
@@ -64,12 +70,45 @@ def artifact_index(paths: ScienceRunPaths, state: Mapping[str, object]) -> dict[
         for path in quantitative_files[:256]:
             if path.suffix.casefold() not in allowed_suffixes or path.name in excluded_names:
                 continue
+            if "figures" in path.relative_to(quantitative_root).parts or any(
+                part.startswith(".") for part in path.relative_to(quantitative_root).parts):
+                continue
             try:
                 relative = path.resolve().relative_to(quantitative_root.resolve()).as_posix()
             except (OSError, ValueError):
                 continue
             indexed[f"quantitative:{relative}"] = path
+    _index_result_figures(paths, indexed)
     return indexed
+
+
+def _index_result_figures(paths: ScienceRunPaths, indexed: dict[str, Path]) -> None:
+    from src.result_figures.validation import verify_figure_manifest, check_reference
+    from src.agents.computational_experiment_agent.artifacts import safe_path
+
+    root = paths.run_dir.resolve()
+    candidates = []
+    for directory in ("quantitative", "computation", "figure_deliveries"):
+        candidates.extend((root / directory).glob("**/figures/figures_manifest.json"))
+    for pointer in sorted(candidates):
+        try:
+            pointer.relative_to(root)
+            if any(part.startswith(".") for part in pointer.relative_to(root).parts):
+                continue
+            manifest = verify_figure_manifest(pointer, root=root)
+            committed = safe_path(root, manifest["committed_manifest"])
+            if committed.read_bytes() != pointer.read_bytes():
+                continue
+            branch = manifest["source_identity"]["branch"]
+            indexed[f"{branch}:figure:{committed.relative_to(root).as_posix()}"] = committed
+            for figure in manifest["figures"]:
+                if figure["status"] != "SUCCEEDED":
+                    continue
+                for reference in [*figure["outputs"], *figure["artifacts"]]:
+                    candidate = check_reference(root, reference)
+                    indexed[f"{branch}:figure:{candidate.relative_to(root).as_posix()}"] = candidate
+        except (ValueError, OSError, KeyError, TypeError):
+            continue
 
 
 def _index_author_pdfs(paths: ScienceRunPaths, indexed: dict[str, Path]) -> None:

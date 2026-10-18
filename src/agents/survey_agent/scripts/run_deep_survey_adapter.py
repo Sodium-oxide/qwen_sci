@@ -41,6 +41,7 @@ from modules.work_collector import WorkCollector
 from modules.database import Database
 from modules.work_analyzer import WorkAnalyzer
 from modules.survey_generator import SurveyGenerator
+from modules.survey_delivery import resume_survey_delivery, run_survey_delivery
 from modules.judge import Judge
 from utils.file_utils import write_result, save_analysis_artifacts
 from modules.code_collector import CodeCollector, CodeAnalyzer
@@ -175,6 +176,9 @@ def save_draft(draft, output_dir: str, logger_instance=None):
 
 
 def run_pipeline_with_saving(config, work_collector, database, work_analyzer, survey_generator, judge, code_collector, code_analyzer, code_report_generator, artifacts_dir, logger_instance):
+    resumed = resume_survey_delivery(survey_generator, judge)
+    if resumed is not None:
+        return resumed
     """
     Run the deep survey pipeline with immediate artifact saving.
     This is a modified version of run_pipeline that saves intermediate results immediately.
@@ -292,31 +296,13 @@ def run_pipeline_with_saving(config, work_collector, database, work_analyzer, su
     logger_instance.info("Drafting survey content...")
     
     # generate draft
-    draft = survey_generator.draft_survey(
-        intra_analysis_results, inter_analysis_results, outline,
-            code_report=code_report if config.ModuleInfo.SurveyGenerator.include_code_report else None
+    result = run_survey_delivery(
+        survey_generator, judge, intra_analysis_results, inter_analysis_results,
+        outline, code_report, env_report,
     )
-    logger_instance.info("Survey drafting completed.")
-    
-    # Save draft immediately after generation
-    if artifacts_dir:
-        save_draft(draft, artifacts_dir, logger_instance)
-
-    logger_instance.info("Reviewing and revising survey draft...")
-    draft = survey_generator.review_and_revise_survey_in_parts(draft, outline, code_report, env_report)
-    logger_instance.info("Reviewing and revising survey completed.")
-
-    logger_instance.info("Survey drafting completed.")
-    logger_instance.info("Refining survey draft...")
-    survey, references = survey_generator.refine_draft(draft, code_report, env_report)
-    survey_generator.save_survey(survey, references)
-    logger_instance.info("Survey refinement completed.")
-
-    logger_instance.info("Evaluating survey...")
-    result, reason = judge.evaluate(survey, references)
-    logger_instance.info("Survey evaluation completed.")
-
-    return result, reason
+    if artifacts_dir and "initial_draft" in survey_generator._survey_checkpoint.state:
+        save_draft(survey_generator._survey_checkpoint.state["initial_draft"], artifacts_dir, logger_instance)
+    return result
 
 
 def parse_args():
@@ -349,9 +335,10 @@ def main():
     
     # Override output paths
     config_dict.setdefault('BasicInfo', {})
-    config_dict['BasicInfo']['save_path'] = f'{output_dir}'
+    config_dict['BasicInfo']['save_path'] = os.path.join(output_dir, 'survey.md')
+    config_dict['BasicInfo']['save_json_path'] = os.path.join(output_dir, 'survey.json')
     config_dict['BasicInfo']['evaluation_save_path'] = f'{output_dir}/evaluation.txt'
-    config_dict['BasicInfo']['base_dir'] = PROJECT_ROOT
+    config_dict['BasicInfo']['base_dir'] = output_dir
     
     # Convert to OmegaConf
     config = OmegaConf.create(config_dict)

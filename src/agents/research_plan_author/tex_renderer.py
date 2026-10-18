@@ -491,9 +491,16 @@ def _copy_visual_figures(
             raise TexRenderError("visual figure filename must be a simple relative filename")
         if not source_path.is_file():
             raise TexRenderError(f"visual figure source does not exist: {source_path}")
+        if figure.get("source_sha256"):
+            from src.pipeline.science_run import file_sha256
+
+            if file_sha256(source_path) != figure["source_sha256"]:
+                raise TexRenderError("result figure source hash no longer matches")
         destination = project_dir / file_name
         try:
             shutil.copyfile(source_path, destination)
+            if figure.get("source_sha256") and file_sha256(destination) != figure["source_sha256"]:
+                raise TexRenderError("result figure changed while copying")
         except OSError as error:
             raise TexRenderError(f"cannot copy visual figure '{file_name}': {error}") from error
         copied.append(
