@@ -7,6 +7,7 @@ from src.agents.idea_agent.utils.workflow.idea_debate import (
     DEBATE_PROMPT_CHAR_LIMIT,
     _apply_revision,
     _debate_prompt,
+    _baseline_concerns,
     cross_seed_debate,
     debate_direction_set,
     effective_scientific_contract,
@@ -49,6 +50,31 @@ def test_debate_keeps_direction_and_gap_ids_and_runs_two_rounds_without_llm() ->
         "SCIENTIFICALLY_QUALIFIED",
         "SCIENTIFICALLY_QUALIFIED_WITH_UNCERTAINTY",
     }
+
+
+def test_debate_does_not_manufacture_gap_mapping_or_assumption_defects() -> None:
+    candidate = _direction()
+    candidate["target_gap_ids"] = []
+    candidate["assumptions"] = []
+
+    baseline = _baseline_concerns(candidate, profile_drift={}, round_number=1)
+
+    assert baseline["severity"] == "none"
+    assert baseline["scientific_concern"] == ""
+
+
+def test_debate_handoff_preserves_candidate_metadata_and_separates_operational_constraints() -> None:
+    prompt = _debate_prompt(
+        direction=_direction(), topic="A general question", round_number=1,
+        profile_id="physical_materials_chemical", profile_context="", profile_drift={}, baseline={},
+        survey_handoff={
+            "topic": "A general question", "constraints": {"may_generate_new_gap": False},
+            "scientific_candidates": {"records": [{"name": "Candidate", "reference_answer": "A mechanistic reference"}]},
+        },
+    )
+
+    assert "may_generate_new_gap" not in prompt
+    assert "A mechanistic reference" in prompt
 
 
 def test_debate_prompt_retains_the_primary_gap_and_context_constraints() -> None:

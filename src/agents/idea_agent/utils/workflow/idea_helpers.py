@@ -5,6 +5,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, Dict, List
 
+from src.agents.idea_agent.agent.artifacts import artifact_get
 from src.agents.idea_agent.utils.workflow.idea_contract import normalize_idea_contract
 
 
@@ -325,6 +326,8 @@ def build_direction_result_document(
         "schema_version": "idea_result_v5",
         "topic": topic,
         "survey_binding": binding,
+        "external_searches": artifact_get(artifact, "external_searches", []),
+        "external_references": artifact_get(artifact, "external_references", []),
         "directions": [direction_payload],
         "primary_direction": _text(direction.get("direction_mode") or direction.get("idea_taste_mode")) or "default",
         "legacy_best_entry": dict(direction),

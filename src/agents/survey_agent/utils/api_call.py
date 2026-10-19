@@ -51,6 +51,8 @@ import json
 import time
 import diskcache as dc
 
+DEFAULT_CHAT_MAX_OUTPUT_TOKENS = 16000
+
 try:
     from pyalex import Works as PyAlexWorks
     from pyalex import config as pyalex_config
@@ -1613,6 +1615,21 @@ class ChatAgent:
         # policy.
         response.raise_for_status()
 
+    @staticmethod
+    def _review_deadline_lines(response, deadline):
+        pending = bytearray()
+        for chunk in response.iter_content(chunk_size=1):
+            if time.monotonic() >= deadline:
+                response.close()
+                raise requests.Timeout("Review request deadline exceeded while streaming.")
+            if chunk:
+                pending.extend(chunk)
+                if pending.endswith(b"\n"):
+                    yield bytes(pending).rstrip(b"\r\n")
+                    pending.clear()
+        if pending:
+            yield bytes(pending)
+
     @retry(
         stop=stop_after_attempt(10),
         wait=wait_exponential(min=1, max=300),
@@ -1626,10 +1643,11 @@ class ChatAgent:
         temperature: float = 0.5,
         debug: bool = False,
         model=None,
-        max_output_tokens: int = 16000,
+        max_output_tokens: int = DEFAULT_CHAT_MAX_OUTPUT_TOKENS,
         response_format: str | None = None,
         request_timeout: float | None = None,
         strict_input_budget: bool = False,
+        request_deadline: float | None = None,
     ) -> str:
         """Chat with remote LLM, return result. Minimal logging; no file writes."""
         from src.llm.research_policy import research_messages, research_policy
@@ -1715,6 +1733,11 @@ class ChatAgent:
             if request_timeout <= 0:
                 raise ValueError("request_timeout must be positive when provided.")
             chat_timeout = min(chat_timeout, request_timeout)
+        if request_deadline is not None:
+            remaining = request_deadline - time.monotonic()
+            if remaining <= 0:
+                raise requests.Timeout("Review request deadline exceeded before HTTP request.")
+            chat_timeout = min(chat_timeout, remaining)
         reserve_model_http_attempt()
         response = requests.post(url, headers=header, json=payload, timeout=chat_timeout, stream=use_stream)
         res = None
@@ -1734,7 +1757,15 @@ class ChatAgent:
         if use_stream:
             response.raise_for_status()
             collected_content = []
-            for line in response.iter_lines():
+            lines = (
+                self._review_deadline_lines(response, request_deadline)
+                if request_deadline is not None and hasattr(response, "iter_content")
+                else response.iter_lines()
+            )
+            for line in lines:
+                if request_deadline is not None and time.monotonic() >= request_deadline:
+                    response.close()
+                    raise requests.Timeout("Review request deadline exceeded while streaming.")
                 if line:
                     decoded_line = line.decode('utf-8').strip()
                     if decoded_line.startswith("data:"):
@@ -1813,7 +1844,7 @@ class ChatAgent:
         request_timeout: float | None = None,
         retry: bool = True,
         strict_input_budget: bool = False,
-        max_output_tokens: int = 16000,
+        max_output_tokens: int = DEFAULT_CHAT_MAX_OUTPUT_TOKENS,
         response_format: str | None = None,
     ):
         model = self.model_name

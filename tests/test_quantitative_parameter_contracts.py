@@ -512,6 +512,7 @@ def test_discovery_and_extraction_keep_secrets_and_metadata_out_of_evidence(tmp_
         openalex_api_key=secret,
         semantic_scholar_api_key=secret,
         unpaywall_email="researcher@example.org",
+        discovery_providers=("openalex", "semantic_scholar", "unpaywall"),
     )
     discovery = discover_parameter_literature(
         blueprint=blueprint,

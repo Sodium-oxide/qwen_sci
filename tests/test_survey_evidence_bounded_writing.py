@@ -1305,7 +1305,6 @@ def test_bounded_quality_revision_rejects_heading_changes_and_section_overflow()
     errors = generator._validate_evidence_bounded_section_quality_revision(
         original_section=original,
         revised_section=unsafe,
-        allowed_paper_ids={"W1"},
         section_word_cap=10,
     )
 
@@ -1320,8 +1319,6 @@ def test_bounded_quality_revision_rejects_heading_changes_and_section_overflow()
     ),
     (_sentence_patch("A new claim <Paper ID: W-candidate>."), "citation tokens changed"),
     (_sentence_patch("The citation is removed."), "citation tokens changed"),
-    (_sentence_patch("An unrelated sentence is changed.", 2), "outside the editable sentences"),
-    (_sentence_patch("A cautious observation <Paper ID: W1>.", True), "outside the editable sentences"),
     (
         json.dumps({"replacements": [
             {"sentence_id": 1, "new_text": "An observation <Paper ID: W1>."},
@@ -1376,13 +1373,11 @@ def test_sentence_repair_exhaustion_keeps_original_draft() -> None:
     assert generator.survey_integrity_artifact["issues"][-1]["resolution"] == "manual_review"
 
 
-def test_sentence_repair_whitelist_failure_is_in_retry_feedback() -> None:
+def test_sentence_repair_allows_citation_outside_section_evidence_plan() -> None:
     original = "## 1. Evidence\n\nAn observation <Paper ID: W3009373177>."
     generator = _quality_generator([
-        _sentence_patch("A narrower observation <Paper ID: W3009373177>."),
         _sentence_patch("A cautious observation <Paper ID: W3009373177>."),
     ])
-    generator.config.ModuleInfo.SurveyGenerator.evidence_bounded_section_quality_revise_retry = 2
 
     revised = generator._revise_evidence_bounded_section_quality(
         section_text=original,
@@ -1393,8 +1388,8 @@ def test_sentence_repair_whitelist_failure_is_in_retry_feedback() -> None:
         target_excerpts=["An observation"],
     )
 
-    assert revised is None
-    assert "outside this section's evidence-plan whitelist: W3009373177" in generator.chat_agent.calls[1]["prompt"]
+    assert revised == "## 1. Evidence\n\nA cautious observation <Paper ID: W3009373177>."
+    assert len(generator.chat_agent.calls) == 1
 
 
 def test_sentence_spans_preserve_citations_and_skip_headings_and_code() -> None:
@@ -1478,7 +1473,7 @@ def test_claim_support_audit_rejects_unsupported_revision() -> None:
     generator.work_analyzer = SimpleNamespace(
         work_collector=SimpleNamespace(get_paper_title_abstract=lambda _paper_id: (
             "Evidence study", "A cautious observation is reported in the study."
-        )),
+        ), _survey_resume_abstracts={"W1": ["Evidence study", "A cautious observation is reported in the study."]}),
         get_paper_keynote=lambda _paper_id: "A cautious observation is reported in the study.",
     )
     generator._finalize_evidence_bounded_draft = lambda draft: (draft["full_draft"], ["W1"])
@@ -1580,7 +1575,7 @@ def test_final_support_audit_repairs_unsupported_claim_before_publication() -> N
     generator.work_analyzer = SimpleNamespace(
         work_collector=SimpleNamespace(get_paper_title_abstract=lambda _paper_id: (
             "Evidence study", "A cautious observation is reported in the study."
-        )),
+        ), _survey_resume_abstracts={"W1": ["Evidence study", "A cautious observation is reported in the study."]}),
         get_paper_keynote=lambda _paper_id: "A cautious observation is reported in the study.",
     )
 
@@ -1619,7 +1614,7 @@ def test_final_support_repair_retries_failed_source_assessment_only_on_flagged_s
     generator.work_analyzer = SimpleNamespace(
         work_collector=SimpleNamespace(get_paper_title_abstract=lambda _paper_id: (
             "Evidence study", "Method Alpha has an observed effect in the study."
-        )),
+        ), _survey_resume_abstracts={"W1": ["Evidence study", "Method Alpha has an observed effect in the study."]}),
         get_paper_keynote=lambda _paper_id: "Method Alpha has an observed effect in the study.",
     )
 
@@ -1634,7 +1629,7 @@ def test_final_support_repair_retries_failed_source_assessment_only_on_flagged_s
     assert generator.survey_integrity_artifact["issues"][-1]["resolution"] == "revised"
 
 
-def test_consolidation_retries_attempt_to_change_unaffected_sentence() -> None:
+def test_consolidation_stops_attempt_to_change_unaffected_sentence() -> None:
     target = "All devices have no leakage <Paper ID: W1>."
     original = "## 1. Broad claim\n\nUnchanged introduction. " + target + " Unchanged caveat."
     other = "## 2. Observation\n\nTransmon devices exhibit leakage <Paper ID: W1>."
@@ -1657,10 +1652,10 @@ def test_consolidation_retries_attempt_to_change_unaffected_sentence() -> None:
 
     repaired = generator._consolidate_evidence_bounded_draft(draft)
 
-    assert repaired["section_drafts"] == [original.replace(target, replacement), other]
-    assert len(generator.chat_agent.calls) == 3
-    assert "outside the editable sentences" in generator.chat_agent.calls[2]["prompt"]
-    assert generator.survey_integrity_artifact["issues"][-1]["resolution"] == "revised"
+    assert repaired["section_drafts"] == [original, other]
+    assert len(generator.chat_agent.calls) == 2
+    assert "outside the editable sentences" in generator._last_quality_revision_errors[0]
+    assert generator.survey_integrity_artifact["issues"][-1]["resolution"] == "manual_review"
 
 
 def test_consistency_audit_receives_long_section_middle() -> None:

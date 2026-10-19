@@ -126,7 +126,10 @@ def _gap_rows(survey_handoff: Any, gap_triage: Any = None) -> List[Dict[str, Any
         rows.append({**dict(row), **dict(triage_row)})
     if rows:
         return rows
-    return [dict(row) for row in triage_by_id.values()]
+    return [
+        dict(row) for row in triage_by_id.values()
+        if not _text(row.get("eligibility_route")) or _text(row.get("eligibility_route")) in _ACTIVE_GAP_ROUTES
+    ]
 
 
 def _survey_gap_ideas(survey_handoff: Any, gap_triage: Any = None, *, limit: int = 4) -> List[Dict[str, Any]]:

@@ -12,7 +12,7 @@ from src.llm.model_policy import TEXT_MODEL_CHOICES
 from .common import PromptSpec
 from .figure import FIGURE_AI_SCHEMATIC, FIGURE_PYTHON_DEFAULT, FIGURE_PYTHON_V1, FIGURE_PYTHON_V101
 from .polish import POLISH_GENERIC, POLISH_NATURE, POLISH_V1
-from .research import RESEARCH_DEFAULT, RESEARCH_LIGHT
+from .research import RESEARCH_DEFAULT, RESEARCH_DEFAULT_V1, RESEARCH_LIGHT, RESEARCH_LIGHT_V1
 from .translation import TRANSLATION_IMAGE_PAGE, TRANSLATION_TEXT_PRESERVING, TRANSLATION_TEXT_V1
 
 
@@ -114,6 +114,8 @@ def build_default_prompt_registry() -> PromptRegistry:
     registry.register_version(FIGURE_PYTHON_V101)
     registry.register_version(POLISH_V1)
     registry.register_version(TRANSLATION_TEXT_V1)
+    registry.register_version(RESEARCH_DEFAULT_V1)
+    registry.register_version(RESEARCH_LIGHT_V1)
     return registry
 
 

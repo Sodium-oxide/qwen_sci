@@ -6,6 +6,7 @@ from src.agents.idea_agent.utils.core.chat_errors import (
     format_chat_retry_error,
     is_non_retryable_chat_error,
 )
+from src.agents.idea_agent.utils.core.task_contract import build_task_contract, with_task_contract
 
 from typing import Any, Dict, List, Optional
 from pathlib import Path
@@ -112,6 +113,12 @@ class LigAgent(AgentBase):
         if isinstance(initial_refinement_scope, str) and initial_refinement_scope.strip():
             artifact_set(self.artifact, "refinement_scope", initial_refinement_scope.strip())
             artifact_set(self.artifact, "refinement_scope_source", "config_explicit")
+        artifact_set(self.artifact, "task_contract", build_task_contract(
+            original_request=str(get_config_value(config, "run.input", "") or ""),
+            topic=str(get_config_value(config, "run.topic", "") or ""),
+            refinement_scope=str(initial_refinement_scope or ""),
+            refinement_scope_source="config_explicit" if initial_refinement_scope else "empty",
+        ))
 
         mcts_config = MCTSConfig()
         for field in fields(MCTSConfig):
@@ -171,6 +178,14 @@ class LigAgent(AgentBase):
         )
 
     def chat(self, prompt: str, model: Optional[str] = None, **kwargs) -> str:
+        artifact = getattr(self, "artifact", {})
+        prompt = with_task_contract(
+            prompt,
+            artifact_get(artifact, "task_contract", {}),
+            scope=artifact_get(artifact, "refinement_scope", ""),
+            scope_source=artifact_get(artifact, "refinement_scope_source", ""),
+            proposed_scope=artifact_get(artifact, "proposed_scope", ""),
+        )
         last_exc: Optional[Exception] = None
         request_kwargs = dict(kwargs)
         stage = str(request_kwargs.pop("stage", "") or "").strip()

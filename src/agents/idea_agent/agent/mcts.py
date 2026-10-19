@@ -21,6 +21,7 @@ from src.memory.memory_system.utils import _multi_thread_run, _safe_dump_str
 from src.agents.idea_agent.utils.core.json_utils import pretty_json
 from src.agents.idea_agent.utils.core.progress import iter_with_progress
 from src.agents.idea_agent.utils.core.response_parsing import parse_json_response
+from src.agents.idea_agent.utils.core.task_contract import build_task_contract, refinement_scope_context
 from src.agents.idea_agent.utils.core.logger import LoguruCompatLogger, get_logger
 from src.agents.idea_agent.utils.mcts.component_novelty import ComponentNoveltyScorer
 from src.agents.idea_agent.utils.mcts.mcts_helpers import (
@@ -1635,6 +1636,20 @@ class MemoryGuidedMCTS:
 
     def prepare_root_context(self, topic: str, context: Dict[str, Any]) -> Dict[str, Any]:
         prepared = dict(context or {})
+        scope_context = refinement_scope_context(
+            prepared.get("refinement_scope"),
+            prepared.get("refinement_scope_source"),
+            prepared.get("proposed_scope"),
+        )
+        prepared.update(scope_context)
+        self.task_contract = prepared.get("task_contract") or build_task_contract(
+            topic=topic,
+            refinement_scope=scope_context["refinement_scope"],
+            refinement_scope_source=scope_context["refinement_scope_source"],
+        )
+        prepared["task_contract"] = self.task_contract
+        self.refinement_scope_source = scope_context["refinement_scope_source"]
+        self.proposed_scope = scope_context["proposed_scope"]
         self.multimodal_evidence_projection = (
             dict(prepared.get("multimodal_evidence_projection"))
             if isinstance(prepared.get("multimodal_evidence_projection"), dict)
@@ -1692,7 +1707,7 @@ class MemoryGuidedMCTS:
             ("verification_only_gaps", "Verification-only gaps"),
             ("future_work_seeds", "Future-work hypothesis seeds"),
         )
-        routing_lines = ["== Survey Gap Routing (authoritative) =="]
+        routing_lines = ["== Survey evidence gap routing =="]
         for key, label in routing_labels:
             rows = prepared.get(key, [])
             statements = [

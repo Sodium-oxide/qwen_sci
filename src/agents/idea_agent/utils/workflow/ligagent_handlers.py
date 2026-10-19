@@ -15,6 +15,19 @@ from src.agents.idea_agent.utils.core.json_utils import pretty_json
 from src.agents.idea_agent.utils.core.logger import suspend_console_handlers
 from src.agents.idea_agent.utils.core.progress import iter_with_progress
 from src.agents.idea_agent.utils.core.response_parsing import JsonObjectResponseError
+from src.agents.idea_agent.utils.papers.external_search import (
+    REFERENCE_SOURCE_FIELDS,
+    flatten_references,
+    reference_metadata,
+    search_idea_literature,
+)
+from src.pipeline.anysearch import identity_keys, merge_papers
+from src.agents.idea_agent.utils.core.task_contract import (
+    build_task_contract,
+    refinement_scope_context,
+    survey_evidence_for_prompt,
+    with_task_contract,
+)
 from src.agents.idea_agent.utils.mcts.idea_taste_presets import IDEA_TASTE_PRESETS
 from src.agents.idea_agent.utils.mcts.idea_routes import IDEA_ROUTE_POLICIES
 from src.agents.idea_agent.utils.mcts.scientific_intervention_ontology import (
@@ -83,6 +96,7 @@ from src.agents.idea_agent.utils.workflow.ligagent_helpers import (
 from src.agents.idea_agent.utils.workflow.ligagent_utils import (
     collect_paper_context_entries,
 )
+from src.agents.idea_agent.utils.workflow.keynote_compression import compress_keynotes
 from src.agents.idea_agent.utils.workflow.stage_contract import (
     ArtifactPatch,
     StageContext,
@@ -107,6 +121,32 @@ def _runtime(agent: Any, ctx: StageContext) -> Any:
 
 def _session(agent: Any, ctx: StageContext) -> Any:
     return ctx.session or getattr(agent, "session", None)
+
+
+def _scope_for_agent(agent: Any) -> Dict[str, str]:
+    return refinement_scope_context(
+        artifact_get(agent.artifact, "refinement_scope", ""),
+        artifact_get(agent.artifact, "refinement_scope_source", ""),
+        artifact_get(agent.artifact, "proposed_scope", ""),
+    )
+
+
+def _task_for_agent(agent: Any, topic: str = "") -> Dict[str, Any]:
+    contract = artifact_get(agent.artifact, "task_contract", {})
+    scope_context = _scope_for_agent(agent)
+    if isinstance(contract, dict) and contract.get("original_request"):
+        return build_task_contract(
+            original_request=str(contract["original_request"]),
+            interpretation=contract,
+            refinement_scope=scope_context["refinement_scope"],
+            refinement_scope_source=scope_context["refinement_scope_source"],
+        )
+    return build_task_contract(
+        original_request=str(get_config_value(getattr(agent, "config", None), "run.input", "") or ""),
+        topic=topic,
+        refinement_scope=scope_context["refinement_scope"],
+        refinement_scope_source=scope_context["refinement_scope_source"],
+    )
 
 
 def _build_route_matrix_tasks(
@@ -156,6 +196,12 @@ def _chat(agent: Any, ctx: StageContext, op_name: str):
     return _invoke
 
 
+def _keynote_source_text(reference: Dict[str, Any]) -> str:
+    keynote = str(reference.get("keynote") or "").strip()
+    mode = str(reference.get("reading_mode") or "").strip()
+    return f"Source scope: {mode}\n\n{keynote}" if mode else keynote
+
+
 def _score_keynote_reference(
     agent: Any,
     ctx: StageContext,
@@ -169,20 +215,27 @@ def _score_keynote_reference(
         topic=topic,
         rag_query=rag_query,
         title=str(reference.get("title") or reference.get("paper_title") or "").strip(),
-        keynote=str(reference.get("keynote") or "").strip(),
-    )
-    payload = runtime.llm_json(
-        session=session,
-        stage="ka_keynote_scoring",
-        workflow_name=ctx.workflow_name,
-        op_name="keynote_scoring",
-        prompt=prompt,
-        model=agent.model,
-        temperature=0.0,
-        max_output_tokens=512,
+        keynote=_keynote_source_text(reference),
     )
     scored = dict(reference)
-    scored["score"] = int(payload["score"])
+    try:
+        payload = runtime.llm_json(
+            session=session,
+            stage="ka_keynote_scoring",
+            workflow_name=ctx.workflow_name,
+            op_name="keynote_scoring",
+            prompt=prompt,
+            model=agent.model,
+            temperature=0.0,
+            max_output_tokens=512,
+        )
+        scored["score"] = int(payload["score"])
+        scored["scoring_status"] = "completed"
+    except Exception as exc:
+        scored.update(score=0, scoring_status="fallback", scoring_issue=type(exc).__name__)
+        logger = _logger(agent, ctx)
+        if logger:
+            logger.warning("Keynote scoring failed paper=%s (%s); retaining the source for summarization.", reference.get("paper_id"), type(exc).__name__)
     return scored
 
 
@@ -193,31 +246,25 @@ def _compress_single_keynote_reference(
     rag_query: str,
     reference: Dict[str, Any],
 ) -> Dict[str, Any]:
-    runtime = _runtime(agent, ctx)
-    session = _session(agent, ctx)
     prompt = PROMPTS["keynote_single_compression"].format(
         topic=topic,
         rag_query=rag_query,
         title=str(reference.get("title") or reference.get("paper_title") or "").strip(),
-        keynote=str(reference.get("keynote") or "").strip(),
+        keynote=_keynote_source_text(reference),
     )
-    payload = runtime.llm_json(
-        session=session,
-        stage="ka_keynote_single_compression",
-        workflow_name=ctx.workflow_name,
-        op_name="keynote_single_compression",
+    payload = compress_keynotes(
+        agent,
+        ctx,
         prompt=prompt,
-        model=agent.model,
-        temperature=0.1,
-        max_output_tokens=2048,
+        references=[reference],
     )
     return {
+        **{key: reference[key] for key in REFERENCE_SOURCE_FIELDS if key in reference},
         "paper_id": reference.get("paper_id"),
         "node_id": reference.get("node_id"),
         "title": reference.get("title"),
         "paper_title": reference.get("paper_title"),
-        "summary": str(payload["summary"]).strip(),
-        "insight": str(payload["insight"]).strip(),
+        **payload,
         "authors": reference.get("authors") or [],
         "source": reference.get("source") or "survey_keynote",
         "source_keywords": reference.get("source_keywords") or rag_query,
@@ -225,7 +272,7 @@ def _compress_single_keynote_reference(
         "venue": reference.get("venue"),
         "year": reference.get("year"),
         "score": int(reference["score"]),
-        "reference_mode": "paper_summary",
+        "reference_mode": "keynote_fallback" if payload["compression_status"] == "fallback" else "paper_summary",
     }
 
 
@@ -236,8 +283,6 @@ def _summarize_remaining_keynotes(
     rag_query: str,
     references: List[Dict[str, Any]],
 ) -> Dict[str, Any]:
-    runtime = _runtime(agent, ctx)
-    session = _session(agent, ctx)
     prompt = PROMPTS["keynote_group_summary"].format(
         topic=topic,
         rag_query=rag_query,
@@ -246,37 +291,47 @@ def _summarize_remaining_keynotes(
                 {
                     "title": reference.get("title"),
                     "score": reference.get("score"),
-                    "keynote": reference.get("keynote"),
+                    "keynote": _keynote_source_text(reference),
                 }
                 for reference in references
             ]
         ),
     )
-    payload = runtime.llm_json(
-        session=session,
-        stage="ka_keynote_group_summary",
-        workflow_name=ctx.workflow_name,
-        op_name="keynote_group_summary",
+    payload = compress_keynotes(
+        agent,
+        ctx,
         prompt=prompt,
-        model=agent.model,
-        temperature=0.1,
-        max_output_tokens=4096,
+        references=references,
+        group=True,
     )
     return {
         "paper_id": "remaining_survey_cited_papers",
         "node_id": "remaining_survey_cited_papers",
-        "title": f"Remaining survey-cited papers ({len(references)})",
-        "paper_title": f"Remaining survey-cited papers ({len(references)})",
-        "summary": str(payload["summary"]).strip(),
-        "insight": "",
+        "title": f"Remaining retrieved papers ({len(references)})",
+        "paper_title": f"Remaining retrieved papers ({len(references)})",
+        **payload,
         "authors": [],
-        "source": "survey_keynote_rollup",
+        "source": "paper_keynote_rollup" if any(ref.get("source") == "anysearch" for ref in references) else "survey_keynote_rollup",
+        "source_references": [reference_metadata(reference) for reference in references],
         "source_keywords": rag_query,
         "paper_domain": "",
         "venue": "",
         "year": "",
         "score": int(references[0]["score"]),
-        "reference_mode": "group_summary",
+        "reference_mode": "group_keynote_fallback" if payload["compression_status"] == "fallback" else "group_summary",
+    }
+
+
+def _external_artifact_updates(artifact, supplement, references=None):
+    searches = {
+        (item.get("provider"), item.get("phase"), item.get("query")): item
+        for item in [*artifact_get(artifact, "external_searches", []), *supplement.get("searches", [])]
+    }
+    records = [reference_metadata(ref) for ref in supplement.get("references", [])]
+    records.extend(reference_metadata(ref) for ref in references or [] if ref.get("source") == "anysearch" or ref.get("discovery_provenance"))
+    return {
+        "external_searches": list(searches.values()),
+        "external_references": merge_papers([*artifact_get(artifact, "external_references", []), *records]),
     }
 
 
@@ -322,6 +377,8 @@ def execute_advanced_analysis_stage(agent: Any, ctx: StageContext) -> StageResul
         )
     refinement_scope = artifact_get(artifact, "refinement_scope", "")
     refinement_scope_source = artifact_get(artifact, "refinement_scope_source", "")
+    scope_context = _scope_for_agent(agent)
+    task_contract = _task_for_agent(agent, topic)
     ablation_results = artifact_get(artifact, "ablation_results", [])
     rag_contents = artifact_get(artifact, "rag_contents", [])
     latest_rag_contents = rag_contents[-1] if rag_contents else []
@@ -372,7 +429,7 @@ def execute_advanced_analysis_stage(agent: Any, ctx: StageContext) -> StageResul
         topic=topic,
         mature_idea=(mature_idea or "").strip(),
         mature_idea_source=(mature_idea_source or "empty").strip(),
-        refinement_scope=(refinement_scope or "").strip(),
+        refinement_scope=scope_context["refinement_scope"],
         refinement_scope_source=(refinement_scope_source or "empty").strip(),
         survey_contents="\n".join(latest_rag_contents) if isinstance(latest_rag_contents, list) else "",
         papers=format_paper_capsules_prompt_view(references),
@@ -385,8 +442,8 @@ def execute_advanced_analysis_stage(agent: Any, ctx: StageContext) -> StageResul
     survey_context = artifact_get(artifact, "survey_idea_context", {})
     if isinstance(survey_context, dict) and survey_context.get("handoff"):
         prompt = (
-            "== Verified Survey -> Idea handoff (authoritative gap boundary) ==\n"
-            + pretty_json(survey_context["handoff"])
+            "== Survey evidence handoff (source provenance checked; coverage may be incomplete) ==\n"
+            + pretty_json(survey_evidence_for_prompt(survey_context["handoff"]))
             + "\n\n"
             + prompt
         )
@@ -413,11 +470,21 @@ def execute_advanced_analysis_stage(agent: Any, ctx: StageContext) -> StageResul
         + "\n\n"
         + prompt
     )
+    prompt = with_task_contract(
+        prompt, task_contract,
+        scope=refinement_scope,
+        scope_source=refinement_scope_source,
+        proposed_scope=scope_context["proposed_scope"],
+    )
     require_grounded_fields = (
         not bool(str(mature_idea or "").strip())
         or str(mature_idea_source or "").strip().casefold() in {"empty", "input_inferred"}
     )
-    require_gap_ids = bool(isinstance(survey_context, dict) and survey_context.get("handoff"))
+    handoff = survey_context.get("handoff") if isinstance(survey_context, dict) else None
+    valid_gap_ids = (
+        [str(gap["gap_id"]) for gap in handoff.get("gaps", []) if isinstance(gap, dict) and gap.get("gap_id")]
+        if isinstance(handoff, dict) else None
+    )
 
     def _request_advanced_analysis(op_name: str, request_prompt: str) -> tuple[Any, List[str]]:
         try:
@@ -437,7 +504,8 @@ def execute_advanced_analysis_stage(agent: Any, ctx: StageContext) -> StageResul
         return candidate, validate_advanced_analysis_response(
             candidate,
             require_grounded_fields=require_grounded_fields,
-            require_gap_ids=require_gap_ids,
+            require_gap_ids=False,
+            valid_gap_ids=valid_gap_ids,
         )
 
     raw_response, contract_errors = _request_advanced_analysis("advanced_analysis", prompt)
@@ -479,7 +547,12 @@ def execute_advanced_analysis_stage(agent: Any, ctx: StageContext) -> StageResul
         response["experiment_findings"] = experiment_findings
     root_idea = extract_root_idea_from_analysis(response, topic=topic)
     preserved_mature_idea = False
-    if isinstance(mature_idea, str) and mature_idea.strip():
+    if (
+        task_contract["task_mode"] == "idea_refinement"
+        and isinstance(mature_idea, str)
+        and mature_idea.strip()
+        and response.get("preserve_current_idea", {}).get("keep_original") is True
+    ):
         preserve_original, preserve_reason = should_preserve_current_mature_idea(
             response,
             root_idea,
@@ -494,7 +567,7 @@ def execute_advanced_analysis_stage(agent: Any, ctx: StageContext) -> StageResul
             root_idea = preserve_mature_idea_as_root(
                 topic,
                 mature_idea,
-                target_defects=list(root_idea.get("target_defects") or ["unclear_mechanism"]),
+                target_defects=list(root_idea.get("target_defects") or []),
                 reason=preserve_reason,
             )
             response["tldr"] = preserve_reason
@@ -507,7 +580,7 @@ def execute_advanced_analysis_stage(agent: Any, ctx: StageContext) -> StageResul
     ]
     if session is not None:
         session.set_slot("analysis.latest", response)
-    replace_patch: Dict[str, Any] = {"root_idea": root_idea}
+    replace_patch: Dict[str, Any] = {"root_idea": root_idea, "task_contract": task_contract}
     grounded_mature_idea = str(response.get("grounded_mature_idea") or "").strip()
     survey_context = artifact_get(artifact, "survey_idea_context", {})
     survey_handoff = survey_context.get("handoff") if isinstance(survey_context, dict) else {}
@@ -540,9 +613,6 @@ def execute_advanced_analysis_stage(agent: Any, ctx: StageContext) -> StageResul
         replace_patch["mature_idea_source"] = "analysis_grounded_collection"
     grounded_refinement_scope = str(response.get("grounded_refinement_scope") or "").strip()
     current_mature_source = str(mature_idea_source or ("empty" if not str(mature_idea or "").strip() else "unknown"))
-    current_scope_source = str(
-        refinement_scope_source or ("empty" if not str(refinement_scope or "").strip() else "unknown")
-    )
     if current_mature_source in {"empty", "input_inferred"}:
         promoted = grounded_mature_idea or root_idea_to_mature_idea_text(root_idea)
         if promoted:
@@ -550,14 +620,16 @@ def execute_advanced_analysis_stage(agent: Any, ctx: StageContext) -> StageResul
             replace_patch["mature_idea_source"] = "analysis_grounded"
             if session is not None:
                 session.set_slot("mature_idea.latest", promoted)
-    if current_scope_source in {"empty", "input_inferred"} and grounded_refinement_scope:
-        replace_patch["refinement_scope"] = grounded_refinement_scope
-        replace_patch["refinement_scope_source"] = "analysis_grounded"
-    elif current_scope_source in {"empty", "input_inferred"}:
-        fallback_scope = root_idea_to_refinement_scope_text(root_idea)
-        if fallback_scope:
-            replace_patch["refinement_scope"] = fallback_scope
-            replace_patch["refinement_scope_source"] = "analysis_grounded"
+    proposed_scope = (
+        grounded_refinement_scope
+        or scope_context["proposed_scope"]
+        or root_idea_to_refinement_scope_text(root_idea)
+    )
+    if proposed_scope:
+        replace_patch["proposed_scope"] = proposed_scope
+    if refinement_scope and not scope_context["refinement_scope"]:
+        replace_patch["refinement_scope"] = ""
+        replace_patch["refinement_scope_source"] = "empty"
     promoted_root_to_mature = False
     if (
         isinstance(mature_idea, str)
@@ -648,13 +720,17 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
         legacy_value=mature_idea,
         default_source=str(artifact_get(artifact, "mature_idea_source", "user_input") or "user_input"),
     )
-    refinement_scope = artifact_get(artifact, "refinement_scope", "")
+    scope_context = _scope_for_agent(agent)
+    refinement_scope = scope_context["refinement_scope"]
     component_decisions = artifact_get(artifact, "component_decisions", [])
     prior_components, prior_component_explanations = prior_component_seed(
         latest_candidate_payload,
         root_idea_payload,
     )
     context = {
+        "task_contract": _task_for_agent(agent, topic),
+        "refinement_scope_source": scope_context["refinement_scope_source"],
+        "proposed_scope": scope_context["proposed_scope"],
         "analysis": artifact_get(artifact, "analysis", []),
         "latest_candidate": latest_candidate_payload,
         "root_idea": root_idea_payload,
@@ -677,8 +753,8 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
                 survey_context["multimodal_evidence_projection"]
             )
         context["paper_context"] = (
-            "Verified Survey handoff:\n"
-            + pretty_json(context["survey_idea_handoff"])
+            "Survey evidence handoff:\n"
+            + pretty_json(survey_evidence_for_prompt(context["survey_idea_handoff"]))
             + "\n\n"
             + str(context.get("paper_context") or "")
         )
@@ -694,14 +770,14 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
             "topic": topic,
             "verified_facts": deepcopy(
                 handoff_for_public_facts.get("verified_facts")
-                or handoff_for_public_facts.get("field_consensus")
                 or []
             ),
+            "field_consensus": deepcopy(handoff_for_public_facts.get("field_consensus") or []),
             "hard_constraints": deepcopy(
                 handoff_for_public_facts.get("hard_constraints")
-                or handoff_for_public_facts.get("constraints")
                 or []
             ),
+            "user_constraints": deepcopy(context["task_contract"].get("user_constraints") or []),
             "profile_resolution": deepcopy(handoff_for_public_facts.get("profile_resolution") or {}),
         }
     analysis_history = artifact_get(artifact, "analysis", [])
@@ -1030,7 +1106,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
                 "seed_id": seed.get("idea_id"),
                 "target_gap_ids": list(seed.get("target_gap_ids") or []),
                 "gap_alignment": deepcopy(seed.get("gap_alignment") or ""),
-                "refinement_scope": seed.get("refinement_scope") or isolated.get("refinement_scope", ""),
+                "proposed_scope": seed.get("refinement_scope") or isolated.get("proposed_scope", ""),
             })
             if is_data_anchored(seed):
                 isolated["data_anchored_context"] = deepcopy(seed)
@@ -1574,7 +1650,7 @@ def execute_reanalysis_replan_stage(agent: Any, ctx: StageContext) -> StageResul
     )
     if not mature_idea_records and mature_idea:
         mature_idea_records = normalize_mature_ideas(mature_idea)
-    refinement_scope = artifact_get(artifact, "refinement_scope", "")
+    refinement_scope = _scope_for_agent(agent)["refinement_scope"]
     root_idea = artifact_get(artifact, "root_idea", {})
     latest_candidate = artifact_get(artifact, "latest_candidate", {})
     topic = artifact_get(artifact, "topic", [])[-1]
@@ -1586,7 +1662,7 @@ def execute_reanalysis_replan_stage(agent: Any, ctx: StageContext) -> StageResul
         prompt = PROMPTS["re_analysis_replan"].format(
             topic=topic,
             mature_idea=seed_text,
-            refinement_scope=(seed.get("refinement_scope") or refinement_scope or "").strip(),
+            refinement_scope=refinement_scope,
             analysis=pretty_json({**analysis, "mature_idea": seed}) if isinstance(analysis, dict) else str(analysis),
             ablation_results=pretty_json(ablation_results) if ablation_results else "[]",
         )
@@ -1770,7 +1846,19 @@ def execute_route_context_preparation_stage(agent: Any, ctx: StageContext) -> St
     artifact = agent.artifact
     topic_history = artifact_get(artifact, "topic", [])
     topic = topic_history[-1] if topic_history else ""
-    references = collect_paper_context_entries(artifact, artifact_get(artifact, "references", []))
+    batches = artifact_get(artifact, "references", [])
+    known_references = flatten_references(batches)
+    mature_ideas = artifact_get(artifact, "mature_ideas", [])
+    supplement = search_idea_literature(
+        agent, phase="candidate", task=_task_for_agent(agent, topic), topic=topic,
+        candidates=mature_ideas, known_references=known_references,
+    )
+    known = set().union(*(identity_keys(ref) for ref in known_references)) if known_references else set()
+    added = [
+        _compress_single_keynote_reference(agent, ctx, topic, topic, _score_keynote_reference(agent, ctx, topic, topic, ref))
+        for ref in supplement["references"] if not identity_keys(ref) & known
+    ]
+    references = collect_paper_context_entries(artifact, [*batches, added])
     survey_context = artifact_get(artifact, "survey_idea_context", {})
     handoff = (
         dict(survey_context.get("handoff") or {})
@@ -1782,7 +1870,6 @@ def execute_route_context_preparation_stage(agent: Any, ctx: StageContext) -> St
         if isinstance(survey_context, dict)
         else None
     )
-    mature_ideas = artifact_get(artifact, "mature_ideas", [])
     contexts = [
         build_mature_idea_evidence_context(
             idea,
@@ -1798,10 +1885,13 @@ def execute_route_context_preparation_stage(agent: Any, ctx: StageContext) -> St
         and str(idea.get("independence_status") or "").casefold() != "collapsed_duplicate"
     ]
     return StageResult(
-        artifact_patch=ArtifactPatch(replace={"mature_idea_contexts": contexts}),
+        artifact_patch=ArtifactPatch(
+            replace={"mature_idea_contexts": contexts, **_external_artifact_updates(artifact, supplement, added)},
+            append={"references": [added]} if added else {},
+        ),
         state_patch={"idea_workflow_phase": "route_context_preparation"},
         step_summary="\nPrepared isolated evidence contexts for mature-idea route expansion.",
-        metrics={"route_context_count": len(contexts)},
+        metrics={"route_context_count": len(contexts), "external_references_added": len(added)},
     )
 
 
@@ -1857,7 +1947,7 @@ def ka_route_stage(agent: Any, ctx: StageContext) -> StageResult:
     topic_history = artifact_get(artifact, "topic", [])
     topic = topic_history[-1] if topic_history else search_keywords
     mature_idea = (artifact_get(artifact, "mature_idea", "") or "").strip()
-    refinement_scope = (artifact_get(artifact, "refinement_scope", "") or "").strip()
+    refinement_scope = _scope_for_agent(agent)["refinement_scope"]
     mode = "mature_idea" if mature_idea else "standard"
     return StageResult(
         state_patch={
@@ -1953,6 +2043,11 @@ def ka_keynote_ranking_stage(agent: Any, ctx: StageContext) -> StageResult:
     rag_query = ctx.state["rag_query"]
     citation_references = ctx.state.get("citation_references", [])
     keynote_references = agent.paper_repository.retrieve_keynotes_by_paper_ids(citation_references)
+    supplement = search_idea_literature(
+        agent, phase="initial", task=_task_for_agent(agent, topic), topic=topic,
+        known_references=[*keynote_references, *flatten_references(artifact_get(agent.artifact, "references", []))],
+    )
+    keynote_references = merge_papers([*keynote_references, *supplement["references"]])
     scored_keynotes = []
     for reference in iter_with_progress(
         keynote_references,
@@ -1963,13 +2058,14 @@ def ka_keynote_ranking_stage(agent: Any, ctx: StageContext) -> StageResult:
             _score_keynote_reference(agent, ctx, topic, rag_query, {**reference, "source_keywords": rag_query})
         )
     scored_keynotes.sort(key=lambda item: int(item["score"]), reverse=True)
-    retrieval_source = "survey_keynotes"
+    retrieval_source = "survey_keynotes+anysearch" if supplement["references"] else "survey_keynotes"
     if logger is not None:
         for idx, reference in enumerate(scored_keynotes, 1):
             title = str(reference.get("title") or reference.get("paper_title") or "").strip()
-            logger.info("📚 Survey Paper %d Title: %s", idx, title)
-            logger.info("📚 Survey Paper %d Score: %s", idx, int(reference["score"]))
+            logger.info("📚 Paper %d Title: %s", idx, title)
+            logger.info("📚 Paper %d Score: %s", idx, int(reference["score"]))
     return StageResult(
+        artifact_patch=ArtifactPatch(replace=_external_artifact_updates(agent.artifact, supplement)),
         state_patch={
             "ranked_keynotes": scored_keynotes,
             "retrieval_source": retrieval_source,
@@ -2007,7 +2103,7 @@ def ka_reference_selection_stage(agent: Any, ctx: StageContext) -> StageResult:
         summary = (
             f"\nIn this knowledge_aquisition action, I used the mature idea to generate "
             f"a focused query '{rag_query}', retrieved {len(rag_hits)} survey hits, "
-            f"and materialized {len(curated_references)} survey-cited paper capsules "
+            f"and materialized {len(curated_references)} paper capsules "
             f"via {retrieval_source or 'survey keynotes'} "
             f"({top_kept} individual paper summaries, {rolled_up} papers rolled into one summary)."
         )
@@ -2015,18 +2111,21 @@ def ka_reference_selection_stage(agent: Any, ctx: StageContext) -> StageResult:
         summary = (
             f"\nIn this knowledge_aquisition action, I generated a focused query '{rag_query}', "
             f"retrieved {len(rag_hits)} survey hits, and materialized {len(curated_references)} "
-            f"survey-cited paper capsules via {retrieval_source or 'survey keynotes'} "
+            f"paper capsules via {retrieval_source or 'survey keynotes'} "
             f"({top_kept} individual paper summaries, {rolled_up} papers rolled into one summary)."
         )
     if session is not None:
         session.set_slot("references.latest", curated_references)
+    fallback_count = sum(reference["compression_status"] == "fallback" for reference in curated_references)
     return StageResult(
+        status="degraded" if fallback_count else "success",
         artifact_patch=ArtifactPatch(
+            replace=_external_artifact_updates(ctx.artifact, {}, curated_references + remaining_keynotes),
             append={"references": [curated_references]},
         ),
         state_patch={
             "curated_references": curated_references,
             "summary": summary,
         },
-        metrics={"curated_references": len(curated_references)},
+        metrics={"curated_references": len(curated_references), "keynote_fallbacks": fallback_count},
     )

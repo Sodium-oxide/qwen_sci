@@ -76,6 +76,7 @@ class PromptSpec:
     default_text_role: str | None = None
     image_model_role: str | None = None
     allowed_model_names: tuple[str, ...] = ()
+    inherit_common_guardrails: bool = True
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "output_schema", _freeze(self.output_schema))
@@ -95,6 +96,7 @@ class PromptSpec:
                 "default_text_role": self.default_text_role,
                 "image_model_role": self.image_model_role,
                 "allowed_model_names": self.allowed_model_names,
+                **({"inherit_common_guardrails": False} if not self.inherit_common_guardrails else {}),
             }
         )
 
@@ -121,7 +123,8 @@ class PromptSpec:
         """Build a JSON-only message envelope without storing raw prompt input."""
 
         system = self.system_prompt.strip()
-        guardrails = "\n".join(f"- {rule}" for rule in (*self.guardrails, *COMMON_GUARDRAILS))
+        common_guardrails = COMMON_GUARDRAILS if self.inherit_common_guardrails else ()
+        guardrails = "\n".join(f"- {rule}" for rule in (*self.guardrails, *common_guardrails))
         system_message = (
             f"{system}\n\nGuardrails:\n{guardrails}\n\n"
             "Return exactly one JSON object matching the supplied output schema."

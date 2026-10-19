@@ -310,7 +310,8 @@ quantitative_modeling:
     fulltext_connect_timeout_seconds: 5
     fulltext_read_timeout_seconds: 30
     openalex_base_url: "https://api.openalex.org"
-    anysearch_base_url: "${oc.env:ANYSEARCH_BASE_URL,''}"
+    anysearch_base_url: "${oc.env:ANYSEARCH_BASE_URL,'https://api.anysearch.com'}"
+    anysearch_tag: "academic.search"
     semantic_scholar_base_url: "https://api.semanticscholar.org/graph/v1"
     unpaywall_base_url: "https://api.unpaywall.org/v2"
     allow_single_literature_source: true
@@ -376,6 +377,10 @@ survey:
     # required by the current OpenAlex API; the adapter sends this value only
     # as an Authorization header and never writes it to logs or cache artifacts.
     openalex_base_url: "https://api.openalex.org"
+    anysearch_base_url: "${oc.env:ANYSEARCH_BASE_URL,'https://api.anysearch.com'}"
+    anysearch_tag: "academic.search"
+    anysearch_timeout_seconds: 30
+    anysearch_max_retries: 1
     openalex_api_key: "${oc.env:OPENALEX_API_KEY,''}"
     # Optional contact address sent as an HTTP From header. It is no longer a
     # substitute for API-key authentication or a rate-limit policy.
@@ -410,6 +415,8 @@ survey:
     semantic_scholar_api_max_retry: 3
   ModuleInfo:
     WorkCollector:
+      enable_anysearch_discovery: true
+      anysearch_result_limit: 10
       download_safe_mode: false
       download_timeout: 60
       download_in_parallel: true
@@ -726,6 +733,11 @@ survey:
       evidence_bounded_section_quality_max_improvements: 2
       evidence_bounded_section_quality_review_retry: 2
       evidence_bounded_section_quality_revise_retry: 2
+      review_mode: repair
+      review_max_calls: 48
+      review_max_tokens: 200000
+      review_max_seconds: 600
+      review_network_attempts: 2
       reviewer_max_suggestions: 5
       section_revision_RAG_topk: 30
       section_revise_temperature: 0.5
@@ -864,6 +876,23 @@ idea:
   agent:
     model: "${oc.env:IDEA_LLM_MODEL,'qwen3.8-flash'}"
     paper_keynote_keep_top_k: 10
+    keynote_json_repair_attempts: 2
+    anysearch:
+      enabled: true
+      base_url: "${oc.env:ANYSEARCH_BASE_URL,'https://api.anysearch.com'}"
+      tag: "academic.search"
+      timeout_seconds: 30
+      max_retries: 1
+      initial_queries: 2
+      candidate_queries: 2
+      result_limit: 8
+      initial_read_limit: 4
+      candidate_read_limit: 4
+      max_total_papers: 8
+      checkpoint_attempts: 2
+      prefer_fulltext: true
+      allow_abstract_fallback: true
+      max_source_chars: 60000
     workflow_models:
       default: "${idea.agent.model}"
       main:

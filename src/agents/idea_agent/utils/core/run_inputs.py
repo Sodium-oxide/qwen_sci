@@ -6,6 +6,7 @@ from src.agents.idea_agent.agent.base import AgentBase
 from src.agents.idea_agent.agent.prompts.input_interpreter import INPUT_INTERPRETER_PROMPT
 from src.agents.idea_agent.utils.core.config_loader import get_config_value
 from src.agents.idea_agent.utils.core.response_parsing import parse_json_response
+from src.agents.idea_agent.utils.core.task_contract import build_task_contract
 from src.agents.idea_agent.utils.workflow.idea_contract import (
     mature_idea_legacy_text,
     normalize_mature_ideas,
@@ -129,6 +130,7 @@ def _interpret_input_text(input_text: str, config: Optional[object]) -> Dict[str
             allow_empty=True,
         ),
         "needs_grounding": bool(payload.get("needs_grounding")) if isinstance(payload, dict) else True,
+        "task_contract": payload.get("task_contract", {}) if isinstance(payload, dict) else {},
     }
 
 
@@ -187,6 +189,20 @@ def resolve_run_inputs(
     interpreted_topic_source = str(interpreted.get("topic_source") or "inferred")
     interpreted_mature_source = str(interpreted.get("mature_idea_source") or "empty")
     interpreted_scope_source = str(interpreted.get("refinement_scope_source") or "empty")
+    if not explicit_refinement_scope and interpreted_scope_source == "explicit" and refinement_scope not in input_text:
+        interpreted_scope_source = "inferred"
+    scope_source = (
+        "config_explicit"
+        if explicit_refinement_scope
+        else ("empty" if interpreted_scope_source == "empty" else f"input_{interpreted_scope_source}")
+    )
+    task_contract = build_task_contract(
+        original_request=input_text,
+        topic=topic,
+        interpretation=interpreted.get("task_contract"),
+        refinement_scope=refinement_scope,
+        refinement_scope_source=scope_source,
+    )
     return {
         **defaults,
         "topic": topic,
@@ -195,16 +211,13 @@ def resolve_run_inputs(
         "refinement_scope": refinement_scope,
         "ablation_results_path": clean_optional_text(str(defaults.get("ablation_results_path") or "")),
         "input_text": input_text,
+        "task_contract": task_contract,
         "topic_source": "config_explicit" if explicit_topic else f"input_{interpreted_topic_source}",
         "mature_idea_source": (
             "config_explicit"
             if explicit_mature_idea or explicit_mature_ideas
             else ("empty" if interpreted_mature_source == "empty" else f"input_{interpreted_mature_source}")
         ),
-        "refinement_scope_source": (
-            "config_explicit"
-            if explicit_refinement_scope
-            else ("empty" if interpreted_scope_source == "empty" else f"input_{interpreted_scope_source}")
-        ),
+        "refinement_scope_source": scope_source,
         "needs_grounding": bool(interpreted.get("needs_grounding", True)),
     }

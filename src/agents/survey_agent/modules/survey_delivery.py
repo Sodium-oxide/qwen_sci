@@ -20,6 +20,7 @@ _GENERATOR_STATE = (
     "survey_evidence_plan", "survey_claim_traceability_artifact",
     "survey_outline_artifact", "survey_integrity_artifact",
     "survey_multimodal_evidence", "_claim_audit_source_cache",
+    "survey_review_state",
 )
 _BASIC_RUNTIME = (
     "research_context", "research_design_inventory", "subhypothesis_decomposition",
@@ -237,6 +238,21 @@ class SurveyCheckpoint:
                 database.valid_paper_ids = set(runtime["valid_paper_ids"])
         for key, value in self.state.get("generator", {}).items():
             setattr(self.generator, key, copy.deepcopy(value))
+        if hasattr(self.generator, "_review_runtime"):
+            delattr(self.generator, "_review_runtime")
+        if getattr(self.generator, "survey_review_state", None) and hasattr(self.generator, "_begin_review_stage"):
+            from modules.survey_review import review_runtime
+
+            review = review_runtime(self.generator)
+            previous_version = review.evidence_version()
+            self.generator._begin_review_stage(self.state.get("draft", {}), "resume")
+            if review.evidence_version() != previous_version:
+                self.state["completed"] = [name for name in self.state["completed"] if name not in {
+                    "section_quality", "consistency", "claim_support", "finalize", "export", "evaluation"
+                }]
+                self.state.pop("final", None)
+                self.state.pop("export", None)
+                self.generator.logger.info("Local review evidence changed; invalidated downstream review checkpoints.")
         if "export" in self.state["completed"]:
             for record in self.state.get("export_files", []):
                 path = Path(record["path"])
@@ -345,7 +361,7 @@ class SurveyCheckpoint:
         self.persist()
         self.write_drafts()
 
-    def draft_step(self, name, operation):
+    def draft_step(self, name, operation, *, defer_review=False):
         self.current_step = name
         if name in self.state["completed"]:
             return self.state["draft"]
@@ -360,7 +376,7 @@ class SurveyCheckpoint:
         unresolved = [issue for issue in integrity.get("issues", [])
                       if issue.get("resolution") == "manual_review" and issue not in before]
         self.state["review_issues"][name] = unresolved
-        if unresolved:
+        if unresolved and not defer_review:
             raise SurveyNeedsReview(" | ".join(str(issue.get("reason") or issue) for issue in unresolved))
         self.state["completed"].append(name)
         self.persist()
@@ -468,12 +484,18 @@ def run_survey_delivery(generator, judge, intra_analysis_results, inter_analysis
             value, outline, code_report, env_report
         ))
         if generator._evidence_bounded_writing_enabled():
+            audit_only = getattr(generator, "_review_audit_only", lambda: False)()
             for name, operation in (
                 ("section_quality", generator._improve_evidence_bounded_sections),
                 ("consistency", generator._consolidate_evidence_bounded_draft),
                 ("claim_support", generator._repair_final_claim_support),
             ):
-                checkpoint.draft_step(name, operation)
+                checkpoint.draft_step(name, operation, defer_review=audit_only)
+            if audit_only:
+                pending = [issue for name in ("section_quality", "consistency", "claim_support")
+                           for issue in checkpoint.state["review_issues"].get(name, [])]
+                if pending:
+                    raise SurveyNeedsReview(" | ".join(str(issue.get("reason") or issue) for issue in pending))
         checkpoint.current_step = "finalize"
         if "finalize" not in checkpoint.state["completed"]:
             last_draft = copy.deepcopy(checkpoint.state["draft"])

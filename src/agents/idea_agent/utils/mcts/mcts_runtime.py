@@ -18,6 +18,7 @@ from src.agents.idea_agent.utils.core.json_utils import (
     read_json_file,
 )
 from src.agents.idea_agent.utils.core.response_parsing import parse_json_response
+from src.agents.idea_agent.utils.core.task_contract import survey_evidence_for_prompt, with_task_contract
 from src.agents.idea_agent.utils.mcts.defect_registry import (
     format_defect_registry,
     profile_skill_defect_tags,
@@ -1781,14 +1782,22 @@ def instantiate_compiled_plan_for_node(
         "boundary_or_failure_condition, claim_scope, assumptions, target_gap_ids, gap_alignment, "
         "evidence_requirement, and evidence_basis.\n"
         "evidence_requirement must name the observation, contrast, proof, measurement, or boundary needed "
-        "to distinguish the claim; it must not contain an experiment design. Do not return predicted results, "
-        "sample sizes, statistical tests, instrument configurations, ablation plans, or failure-repair plans."
+        "to distinguish the claim. Put user-requested design choices and testable predictions in method and "
+        "hypothesis fields, with rationale and a validation path. Label planned values and predictions as proposed; "
+        "never present them as observed results. Leave routine execution detail to Experiment Agent unless "
+        "the original user task explicitly requests it."
     )
     prompt += _data_anchored_contract_prompt(parent_state)
     prompt += _gap_focus_prompt(parent_state)
     survey_handoff = getattr(mcts, "survey_idea_handoff", {})
     if isinstance(survey_handoff, dict) and survey_handoff:
-        prompt += "\n\n== Verified Survey -> Idea handoff ==\n" + pretty_json(survey_handoff)
+        prompt += "\n\n== Survey evidence handoff ==\n" + pretty_json(survey_evidence_for_prompt(survey_handoff))
+    prompt = with_task_contract(
+        prompt, getattr(mcts, "task_contract", {}),
+        scope=mcts.refinement_scope,
+        scope_source=getattr(mcts, "refinement_scope_source", ""),
+        proposed_scope=getattr(mcts, "proposed_scope", ""),
+    )
     try:
         response = mcts.chat_fn(
             prompt,
@@ -2362,7 +2371,7 @@ def simulate_node_value(
     prompt += _gap_focus_prompt(node.state)
     survey_handoff = getattr(mcts, "survey_idea_handoff", {})
     if isinstance(survey_handoff, dict) and survey_handoff:
-        prompt += "\n\n== Verified Survey -> Idea handoff ==\n" + pretty_json(survey_handoff)
+        prompt += "\n\n== Survey evidence handoff ==\n" + pretty_json(survey_evidence_for_prompt(survey_handoff))
     prompt = render_profile_evaluation_prompt(prompt, profile_id)
     allowed_novelty_axes = PROFILE_NOVELTY_AXES.get(
         profile_id,
@@ -2372,6 +2381,12 @@ def simulate_node_value(
         "\nFor `novelty_axes`, output only these profile-native keys: "
         + ", ".join(allowed_novelty_axes)
         + ". Do not add any other axis names.\n"
+    )
+    prompt = with_task_contract(
+        prompt, getattr(mcts, "task_contract", {}),
+        scope=mcts.refinement_scope,
+        scope_source=getattr(mcts, "refinement_scope_source", ""),
+        proposed_scope=getattr(mcts, "proposed_scope", ""),
     )
     cache_key = evaluation_prompt_cache_key(
         prompt,

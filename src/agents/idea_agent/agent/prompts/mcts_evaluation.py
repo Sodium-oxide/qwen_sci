@@ -53,13 +53,15 @@ Gap-to-hypothesis seeds:
 {symbolic_memory_hints}
 
 Scoring policy:
+- Judge alignment and completeness against the original user task. A model-proposed scope or Survey coverage limit is not a user restriction. Identify specific missing decisions or unsupported factual claims rather than asking for generic caution.
+- Clearly labeled hypotheses, predictions, and proposed design values may extend beyond established findings. Assess their rationale and falsifiability; lack of direct validation alone is not claim overreach. Fabricated sources or observed results remain defects.
 - Evaluate the candidate using the scientific intervention profile and rubric above. The native contribution may be a material manipulation, biological or clinical causal intervention, environmental condition, engineering process, formal assumption/derivation/counterexample, measurement construct, or algorithmic mechanism.
 - Evaluate whether the candidate explicitly targets the supplied gap seeds. A provisional or exploratory seed can support a qualified hypothesis; it does not need to meet a fully verified evidence standard to remain eligible.
 - Do not treat training signal, loss, backbone, benchmark, or learned model components as universal requirements. For non-computational profiles, judge innovation through the profile's native mechanism, object, observation, comparator, proof, or boundary conditions; missing training machinery is not an innovation defect.
 - Prefer concrete mechanism-level edits over vague incremental changes.
 - Treat evaluator, contract, audit, or auxiliary control-wrapper additions (for example gates, routers, controllers, or threshold policies) as scaffolding unless they clearly enable or verify a distinct core mechanism change in the generator, objective, representation, planner, or data path.
 - Reward evidence obligations only when they identify the lightest observation, contrast, proof, measurement, or boundary needed to distinguish the core mechanism. Do not reward protocol bulk or detailed experiment design by itself.
-- Penalize evaluator-first proposals whose main contribution is auditing, auxiliary control wrapping, or benchmarking rather than changing the task-solving mechanism.
+- Assess auditing, benchmarking, or protocol proposals as task-relevant contributions when explicitly requested; otherwise assess whether they advance the scientific mechanism.
 - Penalize plans that add an auxiliary control wrapper merely to manage extra machinery they just introduced. Such a wrapper can improve feasibility, but it should not by itself raise novelty or impact.
 - Penalize feature dumping and unsupported complexity jumps.
 - If the idea drifts from topic constraints or the fixed root domains above, reduce alignment_score.
@@ -74,7 +76,7 @@ Scoring policy:
   * Inconclusive results are weak evidence and should not dominate scoring.
   * If the candidate repeats a component family that ablation evidence says is harmful, note it explicitly in feedback.
 - In "detected_defects", list ALL defect tags from the registry above that still apply to this idea AFTER the proposed edit. Choose only from the canonical tags.
-- Do not lower feasibility, clarity, or protocol_score merely because sample sizes, statistical tests, instruments, ablations, predicted results, or other Experiment Agent details are absent. Those details are outside this candidate contract.
+- Routine Experiment Agent details are optional unless explicitly requested in the original task. When the user requests a design decision or prediction, check that it is concretely addressed and distinguish a missing answer from an unverified but testable proposal.
 
 Scoring rubric (use this exact rubric for consistency):
 - Use the full scale. Avoid defaulting to 3 unless the evidence is genuinely mixed.

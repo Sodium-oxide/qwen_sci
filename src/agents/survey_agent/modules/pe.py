@@ -1196,12 +1196,21 @@ Return exactly one JSON object and nothing else:
 }}
 """
 
-SURVEY_CLAIM_SUPPORT_AUDIT = """Check whether each cited claim is supported by the supplied source excerpts. Use only these excerpts, not outside knowledge. A source being on the topic is insufficient. Distinguish direct evidence from background context and do not treat a background source as proof of a specific result. If the excerpt is too short or unavailable, mark uncertain.
+SURVEY_CLAIM_SUPPORT_AUDIT = """Check each cited claim using only the supplied frozen source excerpts and evidence plan. A source being on the topic is insufficient. Background evidence cannot prove a specific result. Missing or insufficient excerpts mean uncertain, not unsupported.
+
+Split each compound claim into atomic subclaims. Their text fields must partition the original claim verbatim and in order, excluding citation tokens; do not omit a qualification or an unsupported clause. Assign each subclaim only the papers supporting that part. Different papers may support different parts; no single paper needs to support the entire compound sentence.
+
+Classify each subclaim:
+- fact: a source-specific empirical or methodological assertion. Require a verbatim evidence quote from its assigned paper. An abstract's silence cannot establish that a paper did not perform an experiment.
+- synthesis: an explicitly qualified inference from cited premises. Verify each premise with a verbatim source quote; reject stronger conclusions than those premises warrant. An inference need not be quoted verbatim as a conclusion in a source.
+- evidence_coverage: a statement about this project's evidence coverage. Check the named SH entry in evidence_plan, return sub_hypothesis_id and an exact ledger_quote from its JSON. Do not turn project coverage gaps into claims that an entire paper or field lacks evidence.
+
+Use unsupported only when available evidence establishes a mismatch. Use uncertain for unavailable evidence or unresolved interpretation. A supported fact or synthesis requires nonempty evidence entries, each with paper_id and a contiguous quote copied from that paper's excerpt. A supported evidence_coverage subclaim requires a matching evidence-plan entry and ledger_quote.
 
 Claims and admitted source excerpts:
 {claims_and_sources}
 
-Return exactly one JSON object: {{"assessments": [{{"claim_id": 1, "paper_id": "W...", "verdict": "supported|unsupported|uncertain", "evidence_quote": "exact contiguous source excerpt or empty", "reason": "brief explanation"}}]}}. Provide one assessment for every claim and cited paper. A supported verdict requires a quote copied verbatim from the supplied source excerpt. Do not invent quotes.
+Return exactly one JSON object: {{"assessments": [{{"claim_id": 1, "verdict": "supported|unsupported|uncertain", "reason": "brief explanation", "subclaims": [{{"text": "verbatim part of original claim", "claim_type": "fact|synthesis|evidence_coverage", "verdict": "supported|unsupported|uncertain", "evidence": [{{"paper_id": "W...", "quote": "exact source excerpt"}}], "sub_hypothesis_id": "SH identifier for coverage statements only", "ledger_quote": "exact evidence-plan text for coverage statements only"}}]}}]}}. Provide one assessment per claim_id, using its paper_ids collectively. Never invent a quote or omit an unsupported part.
 """
 
 SURVEY_CONSISTENCY_AUDIT = """Inspect these survey sections for material factual contradictions and repeated arguments, including repetition across subsections of the same section. Do not flag differences in scope or terminology unless the two quoted factual statements cannot both be true as written. Use the exact section numbers and copy both excerpts verbatim. Return exactly one JSON object: {{"contradictions": [{{"source_section": 1, "target_section": 2, "source_excerpt": "exact text", "target_excerpt": "exact text", "reason": "brief explanation"}}], "repetitions": [{{"source_section": 1, "target_section": 2, "source_excerpt": "exact text", "target_excerpt": "exact text", "reason": "brief explanation"}}]}}. Return empty lists if none are evident.

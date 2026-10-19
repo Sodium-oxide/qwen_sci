@@ -25,3 +25,16 @@ def test_survey_gap_sources_use_four_atomic_gaps_and_three_leading_pair_combinat
         ["gap-1", "gap-3"],
         ["gap-2", "gap-3"],
     ]
+
+
+def test_triage_fallback_does_not_promote_verification_or_constraints_to_ideas() -> None:
+    handoff = {
+        "gaps": [{"gap_id": "missing-source", "statement": "The cached source is unavailable."}],
+        "gap_triage": {"gaps": [
+            {"gap_id": "missing-source", "eligibility_route": "verification_only"},
+            {"gap_id": "fixed-condition", "eligibility_route": "supporting_constraint"},
+            {"gap_id": "rejected", "eligibility_route": "exclude"},
+        ]},
+    }
+
+    assert _survey_gap_ideas(handoff) == []

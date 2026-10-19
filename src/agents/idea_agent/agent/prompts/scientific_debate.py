@@ -20,7 +20,7 @@ Direction summary: {direction_summary}
 Profile ID: {profile_id}
 {profile_context}
 
-== Survey handoff and Gap boundary ==
+== Survey evidence and coverage ==
 {survey_handoff}
 
 == Profile drift diagnostic ==
@@ -71,16 +71,15 @@ Rules:
 - Keep `direction_mode` exactly unchanged.
 - Keep `target_gap_ids` exactly unchanged; never delete or invent Gap IDs.
 - A provisional, exploratory, or unanchored seed is not a reason to reject the candidate.
-- If certainty exceeds the Survey evidence boundary, reduce certainty or claim scope.
+- Empty target gap IDs or assumptions are valid when no specific gap or additional assumption is established. Do not invent a missing requirement or generic objection.
+- Distinguish literature facts and observed results from proposed choices and predictions. Correct unsupported factual assertions locally. A clearly labeled prediction does not require direct validation to remain in the proposal; assess its reasoning and testability.
+- Preserve the original user objective and requested scientific decisions. Model-inferred scopes and Survey coverage do not create additional user restrictions.
 - Correct correlation/causation language and identify alternatives when needed.
 - Use the fixed profile's native object, mechanism, process, relation, observation,
   proof, or boundary vocabulary. For non-computational profiles, rewrite an
   unrelated CS/ML primary contribution as a domain-native scientific claim.
 - Computational tools may remain as secondary analysis tools when the profile permits them.
-- Missing experiment design, sample size, statistics, ablations, or instruments
-  is not a debate failure and must not be requested here.
-- Do not add modules, datasets, experiments, controls, statistical tests,
-  instrument configurations, or failure-repair plans.
+- Leave routine experiment execution to Experiment Agent unless the user explicitly requests it. Preserve requested choices and predictions in the candidate; identify specific omitted answers without inventing observed results or unrelated execution work.
 - `REQUIRES_REVIEW` means preserve the candidate with uncertainty; it is never a reject command.
 """
 

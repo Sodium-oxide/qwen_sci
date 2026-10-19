@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Optional
 from src.agents.idea_agent.agent.artifacts import artifact_get, artifact_set
 from src.agents.idea_agent.agent.prompts import PROMPTS
 from src.agents.idea_agent.utils.core.json_utils import write_json_file
+from src.agents.idea_agent.utils.core.task_contract import refinement_scope_context
 from src.agents.idea_agent.utils.workflow.idea_helpers import (
     build_direction_result_document,
     build_fusion_evolution,
@@ -236,7 +237,10 @@ def build_idea_result_payload(
     refinement_scope = str(
         refinement_scope_override
         if refinement_scope_override is not None
-        else artifact_get(artifact, "refinement_scope", "")
+        else refinement_scope_context(
+            artifact_get(artifact, "refinement_scope", ""),
+            artifact_get(artifact, "refinement_scope_source", ""),
+        )["refinement_scope"]
     ).strip()
     entries = paper_entries or collect_paper_context_entries(
         artifact, artifact_get(artifact, "references", [])
@@ -344,6 +348,8 @@ def build_idea_result_payload(
         "scientific_spec": materialization.get("scientific_spec", {}),
         "materialization_profile": materialization.get("profile_id", "generic_scientific"),
         "reference_papers": reference_titles,
+        "external_searches": artifact_get(artifact, "external_searches", []),
+        "external_references": artifact_get(artifact, "external_references", []),
         "mcts_evolution": mcts_evolution,
         "mature_ideas": mature_idea_records,
         "mature_idea": mature_idea or mature_idea_legacy_text(mature_idea_records),

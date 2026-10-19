@@ -727,7 +727,7 @@ def preserve_mature_idea_as_root(
                 "method": mature_text,
                 "risks": "No clearly better valuable mechanism-level local patch was identified during advanced analysis.",
                 "operator": "analysis_root",
-                "target_defects": target_defects or ["unclear_mechanism"],
+                "target_defects": target_defects or [],
                 "rationale": reason or "Preserve the current mature idea because no convincing valuable mechanism-level local refinement was identified.",
             },
             keep_extra=True,

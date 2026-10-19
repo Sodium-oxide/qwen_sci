@@ -287,12 +287,12 @@ def format_paper_capsules_prompt_view(
 ) -> str:
     items = [item for item in _normalize_list(papers) if item is not None]
     if not items:
-        return "No survey-cited paper capsules."
+        return "No paper capsules."
     visible_items = items if max_papers is None or max_papers <= 0 else items[:max_papers]
 
     sections = [
         _format_section(
-            "Survey-Cited Paper Capsules",
+            "Paper Capsules",
             [f"Available capsules: {len(items)}", f"Showing: {len(visible_items)}"],
         )
     ]
@@ -312,12 +312,21 @@ def format_paper_capsules_prompt_view(
             meta_parts.append(f"authors={authors}")
         if raw.get("paper_id"):
             meta_parts.append(f"id={_clip_text(raw.get('paper_id'))}")
+        if raw.get("source"):
+            meta_parts.append(f"source={_clip_text(raw.get('source'))}")
 
         body_lines = [
             _format_kv_line("Title", raw.get("title") or raw.get("paper_title"), 140),
             f"Metadata: {' | '.join(meta_parts) if meta_parts else 'None'}",
             f"Type: {mode}",
         ]
+        reading_modes = _dedupe_keep_order([
+            _clip_text(item.get("reading_mode"))
+            for item in [raw, *_normalize_list(raw.get("source_references"))]
+            if isinstance(item, Mapping) and item.get("reading_mode")
+        ])
+        if reading_modes:
+            body_lines.append(f"Source scope: {', '.join(reading_modes)}")
         summary = _clip_text(raw.get("summary"), 800) or _extract_paper_summary(raw)
         insight = _clip_text(raw.get("insight"), 500)
         body_lines.append(_format_kv_line("Summary", summary, 1000))
@@ -330,7 +339,7 @@ def format_paper_capsules_prompt_view(
             )
         )
 
-    return _join_sections(sections, empty="No survey-cited paper capsules.")
+    return _join_sections(sections, empty="No paper capsules.")
 
 
 def format_paper_context_prompt_view(
@@ -351,6 +360,8 @@ def format_paper_context_prompt_view(
         source = _clip_text(entry.get("source"))
         if source:
             header_parts.append(f"source={source}")
+        if entry.get("reading_mode"):
+            header_parts.append(f"source_scope={_clip_text(entry.get('reading_mode'))}")
         authors = _format_authors(entry.get("authors"))
         if authors:
             header_parts.append(f"authors={authors}")

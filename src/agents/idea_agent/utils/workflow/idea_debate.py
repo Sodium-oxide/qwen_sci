@@ -10,6 +10,7 @@ from typing import Any, Dict, Iterable, List, Mapping, Optional
 
 from src.agents.idea_agent.agent.prompts.scientific_debate import SCIENTIFIC_DEBATE_PROMPT
 from src.agents.idea_agent.utils.core.json_utils import pretty_json
+from src.agents.idea_agent.utils.core.task_contract import survey_evidence_for_prompt
 from src.agents.idea_agent.utils.mcts.scientific_intervention_ontology import (
     detect_profile_drift,
     format_scientific_intervention_profile_for_prompt,
@@ -337,9 +338,10 @@ def _debate_handoff_view(
 ) -> Dict[str, Any]:
     if not isinstance(survey_handoff, Mapping):
         return {}
+    survey_handoff = survey_evidence_for_prompt(survey_handoff)
     target_ids = set(_list(target_gap_ids))
     view: Dict[str, Any] = {}
-    for field_name in ("survey_run_id", "project_id", "topic", "profile_resolution", "scope", "constraints", "scientific_candidates"):
+    for field_name in ("survey_run_id", "project_id", "topic", "profile_resolution", "survey_coverage", "scientific_candidates"):
         if field_name in survey_handoff:
             view[field_name] = _compact_prompt_value(survey_handoff.get(field_name))
     gaps = []
@@ -391,7 +393,6 @@ def _baseline_concerns(
     round_number: int,
 ) -> Dict[str, Any]:
     candidate = effective_scientific_contract(direction)
-    gap_ids = _gap_ids(candidate)
     concerns: List[str] = []
     alternatives: List[str] = []
     changed_field: List[str] = []
@@ -401,12 +402,6 @@ def _baseline_concerns(
     required_revision = ""
     if round_number == 1:
         question_type = "scientific_consistency"
-        if not gap_ids:
-            concerns.append("The candidate has no explicit target_gap_ids.")
-            changed_field.append("target_gap_ids")
-            actual_missing_fields.append("target_gap_ids")
-            severity = "major"
-            required_revision = "Keep the candidate but mark its scope as needing Gap alignment review."
         if not _text(candidate.get("central_hypothesis")):
             concerns.append("The central hypothesis cannot be read as a standalone claim.")
             changed_field.append("central_hypothesis")
@@ -419,18 +414,12 @@ def _baseline_concerns(
             actual_missing_fields.append("mechanism_or_relation")
             severity = "major"
             required_revision = "Name the profile-native mechanism or relation that links intervention and observation."
-        if not _list(candidate.get("assumptions")):
-            concerns.append("The candidate does not expose its operating assumptions.")
-            changed_field.append("assumptions")
-            actual_missing_fields.append("assumptions")
-            severity = max(severity, "moderate", key=("none", "minor", "moderate", "major").index)
-            required_revision = "State the minimum assumptions needed for the mechanism."
         if not _text(candidate.get("refinement_scope") or candidate.get("claim_scope")):
             concerns.append("The refinement scope is not explicit.")
             changed_field.append("claim_scope")
             actual_missing_fields.append("claim_scope")
             severity = max(severity, "moderate", key=("none", "minor", "moderate", "major").index)
-            required_revision = "Bound the claim to the smallest defensible refinement scope."
+            required_revision = "State the object and operating conditions to which the claim applies within the user's task."
         if _text(candidate.get("independence_status")).casefold() in {"collapsed_duplicate", "duplicate", "rejected"}:
             concerns.append("The candidate was marked non-independent by mature-idea adjudication.")
             changed_field.append("independence_status")
@@ -489,8 +478,6 @@ def _baseline_concerns(
             severity = max(severity, "moderate", key=("none", "minor", "moderate", "major").index)
             required_revision = "Add the smallest meaningful failure or validity boundary."
         alternatives = _list(candidate.get("alternative_explanations"))
-        if not alternatives:
-            alternatives = ["A competing mechanism or confounder could explain the same observation."]
     return {
         "question_type": question_type,
         "scientific_concern": " ".join(concerns),

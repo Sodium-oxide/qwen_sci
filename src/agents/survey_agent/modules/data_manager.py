@@ -28,6 +28,7 @@ from sentence_transformers import SentenceTransformer, util
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
 from utils.gpu_utils import load_sentence_transformer_auto
+from src.pipeline.anysearch import anysearch_from_survey_config, merge_papers
 
 
 class DataManager:
@@ -43,6 +44,7 @@ class DataManager:
         self.semantic_scholar_api = SemanticScholarAPI(config)
         self.arxiv_api = ArxivAPI(config)
         self.unpaywall_api = UnpaywallAPI(config)
+        self.anysearch_api = anysearch_from_survey_config(config)
         self.fulltext_download_coordinator = FulltextDownloadCoordinator(
             self.cache_path,
             self.config.ModuleInfo.WorkCollector,
@@ -59,6 +61,9 @@ class DataManager:
         self.paper_abstract_cache = dc.Cache(
             os.path.join(self.cache_path, "paper_abstracts")
         )
+        self.discovery_metadata_cache = dc.Cache(
+            os.path.join(self.cache_path, "discovery_metadata")
+        )
         self._short_abstract_warning_hashes = set()
         
         # title to paper_id lookup cache (for filter_papers_local_paper_graph)
@@ -69,6 +74,33 @@ class DataManager:
         # embedding model (lazy loading)
         self.embedding_model = None
         self._model_device = None
+
+    def register_discovered_papers(self, papers):
+        """Persist provider metadata so non-OpenAlex IDs remain readable on resume."""
+        cache = getattr(self, "discovery_metadata_cache", None)
+        if cache is None:
+            cache = self.discovery_metadata_cache = {}
+        for paper in papers:
+            if not isinstance(paper, dict):
+                continue
+            pid = self._resolve_paper_reference_id(paper)
+            if not pid:
+                continue
+            previous = cache.get(pid) or {}
+            metadata = merge_papers([previous, paper])[0] if previous else dict(paper)
+            for alias in {pid, str(paper.get("paperId") or ""), self._paper_download_id(paper)} - {""}:
+                cache[alias] = metadata
+            abstract = metadata.get("abstract")
+            if isinstance(abstract, str) and abstract.strip():
+                abstract_cache = getattr(self, "paper_abstract_cache", None)
+                if abstract_cache is not None:
+                    abstract_cache[get_hash(pid)] = {
+                        "paper_id": pid, "title": metadata.get("title", ""), "abstract": abstract,
+                    }
+
+    def get_discovered_paper(self, paper_id):
+        cache = getattr(self, "discovery_metadata_cache", None)
+        return dict(cache.get(str(paper_id), {}) or {}) if cache is not None else {}
 
     def _get_embedding_model(self):
         """Lazy load and cache the embedding model."""
@@ -114,6 +146,9 @@ class DataManager:
 
         if not isinstance(paper_ref, dict):
             return ""
+
+        if paper_ref.get("provider") == "anysearch" and paper_ref.get("paperId"):
+            return str(paper_ref["paperId"]).strip()
 
         openalex_id = OpenAlexAPI.normalize_work_id(
             paper_ref.get("openalex_id") or paper_ref.get("id")
@@ -167,6 +202,15 @@ class DataManager:
 
             abstract = ""
             title = ""
+            discovered = self.get_discovered_paper(pid)
+            if self.is_valid_abstract(discovered.get("abstract")):
+                self.paper_abstract_cache[hash_id] = {
+                    "paper_id": pid, "title": discovered.get("title", ""), "abstract": discovered["abstract"],
+                }
+                continue
+            if str(pid).startswith("AS"):
+                err_papers.append(pid)
+                continue
             
             # fetch minimal metadata including abstract
             for attempt in range(retry):
@@ -260,6 +304,9 @@ class DataManager:
 
     def get_paper_title(self, paper_id: str, retry: int = 3):
         """获取paper的title"""
+        discovered = self.get_discovered_paper(paper_id)
+        if discovered.get("title"):
+            return discovered["title"]
         hash_id = get_hash(paper_id)
         # already cached
         if hash_id in self.paper_abstract_cache:
@@ -537,6 +584,8 @@ class DataManager:
             return paper.strip()
         if not isinstance(paper, dict):
             return ""
+        if paper.get("provider") == "anysearch" and paper.get("paperId"):
+            return str(paper["paperId"]).strip()
         if str(paper.get("api_platform") or "").lower() == "openalex":
             openalex_id = OpenAlexAPI.normalize_work_id(
                 paper.get("openalex_id") or paper.get("paperId")
@@ -552,6 +601,9 @@ class DataManager:
 
     def _has_pdf_download_candidate(self, paper):
         if isinstance(paper, str):
+            discovered = self.get_discovered_paper(paper)
+            if discovered:
+                return self._has_pdf_download_candidate(discovered)
             return "." in paper or OpenAlexAPI.is_openalex_work_id(paper)
         if not isinstance(paper, dict):
             return False
@@ -639,6 +691,8 @@ class DataManager:
     def _prepare_download_info(self, paper, reference_graph=None):
         """Build ordered, provenance-rich legal full-text candidates for one paper."""
         del reference_graph
+        if isinstance(paper, str):
+            paper = self.get_discovered_paper(paper) or paper
         if isinstance(paper, str) and OpenAlexAPI.is_openalex_work_id(paper):
             resolved_paper = self.openalex_api.get_paper_details(paper)
             if not resolved_paper:
@@ -1323,6 +1377,7 @@ class DataManager:
 
     def download_and_parse_papers(self, papers: list, limit: int = -1):
         """下载并解析papers"""
+        self.register_discovered_papers(papers)
         if not self._fulltext_download_enabled():
             selected_papers = papers if limit <= 0 else papers[:limit]
             return [

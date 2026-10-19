@@ -14,6 +14,7 @@ from omegaconf import OmegaConf
 from src.agents.survey_agent.modules.outcome_RAG import OutcomeRAG
 from src.agents.survey_agent.modules.paper_graph_retriever import PaperGraphRetriever
 from src.agents.survey_agent.modules.work_collector import WorkCollector
+from src.agents.survey_agent.modules.data_manager import DataManager
 from src.agents.idea_agent.utils.core.progress import iter_with_progress
 from src.agents.survey_agent.utils.utils import get_hash
 
@@ -337,6 +338,64 @@ class PaperRepository:
             "venue": "",
             "year": "",
             "reference_mode": "raw_keynote",
+        }
+
+    def read_discovered_paper(
+        self, paper: Dict[str, Any], *, work_dir: Path,
+        prefer_fulltext: bool = True, allow_abstract_fallback: bool = True,
+        max_source_chars: int = 60000,
+    ) -> Dict[str, Any]:
+        """Read new literature without modifying the frozen Survey handoff.
+
+        Reuse acquisition caches, but route run-level acquisition reports into
+        the current Idea run. A discovery snippet is never a source abstract.
+        """
+        work_dir = Path(work_dir).resolve()
+        managers = getattr(self, "_external_data_managers", None)
+        if managers is None:
+            managers = self._external_data_managers = {}
+        key = str(work_dir)
+        if key not in managers:
+            config = _clone_config(self.config)
+            OmegaConf.update(config, "BasicInfo.base_dir", key, merge=False)
+            OmegaConf.update(config, "BasicInfo.sh_graph_provenance_artifact_path", str(work_dir / "sh_graph_provenance.json"), merge=False)
+            managers[key] = DataManager(config)
+        manager = managers[key]
+        manager.register_discovered_papers([paper])
+        pid = manager._resolve_paper_reference_id(paper)
+        title = _as_text(paper.get("title"))
+        content, mode, issues = "", "", []
+        if prefer_fulltext:
+            try:
+                content = manager.get_paper_raw_markdown(paper).strip()
+                if content:
+                    mode = "fulltext"
+            except Exception as exc:
+                issues.append({"step": "fulltext", "error_type": type(exc).__name__})
+        if not content and allow_abstract_fallback:
+            try:
+                title, content = manager.get_paper_title_abstract(pid)
+                mode = "abstract"
+            except Exception as exc:
+                issues.append({"step": "abstract", "error_type": type(exc).__name__})
+        if not content:
+            return {"paper_id": pid, "title": title, "reading_status": "unavailable", "reading_issues": issues}
+        work_dir.mkdir(parents=True, exist_ok=True)
+        source_path = work_dir / (pid + ".md")
+        source_path.write_text(content, encoding="utf-8")
+        source_chars = len(content)
+        max_source_chars = max(1000, int(max_source_chars))
+        if len(content) > max_source_chars:
+            content = content[:max_source_chars]
+            mode += "_excerpt"
+        return {
+            **self._normalize_keynote_reference(paper_id=pid, title=title, keynote=content),
+            "authors": paper.get("authors") or [], "year": paper.get("year"),
+            "venue": paper.get("venue"), "doi": paper.get("doi"), "url": paper.get("url"),
+            "source": "anysearch", "reading_status": "completed", "reading_mode": mode,
+            "reading_issues": issues, "source_path": str(source_path),
+            "source_chars": source_chars, "used_chars": len(content),
+            "discovery_provenance": list(paper.get("discovery_provenance") or []),
         }
 
     def _normalize_rag_hit(self, hit: Dict[str, Any]) -> Dict[str, Any]:

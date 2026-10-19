@@ -13,19 +13,19 @@ _BASE_HARD_TASKS = (
     'Write a concrete title, abstract, core contribution, method, risks, and rationale as if drafting a real paper, while also completing the scientific hypothesis contract below.',
     'Keep the instantiated idea consistent with the compiled edit plan structure: preserve the same component-edit count and the same operator types.',
     'Make the method concrete enough to execute, observe, derive, or reproduce, and make the link from the instantiated intervention to the target defects explicit.',
-    'If a mature idea is provided, treat it as the anchor: refine it directly, keep the title/abstract/method framed as a refinement of that mature idea, and do not drift into an unrelated direction or temporary internal search alias.',
+    'Treat a mature idea as a starting point within the original user task. Use minimal edits when the user requests local refinement; otherwise explore useful alternatives while preserving the explicit research object, objective, and restrictions.',
     'Provide a "component_mapping" for every generic template name that literally appears in the compiled edit plan. The mapped names are scientific objects even when the legacy operation says COMPONENT. For REWIRE/REPLACE targets that refer to existing parent components, map them to the actual parent component name. For ADD_COMPONENT, give a concrete name that reflects its profile-native role.',
     'Keep "component_mapping" minimal and bounded to names that literally appear in the compiled edit plan. Also provide aligned "edit_reasons" and "component_role_explanations" for those mapped components.',
     'Complete contribution_mode, scientific_object, central_hypothesis, intervention_or_transformation, expected_mechanism, discriminating_observation, boundary_or_failure_condition, and evidence_requirement using the fixed profile. These fields must describe the science even when the legacy edit operator says COMPONENT.',
     'For non-computational profiles, missing loss, optimizer, dataset, encoder, training signal, or benchmark is not an innovation or completeness defect. Use synthesis, processing, intervention, cohort, endpoint, assumption, proof, observation, design, or safety evidence as appropriate instead.',
-    'Stay inside the fixed root domain(s) and refinement scope above. If `skill_name` is `mechanism-commit-innovation` and the parent idea is not already centered on threshold/control logic, do not realize the edit as thresholding, gating, suppression, or quota adjustment.',
+    'Stay inside the task-relevant root domains and user-explicit refinement scope. Inferred scientific focus remains revisable. Include user-requested choices and testable predictions with rationale; label proposed values and never fabricate observed results.',
 )
 
 _BASE_HEURISTICS = (
     'Use additional retrieved references and skill-specific mechanism references only to ground mechanism choices or failure-mode checks. If a reference is cross-domain, transfer only the useful mechanism or invariant, not the paper-specific packaging or names.',
     'Treat the taste guidance above as a soft preference only. It must not override the compiled edit plan, target defects, validation protocols, or guardrails.',
     'If the mature idea or parent idea is training-free or inference-time only, preserve that character when possible. If you introduce new training, explicitly justify why the training shift is necessary and central.',
-    'Prefer direct profile-native mechanism, relation, intervention, measurement, proof, design, or update-rule repairs over audit, guardrail, controller, or wrapper-heavy realizations. Validation and support steps should stay secondary unless the profile identifies validation itself as the scientific bottleneck.',
+    'Prefer direct profile-native mechanism, relation, intervention, measurement, proof, design, or update-rule work. Validation and support steps may be primary when explicitly requested by the user or when the profile identifies validation itself as the scientific bottleneck.',
 )
 
 _CONCEPTUAL_SURPRISE_HEURISTICS = (

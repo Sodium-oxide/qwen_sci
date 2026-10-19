@@ -453,8 +453,16 @@ authorized search to the configured OpenAlex and AnySearch adapters, stores each
 `quantitative/<Q>/parameter_evidence/v<version>/interactive_search/` directory, and reports progress through the
 existing run SSE stream. Search metadata is discovery-only: selecting a paper records a source selection, but a value
 still requires the normal open-access/user-document full-text extraction, quote validation, parameter proposal, and
-human approval chain. Configure `ANYSEARCH_BASE_URL` and `ANYSEARCH_API_KEY` when an AnySearch HTTP bridge is
-available; credentials remain server-side and are never sent to the browser.
+human approval chain. AnySearch defaults to `https://api.anysearch.com` and uses `POST /v1/search` with
+the `academic.search` tag. `ANYSEARCH_BASE_URL` overrides the address; `ANYSEARCH_API_KEY` enables Bearer
+authentication. Credentials remain server-side and are never sent to the browser.
+
+Survey and Idea also call the AnySearch REST API for supplementary literature discovery.
+Survey adds provider lanes to project, sub-hypothesis, and evidence-slot searches; Idea performs bounded
+initial and candidate searches, reads actual full text or abstracts, and checkpoints each paper under
+the current Idea run. The official URL works by default; no bridge is required. See
+[Survey and Idea AnySearch integration](docs/survey_idea_anysearch.md) for the service contract,
+configuration, reading limits, and recovery behavior.
 
 Review the extracted, quote-anchored candidates against the blueprint. A human must provide a complete selection—one entry for every requested parameter—using the actual `parameter_id` and `candidate_id` returned for this run. Do not replace a candidate-backed normalized value with an invented value. The following is a schema example, not a pulsar parameter list; replace every placeholder after review:
 
@@ -620,7 +628,7 @@ The following values cover the normal Qwen/DashScope workflow. Keep them in the 
 | `DASHSCOPE_IMAGE_BASE_URL` | Optional | DashScope image API URL; defaults to `https://dashscope.aliyuncs.com/api/v1`. |
 | `SEMANTIC_SCHOLAR_API_KEY` | **Required by `doctor`** | Literature metadata and evidence retrieval. |
 | `OPENALEX_API_KEY` | Optional | Higher-rate OpenAlex literature discovery. |
-| `ANYSEARCH_BASE_URL` | Optional | Base URL for the server-side AnySearch academic adapter. |
+| `ANYSEARCH_BASE_URL` | Optional | AnySearch REST base URL; defaults to `https://api.anysearch.com`. Do not use an MCP URL. |
 | `ANYSEARCH_API_KEY` | Optional | Credential for the server-side AnySearch adapter. |
 | `OPENALEX_EMAIL` | Optional | Contact address for provider requests. |
 | `UNPAYWALL_EMAIL` | Optional | Enables DOI-to-PDF resolution for available open-access papers. |

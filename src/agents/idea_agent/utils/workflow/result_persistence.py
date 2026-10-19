@@ -700,6 +700,8 @@ def compact_result_payload(payload: Any) -> Dict[str, Any]:
         "scientific_spec",
         "materialization_profile",
         "reference_papers",
+        "external_searches",
+        "external_references",
         "idea_source",
         "source_modes",
         "fusion_metadata",

@@ -1,5 +1,5 @@
 ADVANCED_ANALYSIS_PROMPT_SURVEY_LED_WITH_PAPERS = """
-You are the lead author preparing an top-tier paper on the topic "{topic}".
+You are the research designer preparing a concrete, task-aligned proposal on "{topic}".
 
 == Mature idea (optional; if empty, ignore) ==
 {mature_idea}
@@ -14,81 +14,56 @@ You are the lead author preparing an top-tier paper on the topic "{topic}".
 {refinement_scope_source}
 
 You have:
-(1) Survey contents (PRIMARY source of problem framing, clusters, and gaps):
+(1) Survey contents (evidence and literature coverage; the original user task defines the objective):
 {survey_contents}
 
-(2) Curated cited-paper capsules derived from survey keynotes (SECONDARY source; use for evidence, baselines, feasibility details, and concrete instantiations ONLY):
+(2) Curated cited-paper capsules derived from survey keynotes (source-specific evidence, methods, and implementation details):
 {papers}
 
 (3) Experiment findings extracted from raw ablation results (OPTIONAL; use only if present):
 {experiment_findings}
 
-Core principle (must follow):
-- Survey drives the agenda: method clusters + unresolved mechanism bottlenecks + evaluation blind spots MUST be derived from survey_contents.
-- Cited-paper capsules may refine or substantiate the survey-derived bottlenecks and gaps, but MUST NOT redefine the agenda or introduce a new main axis not present in the survey framing.
-- This stage is a 1.0 -> 1.1 calibrator, NOT a 2.0 invention stage. Diagnose, constrain, and lightly refine the current idea; leave major novelty jumps to MCTS.
-- If mature_idea is provided and mature_idea_source is `config_explicit` or `input_explicit`, keep the same topic, core hypothesis, and primary mechanism axis. Only make localized corrections, clarifications, or feasibility-driven adjustments.
-- If mature_idea_source is `input_inferred` or `empty`, treat the current mature_idea as provisional. You may rewrite it into a more grounded mature idea as long as you stay on the same overall direction suggested by the input and survey.
-- If refinement_scope is provided, treat it as a hard edit boundary. Keep repairs inside that scope and do not move the proposal's novelty to another subsystem or layer.
-- If refinement_scope_source is `input_inferred` or `empty`, you may sharpen or generate a clearer grounded refinement_scope from the survey and papers.
-- If experiment findings are present, use them as failure evidence, feasibility evidence, and mechanism constraints. They may invalidate a weak component or suggest a local replacement, but they MUST NOT trigger a paradigm shift.
-- Prioritize mechanism bottlenecks over evaluation tooling. Evaluation blind spots are secondary unless they expose a missing mechanism that blocks a credible root idea.
-- Do NOT directly introduce a new primary mechanism family. First identify which part of the current idea is weak, underspecified, brittle, or unsupported, then propose the smallest mechanism patch that repairs that limitation while preserving the original thesis.
-- Do NOT default to gate/router/controller/monitor style patches just because they are easy local edits. Prefer sharpening an existing update rule, objective, representation, write policy, consolidation rule, or training contract already implicit in the current idea.
-- A new gate/threshold/router is allowed only when the mature_idea already centers that decision surface and the patch merely calibrates or simplifies it. Otherwise, treat gate-like control logic as a likely sign of drift away from the original idea.
-- If no clearly valuable mechanism-level local patch exists, preserve the current mature_idea instead of inventing a gate/router/controller/threshold/budget fix.
-- If the only available local change mainly improves explainability, diagnosability, observability, auditing, monitoring, or validation tooling, preserve the current mature_idea instead of elevating that safe repair into the main contribution.
-- If the current mature_idea is training-free or inference-time only, preserve that character when possible. Do NOT introduce a new training stage, trainable controller, auxiliary loss, fine-tuning loop, or learned module unless it is indispensable and central to repairing the identified limitation.
-- For training-free ideas, prefer rule-level, objective-free, or inference-time repairs first. If you newly introduce training, explicitly justify why a training-free patch is insufficient.
-- If no convincing local repair exists within refinement_scope, preserve the current mature_idea instead of escaping that scope.
+Core principles:
+- The original user request defines the research object, goal, explicit restrictions, and deliverables.
+  Survey and papers supply evidence and methods; their coverage does not limit what the user may ask you to design.
+- Follow the task mode: `idea_refinement` makes scoped improvements to an existing idea;
+  `idea_generation` explores distinct mechanisms within the task; `protocol_design` makes concrete design decisions
+  and supplies the requested methodological detail. An existing seed alone does not require minimal edits.
+- A refinement_scope is a hard boundary only when its source is `config_explicit`, `input_explicit`,
+  `user_explicit`, or `explicit`. Inferred and analysis-generated scopes are revisable suggestions.
+- Separate literature facts, user premises, proposed design choices, hypotheses, predictions, and observed results.
+  State proposed choices and testable predictions concretely, with rationale and a validation path.
+  Missing direct validation is a reason to test a hypothesis, not to omit a requested candidate or design choice.
+- Preserve exact source identifiers and reported values. Never invent evidence, observed results, or citations.
+  A missing cached source is a retrieval need, not evidence that the scientific relation is unresolved.
+- List only problems, counterexamples, and gaps supported by the supplied material. Empty lists are valid.
+  Use papers to extend an incomplete Survey when doing so serves the original task.
+- When the user explicitly requests local refinement, preserve the stated edit boundary and justified existing choices.
+  For other tasks, compare alternatives and select a useful mechanism or protocol without imposing a minimal-patch rule.
 
-Perform the steps below explicitly before answering:
-1) Survey-led clustering:
-   Map the dominant method clusters mentioned in the survey. For each cluster, summarize:
-   - assumptions
-   - supervision/training signals
-   - implementation constraints or operating assumptions (as described or implied by the survey)
-   Cited-paper capsules can be used only to add concrete examples, representative baselines, or implementation constraints for clusters already defined by the survey.
-
-2) Mechanism bottleneck stress test (survey is the ground truth for "what is missing"):
-   Extract unresolved mechanism-level limitations from the survey first, then list any evaluation blind spots that prevent those limitations from being measured cleanly.
-   You MAY use cited-paper capsules to corroborate a bottleneck (e.g., show multiple methods still exhibit the limitation), but you MUST keep the bottleneck statement aligned with survey framing.
-   Do NOT let an evaluation gap become the main novelty unless it directly reveals a missing mechanism on the current method axis.
-
-3) Conservative root calibration:
-   Produce a search-ready root idea that directly targets the extracted SURVEY mechanism bottlenecks while staying close to the current mature_idea when one is provided.
-   The root idea should be a minimal but meaningful refinement:
-   - read like a v1.1 update of the current idea, not a replacement idea,
-   - preserve the same main method axis,
-   - keep most of the existing structure if it is still defensible,
-   - explicitly identify which existing component/assumption/objective is weak and what local patch fixes it,
-   - prefer repairing an existing rule or mechanism already present in the idea over adding a new gating or routing layer,
-   - if the only available delta is easier explanation, diagnosis, monitoring, budgeting, or validation, keep the mature_idea unchanged instead of turning that safe repair into the new thesis,
-   - if the current idea is training-free, prefer training-free local repairs over introducing new optimization or fine-tuning machinery,
-   - only adjust components/objectives/protocols that are weak, unsupported, or contradicted by experiment findings,
-   - use evaluation gaps only as evidence for what must be measured to validate the mechanism patch, not as the main proposal.
-
-4) Validation tooling:
-   Specify what experiments/protocols/tools are required to validate the calibrated root idea credibly.
-   Evaluation ideas are allowed only if they are tightly coupled to proving the proposed mechanism patch.
-   Do not let the validation protocol become the primary contribution.
+Before answering:
+1) Recover the user-required decisions and deliverables from the original task contract.
+2) Identify useful method families, established evidence, user premises, and specific retrieval needs.
+3) Produce a search-ready root proposal with concrete choices, rationale, and alternatives within the user task.
+4) State discriminating observations and validation targets. Include execution detail when requested by the user;
+   otherwise leave routine execution to Experiment Agent. Keep unresolved details local to the affected choice.
 
 Return STRICT JSON (no prose, no Markdown) with the schema:
 {{
-  "key_methods": ["..."],                          // survey-led cluster names or dominant families
-  "field_consensus": ["..."],                      // constraints / assumptions / consensus points the new idea should respect
-  "existing_problems": ["..."],                    // survey-led mechanism or structural limitations (primary driver of root_idea)
+  "key_methods": ["relevant method family"],
+  "field_consensus": [],
+  "existing_problems": [],
   "evaluation_gaps": [
     {{
-      "gap": "concise description of a measurement blind spot (MUST originate from survey_contents)",
+      "gap": "an evidenced measurement blind spot; return an empty evaluation_gaps list if none is established",
       "why_it_matters": "impact on validating the mechanism bottleneck or proposed patch",
       "validation_expectation": "what the validation setup must include to measure that mechanism credibly"
     }}
   ],
-  "future_directions": ["..."],                    // incremental but useful; must still be anchored in survey
+  "future_directions": [],
   "preserve_current_idea": {{
     "keep_original": false,
-    "reason": "empty unless no convincing valuable mechanism-level local patch exists and the mature_idea should be preserved"
+    "reason": "why preserving the existing idea fulfills an explicit refinement request; otherwise empty"
   }},
   "mature_ideas": [
     {{
@@ -98,12 +73,12 @@ Return STRICT JSON (no prose, no Markdown) with the schema:
       "scientific_object": "object or process",
       "mechanism": "causal or formal mechanism",
       "assumptions": ["..."],
-      "evidence_basis": ["SURVEY_ANCHOR: ..."],
-      "target_gap_ids": ["gap id when available"],
-      "refinement_scope": "allowed refinement boundary",
+      "evidence_basis": [],
+      "target_gap_ids": [],
+      "refinement_scope": "proposed scientific focus, revisable unless explicitly constrained by the user",
       "falsifier": "result that would refute the idea",
-      "counterexamples": ["relevant counterexample or negative evidence"],
-      "retrieval_queries": ["idea-specific retrieval query"],
+      "counterexamples": [],
+      "retrieval_queries": [],
       "mechanism_chain": ["object -> mechanism -> observable consequence"],
       "validation_targets": ["testable target"],
       "anchor_policy": "scoped_survey_anchor|reframe_without_default_problem_anchor",
@@ -113,24 +88,24 @@ Return STRICT JSON (no prose, no Markdown) with the schema:
       "independence_rationale": "structural difference from other mature ideas"
     }}
   ],
-  "grounded_mature_idea": "3-6 sentences; if mature_idea is empty or provisional, provide a grounded mature idea derived from the survey/papers; otherwise return empty or a minimally clarified restatement",
-  "grounded_refinement_scope": "1-3 sentences; if refinement_scope is empty or provisional, provide a crisp edit boundary that matches the grounded mature idea; otherwise return empty or a minimally clarified restatement",
+  "grounded_mature_idea": "3-6 sentences describing a concrete task-aligned proposal, distinguishing evidence from explicit assumptions and predictions",
+  "grounded_refinement_scope": "optional proposed focus; may be empty and never creates a user restriction",
   "root_idea": {{
-    "title": "one calibrated root idea title",
-    "abstract": "one concrete root idea abstract; should read like a refined v1.1 version of the current idea when mature_idea is provided",
-    "core_contribution": "main mechanism-level claim; keep it close to the current idea and express the smallest meaningful repair unless evidence forces a local correction. Prefer a repaired rule/objective/update contract over a new gate/router/controller",
-    "method": "specific method sketch with modules/objective/training contract; prefer local edits over new paradigms, state which original limitation is being repaired, avoid introducing a fresh gate/router/controller unless the mature idea already depends on one, and keep training-free ideas training-free unless new training is truly necessary",
+    "title": "one concrete task-aligned root proposal title",
+    "abstract": "the proposal, its purpose, and the proposed mechanism or protocol",
+    "core_contribution": "the scientific hypothesis, mechanism, or design contribution requested by the user",
+    "method": "concrete choices, rationale, alternatives, and task-required implementation details; label proposed values and predictions",
     "risks": "main scientific/engineering risks",
-    "target_defects": ["..."],
-    "rationale": "why this is the best calibrated 1.1 starting point from the extracted survey mechanism bottlenecks",
-    "supporting_papers": ["SURVEY_ANCHOR:...", "PAPER_ANCHOR:..."]
+    "target_defects": [],
+    "rationale": "how the proposal fulfills the original request and why its decisions are scientifically useful",
+    "supporting_papers": []
   }},
   "divergent_idea_seeds": [
     {{
       "title": "short memorable name",
-      "hypothesis": "small neighboring alternative only if useful",
-      "why_it_is_not_incremental": "leave empty or describe only a local contrast",
-      "method_sketch": "near-neighbor mechanism patch, not a new paradigm",
+      "hypothesis": "a useful alternative within the user's task",
+      "why_it_is_not_incremental": "the substantive difference, or empty when inapplicable",
+      "method_sketch": "concrete alternative mechanism or design",
       "evaluation_plan": "protocol/stress-test to validate the patch",
       "risk": "dominant scientific or engineering risk",
       "supporting_papers": ["SURVEY_ANCHOR:...", "PAPER_ANCHOR:..."]
@@ -139,42 +114,25 @@ Return STRICT JSON (no prose, no Markdown) with the schema:
   "cross_domain_inspiration": [
     {{
       "source_field": "e.g., control theory, neuroscience",
-      "transferable_mechanism": "what we borrow only if it can be expressed as a local patch",
-      "application_hook": "explicit mapping: which survey bottleneck/cluster it improves and how without changing the main method axis"
+      "transferable_mechanism": "the mechanism or method borrowed",
+      "application_hook": "how it serves the user's objective within explicit task constraints"
     }}
   ],
-  "tldr": "≤50 word synthesis tying SURVEY mechanism bottlenecks to the calibrated 1.1 root idea"
+  "tldr": "≤50 word synthesis of the proposal and its task-relevant decisions"
 }}
 
 == Rules (Strict) ==
 - Always output exactly one `root_idea`; it must be concrete enough to act as the MCTS root node.
-- `root_idea` must directly address at least one named `existing_problems`; it may also respond to `evaluation_gaps`, but evaluation gaps should usually support validation rather than define the main novelty.
-- If `mature_idea` is provided, `root_idea` should usually be a minimally revised version of it, not a new paradigm.
-- If `refinement_scope` is provided, `root_idea` must stay inside that scope. Do not relocate the novelty to a different subsystem just because it seems easier to improve.
-- Preserve the same primary method axis unless experiment findings clearly invalidate a local component; even then, prefer local replacement over architecture reset.
-- `root_idea` should explicitly read as a small-version improvement of the current idea. It should say what limitation in the current idea is being repaired and should avoid introducing a fresh unrelated mechanism as the new center of gravity.
-- If the current idea does not already revolve around gating/routing/control logic, do not introduce a new gate, router, controller, monitor, or threshold policy as the main repair. Prefer expressing the patch as a correction to the existing mechanism itself.
-- If the only available "small fix" would be a gate/router/controller/threshold/budget wrapper, or a patch whose main value is explainability, diagnosability, observability, auditing, monitoring, or validation tooling, set `preserve_current_idea.keep_original=true` and keep `root_idea` as a faithful restatement of the current mature_idea rather than inventing a weak patch.
-- When `preserve_current_idea.keep_original=true`, do not introduce any new mechanism term into `root_idea`; explain in `preserve_current_idea.reason` why the original idea is being kept unchanged.
-- If the current mature idea is training-free, do not add a new training stage, learned controller, auxiliary loss, or fine-tuning loop unless it is clearly indispensable. If such a training shift is not strongly justified, prefer preserving the original idea or making a training-free local repair instead.
-- Every divergent_idea_seed MUST:
-  (a) cite at least one SURVEY_ANCHOR and name which existing_problems it addresses; mention evaluation_gaps only when they affect validation,
-  (b) propose a concrete local mechanism patch, not just instrumentation,
-  (c) keep the main axis consistent with survey framing and close to the current idea,
-  (d) remain a small contrastive variant rather than a replacement proposal.
-- `divergent_idea_seeds` are optional supporting alternatives; return 0-1 only if they help contrast the chosen `root_idea`.
+- `root_idea` must answer the original task. An evidenced problem may motivate it, but a new problem is not required.
+- Preserve user-explicit constraints. Use proposed scopes as focus suggestions, not hard prohibitions.
+- `divergent_idea_seeds` are optional alternatives; each must serve the original task and describe a concrete mechanism or decision.
 - `mature_ideas` may contain multiple structurally independent mature seeds. Do not create title-only variants; distinguish object, assumptions, mechanism, intervention, representation, target gaps, or falsifier.
 - Mature ideas may come from `user_input`, `survey_gap`, `prior_candidate`, `experiment_feedback`, `problem_reframing`, `adversarial_generation`, or `cross_domain_transfer`; preserve the exact source and a structured lineage record for each mature idea. Do not collapse these sources into generic `survey`, `history`, or `generated` labels.
 - Keep problem-reframing or adversarial records as formal exploratory/provisional ideas when they challenge the default problem definition; do not discard them solely for lower feasibility.
-- Papers may contribute:
-  - representative baselines and fair comparison protocol details,
-  - feasibility constraints (latency/memory/compute),
-  - evidence that a survey bottleneck or gap persists across recent works.
-  Cited-paper capsules may NOT contribute:
-  - a new main problem statement that is absent from survey,
-  - a new core mechanism term as the central novelty unless it is only a local substitute for a weak component.
-- Evaluation gaps alone should not define the root idea unless they expose a concrete missing mechanism that the root idea patches.
-- If survey_contents lacks explicit anchors, create anchors by quoting a short distinctive phrase from the survey and prefix it with "SURVEY_QUOTE:".
+- Facts and citations must match the supplied source. Hypotheses and design choices may extend beyond established findings
+  when clearly labeled and accompanied by reasoning and a validation path.
+- Return empty lists for absent consensus, established problems, counterexamples, unnecessary retrieval queries, or gap IDs.
+- Cite only supplied anchors or exact source quotations; never invent an anchor, paper ID, or a literature gap.
 - Keep the JSON valid and free of commentary.
 """
 
