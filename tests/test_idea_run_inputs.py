@@ -8,6 +8,13 @@ from src.agents.idea_agent.utils.core.run_inputs import resolve_run_inputs
 from src.agents.idea_agent.utils.core import run_inputs
 
 
+@pytest.fixture(autouse=True)
+def offline_contract_extraction(monkeypatch):
+    monkeypatch.setattr(run_inputs, "AgentBase", lambda: SimpleNamespace(chat=lambda *args, **kwargs: json.dumps({
+        "extraction_status": "complete", "required_deliverables": [], "user_constraints": [], "problem_premises": [],
+    })))
+
+
 def _empty_idea_run_config():
     return OmegaConf.create(
         {
@@ -116,3 +123,33 @@ def test_manifest_binding_preserves_task_without_requiring_interpreter_title_equ
         assert idea_run.run_idea_workflow(survey_manifest=str(survey.manifest_path)) == str(tmp_path)
         assert captured[0][0] == survey.topic
         assert captured[0][5]["task_contract"]["original_request"] == request
+
+
+def test_manifest_only_entry_extracts_requirements_after_binding_the_topic(monkeypatch, tmp_path) -> None:
+    pytest.importorskip("faiss")
+    from src.agents.idea_agent import run as idea_run
+
+    request = "Compare two mechanisms and give a discriminating observation."
+    config = _empty_idea_run_config()
+    survey = SimpleNamespace(topic=request, manifest_path=tmp_path / "survey_manifest.json")
+    prompts = []
+
+    def chat(prompt, **kwargs):
+        prompts.append(prompt)
+        return json.dumps({"extraction_status": "complete", "user_constraints": [], "problem_premises": [],
+            "required_deliverables": [{"source_quote": "discriminating observation", "acceptance_description": "State a distinguishing signal."}]})
+
+    monkeypatch.setattr(run_inputs, "AgentBase", lambda: SimpleNamespace(chat=chat))
+    monkeypatch.setattr(idea_run, "load_idea_agent_config", lambda *args: config)
+    monkeypatch.setattr(idea_run, "load_project_config", lambda *args: OmegaConf.create({}))
+    monkeypatch.setattr(idea_run, "load_survey_idea_context", lambda *args: survey)
+    monkeypatch.setattr(idea_run, "_resolve_runtime_survey_config", lambda *args: (None, None))
+    captured = []
+    monkeypatch.setattr(idea_run, "_run_topic", lambda *args: captured.append(args) or str(tmp_path))
+
+    assert idea_run.run_idea_workflow(survey_manifest=str(survey.manifest_path), output_root=str(tmp_path)) == str(tmp_path)
+    assert len(prompts) == 1 and request in prompts[0]
+    contract = captured[0][5]["task_contract"]
+    assert contract["original_request"] == request
+    assert contract["extraction_status"] == "complete"
+    assert contract["required_deliverables"][0]["source_quote"] == "discriminating observation"

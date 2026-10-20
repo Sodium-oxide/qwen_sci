@@ -246,7 +246,7 @@ def select_seed_representatives(
             enriched = deepcopy(item)
             enriched["portfolio_score"] = score
             ranked.append(enriched)
-        ranked.sort(key=lambda item: item["portfolio_score"]["composite"], reverse=True)
+        ranked.sort(key=lambda item: (item.get("delivery", {}).get("delivery_ready", False), item["portfolio_score"]["composite"]), reverse=True)
         seen_routes = set()
         selected: List[Dict[str, Any]] = []
         for item in ranked:
@@ -311,7 +311,9 @@ def select_primary_and_competitors(
         ranked.append(item)
     ranked.sort(key=lambda item: item["portfolio_score"]["composite"], reverse=True)
     valid_ranked = [item for item in ranked if item.get("invariant_status") != "violated"]
-    primary = valid_ranked[0] if valid_ranked else {}
+    assessed = any("delivery" in item for item in valid_ranked)
+    eligible = [item for item in valid_ranked if item.get("delivery", {}).get("delivery_ready") is True] if assessed else valid_ranked
+    primary = eligible[0] if eligible else {}
     primary_id = _candidate_key(primary)
     competitors = [item for item in ranked if _candidate_key(item) != primary_id][: max(0, int(max_competitors))]
     high_risk = [
@@ -319,7 +321,8 @@ def select_primary_and_competitors(
         if item["portfolio_score"]["risk"] >= 0.65
         or _text(item.get("maturity_status")).casefold() in {"exploratory", "needs_grounding"}
     ]
-    return {"primary": primary, "competitors": competitors, "high_risk": high_risk, "ranked": ranked}
+    return {"primary": primary, "competitors": competitors, "high_risk": high_risk, "ranked": ranked,
+            "best_available": valid_ranked[0] if valid_ranked else {}, "status": "ready" if eligible else "partial"}
 
 
 def build_idea_portfolio(
@@ -344,6 +347,7 @@ def build_idea_portfolio(
         max_candidates_per_seed=max_candidates_per_seed,
     )
     representatives = [item for items in representatives_by_seed.values() for item in items]
+    representatives.sort(key=lambda item: item.get("delivery", {}).get("delivery_ready", False), reverse=True)
     structurally_unique: List[Dict[str, Any]] = []
     collapsed_representatives: List[Dict[str, Any]] = []
     for item in representatives:
@@ -397,6 +401,8 @@ def build_idea_portfolio(
         "topic": _text(topic),
         "mature_ideas": normalized_mature,
         "selected_primary_idea": primary,
+        "best_available_idea": selection["best_available"],
+        "delivery_status": selection["status"],
         "competitive_ideas": selection["competitors"],
         "high_risk_ideas": selection["high_risk"] if preserve_high_risk_unique_candidates else [],
         "rejected_ideas": rejected,

@@ -236,6 +236,15 @@ def run_idea_workflow(
         requested_topic = survey_context.topic
         resolved_inputs["topic_source"] = "survey_manifest"
     resolved_inputs["topic"] = requested_topic
+    # A manifest-only invocation acquires its original request after loading the manifest.
+    if requested_topic and not (resolved_inputs.get("task_contract") or {}).get("original_request"):
+        from src.agents.idea_agent.utils.core.run_inputs import _extract_task_contract
+        resolved_inputs["task_contract"] = build_task_contract(
+            original_request=requested_topic,
+            interpretation=_extract_task_contract(requested_topic, config),
+            refinement_scope=str(resolved_inputs.get("refinement_scope") or ""),
+            refinement_scope_source=str(resolved_inputs.get("refinement_scope_source") or ""),
+        )
     if output_root is not None:
         resolved_inputs["output_root"] = str(output_root)
     if survey_context is not None:

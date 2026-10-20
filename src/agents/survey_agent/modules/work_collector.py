@@ -633,6 +633,8 @@ class WorkCollector:
             "sort": self._sh_retrieval_cache_json_value(lane.get("sort") or {}),
             "result_limit": self._sh_retrieval_cache_json_value(configured_limit),
             "semantic_scholar_fields": str(lane.get("semantic_scholar_fields") or "").strip(),
+            "anysearch_tag": str(lane.get("tag") or ""),
+            "anysearch_params": self._sh_retrieval_cache_json_value(lane.get("params") or {}),
         }
 
     def _sh_retrieval_lane_cache_key(self, lane: Mapping[str, Any]) -> str:
@@ -733,6 +735,10 @@ class WorkCollector:
         return str(self._work_collector_setting("enable_anysearch_discovery", False)).strip().lower() not in {"0", "false", "no", "off"}
 
     def _with_anysearch_lanes(self, plan):
+        if str(self._work_collector_setting("shared_search_enabled", True)).strip().lower() not in {"0", "false", "no", "off"}:
+            # Purpose-specific AnySearch probes are executed by the shared
+            # planner. Keep the existing native-provider comparison lanes.
+            return plan
         return with_anysearch_lanes(
             plan, enabled=self._anysearch_discovery_enabled(),
             result_limit=int(self._work_collector_setting("anysearch_result_limit", 10)),
@@ -1673,6 +1679,9 @@ class WorkCollector:
 
     @staticmethod
     def _candidate_identity_keys(paper: Mapping[str, Any]) -> list[str]:
+        if paper.get("source_type") and paper.get("source_type") not in {"paper", "preprint"}:
+            from src.pipeline.anysearch import identity_keys
+            return sorted(identity_keys(paper))
         keys: list[str] = []
         openalex_id = str(paper.get("openalex_id") or paper.get("paperId") or "").strip()
         openalex_match = re.search(r"(?:^|/)(W\d+)$", openalex_id, re.IGNORECASE)
@@ -1764,7 +1773,7 @@ class WorkCollector:
             ),
             "candidate_term": str(lane.get("candidate_term") or ""),
             **{key: value for key, value in lane.items() if key.startswith("discovery_")},
-            **{key: lane[key] for key in ("query_id", "purpose", "context_level", "context_reason", "expected_contribution", "term_origins", "quality_score", "action", "feedback_reason", "feedback_references") if key in lane},
+            **{key: lane[key] for key in ("query_id", "purpose", "context_level", "context_reason", "expected_contribution", "term_origins", "quality_score", "action", "feedback_reason", "feedback_references", "tag", "params", "target_subproblem", "need_id") if key in lane},
             "context_expansion": bool(lane.get("context_expansion")),
             "candidate_id": str(lane.get("candidate_id") or ""),
             "evidence_dimension": str(lane.get("evidence_dimension") or ""),
@@ -1985,7 +1994,8 @@ class WorkCollector:
             if not self._anysearch_discovery_enabled():
                 return [], False, "disabled"
             try:
-                result = self.data_manager.anysearch_api.search(query, limit=int(lane.get("result_limit") or 10))
+                options = {key: lane[key] for key in ("tag", "params") if key in lane}
+                result = self.data_manager.anysearch_api.search(query, limit=int(lane.get("result_limit") or 10), **options)
                 self.data_manager.register_discovered_papers(result.papers)
                 self.logger.info("AnySearch discovery status=%s papers=%s cached=%s", result.status, len(result.papers), result.cached)
                 return result.papers, result.successful, result.status
@@ -2110,6 +2120,9 @@ class WorkCollector:
     ) -> list[Dict]:
         lanes = retrieval_plan.get("query_lanes")
         lane_results: list[tuple[Mapping[str, Any], list[Dict]]] = []
+        supplemental = getattr(self, "_shared_search_candidates", [])
+        if supplemental:
+            lane_results.append(({"provider": "anysearch", "lane": "shared_information_needs", "query": topic}, supplemental))
         for lane in lanes if isinstance(lanes, list) else []:
             if not isinstance(lane, Mapping) or not self._discovery_lane_enabled(lane):
                 continue
@@ -2645,6 +2658,10 @@ class WorkCollector:
                         task_outcomes[index] = ([], empty_summary)
 
         all_lane_results: list[tuple[Mapping[str, Any], list[Dict]]] = []
+        supplemental = getattr(self, "_shared_search_candidates", [])
+        if supplemental:
+            all_lane_results.append(({"provider": "anysearch", "lane": "shared_information_needs",
+                                      "query": "scientific information needs", "retrieval_round": retrieval_round}, supplemental))
         summaries: list[dict[str, Any]] = []
         for outcome in [*discovery_outcomes, *task_outcomes]:
             if outcome is None:
@@ -3511,6 +3528,9 @@ class WorkCollector:
             "title": self._normalised_span_text(paper.get("title")),
             "abstract": self._normalised_span_text(paper.get("abstract")),
         }
+        from src.pipeline.source_context import source_texts as actual_source_texts
+        source_texts.update({key: self._normalised_span_text(value)
+                             for key, value in actual_source_texts(paper).items()})
         for raw_source, raw_text in (additional_evidence_sources or {}).items():
             source = str(raw_source or "").strip().casefold()
             text = self._normalised_span_text(raw_text)
@@ -5491,6 +5511,10 @@ class WorkCollector:
             research_context,
         )
         sh_retrieval_active = bool(valid_subhypotheses) and self._subhypothesis_retrieval_enabled()
+        from modules.adaptive_discovery import run_survey_search
+        shared = run_survey_search(self, topic=topic, research_context=research_context, subproblems=valid_subhypotheses)
+        self._shared_search_candidates = shared.get("papers", [])
+        self.shared_search_history = shared.get("history", {})
         sh_selection: Dict = {}
         if sh_retrieval_active:
             papers, sh_selection = self._collect_sh_seed_candidates(

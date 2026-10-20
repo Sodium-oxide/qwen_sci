@@ -57,6 +57,13 @@ def result_to_best_entry(result: Any, idea_taste_mode: Optional[str]) -> Dict[st
     best_entry = normalize_idea_contract(best_payload["idea"], keep_extra=True)
     best_entry["evaluation"] = best_payload["evaluation"]
     best_entry["search_score"] = best_payload["score"]
+    best_entry["delivery"] = best_payload.get("delivery", {})
+    best_entry["scientific_snapshot"] = best_payload["idea"]
+    best_entry["search_status"] = getattr(result, "status", "partial")
+    best_entry["unresolved"] = list(getattr(result, "unresolved", []) or [])
+    best_entry["operational_events"] = list(getattr(result, "operational_events", []) or [])
+    best_entry["acquisition_requests"] = list(getattr(result, "acquisition_requests", []) or [])
+    best_entry["search_stop_reason"] = getattr(result, "stop_reason", "budget_exhausted")
     best_entry["search_path"] = best_payload["path"]
     best_entry["pareto_candidates"] = {
         label: cand.to_dict() if cand else None for label, cand in result.pareto.items()

@@ -13,6 +13,13 @@ project:
 workspace:
   root: "workspace"
 
+# Shared by Survey ingestion, graph build/doctor and Idea retrieval.
+paper_graph:
+  db_path: "${repo_root}/data/processed/graph.db"
+  index_dir: "${repo_root}/data/processed/core_component_summary_vector_store"
+  model_path: "${repo_root}/models/bge-m3"
+  ingest_on_survey: true
+
 # ============================================
 # Shared API Configuration
 # ============================================
@@ -321,6 +328,7 @@ quantitative_modeling:
 # Survey Agent Configuration
 # ============================================
 survey:
+  paper_graph: ${paper_graph}
   output:
     root_dir: "${repo_root}/src/agents/survey_agent/outputs"
   multimodal_evidence:
@@ -417,6 +425,21 @@ survey:
     WorkCollector:
       enable_anysearch_discovery: true
       anysearch_result_limit: 10
+      shared_search_enabled: true
+      shared_search_use_llm: true
+      shared_search_max_needs: 5
+      shared_search_max_requests: 12
+      shared_search_max_http_requests: 80
+      shared_search_max_model_calls: 12
+      shared_search_max_acquisition_attempts: 20
+      shared_search_read_limit: 8
+      shared_search_max_seconds: 900
+      shared_search_max_rounds: 3
+      shared_search_plan_repair_attempts: 1
+      shared_search_checkpoint_attempts: 2
+      shared_search_result_limit: 5
+      shared_search_prefer_fulltext: true
+      shared_search_max_source_chars: 60000
       download_safe_mode: false
       download_timeout: 60
       download_in_parallel: true
@@ -583,7 +606,7 @@ survey:
     Database:
       default_top_k: 20
     PaperGraphRetriever:
-      db_path: data/processed/graph.db
+      db_path: ${paper_graph.db_path}
     WorkAnalyzer:
       abstract_only_mode: false
       abstract_when_full_text_fail: true
@@ -843,6 +866,7 @@ survey:
 # Idea Agent Configuration
 # ============================================
 idea:
+  paper_graph: ${paper_graph}
   enabled: true
   input: ""
   topic: ""
@@ -883,9 +907,19 @@ idea:
       tag: "academic.search"
       timeout_seconds: 30
       max_retries: 1
-      initial_queries: 2
-      candidate_queries: 2
-      result_limit: 8
+      # Maximum information needs; each need starts with 1-2 small probes.
+      initial_queries: 5
+      candidate_queries: 4
+      planner_use_llm: true
+      plan_repair_attempts: 1
+      max_rounds: 3
+      max_requests: 12
+      max_http_requests: 80
+      max_model_calls: 12
+      max_acquisition_attempts: 20
+      max_total_acquisition_attempts: 20
+      max_seconds: 900
+      result_limit: 5
       initial_read_limit: 4
       candidate_read_limit: 4
       max_total_papers: 8
@@ -948,8 +982,9 @@ idea:
     evaluation_temperature: 0.001
     generation_max_tokens: 16384
     evaluation_max_tokens: 16384
-    component_novelty_model_path: "${repo_root}/models/bge-m3"
-    component_novelty_index_dir: null
+    # Compatibility aliases. New path overrides belong in paper_graph above.
+    component_novelty_model_path: ${paper_graph.model_path}
+    component_novelty_index_dir: ${paper_graph.index_dir}
     component_novelty_retrieval_top_k: 50
     component_novelty_evidence_top_k: 5
     component_novelty_eval_model: "${idea.mcts.evaluation_model}"
@@ -959,6 +994,7 @@ idea:
     mechanism_commit_similarity_threshold: 0.6
     theory_transfer_retrieval_top_k: 3
     theory_transfer_similarity_threshold: 0.6
+    retrieval_candidate_budget: 384
     enable_vector_memory: true
     enable_symbolic_memory: true
     max_parallel_seeds: 4

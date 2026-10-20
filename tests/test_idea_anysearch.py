@@ -39,7 +39,8 @@ def _agent(tmp_path, **settings):
     config = OmegaConf.create({"run": {"input": "Identify the receptor mechanism"}, "agent": {
         "paper_keynote_keep_top_k": 1, "keynote_json_repair_attempts": 0,
         "anysearch": {"enabled": True, "initial_queries": 1, "candidate_queries": 1, "initial_read_limit": 2,
-                      "candidate_read_limit": 2, "max_total_papers": 3, "checkpoint_attempts": 2, **settings}}})
+                      "candidate_read_limit": 2, "max_total_papers": 3, "checkpoint_attempts": 2,
+                      "max_rounds": 1, **settings}}})
     agent = SimpleNamespace(artifact=artifact, run_dir=tmp_path, paper_repository=repository, config=config,
                             logger=logging.getLogger(__name__), model="qwen3.8-flash", project_config={"llm": {"provider": "qwen"}})
     agent.session = LigSession(artifact)

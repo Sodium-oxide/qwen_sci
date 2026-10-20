@@ -253,7 +253,7 @@ def _normalize_root_domains(items: Sequence[str]) -> List[str]:
             continue
         seen.add(canonical_key)
         ordered.append(canonical_key)
-    return ordered[:2]
+    return ordered
 
 
 def _format_root_domains_for_prompt(domains: Sequence[str]) -> str:
@@ -436,14 +436,16 @@ def _clean_component_explanation(explanation: Any, fallback_component: str) -> s
 def normalize_component_explanations(
     components: Sequence[str],
     raw_explanations: Any,
+    *, preserve_content: bool = False,
 ) -> Dict[str, str]:
     normalized_components: List[str] = []
     seen: Set[str] = set()
     for component in components:
         name = str(component).strip()
-        if not name or name.lower() in seen:
+        identity = name if preserve_content else name.lower()
+        if not name or identity in seen:
             continue
-        seen.add(name.lower())
+        seen.add(identity)
         normalized_components.append(name)
 
     lookup: Dict[str, str] = {}
@@ -452,7 +454,7 @@ def normalize_component_explanations(
             name = str(key).strip()
             if not name:
                 continue
-            lookup[name] = _clean_component_explanation(value, fallback_component=name)
+            lookup[name] = value if preserve_content and isinstance(value, str) else _clean_component_explanation(value, fallback_component=name)
     elif isinstance(raw_explanations, list):
         for item in raw_explanations:
             if not isinstance(item, dict):

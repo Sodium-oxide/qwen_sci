@@ -119,6 +119,20 @@ def test_manifest_verifier_detects_tampered_artifact(tmp_path: Path) -> None:
     assert any("survey_markdown" in error and "sha256 mismatch" in error for error in errors)
 
 
+def test_search_history_is_verified_and_handed_to_idea(tmp_path: Path) -> None:
+    from src.pipeline.survey_idea_loader import load_survey_idea_context, SurveyIdeaLoadError
+    history = {"schema_version": 2, "sessions": [{"phase": "survey", "queries": [
+        {"query": "solar stability dataset", "tag": "academic.dataset", "status": "success"}],
+        "reads": {"AS1": {"status": "completed"}}, "summary": {"N1": {"uncovered_terms": ["humidity"]}}}]}
+    (tmp_path / "search_history.json").write_text(json.dumps(history), encoding="utf-8")
+    published = _publish(tmp_path)
+    assert "search_history" in published["artifacts"]
+    assert load_survey_idea_context(tmp_path).to_payload()["search_history"] == history
+    (tmp_path / "search_history.json").write_text("{}", encoding="utf-8")
+    with pytest.raises(SurveyIdeaLoadError, match="search_history.*sha256 mismatch"):
+        load_survey_idea_context(tmp_path)
+
+
 def test_publish_projects_llm_gap_candidates_into_handoff(tmp_path: Path) -> None:
     calls: list[str] = []
 

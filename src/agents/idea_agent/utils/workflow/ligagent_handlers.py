@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 from collections.abc import Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -199,7 +200,10 @@ def _chat(agent: Any, ctx: StageContext, op_name: str):
 def _keynote_source_text(reference: Dict[str, Any]) -> str:
     keynote = str(reference.get("keynote") or "").strip()
     mode = str(reference.get("reading_mode") or "").strip()
-    return f"Source scope: {mode}\n\n{keynote}" if mode else keynote
+    if mode:
+        labels = {key: reference.get(key) for key in ("source_type", "url", "doi", "version", "repository_id", "reading_range", "fetched_at") if reference.get(key)}
+        return f"Source scope: {mode}\nSource metadata: {json.dumps(labels, ensure_ascii=False)}\n\n{keynote}"
+    return keynote
 
 
 def _score_keynote_reference(
@@ -1494,8 +1498,10 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
             step_summary="\nIdea generation degraded because no Survey-aligned candidate satisfied the structural invariants.",
             metrics={"invariant_failure": True, "mode_count": len(mode_entries)},
         )
+    fallback_candidates = fallback_pool or mode_entries
+    ready_candidates = [item for item in fallback_candidates if item.get("delivery", {}).get("delivery_ready")]
     best_entry = primary_entry or max(
-        fallback_pool or mode_entries,
+        ready_candidates or fallback_candidates,
         key=lambda item: float(item.get("search_score") or 0.0),
     )
     best_entry.setdefault("search_score", 0.0)
@@ -1591,6 +1597,7 @@ def execute_idea_generation_stage(agent: Any, ctx: StageContext) -> StageResult:
         f"Pareto set -> {pareto_summary}. Persisted {len(all_experiences)} defect->fix lifts to long-term memory."
     )
     return StageResult(
+        status="success" if final_payload.get("delivery", {}).get("delivery_ready") else "degraded",
         artifact_patch=ArtifactPatch(
             replace={
                 "latest_candidate": best_entry,
@@ -1931,12 +1938,21 @@ def execute_portfolio_synthesis_stage(agent: Any, ctx: StageContext) -> StageRes
 
 def execute_primary_idea_materialization_stage(agent: Any, ctx: StageContext) -> StageResult:
     portfolio = artifact_get(agent.artifact, "idea_portfolio", {})
-    primary = portfolio.get("selected_primary_idea", {}) if isinstance(portfolio, dict) else {}
+    final_result = artifact_get(agent.artifact, "idea_result", {})
+    primary = final_result.get("legacy_best_entry", {}) if isinstance(final_result, dict) else {}
+    if not primary:
+        primary = portfolio.get("selected_primary_idea", {}) if isinstance(portfolio, dict) else {}
+    primary = deepcopy(primary)
+    if primary and isinstance(final_result, dict) and isinstance(final_result.get("delivery"), dict):
+        primary["delivery"] = deepcopy(final_result["delivery"])
+        primary["search_status"] = final_result["delivery"].get("status", "partial")
+    delivery_ready = bool(primary) and primary.get("delivery", {}).get("delivery_ready") is True
     return StageResult(
+        status="success" if delivery_ready else "degraded",
         artifact_patch=ArtifactPatch(replace={"latest_candidate": primary}) if primary else ArtifactPatch(),
         state_patch={"idea_workflow_phase": "primary_idea_materialization"},
         step_summary="\nMaterialized the portfolio primary idea through the legacy Experiment-Agent handoff.",
-        metrics={"primary_materialized": bool(primary)},
+        metrics={"primary_materialized": bool(primary), "delivery_ready": delivery_ready},
     )
 
 

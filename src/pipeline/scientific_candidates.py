@@ -80,17 +80,20 @@ def evidence_id(paper: Mapping[str, Any]) -> str:
 
 
 def paper_text(paper: Mapping[str, Any]) -> str:
-    return " ".join(str(paper.get(key) or "") for key in ("title", "abstract"))
+    from .source_context import source_texts
+    return " ".join(str(value) for value in source_texts(paper).values())
 
 
 def grounded_spans(raw: Any, paper: Mapping[str, Any], *, literal_verification=True) -> list[dict[str, str]]:
+    from .source_context import source_texts
+    sources = source_texts(paper)
     spans = []
     for item in raw if isinstance(raw, list) else []:
         if not isinstance(item, Mapping):
             continue
         source, quote = text(item.get("source")), text(item.get("text"))
-        if source in {"title", "abstract"} and quote and paper.get(source):
-            if literal_verification and normalized(quote) not in normalized(paper.get(source)):
+        if source in sources and quote and sources[source]:
+            if literal_verification and normalized(quote) not in normalized(sources[source]):
                 continue
             span = {"source": source, "text": quote}
             if not literal_verification:

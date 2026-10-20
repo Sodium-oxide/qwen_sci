@@ -1362,6 +1362,16 @@ class WorkAnalyzer:
             "fulltext_reading_source": str(fulltext_reading_source or ""),
             "evidence_fragments": list(evidence_fragments or []),
         }
+        try:
+            from src.paper_graph.survey import ingest_survey_paper
+            manager = getattr(getattr(self, "work_collector", None), "data_manager", None)
+            ingest_survey_paper(self.config, manager, pid, {
+                **(keynote if isinstance(keynote, dict) else {}),
+                "keynote": keynote, "evidence_fragments": list(evidence_fragments or []),
+                "fulltext_reading_source": fulltext_reading_source,
+            })
+        except Exception as exc:
+            self.logger.warning("Paper graph ingestion failed for %s: %s", pid, exc)
         if self.config.BasicInfo.debug:
             self.logger.info(f"paper ID {pid} keynote: {keynote}")
 

@@ -337,15 +337,17 @@ def align_paper_assessments(expected_ids, value, diagnostics):
 
 
 def source_summaries(value, paper, diagnostics, **context):
+    from .source_context import source_texts
+    sources = source_texts(paper)
     summaries = record_list(value, "evidence_spans", diagnostics, **context)
     valid = []
     for summary in summaries:
         source, content = summary.get("source"), summary.get("text")
-        if not isinstance(source, str) or source not in {"title", "abstract"}:
+        if not isinstance(source, str) or source not in {"title", "abstract", "source_excerpt"}:
             diagnostics.unresolved("evidence_spans.source", "unknown_source_field", summary, **context)
         elif not isinstance(content, str) or not content.strip():
             diagnostics.unresolved("evidence_spans.text", "missing_source_summary", summary, **context)
-        elif not paper.get(source):
+        elif not sources.get(source):
             diagnostics.unresolved("evidence_spans.source", "source_content_unavailable", summary, **context)
         else:
             valid.append(summary)

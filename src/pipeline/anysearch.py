@@ -44,7 +44,8 @@ def as_bool(value: Any) -> bool:
     return value.strip().lower() in {"true", "1", "yes", "on"} if isinstance(value, str) else bool(value)
 
 
-def build_anysearch_request(base_url: str, query: str, limit: int = 10, *, tag: str = DEFAULT_ANYSEARCH_TAG) -> tuple[str, dict]:
+def build_anysearch_request(base_url: str, query: str, limit: int = 10, *, tag: str = DEFAULT_ANYSEARCH_TAG,
+                            params: Mapping[str, Any] | None = None) -> tuple[str, dict]:
     """Build the public REST request; an MCP URL is a separate protocol."""
     base = text(base_url).rstrip("/")
     if not _url(base) or not text(query):
@@ -61,6 +62,10 @@ def build_anysearch_request(base_url: str, query: str, limit: int = 10, *, tag: 
     payload = {"query": query.strip(), "max_results": min(10, max(1, int(limit))), "format": "json"}
     if text(tag):
         payload["tag"] = text(tag)
+    if params:
+        if not isinstance(params, Mapping):
+            raise ValueError("AnySearch params must be an object")
+        payload["params"] = dict(params)
     return endpoint, payload
 
 
@@ -71,7 +76,42 @@ def identity_keys(paper: Mapping[str, Any]) -> set[str]:
     title = re.sub(r"[^\w]+", "", text(paper.get("title") or paper.get("paper_title")).casefold())
     pid = text(paper.get("paperId") or paper.get("paper_id") or paper.get("openalex_id") or paper.get("node_id"))
     pid = re.sub(r"^https?://(?:api\.)?openalex\.org/", "", pid, flags=re.I)
-    return {key for key in (f"doi:{doi}" if doi else "", f"title:{title}" if title else "", f"id:{pid}" if pid else "") if key}
+    version = text(paper.get("version")) if paper.get("source_type") in {"dataset", "code"} else ""
+    if version == "unspecified":
+        version = ""
+    source_type = text(paper.get("source_type"))
+    suffix = f":source_type:{source_type}" if source_type and source_type not in {"paper", "preprint"} else ""
+    suffix += f":version:{version}" if version else ""
+    keys = {key + suffix for key in (f"doi:{doi}" if doi else "", f"title:{title}" if title else "", f"id:{pid}" if pid else "") if key}
+    for name, value in source_identifiers(paper).items():
+        if value:
+            keys.add(f"{name}:{value.casefold()}{suffix}")
+    return keys
+
+
+def source_identifiers(paper: Mapping[str, Any]) -> dict[str, str]:
+    """Extract identifiers from source URLs, never from discovery snippets."""
+    external = paper.get("externalIds") or paper.get("identifiers") or {}
+    external = external if isinstance(external, Mapping) else {}
+    url = _url(paper.get("url") or paper.get("landing_url") or paper.get("link"))
+    parsed = urlsplit(url)
+    host, path = (parsed.hostname or "").lower(), unquote(parsed.path)
+    pmcid = text(paper.get("pmcid") or external.get("PMCID") or external.get("pmcid"))
+    arxiv = text(external.get("ArXiv") or external.get("arxiv"))
+    repository = text(paper.get("repository_id"))
+    if host in {"pmc.ncbi.nlm.nih.gov", "www.ncbi.nlm.nih.gov", "europepmc.org"}:
+        match = re.search(r"\bPMC\d+\b", path, re.I)
+        pmcid = pmcid or (match.group().upper() if match else "")
+    if host in {"arxiv.org", "export.arxiv.org"}:
+        match = re.search(r"/(?:abs|pdf|html)/(.+?)(?:\.pdf)?$", path)
+        arxiv = arxiv or (match.group(1) if match else "")
+    if host in {"github.com", "gitlab.com"}:
+        repository = repository or "/".join(path.strip("/").split("/")[:2])
+        repository = f"{host}/{repository}" if repository and not repository.startswith(host + "/") else repository
+    if host.endswith("zenodo.org"):
+        match = re.search(r"/records?/(\d+)", path)
+        repository = repository or ("zenodo:" + match.group(1) if match else "")
+    return {"pmcid": pmcid.upper(), "arxiv": re.sub(r"v\d+$", "", arxiv), "repository": repository}
 
 
 def merge_papers(papers: list[dict]) -> list[dict]:
@@ -122,11 +162,25 @@ def normalize_anysearch_paper(raw: Mapping[str, Any]) -> dict:
             openalex_id = match.group(1).upper()
             break
     year = raw.get("year") or raw.get("publication_year")
+    source_type = text(raw.get("source_type") or raw.get("resource_type")).lower()
+    source_type = {"software": "code"}.get(source_type, source_type)
+    if not source_type:
+        host = (urlsplit(landing).hostname or "").lower()
+        if host in {"github.com", "gitlab.com"}:
+            source_type = "code"
+        elif host in {"zenodo.org", "figshare.com", "datadryad.org"}:
+            source_type = "dataset"
     stable_key = doi or re.sub(r"\W+", "", title.casefold()) + ":" + str(year or "")
+    if source_type and source_type not in {"paper", "preprint"}:
+        stable_key += ":source_type:" + source_type
+    if text(raw.get("version")) and source_type in {"dataset", "code"}:
+        stable_key += ":version:" + text(raw["version"])
     pid = openalex_id or "AS" + hashlib.sha256(stable_key.encode()).hexdigest()[:24]
     open_pdf = raw.get("openAccessPdf")
     open_pdf = open_pdf if isinstance(open_pdf, Mapping) else {}
     pdf = _url(raw.get("pdf_url") or raw.get("fulltext_url") or open_pdf.get("url"))
+    if not pdf and landing and urlsplit(landing).path.lower().endswith(".pdf"):
+        pdf = landing
     locations = []
     raw_locations = raw.get("oa_locations")
     raw_locations = raw_locations if isinstance(raw_locations, list) else []
@@ -155,9 +209,29 @@ def normalize_anysearch_paper(raw: Mapping[str, Any]) -> dict:
         "venue": text(raw.get("venue") or raw.get("journal")), "url": landing,
         "openAccessPdf": {"url": pdf} if pdf else {},
         "oa_locations": locations,
-        "openalex_oa_locations": [{"source": x["source"], "pdf_url": x["pdf_url"], "landing_page_url": x["landing_url"]} for x in locations],
+        # This is not an OpenAlex OA assertion. Keep the provider provenance.
+        "openalex_oa_locations": [{"source": x["source"], "pdf_url": x["pdf_url"], "landing_page_url": x["landing_url"], "oa_evidence": "declared_pdf_url" if x["pdf_url"] else ""} for x in locations],
+        "source_type": source_type,
+        "version": text(raw.get("version")), "repository_id": text(raw.get("repository_id")),
         "discovery_provenance": [{"provider": "anysearch", "provider_paper_id": text(raw.get("id") or raw.get("paper_id") or raw.get("paperId")), "url": landing}],
-    }
+    } | _identifier_fields(raw, landing)
+
+
+def _identifier_fields(raw: Mapping, landing: str) -> dict:
+    identifiers = source_identifiers({**raw, "url": landing})
+    external = dict(raw.get("externalIds") or raw.get("identifiers") or {})
+    doi = normalize_doi(raw.get("doi") or external.get("DOI") or external.get("doi"))
+    if not doi and (urlsplit(landing).hostname or "").lower() in {"doi.org", "dx.doi.org"}:
+        doi = normalize_doi(unquote(urlsplit(landing).path).lstrip("/"))
+    if doi:
+        external["DOI"] = doi
+    if identifiers["pmcid"]:
+        external["PMCID"] = identifiers["pmcid"]
+    if identifiers["arxiv"]:
+        # Keep the requested preprint version in provenance and download URL.
+        match = re.search(r"/(?:abs|pdf|html)/(.+?)(?:\.pdf)?$", urlsplit(landing).path)
+        external["ArXiv"] = text(external.get("ArXiv") or external.get("arxiv")) or (match.group(1) if match else identifiers["arxiv"])
+    return {"externalIds": external, "pmcid": identifiers["pmcid"], "repository_id": identifiers["repository"]}
 
 
 def parse_anysearch_response(payload: Any) -> list[dict]:
@@ -215,15 +289,24 @@ class AnySearchClient:
         self.enabled = enabled
         self.session = session or requests.Session()
 
-    def search(self, query: str, limit: int = 10) -> SearchResult:
+    def capabilities(self, *, refresh: bool = False) -> dict:
+        from .search_capabilities import load_capabilities
+        return load_capabilities(self, refresh=refresh)
+
+    def search(self, query: str, limit: int = 10, *, tag: str | None = None,
+               params: Mapping[str, Any] | None = None, max_attempts: int | None = None) -> SearchResult:
         if not self.enabled:
             return SearchResult(status="disabled")
         if not self.base_url:
             return SearchResult(status="unconfigured")
         try:
-            endpoint, payload = build_anysearch_request(self.base_url, query, limit, tag=self.tag)
+            selected_tag = self.tag if tag is None else tag
+            if tag is not None or params is not None:
+                from .search_capabilities import validate_route
+                validate_route(self.capabilities(), selected_tag, params or {})
+            endpoint, payload = build_anysearch_request(self.base_url, query, limit, tag=selected_tag, params=params)
         except (TypeError, ValueError):
-            return SearchResult()
+            return SearchResult(status="invalid_request" if tag is not None or params is not None else "provider_failure")
         limit = payload["max_results"]
         fingerprint = hashlib.sha256(json.dumps(["anysearch_rest_v2", endpoint, payload], sort_keys=True).encode()).hexdigest()
         path = self.cache_dir / (fingerprint + ".json") if self.cache_dir else None
@@ -238,8 +321,11 @@ class AnySearchClient:
             except (OSError, ValueError, KeyError, TypeError):
                 pass
         status = "provider_failure"
-        for attempt in range(self.max_retries + 1):
+        attempt_limit = self.max_retries + 1 if max_attempts is None else min(self.max_retries + 1, max(0, int(max_attempts)))
+        for attempt in range(attempt_limit):
             try:
+                from .adaptive_search import charge_acquisition_http
+                charge_acquisition_http()
                 response = self.session.post(endpoint, json=payload,
                                              headers={"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}, timeout=(5.0, self.timeout))
                 if response.status_code == 429 or response.status_code >= 500:
@@ -258,7 +344,7 @@ class AnySearchClient:
                 status = "provider_failure"
             except (requests.RequestException, ValueError, TypeError):
                 return SearchResult(status="provider_failure", attempts=attempt + 1)
-        return SearchResult(status=status, attempts=self.max_retries + 1)
+        return SearchResult(status=status, attempts=attempt_limit)
 
 
 def anysearch_from_survey_config(config: Any, *, cache_dir: str | Path | None = None) -> AnySearchClient:

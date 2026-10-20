@@ -161,6 +161,7 @@ class LigAgent(AgentBase):
         self._shared_paper_graph_vector_store = self._build_shared_paper_graph_vector_store(
             mcts_config
         )
+        self._paper_graph_consumers = []
         self.mcts = MemoryGuidedMCTS(
             chat_fn=self.chat,
             evaluation_prompt=get_mcts_evaluation_prompt(mcts_config.prompt_mode),
@@ -169,6 +170,7 @@ class LigAgent(AgentBase):
             paper_graph_vector_store=self._shared_paper_graph_vector_store,
             logger=logger,
         )
+        self._paper_graph_consumers.append(self.mcts)
 
         self.paper_repository = PaperRepository(
             config_path=survey_config_path,
@@ -316,22 +318,28 @@ class LigAgent(AgentBase):
         )
         mode_mcts.symbolic_memory = deepcopy(self.mcts.symbolic_memory)
         mode_mcts.persist_symbolic_memory = False
+        self._paper_graph_consumers.append(mode_mcts)
         return mode_mcts
 
     def _build_shared_paper_graph_vector_store(
         self,
         mcts_config: MCTSConfig,
     ) -> PaperGraphComponentVectorStore:
-        component_model_path = resolve_workspace_path(
-            mcts_config.component_novelty_model_path,
-            self.config,
+        from src.paper_graph.settings import PaperGraphSettings, select
+        settings = PaperGraphSettings.from_config(
+            self.config if select(self.config, "paper_graph") is not None else self.project_config
         )
+        component_model_path = str(settings.model_path)
+        # Keep the scorer's model and all mode-specific MCTS instances aligned.
+        mcts_config.paper_graph_db_path = str(settings.db_path)
+        mcts_config.component_novelty_model_path = component_model_path
+        mcts_config.component_novelty_index_dir = str(settings.index_dir)
         shared_store = PaperGraphComponentVectorStore(
             model_name_or_path=component_model_path,
-            index_dir=mcts_config.component_novelty_index_dir or None,
+            index_dir=str(settings.index_dir), db_path=str(settings.db_path),
         )
         try:
-            shared_store.warmup(allow_stale_graph=True)
+            shared_store.warmup()
             logger.info(
                 "[LigAgent] Eager-loaded component retrieval resources from model=%s index_dir=%s",
                 component_model_path,
@@ -341,14 +349,19 @@ class LigAgent(AgentBase):
         except Exception as exc:
             logger.warning(
                 "⚠️  Failed to eager-load component retrieval resources (%s). "
-                "Component novelty and theory-transfer retrieval will stay in fallback mode.",
+                "Paper-graph retrieval is unavailable until resources are repaired and reload_paper_graph() succeeds.",
                 exc,
             )
-            return PaperGraphComponentVectorStore(
-                model_name_or_path=component_model_path,
-                index_dir=mcts_config.component_novelty_index_dir or None,
-                disabled_error=str(exc),
-            )
+            shared_store._disabled_error = str(exc)
+            return shared_store
+
+    def reload_paper_graph(self, *, warm_model: bool = False) -> Dict[str, Any]:
+        """Controlled recovery for every MCTS route sharing this provider."""
+        self._shared_paper_graph_vector_store.reload(warm_model=warm_model)
+        for engine in self._paper_graph_consumers:
+            engine.reset_paper_graph_capability()
+        return {"status": "ready", "components": self._shared_paper_graph_vector_store.size,
+                "consumers": len(self._paper_graph_consumers)}
 
     def _build_memory_accessor(self) -> VectorMemoryAccessor:
         if self.provider.name == "qwen":

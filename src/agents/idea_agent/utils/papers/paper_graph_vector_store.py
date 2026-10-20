@@ -4,22 +4,23 @@ from __future__ import annotations
 
 import copy
 import html
-import importlib.util
 import json
 import faiss
 import numpy as np
+from threading import RLock
+from functools import wraps
 from dataclasses import dataclass
 from pathlib import Path
 from sentence_transformers import SentenceTransformer
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
-from src.agents.idea_agent.utils.core.json_utils import read_json_file
+from src.paper_graph.settings import PaperGraphSettings
+from src.paper_graph.repository import core_snapshot, readonly_connection
+from src.paper_graph.artifacts import model_identity, read_artifacts
+from src.paper_graph.indexing import component_records
+from src.paper_graph.provenance import file_signature, validate_graph
 
 _REPO_ROOT = Path(__file__).resolve().parents[5]
-_DEFAULT_MODEL_NAME = "bge-m3"
-_FAISS_FILE = "faiss.index"
-_METADATA_FILE = "meta.json"
-_GRAPH_SERVER_MODULE: Optional[Any] = None
 
 
 
@@ -66,6 +67,8 @@ def _normalize_keywords(value: Any) -> Tuple[str, ...]:
 
 
 def _normalize_matrix(matrix: Any) -> Any:
+    if not np.all(np.isfinite(matrix)):
+        raise ValueError("Embedding matrix contains non-finite values")
     norms = np.linalg.norm(matrix, axis=1, keepdims=True)
     zero_mask = norms == 0.0
     if np.any(zero_mask):
@@ -95,31 +98,20 @@ def _resolve_repo_path(path_value: Any) -> str:
     return raw
 
 
-def _load_graph_server_module() -> Any:
-    global _GRAPH_SERVER_MODULE
-    if _GRAPH_SERVER_MODULE is not None:
-        return _GRAPH_SERVER_MODULE
-
-    server_path = (_REPO_ROOT / "graph" / "server.py").resolve()
-    spec = importlib.util.spec_from_file_location("researchagent_graph_server", server_path)
-    if spec is None or spec.loader is None:
-        raise RuntimeError(f"Unable to load graph server module from {server_path}")
-
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    _GRAPH_SERVER_MODULE = module
-    return module
-
-
 def _default_db_path() -> Path:
-    graph_server = _load_graph_server_module()
-    return Path(graph_server.DB_PATH).expanduser().resolve()
+    return PaperGraphSettings.from_config().db_path
 
 
 def _default_index_dir() -> Path:
-    graph_server = _load_graph_server_module()
-    base_dir = Path(graph_server.BASE_DIR).expanduser().resolve()
-    return (base_dir / "core_component_summary_vector_store").resolve()
+    return PaperGraphSettings.from_config().index_dir
+
+
+def _locked(method):
+    @wraps(method)
+    def call(self, *args, **kwargs):
+        with self._lock:
+            return method(self, *args, **kwargs)
+    return call
 
 
 @dataclass(frozen=True)
@@ -169,37 +161,31 @@ class PaperGraphComponentVectorStore:
 
     def __init__(
         self,
-        model_name_or_path: str = _DEFAULT_MODEL_NAME,
+        model_name_or_path: Optional[str] = None,
         index_dir: Optional[str] = None,
         device: Optional[str] = None,
         db_path: Optional[str] = None,
         model: Optional[Any] = None,
         disabled_error: Optional[str] = None,
+        config: Any = None,
     ) -> None:
-        self.model_name_or_path = model_name_or_path
+        settings = PaperGraphSettings.from_config(config)
+        self._lock = RLock()
+        self.model_name_or_path = str(model_name_or_path or settings.model_path)
         self.index_dir = (
             Path(index_dir).expanduser().resolve()
             if index_dir
-            else _default_index_dir()
+            else settings.index_dir
         )
-        server_db_path = _default_db_path()
-        if db_path is not None:
-            candidate = Path(db_path).expanduser().resolve()
-            if candidate != server_db_path:
-                raise ValueError(
-                    "PaperGraphComponentVectorStore only supports DB access through graph/server.py. "
-                    f"Expected db_path={server_db_path}, got {candidate}."
-                )
-            self.db_path = candidate
-        else:
-            self.db_path = server_db_path
+        self.db_path = Path(db_path).expanduser().resolve() if db_path else settings.db_path
         self.device = device
 
         self._model: Optional[Any] = model
         self._index: Optional[Any] = None
         self._core_nodes: Dict[str, Dict[str, Any]] = {}
-        self._core_node_fallbacks: Dict[str, Dict[str, Any]] = {}
         self._component_records: Dict[int, ComponentEmbeddingRecord] = {}
+        self._manifest: Dict[str, Any] = {}
+        self._source_signatures: Dict[str, Any] = {}
         self._disabled_error: Optional[str] = str(disabled_error).strip() if disabled_error else None
 
     @property
@@ -217,10 +203,12 @@ class PaperGraphComponentVectorStore:
         self._ensure_available()
         if self._model is not None:
             return self._model
+        if self._manifest and model_identity(self._resolve_model_source())["revision"] != self._manifest["model"]["revision"]:
+            raise ValueError("Embedding model changed after index load; rebuild and reload.")
         kwargs: Dict[str, Any] = {}
         if self.device:
             kwargs["device"] = self.device
-        self._model = SentenceTransformer(self._resolve_model_source(), **kwargs)
+        self._model = SentenceTransformer(self._resolve_model_source(), local_files_only=True, **kwargs)
         return self._model
 
     def get_model(self) -> Any:
@@ -229,7 +217,7 @@ class PaperGraphComponentVectorStore:
     def warmup(
         self,
         index_dir: Optional[str] = None,
-        allow_stale_graph: bool = True,
+        allow_stale_graph: bool = False,
     ) -> "PaperGraphComponentVectorStore":
         self.load(index_dir=index_dir, allow_stale_graph=allow_stale_graph)
         self._get_model()
@@ -237,54 +225,51 @@ class PaperGraphComponentVectorStore:
 
     def _require_loaded_index(self) -> None:
         self._ensure_available()
-        if self._index is not None and self._component_records:
+        if self._index is not None:
+            self._assert_current()
             return
         self.load()
 
-    def _load_core_node_from_graph_server(self, node_id: str) -> Dict[str, Any]:
-        graph_server = _load_graph_server_module()
-        payload = graph_server.get_node(str(node_id))
-        if not isinstance(payload, dict) or not payload.get("found"):
-            return {}
-        node = payload.get("node")
-        if not isinstance(node, dict):
-            return {}
-        normalized = {
-            _normalize_text(key): _normalize_value(value)
-            for key, value in node.items()
-        }
-        normalized.setdefault("node_id", str(node_id))
-        normalized.setdefault("label", _normalize_text(node.get("label")) or str(node_id))
-        return normalized
+    def _assert_current(self) -> None:
+        conn = readonly_connection(self.db_path)
+        try:
+            state = dict(conn.execute("SELECT key,value FROM graph_state"))
+        finally:
+            conn.close()
+        version = self._manifest.get("graph", {})
+        if (int(state.get("revision", -1)) != version.get("revision")
+                or int(state.get("schema_version", -1)) != version.get("schema_version")):
+            raise ValueError("Paper graph changed after index load; rebuild and reload the component index.")
+        if any(file_signature(path) != signature for path, signature in self._source_signatures.items()):
+            raise ValueError("Paper source changed after index load; reimport, rebuild and reload.")
 
-    def _load_core_node_from_db(self, node_id: str) -> Dict[str, Any]:
-        return self._load_core_node_from_graph_server(node_id)
-
+    @_locked
     def load(
         self,
         index_dir: Optional[str] = None,
-        allow_stale_graph: bool = True,
+        allow_stale_graph: bool = False,
     ) -> "PaperGraphComponentVectorStore":
         self._ensure_available()
-        del allow_stale_graph
         target_dir = Path(index_dir).expanduser().resolve() if index_dir else self.index_dir
-        faiss_path = target_dir / _FAISS_FILE
-        metadata_path = target_dir / _METADATA_FILE
-
-        if not faiss_path.exists() or not metadata_path.exists():
-            raise FileNotFoundError(f"Component index files are missing under {target_dir}")
-
-        metadata = read_json_file(metadata_path)
-
-        self._index = faiss.read_index(str(faiss_path))
-        self.index_dir = target_dir
-
+        index, metadata, manifest = read_artifacts(target_dir)
+        nodes, graph = core_snapshot(self.db_path)
+        if allow_stale_graph:
+            raise ValueError("Stale graph loading is unsupported; rebuild against the current graph.")
+        if manifest.get("graph") != graph:
+            raise ValueError("Paper graph and component index versions differ; rebuild the index.")
+        if manifest.get("model", {}).get("revision") != model_identity(self._resolve_model_source())["revision"]:
+            raise ValueError("Configured embedding model differs from the index model; rebuild or select the matching model.")
+        signatures = validate_graph(self.db_path, nodes)
         raw_meta = metadata.get("meta") or {}
         if not isinstance(raw_meta, dict):
-            raise RuntimeError(f"Invalid component metadata under {metadata_path}")
-
-        self._component_records = {}
-        self._core_node_fallbacks = {}
+            raise ValueError(f"Invalid component metadata under {target_dir}")
+        node_map = {str(n["node_id"]): n for n in nodes}
+        expected = {r["id"]: r for r in component_records(nodes)}
+        if {r["id"]: r for r in raw_meta.values()} != expected:
+            raise ValueError("Component index metadata differs from active graph components; rebuild.")
+        if any(str(r.get("node_id")) not in node_map for r in raw_meta.values()):
+            raise ValueError("Component index contains deleted or missing Core nodes; rebuild the index.")
+        records = {}
         component_counts: Dict[str, int] = {}
 
         for fid in sorted(int(key) for key in raw_meta.keys()):
@@ -295,27 +280,35 @@ class PaperGraphComponentVectorStore:
             component_index = component_counts.get(node_id, 0)
             component_counts[node_id] = component_index + 1
             record = ComponentEmbeddingRecord.from_dict(payload, component_index=component_index)
-            self._component_records[fid] = record
-            self._core_node_fallbacks.setdefault(
-                record.node_id,
-                {
-                    "node_id": record.node_id,
-                    "label": record.node_label or record.node_id,
-                    "full_name": record.node_label or record.node_id,
-                    "paper_title": record.paper_title,
-                },
-            )
+            records[fid] = record
 
+        if self._manifest and self._manifest["model"] != manifest["model"]:
+            self._model = None
+        self._index, self._manifest = index, manifest
+        self._source_signatures = signatures
+        self._component_records = records
+        self._core_nodes, self.index_dir = node_map, target_dir
         return self
 
+    @_locked
+    def reload(self, *, warm_model: bool = False) -> "PaperGraphComponentVectorStore":
+        """Validate a replacement completely before clearing a disabled state."""
+        replacement = type(self)(self.model_name_or_path, str(self.index_dir), self.device,
+                                 str(self.db_path))
+        replacement.load()
+        if self._manifest.get("model") == replacement._manifest.get("model"):
+            replacement._model = self._model
+        if warm_model:
+            replacement._get_model()
+        for name in ("_index", "_manifest", "_component_records", "_core_nodes", "_source_signatures", "_model"):
+            setattr(self, name, getattr(replacement, name))
+        self._disabled_error = None
+        return self
+
+    @_locked
     def get_core_node(self, node_id: str) -> Dict[str, Any]:
-        key = str(node_id)
-        if key not in self._core_nodes:
-            payload = self._load_core_node_from_db(key)
-            if not payload:
-                payload = copy.deepcopy(self._core_node_fallbacks.get(key, {"node_id": key}))
-            self._core_nodes[key] = payload
-        return copy.deepcopy(self._core_nodes[key])
+        self._require_loaded_index()
+        return copy.deepcopy(self._core_nodes.get(str(node_id), {}))
 
     def ensure_index(
         self,
@@ -324,7 +317,9 @@ class PaperGraphComponentVectorStore:
         force_rebuild: bool = False,
     ) -> "PaperGraphComponentVectorStore":
         del batch_size, persist
-        if self._index is not None and self._component_records and not force_rebuild:
+        self._ensure_available()
+        if self._index is not None and not force_rebuild:
+            self._assert_current()
             return self
         if force_rebuild:
             raise NotImplementedError(
@@ -332,6 +327,7 @@ class PaperGraphComponentVectorStore:
             )
         return self.load()
 
+    @_locked
     def search(
         self,
         query: str,
@@ -343,6 +339,8 @@ class PaperGraphComponentVectorStore:
         if not text:
             return []
         self.ensure_index()
+        if not self.size:
+            return []
         model = self._get_model()
         query_embedding = model.encode(
             [text],
@@ -377,6 +375,7 @@ class PaperGraphComponentVectorStore:
             raise ValueError("query_embeddings must contain at least one vector")
         return _normalize_matrix(queries)
 
+    @_locked
     def search_component_hits_by_vectors(
         self,
         query_embeddings: Sequence[Sequence[float]],
@@ -390,7 +389,11 @@ class PaperGraphComponentVectorStore:
             raise ValueError("Index is not available")
 
         queries = self._prepare_query_embeddings(query_embeddings)
+        if queries.shape[1] != self._index.d:
+            raise ValueError(f"Query embedding dimension {queries.shape[1]} differs from index dimension {self._index.d}")
         max_hits = min(int(top_k), int(self._index.ntotal))
+        if not max_hits:
+            return [[] for _ in queries]
         scores, ids = self._index.search(queries, max_hits)
 
         all_hits: List[List[Dict[str, Any]]] = []
@@ -417,6 +420,7 @@ class PaperGraphComponentVectorStore:
             all_hits.append(hits)
         return all_hits
 
+    @_locked
     def search_by_vectors(
         self,
         query_embeddings: Sequence[Sequence[float]],
@@ -431,10 +435,17 @@ class PaperGraphComponentVectorStore:
 
         component_cap = max(0, int(component_hits_per_core))
         per_query_hits = max(int(top_k) * max(component_cap, 1) * 8, int(top_k))
-        all_component_hits = self.search_component_hits_by_vectors(
-            query_embeddings=query_embeddings,
-            top_k=per_query_hits,
-        )
+        # One Core can own arbitrarily many high-scoring components. Widen
+        # until we have enough distinct Cores or have actually scanned all
+        # vectors, so a short result means corpus exhaustion to MCTS.
+        while True:
+            all_component_hits = self.search_component_hits_by_vectors(
+                query_embeddings=query_embeddings, top_k=per_query_hits,
+            )
+            distinct = {h["node_id"] for hits in all_component_hits for h in hits}
+            if len(distinct) >= top_k or per_query_hits >= self._index.ntotal:
+                break
+            per_query_hits = min(per_query_hits * 2, self._index.ntotal)
 
         best_by_component: Dict[Tuple[str, int], Dict[str, Any]] = {}
         for hits in all_component_hits:
@@ -464,7 +475,7 @@ class PaperGraphComponentVectorStore:
             score = float(hit.get("score") or 0.0)
             entry = grouped.get(node_id)
             if entry is None:
-                core_node = self.get_core_node(node_id)
+                core_node = copy.deepcopy(self._core_nodes[node_id])
                 entry = {
                     "node_id": node_id,
                     "score": score,

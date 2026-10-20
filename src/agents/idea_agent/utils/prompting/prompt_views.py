@@ -70,7 +70,7 @@ def _extract_named_items(
 
 
 def _format_kv_line(label: str, value: Any, limit: int = DEFAULT_TEXT_LIMIT) -> str:
-    clipped = _clip_text(value)
+    clipped = _clip_text(value, limit)
     return f"{label}: {clipped or 'None'}"
 
 
@@ -553,40 +553,10 @@ def format_evaluator_idea_prompt_view(
             empty="No idea available.",
         )
     payload = normalize_idea_contract(payload, keep_extra=True)
-
-    component_lines: List[str] = []
-    components = _normalize_list(payload.get("components"))
-    explanations = payload.get("component_explanations")
-    explanation_map = explanations if isinstance(explanations, Mapping) else {}
-    for component in components[:8]:
-        name = _clip_text(component)
-        if not name:
-            continue
-        explanation = _clip_text(explanation_map.get(component)) if explanation_map else ""
-        if explanation:
-            component_lines.append(f"- {name}: {explanation}")
-        else:
-            component_lines.append(f"- {name}")
-
-    root_domains = _normalize_list(payload.get("root_domains"))
-    root_domain_text = _format_inline_list(root_domains, max_items=2, item_limit=16) if root_domains else "None"
-
-    sections = [
-        _format_section(
-            heading,
-            [
-                _format_kv_line("Title", payload.get("title"), 140),
-                _format_kv_line("Abstract", payload.get("abstract"), 220),
-                _format_kv_line("Core Contribution", payload.get("core_contribution"), 220),
-                _format_kv_line("Method", payload.get("method"), 260),
-                _format_kv_line("Risks", payload.get("risks"), 220),
-                f"Root domains: {root_domain_text}",
-                f"Target defects: {_format_inline_list(payload.get('target_defects'), max_items=6, item_limit=50)}",
-            ],
-        ),
-        _format_section("Components", component_lines),
-    ]
-    return _join_sections(sections, empty="No idea available.")
+    # Evaluation must not reuse the intentionally compact selection view.
+    # Runtime uses budgeted review packets for large candidates.
+    from src.agents.idea_agent.utils.mcts.review_contracts import canonical_json, scientific_content
+    return heading + "\n" + canonical_json(scientific_content(payload))
 
 
 def format_evaluator_edit_plan_prompt_view(

@@ -84,3 +84,16 @@ def test_merge_derives_paths_when_survey_paths_are_not_explicit(
     assert merged.BasicInfo.save_path == str(expected_dir / "survey.md")
     assert merged.BasicInfo.save_json_path == str(expected_dir / "survey.json")
     assert merged.BasicInfo.evaluation_save_path == str(expected_dir / "evaluation.txt")
+
+
+def test_shared_paper_graph_paths_survive_full_and_detached_survey_configs(tmp_path, monkeypatch):
+    from src.config import DEFAULT_CONFIG_PATH, load_config
+    from src.paper_graph.settings import PaperGraphSettings
+    monkeypatch.setattr(config_utils, "resolve_runtime_config_path", lambda: DEFAULT_CONFIG_PATH)
+    graph = {"db_path": str(tmp_path / "custom.db"), "index_dir": str(tmp_path / "custom-index"),
+             "model_path": str(tmp_path / "model"), "ingest_on_survey": False}
+    for overrides in ({"paper_graph": graph}, {"survey": {"paper_graph": graph}}):
+        merged = config_utils.merge_with_default_survey_config(OmegaConf.create(overrides))
+        assert PaperGraphSettings.from_config(merged).db_path == tmp_path / "custom.db"
+        assert merged.ModuleInfo.PaperGraphRetriever.db_path == str(tmp_path / "custom.db")
+        assert not merged.paper_graph.ingest_on_survey

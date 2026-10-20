@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from collections.abc import Mapping
 from copy import deepcopy
 from typing import Any
@@ -30,7 +31,7 @@ def refinement_scope_context(
     }
 
 
-def _quoted_requirements(value: Any, original_request: str) -> list[dict[str, str]]:
+def _quoted_requirements(value: Any, original_request: str, kind: str = "deliverable") -> list[dict[str, str]]:
     if not isinstance(value, list):
         return []
     requirements: list[dict[str, str]] = []
@@ -40,7 +41,11 @@ def _quoted_requirements(value: Any, original_request: str) -> list[dict[str, st
         if not quote or quote not in original_request or quote in seen:
             continue
         seen.add(quote)
-        requirements.append({"text": quote, "source_quote": quote, "source": "user_input"})
+        requirements.append({
+            "requirement_id": "req:" + hashlib.sha256((kind + "\n" + quote).encode()).hexdigest()[:20],
+            "requirement_kind": kind, "text": quote, "source_quote": quote, "source": "user_input",
+            "acceptance_description": (_text(item.get("acceptance_description")) or quote) if isinstance(item, Mapping) else quote,
+        })
     return requirements
 
 
@@ -63,22 +68,43 @@ def build_task_contract(
         mode = "idea_generation"
     if mode not in _TASK_MODES:
         mode = "idea_refinement" if scope_context["refinement_scope"] else "idea_generation"
-    constraints = _quoted_requirements(extracted.get("user_constraints"), request)
+    constraints = _quoted_requirements(extracted.get("user_constraints"), request, "constraint")
     if scope_context["refinement_scope"]:
         constraints = [item for item in constraints if item["text"] != scope_context["refinement_scope"]]
         constraints.append({
+            "requirement_id": "req:" + hashlib.sha256(("constraint\n" + scope_context["refinement_scope"]).encode()).hexdigest()[:20],
+            "requirement_kind": "constraint",
+            "acceptance_description": scope_context["refinement_scope"],
             "text": scope_context["refinement_scope"],
             "source_quote": scope_context["refinement_scope"],
             "source": scope_context["refinement_scope_source"],
         })
+    status = _text(extracted.get("extraction_status"))
+    if status not in {"complete", "partial", "failed"}:
+        status = "partial"
+    lists_valid = all(isinstance(extracted.get(key), list) for key in ("required_deliverables", "user_constraints", "problem_premises"))
+    quotes_valid = all(
+        isinstance(item, Mapping) and bool(_text(item.get("source_quote")))
+        and (_text(item.get("source_quote")) in request or (
+            key == "user_constraints" and bool(scope_context["refinement_scope"])
+            and _text(item.get("source_quote")) == scope_context["refinement_scope"]
+            and _text(item.get("source")) == scope_context["refinement_scope_source"]
+        ))
+        for key in ("required_deliverables", "user_constraints", "problem_premises")
+        for item in (extracted.get(key) if isinstance(extracted.get(key), list) else [])
+    )
+    if status == "complete" and not (lists_valid and quotes_valid):
+        status = "partial"
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "original_request": request,
         "task_mode": mode,
         "task_mode_source_quote": mode_quote,
-        "required_deliverables": _quoted_requirements(extracted.get("required_deliverables"), request),
+        "extraction_status": status,
+        "extraction_errors": list(extracted.get("extraction_errors") or []),
+        "required_deliverables": _quoted_requirements(extracted.get("required_deliverables"), request, "deliverable"),
         "user_constraints": constraints,
-        "problem_premises": _quoted_requirements(extracted.get("problem_premises"), request),
+        "problem_premises": _quoted_requirements(extracted.get("problem_premises"), request, "premise"),
     }
 
 

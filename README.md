@@ -105,6 +105,11 @@ data/processed/core_component_summary_vector_store/
 workspace/science-runs/
 ```
 
+Paper/Core/Component ingestion, versioned index builds, supplementary extraction
+and runtime recovery are documented in [Paper graph](docs/paper_graph.md).
+Run `qwensci paper-graph check --config /path/to/config.yaml` to inspect graph,
+source, index and model readiness without initializing embeddings.
+
 ### Install local embedding models with ModelScope
 
 The local vector-retrieval and novelty components use `all-MiniLM-L6-v2` and

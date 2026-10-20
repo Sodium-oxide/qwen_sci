@@ -153,3 +153,39 @@ def test_survey_bibliography_uses_discovered_metadata(tmp_path):
     citation = analyzer.generate_mla(paper["paperId"])
     assert "One Author and Two Author" in citation and "Journal" in citation and "2026" in citation
     analyzer.semantic_scholar_api.get_paper_details.assert_not_called()
+
+
+@pytest.mark.parametrize("parallel", [True, False])
+def test_verified_source_is_reused_in_corpus_without_download_or_mineru(tmp_path, parallel):
+    import hashlib
+    source = tmp_path / "repository.md"
+    content = "Dataset units and measurements from a versioned repository."
+    source.write_text(content, encoding="utf-8")
+    paper = _paper(abstract="", source_type="dataset")
+    paper.update(verified_source_path=str(source), verified_source_sha256=hashlib.sha256(content.encode()).hexdigest(),
+                 verified_reading_mode="repository_metadata", version="v2")
+    manager = _manager(tmp_path)
+    manager.config.ModuleInfo.WorkCollector.download_in_parallel = parallel
+    manager._fulltext_download_enabled = lambda: True
+    manager._get_reference_graph = lambda: None
+    manager._download_single_paper = Mock(side_effect=AssertionError("Should reuse actual source"))
+    assert manager.download_and_parse_papers([paper], limit=1) == [paper["paperId"]]
+    actual = manager.get_paper_raw_markdown(paper["paperId"])
+    assert content in actual and '"version": "v2"' in actual
+    manager._download_single_paper.assert_not_called()
+    source.write_text("tampered", encoding="utf-8")
+    assert manager._verified_source_content(paper["paperId"]) == ""
+
+
+def test_per_lane_channel_parameters_are_dispatched_and_cache_isolated(tmp_path):
+    collector = object.__new__(WorkCollector)
+    collector.config = SimpleNamespace(ModuleInfo=SimpleNamespace(WorkCollector=SimpleNamespace(enable_anysearch_discovery=True)))
+    collector.logger = logging.getLogger(__name__)
+    client = SimpleNamespace(search=Mock(return_value=SearchResult([], "valid_empty")))
+    collector.data_manager = SimpleNamespace(anysearch_api=client, register_discovered_papers=Mock())
+    base = {"provider": "anysearch", "query": "receptor modulation", "result_limit": 3,
+            "tag": "academic.biomedical", "params": {"field": "tiab"}}
+    assert collector._execute_query_lane_with_status(base) == ([], True, "valid_empty")
+    client.search.assert_called_once_with("receptor modulation", limit=3, tag="academic.biomedical", params={"field": "tiab"})
+    assert collector._sh_retrieval_lane_cache_key(base) != collector._sh_retrieval_lane_cache_key({**base, "tag": "academic.search"})
+    assert collector._sh_retrieval_lane_cache_key(base) != collector._sh_retrieval_lane_cache_key({**base, "params": {"field": "all"}})

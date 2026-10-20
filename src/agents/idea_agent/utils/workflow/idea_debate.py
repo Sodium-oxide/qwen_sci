@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from copy import deepcopy
+from src.agents.idea_agent.utils.mcts.review_contracts import invalidate_delivery_on_rewrite
 from itertools import combinations
 import json
 from typing import Any, Dict, Iterable, List, Mapping, Optional
@@ -554,6 +555,7 @@ def _apply_revision(
     normalized["target_gap_ids"] = list(original_gap_ids)
     for field_name in EXPERIMENT_FIELDS:
         normalized.pop(field_name, None)
+    invalidate_delivery_on_rewrite(original, normalized, reason="Debate revised scientific content; a fresh candidate review is required.")
     return normalized, list(dict.fromkeys(changed_fields)), bool(changed_fields), gap_violation
 
 
@@ -877,6 +879,8 @@ def _debate_single_direction(
             candidate=effective_scientific_contract(current),
             survey_handoff=survey_handoff if isinstance(survey_handoff, Mapping) else None,
             research_object=current.get("scientific_object"),
+            contribution_review=current.get("evaluation", {}).get("contribution_review"),
+            task_request=topic,
         )
         preflight = _baseline_concerns(
             current,
@@ -971,6 +975,8 @@ def _debate_single_direction(
             candidate=effective_scientific_contract(current),
             survey_handoff=survey_handoff if isinstance(survey_handoff, Mapping) else None,
             research_object=current.get("scientific_object"),
+            contribution_review=(payload.get("contribution_review") or {}) if isinstance(payload, Mapping) else {},
+            task_request=topic,
         )
         postflight = _baseline_concerns(
             current,

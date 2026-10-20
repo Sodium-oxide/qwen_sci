@@ -19,6 +19,15 @@ from src.agents.idea_agent.utils.core.json_utils import (
 )
 from src.agents.idea_agent.utils.core.response_parsing import parse_json_response
 from src.agents.idea_agent.utils.core.task_contract import survey_evidence_for_prompt, with_task_contract
+from src.agents.idea_agent.utils.mcts.review_contracts import (
+    REVIEW_CONTRACT_VERSION, CONTENT_FIELDS, ReviewIssue, active_defects, apply_field_updates, changed_paths,
+    content_hash, dependency_rechecks, delivery_assessment, normalize_requirement_reviews,
+    reconcile_issues, required_items, review_instructions, scientific_content, transition_reward,
+)
+from src.agents.idea_agent.utils.mcts.retrieval_contracts import CapabilityState, RetrievalResult, probe_paper_graph
+from src.agents.idea_agent.utils.mcts.review_execution import run_review
+from src.agents.idea_agent.utils.prompting.review_packets import _leaves, build_review_packets, token_bound
+from src.agents.idea_agent.utils.workflow.claim_evidence import audit_claims, claim_instructions, evidence_catalog
 from src.agents.idea_agent.utils.mcts.defect_registry import (
     format_defect_registry,
     profile_skill_defect_tags,
@@ -90,6 +99,8 @@ HYPOTHESIS_CONTRACT_FIELDS = (
     "gap_alignment",
     "evidence_requirement",
     "evidence_basis",
+    "claims",
+    "evidence_records",
 )
 
 _ROUTE_REQUIRED_CONTRACT_FIELDS = {
@@ -185,6 +196,7 @@ def build_child_component_explanations(
     parent_lookup = normalize_component_explanations(
         getattr(parent_state, "components", []),
         getattr(parent_state, "component_explanations", {}),
+        preserve_content=True,
     )
     payload_lookup = normalize_component_explanations(
         list((instantiated or {}).get("component_role_explanations", {}).keys())
@@ -264,6 +276,9 @@ class EditPlan:
     profile_rendering_id: str = ""
     preferred_operations: List[str] = field(default_factory=list)
     scientific_object_schema: Dict[str, Any] = field(default_factory=dict)
+    required_capabilities: List[str] = field(default_factory=list)
+    evidence_policy: str = "exploratory"
+    review_feedback: List[Dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -279,6 +294,9 @@ class EditPlan:
             "profile_rendering_id": self.profile_rendering_id,
             "preferred_operations": self.preferred_operations,
             "scientific_object_schema": self.scientific_object_schema,
+            "required_capabilities": self.required_capabilities,
+            "evidence_policy": self.evidence_policy,
+            "review_feedback": self.review_feedback,
         }
 
 
@@ -301,6 +319,8 @@ class EditOperatorSkill:
     allowed_object_types: List[str] = field(default_factory=list)
     preferred_operations: List[str] = field(default_factory=list)
     profile_rendering_id: str = ""
+    required_capabilities: List[str] = field(default_factory=list)
+    evidence_policy: str = "exploratory"
 
     def to_prompt_line(self) -> str:
         defects = ", ".join(self.defects) if self.defects else "unspecified"
@@ -332,6 +352,7 @@ class SkillUsagePrior:
     reward_ema: float = 0.5
     prior: float = 0.5
     rule_constraints: List[str] = field(default_factory=list)
+    feedback_history: List[str] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -340,6 +361,7 @@ class SkillUsagePrior:
             "reward_ema": self.reward_ema,
             "prior": self.prior,
             "rule_constraints": self.rule_constraints,
+            "feedback_history": self.feedback_history,
         }
 
 
@@ -705,6 +727,8 @@ class SkillCatalog:
                 required_protocols=list(payload.get("required_protocols", [])),
                 avoid_combinations=list(payload.get("avoid_combinations", [])),
                 execution_logic=list(payload.get("execution_logic", [])),
+                required_capabilities=list(payload.get("required_capabilities", [])),
+                evidence_policy=str(payload.get("evidence_policy", "exploratory")),
                 source_path="builtin-default",
                 profile_renderings=(
                     dict(payload.get("profile_renderings"))
@@ -781,6 +805,8 @@ class SkillCatalog:
             avoid_combinations=avoid_combinations,
             execution_logic=execution_logic,
             source_path=str(path),
+            required_capabilities=sections.get("required_capabilities", []) or list(template.get("required_capabilities", [])),
+            evidence_policy=(sections.get("evidence_policy", []) or [template.get("evidence_policy", "exploratory")])[0],
             profile_renderings=(
                 dict(template.get("profile_renderings"))
                 if isinstance(template.get("profile_renderings"), dict)
@@ -1138,6 +1164,8 @@ class SkillCatalog:
             profile_rendering_id=str(skill.profile_rendering_id or ""),
             preferred_operations=list(skill.preferred_operations),
             scientific_object_schema=normalized_object_schema,
+            required_capabilities=list(skill.required_capabilities),
+            evidence_policy=skill.evidence_policy,
         )
         return plan
 
@@ -1150,6 +1178,8 @@ class SkillCatalog:
         success_threshold: float = 0.6,
     ) -> SkillUsagePrior:
         prior = self.priors.setdefault(skill_name, SkillUsagePrior())
+        if feedback.strip() and feedback not in prior.feedback_history:
+            prior.feedback_history = [*prior.feedback_history, feedback][-8:]
         prior.attempts += 1
         clipped_reward = max(0.0, min(1.0, reward))
         if clipped_reward >= max(0.0, min(1.0, success_threshold)):
@@ -1533,23 +1563,32 @@ def materialize_child_state(
     *,
     idea_state_cls: Any,
 ) -> Any:
-    new_components = apply_edit_plan_to_components(parent_state.components, plan)
+    inst = deepcopy(instantiated or {})
+    delta_mode = "field_updates" in inst
+    parent_payload = (parent_state.to_payload() if callable(getattr(parent_state, "to_payload", None))
+                      else {k: deepcopy(getattr(parent_state, k)) for k in CONTENT_FIELDS if hasattr(parent_state, k)})
+    parent_hash = content_hash(scientific_content(parent_payload))
+    if delta_mode:
+        patched = apply_field_updates(parent_payload, inst, parent_hash)
+        # Operational metadata comes from the executor, never the scientific delta.
+        inst = {**patched, **{k: v for k, v in inst.items() if k.startswith("_") or k == "rationale"}}
+        inst["scientific_contract"] = deepcopy(patched.get("scientific_intervention", {}).get("hypothesis_contract", {}))
+    new_components = (list(inst.get("components", parent_state.components)) if delta_mode
+                      else apply_edit_plan_to_components(parent_state.components, plan))
     component_explanations = build_child_component_explanations(
         parent_state,
         new_components,
         plan,
-        instantiated,
+        inst,
     )
+    if delta_mode:
+        component_explanations = deepcopy(inst.get("component_explanations", component_explanations))
 
-    inst = instantiated or {}
-    title = inst.get("title") or f"{parent_state.title} | {plan.skill_name.replace('-', ' ').title()}"
-    abstract = inst.get("abstract") or (
-        f"Component-level macro action '{plan.skill_name}' targets defects "
-        f"{', '.join(plan.target_defects)} via {len(plan.component_edits)} atomic edits."
-    )
-    core = inst.get("core_contribution") or plan.objective
-    method = inst.get("method") or plan_to_method_text(plan)
-    risks = inst.get("risks") or f"Guardrails: {'; '.join(plan.guardrails)}"
+    title = inst.get("title", parent_state.title)
+    abstract = inst.get("abstract", parent_state.abstract)
+    core = inst.get("core_contribution", parent_state.core_contribution)
+    method = inst.get("method", parent_state.method)
+    risks = inst.get("risks", parent_state.risks)
     rationale = inst.get("rationale") or plan.compile_notes
     tags = _dedupe_keep_order_strings(list(parent_state.tags) + [plan.skill_name] + list(plan.target_defects))
     selection_metadata = selection_metadata or {}
@@ -1563,9 +1602,10 @@ def materialize_child_state(
     skill_selection_breakdown = selection_metadata.get("skill_selection_breakdown")
     if isinstance(skill_selection_breakdown, dict) and skill_selection_breakdown:
         skill_metrics["skill_selection_breakdown"] = skill_selection_breakdown
-    scientific_intervention = dict(
-        getattr(parent_state, "scientific_intervention", {}) or {}
-    )
+    scientific_intervention = deepcopy(inst.get("scientific_intervention", parent_state.scientific_intervention))
+    if inst.get("_retrieval_result"):
+        skill_metrics["retrieval_result"] = deepcopy(inst["_retrieval_result"])
+        skill_metrics["evidence_mode"] = inst.get("_evidence_mode", "exploratory")
     coverage_branch = selection_metadata.get("data_anchored_coverage_branch")
     if isinstance(coverage_branch, Mapping):
         coverage_branch = dict(coverage_branch)
@@ -1582,15 +1622,15 @@ def materialize_child_state(
                 inherited_data_contract["active_coverage_branch"] = coverage_branch
                 scientific_intervention["data_anchored_contract"] = inherited_data_contract
     parent_contract = _parent_hypothesis_contract(parent_state)
-    instantiated_contract = _contract_from_instantiation(inst)
-    scientific_contract = merge_hypothesis_contract(
+    instantiated_contract = deepcopy(inst["scientific_contract"]) if delta_mode else _contract_from_instantiation(inst)
+    scientific_contract = instantiated_contract if delta_mode else merge_hypothesis_contract(
         parent_contract,
         instantiated_contract,
     )
     gap_focus = scientific_intervention.get("gap_search_focus") or {}
-    if gap_focus.get("primary_gap_id"):
+    if not delta_mode and gap_focus.get("primary_gap_id"):
         scientific_contract["target_gap_ids"] = [gap_focus["primary_gap_id"]]
-    if scientific_contract:
+    if scientific_contract or delta_mode:
         scientific_intervention["hypothesis_contract"] = scientific_contract
     direction_mode = str(
         scientific_contract.get("direction_mode")
@@ -1598,14 +1638,14 @@ def materialize_child_state(
         or getattr(getattr(mcts, "idea_taste_preset", None), "mode", None)
         or "default"
     ).strip()
-    if direction_mode:
+    if direction_mode and not delta_mode:
         scientific_intervention["direction_mode"] = direction_mode
     direction_summary = str(
         scientific_contract.get("direction_summary")
         or getattr(getattr(mcts, "idea_taste_preset", None), "summary", None)
         or ""
     ).strip()
-    if direction_summary:
+    if direction_summary and not delta_mode:
         scientific_intervention["direction_summary"] = direction_summary
     route_id = str(getattr(mcts, "route_id", "") or "").strip()
     incomplete_route_fields = _route_contract_incomplete_fields(
@@ -1633,7 +1673,7 @@ def materialize_child_state(
         )
     else:
         scientific_intervention.pop("route_contract_parent_values", None)
-    return idea_state_cls(
+    child = idea_state_cls(
         title=title,
         abstract=abstract,
         core_contribution=core,
@@ -1646,19 +1686,27 @@ def materialize_child_state(
         memory_refs=plan.memory_refs,
         components=new_components,
         component_explanations=component_explanations,
-        root_domains=list(getattr(parent_state, "root_domains", []) or []),
-        discipline_resolution=dict(
+        root_domains=deepcopy(inst.get("root_domains", [])) if delta_mode else list(getattr(parent_state, "root_domains", []) or []),
+        discipline_resolution=deepcopy(inst.get("discipline_resolution", {})) if delta_mode else dict(
             getattr(parent_state, "discipline_resolution", {}) or {}
         ),
         scientific_intervention=scientific_intervention,
         paper_graph_context=(
             str(inst.get("_paper_graph_context") or "")
             if isinstance(inst, dict) and str(inst.get("_paper_graph_context") or "").strip()
-            else parent_state.paper_graph_context
+            else inst.get("paper_graph_context", parent_state.paper_graph_context) if delta_mode else parent_state.paper_graph_context
         ),
         edit_plan=plan.to_dict(),
         skill_metrics=skill_metrics,
+        claims=deepcopy(inst.get("claims", scientific_contract.get("claims", getattr(parent_state, "claims", [])))),
+        evidence_records=deepcopy(inst.get("evidence_records", scientific_contract.get("evidence_records", getattr(parent_state, "evidence_records", [])))),
     )
+    child_payload = (child.to_payload() if callable(getattr(child, "to_payload", None))
+                     else {k: deepcopy(getattr(child, k)) for k in CONTENT_FIELDS if hasattr(child, k)})
+    paths = changed_paths(scientific_content(parent_payload), scientific_content(child_payload))
+    child.skill_metrics.update(parent_content_hash=parent_hash, changed_paths=paths,
+                               dependency_rechecks=dependency_rechecks(paths))
+    return child
 
 def apply_instantiated_mapping_to_plan(
     plan: Any,
@@ -1743,7 +1791,7 @@ def instantiate_compiled_plan_for_node(
         refinement_scope=mcts.refinement_scope or "None",
         taste_guidance=taste_guidance,
         mature_idea=mcts.mature_idea or "None",
-        parent_summary=parent_state.describe(),
+        parent_summary="The exact parent snapshot and coverage are supplied below. Unshown fields are inherited by the executor.",
         parent_components=", ".join(parent_state.components) if parent_state.components else "None",
         paper_context=mcts.paper_context,
         memory_bundle=bundle.to_prompt_block(),
@@ -1789,6 +1837,16 @@ def instantiate_compiled_plan_for_node(
     )
     prompt += _data_anchored_contract_prompt(parent_state)
     prompt += _gap_focus_prompt(parent_state)
+    prompt += "\n== Persistent issues for this transition ==\n" + pretty_json(plan.review_feedback)
+    prompt += "\nPrior operation feedback and plan notes:\n" + plan.compile_notes
+    prompt += claim_instructions()
+    prompt += (
+        "\nReturn parent_content_hash and field_updates (a mapping of scientific field paths to new values), "
+        "plus rationale. Omitted fields are inherited exactly; explicit empty values clear a field. "
+        "Use scientific_intervention.hypothesis_contract.<field> for hypothesis updates. "
+        "Only edit completely visible paths; preserve omitted/partial fields. "
+        f"parent_content_hash={parent_state.signature}\n"
+    )
     survey_handoff = getattr(mcts, "survey_idea_handoff", {})
     if isinstance(survey_handoff, dict) and survey_handoff:
         prompt += "\n\n== Survey evidence handoff ==\n" + pretty_json(survey_evidence_for_prompt(survey_handoff))
@@ -1799,6 +1857,12 @@ def instantiate_compiled_plan_for_node(
         proposed_scope=getattr(mcts, "proposed_scope", ""),
     )
     try:
+        packets = build_review_packets(parent_state.to_payload(), prompt_prefix=prompt,
+                                       token_budget=getattr(mcts.config, "review_prompt_token_budget", 48000))
+        # Generation can use a selected view; application always inherits the full snapshot.
+        targets = [i.get("target_path", "") for i in plan.review_feedback]
+        selected = max(packets, key=lambda p: sum(t in p.included_paths for t in targets))
+        prompt += selected.text
         response = mcts.chat_fn(
             prompt,
             model=mcts.config.generation_model,
@@ -1811,6 +1875,16 @@ def instantiate_compiled_plan_for_node(
             payload = payload[0]
         if not isinstance(payload, dict):
             return None
+        if "field_updates" in payload:
+            from src.agents.idea_agent.utils.mcts.review_contracts import path_present
+            updates = payload["field_updates"]
+            if not isinstance(updates, Mapping) or any(not path_present(p, selected.included_paths) for p in updates):
+                raise ValueError("Generation attempted to change an omitted/partial parent field.")
+            apply_field_updates(parent_state.to_payload(), payload, parent_state.signature)
+            payload["_generation_coverage"] = selected.coverage()
+            return payload
+        if not selected.complete:
+            raise ValueError("A partial parent view requires field_updates; legacy full rewrites need the complete snapshot.")
         contract = payload.get("scientific_contract")
         if not isinstance(contract, dict):
             contract = {
@@ -1961,11 +2035,26 @@ def build_symbolic_eval_hints(mcts: Any, node: Any) -> str:
 
 
 def update_skill_prior_from_evaluation(mcts: Any, node: Any, evaluation: Any) -> None:
-    skill_name = node.state.operator
+    metadata = getattr(node, "_rollout_metadata", {})
+    skill_name = metadata.get("skill_name", node.state.operator)
     if not skill_name or skill_name == "seed":
         return
 
-    normalized_reward = max(0.0, min(1.0, evaluation.composite / 5.0))
+    metrics = metadata.get("skill_metrics", node.state.skill_metrics)
+    if metrics.get("evidence_mode") == "exploratory" and metrics.get("retrieval_result", {}).get("status") in {"unavailable", "error", "budget_exhausted"}:
+        node.state.skill_metrics["skill_credit_status"] = "infrastructure_limited"
+        return
+    parent_eval = getattr(getattr(node, "_rollout_parent", None) or node.parent, "evaluation", None)
+    transition = (getattr(getattr(node, "_rollout_parent", None) or node.parent, "node_id", None), node.node_id, skill_name)
+    credited = getattr(mcts, "_credited_transitions", set())
+    if transition in credited:
+        return
+    credited.add(transition)
+    mcts._credited_transitions = credited
+    normalized_reward = transition_reward(parent_eval, evaluation)
+    if node.state.signature == getattr(getattr(node, "_rollout_parent", None) or node.parent, "state", node.state).signature:
+        normalized_reward = 0.0
+    node.state.skill_metrics["transition_reward"] = normalized_reward
     prior = mcts.skill_catalog.update_prior(
         skill_name=skill_name,
         reward=normalized_reward,
@@ -2111,12 +2200,16 @@ def expand_node_with_skills(
         object_schema = schema_spec.to_payload() if schema_spec is not None else {}
     selected_skill_candidates = mcts.skill_catalog.select_skills(
         defect_tags=node.state.target_defects,
-        max_children=mcts.config.branching_factor,
+        max_children=len(mcts.skill_catalog.skills) if getattr(mcts, "_stagnation_rotation", 0) else mcts.config.branching_factor,
         preset=getattr(mcts, "idea_taste_preset", None),
         structural_profile=structural_profile,
         profile_id=profile_id,
     )
     skill_candidates = list(selected_skill_candidates)
+    rotation = getattr(mcts, "_stagnation_rotation", 0)
+    if rotation and skill_candidates:
+        offset = rotation % len(skill_candidates)
+        skill_candidates = (skill_candidates[offset:] + skill_candidates[:offset])[:mcts.config.branching_factor]
     data_contract = scientific_intervention.get("data_anchored_contract")
     data_contract = data_contract if isinstance(data_contract, Mapping) else {}
     coverage_assignment = data_contract.get("coverage_assignment")
@@ -2160,6 +2253,24 @@ def expand_node_with_skills(
             profile_id,
             object_schema=object_schema,
         )
+        for capability in skill.required_capabilities:
+            if capability in mcts.capabilities.available or capability in mcts.capabilities.unavailable:
+                continue
+            if capability == "paper_graph":
+                preflight = probe_paper_graph(mcts.paper_graph_vector_store)
+                if preflight is None:
+                    mcts.capabilities.available.add(capability)
+                else:
+                    mcts.capabilities.record(preflight)
+            else:
+                mcts.capabilities.record(RetrievalResult("unavailable", provider=capability,
+                    reason="No capability provider is registered for this run."))
+        if skill.evidence_policy == "required" and not mcts.capabilities.eligible(skill.required_capabilities):
+            for capability in skill.required_capabilities:
+                if capability in mcts.capabilities.unavailable:
+                    mcts.capabilities.request(RetrievalResult("unavailable", provider=capability,
+                        reason=mcts.capabilities.unavailable[capability]), skill=skill.name)
+            continue
         plan = mcts.skill_catalog.compile_plan(
             skill=skill,
             parent_title=node.state.title,
@@ -2169,7 +2280,25 @@ def expand_node_with_skills(
             profile_id=profile_id,
             object_schema=object_schema,
         )
+        plan.review_feedback = deepcopy(getattr(node, "review_issues", []))
+        requirement_reviews = {r.get("requirement_id"): r for r in getattr(getattr(node, "evaluation", None), "requirement_reviews", [])}
+        for requirement in required_items(getattr(mcts, "task_contract", {})):
+            review = requirement_reviews.get(requirement.get("requirement_id"), {})
+            if review.get("status") == "satisfied":
+                continue
+            plan.review_feedback.append({
+                "kind": "task_requirement", "requirement_id": requirement.get("requirement_id"),
+                "origin": "candidate" if review.get("status") == "missing" else "context",
+                "status": review.get("status", "unassessed"), "target_path": "$",
+                "rationale": review.get("rationale", "Not reviewed."),
+                "source_quote": requirement.get("source_quote"),
+                "acceptance_description": requirement.get("acceptance_description"),
+                "repair_hint": "Satisfy this original task requirement and provide explicit candidate paths for re-review.",
+            })
         prior_constraints = mcts.skill_catalog.priors.get(skill.name, SkillUsagePrior()).rule_constraints
+        prior_feedback = mcts.skill_catalog.priors.get(skill.name, SkillUsagePrior()).feedback_history
+        if prior_feedback:
+            plan.compile_notes += "\nPrior operation feedback:\n" + "\n".join(prior_feedback)
         if prior_constraints:
             plan.guardrails = _dedupe_keep_order_strings(plan.guardrails + list(prior_constraints))
         if coverage_branch is not None:
@@ -2205,14 +2334,14 @@ def expand_node_with_skills(
         plan.component_edits = filtered_edits
 
         instantiated = mcts._instantiate_skill_plan(plan, node.state, bundle)
-        if isinstance(instantiated, dict) and instantiated.get("_skip_child_creation"):
+        if instantiated is None or (isinstance(instantiated, dict) and instantiated.get("_skip_child_creation")):
             log_message(
                 mcts.logger,
                 mcts.log_sink,
                 "info",
                 "[MCTS] Expand: skipping skill=%s child creation (%s)",
                 skill.name,
-                instantiated.get("_skip_reason", "no reason provided"),
+                (instantiated or {}).get("_skip_reason", "generation failed"),
             )
             continue
         log_message(
@@ -2255,12 +2384,21 @@ def expand_node_with_skills(
         }
         if coverage_branch is not None:
             selection_metadata["data_anchored_coverage_branch"] = dict(coverage_branch)
-        child_state = mcts._materialize_child_state(
-            node.state,
-            plan,
-            instantiated,
-            selection_metadata=selection_metadata,
-        )
+        try:
+            child_state = mcts._materialize_child_state(
+                node.state,
+                plan,
+                instantiated,
+                selection_metadata=selection_metadata,
+            )
+        except (TypeError, ValueError) as exc:
+            mcts.capabilities.events.append({
+                "action": "reject_candidate", "status": "invalid_candidate_contract", "skill": skill.name,
+                "parent_content_hash": node.state.signature, "reason": str(exc),
+            })
+            log_message(mcts.logger, mcts.log_sink, "warning",
+                        "[MCTS] Expand: rejected invalid candidate from skill=%s (%s)", skill.name, exc)
+            continue
         child_node = attach_child(
             node,
             child_state,
@@ -2273,9 +2411,14 @@ def expand_node_with_skills(
         )
         if child_node is None:
             continue
-        cached_eval = get_best_cached_evaluation(child_state.signature, mcts.evaluation_cache)
-        if cached_eval:
-            child_node.evaluation = cached_eval
+        if not hasattr(mcts, "transition_metadata"):
+            mcts.transition_metadata = {}
+        mcts.transition_metadata[(node.node_id, child_node.node_id)] = {
+            "skill_name": skill.name, "skill_metrics": deepcopy(child_state.skill_metrics),
+        }
+        child_node.task_contract = deepcopy(getattr(mcts, "task_contract", {}))
+        if child_node.parent is node:
+            child_node.review_issues = deepcopy(getattr(node, "review_issues", []))
         if new_child is None and child_node.visits == 0:
             new_child = child_node
 
@@ -2351,14 +2494,14 @@ def simulate_node_value(
         taste_guidance=direction_context["taste_guidance"],
         target_gap_ids=direction_context["target_gap_ids"],
         profile_id=direction_context["profile_id"],
-        gap_seed_context=direction_context["gap_seed_context"],
+        gap_seed_context="See review context.",
         root_domains=_format_root_domains_for_prompt(getattr(node.state, "root_domains", [])),
         refinement_scope=mcts.refinement_scope or "None",
-        mature_idea=mcts.mature_idea or "None",
+        mature_idea="See full seed in review context.",
         edit_plan=format_evaluator_edit_plan_prompt_view(node.state.edit_plan)
         if node.state.edit_plan
         else "No edit plan available.",
-        idea=format_evaluator_idea_prompt_view(node.state, heading="Candidate Idea"),
+        idea="See the budgeted candidate review packet below.",
         scientific_intervention_profile=format_scientific_intervention_profile_for_prompt(
             scientific_intervention
         ),
@@ -2367,11 +2510,6 @@ def simulate_node_value(
         defect_registry=format_defect_registry(profile_id),
         symbolic_memory_hints=symbolic_hints,
     )
-    prompt += _data_anchored_contract_prompt(node.state)
-    prompt += _gap_focus_prompt(node.state)
-    survey_handoff = getattr(mcts, "survey_idea_handoff", {})
-    if isinstance(survey_handoff, dict) and survey_handoff:
-        prompt += "\n\n== Survey evidence handoff ==\n" + pretty_json(survey_evidence_for_prompt(survey_handoff))
     prompt = render_profile_evaluation_prompt(prompt, profile_id)
     allowed_novelty_axes = PROFILE_NOVELTY_AXES.get(
         profile_id,
@@ -2382,66 +2520,44 @@ def simulate_node_value(
         + ", ".join(allowed_novelty_axes)
         + ". Do not add any other axis names.\n"
     )
-    prompt = with_task_contract(
-        prompt, getattr(mcts, "task_contract", {}),
-        scope=mcts.refinement_scope,
-        scope_source=getattr(mcts, "refinement_scope_source", ""),
-        proposed_scope=getattr(mcts, "proposed_scope", ""),
-    )
+    prompt += review_instructions()
+    parent_issues = deepcopy(getattr(node, "review_issues", []))
+    if len(path) > 1:
+        parent_issues = list({i["issue_id"]: deepcopy(i) for i in [*getattr(path[-2], "review_issues", []), *parent_issues]}.values())
+    trusted_sources = getattr(mcts, "evidence_sources", {})
+    review_context = {
+        "task_contract": getattr(mcts, "task_contract", {}),
+        "trusted_sources": trusted_sources,
+        "previous_issues": parent_issues,
+        "dependency_rechecks": node.state.skill_metrics.get("dependency_rechecks", []),
+        "survey_evidence": survey_evidence_for_prompt(getattr(mcts, "survey_idea_handoff", {})),
+        "mature_idea": mcts.mature_idea,
+        "gap_seeds": direction_context["gap_seed_context"],
+    }
     cache_key = evaluation_prompt_cache_key(
-        prompt,
-        rubric_version=SCIENTIFIC_RUBRIC_VERSION,
-        profile_version=SCIENTIFIC_INTERVENTION_PROFILE_VERSION,
-        profile_id=profile_id,
-    )
-
-    survey_handoff = getattr(mcts, "survey_idea_handoff", {})
-    profile_drift = detect_profile_drift(
-        profile_id,
-        candidate=node.state.to_payload(),
-        survey_handoff=survey_handoff if isinstance(survey_handoff, Mapping) else None,
-        research_object=getattr(node.state, "scientific_intervention", {}).get("scientific_object_schema")
-        if isinstance(getattr(node.state, "scientific_intervention", {}), Mapping)
-        else None,
+        prompt, profile_id=profile_id,
+        review_version=REVIEW_CONTRACT_VERSION, content_hash=node.state.signature,
+        task_contract=review_context["task_contract"], evidence_version=content_hash(trusted_sources),
+        context_version=content_hash(review_context),
+        model_config={"model": mcts.config.evaluation_model, "temperature": mcts.config.evaluation_temperature,
+                      "max_output_tokens": mcts.config.evaluation_max_tokens,
+                      "prompt_budget": getattr(mcts.config, "review_prompt_token_budget", 48000),
+                      "max_packets": getattr(mcts.config, "max_review_packets", 32)},
     )
 
     cached_evaluation = get_cached_evaluation(node.state.signature, cache_key, mcts.evaluation_cache)
     if cached_evaluation:
-        apply_profile_drift_to_evaluation(node, cached_evaluation, profile_drift)
         node.evaluation = cached_evaluation
+        node.review_issues = deepcopy(cached_evaluation.review_issues)
+        node.state.target_defects = active_defects(node.review_issues)
+        node.delivery = delivery_assessment(cached_evaluation, getattr(mcts, "task_contract", {}), current_content_hash=node.state.signature)
         node.latest_path_summary = path_summary_text
-        log_message(
-            mcts.logger,
-            mcts.log_sink,
-            "info",
-            "[MCTS] Simulate (cache hit): node=%s\n[MCTS] Score: %.4f\n%s",
-            node.state.title,
-            cached_evaluation.composite,
-            pretty_json(mcts._simulate_log_payload(cached_evaluation)),
-        )
-        maybe_record_experience(
-            cache_key,
-            node,
-            cached_evaluation,
-            path_summary_text,
-            experiences,
-            mcts.experience_cache,
-            getattr(mcts, "enable_vector_memory", True),
-            mcts.memory_accessor,
-            mcts.config.min_confidence_for_memory,
-        )
         return cached_evaluation
 
     try:
-        response = mcts.chat_fn(
-            prompt,
-            model=mcts.config.evaluation_model,
-            temperature=mcts.config.evaluation_temperature,
-            max_output_tokens=mcts.config.evaluation_max_tokens,
-        )
-        payload = parse_json_response(response)
-        if isinstance(payload, list):
-            payload = payload[0]
+        payload, coverage = run_review(mcts, node, prompt, review_context)
+        if not payload:
+            payload = {"confidence": 0, "feedback": "Review incomplete; inspect review_coverage.errors."}
         legacy_weights = {
             "novelty_weight": mcts.config.novelty_weight,
             "surprise_weight": mcts.config.surprise_weight,
@@ -2490,7 +2606,85 @@ def simulate_node_value(
     if evaluation.protocol_score <= 0.0:
         evaluation.protocol_score = mcts._compute_protocol_score(node.state.edit_plan)
 
+    evaluation.review_coverage = coverage
+    included = coverage["included_paths"]
+    complete = coverage["complete"]
+    incoming = list(evaluation.review_issues)
+    # Compatibility with old reviewers: labels stay open until explicitly rechecked.
+    structured_kinds = {i.get("kind") for i in incoming if isinstance(i, Mapping)}
+    for tag in evaluation.detected_defects:
+        if tag not in structured_kinds and tag != "profile_drift":
+            incoming.append(ReviewIssue.from_payload({"kind": tag, "target_path": "$",
+                "origin": "candidate" if complete else "context",
+                "rationale": evaluation.feedback, "repair_hint": evaluation.defect_fix_summary}).to_dict())
+    if not complete:
+        incoming.append(ReviewIssue.from_payload({"kind": "review_incomplete", "origin": "context",
+            "target_path": "$", "status": "unassessed", "rationale": "; ".join(coverage.get("errors", [])),
+            "repair_hint": "Review the omitted fields and finish consistency review.", "checker": "review_execution_v2"}).to_dict())
+    audits, claim_issues = audit_claims(node.state.claims, node.state.evidence_records, trusted_sources,
+                                       semantic_reviews=evaluation.claim_reviews,
+                                       original_request=str(getattr(mcts, "task_contract", {}).get("original_request") or ""))
+    evaluation.claim_reviews = audits
+    incoming.extend(claim_issues)
+    structural_claim_kinds = {"validation_gap", "proof_gap", "source_unavailable", "quote_mismatch",
+                              "measurement_construct_mismatch", "unsupported_causal_link", "claim_overreach",
+                              "claim_support_unassessed", "unsupported_claim", "proof_support_unassessed", "link_support_unassessed",
+                              "source_locator_missing", "premise_provenance_gap", "premise_support_unassessed"}
+    current_claim_ids = {i["issue_id"] for i in claim_issues}
+    for issue in parent_issues:
+        if (complete and issue.get("checker") == "claim_contract_v2" and issue.get("kind") in structural_claim_kinds
+                and issue.get("claim_id") and issue["issue_id"] not in current_claim_ids):
+            current_index = next((i for i, claim in enumerate(node.state.claims) if claim["claim_id"] == issue["claim_id"]), None)
+            target = f"claims[{current_index}]" if current_index is not None else "claims"
+            incoming.append({**issue, "status": "resolved", "rechecked": True, "target_path": target,
+                             "evidence_refs": [target],
+                             "rationale": "Program rechecked this claim by ID against current obligations, or verified its removal."})
+    if not node.state.claims and scientific_intervention.get("hypothesis_contract", {}).get("evidence_basis"):
+        incoming.append(ReviewIssue.from_payload({"kind": "claim_typing_unassessed", "origin": "context", "target_path": "claims",
+            "status": "unassessed", "rationale": "Legacy evidence_basis has no typed claim linkage.",
+            "repair_hint": "Express the key assertions and proposals as typed claims linked to evidence IDs.", "checker": "claim_contract_v2"}).to_dict())
+    if complete:
+        for issue in parent_issues:
+            reviewed = (issue.get("kind") == "review_incomplete" and issue.get("checker") == "review_execution_v2") or (
+                issue.get("kind") == "claim_typing_unassessed" and issue.get("checker") == "claim_contract_v2" and bool(node.state.claims))
+            if reviewed:
+                incoming.append({**issue, "status": "resolved", "rechecked": True,
+                                 "evidence_refs": ["claims" if node.state.claims else "method"],
+                                 "rationale": "Program rechecked complete review coverage and current typed-claim availability."})
+    profile_drift = detect_profile_drift(
+        profile_id, candidate=node.state.to_payload(),
+        contribution_review=evaluation.contribution_review,
+        task_request=str(getattr(mcts, "task_contract", {}).get("original_request") or mcts.topic),
+    )
+    # A lexical profile_drift label cannot bypass semantic confirmation.
+    incoming = [i for i in incoming if i.get("kind") != "profile_drift"]
+    if profile_drift.get("primary_drift"):
+        incoming.append(ReviewIssue.from_payload({"kind": "profile_drift", "target_path": "core_contribution",
+            "rationale": evaluation.contribution_review.get("rationale"),
+            "repair_hint": "Restore a contribution that serves the original task objective."}).to_dict())
+    elif complete and evaluation.contribution_review.get("serves_task_objective") is True and evaluation.contribution_review.get("rationale"):
+        for issue in parent_issues:
+            if issue.get("kind") == "profile_drift":
+                incoming.append({**issue, "status": "resolved", "rechecked": True,
+                                 "rationale": evaluation.contribution_review["rationale"], "evidence_refs": ["core_contribution"]})
+    valid_refs = {p for p, _ in _leaves(scientific_content(node.state.to_payload()))}
+    valid_refs.update(trusted_sources)
+    # Aggregate ancestor paths can be used to cite a fully examined claim/object.
+    for ref in [r for i in incoming for r in i.get("evidence_refs", [])]:
+        if any(p.startswith(ref + ".") or p.startswith(ref + "[") for p in valid_refs.copy()):
+            valid_refs.add(ref)
+    evaluation.review_issues = reconcile_issues(
+        parent_issues, incoming, included_paths=included, complete=complete,
+        invalidated_paths=node.state.skill_metrics.get("dependency_rechecks", []),
+        valid_evidence_refs=valid_refs,
+    )
+    evaluation.detected_defects = active_defects(evaluation.review_issues)
+    node.review_issues = deepcopy(evaluation.review_issues)
+    node.state.target_defects = list(evaluation.detected_defects)
+    node.transformation.defects = list(evaluation.detected_defects)
     apply_profile_drift_to_evaluation(node, evaluation, profile_drift)
+    node.delivery = delivery_assessment(evaluation, getattr(mcts, "task_contract", {}), current_content_hash=node.state.signature)
+
 
     log_message(
         mcts.logger,
@@ -2534,6 +2728,12 @@ def reset_search_state(mcts: Any) -> None:
     mcts.experience_cache.clear()
     mcts.trace = []
     mcts.retrieved_core_titles = []
+    mcts.capabilities = CapabilityState()
+    mcts.evidence_sources = {}
+    mcts.retrieval_calls = 0
+    mcts._credited_transitions = set()
+    mcts.transition_metadata = {}
+    mcts._stagnation_rotation = 0
     mcts._id_iter = itertools.count()
 
 
@@ -2618,6 +2818,7 @@ def evaluation_prompt_cache_key(
     rubric_version: str = SCIENTIFIC_RUBRIC_VERSION,
     profile_version: str = SCIENTIFIC_INTERVENTION_PROFILE_VERSION,
     profile_id: str = "generic_scientific",
+    **versions: Any,
 ) -> str:
     cache_material = "\n".join(
         [
@@ -2625,6 +2826,7 @@ def evaluation_prompt_cache_key(
             str(profile_version),
             str(profile_id),
             str(prompt_text),
+            json.dumps(versions, sort_keys=True, ensure_ascii=False),
         ]
     )
     return hashlib.sha256(cache_material.encode("utf-8")).hexdigest()
@@ -2638,7 +2840,7 @@ def get_cached_evaluation(
     sig_cache = evaluation_cache.get(signature)
     if not sig_cache:
         return None
-    return sig_cache.get(path_key)
+    return deepcopy(sig_cache.get(path_key))
 
 
 def cache_evaluation(
@@ -2647,7 +2849,7 @@ def cache_evaluation(
     evaluation: Any,
     evaluation_cache: Dict[str, Dict[str, Any]],
 ) -> None:
-    evaluation_cache.setdefault(signature, {})[path_key] = evaluation
+    evaluation_cache.setdefault(signature, {})[path_key] = deepcopy(evaluation)
 
 
 def get_best_cached_evaluation(
@@ -2657,7 +2859,7 @@ def get_best_cached_evaluation(
     sig_cache = evaluation_cache.get(signature)
     if not sig_cache:
         return None
-    return max(sig_cache.values(), key=lambda ev: ev.composite)
+    return deepcopy(max(sig_cache.values(), key=lambda ev: ev.composite))
 
 
 def maybe_record_experience(
@@ -2695,6 +2897,12 @@ def build_root_state(
 ) -> Any:
     latest_candidate = context.get("latest_candidate")
     root_idea = context.get("root_idea")
+    restored_snapshot = next((deepcopy(item["scientific_snapshot"]) for item in (latest_candidate, root_idea)
+                              if isinstance(item, Mapping) and isinstance(item.get("scientific_snapshot"), Mapping)), None)
+    if isinstance(latest_candidate, Mapping) and isinstance(latest_candidate.get("scientific_snapshot"), Mapping):
+        latest_candidate = {**latest_candidate, **deepcopy(latest_candidate["scientific_snapshot"])}
+    if isinstance(root_idea, Mapping) and isinstance(root_idea.get("scientific_snapshot"), Mapping):
+        root_idea = {**root_idea, **deepcopy(root_idea["scientific_snapshot"])}
     mature_value = context.get("mature_idea")
     mature_record = context.get("mature_idea_record")
     if isinstance(mature_value, Mapping):
@@ -2813,27 +3021,6 @@ def build_root_state(
         profile = get_scientific_intervention_profile("generic_scientific")
     if profile is None:  # pragma: no cover - registry invariant
         raise RuntimeError("generic_scientific intervention profile is unavailable")
-    if profile.profile_id != "computational_algorithmic" and components:
-        forbidden_algorithm_components = set(profile.forbidden_default_patterns)
-        idea_text = " ".join(
-            str(value or "")
-            for value in (title, abstract, core, method)
-        ).lower()
-        high_precision_algorithm_terms = re.search(
-            r"\b(?:algorithm(?:ic)?|machine\s+learning|deep\s+learning|neural\s+(?:network|model)|model\s+training|training\s+(?:a|the)\s+(?:model|network)|model\s+inference|inference[- ]time|trained\s+model|learned\s+(?:model|representation))\b",
-            idea_text,
-        )
-        algorithmic_compound_terms = re.search(
-            r"\b(?:algorithmic|machine[- ]learning|deep[- ]learning|neural|trained|learned)\s+(?:predictor|classifier|optimizer|surrogate\s+model|computational\s+(?:model|method))\b",
-            idea_text,
-        )
-        algorithm_explicit = bool(high_precision_algorithm_terms or algorithmic_compound_terms)
-        if not algorithm_explicit:
-            components = [
-                component
-                for component in components
-                if component not in forbidden_algorithm_components
-            ]
     if not defect_tags:
         defect_tags = list(profile.defect_tags) or ["unexplored_gap"]
     if not components:
@@ -2841,6 +3028,7 @@ def build_root_state(
     component_explanations = normalize_component_explanations(
         components,
         context_component_explanations,
+        preserve_content=True,
     )
     scientific_intervention = build_scientific_intervention_payload(
         profile,
@@ -2860,6 +3048,10 @@ def build_root_state(
         seed_gap_ids = mature_record.get("target_gap_ids")
     seed_gap_ids = [str(item).strip() for item in (seed_gap_ids or []) if str(item).strip()]
     hypothesis_contract = dict(scientific_intervention.get("hypothesis_contract") or {})
+    for key in HYPOTHESIS_CONTRACT_FIELDS:
+        value = latest_payload.get(key, context.get(key))
+        if value not in (None, "", [], {}):
+            hypothesis_contract.setdefault(key, deepcopy(value))
     if seed_gap_ids:
         hypothesis_contract["target_gap_ids"] = seed_gap_ids
     if isinstance(mature_record, Mapping):
@@ -2956,7 +3148,7 @@ def build_root_state(
                 "coverage_assignment"
             ] = dict(coverage_assignment)
 
-    return idea_state_cls(
+    state = idea_state_cls(
         title=str(title),
         abstract=str(abstract),
         core_contribution=str(core),
@@ -2969,14 +3161,22 @@ def build_root_state(
         memory_refs=[],
         components=components,
         component_explanations=component_explanations,
-        root_domains=[str(domain).strip() for domain in root_domains if str(domain).strip()][:2],
+        root_domains=[str(domain).strip() for domain in root_domains if str(domain).strip()],
         discipline_resolution=discipline_resolution,
         scientific_intervention=scientific_intervention,
         paper_graph_context=str(context.get("paper_context") or ""),
+        claims=deepcopy((mature_record if isinstance(mature_record, Mapping) else latest_payload).get("claims", context.get("claims", []))),
+        evidence_records=deepcopy((mature_record if isinstance(mature_record, Mapping) else latest_payload).get("evidence_records", context.get("evidence_records", []))),
     )
+    if restored_snapshot is not None and not mature_idea:
+        restored = {key: deepcopy(value) for key, value in restored_snapshot.items() if key in CONTENT_FIELDS}
+        state = idea_state_cls(
+            **{key: getattr(state, key) for key in ("tags", "operator", "target_defects", "rationale", "memory_refs")},
+            **{key: restored.get(key, getattr(state, key)) for key in CONTENT_FIELDS})
+    return state
 
 
-def best_candidate(root: Any, candidate_cls: Any) -> Optional[Any]:
+def best_candidate(root: Any, candidate_cls: Any, *, ready_first: bool = True) -> Optional[Any]:
     candidates: List[Any] = []
     stack = [root]
     visited: Set[int] = set()
@@ -2986,11 +3186,13 @@ def best_candidate(root: Any, candidate_cls: Any) -> Optional[Any]:
             continue
         visited.add(node.node_id)
         if node.evaluation:
+            node.delivery = delivery_assessment(node.evaluation, getattr(node, "task_contract", {}), current_content_hash=node.state.signature)
             candidates.append(candidate_cls(node=node, evaluation=node.evaluation))
         stack.extend(node.children)
     if not candidates:
         return None
-    return max(candidates, key=lambda c: c.evaluation.composite)
+    ready = [c for c in candidates if c.node.delivery["delivery_ready"]]
+    return max((ready or candidates) if ready_first else candidates, key=lambda c: c.evaluation.composite)
 
 
 def pareto_candidates(root: Any, candidate_cls: Any) -> Dict[str, Optional[Any]]:

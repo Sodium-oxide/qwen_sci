@@ -1,4 +1,6 @@
 import sqlite3
+from src.paper_graph.ingest import merge_entities
+from src.paper_graph.repository import readonly_connection
 from typing import List, Dict, Optional, Tuple
 import hydra
 import sys
@@ -33,9 +35,8 @@ class PaperGraphRetriever:
     def __init__(self, config, data_manager = None):
         self.config = config
         self.logger = get_logger("PaperGraphRetriever")
-        self.db_path = resolve_repo_relative_path(
-            self.config.ModuleInfo.PaperGraphRetriever.db_path
-        )
+        from src.paper_graph.settings import PaperGraphSettings
+        self.db_path = str(PaperGraphSettings.from_config(config).db_path)
         self.chat_agent = ChatAgent(config)
         if not data_manager:
             self.data_manager = DataManager(config)
@@ -64,7 +65,9 @@ class PaperGraphRetriever:
         Returns:
             list: 匹配的论文节点列表，每项为包含节点信息的字典
         """
-        conn = sqlite3.connect(self.db_path)
+        if not os.path.isfile(self.db_path):
+            return []
+        conn = readonly_connection(self.db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         
@@ -105,7 +108,9 @@ class PaperGraphRetriever:
         Returns:
             list: 匹配的论文节点列表，每项为包含节点信息的字典
         """
-        conn = sqlite3.connect(self.db_path)
+        if not os.path.isfile(self.db_path):
+            return []
+        conn = readonly_connection(self.db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         
@@ -146,7 +151,7 @@ class PaperGraphRetriever:
             如果 include_edges=False: 返回相邻节点的信息列表
             如果 include_edges=True: 返回 (相邻节点列表, 边列表) 的元组
         """
-        conn = sqlite3.connect(self.db_path)
+        conn = readonly_connection(self.db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         
@@ -211,7 +216,7 @@ class PaperGraphRetriever:
 
     def debug_table(self, table_name: str, limit: int = 10, where_clause: str = None, where_params: tuple = None):
         """Debug函数：查看任意表的数据结构和内容"""
-        conn = sqlite3.connect(self.db_path)
+        conn = readonly_connection(self.db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         
@@ -270,7 +275,7 @@ class PaperGraphRetriever:
 
     def print_all_tables(self, limit: int = 5):
         """打印数据库中所有表的列信息和前若干行数据"""
-        conn = sqlite3.connect(self.db_path)
+        conn = readonly_connection(self.db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         
@@ -513,9 +518,10 @@ class PaperGraphRetriever:
                 try:
                     title = self.data_manager.get_paper_title(paper_id)
                     graph_id = self.title_to_id(title)
-                    graph_ids[idx] = graph_id
+                    graph_ids[idx] = graph_id or paper_id
                 except Exception as e:
                     self.logger.warning(f"Fail to convert ds_id to graph_id before retrieve in graph: {e}")
+                    graph_ids[idx] = paper_id
         else:
             graph_ids = paper_ids
             
@@ -593,6 +599,8 @@ class PaperGraphRetriever:
 
     def _write_keynote_to_db(self, node_id: str, keynote: str):
         """Write keynote to database. Creates keynote column if not exists."""
+        if not os.path.isfile(self.db_path):
+            return
         try:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
@@ -619,7 +627,7 @@ class PaperGraphRetriever:
     def _read_keynote_from_db(self, node_id: str) -> Optional[str]:
         """Read keynote from database."""
         try:
-            conn = sqlite3.connect(self.db_path)
+            conn = readonly_connection(self.db_path)
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             
@@ -656,10 +664,27 @@ class PaperGraphRetriever:
             self.logger.info(f"Saved extraction result to {json_path}")
         except Exception as e:
             self.logger.warning(f"Failed to save extraction result to JSON for {node_id}: {e}")
+            return
+        try:
+            from src.paper_graph.survey import ingest_survey_paper
+            details = self.get_node_details(node_id) or {}
+            paper_id = extraction_result.get("paper_id") or details.get("paper_id") or node_id
+            ingest_survey_paper(self.config, self.data_manager, paper_id, extraction_result)
+        except Exception as e:
+            self.logger.warning(f"Paper graph ingestion failed for {node_id}; extraction retained at {json_path}: {e}")
     
     def get_paper_markdown(self, node_id: str) -> Optional[str]:
         """Get the raw markdown text for a paper via data_manager."""
         try:
+            from pathlib import Path
+            from src.paper_graph.ingest import cached_documents
+            docs = cached_documents(Path(self.config.BasicInfo.cache_path).resolve(), node_id)
+            if docs:
+                return Path(docs[0]["path"]).read_text(encoding="utf-8")
+            lookup = getattr(self.data_manager, "get_discovered_paper", None)
+            metadata = lookup(node_id) if callable(lookup) else {}
+            if metadata:
+                return self.data_manager.get_paper_raw_markdown(node_id)
             paper_title = self.id_to_title(node_id)
             paper_info = self.data_manager.get_paper_with_title(paper_title)
             ds_id = self.data_manager._resolve_paper_reference_id(paper_info)
@@ -670,7 +695,12 @@ class PaperGraphRetriever:
 
     def get_source_info(self, node_id: str) -> dict:
         """Get source info (venue, year) for a paper from database."""
-        conn = sqlite3.connect(self.db_path)
+        lookup = getattr(self.data_manager, "get_discovered_paper", None)
+        metadata = lookup(node_id) if callable(lookup) else {}
+        fallback = {"source_venue": metadata.get("venue", ""), "pub_year": metadata.get("year", "")}
+        if not os.path.isfile(self.db_path):
+            return fallback
+        conn = readonly_connection(self.db_path)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute(
@@ -685,7 +715,7 @@ class PaperGraphRetriever:
                 'source_venue': row['source_venue'] or 'Unknown',
                 'pub_year': str(row['pub_year']) if row['pub_year'] else '2024'
             }
-        return {'source_venue': 'Unknown', 'pub_year': '2024'}
+        return fallback
 
     def extract_node_info(self, node_ids: List[str]) -> List[dict]:
         """
@@ -1012,6 +1042,8 @@ class PaperGraphRetriever:
                             existing.append(item)
                             seen.add(fingerprint)
 
+            merged["core_contributions"] = merge_entities(merged.get("core_contributions", []))
+            merged["components"] = merge_entities(merged.get("components", []), parent_key="related_to_core")
             core_names = [
                 item.get("name")
                 for item in merged.get("core_contributions", [])

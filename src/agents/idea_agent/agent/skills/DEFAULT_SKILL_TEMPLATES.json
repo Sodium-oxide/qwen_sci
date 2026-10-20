@@ -29,7 +29,11 @@
       "Identify the defect from `defect_tags`.",
       "Generate the solution by instantiating the `atomic_blueprint`.",
       "Format: FUNCTION_NAME(ARGUMENTS) -> REASONING"
-    ]
+    ],
+    "required_capabilities": [
+      "paper_graph"
+    ],
+    "evidence_policy": "exploratory"
   },
   "alternative-path-contrast": {
     "description": "Introduce a structured alternative treatment for failure regimes so rare cases and recovery behavior are explicit without turning the method into generic control scaffolding.",
@@ -224,7 +228,11 @@
       "Identify the defect from `defect_tags`.",
       "Generate the solution by instantiating the `atomic_blueprint`.",
       "Format: FUNCTION_NAME(ARGUMENTS) -> REASONING"
-    ]
+    ],
+    "required_capabilities": [
+      "paper_graph"
+    ],
+    "evidence_policy": "required"
   },
   "speculative-execution-with-repair": {
     "description": "Introduce speculative or optimistic execution plus explicit repair so the system can pursue fast paths without giving up recoverability.",

@@ -925,6 +925,9 @@ def _build_root_parser() -> argparse.ArgumentParser:
     quantitative_bundle.add_argument("--quantitative-author-handoff-manifest", required=True)
     quantitative_bundle.set_defaults(func=_quantitative_bundle_command)
 
+    from src.paper_graph.cli import configure_parser as configure_paper_graph_parser
+    configure_paper_graph_parser(subparsers.add_parser("paper-graph", help="Ingest, build and check grounded paper components"))
+
     doctor = subparsers.add_parser("doctor", help="Check local runtime prerequisites")
     doctor.add_argument("--config", default=str(DEFAULT_CONFIG_PATH), help="Path to config YAML")
     doctor.set_defaults(func=_doctor_command)
@@ -3153,9 +3156,11 @@ def _doctor_command(args: argparse.Namespace) -> int:
     checks.append(
         ("all-MiniLM-L6-v2", (REPO_ROOT / "models" / "all-MiniLM-L6-v2").exists(), "models/all-MiniLM-L6-v2")
     )
-    checks.append(
-        ("bge-m3", (REPO_ROOT / "models" / "bge-m3").exists(), "models/bge-m3"),
-    )
+    from src.paper_graph.health import check_paper_graph
+    from src.paper_graph.settings import PaperGraphSettings
+    graph_health = check_paper_graph(PaperGraphSettings.from_config(config))
+    for item in graph_health["checks"]:
+        checks.append(("paper_graph." + item["name"], item["ok"], json.dumps(item["detail"], ensure_ascii=False)))
     required_settings = provider_required_settings(llm_provider)[:1] + [
         (
             "SEMANTIC_SCHOLAR_API_KEY",
@@ -3203,12 +3208,12 @@ def _doctor_command(args: argparse.Namespace) -> int:
     console.print(Panel(env_table, title="Environment variables", border_style="cyan", padding=(0, 1)))
 
     failures = [
+        not graph_health["ok"],
         not llm_provider.api_key,
         not llm_provider.base_url,
         any(role_model_failures),
         not os.environ.get("SEMANTIC_SCHOLAR_API_KEY"),
         not (REPO_ROOT / "models" / "all-MiniLM-L6-v2").exists(),
-        not (REPO_ROOT / "models" / "bge-m3").exists(),
     ]
     return 1 if any(failures) else 0
 

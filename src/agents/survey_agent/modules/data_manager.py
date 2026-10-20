@@ -20,6 +20,7 @@ from modules.fulltext_download_cache import FulltextDownloadCoordinator
 from modules.fulltext_http import FulltextHttpClient
 import requests
 from contextlib import closing
+from contextvars import copy_context
 import diskcache as dc
 import torch
 import gc
@@ -101,6 +102,21 @@ class DataManager:
     def get_discovered_paper(self, paper_id):
         cache = getattr(self, "discovery_metadata_cache", None)
         return dict(cache.get(str(paper_id), {}) or {}) if cache is not None else {}
+
+    def _verified_source_content(self, paper_id):
+        """Reuse only source files that still match the reader's checksum."""
+        from pathlib import Path
+        import hashlib
+        source = self.get_discovered_paper(paper_id)
+        try:
+            path = Path(source.get("verified_source_path") or "")
+            if path.is_file():
+                content = path.read_text(encoding="utf-8")
+                if hashlib.sha256(content.encode()).hexdigest() == source.get("verified_source_sha256"):
+                    return content
+        except (OSError, UnicodeError):
+            pass
+        return ""
 
     def _get_embedding_model(self):
         """Lazy load and cache the embedding model."""
@@ -1104,7 +1120,11 @@ class DataManager:
         while index < len(papers) and (limit < 0 or len(valid_paper_ids) < limit):
             paper = papers[index]
             index += 1
-            
+            verified_id = self._resolve_paper_reference_id(paper)
+            if self._verified_source_content(verified_id):
+                valid_paper_ids.append(verified_id)
+                continue
+
             # 处理abstract_when_full_text_fail的情况
             if isinstance(paper, dict):
                 paper_id = self._paper_download_id(paper)
@@ -1142,6 +1162,10 @@ class DataManager:
         limit = limit if limit > 0 else len(papers)
         
         for idx, paper in enumerate(papers[:limit]):
+            verified_id = self._resolve_paper_reference_id(paper)
+            if self._verified_source_content(verified_id):
+                valid_paper_ids.append(verified_id)
+                continue
             # 处理特殊情况
             if isinstance(paper, dict):
                 paper_id = self._paper_download_id(paper)
@@ -1170,7 +1194,7 @@ class DataManager:
         
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = {
-                executor.submit(self._download_single_paper, paper, idx, total, reference_graph): idx
+                executor.submit(copy_context().run, self._download_single_paper, paper, idx, total, reference_graph): idx
                 for idx, paper in download_tasks
             }
             
@@ -1458,6 +1482,13 @@ class DataManager:
         resolved_paper_id = self._resolve_paper_reference_id(paper_id)
         if not resolved_paper_id:
              raise ValueError("Paper id is empty or none when get_paper_raw_markdown")
+        source = self.get_discovered_paper(resolved_paper_id)
+        content = self._verified_source_content(resolved_paper_id)
+        if content:
+            if str(source.get("verified_reading_mode", "")).startswith("abstract"):
+                raise ValueError("Only a verified abstract is available; use configured abstract fallback")
+            from src.pipeline.source_context import labelled_source
+            return labelled_source(content, {**source, "reading_range": {"start": 0, "end": len(content), "total_chars": len(content)}})
         md_path = os.path.join(
             f"{self.cache_path}/parsed_papers",
             resolved_paper_id,

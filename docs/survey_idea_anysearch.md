@@ -1,154 +1,121 @@
-# Survey 和 Idea 的 AnySearch 接入
+# Survey 和 Idea 的共享资料检索
 
-Survey 和 Idea 共用 `src/pipeline/anysearch.py` 中的 HTTP 客户端。Survey 在现有文献发现计划中加入 AnySearch；Idea 在读取 Survey 文献和形成候选想法之后分别补检索。返回的论文经过实际全文或摘要阅读后才进入模型上下文。
+Survey 和 Idea 共用科学需求规划器、AnySearch 能力清单、检索调度器和真实资料读取器。同一项目可以为不同子问题选择不同学科和资料通道。输入通过科学字段白名单构建，排除 rubric、评测指令、候选评分和裁决数据。
 
-## 连接服务
+## 连接与通道
 
-默认直接调用 AnySearch 官方 REST API，Base URL 为 `https://api.anysearch.com`。不需要部署桥接服务，也不需要额外填写地址；需要代理或兼容部署时，通过 `ANYSEARCH_BASE_URL` 或各模块配置覆盖。
+WSL 终端或项目根目录 `.env` 配置 `ANYSEARCH_API_KEY`。默认 REST Base URL 是 `https://api.anysearch.com`，可通过 `ANYSEARCH_BASE_URL` 覆盖。主机地址、`/v1` 地址和完整 `/v1/search` 地址均可配置；MCP 地址不适用于 REST 客户端。未设置 key 时不发送鉴权头。
 
-```bash
-# 在启动 qwen_sci 的 WSL 终端中设置，也可以写入项目根目录 .env。
-# 默认地址可省略。
-export ANYSEARCH_BASE_URL='https://api.anysearch.com'
-export ANYSEARCH_API_KEY='your-service-key'
+共享检索启动时调用 `GET /v1/domains`，再按实际 domain 调用 `GET /v1/sub-domains?domain=academic` 等接口，获取用途、参数和必填字段，优先加载 academic、general、code、health、legal。能力发现独立限制最多 20 次请求、45 秒，在客户端缓存目录保存 `capabilities-<endpoint-hash>.json`，24 小时内复用。部分通道失败时保留此前验证的缓存；全部失败且没有缓存时使用内置 `academic.search` 无参数回退，计划也可选择已有 OpenAlex。
+
+模型只能从能力清单选通道。程序校验标签、参数名、必填字段、接口提供的类型和枚举、年份顺序。客户端默认标签兼容旧调用；共享规划器逐次指定：
+
+```python
+client.search("alpha7 cannabidiol modulation", limit=5,
+              tag="academic.biomedical", params={"field": "tiab"})
+client.search("perovskite stability dataset", limit=5,
+              tag="academic.dataset", params={})
 ```
 
-请求遵循 [AnySearch 官方 REST 文档](https://www.anysearch.com/docs/api-endpoints/v1-search)：
+官方请求是 `POST /v1/search`，JSON 包含 `query`、`tag`、`params`、`max_results`、`format: json`；读取 `data.results`，兼容顶层数组、`results`、`papers`、`data` 数组。通道以实际清单为准，引用追踪须有真实标识符。HTTP 200 的非零业务 code 按失败处理。网络、429、5xx 有有限重试，错误响应消息不会写入日志或检查点。成功结果默认缓存 7 天，空结果最多 6 小时，缓存身份包含 endpoint、通道、参数、查询和结果数。
 
-```http
-POST https://api.anysearch.com/v1/search
-Content-Type: application/json
-Authorization: Bearer <ANYSEARCH_API_KEY>
+## 规划、试搜和读取
 
-{"query":"receptor mechanism","tag":"academic.search","max_results":10,"format":"json"}
-```
+`src/pipeline/search_planner.py` 从原始任务、研究对象、子问题、已读文献、候选机制和信息缺口形成多项需求。每项保存目的、目标子问题、学科、预期资料类型、研究对象、待覆盖条件、初始通道及参数、查询及理由、替代查询、请求预算和成功阅读目标。
 
-`max_results` 按官方限制收敛到 1–10；学术发现默认使用 `academic.search` 标签，已通过 `/v1/sub-domains?domain=academic` 核对。`anysearch_tag` / Idea 的 `tag` 可以覆盖该标签。未设置 key 时不发送 Authorization 头，使用服务支持的匿名访问；填写 key 时使用 Bearer 鉴权。请求连接超时为 5 秒，默认读取超时为 30 秒。
+查询使用“对象＋关系或方法＋条件”，同义词拆为替代查询；不再把主题前 700 个字符直接用于搜索。计划格式错误时保存原始回答，有限修复后使用简短词项的确定性回退。
 
-Base URL 可以填主机地址、以 `/v1` 结尾的地址或完整的 `/v1/search` 地址，客户端会生成同一个搜索端点。`https://api.anysearch.com/mcp` 属于 MCP 协议，本适配器不接收它作为 REST 地址；误填时记录服务失败并继续现有流程。
+`src/pipeline/adaptive_search.py` 先小规模试搜，再按新增相关资料、成功读取量、读取成功率和未覆盖条件排序。偏题或科普结果触发对象与资料类型调整；资料不足时换查询、放宽年份或补充通道；重复结果可沿真实 DOI 追踪引用。调整模型失败时用计划内替代查询，无有效替代则保存证据结束该需求。HTTP 成功和返回条数仅记录接口状态，覆盖指标来自实际读到的内容。关键词覆盖是调度提示，科学结论由后续阅读分析确定。
 
-官方响应从 `data.results` 读取：
+`src/pipeline/source_reader.py` 识别身份、去重后读取实际来源：
 
-```json
-{
-  "code": 0,
-  "message": "success",
-  "request_id": "server-generated-request-id",
-  "data": {
-    "results": [
-      {
-        "title": "A receptor mechanism study",
-        "url": "https://doi.org/10.1000/example",
-        "snippet": "Search discovery text.",
-        "content": "Provider-cleaned discovery content."
-      }
-    ],
-    "metadata": {"total_results": 1, "search_time_ms": 100}
-  }
-}
-```
+| 资料 | 读取方式 | 来源范围 |
+| --- | --- | --- |
+| 论文、预印本 | DOI、PMCID、arXiv、明确 PDF；有学术元数据的实际正文页；PDF 沿用下载和 MinerU | `fulltext`、`fulltext_html`；按配置回退真实 `abstract` |
+| 数据集 | 仓库页、仓库 ID 或 DOI、版本、下载链接；预算内探测下载响应 | `repository_metadata`，区分介绍页、声明下载地址、下载可访问 |
+| GitHub 代码 | 仓库元数据、提交 SHA、固定提交的 README | `repository_readme`，记录提交版本 |
+| 政策、标准、文档、统计 | 所选链接的实际页面；明确 PDF 继续 PDF 链路 | `source_page` 或 `fulltext` |
 
-也兼容论文数组和顶层 `results`、`papers`、`data` 数组。HTTP 200 中的非零业务 `code` 按失败处理，错误响应不作为空结果缓存。
+读取代码仓库不执行代码，下载探测不加载完整数据。其他仓库无可验证身份或实际内容时记录失败。官方来源由任务和通道选择优先访问，页面可读取不等于权威性已验证。
 
-`title` 是本项目接收记录的必需字段，其余字段按实际返回使用。DOI 既可来自明确的 `doi` 字段，也可来自 `doi.org` 链接。兼容服务若额外返回 `abstract`、作者、年份、PDF 或真实 `openalex_id`，这些元数据会一并保留。缺少 `openalex_id` 时生成稳定的本地 `AS…` 编号；该编号不会发给 OpenAlex 或 Semantic Scholar 当作文献编号查询。DOI、标题和文献编号用于去重，合并后保留各来源和下载入口。
+`snippet` 与搜索 `content` 只保存为 `discovery_snippet` / `discovery_content`。真实摘要、正文或仓库内容才能进入阅读结果。完整来源保存 SHA-256、类型、URL、DOI、版本、时间、访问状态和读取范围；超过上限保留完整文件，给模型标为 `*_excerpt` 的片段。Survey 相关性评估用独立 `source_excerpt` 字段，不把实际正文片段伪装为摘要。后续下载与分析按哈希复用已读来源，避免重复下载和 MinerU 解析。
 
-`snippet` 和 `content` 分别保存在 `discovery_snippet` 和 `discovery_content`，不会自动视作论文摘要或全文。阅读使用来源链接和既有下载、解析流程；只有明确的 `abstract` 字段才能作为服务提供的摘要回退。仅有搜索文本、且无法取得实际来源的条目会记录为不可读。
+论文按 DOI、PMCID、arXiv、标题等跨来源去重并保留来源；数据、代码等按类型和已知版本区分。无 OpenAlex ID 时使用稳定 `AS…` 编号，不当作外部 API 文献 ID。`AS…` 可作上下文阅读，真实 `W…` 论文仍可按原策略扩展图谱。
 
-显式空地址的客户端记录 `unconfigured`。网络错误、超时、HTTP 429 和 5xx 进行有限重试；HTTP 4xx（429 除外）及响应格式错误直接记录失败。成功结果默认缓存 7 天，空结果最多缓存 6 小时；缓存身份包含 REST 端点、检索标签和请求参数。
+## 配置与预算
 
-## Survey 配置与行为
-
-`src/config/default.yaml` 中：
+Survey 的 `survey.ModuleInfo.WorkCollector` 默认值：
 
 ```yaml
-survey:
-  APIInfo:
-    anysearch_base_url: "${oc.env:ANYSEARCH_BASE_URL,'https://api.anysearch.com'}"
-    anysearch_tag: "academic.search"
-    anysearch_timeout_seconds: 30
-    anysearch_max_retries: 1
-  ModuleInfo:
-    WorkCollector:
-      enable_anysearch_discovery: true
-      anysearch_result_limit: 10
+enable_anysearch_discovery: true
+shared_search_enabled: true
+shared_search_use_llm: true
+shared_search_max_needs: 5
+shared_search_max_requests: 12
+shared_search_max_http_requests: 80
+shared_search_max_model_calls: 12
+shared_search_max_acquisition_attempts: 20
+shared_search_read_limit: 8
+shared_search_max_seconds: 900
+shared_search_max_rounds: 3
+shared_search_plan_repair_attempts: 1
+shared_search_checkpoint_attempts: 2
+shared_search_result_limit: 5
+shared_search_prefer_fulltext: true
+shared_search_max_source_chars: 60000
 ```
 
-项目、子假设（SH）、证据槽位和已缓存的检索计划都会在 OpenAlex 检索式后加入 AnySearch 查询，保留原来的 SH、槽位和任务身份。OpenAlex 专用过滤条件不会传给 AnySearch。种子数、筛选与阅读策略仍由现有配置控制；既有 HTTP 检索预算的统计范围仍是 OpenAlex query-search。
+预算用于共享检索与获取，和 Survey 原控制器分别记录。默认控制器接收共享检索读到的资料，执行科学相关性分析，再继续本身检索。共享规划器开启后不再机械复制每条原生查询到 AnySearch；关闭 `shared_search_enabled` 可使用旧附加通道行为。
 
-AnySearch 的来源记录与候选论文一起进入筛选。带真实 `W…` 编号的论文可以继续走图谱扩展；本地图谱缺少它时仍可阅读。`AS…` 论文作为上下文阅读，不作为图谱扩展根节点。全文失败时，是否使用真实摘要由既有 `WorkAnalyzer.abstract_only_mode` / `abstract_when_full_text_fail` 配置决定。
-
-元数据保存在 `BasicInfo.cache_path/discovery_metadata`，请求缓存位于 `BasicInfo.cache_path/anysearch`。恢复时可以根据本地编号重新找到标题、摘要和下载入口，参考文献生成也使用这些元数据。
-
-## Idea 配置与行为
-
-默认配置：
+Idea 的 `idea.agent.anysearch` 默认值：
 
 ```yaml
-idea:
-  agent:
-    anysearch:
-      enabled: true
-      base_url: "${oc.env:ANYSEARCH_BASE_URL,'https://api.anysearch.com'}"
-      tag: "academic.search"
-      timeout_seconds: 30
-      max_retries: 1
-      initial_queries: 2
-      candidate_queries: 2
-      result_limit: 8
-      initial_read_limit: 4
-      candidate_read_limit: 4
-      max_total_papers: 8
-      checkpoint_attempts: 2
-      prefer_fulltext: true
-      allow_abstract_fallback: true
-      max_source_chars: 60000
+enabled: true
+planner_use_llm: true
+initial_queries: 5       # 初始阶段信息需求数上限
+candidate_queries: 4     # 候选阶段信息需求数上限
+initial_read_limit: 4
+candidate_read_limit: 4
+max_total_papers: 8      # 两阶段合计成功新增阅读上限
+max_acquisition_attempts: 20
+max_total_acquisition_attempts: 20
+max_requests: 12
+max_http_requests: 80
+max_model_calls: 12
+max_seconds: 900
+max_rounds: 3
+plan_repair_attempts: 1
+checkpoint_attempts: 2
+result_limit: 5
+prefer_fulltext: true
+allow_abstract_fallback: true
+max_source_chars: 60000
 ```
 
-Idea 在两个位置使用外部检索：
+初始知识获取和候选路线准备分别调用规划器。每阶段查询、HTTP、规划器调用和时间预算独立；新增成功阅读与获取尝试有跨阶段总上限。已拒绝或合并的候选不生成新需求。
 
-1. **初始文献整理**：从主题和原始研究请求生成最多 2 条检索式，与 Survey 已有文献去重，最多新增阅读 4 篇，然后参与评分、摘要压缩和分析。
-2. **候选路线准备**：从候选的标题、假设、机制、证据缺口和开放问题生成最多 2 条检索式，最多新增阅读 4 篇。读取结果马上提供给相关候选的证据上下文。
+目标读 8 篇、允许获取 20 次时，前 4 个失败后仍尝试后续候选。重试占获取尝试，失败不占成功名额；每项还受 `checkpoint_attempts` 限制。作用域中的 HTTP 重试和重定向逐次计入预算。能力发现独立限额，模型客户端底层重试由原配置约束。时间在下一项操作或下一次 HTTP 前检查；已经进入 MinerU 的解析继续沿用既有超时，不会在第 900 秒强杀外部解析进程。
 
-两阶段合计默认最多阅读 8 篇新论文，失败的阅读也占据名额。每个阶段在同一运行目录内固定查询集合，后续工作流或 MCTS 节点复用记录。没有候选时暂不创建候选阶段检查点，等候选形成后再检索。
+## 保存、交接与恢复
 
-查询只读取科学任务字段；不会序列化 rubric、评价分数或评测指令。已拒绝的候选与已合并的重复候选不生成检索式。
+Survey 的 `BasicInfo.base_dir` 保存 `search/project.json`（能力快照、计划、请求、候选、读取、指标、调整）、`search/project_model/`（原始回答）、`search/reading/<ID>.md` 和 `<ID>.source.json`（完整来源与元数据）。另有 `search_history.json`，发布时纳入 manifest 哈希，并传入 Survey JSON 和 Idea 上下文。旧交接无历史时仍可加载。
 
-新增文献优先走现有下载与解析链路。全文不可用时使用服务返回的真实摘要；只返回 snippet 的论文标记为不可读。正文超过 `max_source_chars` 时保留完整来源文件，只向后续模型传递标记为 `fulltext_excerpt` / `abstract_excerpt` 的截断文本。模型压缩和后续分析能够看到 `reading_mode` 来源范围。
+Idea 在当前目录的 `external_search/` 保存 `initial.json`、`candidate.json`、`initial_model/`、`candidate_model/`、`search_cache/`、`reading/`。原有 `keynote_compression/` 保存摘要及 JSON 修复检查点。
 
-## 保存与恢复
+操作执行前预留预算并保存，完成后更新状态，模型原始回答在解析前落盘。恢复同一阶段复用已完成请求和阅读，只在预算内重试未完成项目；重启不清零已用预算。Idea 能看到已查目的、通道、参数、查询、候选、已读资料、未覆盖条件和调整理由，再针对候选补检索。
 
-Idea 当前运行目录下新增：
-
-```text
-external_search/
-  initial.json       # 初始查询、状态、返回元数据、逐篇阅读状态与结果
-  candidate.json     # 候选查询与阅读检查点
-  search_cache/      # 成功或有效空结果的 HTTP 响应缓存
-  reading/
-    AS….md           # 阅读到的完整来源正文，真实 W 编号使用 W….md
-    sh_graph_provenance.json
-keynote_compression/  # 既有摘要压缩与 JSON 修复检查点
-```
-
-每次请求和阅读前后保存检查点。在同一 `run_dir` 再次进入阶段时，成功检索和已完成阅读直接复用；只尝试未完成或失败的项目。每个查询或论文最多执行 `checkpoint_attempts` 次，单次查询另受 `max_retries` 限制。创建新的运行目录会开始新的阶段记录。
-
-单篇阅读、评分或结构化摘要失败时保留已有资料并记录问题。摘要继续使用既有的有限 JSON 修复与原始 keynote 回退机制。Idea 的运行报告写入当前 Idea 目录，下载与解析缓存可以共享，原 Survey 交接文件保持冻结。
-
-最终 Idea JSON 及方向结果 JSON 保存 `external_searches` 和 `external_references`。后者包括实际来源范围、来源文件、DOI、检索来源和摘要检查点；合并摘要保留逐篇来源。它们是运行级来源记录，某篇论文是否支持特定方向由该方向的证据上下文决定。
-
-要停用接入，设置 `survey.ModuleInfo.WorkCollector.enable_anysearch_discovery: false` 和/或 `idea.agent.anysearch.enabled: false`。修改代码或环境变量后，新启动的进程才会加载这些设置。
+通道不可用、计划解析失败、预算耗尽时记录问题，保留已完成资料。后续摘要仍用原始 keynote 保留及有限 JSON 修复。最终 Idea JSON 的 `external_searches` / `external_references` 保留来源信息。
 
 ## 验证
 
-接入测试使用模拟 HTTP、文献阅读和模型响应，不调用真实服务或付费模型：
+模拟 HTTP、来源和模型，不启动研究任务或调用付费模型：
 
 ```bash
 .venv/bin/python -B -m pytest -q \
-  tests/test_anysearch.py \
-  tests/test_survey_anysearch.py \
-  tests/test_idea_anysearch.py
+  tests/test_adaptive_search.py tests/test_anysearch.py \
+  tests/test_idea_anysearch.py tests/test_survey_anysearch.py \
+  tests/test_survey_search_controller.py tests/test_survey_handoff_persistence.py \
+  tests/test_survey_fulltext_resolution.py tests/test_fulltext_http.py
 ```
 
-这些测试覆盖官方请求方法与响应格式、地址拼接、MCP 地址误填、业务失败、去重、来源保留、搜索文本隔离、重试上限、缓存失效、断点复用、阅读名额、Survey 图谱缺文献场景和 Idea 最终结果持久化。
-
-数值实验的参数文献发现和 WebApp 参数搜索也使用同一 REST 请求构建与响应解析约定，地址与标签分别位于 `quantitative_modeling.parameter_evidence.anysearch_base_url` 和 `anysearch_tag`。
+覆盖能力缓存、逐请求参数、多学科计划、rubric 隔离、失败补位、预算、重复调整、真实读取、断点复用、默认 Survey 控制器接入和交接哈希。

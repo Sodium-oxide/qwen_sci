@@ -90,7 +90,8 @@ def _run_stage(monkeypatch, tmp_path, *, screening_budget=0, refinement_budget=1
 
 def test_stage_focuses_context_and_preserves_screening_coverage(monkeypatch, tmp_path):
     result, requests, candidates = _run_stage(monkeypatch, tmp_path, fail_gap="gap-b")
-    assert result.status == "success"
+    # A stage can retain complete search coverage without a reviewed delivery.
+    assert result.status == "degraded"
     assert len(requests) == 4
     assert [request["mcts_iteration_budget"] for request in requests[:3]] == [3, 3, 3]
     assert requests[-1]["gap_search_focus"]["primary_gap_id"] == "gap-b"

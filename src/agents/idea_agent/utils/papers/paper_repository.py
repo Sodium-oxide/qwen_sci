@@ -361,41 +361,16 @@ class PaperRepository:
             OmegaConf.update(config, "BasicInfo.sh_graph_provenance_artifact_path", str(work_dir / "sh_graph_provenance.json"), merge=False)
             managers[key] = DataManager(config)
         manager = managers[key]
-        manager.register_discovered_papers([paper])
-        pid = manager._resolve_paper_reference_id(paper)
-        title = _as_text(paper.get("title"))
-        content, mode, issues = "", "", []
-        if prefer_fulltext:
-            try:
-                content = manager.get_paper_raw_markdown(paper).strip()
-                if content:
-                    mode = "fulltext"
-            except Exception as exc:
-                issues.append({"step": "fulltext", "error_type": type(exc).__name__})
-        if not content and allow_abstract_fallback:
-            try:
-                title, content = manager.get_paper_title_abstract(pid)
-                mode = "abstract"
-            except Exception as exc:
-                issues.append({"step": "abstract", "error_type": type(exc).__name__})
-        if not content:
-            return {"paper_id": pid, "title": title, "reading_status": "unavailable", "reading_issues": issues}
-        work_dir.mkdir(parents=True, exist_ok=True)
-        source_path = work_dir / (pid + ".md")
-        source_path.write_text(content, encoding="utf-8")
-        source_chars = len(content)
-        max_source_chars = max(1000, int(max_source_chars))
-        if len(content) > max_source_chars:
-            content = content[:max_source_chars]
-            mode += "_excerpt"
+        from src.pipeline.source_reader import SourceReader
+        result = SourceReader(manager, work_dir).read(
+            paper, prefer_fulltext=prefer_fulltext,
+            allow_abstract_fallback=allow_abstract_fallback, max_source_chars=max_source_chars,
+        )
+        if result.get("reading_status") != "completed":
+            return result
         return {
-            **self._normalize_keynote_reference(paper_id=pid, title=title, keynote=content),
-            "authors": paper.get("authors") or [], "year": paper.get("year"),
-            "venue": paper.get("venue"), "doi": paper.get("doi"), "url": paper.get("url"),
-            "source": "anysearch", "reading_status": "completed", "reading_mode": mode,
-            "reading_issues": issues, "source_path": str(source_path),
-            "source_chars": source_chars, "used_chars": len(content),
-            "discovery_provenance": list(paper.get("discovery_provenance") or []),
+            **self._normalize_keynote_reference(paper_id=result["paper_id"], title=result["title"], keynote=result["keynote"]),
+            **result,
         }
 
     def _normalize_rag_hit(self, hit: Dict[str, Any]) -> Dict[str, Any]:

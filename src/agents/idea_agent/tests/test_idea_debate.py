@@ -476,7 +476,7 @@ def test_profile_drift_allows_computational_profile_and_secondary_tools() -> Non
 
     assert computational["drift_severity"] == "none"
     assert computational["primary_drift"] is False
-    assert auxiliary["drift_severity"] == "soft"
+    assert auxiliary["drift_severity"] == "none"
     assert auxiliary["primary_drift"] is False
     assert "machine_learning" not in auxiliary["forbidden_primary_terms"]
 
@@ -485,6 +485,12 @@ def test_profile_drift_marks_incompatible_primary_cs_contribution() -> None:
     drift = detect_profile_drift(
         "physical_materials_chemical",
         {"core_contribution": "The main novelty is a neural architecture and loss function."},
+        task_request="Explain the physical transition mechanism.",
+        contribution_review={
+            "role": "primary_contribution", "replaces_task_objective": True, "serves_task_objective": False,
+            "triggering_text": "neural architecture and loss function", "task_boundary_quote": "physical transition mechanism",
+            "rationale": "The candidate optimizes prediction architecture without explaining the requested transition.",
+        },
     )
 
     assert drift["primary_drift"] is True
@@ -525,7 +531,7 @@ def test_debate_separates_profile_drift_from_actual_missing_fields() -> None:
     event = result["directions"][0]["debate_trace"][0]
 
     assert "mechanism_or_relation" not in event["actual_missing_fields"]
-    assert event["profile_drift_fields"] == ["mechanism_or_relation"]
-    assert event["final_status"] == "PROFILE_DRIFT"
+    assert event["profile_drift_fields"] == []
+    assert event["final_status"] != "PROFILE_DRIFT"
     assert event["postflight_missing"] == []
-    assert event["postflight_profile_drift_fields"] == ["mechanism_or_relation"]
+    assert event["postflight_profile_drift_fields"] == []

@@ -8,6 +8,7 @@ keeps a recoverable candidate for every expected direction.
 from __future__ import annotations
 
 from copy import deepcopy
+from src.agents.idea_agent.utils.mcts.review_contracts import invalidate_delivery_on_rewrite
 import re
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
@@ -98,7 +99,7 @@ def _candidate_payload(raw: Any) -> Optional[Dict[str, Any]]:
         return None
     payload = raw.get("idea") if isinstance(raw.get("idea"), Mapping) else raw
     candidate = dict(payload)
-    for key in ("evaluation", "score", "path", "search_path", "search_score"):
+    for key in ("evaluation", "score", "path", "search_path", "search_score", "delivery", "scientific_snapshot", "search_status"):
         if key in raw and key not in candidate:
             candidate[key] = deepcopy(raw[key])
     return candidate
@@ -106,6 +107,7 @@ def _candidate_payload(raw: Any) -> Optional[Dict[str, Any]]:
 
 def _normalise_candidate(raw: Any, mode: str, ordinal: int = 0) -> Dict[str, Any]:
     candidate = _candidate_payload(raw) or {}
+    before = deepcopy(candidate)
     intervention = candidate.get("scientific_intervention")
     contract = intervention.get("hypothesis_contract") if isinstance(intervention, Mapping) else None
     if isinstance(contract, Mapping):
@@ -138,6 +140,7 @@ def _normalise_candidate(raw: Any, mode: str, ordinal: int = 0) -> Dict[str, Any
     normalized["direction_mode"] = mode or _mode_of(normalized) or "default"
     normalized["idea_taste_mode"] = normalized["direction_mode"]
     normalized.setdefault("source_candidate_ids", [_source_id(normalized, normalized["direction_mode"], ordinal)])
+    invalidate_delivery_on_rewrite(before, normalized, reason="Synthesis changed scientific content and requires a fresh candidate review.")
     return normalized
 
 
