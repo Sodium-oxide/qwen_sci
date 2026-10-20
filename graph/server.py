@@ -1,18 +1,20 @@
-import os
 import json
-import sqlite3
 from fastapi import FastAPI, Query
 from pathlib import Path
+import sys
 
-BASE_DIR = Path(__file__).resolve().parent.parent / "data" / "processed"
-DB_PATH = BASE_DIR / "graph.db"
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from src.paper_graph.settings import PaperGraphSettings
+from src.paper_graph.repository import readonly_connection
+
+_SETTINGS = PaperGraphSettings.from_config()
+BASE_DIR = _SETTINGS.db_path.parent
+DB_PATH = _SETTINGS.db_path
 
 app = FastAPI(title="Graph Server")
 
 def get_conn():
-    conn = sqlite3.connect(str(DB_PATH), check_same_thread=False)
-    conn.row_factory = sqlite3.Row
-    return conn
+    return readonly_connection(DB_PATH)
 
 def normalize_key(name):
     if not name:
@@ -26,7 +28,8 @@ def normalize_key(name):
 
 @app.get("/health")
 def health():
-    return {"ok": True}
+    from src.paper_graph.health import check_paper_graph
+    return check_paper_graph(PaperGraphSettings.from_config())
 
 @app.get("/stats")
 def stats():

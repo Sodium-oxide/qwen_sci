@@ -14,6 +14,7 @@ from omegaconf import OmegaConf
 from src.agents.survey_agent.modules.outcome_RAG import OutcomeRAG
 from src.agents.survey_agent.modules.paper_graph_retriever import PaperGraphRetriever
 from src.agents.survey_agent.modules.work_collector import WorkCollector
+from src.agents.survey_agent.modules.data_manager import DataManager
 from src.agents.idea_agent.utils.core.progress import iter_with_progress
 from src.agents.survey_agent.utils.utils import get_hash
 
@@ -337,6 +338,39 @@ class PaperRepository:
             "venue": "",
             "year": "",
             "reference_mode": "raw_keynote",
+        }
+
+    def read_discovered_paper(
+        self, paper: Dict[str, Any], *, work_dir: Path,
+        prefer_fulltext: bool = True, allow_abstract_fallback: bool = True,
+        max_source_chars: int = 60000,
+    ) -> Dict[str, Any]:
+        """Read new literature without modifying the frozen Survey handoff.
+
+        Reuse acquisition caches, but route run-level acquisition reports into
+        the current Idea run. A discovery snippet is never a source abstract.
+        """
+        work_dir = Path(work_dir).resolve()
+        managers = getattr(self, "_external_data_managers", None)
+        if managers is None:
+            managers = self._external_data_managers = {}
+        key = str(work_dir)
+        if key not in managers:
+            config = _clone_config(self.config)
+            OmegaConf.update(config, "BasicInfo.base_dir", key, merge=False)
+            OmegaConf.update(config, "BasicInfo.sh_graph_provenance_artifact_path", str(work_dir / "sh_graph_provenance.json"), merge=False)
+            managers[key] = DataManager(config)
+        manager = managers[key]
+        from src.pipeline.source_reader import SourceReader
+        result = SourceReader(manager, work_dir).read(
+            paper, prefer_fulltext=prefer_fulltext,
+            allow_abstract_fallback=allow_abstract_fallback, max_source_chars=max_source_chars,
+        )
+        if result.get("reading_status") != "completed":
+            return result
+        return {
+            **self._normalize_keynote_reference(paper_id=result["paper_id"], title=result["title"], keynote=result["keynote"]),
+            **result,
         }
 
     def _normalize_rag_hit(self, hit: Dict[str, Any]) -> Dict[str, Any]:

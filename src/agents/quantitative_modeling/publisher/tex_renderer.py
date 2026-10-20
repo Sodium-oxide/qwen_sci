@@ -363,6 +363,19 @@ def _render_parameter_provenance(value: object) -> str:
     )
 
 
+def _render_figures(figures):
+    blocks = []
+    for figure in figures:
+        filename = figure["file"]
+        if not re.fullmatch(r"[A-Za-z0-9_-]+\.(?:pdf|png)", filename):
+            raise QuantitativeTexRenderError("unsafe result figure filename")
+        blocks.append("\n".join((r"\begin{figure}[htbp]", r"\centering",
+            r"\includegraphics[width=0.95\linewidth,height=0.65\textheight,keepaspectratio]{" + filename + "}",
+            r"\caption{" + _safe_breakable_text(figure["caption_en"], label="result figure caption") + "}",
+            r"\label{fig:" + _label(figure["figure_id"]) + "}", r"\end{figure}")))
+    return blocks
+
+
 def render_quantitative_models_tex(records: Sequence[Mapping[str, object]]) -> str:
     """Create standalone TeX with numbered formulas and no raw LLM TeX template input."""
 
@@ -411,6 +424,7 @@ def render_quantitative_models_tex(records: Sequence[Mapping[str, object]]) -> s
                 "\\subsection{Numerical Validation and Model-Internal Results}",
                 "\\paragraph{Validation Plan}\n" + _bullet_list(list(specification.get("validation_plan") or []), label="validation plan"),
                 _render_result_entries(list(record.get("qualified_entries") or [])),
+                *_render_figures(record.get("result_figures") or []),
                 "\\subsection{Hypothesis Iteration Lineage}",
                 _bullet_list(list(record.get("lineage_summary") or []), label="iteration lineage"),
                 "\\subsection{Limitations, Non-Empirical Disclosure, and References}",
@@ -424,6 +438,7 @@ def render_quantitative_models_tex(records: Sequence[Mapping[str, object]]) -> s
             r"\documentclass[11pt]{article}",
             r"\usepackage[margin=1in]{geometry}",
             r"\usepackage{amsmath}",
+            r"\usepackage{graphicx}",
             r"\usepackage[T1]{fontenc}",
             r"\title{Mathematical Modeling and Numerical Simulation Supplement}",
             r"\author{Anonymous Research Plan Author}",

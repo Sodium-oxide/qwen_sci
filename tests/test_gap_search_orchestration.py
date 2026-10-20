@@ -6,12 +6,13 @@ from types import SimpleNamespace
 from omegaconf import OmegaConf
 
 from src.agents.idea_agent.agent.artifacts import artifact_get, artifact_set
+from src.agents.idea_agent.utils.core.task_contract import build_task_contract
 from src.agents.idea_agent.utils.workflow import ligagent_handlers as handlers
 from src.agents.idea_agent.utils.workflow.result_persistence import compact_candidate_entry, compact_direction_document
 from src.agents.idea_agent.utils.workflow.stage_contract import StageContext
 
 
-def _run_stage(monkeypatch, tmp_path, *, screening_budget=0, refinement_budget=1, routes=None, screening_iterations=3, fail_gap=""):
+def _run_stage(monkeypatch, tmp_path, *, screening_budget=0, refinement_budget=1, routes=None, screening_iterations=3, fail_gap="", task_contract=None, scope="", scope_source="", seed_scope="", handoff_metadata=None):
     gaps = [
         {"gap_id": "gap-a", "target_slot": "comparable_endpoint", "gap_kind": "comparable_endpoint"},
         {"gap_id": "gap-b", "target_slot": "comparable_endpoint", "gap_kind": "comparable_endpoint"},
@@ -21,10 +22,15 @@ def _run_stage(monkeypatch, tmp_path, *, screening_budget=0, refinement_budget=1
         "idea_id": "seed", "title": "A scientific hypothesis", "hypothesis": "A relation is testable.",
         "target_gap_ids": [gap["gap_id"] for gap in gaps], "maturity_status": "mature",
     }
+    if seed_scope:
+        seed["refinement_scope"] = seed_scope
     artifact = {
         "topic": ["A general scientific question"], "mature_ideas": [seed],
-        "survey_idea_context": {"handoff": {"gaps": gaps}},
+        "survey_idea_context": {"handoff": {"gaps": gaps, **(handoff_metadata or {})}},
     }
+    artifact_set(artifact, "task_contract", task_contract or {})
+    artifact_set(artifact, "refinement_scope", scope)
+    artifact_set(artifact, "refinement_scope_source", scope_source)
     requests = []
     captured_candidates = []
 
@@ -84,7 +90,8 @@ def _run_stage(monkeypatch, tmp_path, *, screening_budget=0, refinement_budget=1
 
 def test_stage_focuses_context_and_preserves_screening_coverage(monkeypatch, tmp_path):
     result, requests, candidates = _run_stage(monkeypatch, tmp_path, fail_gap="gap-b")
-    assert result.status == "success"
+    # A stage can retain complete search coverage without a reviewed delivery.
+    assert result.status == "degraded"
     assert len(requests) == 4
     assert [request["mcts_iteration_budget"] for request in requests[:3]] == [3, 3, 3]
     assert requests[-1]["gap_search_focus"]["primary_gap_id"] == "gap-b"
@@ -131,6 +138,41 @@ def test_logged_and_recorded_budget_matches_mcts_cap(monkeypatch, tmp_path):
     assert all(request["mcts_iteration_budget"] == 8 for request in requests)
     schedule = result.artifact_patch.replace["gap_route_schedule"]
     assert schedule["screening_coverage"]["iteration_budget"] == 24
+
+
+def test_task_and_constraint_provenance_survive_seed_and_gap_isolation(monkeypatch, tmp_path):
+    request = "Design an ecological comparison and predict a discriminating observation."
+    contract = build_task_contract(original_request=request, interpretation={"task_mode": "protocol_design"})
+    _, requests, _ = _run_stage(
+        monkeypatch, tmp_path, refinement_budget=0, task_contract=contract,
+        scope="Only report uncertainty", scope_source="analysis_grounded", seed_scope="Inspect a local relation",
+        handoff_metadata={
+            "constraints": {"may_generate_new_gap": False},
+            "field_consensus": ["A source-reported consensus"],
+        },
+    )
+
+    assert requests
+    for context in requests:
+        assert context["task_contract"]["original_request"] == request
+        assert not context.get("refinement_scope")
+        assert context["proposed_scope"] == "Inspect a local relation"
+        assert context["public_facts"]["verified_facts"] == []
+        assert context["public_facts"]["hard_constraints"] == []
+        assert context["public_facts"]["field_consensus"] == ["A source-reported consensus"]
+
+
+def test_seed_focus_cannot_replace_explicit_user_scope(monkeypatch, tmp_path):
+    _, requests, _ = _run_stage(
+        monkeypatch, tmp_path, refinement_budget=0,
+        scope="Keep the study population fixed", scope_source="config_explicit",
+        seed_scope="Explore a different population",
+    )
+
+    for context in requests:
+        assert context["refinement_scope"] == "Keep the study population fixed"
+        assert context["proposed_scope"] == "Explore a different population"
+        assert context["task_contract"]["user_constraints"][0]["text"] == "Keep the study population fixed"
 
 
 def test_schedule_and_focus_survive_artifact_and_candidate_projection():

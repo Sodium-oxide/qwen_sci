@@ -2,6 +2,7 @@
 
 import json
 import shutil
+import time
 import uuid
 from copy import deepcopy
 from pathlib import Path
@@ -37,12 +38,15 @@ DEFAULT_BUDGET = {
 
 class ComputationalOrchestrator:
     def __init__(self, run_dir: str | Path, *, llm_call=None, analysis_llm_call=None, runtime=None,
-                 environment_id: str = "qwensci-computation:py312-v1"):
+                 environment_id: str = "qwensci-computation:py312-v1", figure_settings=None):
         self.root = Path(run_dir).expanduser().resolve()
         self.branch = self.root / "computation"
         self.llm_call, self.analysis_llm_call = llm_call, analysis_llm_call
         self.runtime = runtime or DockerRuntime()
         self.environment_id = environment_id
+        self.figure_settings = figure_settings
+        self._figure_attempts = set()
+        self._active_budget = None
 
     def cancelled(self) -> bool:
         return bool(load_state(self.branch).get("cancel_requested"))
@@ -103,15 +107,21 @@ class ComputationalOrchestrator:
             return self._resume_locked()
 
     def _resume_locked(self) -> dict:
+        self._figure_attempts.clear()
         state = load_state(self.branch)
         if (self.branch / "manifest.json").is_file():
             verify_manifest(self.branch / "manifest.json")
         if state.get("status") in {"COMPLETED", "PLANNED", "NEEDS_INPUT", "BUDGET_EXHAUSTED"} and (self.branch / "manifest.json").is_file():
-            verify_manifest(self.branch / "manifest.json")
+            handoff = verify_manifest(self.branch / "manifest.json")
+            for result in handoff["results"]:
+                plan = next(item for item in handoff["plans"] if (item["experiment_id"], item["protocol_version"]) ==
+                    (result["experiment_id"], result["protocol_version"]))
+                self._ensure_figures(plan, result)
             return state
         context = require_contract(read_json(self.branch / "context.json"))
         self._stage_inputs(context)
         budget = BranchBudget(self.branch, state["budget"])
+        self._active_budget = budget
         self.environment_id = state["environment_id"]
         update_state(self.branch, owner=owner(), status="RUNNING" if state["mode"] == "run" else "PLANNING")
         plans, results, unresolved = [], [], []
@@ -203,6 +213,7 @@ class ComputationalOrchestrator:
             accepted = require_contract(read_json(safe_path(self.branch, experiment["accepted_result_path"])))
             if any(accepted[key] != plan[key] for key in ("source_binding", "experiment_id", "protocol_version")) or accepted["validation_status"] != "QUALIFIED":
                 raise ValueError("accepted_result_identity_or_status_mismatch")
+            self._ensure_figures(plan, accepted, budget)
             return plan, accepted
         if experiment.get("execution_path") and Path(experiment["execution_path"]).is_file():
             execution_path = Path(experiment["execution_path"]).resolve()
@@ -216,13 +227,17 @@ class ComputationalOrchestrator:
             if any(recovered[key] != plan[key] for key in ("source_binding", "experiment_id", "protocol_version")) or recovered["authorization_id"] != authorization.authorization_id or recovered["implementation_version"] != experiment.get("implementation_version"):
                 raise ValueError("recovered_execution_source_mismatch")
             if recovered["status"] == "COMPLETED":
-                recovered_result = analyze(plan, recovered, get_backend(plan["backend_id"]).parse(recovered))
+                observations = get_backend(plan["backend_id"]).parse(recovered)
+                recovered_result = analyze(plan, recovered, observations)
                 if recovered_result["validation_status"] == "QUALIFIED":
+                    atomic_write_json(execution_path.parent / "parsed_result.json", observations)
+                    atomic_write_json(execution_path.parent / "qualification.json", recovered_result)
                     result_path = execution_path.parents[1].parent / "result.json"
                     atomic_write_json(result_path, recovered_result)
                     atomic_write_text(result_path.with_name("analysis.md"), render_analysis(plan, recovered_result))
                     self._checkpoint(plan, accepted_result_path=result_path.relative_to(self.branch).as_posix(), active_container=None)
                     event(self.branch, "COMPLETED_EXECUTION_RECOVERED", execution_id=recovered["execution_id"])
+                    self._ensure_figures(plan, recovered_result, budget)
                     return plan, recovered_result
         if experiment.get("active_container"):
             self.runtime.cancel(experiment["active_container"])
@@ -295,6 +310,7 @@ class ComputationalOrchestrator:
                 atomic_write_json(plan_dir / "result.json", result)
                 atomic_write_text(plan_dir / "analysis.md", render_analysis(plan, result))
                 self._checkpoint(plan, accepted_result_path=(plan_dir / "result.json").relative_to(self.branch).as_posix())
+                self._ensure_figures(plan, result, budget)
                 return plan, result
             if decision.kind == "REPAIR_IMPLEMENTATION":
                 repairs += 1
@@ -359,7 +375,25 @@ class ComputationalOrchestrator:
         experiments[plan["experiment_id"]] = current
         update_state(self.branch, experiments=experiments)
 
+    def _ensure_figures(self, plan, result, budget=None):
+        from src.result_figures.integration import ensure_computational_figures, optional_figures
+
+        key = (plan["experiment_id"], plan["protocol_version"], str(result["lineage"]))
+        if key in self._figure_attempts:
+            return None
+        self._figure_attempts.add(key)
+        return optional_figures(ensure_computational_figures, self.root, plan, result,
+            settings=self.figure_settings, deadline=time.monotonic() + budget.remaining() if budget else None,
+            cancel_check=self.cancelled)
+
     def _publish(self, context: dict, plans: list, results: list, status: str, unresolved: list) -> dict:
+        for result in results:
+            plan = next((item for item in plans if (item["experiment_id"], item["protocol_version"]) ==
+                (result["experiment_id"], result["protocol_version"])), None)
+            if plan:
+                self._ensure_figures(plan, result, self._active_budget)
+        if self._active_budget:
+            self._active_budget.checkpoint()
         unresolved = list(dict.fromkeys([*unresolved, *[item for result in results for item in result["unresolved_items"]]]))
         manifest = write_manifest(self.branch, build_handoff(self.branch, context, plans, results, status, unresolved))
         return update_state(self.branch, status=status, owner=None, manifest_path=str(manifest),

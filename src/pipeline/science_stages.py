@@ -68,6 +68,7 @@ class SurveyStageRequest:
     on_service_process_started: Callable[[int], None] | None = None
     multimodal_manifest_path: Path | None = None
     remote_perception_authorized: bool = False
+    resume_dir: Path | None = None
 
 
 @dataclass(frozen=True)
@@ -268,6 +269,7 @@ def _survey_runtime_config(request: SurveyStageRequest) -> Path:
             "BasicInfo.save_path": str(request.attempt_dir / "survey.md"),
             "BasicInfo.save_json_path": str(request.attempt_dir / "survey.json"),
             "BasicInfo.evaluation_save_path": str(request.attempt_dir / "evaluation.txt"),
+            "BasicInfo.survey_resume_dir": str(request.resume_dir) if request.resume_dir else "",
         }
         if request.multimodal_manifest_path is not None:
             settings = multimodal_settings_from_config(
@@ -290,13 +292,22 @@ def _survey_runtime_config(request: SurveyStageRequest) -> Path:
                 }
             )
         for key, value in values.items():
-            OmegaConf.update(config, _survey_override_key(request.config_path, key), value, merge=False)
+            OmegaConf.update(config, _survey_override_key(request.config_path, key), value, merge=False, force_add=True)
         request.attempt_dir.mkdir(parents=True, exist_ok=True)
         runtime_path = request.attempt_dir / f"science_survey_{uuid.uuid4().hex}.yaml"
         OmegaConf.save(config, runtime_path)
         return runtime_path
     except Exception as exc:
         raise ScienceStageError("survey", 10, f"Cannot create Survey runtime config: {exc}") from exc
+
+
+def survey_draft_outputs(directory: Path) -> dict[str, str]:
+    names = {
+        "survey_status": "survey_status.json", "survey_draft_json": "survey_draft.json",
+        "survey_draft_markdown": "survey_draft.md", "initial_draft_json": "draft.json",
+        "initial_draft_markdown": "draft.md", "survey_checkpoint": "checkpoints/survey_checkpoint.json",
+    }
+    return {key: str(directory / name) for key, name in names.items() if (directory / name).is_file()}
 
 
 def run_survey_stage(request: SurveyStageRequest) -> ScienceStageResult:
@@ -363,11 +374,26 @@ def run_survey_stage(request: SurveyStageRequest) -> ScienceStageResult:
         raise ScienceStageError(
             "survey", 10, f"Survey process ownership could not be recorded: {callback_error}"
         ) from callback_error
-    if return_code:
-        raise ScienceStageError("survey", 10, f"Survey process exited with code {return_code}")
     status_path = request.attempt_dir / "survey_status.json"
+    draft_path = request.attempt_dir / "survey_draft.json"
+    if return_code and draft_path.is_file():
+        draft = json.loads(draft_path.read_text(encoding="utf-8"))
+        issues = list(draft.get("unresolved_issues", []))
+        issues.append(f"Survey process exited with code {return_code}")
+        draft.update(survey_status="requires_review", unresolved_issues=issues)
+        atomic_write_json(draft_path, draft)
+        text = draft.get("paper") or draft.get("full_draft", "")
+        atomic_write_text(request.attempt_dir / "survey_draft.md",
+            "> 待复核草稿\n\n" + text + "\n\n## 未解决的问题\n\n" + "\n".join(f"- {issue}" for issue in issues))
+        atomic_write_json(status_path, {
+            "schema_version": "survey_status_v1", "survey_status": "requires_review",
+            "topic": request.topic, "reason": " | ".join(issues), "unresolved_issues": issues,
+        })
     if status_path.is_file():
         status = json.loads(status_path.read_text(encoding="utf-8"))
+        if status.get("survey_status") == "requires_review" and status.get("topic") == request.topic and draft_path.is_file():
+            return ScienceStageResult(stage="survey", result_path=status_path, outputs=survey_draft_outputs(request.attempt_dir),
+                identity={"survey_run_id": request.survey_run_id}, metadata=status)
         if status.get("survey_status") == "insufficient_evidence" and status.get("topic") == request.topic:
             outputs = {"survey_status": str(status_path)}
             diagnostics = request.attempt_dir / "subhypothesis_retrieval.json"
@@ -375,6 +401,8 @@ def run_survey_stage(request: SurveyStageRequest) -> ScienceStageResult:
                 outputs["retrieval_diagnostics"] = str(diagnostics)
             return ScienceStageResult(stage="survey", result_path=status_path, outputs=outputs,
                 identity={"survey_run_id": request.survey_run_id}, metadata=status)
+    if return_code:
+        raise ScienceStageError("survey", 10, f"Survey process exited with code {return_code}")
     manifest_path = request.attempt_dir / "survey_manifest.json"
     try:
         context = load_survey_idea_context(manifest_path)

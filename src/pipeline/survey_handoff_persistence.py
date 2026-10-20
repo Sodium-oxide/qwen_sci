@@ -44,6 +44,7 @@ _ARTIFACT_FILENAMES = {
     "multimodal_evidence": "multimodal_evidence.json",
     "idea_handoff": "survey_idea_handoff.json",
     "retrieval_papers": "survey_retrieval_manifest.json",
+    "search_history": "search_history.json",
 }
 
 
@@ -319,6 +320,12 @@ def publish_survey_run_artifacts(
     normalized_survey.setdefault("research_context", _mapping(context_artifact.get("research_context")))
     normalized_survey.setdefault("survey_evidence_plan", plan)
     normalized_survey.setdefault("claim_traceability", claim_artifact)
+    search_history_path = root / _ARTIFACT_FILENAMES["search_history"]
+    search_history = {}
+    if search_history_path.is_file():
+        from .adaptive_search import load_history
+        search_history = load_history(search_history_path)
+        normalized_survey["search_history"] = search_history
     artifacts: dict[str, bytes] = {
         "survey_markdown": str(final_survey or "").encode("utf-8"),
         "survey_json": _json_bytes(normalized_survey),
@@ -327,6 +334,8 @@ def publish_survey_run_artifacts(
     }
     if safe_multimodal_evidence is not None:
         artifacts["multimodal_evidence"] = _json_bytes(safe_multimodal_evidence)
+    if search_history:
+        artifacts["search_history"] = _json_bytes(search_history)
     complete_contract = _valid_evidence_plan(plan, fingerprint)
     if complete_contract:
         ledger = build_deterministic_gap_ledger(

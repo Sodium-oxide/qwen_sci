@@ -7,6 +7,7 @@ import re
 from typing import Any, Dict, Iterable, List, Mapping, Optional
 
 from src.pipeline.discipline_taxonomy import canonicalize_discipline_key
+from src.agents.idea_agent.utils.workflow.claim_evidence import normalize_claims, normalize_evidence_records
 
 
 LEGACY_IDEA_ALIASES = {
@@ -48,6 +49,8 @@ IDEA_CONTRACT_FIELDS = (
     "gap_alignment",
     "evidence_requirement",
     "evidence_basis",
+    "claims",
+    "evidence_records",
     "analysis_priority",
     "data_anchor_refs",
     "literature_reconciliation_status",
@@ -153,7 +156,7 @@ def _as_root_domains(value: Any) -> list[str]:
             continue
         seen.add(canonical_key)
         normalized.append(canonical_key)
-    return normalized[:2]
+    return normalized
 
 
 def _as_str_dict(value: Any) -> Dict[str, str]:
@@ -232,6 +235,8 @@ def normalize_idea_contract(
         "gap_alignment": _as_optional_payload(raw.get("gap_alignment")),
         "evidence_requirement": _as_text(raw.get("evidence_requirement")),
         "evidence_basis": _as_optional_payload(raw.get("evidence_basis")),
+        "claims": normalize_claims(raw.get("claims", [])),
+        "evidence_records": normalize_evidence_records(raw.get("evidence_records", [])),
         "analysis_priority": _as_text(raw.get("analysis_priority")),
         "data_anchor_refs": _as_list(raw.get("data_anchor_refs")),
         "literature_reconciliation_status": _as_text(raw.get("literature_reconciliation_status")),

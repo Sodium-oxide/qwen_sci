@@ -4,8 +4,11 @@ from typing import Any, Dict, Optional
 
 from src.agents.idea_agent.agent.base import AgentBase
 from src.agents.idea_agent.agent.prompts.input_interpreter import INPUT_INTERPRETER_PROMPT
+from src.agents.idea_agent.agent.prompts.task_extraction import TASK_EXTRACTION_PROMPT
+from src.agents.idea_agent.utils.core.logger import get_logger
 from src.agents.idea_agent.utils.core.config_loader import get_config_value
 from src.agents.idea_agent.utils.core.response_parsing import parse_json_response
+from src.agents.idea_agent.utils.core.task_contract import build_task_contract
 from src.agents.idea_agent.utils.workflow.idea_contract import (
     mature_idea_legacy_text,
     normalize_mature_ideas,
@@ -129,6 +132,7 @@ def _interpret_input_text(input_text: str, config: Optional[object]) -> Dict[str
             allow_empty=True,
         ),
         "needs_grounding": bool(payload.get("needs_grounding")) if isinstance(payload, dict) else True,
+        "task_contract": payload.get("task_contract", {}) if isinstance(payload, dict) else {},
     }
 
 
@@ -187,6 +191,22 @@ def resolve_run_inputs(
     interpreted_topic_source = str(interpreted.get("topic_source") or "inferred")
     interpreted_mature_source = str(interpreted.get("mature_idea_source") or "empty")
     interpreted_scope_source = str(interpreted.get("refinement_scope_source") or "empty")
+    if not explicit_refinement_scope and interpreted_scope_source == "explicit" and refinement_scope not in input_text:
+        interpreted_scope_source = "inferred"
+    scope_source = (
+        "config_explicit"
+        if explicit_refinement_scope
+        else ("empty" if interpreted_scope_source == "empty" else f"input_{interpreted_scope_source}")
+    )
+    original_request = input_text or explicit_topic or topic
+    extraction = _extract_task_contract(original_request, config, interpreted.get("task_contract"))
+    task_contract = build_task_contract(
+        original_request=original_request,
+        topic=topic,
+        interpretation=extraction,
+        refinement_scope=refinement_scope,
+        refinement_scope_source=scope_source,
+    )
     return {
         **defaults,
         "topic": topic,
@@ -195,16 +215,44 @@ def resolve_run_inputs(
         "refinement_scope": refinement_scope,
         "ablation_results_path": clean_optional_text(str(defaults.get("ablation_results_path") or "")),
         "input_text": input_text,
+        "task_contract": task_contract,
         "topic_source": "config_explicit" if explicit_topic else f"input_{interpreted_topic_source}",
         "mature_idea_source": (
             "config_explicit"
             if explicit_mature_idea or explicit_mature_ideas
             else ("empty" if interpreted_mature_source == "empty" else f"input_{interpreted_mature_source}")
         ),
-        "refinement_scope_source": (
-            "config_explicit"
-            if explicit_refinement_scope
-            else ("empty" if interpreted_scope_source == "empty" else f"input_{interpreted_scope_source}")
-        ),
+        "refinement_scope_source": scope_source,
         "needs_grounding": bool(interpreted.get("needs_grounding", True)),
     }
+
+
+def _extract_task_contract(request: str, config: Optional[object], initial: Any = None,
+                           *, chat_fn: Any = None, model: str | None = None) -> dict:
+    """Every input route uses the same bounded extraction, including topic-only runs."""
+    if not request:
+        return {"extraction_status": "failed", "extraction_errors": ["empty_request"]}
+    initial = initial if isinstance(initial, dict) else {}
+    errors = []
+    attempts = max(1, min(3, int(get_config_value(config, "run.task_contract_max_attempts", 2) or 2)))
+    model = model or clean_optional_text(get_config_value(config, "run.input_interpreter_model", "")) or clean_optional_text(get_config_value(config, "agent.model", "")) or None
+    best = initial
+    for _ in range(attempts):
+        try:
+            chat = chat_fn if chat_fn is not None else AgentBase().chat
+            response = chat(TASK_EXTRACTION_PROMPT.format(original_request=request), model=model, temperature=0.1, max_output_tokens=4096)
+            raw = parse_json_response(response)
+            if isinstance(raw, dict) and isinstance(raw.get("task_contract"), dict):
+                raw = raw["task_contract"]
+            if not isinstance(raw, dict):
+                raise ValueError("Task extraction must return an object.")
+            contract = build_task_contract(original_request=request, interpretation=raw)
+            if contract["extraction_status"] == "complete":
+                return {**raw, "extraction_errors": errors}
+            if any(raw.get(k) for k in ("required_deliverables", "user_constraints", "problem_premises")):
+                best = raw
+            errors.append("incomplete_or_ungrounded_extraction")
+        except Exception as exc:
+            errors.append(type(exc).__name__)
+    get_logger().warning("Task contract extraction incomplete after %s attempts (%s).", attempts, ", ".join(errors))
+    return {**best, "extraction_status": "partial" if best else "failed", "extraction_errors": errors}

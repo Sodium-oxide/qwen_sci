@@ -1135,6 +1135,7 @@ Score each dimension from 0 to 10:
 - framework: fidelity to the supplied section outline, logical organisation, and terminological consistency.
 
 Give at most {max_suggestions} concrete, local revision suggestions.  Each suggestion must be feasible without adding, removing, or replacing a citation, changing any heading, or introducing a new empirical result.
+For every suggestion, copy the affected sentence or excerpt verbatim into target_excerpts. Do not select headings or unaffected sentences.
 
 Previous Section:
 {previous_section_text}
@@ -1155,22 +1156,24 @@ Return exactly one JSON object and nothing else:
     "scientific": 0,
     "framework": 0
   }},
-  "suggestions": ["specific, local suggestion"]
+  "suggestions": ["specific, local suggestion"],
+  "target_excerpts": ["exact affected sentence from the current section"]
 }}
 """
 
 
-EVIDENCE_BOUNDED_SECTION_QUALITY_REVISE = """Revise one section of an evidence-bounded academic survey on {topic}.
+EVIDENCE_BOUNDED_SECTION_QUALITY_REVISE = """Repair specific sentences in an evidence-bounded academic survey on {topic}.
 
 Apply only the supplied quality suggestions.  This is a constrained editorial revision, not new research or a new evidence synthesis.
 
 Strict rules:
-1. Return the complete revised section, including all existing Markdown headings.
-2. Preserve every heading line verbatim.  Do not add, remove, rename, reorder, or promote/demote headings.
-3. Preserve the set of cited papers exactly.  Do not add, remove, replace, or edit any inline citation token in angle brackets.
+1. Return only sentence replacements using the supplied sentence_id values. Do not return a rewritten section.
+2. Edit only the listed editable sentences. Headings and all other text are read-only.
+3. Preserve every inline citation token in each edited sentence exactly, including its order. Do not move citations between sentences.
 4. Do not add empirical facts, numerical results, causal claims, or paper-specific claims that are not already expressed in the original section.
 5. Keep the section aligned with the immutable outline and within {section_word_cap} words.
-6. Improve prose, caveats, transitions, precision, and explanation where possible; if no safe improvement is possible, return the original section unchanged.
+6. Address only the supplied issues. If no safe improvement is possible, return an empty replacements list.
+7. Correct every reported validation failure from the previous attempt. Start from the original text, not a rejected revision.
 
 Immutable Section Outline:
 {section_outline}
@@ -1178,21 +1181,36 @@ Immutable Section Outline:
 Original Section:
 {section_text}
 
+Editable Sentences:
+{editable_sentences}
+
 Quality Suggestions:
 {suggestions}
 
+Previous Attempt Validation Errors:
+{validation_errors}
+
 Return exactly one JSON object and nothing else:
 {{
-  "revised_section": "complete revised section text"
+  "replacements": [{{"sentence_id": {example_sentence_id}, "new_text": "replacement sentence text"}}]
 }}
 """
 
-SURVEY_CLAIM_SUPPORT_AUDIT = """Check whether each cited claim is supported by the supplied source excerpts. Use only these excerpts, not outside knowledge. A source being on the topic is insufficient. Distinguish direct evidence from background context and do not treat a background source as proof of a specific result. If the excerpt is too short or unavailable, mark uncertain.
+SURVEY_CLAIM_SUPPORT_AUDIT = """Check each cited claim using only the supplied frozen source excerpts and evidence plan. A source being on the topic is insufficient. Background evidence cannot prove a specific result. Missing or insufficient excerpts mean uncertain, not unsupported.
+
+Split each compound claim into atomic subclaims. Their text fields must partition the original claim verbatim and in order, excluding citation tokens; do not omit a qualification or an unsupported clause. Assign each subclaim only the papers supporting that part. Different papers may support different parts; no single paper needs to support the entire compound sentence.
+
+Classify each subclaim:
+- fact: a source-specific empirical or methodological assertion. Require a verbatim evidence quote from its assigned paper. An abstract's silence cannot establish that a paper did not perform an experiment.
+- synthesis: an explicitly qualified inference from cited premises. Verify each premise with a verbatim source quote; reject stronger conclusions than those premises warrant. An inference need not be quoted verbatim as a conclusion in a source.
+- evidence_coverage: a statement about this project's evidence coverage. Check the named SH entry in evidence_plan, return sub_hypothesis_id and an exact ledger_quote from its JSON. Do not turn project coverage gaps into claims that an entire paper or field lacks evidence.
+
+Use unsupported only when available evidence establishes a mismatch. Use uncertain for unavailable evidence or unresolved interpretation. A supported fact or synthesis requires nonempty evidence entries, each with paper_id and a contiguous quote copied from that paper's excerpt. A supported evidence_coverage subclaim requires a matching evidence-plan entry and ledger_quote.
 
 Claims and admitted source excerpts:
 {claims_and_sources}
 
-Return exactly one JSON object: {{"assessments": [{{"claim_id": 1, "paper_id": "W...", "verdict": "supported|unsupported|uncertain", "evidence_quote": "exact contiguous source excerpt or empty", "reason": "brief explanation"}}]}}. Provide one assessment for every claim and cited paper. A supported verdict requires a quote copied verbatim from the supplied source excerpt. Do not invent quotes.
+Return exactly one JSON object: {{"assessments": [{{"claim_id": 1, "verdict": "supported|unsupported|uncertain", "reason": "brief explanation", "subclaims": [{{"text": "verbatim part of original claim", "claim_type": "fact|synthesis|evidence_coverage", "verdict": "supported|unsupported|uncertain", "evidence": [{{"paper_id": "W...", "quote": "exact source excerpt"}}], "sub_hypothesis_id": "SH identifier for coverage statements only", "ledger_quote": "exact evidence-plan text for coverage statements only"}}]}}]}}. Provide one assessment per claim_id, using its paper_ids collectively. Never invent a quote or omit an unsupported part.
 """
 
 SURVEY_CONSISTENCY_AUDIT = """Inspect these survey sections for material factual contradictions and repeated arguments, including repetition across subsections of the same section. Do not flag differences in scope or terminology unless the two quoted factual statements cannot both be true as written. Use the exact section numbers and copy both excerpts verbatim. Return exactly one JSON object: {{"contradictions": [{{"source_section": 1, "target_section": 2, "source_excerpt": "exact text", "target_excerpt": "exact text", "reason": "brief explanation"}}], "repetitions": [{{"source_section": 1, "target_section": 2, "source_excerpt": "exact text", "target_excerpt": "exact text", "reason": "brief explanation"}}]}}. Return empty lists if none are evident.

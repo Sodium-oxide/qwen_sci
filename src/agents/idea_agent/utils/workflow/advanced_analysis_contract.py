@@ -26,6 +26,8 @@ _TOP_LEVEL_FIELDS = frozenset(
 )
 _NONEMPTY_STRING_LIST_FIELDS = (
     "key_methods",
+)
+_STRING_LIST_FIELDS = (
     "field_consensus",
     "existing_problems",
     "future_directions",
@@ -81,6 +83,11 @@ def _validate_nonempty_string_list(value: Any, field_name: str, errors: List[str
         errors.append(f"{field_name} must be a non-empty list of non-empty strings")
 
 
+def _validate_string_list(value: Any, field_name: str, errors: List[str]) -> None:
+    if not isinstance(value, list) or not all(_is_nonempty_string(item) for item in value):
+        errors.append(f"{field_name} must be a list of non-empty strings (an empty list is allowed)")
+
+
 def _validate_mapping(value: Any, field_name: str, errors: List[str]) -> Mapping[str, Any] | None:
     if not isinstance(value, Mapping):
         errors.append(f"{field_name} must be an object")
@@ -89,8 +96,8 @@ def _validate_mapping(value: Any, field_name: str, errors: List[str]) -> Mapping
 
 
 def _validate_evaluation_gaps(value: Any, errors: List[str]) -> None:
-    if not isinstance(value, list) or not value:
-        errors.append("evaluation_gaps must be a non-empty list")
+    if not isinstance(value, list):
+        errors.append("evaluation_gaps must be a list")
         return
     for index, gap in enumerate(value):
         item = _validate_mapping(gap, f"evaluation_gaps[{index}]", errors)
@@ -101,7 +108,7 @@ def _validate_evaluation_gaps(value: Any, errors: List[str]) -> None:
                 errors.append(f"evaluation_gaps[{index}].{field_name} must be a non-empty string")
 
 
-def _validate_mature_ideas(value: Any, *, require_gap_ids: bool, errors: List[str]) -> None:
+def _validate_mature_ideas(value: Any, *, valid_gap_ids: set[str] | None, errors: List[str]) -> None:
     if not isinstance(value, list) or not value:
         errors.append("mature_ideas must be a non-empty list")
         return
@@ -116,10 +123,12 @@ def _validate_mature_ideas(value: Any, *, require_gap_ids: bool, errors: List[st
             value = idea.get(field_name)
             if not isinstance(value, list) or not all(_is_nonempty_string(item) for item in value):
                 errors.append(f"mature_ideas[{index}].{field_name} must be a list of non-empty strings")
-            elif field_name != "target_gap_ids" and not value:
+            elif field_name in {"mechanism_chain", "validation_targets"} and not value:
                 errors.append(f"mature_ideas[{index}].{field_name} must not be empty")
-            elif field_name == "target_gap_ids" and require_gap_ids and not value:
-                errors.append(f"mature_ideas[{index}].target_gap_ids must not be empty when Survey handoff is present")
+            elif field_name == "target_gap_ids" and valid_gap_ids is not None:
+                for gap_id in value:
+                    if gap_id not in valid_gap_ids:
+                        errors.append(f"mature_ideas[{index}].target_gap_ids contains unknown gap ID: {gap_id}")
         if idea.get("maturity_status") not in {"mature", "provisional"}:
             errors.append(f"mature_ideas[{index}].maturity_status must be mature or provisional")
         if idea.get("idea_source") not in _IDEA_SOURCES:
@@ -134,7 +143,7 @@ def _validate_root_idea(value: Any, errors: List[str]) -> None:
         if not _is_nonempty_string(root_idea.get(field_name)):
             errors.append(f"root_idea.{field_name} must be a non-empty string")
     for field_name in ("target_defects", "supporting_papers"):
-        _validate_nonempty_string_list(root_idea.get(field_name), f"root_idea.{field_name}", errors)
+        _validate_string_list(root_idea.get(field_name), f"root_idea.{field_name}", errors)
 
 
 def _validate_optional_seed_records(
@@ -165,6 +174,7 @@ def validate_advanced_analysis_response(
     *,
     require_grounded_fields: bool,
     require_gap_ids: bool,
+    valid_gap_ids: Sequence[str] | None = None,
 ) -> List[str]:
     """Return contract violations; an empty list means the response is usable."""
 
@@ -180,6 +190,8 @@ def validate_advanced_analysis_response(
 
     for field_name in _NONEMPTY_STRING_LIST_FIELDS:
         _validate_nonempty_string_list(response.get(field_name), field_name, errors)
+    for field_name in _STRING_LIST_FIELDS:
+        _validate_string_list(response.get(field_name), field_name, errors)
     _validate_evaluation_gaps(response.get("evaluation_gaps"), errors)
 
     preserve = _validate_mapping(response.get("preserve_current_idea"), "preserve_current_idea", errors)
@@ -189,12 +201,16 @@ def validate_advanced_analysis_response(
         if not isinstance(preserve.get("reason"), str):
             errors.append("preserve_current_idea.reason must be a string")
 
-    _validate_mature_ideas(response.get("mature_ideas"), require_gap_ids=require_gap_ids, errors=errors)
+    _validate_mature_ideas(
+        response.get("mature_ideas"),
+        valid_gap_ids=set(valid_gap_ids) if valid_gap_ids is not None else None,
+        errors=errors,
+    )
     for field_name in ("grounded_mature_idea", "grounded_refinement_scope"):
         value = response.get(field_name)
         if not isinstance(value, str):
             errors.append(f"{field_name} must be a string")
-        elif require_grounded_fields and not value.strip():
+        elif field_name == "grounded_mature_idea" and require_grounded_fields and not value.strip():
             errors.append(f"{field_name} must be non-empty when no explicit mature idea is supplied")
     _validate_root_idea(response.get("root_idea"), errors)
     _validate_optional_seed_records(
@@ -220,7 +236,7 @@ def build_advanced_analysis_repair_prompt(
     invalid_response: Any,
     errors: Sequence[str],
 ) -> str:
-    """Ask the model for a full replacement, retaining the original evidence context."""
+    """Repair reported contract errors while retaining valid scientific decisions."""
 
     serialized_response = json.dumps(invalid_response, ensure_ascii=False, default=str)
     if len(serialized_response) > 12_000:
@@ -230,13 +246,16 @@ def build_advanced_analysis_repair_prompt(
         base_prompt
         + "\n\n== REQUIRED CONTRACT REPAIR ==\n"
         + "Your previous JSON response was syntactically valid but failed the mandatory advanced-analysis contract. "
-        + "Return one complete replacement JSON object, with no Markdown and no commentary. Do not merely fill the omitted fields; "
-        + "re-evaluate the supplied Survey evidence and make every required field mutually consistent.\n"
+        + "Return one complete JSON object, with no Markdown and no commentary. Repair only the reported violations "
+        + "and directly dependent fields; preserve valid decisions, headings, evidence references, and task coverage.\n"
         + "The required top-level fields are exactly: "
         + ", ".join(sorted(_TOP_LEVEL_FIELDS))
-        + ". `key_methods`, `field_consensus`, `existing_problems`, `evaluation_gaps`, `future_directions`, and `mature_ideas` must all be non-empty. "
+        + ". `key_methods` and `mature_ideas` must be non-empty. "
         + "Always provide one concrete `root_idea` and at least one fully specified mature idea. "
-        + "When Survey handoff is present, every mature idea must contain non-empty `target_gap_ids`.\n"
+        + "Consensus, problems, evaluation gaps, future directions, counterexamples, retrieval queries, supporting papers, "
+        + "and target gap IDs may be empty when none are established or needed. Never manufacture them. "
+        + "A proposed scope is optional and does not create a user constraint. Preserve the original task and "
+        + "keep proposed choices and predictions distinct from literature facts or observed results.\n"
         + "Contract violations in the previous response:\n"
         + error_lines
         + "\nPrevious invalid JSON (for repair only):\n"

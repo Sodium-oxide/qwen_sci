@@ -31,6 +31,7 @@ from src.pipeline.survey_response_normalization import (
     slot_contributions, source_summaries,
 )
 from src.pipeline.survey_prompt_budget import compact_value, fit_payload, planning_batches, project_fields, serialize_prompt
+from src.pipeline.source_context import assessment_source, has_source_content
 
 
 PLAN_PROMPT = """Plan literature queries using the original topic and all supplied SHs. Return ONE JSON
@@ -118,7 +119,7 @@ sh_assessments: [{sub_hypothesis_id, evidence_boundaries,
 semantic_relevance_score, overall_relation, contribution_types: [string],
 candidate_slot_contributions: [{slot_name: supplied slot ID,
 support_level: direct|partial|indirect|none, reason: string}],
-supported_minimal_claims, claim_limits, evidence_spans: [{source: title|abstract, text: source-based summary}],
+supported_minimal_claims, claim_limits, evidence_spans: [{source: title|abstract|source_excerpt, text: source-based summary}],
 explicit_exclusion_matches, recommended_graph_role, confidence, reason}], scientific_objects:
 [{name, aliases, candidate_kind, taxonomic_level, sub_hypothesis_ids,
 roles_by_subhypothesis, role_reason, evidence_spans: [{source, text: source-based summary}],
@@ -128,7 +129,10 @@ evidence_spans, claim_limits, reason}]}]}]}.
 Role options: decision_candidate, comparator, target_system, source_system_proxy,
 mechanism_or_component, background_entity, role_unresolved. Selection roles describe options
 the research question actually chooses between, not every named entity. Identify objects and
-summarize their contribution semantically from the supplied title/abstract. Canonical names,
+summarize their contribution semantically from the supplied title, abstract or source_excerpt.
+source_excerpt is actual retrieved content; source_context identifies its type, version and
+reading range. A repository README or dataset description establishes only what it reports.
+An abstract remains an abstract; never treat a discovery snippet as source evidence. Canonical names,
 aliases and paraphrases need not match the source wording literally. Do not invent reported
 findings; these summaries are model assessments, not verified verbatim quotations.
 Project and SH scores are integers 0..5:
@@ -160,7 +164,7 @@ Use only this SH's supplied slot_recovery_tasks.slot_name in candidate_slot_cont
 support_level is an explicit reported judgment, never guess it from a slot name.
 Scores are integers 0..5 and are never null or omitted; scope_pass, evidence_role_pass,
 minimum_evidence_pass and excluded are JSON booleans. All source summaries require
-source="title" or "abstract" and a nonempty text string referring to the supplied source.
+source="title", "abstract" or "source_excerpt" and a nonempty text string referring to the supplied source.
 Always emit project_score on each paper and semantic_relevance_score on EVERY SH assessment.
 Use JSON numbers, for example "project_score": 4 and "semantic_relevance_score": 3.
 Do not use confidence as a relevance score or omit scores because a graph is not expanded.
@@ -583,8 +587,8 @@ class SurveySearchController:
             assessments = [project_fields(item, ("sub_hypothesis_id", "assessment_status", "semantic_relevance_score",
                 "overall_relation", "candidate_slot_contributions", "supported_minimal_claims", "claim_limits",
                 "explicit_exclusion_matches", "evidence_boundaries", "reason")) for item in paper.get("sh_semantic_assessments", [])]
-            papers.append(compact_value({"paper_id": paper_identity(paper), "title": paper.get("title"),
-                "abstract": paper.get("abstract"), "project_relevance": paper.get("project_relevance"),
+            papers.append(compact_value({"paper_id": paper_identity(paper), **assessment_source(paper),
+                "project_relevance": paper.get("project_relevance"),
                 "sh_semantic_assessments": assessments}))
         collections = {"paper_results": papers,
             "registered_objects": [compact_value(project_fields(record, ("candidate_id", "name", "canonical_name",
@@ -728,7 +732,7 @@ class SurveySearchController:
         batches = [pending[index:index + self.paper_batch] for index in range(0, len(pending), self.paper_batch)]
         diagnostics = [self.format_batch("assessment", paper_ids=[paper_identity(paper) for paper in batch]) for batch in batches]
         prompts = [ASSESS_PROMPT + json.dumps({**self.payload(), "papers": [
-            {"paper_id": paper_identity(paper), "title": paper.get("title"), "abstract": paper.get("abstract"),
+            {"paper_id": paper_identity(paper), **assessment_source(paper),
              "metadata": {key: paper.get(key) for key in ("doi", "year", "publication_year", "journal", "externalIds")},
              "query_provenance": paper.get("retrieval_provenance", [])} for paper in batch]}, ensure_ascii=False) for batch in batches]
         responses = self.model(prompts, "Assessing Survey Papers and Objects", lease, diagnostics=diagnostics)
@@ -753,9 +757,10 @@ class SurveySearchController:
                 raw = aligned.get(canonical_paper_id(paper_identity(paper)), {})
                 paper["survey_assessment_alignment"] = {"batch_id": diagnostic.batch_id,
                     **next(record for record in alignment["expected_records"] if record["paper_id"] == paper_identity(paper))}
-                project_score = score_field(raw, "project_score", diagnostic) if paper.get("abstract") else None
+                available = has_source_content(paper)
+                project_score = score_field(raw, "project_score", diagnostic) if available else None
                 valid = project_score is not None and isinstance(raw.get("project_reason"), str) and bool(raw["project_reason"].strip())
-                if raw and not valid and paper.get("abstract"):
+                if raw and not valid and available:
                     if project_score is None:
                         diagnostic.unresolved("project_score", "missing_invalid_or_conflicting_score_0_to_5", score_fields_raw(raw, "project_score"), **context)
                     if not isinstance(raw.get("project_reason"), str) or not raw["project_reason"].strip():
@@ -767,7 +772,7 @@ class SurveySearchController:
                     "exclusion_basis": normalize_evidence_boundaries(
                         {"exclusion_basis": raw.get("exclusion_basis")}, diagnostic, **context)["exclusion_basis"],
                     "exclusion_reason": raw.get("exclusion_reason", ""),
-                    "assessment_status": "assessed" if valid else "uncertain" if not paper.get("abstract") else "assessment_unavailable"}
+                    "assessment_status": "assessed" if valid else "uncertain" if not available else "assessment_unavailable"}
                 project = paper["project_relevance"]
                 project["excluded"] = project_is_excluded(project)
                 if project["excluded_raw"] is True and not project["excluded"]:
@@ -792,7 +797,7 @@ class SurveySearchController:
                     if "evidence_boundaries" in item:
                         item["evidence_boundaries"] = normalize_evidence_boundaries(item["evidence_boundaries"], diagnostic, **sh_context)
                     raw_score = score_fields_raw(item, "semantic_relevance_score")
-                    value = score_field(item, "semantic_relevance_score", diagnostic) if paper.get("abstract") else None
+                    value = score_field(item, "semantic_relevance_score", diagnostic) if available else None
                     item["semantic_relevance_score"] = value
                     item["evidence_spans"] = source_summaries(item.get("evidence_spans", []), paper, diagnostic, **sh_context)
                     allowed_slots = {task["slot_name"] for task in sh.get("slot_recovery_tasks", [])
@@ -801,7 +806,7 @@ class SurveySearchController:
                         item.get("candidate_slot_contributions", []), allowed_slots, diagnostic, **sh_context)
                     spans = grounded_spans(item.get("evidence_spans"), paper, literal_verification=False)
                     has_reason = isinstance(item.get("reason"), str) and bool(item["reason"].strip())
-                    status = "assessed" if value is not None and has_reason and (value < 3 or spans) else "uncertain" if not paper.get("abstract") else "assessment_unavailable"
+                    status = "assessed" if value is not None and has_reason and (value < 3 or spans) else "uncertain" if not available else "assessment_unavailable"
                     assessment = self.collector._normalise_sh_semantic_assessment(item, paper=paper, subhypothesis=sh,
                         research_context=self.context, cache_key="", status=status, assessment_source="survey_combined_batch",
                         literal_verification=False)
@@ -813,7 +818,7 @@ class SurveySearchController:
                     assessment["unresolved_slot_contributions"] = unresolved_slots
                     if status != "assessed":
                         assessment["semantic_relevance_score"] = None
-                        if paper.get("abstract"):
+                        if available:
                             missing = []
                             if len(matches) != 1:
                                 missing.append("missing_SH_assessment" if not matches else "duplicate_SH_id")
@@ -1140,11 +1145,18 @@ class SurveySearchController:
                 result_info.append((lane, papers, status))
             self.papers = self.collector._merge_candidate_collections([self.papers, *collections])
             new_papers = [paper for paper in self.papers if evidence_id(paper) not in prior_ids]
-            returned_ids = {evidence_id(paper) for collection in collections for paper in collection}
+            # Cross-provider deduplication can retain an earlier AS identifier
+            # for a later W identifier. Resolve by every identity, not only ID.
+            by_identity = {key: paper for paper in self.papers for key in self.collector._candidate_identity_keys(paper)}
+
+            def canonical_source(paper):
+                return next((by_identity[key] for key in self.collector._candidate_identity_keys(paper)
+                             if key in by_identity), paper)
+
+            returned_ids = {evidence_id(canonical_source(paper)) for collection in collections for paper in collection}
             self.assess([paper for paper in self.papers if evidence_id(paper) in returned_ids and paper.get("survey_assessment_attempts", 0) < 2], lease)
-            by_id = {evidence_id(paper): paper for paper in self.papers}
             for lane, returned, status in result_info:
-                relevant = [by_id[evidence_id(paper)] for paper in returned]
+                relevant = [canonical_source(paper) for paper in returned]
                 metrics = query_metrics(relevant, lane["sub_hypothesis_id"], {evidence_id(paper) for paper in new_papers}, status)
                 self.history.append({**lane, "metrics": metrics, "paper_ids": [paper_identity(paper) for paper in relevant],
                     "new_paper_ids": [paper_identity(paper) for paper in relevant if evidence_id(paper) not in prior_ids]})
@@ -1164,7 +1176,7 @@ class SurveySearchController:
             "deferred_lanes": [lane["lane_id"]] if status == "deferred_budget" else []})
 
     def complete_pending_assessments(self):
-        pending = [paper for paper in self.papers if paper.get("survey_assessment_status") != "assessed" and paper.get("abstract")
+        pending = [paper for paper in self.papers if paper.get("survey_assessment_status") != "assessed" and has_source_content(paper)
             and paper.get("survey_assessment_attempts", 0) < 2]
         capacity = max(0, self.budget.model_remaining() - (0 if self.feedback_lease else 1))
         pending = pending[:capacity * self.paper_batch]
@@ -1229,6 +1241,13 @@ class SurveySearchController:
 
     def run(self):
         self.collector.logger.info("Survey search plan: SHs=%s initial_queries_per_SH=%s logical_limit=%s http_limit=%s model_limit=%s.", len(self.by_sh), self.setting("survey_initial_queries_per_sh", 3), self.logical_limit, self.budget.total, self.budget.assessment_limit)
+        shared = list(getattr(self.collector, "_shared_search_candidates", []) or [])
+        if shared:
+            self.papers = self.collector._merge_candidate_collections([self.papers, shared])
+            self.complete_pending_assessments()
+            self.update()
+            self.prompt_audit.append({"stage": "shared_source_ingestion", "source_count": len(shared),
+                                      "assessed": sum(p.get("survey_assessment_status") == "assessed" for p in self.papers)})
         stagnant = 0
         prior_gain = None
         rounds = min(2, self.setting("survey_feedback_rounds", 2))

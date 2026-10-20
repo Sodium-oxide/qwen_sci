@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import threading
 import time
+from urllib.parse import urljoin
 from email.utils import parsedate_to_datetime
 from typing import Any, Mapping
 
@@ -25,7 +26,7 @@ class FulltextHttpClient:
         self.settings = settings
         self.logger = logger
         self.contact_email = self._safe_header_value(contact_email)
-        self.max_retries = max(0, int(self._setting("fulltext_http_max_retries", 5) or 0))
+        self.max_retries = max(0, int(self._setting("fulltext_http_max_retries", 1) or 0))
         self.retry_base_delay_seconds = self._positive_float(
             self._setting("fulltext_http_retry_base_delay_seconds", 1), default=1.0
         )
@@ -104,6 +105,7 @@ class FulltextHttpClient:
         stream: bool = True,
         timeout: float | tuple[float, float] | None = None,
         allow_redirects: bool = True,
+        _redirect_depth: int = 0,
     ) -> requests.Response:
         """GET once or retry only retryable failures; the final response is returned."""
 
@@ -113,18 +115,29 @@ class FulltextHttpClient:
         total_attempts = self.max_retries + 1
         for attempt in range(1, total_attempts + 1):
             try:
+                from src.pipeline.adaptive_search import charge_acquisition_http, acquisition_scope_active
+                charge_acquisition_http()
+                scoped = acquisition_scope_active()
                 response = self._session().get(
                     url,
                     headers=request_headers,
                     stream=stream,
                     timeout=effective_timeout,
-                    allow_redirects=allow_redirects,
+                    allow_redirects=False if scoped else allow_redirects,
                 )
             except requests.RequestException:
                 if attempt >= total_attempts:
                     raise
                 time.sleep(self._retry_delay_seconds(None, attempt))
                 continue
+            if scoped and allow_redirects and response.status_code in {301, 302, 303, 307, 308}:
+                if _redirect_depth >= 5:
+                    response.close()
+                    raise requests.TooManyRedirects("Source redirect budget exhausted")
+                redirected = urljoin(url, response.headers.get("Location", ""))
+                response.close()
+                return self.get(redirected, headers=headers, stream=stream, timeout=timeout,
+                                allow_redirects=True, _redirect_depth=_redirect_depth + 1)
             if response.status_code not in self._RETRYABLE_STATUS_CODES or attempt >= total_attempts:
                 return response
             delay = self._retry_delay_seconds(response, attempt)

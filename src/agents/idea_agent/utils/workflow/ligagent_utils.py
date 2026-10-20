@@ -6,6 +6,7 @@ from time import perf_counter
 from typing import Any, Dict, List, Optional
 
 from src.agents.idea_agent.utils.core.json_utils import pretty_json
+from src.agents.idea_agent.utils.papers.external_search import REFERENCE_SOURCE_FIELDS
 from src.agents.idea_agent.utils.core.response_parsing import (
     parse_json_object_response,
     parse_json_response,
@@ -48,6 +49,7 @@ def collect_paper_context_entries(
                 summary = "No summary available."
             entries.append(
                 {
+                    **{key: reference[key] for key in REFERENCE_SOURCE_FIELDS if key in reference},
                     "paper_id": node_id,
                     "title": reference.get("title") or reference.get("paper_title") or node_id,
                     "summary": summary,

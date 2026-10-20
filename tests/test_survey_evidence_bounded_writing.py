@@ -22,7 +22,7 @@ from modules.pe import (
     SURVEY_OUTLINE_GENERATION_PAPER_ASSIGNMENT,
 )
 from modules.survey_generator import SurveyGenerator
-from modules.survey_integrity import repeated_passages, strip_claim_trace_metadata
+from modules.survey_integrity import prose_sentence_spans, repeated_passages, strip_claim_trace_metadata
 from src.pipeline.survey_evidence_plan import (
     EVIDENCE_BACKED_SYNTHESIS,
     QUALIFIED_SYNTHESIS,
@@ -1160,6 +1160,12 @@ class _QualityChatAgent:
         return self.responses.pop(0)
 
 
+def _sentence_patch(new_text: str, sentence_id: int = 1) -> str:
+    return json.dumps({
+        "replacements": [{"sentence_id": sentence_id, "new_text": new_text}],
+    })
+
+
 def _quality_generator(responses, *, strict_claim_trace=False) -> SurveyGenerator:
     generator = _generator()
     generator.chat_agent = _QualityChatAgent(responses)
@@ -1226,9 +1232,10 @@ def test_bounded_quality_review_improves_low_score_section_then_finalizes() -> N
                         "framework": 8,
                     },
                     "suggestions": ["Clarify the relation without adding evidence."],
+                    "target_excerpts": [original.split("\n\n", 1)[1]],
                 }
             ),
-            json.dumps({"revised_section": revised}),
+            _sentence_patch(revised.split("\n\n", 1)[1]),
             json.dumps(
                 {
                     "scores": {
@@ -1267,9 +1274,10 @@ def test_bounded_quality_review_discards_new_citation_without_blocking() -> None
                         "framework": 7,
                     },
                     "suggestions": ["Improve the wording."],
+                    "target_excerpts": [original.split("\n\n", 1)[1]],
                 }
             ),
-            json.dumps({"revised_section": unsafe}),
+            _sentence_patch(unsafe.split("\n\n", 1)[1]),
         ]
     )
     generator._finalize_evidence_bounded_draft = lambda draft: (
@@ -1297,12 +1305,102 @@ def test_bounded_quality_revision_rejects_heading_changes_and_section_overflow()
     errors = generator._validate_evidence_bounded_section_quality_revision(
         original_section=original,
         revised_section=unsafe,
-        allowed_paper_ids={"W1"},
         section_word_cap=10,
     )
 
     assert "section or subsection headings changed" in errors
     assert any("section exceeds its word cap" in error for error in errors)
+
+
+@pytest.mark.parametrize(("invalid_response", "feedback"), [
+    (
+        _sentence_patch("## Changed heading\n\nA cautious observation <Paper ID: W1>."),
+        "section or subsection headings changed",
+    ),
+    (_sentence_patch("A new claim <Paper ID: W-candidate>."), "citation tokens changed"),
+    (_sentence_patch("The citation is removed."), "citation tokens changed"),
+    (
+        json.dumps({"replacements": [
+            {"sentence_id": 1, "new_text": "An observation <Paper ID: W1>."},
+            {"sentence_id": 1, "new_text": "Another observation <Paper ID: W1>."},
+        ]}),
+        "duplicate replacement",
+    ),
+    (_sentence_patch("careful " * 100 + "<Paper ID: W1>."), "section exceeds its word cap"),
+    (json.dumps({"revised_section": "An entire rewritten section."}), "'replacements' list"),
+    ("not JSON", ""),
+])
+def test_sentence_repair_retries_with_validation_feedback(invalid_response, feedback) -> None:
+    claim = "A major effect is proven <Paper ID: W1>."
+    replacement = "A cautious observation is reported <Paper ID: W1>."
+    original = "## 1. Evidence\n\n" + claim + " Unaffected details stay verbatim.\n\n### Limits\n\nUnchanged scope."
+    generator = _quality_generator([invalid_response, _sentence_patch(replacement)])
+    generator.config.ModuleInfo.SurveyGenerator.evidence_bounded_section_quality_revise_retry = 2
+
+    revised = generator._revise_evidence_bounded_section_quality(
+        section_text=original,
+        section_outline=_quality_draft(original)["outline"]["sections"][0],
+        suggestions=["Narrow the unsupported claim."],
+        section_word_cap=80,
+        settings=generator._evidence_bounded_section_quality_settings(),
+        target_excerpts=[claim],
+    )
+
+    assert revised == original.replace(claim, replacement)
+    assert len(generator.chat_agent.calls) == 2
+    assert feedback in generator.chat_agent.calls[1]["prompt"]
+    assert "Previous Attempt Validation Errors:" in generator.chat_agent.calls[1]["prompt"]
+    assert claim in generator.chat_agent.calls[1]["prompt"]
+
+
+def test_sentence_repair_exhaustion_keeps_original_draft() -> None:
+    claim = "A major effect is proven <Paper ID: W1>."
+    original = "## 1. Evidence\n\n" + claim
+    generator = _quality_generator([
+        _sentence_patch("An invalid citation <Paper ID: W2>."),
+        _sentence_patch("Another invalid citation <Paper ID: W3>."),
+    ])
+    generator.config.ModuleInfo.SurveyGenerator.evidence_bounded_section_quality_revise_retry = 2
+    generator._audit_section_claim_support = lambda *_args, **_kwargs: [{
+        "claim": claim, "paper_id": "W1", "verdict": "unsupported", "reason": "Only an observation is reported.",
+    }]
+    draft = _quality_draft(original)
+
+    repaired = generator._repair_final_claim_support(draft)
+
+    assert repaired["section_drafts"] == [original]
+    assert len(generator.chat_agent.calls) == 2
+    assert generator.survey_integrity_artifact["issues"][-1]["resolution"] == "manual_review"
+
+
+def test_sentence_repair_allows_citation_outside_section_evidence_plan() -> None:
+    original = "## 1. Evidence\n\nAn observation <Paper ID: W3009373177>."
+    generator = _quality_generator([
+        _sentence_patch("A cautious observation <Paper ID: W3009373177>."),
+    ])
+
+    revised = generator._revise_evidence_bounded_section_quality(
+        section_text=original,
+        section_outline=_quality_draft(original)["outline"]["sections"][0],
+        suggestions=["Clarify the observation."],
+        section_word_cap=80,
+        settings=generator._evidence_bounded_section_quality_settings(),
+        target_excerpts=["An observation"],
+    )
+
+    assert revised == "## 1. Evidence\n\nA cautious observation <Paper ID: W3009373177>."
+    assert len(generator.chat_agent.calls) == 1
+
+
+def test_sentence_spans_preserve_citations_and_skip_headings_and_code() -> None:
+    first = "First observation <A study. With punctuation?>."
+    second = 'A quoted observation is reported."'
+    third = "The next observation follows."
+    text = "## Heading\n\n" + first + " " + second + " " + third + "\n\n```python\nprint('unchanged')\n```\n\n### Scope\n\nLast observation."
+
+    sentences = [text[start:end] for start, end in prose_sentence_spans(text)]
+
+    assert sentences == [first, second, third, "Last observation."]
 
 
 def test_bounded_quality_review_skips_when_strict_claim_trace_is_active() -> None:
@@ -1358,8 +1456,9 @@ def test_claim_support_audit_rejects_unsupported_revision() -> None:
         json.dumps({
             "scores": {"readability": 7, "scientific": 7, "framework": 7},
             "suggestions": ["Clarify the claim."],
+            "target_excerpts": [original.split("\n\n", 1)[1]],
         }),
-        json.dumps({"revised_section": revised}),
+        _sentence_patch(revised.split("\n\n", 1)[1]),
         json.dumps({"assessments": [{
             "claim_id": 1, "paper_id": "W1", "verdict": "unsupported",
             "evidence_quote": "", "reason": "The source does not show this effect.",
@@ -1374,7 +1473,7 @@ def test_claim_support_audit_rejects_unsupported_revision() -> None:
     generator.work_analyzer = SimpleNamespace(
         work_collector=SimpleNamespace(get_paper_title_abstract=lambda _paper_id: (
             "Evidence study", "A cautious observation is reported in the study."
-        )),
+        ), _survey_resume_abstracts={"W1": ["Evidence study", "A cautious observation is reported in the study."]}),
         get_paper_keynote=lambda _paper_id: "A cautious observation is reported in the study.",
     )
     generator._finalize_evidence_bounded_draft = lambda draft: (draft["full_draft"], ["W1"])
@@ -1439,7 +1538,7 @@ def test_consolidation_revises_only_the_conflicting_section() -> None:
             "target_excerpt": "All quantum devices have no leakage",
             "reason": "The universal claim conflicts with the device observation.",
         }]}),
-        json.dumps({"revised_section": revised}),
+        _sentence_patch(revised.split("\n\n", 1)[1]),
     ])
     generator.config.ModuleInfo.SurveyGenerator.survey_consolidation_enabled = True
     draft = {
@@ -1465,7 +1564,7 @@ def test_final_support_audit_repairs_unsupported_claim_before_publication() -> N
             "claim_id": 1, "paper_id": "W1", "verdict": "unsupported",
             "evidence_quote": "", "reason": "The source reports only an observation.",
         }]}),
-        json.dumps({"revised_section": revised}),
+        _sentence_patch(revised.split("\n\n", 1)[1]),
         json.dumps({"assessments": [{
             "claim_id": 1, "paper_id": "W1", "verdict": "supported",
             "evidence_quote": "A cautious observation is reported",
@@ -1476,7 +1575,7 @@ def test_final_support_audit_repairs_unsupported_claim_before_publication() -> N
     generator.work_analyzer = SimpleNamespace(
         work_collector=SimpleNamespace(get_paper_title_abstract=lambda _paper_id: (
             "Evidence study", "A cautious observation is reported in the study."
-        )),
+        ), _survey_resume_abstracts={"W1": ["Evidence study", "A cautious observation is reported in the study."]}),
         get_paper_keynote=lambda _paper_id: "A cautious observation is reported in the study.",
     )
 
@@ -1487,6 +1586,76 @@ def test_final_support_audit_repairs_unsupported_claim_before_publication() -> N
         issue["kind"] == "final_claim_support_repair" and issue["resolution"] == "revised"
         for issue in generator.survey_integrity_artifact["issues"]
     )
+
+
+def test_final_support_repair_retries_failed_source_assessment_only_on_flagged_sentence() -> None:
+    claim = "Method Alpha is proven superior <Paper ID: W1>."
+    replacement = "Method Alpha has an observed effect <Paper ID: W1>."
+    original = "## 1. Evidence\n\nUnchanged introduction. " + claim + "\n\n### Scope\n\nUnchanged limitations."
+    generator = _quality_generator([
+        json.dumps({"assessments": [{
+            "claim_id": 1, "paper_id": "W1", "verdict": "unsupported",
+            "evidence_quote": "", "reason": "The source does not compare candidates.",
+        }]}),
+        _sentence_patch("Method Alpha is the optimal choice <Paper ID: W1>.", 2),
+        json.dumps({"assessments": [{
+            "claim_id": 1, "paper_id": "W1", "verdict": "unsupported",
+            "evidence_quote": "", "reason": "The source does not compare candidates.",
+        }]}),
+        _sentence_patch(replacement, 2),
+        json.dumps({"assessments": [{
+            "claim_id": 1, "paper_id": "W1", "verdict": "supported",
+            "evidence_quote": "Method Alpha has an observed effect",
+            "reason": "The source reports this observation.",
+        }]}),
+    ])
+    generator.config.ModuleInfo.SurveyGenerator.claim_support_audit_enabled = True
+    generator.config.ModuleInfo.SurveyGenerator.evidence_bounded_section_quality_revise_retry = 2
+    generator.work_analyzer = SimpleNamespace(
+        work_collector=SimpleNamespace(get_paper_title_abstract=lambda _paper_id: (
+            "Evidence study", "Method Alpha has an observed effect in the study."
+        ), _survey_resume_abstracts={"W1": ["Evidence study", "Method Alpha has an observed effect in the study."]}),
+        get_paper_keynote=lambda _paper_id: "Method Alpha has an observed effect in the study.",
+    )
+
+    repaired = generator._repair_final_claim_support(_quality_draft(original))
+
+    assert repaired["section_drafts"] == [original.replace(claim, replacement)]
+    assert len(generator.chat_agent.calls) == 5
+    assert "The source does not compare candidates." in generator.chat_agent.calls[3]["prompt"]
+    assert "Claim support is unsupported for paper W1" in generator.chat_agent.calls[3]["prompt"]
+    editable = json.loads(generator.chat_agent.calls[3]["prompt"].split("Editable Sentences:\n", 1)[1].split("\n\nQuality Suggestions:", 1)[0])
+    assert [sentence["sentence_id"] for sentence in editable] == [2]
+    assert generator.survey_integrity_artifact["issues"][-1]["resolution"] == "revised"
+
+
+def test_consolidation_stops_attempt_to_change_unaffected_sentence() -> None:
+    target = "All devices have no leakage <Paper ID: W1>."
+    original = "## 1. Broad claim\n\nUnchanged introduction. " + target + " Unchanged caveat."
+    other = "## 2. Observation\n\nTransmon devices exhibit leakage <Paper ID: W1>."
+    replacement = "Some devices exhibit leakage <Paper ID: W1>."
+    generator = _quality_generator([
+        json.dumps({"contradictions": [{
+            "source_section": 2, "target_section": 1,
+            "source_excerpt": "Transmon devices exhibit leakage",
+            "target_excerpt": "All devices have no leakage",
+            "reason": "The universal statement contradicts the observation.",
+        }]}),
+        _sentence_patch("An unrelated introduction is rewritten.", 1),
+        _sentence_patch(replacement, 2),
+    ])
+    generator.config.ModuleInfo.SurveyGenerator.survey_consolidation_enabled = True
+    generator.config.ModuleInfo.SurveyGenerator.evidence_bounded_section_quality_revise_retry = 2
+    draft = _quality_draft(original)
+    draft["outline"]["sections"].append({"title": "Observation", "papers_to_use": ["W1"]})
+    draft["section_drafts"].append(other)
+
+    repaired = generator._consolidate_evidence_bounded_draft(draft)
+
+    assert repaired["section_drafts"] == [original, other]
+    assert len(generator.chat_agent.calls) == 2
+    assert "outside the editable sentences" in generator._last_quality_revision_errors[0]
+    assert generator.survey_integrity_artifact["issues"][-1]["resolution"] == "manual_review"
 
 
 def test_consistency_audit_receives_long_section_middle() -> None:

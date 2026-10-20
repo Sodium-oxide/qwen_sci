@@ -61,14 +61,35 @@ def merge_with_default_survey_config(config: DictConfig) -> DictConfig:
         _resolve_project_placeholders(top_level_config),
         _resolve_project_placeholders(survey_overrides) if survey_overrides is not None else OmegaConf.create(),
     )
+    # Resolve the shared root before detaching the Survey subtree. Root-level
+    # interpolations otherwise refer to a key absent in standalone presets.
+    from src.paper_graph.settings import PaperGraphSettings
+    graph_config = OmegaConf.merge(
+        OmegaConf.create({"paper_graph": _resolve_project_placeholders(default_root).get("paper_graph", {})}),
+        OmegaConf.create({"paper_graph": config_container.get("paper_graph", {})})
+        if isinstance(config_container.get("paper_graph"), dict) else OmegaConf.create(),
+    )
+    nested_graph = OmegaConf.select(survey_overrides, "paper_graph") if survey_overrides is not None else None
+    if isinstance(nested_graph, (dict, DictConfig)) and not isinstance(config_container.get("paper_graph"), dict):
+        graph_config = OmegaConf.merge(graph_config, {"paper_graph": nested_graph})
+    graph_settings = PaperGraphSettings.from_config(graph_config)
+    merged.paper_graph = {"db_path": str(graph_settings.db_path), "index_dir": str(graph_settings.index_dir),
+                          "model_path": str(graph_settings.model_path), "ingest_on_survey": graph_settings.ingest_on_survey}
+    OmegaConf.update(merged, "ModuleInfo.PaperGraphRetriever.db_path", str(graph_settings.db_path), force_add=True)
     topic = str(OmegaConf.select(merged, "BasicInfo.topic") or "").strip()
     if topic and not _has_explicit_survey_artifact_paths(merged):
-        from src.agents.survey_agent.utils.topic_survey_storage import apply_topic_survey_paths
+        from src.agents.survey_agent.utils.topic_survey_storage import apply_topic_survey_paths, get_survey_output_root
+        from src.agents.survey_agent.modules.survey_delivery import find_pending_survey_checkpoint
 
+        run_id = OmegaConf.select(merged, "BasicInfo.survey_run_id")
+        if not run_id and not OmegaConf.select(merged, "BasicInfo.survey_resume_dir"):
+            pending = find_pending_survey_checkpoint(merged, get_survey_output_root(merged))
+            if pending is not None:
+                run_id = pending.name
         apply_topic_survey_paths(
             merged,
             topic,
-            research_run_id=OmegaConf.select(merged, "BasicInfo.survey_run_id"),
+            research_run_id=run_id,
         )
     return merged
 

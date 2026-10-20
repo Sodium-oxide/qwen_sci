@@ -26,6 +26,7 @@ from modules.pe import (
     CLUSTER_TABLE_GENERATION
 )
 from modules.paper_graph_retriever import PaperGraphRetriever
+from modules.survey_review import confirmed_packet_evidence
 from utils.mineru_section_packer import (
     DEFAULT_EXCLUDED_SECTION_PATTERNS,
     derive_effective_body_budget,
@@ -538,6 +539,7 @@ class WorkAnalyzer:
                 state["hash_id"],
                 keynote,
                 fulltext_reading_source="complete_section_packet_synthesis",
+                evidence_fragments=confirmed_packet_evidence(section_responses, packing.packets),
             )
             state["resolved"] = True
 
@@ -1348,6 +1350,7 @@ class WorkAnalyzer:
         keynote,
         *,
         fulltext_reading_source: str = "legacy_or_unknown",
+        evidence_fragments: list[dict[str, str]] | None = None,
     ):
         self.paper_keynote_cache[hash_id] = {
             "paper_id": pid,
@@ -1357,7 +1360,18 @@ class WorkAnalyzer:
             # Old cache entries have no such provenance and remain usable for
             # ordinary survey RAG, but cannot silently become SH evidence.
             "fulltext_reading_source": str(fulltext_reading_source or ""),
+            "evidence_fragments": list(evidence_fragments or []),
         }
+        try:
+            from src.paper_graph.survey import ingest_survey_paper
+            manager = getattr(getattr(self, "work_collector", None), "data_manager", None)
+            ingest_survey_paper(self.config, manager, pid, {
+                **(keynote if isinstance(keynote, dict) else {}),
+                "keynote": keynote, "evidence_fragments": list(evidence_fragments or []),
+                "fulltext_reading_source": fulltext_reading_source,
+            })
+        except Exception as exc:
+            self.logger.warning("Paper graph ingestion failed for %s: %s", pid, exc)
         if self.config.BasicInfo.debug:
             self.logger.info(f"paper ID {pid} keynote: {keynote}")
 
@@ -1376,8 +1390,15 @@ class WorkAnalyzer:
             venue = self.reference_graph.nodes[paper_id].get("venue", "")
             year = self.reference_graph.nodes[paper_id].get("year", "")
         else:
-            paper = None
-            if OpenAlexAPI.is_openalex_work_id(paper_id):
+            manager = getattr(getattr(self, "work_collector", None), "data_manager", None)
+            metadata_lookup = getattr(manager, "get_discovered_paper", None)
+            paper = metadata_lookup(paper_id) if callable(metadata_lookup) else None
+            if paper:
+                pass
+            elif str(paper_id).startswith("AS"):
+                # AnySearch IDs are local discovery identities, not S2 IDs.
+                paper = None
+            elif OpenAlexAPI.is_openalex_work_id(paper_id):
                 try:
                     paper = self.openalex_api.get_paper_details(paper_id)
                 except Exception as exc:
@@ -1436,6 +1457,9 @@ class WorkAnalyzer:
 
     def get_paper_keynote(self, paper_id: str, ds_keynote_fallback: bool = False):
         """Get the keynote of a paper by its ID."""
+        saved_keynotes = getattr(self, "_survey_resume_keynotes", {})
+        if paper_id in saved_keynotes:
+            return saved_keynotes[paper_id]
         hash_id = get_hash(paper_id)
 
         if canonical_paper_id(paper_id) in FULLTEXT_READING_BYPASS_PAPER_IDS:

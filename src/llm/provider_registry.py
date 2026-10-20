@@ -94,7 +94,7 @@ _BUILTIN_PROVIDERS: dict[str, dict[str, Any]] = {
         "tokenizer_fallback": "utf8_bytes",
         "token_limit_parameter": "max_tokens",
         "default_models": {
-            "survey": "qwen3.6-flash",
+            "survey": "qwen3.8-flash",
             "judge": "qwen3.8-max",
             "blog": "qwen3.8-max",
             "idea": "qwen3.8-flash",

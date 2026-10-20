@@ -213,7 +213,7 @@ def test_default_config_resolves_openai_and_qwen(
     assert provider.name == provider_name
     assert provider.api_key == "test-key"
     assert provider.base_url == base_url
-    expected_survey_model = "qwen3.6-flash" if provider_name == "qwen" else "gpt-5.4-mini"
+    expected_survey_model = "qwen3.8-flash" if provider_name == "qwen" else "gpt-5.4-mini"
     assert resolve_role_model(config, "survey", provider_name).name == expected_survey_model
 
 

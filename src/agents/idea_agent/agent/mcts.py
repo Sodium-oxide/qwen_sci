@@ -3,9 +3,10 @@ from __future__ import annotations
 import hashlib
 import itertools
 import math
+from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple
+from typing import Any, Callable, Dict, List, Mapping, Optional, Set, Tuple
 
 try:
     from omegaconf import OmegaConf
@@ -21,6 +22,7 @@ from src.memory.memory_system.utils import _multi_thread_run, _safe_dump_str
 from src.agents.idea_agent.utils.core.json_utils import pretty_json
 from src.agents.idea_agent.utils.core.progress import iter_with_progress
 from src.agents.idea_agent.utils.core.response_parsing import parse_json_response
+from src.agents.idea_agent.utils.core.task_contract import build_task_contract, refinement_scope_context
 from src.agents.idea_agent.utils.core.logger import LoguruCompatLogger, get_logger
 from src.agents.idea_agent.utils.mcts.component_novelty import ComponentNoveltyScorer
 from src.agents.idea_agent.utils.mcts.mcts_helpers import (
@@ -92,6 +94,13 @@ from src.agents.idea_agent.utils.workflow.gap_hypothesis_bridge import (
     build_gap_seed_status,
 )
 from src.agents.idea_agent.utils.workflow.idea_contract import normalize_mature_idea
+from src.agents.idea_agent.utils.mcts.review_contracts import (
+    content_hash, scientific_content, validate_snapshot, delivery_assessment, transition_reward, progress_hash,
+)
+from src.agents.idea_agent.utils.mcts.retrieval_contracts import (
+    CapabilityState, RetrievalResult, retrieve, operator_retrieval_policy, probe_paper_graph,
+)
+from src.agents.idea_agent.utils.workflow.claim_evidence import normalize_claims
 from src.agents.idea_agent.utils.mcts.mcts_runtime import (
     EditPlan,
     MemoryBundle,
@@ -140,6 +149,8 @@ HYPOTHESIS_PAYLOAD_FIELDS = (
     "gap_alignment",
     "evidence_requirement",
     "evidence_basis",
+    "claims",
+    "evidence_records",
 )
 INTEGER_EVALUATION_FIELDS = (
     "novelty",
@@ -215,32 +226,29 @@ class IdeaState:
     paper_graph_context: str = ""
     edit_plan: Optional[Dict[str, Any]] = None
     skill_metrics: Dict[str, Any] = field(default_factory=dict)
-    signature: str = field(init=False)
+    claims: List[Dict[str, Any]] = field(default_factory=list)
+    evidence_records: List[Dict[str, Any]] = field(default_factory=list)
 
     def __post_init__(self) -> None:
-        self.title = clip_text(self.title, UNIFORM_CLIP_TEXT_LIMIT)
-        self.abstract = clip_text(self.abstract, UNIFORM_CLIP_TEXT_LIMIT)
-        self.core_contribution = clip_text(self.core_contribution, UNIFORM_CLIP_TEXT_LIMIT)
-        self.method = clip_text(self.method, UNIFORM_CLIP_TEXT_LIMIT)
-        self.risks = clip_text(self.risks, UNIFORM_CLIP_TEXT_LIMIT)
-        self.rationale = clip_text(self.rationale, UNIFORM_CLIP_TEXT_LIMIT)
-        self.paper_graph_context = clip_text(self.paper_graph_context, UNIFORM_CLIP_TEXT_LIMIT)
+        for name in ("title", "abstract", "core_contribution", "method", "risks", "rationale", "paper_graph_context"):
+            value = getattr(self, name)
+            if not isinstance(value, str):
+                raise TypeError(f"IdeaState.{name} must be a string.")
 
         self.tags = _dedupe_keep_order_strings(
-            [clip_text(tag, UNIFORM_CLIP_TEXT_LIMIT) for tag in self.tags[:MAX_LIST_ENTRIES]]
+            [str(tag) for tag in self.tags]
         )
         self.target_defects = _dedupe_keep_order_strings(
-            [clip_text(tag, UNIFORM_CLIP_TEXT_LIMIT) for tag in self.target_defects[:MAX_LIST_ENTRIES]]
+            [str(tag) for tag in self.target_defects]
         )
         self.memory_refs = _dedupe_keep_order_strings(
-            [clip_text(ref, UNIFORM_CLIP_TEXT_LIMIT) for ref in self.memory_refs[:MAX_LIST_ENTRIES]]
+            [str(ref) for ref in self.memory_refs]
         )
-        self.components = _dedupe_keep_order_strings(
-            [clip_text(comp, UNIFORM_CLIP_TEXT_LIMIT) for comp in self.components[: 2 * MAX_LIST_ENTRIES]]
-        )
+        self.components = list(dict.fromkeys(str(comp) for comp in self.components))
         self.component_explanations = normalize_component_explanations(
             self.components,
             self.component_explanations,
+            preserve_content=True,
         )
         self.root_domains = _normalize_root_domains(self.root_domains)
         self.discipline_resolution = (
@@ -249,28 +257,28 @@ class IdeaState:
             else {}
         )
         self.scientific_intervention = (
-            dict(self.scientific_intervention)
+            deepcopy(self.scientific_intervention)
             if isinstance(self.scientific_intervention, dict)
             else {}
         )
 
-        canonical = "|".join(
-            [
-                self.title.lower(),
-                self.core_contribution.lower(),
-                self.method.lower(),
-                ",".join(sorted(self.tags)),
-                ",".join(self.root_domains),
-                str(self.scientific_intervention.get("profile_id") or ""),
-                str(self.scientific_intervention.get("contribution_mode") or ""),
-                ",".join(sorted(self.components)),
-                "|".join(
-                    f"{component}:{self.component_explanations.get(component, '').lower()}"
-                    for component in self.components
-                ),
-            ]
-        )
-        self.signature = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+        contract = self.scientific_intervention.get("hypothesis_contract", {})
+        if not isinstance(contract, dict):
+            raise TypeError("IdeaState.scientific_intervention.hypothesis_contract must be an object.")
+        if not isinstance(self.claims, list) or not isinstance(self.evidence_records, list):
+            raise TypeError("IdeaState claims and evidence_records must be lists of objects.")
+        # Top-level lists are canonical. Normalize legacy aliases once, then remove them.
+        self.claims = normalize_claims(self.claims or contract.pop("claims", []))
+        self.evidence_records = deepcopy(self.evidence_records or contract.pop("evidence_records", []))
+        contract.pop("claims", None)
+        contract.pop("evidence_records", None)
+        if not isinstance(self.evidence_records, list) or any(not isinstance(r, dict) for r in self.evidence_records):
+            raise TypeError("IdeaState.evidence_records must be a list of objects.")
+        validate_snapshot(self.to_payload())
+
+    @property
+    def signature(self) -> str:
+        return content_hash(scientific_content(self.to_payload()))
 
     def describe(self) -> str:
         return self.to_prompt_view(heading="Parent Idea")
@@ -314,7 +322,9 @@ class IdeaState:
             payload["edit_plan"] = self.edit_plan
         if self.skill_metrics:
             payload["skill_metrics"] = self.skill_metrics
-        return payload
+        payload["claims"] = self.claims
+        payload["evidence_records"] = self.evidence_records
+        return deepcopy(payload)
 
     def component_inventory(self) -> List[Dict[str, str]]:
         return component_inventory_payload(self.components, self.component_explanations)
@@ -344,6 +354,11 @@ class IdeaEvaluation:
     claim_overreach_penalty: float = 0.0
     novelty_axes: Dict[str, float] = field(default_factory=dict)
     profile_id: str = ""
+    review_issues: List[Dict[str, Any]] = field(default_factory=list)
+    requirement_reviews: List[Dict[str, Any]] = field(default_factory=list)
+    review_coverage: Dict[str, Any] = field(default_factory=dict)
+    claim_reviews: List[Dict[str, Any]] = field(default_factory=list)
+    contribution_review: Dict[str, Any] = field(default_factory=dict)
     novelty_weight: float = 0.20
     surprise_weight: float = 0.10
     impact_weight: float = 0.18
@@ -360,17 +375,15 @@ class IdeaEvaluation:
     claim_overreach_weight: float = 0.10
 
     def __post_init__(self) -> None:
-        self.failure_modes = [
-            clip_text(mode, UNIFORM_CLIP_TEXT_LIMIT)
-            for mode in (self.failure_modes or [])[:MAX_LIST_ENTRIES]
-        ]
-        self.fairness_protocol = clip_text(self.fairness_protocol, UNIFORM_CLIP_TEXT_LIMIT)
-        self.feedback = clip_text(self.feedback, UNIFORM_CLIP_TEXT_LIMIT)
-        self.defect_fix_summary = clip_text(self.defect_fix_summary, UNIFORM_CLIP_TEXT_LIMIT)
-        self.detected_defects = [
-            clip_text(tag, UNIFORM_CLIP_TEXT_LIMIT)
-            for tag in (self.detected_defects or [])[:MAX_LIST_ENTRIES]
-        ]
+        self.failure_modes = [str(mode) for mode in (self.failure_modes or [])]
+        for name in ("review_issues", "requirement_reviews", "claim_reviews"):
+            value = getattr(self, name)
+            setattr(self, name, [deepcopy(dict(v)) for v in value if isinstance(v, Mapping)] if isinstance(value, list) else [])
+        self.contribution_review = deepcopy(dict(self.contribution_review)) if isinstance(self.contribution_review, Mapping) else {}
+        self.fairness_protocol = str(self.fairness_protocol or "")
+        self.feedback = str(self.feedback or "")
+        self.defect_fix_summary = str(self.defect_fix_summary or "")
+        self.detected_defects = list(dict.fromkeys(str(tag) for tag in (self.detected_defects or [])))
         self.profile_id = str(self.profile_id or "").strip().lower()
         allowed_axes = None
         if self.profile_id:
@@ -475,6 +488,11 @@ class IdeaEvaluation:
             feedback=str(payload.get("feedback", "")),
             defect_fix_summary=str(payload.get("defect_fix_summary", "")),
             detected_defects=_list("detected_defects"),
+            review_issues=deepcopy(payload.get("review_issues") or []),
+            requirement_reviews=deepcopy(payload.get("requirement_reviews") or []),
+            review_coverage=deepcopy(payload.get("review_coverage") or {}),
+            claim_reviews=deepcopy(payload.get("claim_reviews") or []),
+            contribution_review=deepcopy(payload.get("contribution_review") or {}),
             novelty_weight=w.get("novelty_weight", 0.20),
             surprise_weight=w.get("surprise_weight", 0.10),
             impact_weight=w.get("impact_weight", 0.18),
@@ -515,6 +533,11 @@ class IdeaEvaluation:
             "feedback": self.feedback,
             "defect_fix_summary": self.defect_fix_summary,
             "detected_defects": self.detected_defects,
+            "review_issues": deepcopy(self.review_issues),
+            "requirement_reviews": deepcopy(self.requirement_reviews),
+            "review_coverage": deepcopy(self.review_coverage),
+            "claim_reviews": deepcopy(self.claim_reviews),
+            "contribution_review": deepcopy(self.contribution_review),
         }
 
     @property
@@ -587,6 +610,9 @@ class IdeaNode:
     expanded: bool = False
     evaluation: Optional[IdeaEvaluation] = None
     latest_path_summary: str = ""
+    task_contract: Dict[str, Any] = field(default_factory=dict)
+    review_issues: List[Dict[str, Any]] = field(default_factory=list)
+    delivery: Dict[str, Any] = field(default_factory=dict)
 
     def uct_value(self, parent_visits: int, exploration_constant: float) -> float:
         if self.visits == 0:
@@ -616,6 +642,11 @@ class IdeaNode:
 
 @dataclass
 class MCTSConfig:
+    review_prompt_token_budget: int = _mcts_default("review_prompt_token_budget", 48000)
+    max_review_packets: int = _mcts_default("max_review_packets", 32)
+    retrieval_call_budget: int = _mcts_default("retrieval_call_budget", 32)
+    retrieval_max_attempts: int = _mcts_default("retrieval_max_attempts", 2)
+    stagnation_patience: int = _mcts_default("stagnation_patience", 12)
     max_iterations: int = _mcts_default("exploration_budget", _mcts_default("max_iterations", 128))
     screening_max_iterations: int = _mcts_default("screening_max_iterations", 3)
     refinement_max_iterations: int = _mcts_default(
@@ -640,6 +671,8 @@ class MCTSConfig:
     component_novelty_index_dir: Optional[str] = _mcts_default(
         "component_novelty_index_dir", None
     )
+    paper_graph_db_path: Optional[str] = None
+    retrieval_candidate_budget: int = _mcts_default("retrieval_candidate_budget", 384)
     component_novelty_retrieval_top_k: int = _mcts_default(
         "component_novelty_retrieval_top_k", 50
     )
@@ -721,6 +754,7 @@ class SearchCandidate:
             "evaluation": self.evaluation.to_dict(),
             "score": self.evaluation.composite,
             "path": self.node.path_summary(),
+            "delivery": deepcopy(self.node.delivery),
         }
 
 
@@ -732,6 +766,12 @@ class SearchResult:
     cache_size: int
     experiences: List[Dict[str, Any]]
     retrieved_core_titles: List[str]
+    status: str = "partial"
+    best_available: Optional[SearchCandidate] = None
+    unresolved: List[Dict[str, Any]] = field(default_factory=list)
+    operational_events: List[Dict[str, Any]] = field(default_factory=list)
+    acquisition_requests: List[Dict[str, Any]] = field(default_factory=list)
+    stop_reason: str = "budget_exhausted"
 
 
 class VectorMemoryAccessor:
@@ -978,6 +1018,7 @@ class MemoryGuidedMCTS:
         self.paper_graph_vector_store = paper_graph_vector_store or PaperGraphComponentVectorStore(
             model_name_or_path=component_model_path,
             index_dir=self.config.component_novelty_index_dir or None,
+            db_path=self.config.paper_graph_db_path,
         )
         self.component_novelty_scorer = ComponentNoveltyScorer(
             model_name_or_path=component_model_path,
@@ -1003,6 +1044,11 @@ class MemoryGuidedMCTS:
         self.signature_nodes: Dict[str, IdeaNode] = {}
         self.evaluation_cache: Dict[str, Dict[str, IdeaEvaluation]] = {}
         self.experience_cache: Set[str] = set()
+        self.capabilities = CapabilityState()
+        self.evidence_sources = {}
+        self._paper_graph_source_ids: Set[str] = set()
+        self.retrieval_calls = 0
+        self._credited_transitions = set()
         self.trace: List[Dict[str, Any]] = []
         self.retrieved_core_titles: List[str] = []
 
@@ -1189,8 +1235,6 @@ class MemoryGuidedMCTS:
             )
             if not str(normalized.get("query") or "").strip():
                 return None
-            if self._query_payload_uses_forbidden_terms(normalized):
-                return None
             return normalized
         except Exception as exc:
             log_message(
@@ -1232,8 +1276,6 @@ class MemoryGuidedMCTS:
             )
             if not str(normalized.get("query") or "").strip():
                 return None
-            if self._query_payload_uses_forbidden_terms(normalized):
-                return None
             return normalized
         except Exception as exc:
             log_message(
@@ -1271,149 +1313,125 @@ class MemoryGuidedMCTS:
             seen.add(key)
             self.retrieved_core_titles.append(title)
 
-    def _retrieve_theory_transfer_references(
-        self,
-        query_payload: Dict[str, str],
-        root_domains: List[str],
-    ) -> List[Dict[str, Any]]:
-        query = str(query_payload.get("query") or "").strip()
-        if not query:
-            return []
-        try:
-            search_pool = max(int(self.config.theory_transfer_retrieval_top_k) * 6, 12)
-            hits = self.paper_graph_vector_store.search(
-                query=query,
-                top_k=search_pool,
-                component_hits_per_core=2,
-            )
-        except Exception as exc:
-            log_message(
-                self.logger,
-                self.log_sink,
-                "warning",
-                "⚠️  Theory-transfer paper-graph retrieval unavailable: %s",
-                exc,
-            )
-            return []
+    def reset_paper_graph_capability(self) -> None:
+        self.capabilities.unavailable.pop("paper_graph", None)
+        self.capabilities.available.add("paper_graph")
+        self.component_novelty_scorer._disabled_error = None
+        self.component_novelty_scorer._model = None
+        self.component_novelty_scorer.last_novelty_axes = {}
+        for source_id in self._paper_graph_source_ids:
+            self.evidence_sources.pop(source_id, None)
+        self._paper_graph_source_ids.clear()
+        self.evaluation_cache.clear()
 
-        threshold = float(self.config.theory_transfer_similarity_threshold)
-        blocked_domains = set(_normalize_root_domains(root_domains))
-        filtered: List[Dict[str, Any]] = []
-        for hit in hits:
-            core_node = hit.get("core_node") if isinstance(hit.get("core_node"), dict) else {}
-            paper_domain = str(core_node.get("paper_domain") or "").strip()
-            paper_domain_key = canonicalize_discipline_key(paper_domain)
-            if not paper_domain or (
-                paper_domain_key and paper_domain_key in blocked_domains
-            ):
-                continue
-            if float(hit.get("score") or 0.0) < threshold:
-                continue
-            filtered.append(hit)
-            if len(filtered) >= int(self.config.theory_transfer_retrieval_top_k):
-                break
-        if filtered:
-            rendered_hits: List[str] = []
-            for idx, hit in enumerate(filtered, start=1):
-                core_node = hit.get("core_node") if isinstance(hit.get("core_node"), dict) else {}
-                paper_domain = str(core_node.get("paper_domain") or "").strip() or "unknown"
-                label = (
-                    str(core_node.get("full_name") or "").strip()
-                    or str(core_node.get("label") or "").strip()
-                    or str(core_node.get("node_id") or "").strip()
-                    or f"core_{idx}"
-                )
-                paper_title = clip_text(str(core_node.get("paper_title") or "").strip(), 400)
-                summary = clip_text(str(core_node.get("summary") or "").strip(), 1000)
-                insight = clip_text(str(core_node.get("insight") or "").strip(), 1000)
-                rendered_hits.append(
-                    f"{idx}. {label} | domain={paper_domain} | score={float(hit.get('score') or 0.0):.3f}"
-                )
-                if paper_title:
-                    rendered_hits.append(f"   title: {paper_title}")
-                if summary:
-                    rendered_hits.append(f"   summary: {summary}")
-                if insight:
-                    rendered_hits.append(f"   insight: {insight}")
-            log_message(
-                self.logger,
-                self.log_sink,
-                "info",
-                "[MCTS] Theory-transfer eligible core nodes for query=%s\n%s",
-                clip_text(query, 1000),
-                "\n".join(rendered_hits),
-            )
-            self._record_retrieved_core_titles(filtered)
-        return filtered
+    def reload_paper_graph(self, *, warm_model: bool = False) -> None:
+        self.paper_graph_vector_store.reload(warm_model=warm_model)
+        self.reset_paper_graph_capability()
 
-    def _retrieve_mechanism_commit_references(
-        self,
-        query_payload: Dict[str, str],
-    ) -> List[Dict[str, Any]]:
+    def _retrieve_references(self, query_payload: Dict[str, str], *, cross_domain: bool,
+                             root_domains: Optional[List[str]] = None) -> RetrievalResult:
         query = str(query_payload.get("query") or "").strip()
-        if not query:
-            return []
-        if getattr(self, "_mechanism_commit_retrieval_unavailable", False):
-            return []
-        try:
-            search_pool = max(int(self.config.mechanism_commit_retrieval_top_k) * 6, 12)
-            hits = self.paper_graph_vector_store.search(
-                query=query,
-                top_k=search_pool,
-                component_hits_per_core=2,
-            )
-        except Exception as exc:
-            log_message(
-                self.logger,
-                self.log_sink,
-                "warning",
-                "⚠️  Mechanism-commit paper-graph retrieval unavailable (%s); "
-                "continuing without paper-graph grounding.",
-                exc,
-            )
-            self._mechanism_commit_retrieval_unavailable = True
-            return []
-        threshold = float(self.config.mechanism_commit_similarity_threshold)
-        filtered: List[Dict[str, Any]] = []
-        for hit in hits:
-            if float(hit.get("score") or 0.0) < threshold:
-                continue
-            filtered.append(hit)
-            if len(filtered) >= int(self.config.mechanism_commit_retrieval_top_k):
+        unavailable = self.capabilities.unavailable.get("paper_graph")
+        if unavailable:
+            return RetrievalResult("unavailable", query=query, reason=unavailable)
+        preflight = probe_paper_graph(self.paper_graph_vector_store)
+        if preflight is not None:
+            self.capabilities.record(preflight)
+            return preflight
+        prefix = "theory_transfer" if cross_domain else "mechanism_commit"
+        top_k = int(getattr(self.config, prefix + "_retrieval_top_k"))
+        threshold = float(getattr(self.config, prefix + "_similarity_threshold"))
+        excluded = set(_normalize_root_domains(root_domains or []))
+        attempts = max(1, min(3, self.config.retrieval_max_attempts))
+        fallback = str(query_payload.get("needed_content") or query_payload.get("mechanism_gap") or "").strip()
+        result = RetrievalResult("no_hits", query=query, reason="No query available.")
+        if cross_domain and not excluded:
+            return RetrievalResult("no_hits", query=query, reason="Root disciplines are unresolved; cannot establish cross-domain eligibility.",
+                                   diagnostics={"stop_reason": "unresolved_root_discipline"})
+        for attempt in range(attempts):
+            limit = max(top_k, int(self.config.retrieval_candidate_budget))
+            window = min(max(top_k * 6, 12), limit)
+            diagnostics = {"raw_hits": 0, "low_score": 0, "same_domain": 0,
+                           "missing_domain": 0, "unrecognized_domain": 0, "eligible": 0,
+                           "windows": [], "candidate_budget": limit}
+            while True:
+                allowed = self.retrieval_calls < self.config.retrieval_call_budget
+                raw = retrieve(self.paper_graph_vector_store, query, top_k=window, budget_available=allowed)
+                if allowed and query:
+                    self.retrieval_calls += 1
+                diagnostics["windows"].append(window)
+                if not raw:
+                    diagnostics["stop_reason"] = "corpus_exhausted" if raw.status == "no_hits" else raw.status
+                    result = RetrievalResult(raw.status, query=query, reason=raw.reason, diagnostics=diagnostics)
+                    break
+                eligible = []
+                diagnostics.update(raw_hits=len(raw.hits), low_score=0, same_domain=0, missing_domain=0, unrecognized_domain=0)
+                for hit in raw.hits:
+                    raw_domain = (hit.get("core_node") or {}).get("paper_domain")
+                    domain = canonicalize_discipline_key(raw_domain)
+                    score = float(hit.get("score") or 0)
+                    if not math.isfinite(score) or score < threshold:
+                        diagnostics["low_score"] += 1
+                    elif cross_domain and not domain:
+                        diagnostics["unrecognized_domain" if raw_domain else "missing_domain"] += 1
+                    elif cross_domain and domain in excluded:
+                        diagnostics["same_domain"] += 1
+                    else:
+                        eligible.append(hit)
+                diagnostics["eligible"] = len(eligible)
+                exhausted = len(raw.hits) < window
+                enough = len(eligible) >= top_k
+                capped = window >= limit or self.retrieval_calls >= self.config.retrieval_call_budget
+                if enough or exhausted or capped:
+                    diagnostics["stop_reason"] = ("enough_results" if enough else "corpus_exhausted" if exhausted
+                                                  else "candidate_budget" if window >= limit else "call_budget")
+                    # Preserve partial grounded results when the window budget
+                    # expires, and expose that truncation in diagnostics.
+                    status = "success" if eligible else "budget_exhausted" if capped and not exhausted else "no_hits"
+                    result = RetrievalResult(status, hits=tuple(eligible[:top_k]), query=query,
+                        reason=None if eligible else "No eligible nodes after domain/score filtering: " + diagnostics["stop_reason"],
+                        diagnostics=diagnostics)
+                    break
+                window = min(window * 2, limit)
+            log_message(self.logger, self.log_sink, "info", "[MCTS] paper-graph filtering: %s", pretty_json(diagnostics))
+            self.capabilities.record(result)
+            if result or result.status in {"unavailable", "budget_exhausted"}:
                 break
-        if filtered:
-            rendered_hits: List[str] = []
-            for idx, hit in enumerate(filtered, start=1):
-                core_node = hit.get("core_node") if isinstance(hit.get("core_node"), dict) else {}
-                paper_domain = str(core_node.get("paper_domain") or "").strip() or "unknown"
-                label = (
-                    str(core_node.get("full_name") or "").strip()
-                    or str(core_node.get("label") or "").strip()
-                    or str(core_node.get("node_id") or "").strip()
-                    or f"core_{idx}"
-                )
-                paper_title = clip_text(str(core_node.get("paper_title") or "").strip(), 400)
-                summary = clip_text(str(core_node.get("summary") or "").strip(), 1000)
-                insight = clip_text(str(core_node.get("insight") or "").strip(), 1000)
-                rendered_hits.append(
-                    f"{idx}. {label} | domain={paper_domain} | score={float(hit.get('score') or 0.0):.3f}"
-                )
-                if paper_title:
-                    rendered_hits.append(f"   title: {paper_title}")
-                if summary:
-                    rendered_hits.append(f"   summary: {summary}")
-                if insight:
-                    rendered_hits.append(f"   insight: {insight}")
-            log_message(
-                self.logger,
-                self.log_sink,
-                "info",
-                "[MCTS] Mechanism-commit grounding core nodes for query=%s\n%s",
-                clip_text(query, 1000),
-                "\n".join(rendered_hits),
-            )
-            self._record_retrieved_core_titles(filtered)
-        return filtered
+            if result.status == "no_hits":
+                if not fallback or fallback == query:
+                    break
+                query, fallback = fallback, ""
+            # Execution errors receive a bounded retry of the same query.
+        if result:
+            self._record_retrieved_core_titles(list(result.hits))
+            from src.agents.idea_agent.utils.workflow.claim_evidence import evidence_catalog
+            catalog = evidence_catalog(result.hits)
+            self.evidence_sources.update(catalog)
+            self._paper_graph_source_ids.update(catalog)
+        return result
+
+    def _retrieve_theory_transfer_references(self, query_payload: Dict[str, str],
+                                             root_domains: List[str]) -> RetrievalResult:
+        return self._retrieve_references(query_payload, cross_domain=True, root_domains=root_domains)
+
+    def _retrieve_mechanism_commit_references(self, query_payload: Dict[str, str]) -> RetrievalResult:
+        return self._retrieve_references(query_payload, cross_domain=False)
+
+    def _assess_theory_transfer(self, result: RetrievalResult, parent_state: IdeaState) -> RetrievalResult:
+        from src.paper_graph.transfer import transfer_prompt, qualify_transfer
+        try:
+            response = self.chat_fn(transfer_prompt(parent_state.to_payload(), result.hits),
+                model=self.config.evaluation_model, temperature=self.config.evaluation_temperature,
+                max_output_tokens=self.config.evaluation_max_tokens)
+            qualified, audits = qualify_transfer(result.hits, parse_json_response(response))
+            assessed = RetrievalResult("success" if qualified else "no_hits", hits=qualified, query=result.query,
+                reason=None if qualified else "No retrieved contribution passed structure/assumption/boundary review.",
+                diagnostics={**result.diagnostics, "transfer_reviews": audits})
+        except Exception as exc:
+            assessed = RetrievalResult("error", query=result.query, reason="Transfer applicability review failed: " + str(exc),
+                                       diagnostics=result.diagnostics)
+        self.capabilities.record(assessed)
+        return assessed
 
     def _materialize_child_state(
         self,
@@ -1442,52 +1460,39 @@ class MemoryGuidedMCTS:
     ) -> Optional[Dict[str, Any]]:
         root_domains_text = _format_root_domains_for_prompt(parent_state.root_domains)
         additional_retrieval_context = ""
-        skip_payload: Optional[Dict[str, Any]] = None
-
-        if plan.skill_name == "mechanism-commit-innovation":
-            query_payload = self._build_mechanism_commit_query(plan, parent_state)
-            if query_payload is not None:
-                hits = self._retrieve_mechanism_commit_references(query_payload)
-                if hits:
-                    additional_retrieval_context = "\n".join(
-                        [
-                            "Mechanism-grounding retrieval query:",
-                            query_payload.get("query") or "None",
-                            format_mechanism_commit_references(
-                                query_payload,
-                                hits,
-                                clip_limit=UNIFORM_CLIP_TEXT_LIMIT,
-                            ),
-                        ]
-                    )
-        elif plan.skill_name == "theory-transfer-injection":
-            query_payload = self._build_theory_transfer_query(plan, parent_state)
-            if query_payload is not None:
-                hits = self._retrieve_theory_transfer_references(query_payload, parent_state.root_domains)
-                if not hits:
-                    skip_payload = {
-                        "_skip_child_creation": True,
-                        "_skip_reason": (
-                            "theory-transfer-injection retrieved no eligible cross-domain core nodes "
-                            f"(threshold={self.config.theory_transfer_similarity_threshold}, "
-                            f"excluded_domains={parent_state.root_domains})"
-                        ),
-                    }
+        retrieval_result = None
+        evidence_mode = "independent"
+        skill = self.skill_catalog.skills.get(plan.skill_name, plan)
+        if plan.skill_name in {"mechanism-commit-innovation", "theory-transfer-injection"} or "paper_graph" in skill.required_capabilities:
+            preflight = probe_paper_graph(self.paper_graph_vector_store)
+            if preflight is not None:
+                self.capabilities.record(preflight)
+                retrieval_result = preflight
+            elif "paper_graph" not in self.capabilities.unavailable:
+                self.capabilities.available.add("paper_graph")
+            if retrieval_result is None and not self.capabilities.eligible(getattr(skill, "required_capabilities", [])):
+                retrieval_result = RetrievalResult("unavailable", reason=self.capabilities.unavailable.get("paper_graph"))
+            elif retrieval_result is None:
+                builder = self._build_theory_transfer_query if plan.skill_name == "theory-transfer-injection" else self._build_mechanism_commit_query
+                query_payload = builder(plan, parent_state)
+                if query_payload is None:
+                    retrieval_result = RetrievalResult("error", reason="Query generation failed or returned no eligible query.")
+                    self.capabilities.record(retrieval_result)
+                elif plan.skill_name == "theory-transfer-injection":
+                    retrieval_result = self._retrieve_theory_transfer_references(query_payload, parent_state.root_domains)
+                    if retrieval_result:
+                        retrieval_result = self._assess_theory_transfer(retrieval_result, parent_state)
                 else:
-                    additional_retrieval_context = "\n".join(
-                        [
-                            "Cross-domain transfer query:",
-                            query_payload.get("query") or "None",
-                            format_theory_transfer_references(
-                                query_payload,
-                                hits,
-                                clip_limit=UNIFORM_CLIP_TEXT_LIMIT,
-                            ),
-                        ]
-                    )
-
-        if skip_payload is not None:
-            return skip_payload
+                    retrieval_result = self._retrieve_mechanism_commit_references(query_payload)
+            evidence_mode = operator_retrieval_policy(skill, retrieval_result)
+            if not retrieval_result:
+                self.capabilities.request(retrieval_result, skill=plan.skill_name)
+            if evidence_mode == "skip":
+                return {"_skip_child_creation": True, "_skip_reason": retrieval_result.status + ": " + (retrieval_result.reason or "Evidence precondition unmet."),
+                        "_retrieval_result": retrieval_result.to_dict()}
+            additional_retrieval_context = pretty_json({"retrieval": retrieval_result.to_dict(), "evidence_mode": evidence_mode})
+            if evidence_mode == "exploratory":
+                additional_retrieval_context += "\nNo retrieved grounding is available. Generated mechanisms remain hypotheses with validation obligations; do not claim literature support."
 
         payload = instantiate_skill_plan_for_node(
             self,
@@ -1504,33 +1509,9 @@ class MemoryGuidedMCTS:
             root_domains_text=root_domains_text,
             additional_retrieval_context=additional_retrieval_context,
         )
-        if plan.skill_name == "theory-transfer-injection":
-            if not isinstance(payload, dict):
-                return {
-                    "_skip_child_creation": True,
-                    "_skip_reason": "theory-transfer-injection instantiation returned no structured payload",
-                }
-            payload.pop("_paper_graph_context", None)
-            payload["_paper_graph_context"] = additional_retrieval_context
-        if (
-            plan.skill_name == "mechanism-commit-innovation"
-            and isinstance(payload, dict)
-            and not parent_centers_control_surface(parent_state)
-        ):
-            rendered = "\n".join(
-                str(payload.get(field_name) or "")
-                for field_name in ("title", "abstract", "core_contribution", "method", "rationale")
-            )
-            if text_uses_forbidden_query_terms(rendered):
-                return {
-                    "_skip_child_creation": True,
-                    "_skip_reason": (
-                        "mechanism-commit-innovation instantiated a threshold/gating/suppression/quota-style "
-                        "patch for a parent idea that is not control-centered"
-                    ),
-                }
-        if plan.skill_name == "mechanism-commit-innovation" and isinstance(payload, dict):
-            payload.pop("_paper_graph_context", None)
+        if isinstance(payload, dict) and retrieval_result is not None:
+            payload["_retrieval_result"] = retrieval_result.to_dict()
+            payload["_evidence_mode"] = evidence_mode
             payload["_paper_graph_context"] = additional_retrieval_context
         return payload
 
@@ -1635,6 +1616,27 @@ class MemoryGuidedMCTS:
 
     def prepare_root_context(self, topic: str, context: Dict[str, Any]) -> Dict[str, Any]:
         prepared = dict(context or {})
+        scope_context = refinement_scope_context(
+            prepared.get("refinement_scope"),
+            prepared.get("refinement_scope_source"),
+            prepared.get("proposed_scope"),
+        )
+        prepared.update(scope_context)
+        extracted_task = prepared.get("task_contract")
+        original_request = (extracted_task or {}).get("original_request") or prepared.get("original_request") or topic
+        if not extracted_task and callable(getattr(self, "chat_fn", None)):
+            from src.agents.idea_agent.utils.core.run_inputs import _extract_task_contract
+            extracted_task = _extract_task_contract(original_request, None, chat_fn=self.chat_fn, model=self.config.generation_model)
+        elif not extracted_task:
+            extracted_task = {"extraction_status": "failed", "extraction_errors": ["Task extractor not configured."]}
+        self.task_contract = build_task_contract(
+            original_request=original_request, interpretation=extracted_task,
+            refinement_scope=scope_context["refinement_scope"],
+            refinement_scope_source=scope_context["refinement_scope_source"],
+        )
+        prepared["task_contract"] = self.task_contract
+        self.refinement_scope_source = scope_context["refinement_scope_source"]
+        self.proposed_scope = scope_context["proposed_scope"]
         self.multimodal_evidence_projection = (
             dict(prepared.get("multimodal_evidence_projection"))
             if isinstance(prepared.get("multimodal_evidence_projection"), dict)
@@ -1692,7 +1694,7 @@ class MemoryGuidedMCTS:
             ("verification_only_gaps", "Verification-only gaps"),
             ("future_work_seeds", "Future-work hypothesis seeds"),
         )
-        routing_lines = ["== Survey Gap Routing (authoritative) =="]
+        routing_lines = ["== Survey evidence gap routing =="]
         for key, label in routing_labels:
             rows = prepared.get(key, [])
             statements = [
@@ -1950,24 +1952,26 @@ class MemoryGuidedMCTS:
         )
         experiences: List[Dict[str, Any]] = []
 
-        # Prime root defects via one evaluator pass before the first expand so
-        # initial skill selection is not forced to rely on the placeholder
-        # "unexplored_gap" defect tag.
+        root.task_contract = deepcopy(self.task_contract)
+        prior_candidate = context.get("latest_candidate") or context.get("root_idea") or {}
+        if isinstance(prior_candidate, Mapping):
+            prior_evaluation = prior_candidate.get("evaluation") or {}
+            root.review_issues = deepcopy(prior_candidate.get("review_issues") or (
+                prior_evaluation.get("review_issues", []) if isinstance(prior_evaluation, Mapping) else []))
+        from src.agents.idea_agent.utils.workflow.claim_evidence import evidence_catalog
+        self.evidence_sources.update(evidence_catalog(context.get("survey_idea_handoff", {}),
+                                                     context.get("evidence_sources", {}),
+                                                     context.get("multimodal_evidence_projection", {}),
+                                                     context.get("papers", [])))
         root_eval = self._simulate(root, [root], experiences)
-        if root_eval and root_eval.detected_defects:
-            inferred_defects = _dedupe_keep_order_strings(
-                [str(tag) for tag in root_eval.detected_defects if str(tag).strip()]
-            )
-            if inferred_defects:
-                previous_defects = list(root.state.target_defects)
-                root.state.target_defects = _dedupe_keep_order_strings(
-                    [*previous_defects, *inferred_defects]
-                )
-                root.transformation.defects = list(root.state.target_defects)
-                root.latest_path_summary = ""
+        stagnation = 0
+        seen_content = {progress_hash(root.state.to_payload())}
+        stop_reason = "budget_exhausted"
 
         def _record_rollout(iteration: int, target: IdeaNode, rollout_path: List[IdeaNode], evaluation: IdeaEvaluation) -> None:
             self._backpropagate(rollout_path, evaluation)
+            target._rollout_parent = rollout_path[-2] if len(rollout_path) > 1 else None
+            target._rollout_metadata = self.transition_metadata.get((target._rollout_parent.node_id, target.node_id), {}) if target._rollout_parent else {}
             self._update_skill_prior(target, evaluation)
 
             rollout_summary = path_summary(rollout_path)
@@ -1991,6 +1995,7 @@ class MemoryGuidedMCTS:
                     "path": rollout_summary,
                     "action_summary": action_summary,
                     "evaluation": {**evaluation.to_dict(), "composite": evaluation.composite},
+                    "delivery": deepcopy(target.delivery),
                     "signature": target.state.signature,
                     "edit_plan": target.state.edit_plan,
                     "skill_metrics": target.state.skill_metrics,
@@ -2030,13 +2035,28 @@ class MemoryGuidedMCTS:
                 elif target is not None:
                     rollout_targets = [(target, rollout_path)]
 
+            progressed = False
             for target, rollout_path in rollout_targets:
                 evaluation = self._simulate(target, rollout_path, experiences)
                 if evaluation is None:
                     continue
                 _record_rollout(iteration, target, rollout_path, evaluation)
+                parent_eval = rollout_path[-2].evaluation if len(rollout_path) > 1 else None
+                progress = progress_hash(target.state.to_payload())
+                progressed |= progress not in seen_content or transition_reward(parent_eval, evaluation) > 0
+                seen_content.add(progress)
+            stagnation = 0 if progressed else stagnation + 1
+            patience = max(2, int(self.config.stagnation_patience))
+            if stagnation == max(1, patience // 2):
+                self._stagnation_rotation += self.config.branching_factor
+                root.expanded = False
+                self.capabilities.events.append({"action": "switch_operators", "reason": "stagnation", "iteration": iteration})
+            if stagnation >= patience:
+                stop_reason = "stagnation"
+                break
 
         best = best_candidate(root, SearchCandidate)
+        best_available = best_candidate(root, SearchCandidate, ready_first=False)
         pareto = pareto_candidates(root, SearchCandidate)
         cache_entries = sum(len(entries) for entries in self.evaluation_cache.values())
 
@@ -2062,4 +2082,11 @@ class MemoryGuidedMCTS:
             cache_size=cache_entries,
             experiences=experiences,
             retrieved_core_titles=list(self.retrieved_core_titles),
+            status="ready" if best and best.node.delivery.get("delivery_ready") else "partial",
+            best_available=best_available,
+            unresolved=deepcopy(best.node.delivery.get("unresolved_requirements", []) + best.node.delivery.get("unresolved_issues", [])
+                                + [{"kind": "delivery_incomplete", "rationale": reason} for reason in best.node.delivery.get("reasons", [])]) if best else [{"kind": "no_evaluated_candidate"}],
+            operational_events=deepcopy(self.capabilities.events),
+            acquisition_requests=deepcopy(self.capabilities.acquisition_requests),
+            stop_reason=stop_reason,
         )

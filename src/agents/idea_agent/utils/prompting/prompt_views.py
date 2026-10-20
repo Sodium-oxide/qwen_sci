@@ -70,7 +70,7 @@ def _extract_named_items(
 
 
 def _format_kv_line(label: str, value: Any, limit: int = DEFAULT_TEXT_LIMIT) -> str:
-    clipped = _clip_text(value)
+    clipped = _clip_text(value, limit)
     return f"{label}: {clipped or 'None'}"
 
 
@@ -287,12 +287,12 @@ def format_paper_capsules_prompt_view(
 ) -> str:
     items = [item for item in _normalize_list(papers) if item is not None]
     if not items:
-        return "No survey-cited paper capsules."
+        return "No paper capsules."
     visible_items = items if max_papers is None or max_papers <= 0 else items[:max_papers]
 
     sections = [
         _format_section(
-            "Survey-Cited Paper Capsules",
+            "Paper Capsules",
             [f"Available capsules: {len(items)}", f"Showing: {len(visible_items)}"],
         )
     ]
@@ -312,12 +312,21 @@ def format_paper_capsules_prompt_view(
             meta_parts.append(f"authors={authors}")
         if raw.get("paper_id"):
             meta_parts.append(f"id={_clip_text(raw.get('paper_id'))}")
+        if raw.get("source"):
+            meta_parts.append(f"source={_clip_text(raw.get('source'))}")
 
         body_lines = [
             _format_kv_line("Title", raw.get("title") or raw.get("paper_title"), 140),
             f"Metadata: {' | '.join(meta_parts) if meta_parts else 'None'}",
             f"Type: {mode}",
         ]
+        reading_modes = _dedupe_keep_order([
+            _clip_text(item.get("reading_mode"))
+            for item in [raw, *_normalize_list(raw.get("source_references"))]
+            if isinstance(item, Mapping) and item.get("reading_mode")
+        ])
+        if reading_modes:
+            body_lines.append(f"Source scope: {', '.join(reading_modes)}")
         summary = _clip_text(raw.get("summary"), 800) or _extract_paper_summary(raw)
         insight = _clip_text(raw.get("insight"), 500)
         body_lines.append(_format_kv_line("Summary", summary, 1000))
@@ -330,7 +339,7 @@ def format_paper_capsules_prompt_view(
             )
         )
 
-    return _join_sections(sections, empty="No survey-cited paper capsules.")
+    return _join_sections(sections, empty="No paper capsules.")
 
 
 def format_paper_context_prompt_view(
@@ -351,6 +360,8 @@ def format_paper_context_prompt_view(
         source = _clip_text(entry.get("source"))
         if source:
             header_parts.append(f"source={source}")
+        if entry.get("reading_mode"):
+            header_parts.append(f"source_scope={_clip_text(entry.get('reading_mode'))}")
         authors = _format_authors(entry.get("authors"))
         if authors:
             header_parts.append(f"authors={authors}")
@@ -542,40 +553,10 @@ def format_evaluator_idea_prompt_view(
             empty="No idea available.",
         )
     payload = normalize_idea_contract(payload, keep_extra=True)
-
-    component_lines: List[str] = []
-    components = _normalize_list(payload.get("components"))
-    explanations = payload.get("component_explanations")
-    explanation_map = explanations if isinstance(explanations, Mapping) else {}
-    for component in components[:8]:
-        name = _clip_text(component)
-        if not name:
-            continue
-        explanation = _clip_text(explanation_map.get(component)) if explanation_map else ""
-        if explanation:
-            component_lines.append(f"- {name}: {explanation}")
-        else:
-            component_lines.append(f"- {name}")
-
-    root_domains = _normalize_list(payload.get("root_domains"))
-    root_domain_text = _format_inline_list(root_domains, max_items=2, item_limit=16) if root_domains else "None"
-
-    sections = [
-        _format_section(
-            heading,
-            [
-                _format_kv_line("Title", payload.get("title"), 140),
-                _format_kv_line("Abstract", payload.get("abstract"), 220),
-                _format_kv_line("Core Contribution", payload.get("core_contribution"), 220),
-                _format_kv_line("Method", payload.get("method"), 260),
-                _format_kv_line("Risks", payload.get("risks"), 220),
-                f"Root domains: {root_domain_text}",
-                f"Target defects: {_format_inline_list(payload.get('target_defects'), max_items=6, item_limit=50)}",
-            ],
-        ),
-        _format_section("Components", component_lines),
-    ]
-    return _join_sections(sections, empty="No idea available.")
+    # Evaluation must not reuse the intentionally compact selection view.
+    # Runtime uses budgeted review packets for large candidates.
+    from src.agents.idea_agent.utils.mcts.review_contracts import canonical_json, scientific_content
+    return heading + "\n" + canonical_json(scientific_content(payload))
 
 
 def format_evaluator_edit_plan_prompt_view(

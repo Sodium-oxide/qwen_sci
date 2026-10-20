@@ -20,6 +20,7 @@ from src.agents.idea_agent.utils.core.config_loader import (
 )
 from src.agents.idea_agent.utils.core.json_utils import read_json_file
 from src.agents.idea_agent.utils.core.run_inputs import clean_optional_text, load_topic, resolve_run_inputs
+from src.agents.idea_agent.utils.core.task_contract import build_task_contract
 from src.agents.idea_agent.utils.workflow.idea_contract import (
     normalize_idea_contract,
     normalize_mature_ideas,
@@ -97,6 +98,16 @@ def _run_topic(
     run_dir = Path(output_root) / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "logs").mkdir(parents=True, exist_ok=True)
+    task_contract = build_task_contract(
+        original_request=str(resolved_inputs.get("input_text") or ""),
+        topic=topic,
+        interpretation=resolved_inputs.get("task_contract"),
+        refinement_scope=str(resolved_inputs.get("refinement_scope") or ""),
+        refinement_scope_source=str(resolved_inputs.get("refinement_scope_source") or ""),
+    )
+    (run_dir / "task_contract.json").write_text(
+        json.dumps(task_contract, ensure_ascii=False, indent=2), encoding="utf-8",
+    )
     (run_dir / "run_metadata.json").write_text(
         json.dumps(
             {
@@ -142,6 +153,7 @@ def _run_topic(
         config=config,
         survey_config=survey_config,
     )
+    artifact_set(agent.artifact, "task_contract", task_contract)
     if survey_context is not None:
         artifact_set(agent.artifact, "survey_idea_context", survey_context.to_payload())
     agent.bootstrap_topic(topic)
@@ -215,7 +227,8 @@ def run_idea_workflow(
     )
     requested_topic = clean_optional_text(topic or str(resolved_inputs.get("topic") or ""))
     if survey_context is not None:
-        if requested_topic and requested_topic.casefold() != survey_context.topic.casefold():
+        explicit_topic = resolved_inputs.get("topic_source") == "config_explicit"
+        if explicit_topic and requested_topic and requested_topic.casefold() != survey_context.topic.casefold():
             raise SurveyIdeaLoadError(
                 "Explicit Idea topic does not match the selected Survey manifest: "
                 f"{requested_topic!r} != {survey_context.topic!r}"
@@ -223,6 +236,15 @@ def run_idea_workflow(
         requested_topic = survey_context.topic
         resolved_inputs["topic_source"] = "survey_manifest"
     resolved_inputs["topic"] = requested_topic
+    # A manifest-only invocation acquires its original request after loading the manifest.
+    if requested_topic and not (resolved_inputs.get("task_contract") or {}).get("original_request"):
+        from src.agents.idea_agent.utils.core.run_inputs import _extract_task_contract
+        resolved_inputs["task_contract"] = build_task_contract(
+            original_request=requested_topic,
+            interpretation=_extract_task_contract(requested_topic, config),
+            refinement_scope=str(resolved_inputs.get("refinement_scope") or ""),
+            refinement_scope_source=str(resolved_inputs.get("refinement_scope_source") or ""),
+        )
     if output_root is not None:
         resolved_inputs["output_root"] = str(output_root)
     if survey_context is not None:

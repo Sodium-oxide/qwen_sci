@@ -19,6 +19,7 @@ from src.agents.survey_agent.utils.topic_survey_storage import (
     apply_topic_survey_paths,
     get_survey_output_root,
 )
+from src.agents.survey_agent.modules.survey_delivery import find_pending_survey_checkpoint
 from src.pipeline.multimodal_evidence import (
     MultimodalInputError,
     MultimodalSettings,
@@ -204,6 +205,9 @@ def _build_root_parser() -> argparse.ArgumentParser:
     survey = subparsers.add_parser("survey", help="Run Survey Agent")
     survey.add_argument("--config", default=str(DEFAULT_CONFIG_PATH), help="Path to config YAML")
     survey.add_argument("--topic", help="Override survey BasicInfo.topic")
+    survey_recovery = survey.add_mutually_exclusive_group()
+    survey_recovery.add_argument("--resume", metavar="DIRECTORY", help="Resume a saved Survey draft directory")
+    survey_recovery.add_argument("--run-id", help="Use an explicit Survey run ID; a new ID starts a new run")
     survey.add_argument(
         "--declared-domain",
         help="User-declared scientific domain for project-level domain confirmation",
@@ -921,6 +925,9 @@ def _build_root_parser() -> argparse.ArgumentParser:
     quantitative_bundle.add_argument("--quantitative-author-handoff-manifest", required=True)
     quantitative_bundle.set_defaults(func=_quantitative_bundle_command)
 
+    from src.paper_graph.cli import configure_parser as configure_paper_graph_parser
+    configure_paper_graph_parser(subparsers.add_parser("paper-graph", help="Ingest, build and check grounded paper components"))
+
     doctor = subparsers.add_parser("doctor", help="Check local runtime prerequisites")
     doctor.add_argument("--config", default=str(DEFAULT_CONFIG_PATH), help="Path to config YAML")
     doctor.set_defaults(func=_doctor_command)
@@ -1054,6 +1061,16 @@ def _survey_command(args: argparse.Namespace) -> int:
         return 2
     override_key = lambda key: _survey_override_key(config_path, key)
     config = OmegaConf.load(config_path)
+    resume_dir = _resolve_cli_path(args.resume) if args.resume else None
+    if resume_dir is not None:
+        checkpoint_path = resume_dir / "checkpoints" / "survey_checkpoint.json"
+        try:
+            checkpoint = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+            if not args.topic:
+                args.topic = checkpoint["topic"]
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            print(f"Cannot resume Survey checkpoint: {exc}", file=sys.stderr)
+            return 2
     try:
         (
             multimodal_input_spec,
@@ -1110,10 +1127,24 @@ def _survey_command(args: argparse.Namespace) -> int:
             if hasattr(config, "get") and config.get("survey") is not None
             else config
         )
+        path_config = OmegaConf.create(OmegaConf.to_container(survey_config, resolve=False))
+        for name in ("topic", "declared_domain", "research_title", "research_objective", "research_brief"):
+            value = getattr(args, name)
+            if value is not None:
+                OmegaConf.update(path_config, "BasicInfo." + name, value, merge=False, force_add=True)
+        for key, value in multimodal_updates:
+            OmegaConf.update(path_config, key.removeprefix("survey."), value, merge=False, force_add=True)
+        run_id = args.run_id or OmegaConf.select(path_config, "BasicInfo.survey_run_id")
+        pending = resume_dir
+        if pending is None and not run_id and not args.overrides:
+            pending = find_pending_survey_checkpoint(path_config, get_survey_output_root(survey_config))
+        if pending is not None and pending.parent == get_survey_output_root(survey_config):
+            run_id = pending.name
         derived_paths = apply_topic_survey_paths(
-            OmegaConf.create(OmegaConf.to_container(survey_config, resolve=False)),
+            path_config,
             args.topic,
             output_root=get_survey_output_root(survey_config),
+            research_run_id=run_id,
         )
     runtime_config = _temporary_config(
         config_path,
@@ -1123,9 +1154,10 @@ def _survey_command(args: argparse.Namespace) -> int:
             (override_key("BasicInfo.research_title"), args.research_title),
             (override_key("BasicInfo.research_objective"), args.research_objective),
             (override_key("BasicInfo.research_brief"), args.research_brief),
+            (override_key("BasicInfo.survey_resume_dir"), str(resume_dir) if resume_dir else None),
             (
                 override_key("BasicInfo.survey_run_id"),
-                derived_paths.research_run_id if derived_paths else "",
+                derived_paths.research_run_id if derived_paths else args.run_id or "",
             ),
             (
                 override_key("BasicInfo.base_dir"),
@@ -3124,9 +3156,11 @@ def _doctor_command(args: argparse.Namespace) -> int:
     checks.append(
         ("all-MiniLM-L6-v2", (REPO_ROOT / "models" / "all-MiniLM-L6-v2").exists(), "models/all-MiniLM-L6-v2")
     )
-    checks.append(
-        ("bge-m3", (REPO_ROOT / "models" / "bge-m3").exists(), "models/bge-m3"),
-    )
+    from src.paper_graph.health import check_paper_graph
+    from src.paper_graph.settings import PaperGraphSettings
+    graph_health = check_paper_graph(PaperGraphSettings.from_config(config))
+    for item in graph_health["checks"]:
+        checks.append(("paper_graph." + item["name"], item["ok"], json.dumps(item["detail"], ensure_ascii=False)))
     required_settings = provider_required_settings(llm_provider)[:1] + [
         (
             "SEMANTIC_SCHOLAR_API_KEY",
@@ -3174,12 +3208,12 @@ def _doctor_command(args: argparse.Namespace) -> int:
     console.print(Panel(env_table, title="Environment variables", border_style="cyan", padding=(0, 1)))
 
     failures = [
+        not graph_health["ok"],
         not llm_provider.api_key,
         not llm_provider.base_url,
         any(role_model_failures),
         not os.environ.get("SEMANTIC_SCHOLAR_API_KEY"),
         not (REPO_ROOT / "models" / "all-MiniLM-L6-v2").exists(),
-        not (REPO_ROOT / "models" / "bge-m3").exists(),
     ]
     return 1 if any(failures) else 0
 

@@ -5,7 +5,7 @@ import threading
 from contextvars import copy_context
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from concurrent.futures import (
     FIRST_COMPLETED,
     ThreadPoolExecutor,
@@ -25,10 +25,10 @@ from tenacity import (
 )
 from tqdm import tqdm
 from pathlib import Path
-from utils.rich_logger import get_logger
+from src.agents.survey_agent.utils.rich_logger import get_logger
 import tiktoken
 import xml.etree.ElementTree as ET
-from utils.utils import extract_json
+from src.agents.survey_agent.utils.utils import extract_json
 
 _PROJECT_ROOT = Path(__file__).resolve().parents[4]
 if str(_PROJECT_ROOT) not in sys.path:
@@ -50,6 +50,8 @@ import requests
 import json
 import time
 import diskcache as dc
+
+DEFAULT_CHAT_MAX_OUTPUT_TOKENS = 16000
 
 try:
     from pyalex import Works as PyAlexWorks
@@ -73,6 +75,8 @@ class _BudgetedHTTPAdapter(requests.adapters.HTTPAdapter):
         self.budgeted_search = budgeted_search
 
     def send(self, request, **kwargs):
+        from src.pipeline.adaptive_search import charge_acquisition_http
+        charge_acquisition_http()
         if self.budgeted_search:
             reserve_retrieval_http_attempt(self.retrieval_budget, request.method + ":" + request.url)
         return super().send(request, **kwargs)
@@ -116,6 +120,8 @@ class ArxivAPI:
         paper = {}
         
         for retry_count in range(self.config.APIInfo.arxiv_api_max_retry):
+            from src.pipeline.adaptive_search import charge_acquisition_http
+            charge_acquisition_http()
             response = requests.get(arxiv_url, timeout=120, allow_redirects=False)
             if response.status_code == 200:
                 break
@@ -159,6 +165,8 @@ class ArxivAPI:
         
         papers = []
         for retry_count in range(self.config.APIInfo.arxiv_api_max_retry):
+            from src.pipeline.adaptive_search import charge_acquisition_http
+            charge_acquisition_http()
             response = requests.get(arxiv_url, timeout=120, allow_redirects=False)
             if response.status_code == 200:
                 break
@@ -267,6 +275,8 @@ class ArxivAPI:
         max_retries = max(1, int(getattr(self.config.APIInfo, "arxiv_api_max_retry", 3) or 3))
         while retry_count < max_retries:
             try:
+                from src.pipeline.adaptive_search import charge_acquisition_http
+                charge_acquisition_http()
                 response = requests.get(arxiv_url, timeout=120, allow_redirects=False)
             except requests.RequestException as exc:
                 self.logger.warning("arXiv discovery request failed for %s: %s", query_text, exc)
@@ -320,6 +330,10 @@ class SemanticScholarAPI:
         if limit is not None:
             params["limit"] = int(limit)
 
+        from src.pipeline.adaptive_search import charge_acquisition_http
+
+        charge_acquisition_http()
+
         resp = requests.get(
             url, headers=self.headers, params=params, timeout=60, allow_redirects=False
         )
@@ -349,6 +363,8 @@ class SemanticScholarAPI:
         """Fetch paper details with bounded retries; raises on final failure."""
         max_retry = self.config.APIInfo.semantic_scholar_api_max_retry
         url = f"{self.base_url}/paper/{paper_id}?fields={fields}"
+        from src.pipeline.adaptive_search import charge_acquisition_http
+        charge_acquisition_http()
         resp = requests.get(url, headers=self.headers, timeout=60, allow_redirects=False)
 
         if resp.status_code == 200:
@@ -1301,6 +1317,8 @@ class UnpaywallAPI:
                 self._missing_email_logged = True
             return []
         try:
+            from src.pipeline.adaptive_search import charge_acquisition_http
+            charge_acquisition_http()
             response = requests.get(
                 f"{self.base_url}/{quote(normalized_doi, safe='')}",
                 params={"email": self.email},
@@ -1388,9 +1406,10 @@ class ChatAgent:
         *,
         provider_override: str = "",
         model_override: str = "",
+        project_config=None,
     ) -> None:
         self.config = config
-        self._project_config = load_config()
+        self._project_config = project_config if project_config is not None else load_config()
         api_info = config.APIInfo
         provider_override = str(provider_override or "").strip()
         model_override = str(model_override or "").strip()
@@ -1613,6 +1632,21 @@ class ChatAgent:
         # policy.
         response.raise_for_status()
 
+    @staticmethod
+    def _review_deadline_lines(response, deadline):
+        pending = bytearray()
+        for chunk in response.iter_content(chunk_size=1):
+            if time.monotonic() >= deadline:
+                response.close()
+                raise requests.Timeout("Review request deadline exceeded while streaming.")
+            if chunk:
+                pending.extend(chunk)
+                if pending.endswith(b"\n"):
+                    yield bytes(pending).rstrip(b"\r\n")
+                    pending.clear()
+        if pending:
+            yield bytes(pending)
+
     @retry(
         stop=stop_after_attempt(10),
         wait=wait_exponential(min=1, max=300),
@@ -1626,10 +1660,11 @@ class ChatAgent:
         temperature: float = 0.5,
         debug: bool = False,
         model=None,
-        max_output_tokens: int = 16000,
+        max_output_tokens: int = DEFAULT_CHAT_MAX_OUTPUT_TOKENS,
         response_format: str | None = None,
         request_timeout: float | None = None,
         strict_input_budget: bool = False,
+        request_deadline: float | None = None,
     ) -> str:
         """Chat with remote LLM, return result. Minimal logging; no file writes."""
         from src.llm.research_policy import research_messages, research_policy
@@ -1715,6 +1750,11 @@ class ChatAgent:
             if request_timeout <= 0:
                 raise ValueError("request_timeout must be positive when provided.")
             chat_timeout = min(chat_timeout, request_timeout)
+        if request_deadline is not None:
+            remaining = request_deadline - time.monotonic()
+            if remaining <= 0:
+                raise requests.Timeout("Review request deadline exceeded before HTTP request.")
+            chat_timeout = min(chat_timeout, remaining)
         reserve_model_http_attempt()
         response = requests.post(url, headers=header, json=payload, timeout=chat_timeout, stream=use_stream)
         res = None
@@ -1734,7 +1774,15 @@ class ChatAgent:
         if use_stream:
             response.raise_for_status()
             collected_content = []
-            for line in response.iter_lines():
+            lines = (
+                self._review_deadline_lines(response, request_deadline)
+                if request_deadline is not None and hasattr(response, "iter_content")
+                else response.iter_lines()
+            )
+            for line in lines:
+                if request_deadline is not None and time.monotonic() >= request_deadline:
+                    response.close()
+                    raise requests.Timeout("Review request deadline exceeded while streaming.")
                 if line:
                     decoded_line = line.decode('utf-8').strip()
                     if decoded_line.startswith("data:"):
@@ -1813,7 +1861,7 @@ class ChatAgent:
         request_timeout: float | None = None,
         retry: bool = True,
         strict_input_budget: bool = False,
-        max_output_tokens: int = 16000,
+        max_output_tokens: int = DEFAULT_CHAT_MAX_OUTPUT_TOKENS,
         response_format: str | None = None,
     ):
         model = self.model_name
@@ -2041,6 +2089,7 @@ class ChatAgent:
         max_output_tokens: int = 16000,
         response_format: str | None = None,
         max_in_flight_tokens: int | None = None,
+        on_result: Callable[[int, str], None] | None = None,
     ) -> list[str]:
         if workers is None:
             workers = self.batch_workers
@@ -2210,6 +2259,8 @@ class ChatAgent:
                                 )
                                 continue
                             results[completed_index] = response
+                            if on_result is not None:
+                                on_result(completed_index, response)
                             self.logger.info(
                                 "Batch request %s/%s completed.",
                                 completed_index + 1,
@@ -2295,6 +2346,8 @@ class ChatAgent:
                     )
                     continue
                 res_l[index] = response
+                if on_result is not None:
+                    on_result(index, response)
                 log_info = getattr(self.logger, "info", None)
                 if callable(log_info):
                     log_info(
@@ -2335,7 +2388,7 @@ class ChatAgent:
         temperature: float = 0.5,
         future_timeout: float = None,
         model: str = None,
-        info_dict: dict = {},
+        info_dict: dict = None,
         strict_input_budget: bool = False,
         max_output_tokens: int = 16000,
         response_format: str | None = None,
@@ -2368,11 +2421,17 @@ class ChatAgent:
             model = self.model_name
         if validate_fn is None:
             validate_fn = self._default_validate_fn
+        if max_retry < 1:
+            raise ValueError("max_retry must be positive")
+        if not prompts:
+            return []
 
         input_prompts = prompts.copy()
         input_indices = list(range(len(prompts)))
         all_results = [None] * len(prompts)
         finished = False
+        info_dict = dict(info_dict or {})
+        last_errors = {}
         info_dict["max_retry"] = max_retry
         
         for retry in range(max_retry):
@@ -2393,6 +2452,7 @@ class ChatAgent:
                 max_in_flight_tokens=max_in_flight_tokens,
             )
             if not results:
+                last_errors.update({index: "No response returned" for index in input_indices})
                 self.logger.info(
                     f"return None "
                     f"retrying {retry + 1}/{max_retry}"
@@ -2400,18 +2460,20 @@ class ChatAgent:
                 continue
             
             # Validate each result
-            for i in range(len(results)):
+            for i in range(len(input_prompts)):
                 info_dict["idx"] = input_indices[i]
                 try:
                     # Validate the result using the provided validation function
-                    val, result = validate_fn(results[i], info_dict)
+                    response = results[i] if i < len(results) else None
+                    val, result = validate_fn(response, info_dict)
                     if not val:
                         raise ValueError("Validation failed")
                     # If validation passes, store the result
                     all_results[input_indices[i]] = result
                 except Exception as e:
+                    last_errors[input_indices[i]] = f"{type(e).__name__}: {e}"
                     self.logger.warning(f"Validation failed for prompt {input_indices[i]}: {e}")
-                    if self.config.BasicInfo.debug and results[i]:
+                    if self.config.BasicInfo.debug and i < len(results) and results[i]:
                         self.logger.warning(f"return text: {results[i][:50]}...")
                     error_prompts.append(input_prompts[i])
                     error_indices.append(input_indices[i])
@@ -2439,13 +2501,15 @@ class ChatAgent:
                     time.sleep(wait_time)
         
         if not finished:
+            details = "; ".join(f"prompt {index}: {last_errors.get(index, 'No validated result')}"
+                                for index in input_indices)
             self.logger.error(
                 f"batch_remote_chat_with_retry failed after {max_retry} retries. "
                 f"Failed prompts: {len(error_prompts)}"
             )
             raise ValueError(
                 f"batch_remote_chat_with_retry failed after {max_retry} retries. "
-                f"{len(error_prompts)} prompts still failing validation."
+                f"{len(input_indices)} prompts still failing validation. Last errors: {details}"
             )
         
         return all_results

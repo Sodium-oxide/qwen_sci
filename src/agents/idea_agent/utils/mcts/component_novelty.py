@@ -94,7 +94,7 @@ class ComponentNoveltyScorer:
         if self._vector_store is not None:
             self._model = self._vector_store.get_model()
             return self._model
-        self._model = SentenceTransformer(self._resolve_model_source())
+        self._model = SentenceTransformer(self._resolve_model_source(), local_files_only=True)
         return self._model
 
     def _get_vector_store(self) -> PaperGraphComponentVectorStore:
@@ -105,7 +105,7 @@ class ComponentNoveltyScorer:
                 model=self._model,
             )
         if self._vector_store.size <= 0:
-            self._vector_store.load(allow_stale_graph=True)
+            self._vector_store.load()
         return self._vector_store
 
     def _extract_components(

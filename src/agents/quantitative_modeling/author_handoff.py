@@ -170,6 +170,9 @@ def finalize_quantitative_idea(
     finalization_path = root / "quantitative" / quantitative_idea_id / "finalization.json"
     if finalization_path.exists():
         raise QuantitativeAuthorHandoffError("quantitative idea already has a finalization record")
+    from src.result_figures.integration import quantitative_figure_index
+
+    figure_index = quantitative_figure_index(root, version_dir, [entry["execution_id"] for entry in qualified])
     lineage_ledgers: dict[str, dict[str, str]] = {}
     for historical_version in range(version + 1):
         historical_path = _version_directory(root, quantitative_idea_id, historical_version) / "result_ledger.json"
@@ -187,6 +190,7 @@ def finalize_quantitative_idea(
             "model_spec": _record(spec_path),
             "mathematical_model_markdown": _record(markdown_path),
             "result_ledger": _record(ledger_path),
+            "result_figures": figure_index,
             **parameter_artifacts,
         },
         "lineage_ledgers": lineage_ledgers,
@@ -259,6 +263,12 @@ def load_finalized_quantitative_record(
     markdown_path = version_dir / "mathematical_model.md"
     ledger_path = version_dir / "result_ledger.json"
     artifacts = _mapping(finalization.get("artifacts"))
+    if artifacts.get("result_figures"):
+        from src.result_figures.integration import verify_figure_index
+
+        verify_figure_index(artifacts["result_figures"], root=root,
+            expected_identity={"quantitative_idea_id": quantitative_idea_id, "version": final_version},
+            execution_ids=finalization["qualified_execution_ids"])
     _verify_record(spec_path, artifacts.get("model_spec"), label="model specification")
     _verify_record(markdown_path, artifacts.get("mathematical_model_markdown"), label="mathematical model Markdown")
     _verify_record(ledger_path, artifacts.get("result_ledger"), label="result ledger")
@@ -375,6 +385,7 @@ def build_quantitative_author_handoff(
     identities: list[dict[str, str]] = []
     evidence: list[dict[str, Any]] = []
     finalization_records: dict[str, dict[str, str]] = {}
+    figure_indexes = []
     expected_ids = expected_quantitative_idea_ids(root=root)
     missing_finalizations = [
         quantitative_idea_id
@@ -394,6 +405,8 @@ def build_quantitative_author_handoff(
         identities.append(identity)
         evidence.extend(records)
         finalization_records[quantitative_idea_id] = _record(finalization_path)
+        if _finalization["artifacts"].get("result_figures"):
+            figure_indexes.append(_finalization["artifacts"]["result_figures"])
     if not evidence:
         raise QuantitativeAuthorHandoffError("no finalized qualified Q evidence is available for Author")
     source_identity = identities[0]
@@ -418,7 +431,8 @@ def build_quantitative_author_handoff(
         "status": "COMPLETED",
         "source_identity": source_identity,
         "inputs": {"finalizations": finalization_records},
-        "artifacts": {"handoff": _record(handoff_path), "quantitative_models_pdf": _record(pdf_path)},
+        "artifacts": {"handoff": _record(handoff_path), "quantitative_models_pdf": _record(pdf_path),
+            "result_figure_indexes": figure_indexes},
     }
     atomic_write_json(manifest_path, manifest)
     return handoff_path, manifest_path

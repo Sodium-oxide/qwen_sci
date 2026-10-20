@@ -59,6 +59,37 @@ def cited_passages(section_text: str, limit: int = 24) -> list[str]:
     return passages
 
 
+def prose_sentence_spans(text: str) -> list[tuple[int, int]]:
+    """Locate editable prose sentences while preserving exact source offsets."""
+
+    spans: list[tuple[int, int]] = []
+    start = 0
+    in_fence = False
+    boundary = re.compile(
+        r"<[^<>\n]+>|`[^`\n]+`|(?P<ending>[.!?。！？][\"'”’\)\]）]*)(?=\s|$)"
+    )
+    for line in text.splitlines(keepends=True):
+        stripped = line.strip()
+        if stripped.startswith(("```", "~~~")):
+            in_fence = not in_fence
+        elif stripped and not in_fence and not re.match(r"^\s{0,3}#{1,6}\s+", line):
+            sentence_start = len(line) - len(line.lstrip())
+            for match in boundary.finditer(line):
+                if match.group("ending") is None:
+                    continue
+                sentence_end = match.end()
+                if line[sentence_start:sentence_end].strip():
+                    spans.append((start + sentence_start, start + sentence_end))
+                sentence_start = sentence_end
+                while sentence_start < len(line) and line[sentence_start].isspace():
+                    sentence_start += 1
+            sentence_end = len(line.rstrip())
+            if sentence_start < sentence_end:
+                spans.append((start + sentence_start, start + sentence_end))
+        start += len(line)
+    return spans
+
+
 def repeated_passages(sections: Sequence[str]) -> list[dict[str, Any]]:
     """Find long repeated paragraphs or leads across distinct sections."""
 

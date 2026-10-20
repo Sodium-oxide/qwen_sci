@@ -227,6 +227,9 @@ def compact_candidate_entry(entry: Any) -> Dict[str, Any]:
     if not isinstance(entry, Mapping):
         return {}
     fields = (
+        "scientific_snapshot",
+        "claims", "evidence_records", "delivery", "search_status", "unresolved",
+        "operational_events", "acquisition_requests", "search_stop_reason",
         "scientific_candidate_id",
         "scientific_candidate_root_role",
         "candidate_ledger_fingerprint",
@@ -428,6 +431,8 @@ def compact_idea_portfolio(value: Any) -> Dict[str, Any]:
         "route_clusters": compact_route_clusters(value.get("route_clusters")),
         "diversity_report": value.get("diversity_report") or {},
         "selection_rationale": value.get("selection_rationale", ""),
+        "delivery_status": value.get("delivery_status", "partial"),
+        "best_available_idea": compact_candidate_entry(value.get("best_available_idea")),
         "debate_summary": compact_stage_summary(value.get("debate_summary"), kind="debate") if isinstance(value.get("debate_summary"), Mapping) else {},
     }
     for field in ("selected_primary_idea", "competitive_ideas", "high_risk_ideas", "rejected_ideas"):
@@ -503,6 +508,7 @@ def _compact_intervention(value: Any) -> Dict[str, Any]:
 
 def _compact_evaluation(value: Mapping[str, Any]) -> Dict[str, Any]:
     allowed = (
+        "review_issues", "requirement_reviews", "review_coverage", "claim_reviews", "contribution_review",
         "novelty",
         "surprise",
         "feasibility",
@@ -690,6 +696,7 @@ def compact_result_payload(payload: Any) -> Dict[str, Any]:
         return {}
     result: Dict[str, Any] = {}
     public_fields = (
+        "delivery", "search_status", "unresolved", "operational_events", "acquisition_requests", "search_stop_reason",
         "schema_version",
         "title",
         "abstract",
@@ -700,6 +707,8 @@ def compact_result_payload(payload: Any) -> Dict[str, Any]:
         "scientific_spec",
         "materialization_profile",
         "reference_papers",
+        "external_searches",
+        "external_references",
         "idea_source",
         "source_modes",
         "fusion_metadata",

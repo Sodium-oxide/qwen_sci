@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import os
+from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from src.agents.idea_agent.agent.artifacts import artifact_get, artifact_set
 from src.agents.idea_agent.agent.prompts import PROMPTS
 from src.agents.idea_agent.utils.core.json_utils import write_json_file
+from src.agents.idea_agent.utils.core.task_contract import refinement_scope_context
+from src.agents.idea_agent.utils.mcts.review_contracts import invalidate_delivery_on_rewrite
 from src.agents.idea_agent.utils.workflow.idea_helpers import (
     build_direction_result_document,
     build_fusion_evolution,
@@ -236,7 +239,10 @@ def build_idea_result_payload(
     refinement_scope = str(
         refinement_scope_override
         if refinement_scope_override is not None
-        else artifact_get(artifact, "refinement_scope", "")
+        else refinement_scope_context(
+            artifact_get(artifact, "refinement_scope", ""),
+            artifact_get(artifact, "refinement_scope_source", ""),
+        )["refinement_scope"]
     ).strip()
     entries = paper_entries or collect_paper_context_entries(
         artifact, artifact_get(artifact, "references", [])
@@ -276,6 +282,13 @@ def build_idea_result_payload(
             else introduction_json_repair_attempts
         ),
     )
+    public_entry.update({
+        "introduction": introduction,
+        "algorithm": materialization.get("legacy_algorithm", []),
+        "scientific_spec": materialization.get("scientific_spec", {}),
+    })
+    invalidate_delivery_on_rewrite(best_entry, public_entry,
+        reason="Public materialization added or changed scientific content and requires re-review.")
     component_entries = public_entry.get("components_with_explanations")
     if not isinstance(component_entries, list):
         raw_components = public_entry.get("components") or []
@@ -335,6 +348,7 @@ def build_idea_result_payload(
         reference_titles.append(cleaned)
     mcts_evolution = build_mcts_evolution(best_entry)
     payload = {
+        **{key: deepcopy(public_entry.get(key, best_entry.get(key))) for key in ("delivery", "search_status", "scientific_snapshot", "unresolved", "operational_events", "acquisition_requests", "search_stop_reason") if key in public_entry or key in best_entry},
         "title": public_entry.get("title"),
         "abstract": public_entry.get("abstract"),
         "method": public_entry.get("method"),
@@ -344,6 +358,8 @@ def build_idea_result_payload(
         "scientific_spec": materialization.get("scientific_spec", {}),
         "materialization_profile": materialization.get("profile_id", "generic_scientific"),
         "reference_papers": reference_titles,
+        "external_searches": artifact_get(artifact, "external_searches", []),
+        "external_references": artifact_get(artifact, "external_references", []),
         "mcts_evolution": mcts_evolution,
         "mature_ideas": mature_idea_records,
         "mature_idea": mature_idea or mature_idea_legacy_text(mature_idea_records),
@@ -408,6 +424,9 @@ def build_idea_result_payload(
         if public_entry.get(key):
             best_entry[key] = public_entry[key]
     best_entry["introduction"] = introduction
+    for key in ("delivery", "search_status"):
+        if key in payload:
+            best_entry[key] = deepcopy(payload[key])
     payload["legacy_best_entry"] = dict(best_entry)
     return payload
 

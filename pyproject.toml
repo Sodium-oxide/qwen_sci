@@ -129,6 +129,11 @@ qwensci-install-mcp-wrappers = "src.cli:install_mcp_wrappers_main"
 qwensci-web = "src.webapp.api:main"
 
 [dependency-groups]
+result-figures = [
+  "matplotlib==3.10.8",
+  "pillow==12.0.0",
+  "PyMuPDF==1.26.7",
+]
 dev = [
   "build>=1.2.2",
   "pytest==9.0.2",

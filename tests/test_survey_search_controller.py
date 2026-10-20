@@ -221,6 +221,65 @@ def test_default_controller_filters_early_and_keeps_hard_limits():
     assert all(source["retrieval_provenance"] for source in selected)
 
 
+def test_default_controller_assesses_shared_dataset_as_actual_source_without_abstract():
+    class SourceModel(Model):
+        def batch_remote_chat(self, prompts, desc, **options):
+            outputs = super().batch_remote_chat(prompts, desc, **options)
+            if desc == "Assessing Survey Papers and Objects":
+                for index, prompt in enumerate(prompts):
+                    payload = json.loads(prompt[prompt.index('{"original_topic"'):])
+                    originals = {p["paper_id"]: p for p in payload["papers"]}
+                    response = json.loads(outputs[index])
+
+                    def relabel(value, source):
+                        if isinstance(value, dict):
+                            if value.get("source") == "abstract" and not source.get("abstract"):
+                                value.update(source="source_excerpt", text=source["source_excerpt"])
+                            for item in list(value.values()):
+                                relabel(item, source)
+                        elif isinstance(value, list):
+                            for item in value:
+                                relabel(item, source)
+
+                    for record in response["papers"]:
+                        relabel(record, originals[record["paper_id"]])
+                    outputs[index] = json.dumps(response)
+            return outputs
+
+    model = SourceModel(objects=1)
+    collector, _calls = runtime(model)
+    dataset = paper("ASdataset", "Method 0", abstract=False)
+    dataset.update(source_type="dataset", version="v2.1", verified_source_sha256="a" * 64,
+        verified_source_excerpt="Method 0 reports reproducible measurement performance and units.",
+        verified_reading_mode="repository_metadata", reading_range={"start": 0, "end": 73},
+        discovery_snippet="DISCOVERY_ONLY", retrieval_provenance=[{"provider": "anysearch", "need_id": "N1"}])
+    collector._shared_search_candidates = [dataset]
+    selected, _selection = collector._collect_sh_seed_candidates(TOPIC, {}, {}, [SH])
+    shared = next(p for p in collector.subhypothesis_retrieval_artifact["candidate_papers"] if p["paperId"] == "ASdataset")
+    assert shared["survey_assessment_status"] == "assessed"
+    assert shared["sh_semantic_assessments"][0]["evidence_spans"][0]["source"] == "source_excerpt"
+    assert any(p["paperId"] == "ASdataset" for p in selected)
+    supplied = [p for desc, payload in model.payloads if desc == "Assessing Survey Papers and Objects"
+                for p in payload["papers"] if p["paper_id"] == "ASdataset"]
+    assert len(supplied) == 1 and not supplied[0]["abstract"]
+    assert supplied[0]["source_context"]["version"] == "v2.1"
+    assert "DISCOVERY_ONLY" not in json.dumps(supplied)
+
+
+def test_shared_paper_and_provider_alias_merge_without_losing_feedback_identity():
+    collector, _calls = runtime(Model(objects=1))
+    shared = paper("ASshared", "Method 0")
+    collector._shared_search_candidates = [shared]
+    selected, _selection = collector._collect_sh_seed_candidates(TOPIC, {}, {}, [SH])
+    sources = collector.subhypothesis_retrieval_artifact["candidate_papers"]
+    # W1 has the same scientific title as ASshared. Its query feedback must
+    # point at the retained source even though the provider ID was merged.
+    assert "ASshared" in {p["paperId"] for p in sources}
+    assert "W1" not in {p["paperId"] for p in sources}
+    assert any(p["paperId"] == "ASshared" for p in selected)
+    assert all("ASshared" in q["paper_ids"] for q in collector.subhypothesis_retrieval_artifact["query_history"])
+
+
 def test_irrelevant_source_objects_never_get_search_budget():
     collector, calls = runtime(Model(objects=3, relevant=False, feedback=False), objects=3)
     selected, _selection = collector._collect_sh_seed_candidates(TOPIC, {}, {}, [SH])

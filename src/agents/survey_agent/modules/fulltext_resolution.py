@@ -268,8 +268,8 @@ def resolve_fulltext_candidates(
                 "version": str(location.get("version") or ""),
                 "license": str(location.get("license") or ""),
                 "host_type": str(location.get("host_type") or ""),
-                "evidence": str(location.get("evidence") or "openalex.oa_location"),
-                "oa_evidence": "openalex.oa_location",
+                "evidence": str(location.get("evidence") or ("openalex.oa_location" if source.startswith("openalex.") else source)),
+                "oa_evidence": "openalex.oa_location" if source.startswith("openalex.") else str(location.get("oa_evidence") or ""),
             }
             pdf_url = location.get("pdf_url") or location.get("url_for_pdf")
             if pdf_url:

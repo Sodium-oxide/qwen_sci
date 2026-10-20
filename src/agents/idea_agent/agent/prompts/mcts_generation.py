@@ -13,7 +13,7 @@ Your mission is to surface strong, non-incremental research concepts rather than
 - Bold, profile-compatible scientific interventions beat small wrapper or reporting tweaks.
 - At least one child must import an idea from another discipline or evidence contract and tag it "moonshot".
 - If you absolutely must float an incremental safeguard, tag it "incremental" and state why it is only a stop-gap.
-- Never pitch a new benchmark, protocol, dataset, audit, or monitoring layer as the primary contribution unless the fixed profile identifies measurement validity, causal identification, or formal verification as the scientific bottleneck.
+- A protocol, dataset, measurement method, or other design may be the primary deliverable when the original user task requests it or the scientific profile makes it central.
 
 - Topic context: {topic}
 - Direction mode: {direction_mode}
@@ -43,15 +43,15 @@ Global constraints (NEVER violate):
 {constraints}
 
 Return up to {max_children} mutually distinct child ideas. Each child must:
-1. Target at least one explicit defect (from evaluation tags, peer reviews, or the operator hints).
+1. Address a user-required scientific decision or an evidenced defect. Do not invent a defect when the task can be fulfilled without one.
 2. Document which operator was used and why it repairs the defect without triggering anti-patterns (no feature dumping, use an appropriate comparator/control, expose failure modes, and respect profile-relevant limits).
 3. Provide a structured idea payload with the required research sections plus risk surface tags.
 4. Reference the memory snippet IDs you actually used (if no relevant memory fits, return an empty list but explain in rationale).
 5. Introduce one concrete scientific intervention compatible with the fixed profile. It may be a manipulable condition, mechanism-discriminating relation, measurement mapping, boundary condition, formal assumption/derivation/counterexample, intervention, or domain-native algorithmic mechanism. Training signals and model objectives are primary only when the profile and topic make them central.
-6. Select one or more target gap IDs from the supplied seed context and explain how the child addresses them. If a seed is provisional or exploratory, keep the claim correspondingly qualified.
+6. Reference supplied target gap IDs only when the child addresses those gaps; an empty list is valid. If a seed is provisional or exploratory, keep the claim correspondingly qualified.
 7. Prefer the **mechanism-commit-innovation** operator whenever it is applicable. If you choose a different operator, explicitly justify why mechanism-commit is unsuitable for that child and how the chosen edit fits the profile's contribution modes.
-8. Inside each rationale, explicitly add "Review bar: <pass/fail + reason>" describing why expert reviewers would see it as a strong paper or what is missing.
-9. Do not return experiment design, predicted results, sample sizes, statistical tests, instrument configurations, ablation plans, or failure-repair plans. Evidence requirements may state what observation or contrast is needed, but not how Experiment Agent should execute it.
+8. Explain how the idea fulfills the original user task and why its mechanism or design is useful.
+9. Include user-requested design decisions and testable predictions, with rationale and validation criteria. Label proposed values and predictions; never invent observed results. Leave routine execution to Experiment Agent unless the user explicitly requests that detail.
 
 STRICT OUTPUT: valid JSON with the following schema (do not wrap in Markdown):
 {{
@@ -98,18 +98,11 @@ Never invent data that contradicts the retrieved memory or operators. Keep child
 
 
 CONCEPTUAL_SURPRISE_MCTS_IDEA_GENERATION_PROMPT = MCTS_IDEA_GENERATION_PROMPT.replace(
-    "5. Introduce one concrete scientific intervention compatible with the fixed profile. It may be a manipulable condition, mechanism-discriminating relation, measurement mapping, boundary condition, formal assumption/derivation/counterexample, intervention, or domain-native algorithmic mechanism. Training signals and model objectives are primary only when the profile and topic make them central.\n"
-    "6. Select one or more target gap IDs from the supplied seed context and explain how the child addresses them. If a seed is provisional or exploratory, keep the claim correspondingly qualified.\n"
-    "7. Prefer the **mechanism-commit-innovation** operator whenever it is applicable. If you choose a different operator, explicitly justify why mechanism-commit is unsuitable for that child and how the chosen edit fits the profile's contribution modes.\n"
-    "8. Inside each rationale, explicitly add \"Review bar: <pass/fail + reason>\" describing why expert reviewers would see it as a strong paper or what is missing.\n"
-    "9. Do not return experiment design, predicted results, sample sizes, statistical tests, instrument configurations, ablation plans, or failure-repair plans. Evidence requirements may state what observation or contrast is needed, but not how Experiment Agent should execute it.\n",
-    """5. Introduce one concrete scientific intervention compatible with the fixed profile. It may be a manipulable condition, mechanism-discriminating relation, measurement mapping, boundary condition, formal assumption/derivation/counterexample, experimental intervention, or domain-native algorithmic mechanism. Training signals and model objectives are primary only when the profile and topic make them central.
-6. For each child, first sharpen one local scientific thesis: repair a weak assumption, propose a better principle, or reframe the parent idea on the same method axis. The concrete mechanism should realize that conceptual move rather than replace it.
-7. Select one or more target gap IDs from the supplied seed context and keep provisional or exploratory claims qualified.
-8. Prefer the **mechanism-commit-innovation** operator whenever it is applicable. If you choose a different operator, explicitly justify why mechanism-commit is unsuitable for that child and how the chosen edit fits the profile's contribution modes.
-9. Inside each rationale, explicitly add "Review bar: <pass/fail + reason>" describing why expert reviewers would see it as a strong paper or what is missing.
-10. Do not return experiment design, predicted results, sample sizes, statistical tests, instrument configurations, ablation plans, or failure-repair plans. Evidence requirements may state what observation or contrast is needed, but not how Experiment Agent should execute it.
-""",
+    "5. Introduce one concrete scientific intervention compatible with the fixed profile.",
+    "5. For each child, first sharpen one local scientific thesis within the user's task: repair a weak assumption, "
+    "propose a better principle, or reframe the parent idea on the same method axis when that axis is user-constrained. "
+    "The concrete mechanism should realize that conceptual move rather than replace it. "
+    "Introduce one concrete scientific intervention compatible with the fixed profile.",
 ).replace(
     '"core_contribution": "focused statement of the new insight",',
     '"core_contribution": "focused statement of the new thesis, principle, reframing, or mechanism insight",',

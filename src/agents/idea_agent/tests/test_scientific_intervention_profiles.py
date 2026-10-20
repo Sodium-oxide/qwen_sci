@@ -182,7 +182,7 @@ def test_explicit_algorithm_component_is_preserved_for_non_cs_input() -> None:
     assert state.components == ["backbone_model"]
 
 
-def test_non_cs_legacy_algorithm_component_is_dropped_without_explicit_algorithm_idea() -> None:
+def test_non_cs_component_name_alone_does_not_authorize_removal() -> None:
     state = build_root_state(
         "materials fixture",
         {
@@ -192,11 +192,11 @@ def test_non_cs_legacy_algorithm_component_is_dropped_without_explicit_algorithm
         CaptureIdeaState,
     )
 
-    assert "backbone_model" not in state.components
+    assert "backbone_model" in state.components
     assert "candidate_mechanism" in state.components
 
 
-def test_non_cs_simulation_word_does_not_count_as_explicit_algorithm_semantics() -> None:
+def test_non_cs_simulation_keeps_supplied_components_for_semantic_review() -> None:
     state = build_root_state(
         "materials simulation fixture",
         {
@@ -207,7 +207,7 @@ def test_non_cs_simulation_word_does_not_count_as_explicit_algorithm_semantics()
         CaptureIdeaState,
     )
 
-    assert "backbone_model" not in state.components
+    assert "backbone_model" in state.components
     assert "candidate_mechanism" in state.components
 
 

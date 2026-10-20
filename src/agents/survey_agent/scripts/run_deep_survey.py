@@ -27,6 +27,7 @@ from modules.work_collector import WorkCollector
 from modules.database import Database
 from modules.work_analyzer import WorkAnalyzer
 from modules.survey_generator import SurveyGenerator
+from modules.survey_delivery import resume_survey_delivery, run_survey_delivery
 from modules.judge import Judge
 from utils.config_utils import merge_with_default_survey_config
 from modules.code_collector import CodeCollector, CodeAnalyzer
@@ -39,6 +40,9 @@ logger = get_logger("Deep Survey")
 
 
 def run_pipeline(config, work_collector, database, work_analyzer, survey_generator, judge, code_collector, code_analyzer, code_report_generator):
+    resumed = resume_survey_delivery(survey_generator, judge)
+    if resumed is not None:
+        return resumed
     # step 1: related work collection
     logger.info("Collecting related work...")
 
@@ -173,30 +177,10 @@ def run_pipeline(config, work_collector, database, work_analyzer, survey_generat
     logger.info("Survey generation completed.")
     logger.info("Drafting survey content...")
     # generate draft
-    draft = survey_generator.draft_survey(
-        intra_analysis_results, inter_analysis_results, outline #YZY MODIFY from inter_cluster_analysis
+    return run_survey_delivery(
+        survey_generator, judge, intra_analysis_results, inter_analysis_results,
+        outline, code_report, env_report,
     )
-    logger.info("Survey drafting completed.")
-
-    # if config.BasicInfo.debug:
-    #     logger.info(f'DRAFT: {draft}')
-
-    logger.info("Reviewing and revising survey draft...")
-    draft = survey_generator.review_and_revise_survey_in_parts(draft, outline, code_report, env_report)
-    logger.info("Reviewing and revising survey completed.")
-
-    # print(draft)
-    logger.info("Survey drafting completed.")
-    logger.info("Refining survey draft...")
-    survey, references = survey_generator.refine_draft(draft, code_report, env_report)
-    survey_generator.save_survey(survey, references)
-    logger.info("Survey refinement completed.")
-
-    logger.info("Evaluating survey...")
-    result, reason = judge.evaluate(survey, references)
-    logger.info("Survey evaluation completed.")
-
-    return result, reason
 
 
 

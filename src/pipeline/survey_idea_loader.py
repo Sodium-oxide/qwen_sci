@@ -150,6 +150,7 @@ class SurveyIdeaContext:
             "project_context_fingerprint": self.project_context_fingerprint,
             "defect_tags": list(self.defect_tags),
             "legacy": self.legacy,
+            "search_history": dict(self.survey_json.get("search_history") or {}),
         }
         if self.multimodal_evidence_projection:
             payload["multimodal_evidence_projection"] = dict(
@@ -233,6 +234,9 @@ def load_survey_idea_context(source: str | Path) -> SurveyIdeaContext:
     ledger = _read_json(ledger_path, "Survey Gap Ledger")
     project_context = _read_json(context_path, "Survey project context")
     survey_json = _read_json(survey_json_path, "Survey JSON")
+    if "search_history" in _mapping(manifest.get("artifacts")):
+        history_path = _artifact_path(base_dir, manifest, "search_history")
+        survey_json["search_history"] = _read_json(history_path, "Survey search history")
     try:
         markdown = markdown_path.read_text(encoding="utf-8")
     except OSError as exc:

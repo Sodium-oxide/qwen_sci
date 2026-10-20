@@ -32,8 +32,17 @@ from modules.pe import (
 from modules.survey_integrity import (
     cited_passages,
     paper_role,
+    prose_sentence_spans,
     repeated_passages,
     strip_claim_trace_metadata,
+)
+from modules.survey_review import (
+    AUDIT_VERSION,
+    ReviewStopped,
+    fingerprint,
+    freeze_paper_evidence,
+    review_runtime,
+    select_evidence,
 )
 from modules.refine_agent import (
     agentic_revise_survey_whole,
@@ -41,7 +50,7 @@ from modules.refine_agent import (
     apply_revision_to_text,
     validate_revision_payload,
 )
-from typing import Any, Dict, List, Mapping, Sequence, Union
+from typing import Any, Callable, Dict, List, Mapping, Sequence, Union
 from utils.err_info import CumulativeErrorInfo
 from utils.utils import extract_json
 import textwrap
@@ -1588,18 +1597,18 @@ class SurveyGenerator:
             "max_improvements": nonnegative_int(
                 "evidence_bounded_section_quality_max_improvements", 2
             ),
-            "review_retry": max(
+            "review_retry": min(2, max(
                 1,
                 nonnegative_int(
                     "evidence_bounded_section_quality_review_retry", 2
                 ),
-            ),
-            "revise_retry": max(
+            )),
+            "revise_retry": min(2, max(
                 1,
                 nonnegative_int(
                     "evidence_bounded_section_quality_revise_retry", 2
                 ),
-            ),
+            )),
             "max_suggestions": max(
                 1, self._positive_int(getattr(generator_config, "reviewer_max_suggestions", 5), 5)
             ),
@@ -1615,10 +1624,25 @@ class SurveyGenerator:
     def _record_integrity(self, category: str, finding: Mapping[str, Any]) -> None:
         if not hasattr(self, "survey_integrity_artifact"):
             self.survey_integrity_artifact = {"issues": [], "claim_support": []}
-        self.survey_integrity_artifact.setdefault(category, []).append(dict(finding))
+        findings = self.survey_integrity_artifact.setdefault(category, [])
+        if dict(finding) not in findings:
+            findings.append(dict(finding))
+
+    def _begin_review_stage(self, draft: Mapping[str, Any], stage: str):
+        runtime = review_runtime(self)
+        for section in draft.get("section_drafts", []):
+            for paper_id in self._evidence_bounded_section_cited_paper_ids(str(section))[0]:
+                freeze_paper_evidence(self, paper_id)
+        runtime.stage, runtime.section, runtime.issue_id = stage, 0, "-"
+        runtime.progress("stage_started")
+        return runtime
+
+    def _review_audit_only(self) -> bool:
+        return str(getattr(self.config.ModuleInfo.SurveyGenerator, "review_mode", "repair")).casefold() == "audit_only"
 
     def _audit_section_claim_support(
-        self, section_text: str, *, section_index: int, stage: str
+        self, section_text: str, *, section_index: int, stage: str,
+        claim_passages: Sequence[str] | None = None,
     ) -> list[dict[str, Any]]:
         if not self._integrity_enabled("claim_support_audit_enabled"):
             return []
@@ -1634,14 +1658,14 @@ class SurveyGenerator:
                         "section": section_index, "excerpt": paragraph[:300],
                         "resolution": "manual_review",
                     })
+        runtime = review_runtime(self)
+        runtime.stage, runtime.section = stage, section_index
         requests: list[dict[str, Any]] = []
         source_texts: dict[str, str] = {}
-        skipped_pairs = 0
-        source_cache = getattr(self, "_claim_audit_source_cache", None)
-        if source_cache is None:
-            source_cache = {}
-            self._claim_audit_source_cache = source_cache
-        all_passages = cited_passages(section_text, limit=10000)
+        assessments: list[dict[str, Any]] = []
+        source_cache = getattr(self, "_claim_audit_source_cache", {})
+        self._claim_audit_source_cache = source_cache
+        all_passages = list(claim_passages) if claim_passages is not None else cited_passages(section_text, limit=10000)
         if len(all_passages) > 24:
             self._record_integrity("issues", {
                 "kind": "claim_audit_sampling", "section": section_index,
@@ -1656,38 +1680,44 @@ class SurveyGenerator:
                     "section": section_index, "claim": claim_text, "reason": error,
                     "resolution": "manual_review",
                 })
-            for paper_id in sorted(paper_ids):
-                if len(requests) >= 36:
-                    skipped_pairs += 1
-                    continue
-                if paper_id not in source_texts:
-                    if paper_id not in source_cache:
-                        parts: list[str] = []
-                        try:
-                            title, abstract = self.work_analyzer.work_collector.get_paper_title_abstract(paper_id)
-                            parts.extend((str(title or ""), str(abstract or "")))
-                        except Exception as exc:
-                            self.logger.warning("Claim audit abstract unavailable for %s: %s", paper_id, exc)
-                        try:
-                            parts.append(str(self.work_analyzer.get_paper_keynote(paper_id) or ""))
-                        except Exception as exc:
-                            self.logger.warning("Claim audit keynote unavailable for %s: %s", paper_id, exc)
-                        source_cache[paper_id] = "\n".join(parts)[:2400]
-                    source_texts[paper_id] = source_cache[paper_id]
-                requests.append({
-                    "claim_id": len(requests) + 1,
-                    "claim": claim_text,
-                    "paper_id": paper_id,
-                    "evidence_role": paper_role(self.survey_evidence_plan, paper_id),
-                    "source_excerpt": source_texts[paper_id],
-                })
-        if skipped_pairs:
-            self._record_integrity("issues", {
-                "kind": "claim_audit_sampling", "section": section_index,
-                "stage": stage, "unaudited_citation_pairs": skipped_pairs,
-                "resolution": "manual_review",
-            })
-        if not requests:
+            if not paper_ids:
+                continue
+            packets = {paper_id: freeze_paper_evidence(self, paper_id) for paper_id in sorted(paper_ids)}
+            selected = {paper_id: select_evidence(packet, claim_text) for paper_id, packet in packets.items()}
+            excerpts = {paper_id: "\n\n".join(item["text"] for item in fragments)
+                        for paper_id, fragments in selected.items()}
+            for paper_id, excerpt in excerpts.items():
+                if excerpt and excerpt not in source_texts.get(paper_id, ""):
+                    source_texts[paper_id] = "\n\n".join(filter(None, (source_texts.get(paper_id), excerpt)))
+            source_cache.update(excerpts)
+            cache_key = fingerprint({"claim": claim_text, "papers": sorted(paper_ids),
+                                     "packets": {key: value["version"] for key, value in packets.items()},
+                                     "plan": self.survey_evidence_plan, "audit": AUDIT_VERSION})
+            request = {
+                "claim_id": len(requests) + 1, "claim": claim_text,
+                "paper_id": sorted(paper_ids)[0], "paper_ids": sorted(paper_ids),
+                "evidence_role": {paper_id: paper_role(self.survey_evidence_plan, paper_id)
+                                  for paper_id in sorted(paper_ids)},
+                "source_status": {paper_id: packet["status"] for paper_id, packet in packets.items()},
+                "source_locations": {paper_id: [{key: value for key, value in item.items() if key != "text"}
+                                                 for item in fragments]
+                                     for paper_id, fragments in selected.items()}, "cache_key": cache_key,
+            }
+            cached = runtime.state["audit_cache"].get(cache_key)
+            if cached is not None:
+                assessments.append({**cached, "section": section_index, "stage": stage, "cached": True})
+            elif runtime.terminal(claim_text):
+                previous = runtime.state["issues"][runtime.issue_key(claim_text)]
+                assessments.append({**request, "section": section_index, "stage": stage,
+                                    "verdict": "uncertain", "evidence_quote": "",
+                                    "reason": previous["reason"], "status": previous["status"], "cached": True})
+            elif not any(excerpts.values()):
+                assessments.append({**request, "section": section_index, "stage": stage,
+                                    "verdict": "uncertain", "evidence_quote": "",
+                                    "reason": "No frozen source excerpt is available.", "status": "needs_evidence"})
+            else:
+                requests.append(request)
+        if not requests and not assessments:
             cited_ids, _ = self._evidence_bounded_section_cited_paper_ids(section_text)
             if cited_ids:
                 self._record_integrity("issues", {
@@ -1702,24 +1732,34 @@ class SurveyGenerator:
                     "resolution": "manual_review",
                 })
             return []
-        audit_input = {
-            "claims": [
-                {key: value for key, value in request.items() if key != "source_excerpt"}
-                for request in requests
-            ],
-            "sources": source_texts,
-        }
-        prompt = SURVEY_CLAIM_SUPPORT_AUDIT.format(
-            claims_and_sources=json.dumps(audit_input, ensure_ascii=False)
-        )
-        try:
-            payload = extract_json(self.chat_agent.remote_chat(
-                prompt, temperature=0.0, response_format="json_object"
-            ))
-            raw_assessments = payload.get("assessments", []) if isinstance(payload, Mapping) else []
-        except Exception as exc:
-            self.logger.warning("Claim support audit failed for section %s: %s", section_index, exc)
-            raw_assessments = []
+        raw_assessments = []
+        stopped_requests = {}
+        if requests:
+            batch_size = 8
+            for batch_start in range(0, len(requests), batch_size):
+                batch = requests[batch_start:batch_start + batch_size]
+                runtime.issue_id = fingerprint({"claims": [item["cache_key"] for item in batch], "stage": stage})
+                batch_papers = {paper_id for request in batch for paper_id in request["paper_ids"]}
+                audit_input = {
+                    "claims": [{key: value for key, value in request.items() if key != "cache_key"}
+                               for request in batch],
+                    "sources": {paper_id: source_texts.get(paper_id, "") for paper_id in sorted(batch_papers)},
+                    "evidence_plan": self.survey_evidence_plan,
+                }
+                prompt = SURVEY_CLAIM_SUPPORT_AUDIT.format(
+                    claims_and_sources=json.dumps(audit_input, ensure_ascii=False)
+                )
+                try:
+                    payload = extract_json(runtime.call(prompt, temperature=0.0, response_format="json_object"))
+                    responses = payload.get("assessments", []) if isinstance(payload, Mapping) else []
+                    if isinstance(responses, list):
+                        raw_assessments.extend(responses)
+                except Exception as exc:
+                    affected = requests[batch_start:] if isinstance(exc, ReviewStopped) else batch
+                    stopped_requests.update({request["claim_id"]: exc for request in affected})
+                    runtime.progress(f"claim_audit_stopped: {exc}")
+                    if isinstance(exc, ReviewStopped):
+                        break
         keyed = {}
         for item in raw_assessments:
             if not isinstance(item, Mapping):
@@ -1728,47 +1768,124 @@ class SurveyGenerator:
                 claim_id = int(item.get("claim_id"))
             except (TypeError, ValueError):
                 continue
-            keyed[(claim_id, item.get("paper_id"))] = item
-        assessments: list[dict[str, Any]] = []
+            keyed[claim_id] = item
         for request in requests:
-            response = keyed.get((request["claim_id"], request["paper_id"]), {})
+            stopped = stopped_requests.get(request["claim_id"])
+            response = keyed.get(request["claim_id"], {})
             verdict = str(response.get("verdict") or "uncertain").strip().lower()
             quote = str(response.get("evidence_quote") or "").strip()
-            source = request["source_excerpt"]
-            if verdict == "supported" and (
-                not quote or re.sub(r"\s+", " ", quote) not in re.sub(r"\s+", " ", source)
-            ):
+            source = source_texts.get(request["paper_id"], "")
+            subclaims = response.get("subclaims", [])
+            if isinstance(subclaims, list) and subclaims:
+                verdict = self._validate_audit_subclaims(request, subclaims, source_texts)
+            elif verdict == "supported":
+                if len(request["paper_ids"]) > 1 or not quote or re.sub(r"\s+", " ", quote) not in re.sub(r"\s+", " ", source):
+                    verdict = "uncertain"
+            if response.get("paper_id", request["paper_id"]) != request["paper_id"]:
+                verdict = "uncertain"
+            if "subclaims" in response and (not isinstance(subclaims, list) or not subclaims):
                 verdict = "uncertain"
             if verdict not in {"supported", "unsupported", "uncertain"}:
                 verdict = "uncertain"
             finding = {
                 "section": section_index, "stage": stage,
-                "claim": request["claim"], "paper_id": request["paper_id"],
+                "claim": request["claim"], "paper_id": request["paper_id"], "paper_ids": request["paper_ids"],
                 "evidence_role": request["evidence_role"], "verdict": verdict,
                 "evidence_quote": quote if verdict == "supported" else "",
                 "reason": str(response.get("reason") or "No conclusive source match."),
+                "claim_type": response.get("claim_type", "fact"), "subclaims": subclaims,
+                "source_status": request["source_status"], "source_locations": request["source_locations"],
+                "status": "needs_evidence" if verdict == "uncertain" else "assessed",
             }
+            if stopped is not None:
+                finding.update(status=getattr(stopped, "status", "exhausted"), reason=str(stopped))
             assessments.append(finding)
+            if stopped is None and response:
+                runtime.state["audit_cache"][request["cache_key"]] = finding
+        for finding in assessments:
             self._record_integrity("claim_support", finding)
-            if verdict != "supported":
+            if finding["verdict"] != "supported":
+                if finding["verdict"] == "uncertain":
+                    runtime.finish([finding["claim"]], finding.get("status", "needs_evidence"), finding["reason"])
                 self._record_integrity("issues", {
                     "kind": "claim_support", **finding,
                     "resolution": "manual_review" if stage == "final" else "reject_revision",
                 })
+        self._last_claim_assessments = assessments
+        runtime.persist()
         return assessments
 
-    def _evidence_bounded_section_allowed_paper_ids(
-        self, section_outline: Mapping[str, Any] | None
-    ) -> set[str]:
-        """Return the evidence-plan papers assigned to one immutable section."""
+    def _validate_audit_subclaims(self, request, subclaims, sources) -> str:
+        def normalized(text):
+            return re.sub(r"[^\w]", "", re.sub(r"<[^<>]+>", "", str(text))).casefold()
 
-        section = self._as_mapping(section_outline)
-        candidates: list[str] = []
-        for unit in [section, *(section.get("subsections") or [])]:
-            if isinstance(unit, Mapping):
-                candidates.extend(self._as_paper_ids(unit.get("papers_to_use")))
-        permitted = self._permitted_evidence_plan_paper_ids()
-        return {paper_id for paper_id in candidates if paper_id in permitted}
+        if not all(isinstance(item, Mapping) and isinstance(item.get("text"), str) for item in subclaims):
+            return "uncertain"
+        if normalized("".join(item["text"] for item in subclaims)) != normalized(request["claim"]):
+            return "uncertain"
+        verdicts = []
+        for item in subclaims:
+            verdict = item.get("verdict", "uncertain")
+            claim_type = item.get("claim_type", "fact")
+            if not isinstance(verdict, str):
+                verdict = "uncertain"
+            if not isinstance(claim_type, str) or claim_type not in {"fact", "synthesis", "evidence_coverage"}:
+                verdict = "uncertain"
+            if verdict == "supported" and claim_type == "evidence_coverage":
+                identifier = item.get("sub_hypothesis_id")
+                entry = next((entry for entry in self.survey_evidence_plan.get("subhypotheses", [])
+                              if entry.get("sub_hypothesis_id") == identifier), None)
+                ledger_quote = item.get("ledger_quote")
+                if not entry or not isinstance(ledger_quote, str) or not ledger_quote or ledger_quote not in json.dumps(entry, ensure_ascii=False):
+                    verdict = "uncertain"
+            elif verdict == "supported":
+                evidence = item.get("evidence", [])
+                if not isinstance(evidence, list) or not evidence:
+                    verdict = "uncertain"
+                else:
+                    for support in evidence:
+                        if not isinstance(support, Mapping):
+                            verdict = "uncertain"
+                            break
+                        paper_id, quote = support.get("paper_id"), support.get("quote")
+                        if paper_id not in request["paper_ids"] or not isinstance(quote, str) or not quote or re.sub(r"\s+", " ", quote) not in re.sub(r"\s+", " ", sources.get(paper_id, "")):
+                            verdict = "uncertain"
+            verdicts.append(verdict if verdict in {"supported", "unsupported", "uncertain"} else "uncertain")
+        return "unsupported" if "unsupported" in verdicts else "uncertain" if "uncertain" in verdicts else "supported"
+
+    def _revision_claim_support_errors(
+        self, section_text: str, *, section_index: int, stage: str,
+        original_section: str | None = None,
+    ) -> list[str]:
+        """Return source-specific feedback for the next sentence repair attempt."""
+
+        passages = None
+        if original_section is not None:
+            original_sentences = [original_section[start:end] for start, end in prose_sentence_spans(original_section)]
+            revised_sentences = [section_text[start:end] for start, end in prose_sentence_spans(section_text)]
+            passages = [" ".join(revised_sentences[new_start:new_end])
+                        for operation, _, _, new_start, new_end in SequenceMatcher(
+                            None, original_sentences, revised_sentences, autojunk=False
+                        ).get_opcodes() if operation != "equal" and new_start < new_end]
+            if not passages:
+                return []
+        assessments = self._audit_section_claim_support(
+            section_text, section_index=section_index, stage=stage, claim_passages=passages
+        )
+        self._last_claim_assessments = assessments
+        errors = [
+            f"Claim support is {item['verdict']} for paper {item['paper_id']}: "
+            f"{item['claim'][:260]} — {item['reason']}"
+            for item in assessments
+            if item["verdict"] != "supported"
+        ]
+        if (
+            self._integrity_enabled("claim_support_audit_enabled")
+            and self._evidence_bounded_section_cited_paper_ids("\n\n".join(passages) if passages is not None else section_text)[0]
+            and not assessments
+        ):
+            errors.append("No claim support assessment was returned for the cited sentences.")
+        return errors
 
     @staticmethod
     def _section_heading_signature(section_text: str) -> list[str]:
@@ -1817,10 +1934,12 @@ class SurveyGenerator:
         )
         generator_config = self.config.ModuleInfo.SurveyGenerator
         temperature = getattr(generator_config, "section_review_temperature", 0.2)
+        runtime = review_runtime(self)
+        runtime.issue_id = runtime.issue_key(section_text)
         for attempt in range(int(settings["review_retry"])):
             try:
                 payload = extract_json(
-                    self.chat_agent.remote_chat(
+                    runtime.call(
                         prompt,
                         temperature=temperature,
                         response_format="json_object",
@@ -1850,14 +1969,26 @@ class SurveyGenerator:
                     for suggestion in raw_suggestions
                     if str(suggestion).strip()
                 ][: int(settings["max_suggestions"])]
-                return {"scores": scores, "suggestions": suggestions}
+                raw_targets = payload.get("target_excerpts", [])
+                if not isinstance(raw_targets, list) or any(
+                    not isinstance(target, str) or not target.strip() or target not in section_text
+                    for target in raw_targets
+                ):
+                    raise ValueError("quality review targets must be verbatim excerpts from the section")
+                if suggestions and not raw_targets:
+                    raise ValueError("quality review suggestions must identify target_excerpts")
+                return {"scores": scores, "suggestions": suggestions, "target_excerpts": raw_targets}
+            except ReviewStopped as exc:
+                runtime.finish([section_text], exc.status, str(exc))
+                return None
             except Exception as exc:
                 self.logger.warning(
                     "Evidence-bounded quality review attempt %s/%s failed: %s",
                     attempt + 1,
                     settings["review_retry"],
-                    exc,
+                    str(exc)[:400],
                 )
+        runtime.finish([section_text], "exhausted", "Section quality review exhausted its format retry budget.")
         return None
 
     def _revise_evidence_bounded_section_quality(
@@ -1868,40 +1999,152 @@ class SurveyGenerator:
         suggestions: Sequence[str],
         section_word_cap: int,
         settings: Mapping[str, Any],
+        target_excerpts: Sequence[str],
+        validate_candidate: Callable[[str], list[str]] | None = None,
+        stage: str = "section_revision",
+        section_index: int = 0,
     ) -> str | None:
-        """Request a complete but citation-preserving bounded section revision."""
+        """Apply sentence patches, retrying with structural and evidence feedback."""
 
-        prompt = EVIDENCE_BOUNDED_SECTION_QUALITY_REVISE.format(
-            topic=self.config.BasicInfo.topic,
-            section_outline=self._format_section_outline(section_outline),
-            section_text=section_text,
-            suggestions="\n".join(f"- {suggestion}" for suggestion in suggestions),
-            section_word_cap=section_word_cap,
-        )
+        self._last_quality_revision_errors = []
+        runtime = review_runtime(self)
+        for paper_id in self._evidence_bounded_section_cited_paper_ids(section_text)[0]:
+            freeze_paper_evidence(self, paper_id)
+        runtime.stage, runtime.section = stage, section_index
+        _, baseline_errors = self._evidence_bounded_section_cited_paper_ids(section_text)
+        if baseline_errors:
+            self._last_quality_revision_errors = baseline_errors
+            runtime.finish([section_text], "permission_conflict", "Original citations cannot be resolved.")
+            return None
+        spans = prose_sentence_spans(section_text)
+        target_ranges: list[tuple[int, int]] = []
+        for excerpt in target_excerpts:
+            if not excerpt:
+                continue
+            for match in re.finditer(re.escape(excerpt), section_text):
+                target_ranges.append((match.start(), match.end()))
+        editable = {
+            index: (start, end)
+            for index, (start, end) in enumerate(spans, start=1)
+            if any(
+                start < target_end and end > target_start
+                for target_start, target_end in target_ranges
+            )
+        }
+        if not editable:
+            self._last_quality_revision_errors = ["No editable prose sentence matches the reported issue"]
+            self.logger.warning("No editable prose sentence matches the reported issue.")
+            runtime.finish(list(target_excerpts), "permission_conflict", self._last_quality_revision_errors[0])
+            return None
+        editable = {index: span for index, span in editable.items()
+                    if not runtime.terminal(section_text[span[0]:span[1]])}
+        if not editable:
+            self._last_quality_revision_errors = ["Unchanged issue already reached a terminal review state."]
+            runtime.progress("terminal_issue_skipped")
+            return None
+        targets = [section_text[start:end] for start, end in editable.values()]
+        runtime.issue_id = fingerprint([runtime.issue_key(text) for text in targets])
+        validation_errors: list[str] = []
+        seen_errors = set()
+        candidate_history = runtime.state.setdefault("candidates", {}).setdefault(runtime.issue_id, [])
         generator_config = self.config.ModuleInfo.SurveyGenerator
         temperature = getattr(generator_config, "section_revise_temperature", 0.2)
         for attempt in range(int(settings["revise_retry"])):
+            prompt = EVIDENCE_BOUNDED_SECTION_QUALITY_REVISE.format(
+                topic=self.config.BasicInfo.topic,
+                section_outline=self._format_section_outline(section_outline),
+                section_text=section_text,
+                editable_sentences=json.dumps([
+                    {"sentence_id": index, "text": section_text[start:end]}
+                    for index, (start, end) in editable.items()
+                ], ensure_ascii=False),
+                example_sentence_id=next(iter(editable)),
+                suggestions="\n".join(f"- {suggestion}" for suggestion in suggestions),
+                section_word_cap=section_word_cap,
+                validation_errors="\n".join(f"- {error}" for error in validation_errors) or "(None)",
+            )
             try:
                 payload = extract_json(
-                    self.chat_agent.remote_chat(
+                    runtime.call(
                         prompt,
                         temperature=temperature if attempt == 0 else 0.1,
                         response_format="json_object",
                     )
                 )
-                revised = (
-                    payload.get("revised_section") if isinstance(payload, Mapping) else None
+                replacements = payload.get("replacements") if isinstance(payload, Mapping) else None
+                if not isinstance(replacements, list):
+                    raise ValueError("quality revision must contain a 'replacements' list")
+                if not replacements:
+                    self._last_quality_revision_errors = ["Sentence repair returned no changes."]
+                    runtime.finish(targets, "no_change", self._last_quality_revision_errors[0])
+                    return None
+                patches: dict[int, tuple[int, int, str]] = {}
+                for replacement in replacements:
+                    if not isinstance(replacement, Mapping):
+                        raise ValueError("each sentence replacement must be an object")
+                    sentence_id = replacement.get("sentence_id")
+                    if type(sentence_id) is not int or sentence_id not in editable:
+                        raise ReviewStopped(f"sentence_id {sentence_id!r} is outside the editable sentences", "permission_conflict")
+                    if sentence_id in patches:
+                        raise ValueError(f"duplicate replacement for sentence_id {sentence_id}")
+                    new_text = replacement.get("new_text")
+                    if not isinstance(new_text, str):
+                        raise ValueError(f"sentence_id {sentence_id} must contain string 'new_text'")
+                    start, end = editable[sentence_id]
+                    if re.findall(r"<[^<>]+>", new_text) != re.findall(r"<[^<>]+>", section_text[start:end]):
+                        raise ValueError(f"citation tokens changed in sentence_id {sentence_id}")
+                    patches[sentence_id] = (start, end, new_text)
+                revised = section_text
+                for start, end, new_text in sorted(patches.values(), reverse=True):
+                    revised = revised[:start] + new_text + revised[end:]
+                if revised == section_text:
+                    self._last_quality_revision_errors = ["Sentence repair returned unchanged text."]
+                    runtime.finish(targets, "no_change", self._last_quality_revision_errors[0])
+                    return None
+                candidate_key = fingerprint(revised)
+                if candidate_key in candidate_history:
+                    self._last_quality_revision_errors = ["Repeated rejected candidate; review stopped without another audit."]
+                    runtime.finish(targets, "exhausted", self._last_quality_revision_errors[0])
+                    return None
+                candidate_history.append(candidate_key)
+                validation_errors = self._validate_evidence_bounded_section_quality_revision(
+                    original_section=section_text,
+                    revised_section=revised,
+                    section_word_cap=section_word_cap,
                 )
-                if not isinstance(revised, str) or not revised.strip():
-                    raise ValueError("quality revision must contain non-empty 'revised_section'")
-                return revised.strip()
+                if not validation_errors and validate_candidate is not None:
+                    self._last_claim_assessments = []
+                    validation_errors = validate_candidate(revised)
+                    unresolved = [item for item in getattr(self, "_last_claim_assessments", [])
+                                  if item.get("verdict") == "uncertain"]
+                    if unresolved:
+                        status = next((item["status"] for item in unresolved if item.get("status") in
+                                       {"budget_exhausted", "exhausted"}), "needs_evidence")
+                        raise ReviewStopped(" | ".join(validation_errors) or "Changed claim requires additional evidence.", status)
+                if validation_errors:
+                    raise ValueError(" | ".join(validation_errors))
+                runtime.state["accepted_modifications"] += 1
+                runtime.finish(targets, "revised", "sentence_patch_accepted")
+                return revised
+            except ReviewStopped as exc:
+                self._last_quality_revision_errors = [str(exc)]
+                runtime.finish(targets, exc.status, str(exc))
+                return None
             except Exception as exc:
+                validation_errors = [str(exc)]
+                self._last_quality_revision_errors = list(validation_errors)
                 self.logger.warning(
-                    "Evidence-bounded quality revision attempt %s/%s failed: %s",
+                    "Survey review stage=%s section=%s issue=%s revision attempt %s/%s failed: %s",
+                    stage, section_index, runtime.issue_id[:12],
                     attempt + 1,
                     settings["revise_retry"],
-                    exc,
+                    str(exc)[:400],
                 )
+                error_key = fingerprint(validation_errors)
+                if error_key in seen_errors:
+                    break
+                seen_errors.add(error_key)
+        runtime.finish(targets, "exhausted", " | ".join(self._last_quality_revision_errors))
         return None
 
     def _validate_evidence_bounded_section_quality_revision(
@@ -1909,12 +2152,11 @@ class SurveyGenerator:
         *,
         original_section: str,
         revised_section: str,
-        allowed_paper_ids: set[str],
         section_word_cap: int,
     ) -> list[str]:
         """Reject unsafe quality rewrites while retaining the last valid draft."""
 
-        errors: list[str] = self._candidate_comparison_errors(revised_section)
+        errors: list[str] = []
         if self._section_heading_signature(revised_section) != self._section_heading_signature(
             original_section
         ):
@@ -1934,23 +2176,16 @@ class SurveyGenerator:
             errors.extend(f"original citation invalid: {error}" for error in original_errors)
         if revised_errors:
             errors.extend(f"revised citation invalid: {error}" for error in revised_errors)
-        if not original_errors and not revised_errors:
-            if set(original_ids) != set(revised_ids):
-                errors.append("citation paper set changed during quality revision")
-            unauthorized = set(revised_ids) - allowed_paper_ids
-            if unauthorized:
-                errors.append(
-                    "citation is outside this section's evidence-plan whitelist: "
-                    + ", ".join(sorted(unauthorized))
-                )
+        if not original_errors and not revised_errors and set(original_ids) != set(revised_ids):
+            errors.append("citation paper set changed during quality revision")
         return errors
 
     def _improve_evidence_bounded_sections(self, draft: dict) -> dict:
         """Run bounded quality improvement without making survey completion depend on it.
 
         Unlike the legacy free-form revisor, this path has no external RAG and
-        accepts a rewritten section only after structural, citation, whitelist,
-        and length checks.  Any review/revision failure leaves the last safe
+        accepts a rewritten section only after structural, citation, and length
+        checks.  Any review/revision failure leaves the last safe
         text in place and merely emits a warning.
         """
 
@@ -1981,27 +2216,31 @@ class SurveyGenerator:
             budget["survey_max_words"] / max(1, budget["section_count"])
         )
         revised_sections = list(sections)
+        runtime = self._begin_review_stage(draft, "section_quality")
+        checkpoint = getattr(self, "_survey_checkpoint", None)
         for index, original_section in enumerate(sections):
+            saved = checkpoint.state.get("quality_sections", {}).get(str(index), {}) if checkpoint is not None else {}
+            if (saved.get("completed") or saved.get("terminal")) and original_section in (saved["original"], saved["text"]) and saved.get("evidence_version", runtime.evidence_version()) == runtime.evidence_version():
+                revised_sections[index] = saved["text"]
+                for issue in saved.get("issues", []):
+                    self._record_integrity("issues", issue)
+                continue
+            issues_before = len(getattr(self, "survey_integrity_artifact", {}).get("issues", []))
             section_outline = (
                 outline_sections[index] if index < len(outline_sections) else {}
             )
-            allowed_paper_ids = self._evidence_bounded_section_allowed_paper_ids(
-                section_outline
-            )
-            original_ids, original_citation_errors = (
+            _, original_citation_errors = (
                 self._evidence_bounded_section_cited_paper_ids(original_section)
             )
             baseline_errors = [
                 f"original citation invalid: {error}"
                 for error in original_citation_errors
             ]
-            baseline_unauthorized = set(original_ids) - allowed_paper_ids
-            if baseline_unauthorized:
-                baseline_errors.append(
-                    "original citation is outside this section's evidence-plan "
-                    "whitelist: " + ", ".join(sorted(baseline_unauthorized))
-                )
             if baseline_errors:
+                self._record_integrity("issues", {
+                    "kind": "section_quality", "section_index": index + 1,
+                    "reason": " | ".join(baseline_errors), "resolution": "manual_review",
+                })
                 self.logger.warning(
                     "Skipping quality revision for section %s because its existing "
                     "citation boundary cannot be established: %s",
@@ -2012,6 +2251,14 @@ class SurveyGenerator:
 
             current_section = original_section
             accepted_improvements = 0
+            previous_scores = None
+            runtime.stage, runtime.section = "section_quality", index + 1
+            if runtime.terminal(original_section):
+                self._record_integrity("issues", {
+                    "kind": "section_quality", "section_index": index + 1,
+                    "reason": "Unchanged section review already exhausted its budget.", "resolution": "manual_review",
+                })
+                continue
             for review_round in range(int(settings["max_improvements"]) + 1):
                 review = self._review_evidence_bounded_section_quality(
                     section_text=current_section,
@@ -2023,6 +2270,10 @@ class SurveyGenerator:
                     settings=settings,
                 )
                 if review is None:
+                    self._record_integrity("issues", {
+                        "kind": "section_quality", "section_index": index + 1,
+                        "reason": "Section quality review failed after retries", "resolution": "manual_review",
+                    })
                     self.logger.warning(
                         "Section %s quality could not be scored; retaining its last "
                         "safe version without blocking the survey.",
@@ -2049,7 +2300,23 @@ class SurveyGenerator:
                         scores,
                     )
                     break
+                if previous_scores is not None and all(
+                    score <= previous_scores.get(dimension, score) for dimension, score in scores.items()
+                ):
+                    self._record_integrity("issues", {
+                        "kind": "section_quality", "section_index": index + 1,
+                        "reason": "Quality scores did not improve after the accepted sentence patch.",
+                        "resolution": "manual_review",
+                    })
+                    runtime.finish([current_section], "exhausted", "quality_scores_stalled")
+                    break
+                previous_scores = scores
                 if review_round >= int(settings["max_improvements"]):
+                    self._record_integrity("issues", {
+                        "kind": "section_quality", "section_index": index + 1,
+                        "reason": "Section remains below quality target: " + ", ".join(low_dimensions),
+                        "resolution": "manual_review",
+                    })
                     self.logger.warning(
                         "Section %s remains below the %.1f quality target after %s "
                         "accepted improvement(s), low dimensions=%s, scores=%s; "
@@ -2062,58 +2329,81 @@ class SurveyGenerator:
                     )
                     break
                 suggestions = review["suggestions"]
+                if self._review_audit_only():
+                    self._record_integrity("issues", {
+                        "kind": "section_quality", "section_index": index + 1,
+                        "reason": "Quality target unmet; review_mode=audit_only retains the current text.",
+                        "resolution": "manual_review",
+                    })
+                    break
                 if not suggestions:
+                    self._record_integrity("issues", {
+                        "kind": "section_quality", "section_index": index + 1,
+                        "reason": "Quality target unmet; review supplied no safe sentence repair", "resolution": "manual_review",
+                    })
                     self.logger.warning(
                         "Section %s is below the quality target but has no safe "
                         "revision suggestion; retaining its current version.",
                         index + 1,
                     )
                     break
+
+                def validate_quality_candidate(candidate: str) -> list[str]:
+                    return self._revision_claim_support_errors(
+                        candidate, section_index=index + 1, stage="section_revision",
+                        original_section=current_section,
+                    )
+
                 candidate = self._revise_evidence_bounded_section_quality(
                     section_text=current_section,
                     section_outline=section_outline,
                     suggestions=suggestions,
                     section_word_cap=section_word_cap,
                     settings=settings,
+                    target_excerpts=review["target_excerpts"],
+                    validate_candidate=validate_quality_candidate,
+                    stage="section_revision", section_index=index + 1,
                 )
                 if candidate is None:
+                    self._record_integrity("issues", {
+                        "kind": "section_quality", "section_index": index + 1,
+                        "reason": "Sentence repair failed validation after retries: " + " | ".join(
+                            getattr(self, "_last_quality_revision_errors", [])
+                        ), "resolution": "manual_review",
+                    })
                     self.logger.warning(
                         "Section %s quality revision failed; retaining its last safe "
                         "version without blocking the survey.",
                         index + 1,
                     )
                     break
-                revision_errors = self._validate_evidence_bounded_section_quality_revision(
-                    original_section=original_section,
-                    revised_section=candidate,
-                    allowed_paper_ids=allowed_paper_ids,
-                    section_word_cap=section_word_cap,
-                )
-                if revision_errors:
-                    self.logger.warning(
-                        "Discarding unsafe quality revision for section %s: %s. "
-                        "Retaining its last safe version without blocking the survey.",
-                        index + 1,
-                        " | ".join(revision_errors),
-                    )
-                    break
-                support_assessments = self._audit_section_claim_support(
-                    candidate, section_index=index + 1, stage="section_revision"
-                )
-                if (
-                    any(item["verdict"] != "supported" for item in support_assessments)
-                    or self._integrity_enabled("claim_support_audit_enabled")
-                    and self._evidence_bounded_section_cited_paper_ids(candidate)[0]
-                    and not support_assessments
-                ):
-                    self.logger.warning(
-                        "Discarding section %s revision with unverified claim support.",
-                        index + 1,
-                    )
+                if candidate == current_section:
+                    self._record_integrity("issues", {
+                        "kind": "section_quality", "section_index": index + 1,
+                        "reason": "Quality target unmet; sentence repair returned unchanged text",
+                        "resolution": "manual_review",
+                    })
                     break
                 current_section = candidate
                 accepted_improvements += 1
             revised_sections[index] = current_section
+            if checkpoint is not None:
+                new_issues = getattr(self, "survey_integrity_artifact", {}).get("issues", [])[issues_before:]
+                checkpoint.state.setdefault("quality_sections", {})[str(index)] = {
+                    "original": original_section, "text": current_section,
+                    "completed": not any(issue.get("resolution") == "manual_review" for issue in new_issues),
+                    "terminal": any(issue.get("status") in {"exhausted", "needs_evidence", "permission_conflict", "no_change", "budget_exhausted"}
+                                    and issue.get("section") == index + 1 for issue in runtime.state["issues"].values()),
+                    "evidence_version": runtime.evidence_version(), "issues": new_issues,
+                }
+                saved_draft = {
+                    **draft, "section_drafts": list(revised_sections),
+                    "full_draft": str(draft.get("title", "")) + "\n\n" + "\n\n".join(revised_sections),
+                }
+                if len(saved_draft["full_draft"].split()) <= budget["survey_max_words"]:
+                    checkpoint.save_draft(saved_draft)
+                else:
+                    checkpoint.persist()
 
         title = draft.get("title", self.config.BasicInfo.topic + " Survey")
         def draft_text_for(candidate_sections: Sequence[str]) -> str:
@@ -2138,6 +2428,13 @@ class SurveyGenerator:
                 changed_index + 1,
             )
             revised_sections[changed_index] = sections[changed_index]
+            if checkpoint is not None:
+                checkpoint.state.get("quality_sections", {}).pop(str(changed_index), None)
+                self._record_integrity("issues", {
+                    "kind": "section_quality", "section_index": changed_index + 1,
+                    "reason": "Quality revision exceeded the total word budget; previous text retained",
+                    "resolution": "manual_review",
+                })
 
         draft["section_drafts"] = revised_sections
         draft["full_draft"] = draft_text_for(revised_sections)
@@ -2152,23 +2449,32 @@ class SurveyGenerator:
         sections = [str(section or "") for section in draft.get("section_drafts", [])]
         if not sections:
             return draft
+        runtime = self._begin_review_stage(draft, "consistency")
         issues = repeated_passages(sections)
         compact_sections = [
             {"section": index + 1, "text": section}
             for index, section in enumerate(sections)
         ]
+        consistency_key = fingerprint({"sections": sections, "evidence": runtime.evidence_version(),
+                                       "audit": AUDIT_VERSION})
         try:
-            payload = extract_json(self.chat_agent.remote_chat(
-                SURVEY_CONSISTENCY_AUDIT.format(
-                    section_texts=json.dumps(compact_sections, ensure_ascii=False)
-                ),
-                temperature=0.0,
-                response_format="json_object",
-            ))
+            payload = runtime.state.setdefault("consistency_cache", {}).get(consistency_key)
+            if payload is None:
+                payload = extract_json(runtime.call(
+                    SURVEY_CONSISTENCY_AUDIT.format(
+                        section_texts=json.dumps(compact_sections, ensure_ascii=False)
+                    ),
+                    temperature=0.0,
+                    response_format="json_object",
+                ))
             contradictions = payload.get("contradictions", []) if isinstance(payload, Mapping) else []
             repetitions = payload.get("repetitions", []) if isinstance(payload, Mapping) else []
             if not isinstance(contradictions, list) or not isinstance(repetitions, list):
                 raise ValueError("Consistency audit must return contradiction and repetition lists.")
+            if not isinstance(payload, Mapping):
+                raise ValueError("Consistency audit must return a JSON object.")
+            runtime.state["consistency_cache"][consistency_key] = payload
+            runtime.persist()
         except Exception as exc:
             self.logger.warning("Cross-section consistency audit failed: %s", exc)
             contradictions = []
@@ -2204,8 +2510,8 @@ class SurveyGenerator:
                     "kind": kind,
                     "source_section": source_index + 1,
                     "target_section": target_index + 1,
-                    "source_excerpt": source_excerpt[:300],
-                    "target_excerpt": target_excerpt[:300],
+                    "source_excerpt": source_excerpt,
+                    "target_excerpt": target_excerpt,
                     "reason": str(raw_issue.get("reason") or ""),
                 })
         outline = self._as_mapping(draft.get("outline"))
@@ -2216,6 +2522,9 @@ class SurveyGenerator:
         for issue in issues[:8]:
             target_index = issue["target_section"] - 1
             section_outline = outlines[target_index] if target_index < len(outlines) else {}
+            if self._review_audit_only():
+                self._record_integrity("issues", {**issue, "resolution": "manual_review"})
+                continue
             if issue["kind"] == "cross_section_repetition":
                 suggestion = (
                     "Remove or substantially condense the repeated material beginning "
@@ -2229,51 +2538,48 @@ class SurveyGenerator:
                     f"versus '{issue['target_excerpt'][:150]}'. Narrow or qualify "
                     "the latter claim without adding unsupported facts."
                 )
+            original_section = sections[target_index]
+
+            def validate_consolidation_candidate(candidate: str) -> list[str]:
+                errors = []
+                if candidate.count(issue["target_excerpt"]) >= original_section.count(issue["target_excerpt"]):
+                    errors.append("The flagged passage remains unchanged.")
+                assembled = str(draft.get("title") or "") + "\n\n" + "\n\n".join(
+                    candidate if position == target_index else text
+                    for position, text in enumerate(sections)
+                )
+                if len(assembled.split()) > budget["survey_max_words"]:
+                    errors.append("Revised survey exceeds the word budget.")
+                if not errors:
+                    errors.extend(self._revision_claim_support_errors(
+                        candidate, section_index=target_index + 1, stage="consolidation",
+                        original_section=original_section,
+                    ))
+                return errors
+
             candidate = self._revise_evidence_bounded_section_quality(
                 section_text=sections[target_index],
                 section_outline=section_outline,
                 suggestions=[suggestion],
                 section_word_cap=section_cap,
                 settings=settings,
+                target_excerpts=[issue["target_excerpt"]],
+                validate_candidate=validate_consolidation_candidate,
+                stage="consolidation", section_index=target_index + 1,
             )
-            errors = self._validate_evidence_bounded_section_quality_revision(
-                original_section=sections[target_index],
-                revised_section=candidate or "",
-                allowed_paper_ids=self._evidence_bounded_section_allowed_paper_ids(section_outline),
-                section_word_cap=section_cap,
-            ) if candidate else ["No valid local revision was returned."]
-            if candidate and issue["target_excerpt"] in candidate:
-                errors.append("The flagged passage remains unchanged.")
-            if candidate and not errors:
-                assessments = self._audit_section_claim_support(
-                    candidate, section_index=target_index + 1, stage="consolidation"
-                )
-                if (
-                    any(item["verdict"] != "supported" for item in assessments)
-                    or self._integrity_enabled("claim_support_audit_enabled")
-                    and self._evidence_bounded_section_cited_paper_ids(candidate)[0]
-                    and not assessments
-                ):
-                    errors.append("Candidate claim support is unverified.")
-            revised = False
-            if candidate and not errors and candidate != sections[target_index]:
-                prior = sections[target_index]
+            revised = candidate is not None and candidate != original_section
+            if revised:
                 sections[target_index] = candidate
-                assembled = str(draft.get("title") or "") + "\n\n" + "\n\n".join(sections)
-                if len(assembled.split()) > budget["survey_max_words"]:
-                    sections[target_index] = prior
-                    errors.append("Revised survey exceeds the word budget.")
-                else:
-                    revised = True
             issue["resolution"] = "revised" if revised else "manual_review"
-            if errors:
-                issue["revision_errors"] = errors
+            if not revised:
+                issue["revision_errors"] = ["No validated sentence repair was returned within the retry budget."]
             self._record_integrity("issues", issue)
         draft["section_drafts"] = sections
         draft["full_draft"] = str(draft.get("title") or "") + "\n\n" + "\n\n".join(sections)
         return draft
 
     def _repair_final_claim_support(self, draft: dict) -> dict:
+        runtime = self._begin_review_stage(draft, "claim_support")
         sections = [str(section or "") for section in draft.get("section_drafts", [])]
         outline = self._as_mapping(draft.get("outline"))
         outlines = [self._as_mapping(item) for item in outline.get("sections", [])]
@@ -2285,60 +2591,57 @@ class SurveyGenerator:
                 section, section_index=index + 1, stage="final"
             )
             unsupported = [item for item in assessments if item["verdict"] == "unsupported"]
-            if not unsupported or self._claim_trace_validation_enabled():
+            if not unsupported or self._claim_trace_validation_enabled() or self._review_audit_only():
                 continue
             section_outline = outlines[index] if index < len(outlines) else {}
             suggestions = []
-            for item in unsupported[:3]:
-                source = getattr(self, "_claim_audit_source_cache", {}).get(item["paper_id"], "")
+            for item in unsupported:
+                source = "\n\n".join(getattr(self, "_claim_audit_source_cache", {}).get(paper_id, "")
+                                     for paper_id in item.get("paper_ids", [item["paper_id"]]))
                 suggestions.append(
                     f"The claim '{item['claim'][:260]}' is not supported by "
                     f"paper {item['paper_id']}: {item['reason']}. Use only this "
-                    f"source excerpt: {source[:650]}. Remove or narrow the claim "
+                    f"source excerpt: {source}. Remove or narrow the claim "
                     "without adding a new citation or result."
                 )
+            def validate_support_candidate(candidate: str) -> list[str]:
+                if candidate == section:
+                    return ["The unsupported passage was not revised."]
+                assembled = str(draft.get("title") or "") + "\n\n" + "\n\n".join(
+                    candidate if position == index else text
+                    for position, text in enumerate(sections)
+                )
+                if len(assembled.split()) > budget["survey_max_words"]:
+                    return ["Revised survey exceeds the word budget."]
+                return self._revision_claim_support_errors(
+                    candidate, section_index=index + 1, stage="final_repair", original_section=section,
+                )
+
             candidate = self._revise_evidence_bounded_section_quality(
                 section_text=section,
                 section_outline=section_outline,
                 suggestions=suggestions,
                 section_word_cap=section_cap,
                 settings=settings,
+                target_excerpts=[item["claim"] for item in unsupported],
+                validate_candidate=validate_support_candidate,
+                stage="final_repair", section_index=index + 1,
             )
-            errors = self._validate_evidence_bounded_section_quality_revision(
-                original_section=section,
-                revised_section=candidate or "",
-                allowed_paper_ids=self._evidence_bounded_section_allowed_paper_ids(section_outline),
-                section_word_cap=section_cap,
-            ) if candidate else ["No local support repair was returned."]
-            if candidate == section:
-                errors.append("The unsupported passage was not revised.")
-            if candidate and not errors:
-                revised_assessments = self._audit_section_claim_support(
-                    candidate, section_index=index + 1, stage="final_repair"
-                )
-                if (
-                    not revised_assessments
-                    or any(item["verdict"] != "supported" for item in revised_assessments)
-                ):
-                    errors.append("Revised claim support is still unverified.")
-            if candidate and not errors:
-                sections[index] = candidate
-                assembled = str(draft.get("title") or "") + "\n\n" + "\n\n".join(sections)
-                if len(assembled.split()) > budget["survey_max_words"]:
-                    sections[index] = section
-                    errors.append("Revised survey exceeds the word budget.")
-            if errors:
+            if candidate is None:
                 self._record_integrity("issues", {
                     "kind": "final_claim_support_repair", "section": index + 1,
-                    "reason": " | ".join(errors), "resolution": "manual_review",
+                    "reason": "No validated sentence repair was returned within the retry budget.",
+                    "resolution": "manual_review",
                 })
                 continue
+            sections[index] = candidate
             for issue in self.survey_integrity_artifact.get("issues", []):
                 if (
                     issue.get("kind") == "claim_support"
                     and issue.get("stage") == "final"
                     and issue.get("section") == index + 1
                     and issue.get("verdict") == "unsupported"
+                    and issue.get("claim") not in candidate
                 ):
                     issue["resolution"] = "revised"
             self._record_integrity("issues", {
@@ -3081,9 +3384,10 @@ class SurveyGenerator:
             limitation_slots = self._as_texts(claim.get("limitation_slots"))
             prefix = f"claim {index}"
 
-            if comparison and comparison.get("best_candidate_claim_allowed") is not True and (
-                claim.get("candidate_claim_type") == "best_candidate" or
-                self._candidate_comparison_errors(claim_text)
+            if (
+                comparison
+                and comparison.get("best_candidate_claim_allowed") is not True
+                and claim.get("candidate_claim_type") == "best_candidate"
             ):
                 errors.append(f"{prefix}: best_candidate claim is prohibited by the scientific comparison ledger.")
 
@@ -3285,45 +3589,6 @@ class SurveyGenerator:
             ):
                 errors.append(f"{prefix}: background-only claims require background paper paths.")
         return errors
-
-    def _candidate_comparison_errors(self, prose: str) -> list[str]:
-        comparison = self._as_mapping(getattr(self, "survey_evidence_plan", {}).get("scientific_candidate_comparison"))
-        if not comparison or comparison.get("best_candidate_claim_allowed") is True:
-            return []
-        pattern = r"\b(?:best|optimal|most suitable|most appropriate|superior to all)\b|最佳|最优|最适合|最合适"
-        qualified = r"\b(?:cannot conclude|cannot determine|not established|insufficient evidence|whether|not the best|not optimal|not the most)\b|尚不能|不能认定|无法确定|证据不足|是否|尚未证实"
-        errors = []
-        for sentence in re.split(r"(?<=[.!?。！？])\s+|\n", str(prose or "")):
-            if not re.search(qualified, sentence, re.IGNORECASE) and not sentence.rstrip().endswith(("?", "？")) and re.search(pattern, sentence, re.IGNORECASE) and any(
-                alias.casefold() in sentence.casefold() for alias in self._as_texts(comparison.get("candidate_aliases"))
-            ):
-                errors.append("Insufficient candidate comparison prohibits this best-candidate statement: " + sentence[:300])
-        return errors
-
-    def _repair_final_candidate_comparison(self, draft: dict) -> dict:
-        sections = list(draft.get("section_drafts", []))
-        outline = self._as_mapping(draft.get("outline"))
-        outlines = outline.get("sections", [])
-        budget = self._survey_length_budget(outline)
-        cap = math.ceil(budget["survey_max_words"] / max(1, budget["section_count"]))
-        for index, section in enumerate(sections):
-            errors = self._candidate_comparison_errors(section)
-            if not errors:
-                continue
-            section_outline = outlines[index] if index < len(outlines) else {}
-            candidate = self._revise_evidence_bounded_section_quality(section_text=section,
-                section_outline=section_outline, suggestions=[*errors,
-                    "State candidates as provisional alternatives and describe the missing comparison evidence. Preserve citations and headings."],
-                section_word_cap=cap, settings=self._evidence_bounded_section_quality_settings())
-            validation = self._validate_evidence_bounded_section_quality_revision(original_section=section,
-                revised_section=candidate or "", allowed_paper_ids=self._evidence_bounded_section_allowed_paper_ids(section_outline),
-                section_word_cap=cap) if candidate else errors
-            if validation:
-                raise ValueError("Survey candidate comparison repair failed: " + " | ".join(validation))
-            sections[index] = candidate
-        draft["section_drafts"] = sections
-        draft["full_draft"] = str(draft.get("title") or "") + "\n\n" + "\n\n".join(sections)
-        return draft
 
     @staticmethod
     def _is_bounded_multimodal_claim(
@@ -4377,6 +4642,11 @@ class SurveyGenerator:
     def draft_survey(self, intra_analysis_results, inter_analysis_results, outline, code_report=None):
         self.prepare_survey_evidence_plan()
         outline = self._bound_outline_to_evidence_plan(outline)
+        checkpoint = getattr(self, "_survey_checkpoint", None)
+        if checkpoint is not None:
+            checkpoint.state["context"]["outline"] = self._json_compatible(outline)
+            checkpoint.capture_generator()
+            checkpoint.persist()
         claim_trace_validation_enabled = self._claim_trace_validation_enabled()
         if (
             self._evidence_bounded_writing_enabled()
@@ -4476,7 +4746,12 @@ class SurveyGenerator:
             subsection_prompts_with_error = [subsection_prompts[i] + ERROR_FEEDBACK_PROMPT.format(info=previous_err_infos[i].get_errors_text()) 
                                                                         if len(previous_err_infos[i].get_errors_text()) > 1 else subsection_prompts[i] for i in range(len(subsection_prompts))]
             try:    
-                response_drafts = self.chat_agent.batch_remote_chat(
+                batch = self.chat_agent.batch_remote_chat
+                if checkpoint is not None:
+                    batch = lambda prompts, **kwargs: checkpoint.batch(
+                        self.chat_agent, "subsection", subsection_indices, prompts, **kwargs
+                    )
+                response_drafts = batch(
                     subsection_prompts_with_error,
                     desc="Drafting survey subsections...",
                     temperature=self.config.ModuleInfo.SurveyGenerator.subsection_draft_temperature,
@@ -4492,6 +4767,10 @@ class SurveyGenerator:
             for i, drafts in enumerate(response_drafts):
                 allow_omit = (not self.config.BasicInfo.error_conservatism_mode) and (try_time + self.omit_error_preserve_retry_time >= self.config.ModuleInfo.SurveyGenerator.subsection_draft_max_retry)
                 visible_draft, claim_trace, parse_errors = self._extract_claim_trace(drafts)
+                if checkpoint is not None:
+                    saved = checkpoint.state["units"].get(f"subsection:{subsection_indices[i]}", {})
+                    if saved.get("accepted"):
+                        visible_draft, claim_trace, parse_errors = saved["text"], saved["claims"], []
                 if self.use_title_in_draft:
                     is_valid_subsection, info, cleaned_draft = self.validate_title_citation_draft(
                         visible_draft,
@@ -4520,6 +4799,8 @@ class SurveyGenerator:
                     normalized_claim_trace, trace_errors = [], []
 
                 if not is_valid_subsection:
+                    if checkpoint is not None:
+                        checkpoint.reject_response("subsection", subsection_indices[i])
                     if trace_errors:
                         info = [*info, *trace_errors]
                     err_prompts.append(subsection_prompts[i])
@@ -4540,6 +4821,8 @@ class SurveyGenerator:
                         f"subsection for {try_time + 1}..."
                     )
                 elif trace_errors:
+                    if checkpoint is not None:
+                        checkpoint.record_unit("subsection", subsection_indices[i], cleaned_draft, normalized_claim_trace, accepted=False)
                     # The reader-visible subsection already satisfies citation
                     # and length checks.  Preserve it and repair only its
                     # metadata instead of regenerating a long passage.
@@ -4553,6 +4836,8 @@ class SurveyGenerator:
                 else:
                     subsection_drafts[subsection_indices[i]] = cleaned_draft
                     subsection_claims_by_index[subsection_indices[i]] = normalized_claim_trace
+                    if checkpoint is not None:
+                        checkpoint.record_unit("subsection", subsection_indices[i], cleaned_draft, normalized_claim_trace, accepted=True)
 
             if trace_repair_records:
                 repaired_traces, repair_failures = self._repair_claim_traces(
@@ -4566,6 +4851,8 @@ class SurveyGenerator:
                         subsection_claims_by_index[draft_index] = repaired_traces[
                             draft_index
                         ]
+                        if checkpoint is not None:
+                            checkpoint.record_unit("subsection", draft_index, str(record["visible_draft"]), repaired_traces[draft_index], accepted=True)
                 if repair_failures:
                     details = "; ".join(
                         f"subsection {index}: {' | '.join(errors[:3])}"
@@ -4692,14 +4979,19 @@ class SurveyGenerator:
             CumulativeErrorInfo() for _ in range(len(section_prompts))
         ]
 
-        valid = True
+        valid = False
         self.logger.info(f"Starting section draft with max_retry: {self.config.ModuleInfo.SurveyGenerator.section_draft_max_retry}, error_conservatism_mode: {self.config.BasicInfo.error_conservatism_mode}")
         for try_time in range(self.config.ModuleInfo.SurveyGenerator.section_draft_max_retry):
             section_prompts_with_error = [section_prompts[i] + ERROR_FEEDBACK_PROMPT.format(info=previous_err_infos[i].get_errors_text()) 
                                         if len(previous_err_infos[i].get_errors_text()) > 1 else section_prompts[i] for i in range(len(section_prompts))]
 
             try:
-                response_drafts = self.chat_agent.batch_remote_chat(
+                batch = self.chat_agent.batch_remote_chat
+                if checkpoint is not None:
+                    batch = lambda prompts, **kwargs: checkpoint.batch(
+                        self.chat_agent, "section", section_indices, prompts, **kwargs
+                    )
+                response_drafts = batch(
                     section_prompts_with_error,
                     desc="Drafting survey sections...",
                     temperature=self.config.ModuleInfo.SurveyGenerator.section_draft_temperature,
@@ -4715,6 +5007,10 @@ class SurveyGenerator:
             for i, drafts in enumerate(response_drafts):
                 allow_omit = (not self.config.BasicInfo.error_conservatism_mode) and (try_time + self.omit_error_preserve_retry_time >= self.config.ModuleInfo.SurveyGenerator.section_draft_max_retry)
                 visible_draft, claim_trace, parse_errors = self._extract_claim_trace(drafts)
+                if checkpoint is not None:
+                    saved = checkpoint.state["units"].get(f"section:{section_indices[i]}", {})
+                    if saved.get("accepted"):
+                        visible_draft, claim_trace, parse_errors = saved["text"], saved["claims"], []
                 if self.use_title_in_draft:
                     is_valid_section, info, cleaned_draft = self.validate_title_citation_draft(
                         visible_draft,
@@ -4743,6 +5039,8 @@ class SurveyGenerator:
                     normalized_claim_trace, trace_errors = [], []
 
                 if not is_valid_section:
+                    if checkpoint is not None:
+                        checkpoint.reject_response("section", section_indices[i])
                     if trace_errors:
                         info = [*info, *trace_errors]
                     self.logger.warning(f"Section draft validation failed for section index {section_indices[i]}. Retrying this section for {try_time + 1}...")
@@ -4754,6 +5052,8 @@ class SurveyGenerator:
                     err_infos.append(previous_err_infos[i])
                     valid =False
                 elif trace_errors:
+                    if checkpoint is not None:
+                        checkpoint.record_unit("section", section_indices[i], cleaned_draft, normalized_claim_trace, accepted=False)
                     trace_repair_records.append(
                         {
                             "draft_index": section_indices[i],
@@ -4764,6 +5064,8 @@ class SurveyGenerator:
                 else:
                     section_drafts[section_indices[i]] = cleaned_draft + sections_subsection_drafts[section_indices[i]]
                     section_claims_by_index[section_indices[i]] = normalized_claim_trace
+                    if checkpoint is not None:
+                        checkpoint.record_unit("section", section_indices[i], cleaned_draft, normalized_claim_trace, accepted=True)
                     self.logger.info(f"OUTLINEDEBUG: Section draft for index {section_indices[i]} valid, and updated with subsection drafts.")
 
             if trace_repair_records:
@@ -4781,6 +5083,8 @@ class SurveyGenerator:
                         section_claims_by_index[draft_index] = repaired_traces[
                             draft_index
                         ]
+                        if checkpoint is not None:
+                            checkpoint.record_unit("section", draft_index, str(record["visible_draft"]), repaired_traces[draft_index], accepted=True)
                 if repair_failures:
                     details = "; ".join(
                         f"section {index}: {' | '.join(errors[:3])}"
@@ -4811,6 +5115,12 @@ class SurveyGenerator:
         #     self.logger.info(f"SECTION DRAFTS: {section_drafts}")
 
         outcome_draft = outline.get("title", self.config.BasicInfo.topic + " Survey")+ "\n\n"+ "\n\n".join(section_drafts)
+        drafts = {
+            "section_drafts": section_drafts, "full_draft": outcome_draft,
+            "title": outline.get("title", self.config.BasicInfo.topic + " Survey"), "outline": outline,
+        }
+        if checkpoint is not None:
+            checkpoint.save_draft(drafts, initial=True)
         outcome_word_count = len(outcome_draft.split())
         if outcome_word_count > length_budget["survey_max_words"]:
             raise ValueError(
@@ -5577,9 +5887,6 @@ class SurveyGenerator:
 
         survey = self._format_full_survey_text_from_drafts(draft)
         survey, _, strip_errors = strip_claim_trace_metadata(survey)
-        comparison_errors = self._candidate_comparison_errors(survey)
-        if comparison_errors:
-            raise ValueError("Survey scientific comparison remains insufficient: " + " | ".join(comparison_errors))
         if strip_errors:
             self._record_integrity("issues", {
                 "kind": "final_claim_trace_cleanup", "reason": " | ".join(strip_errors),
@@ -5613,7 +5920,6 @@ class SurveyGenerator:
             draft = self._improve_evidence_bounded_sections(draft)
             draft = self._consolidate_evidence_bounded_draft(draft)
             draft = self._repair_final_claim_support(draft)
-            draft = self._repair_final_candidate_comparison(draft)
             return self._finalize_evidence_bounded_draft(draft)
         # Optional: first refine each section independently with local context, keeping <title> citations.
         draft_text = draft["full_draft"]

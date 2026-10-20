@@ -14,9 +14,13 @@ OPENALEX_API_KEY=
 OPENALEX_EMAIL=
 UNPAYWALL_EMAIL=
 SEMANTIC_SCHOLAR_API_KEY=
-ANYSEARCH_BASE_URL=
+ANYSEARCH_BASE_URL=https://api.anysearch.com
 ANYSEARCH_API_KEY=
 ```
+
+AnySearch 默认直连 `POST https://api.anysearch.com/v1/search`，使用 `academic.search`
+标签；保留默认地址时可以省略 `ANYSEARCH_BASE_URL`。API key 通过 Bearer 头发送，
+未配置时使用匿名访问。MCP 地址 `/mcp` 不用于此 REST 适配器。
 
 `OPENALEX` 和 `Semantic Scholar` 只用于发现与元数据交叉核验；它们的搜索
 结果、摘要和网页片段不能直接成为数值参数。`Unpaywall` 仅定位 DOI 对应的

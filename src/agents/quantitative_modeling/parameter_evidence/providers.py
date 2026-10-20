@@ -15,12 +15,20 @@ from urllib.parse import urlparse
 
 import requests
 
+from src.pipeline.anysearch import (
+    DEFAULT_ANYSEARCH_BASE_URL,
+    DEFAULT_ANYSEARCH_TAG,
+    build_anysearch_request,
+    parse_anysearch_response,
+)
+
 
 class ParameterEvidenceProviderError(RuntimeError):
     """Raised when a bounded academic metadata request cannot be completed."""
 
 
 JsonGet = Callable[..., object]
+JsonPost = Callable[..., object]
 
 
 def _mapping(value: object) -> dict[str, Any]:
@@ -87,6 +95,25 @@ def _default_json_get(
         raise ParameterEvidenceProviderError("academic metadata provider returned invalid JSON") from error
 
 
+def _default_json_post(
+    url: str,
+    *,
+    json: Mapping[str, object],
+    headers: Mapping[str, str] | None = None,
+    timeout: float = 30.0,
+) -> object:
+    try:
+        response = requests.post(url, json=dict(json), headers=dict(headers or {}), timeout=timeout)
+    except requests.RequestException as error:
+        raise ParameterEvidenceProviderError(f"academic metadata request failed: {type(error).__name__}") from error
+    if response.status_code >= 400:
+        raise ParameterEvidenceProviderError(f"academic metadata request returned HTTP {response.status_code}")
+    try:
+        return response.json()
+    except ValueError as error:
+        raise ParameterEvidenceProviderError("academic metadata provider returned invalid JSON") from error
+
+
 @dataclass(frozen=True)
 class ParameterEvidenceSettings:
     """Non-secret runtime settings; API secrets remain in environment variables."""
@@ -95,8 +122,9 @@ class ParameterEvidenceSettings:
     semantic_scholar_base_url: str = "https://api.semanticscholar.org/graph/v1"
     unpaywall_base_url: str = "https://api.unpaywall.org/v2"
     openalex_api_key: str = ""
-    anysearch_base_url: str = ""
+    anysearch_base_url: str = DEFAULT_ANYSEARCH_BASE_URL
     anysearch_api_key: str = ""
+    anysearch_tag: str = DEFAULT_ANYSEARCH_TAG
     semantic_scholar_api_key: str = ""
     unpaywall_email: str = ""
     enabled: bool = True
@@ -159,8 +187,9 @@ class ParameterEvidenceSettings:
             unpaywall_base_url=_text(_setting(evidence, "unpaywall_base_url", "https://api.unpaywall.org/v2"))
             or "https://api.unpaywall.org/v2",
             openalex_api_key=_text(os.environ.get("OPENALEX_API_KEY")),
-            anysearch_base_url=_text(_setting(evidence, "anysearch_base_url", "")),
+            anysearch_base_url=_text(_setting(evidence, "anysearch_base_url", os.environ.get("ANYSEARCH_BASE_URL", DEFAULT_ANYSEARCH_BASE_URL))),
             anysearch_api_key=_text(os.environ.get("ANYSEARCH_API_KEY")),
+            anysearch_tag=_text(_setting(evidence, "anysearch_tag", DEFAULT_ANYSEARCH_TAG)),
             semantic_scholar_api_key=_text(
                 os.environ.get("SEMANTIC_SCHOLAR_API_KEY") or _setting(semantic, "api_key", "")
             ),
@@ -234,9 +263,11 @@ class ParameterEvidenceSettings:
 class AcademicMetadataProviders:
     """Small provider adapters with a test-injectable JSON transport."""
 
-    def __init__(self, settings: ParameterEvidenceSettings, *, json_get: JsonGet | None = None) -> None:
+    def __init__(self, settings: ParameterEvidenceSettings, *, json_get: JsonGet | None = None,
+                 json_post: JsonPost | None = None) -> None:
         self.settings = settings
         self._json_get = json_get or _default_json_get
+        self._json_post = json_post or _default_json_post
 
     def _get_json(
         self,
@@ -305,60 +336,22 @@ class AcademicMetadataProviders:
         return records
 
     def search_anysearch(self, query: str) -> list[dict[str, Any]]:
-        """Search the configured AnySearch academic endpoint.
-
-        AnySearch deployments expose slightly different response envelopes, so
-        this adapter accepts ``results``, ``papers`` or ``data`` while keeping
-        the normalized provider contract identical to OpenAlex.  Returned
-        snippets remain discovery metadata and are never parameter evidence.
-        """
-
-        base = self.settings.anysearch_base_url.rstrip("/")
-        if not base:
+        """Use the public academic REST API and keep search text as discovery."""
+        if not self.settings.anysearch_base_url:
             return []
-        response = self._get_json(
-            f"{base}/search",
-            params={"q": query, "query": query, "limit": self.settings.max_papers_per_parameter},
-            headers=(
-                {"Authorization": f"Bearer {self.settings.anysearch_api_key}"}
-                if self.settings.anysearch_api_key
-                else {}
-            ),
-        )
-        raw_results = response.get("results")
-        if not isinstance(raw_results, list):
-            raw_results = response.get("papers")
-        if not isinstance(raw_results, list):
-            raw_results = response.get("data")
-        records: list[dict[str, Any]] = []
-        for raw in raw_results or []:
-            work = _mapping(raw)
-            title = _text(work.get("title") or work.get("name"))
-            if not title:
-                continue
-            doi = work.get("doi") or _mapping(work.get("identifiers")).get("doi")
-            url = work.get("url") or work.get("landing_url") or work.get("link")
-            pdf_url = work.get("pdf_url") or work.get("fulltext_url")
-            records.append(
-                {
-                    "provider": "anysearch",
-                    "provider_paper_id": _text(work.get("id") or work.get("paper_id") or work.get("paperId")),
-                    "title": title,
-                    "doi": _normalize_doi(doi),
-                    "year": work.get("year") or work.get("publication_year"),
-                    "abstract": _text(work.get("abstract") or work.get("snippet")),
-                    "oa_locations": [
-                        {
-                            "source": "anysearch.oa_location",
-                            "pdf_url": _safe_url(pdf_url),
-                            "landing_url": _safe_url(url),
-                        }
-                    ]
-                    if _safe_url(pdf_url) or _safe_url(url)
-                    else [],
-                }
+        try:
+            url, payload = build_anysearch_request(
+                self.settings.anysearch_base_url, query, self.settings.max_papers_per_parameter,
+                tag=self.settings.anysearch_tag,
             )
-        return records
+            response = self._json_post(
+                url, json=payload,
+                headers={"Authorization": f"Bearer {self.settings.anysearch_api_key}"} if self.settings.anysearch_api_key else {},
+                timeout=float(self.settings.request_timeout_seconds),
+            )
+            return parse_anysearch_response(response)[:payload["max_results"]]
+        except (TypeError, ValueError) as error:
+            raise ParameterEvidenceProviderError("AnySearch returned invalid configuration or search data") from error
 
     def search_semantic_scholar(self, query: str) -> list[dict[str, Any]]:
         base = self.settings.semantic_scholar_base_url.rstrip("/")

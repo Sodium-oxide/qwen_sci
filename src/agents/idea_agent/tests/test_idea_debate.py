@@ -7,6 +7,7 @@ from src.agents.idea_agent.utils.workflow.idea_debate import (
     DEBATE_PROMPT_CHAR_LIMIT,
     _apply_revision,
     _debate_prompt,
+    _baseline_concerns,
     cross_seed_debate,
     debate_direction_set,
     effective_scientific_contract,
@@ -49,6 +50,31 @@ def test_debate_keeps_direction_and_gap_ids_and_runs_two_rounds_without_llm() ->
         "SCIENTIFICALLY_QUALIFIED",
         "SCIENTIFICALLY_QUALIFIED_WITH_UNCERTAINTY",
     }
+
+
+def test_debate_does_not_manufacture_gap_mapping_or_assumption_defects() -> None:
+    candidate = _direction()
+    candidate["target_gap_ids"] = []
+    candidate["assumptions"] = []
+
+    baseline = _baseline_concerns(candidate, profile_drift={}, round_number=1)
+
+    assert baseline["severity"] == "none"
+    assert baseline["scientific_concern"] == ""
+
+
+def test_debate_handoff_preserves_candidate_metadata_and_separates_operational_constraints() -> None:
+    prompt = _debate_prompt(
+        direction=_direction(), topic="A general question", round_number=1,
+        profile_id="physical_materials_chemical", profile_context="", profile_drift={}, baseline={},
+        survey_handoff={
+            "topic": "A general question", "constraints": {"may_generate_new_gap": False},
+            "scientific_candidates": {"records": [{"name": "Candidate", "reference_answer": "A mechanistic reference"}]},
+        },
+    )
+
+    assert "may_generate_new_gap" not in prompt
+    assert "A mechanistic reference" in prompt
 
 
 def test_debate_prompt_retains_the_primary_gap_and_context_constraints() -> None:
@@ -450,7 +476,7 @@ def test_profile_drift_allows_computational_profile_and_secondary_tools() -> Non
 
     assert computational["drift_severity"] == "none"
     assert computational["primary_drift"] is False
-    assert auxiliary["drift_severity"] == "soft"
+    assert auxiliary["drift_severity"] == "none"
     assert auxiliary["primary_drift"] is False
     assert "machine_learning" not in auxiliary["forbidden_primary_terms"]
 
@@ -459,6 +485,12 @@ def test_profile_drift_marks_incompatible_primary_cs_contribution() -> None:
     drift = detect_profile_drift(
         "physical_materials_chemical",
         {"core_contribution": "The main novelty is a neural architecture and loss function."},
+        task_request="Explain the physical transition mechanism.",
+        contribution_review={
+            "role": "primary_contribution", "replaces_task_objective": True, "serves_task_objective": False,
+            "triggering_text": "neural architecture and loss function", "task_boundary_quote": "physical transition mechanism",
+            "rationale": "The candidate optimizes prediction architecture without explaining the requested transition.",
+        },
     )
 
     assert drift["primary_drift"] is True
@@ -499,7 +531,7 @@ def test_debate_separates_profile_drift_from_actual_missing_fields() -> None:
     event = result["directions"][0]["debate_trace"][0]
 
     assert "mechanism_or_relation" not in event["actual_missing_fields"]
-    assert event["profile_drift_fields"] == ["mechanism_or_relation"]
-    assert event["final_status"] == "PROFILE_DRIFT"
+    assert event["profile_drift_fields"] == []
+    assert event["final_status"] != "PROFILE_DRIFT"
     assert event["postflight_missing"] == []
-    assert event["postflight_profile_drift_fields"] == ["mechanism_or_relation"]
+    assert event["postflight_profile_drift_fields"] == []

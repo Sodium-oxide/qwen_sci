@@ -1411,11 +1411,11 @@ def _profile_drift_content(value: Any) -> Any:
     return content
 
 
-def _flatten_profile_drift_text(value: Any, *, limit: int = 12000) -> str:
+def _flatten_profile_drift_text(value: Any, *, limit: int | None = 12000) -> str:
     chunks: list[str] = []
 
     def visit(item: Any) -> None:
-        if sum(len(chunk) for chunk in chunks) >= limit:
+        if limit is not None and sum(len(chunk) for chunk in chunks) >= limit:
             return
         if isinstance(item, Mapping):
             for key, nested in item.items():
@@ -1430,7 +1430,8 @@ def _flatten_profile_drift_text(value: Any, *, limit: int = 12000) -> str:
                 chunks.append(text)
 
     visit(value)
-    return " ".join(chunks)[:limit]
+    text = " ".join(chunks)
+    return text[:limit] if limit is not None else text
 
 
 def detect_profile_drift(
@@ -1440,14 +1441,10 @@ def detect_profile_drift(
     candidate: Mapping[str, Any] | None = None,
     survey_handoff: Mapping[str, Any] | None = None,
     research_object: Any = None,
+    contribution_review: Mapping[str, Any] | None = None,
+    task_request: str = "",
 ) -> Dict[str, Any]:
-    """Detect CS/ML primary-contribution drift without rejecting an idea.
-
-    Computational profiles are intentionally exempt.  For other profiles,
-    strong software/optimization terms are material only when they are used as
-    the candidate's primary contribution; auxiliary analysis mentions remain
-    soft secondary-tool signals.
-    """
+    """Collect lexical hints; confirm drift only against task semantics and contribution role."""
 
     if isinstance(profile_id, ScientificInterventionProfile):
         resolved_profile_id = profile_id.profile_id
@@ -1459,7 +1456,7 @@ def detect_profile_drift(
         resolved_profile_id = str(profile_id or "generic_scientific")
     resolved_profile_id = resolved_profile_id.strip().lower()
     candidate_value = candidate if candidate is not None else text
-    candidate_text = _flatten_profile_drift_text(_profile_drift_content(candidate_value))
+    candidate_text = _flatten_profile_drift_text(_profile_drift_content(candidate_value), limit=None)
     anchor_text = _flatten_profile_drift_text(
         {
             "survey_handoff": survey_handoff or {},
@@ -1498,29 +1495,28 @@ def detect_profile_drift(
             f"{term_name}: rewrite as the selected profile's native mechanism, process, relation, object, or boundary"
         )
 
-    if resolved_profile_id == "computational_algorithmic":
-        return {
-            "profile_id": resolved_profile_id,
-            "primary_drift": False,
-            "secondary_tool_mentions": [],
-            "forbidden_primary_terms": [],
-            "drift_severity": "none",
-            "rewrite_targets": [],
-        }
-
-    if forbidden_primary_terms:
-        severity = "material"
-    elif secondary_tool_mentions:
-        severity = "soft"
-    else:
-        severity = "none"
+    review = contribution_review or {}
+    trigger = str(review.get("triggering_text") or "")
+    boundary = str(review.get("task_boundary_quote") or "")
+    confirmed = bool(
+        review.get("role") == "primary_contribution"
+        and review.get("replaces_task_objective") is True
+        and review.get("serves_task_objective") is False
+        and trigger and trigger.lower() in candidate_lower
+        and boundary and boundary in task_request
+        and review.get("rationale")
+    )
+    severity = "material" if confirmed else "none"
     return {
         "profile_id": resolved_profile_id,
-        "primary_drift": bool(forbidden_primary_terms),
+        "primary_drift": confirmed,
         "secondary_tool_mentions": list(dict.fromkeys(secondary_tool_mentions)),
-        "forbidden_primary_terms": list(dict.fromkeys(forbidden_primary_terms)),
+        "forbidden_primary_terms": list(dict.fromkeys(forbidden_primary_terms)) if confirmed else [],
+        "lexical_signals": list(dict.fromkeys(matched_terms)),
+        "review_status": "confirmed" if confirmed else ("pending" if matched_terms else "none"),
+        "contribution_review": dict(review),
         "drift_severity": severity,
-        "rewrite_targets": list(dict.fromkeys(rewrite_targets)),
+        "rewrite_targets": list(dict.fromkeys(rewrite_targets)) if confirmed else [],
     }
 
 

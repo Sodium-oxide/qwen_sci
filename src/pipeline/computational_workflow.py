@@ -214,7 +214,8 @@ def worker(run_dir: Path) -> dict:
     budget = {key: budget[key] for key in DEFAULT_BUDGET}
     callback = build_default_json_llm_call(config=config, model=options.get("computation", {}).get("model"))
     controller = ComputationalOrchestrator(run_dir, llm_call=callback, analysis_llm_call=callback,
-        environment_id=settings.get("runtime", {}).get("environment_id", "qwensci-computation:py312-v1"))
+        environment_id=settings.get("runtime", {}).get("environment_id", "qwensci-computation:py312-v1"),
+        figure_settings=OmegaConf.to_container(config.get("result_figures", {}), resolve=True))
     try:
         context = build_context(science_run_id=metadata["science_run_id"],
             idea_manifest_path=Path(state["stages"]["idea"]["result_manifest_path"]),

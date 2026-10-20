@@ -10,13 +10,16 @@ class ComputationalEvidenceLoadError(ValueError):
 
 def load_computational_evidence_capsule(path: str | Path, *, expected_identity: dict | None = None) -> dict:
     from src.pipeline.computational_manifests import verify_manifest
+    from src.pipeline.science_run import file_sha256
     try:
         handoff = verify_manifest(Path(path).expanduser().resolve(), expected_identity=expected_identity)
     except Exception as error:
         raise ComputationalEvidenceLoadError(str(error)) from error
     return {"schema_version": "computational_author_evidence_capsule_v1", "branch_status": handoff["branch_status"],
         "source_binding": handoff["source_binding"], "plans": handoff["plans"], "results": handoff["results"],
-        "unresolved_items": handoff["unresolved_items"], "manifest_path": str(Path(path).resolve())}
+        "unresolved_items": handoff["unresolved_items"], "manifest_path": str(Path(path).resolve()),
+        "manifest_sha256": file_sha256(Path(path)),
+        "result_figure_refs": [item for item in handoff["artifact_refs"] if item.get("role") == "result_figures"]}
 
 
 def append_computational_evidence_section(document: dict, capsule: dict) -> dict:
@@ -57,6 +60,7 @@ def append_computational_evidence_section(document: dict, capsule: dict) -> dict
     manifest = dict(result.get("source_manifest") or {})
     manifest["computational_evidence"] = {"schema_version": capsule["schema_version"],
         "branch_status": capsule["branch_status"], "manifest_path": capsule["manifest_path"],
+        "manifest_sha256": capsule.get("manifest_sha256"), "source_identity": capsule["source_binding"],
         "result_count": len(capsule["results"]), "evidence_scope": "DECLARED_MODEL_OR_DATASET"}
     result["source_manifest"] = manifest
     return result

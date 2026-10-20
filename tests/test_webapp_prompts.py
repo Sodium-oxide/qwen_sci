@@ -59,3 +59,20 @@ def test_prompt_schema_and_nested_values_cannot_change_registered_content():
     snapshot["output_schema"]["properties"]["schema_version"]["type"] = "integer"
     assert spec.prompt_hash == digest
     assert registry.get("polish-generic").snapshot()["output_schema"]["properties"]["schema_version"]["type"] == "string"
+
+
+@pytest.mark.parametrize("profile", ["research-default", "research-light"])
+def test_research_policy_distinguishes_design_values_and_preserves_frozen_versions(profile: str) -> None:
+    registry = build_default_prompt_registry()
+    current = registry.get(profile)
+    previous = registry.get(profile, prompt_version="1.0.0")
+    rules = current.build_messages(input_manifest={}, task_context={})[0]["content"]
+    previous_rules = previous.build_messages(input_manifest={}, task_context={})[0]["content"]
+
+    assert current.prompt_version == "1.1.0"
+    assert "Explicitly proposed design values" in rules
+    assert "observed experimental results" in rules
+    assert "The original user task defines the objective" in rules
+    assert "Do not invent data, numerical values" not in rules
+    assert "Do not invent data, numerical values" in previous_rules
+    assert previous.prompt_hash != current.prompt_hash

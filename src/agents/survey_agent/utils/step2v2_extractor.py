@@ -14,7 +14,8 @@ import json
 import re
 from typing import Dict, List, Optional, Tuple, Any
 
-from utils.utils import extract_json
+from src.agents.survey_agent.utils.utils import extract_json
+from src.pipeline.discipline_taxonomy import NATURAL_SCIENCE_ENGINEERING_TAXONOMY
 
 # ================= CONSTANTS =================
 
@@ -107,7 +108,7 @@ def build_main_extraction_prompt(
     Returns:
         Tuple of (system_prompt, user_prompt)
     """
-    domain_str = ", ".join(ARXIV_DOMAINS)
+    domain_str = ", ".join(NATURAL_SCIENCE_ENGINEERING_TAXONOMY)
     type_str = ", ".join(PAPER_TYPES)
     
     marked_text = mark_entities_in_text(markdown_text, regex_candidates['methods'], "HINT_METHOD")
@@ -129,9 +130,11 @@ OUTPUT FORMAT: Single word only (e.g., Algorithm, NOT Type: Algorithm)
 
 CRITICAL GROUNDING RULES:
 1. Insight: Must provide INDEPENDENT ANALYSIS beyond summary. Describe prerequisites, trade-offs, design choices, or potential defects. DO NOT copy summary or quote.
-2. Quote: Must be VERBATIM text from the original paper. Use ... for exact excerpts. DO NOT paraphrase or fabricate.
+2. Quote: Copy a contiguous VERBATIM span from the unmarked original paper. Never join excerpts with added ellipses. Provide its exact source_section heading. Do not include HINT markers. If no supporting text exists, use an empty quote.
 3. Summary: Concise factual description in natural sentence form.
 4. Keywords: Concept words used for COARSE-GRAINED RETRIEVAL and filtering. Choose representative terms that capture the essence for search/matching.
+5. Domain: Choose one canonical discipline ID from the schema list, or an empty string if unresolved. Never use Others or Hybrid as a discipline.
+6. Structure, assumptions and boundary_conditions: Extract only explicit source statements. Use empty values for unstated conditions. Include separate evidence_records for the exact passages supporting these fields; a design insight is not source evidence.
 
 PRIORITY: RECALL - Extract ALL relevant entities (cores, components, problems, innovations, limitations, future work). Do not omit items due to uncertainty.
 
@@ -265,7 +268,12 @@ Output JSON Schema (FOLLOW THIS EXACT ATTRIBUTE ORDER):
       "keywords": ["str"],
       "summary": "str",
       "insight": "str (prerequisites, trade-offs, design rationale)",
-      "quote": "str"
+      "quote": "str (contiguous verbatim supporting span)",
+      "source_section": "str (exact Markdown section heading)",
+      "evidence_records": [{{"quote": "str (separate exact passages supporting structure, assumptions and boundaries)", "source_section": "str (exact heading)"}}],
+      "structure": "str (relations explicitly stated in source, or empty)",
+      "assumptions": ["str (explicit source assumption; empty array if unstated)"],
+      "boundary_conditions": ["str (explicit source applicability limit; empty array if unstated)"]
     }}
   ],
   "core_relations": [
@@ -286,7 +294,8 @@ Output JSON Schema (FOLLOW THIS EXACT ATTRIBUTE ORDER):
       "keywords": ["str"],
       "summary": "str",
       "insight": "str (MUST include design choices AND potential defects)",
-      "quote": "str"
+      "quote": "str (contiguous verbatim supporting span)",
+      "source_section": "str (exact Markdown section heading)"
     }}
   ],
   "innovations": [
@@ -323,7 +332,7 @@ CRITICAL REMINDERS:
 2. Core vs Component: Use hierarchy rules above
 3. Type field: Single word only
 4. Insight: Independent analysis, not copy of summary/quote
-5. Quote: Verbatim text with ... markers
+5. Quote: Contiguous original text with exact source_section; no added ellipses or hint markers
 6. Components: MUST discuss potential defects
 7. Keywords: Choose terms for RETRIEVAL and FILTERING purposes
 8. Attribute order: MUST follow schema order exactly (keywords first, then summary, insight, quote)
@@ -467,6 +476,19 @@ Return JSON only:"""
 
 # ================= VALIDATION & PARSING (COMBINED) =================
 
+def _response_metadata(info_dict: Optional[dict]) -> dict:
+    """Resolve the original paper even when a retry contains only one prompt."""
+    info = info_dict or {}
+    if 'metadata' in info:
+        metadata, index = info['metadata'], info.get('idx')
+        if not isinstance(index, int) or not isinstance(metadata, list) or not 0 <= index < len(metadata):
+            raise ValueError("Missing or invalid original extraction prompt index")
+        info = metadata[index]
+    if not isinstance(info, dict):
+        raise ValueError("Extraction metadata must be an object")
+    return info
+
+
 def validate_and_parse_main(response: str, info_dict: dict = None) -> Tuple[bool, dict]:
     """
     Validate and parse main extraction response.
@@ -500,12 +522,11 @@ def validate_and_parse_main(response: str, info_dict: dict = None) -> Tuple[bool
     core_names = [c.get("name") for c in core_contributions if c.get("name")]
     
     # Extract original title from info_dict for fallback (info_dict contains the extracted title from markdown)
-    original_title = None
-    if info_dict:
-        original_title = info_dict.get('title')
+    info = _response_metadata(info_dict)
+    original_title = info.get('title')
     
     result = {
-        'node_id': info_dict.get('node_id') if info_dict else None,
+        'node_id': info.get('node_id') or info.get('paper_id'),
         'result': parsed,
         'core_names': core_names,
         'original_title': original_title
@@ -542,10 +563,11 @@ def validate_and_parse_baseline(response: str, info_dict: dict = None) -> Tuple[
     if 'baselines' not in parsed and 'datasets' not in parsed:
         raise ValueError("Missing required keys: baselines or datasets")
     
+    info = _response_metadata(info_dict)
     result = {
-        'node_id': info_dict.get('node_id') if info_dict else None,
+        'node_id': info.get('node_id') or info.get('paper_id'),
         'result': parsed,
-        'core_names': info_dict.get('core_names', []) if info_dict else []
+        'core_names': info.get('core_names', [])
     }
     
     return True, result
@@ -556,7 +578,9 @@ def validate_and_parse_baseline(response: str, info_dict: dict = None) -> Tuple[
 def aggregate_results(
     main_results: List[dict],
     baseline_results: List[dict],
-    source_info: Dict[str, dict]
+    source_info: Dict[str, dict],
+    *,
+    preserve_components: bool = False,
 ) -> List[dict]:
     """Aggregate main and baseline results into final output."""
     main_by_paper = {r['node_id']: r for r in main_results if r}
@@ -588,8 +612,10 @@ def aggregate_results(
             if c.get("acronym"): self_names.add(c.get("acronym").lower())
         
         # Filter components
-        valid_components = []
-        for comp in result.get("components", []):
+        # Queue extraction validates every declared component downstream. Do
+        # not hide invalid entries or repair their parent links in that path.
+        valid_components = result.get("components", []) if preserve_components else []
+        for comp in ([] if preserve_components else result.get("components", [])):
             c_name = comp.get("name", "").strip()
             if not c_name or c_name.lower() in self_names:
                 continue
@@ -660,9 +686,14 @@ def aggregate_results(
 def extract_paper_info_batch(
     papers: Dict[str, str],
     chat_agent,
-    source_info: Dict[str, str] = None,
+    source_info: Optional[Dict[str, dict]] = None,
     temperature: float = 0.05,
     max_retry: int = 3,
+    *,
+    include_baselines: bool = True,
+    preserve_components: bool = False,
+    strict_input_budget: bool = False,
+    max_output_tokens: int = 16000,
 ) -> List[dict]:
     """
     Extract paper information using ChatAgent with retry.
@@ -673,12 +704,20 @@ def extract_paper_info_batch(
         source_info: Optional dict mapping paper_id -> {source_venue, pub_year}
         temperature: LLM temperature
         max_retry: Max retry attempts per prompt
+        include_baselines: Also extract comparison baselines and datasets.
+        preserve_components: Retain all declared components and parent links
+            for downstream evidence and relationship validation.
+        strict_input_budget: Refuse over-budget full text instead of truncating it.
         
     Returns:
         List of extraction results
     """
     if source_info is None:
         source_info = {}
+    if not papers:
+        return []
+    if max_retry < 1 or max_output_tokens < 1:
+        raise ValueError("max_retry and max_output_tokens must be positive")
     
     paper_ids = list(papers.keys())
     markdowns = list(papers.values())
@@ -708,6 +747,16 @@ def extract_paper_info_batch(
             'regex_candidates': regex_candidates
         })
     
+    if strict_input_budget:
+        context = int(chat_agent.config.APIInfo.llm_max_context_length)
+        budget = context - max_output_tokens
+        if budget <= 0:
+            raise ValueError("max_output_tokens must be smaller than the configured context window")
+        for paper_id, prompt in zip(paper_ids, main_prompts):
+            tokens = chat_agent.estimate_tokens(prompt)
+            if tokens > budget:
+                raise ValueError(f"input_budget_exceeded:{paper_id}: {tokens} > {budget} tokens; full text was not truncated")
+
     # Call with retry and validation - info_dict contains paper_id for later aggregation
     main_responses = chat_agent.batch_remote_chat_with_retry(
         main_prompts,
@@ -715,11 +764,15 @@ def extract_paper_info_batch(
         max_retry=max_retry,
         desc="Main extraction",
         temperature=temperature,
-        info_dict={'metadata': main_metadata}  # Pass metadata for aggregation
+        info_dict={'metadata': main_metadata},
+        strict_input_budget=strict_input_budget,
+        max_output_tokens=max_output_tokens,
     )
     
     # main_responses are already parsed results from validate_and_parse_main
     main_results = main_responses
+    if not include_baselines:
+        return aggregate_results(main_results, [], source_info, preserve_components=preserve_components)
     
     # Build core names map for baseline extraction
     core_names_map = {}
@@ -750,14 +803,16 @@ def extract_paper_info_batch(
         max_retry=max_retry,
         desc="Baseline extraction",
         temperature=temperature,
-        info_dict={'metadata': baseline_metadata}
+        info_dict={'metadata': baseline_metadata},
+        strict_input_budget=strict_input_budget,
+        max_output_tokens=max_output_tokens,
     )
     
     # baseline_responses are already parsed results from validate_and_parse_baseline
     baseline_results = baseline_responses
     
     # ===== Step 3: Aggregate =====
-    return aggregate_results(main_results, baseline_results, source_info)
+    return aggregate_results(main_results, baseline_results, source_info, preserve_components=preserve_components)
 
 
 def format_extraction_result(result: dict) -> str:

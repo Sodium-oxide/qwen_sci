@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import json
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -31,6 +32,7 @@ from src.pipeline.science_manifests import (
     verify_stage_manifest,
 )
 from src.pipeline.science_stages import (
+    survey_draft_outputs,
     AuthorStageRequest,
     ExperimentDesignStageRequest,
     IdeaStageRequest,
@@ -298,6 +300,7 @@ def _stage_request(
     quiet: bool,
     quantitative_handoff_manifest_path: Path | None = None,
     computational_handoff_manifest_path: Path | None = None,
+    survey_resume_dir: Path | None = None,
 ) -> SurveyStageRequest | IdeaStageRequest | ExperimentDesignStageRequest | AuthorStageRequest:
     topic, options, _immutable_inputs = _metadata_inputs(metadata)
     attempt_dir = _stage_attempt_dir(paths, stage_name, attempt)
@@ -355,6 +358,7 @@ def _stage_request(
             on_service_process_started=record_service_process,
             multimodal_manifest_path=multimodal_manifest_path,
             remote_perception_authorized=bool(material_inputs.get("remote_perception_authorized")),
+            resume_dir=survey_resume_dir,
         )
 
     survey = _completed_stage(
@@ -577,7 +581,15 @@ def _recover_interrupted_stages(
                 )
             attempt = int(stage.get("attempt") or 0)
             manifest_path = _stage_attempt_dir(paths, stage_name, attempt) / _STAGE_MANIFEST_FILENAMES[stage_name]
-            if manifest_path.is_file():
+            checkpoint_path = manifest_path.parent / "checkpoints" / "survey_checkpoint.json"
+            pending_survey = False
+            if stage_name == "survey" and checkpoint_path.is_file():
+                try:
+                    checkpoint = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+                    pending_survey = "evaluation" not in checkpoint.get("completed", []) or bool(checkpoint.get("failed_step"))
+                except (OSError, ValueError, AttributeError):
+                    pending_survey = True
+            if manifest_path.is_file() and not pending_survey:
                 try:
                     verified = verify_stage_manifest(
                         stage_name,
@@ -603,6 +615,8 @@ def _recover_interrupted_stages(
                         outputs=outputs,
                         result_identity=identity,
                     )
+                    if stage_name == "survey":
+                        state["stages"][stage_name].pop("outcome", None)
                     append_science_event(
                         paths,
                         event_type="STAGE_RECOVERED",
@@ -613,7 +627,10 @@ def _recover_interrupted_stages(
                     changed = True
                     continue
             else:
-                recovery_message = f"Interrupted attempt {attempt} has no published manifest"
+                recovery_message = (
+                    f"Interrupted attempt {attempt} has pending Survey delivery steps"
+                    if pending_survey else f"Interrupted attempt {attempt} has no published manifest"
+                )
             mark_stage_failed(
                 state,
                 stage_name,
@@ -621,6 +638,10 @@ def _recover_interrupted_stages(
                 message=recovery_message,
                 error_type="InterruptedScienceStage",
             )
+            if stage_name == "survey":
+                outputs = survey_draft_outputs(manifest_path.parent)
+                if outputs:
+                    state["stages"][stage_name].update(outcome="requires_review", outputs=outputs)
             append_science_event(
                 paths,
                 event_type="STAGE_RECOVERY_RETRY",
@@ -671,6 +692,10 @@ def _record_failure(
             message=str(error),
             error_type=type(error).__name__,
         )
+        if stage_name == "survey":
+            outputs = survey_draft_outputs(_stage_attempt_dir(paths, stage_name, attempt))
+            if outputs:
+                state["stages"][stage_name].update(outcome="requires_review", outputs=outputs)
         if acknowledge_cancellation:
             cancellation["acknowledged_at"] = utc_now()
             state["cancellation"] = cancellation
@@ -748,6 +773,11 @@ def _run_stage(
             )
         input_identity: dict[str, Any]
         try:
+            survey_resume_dir = None
+            if stage_name == "survey" and stage.get("status") == "FAILED":
+                previous_dir = _stage_attempt_dir(paths, stage_name, int(stage.get("attempt") or 0))
+                if (previous_dir / "checkpoints" / "survey_checkpoint.json").is_file():
+                    survey_resume_dir = previous_dir
             input_identity = _input_identity(
                 paths,
                 state,
@@ -757,6 +787,8 @@ def _run_stage(
                 computational_handoff_manifest_path,
             )
             mark_stage_running(state, stage_name, input_identity=input_identity)
+            if stage_name == "survey":
+                state["stages"][stage_name].pop("outcome", None)
             attempt = int(_mapping(_mapping(state.get("stages")).get(stage_name)).get("attempt") or 0)
             request = _stage_request(
                 paths=paths,
@@ -767,6 +799,7 @@ def _run_stage(
                 quiet=quiet,
                 quantitative_handoff_manifest_path=quantitative_handoff_manifest_path,
                 computational_handoff_manifest_path=computational_handoff_manifest_path,
+                survey_resume_dir=survey_resume_dir,
             )
         except Exception as exc:
             error = _coerce_stage_error(stage_name, exc)
@@ -811,6 +844,20 @@ def _run_stage(
             attempt_dir=attempt_dir,
         )
         topic, options, _immutable_inputs = _metadata_inputs(metadata)
+        if stage_name == "survey" and result.metadata.get("survey_status") == "requires_review":
+            with locked_science_run(paths):
+                _persisted_metadata, state = load_science_run(paths)
+                current = state["stages"][stage_name]
+                if current.get("status") != "RUNNING" or current.get("attempt") != attempt:
+                    raise ScienceRunStateError("Cannot record a draft after the Survey attempt changed")
+                mark_stage_failed(state, stage_name, exit_code=0,
+                    message="Survey draft requires review: " + _text(result.metadata.get("reason")),
+                    error_type="SurveyRequiresReview")
+                current.update(outcome="requires_review", outputs=dict(result.outputs))
+                save_science_state(paths, state)
+                append_science_event(paths, event_type="STAGE_REQUIRES_REVIEW", stage=stage_name,
+                    attempt=attempt, result_path=str(result.result_path), reason=result.metadata.get("reason"))
+            return False
         if stage_name == "survey" and result.metadata.get("survey_status") == "insufficient_evidence":
             with locked_science_run(paths):
                 _persisted_metadata, state = load_science_run(paths)

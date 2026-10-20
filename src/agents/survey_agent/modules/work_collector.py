@@ -58,6 +58,7 @@ from src.pipeline.retrieval_budget import RetrievalBudget, RetrievalBudgetExceed
 from src.pipeline.survey_response_normalization import graph_role_fields
 from src.pipeline.survey_evidence_judgments import semantic_boundary_fields
 from src.pipeline.candidate_discovery_queries import broaden_discovery_lane
+from src.pipeline.anysearch import merge_papers, with_anysearch_lanes
 from src.pipeline.candidate_search_schedule import screening_dimensions, dimension_satisfied, promotion_order, interleave, accepted_dimension_papers
 from src.pipeline.evidence_coverage_ledger import (
     associate_papers_with_subhypotheses,
@@ -632,6 +633,8 @@ class WorkCollector:
             "sort": self._sh_retrieval_cache_json_value(lane.get("sort") or {}),
             "result_limit": self._sh_retrieval_cache_json_value(configured_limit),
             "semantic_scholar_fields": str(lane.get("semantic_scholar_fields") or "").strip(),
+            "anysearch_tag": str(lane.get("tag") or ""),
+            "anysearch_params": self._sh_retrieval_cache_json_value(lane.get("params") or {}),
         }
 
     def _sh_retrieval_lane_cache_key(self, lane: Mapping[str, Any]) -> str:
@@ -724,7 +727,22 @@ class WorkCollector:
         """Return whether a provider lane is enabled for active discovery."""
 
         provider = str(lane.get("provider") or "").strip().lower()
+        if provider == "anysearch":
+            return self._anysearch_discovery_enabled()
         return provider != "arxiv" or self._arxiv_discovery_enabled()
+
+    def _anysearch_discovery_enabled(self) -> bool:
+        return str(self._work_collector_setting("enable_anysearch_discovery", False)).strip().lower() not in {"0", "false", "no", "off"}
+
+    def _with_anysearch_lanes(self, plan):
+        if str(self._work_collector_setting("shared_search_enabled", True)).strip().lower() not in {"0", "false", "no", "off"}:
+            # Purpose-specific AnySearch probes are executed by the shared
+            # planner. Keep the existing native-provider comparison lanes.
+            return plan
+        return with_anysearch_lanes(
+            plan, enabled=self._anysearch_discovery_enabled(),
+            result_limit=int(self._work_collector_setting("anysearch_result_limit", 10)),
+        )
 
     def _automatic_subhypothesis_decomposition_enabled(self) -> bool:
         if getattr(self.config, "BasicInfo", None) is None:
@@ -1654,13 +1672,16 @@ class WorkCollector:
             and plan.get("execution_policy") == "limited_query_lanes"
             and isinstance(plan.get("query_lanes"), list)
         ):
-            return dict(plan)
+            return self._with_anysearch_lanes(dict(plan))
         # Cached v1 contexts were metadata-only. Upgrade their route in memory
         # without rebuilding the one-time project identity or invoking its LLM.
-        return build_project_query_lanes(research_context)
+        return self._with_anysearch_lanes(build_project_query_lanes(research_context))
 
     @staticmethod
     def _candidate_identity_keys(paper: Mapping[str, Any]) -> list[str]:
+        if paper.get("source_type") and paper.get("source_type") not in {"paper", "preprint"}:
+            from src.pipeline.anysearch import identity_keys
+            return sorted(identity_keys(paper))
         keys: list[str] = []
         openalex_id = str(paper.get("openalex_id") or paper.get("paperId") or "").strip()
         openalex_match = re.search(r"(?:^|/)(W\d+)$", openalex_id, re.IGNORECASE)
@@ -1752,7 +1773,7 @@ class WorkCollector:
             ),
             "candidate_term": str(lane.get("candidate_term") or ""),
             **{key: value for key, value in lane.items() if key.startswith("discovery_")},
-            **{key: lane[key] for key in ("query_id", "purpose", "context_level", "context_reason", "expected_contribution", "term_origins", "quality_score", "action", "feedback_reason", "feedback_references") if key in lane},
+            **{key: lane[key] for key in ("query_id", "purpose", "context_level", "context_reason", "expected_contribution", "term_origins", "quality_score", "action", "feedback_reason", "feedback_references", "tag", "params", "target_subproblem", "need_id") if key in lane},
             "context_expansion": bool(lane.get("context_expansion")),
             "candidate_id": str(lane.get("candidate_id") or ""),
             "evidence_dimension": str(lane.get("evidence_dimension") or ""),
@@ -1785,6 +1806,8 @@ class WorkCollector:
                     existing_index = len(merged)
                     merged.append(paper)
                 target = merged[existing_index]
+                if target is not paper:
+                    target.update(merge_papers([target, paper])[0])
                 existing_provenance = target.get("retrieval_provenance")
                 provenance_records = (
                     existing_provenance if isinstance(existing_provenance, list) else []
@@ -1814,6 +1837,7 @@ class WorkCollector:
                     merged.append(paper)
                 else:
                     target = merged[existing_index]
+                    target.update(merge_papers([target, paper])[0])
                     for key, value in paper.items():
                         if key not in target or not target.get(key):
                             target[key] = value
@@ -1878,6 +1902,7 @@ class WorkCollector:
             return papers
         lane_order = (
             "broad_anchor",
+            "anysearch_discovery",
             "exact_primary_discipline",
             "adjacent_precision",
             "exact_discipline",
@@ -1965,6 +1990,18 @@ class WorkCollector:
             return [], False, "provider_failure"
         if provider == "arxiv" and not self._arxiv_discovery_enabled():
             return [], False, "provider_failure"
+        if provider == "anysearch":
+            if not self._anysearch_discovery_enabled():
+                return [], False, "disabled"
+            try:
+                options = {key: lane[key] for key in ("tag", "params") if key in lane}
+                result = self.data_manager.anysearch_api.search(query, limit=int(lane.get("result_limit") or 10), **options)
+                self.data_manager.register_discovered_papers(result.papers)
+                self.logger.info("AnySearch discovery status=%s papers=%s cached=%s", result.status, len(result.papers), result.cached)
+                return result.papers, result.successful, result.status
+            except Exception as exc:
+                self.logger.warning("AnySearch discovery failed (%s); continuing other lanes.", type(exc).__name__)
+                return [], False, "provider_failure"
         provider_filter = lane.get("provider_filter") if self._is_exact_native_lane(lane) else None
         try:
             if provider == "openalex":
@@ -2083,6 +2120,9 @@ class WorkCollector:
     ) -> list[Dict]:
         lanes = retrieval_plan.get("query_lanes")
         lane_results: list[tuple[Mapping[str, Any], list[Dict]]] = []
+        supplemental = getattr(self, "_shared_search_candidates", [])
+        if supplemental:
+            lane_results.append(({"provider": "anysearch", "lane": "shared_information_needs", "query": topic}, supplemental))
         for lane in lanes if isinstance(lanes, list) else []:
             if not isinstance(lane, Mapping) or not self._discovery_lane_enabled(lane):
                 continue
@@ -2106,7 +2146,7 @@ class WorkCollector:
         """Expose the cached project identity to an SH planner without another LLM call."""
         research_context = self.get_project_research_context(topic)
         data_anchored_artifact = self._load_data_anchored_subhypotheses(research_context)
-        return build_subhypothesis_retrieval_plan(
+        plan = build_subhypothesis_retrieval_plan(
             research_context,
             subhypotheses,
             include_arxiv=self._arxiv_discovery_enabled(),
@@ -2122,6 +2162,8 @@ class WorkCollector:
                 else None
             ),
         )
+
+        return self._with_anysearch_lanes(plan)
 
     @staticmethod
     def _valid_subhypotheses(plan: Mapping[str, Any]) -> list[Dict]:
@@ -2231,7 +2273,7 @@ class WorkCollector:
                 )
                 if requested_task_ids and task_id not in requested_task_ids:
                     continue
-                task_plan = task.get("retrieval_plan")
+                task_plan = self._with_anysearch_lanes(task.get("retrieval_plan"))
                 for lane in (task_plan or {}).get("query_lanes", []):
                     if not isinstance(lane, Mapping) or not self._discovery_lane_enabled(lane):
                         continue
@@ -2616,6 +2658,10 @@ class WorkCollector:
                         task_outcomes[index] = ([], empty_summary)
 
         all_lane_results: list[tuple[Mapping[str, Any], list[Dict]]] = []
+        supplemental = getattr(self, "_shared_search_candidates", [])
+        if supplemental:
+            all_lane_results.append(({"provider": "anysearch", "lane": "shared_information_needs",
+                                      "query": "scientific information needs", "retrieval_round": retrieval_round}, supplemental))
         summaries: list[dict[str, Any]] = []
         for outcome in [*discovery_outcomes, *task_outcomes]:
             if outcome is None:
@@ -3482,6 +3528,9 @@ class WorkCollector:
             "title": self._normalised_span_text(paper.get("title")),
             "abstract": self._normalised_span_text(paper.get("abstract")),
         }
+        from src.pipeline.source_context import source_texts as actual_source_texts
+        source_texts.update({key: self._normalised_span_text(value)
+                             for key, value in actual_source_texts(paper).items()})
         for raw_source, raw_text in (additional_evidence_sources or {}).items():
             source = str(raw_source or "").strip().casefold()
             text = self._normalised_span_text(raw_text)
@@ -4501,6 +4550,7 @@ class WorkCollector:
                 else None
             ),
         )
+        plan = self._with_anysearch_lanes(plan)
         self._emit_subhypothesis_declared_events(plan, resolved_context)
         valid_subhypotheses = self._valid_subhypotheses(plan)
         if configured_subhypotheses and not valid_subhypotheses:
@@ -5461,6 +5511,10 @@ class WorkCollector:
             research_context,
         )
         sh_retrieval_active = bool(valid_subhypotheses) and self._subhypothesis_retrieval_enabled()
+        from modules.adaptive_discovery import run_survey_search
+        shared = run_survey_search(self, topic=topic, research_context=research_context, subproblems=valid_subhypotheses)
+        self._shared_search_candidates = shared.get("papers", [])
+        self.shared_search_history = shared.get("history", {})
         sh_selection: Dict = {}
         if sh_retrieval_active:
             papers, sh_selection = self._collect_sh_seed_candidates(
@@ -5510,6 +5564,20 @@ class WorkCollector:
             for paper in sh_selection.get("context_seed_papers", [])
             if isinstance(paper, Mapping)
         ] if sh_retrieval_active else []
+        register = getattr(self.data_manager, "register_discovered_papers", None)
+        if callable(register):
+            register(papers)
+        # External results remain readable when the local graph lacks them.
+        # Synthetic IDs cannot be used as local/OpenAlex graph roots.
+        external_reading_papers = [
+            paper for paper in papers
+            if paper.get("provider") == "anysearch"
+            or any(origin.get("provider") == "anysearch" for origin in paper.get("discovery_provenance", []) if isinstance(origin, Mapping))
+        ]
+        context_seed_papers = merge_papers([
+            *context_seed_papers,
+            *(paper for paper in external_reading_papers if str(self.data_manager._resolve_paper_reference_id(paper)).startswith("AS")),
+        ])
         context_source_ids = {
             self.data_manager._resolve_paper_reference_id(paper)
             for paper in context_seed_papers
@@ -5565,22 +5633,33 @@ class WorkCollector:
                 valid_graph_seed_paper_ids.extend(fallback_valid_papers_ids)
                 self.graph_paper_ids.update(valid_graph_seed_paper_ids)
 
+            external_ids = {self.data_manager._resolve_paper_reference_id(paper) for paper in external_reading_papers}
+            context_seed_papers = merge_papers([
+                *context_seed_papers,
+                *(paper for paper in graph_fail_papers if self.data_manager._resolve_paper_reference_id(paper) in external_ids
+                  and self.data_manager._resolve_paper_reference_id(paper) not in valid_graph_seed_paper_ids),
+            ])
+
             valid_context_seed_paper_ids = []
             if context_seed_papers:
                 valid_context_seed_paper_ids = self.data_manager.download_and_parse_papers(
                     context_seed_papers,
                     limit=len(context_seed_papers),
                 )
-                self.graph_paper_ids.update(valid_context_seed_paper_ids)
                 for paper in context_seed_papers:
                     source_id = self.data_manager._resolve_paper_reference_id(paper)
+                    if str(source_id).startswith("AS"):
+                        continue
                     openalex_id = self.data_manager.openalex_api.resolve_work_id(paper)
                     if source_id and openalex_id:
                         self._openalex_id_aliases[source_id] = openalex_id
+                valid_context_seed_paper_ids = self._include_external_abstract_seeds(
+                    context_seed_papers, valid_context_seed_paper_ids
+                )
+                self.graph_paper_ids.update(valid_context_seed_paper_ids)
                 self.context_seed_paper_ids = {
                     self._openalex_id_aliases.get(paper_id, paper_id)
-                    for paper_id in valid_context_seed_paper_ids
-                    if paper_id
+                    for paper_id in valid_context_seed_paper_ids if paper_id
                 }
             
             if len(valid_graph_seed_paper_ids) == 0 and not valid_context_seed_paper_ids:
@@ -5592,7 +5671,7 @@ class WorkCollector:
                 len(valid_context_seed_paper_ids),
             )
             
-            return valid_graph_seed_paper_ids + valid_context_seed_paper_ids
+            return list(dict.fromkeys([*valid_graph_seed_paper_ids, *valid_context_seed_paper_ids]))
 
         self.logger.info(
             f"Downloading and parsing up to {len(papers)} papers..."
@@ -5600,8 +5679,13 @@ class WorkCollector:
         valid_seed_papers_ids = self.data_manager.download_and_parse_papers(
             papers, limit=max_seed_papers
         )
+        valid_seed_papers_ids = self._include_external_abstract_seeds(
+            external_reading_papers, valid_seed_papers_ids
+        )
         for paper in papers:
             source_id = self.data_manager._resolve_paper_reference_id(paper)
+            if str(source_id).startswith("AS"):
+                continue
             openalex_id = self.data_manager.openalex_api.resolve_work_id(paper)
             if source_id and openalex_id:
                 self._openalex_id_aliases[source_id] = openalex_id
@@ -5630,7 +5714,8 @@ class WorkCollector:
         self.metadata_only_graph_seed_ids = {
             paper_id
             for paper_id in selected_graph_root_ids
-            if paper_id not in valid_seed_papers_ids and paper_id not in self.ignore_paper
+            if not str(paper_id).startswith("AS")
+            and paper_id not in valid_seed_papers_ids and paper_id not in self.ignore_paper
         }
         if self.metadata_only_graph_seed_ids:
             self.logger.info(
@@ -5639,17 +5724,16 @@ class WorkCollector:
                 len(self.metadata_only_graph_seed_ids),
             )
         self.graph_paper_ids.update(valid_seed_papers_ids)
+        self.context_seed_paper_ids = {
+            self._openalex_id_aliases.get(paper_id, paper_id)
+            for paper_id in context_source_ids if paper_id
+        }
         if not sh_retrieval_active:
             return list(dict.fromkeys([
                 *valid_seed_papers_ids,
                 *sorted(self.metadata_only_graph_seed_ids),
             ]))
 
-        self.context_seed_paper_ids = {
-            self._openalex_id_aliases.get(paper_id, paper_id)
-            for paper_id in context_source_ids
-            if paper_id
-        }
         self.logger.info(
             "SH seed selection retained %s evidence seeds and %s context-only seeds.",
             len([paper for paper in sh_selection.get("evidence_seed_papers", []) if isinstance(paper, Mapping)]),
@@ -5659,6 +5743,25 @@ class WorkCollector:
             *valid_seed_papers_ids,
             *sorted(self.metadata_only_graph_seed_ids),
         ]))
+
+    def _include_external_abstract_seeds(self, papers, readable_ids):
+        """Allow actual external abstracts under the existing fallback policy."""
+        result = list(readable_ids)
+        analyzer = getattr(getattr(self.config, "ModuleInfo", None), "WorkAnalyzer", {}) or {}
+        setting = analyzer.get if hasattr(analyzer, "get") else lambda key, default: getattr(analyzer, key, default)
+        if not (setting("abstract_only_mode", False) or setting("abstract_when_full_text_fail", False)):
+            return result
+        for paper in papers:
+            pid = self.data_manager._resolve_paper_reference_id(paper)
+            if pid in result:
+                continue
+            if paper.get("provider") != "anysearch" and not any(
+                origin.get("provider") == "anysearch" for origin in paper.get("discovery_provenance", []) if isinstance(origin, Mapping)
+            ):
+                continue
+            if self.data_manager.is_valid_abstract(paper.get("abstract")):
+                result.append(pid)
+        return result
 
     # ========== 直接委托给 DataManager 的函数 ==========
     
@@ -5672,6 +5775,9 @@ class WorkCollector:
 
     def get_paper_title_abstract(self, paper_id: str, retry: int = 1):
         """Get paper title and abstract - 委托给 DataManager"""
+        saved_abstracts = getattr(self, "_survey_resume_abstracts", {})
+        if paper_id in saved_abstracts:
+            return tuple(saved_abstracts[paper_id])
         return self.data_manager.get_paper_title_abstract(paper_id, retry)
 
     def get_paper_title(self, paper_id: str, retry: int = 3):
