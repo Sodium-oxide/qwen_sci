@@ -40,6 +40,8 @@ def validate_graph(db_path: str | Path, cores: list[dict[str, Any]]) -> dict[str
     expected_edges = set()
 
     def verify(node: dict[str, Any], paper: dict[str, Any]) -> None:
+        if node.get("verification_status", "verified") != "verified":
+            raise ValueError(f"Unverified graph candidate: {node.get('node_id')}")
         records = node.get("evidence_records")
         if not isinstance(records, list) or not records:
             raise ValueError(f"Missing verified evidence: {node.get('node_id')}")
@@ -76,7 +78,7 @@ def validate_graph(db_path: str | Path, cores: list[dict[str, Any]]) -> dict[str
                     or record.get("evidence_id") != stable_id("evidence", source_id, quote, str(start))):
                 raise ValueError(f"Evidence quote, checksum or locator mismatch: {node.get('node_id')}")
             section, page = loc.get("section"), loc.get("page")
-            span = _section_span(body, section) if section else None
+            span = _section_span(body, section, offset=start, end=end) if section else None
             if ((section and (not span or not span[0] <= start < end <= span[1]))
                     or (page is not None and str(page) != str(source.get("page")))
                     or (not section and page is None)):

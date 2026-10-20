@@ -15,6 +15,7 @@ import re
 from typing import Dict, List, Optional, Tuple, Any
 
 from src.agents.survey_agent.utils.utils import extract_json
+from src.agents.survey_agent.utils.main_json_repair import extract_main_with_repair, parse_main_object
 from src.pipeline.discipline_taxonomy import NATURAL_SCIENCE_ENGINEERING_TAXONOMY
 
 # ================= CONSTANTS =================
@@ -130,7 +131,7 @@ OUTPUT FORMAT: Single word only (e.g., Algorithm, NOT Type: Algorithm)
 
 CRITICAL GROUNDING RULES:
 1. Insight: Must provide INDEPENDENT ANALYSIS beyond summary. Describe prerequisites, trade-offs, design choices, or potential defects. DO NOT copy summary or quote.
-2. Quote: Copy a contiguous VERBATIM span from the unmarked original paper. Never join excerpts with added ellipses. Provide its exact source_section heading. Do not include HINT markers. If no supporting text exists, use an empty quote.
+2. Quote: Copy a contiguous VERBATIM span from the unmarked original paper. Never join excerpts with added ellipses. Provide its exact source_section heading. Do not include HINT markers. PDF-to-Markdown reading order may insert figures, captions or columns inside a logical sentence: never stitch the separated text into one quote. Instead leave quote empty and supply multiple evidence_records, each a continuous original fragment with its own exact source_section (and source_id when provided). The fragments must jointly support the same claim. If no supporting text exists, leave quote and evidence_records empty.
 3. Summary: Concise factual description in natural sentence form.
 4. Keywords: Concept words used for COARSE-GRAINED RETRIEVAL and filtering. Choose representative terms that capture the essence for search/matching.
 5. Domain: Choose one canonical discipline ID from the schema list, or an empty string if unresolved. Never use Others or Hybrid as a discipline.
@@ -295,7 +296,8 @@ Output JSON Schema (FOLLOW THIS EXACT ATTRIBUTE ORDER):
       "summary": "str",
       "insight": "str (MUST include design choices AND potential defects)",
       "quote": "str (contiguous verbatim supporting span)",
-      "source_section": "str (exact Markdown section heading)"
+      "source_section": "str (exact Markdown section heading)",
+      "evidence_records": [{{"quote": "str (one contiguous fragment; use separate records when captions interrupt a sentence)", "source_section": "str (exact heading)"}}]
     }}
   ],
   "innovations": [
@@ -508,7 +510,7 @@ def validate_and_parse_main(response: str, info_dict: dict = None) -> Tuple[bool
     if not response:
         raise ValueError("Empty response")
     
-    parsed = extract_json(response)
+    parsed = parse_main_object(response)
     
     if not isinstance(parsed, dict):
         raise ValueError("Response is not a JSON object")
@@ -516,6 +518,8 @@ def validate_and_parse_main(response: str, info_dict: dict = None) -> Tuple[bool
     # Check required top-level keys
     if 'metadata' not in parsed:
         raise ValueError("Missing required key: metadata")
+    if not isinstance(parsed['metadata'], dict):
+        raise ValueError("metadata must be a JSON object")
     
     # Extract core names for baseline extraction
     core_contributions = parsed.get("core_contributions", [])
@@ -694,6 +698,9 @@ def extract_paper_info_batch(
     preserve_components: bool = False,
     strict_input_budget: bool = False,
     max_output_tokens: int = 16000,
+    repair_main_json: bool = False,
+    main_request_observer=None,
+    initial_main_states: Optional[dict] = None,
 ) -> List[dict]:
     """
     Extract paper information using ChatAgent with retry.
@@ -758,16 +765,22 @@ def extract_paper_info_batch(
                 raise ValueError(f"input_budget_exceeded:{paper_id}: {tokens} > {budget} tokens; full text was not truncated")
 
     # Call with retry and validation - info_dict contains paper_id for later aggregation
-    main_responses = chat_agent.batch_remote_chat_with_retry(
-        main_prompts,
-        validate_fn=validate_and_parse_main,
-        max_retry=max_retry,
-        desc="Main extraction",
-        temperature=temperature,
-        info_dict={'metadata': main_metadata},
-        strict_input_budget=strict_input_budget,
-        max_output_tokens=max_output_tokens,
-    )
+    if repair_main_json:
+        main_responses = extract_main_with_repair(
+            main_prompts, main_metadata, chat_agent, validate_and_parse_main, max_retry=max_retry,
+            temperature=temperature, strict_input_budget=strict_input_budget,
+            max_output_tokens=max_output_tokens, observer=main_request_observer, initial_states=initial_main_states)
+    else:
+        main_responses = chat_agent.batch_remote_chat_with_retry(
+            main_prompts,
+            validate_fn=validate_and_parse_main,
+            max_retry=max_retry,
+            desc=f"Main extraction paper={paper_ids[0]}" if len(paper_ids) == 1 else "Main extraction",
+            temperature=temperature,
+            info_dict={'metadata': main_metadata},
+            strict_input_budget=strict_input_budget,
+            max_output_tokens=max_output_tokens,
+        )
     
     # main_responses are already parsed results from validate_and_parse_main
     main_results = main_responses
@@ -801,7 +814,7 @@ def extract_paper_info_batch(
         baseline_prompts,
         validate_fn=validate_and_parse_baseline,
         max_retry=max_retry,
-        desc="Baseline extraction",
+        desc=f"Baseline extraction paper={paper_ids[0]}" if len(paper_ids) == 1 else "Baseline extraction",
         temperature=temperature,
         info_dict={'metadata': baseline_metadata},
         strict_input_budget=strict_input_budget,

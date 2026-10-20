@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from src.paper_graph.repository import PaperGraphRepository, digest, readonly_connection
+from src.paper_graph.source_locations import formatted_quote_locations, quote_location, section_span as _section_span
 from src.pipeline.discipline_taxonomy import canonicalize_discipline_key
 from src.pipeline.paper_identity import canonical_paper_id
 
@@ -85,36 +86,36 @@ def source_documents(payload: dict[str, Any], documents: Iterable[dict[str, Any]
     return [result[k] for k in sorted(result)]
 
 
-def _section_span(body: str, section: str) -> tuple[int, int] | None:
-    headings = list(re.finditer(r"(?m)^\s{0,3}(#{1,6})\s+(.+?)\s*#*\s*$", body))
-    for i, heading in enumerate(headings):
-        if section.strip().lstrip("#").strip() != heading.group(2).strip():
-            continue
-        end = len(body)
-        for following in headings[i + 1:]:
-            if len(following.group(1)) <= len(heading.group(1)):
-                end = following.start()
-                break
-        return heading.end(), end
-    return None
+def declared_evidence(item: dict[str, Any]) -> list[Any]:
+    """Keep evidence in every supported field, including legacy aliases."""
+    entries = []
+    for field in ("evidence_records", "evidence"):
+        raw = item.get(field) or []
+        if isinstance(raw, (str, Mapping)):
+            raw = [raw]
+        if isinstance(raw, list):
+            entries.extend(raw)
+    for field in ("source_quote", "quote"):
+        if item.get(field):
+            entries.append({"quote": item[field], **{k: item[k] for k in
+                ("source_id", "source_sha256", "locator", "source_section", "page") if k in item}})
+    return entries
 
 
 def verified_evidence(item: dict[str, Any], docs: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    raw = item.get("evidence_records") or item.get("evidence") or []
-    if isinstance(raw, (str, Mapping)):
-        raw = [raw]
-    if item.get("source_quote") or item.get("quote"):
-        raw = [*raw, {"quote": item.get("source_quote") or item["quote"], "source_id": item.get("source_id"),
-                       "locator": item.get("locator"), "source_section": item.get("source_section"),
-                       "page": item.get("page")}]
+    raw = declared_evidence(item)
     records = []
     for candidate in raw:
         entry = {"quote": candidate} if isinstance(candidate, str) else object_value(candidate)
-        quote = text(entry.get("quote") or entry.get("evidence"))
+        quote = entry.get("quote") or entry.get("evidence")
+        if not isinstance(quote, str):
+            continue
+        quote = quote.strip()
         locator = object_value(entry.get("locator"))
-        section = text(entry.get("source_section") or entry.get("section") or locator.get("section")
-                       or item.get("source_section"))
+        section = text(entry.get("source_section") or entry.get("section")
+                       or locator.get("section", item.get("source_section")))
         page = entry.get("page", locator.get("page", item.get("page")))
+        eligible = []
         for doc in docs:
             if entry.get("source_id") and entry["source_id"] != doc["source_id"]:
                 continue
@@ -124,38 +125,33 @@ def verified_evidence(item: dict[str, Any], docs: list[dict[str, Any]]) -> list[
                 continue
             if not quote:
                 continue
-            # Old Survey notes carry exact quotes without locators. Recover a
-            # heading only from a unique literal match, never from a paraphrase.
-            resolved_section = section
-            if not section and page is None:
-                offset = doc["text"].find(quote)
-                if offset < 0 or doc["text"].find(quote, offset + 1) >= 0:
-                    continue
-                headings = list(re.finditer(r"(?m)^\s{0,3}#{1,6}\s+(.+?)\s*#*\s*$", doc["text"][:offset]))
-                if headings:
-                    resolved_section = headings[-1].group(1).strip()
-            span = _section_span(doc["text"], resolved_section) if resolved_section else None
-            # A reported page is verifiable only with a page-specific source.
-            page_valid = page is not None and str(page) == str(doc.get("page"))
-            if (resolved_section and not span) or (page is not None and not page_valid) or not (span or page_valid):
+            page_valid = page is not None and doc.get("page") is not None and str(page) == str(doc["page"])
+            if page is not None and not page_valid:
                 continue
-            start, end = span or (0, len(doc["text"]))
-            offset = doc["text"].find(quote, start, end)
-            if offset < 0:
+            if ("start" in locator or "end" in locator) and (
+                    type(locator.get("start")) is not int or type(locator.get("end")) is not int):
                 continue
-            if "start" in locator or "end" in locator:
-                claimed_start, claimed_end = locator.get("start"), locator.get("end")
-                if (type(claimed_start) is not int or type(claimed_end) is not int
-                        or not start <= claimed_start < claimed_end <= end
-                        or doc["text"][claimed_start:claimed_end] != quote):
-                    continue
-                offset = claimed_start
-            location = {"section": resolved_section, "page": page, "path": doc["path"],
-                        "start": offset, "end": offset + len(quote)}
-            records.append({"evidence_id": stable_id("evidence", doc["source_id"], quote, str(offset)),
-                            "source_id": doc["source_id"], "quote": quote, "locator": location,
-                            "source_sha256": doc["sha256"]})
-            break
+            eligible.append((doc, page_valid))
+        for resolver in (quote_location, formatted_quote_locations):
+            matches = []
+            for doc, page_valid in eligible:
+                locations = resolver(doc["text"], quote, section=section, start=locator.get("start"),
+                                     end=locator.get("end"), allow_unsectioned=page_valid)
+                if resolver is quote_location:
+                    locations = [locations] if locations is not None else []
+                for resolved_section, offset, quote_end in locations:
+                    original_quote = doc["text"][offset:quote_end]
+                    location = {"section": resolved_section, "page": page, "path": doc["path"],
+                                "start": offset, "end": quote_end}
+                    matches.append({"evidence_id": stable_id("evidence", doc["source_id"], original_quote, str(offset)),
+                                    "source_id": doc["source_id"], "quote": original_quote, "locator": location,
+                                    "source_sha256": doc["sha256"]})
+                if resolver is quote_location and matches:
+                    break
+            if matches:
+                if len(matches) == 1:
+                    records.extend(matches)
+                break
     return sorted({r["evidence_id"]: r for r in records}.values(), key=lambda r: r["evidence_id"])
 
 
@@ -171,12 +167,7 @@ def merge_entities(items: Iterable[Any], *, parent_key: str | None = None) -> li
         if not key[1]:
             key = (key[0], digest(entry))
         # Convert each packet's legacy quote before any field is merged.
-        evidence = entry.get("evidence_records") or entry.get("evidence") or []
-        if isinstance(evidence, (str, Mapping)):
-            evidence = [evidence]
-        if entry.get("quote") or entry.get("source_quote"):
-            evidence = [*evidence, {"quote": entry.get("source_quote") or entry["quote"],
-                **{k: entry[k] for k in ("source_id", "source_section", "locator", "page") if k in entry}}]
+        evidence = declared_evidence(entry)
         entry = {**entry, "evidence_records": evidence}
         if key not in merged:
             merged[key] = entry
@@ -197,19 +188,27 @@ def merge_entities(items: Iterable[Any], *, parent_key: str | None = None) -> li
 
 
 def normalize_extraction(payload: dict[str, Any], documents: Iterable[dict[str, Any]] = ()) -> tuple[str, list[dict[str, Any]], list[dict[str, Any]], dict[str, Any], list[str]]:
+    from src.paper_graph.candidates import verified_candidates
+
     pid = paper_identity(payload)
     meta = object_value(payload.get("metadata"))
-    resources = object_value(payload.get("ideation_resource")) or payload
     title = text(payload.get("paper_title") or meta.get("title") or payload.get("title"))
     domain = canonicalize_discipline_key(payload.get("paper_domain") or meta.get("domain"))
     docs = source_documents(payload, documents)
-    reasons = []
+    resources, candidates, reasons = verified_candidates(payload, docs)
     if not title:
         reasons.append("missing_paper_title")
     if not domain:
         reasons.append("unresolved_discipline")
     if not docs:
         reasons.append("missing_fulltext")
+    blocking = [reason for reason in reasons if reason in {"missing_paper_title", "unresolved_discipline", "missing_fulltext"}]
+    if blocking:
+        resources = {**resources, "core_contributions": []}
+        for candidate in candidates:
+            if candidate["verification_status"] == "verified":
+                candidate["verification_status"] = "blocked"
+                candidate["reasons"].extend(blocking)
     common = {"paper_id": pid, "paper_title": title, "paper_domain": domain,
               "pub_year": payload.get("pub_year") or meta.get("year") or "",
               "source_venue": payload.get("source_venue") or meta.get("venue") or ""}
@@ -254,7 +253,7 @@ def normalize_extraction(payload: dict[str, Any], documents: Iterable[dict[str, 
             reasons.append(f"contribution_evidence_missing:{name}")
             continue
         core_node = {**common, "node_id": cid, "node_type": "Core", "label": name, "full_name": name,
-                     "summary": summary, "evidence_records": evidence,
+                     "summary": summary, "evidence_records": evidence, "verification_status": "verified",
                      "text": "\n".join(e["quote"] for e in evidence),
                      "structure": core.get("structure", ""), "assumptions": core.get("assumptions", []),
                      "boundary_conditions": core.get("boundary_conditions", []), "components": []}
@@ -282,7 +281,7 @@ def normalize_extraction(payload: dict[str, Any], documents: Iterable[dict[str, 
                 continue
             component = {**common, "node_id": comp_id, "node_type": "Component", "core_id": cid,
                          "name": comp_name, "summary": comp_summary, "keywords": comp.get("keywords", []),
-                         "evidence_records": comp_evidence}
+                         "evidence_records": comp_evidence, "verification_status": "verified"}
             nodes.append(component)
             core_node["components"].append(component)
             edges.append({"id": stable_id("edge", cid, comp_id), "source": cid,
@@ -292,20 +291,25 @@ def normalize_extraction(payload: dict[str, Any], documents: Iterable[dict[str, 
         nodes.append(core_node)
         edges.append({"id": stable_id("edge", pid, cid), "source": paper_node["node_id"],
                       "target": cid, "edge_type": "has_contribution"})
-    queued = {**payload, "paper_id": pid, "source_documents": docs}
+    queued = {**payload, "paper_id": pid, "source_documents": docs,
+              "candidate_verification": candidates}
     return pid, sorted(nodes, key=lambda n: n["node_id"]), sorted(edges, key=lambda e: e["id"]), queued, sorted(set(reasons))
 
 
 def ingest_paper(db_path: Path | str, payload: dict[str, Any], *, documents: Iterable[dict[str, Any]] = (),
-                 expected_queue_hash: str | None = None, extraction_attempt_id: int | None = None) -> dict[str, Any]:
+                 expected_queue_hash: str | None = None, extraction_attempt_id: int | None = None,
+                 queue_input: dict[str, Any] | None = None, extraction_error: dict[str, Any] | None = None) -> dict[str, Any]:
     pid, nodes, edges, queued, reasons = normalize_extraction(payload, documents)
-    if expected_queue_hash is not None and reasons:
+    has_verified = any(node["node_type"] == "Core" for node in nodes)
+    if expected_queue_hash is not None and reasons and not has_verified:
         raise ValueError("Queue extraction failed import validation: " + "; ".join(reasons))
     resources = object_value(payload.get("ideation_resource")) or payload
     authoritative = not reasons and ("core_contributions" in resources or "cores" in payload)
     return PaperGraphRepository(db_path).replace_paper(pid, nodes, edges, queued, reasons, authoritative=authoritative,
                                                      expected_queue_hash=expected_queue_hash,
-                                                     extraction_attempt_id=extraction_attempt_id)
+                                                     extraction_attempt_id=extraction_attempt_id,
+                                                     partial_import=bool(reasons and has_verified),
+                                                     queue_input=queue_input, extraction_error=extraction_error)
 
 
 def _diskcache_values(directory: Path) -> Iterable[dict[str, Any]]:
