@@ -35,6 +35,8 @@ def load_capabilities(client, *, refresh: bool = False) -> dict:
     Only safe schema fields are saved. API messages and headers may contain
     credentials and are deliberately excluded from this artifact.
     """
+    if not getattr(client, "enabled", True):
+        return {"schema_version": CATALOG_VERSION, "status": "disabled", "channels": {}, "requests_used": 0, "issues": []}
     memory = getattr(client, "_capability_catalog", None)
     if memory and not refresh:
         return memory

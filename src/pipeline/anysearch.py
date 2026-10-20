@@ -97,11 +97,18 @@ def source_identifiers(paper: Mapping[str, Any]) -> dict[str, str]:
     parsed = urlsplit(url)
     host, path = (parsed.hostname or "").lower(), unquote(parsed.path)
     pmcid = text(paper.get("pmcid") or external.get("PMCID") or external.get("pmcid"))
+    pmid = text(str(paper.get("pmid") or external.get("PubMed") or external.get("PMID") or external.get("pmid") or ""))
     arxiv = text(external.get("ArXiv") or external.get("arxiv"))
     repository = text(paper.get("repository_id"))
     if host in {"pmc.ncbi.nlm.nih.gov", "www.ncbi.nlm.nih.gov", "europepmc.org"}:
         match = re.search(r"\bPMC\d+\b", path, re.I)
         pmcid = pmcid or (match.group().upper() if match else "")
+    if host == "pubmed.ncbi.nlm.nih.gov" or host == "www.ncbi.nlm.nih.gov" and path.startswith("/pubmed/"):
+        match = re.fullmatch(r"/(?:pubmed/)?(\d+)/?", path)
+        pmid = pmid or (match.group(1) if match else "")
+    if host == "europepmc.org":
+        match = re.fullmatch(r"/article/MED/(\d+)/?", path, re.I)
+        pmid = pmid or (match.group(1) if match else "")
     if host in {"arxiv.org", "export.arxiv.org"}:
         match = re.search(r"/(?:abs|pdf|html)/(.+?)(?:\.pdf)?$", path)
         arxiv = arxiv or (match.group(1) if match else "")
@@ -111,7 +118,10 @@ def source_identifiers(paper: Mapping[str, Any]) -> dict[str, str]:
     if host.endswith("zenodo.org"):
         match = re.search(r"/records?/(\d+)", path)
         repository = repository or ("zenodo:" + match.group(1) if match else "")
-    return {"pmcid": pmcid.upper(), "arxiv": re.sub(r"v\d+$", "", arxiv), "repository": repository}
+    pmcid = pmcid.upper()
+    pmcid = "PMC" + pmcid if pmcid.isdigit() else pmcid
+    return {"pmid": pmid if pmid.isdigit() else "", "pmcid": pmcid if re.fullmatch(r"PMC\d+", pmcid) else "",
+            "arxiv": re.sub(r"v\d+$", "", arxiv), "repository": repository}
 
 
 def merge_papers(papers: list[dict]) -> list[dict]:
@@ -126,7 +136,7 @@ def merge_papers(papers: list[dict]) -> list[dict]:
         target = merged[matches[0]]
         for other in [*(merged[i] for i in matches[1:]), raw]:
             for key, value in other.items():
-                if key in {"retrieval_provenance", "discovery_provenance", "oa_locations", "openalex_oa_locations"}:
+                if key in {"retrieval_provenance", "discovery_provenance", "identity_provenance", "oa_locations", "openalex_oa_locations"}:
                     records = list(target.get(key) or [])
                     for record in value or []:
                         if record not in records:
@@ -227,11 +237,13 @@ def _identifier_fields(raw: Mapping, landing: str) -> dict:
         external["DOI"] = doi
     if identifiers["pmcid"]:
         external["PMCID"] = identifiers["pmcid"]
+    if identifiers["pmid"]:
+        external["PubMed"] = identifiers["pmid"]
     if identifiers["arxiv"]:
         # Keep the requested preprint version in provenance and download URL.
         match = re.search(r"/(?:abs|pdf|html)/(.+?)(?:\.pdf)?$", urlsplit(landing).path)
         external["ArXiv"] = text(external.get("ArXiv") or external.get("arxiv")) or (match.group(1) if match else identifiers["arxiv"])
-    return {"externalIds": external, "pmcid": identifiers["pmcid"], "repository_id": identifiers["repository"]}
+    return {"externalIds": external, "pmid": identifiers["pmid"], "pmcid": identifiers["pmcid"], "repository_id": identifiers["repository"]}
 
 
 def parse_anysearch_response(payload: Any) -> list[dict]:
@@ -348,15 +360,14 @@ class AnySearchClient:
 
 
 def anysearch_from_survey_config(config: Any, *, cache_dir: str | Path | None = None) -> AnySearchClient:
+    """Build a disabled client because Survey has no AnySearch access."""
     api = _config_get(config, "APIInfo", {}) or {}
-    settings = _config_get(_config_get(config, "ModuleInfo"), "WorkCollector", {}) or {}
-    enabled = as_bool(_config_get(settings, "enable_anysearch_discovery", False))
     basic = _config_get(config, "BasicInfo")
     return AnySearchClient(
         _config_get(api, "anysearch_base_url") or None,
         tag=_config_get(api, "anysearch_tag", DEFAULT_ANYSEARCH_TAG),
         timeout=_config_get(api, "anysearch_timeout_seconds", 30), max_retries=_config_get(api, "anysearch_max_retries", 1),
-        cache_dir=cache_dir or Path(str(_config_get(basic, "cache_path", "./database"))) / "anysearch", enabled=enabled,
+        cache_dir=cache_dir or Path(str(_config_get(basic, "cache_path", "./database"))) / "anysearch", enabled=False,
     )
 
 

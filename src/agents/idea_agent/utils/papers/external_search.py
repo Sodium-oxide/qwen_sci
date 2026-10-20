@@ -23,6 +23,7 @@ REFERENCE_SOURCE_FIELDS = (
     "scoring_status", "scoring_issue",
     "source_type", "version", "externalIds", "repository_id", "access_urls", "access_status",
     "fetched_at", "reading_range", "content_sha256",
+    "pmid", "pmcid", "identity_provenance", "raw_source_path", "raw_source_sha256",
 )
 
 
@@ -124,6 +125,8 @@ class IdeaExternalSearch:
         settings["max_acquisition_attempts"] = min(int(settings["max_acquisition_attempts"]),
             max(0, int(self.setting("max_total_acquisition_attempts", 20)) - spent_acquisition))
         settings.update(read_limit=read_limit, max_needs=int(self.setting(phase + "_queries", 5 if phase == "initial" else 4)))
+        settings["access_context_generation"] = get_config_value(
+            getattr(self.repository, "config", None), "ModuleInfo.WorkCollector.fulltext_access_context_generation", "anonymous-v1")
 
         def read(paper):
             return self.repository.read_discovered_paper(

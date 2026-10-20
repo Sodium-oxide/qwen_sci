@@ -19,6 +19,7 @@ from modules.fulltext_resolution import (
 from modules.fulltext_download_cache import FulltextDownloadCoordinator
 from modules.fulltext_http import FulltextHttpClient
 import requests
+import re
 from contextlib import closing
 from contextvars import copy_context
 import diskcache as dc
@@ -380,6 +381,17 @@ class DataManager:
             "fulltext_provenance",
             f"{paper_id}.json",
         )
+
+    def get_fulltext_acquisition_report(self, paper_id):
+        paper_id = str(paper_id or "")
+        if not re.fullmatch(r"[A-Za-z0-9_.-]+", paper_id):
+            return {}
+        try:
+            with open(self._fulltext_provenance_path(paper_id), encoding="utf-8") as handle:
+                report = json.load(handle)
+            return report if isinstance(report, dict) else {}
+        except (OSError, ValueError):
+            return {}
 
     def _write_fulltext_provenance(self, paper_id, payload):
         """Atomically persist non-sensitive acquisition provenance for one paper."""

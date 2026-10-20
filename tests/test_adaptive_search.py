@@ -11,6 +11,7 @@ from src.pipeline.anysearch import AnySearchClient, SearchResult, identity_keys,
 from src.pipeline.search_capabilities import validate_route
 from src.pipeline.search_planner import ScientificSearchPlanner, scientific_input
 from src.pipeline.source_reader import SourceReader
+from src.pipeline.source_retry import SOURCE_READER_REVISION, source_route_fingerprint
 
 
 def catalog():
@@ -343,3 +344,52 @@ def test_policy_pdf_is_delegated_to_pdf_parser_without_page_size_limit(tmp_path)
     assert result["reading_status"] == "completed" and result["reading_mode"] == "fulltext"
     parsed = manager.get_paper_raw_markdown.call_args.args[0]
     assert parsed["openAccessPdf"]["url"] == p["url"] and response.closed
+
+
+def test_blocked_source_is_not_rescheduled_without_new_routes_even_across_resume(tmp_path):
+    candidate = paper(20)
+    client = SimpleNamespace(search=Mock(return_value=SearchResult([candidate], "success")))
+
+    def read(value):
+        return {"reading_status": "unavailable", "retry": {"policy": "when_source_changes",
+            "route_fingerprint": source_route_fingerprint(value), "access_context_generation": "anonymous-v1",
+            "reader_revision": SOURCE_READER_REVISION}}
+
+    reader = Mock(side_effect=read)
+    runner(tmp_path, client, reader, state=state(need(read_limit=1)), settings={"max_rounds": 2}).run(phase="survey", task={})
+    saved = load_history(tmp_path / "search.json")
+    assert reader.call_count == 1 and saved["budget"]["acquisitions"] == 1
+    assert saved["reads"][candidate["paperId"]]["deferred_reason"] == "unchanged_source_routes"
+    runner(tmp_path, client, reader, settings={"max_rounds": 2}).run(phase="survey", task={})
+    assert reader.call_count == 1
+
+
+def test_new_download_route_reopens_paper_after_attempt_limit_without_resetting_budget(tmp_path):
+    candidate = paper(21)
+    client = SimpleNamespace(search=Mock(return_value=SearchResult([candidate], "success")))
+    reader = Mock(side_effect=[{"reading_status": "unavailable"}, reference(candidate)])
+    runner(tmp_path, client, reader, state=state(need(read_limit=1)), settings={"checkpoint_attempts": 1}).run(phase="survey", task={})
+    saved = load_history(tmp_path / "search.json")
+    saved["queries"][0]["papers"][0]["openAccessPdf"] = {"url": "https://repository.example/new.pdf"}
+    (tmp_path / "search.json").write_text(json.dumps(saved))
+    result = runner(tmp_path, client, reader, settings={"checkpoint_attempts": 1}).run(phase="survey", task={})
+    saved = load_history(tmp_path / "search.json")
+    assert len(result["references"]) == 1 and reader.call_count == 2
+    assert saved["budget"]["acquisitions"] == 2
+    assert saved["reads"][candidate["paperId"]]["attempts"] == 2
+
+
+def test_blocked_reading_is_shared_across_phases_but_access_context_change_reopens_it(tmp_path):
+    candidate = paper(22)
+    retry = {"policy": "when_source_changes", "route_fingerprint": source_route_fingerprint(candidate),
+             "access_context_generation": "anonymous-v1", "reader_revision": SOURCE_READER_REVISION}
+    inherited = {"reads": {candidate["paperId"]: {"paper": candidate, "status": "unavailable", "attempts": 2,
+        "reference": {"reading_status": "unavailable", "retry": retry}, "attempt_fingerprint": retry["route_fingerprint"]}}}
+    client = SimpleNamespace(search=Mock(return_value=SearchResult([candidate], "success")))
+    reader = Mock(return_value=reference(candidate))
+    result = runner(tmp_path, client, reader, state=state(need(read_limit=1)), inherited=[inherited]).run(phase="candidate", task={})
+    assert result["references"] == []
+    reader.assert_not_called()
+    result = runner(tmp_path, client, reader, settings={"access_context_generation": "institutional-v2"}).run(phase="candidate", task={})
+    assert len(result["references"]) == 1 and reader.call_count == 1
+    assert load_history(tmp_path / "search.json")["budget"]["acquisitions"] == 1

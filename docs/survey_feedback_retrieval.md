@@ -63,7 +63,13 @@
 
 最终排名另存于 `ranking_readiness_by_subhypothesis`，记录缺失维度、目标验证状态、待验证条件和比较资格。模型声明 `ranking_evidence=sufficient` 不能跳过证据矩阵；声明不足时保留缺口。排名还需要必需维度满足独立来源要求、存在非纯负向证据以及同类同层级的比较对象。没有目标直接证据时记录 `indirect/not_reported/unknown` 和待验证条件；需要直接目标证据的结论仍必须满足对应维度，代理证据不能代替。全局最佳候选结论继续受发现覆盖与比较充分性约束。
 
-查询反馈增加 `contribution_outcomes` 原因计数：`identity_only`、`target_validation_gap`、`ranking_evidence_gap`、`insufficient_evidence`、`irrelevant`、`explicit_exclusion`、`assessment_unavailable` 或局部贡献。`useful` 统计可用局部贡献，`returned_unique` 单独统计检索命中。低收益不等于零命中，也不直接淘汰候选。身份线索不足时保留对象补方法/机制，目标验证不足时放宽精确目标上下文，排名不足时寻找可比终点/对照；实际无关噪声才建议收窄辨识上下文。`revision_guidance` 保留具体原因与优先级，原有轮数和预算继续约束执行。
+对已完成评估、有实际摘要或正文依据、未被明确排除或判无关，却同时给出 `local_contribution=none/identity_only/unknown` 与 `target_validation=indirect/not_reported` 的论文—SH 配对，执行一次定向局部贡献复核。复核读取原评估、原课题、对应 SH 与实际来源，独立判断源体系中的方法、机制、控制设计或反证能否支持具体的局部主张，不通过关键词自动提升贡献。改为 `supported` 时必须返回明确源体系、迁移理由、具体主张和有效摘要/正文依据；身份不匹配、重复答复、只有题名、缺少依据或调用失败时保留原判定。目标验证、排名、排除结论、分数和角色不随局部贡献复核升级。
+
+复核每个配对最多尝试一次，默认每次 Survey 最多四个请求、每请求十二个配对，并计入共享模型预算；可复用主评估已预留且未使用的容量，不能占用独立预留的反馈容量。超限或预算不足记录 `deferred` 及原因。`local_contribution_review_audit` 保存输入、响应、逐配对状态及原判定，同时追加到 `survey_assessment_alignment.jsonl`；每条 SH 评估通过 `local_contribution_review` 保留复核状态。成功恢复的贡献参与本轮 `useful` 统计和种子筛选，仍保留未验证的目标适用性。
+
+查询反馈的 `contribution_outcomes` 记录实际局部贡献准入结果：`local_contribution`、`identity_only`、`no_local_contribution`、`missing_evidence_spans`、`insufficient_evidence`、`irrelevant`、`explicit_exclusion`、`assessment_unavailable`。`local_contribution_counts`、`target_validation_counts` 和 `ranking_evidence_counts` 分别统计三个独立判断；`non_admission_reasons` 只计未准入原因。`paper_diagnostics` 和 `Query paper admission` 日志提供论文、SH、查询、准入结果、局部贡献、目标验证、排名及复核状态；`Query evidence boundaries` 汇总同一查询的独立计数。可用贡献即使存在目标验证缺口，准入结果仍为 `local_contribution`，缺口不作为未准入原因。
+
+`useful` 统计可用局部贡献，`returned_unique` 单独统计检索命中。低收益不等于零命中，也不直接淘汰候选。身份线索或局部贡献不足时保留对象补方法/机制，并区分缺少源体系贡献与缺少目标验证；只有已准入贡献的验证或排名缺口才生成相应的 `target_validation_gap` / `ranking_evidence_gap` 指导。实际无关噪声才建议收窄辨识上下文。`revision_guidance` 保留具体原因与优先级，原有轮数和预算继续约束执行。
 
 SH 分解从用户的研究决策和不确定性出发，区分已有文献能提供的局部依据与未来实验应验证的结果，不预设精确目标上已有获胜方案。直接目标与可比终点要求只用于需要它们的结论，不成为所有发现槽位的准入要求。提示词修订号进入分解缓存指纹，避免重用旧规则生成的 SH。
 
@@ -97,6 +103,8 @@ SH 分解从用户的研究决策和不确定性出发，区分已有文献能�
 | `survey_planning_workers` | 10（查询规划与反馈批次并行上限） |
 | `survey_feedback_repair_limit` | 1（每次 Survey 的结构修复模型请求次数） |
 | `survey_feedback_repair_item_limit` | 12（单次修复记录上限） |
+| `survey_local_contribution_review_request_limit` | 4（每次 Survey 的局部贡献复核请求上限） |
+| `survey_local_contribution_review_item_limit` | 12（单次复核论文—SH 配对上限） |
 | `max_seed_paper_num` | 18（反馈路径硬上限） |
 | `min_seed_papers_per_sh` | 2 |
 

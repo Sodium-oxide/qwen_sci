@@ -10,6 +10,7 @@ from __future__ import annotations
 from html.parser import HTMLParser
 from typing import Any, Iterable, Mapping
 from urllib.parse import quote, urljoin, urlsplit, urlunsplit
+import re
 import time
 
 import requests
@@ -513,12 +514,30 @@ class _DeclaredPdfLinkParser(HTMLParser):
                 self.pdf_links.append(href)
 
 
+def public_repository_route(url: str) -> dict[str, str]:
+    parsed = urlsplit(normalize_http_url(url))
+    host, path = parsed.hostname or "", parsed.path
+    if host in {"pmc.ncbi.nlm.nih.gov", "www.ncbi.nlm.nih.gov", "europepmc.org"}:
+        match = re.fullmatch(r"/(?:articles|pmc/articles)/(?P<pmcid>PMC\d+)(?:/.*)?", path, re.I)
+        if match:
+            return {"repository": "pmc", "pmcid": match.group("pmcid").upper(), "version": "open_access_repository"}
+    if host in {"biorxiv.org", "www.biorxiv.org", "medrxiv.org", "www.medrxiv.org"}:
+        match = re.fullmatch(r"/content/(10\.1101/[\d.]+)(v\d+)?(?:\.(?:full|full-text|full\.pdf)|/.*)?", path)
+        if match:
+            return {"repository": host.removeprefix("www."), "doi": match.group(1), "version": match.group(2) or "unspecified"}
+    return {}
+
+
 def _landing_recovery_permitted(candidate: Mapping[str, Any]) -> bool:
     """Allow recovery only from explicit, lawful OA/repository routes."""
 
     if str(candidate.get("kind") or "") != "landing_page":
         return False
+    if public_repository_route(str(candidate.get("url") or "")):
+        return True
     source = str(candidate.get("source") or "").casefold()
+    if source.startswith("europepmc.fulltext"):
+        return bool(str(candidate.get("oa_evidence") or "").strip())
     # DOI resolution is deliberately more restrictive than a landing page
     # already supplied by Unpaywall: the caller must have retained a concrete
     # OA declaration in the candidate provenance.

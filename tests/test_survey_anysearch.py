@@ -6,9 +6,10 @@ import diskcache
 import pytest
 
 from src.agents.survey_agent.modules.data_manager import DataManager
+from src.agents.survey_agent.modules.adaptive_discovery import run_survey_search
 from src.agents.survey_agent.modules.work_analyzer import WorkAnalyzer
 from src.agents.survey_agent.modules.work_collector import WorkCollector
-from src.pipeline.anysearch import SearchResult, normalize_anysearch_paper
+from src.pipeline.anysearch import normalize_anysearch_paper
 
 
 def _paper(**kwargs):
@@ -69,19 +70,39 @@ def test_bare_discovered_id_uses_cached_fulltext_routes(tmp_path, openalex_id):
     manager.openalex_api.get_paper_details.assert_not_called()
 
 
-@pytest.mark.parametrize("status,successful", [("success", True), ("valid_empty", True), ("unconfigured", False), ("provider_failure", False)])
-def test_survey_dispatch_preserves_provider_status_and_registers_metadata(status, successful):
+@pytest.mark.parametrize("enabled", [True, False, "true", "false"])
+def test_survey_dispatch_blocks_anysearch_even_with_legacy_config(enabled):
     collector = object.__new__(WorkCollector)
-    collector.config = SimpleNamespace(ModuleInfo=SimpleNamespace(WorkCollector=SimpleNamespace(enable_anysearch_discovery=True)))
+    collector.config = SimpleNamespace(ModuleInfo=SimpleNamespace(WorkCollector=SimpleNamespace(enable_anysearch_discovery=enabled)))
     collector.logger = logging.getLogger(__name__)
-    papers = [_paper()] if status == "success" else []
-    client = SimpleNamespace(search=Mock(return_value=SearchResult(papers, status)))
+    client = SimpleNamespace(search=Mock())
     register = Mock()
     collector.data_manager = SimpleNamespace(anysearch_api=client, register_discovered_papers=register)
     result = collector._execute_query_lane_with_status({"provider": "anysearch", "query": "receptor", "result_limit": 3})
-    assert result == (papers, successful, status)
-    client.search.assert_called_once_with("receptor", limit=3)
-    register.assert_called_once_with(papers)
+    assert result == ([], False, "disabled")
+    assert not collector._discovery_lane_enabled({"provider": "anysearch"})
+    assert collector._discovery_lane_enabled({"provider": "openalex"})
+    client.search.assert_not_called()
+    register.assert_not_called()
+
+
+@pytest.mark.parametrize("shared_search_enabled", [True, False])
+def test_survey_skips_shared_anysearch_search_with_legacy_config(tmp_path, monkeypatch, shared_search_enabled):
+    collector = object.__new__(WorkCollector)
+    collector.config = SimpleNamespace(
+        BasicInfo=SimpleNamespace(base_dir=str(tmp_path)),
+        ModuleInfo=SimpleNamespace(WorkCollector=SimpleNamespace(
+            enable_anysearch_discovery=True, shared_search_enabled=shared_search_enabled)),
+    )
+    search_loop = Mock()
+    monkeypatch.setattr("src.agents.survey_agent.modules.adaptive_discovery.AdaptiveSearch", search_loop)
+    assert run_survey_search(collector, topic="receptor", research_context={}) == {
+        "papers": [], "references": [], "searches": [],
+    }
+    search_loop.assert_not_called()
+    plan = {"query_lanes": [{"provider": "openalex", "query": "receptor"}]}
+    assert collector._with_anysearch_lanes(plan) == plan
+    assert not list(tmp_path.iterdir())
 
 
 def _collector(tmp_path, papers, *, local, graph_match=False, fulltext=False, fallback=True):
@@ -177,15 +198,16 @@ def test_verified_source_is_reused_in_corpus_without_download_or_mineru(tmp_path
     assert manager._verified_source_content(paper["paperId"]) == ""
 
 
-def test_per_lane_channel_parameters_are_dispatched_and_cache_isolated(tmp_path):
+def test_cached_anysearch_channel_lanes_are_blocked_and_cache_isolated(tmp_path):
     collector = object.__new__(WorkCollector)
     collector.config = SimpleNamespace(ModuleInfo=SimpleNamespace(WorkCollector=SimpleNamespace(enable_anysearch_discovery=True)))
     collector.logger = logging.getLogger(__name__)
-    client = SimpleNamespace(search=Mock(return_value=SearchResult([], "valid_empty")))
+    client = SimpleNamespace(search=Mock())
     collector.data_manager = SimpleNamespace(anysearch_api=client, register_discovered_papers=Mock())
     base = {"provider": "anysearch", "query": "receptor modulation", "result_limit": 3,
             "tag": "academic.biomedical", "params": {"field": "tiab"}}
-    assert collector._execute_query_lane_with_status(base) == ([], True, "valid_empty")
-    client.search.assert_called_once_with("receptor modulation", limit=3, tag="academic.biomedical", params={"field": "tiab"})
+    assert collector._execute_query_lane_with_status(base) == ([], False, "disabled")
+    client.search.assert_not_called()
+    collector.data_manager.register_discovered_papers.assert_not_called()
     assert collector._sh_retrieval_lane_cache_key(base) != collector._sh_retrieval_lane_cache_key({**base, "tag": "academic.search"})
     assert collector._sh_retrieval_lane_cache_key(base) != collector._sh_retrieval_lane_cache_key({**base, "params": {"field": "all"}})

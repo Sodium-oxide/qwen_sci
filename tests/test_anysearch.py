@@ -2,6 +2,7 @@ import json
 import time
 from copy import deepcopy
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 from omegaconf import OmegaConf
 import pytest
@@ -116,6 +117,9 @@ def test_official_default_and_environment_override(monkeypatch):
     monkeypatch.delenv("ANYSEARCH_BASE_URL", raising=False)
     assert AnySearchClient(api_key="").base_url == DEFAULT_ANYSEARCH_BASE_URL
     config = OmegaConf.load("src/config/default.yaml")
+    assert config.survey.ModuleInfo.WorkCollector.enable_anysearch_discovery is False
+    assert config.survey.ModuleInfo.WorkCollector.shared_search_enabled is False
+    assert config.idea.agent.anysearch.enabled is True
     for key in ["survey.APIInfo.anysearch_base_url", "idea.agent.anysearch.base_url", "quantitative_modeling.parameter_evidence.anysearch_base_url"]:
         assert OmegaConf.select(config, key) == DEFAULT_ANYSEARCH_BASE_URL
     monkeypatch.setenv("ANYSEARCH_BASE_URL", "https://anysearch.example")
@@ -214,14 +218,19 @@ def test_plan_upgrade_covers_nested_cached_sh_slots_without_losing_scope():
     assert with_anysearch_lanes(plan, enabled=False) == plan
 
 
-def test_survey_client_accepts_namespace_config_and_env_url(monkeypatch, tmp_path):
+@pytest.mark.parametrize("enabled", [True, False, "true", "false"])
+def test_survey_client_denies_access_with_legacy_config_and_environment(monkeypatch, tmp_path, enabled):
     monkeypatch.setenv("ANYSEARCH_BASE_URL", "https://anysearch.example")
+    monkeypatch.setenv("ANYSEARCH_API_KEY", "test-credential")
     config = SimpleNamespace(BasicInfo=SimpleNamespace(cache_path=str(tmp_path)), APIInfo=SimpleNamespace(),
-                             ModuleInfo=SimpleNamespace(WorkCollector=SimpleNamespace(enable_anysearch_discovery=True)))
+                             ModuleInfo=SimpleNamespace(WorkCollector=SimpleNamespace(enable_anysearch_discovery=enabled)))
     client = anysearch_from_survey_config(config)
-    assert client.enabled and client.base_url == "https://anysearch.example"
-    config.ModuleInfo.WorkCollector.enable_anysearch_discovery = "false"
-    assert not anysearch_from_survey_config(config).enabled
+    client.session = Mock()
+    assert not client.enabled and client.base_url == "https://anysearch.example"
+    assert client.search("receptor").status == "disabled"
+    assert client.capabilities(refresh=True)["status"] == "disabled"
+    client.session.post.assert_not_called()
+    client.session.get.assert_not_called()
 
 
 def test_survey_client_defaults_to_official_service_and_accepts_tag(monkeypatch, tmp_path):
@@ -229,6 +238,7 @@ def test_survey_client_defaults_to_official_service_and_accepts_tag(monkeypatch,
     config = {"BasicInfo": {"cache_path": str(tmp_path)}, "APIInfo": {"anysearch_tag": "academic.biomedical"},
               "ModuleInfo": {"WorkCollector": {"enable_anysearch_discovery": True}}}
     client = anysearch_from_survey_config(config)
+    assert not client.enabled
     assert client.base_url == DEFAULT_ANYSEARCH_BASE_URL
     assert client.tag == "academic.biomedical"
 

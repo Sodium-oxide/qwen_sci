@@ -1,6 +1,8 @@
-# Survey 和 Idea 的共享资料检索
+# Survey 原生检索与 Idea 的 AnySearch 检索
 
-Survey 和 Idea 共用科学需求规划器、AnySearch 能力清单、检索调度器和真实资料读取器。同一项目可以为不同子问题选择不同学科和资料通道。输入通过科学字段白名单构建，排除 rubric、评测指令、候选评分和裁决数据。
+Survey 阶段禁止访问 AnySearch，继续使用原生 OpenAlex 等检索通道。共享预检索、附加 AnySearch 查询通道以及 AnySearch 能力发现均不会在 Survey 中发起请求；旧配置或恢复配置中的 `enable_anysearch_discovery: true` 不能重新授权。
+
+Idea 继续使用科学需求规划器、AnySearch 能力清单、检索调度器和真实资料读取器。同一项目可以为不同子问题选择不同学科和资料通道。输入通过科学字段白名单构建，排除 rubric、评测指令、候选评分和裁决数据。
 
 ## 连接与通道
 
@@ -40,15 +42,23 @@ client.search("perovskite stability dataset", limit=5,
 
 `snippet` 与搜索 `content` 只保存为 `discovery_snippet` / `discovery_content`。真实摘要、正文或仓库内容才能进入阅读结果。完整来源保存 SHA-256、类型、URL、DOI、版本、时间、访问状态和读取范围；超过上限保留完整文件，给模型标为 `*_excerpt` 的片段。Survey 相关性评估用独立 `source_excerpt` 字段，不把实际正文片段伪装为摘要。后续下载与分析按哈希复用已读来源，避免重复下载和 MinerU 解析。
 
-论文按 DOI、PMCID、arXiv、标题等跨来源去重并保留来源；数据、代码等按类型和已知版本区分。无 OpenAlex ID 时使用稳定 `AS…` 编号，不当作外部 API 文献 ID。`AS…` 可作上下文阅读，真实 `W…` 论文仍可按原策略扩展图谱。
+论文按 DOI、PMID、PMCID、arXiv、标题等跨来源去重并保留来源；数据、代码等按类型和已知版本区分。无 OpenAlex ID 时使用稳定 `AS…` 编号，不当作外部 API 文献 ID。`AS…` 可作上下文阅读，真实 `W…` 论文仍可按原策略扩展图谱。
+
+### 从检索链接到正文
+
+PubMed URL 和外部标识中的 PMID 会保留在 `externalIds.PubMed` 中。缺少 DOI 或 PMCID 的生物医学记录，通过 Europe PMC 的标识查询补全正式题名、作者、DOI、PMCID、真实摘要和公开全文地址。返回记录必须与已有标识精确对应，任一共有标识冲突时不采用该记录。查询和匹配标识保存为 `identity_provenance`，请求与其他来源读取共用 HTTP 和时间预算。
+
+PMC、bioRxiv、medRxiv 页面按真实主机和论文路径识别，AnySearch 来源标签不再阻止这些仓储页面解析。普通网页仍不能仅凭 `anysearch.oa_location` 标签进入全文页面解析。优先保留页面声明的 PDF；可用的文章 HTML 正文直接读取。PubMed 题录页不作为全文。PMC 页面或 PDF 获取失败时，可通过 Europe PMC 的 `fullTextXML` 接口读取 JATS，核对 XML 内 DOI、PMID、PMCID 和实际正文后再使用。原始 XML、SHA-256、来源 URL、文章类型与版本同时保留；搜索片段不进入正文。相同规范标识的已读来源在校验文件哈希后跨检索编号复用。
+
+来源检查点保留 `source_attempts` 和 `retry`。403、404、无声明 PDF、无法解析的路线等确定性失败，在所有路线均未出现临时故障时标为 `when_source_changes`。调度器和读取器都跳过相同地址、标识和访问条件的重复获取；新增地址、补全标识或修改 `survey.ModuleInfo.WorkCollector.fulltext_access_context_generation` 后重新允许获取，并为新路线重计逐篇尝试次数。已用全局获取预算保留。网络错误、429、5xx 仍按有限重试处理。旧检查点缺少该分类时保持原有重试行为。
 
 ## 配置与预算
 
 Survey 的 `survey.ModuleInfo.WorkCollector` 默认值：
 
 ```yaml
-enable_anysearch_discovery: true
-shared_search_enabled: true
+enable_anysearch_discovery: false
+shared_search_enabled: false
 shared_search_use_llm: true
 shared_search_max_needs: 5
 shared_search_max_requests: 12
@@ -65,7 +75,7 @@ shared_search_prefer_fulltext: true
 shared_search_max_source_chars: 60000
 ```
 
-预算用于共享检索与获取，和 Survey 原控制器分别记录。默认控制器接收共享检索读到的资料，执行科学相关性分析，再继续本身检索。共享规划器开启后不再机械复制每条原生查询到 AnySearch；关闭 `shared_search_enabled` 可使用旧附加通道行为。
+Survey 的这些字段保留以兼容已有配置。Survey 的阶段权限始终禁止 AnySearch，即使将 `enable_anysearch_discovery` 或 `shared_search_enabled` 改为 `true`，也不会运行共享预检索或附加 AnySearch 查询。Survey 原生检索控制器沿用自己的预算。
 
 Idea 的 `idea.agent.anysearch` 默认值：
 
@@ -98,7 +108,7 @@ max_source_chars: 60000
 
 ## 保存、交接与恢复
 
-Survey 的 `BasicInfo.base_dir` 保存 `search/project.json`（能力快照、计划、请求、候选、读取、指标、调整）、`search/project_model/`（原始回答）、`search/reading/<ID>.md` 和 `<ID>.source.json`（完整来源与元数据）。另有 `search_history.json`，发布时纳入 manifest 哈希，并传入 Survey JSON 和 Idea 上下文。旧交接无历史时仍可加载。
+已有 Survey 产物中的 `search/project.json`、`search/project_model/`、`search/reading/` 和 `search_history.json` 可以保留。已缓存的文献元数据和已读来源仍可供恢复与交接使用；恢复任务不会重新开启 AnySearch。旧交接无历史时仍可加载。
 
 Idea 在当前目录的 `external_search/` 保存 `initial.json`、`candidate.json`、`initial_model/`、`candidate_model/`、`search_cache/`、`reading/`。原有 `keynote_compression/` 保存摘要及 JSON 修复检查点。
 
@@ -118,4 +128,4 @@ Idea 在当前目录的 `external_search/` 保存 `initial.json`、`candidate.js
   tests/test_survey_fulltext_resolution.py tests/test_fulltext_http.py
 ```
 
-覆盖能力缓存、逐请求参数、多学科计划、rubric 隔离、失败补位、预算、重复调整、真实读取、断点复用、默认 Survey 控制器接入和交接哈希。
+覆盖 Survey 的 AnySearch 访问阻断、旧配置隔离、Idea 能力缓存、逐请求参数、多学科计划、rubric 隔离、失败补位、预算、重复调整、真实读取、断点复用和交接哈希。

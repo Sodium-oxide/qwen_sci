@@ -7,7 +7,7 @@ import re
 from .evidence_coverage_ledger import paper_identity
 from .scientific_candidates import comparison_key, evidence_id, is_decision_candidate
 from .survey_evidence_judgments import (
-    contribution_failure, failure_guidance, has_local_contribution, project_is_excluded,
+    contribution_failure, evidence_boundaries, failure_guidance, has_local_contribution, project_is_excluded,
 )
 
 
@@ -128,15 +128,29 @@ def admit_query(raw, subhypotheses, topic, papers, *, feedback=False):
 def query_metrics(papers, sh_id, new_ids, provider_status):
     assessed, useful = [], []
     failures = Counter()
+    local_counts, target_counts, ranking_counts, non_admission = Counter(), Counter(), Counter(), Counter()
+    paper_diagnostics = []
     for paper in papers:
         project = paper.get("project_relevance", {})
         assessment = next((item for item in paper.get("sh_semantic_assessments", []) if item.get("sub_hypothesis_id") == sh_id), {})
         failure = "explicit_exclusion" if project_is_excluded(project) else contribution_failure(assessment)
         failures[failure] += 1
+        boundaries = evidence_boundaries(assessment)
+        local_counts[boundaries["local_contribution"]] += 1
+        target_counts[boundaries["target_validation"]] += 1
+        ranking_counts[boundaries["ranking_evidence"]] += 1
+        admitted = failure == "local_contribution"
+        if not admitted:
+            non_admission[failure] += 1
+        paper_diagnostics.append({"paper_id": paper_identity(paper), "admitted": admitted,
+            "assessment_status": assessment.get("assessment_status", "assessment_unavailable"),
+            "local_contribution": boundaries["local_contribution"], "target_validation": boundaries["target_validation"],
+            "ranking_evidence": boundaries["ranking_evidence"], "non_admission_reason": None if admitted else failure,
+            "review_status": assessment.get("local_contribution_review", {}).get("status", "not_requested")})
         if assessment.get("assessment_status") != "assessed":
             continue
         assessed.append(paper)
-        if not project_is_excluded(project) and has_local_contribution(assessment):
+        if admitted:
             useful.append(paper)
     count = len(papers)
     valid = provider_status in {"success", "valid_empty"}
@@ -152,7 +166,13 @@ def query_metrics(papers, sh_id, new_ids, provider_status):
             "scientific_absence_established": False}
     elif valid and assessed and completion >= 0.8:
         gaps = {key: value for key, value in failures.items() if key in {
-            "identity_only", "target_validation_gap", "ranking_evidence_gap", "insufficient_evidence"}}
+            "identity_only", "no_local_contribution", "missing_evidence_spans", "insufficient_evidence"}}
+        if not gaps:
+            supported = [item for item in paper_diagnostics if item["admitted"]]
+            target_gaps = sum(item["target_validation"] in {"indirect", "not_reported"} for item in supported)
+            ranking_gaps = sum(item["ranking_evidence"] == "insufficient" for item in supported)
+            gaps = {key: value for key, value in {"target_validation_gap": target_gaps,
+                "ranking_evidence_gap": ranking_gaps}.items() if value}
         # Diagnose evidence shortages even when the current numerical score is low.
         # An unrelated majority may justify narrowing; it never rejects a candidate.
         unrelated = failures["irrelevant"] + failures["explicit_exclusion"]
@@ -167,7 +187,10 @@ def query_metrics(papers, sh_id, new_ids, provider_status):
     return {"returned_unique": count, "assessed": len(assessed), "useful": len(useful),
             "precision": precision, "assessment_completion": completion, "novelty": novelty,
             "provider_status": provider_status, "feedback_hint": hint, "revision_guidance": revision,
-            "contribution_outcomes": dict(failures), "candidate_rejection_established": False}
+            "contribution_outcomes": dict(failures), "local_contribution_counts": dict(local_counts),
+            "target_validation_counts": dict(target_counts), "ranking_evidence_counts": dict(ranking_counts),
+            "non_admission_reasons": dict(non_admission), "paper_diagnostics": paper_diagnostics,
+            "candidate_rejection_established": False}
 
 
 def activate_candidates(registry, subhypotheses, limit=3, opportunity_limit=None):

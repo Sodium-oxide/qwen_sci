@@ -99,6 +99,20 @@ def _paper():
     }
 
 
+def test_fulltext_report_accessor_preserves_classified_failures_and_handles_missing_reports(tmp_path):
+    manager = object.__new__(DataManager)
+    manager.cache_path = str(tmp_path)
+    assert manager.get_fulltext_acquisition_report("W123") == {}
+    path = Path(manager._fulltext_provenance_path("W123"))
+    path.parent.mkdir(parents=True)
+    report = {"attempts": [{"status": "access_denied", "http_status": 403}]}
+    path.write_text(json.dumps(report))
+    assert manager.get_fulltext_acquisition_report("W123") == report
+    assert manager.get_fulltext_acquisition_report("../outside") == {}
+    path.write_text("invalid json")
+    assert manager.get_fulltext_acquisition_report("W123") == {}
+
+
 def test_unpaywall_returns_all_locations_as_provenance_rich_candidates(monkeypatch):
     def fake_get(_url, **_kwargs):
         return _JsonResponse(

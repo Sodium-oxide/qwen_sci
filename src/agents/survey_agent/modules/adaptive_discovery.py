@@ -4,6 +4,7 @@ from pathlib import Path
 from src.pipeline.adaptive_search import AdaptiveSearch, history_projection, load_history
 from src.pipeline.anysearch import as_bool, write_json_atomic
 from src.pipeline.source_reader import SourceReader
+from src.pipeline.source_retry import source_access_context
 import hashlib
 
 
@@ -21,6 +22,7 @@ def run_survey_search(collector, *, topic, research_context, subproblems=()):
                     "max_seconds": 900, "max_rounds": 3, "plan_repair_attempts": 1,
                     "checkpoint_attempts": 2, "result_limit": 5}.items()}
     reader = SourceReader(manager, root / "search" / "reading")
+    settings["access_context_generation"] = source_access_context(manager)
 
     def read(paper):
         return reader.read(paper, prefer_fulltext=as_bool(collector._work_collector_setting("shared_search_prefer_fulltext", True)),

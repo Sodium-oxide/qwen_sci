@@ -28,6 +28,16 @@ class BoundaryModel(Model):
         self.project_basis, self.stance = project_basis, stance
 
     def batch_remote_chat(self, prompts, desc, **kwargs):
+        if desc == "Reviewing Survey Local Contributions":
+            outputs = []
+            for prompt in prompts:
+                payload = json.loads(prompt[prompt.index('{"original_topic"'):])
+                self.payloads.append((desc, payload))
+                outputs.append(json.dumps({"reviews": [{"paper_id": item["paper_id"],
+                    "sub_hypothesis_id": item["sub_hypothesis_id"],
+                    "local_contribution": item["assessment"]["evidence_boundaries"]["local_contribution"],
+                    "reason": "No additional source contribution identified"} for item in payload["review_items"]]}))
+            return outputs
         outputs = super().batch_remote_chat(prompts, desc, **kwargs)
         for index, output in enumerate(outputs):
             response = json.loads(output)
@@ -152,8 +162,8 @@ def test_counterevidence_remains_relevant_and_cannot_establish_positive_ranking(
 
 @pytest.mark.parametrize("judgment,reason,action", [
     (boundaries(), "identity_only", "broaden_context"),
-    (boundaries(local_contribution="none"), "target_validation_gap", "broaden_context"),
-    (boundaries(local_contribution="none", target_validation="direct"), "ranking_evidence_gap", "compare_alternative"),
+    (boundaries(local_contribution="none"), "no_local_contribution", "broaden_context"),
+    (boundaries(local_contribution="none", target_validation="direct"), "no_local_contribution", "broaden_context"),
 ])
 def test_zero_useful_results_preserve_candidate_and_diagnose_failed_condition(judgment, reason, action):
     papers = [assessed_paper(f"W{index}", value=2) for index in range(6)]
@@ -167,6 +177,32 @@ def test_zero_useful_results_preserve_candidate_and_diagnose_failed_condition(ju
     assert metrics["revision_guidance"]["preferred_action"] == action
     assert metrics["revision_guidance"]["preserve_candidate"]
     assert not metrics["candidate_rejection_established"]
+
+
+def test_admission_outcomes_separate_usable_transfer_from_missing_local_support():
+    supported = assessed_paper("W1", value=2)
+    unsupported = assessed_paper("W2", value=2)
+    missing_spans = assessed_paper("W3", value=2)
+    for paper, local in ((supported, "supported"), (unsupported, "none"), (missing_spans, "supported")):
+        paper["sh_semantic_assessments"][0]["evidence_boundaries"] = boundaries(local_contribution=local)
+    missing_spans["sh_semantic_assessments"][0]["evidence_spans"] = []
+    metrics = query_metrics([supported, unsupported, missing_spans], "SH1", set(), "success")
+    assert metrics["useful"] == 1
+    assert metrics["contribution_outcomes"] == {"local_contribution": 1, "no_local_contribution": 1, "missing_evidence_spans": 1}
+    assert metrics["target_validation_counts"] == {"not_reported": 3}
+    assert metrics["ranking_evidence_counts"] == {"insufficient": 3}
+    assert metrics["non_admission_reasons"] == {"no_local_contribution": 1, "missing_evidence_spans": 1}
+    assert metrics["paper_diagnostics"][0]["admitted"] is True
+    assert metrics["paper_diagnostics"][0]["non_admission_reason"] is None
+
+
+def test_usable_transfer_retains_target_gap_guidance_without_being_counted_as_a_failure():
+    paper = assessed_paper("W1")
+    paper["sh_semantic_assessments"][0]["evidence_boundaries"] = boundaries(local_contribution="supported")
+    metrics = query_metrics([paper], "SH1", {"W1"}, "success")
+    assert metrics["contribution_outcomes"] == {"local_contribution": 1}
+    assert not metrics["non_admission_reasons"]
+    assert metrics["revision_guidance"]["reason"] == "target_validation_gap"
 
 
 def test_irrelevant_noise_does_not_erase_a_minority_candidate_evidence_gap():

@@ -11,6 +11,7 @@ import threading
 
 from .anysearch import identity_keys, merge_papers, text, write_json_atomic
 from .search_planner import ScientificSearchPlanner, request_key, scientific_input
+from .source_retry import source_retry_allowed, source_route_fingerprint
 
 
 _active_acquisition = ContextVar("adaptive_source_acquisition", default=None)
@@ -309,15 +310,38 @@ class AdaptiveSearch:
                 continue
             paper["source_type"] = assessment["source_type"]
             existing = self.state["reads"].get(pid)
-            if existing and (existing.get("status") == "completed" or existing.get("attempts", 0) >= self.setting("checkpoint_attempts", 2, 1, 3)):
+            if existing is None:
+                existing = next((read for history in [self.state, *self.inherited] for read in history.get("reads", {}).values()
+                                 if read.get("status") != "completed" and identity_keys(paper) &
+                                 (identity_keys(read.get("paper", {})) | identity_keys(read.get("reference", {})))), None)
+            if existing and existing.get("status") == "completed":
+                continue
+            fingerprint = source_route_fingerprint(paper)
+            access_context = str(self.settings.get("access_context_generation", "anonymous-v1"))
+            if existing and not source_retry_allowed(paper, existing.get("reference", {}), access_context):
+                self.state["reads"][pid] = {**existing, "paper": paper, "deferred_reason": "unchanged_source_routes"}
+                if self.logger:
+                    self.logger.info("Source acquisition deferred paper=%s reason=unchanged_source_routes", pid)
+                self.save()
+                continue
+            old_fingerprint = (existing or {}).get("attempt_fingerprint")
+            if existing and not old_fingerprint:
+                old_fingerprint = source_route_fingerprint(existing.get("paper", {}))
+            previous_retry = (existing or {}).get("reference", {}).get("retry", {})
+            old_context = (existing or {}).get("access_context_generation", previous_retry.get("access_context_generation", access_context))
+            changed = bool(old_fingerprint and old_fingerprint != fingerprint or old_context != access_context)
+            route_attempts = 0 if changed else (existing or {}).get("route_attempts", (existing or {}).get("attempts", 0))
+            if route_attempts >= self.setting("checkpoint_attempts", 2, 1, 3):
                 continue
             target = min(need["budget"]["successful_reads"], probe_limit) if probe_limit is not None else need["budget"]["successful_reads"]
             if self._success_count() >= self.limits["successful_reads"] or self._metrics(need)["read_successes"] >= target:
                 break
             if not self.reserve("acquisitions"):
                 break
-            read = existing or {"paper": paper, "attempts": 0, "need_id": need["id"]}
-            read.update(attempts=read["attempts"] + 1, status="in_progress")
+            read = dict(existing or {"attempts": 0})
+            read.pop("deferred_reason", None)
+            read.update(paper=paper, need_id=need["id"], attempts=read["attempts"] + 1, status="in_progress",
+                        route_attempts=route_attempts + 1, attempt_fingerprint=fingerprint, access_context_generation=access_context)
             self.state["reads"][pid] = read
             self.state["papers"][pid] = paper
             self.save()

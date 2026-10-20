@@ -423,9 +423,9 @@ survey:
     semantic_scholar_api_max_retry: 3
   ModuleInfo:
     WorkCollector:
-      enable_anysearch_discovery: true
+      enable_anysearch_discovery: false
       anysearch_result_limit: 10
-      shared_search_enabled: true
+      shared_search_enabled: false
       shared_search_use_llm: true
       shared_search_max_needs: 5
       shared_search_max_requests: 12
@@ -508,6 +508,8 @@ survey:
       survey_confirmation_pairs_per_batch: 16
       survey_confirmation_score_repair_request_limit: 8
       survey_confirmation_score_repair_item_limit: 8
+      survey_local_contribution_review_request_limit: 4
+      survey_local_contribution_review_item_limit: 12
       survey_planning_batch_limit: 48
       survey_planning_workers: 10
       use_seed_filter_LLM: true

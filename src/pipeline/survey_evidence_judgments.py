@@ -135,18 +135,36 @@ def contribution_failure(assessment):
         return "explicit_exclusion"
     if assessment_is_irrelevant(assessment):
         return "irrelevant"
+    if not assessment.get("evidence_spans"):
+        return "missing_evidence_spans"
+    if has_local_contribution(assessment):
+        return "local_contribution"
     if boundaries["local_contribution"] == "identity_only":
         return "identity_only"
-    if boundaries["target_validation"] in {"indirect", "not_reported"}:
-        return "target_validation_gap"
-    if boundaries["ranking_evidence"] == "insufficient":
-        return "ranking_evidence_gap"
-    return "local_contribution" if has_local_contribution(assessment) else "insufficient_evidence"
+    if boundaries["local_contribution"] == "none":
+        return "no_local_contribution"
+    return "insufficient_evidence"
+
+
+def needs_local_contribution_review(paper, assessment):
+    from .source_context import has_source_content
+
+    boundaries = evidence_boundaries(assessment)
+    return (assessment.get("assessment_status") == "assessed"
+        and boundaries["local_contribution"] in {"none", "identity_only", "unknown"}
+        and boundaries["target_validation"] in {"indirect", "not_reported"}
+        and not project_is_excluded(paper.get("project_relevance", {}))
+        and not assessment_is_excluded(assessment) and not assessment_is_irrelevant(assessment)
+        and has_source_content(paper)
+        and any(span.get("source") in {"abstract", "source_excerpt"} and span.get("text")
+                for span in assessment.get("evidence_spans", []) if isinstance(span, Mapping)))
 
 
 def failure_guidance(failure):
     guidance = {
         "identity_only": ("broaden_context", ["preserve_candidate_identity", "seek_local_method_or_mechanism_evidence", "use_justified_source_system"]),
+        "no_local_contribution": ("broaden_context", ["seek_source_system_contribution", "separate_local_support_from_target_validation", "record_target_validation_condition"]),
+        "missing_evidence_spans": ("broaden_context", ["seek_source_evidence", "complete_local_contribution_assessment"]),
         "target_validation_gap": ("broaden_context", ["preserve_candidate_identity", "relax_exact_target_to_source_system", "record_target_validation_condition"]),
         "ranking_evidence_gap": ("compare_alternative", ["preserve_candidate_identity", "seek_comparable_endpoint_or_comparator", "record_unresolved_ranking_requirements"]),
         "insufficient_evidence": ("broaden_context", ["preserve_candidate_identity", "seek_missing_local_contribution", "separate_discovery_from_validation_requirements"]),

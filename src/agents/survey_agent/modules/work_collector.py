@@ -732,7 +732,7 @@ class WorkCollector:
         return provider != "arxiv" or self._arxiv_discovery_enabled()
 
     def _anysearch_discovery_enabled(self) -> bool:
-        return str(self._work_collector_setting("enable_anysearch_discovery", False)).strip().lower() not in {"0", "false", "no", "off"}
+        return False
 
     def _with_anysearch_lanes(self, plan):
         if str(self._work_collector_setting("shared_search_enabled", True)).strip().lower() not in {"0", "false", "no", "off"}:
@@ -1944,6 +1944,8 @@ class WorkCollector:
     def _execute_query_lane_with_status(
         self, lane: Mapping[str, Any],
     ) -> tuple[list[Dict], bool, str]:
+        if str(lane.get("provider") or "").strip().lower() == "anysearch" and not self._anysearch_discovery_enabled():
+            return [], False, "disabled"
         budget = getattr(self, "_candidate_retrieval_budget", None)
         if budget is None:
             return self._execute_query_lane_unbudgeted(lane)

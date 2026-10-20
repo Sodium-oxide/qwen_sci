@@ -24,7 +24,7 @@ from src.pipeline.survey_search_controller import (
 )
 from src.pipeline.survey_evidence_judgments import (
     assessment_is_excluded, assessment_is_irrelevant, candidate_discovery_status,
-    evidence_boundaries, normalize_evidence_boundaries, project_is_excluded,
+    evidence_boundaries, needs_local_contribution_review, normalize_evidence_boundaries, project_is_excluded,
 )
 from src.pipeline.survey_response_normalization import (
     FormatBatch, align_paper_assessments, graph_role_fields, normalize_model_response, record_list, score_field, score_fields_raw,
@@ -76,6 +76,8 @@ optional requirements to post-retrieval assessment, then replace restrictive tar
 with a justified source system/class. Preserve purpose, use broaden_context, reference the
 failed query and name the relaxed condition. Appending constraints/synonyms is not relaxation.
 - Identity only: retain the candidate and seek local method/mechanism evidence.
+- No local contribution: seek a concrete source-system claim; distinguish this from untested
+target applicability. Missing source spans require actual source evidence before admission.
 - Target validation gap: retain candidate identity, use justified transfer context and record
 untested target conditions. Ranking gap: seek comparable endpoints/comparators.
 - Actual unrelated/excluded results: restore identifying context/respect explicit exclusions.
@@ -111,6 +113,26 @@ missing abstract or unperformed target experiment is not an explicit exclusion. 
 specific untested transfer conditions and missing comparisons in validation_gaps. Do not infer
 negative findings from silence. These judgments add no evidence beyond the supplied sources.
 """
+
+LOCAL_CONTRIBUTION_REVIEW_PROMPT = """Review only whether each supplied paper/SH pair has a
+source-grounded local contribution that the initial assessment may have confused with missing
+target validation. Return ONE JSON object {reviews: [{paper_id, sub_hypothesis_id,
+local_contribution: supported|identity_only|none|unknown, source_system, transfer_rationale,
+supported_minimal_claims: [string], evidence_spans: [{source: abstract|source_excerpt, text}], reason}]}.
+Copy both IDs exactly. Read the actual supplied abstract or source_excerpt and the SH purpose.
+A concrete method, mechanism, source-system observation, control design or counterevidence
+can support a bounded local claim without testing the exact target. Explain what the source
+system establishes and why it informs this SH. Do not require target outcomes or final candidate
+ranking to acknowledge that contribution. Shared terms, identity or generic background alone
+remain insufficient. For supported, supply a nonempty source_system, transfer_rationale, at least
+one specific supported_minimal_claim and evidence from the supplied abstract/source_excerpt.
+Summaries may paraphrase; never invent reported observations or treat a snippet as evidence.
+Keep target_validation, ranking_evidence, exclusion judgments, validation_gaps, scores, roles and
+all other SH assessments unchanged. A supported local contribution is not target efficacy.
+If a concrete source claim or its relevance is unclear, retain none/identity_only/unknown and
+explain the missing information. Omit pairs that cannot be reviewed; do not guess.
+"""
+
 
 ASSESS_PROMPT = """Assess this batch against the FULL original topic and EVERY supplied SH, and extract
 source-grounded scientific objects in the SAME response. Return JSON {papers: [{paper_id,
@@ -264,6 +286,9 @@ class SurveySearchController:
         self.object_audit = []
         self.format_audit = []
         self.assessment_alignment_audit = []
+        self.local_contribution_review_audit = []
+        self.local_contribution_review_requests = 0
+        self.local_contribution_reviewed_pairs = set()
         self.assessment_audit_write_failed = False
         self.prompt_audit = []
         self.format_batch_counts = Counter()
@@ -384,7 +409,8 @@ class SurveySearchController:
                 try:
                     value = extract_json(responses[index])
                     collection_field = ("papers" if description == "Assessing Survey Papers and Objects"
-                        else "candidates" if description == "Confirming Survey Candidate Relevance" else "queries")
+                        else "candidates" if description == "Confirming Survey Candidate Relevance"
+                        else "reviews" if description == "Reviewing Survey Local Contributions" else "queries")
                     parsed.append(normalize_model_response(value, collection_field=collection_field,
                         diagnostics=format_batches[index]))
                 except (IndexError, TypeError, ValueError, AttributeError) as exc:
@@ -877,6 +903,88 @@ class SurveySearchController:
                     if issue.get("paper_id") == paper_identity(paper)]
             self.publish_format(diagnostic)
             self.checkpoint_assessment_alignment(alignment_record, diagnostic)
+        self.review_local_contributions(papers, lease)
+
+    def review_local_contributions(self, papers, lease=None):
+        pending = [(paper, assessment) for paper in papers for assessment in paper.get("sh_semantic_assessments", [])
+            if (canonical_paper_id(paper_identity(paper)), assessment.get("sub_hypothesis_id")) not in self.local_contribution_reviewed_pairs
+            and needs_local_contribution_review(paper, assessment)]
+        pending.sort(key=lambda pair: evidence_boundaries(pair[1])["discovery_relevance"] != "relevant")
+        item_limit = self.setting("survey_local_contribution_review_item_limit", 12)
+        request_limit = self.setting("survey_local_contribution_review_request_limit", 4)
+        for start in range(0, len(pending), item_limit):
+            available_lease = lease if lease and not lease["closed"] and lease["remaining"] else None
+            if self.local_contribution_review_requests >= request_limit or (available_lease is None and not self.budget.model_remaining()):
+                reason = "review_limit" if self.local_contribution_review_requests >= request_limit else "model_budget_exhausted"
+                for paper, assessment in pending[start:]:
+                    assessment["local_contribution_review"] = {"status": "deferred", "reason": reason}
+                self.collector.logger.info("Survey local contribution review deferred: pairs=%s reason=%s.", len(pending) - start, reason)
+                break
+            selected = pending[start:start + item_limit]
+            originals = [deepcopy(assessment) for _paper, assessment in selected]
+            review_items = [{"paper_id": paper_identity(paper), "sub_hypothesis_id": assessment["sub_hypothesis_id"],
+                "source": assessment_source(paper), "assessment": original}
+                for (paper, assessment), original in zip(selected, originals)]
+            selected_ids = {assessment["sub_hypothesis_id"] for _paper, assessment in selected}
+            payload = {**self.payload(), "review_items": review_items}
+            payload["subhypotheses"] = [sh for sh in payload["subhypotheses"] if sh["sub_hypothesis_id"] in selected_ids]
+            diagnostic = self.format_batch("local_contribution_review")
+            self.local_contribution_review_requests += 1
+            response = self.model([serialize_prompt(LOCAL_CONTRIBUTION_REVIEW_PROMPT, payload)],
+                "Reviewing Survey Local Contributions", available_lease, diagnostics=[diagnostic], workers=1)[0]
+            patches = self.records(response.get("reviews", []), "reviews", "local_contribution_review", diagnostic)
+            results = []
+            for (paper, assessment), original in zip(selected, originals):
+                pid, sh_id = canonical_paper_id(paper_identity(paper)), assessment["sub_hypothesis_id"]
+                self.local_contribution_reviewed_pairs.add((pid, sh_id))
+                matches = [patch for patch in patches if canonical_paper_id(patch.get("paper_id")) == pid
+                    and patch.get("sub_hypothesis_id") == sh_id]
+                review = {"status": "unavailable" if response.get("_survey_response_unavailable") else "invalid_response",
+                    "request": self.local_contribution_review_requests, "original_assessment": original}
+                if len(matches) == 1:
+                    patch = matches[0]
+                    local = patch.get("local_contribution")
+                    reason = patch.get("reason")
+                    valid = isinstance(local, str) and local in {"supported", "identity_only", "none", "unknown"}
+                    valid = valid and isinstance(reason, str) and bool(reason.strip())
+                    spans, claims = [], patch.get("supported_minimal_claims", [])
+                    if local == "supported" and valid:
+                        spans = grounded_spans(source_summaries(patch.get("evidence_spans", []), paper, diagnostic,
+                            paper_id=paper_identity(paper), sub_hypothesis_id=sh_id), paper, literal_verification=False)
+                        spans = [span for span in spans if span["source"] in {"abstract", "source_excerpt"}]
+                        valid = (bool(spans) and isinstance(claims, list) and bool(claims)
+                            and all(isinstance(claim, str) and claim.strip() for claim in claims)
+                            and all(isinstance(patch.get(field), str) and patch[field].strip()
+                                for field in ("source_system", "transfer_rationale")))
+                    if valid:
+                        boundaries = evidence_boundaries(assessment)
+                        boundaries["local_contribution"] = local
+                        assessment.update(evidence_boundaries=boundaries, reason=reason)
+                        if local == "supported":
+                            assessment.update(evidence_spans=spans, supported_minimal_claims=claims)
+                        review.update(status="reviewed", source_system=patch.get("source_system"),
+                            transfer_rationale=patch.get("transfer_rationale"), reason=reason)
+                if review["status"] == "invalid_response":
+                    diagnostic.unresolved("reviews", "missing_duplicate_or_invalid_local_review", matches,
+                        paper_id=paper_identity(paper), sub_hypothesis_id=sh_id)
+                assessment["local_contribution_review"] = review
+                result = {"paper_id": paper_identity(paper), "sub_hypothesis_id": sh_id, **review,
+                    "local_contribution": evidence_boundaries(assessment)["local_contribution"],
+                    "target_validation": evidence_boundaries(assessment)["target_validation"]}
+                results.append(result)
+                self.collector.logger.info("Survey local contribution review: paper=%s SH=%s status=%s local_contribution=%s->%s target_validation=%s request=%s.",
+                    paper_identity(paper), sh_id, review["status"], evidence_boundaries(original)["local_contribution"],
+                    result["local_contribution"], result["target_validation"], self.local_contribution_review_requests)
+            audit = {"stage": "local_contribution_review", "batch_id": diagnostic.batch_id,
+                "review_items": review_items, "response": deepcopy(response), "results": results}
+            self.local_contribution_review_audit.append(audit)
+            self.publish_format(diagnostic)
+            self.checkpoint_assessment_alignment(audit, diagnostic)
+        by_id = {paper_identity(paper): paper for paper in papers}
+        for observation in self.observations:
+            paper = by_id.get(observation["paper_id"])
+            if paper is not None:
+                observation["eligible_source_sh_ids"] = [sh_id for sh_id in self.by_sh if self.source_is_eligible(paper, sh_id)]
 
     def repair_confirmation_scores(self, returned, batch, sources, diagnostic):
         returned = deepcopy(returned)
@@ -1161,6 +1269,14 @@ class SurveySearchController:
                 self.history.append({**lane, "metrics": metrics, "paper_ids": [paper_identity(paper) for paper in relevant],
                     "new_paper_ids": [paper_identity(paper) for paper in relevant if evidence_id(paper) not in prior_ids]})
                 self.collector.logger.info("Query feedback: SH=%s query=%s returned=%s assessed=%s useful=%s precision=%s novelty=%s status=%s outcomes=%s hint=%s.", lane["sub_hypothesis_id"], lane["query_id"], metrics["returned_unique"], metrics["assessed"], metrics["useful"], metrics["precision"], metrics["novelty"], status, metrics["contribution_outcomes"], metrics["feedback_hint"])
+                self.collector.logger.info("Query evidence boundaries: SH=%s query=%s local_contribution=%s target_validation=%s ranking_evidence=%s non_admission_reasons=%s.",
+                    lane["sub_hypothesis_id"], lane["query_id"], metrics["local_contribution_counts"],
+                    metrics["target_validation_counts"], metrics["ranking_evidence_counts"], metrics["non_admission_reasons"])
+                for entry in metrics["paper_diagnostics"]:
+                    self.collector.logger.info("Query paper admission: SH=%s query=%s paper=%s admitted=%s local_contribution=%s target_validation=%s ranking_evidence=%s non_admission_reason=%s review_status=%s.",
+                        lane["sub_hypothesis_id"], lane["query_id"], entry["paper_id"], entry["admitted"],
+                        entry["local_contribution"], entry["target_validation"], entry["ranking_evidence"],
+                        entry["non_admission_reason"], entry["review_status"])
                 if metrics["revision_guidance"]:
                     self.collector.logger.info("Query relaxation guidance: SH=%s query=%s reason=%s action=%s priority=%s.",
                         lane["sub_hypothesis_id"], lane["query_id"], metrics["revision_guidance"]["reason"],
@@ -1337,6 +1453,7 @@ class SurveySearchController:
             "object_extraction_audit": self.object_audit,
             "format_normalization_audit": self.format_audit,
             "assessment_alignment_audit": self.assessment_alignment_audit,
+            "local_contribution_review_audit": self.local_contribution_review_audit,
             "prompt_budget_audit": self.prompt_audit,
             "candidate_balance": self.ledger["balance"], "comparison_metrics": self.metrics, "stop_reason": self.stop_reason}
         self.collector._store_subhypothesis_retrieval_artifact(artifact)
