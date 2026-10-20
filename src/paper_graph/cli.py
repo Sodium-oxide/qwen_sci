@@ -63,11 +63,16 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     extract.add_argument("--config", default=None)
     extract.add_argument("--paper-id", action="append", default=[], help="Select a pending paper; repeat for multiple papers")
     extract.add_argument("--limit", type=int, default=None, help="Maximum runnable papers in this invocation")
+    extract.add_argument("--workers", type=int, default=10, help="Maximum papers processed concurrently (default: 10; 1 runs sequentially)")
     extract.add_argument("--dry-run", action="store_true", help="Inspect work without model calls or checkpoint writes")
-    extract.add_argument("--retry-failed", action="store_true", help="Retry failed extractions or evidence checks")
+    extract.add_argument("--retry-failed", action="store_true", help="Resume saved evidence, component and JSON repairs; extract again when no saved result exists")
     extract.add_argument("--temperature", type=float, default=0.05)
     extract.add_argument("--max-retry", type=int, default=3)
     extract.add_argument("--max-output-tokens", type=int, default=16000)
+    extract.add_argument("--max-evidence-repairs", type=int, default=2,
+                         help="Targeted repair rounds per failed entity per invocation; 0 disables evidence model repairs")
+    extract.add_argument("--max-component-repairs", type=int, default=2,
+                         help="Repair rounds per Core missing grounded components; 0 disables component repair")
     extract.add_argument("--build-index", action="store_true", help="Build the complete active index and verify retrieval afterwards")
     extract.add_argument("--query", action="append", default=None, help="Verify retrieval with this query; requires --build-index")
     extract.add_argument("--top-k", type=int, default=5)
@@ -119,7 +124,9 @@ def run_command(args: argparse.Namespace) -> int:
                 from src.paper_graph.extraction import PaperGraphExtractionExecutor
                 result = PaperGraphExtractionExecutor(settings.db_path, config=config).run(
                     paper_ids=args.paper_id, limit=args.limit, retry_failed=args.retry_failed, dry_run=args.dry_run,
-                    temperature=args.temperature, max_retry=args.max_retry, max_output_tokens=args.max_output_tokens)
+                    temperature=args.temperature, max_retry=args.max_retry, max_output_tokens=args.max_output_tokens,
+                    max_evidence_repairs=args.max_evidence_repairs, max_component_repairs=args.max_component_repairs,
+                    workers=args.workers)
             if args.build_index:
                 if args.dry_run:
                     result["validation"] = {"status": "planned", "build": "full_active_snapshot", "queries": args.query}

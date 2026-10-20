@@ -2182,6 +2182,7 @@ class ChatAgent:
                     total=len(prompt_l),
                     desc=desc,
                     dynamic_ncols=True,
+                    disable=None,
                 ) as progress:
                     while queued or active:
                         submit_available_requests()
@@ -2262,9 +2263,10 @@ class ChatAgent:
                             if on_result is not None:
                                 on_result(completed_index, response)
                             self.logger.info(
-                                "Batch request %s/%s completed.",
+                                "Batch request %s/%s completed. batch=%s",
                                 completed_index + 1,
                                 len(prompt_l),
+                                desc,
                             )
                             if self.config.APIInfo.low_flow_mode:
                                 time.sleep(self.config.APIInfo.low_flow_latency)
@@ -2325,6 +2327,7 @@ class ChatAgent:
                 desc=desc,
                 total=len(future_to_index),
                 dynamic_ncols=True,
+                disable=None,
             ):
                 pending.discard(future)
                 try:
@@ -2351,9 +2354,10 @@ class ChatAgent:
                 log_info = getattr(self.logger, "info", None)
                 if callable(log_info):
                     log_info(
-                        "Batch request %s/%s completed.",
+                        "Batch request %s/%s completed. batch=%s",
                         index + 1,
                         len(future_to_index),
+                        desc,
                     )
                 if self.config.APIInfo.low_flow_mode:
                     time.sleep(self.config.APIInfo.low_flow_latency)

@@ -36,7 +36,8 @@ def check_paper_graph(settings: PaperGraphSettings) -> dict[str, Any]:
             conn.close()
         nodes, graph = core_snapshot(settings.db_path)
         records = component_records(nodes)
-        domains.update(canonicalize_discipline_key(n.get("paper_domain")) or "unresolved" for n in nodes)
+        domains.update(canonicalize_discipline_key(node.get("paper_domain")) or "unresolved"
+                       for node in nodes if node.get("components"))
         check("graph_content", bool(nodes and records), {"nodes": counts, "indexable_components": len(records)})
         validate_graph(settings.db_path, nodes)
         check("graph_provenance", bool(records), {"verified_cores": len(nodes), "verified_components": len(records)})

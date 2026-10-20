@@ -65,7 +65,7 @@ def load_store(corpus, **kwargs):
 
 def test_nested_ingestion_stable_ids_idempotency_and_queue(corpus):
     first = ingest_paper(corpus.settings.db_path, corpus.payload)
-    assert first == {"paper_id": "W123", "changed": True, "cores": 1, "components": 1, "pending_reasons": []}
+    assert first == {"paper_id": "W123", "changed": True, "status": "succeeded", "cores": 1, "components": 1, "pending_reasons": []}
     nodes, version = core_snapshot(corpus.settings.db_path)
     assert validate_graph(corpus.settings.db_path, nodes)
     assert not ingest_paper(corpus.settings.db_path, corpus.payload)["changed"]
@@ -104,6 +104,17 @@ def test_incomplete_data_queued_without_invented_evidence(corpus, mutation, reas
     result = ingest_paper(corpus.settings.db_path, corpus.payload)
     assert any(r.startswith(reason) for r in result["pending_reasons"])
     assert PaperGraphRepository(corpus.settings.db_path).pending()
+
+
+def test_legacy_cores_cannot_hide_unverified_additional_evidence(corpus):
+    payload = copy.deepcopy(corpus.payload)
+    payload["cores"] = payload.pop("ideation_resource")["core_contributions"]
+    payload["cores"][0]["evidence_records"] = [{"quote": "An invented additional claim."}]
+    result = ingest_paper(corpus.settings.db_path, payload)
+    assert result["status"] == "pending" and result["cores"] == result["components"] == 0
+    core, = [candidate for candidate in result["candidates"] if candidate["entity_type"] == "Core"]
+    assert core["target_id"] == "/cores/0" and core["verification_status"] == "unverified"
+    assert any("unverified_evidence" in reason for reason in core["reasons"])
 
 
 def test_legacy_quote_locator_recovery_and_page_specific_text(corpus):
